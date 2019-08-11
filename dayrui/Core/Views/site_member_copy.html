@@ -1,0 +1,29 @@
+{template "header.html"}
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-12">
+                {$select}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                {dr_lang('可以将本栏目的权限规则复制到其他栏目中去')}
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{template "footer.html"}

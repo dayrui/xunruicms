@@ -1,0 +1,47 @@
+{template "header.html"}
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('名称')}</label>
+            <div class="col-xs-7">
+                <input type="text" onblur="d_topinyin('code', 'name')" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+                <span class="help-block"> {dr_lang('它的描述名称')} </span>
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_code">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('别名')}</label>
+            <div class="col-xs-7">
+                <input type="text" class="form-control" id="dr_code" name="data[code]" value="{$data.code}">
+                <span class="help-block"> {dr_lang('别名只能由字母或者字母+数字组成')} </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('类型')}</label>
+            <div class="col-xs-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio" name="data[type]"  value="0"  {if !$data['type']} checked{/if}> {dr_lang('全局共享')}
+                        <span></span>
+                    </label>
+                    <label class="mt-radio">
+                        <input type="radio" name="data[type]"  value="1"  {if $data['type']} checked{/if}> {dr_lang('站点独立')}
+                        <span></span>
+                    </label>
+                </div>
+                <span class="help-block"> {dr_lang('站点独立是指各个站点的联动菜单数据分开录入')} </span>
+            </div>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

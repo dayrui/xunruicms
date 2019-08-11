@@ -1,0 +1,159 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('单笔交易的详细内容')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <input type="hidden" name="is_ajax" value="1" />
+    <input type="hidden" name="ids[]" value="{$data.id}" />
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green">{$data.title}</span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+                    <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('识别码')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static">
+                            {$data.mid}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('流水号')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static">
+                            {if $data.url}
+                            <a href="{$data.url}" target="_blank">{$data.id}</a>
+                            {else}
+                            {$data.id}
+                            {/if}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('交易详情')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static">
+                            {if $data.url}
+                            <a href="{$data.url}" target="_blank">{$data.title}</a>
+                            {else}
+                            {$data.title}
+                            {/if}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('用途类型')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {php echo \Phpcmf\Service::M('Pay')->paytype($data.mid)} </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('交易账号')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {if $data.uid}{Function_list::uid($data.uid)}{else} {dr_lang('游客')}{/if}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('对方账号')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {if $data.touid}{Function_list::uid($data.touid)} {else} <a>{dr_lang('系统')}</a> {/if} </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('流水金额')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> <b>{dr_pay_money_html($data.value)}</b> </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('付款方式')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {dr_lang(dr_pay_type_html($data.type))} </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('支付状态')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static">{php echo \Phpcmf\Service::M('Pay')->paystatus($data)}</p>
+                    </div>
+                </div>
+                {if $data.paytime}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('付款时间')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {dr_date($data.paytime)} </p>
+                    </div>
+                </div>
+                {/if}
+                {if $data.result}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('备注信息')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {$data.result} </p>
+                    </div>
+                </div>
+                {/if}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('创建时间')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {dr_date($data.inputtime)} </p>
+                    </div>
+                </div>
+                {if $is_remit && $data.status == 2 && $data.type == 'remit'}
+                <div class="form-group" id="dr_row_verify">
+                    <label class="col-md-2 control-label">{dr_lang('审核状态')}</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" name="post[verify]" value="1" /> {dr_lang('确定')} <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" name="post[verify]" value="0" /> {dr_lang('拒绝')} <span></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="dr_row_note">
+                    <label class="col-md-2 control-label">{dr_lang('审核备注')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="dr_note" name="post[note]" rows="4"></textarea>
+                    </div>
+                </div>
+                {else if $is_meet && $data.status == 5 && $data.type == 'meet'}
+                <div class="form-group" id="dr_row_verify">
+                    <label class="col-md-2 control-label">{dr_lang('审核状态')}</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" name="post[verify]" value="1" /> {dr_lang('确定收款')} <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" name="post[verify]" value="0" /> {dr_lang('关闭')} <span></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="dr_row_note">
+                    <label class="col-md-2 control-label">{dr_lang('审核备注')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="dr_note" name="post[note]" rows="4"></textarea>
+                    </div>
+                </div>
+                {/if}
+
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            {if ($is_remit && $data.status == 2 && $data.type == 'remit') || ($is_meet && $data.status == 5 && $data.type == 'meet')}
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交')}</button>
+            {/if}
+            <button type="button" onclick="dr_ajax_option_url('{dr_url('member_paylog/del')}', '{dr_lang('你确定要删除吗？')}', '{$reply_url}')" class="btn red "> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

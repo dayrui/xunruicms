@@ -1,0 +1,62 @@
+
+<div class="portlet portlet-sortable light bordered">
+<div class="portlet-title tabbable-line">
+    <div class="caption">
+        <i class="fa fa-bar-chart"></i>
+        <span class="caption-subject"> {dr_lang('数据统计')} </span>
+    </div>
+</div>
+<div class="portlet-body">
+    <?php
+
+
+		$mtotal = [];
+		$module = $ci->get_cache('module-'.SITE_ID.'-content');
+    if ($module) {
+    foreach ($module as $dir => $t) {
+    // 判断权限
+    $mtotal[$dir] = [
+    'name' => dr_lang($t['name']),
+    'today' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
+    'all' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
+    'verify' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/verify/index', $dir.'/verify/index'),
+    'recycle' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/recycle/index'),
+    'timing' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/time/index'),
+    ];
+    }
+    }
+    ?>
+    <div class="table-scrollable">
+        <table class="table table-mtotal table-nomargin table-bordered table-striped table-bordered table-advance">
+            <thead>
+            <tr>
+                <th>{dr_lang('模块')}</th>
+                <th>{dr_lang('总数据')}</th>
+                <th>{dr_lang('今日')}</th>
+                <th>{dr_lang('待审核')}</th>
+                <th>{dr_lang('待发布')}</th>
+                <th>{dr_lang('回收站')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $mtotal $dir $t}
+            <tr>
+                <td>{$t.name}</td>
+                <td><a class="drlabel drlabel-success" href="{$t.all}" id="{$dir}_all"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                <td><a class="drlabel drlabel-success" href="{$t.today}" id="{$dir}_today"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                <td><a class="drlabel drlabel-important" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                <td><a class="drlabel drlabel-important" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                <td><a class="drlabel drlabel-important" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+            </tr>
+            <script type="text/javascript">
+                $(function(){
+                    $.getScript("{dr_url('api/mtotal')}&dir={$dir}");
+                });
+            </script>
+            {/loop}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+</div>

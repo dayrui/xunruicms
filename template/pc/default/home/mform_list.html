@@ -1,0 +1,75 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是模块表单列表页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <a href="{$index.url}">{$index.title}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{Router::mform_list_url($form_table, $index.id, MOD_DIR)}">{$form_name}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>列表</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject"> {$form_name} </span>
+                            </div>
+                            <div class="actions">
+                                <a href="{Router::mform_post_url($form_table, $index.id, MOD_DIR)}" class="btn btn-sm green"><i class="fa fa-plus-square"></i> 我要发布</a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+
+
+                            <ul class="list-unstyled fc-list-form">
+                                {mform form=$form_table cid=$index.id page=1 urlrule=$urlrule pagesize=5}
+                                <li>
+                                    <a href="{Router::mform_show_url($form_table, $t.id)}" class="title">{dr_strcut($t.title, 60)}</a>
+                                    <span>{$t.inputtime}</span>
+                                </li>
+                                {/mform}
+                            </ul>
+
+                            <div class="search-pagination text-center margin-top-30">
+                                {$pages}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

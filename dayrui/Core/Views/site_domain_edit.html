@@ -1,0 +1,28 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('新域名')}</label>
+            <div class="col-xs-7">
+                <input type="text" id="dr_domain" class="form-control" name="domain">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">&nbsp;</label>
+            <div class="col-xs-7">
+                <p class="form-control-static"> {dr_lang('例如：www.test.com，不能包含/符号')} </p>
+                <p class="form-control-static"> {dr_lang('域名变更需要提前把新域名绑定到本站')} </p>
+                <p class="form-control-static"> {dr_lang('变更修改之后需要更新缓存生效')} </p>
+                <p class="form-control-static" style="color: red"> {dr_lang('编辑器中的旧域名需要手动替换新域名')} </p>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+{template "footer.html"}

@@ -1,0 +1,81 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable">
+            <thead>
+            <tr>
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                    <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th width="60" style="text-align:center"> {dr_lang('排序')} </th>
+                <th width="60" style="text-align:center"> {dr_lang('显示')} </th>
+                <th width="70"> Id </th>
+                <th> {dr_lang('名称 / 别名')} </th>
+                <th>
+                    {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key,'pid'=>$pid])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
+                    <a href="{dr_url('linkage/list_index', ['key'=>$key,'pid'=>0])}" class="btn btn-xs dark"> <i class="fa fa-reply"></i> {dr_lang('全部数据')} </a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $ci->_is_admin_auth('del')}
+                <td class="myselect">
+                    <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url('linkage/displayorder_edit', ['key'=>$key,'id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+                <td style="text-align:center">
+                    <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('linkage/hidden_edit', ['key'=>$key,'id'=>$t.id])}', 1);" class="badge badge-{if $t.hidden}no{else}yes{/if}"><i class="fa fa-{if $t.hidden}times{else}check{/if}"></i></a>
+                </td>
+                <td>{$t.id}</td>
+                <td>{$t.name} / {$t.cname}</td>
+                <td>
+                    {if $ci->_is_admin_auth('add')}<label><a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key, 'pid'=>$t.id])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a></label>{/if}
+                    {if $ci->_is_admin_auth('edit')}<label><a href="{dr_url('linkage/list_edit', ['key'=>$key, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>{/if}
+                    {if $t.child}<label><a href="{dr_url('linkage/list_index', ['key'=>$key, 'pid'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-table"></i> {dr_lang('下级数据管理')} </a></label>{/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+    <table class="table table-footer table-checkable ">
+        <tbody>
+        <tr>
+            <td class="myselect" style="text-align: left;">
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                {/if}
+                {if $ci->_is_admin_auth('del')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('linkage/list_del', ['key'=>$key])}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                {/if}
+                {if $ci->_is_admin_auth('edit')}
+                <label>{$select}</label>
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('linkage/pid_edit', ['key'=>$key])}', '{dr_lang('你确定要批量移动它们吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('变更分类')}</button></label>
+                {/if}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+{template "footer.html"}

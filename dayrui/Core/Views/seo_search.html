@@ -1,0 +1,141 @@
+{template "header.html"}
+<script>
+    function dr_page_content(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url('category/content_edit')}&id='+id, '90%', '90%');
+    }
+    function dr_link_url(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url('category/link_edit')}&id='+id, '50%', '30%');
+    }
+    $(function() {
+        $(".select-cat").click(function(){
+            var action = $(this).attr("action");
+            var childs = $(this).attr("childs");
+            var catid = $(this).attr("catid");
+            var catids= new Array(); //定义一数组
+            catids = childs.split(","); //字符分割
+            if (action == 'close') {
+                $.cookie('dr_{SITE_ID}_{$dirname}_'+catid, null,{path:"/",expires: -1});
+                $(this).attr("action", "open");
+                $(this).html("[-]");
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).show();
+                    }
+                }
+            } else {
+                // 关闭状态存储cookie
+                $.cookie('dr_{SITE_ID}_{$dirname}_'+catid, 1);
+                $(this).attr("action", "close");
+                $(this).html("[+]");
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).hide();
+                    }
+                }
+            }
+        });
+        $(".select-cat").each(function(){
+            var childs = $(this).attr("childs");
+            var catid = $(this).attr("catid");
+            var cache = $.cookie('dr_{SITE_ID}_{$dirname}_'+catid);
+            if (cache) {
+                $(this).attr("action", "close");
+                $(this).html("[+]");
+                var catids= new Array(); //定义一数组
+                catids = childs.split(","); //字符分割
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).hide();
+                    }
+                }
+            }
+        });
+    });
+</script>
+<div class="note note-danger my-content-top-tool">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+{dr_form_hidden()}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="active">
+                    <a href="#" data-toggle="tab" > <i class="fa fa-internet-explorer"></i> {$site_name} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane  active" id="">
+                    <div class="form-body">
+
+                        {if !$data.share}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="site[urlrule]">
+                                        <option value="0"> -- </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==1}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                            </div>
+                        </div>
+                        {else}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="site[urlrule]">
+                                        <option value="0"> -- </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==2}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                            </div>
+                        </div>
+                        {/if}
+
+                        <?php !$site['search_title'] && $site['search_title'] = '[第{page}页{join}][{keyword}{join}][{param}{join}]{modulename}{join}{'.'SITE_NAME}';?>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:70px" name="site[search_title]">{$site['search_title']}</textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO关键字')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:70px" name="site[search_keywords]">{$site['search_keywords']}</textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO描述信息')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="site[search_description]">{$site['search_description']}</textarea>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{$save_url}', 'myform', '2000', '{dr_now_url()}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

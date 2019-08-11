@@ -1,0 +1,130 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>内容搜索页面</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+
+<div class="search-page search-content-1">
+
+    <div class="portlet light">
+
+        <div class="portlet-body form fc-search-param">
+            <div class="form-body">
+                <div class="form-group row">
+                    <label class="col-md-12">栏目分类</label>
+                    <div class="col-md-9">
+                        <label><a class="label {if !$cat || $cat.child}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catdir', NULL)}">不限</a></label>
+                        <!--调用栏目分类，这种用法只能用于模块列表与搜索页面-->
+                        {loop $related $t}
+                        <label><a class="label {if $t.id==$cat.id}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catdir', $t.dirname)}">{$t.name}</a></label>
+                        {/loop}
+                    </div>
+                </div>
+
+                <!--category_search_field是调用当前栏目下的附加字段是否具有搜索字段功能，这种用法只能用于模块列表与搜索页面-->
+                {category_search_field module=MOD_DIR catid=$catid}
+                <div class="form-group row">
+                    <label class="col-md-12">{$t.name}</label>
+                    <div class="col-md-9">
+                        <label><a class="label {if !$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, NULL)}">不限</a></label>
+                        {loop $t.data $v}
+                        <label><a class="label {if $v.value==$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, $v.value)}">{$v.name}</a></label>
+                        {/loop}
+                    </div>
+                </div>
+                {/category_search_field}
+
+                <!--按关键字搜索-->
+                <div class="form-group row">
+                    <label class="col-md-12" style="padding-top:5px">内容搜索</label>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" onkeypress="if(event.keyCode==13) {dr_module_search('search_keyword');return false;}" name='keyword' value='{$keyword}' id='search_keyword'>
+                            <span class="input-group-btn">
+                                                <button class="btn blue" onclick="dr_module_search('search_keyword')" type="button"> <i class="fa fa-search"></i> 搜索</button>
+                                            </span>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    // 这段js是用来执行搜索的
+                    function dr_module_search(name) {
+                        var url="{Router::search_url($params, 'keyword', 'dayruicom')}";
+                        var value = $("#"+name).val();
+                        if (value) {
+                            location.href=url.replace('dayruicom', value);
+                        } else {
+                            $("#"+name).focus()
+                            dr_tips(0, "输入关键字");
+                        }
+                        return false;
+                    }
+                </script>
+
+            </div>
+        </div>
+        <div class="portlet-body search-container ">
+            <ul class="search-container" id="content_list">
+                {template "search_data.html"}
+            </ul>
+
+            {if !$count}
+            <div class="row fc-search-null">
+                <div class="col-md-12 text-center">
+                    <i class="fa fa-close fc-search-null-icon"></i>
+                    <label class="fc-search-null-txt">没有找到相关内容...</label>
+                </div>
+
+            </div>
+
+            {else}
+            <div class="margin-top-20" id="is_ajax_btn">
+                <a href="javascript:dr_ajax_load_more();" class="btn default btn-block"> 加载更多 </a>
+            </div>
+            {/if}
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    var Mpage=1;
+    //滚动显示更多
+    var scroll_get = true;  //做个标志,不要反反复复的加载
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if (scroll_get==true &&  (400 + $(window).scrollTop())>($(document).height() - $(window).height())) {
+                scroll_get = false;
+                layer.msg('内容加截中,请稍候',{time:1000});
+                dr_ajax_load_more();
+            }
+        });
+    });
+
+    function dr_ajax_load_more(){
+        Mpage++;
+        $.get('/index.php?s=api&c=api&m=template&name=search_data.html&module={MOD_DIR}&catid={$catid}&searchid={$searchid}&sototal={$sototal}&order={$params.order}&format=json&page='+Mpage+'&'+Math.random(),function(res){
+            $('.footer-cont').hide();
+            if(res.code==1){
+                if(res.msg==''){
+                    layer.msg("已经显示完了",{time:500});
+                    $('#is_ajax_btn').hide();
+                }else{
+                    $('#content_list').append(res.msg);
+                    scroll_get = true;
+                }
+            }else{
+                layer.msg(res.msg,{time:2500});
+            }
+        }, 'json');
+    }
+
+</script>
+
+{template "footer.html"}

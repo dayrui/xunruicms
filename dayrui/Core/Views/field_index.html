@@ -1,0 +1,91 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered fc-head-table table-hover table-checkable">
+            <thead>
+        <tr class="heading">
+            {if $ci->_is_admin_auth('del')}
+            <th class="myselect">
+                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+            </th>
+            {/if}
+            <th width="60" style="text-align:center"> {dr_lang('排序')} </th>
+            <th style="text-align: center;font-size: 15px;" width="60">Id</th>
+            <th>{dr_lang('字段')}</th>
+            <th width="90">{dr_lang('类别')}</th>
+            <th width="70" style="text-align: center">{dr_lang('系统')}</th>
+            <th width="70" style="text-align: center">{dr_lang('主表')}</th>
+            <th width="80"  style="text-align: center">{dr_lang('XSS过滤')}</th>
+            <th width="70" style="text-align: center">{dr_lang('前端')}</th>
+            <th width="70" style="text-align: center">{dr_lang('可用')}</th>
+            <th width="100"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {loop $list $t}
+        <tr class="odd gradeX" id="dr_row_{$t.id}">
+            {if $ci->_is_admin_auth('del')}
+            <td class="myselect">
+                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    {if $t.issystem}
+                    <input type="checkbox" class="" disabled name="" value="" />
+                    {else}
+                    <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                    {/if}
+                    <span></span>
+                </label>
+            </td>
+            {/if}
+            <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'save', 'id'=>$t.id])}', 'displayorder')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+            <td style="text-align: center;font-size: 15px;">{$t.id}</td>
+            <td> {$t.spacer}  {$t.name} / {$t.fieldname}</td>
+            <td>{$t.fieldtype}</td>
+            <td style="text-align: center;font-size: 15px;">{if $t.issystem}<i class="fa fa-check-circle"></i>{else}<i class="fa fa-times-circle"></i>{/if}</td>
+            <td style="text-align: center;font-size: 15px;">{if $t.ismain}<i class="fa fa-check-circle"></i>{else}<i class="fa fa-times-circle"></i>{/if}</td>
+            <td style="text-align:center">
+                <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'xss', 'id'=>$t.id])}', 1);" class="badge badge-{if $t['setting']['validate']['xss']}no{else}yes{/if}"><i class="fa fa-{if $t['setting']['validate']['xss']}times{else}check{/if}"></i></a>
+            </td>
+            <td style="text-align:center">
+                <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'member','id'=>$t.id])}', 0);" class="badge badge-{if !$t.ismember}no{else}yes{/if}"><i class="fa fa-{if !$t.ismember}times{else}check{/if}"></i></a>
+            </td>
+            <td style="text-align:center">
+                <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'disabled','id'=>$t.id])}', 1);" class="badge badge-{if $t.disabled}no{else}yes{/if}"><i class="fa fa-{if $t.disabled}times{else}check{/if}"></i></a>
+            </td>
+            <td>
+                {if $ci->_is_admin_auth('edit') }<a href="{dr_url('field/edit', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
+            </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+    </div>
+
+    {if $ci->_is_admin_auth('del')}
+    <table class="table table-footer table-checkable ">
+        <tbody>
+        <tr>
+            <td class="myleft myselect" style="padding-left: 7px !important;">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                <button type="button" onclick="dr_ajax_option('{dr_url('field/del', ['rname' => $rname, 'rid' => $rid])}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button>
+
+            </td>
+            <td class="myright">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {/if}
+</form>
+
+
+{template "footer.html"}

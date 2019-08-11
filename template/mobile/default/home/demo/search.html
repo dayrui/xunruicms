@@ -1,0 +1,241 @@
+{template "header.html"}
+<style>
+    label {
+        margin-bottom: 15px;
+    }
+</style>
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>这里是demo模块的搜索页</h1>
+</header>
+<div class="hui-header-line"></div>
+
+
+<div class="page-content">
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+    
+        <div class="page-content">
+
+            <div class="container">
+
+               
+
+                <div class="search-page search-content-1">
+
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject font-green-sharp"> 条件筛选 </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body form fc-search-param">
+                            <div class="form-body">
+                                <div class="form-group row">
+                                    <label class="col-md-12">栏目分类</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$cat || $cat.child}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', NULL)}">不限</a></label>
+                                        <!--调用栏目分类，这种用法只能用于模块列表与搜索页面-->
+                                        {loop $related $t}
+                                            <label><a class="label {if $t.id==$cat.id}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', $t.id)}">{$t.name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
+                                <!--category_search_field是调用当前栏目下的附加字段是否具有搜索字段功能，这种用法只能用于模块列表与搜索页面-->
+                                {category_search_field module=MOD_DIR catid=$catid}
+                                <div class="form-group row">
+                                    <label class="col-md-12">{$t.name}</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, NULL)}">不限</a></label>
+                                        {loop $t.data $v}
+                                            <label><a class="label {if $v.value==$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, $v.value)}">{$v.name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+                                {/category_search_field}
+
+                                <!--按联动菜单搜索-->
+                                <div class="form-group row">
+                                    <label class="col-md-12">联动菜单</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.csxz || dr_linkage('address', $params.csxz, 0, 'child')}label-success{else}label-default{/if}" href="{Router::search_url($params, 'csxz', NULL)}">不限</a></label>
+                                        <!--调用联动菜单address，pid为动态获取的地区id-->
+                                        {list action=linkage code=address pid=$params.csxz}
+                                        <label><a class="label {if $t.id==$params.csxz}label-success{else}label-default{/if}" href="{Router::search_url($params, 'csxz', $t.id)}">{$t.name}</a></label>
+                                        {/list}
+                                    </div>
+                                </div>
+
+                                <!--单选按钮字段搜索-->
+                                <div class="form-group row">
+                                    <label class="col-md-12">单选字段</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.danxuananniu}label-success{else}label-default{/if}" href="{Router::search_url($params, 'danxuananniu', NULL)}">不限</a></label>
+                                        <!--调用单选字段数据方法-->
+                                        {php $field = dr_field_options($ci->module['field']['danxuananniu']['id']);}
+                                        {loop $field $value $name}
+                                        <label><a class="label {if $value==$params.danxuananniu}label-success{else}label-default{/if}" href="{Router::search_url($params, 'danxuananniu', $value)}">{$name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
+                                <!--下拉框字段搜索-->
+                                <div class="form-group row">
+                                    <label class="col-md-12">下拉选择字段</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.xialaxuanze}label-success{else}label-default{/if}" href="{Router::search_url($params, 'xialaxuanze', NULL)}">不限</a></label>
+                                        <!--调用单选字段数据方法-->
+                                        {php $field = dr_field_options($ci->module['field']['xialaxuanze']['id']);}
+                                        {loop $field $value $name}
+                                        <label><a class="label {if $value==$params.xialaxuanze}label-success{else}label-default{/if}" href="{Router::search_url($params, 'xialaxuanze', $value)}">{$name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-12">单一购买价格</label>
+                                    <div class="col-md-9">
+                                        <!--自定义一个价格返回数组，这个都懂得，php最基础的数组用法-->
+                                        {php $price=array('0,500'=>'500以内','500,1000'=>'500到1000','1000,2000'=>'1000到2000','2000,3000'=>'2000到3000','3000,0'=>'3000以上');}
+                                        <label><a class="label {if !$params.dydgm}label-success{else}label-default{/if}" href="{Router::search_url($params, 'dydgm', NULL)}">不限</a></label>
+                                        {loop $price $i $t}
+                                        <label><a class="label {if $i==$params.dydgm}label-success{else}label-default{/if}" href="{Router::search_url($params, 'dydgm', $i)}">{$t}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-12">组合购买价格自定义</label>
+                                    <div class="col-md-9">
+                                        {php $zhxgm = explode(',', $params.zhxgm);}
+                                       <label><input type="text" class="form-control" value="{$zhxgm[0]}" id="zhxgm_min"></label>
+                                       <label>到</label>
+                                       <label><input type="text" class="form-control" value="{$zhxgm[1]}" id="zhxgm_max"></label>
+                                       <label>这是自定义价格范围搜索的写法</label>
+                                    </div>
+                                </div>
+
+                                <!--按关键字搜索-->
+                                <div class="form-group row">
+                                    <label class="col-md-12" style="padding-top:5px">内容搜索</label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" onkeypress="if(event.keyCode==13) {dr_module_search();return false;}" name='keyword' value='{$keyword}' id='search_keyword'>
+                                            <span class="input-group-btn">
+                                                <button class="btn blue" onclick="dr_module_search()" type="button"> <i class="fa fa-search"></i> 搜索</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    // 这段js是用来执行搜索的
+                                    function dr_module_search(name) {
+                                        var url="{Router::search_url($params, ['keyword', 'zhxgm'], ['mykeyword', 'myzhxgm'])}";
+                                        var keyword = $("#search_keyword").val();
+                                        var zhxgm_min = $("#zhxgm_min").val();
+                                        var zhxgm_max = $("#zhxgm_max").val();
+                                        zhxgm_max = zhxgm_max ? zhxgm_max : 0;
+                                        zhxgm_min = zhxgm_min ? zhxgm_min : 0;
+                                        if (zhxgm_max || zhxgm_min) {
+                                            url = url.replace('myzhxgm', zhxgm_min+','+zhxgm_max);
+                                        } else {
+                                            url = url.replace('myzhxgm', '');
+                                        }
+                                        if (keyword) {
+                                            url = url.replace('mykeyword', keyword);
+                                        } else {
+                                            url = url.replace('mykeyword', '');
+                                        }
+                                        location.href=url;
+                                        return false;
+                                    }
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject font-green-sharp"> 筛选结果 </span>
+                            </div>
+                            <div class="actions">
+                                <div class="btn-group">
+                                    <a href="{Router::search_url($params, 'order', null)}" class="btn btn-default {if !$params.order || $param.order=='updatetime'}active{/if}"> <i class="fa fa-clock-o"></i> 时间排序 </a>
+                                    <a href="{Router::search_url($params, 'order', 'hits')}" class="btn btn-default {if $params.order=='hits'}active{/if}"> <i class="fa fa-fire"></i> 点击排序 </a>
+                                    <a href="{Router::search_url($params, 'order', 'comments')}" class="btn btn-default {if $params.order=='comments'}active{/if}"> <i class="fa fa-comments-o"></i> 评论排序 </a>
+                                    <a href="{Router::search_url($params, 'order', 'avgsort')}" class="btn btn-default {if $params.order=='avgsort'}active{/if}"> <i class="fa fa-diamond"></i> 评分排序 </a>
+                                    <a href="{Router::search_url($params, 'order', 'support')}" class="btn btn-default {if $params.order=='support'}active{/if}"> <i class="fa fa-digg"></i> 支持量排序 </a>
+                                    <a href="{Router::search_url($params, 'order', 'donation')}" class="btn btn-default {if $params.order=='donation'}active{/if}"> <i class="fa fa-rmb"></i> 赞助排序 </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body search-container ">
+                            <ul>
+                                <!--调用MOD_DIR模块的数据 id和total和order参数(本页面固有参数) page=1标示开启分页 urlrule分页地址规则 pagesize每页数量-->
+                                {search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=5 urlrule=$urlrule}
+                                <li class="search-item clearfix">
+                                    <a title="{$t.title}" href="{$t.url}">
+                                        <img src="{dr_thumb($t.thumb, 100, 90)}" width="100" height="90" style="margin-top: 15px;">
+                                    </a>
+                                    <div class="search-content text-left">
+                                        <h4 class="search-title">
+                                            <a title="{$t.title}" href="{$t.url}">{$t.title}</a>
+                                        </h4>
+                                        <p class="search-desc">{$t.description}</p>
+                                        <div class="search-post-foot">
+                                            <ul class="search-post-tags">
+                                                {php $kw=@explode(',', $t.keywords);}
+                                                {loop $kw $a}
+                                                {if $a}
+                                                <li class="uppercase">
+                                                    <a href="{Router::tag_url($a)}" target="_blank">{$a}</a>
+                                                </li>
+                                                {/if}
+                                                {/loop}
+                                            </ul>
+                                            <div class="search-post-meta">
+                                                <i class="fa fa-calendar font-blue"></i>
+                                                <a href="javascript:;">{$t.updatetime}</a>
+                                            </div>
+                                            <div class="search-post-meta">
+                                                <i class="fa fa-fire font-blue"></i>
+                                                <a href="javascript:;">{$t.hits}</a>
+                                            </div>
+                                            <div class="search-post-meta">
+                                                <i class="fa fa-bubble font-blue"></i>
+                                                <a href="javascript:;">{$t.comments}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {/search}
+                            </ul>
+                            {if !$count}
+                            <div class="row fc-search-null">
+                                <div class="col-md-12 text-center">
+                                    <i class="fa fa-close fc-search-null-icon"></i>
+                                    <label class="fc-search-null-txt">没有找到相关内容...</label>
+                                </div>
+
+                            </div>
+                            {/if}
+                            <div class="search-pagination">
+                                <ul class="pagination">
+                                    {$pages}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+{template "footer.html"}

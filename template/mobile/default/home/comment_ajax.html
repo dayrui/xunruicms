@@ -1,0 +1,211 @@
+<!--评论主体-->
+<link rel="stylesheet" type="text/css" href="{ROOT_THEME_PATH}assets/comment/css/embed.css" />
+<script type="text/javascript">
+    var comment_url = '{$post_url}';
+    function dr_todo_ajax() {
+        {$js}(0, 1);
+    }
+</script>
+<script type="text/javascript" src="{ROOT_THEME_PATH}assets/comment/embed.js"></script>
+<div id="ds-reset">
+    <div class="ds-replybox" id="dr_post_form">
+        <form class="ds_form_post form" method="post" id="myform">
+            {dr_form_hidden()}
+            {if $myfield}
+            <div class="ds-myfield form-horizontal">
+                <div class="form-body">
+                    {$myfield}
+                </div>
+            </div>
+            {/if}
+            {if $review}
+            <style>
+                .ds-avatar-top { margin-top: 10px; }
+            </style>
+            <div class="ds-review" id="dr_review_post">
+                <ul>
+                    {loop $review.option $i $name}
+                    <li>
+                        <input id="dr_review_option_{$i}" type="hidden" name="review[{$i}]" value="0">
+                        <span class="opname">{$name}：</span>
+                        <span class="commstar">
+                            {loop $review.value $ii $v}
+                            <a id="dr_review_value_{$i}_{$ii}" class="dr_review_value_{$i} star{$ii}" href="javascript:dr_review_value({$i}, {$ii});" title="{$v}">&nbsp;</a>
+                            {/loop}
+                        </span>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+            <div class="ds-clear"></div>
+            {/if}
+
+            <a class="ds-avatar ds-avatar-top" href="javascript:;">
+                <img src="{dr_avatar($member.uid)}">
+            </a>
+
+            <div class="ds-textarea-wrapper ds-rounded-top">
+                <textarea class="J_CmFormField" name="content" placeholder="说点什么吧…"></textarea>
+            </div>
+
+            <div class="ds-post-toolbar">
+                <div class="ds-post-options ds-gradient-bg"></div>
+                <button class="ds-post-button" type="button" onclick="dr_post_comment()">评论</button>
+                <div class="ds-toolbar-buttons">
+                    <a class="ds-toolbar-button ds-add-emote" onclick="dr_show_bq()" title="插入表情"></a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="ds-comments-info">
+        <div class="ds-sort">
+            <a class="ds-order-desc {if !$type}ds-current{/if}" href="javascript:{$js}(0, 1);">
+                最新
+            </a>
+            <a class="ds-order-asc {if $type==1}ds-current{/if}" href="javascript:{$js}(1, 1);">
+                最早
+            </a>
+            <a class="ds-order-hot {if $type==2}ds-current{/if}" href="javascript:{$js}(2, 1);">
+                最热
+            </a>
+            <a class="ds-order-hot {if $type==3}ds-current{/if}" href="javascript:{$js}(3, 1);">
+                评分最高
+            </a>
+        </div>
+        <span class="ds-comment-count">
+            <a class="ds-comments-tab-duoshuo ds-current" href="javascript:void(0);">
+                <span class="ds-highlight">{$commnets}</span>条评论
+            </a>
+        </span>
+    </div>
+
+    <ul id="dr_comment_list" class="ds-comments">
+
+        {loop $list $t}
+        <li class="ds-post">
+            <div class="ds-post-self">
+                <div class="ds-avatar">
+                    <a rel="nofollow author" href="javascript:;;">
+                        <img src="{dr_avatar($t.uid)}" >
+                    </a>
+                </div>
+                <div class="ds-comment-body">
+                    <div class="ds-comment-header">
+                        <a class="ds-user-name ds-highlight" href="javascript:;;">
+                            {$t.author}
+                        </a>
+                    </div>
+                    <p>
+                        {dr_replace_emotion($t.content)}
+                    </p>
+                    <div class="ds-comment-footer ds-comment-actions">
+                        <span class="ds-time">
+                            {dr_fdate($t.inputtime)}
+                        </span>
+                        {if dr_comment_is_reply($is_reply, $member, $t.uid)}
+                        <a class="ds-post-reply" href="javascript:void(0);" onclick="dr_reply_show({$t.id}, '{$t.author}', {$t.id})">
+                            <span class="ds-ui-icon"></span>
+                            回复({count($t.rlist)})
+                        </a>
+                        {/if}
+                        <a class="ds-post-likes" href="javascript:void(0);" onclick="dr_zc_comment({$t.id})">
+                            <span class="ds-ui-icon"></span>
+                            支持(<span id="dr_comment_zc_{$t.id}">{$t.support}</span>)
+                        </a>
+                        <a class="ds-post-report" href="javascript:void(0);" onclick="dr_fd_comment({$t.id})">
+                            <span class="ds-ui-icon"></span>
+                            反对(<span id="dr_comment_fd_{$t.id}">{$t.oppose}</span>)
+                        </a>
+                        {if $member.adminid}
+                        <a class="ds-post-delete" href="javascript:void(0);" onclick="dr_delete_comment({$t.id})">
+                            <span class="ds-ui-icon"></span>
+                            删除
+                        </a>
+                        {/if}
+                        <a href="javascript:void(0);" style="float: right">评分：{number_format($t.avgsort, $review['point'])}分</a>
+                    </div>
+                    <div class="ds-replybox ds-replybox2 ds-inline-replybox " id="dr_reply_{$t.id}" style="display:none;">
+                    </div>
+                </div>
+            </div>
+        </li>
+        {if $t.rlist}
+        <ul class="ds-children">
+            {loop $t.rlist $r}
+            <li class="ds-post">
+                <div class="ds-post-self">
+                    <div class="ds-avatar">
+                        <a rel="nofollow author" href="javascript:;;" title="">
+                            <img src="{dr_avatar($r.uid)}" >
+                        </a>
+                    </div>
+                    <div class="ds-comment-body">
+                        <div class="ds-comment-header">
+                            <a class="ds-user-name ds-highlight" data-qqt-account="" href="javascript:;;"
+                               rel="nofollow" data-userid="0">
+                                {$r.author}
+                            </a>
+                        </div>
+                        <p>
+                            {dr_replace_emotion($r.content)}
+                        </p>
+                        <div class="ds-comment-footer ds-comment-actions">
+                            <span class="ds-time">
+                            {dr_fdate($r.inputtime)}
+                            </span>
+                            {if dr_comment_is_reply($is_reply, $member, $r.uid)}
+                            <a class="ds-post-reply" href="javascript:void(0);" onclick="dr_reply_show({$r.id}, '{$r.author}', {$t.id})">
+                                <span class="ds-ui-icon"></span>
+                                回复
+                            </a>
+                            {/if}
+                            <a class="ds-post-likes" href="javascript:void(0);" onclick="dr_zc_comment({$r.id})">
+                                <span class="ds-ui-icon"></span>
+                                支持(<span id="dr_comment_zc_{$r.id}">{$r.support}</span>)
+                            </a>
+                            <a class="ds-post-report" href="javascript:void(0);" onclick="dr_fd_comment({$r.id})">
+                                <span class="ds-ui-icon"></span>
+                                反对(<span id="dr_comment_fd_{$r.id}">{$r.oppose}</span>)
+                            </a>
+                            {if $member.adminid}
+                            <a class="ds-post-delete" href="javascript:void(0);" onclick="dr_delete_comment({$r.id})">
+                                <span class="ds-ui-icon"></span>
+                                删除
+                            </a>
+                            {/if}
+                        </div>
+                        <div class="ds-replybox ds-replybox2 ds-inline-replybox" id="dr_reply_{$r.id}">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {/loop}
+        </ul>
+        {/if}
+        {/loop}
+    </ul>
+
+    <div class="ds-paginator">
+        <div class="ds-border"> </div>
+        {$ajax_pages}
+    </div>
+
+
+    <a name="respond"></a>
+    <div id="ds-smilies-tooltip" style="width: {if IS_PC}370{else}200{/if}px;display: none;">
+        <div class="ds-smilies-container">
+            <ul>
+                {loop $emotion $name $file}
+                <li>
+                    <img src="{$file}" alt="[{$name}]" title="[{$name}]">
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <div id="ds-foot5">
+            &nbsp;&nbsp;&nbsp;
+        </div>
+    </div>
+</div>

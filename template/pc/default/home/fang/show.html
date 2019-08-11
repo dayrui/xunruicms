@@ -1,0 +1,197 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是{MODULE_NAME}模块栏目内容页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {if !IS_SHARE}
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {/if}
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <span>{$title}</span>
+                    </li>
+                </ul>
+
+                <div class="search-page search-content-2">
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="portlet light">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <button type="button" style="background-color:#2C99FF;border-color:#2C99FF" class="btn btn-danger btn-xs">{$cat.name}</button>
+                                        <span class="caption-subject font-blue  ">{$title}</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+
+                                    <p style="color:#9eacb4">{$description}</p>
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <img  src="{dr_thumb($thumb, 250, 200)}" alt="{$title}">
+                                        </div>
+
+                                        <div class="col-md-8 down-title">
+                                            <div class="info">
+                                                <label>更新时间： <span>{$updatetime} </span></label>
+                                                <label>人气指数： <span> {dr_show_hits($id)} </span></label>
+                                                <label>评论数量： <span> {$comments} </span></label>
+                                            </div>
+                                            <div class="info">
+                                                <label>所在区域： <span> {dr_linkagepos('address', $area, ' > ', dr_search_url($params, 'area', '{linkage}'))} </span></label>
+                                                <label>小区名称： <span> {$xiaoqumingcheng} </span></label>
+                                                <label>租金信息： <span> {$zujin}/月，{$zujinleixing}</span></label>
+                                            </div>
+                                            <div class="info">
+                                                <label>联系姓名： <span> {$lianxiren} </span></label>
+                                                <label>联系电话： <span> {$lianxidianhua} </span></label>
+                                            </div>
+                                            <div class="info">
+                                                <label>详细地址： <span> {$dizhi} </span></label>
+                                                <label>户型状况： <span> {$shi}室，{$ting}厅，{$wei}卫，{$huxing} </span></label>
+                                                <label>房屋状况： <span> 共{$zongceng}层，第{$suozaiceng}层，{$mianji}平米，{$zhuangxiu}，{$chaoxiang} </span></label>
+                                                <label>配置状况： <span> {if $peitao}{implode('，', $peitao)}{/if} </span></label>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="portlet light">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark">源码介绍</span>
+                                    </div>
+                                    <div class="actions">
+                                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="全屏查看"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" style="height: auto;overflow: hidden;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {$content}
+                                        </div>
+                                    </div>
+                                    <div class="row fc-show-total">
+                                        <div class="col-md-12 text-center">
+                                            <a href="javascript:dr_module_favorite('{MOD_DIR}', '{$id}');" class="icon-btn">
+                                                <i class="fa fa-star"></i>
+                                                <div> 收藏 </div>
+                                                <span class="badge badge-danger" id="module_favorite_{$id}"> {intval($favorites)} </span>
+                                            </a>
+                                            <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
+                                                <i class="fa fa-thumbs-o-up"></i>
+                                                <div> 有帮助 </div>
+                                                <span class="badge badge-danger" id="module_digg_{$id}_1"> {intval($support)} </span>
+                                            </a>
+                                            <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 0);" class="icon-btn">
+                                                <i class="fa fa-thumbs-o-down"></i>
+                                                <div> 没帮助 </div>
+                                                <span class="badge badge-danger" id="module_digg_{$id}_0"> {intval($oppose)} </span>
+                                            </a>
+                                            {if dr_is_app('shang')}
+                                            <a href="{Router::donation_url($id)}" class="icon-btn">
+                                                <i class="fa fa-rmb"></i>
+                                                <div> 打赏 </div>
+                                                <span class="badge badge-danger"> {floatval($donation)} </span>
+                                            </a>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="portlet light ">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark bold uppercase">源码截图</span>
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body text-center">
+                                    <div id="layer-photos-demo" class="layer-photos-demo">
+                                        {loop $images $i $c}
+                                        <img layer-pid="{$i}" width="200" height="150" layer-src="{dr_get_file($c.file)}" src="{dr_thumb($c.file, 200, 150)}" alt="{$c.title}">
+                                        {/loop}
+                                        <script>
+                                            layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+                                                layer.photos({
+                                                    photos: '#layer-photos-demo'
+                                                    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="portlet light ">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark bold uppercase">地图位置</span>
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body">
+                                    {dr_baidu_map($weizhi, 17, '100%', '400')}
+                                </div>
+                            </div>
+
+                            <div class="portlet light ">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark bold uppercase">网友评论</span>
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body">
+                                    <!--调用ajax评论-->
+                                    {if IS_COMMENT}
+                                    {dr_module_comment(MOD_DIR, $id)}
+                                    {/if}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

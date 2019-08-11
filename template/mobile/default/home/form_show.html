@@ -1,0 +1,26 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>这里是网站表单详情页</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-wrapper-row full-height">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject"> {$title}</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            {$myfield}
+            {$diyfield}
+            {$sysfield}
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

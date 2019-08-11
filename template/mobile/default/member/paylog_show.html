@@ -1,0 +1,99 @@
+{template "mheader.html"}
+
+<div class="portlet light ">
+
+    <div class="portlet-body form fc-form">
+        <div class="form-horizontal" >
+            <div class="form-group">
+                <label class="col-md-2 control-label">流水号</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> {$id} </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">交易描述</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {if $url}
+                        <a href="{$url}" target="_blank">{$title}</a>
+                        {else}
+                        {$title}
+                        {/if}
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">用途类型</label>
+                <div class="col-md-9">
+                    <div class="form-control-static"> {php echo \Phpcmf\Service::M('Pay')->paytype($mid)} </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">对方账号</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> {if $touid}{$tousername}{else}系统{/if} </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">交易金额</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> <b>{dr_pay_money_html($value)}</b> </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">付款方式</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {dr_lang(dr_pay_type_html($type))}
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">支付状态</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        {php echo \Phpcmf\Service::M('Pay')->paystatus(['status'=>$status, 'id'=>$id]);}
+                        {if $status != 1}
+                        <a style="margin-left:10px;" class="label label-danger" target="_blank" href="{ROOT_URL}index.php?s=api&c=pay&id={$id}"> <i class="fa fa-rmb"></i> 立即处理 </a>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+            {if $paytime}
+            <div class="form-group">
+                <label class="col-md-2 control-label">付款时间</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> {dr_date($paytime)} </p>
+                </div>
+            </div>
+            {/if}
+            {if $result && strpos($result, 'a:') !== 0}
+            <div class="form-group">
+                <label class="col-md-2 control-label">交易信息</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> {$result} </p>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-md-2 control-label">创建时间</label>
+                <div class="col-md-9">
+                    <p class="form-control-static"> {dr_date($_inputtime)} </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    var menus = [];
+    var menu_url = [];
+    {php $i=0;}
+    {loop $type $t}
+    menus[{$i}] = "{$t.name}";
+    menu_url[{$i}] = "{$t.url}";
+    {php $i++;}
+    {/loop}
+</script>
+{template "mfooter.html"}

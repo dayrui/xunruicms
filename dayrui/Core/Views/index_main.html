@@ -1,0 +1,110 @@
+{template "header.html"}
+{if $admin.usermenu}
+<div class="row">
+    <div class="col-md-12">
+        <div class="admin-usermenu">
+            {loop $admin.usermenu $t}
+            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
+            {/loop}
+        </div>
+    </div>
+</div>
+{/if}
+
+{if $table_data}
+
+<div class="row">
+    <div class="col-md-3 column sortable" id="3-1">
+        {loop $table_data $table $tid}
+        {if $tid == '3-1'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+    <div class="col-md-3 column sortable" id="3-2">
+        {loop $table_data $table $tid}
+        {if $tid == '3-2'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+    <div class="col-md-3 column sortable" id="3-3">
+        {loop $table_data $table $tid}
+        {if $tid == '3-3'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+    <div class="col-md-3 column sortable" id="3-4">
+        {loop $table_data $table $tid}
+        {if $tid == '3-4'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 column sortable" id="4-1">
+        {loop $table_data $table $tid}
+        {if $tid == '4-1'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+
+    <div class="col-md-4 column sortable" id="4-2">
+        {loop $table_data $table $tid}
+        {if $tid == '4-2'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+
+    <div class="col-md-4 column sortable" id="4-3">
+        {loop $table_data $table $tid}
+        {if $tid == '4-3'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-6 column sortable" id="6-1">
+        {loop $table_data $table $tid}
+        {if $tid == '6-1'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+    <div class="col-md-6 column sortable" id="6-2">
+        {loop $table_data $table $tid}
+        {if $tid == '6-2'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 column sortable" id="12">
+        {loop $table_data $table $tid}
+        {if $tid == '12'}
+        {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
+        {load "$file"}
+        {/if}
+        {/loop}
+    </div>
+</div>
+
+{/if}
+
+{template "footer.html"}

@@ -1,0 +1,155 @@
+{template "header.html"}
+
+<div class="row table-search-tool">
+    <form action="{SELF}" method="get">
+        {dr_form_search_hidden()}
+        <div class="col-md-12 col-sm-12">
+            <label>
+                <select name="groupid" class="form-control">
+                    <option value=""> {dr_lang('全部')} </option>
+                    {loop $group $t}
+                    <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{$t.name}</option>
+                    {/loop}
+                </select>
+            </label>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <label>
+                <select name="field" class="form-control">
+                    {loop $field $t}
+                    {if $t.ismain}
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    {/if}
+                    {/loop}
+                    <option value="id"> Id </option>
+                </select>
+            </label>
+            <label><i class="fa fa-caret-right"></i></label>
+            <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+        </div>
+
+
+        <div class="col-md-12 col-sm-12">
+            <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+            {if $list_table}<label><button type="button" onclick="dr_export('{$list_table}', '{$list_query}')" class="btn blue btn-sm" style="margin-top: 2px;"> <i class="fa fa-mail-forward"></i> {dr_lang('导出')}</button></label>{/if}
+        </div>
+    </form>
+</div>
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('member/del') || $ci->_is_admin_auth('member/edit') || $ci->_is_admin_auth('member_verify/edit')}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th style="text-align:center" width="70" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
+                <th width="200" class="{dr_sorting('username')}" name="username">{dr_lang('账号 / 邮箱')}</th>
+                <th width="130" class="{dr_sorting('name')} dr_username_phone" name="name">{dr_lang('姓名 / 手机')}</th>
+                <th width="140" class="{dr_sorting('money')}" name="money">{dr_lang('实际资金')}</th>
+                <th width="130" class="{dr_sorting('experience')}" name="score">{dr_lang('虚拟资产')}</th>
+                <th width="160" class="{dr_sorting('regtime')}" name="regtime">{dr_lang('注册时间')}</th>
+                <th>{dr_lang('操作')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $ci->_is_admin_auth('member/del') || $ci->_is_admin_auth('member/edit') || $ci->_is_admin_auth('member_verify/edit')}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td style="text-align:center"> <a class="fc_member_show" href="javascript:;" member="{$t.username}"><img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"></a> </td>
+                <td class="member_info_p">
+                    <p>{Function_list::uid($t.id)}</p>
+                    <p>{$t.email}</p>
+                </td>
+                <td class="member_info_p dr_username_phone" name="username">
+                    {if $t.name}<p>{$t.name}</p>{/if}
+                    {if $t.phone}<p>{$t.phone}</p>{/if}
+                </td>
+                <td class="member_info_p">
+                    <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_paylog/index', 'member_paylog/index', ['field'=>'uid','keyword'=>$t.id])}">{dr_lang('余额')}: {$t.money}</a></p>
+                    <p>{dr_lang('消费')}: {$t.spend}</p>
+                </td>
+                <td class="member_info_p">
+                    <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_scorelog/index', 'member_scorelog/index', ['field'=>'uid','keyword'=>$t.id])}">{SITE_SCORE}: {$t.score}</a></p>
+                    <p>{SITE_EXPERIENCE}: {$t.experience}</p>
+                </td>
+                <td class="member_info_p">
+                    <p>{dr_date($t.regtime, 'Y-m-d H:i:s', 'red')}</p>
+                    <p>{Function_list::ip($t.regip, 0, 0, 15)}</p>
+                </td>
+                <td>
+                    <label><a href="javascript:dr_iframe_show('{dr_lang('登录记录')}', '{dr_url($uriprefix.'/login_index', ['id'=>$t.id])}', '80%')" class="btn btn-xs blue"> <i class="fa fa-calendar"></i> {dr_lang('记录')}</a></label>
+                    {if $ci->_is_admin_auth('member/edit')}
+                    <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('资料')}</a></label>
+                    <label><a href="javascript:dr_iframe('{dr_lang('设置用户组')}', '{dr_url($uriprefix.'/group_edit', ['id'=>$t.id])}', '60%')" class="btn btn-xs dark"> <i class="fa fa-users"></i> {dr_lang('权限')}</a></label>
+                    {/if}
+
+                    <label><a href="{dr_url($uriprefix.'/alogin_index', ['id'=>$t.id])}" class="btn btn-xs red" target="_blank"> <i class="fa fa-user"></i> {dr_lang('登录')}</a></label>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+         <div class="row fc-list-footer table-checkable ">
+             <div class="col-md-7 fc-list-select">
+                {if $ci->_is_admin_auth('member/del') || $ci->_is_admin_auth('member/edit') || $ci->_is_admin_auth('member_verify/edit')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                {/if}
+                {if $ci->_is_admin_auth('member/del')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('member/del')}', '{dr_lang('你确定要删除吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                {/if}
+                {if $is_verify && $ci->_is_admin_auth('member_verify/edit')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('member_verify/edit')}', '{dr_lang('你确定要通过审核吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-check-square-o"></i> {dr_lang('通过')}</button></label>
+                {/if}
+                {if $ci->_is_admin_auth('member/edit')}
+                <label>
+                    <select name="groupid" class="form-control">
+                        <option value=""> -- </option>
+                        {loop $group $t}
+                        <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('member/group_all_edit')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('更改')}</button></label>
+                {/if}
+         </div>
+             <div class="col-md-5 fc-list-page">
+                 {$mypages}
+             </div>
+         </div>
+</form>
+<script>
+    $(function () {
+        var up = 0;
+        $('.dr_username_phone').each(function () {
+            var html = $(this).html();
+            if (html.length > 44) {
+                up = 1;
+            }
+        });
+        if (up == 0) {
+            $('.dr_username_phone').remove();
+        }
+    });
+</script>
+
+{template "footer.html"}

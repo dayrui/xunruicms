@@ -1,0 +1,91 @@
+{template "header.html"}
+<style>
+    .preview img {
+        max-width: 100px !important;
+        max-height: 100px !important;
+    }
+</style>
+<form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
+    {$form}
+    <input type="hidden" name="is_ajax" value="1">
+    <input type="hidden" name="is_page" id="dr_page" value="0">
+
+    <div class="portlet  light " style="padding: 0">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="active">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> {dr_lang('未使用的附件')} </a>
+                </li>
+                <li class="dev {if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> {dr_lang('已使用的附件')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane active" id="tab_0">
+
+                    <table role="presentation" class="table table-fc-upload table-striped clearfix">
+                        <tbody class="files">
+                        {loop $list.unused $i $t}
+                        {php $url = dr_get_file_url($t);}
+                        <tr class="template-download files_row {if $i==0}border_none{/if}">
+                            <td width="60" style="text-align:center;">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td width="100" style="text-align:center;">
+                                <span class="files_row_preview preview">{dr_file_preview_html($url)}</span>
+                            </td>
+                            <td>
+                                {$t.filename}<br>
+                                <span class="label label-sm label-success"> {dr_format_file_size($t.filesize)} </span>
+                            </td>
+                            <td width="200" style="text-align:right;">
+                                <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>
+                                <label><a href="{$url}" target="_blank" class="btn blue btn-sm"><i class="fa fa-cloud-download"></i></a></label>
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane " id="tab_1">
+
+                    <table role="presentation" class="table table-fc-upload table-striped clearfix">
+                        <tbody class="files">
+                        {loop $list.used $i $t}
+                        {php $url = dr_get_file_url($t);}
+                        <tr class="template-download files_row {if $i==0}border_none{/if}">
+                            <td width="60" style="text-align:center;">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td width="100" style="text-align:center;">
+                                <span class="files_row_preview preview">{dr_file_preview_html($url)}</span>
+                            </td>
+                            <td>
+                                {$t.filename}<br>
+                                <span class="label label-sm label-success"> {dr_format_file_size($t.filesize)} </span>
+                            </td>
+                            <td width="200" style="text-align:right;">
+                                <label><a href="{$url}" target="_blank" class="btn blue btn-sm"><i class="fa fa-cloud-download"></i></a></label>
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+{template "footer.html"}

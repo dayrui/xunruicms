@@ -1,0 +1,44 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group">
+            <label class="control-label col-xs-3 ajax_name"> {dr_lang('发布时间')}</label>
+            <div class="col-xs-5">
+                <span class="form-date input-group">
+                    <link href="{THEME_PATH}assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+                    <link href="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+                    <link href="{THEME_PATH}assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+                    <script src="{THEME_PATH}assets/global/plugins/moment.min.js" type="text/javascript"></script>
+                    <script src="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
+                    <script src="{THEME_PATH}assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js" type="text/javascript"></script>
+                    <div class="input-group date field_date_inputtime">
+                        <input id="posttime" name="posttime" type="text" style="width:160px;" value=""  required="required" class="form-control ">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <script>
+                    $(function(){
+                        $(".field_date_inputtime").datetimepicker({
+                            isRTL: App.isRTL(),
+                            format: "yyyy-mm-dd hh:ii:ss",
+                            showMeridian: true,
+                            autoclose: true,
+                            pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+                            todayBtn: true
+                        });
+                    });
+                    </script>
+                </span>
+
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{template "footer.html"}

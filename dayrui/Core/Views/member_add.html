@@ -1,0 +1,55 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        <div class="form-group" id="dr_row_username">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('账号')}</label>
+            <div class="col-xs-7">
+                <input type="text" class="form-control" id="dr_username" name="data[username]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_email">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('邮箱')}</label>
+            <div class="col-xs-7">
+                <input type="text" id="dr_email" class="form-control" name="data[email]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_phone">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('手机')}</label>
+            <div class="col-xs-7">
+                <input type="text" id="dr_phone" class="form-control" name="data[phone]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('姓名')}</label>
+            <div class="col-xs-7">
+                <input type="text" id="dr_row" class="form-control" name="data[name]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_passowrd">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('密码')}</label>
+            <div class="col-xs-7">
+                <input type="text" id="dr_passowrd" class="form-control" name="data[password]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('用户组')}</label>
+            <div class="col-xs-7">
+                <label>
+                    <select name="data[groupid]" class="form-control">
+                        <option value=""> -- </option>
+                        {loop $group $t}
+                        <option value="{$t.id}">{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+{template "footer.html"}

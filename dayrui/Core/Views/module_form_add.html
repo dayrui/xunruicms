@@ -1,0 +1,31 @@
+{template "header.html"}
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('表单名称')}</label>
+            <div class="col-xs-8">
+                <input type="text" onblur="d_topinyin('table', 'name')" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+                <span class="help-block"> {dr_lang('表单的描述名称')} </span>
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_table">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('表单别名')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_table" name="data[table]" value="{$data.table}">
+                <span class="help-block"> {dr_lang('表单别名只能由字母或者字母+数字组成')} </span>
+            </div>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

@@ -1,0 +1,16 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="form-body">
+
+        <div class="form-group" id="dr_row_name">
+            <div class="col-xs-12">
+                <input type="text" class="form-control" id="dr_name" name="name" value="{$name}">
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{template "footer.html"}

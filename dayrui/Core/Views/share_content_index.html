@@ -1,0 +1,170 @@
+{template "header.html"}
+<div class="note note-danger  my-content-top-tool">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('操作之前请更新下全站缓存')}</a></p>
+</div>
+
+<div class="portlet light bordered ">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-refresh font-dark"></i>
+            <span class="caption-subject font-dark  "> {dr_lang('内容更新')}</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <label style="margin-right:20px"><button type="button" onclick="dr_submit_todo('thumbform', '{SELF}?s={APP_DIR}&c=content&m=url_index')" class="btn blue"> <i class="fa fa-th-large"></i> {dr_lang('更新内容URL')} </button></label>
+
+    </div>
+</div>
+
+<div class="row finecms-tool-row">
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-photo font-dark"></i>
+                    <span class="caption-subject font-dark  "> {dr_lang('提取缩略图')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form id="thumbform">
+                    {$form}
+                    <div class="form-body">
+                        <div class="form-group">
+                                {$select}
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align:left">
+                                    <div class="form-group" style="margin-bottom:5px">
+                                        <label> {dr_lang('替换范围')} </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="checkbox" name="thumb" value="1" checked data-on-text="{dr_lang('只替换空图')}" data-off-text="{dr_lang('替换全部')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="text-align:right;padding-top:25px">
+                                    <button type="button" onclick="dr_submit_todo('thumbform', '{SELF}?s={APP_DIR}&c=content&m=thumb_index')" class="btn blue"> <i class="fa fa-photo"></i> {dr_lang('立即执行')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-tag font-dark"></i>
+                    <span class="caption-subject font-dark  "> {dr_lang('提取关键词')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form id="tagform">
+                    {$form}
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            {$select}
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align:left">
+                                    <div class="form-group" style="margin-bottom:5px">
+                                        <label> {dr_lang('提取范围')} </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="checkbox" name="keyword" value="1" checked data-on-text="{dr_lang('只提取空词的内容')}" data-off-text="{dr_lang('重新提取全部内容')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="text-align:right;padding-top:25px">
+                                    <button type="button" onclick="dr_submit_todo('tagform', '{SELF}?s={APP_DIR}&c=content&m=tag_index')" class="btn blue"> <i class="fa fa-tag"></i> {dr_lang('立即执行')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-database font-dark"></i>
+            <span class="caption-subject font-dark  "> {dr_lang('内容替换')}</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form id="replaceform">
+            {$form}
+            <input name="is_module" value="1" type="hidden">
+            <div class="form-body">
+
+                <div class="form-group row">
+                    <label class="col-md-2 control-label"> {dr_lang('表名称')} </label>
+                    <div class="col-md-9">
+                        <label><select name="bm" class="form-control" onchange="dr_fd(this.value)">
+                            <option value="0">{dr_lang('选择表')}</option>
+                            {loop $tables $t}
+                            <option value="{$t.Name}">{$t.Name}{if $t.Comment}（{$t.Comment}）{/if}</option>
+                            {/loop}
+                        </select></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">{dr_lang('待替换字段')}</label>
+                    <div class="col-md-9">
+                        <label id="dr_fd"></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">{dr_lang('被替换内容')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" style="height:100px" name="t1"></textarea>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">{dr_lang('替换后的内容')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" style="height:100px" name="t2"></textarea>
+
+                    </div>
+                </div>
+
+
+                <div class="form-actions">
+                    <label class="col-md-2 control-label">&nbsp;</label>
+                    <div class="col-md-9" style="padding-left: 5px;">
+                        <button type="button" onclick="dr_submit_post_todo('replaceform', '{SELF}?s={APP_DIR}&c=content&m=replace_module_index')" class="btn blue"> <i class="fa fa-database"></i> {dr_lang('立即执行')}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function dr_fd(v) {
+        $.ajax({type: "POST",dataType:"json", url: "{dr_url('content/field_index')}&table="+v,
+            success: function(json) {
+                if (json.code == 1) {
+                    $('#dr_fd').html(json.msg);
+                } else {
+                    dr_cmf_tips(0, json.msg);
+                }
+                return false;
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+{template "footer.html"}

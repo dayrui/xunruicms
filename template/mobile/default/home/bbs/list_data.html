@@ -1,0 +1,12 @@
+{module NOTIN_isflag=1,2 catid=$catid order=updatetime page=1}
+<li>
+    <a class="bbs-avatar"><img src="{dr_avatar($t.uid)}" alt="{$t.author}"></a>
+    <h2><a href="{dr_cat_value($t.catid, 'url')}" class="layui-badge">{dr_cat_value($t.catid, 'name')}</a>
+        <a href="{$t.url}" {if $t.color}style="color:{$t.color} !important"{/if}>{dr_strcut($t.title, 30)}</a></h2>
+    <div class="bbs-list-info">
+        <span class="layui-badge layui-bg-red"><i class="fa fa-eye"></i> {$t.hits}</span>
+        <span class="layui-badge layui-bg-red"><i class="fa fa-comments"></i> {$t.comments}</span>
+        最后回复：<span><a rel="nofollow" href="{$t.url}">{dr_fdate($t._updatetime)}</a></span>
+    </div>
+</li>
+{/module}

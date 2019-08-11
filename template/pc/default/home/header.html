@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh-cn" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="zh-cn" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh-cn">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <!-- 主要css开始 -->
+    <link href="{THEME_PATH}assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/common.css" rel="stylesheet" type="text/css" />
+    <!-- 主要css结束 -->
+    <!-- 风格css开始 -->
+    <link href="{HOME_THEME_PATH}web/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}web/css/default.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}web/css/custom.css" rel="stylesheet" type="text/css" />
+    <!-- 风格css结束 -->
+    <!--[if lt IE 9]>
+    <script src="{THEME_PATH}assets/global/plugins/respond.min.js"></script>
+    <script src="{THEME_PATH}assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <!-- 系统关键js(所有自建模板必须引用) -->
+    <script type="text/javascript">var assets_path = '{THEME_PATH}assets/';var is_mobile_cms = '{IS_MOBILE}';</script>
+    <script src="{LANG_PATH}lang.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/layer/layer.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+    <!-- 系统关键js结束 -->
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/scripts/app.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}web/scripts/layout.js" type="text/javascript"></script>
+    {if in_array('store', [MOD_DIR, APP_DIR])}
+    <!-- 加载商城模块css -->
+    <link href="{HOME_THEME_PATH}web/store/style.css" rel="stylesheet" type="text/css" />
+    <script src="{HOME_THEME_PATH}web/store/js/mall.js"></script>
+    <script src="{HOME_THEME_PATH}web/store/js/jquery.counterup.min.js"></script>
+    <script>
+        $(function () {
+            dr_cart_nums();
+        });
+    </script>
+    {/if}
+
+</head>
+<body class="page-container-bg-solid">
+<div class="page-wrapper">
+
+    <div class="page-wrapper-row" style="height: 180px;">
+        <div class="page-wrapper-top">
+            <div class="page-header">
+                <div class="page-header-top-index">
+                    <div class="container">
+                        <div class="page-top-index-left">
+                            <a href="{SITE_URL}">网站首页</a> <span>|</span>
+                            <a href="javascript:dr_pc_or_mobile('{FC_NOW_URL}');">手机网站</a> <span>|</span>
+                            <a href="{MEMBER_URL}">用户中心</a>
+                        </div>
+                        <div class="page-top-index-right">
+                            {if dr_is_module('store')}
+                            <a href="/index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
+                            <a href="/index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
+                            {/if}
+                            <a href="{MEMBER_URL}">用户中心</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-header-top">
+                    <div class="container">
+
+                        <div class="page-logo">
+                            <a href="{SITE_URL}">
+                                <img src="{SITE_LOGO}" alt="{SITE_NAME}" class="logo-default">
+                            </a>
+                        </div>
+                        <div class="page-header-module">
+                            {if defined('MOD_DIR') && !IS_SHARE}
+                            {MODULE_NAME}
+                            {/if}
+                        </div>
+                        <div class="page-header-search">
+                            <form class="search-form" action="/index.php" method="get">
+                                <input type="hidden" name="s" value="api">
+                                <input type="hidden" name="c" value="api">
+                                <input type="hidden" name="m" value="search">
+                                <input type="hidden" name="dir" id="dr_search_module_dir" >
+                                <div class="input-group">
+                                    <div class="input-group-btn btn-group">
+                                        <button id="dr_search_module_name" type="button" class="btn default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <!--这是来列出全部可以搜索的内容模块-->
+                                            {php $top_search=[];}
+                                            {cache name=module-content}
+                                            {if $t.search}
+                                            {php !$top_search && $top_search=$t;}
+                                            <li><a href="javascript:dr_search_module_select('{$t.dirname}', '{$t.name}');"> {$t.name} </a></li>
+                                            {/if}
+                                            {/cache}
+                                        </ul>
+                                    </div>
+                                    <input type="text" placeholder="搜索内容..." name="keyword" class="fc-search-keyword form-control">
+                                    <div class="input-group-btn">
+                                        <button class="btn default" type="submit"> <i class="fa fa-search"></i> </button>
+                                    </div>
+                                </div>
+                                <script>
+                                    // 这段js是用来执行搜索的
+                                    function dr_search_module_select(dir, name) {
+                                        $("#dr_search_module_dir").val(dir);
+                                        $("#dr_search_module_name").html(name+' <i class="fa fa-angle-down"></i>');
+                                    }
+                                    dr_search_module_select('{php echo defined('MOD_DIR') ? MOD_DIR : $top_search.dirname}', '{php echo defined('MOD_DIR') ? MODULE_NAME : $top_search.name}');
+                                </script>
+                            </form>
+                        </div>
+                        <div class="page-header-member" id="dr_member_info">
+
+                        </div>
+                        <!-- 动态调用member.html模板的会员登录信息 -->
+                        {dr_ajax_template('dr_member_info', 'member.html')}
+                    </div>
+                </div>
+                <div class="page-header-menu">
+                    <div class="container">
+                        <div class="hor-menu">
+                            <ul class="nav navbar-nav">
+                                <li id="dr_nav_0" class="menu-dropdown classic-menu-dropdown {if $indexc}active{/if}">
+                                    <a href="{SITE_URL}" title="{SITE_TITLE}">首页</a>
+                                </li>
+
+                                <!--调用共享栏目-->
+                                <!--第一层：调用pid=0表示顶级-->
+                                {category module=share pid=0}
+                                <li class="menu-dropdown classic-menu-dropdown {if IS_SHARE && $catid && in_array($catid, $t.catids)} active{/if}">
+                                    <a href="{$t.url}" title="{$t.name}" {if $t.tid==2} target="_blank"{/if}>{$t.name}</a>
+                                    {if $t.child}
+                                    <ul class="dropdown-menu pull-left">
+                                        <!--第二层：调用第二级共享栏目-->
+                                        {category module=share pid=$t.id return=t2}
+                                        <li class="{if $t2.child} dropdown-submenu{/if} {if IS_SHARE && $catid && in_array($catid, $t2.catids)} active{/if}">
+                                            <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
+                                                {$t2.name}
+                                            </a>
+                                            {if $t2.child}
+                                            <ul class="dropdown-menu pull-left">
+                                                <!--第三层：调用第三级共享栏目数据-->
+                                                {category module=share pid=$t2.id return=t3}
+                                                <li class="{if IS_SHARE && $catid && in_array($catid, $t3.catids)} active{/if}">
+                                                    <a href="{$t3.url}" title="{$t3.name}">
+                                                        {$t3.name}
+                                                    </a>
+                                                </li>
+                                                {/category}
+                                            </ul>
+                                            {/if}
+                                        </li>
+                                        {/category}
+                                    </ul>
+                                    {/if}
+                                </li>
+                                {/category}
+
+
+
+                                <!--调用全部独立模块-->
+								{cache name=module-content return=m}
+                                {if !$m.share}
+                                <li class="menu-dropdown classic-menu-dropdown {if MOD_DIR==$m.dirname}active{/if}">
+                                    <a href="{$m.url}">{$m.name}</a>
+                                    <ul class="dropdown-menu pull-left">
+                                        <!--第一层：调用独立模块下的顶级栏目-->
+                                        {category module=$m.dirname pid=0 return=t2}
+                                        <li class="{if $t2.child} dropdown-submenu{/if} {if MOD_DIR==$m.dirname && $catid && in_array($catid, $t2.catids)} active{/if}">
+                                            <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
+                                                {$t2.name}
+                                            </a>
+                                            {if $t2.child}
+                                            <ul class="dropdown-menu pull-left">
+                                                <!--第二层：调用第二级栏目-->
+                                                {category module=$m.dirname pid=$t2.id return=t3}
+                                                <li class="{if MOD_DIR==$m.dirname && $catid && in_array($catid, $t3.catids)} active{/if}">
+                                                    <a href="{$t3.url}" title="{$t3.name}">
+                                                        {$t3.name}
+                                                    </a>
+                                                </li>
+                                                {/category}
+                                            </ul>
+                                            {/if}
+                                        </li>
+                                        {/category}
+                                    </ul>
+                                </li>
+								{/if}
+								{/cache}
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

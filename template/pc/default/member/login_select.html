@@ -1,0 +1,75 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MEMBER_URL}">用户中心</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>授权登录</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="search-page search-content-2">
+                        <div class="portlet light">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark">直接登录</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body login">
+
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+
+                                        <form class="content" id="myform" method="post" novalidate="novalidate">
+                                            {$form}
+                                            <div class="form-body">
+                                                <div class="form-group text-center">
+                                                    <p><img  class="img-circle fc-member-avatar" src="{$oauth.avatar}"></p>
+                                                    <p>{dr_html2emoji($oauth.nickname)}</p>
+                                                </div>
+                                                <div class="form-group text-center">
+                                                    <div class="mt-radio-inline">
+                                                        {loop $register.group $i}
+                                                        <label class="mt-radio">
+                                                            <input type="radio" name="groupid" value="{$i}" {if $groupid==$i}checked=""{/if}> {$group[$i][name]}
+                                                            <span></span>
+                                                        </label>
+                                                        {/loop}
+                                                    </div>
+                                                </div>
+
+                                                <div class="text-center">
+                                                    <button type="button" onclick="dr_ajax_member('{dr_now_url()}', 'myform');" class="btn green "> 确认登录 </button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

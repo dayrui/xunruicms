@@ -1,0 +1,53 @@
+{template "mheader.html"}
+
+<div class="portlet light ">
+
+    <div class="portlet-body">
+
+        <ul class="feeds fc-checkable">
+            {loop $list $t}
+            <li>
+                <div class="col1">
+                    <div class="cont">
+                        <div class="cont-col1">
+                            {dr_notice_icon($t.type)}
+                        </div>
+                        <div class="cont-col2">
+                            <div class="desc">
+
+                                {if $t.url}
+                                <a href="{$t.url}" target="_blank">
+                                    {$t.content}
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                {else}
+                                {$t.content}
+                                {/if}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col2">
+                    <div class="date"> {dr_fdate($t.inputtime)} </div>
+                </div>
+            </li>
+            {/loop}
+        </ul>
+
+        {if $mypages}
+        <div class="fc-pages text-center">{$mypages}</div>
+        {/if}
+    </div>
+</div>
+<script>
+    var menus = [];
+    var menu_url = [];
+    {php $i=0;}
+    {loop $type $t}
+    menus[{$i}] = "{$t.name}";
+    menu_url[{$i}] = "{$t.url}";
+    {php $i++;}
+    {/loop}
+</script>
+{template "mfooter.html"}

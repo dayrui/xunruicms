@@ -1,0 +1,75 @@
+{template "mheader.html"}
+{if $ci->member_cache['config']['mobile']}
+{if $member.is_mobile}
+<div class="alert alert-success">
+    手机认证成功
+</div>
+{else}
+<div class="alert alert-danger">
+    系统强制用户进行手机认证
+</div>
+{/if}
+{/if}
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject"> 手机认证</span>
+                </div>
+            </div>
+            <div class="portlet-body form fc-form">
+                <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                    {$form}
+                    {if $member.phone}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"> 手机号码 </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static"> {$member.phone} </p>
+                        </div>
+                    </div>
+                    {/if}
+                    {if $is_update}
+                    <div class="form-group" id="dr_row_phone">
+                        <label class="col-md-2 control-label"> {if $member.phone}变更手机{else}设置手机{/if} </label>
+                        <div class="col-md-9">
+                            <label><input type="text" id="dr_phone" class="form-control"  name="data[phone]"></label>
+                            <span class="help-block">留空表示不修改手机号码</span>
+                        </div>
+                    </div>
+                    {else}
+                    <input type="hidden" id="dr_phone" value="{$member.phone}">
+                    {/if}
+                    {if $is_update || $is_mobile}
+                    <div class="form-group" id="dr_row_code">
+                        <label class="col-md-2 control-label">短信验证码</label>
+                        <div class="col-md-5">
+                            <div class="input-group" style="width: 200px">
+                                <input type="text" id="dr_code" name="data[code]" class="form-control" placeholder="验证码">
+                                <span class="input-group-btn">
+                                        <button class="btn green" type="button" onclick="dr_ajax_url('{$api_url}&value='+$('#dr_phone').val())">发送验证码</button>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions fc-form-actions">
+                        <label class="col-md-2 control-label">  </label>
+                        <div class="col-md-9 fc-form-submit">
+                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> 提交保存 </button>
+                        </div>
+
+                    </div>
+                    {/if}
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{template "mfooter.html"}

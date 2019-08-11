@@ -1,0 +1,31 @@
+{template "header.html"}
+
+<div class="table-scrollable table-scrollable-borderless" style="margin-top: -20px !important;">
+    <table class="table table-hover table-light">
+        <thead>
+        <tr class="heading">
+            <th width="220"> {dr_lang('时间 / 地点')} </th>
+            <th> {dr_lang('客户端详情')} </th>
+        </tr>
+        </thead>
+        <tbody>
+        {loop $list $i $t}
+        <tr class="odd gradeX">
+            <td>
+                <p style="margin: 8px 0">{dr_date($t.logintime)}</p>
+                <p style="margin: 8px 0"><a href="http://www.ip138.com/ips138.asp?ip={$t[loginip]}&action=2" target="_blank">{Ip::address($t[loginip])}</a></p>
+            </td>
+            <td> {str_replace(') ', ') <br>', $t.useragent)} </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+</div>
+<div class="row fc-list-footer table-checkable ">
+    <div class="col-md-7 fc-list-page">
+        {$mypages}
+    </div>
+</div>
+
+
+{template "footer.html"}

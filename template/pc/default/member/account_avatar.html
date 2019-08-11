@@ -1,0 +1,103 @@
+{template "mheader.html"}
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+
+<script src="{THEME_PATH}assets/js/avatar/iscroll-zoom.js"></script>
+<script src="{THEME_PATH}assets/js/avatar/hammer.js"></script>
+<script src="{THEME_PATH}assets/js/avatar/lrz.all.bundle.js"></script>
+<script src="{THEME_PATH}assets/js/avatar/jquery.photoClip.js"></script>
+<style>
+
+    #clipArea {
+        margin: 20px;
+        height: 300px;
+    }
+    #file,
+    #clipBtn {
+        margin: 5px;
+    }
+    #view {
+        margin: 0 auto;
+        width: 200px;
+        height: 200px;
+    }
+</style>
+{if $ci->member_cache['config']['avatar']}
+{if $member.is_avatar}
+<div class="alert alert-success">
+    头像认证成功
+</div>
+{else}
+<div class="alert alert-danger">
+    系统强制用户上传头像
+</div>
+{/if}
+{/if}
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet light ">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject"> 头像设置</span>
+                    </div>
+                </div>
+                <div class="portlet-body form fc-form">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div id="clipArea"></div>
+
+                            <div class="form-body">
+
+                                <div class="form-group">
+                                    <div class="col-md-12 text-center">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <span class="btn green btn-file">
+                                                <span class="fileinput-new"> 选择图片 </span>
+                                                <input type="file" id="file">
+                                            </span>
+                                        </div>
+                                        <button type="button" class="btn btn-info" id="clipBtn"> 保存头像</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6" {if IS_PC} style="padding-top:55px;"{/if}>
+                            <div id="view"><img width="200" height="200" src="{dr_avatar($member.uid)}?cache={SYS_TIME}"></div>
+                        </div>
+                    </div>
+
+                    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                        {$form}
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+<script>
+    var clipArea = new bjj.PhotoClip("#clipArea", {
+        size: [200, 200],
+        outputSize: [200, 200],
+        file: "#file",
+        view: "#view",
+        ok: "#clipBtn",
+        loadStart: function() {
+            //console.log("照片读取中");
+        },
+        loadComplete: function() {
+            //console.log("照片读取完成");
+        },
+        clipFinish: function(dataURL) {
+            $('#dr_file').val(dataURL);
+            dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_member_url('account/avatar', ['r'=>rand(0, 9999)])}');
+        }
+    });
+</script>
+
+{template "mfooter.html"}

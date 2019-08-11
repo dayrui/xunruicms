@@ -1,0 +1,69 @@
+{template "header.html"}
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="row myfbody {if $is_verify} fc-verify-post{/if}">
+        <div class="col-md-9">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('基本内容')}</span>
+                    </div>
+
+                    <div class="actions">
+                        <div class="btn-group">
+                            <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('关联')}</label>
+                            <div class="col-md-9">
+                                <code class="form-control-static">{$index.title}</code>
+                            </div>
+                        </div>
+                        {str_replace('col-md-9', 'col-md-10', $myfield)}
+                    </div>
+                </div>
+            </div>
+
+            {if $diyfield}
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('其他内容')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        {str_replace('col-md-9', 'col-md-10', $diyfield)}
+                    </div>
+                </div>
+            </div>
+            {/if}
+
+        </div>
+        <div class="col-md-3 my-sysfield">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <div class="form-body">
+                        {$sysfield}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <a href="{$reply_url}" class="btn green"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

@@ -1,0 +1,74 @@
+
+<link href="{THEME_PATH}assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/jstree/dist/jstree.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var UITree = function () {
+
+        var handleSample1 = function () {
+
+            $('#tree_1').jstree({
+                "core" : {
+                    "themes" : {
+                        "responsive": false
+                    }
+                },
+                "types" : {
+                    "default" : {
+                        "icon" : "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file" : {
+                        "icon" : "fa fa-file icon-state-warning icon-lg"
+                    }
+                },
+                "plugins": ["types"]
+            });
+
+            // handle link clicks in tree nodes(support target="_blank" as well)
+            $('#tree_1').on('select_node.jstree', function(e,data) {
+                var link = $('#' + data.selected).find('a');
+                if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
+                    if (link.attr("target") == "_blank") {
+                        link.attr("href").target = "_blank";
+                    }
+                    document.location.href = link.attr("href");
+                    return false;
+                }
+            });
+        }
+
+
+        return {
+            //main function to initiate the module
+            init: function () {
+
+                handleSample1();
+
+            }
+
+        };
+
+    }();
+
+    if (App.isAngularJsApp() === false) {
+        jQuery(document).ready(function() {
+            UITree.init();
+        });
+    }
+</script>
+<div class="portlet portlet-sortable light bordered">
+    <div class="portlet-title tabbable-line">
+        <div class="caption">
+            <i class="fa fa-list"></i>
+            <span class="caption-subject"> {dr_lang('共享栏目')} </span>
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div id="tree_1" class="tree-demo">
+            {php
+            $data = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category');
+            echo \Phpcmf\Service::M('category')->get_tree_category($data);}
+        </div>
+
+    </div>
+</div>

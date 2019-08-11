@@ -1,0 +1,262 @@
+{template "header.html"}
+<script>
+    function dr_page_content(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url(APP_DIR.'/category/content_edit')}&id='+id, '90%', '90%');
+    }
+    function dr_link_url(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url(APP_DIR.'/category/link_edit')}&id='+id, '50%', '40%');
+    }
+    // ajax关闭或启用
+    function dr_cat_ajax_open_close(e, url, fan) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                if (json.code == 1) {
+                    if (json.data.share == 1) {
+                        if (json.data.value == fan) {
+                            $(e).attr('class', 'badge badge-no');
+                            $(e).html('<i class="fa fa-times"></i>');
+                        } else {
+                            $(e).attr('class', 'badge badge-yes');
+                            $(e).html('<i class="fa fa-check"></i>');
+                        }
+                    } else {
+                        // 独立模块 dr_is_page_html
+                        var obj = $('.dr_is_page_html');
+                        if (json.data.value == fan) {
+                            obj.attr('class', 'dr_is_page_html badge badge-no');
+                            obj.html('<i class="fa fa-times"></i>');
+                        } else {
+                            obj.attr('class', 'dr_is_page_html badge badge-yes');
+                            obj.html('<i class="fa fa-check"></i>');
+                        }
+                    }
+                    dr_tips(1, json.msg);
+                } else {
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    function dr_cat_ajax_save(value, id) {
+        var url = "{dr_url($uriprefix.'/displayorder_edit')}&id="+id;
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url+'&value='+value,
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                if (json.code == 1) {
+                    dr_tips(1, json.msg);
+                } else {
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    // ajax关闭或启用
+    function dr_cat_ajax_show_open_close(e, url, fan) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        var obj = $(e);
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                if (json.code == 1) {
+                    if (json.data.value == fan) {
+                        obj.attr('class', 'badge badge-no');
+                        obj.html('<i class="fa fa-times"></i>');
+                    } else {
+                        obj.attr('class', 'badge badge-yes');
+                        obj.html('<i class="fa fa-check"></i>');
+                    }
+                    dr_tips(1, json.msg);
+                } else {
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    $(function() {
+        $(".select-cat").click(function(){
+            var action = $(this).attr("action");
+            var childs = $(this).attr("childs");
+            var catid = $(this).attr("catid");
+            var catids= new Array(); //定义一数组
+            catids = childs.split(","); //字符分割
+            if (action == 'close') {
+                $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid, null,{path:"/",expires: -1});
+                $(this).attr("action", "open");
+                $(this).html("[-]");
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).show();
+                    }
+                }
+            } else {
+                // 关闭状态存储cookie
+                $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid, 1);
+                $(this).attr("action", "close");
+                $(this).html("[+]");
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).hide();
+                    }
+                }
+            }
+        });
+        $(".select-cat").each(function(){
+            var childs = $(this).attr("childs");
+            var catid = $(this).attr("catid");
+            var cache = $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid);
+            if (cache) {
+                $(this).attr("action", "close");
+                $(this).html("[+]");
+                var catids= new Array(); //定义一数组
+                catids = childs.split(","); //字符分割
+                for (i=0;i<catids.length ;i++ ) {
+                    if (catids[i] != catid) {
+                        $(".dr_catid_"+catids[i]).hide();
+                    }
+                }
+            }
+        });
+    });
+    function dr_scjt() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{dr_url($uriprefix.'/scjt_edit')}",
+            data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    dr_bfb('{dr_lang('生成栏目')}', '', json.msg);
+                } else {
+                    dr_cmf_tips(json.code, json.msg);
+                }
+
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_scjt2() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{dr_url($uriprefix.'/scjt2_edit')}",
+            data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    dr_bfb('{dr_lang('生成内容')}', '', json.msg);
+                } else {
+                    dr_cmf_tips(json.code, json.msg);
+                }
+
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+<div class="row my-content-top-tool">
+    <div class="col-md-12 col-sm-12">
+        <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
+        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')}</a></label>
+        <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
+        <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
+    </div>
+</div>
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('module', 'module');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th class="myselect">
+                    <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                <th width="70" style="text-align:center"> {dr_lang('排序')} </th>
+                <th width="50" style="text-align:center"> {dr_lang('显示')} </th>
+                <th width="50" style="text-align:center"> Id </th>
+                <th> {dr_lang('栏目')} </th>
+                {if $is_scategory}
+                <th width="60" style="text-align:center"> {dr_lang('类型')} </th>
+                {/if}
+                {if $module.share}
+                <th width="70" style="text-align:center"> {dr_lang('模块')} </th>
+                {/if}
+                <th width="90" style="text-align:center"> {dr_lang('数据')} </th>
+                <th width="50" style="text-align:center"> {dr_lang('静态')} </th>
+                <th>{dr_lang('操作')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {$list}
+            </tbody>
+        </table>
+    </div>
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-12 fc-list-select">
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+            {if $ci->_is_admin_auth('del')}
+            <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+            {/if}
+            {if IS_SHARE && $ci->_is_admin_auth('edit')}
+            <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/htmlall_edit')}', '{dr_lang('你确定要批量设置为静态模式吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-file-o"></i> {dr_lang('静态')}</button></label>
+            <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/phpall_edit')}', '{dr_lang('你确定要批量设置为动态模式吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-file"></i> {dr_lang('动态')}</button></label>
+            {/if}
+            {if $ci->_is_admin_auth('edit')}
+            <label>{$move_select}</label>
+            <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/move_edit')}', '{dr_lang('你确定要移动它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('移动')}</button></label>
+            {/if}
+            <label><button type="button" onclick="dr_scjt()" class="btn green btn-sm"> <i class="fa fa-reorder"></i> {dr_lang('生成栏目静态')} </button></label>
+            <label><button type="button" onclick="dr_scjt2()" class="btn blue btn-sm"> <i class="fa fa-th-large"></i> {dr_lang('生成内容静态')} </button></label>
+        </div>
+    </div>
+</form>
+
+
+{template "footer.html"}

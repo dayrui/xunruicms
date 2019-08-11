@@ -1,0 +1,93 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('推荐位是对内容进行推荐分类，方便前端数据调用，例如：首页头条、幻灯推荐、频道推荐等')}</p>
+</div>
+<form class="form-horizontal myfbody" role="form" id="myform">
+    {$form}
+    <div class="table-scrollable ">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="40"> Id </th>
+                <th width="250"> {dr_lang('名称')} </th>
+                <th width="180"> {dr_lang('图标')} </th>
+                <th> {dr_lang('操作')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {php for ($i = 1; $i <= 20; $i ++) {}
+            <tr class="odd gradeX">
+                <td>{$i}</td>
+                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{$flag[$i]['name']}" placeholder="{dr_lang('推荐位名称')}"></td>
+                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{$flag[$i]['icon']}" placeholder="{dr_lang('fa fa-user')}" />
+                </td>
+                <td>
+                    {cache name=member.group return=group}
+                    {if $group.id > 2}
+                    {loop $group.level $level}
+                    {php $iid=$group['id'].'_'.$level['id'];}
+                    <input name="flag[{$i}][value][{$iid}]" class="dr_flag_{$i}" iid="{$iid}" id="dr_flag_{$i}_{$iid}" type="hidden" value="{intval($flag[$i]['value'][$iid])}" />
+                    {/loop}
+                    {/if}
+                    {/cache}
+                    <label class="hide"><a href="javascript:;" onclick="dr_set_flag('{$i}')" class="btn btn-xs green"> <i class="fa fa-cog"></i> {dr_lang('收费设置')} </a></label>
+                    <label id="dr_status_{$i}"></label>
+                </td>
+            </tr>
+            {php }}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+    function dr_set_flag(id) {
+        var url = '{dr_url("module/flag_save_edit")}&id='+id;
+        layer.open({
+            type: 2,
+            title: '{dr_lang('收费设置')}',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['500px', '50%'],
+            btn: [lang['ok']],
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                // 延迟加载
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 10000
+                });
+                $(".dr_flag_"+id).each(function(){
+                    var iid = $(this).attr('iid');
+                    $("#dr_flag_"+id+"_"+iid).val($(body).find('#top_dr_flag_'+iid).val());
+                });
+                $("#dr_status_"+id).html(" <i class='fa fa-check-square'></i>");
+                return false;
+            },
+            success: function(layero, index){
+                // 主要用于后台权限验证
+                var body = layer.getChildFrame('body', index);
+                var json = $(body).html();
+                if (json.indexOf('"code":0') > 0 && json.length < 150){
+                    var obj = JSON.parse(json);
+                    layer.close(index);
+                    dr_tips(0, obj.msg);
+                }
+                $(".dr_flag_"+id).each(function(){
+                    var iid = $(this).attr('iid');
+                    $(body).find('#top_dr_flag_'+iid).val(Math.abs($("#dr_flag_"+id+"_"+iid).val()));
+                });
+            },
+            content: url+'&is_ajax=1'
+        });
+    }
+</script>
+
+{template "footer.html"}

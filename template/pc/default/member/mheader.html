@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh-cn" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="zh-cn" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh-cn">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="{THEME_PATH}assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/themes/blue.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />
+    <!--[if lt IE 9]>
+    <script src="{THEME_PATH}assets/global/plugins/respond.min.js"></script>
+    <script src="{THEME_PATH}assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <!-- 系统关键js(所有自建模板必须引用) -->
+    <script type="text/javascript">var assets_path = '{THEME_PATH}assets/';var is_mobile_cms = '{IS_MOBILE}';</script>
+    <script src="{LANG_PATH}/lang.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/layer/layer.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+    <!-- 系统关键js结束 -->
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/scripts/app.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}member/scripts/layout.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}member/scripts/demo.min.js" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+</head>
+<body class="page-sidebar-closed-hide-logo page-container-bg-solid page-header-fixed page-sidebar-fixed ">
+<div class="page-header navbar navbar-fixed-top">
+    <div class="page-header-inner ">
+        <div class="page-logo">
+            <a href="{SITE_URL}" target="_blank">
+                <img src="{THEME_PATH}assets/logo.png" class="logo-default" />
+            </a>
+            <div class="menu-toggler sidebar-toggler">
+            </div>
+        </div>
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+        <div class="page-top">
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="fa fa-bell"></i>
+                            <span class="badge badge-default dr_notice_num"> 0 </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="external dr_notice_html">
+                                <h3>
+                                    <span class="bold dr_notice_num"> 0 </span> 条未读提醒</h3>
+                                <a href="{dr_member_url('notice/index')}">查看</a>
+                            </li>
+                            <li>
+                                <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                    {table table=member_notice isnew=1 uid=$member.uid order=inputtime cahce=0}
+                                    <li>
+                                        <a {if $t.url} href="{$t.url}" target="_blank" {else}href="javascript:;"{/if}>
+                                            <span class="time">{dr_fdate($t.inputtime)}</span>
+                                            <span class="details">
+                                                {dr_notice_icon($t.type, 'label-icon')}
+                                                {dr_strcut($t.content, 20)}
+                                            </span>
+                                        </a>
+                                    </li>
+                                    {/table}
+                                    <script>
+                                        $('.dr_notice_num').html("{$count}");
+                                    </script>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <img class="img-circle" src="{dr_avatar($member.uid)}" />
+                            <span class="username username-hide-on-mobile"> {$member.username} </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="{dr_member_url('account/index')}">
+                                    <i class="fa fa-user"></i> 我的资料 </a>
+                            </li>
+                            <li>
+                                <a href="{dr_member_url('account/avatar')}">
+                                    <i class="fa fa-smile-o"></i> 我的头像 </a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
+                                <a href="javascript:;" onclick="dr_loginout()">
+                                    <i class="fa fa-sign-out"></i> 我要退出 </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"> </div>
+<div class="page-container">
+    <div class="page-sidebar-wrapper">
+        <div class="page-sidebar navbar-collapse collapse">
+
+            <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-compact" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                <li class="nav-item start {if !$mymenu} active open{/if}">
+                    <a href="{MEMBER_URL}" class="nav-link nav-toggle">
+                        <i class="fa fa-home"></i>
+                        <span class="title">用户中心</span>
+                    </a>
+                </li>
+                {loop $menu $top}
+                {if dr_member_menu_show($top)}
+                <li class="nav-item {if in_array($top.id, $mymenu)}active open{/if}">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="{dr_icon($top.icon)}"></i>
+                        <span class="title">{$top.name}</span>
+                        {if in_array($top.id, (array)$mymenu)}<span class="arrow"></span>{/if}
+                    </a>
+                    <ul class="sub-menu">
+                        {loop $top.link $t}
+                        {if dr_member_menu_show($t)}
+                        <li class="nav-item {if in_array($t.id, $mymenu)}active open{/if}">
+                            <a href="{if $t.url}{$t.url}{else}{dr_member_url($t.uri)}{/if}" class="nav-link ">
+                                <i class="{dr_icon($t.icon)}"></i>
+                                <span class="title">{$t.name}</span>
+                            </a>
+                        </li>
+                        {/if}
+                        {/loop}
+                    </ul>
+                </li>
+                {/if}
+                {/loop}
+            </ul>
+
+
+        </div>
+    </div>
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            {$page_bar}

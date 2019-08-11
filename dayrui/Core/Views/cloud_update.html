@@ -1,0 +1,205 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>升级程序之前，请务必备份全站数据</p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="40">  </th>
+                <th width="80"> 类型</th>
+                <th width="250"> 程序名称</th>
+                <th width="110"> 更新时间 </th>
+                <th width="100"> 版本 </th>
+                <th> </th>
+            </tr>
+            </thead>
+            <tbody>
+            {php $i=1;}
+            {loop $list $dir $t}
+            <tr class="odd gradeX">
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" checked value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                <td>{$t.tname}</td>
+                <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
+                <td> {$t.updatetime} </td>
+                <td> <a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a> </td>
+                <td class="dr_check_version" id="dr_row_{$dir}"></td>
+            </tr>
+            {php $i++;}
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-12">
+            {if dr_is_app('beifen')}
+            <label><button type="button" onclick="dr_beifen_cms('{dr_url('beifen/home/add')}', '{dr_lang('你确定要备份全站文件吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('备份全站')}</button></label>
+            {/if}
+            <label><button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update')}', '{dr_lang('升级前请务必做好数据备份，你确定要升级所选程序吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级程序')}</button></label>
+            <label><a href="javascript:dr_help('610');" class="btn blue btn-sm"> <i class="fa fa-book"></i> {dr_lang('离线升级程序')}</a></label>
+
+
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    $(function() {
+        {loop $list $dir $t}
+        {if $t.id}
+        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
+            success: function(json) {
+                if (json.code) {
+                    $("#dr_row_{$dir}").html(json.msg);
+                } else {
+                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
+            }
+        });
+        {/if}
+        {/loop}
+    });
+
+    // ajax 批量操作确认
+    function dr_update_cms(url, msg, remove) {
+        layer.confirm(
+                msg,
+                {
+                    icon: 3,
+                    shade: 0,
+                    title: lang['ts'],
+                    btn: [lang['ok'], lang['esc']]
+                }, function(index){
+                    layer.close(index);
+
+                    var login_url = '{dr_url("cloud/login")}';
+                    layer.open({
+                        type: 2,
+                        title: '登录官方云账号',
+                        fix:true,
+                        scrollbar: false,
+                        shadeClose: true,
+                        shade: 0,
+                        area: ['500px', '50%'],
+                        btn: [lang['ok'], lang['esc']],
+                        yes: function(index, layero){
+                            var body = layer.getChildFrame('body', index);
+                            $(body).find('.form-group').removeClass('has-error');
+                            // 延迟加载
+                            var loading = layer.load(2, {
+                                shade: [0.3,'#fff'], //0.1透明度的白色背景
+                                time: 100000000
+                            });
+                            $.ajax({type: "POST",dataType:"json", url: login_url, data: $(body).find('#myform').serialize(),
+                                success: function(json) {
+                                    layer.close(loading);
+                                    if (json.code == 1) {
+                                        layer.close(index);
+                                        // 验证成功
+                                        layer.open({
+                                            type: 2,
+                                            title: '升级程序',
+                                            scrollbar: false,
+                                            resize: true,
+                                            maxmin: true, //开启最大化最小化按钮
+                                            shade: 0,
+                                            area: ['80%', '80%'],
+                                            success: function(layero, index){
+                                                // 主要用于后台权限验证
+                                                var body = layer.getChildFrame('body', index);
+                                                var json = $(body).html();
+                                                if (json.indexOf('"code":0') > 0 && json.length < 150){
+                                                    var obj = JSON.parse(json);
+                                                    layer.closeAll(index);
+                                                    dr_tips(0, obj.msg);
+                                                }
+                                            },
+                                            content: url+'&'+$('#myform').serialize()
+                                        });
+                                    } else {
+                                        $(body).find('#dr_row_'+json.data.field).addClass('has-error');
+                                        dr_tips(0, json.msg);
+                                    }
+                                    return false;
+                                },
+                                error: function(HttpRequest, ajaxOptions, thrownError) {
+                                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                                }
+                            });
+                            return false;
+                        },
+                        content: login_url+'&is_ajax=1'
+                    });
+
+
+
+                });
+    }
+
+    function dr_beifen_cms(url, msg, remove) {
+        layer.confirm(
+                msg,
+                {
+                    icon: 3,
+                    shade: 0,
+                    title: lang['ts'],
+                    btn: [lang['ok'], lang['esc']]
+                }, function(index){
+                    layer.close(index);
+                    layer.open({
+                        type: 2,
+                        title: '备份程序',
+                        scrollbar: false,
+                        resize: true,
+                        maxmin: true, //开启最大化最小化按钮
+                        shade: 0,
+                        area: ['80%', '80%'],
+                        success: function(layero, index){
+                            // 主要用于后台权限验证
+                            var body = layer.getChildFrame('body', index);
+                            var json = $(body).html();
+                            if (json.indexOf('"code":0') > 0 && json.length < 150){
+                                var obj = JSON.parse(json);
+                                layer.closeAll(index);
+                                dr_tips(0, obj.msg);
+                            }
+                        },
+                        content: url
+                    });
+                });
+    }
+    
+    function dr_show_log(id, v) {
+        layer.open({
+            type: 2,
+            title: '版本日志',
+            scrollbar: false,
+            resize: true,
+            maxmin: true, //开启最大化最小化按钮
+            shade: 0,
+            area: ['80%', '80%'],
+            content: '{dr_url("cloud/log_show")}&id='+id+'&version='+v,
+            //content: 'http://www.phpcmf.net/version.php?id='+id+'&version='+v,
+        });
+    }
+
+</script>
+
+
+{template "footer.html"}

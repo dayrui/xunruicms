@@ -1,0 +1,48 @@
+{template "mheader.html"}
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet light ">
+                <div class="portlet-body">
+
+
+                    <div class="table-scrollable table-scrollable-borderless">
+                        <table class="table table-hover table-light">
+                            <thead>
+                            <tr class="uppercase">
+                                <th width="60" style="text-align:center"> 渠道  </th>
+                                <th width="150"> 昵称 </th>
+                                <th> 操作 </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop $oauth $name}
+                            <tr>
+                                <td style="text-align:center"> <img src="{ROOT_THEME_PATH}assets/oauth/{$name}.png"> </td>
+                                <td> {dr_html2emoji($list[$name][nickname])} </td>
+                                <td>
+                                    {if $list[$name]}
+                                    <a href="{Router::oauth_url($name, 'bang')}" class="btn btn-xs blue"> <i class="fa fa-user-plus"></i> 更新</a>
+                                    <a href="javascript:dr_ajax_url('{dr_member_url('account/oauth_delete', ['name' => $name])}');" class="btn btn-xs red"> <i class="fa fa-user-times"></i> 解绑</a>
+                                    {else}
+                                    <a href="{Router::oauth_url($name, 'bang')}" class="btn btn-xs green"> <i class="fa fa-user-plus"></i> 绑定</a>
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+{template "mfooter.html"}

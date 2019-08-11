@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh-cn" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="zh-cn" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh-cn">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+	<title>{dr_clearhtml($msg)}</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+	<link href="{ROOT_THEME_PATH}assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/global/css/common.css" rel="stylesheet" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/layouts/layout/css/layout.css" rel="stylesheet" type="text/css" />
+	<link href="{ROOT_THEME_PATH}assets/layouts/layout/css/themes/default.min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">var admin_file = '{SELF}'; var assets_path = '{THEME_PATH}assets/';</script>
+	<script src="{LANG_PATH}lang.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/global/scripts/app.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/layouts/layout/scripts/layout.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/layer/layer.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+	<script src="{ROOT_THEME_PATH}assets/js/admin.js" type="text/javascript"></script>
+</head>
+
+<body style="background: #ffffff">
+
+<div class="page-404-full-page" style="padding-top:10px">
+<div class="row">
+	<div class="col-xs-12 page-404">
+		{if $mark==1}
+		<div class="admin_msg number font-green-turquoise"> <i class="fa fa-check-circle-o"></i> </div>
+		{else if $mark==2}
+		<div class="admin_msg number font-blue" > <i class="fa fa-info-circle"></i> </div>
+		{else}
+		<div class="admin_msg number font-red"> <i class="fa fa-times-circle-o"></i> </div>
+		{/if}
+		<div class="details">
+			<h4>{$msg}</h4>
+			<p class="alert_btnleft">
+				{if $url}
+				<a href="{$url}">{dr_lang('如果您的浏览器没有自动跳转，请点击这里')}</a>
+				<meta http-equiv="refresh" content="{$time}; url={$url}">
+				{else}
+				<a href="{$backurl}" >[{dr_lang('点击返回上一页')}]</a>
+				{/if}
+			</p>
+
+		</div>
+	</div>
+</div>
+</div>
+<script>
+$(function(){
+	$('.page-bar').hide();
+	parent.$('.page-bar').hide();
+	parent.$('.module-content-left').hide();
+	parent.$('.module-content-right').addClass('page-content4');
+	parent.$('.module-content-right').removeClass('page-content2');
+});
+</script>
+
+</body>
+</html>

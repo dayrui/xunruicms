@@ -1,0 +1,81 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('联动菜单可以作为地区、行业、类型等，也可以按站点来设置联动菜单值')}</p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th width="150"> {dr_lang('名称')} </th>
+                <th width="120"> {dr_lang('别名')} </th>
+                <th width="120" style="text-align:center"> {dr_lang('类型')} </th>
+                <th> {dr_lang('操作')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $ci->_is_admin_auth('del')}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td>{$t.name}</td>
+                <td>{$t.code}</td>
+                <td style="text-align:center">
+                    {if $t.type}
+                    <span class="label label-success"> {dr_lang('站点独立')} </span>
+                    {else}
+                    <span class="label label-danger"> {dr_lang('全局共享')} </span>
+                    {/if}
+                </td>
+                <td style="overflow:visible">
+                    {if $ci->_is_admin_auth('edit')}<label><a href="javascript:dr_iframe('edit', '{dr_url('linkage/edit', ['id'=>$t.id])}', '500px','410px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>{/if}
+                    <label><a href="{dr_url('linkage/list_index', ['key'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-table"></i> {dr_lang('数据管理')} </a></label>
+                    {if $ci->_is_admin_auth()}
+                    <label><a href="{dr_url('field/index', ['rname'=>'linkage', 'rid'=>$t.id])}" class="btn btn-xs blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')} </a></label>
+                    {loop $dt_data $i $n}
+                    <label>
+                        <a class="btn btn-xs red" href="javascript:dr_load_ajax('{dr_lang('操作将会现有的数据覆盖掉，您确定吗？')}', '{dr_url('linkage/import', ['code'=> $i, 'id'=>$t.id])}');" > <i class="fa fa-sign-in"></i> {dr_lang($n)}</a>
+                    </label>
+                    {/loop}
+                    {/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+     <div class="row fc-list-footer table-checkable ">
+         <div class="col-md-5 fc-list-select">
+            {if $ci->_is_admin_auth('del')}
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+            <button type="button" onclick="dr_ajax_option('{dr_url('linkage/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+            {/if}
+        </div>
+         <div class="col-md-7 fc-list-page">
+             {$mypages}
+         </div>
+     </div>
+
+</form>
+
+
+{template "footer.html"}

@@ -1,0 +1,68 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-content">
+
+            <div class="container">
+
+
+
+                <div class="page-content-inner">
+                    <div class="search-page search-content-2">
+                        <div class="portlet light">
+
+                            <div class="portlet-body form">
+
+                                <form action="" class="form-horizontal" method="post" name="myform" id="myform" style="padding-top: 20px">
+                                    {dr_form_hidden()}
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label"> 账号 </label>
+                                        <div class="col-md-9">
+                                        <div class="form-control-static">
+                                            {$member.username}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="dr_row_value">
+                                        <label class="col-md-2 control-label"> 新{if $verify_type =='email'}邮箱地址{else}手机号码{/if} </label>
+                                        <div class="col-md-9">
+                                            <label><input type="text" class="form-control input-large" id="dr_value" name="value"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="dr_row_code">
+                                        <label class="col-md-2 control-label"> 验证码 </label>
+                                        <div class="col-md-4">
+                                            <div class="input-group login-code">
+                                                <div class="input-icon">
+                                                    <i class="fa fa-code"></i>
+                                                    <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="code">
+                                                </div>
+                                                <div class="input-group-btn fc-code">
+                                                    {dr_code(120, 35)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions fc-form-actions">
+                                        <label class="col-md-2 control-label">  </label>
+                                        <div class="col-md-9 fc-form-submit">
+                                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_member_url('member/api/verify')}')" class="btn green"> 提交并发送验证码 </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

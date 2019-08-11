@@ -1,0 +1,142 @@
+{template "header.html"}
+<script>
+    {$auto_form_data_ajax}
+</script>
+
+<link rel="stylesheet" type="text/css" href="{THEME_PATH}assets/comment/css/embed.css" />
+<script type="text/javascript" src="{THEME_PATH}assets/comment/embed.js"></script>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="row myfbody  {if $is_verify} fc-verify-post{/if}">
+        <div class="{if $is_mobile}col-md-12{else}col-md-9{/if}">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('基本内容')}</span>
+                    </div>
+
+                    <div class="actions">
+                        <div class="btn-group">
+                            <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('关联')}</label>
+                            <div class="col-md-9">
+                                <code class="form-control-static"><a href="{$index.url}" target="_blank">{dr_clearhtml($index.title)}</a></code>
+                            </div>
+                        </div>
+                        {str_replace('col-md-9', 'col-md-10', $myfield)}
+                    </div>
+                </div>
+            </div>
+
+            {if $diyfield}
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('其他内容')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        {str_replace('col-md-9', 'col-md-10', $diyfield)}
+                    </div>
+                </div>
+            </div>
+            {/if}
+
+            {if $ci->module['comment']['review']}
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('点评分值')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        <div class="form-group" style="margin-bottom: 30px">
+                            <label class="col-md-2 control-label">{dr_lang('平均分')}</label>
+                            <div class="col-md-9">
+                                <code class="form-control-static">{number_format($avgsort, $ci->module['comment']['review']['point'])}</code>
+                            </div>
+                        </div>
+
+                        {loop $ci->module['comment']['review']['option'] $i $name}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{$name}</label>
+                            <div class="col-md-9">
+                                <div class="ds-review " style="margin-bottom:0 !important" id="dr_review_post">
+                                    <input id="dr_review_option_{$i}" type="hidden" name="review[{$i}]" value="{$data['sort'.$i]}">
+                                    <span class="commstar">
+                                        {loop $review.value $ii $v}
+                                        <a id="dr_review_value_{$i}_{$ii}" class="dr_review_value_{$i} star{$ii}" href="javascript:dr_review_value({$i}, {$ii});" title="{$v}">&nbsp;</a>
+                                        {/loop}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            dr_review_value({$i}, {intval($data['sort'.$i])})
+                        </script>
+                        {/loop}
+
+
+                    </div>
+                </div>
+            </div>
+            {/if}
+
+        </div>
+        <div class="{if $is_mobile}col-md-12{else}col-md-3{/if} my-sysfield">
+            <div class="portlet light bordered">
+                <div class="portlet-body">
+                    <div class="form-body">
+                        {$sysfield}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            {if $is_verify}
+            <script>
+                function dr_verify() {
+                    if ($("input[name='data[status]']:checked").val() == 0) {
+                        layer.confirm('{dr_lang("您需要将它设置为通过状态吗？")}', {
+                            icon: 3,
+                            shade: 0,
+                            title: '{dr_lang("审核提示")}',
+                            btn: ['{dr_lang("设为通过")}','{dr_lang("保持现状")}']
+                        }, function(){
+                            $("input[name='data[status]'][value='1']").prop('checked',true);
+                            dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}');
+                        }, function(){
+                            dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}');
+                        });
+                    } else {
+                        dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}');
+                    }
+
+                }
+            </script>
+            <label><button type="button" onclick="dr_verify()" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交审核')}</button></label>
+            {else}
+            <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button></label>
+            <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button></label>
+            {if $is_form_cache}
+            <label><button type="button" onclick="auto_form_data_delete()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('删除历史缓存')}</button></label>
+            {/if}
+            {/if}
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

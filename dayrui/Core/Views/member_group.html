@@ -1,0 +1,129 @@
+{template "header.html"}
+
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    if (App.isAngularJsApp() === false) {
+        jQuery(document).ready(function() {
+            if (jQuery().datepicker) {
+                $('.date-picker').datepicker({
+                    rtl: App.isRTL(),
+                    orientation: "left",
+                    autoclose: true
+                });
+            }
+        });
+    }
+    function dr_add_group() {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: '{dr_url('member/group_all_edit')}',
+            data: $("#myform2").serialize(),
+            success: function(json) {
+                layer.close(loading);
+                if (json.code == 1) {
+                    setTimeout("window.location.reload(true)", 1000)
+                }
+                dr_layer_tips(json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    function dr_delete(gid) {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: '{dr_url('member/group_del', ['uid'=>$id])}&gid='+gid,
+            data: $("#myform2").serialize(),
+            success: function(json) {
+                layer.close(loading);
+                if (json.code == 1) {
+                    setTimeout("window.location.reload(true)", 1000)
+                }
+                dr_layer_tips(json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+</script>
+
+<form class="form-horizontal " role="form" id="myform2">
+    {$form}
+    <input name="ids[]" value="{$id}" type="hidden">
+    <label>
+        <select name="groupid" class="form-control">
+            <option value=""> -- </option>
+            {loop $group $t}
+            <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{$t.name}</option>
+            {/loop}
+        </select>
+    </label>
+    <label><button style="padding: 6px;" type="button" onclick="dr_add_group()" class="btn green btn-sm"> <i class="fa fa-plus"></i> {dr_lang('添加用户组')}</button></label>
+
+</form>
+<form class="form-horizontal myfbody" role="form" id="myform">
+    {$form}
+    <div class="table-scrollable ">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="50"> </th>
+                <th width="150"> {dr_lang('用户组')} </th>
+                <th width="150"> {dr_lang('等级')} </th>
+                <th> {dr_lang('有效期')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $mygroup $i $t}
+            <tr class="odd gradeX">
+                <td><a href="javascript:dr_delete('{$t.gid}');" class="btn btn-xs red"> <i class="fa fa-times"></i> </a></td>
+                <td>{$group[$t.gid]['name']}</td>
+                <td>
+                    {if $group[$t.gid]['setting']['level']['auto']}
+                    {$group[$t[gid]]['level'][$t.lid]['name']}
+                    {else}
+                        <select name="data[{$t.gid}][lid]" class="form-control">
+                            <option value="0"> -- </option>
+                            {loop $group[$t[gid]]['level'] $lv}
+                            <option value="{$lv.id}" {if $lv.id==$t.lid}selected{/if}>{$lv.name}</option>
+                            {/loop}
+                        </select>
+                    {/if}
+                </td>
+                <td>
+                    <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" value="{dr_date($t.stime, 'Y-m-d')}" name="data[{$t.gid}][stime]">
+                        <span class="input-group-addon"> {dr_lang('到')} </span>
+                        <input type="text" class="form-control" value="{dr_date($t.etime, 'Y-m-d')}" name="data[{$t.gid}][etime]">
+                    </div>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+
+</form>
+
+
+
+{template "footer.html"}

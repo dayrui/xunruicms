@@ -1,0 +1,151 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-list-alt"></i> {dr_lang('菜单权限')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-th-large"></i> {dr_lang('模块权限')} </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+
+                    <table class="table table-striped table-bordered table-checkable">
+                        <thead>
+                        <tr>
+                            <th width="50" class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th width="50" style="text-align:center"> Id </th>
+                            <th> {dr_lang('菜单名称')} </th>
+                            <th width="40" style="text-align:center"> {dr_lang('增')} </th>
+                            <th width="40" style="text-align:center"> {dr_lang('改')} </th>
+                            <th width="40" style="text-align:center"> {dr_lang('删')} </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $menu_data $t}
+                        <tr class="{if $t.pid==0} my_pid_menu{/if} odd gradeX" id="dr_row_{$t.id}">
+                            <td class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes group-checkable menu{$t.pid} menu{$t.tid}" data-set="{if $t.uri}.zsg{$t.id}{else}.menu{$t.id}{/if}" name="data[mark][]" {if $t.mark && @in_array($t.mark, (array)$data.system.mark)}checked{/if} value="{$t.mark}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td style="text-align:center">
+                                {$t.id}
+                            </td>
+                            <td>
+                                {$t.spacer} <i class="{$t.icon}"></i> {$t.name}
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                {if $t.uri}
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('add', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="add" />
+                                    <span></span>
+                                </label>
+                                {/if}
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                {if $t.uri}
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('edit', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="edit" />
+                                    <span></span>
+                                </label>
+                                {/if}
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                {if $t.uri}
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('del', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="del" />
+                                    <span></span>
+                                </label>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                    {loop $module_auth $dir $t}
+                    <table class="table table-striped table-bordered table-hover table-checkable">
+                        <thead>
+                        <tr>
+                            <th width="50" class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="group-checkable" data-set=".menu_module_{$dir}" />
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th> {$t.name} </th>
+                            <th width="50" style="text-align:center" class="myselect"> {dr_lang('增')} </th>
+                            <th width="50" style="text-align:center" class="myselect"> {dr_lang('改')} </th>
+                            <th width="50" style="text-align:center" class="myselect"> {dr_lang('删')} </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $t.auth $uri $name}
+                        <tr class="odd gradeX">
+                            <td class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes group-checkable menu_module_{$dir} menu{md5($uri)}" data-set=".menu{md5($uri)}" name="module[{$uri}index]" {if @in_array($uri.'index', (array)$data.module)}checked{/if} value="{$uri.'index'}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>
+                                {$name}
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'add', (array)$data.module)}checked{/if} name="module[{$uri}add]" value="{$uri.'add'}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'edit', (array)$data.module)}checked{/if} name="module[{$uri}edit]" value="{$uri.'edit'}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td style="text-align:center" class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'del', (array)$data.module)}checked{/if} name="module[{$uri}del]" value="{$uri.'del'}" />
+                                    <span></span>
+                                </label>
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                    {/loop}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

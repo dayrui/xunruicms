@@ -1,0 +1,90 @@
+{template "header.html", "/"}
+
+<div class="page-container">
+    <div class="page-content-wrapper">
+        <div class="page-content bg-h">
+            <div class="container">
+
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {if !IS_SHARE}
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {/if}
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <span>帖子</span>
+                    </li>
+                </ul>
+
+                <div class="bbs-content row">
+
+                    <div class="col-md-12">
+
+                        <div class="news-body">
+                            <h4 class="title">{$title}</h4>
+                            <div class="title-btn">
+                                <label>
+                                    <i class="fa fa-user"></i> {$author}
+                                </label>
+                                <label>
+                                    <i class="fa fa-calendar"></i> {$updatetime}
+                                </label>
+                                <label>
+                                    <i class="fa fa-eye"></i> {dr_show_hits($id)}次
+                                </label>
+                                <label class="">
+                                    <i class="fa fa-comments"></i> {$comments}
+                                </label>
+                                <label class="">
+                                    <i class="fa fa-flag"></i>  <a href="javascript:dr_module_favorite('{MOD_DIR}', '{$id}', 0);">加入收藏</a>
+                                </label>
+                            </div>
+
+                            <div class="news-content">
+                                {$content}
+                            </div>
+                            <div class="news-keyword">
+                                <div class="news-keyword-tags">
+                                    {loop $keyword_list $name $url}
+                                    <label>
+                                        <a href="{$url}" target="_blank">{$name}</a>
+                                    </label>
+                                    {/loop}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="news-comments-top">
+                            <h4>网友回帖</h4>
+                            <div class="count"><span class="num">{$comments}</span>条回帖</div>
+                        </div>
+                        <div class="news-comments-body">
+
+                            {if IS_COMMENT}
+                            {dr_module_comment(MOD_DIR, $id)}
+                            {else}
+                            没有开启评论功能
+                            {/if}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

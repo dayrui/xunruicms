@@ -1,0 +1,42 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>评论：{$title}</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+<script>
+    function {$js}(type, page) {
+        var index = layer.load(2, { time: 10000 });
+        $.ajax({type: "GET", url: "{$page_url}&type="+type+"&page="+page, dataType:"jsonp",
+        success: function (data) {
+            layer.close(index);
+            if (data.code) {
+                $("#dr_module_comment_{$index.id}").html(data.msg);
+            } else {
+                dr_tips(0, data.msg);
+            }
+        }
+    });
+    }
+</script>
+
+<div class="page-content margin-top-20">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject  "> 评论: {$index.title} </span>
+            </div>
+        </div>
+        <div class="portlet-body" id="dr_module_comment_{$index.id}">
+
+
+            {template "comment_ajax.html"}
+
+
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

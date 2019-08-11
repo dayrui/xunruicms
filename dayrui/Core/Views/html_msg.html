@@ -1,0 +1,14 @@
+{template "header.html"}
+
+{if $url}
+<div class="alert">
+    <a href="{$url}">{$msg}</a>
+</div>
+<meta http-equiv="refresh" content="0; url={$url}">
+{else}
+<div class="alert">
+    {$msg}
+</div>
+{/if}
+
+{template "footer.html"}

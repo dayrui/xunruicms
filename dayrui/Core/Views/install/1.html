@@ -1,0 +1,52 @@
+{template "install/header.html"}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-refresh font-green"></i>
+            <span class="caption-subject font-green">环境监测</span>
+        </div>
+    </div>
+    <div class="portlet-body ">
+        <div class="scroller" style="height:300px" data-rail-visible="1">
+        <form action="#" class="form-horizontal form-bordered ">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3">PHP版本</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {PHP_VERSION} </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">目录权限</label>
+                    <div class="col-md-9" style="margin-top:-1px;">
+                        {loop $path $name $code}
+                        <p style="margin:10px 0;{if !$code}color:red{/if}"> {if !$code}[错误]{else}[正确]{/if}&nbsp;&nbsp;{$name} </p>
+                        {/loop}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">环境检测</label>
+                    <div class="col-md-9" style="margin-top:-1px;">
+                        {loop $php $name $code}
+                        <p style="margin:10px 0;{if !$code}color:red{/if}"> {if !$code}[不支持]{else}[支持]{/if}&nbsp;&nbsp;{$name} </p>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    </div>
+    <div class="portlet-title" style="min-height: 18px;">
+    </div>
+    <div class="portlet-body text-center">
+        {if $error}
+        <button type="button" class="btn default"> 无法进行下一步安装 </button>
+        {else}
+        <a href="{$next_url}" class="btn btn-success"> 下一步安装 </a>
+        {/if}
+    </div>
+</div>
+
+{template "install/footer.html"}

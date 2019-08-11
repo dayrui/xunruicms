@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <!-- 主要css开始 -->
+    <link href="{MOBILE_THEME_PATH}font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/themes/blue.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}member/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css" />
+    <!-- 主要css结束 -->
+    <!-- 风格css开始 -->
+    <link href="{HOME_THEME_PATH}web/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}web/css/default.css" rel="stylesheet" type="text/css" />
+    <link href="{MOBILE_THEME_PATH}css/custom.css" rel="stylesheet" type="text/css" />
+    <!-- 风格css结束 -->
+    <link rel="stylesheet" type="text/css" href="{MOBILE_THEME_PATH}css/mobile.css" />
+    <!--[if lt IE 9]>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/respond.min.js"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <!-- 系统关键js(所有自建模板必须引用) -->
+    <script type="text/javascript">var assets_path = '{ROOT_THEME_PATH}assets/';var is_mobile_cms = '{IS_MOBILE}';</script>
+    <script src="{LANG_PATH}lang.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/layer/layer.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+    <!-- 系统关键js结束 -->
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/scripts/app.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}member/scripts/layout.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}member/scripts/demo.js" type="text/javascript"></script>
+</head>
+<body class="page-sidebar-closed-hide-logo page-header-fixed">
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$meta_name}</h1>
+    <div id="hui-header-menu"></div>
+</header>
+<div class="hui-header-line"></div>
+<script type="text/javascript">
+    // 顶部"..."弹出菜单
+    var menus = ['用户中心', '我的消息', '密码修改'];
+    var menu_url = ["{MEMBER_URL}", "{dr_member_url('notice/index')}", "{dr_member_url('account/password')}"];
+</script>
+
+<div class="clearfix"> </div>
+<div class="page-container">
+    <div class="page-content-wrapper">
+        <div class="page-content">

@@ -1,0 +1,83 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        {if $type}
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('所属菜单')}</label>
+            <div class="col-xs-8">
+                <label>
+                    <select name="data[pid]" class="form-control">
+                        <option value=""> {dr_lang('顶级菜单')} </option>
+                        {loop $top $t}
+                        <option value="{$t.id}" {if $data.pid==$t.id}selected{/if}>{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单名称')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_mark">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('标识字符')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_mark" name="data[mark]" value="{$data.mark}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_icon">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单图标')}</label>
+            <div class="col-xs-8">
+                <div class="input-group">
+                    <input class="form-control" id="dr_icon" type="text" name="data[icon]" value="{$data.icon}" />
+                    <span class="input-group-btn">
+                        <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {if $type}
+        <div class="form-group" id="dr_row_uri">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('系统路径')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_uri" name="data[uri]" value="{$data.uri}">
+                <span class="help-block">{dr_lang('系统路径是模块目录+控制器+方法的组合（不支持其他参数）')}</span>
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_url">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('实际地址')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{$data.url}">
+                <span class="help-block">{dr_lang('填写完整的URL地址，优先于系统路径')}</span>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('排列顺序')}</label>
+            <div class="col-xs-8">
+                <input type="text" id="displayorder" class="form-control" name="data[displayorder]" value="{intval($data.displayorder)}">
+                <span class="help-block"> {dr_lang('排序值由小到大排列，范围为0-255')} </span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/fuelux/js/spinner.min.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#displayorder").TouchSpin({
+            buttondown_class: "btn red",
+            buttonup_class: "btn green",
+            min: -255,
+            max: 255
+        });
+    });
+</script>
+{template "footer.html"}

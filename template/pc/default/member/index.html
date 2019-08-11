@@ -1,0 +1,135 @@
+{template "mheader.html"}
+
+<div class="row">
+
+    <div class="col-md-8">
+        <div class="profile-sidebar-portlet pull-left">
+            <div class="profile-userpic">
+                <a href="{dr_member_url('account/avatar')}"><img src="{$member.avatar}" class="img-responsive"></a>
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name"> {$member.username} </div>
+            </div>
+        </div>
+        <div class="profile-sidebar-m pull-left">
+            <div class="user-body-title">
+                余额<span class="home-colon">:</span>
+            </div>
+            <div class="user-body-main">
+                <div class="user-balance-wrap">
+                    <div class="user-balance">
+                        <span class="ng-binding"><i class="fa fa-rmb"></i></span>
+                        <span class="user-balance-small ng-binding">{number_format($member.money, 2)}</span>
+                        <span class="user-small">元</span>
+                    </div>
+                    <div class="user-small">
+                        冻结 <i class="fa fa-rmb"></i> {number_format($member.freeze, 2)} 元
+                    </div>
+
+                </div>
+                <div class="user-bottom">
+                    <a href="{dr_member_url('recharge/index')}" class="btn green btn-xs"> 在线充值 </a>
+                </div>
+            </div>
+        </div>
+        <div class="profile-sidebar-r pull-left">
+            <div class="user-body-title">
+                {SITE_SCORE}<span class="home-colon">:</span>
+            </div>
+            <div class="user-body-main" style="height: 30px;">
+                <div class="user-balance-wrap">
+                    <div class="user-balance">
+                        <span class="user-balance-small">{$member.score}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-bottom">
+                <a href="{dr_member_url('scorelog/index', ['tid'=>1])}" class=""> 收入记录 </a>
+                <a href="{dr_member_url('scorelog/index', ['tid'=>-1])}" class=""> 消费记录 </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="portlet light" style="margin-bottom:0">
+            <div class="portlet-body text-center" style="height: 122px;padding-top:20px">
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="row margin-top-20">
+
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject"> 我的权限</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-advance ">
+                    <thead>
+                    <tr>
+                        <th><i class="fa fa-users"></i> 用户组 </th>
+                        <th><i class="fa fa-star"></i> 级别 </th>
+                        <th><i class="fa fa-clock-o"></i> 有效期 </th>
+                        <th> </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $ci->member_cache['group'] $gid $t}
+                    {if $member['groupid'][$gid]}
+                    <tr>
+                        <td class="highlight">
+                            <div class="success"></div>
+                            <a href="javascript:;"> {$t.name} </a>
+                        </td>
+                        <td>{if $t['level']}{$t['level'][$member['levelid'][$gid]]['name']}{else}无{/if}</td>
+                        <td>{dr_date($member['group'][$gid]['stime'], 'Y-m-d')} ~ {if $member['group'][$gid]['etime']}{dr_date($member['group'][$gid]['etime'], 'Y-m-d')}{else}永久{/if}</td>
+                        <td>
+                            {php $next = dr_level_next_value($t.level, $member['levelid'][$gid]);}
+                            {if $next}
+                            {if $t[setting][level][auto]}
+                            升级要求:
+                                {if $t[setting][level][unit]}
+                                消费额{$member.spend} >= {$next.value}
+                                {else}
+                                {SITE_SCORE}{$member.score} >= {$next.value}
+                                {/if}
+                            {else}
+                            <a href="{dr_member_url('apply/level', ['gid'=>$gid])}" class="btn green btn-xs "> 我要升级 </a>
+                            {/if}
+                            {else}
+                            已开通
+                            {/if}
+
+                        </td>
+                    </tr>
+                    {else}
+                    {if $t.apply}
+                    <tr>
+                        <td class="highlight">
+                            <div class="danger"></div>
+                            <a href="javascript:;"> {$t.name} </a>
+                        </td>
+                        <td> 无 </td>
+                        <td> {if $t.days}{$t.days}天{else}永久{/if} </td>
+                        <td>
+                            <a href="{dr_member_url('apply/index', ['gid'=>$gid])}" class="btn red  btn-xs "> 申请开通 </a>
+                        </td>
+                    </tr>
+                    {/if}
+                    {/if}
+                    {/loop}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{template "mfooter.html"}

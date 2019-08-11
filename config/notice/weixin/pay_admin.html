@@ -1,0 +1,37 @@
+<xml>
+    <id>这里填写你微信公众号上添加的模板id</id>
+    <url></url>
+
+    <param>
+        <first>
+            <value>您好，您已成功充值到账。</value>
+            <color></color>
+        </first>
+
+        <keyword1>
+            <value>{$username}</value>
+            <color></color>
+        </keyword1>
+
+        <keyword2>
+            <value>{number_format($value,2)}</value>
+            <color></color>
+        </keyword2>
+
+        <keyword3>
+            <value>后台充值</value>
+            <color></color>
+        </keyword3>
+
+        <keyword4>
+            <value>{dr_date($sys_time)}</value>
+            <color></color>
+        </keyword4>
+
+        <remark>
+            <value>感谢你的使用。</value>
+            <color></color>
+        </remark>
+    </param>
+
+</xml>

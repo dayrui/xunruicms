@@ -1,0 +1,74 @@
+{template "header.html"}
+
+
+<link href="{THEME_PATH}assets/global/plugins/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/codemirror/theme/neat.css" rel="stylesheet" type="text/css" />
+
+<script src="{THEME_PATH}assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript"></script>
+
+
+
+
+<form style="margin-top: -40px" action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="portlet  light ">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $list $sid $t}
+                <li class="{if SITE_ID==$sid}active{/if}">
+                    <a href="#tab_{$sid}" data-toggle="tab" onclick="$('#dr_page').val('{$sid}')"> {$t.name} </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content" style="margin-top: -20px;">
+
+                {loop $list $sid $t}
+                <div class="tab-pane  {if SITE_ID==$sid}active{/if}" id="tab_{$sid}">
+                    <div class="form-body">
+
+                        {loop $t.data $id $m}
+                        <div class="form-group well" style="margin-top: 30px;padding: 10px 10px 10px 20px;margin-bottom:10px;">
+                            <div class="col-md-10 " >
+                                <span class="label label-danger">{$m.name}</span> &nbsp;&nbsp;
+                                {$m.file}
+                            </div>
+                            <div class="col-md-2 text-right" >
+                                <a class="label label-success" href="{$m.help}">{dr_lang('设置教程')}</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <textarea readonly name="data[{$sid}][{$id}]" style="height: {$m.height}px" id="file_code_{$sid}_{$id}" class="form-control ">{$m.code}</textarea>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            jQuery(document).ready(function() {
+                                var myTextArea = document.getElementById('file_code_{$sid}_{$id}');
+                                var myCodeMirror = CodeMirror.fromTextArea(myTextArea, {
+                                    lineNumbers: true,
+                                    matchBrackets: true,
+                                    styleActiveLine: true,
+                                    readOnly: true,
+                                    theme: "neat",
+                                    mode: '.html'
+                                });
+                            });
+                        </script>
+                        {/loop}
+
+
+                    </div>
+                </div>
+                {/loop}
+
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+{template "footer.html"}

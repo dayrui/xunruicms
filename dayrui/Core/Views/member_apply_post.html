@@ -1,0 +1,91 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('用户自助申请用户组权限')}</p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="row myfbody ">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('申请详情')}</span>
+                    </div>
+
+                    <div class="actions">
+                        <div class="btn-group">
+                            <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('账号')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{Function_list::author($username)}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('用户组')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{$ci->member_cache['group'][$gid][name]}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('组级别')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{$ci->member_cache['group'][$gid][level][$lid][name]}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('审核状态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input name="data[status]" type="radio" value="1" checked /> {dr_lang('通过')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="data[status]" type="radio" value="0"  /> {dr_lang('拒绝')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('常用备注')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" onchange="javascript:$('#dr_note').val(this.value)">
+                                        <option value=""> -- </option>
+                                        {loop $verify_msg $t}
+                                        <option value="{$t}">{$t}</option>
+                                        {/loop}
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        {str_replace('col-md-9', 'col-md-10', $myfield)}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('申请时间')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{dr_date($inputtime)}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交审核')}</button>
+
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

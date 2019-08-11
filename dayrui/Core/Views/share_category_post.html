@@ -1,0 +1,285 @@
+{template "header.html"}
+<script>
+$(function () {
+    {if $is_scategory}
+    dr_tid({intval($data.tid)});
+    {else}
+    dr_tid(1);
+    {/if}
+});
+function dr_tid(i) {
+    $('.dr_tid_0').hide();
+    $('.dr_tid_1').hide();
+    $('.dr_tid_2').hide();
+    $('.dr_tid_'+i).show();
+}
+</script>
+<div class="row my-content-top-tool">
+    <div class="col-md-12 col-sm-12">
+        <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
+        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')}</a></label>
+        <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
+        <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
+    </div>
+</div>
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('module', 'module');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('基本设置')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('内容设置')} </a>
+                </li>
+                <li class="{if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-internet-explorer"></i> {dr_lang('SEO优化')} </a>
+                </li>
+                <li class="{if $page==4}active{/if}">
+                    <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-html5"></i> {dr_lang('模板设置')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('所属栏目')}</label>
+                            <div class="col-md-9">
+                                <label>{$select}</label>
+                            </div>
+                        </div>
+
+                        {if $is_scategory}
+                        <div class="form-group r1">
+                            <label class="col-md-2 control-label">{dr_lang('栏目类型')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[tid]" value="0" onclick="dr_tid(0)" {if !$data.tid} checked{/if} /> {dr_lang('单网页')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[tid]" value="1" onclick="dr_tid(1)" {if $data.tid==1} checked{/if} /> {dr_lang('内容模块')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[tid]" value="2" onclick="dr_tid(2)" {if $data.tid==2} checked{/if} /> {dr_lang('外部地址')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $module.share}
+                        <div class="form-group dr_tid_1 " style="display: none">
+                            <label class="col-md-2 control-label">{dr_lang('共享模块')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="data[mid]">
+                                    <option value=""> -- </option>
+                                    {loop $module_share $t}
+                                    {if $t.share}
+                                    <option value="{$t.dirname}" {if $t.dirname==$data['mid']}selected{/if}> {dr_lang($t.name)} </option>
+                                    {/if}
+                                    {/loop}
+                                    </select>
+                                </label>
+                                <span class="help-block">{dr_lang('当同一父级栏目下存在多个不同的模块栏目时，其父级栏目将自动转换为单页栏目')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group " id="dr_row_name">
+                            <label class="col-md-2 control-label">{dr_lang('栏目名称')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[name]" value="{htmlspecialchars($data.name)}" id="dr_name" onblur="d_topinyin('dirname','name', 1);"></label>
+                                <span class="help-block" id="dr_name_tips">{dr_lang('栏目的一个显示名称')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group " id="dr_row_dirname">
+                            <label class="col-md-2 control-label">{dr_lang('目录名称')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[dirname]" id="dr_dirname" value="{$data.dirname}"></label>
+                                <span class="help-block" id="dr_dirname_tips">{dr_lang('栏目目录确保唯一，用于url填充或者生成目录')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_2 " style="display: none">
+                            <label class="col-md-2 control-label">{dr_lang('外链地址')}</label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="data[setting][linkurl]" value="{$data['setting']['linkurl']}">
+                                <span class="help-block">{dr_lang('可跳转到指定地址（不允许发布内容）')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('显示状态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[show]" value="1" {if $data['show']}checked{/if} data-on-text="{dr_lang('显示')}" data-off-text="{dr_lang('隐藏')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('前端循环调用不会显示')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_0">
+                            <label class="col-md-2 control-label">{dr_lang('继承下级')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][getchild]" value="1" {if $data['setting']['getchild']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('选择“是”时，将下级第一个页面数据作为当前的栏目，只对父级单网页有效')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('禁止修改')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][notedit]" value="1" {if $data['setting']['notedit']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('内容发布之后将禁止修改栏目')}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
+
+                        {if $module.share}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][html]" value="1" {if $data['setting']['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+
+                                <label>
+                                    <select class="form-control" name="data[setting][urlrule]">
+                                        <option value="0"> {dr_lang('动态地址')} </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==3}<option value="{$u.id}" {if $u.id == $data['setting']['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label style="margin-left:20px;">{dr_lang('<a href="'.dr_url('urlrule/index', ['hide_menu' => 1]).'" style="color:blue !important">[URL规则管理]</a>')} </label>
+
+                            </div>
+                        </div>
+                        {/if}
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][list_title]">{$data['setting']['seo']['list_title']}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO关键字')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][list_keywords]">{$data['setting']['seo']['list_keywords']}</textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO描述信息')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][list_description]">{$data['setting']['seo']['list_description']}</textarea>
+
+                            </div>
+                        </div>
+                        {if $id}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('同步到其他栏目')}</label>
+                            <div class="col-md-9">
+                                <label><button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url(APP_DIR.'/category/copy_edit')}&at=seo&catid={$id}')" type="button" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('同步配置')}</button></label>
+                                <label>{dr_lang('把本页的设置数据同步到其他栏目；需要保存之后再同步')}</label>
+                            </div>
+                        </div>
+                        {/if}
+
+                    </div>
+                </div>
+                <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
+                    <div class="form-body">
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('电脑列表信息数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['pagesize']}" name="data[setting][template][pagesize]"></label>
+                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('手机列表信息数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['mpagesize']}" name="data[setting][template][mpagesize]"></label>
+                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
+                            </div>
+                        </div>
+                        {if $is_scategory}
+                        <div class="form-group dr_tid_0">
+                            <label class="col-md-2 control-label">{dr_lang('单网页模板')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['page']}" name="data[setting][template][page]"></label>
+                                <span class="help-block">{dr_lang('单网页模板默认page.html')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('内容列表页模板')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['list']}" name="data[setting][template][list]"></label>
+                                <span class="help-block">{dr_lang('模块栏目列表默认list.html')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('内容栏目封面模板')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['category']}" name="data[setting][template][category]"></label>
+                                <span class="help-block">{dr_lang('默认category.html')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('内容搜索页模板')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{php echo $data['setting']['template']['search'] ? $data['setting']['template']['search'] : 'search.html'}" name="data[setting][template][search]"></label>
+                                <span class="help-block">{dr_lang('默认search.html')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_tid_1">
+                            <label class="col-md-2 control-label">{dr_lang('内容详细页模板')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" value="{$data['setting']['template']['show']}" name="data[setting][template][show]"></label>
+                                <span class="help-block">{dr_lang('默认show.html')}</span>
+                            </div>
+                        </div>
+                        {if $id}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('同步到其他栏目')}</label>
+                            <div class="col-md-9">
+                                <label><button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url(APP_DIR.'/category/copy_edit')}&at=tpl&catid={$id}')" type="button" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('同步配置')}</button></label>
+                                <label>{dr_lang('把本页的设置数据同步到其他栏目；需要保存之后再同步')}</label>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+
+                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+                        {$sysfield}
+                        {$myfield}
+                        {$diyfield}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$post_url}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

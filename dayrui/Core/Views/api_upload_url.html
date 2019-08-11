@@ -1,0 +1,30 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        {if !$one}
+        <div class="form-group" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name" style="padding-top: 0">{dr_lang('文件名称')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{$name}">
+            </div>
+        </div>
+        {/if}
+        <div class="form-group" id="dr_row_url">
+            <label class="col-xs-3 control-label ajax_name" style="padding-top: 0">{dr_lang('文件地址')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{$file}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_down">
+            <label class="col-xs-3 control-label ajax_name" style="padding-top: 0">{dr_lang('下载文件')}</label>
+            <div class="col-xs-8">
+                <input type="checkbox" name="data[down]" value="1"  data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+            </div>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

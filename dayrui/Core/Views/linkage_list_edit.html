@@ -1,0 +1,59 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green-sharp">
+                    {dr_lang('内容')}
+                </span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+                    <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回')}</a>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-body">
+
+                <div class="form-group " id="dr_row_pid">
+                    <label class="col-md-2 control-label ">{dr_lang('分类')}</label>
+                    <div class="col-md-7">
+                        <label>{$select}</label>
+                    </div>
+                </div>
+                <div class="form-group dr_one" id="dr_row_name">
+                    <label class="col-md-2 control-label ">{dr_lang('名称')}</label>
+                    <div class="col-md-7">
+                        <label><input type="text" onblur="d_topinyin('cname', 'name')" class="form-control" id="dr_name" name="data[name]" value="{$data.name}"></label>
+                        <span class="help-block"> {dr_lang('它的描述名称')} </span>
+                    </div>
+                </div>
+                <div class="form-group " id="dr_row_cname">
+                    <label class="col-md-2 control-label ">{dr_lang('别名')}</label>
+                    <div class="col-md-7">
+                        <label><input type="text" class="form-control" id="dr_cname" name="data[cname]" value="{$data.cname}"></label>
+                        <span class="help-block"> {dr_lang('别名只能由字母或者字母+数字组成')} </span>
+                    </div>
+                </div>
+                {$myfield}
+                {$diyfield}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

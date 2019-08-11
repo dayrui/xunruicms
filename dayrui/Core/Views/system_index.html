@@ -1,0 +1,176 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('./cache/目录一定要有可写权限')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+{$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('系统参数')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-expeditedssl"></i> {dr_lang('安全设置')} </a>
+                </li>
+                <li class="{if $page==2}active{/if}">
+                    <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-code"></i> {dr_lang('API工具')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        {if !IS_DEV}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('调试器')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_DEBUG]" value="1" {if $data['SYS_DEBUG']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('用于后台启用DebugBar工具查看程序和SQL执行详情')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('操作日志')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_ADMIN_LOG]" value="1" {if $data['SYS_ADMIN_LOG']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('多用户操作后台建议打开日志功能')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容临时存储')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_AUTO_FORM]" value="1" {if $data['SYS_AUTO_FORM']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('发布内容临时存储，再次发布时自动填充')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('栏目目录允许重复')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_CAT_RNAME]" value="1" {if $data['SYS_CAT_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('栏目开启之后请不要使用目录作为伪静态关键字')}</span>
+                            </div>
+                        </div>
+                        {if dr_is_app('page')}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('自定义页面目录允许重复')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_PAGE_RNAME]" value="1" {if $data['SYS_PAGE_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('自定义页面开启之后请不要使用目录作为伪静态关键字')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('系统风格目录的作用域')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_THEME_ROOT]" value="1" {if $data['SYS_THEME_ROOT']}checked{/if} data-on-text="{dr_lang('相对')}" data-off-text="{dr_lang('绝对')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('选择绝对模式时，多站点和THEME_PATH变量在引用风格时，路径为主站URL')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('后台数据分页条数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[SYS_ADMIN_PAGESIZE]" value="{$data['SYS_ADMIN_PAGESIZE']}" ></label>
+                                <span class="help-block">{dr_lang('例如文章每页显示的数量控制')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('系统通知邮箱')}</label>
+                            <div class="col-md-5">
+                                <input class="form-control input-large" type="text" name="data[SYS_EMAIL]" value="{$data['SYS_EMAIL']}" >
+                                <span class="help-block">{dr_lang('用于系统管理员接收消息的邮箱')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('HTTPS模式')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启之后全系统将采用https地址模式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('跨站验证')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启跨站验证后将禁止外部站点向本站提交数据')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('登录验证码')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_ADMIN_CODE]" value="1" {if $data['SYS_ADMIN_CODE']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('登录后台的验证码开关')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('登录失败次数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" ></label>
+                                <span class="help-inline"> {dr_lang('登录失败N次后，系统将锁定登录，0表示不限制')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('登录失败时限')}</label>
+                            <div class="col-md-9">
+                                <div class="input-inline input-medium">
+                                    <div class="input-group">
+                                        <input type="text" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" class="form-control">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="help-inline"> {dr_lang('单位分钟，登录失败锁定后在x分钟内禁止登录')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('安全密钥')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_KEY]" id="sys_key" value="{if $data['SYS_KEY']}************{/if}"  ></label>
+                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key()"> {dr_lang('重新生成')} </button></label>
+                                <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane  {if $page==2}active{/if}" id="tab_2">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('百度地图Api（AK）')}</label>
+                            <div class="col-md-5">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_BDMAP_API]" value="{$data['SYS_BDMAP_API']}"  ></label>
+                                <label><a class="btn btn-sm blue" href="javascript:dr_help(584);"> {dr_lang('立即申请')} </a></label>
+                                <span class="help-block">{dr_lang('用于百度地图调用')}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function dr_to_key() {
+        $.get("{dr_url('api/syskey')}", function(data){
+            $("#sys_key").val(data);
+        });
+    }
+</script>
+{template "footer.html"}

@@ -1,0 +1,106 @@
+{template "header.html"}
+
+<div class="note note-danger my-content-top-tool">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+{dr_form_hidden()}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="active">
+                    <a href="#" data-toggle="tab" > <i class="fa fa-internet-explorer"></i> {$site_name} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane  active" id="">
+                    <div class="form-body">
+
+                        {if !$data.share}
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="module_index_html" value="1" {if $data['setting']['module_index_html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('模块的首页将会自动生成静态文件')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容静态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="site[html]" value="1" {if $site['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('模块栏目、模块内容页面静态功能开关')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="site[urlrule]">
+                                        <option value="0"> -- </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==1}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                            </div>
+                        </div>
+
+                        {else}
+
+                        <div class="form-group hide">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="site[urlrule]">
+                                        <option value="0"> -- </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==2}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                            </div>
+                        </div>
+                        {/if}
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:70px" name="site[show_title]">{$site['show_title']}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO关键字')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:70px" name="site[show_keywords]">{$site['show_keywords']}</textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('SEO描述信息')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" rows="3" name="site[show_description]">{$site['show_description']}</textarea>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{$save_url}', 'myform', '2000', '{dr_now_url()}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

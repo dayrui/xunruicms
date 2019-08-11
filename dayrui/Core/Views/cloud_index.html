@@ -1,0 +1,110 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green sbold ">版本信息</span>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div class="form-body fc-yun-list">
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('框架版本')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="{dr_url('cloud/update')}">v{$cmf_version.version}（{$cmf_version.updatetime}）</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('系统版本')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="{dr_url('cloud/update')}">v{$cms_version.version}（{$cms_version.updatetime}）</a></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green sbold ">{dr_lang('服务器信息')}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-body fc-yun-list">
+
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('上传最大值')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("upload_max_filesize");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('POST最大值')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("post_max_size");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('PHP内存上限')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("memory_limit");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('提交表单数量')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("max_input_vars");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('Web网站目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{WEBPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('核心程序目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{FCPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('附件存储目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{SYS_UPLOAD_PATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('模板文件目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{TPLPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('应用程序目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{APPSPATH}</div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</form>
+
+
+{template "footer.html"}

@@ -1,0 +1,53 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是网站表单详情页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{Router::form_list_url($index.id, $form_table)}">{$form_name}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>详情</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject"> {$title}</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+
+                            {$myfield}
+                            {$diyfield}
+                            {$sysfield}
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

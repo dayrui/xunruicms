@@ -1,0 +1,81 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="row myfbody ">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green sbold ">{dr_lang('用户通知')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-body">
+                    {loop $notice_config $t}
+                        {loop $t.value $name $v}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                {dr_lang($v.name)}
+                            </label>
+                            <div class="col-md-8 ">
+
+                                <div class="mt-checkbox-inline">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" name="data[{$name}][mobile]" value="1"  {if $value[$name][mobile]}checked{/if}  /> {dr_lang('短信')} <span></span>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" name="data[{$name}][email]" value="1"  {if $value[$name][email]}checked{/if}  /> {dr_lang('邮件')} <span></span>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" name="data[{$name}][weixin]" value="1"  {if $value[$name][weixin]}checked{/if}  /> {dr_lang('微信')} <span></span>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" name="data[{$name}][notice]" value="1"  {if $value[$name][notice]}checked{/if}  /> {dr_lang('消息')} <span></span>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <a href="javascript:dr_iframe_show('{dr_lang($v.name)}', '{dr_url('member_setting_notice/edit')}&file={$name}', '90%','90%', 'nogo');">{dr_lang('内容设置')}</a>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        {if $value[$name][mobile] && !$v[file][mobile]}
+                                        <a href="javascript:dr_iframe_show('{dr_lang($v.name)}', '{dr_url('member_setting_notice/edit')}&file={$name}', '90%','90%', 'nogo');" class="btn btn-xs red">{dr_lang('短信内容未设置')}</a>
+                                        {/if}
+                                        {if $value[$name][email] && !$v[file][email]}
+                                        <a href="javascript:dr_iframe_show('{dr_lang($v.name)}', '{dr_url('member_setting_notice/edit')}&file={$name}', '90%','90%', 'nogo');" class="btn btn-xs red">{dr_lang('邮件内容未设置')}</a>
+                                        {/if}
+                                        {if $value[$name][weixin] && !$v[file][weixin]}
+                                        <a href="javascript:dr_iframe_show('{dr_lang($v.name)}', '{dr_url('member_setting_notice/edit')}&file={$name}', '90%','90%', 'nogo');" class="btn btn-xs red">{dr_lang('微信内容未设置')}</a>
+                                        {/if}
+                                        {if $value[$name][notice] && !$v[file][notice]}
+                                        <a href="javascript:dr_iframe_show('{dr_lang($v.name)}', '{dr_url('member_setting_notice/edit')}&file={$name}', '90%','90%', 'nogo');" class="btn btn-xs red">{dr_lang('消息内容未设置')}</a>
+                                        {/if}
+
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        {/loop}
+                    {/loop}
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_url('member_setting_notice/add')}&page='+$('#dr_page').val(), 'myform', '2000', '{FC_NOW_URL}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

@@ -1,0 +1,42 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>提示信息</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-content">
+
+    <div class="text-center fc-msg-body">
+
+
+        <div class="fc-msg-icon">
+            {if $code == 1}
+            <i class="fa fa-check fc-msg-icon font-green-sharp"></i>
+            {else if $code == 2}
+            <i class="fa fa-info fc-msg-icon"></i>
+            {else}
+            <i class="fa fa-close fc-msg-icon"></i>
+            {/if}
+        </div>
+
+        <div class="fc-msg-info">
+            <label class="fc-msg-title">{$msg}</label>
+
+        </div>
+        <div class="fc-msg-url">
+            {if $url}
+            <a href="{$url}">如果您的浏览器没有自动跳转，请点击这里</a>
+            <meta http-equiv="refresh" content="{$time}; url={$url}">
+            {else}
+            <a href="{$backurl}" >[点击返回上一页]</a>
+            {/if}
+        </div>
+
+
+    </div>
+
+</div>
+
+{template "footer.html"}

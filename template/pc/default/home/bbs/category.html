@@ -1,0 +1,144 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                    这里是{MODULE_NAME}模块栏目封面页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {if !IS_SHARE}
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {/if}
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <span>封面</span>
+                    </li>
+                </ul>
+
+                <div class="bbs-content row">
+
+                    <div class="col-md-8">
+
+                        <div class="bbs-table">
+                            <div class="bbs-table-title">置顶贴子</div>
+                            <ul class="bbs-list">
+                                {module IN_isflag=1,2}
+                                <li>
+                                    <a class="bbs-avatar"><img src="{dr_avatar($t.uid)}" alt="{$t.author}"></a>
+                                    <h2><a class="layui-badge">{dr_cat_value($t.catid, 'name')}</a><a href="{$t.url}" {if $t.color}style="color:{$t.color} !important"{/if}>{dr_strcut($t.title, 30)}</a></h2>
+                                    <div class="bbs-list-info">
+                                        <span>{$t.author}</span>
+                                        <span>{dr_fdate($t._inputtime)}</span>
+                                        最后回复：<span><a rel="nofollow" href="{$t.url}">{dr_fdate($t._updatetime)}</a></span>
+                                    </div>
+                                    <div class="bbs-list-badge">
+                                        <span class="layui-badge layui-bg-red"><i class="fa fa-eye"></i> {$t.hits}</span>
+                                        <span class="layui-badge layui-bg-red"><i class="fa fa-comments"></i> {$t.comments}</span>
+                                    </div>
+                                </li>
+                                {/module}
+
+                            </ul>
+                        </div>
+
+                        <div class="bbs-table">
+                            <div class="bbs-table-title">最新贴子</div>
+                            <ul class="bbs-list">
+                                {module NOTIN_isflag=1,2 catid=$catid num=10}
+                                <li>
+                                    <a class="bbs-avatar"><img src="{dr_avatar($t.uid)}" alt="{$t.author}"></a>
+                                    <h2><a class="layui-badge">{dr_cat_value($t.catid, 'name')}</a><a href="{$t.url}" {if $t.color}style="color:{$t.color} !important"{/if}>{dr_strcut($t.title, 30)}</a></h2>
+                                    <div class="bbs-list-info">
+                                        <span>{$t.author}</span>
+                                        <span>{dr_fdate($t._inputtime)}</span>
+                                        最后回复：<span><a rel="nofollow" href="{$t.url}">{dr_fdate($t._updatetime)}</a></span>
+                                    </div>
+                                    <div class="bbs-list-badge">
+                                        <span class="layui-badge layui-bg-red"><i class="fa fa-eye"></i> {$t.hits}</span>
+                                        <span class="layui-badge layui-bg-red"><i class="fa fa-comments"></i> {$t.comments}</span>
+                                    </div>
+                                </li>
+                                {/module}
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4 ">
+
+                        <div class="bbs-table">
+                            <div class="bbs-table-title">论坛版块</div>
+                            <div class="bbs-list">
+
+                                <div class="layui-clear bbs-list-quick">
+                                    {if $related}
+                                    {loop $related $t}
+                                    <div class="layui-col-xs6">
+                                        <div class="{if $t.id==$catid}on{/if}"><a href="{$t.url}">{$t.name}</a></div>
+                                    </div>
+                                    {/loop}
+                                    {else}
+                                    {category pid=0}
+                                    <div class="layui-col-xs6">
+                                        <div>
+                                            <a href="{$t.url}">{$t.name}</a></div>
+                                    </div>
+                                    {/category}
+                                    {/if}
+                                    <div class="layui-clear"></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="bbs-table">
+                            <div class="bbs-table-title">热门讨论</div>
+                            <ul class="bbs-list-tz">
+                                {module num=10 catid=$catid order=comments}
+                                <li> <a href="{$t.url}">{dr_strcut($t.title, 20)}</a> <i class="fa fa-comments"></i> {$t.comments}</li>
+                                {/module}
+                            </ul>
+                        </div>
+
+                        <div class="bbs-table">
+                            <div class="bbs-table-title">人气贴子</div>
+                            <ul class="bbs-list-tz">
+                                {module num=10 catid=$catid order=hits}
+                                <li> <a href="{$t.url}">{dr_strcut($t.title, 20)}</a> <i class="fa fa-eye"></i> {$t.hits}</li>
+                                {/module}
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

@@ -1,0 +1,108 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('urlrule', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cloud"></i> {dr_lang('远程附件')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body form">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('名称')}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control input-large" value="{htmlspecialchars($data.name)}" name="data[name]" />
+                                <span class="help-block">{dr_lang('给它一个描述名称')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('存储类型')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    {loop $ci->type $i $n}
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[type]" onclick="dr_remote('{$i}')" value="{$i}" {if (int)$data['type'] == $i}checked{/if} /> {$n.name} <span></span> </label>
+                                    {/loop}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group r r0">
+                            <label class="col-md-2 control-label">{dr_lang('使用说明')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {dr_lang('本地磁盘存储是将文件存储到本地的一块盘之中')} </p>
+                            </div>
+                        </div>
+                        <div class="form-group r r0">
+                            <label class="col-md-2 control-label">{dr_lang('本地绝对路径')}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" type="text" name="data[value][0][path]" value="{$data['value']['path']}" />
+                                <span class="help-block">{dr_lang('填写磁盘绝对路径，一定要以“/”结尾')}</span>
+                            </div>
+                        </div>
+
+                        {loop $ci->load_file $tp}
+                        {load "$tp"}
+                        {/loop}
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件远程访问URL')}</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" value="{$data.url}" name="data[url]" />
+                                <span class="help-block">{dr_lang('浏览器可访问的URL地址，必须以http://或https://开头，要以“/”结尾')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+            <button type="button" onclick="dr_test_attach()" class="btn red"> <i class="fa fa-cloud"></i> {dr_lang('测试')}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function() {
+        dr_remote({intval($data.type)});
+    });
+    function dr_test_attach() {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{dr_url('api/test_attach')}",
+            data: $("#myform").serialize(),
+            success: function(json) {
+                layer.close(loading);
+                dr_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_remote(i) {
+        $('.r').hide();
+        $('.r'+i).show();
+    }
+</script>
+{template "footer.html"}

@@ -1,0 +1,103 @@
+{template "mheader.html"}
+
+<div class="page-content">
+
+    <div class="portlet light">
+        <div class="fc-register portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $register.group $i}
+                <li class="{if $groupid == $i}active{/if}">
+                    <a href="{dr_member_url('register/index', ['groupid' => $i])}" >{$group[$i][name]}</a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+
+        <div class="portlet-body">
+            <form action="" class="form-horizontal form" method="post" name="myform" id="myform">
+                {$form}
+                <div class="form-body" style="padding-bottom:0">
+
+                    {if in_array('username', $register.field)}
+                    <div class="form-group" id="dr_row_username">
+                        <label class="col-md-2 control-label">账号</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control " name="data[username]" id="dr_username">
+                        </div>
+                    </div>
+                    {/if}
+                    {if in_array('email', $register.field)}
+                    <div class="form-group " id="dr_row_email">
+                        <label class="col-md-2 control-label">邮箱</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control " name="data[email]" id="dr_email">
+                        </div>
+                    </div>
+                    {/if}
+                    {if in_array('phone', $register.field)}
+                    <div class="form-group " id="dr_row_phone">
+                        <label class="col-md-2 control-label">手机号</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control " name="data[phone]" id="dr_phone">
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="form-group " id="dr_row_password">
+                        <label class="col-md-2 control-label">密码</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control " name="data[password]" id="dr_password">
+                        </div>
+                    </div>
+                    <div class="form-group " id="dr_row_password2">
+                        <label class="col-md-2 control-label">确认密码</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control " name="data[password2]" id="dr_password2">
+                        </div>
+                    </div>
+                    {$myfield}
+                    {if $register.sms}
+                    <div class="form-group" id="dr_row_sms">
+                        <label class="col-md-2 control-label">短信验证</label>
+                        <div class="col-md-9">
+                            <div class="input-group ">
+                                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_sms" name="sms">
+                                <div class="input-group-btn">
+                                    <button class="btn blue" onclick="dr_ajax_url('/index.php?s=member&c=api&m=register_code&id='+$('#dr_phone').val())" type="button">获取手机验证码</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    {if $register.code}
+                    <div class="form-group" id="dr_row_code">
+                        <label class="col-md-2 control-label">验证码</label>
+                        <div class="col-md-9">
+                            <div class="input-group ">
+                                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_code" name="code">
+                                <div class="input-group-btn fc-code">
+                                    {dr_code(120, 35)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="form-group" style="margin-top:30px">
+                        <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class=" btn red btn-block"> 立即注册 </button>
+                    </div>
+
+                    <div class="form-group" style="margin-top:30px">
+                        <label class="mt-checkbox mt-checkbox-outline" style="margin-left:20px;">
+                            <input type="checkbox" name="is_protocol" value="1" checked> 我已阅读并同意
+                            <span></span>
+                        </label>
+                        <label>
+                            <a href="javascript:dr_show_protocol();">《用户注册协议》</a>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{template "mfooter.html"}

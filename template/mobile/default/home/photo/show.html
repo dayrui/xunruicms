@@ -1,0 +1,112 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$title}</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-content margin-top-20">
+
+
+        <div class="search-page search-content-2">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-dark  ">{$title}</span>
+                    </div>
+                </div>
+                <div class="search-post-foot fc-content-tool">
+                    <div class="search-post-meta">
+                        <i class="fa fa-calendar font-blue"></i>
+                        <a href="javascript:;">{$updatetime}</a>
+                    </div>
+                    <div class="search-post-meta">
+                        <i class="fa fa-fire font-blue"></i>
+                        <a href="javascript:;">{dr_show_hits($id)}次</a>
+                    </div>
+                    <div class="search-post-meta">
+                        <i class="fa fa-comments font-blue"></i>
+                        <a href="{Router::comment_url($id)}">{$comments}</a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: auto;overflow: hidden;">
+                    <div class="row">
+                        <div class="col-md-12 fc-image-list">
+                            <div id="layer-photos-demo" class="layer-photos-demo">
+                                {loop $images $i $c}
+                                <img layer-pid="{$i}" width="120" height="120" layer-src="{dr_get_file($c.file)}" src="{dr_thumb($c.file, 120, 120)}" alt="{$c.title}">
+                                {/loop}
+                                <script>
+                                    layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+                                        layer.photos({
+                                            photos: '#layer-photos-demo'
+                                            ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            {$content}
+                        </div>
+                        <div class="col-md-12">
+                            <div class="blog-single-foot fc-news-tag-list">
+                                <ul class="blog-post-tags">
+                                    {loop $tags $name $url}
+                                    <li class="uppercase">
+                                        <a href="{$url}">{$name}</a>
+                                    </li>
+                                    {/loop}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row fc-show-total">
+                        <div class="col-md-12 text-center">
+                            <a href="javascript:dr_module_favorite('{MOD_DIR}', '{$id}');" class="icon-btn">
+                                <i class="fa fa-star"></i>
+                                <div> 收藏 </div>
+                                <span class="badge badge-danger" id="module_favorite_{$id}"> {intval($favorites)} </span>
+                            </a>
+                            <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
+                                <i class="fa fa-thumbs-o-up"></i>
+                                <div> 有帮助 </div>
+                                <span class="badge badge-danger" id="module_digg_{$id}_1"> {intval($support)} </span>
+                            </a>
+                            <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 0);" class="icon-btn">
+                                <i class="fa fa-thumbs-o-down"></i>
+                                <div> 没帮助 </div>
+                                <span class="badge badge-danger" id="module_digg_{$id}_0"> {intval($oppose)} </span>
+                            </a>
+                            {if dr_is_app('shang')}
+                            <a href="{Router::donation_url($id)}" class="icon-btn">
+                                <i class="fa fa-rmb"></i>
+                                <div> 打赏 </div>
+                                <span class="badge badge-danger"> {floatval($donation)} </span>
+                            </a>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blog-single-foot">
+                    <p class="fc-show-prev-next">
+                        <strong>上一篇：</strong>{if $prev_page}<a href="{$prev_page.url}">{$prev_page.title}</a>{else}没有了{/if}<br>
+                    </p>
+                    <p class="fc-show-prev-next">
+                        <strong>下一篇：</strong>{if $next_page}<a href="{$next_page.url}">{$next_page.title}</a>{else}没有了{/if}
+                    </p>
+                </div>
+
+                <!--调用ajax评论-->
+                {if IS_COMMENT}
+                {dr_module_comment(MOD_DIR, $id)}
+                {/if}
+            </div>
+        </div>
+
+
+</div>
+
+{template "footer.html"}

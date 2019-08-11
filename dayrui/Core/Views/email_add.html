@@ -1,0 +1,54 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group" id="dr_row_host">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('服务器')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_host" name="data[host]" value="{$data.host}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_port">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('端口号')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_port" name="data[port]" value="{$data.port}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_user">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('邮箱账号')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_user" name="data[user]" value="{$data.user}">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_pass">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('邮箱密码')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_pass" name="data[pass]" value="{$data.pass}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('排列顺序')}</label>
+            <div class="col-xs-8">
+                <input type="text" id="displayorder" class="form-control" name="data[displayorder]" value="{intval($data.displayorder)}">
+                <span class="help-block"> {dr_lang('排序值由小到大排列，范围为0-255')} </span>
+            </div>
+        </div>
+    </div>
+</form>
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/fuelux/js/spinner.min.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#displayorder").TouchSpin({
+            buttondown_class: "btn red",
+            buttonup_class: "btn green",
+            min: -255,
+            max: 255
+        });
+    });
+</script>
+{template "footer.html"}

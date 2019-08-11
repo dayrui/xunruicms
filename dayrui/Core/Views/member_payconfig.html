@@ -1,0 +1,85 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('支付设置')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">SITE_EXPERIENCE</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[experience]" value="{$data['experience']}" ></label>
+                                <span class="help-block">{dr_lang('例如“经验值”，“积分值”等等')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">SITE_SCORE</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[score]" value="{$data['score']}" ></label>
+                                <span class="help-block">{dr_lang('例如“虚拟币”，“F币”，“A币”，“B币”等等')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('1元兑换')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-small" style="width:75px!important;" type="text" name="data[convert]" value="{$data['convert']}" /></label>
+                                <label>&nbsp;&nbsp;{SITE_SCORE}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('支付号前缀')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control " type="text" name="data[prefix]" value="{$data['prefix']}" /></label>
+                                <span class="help-block">{dr_lang('用于生成唯一支付id前缀，只允许填写字母')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('最小充值金额')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control " type="text" name="data[min]" value="{$data['min']}" /></label>
+                                <label>&nbsp;&nbsp;元</label>
+                                <span class="help-block">{dr_lang('用户中心在线充值功能的最小充值金额')}</span>
+                            </div>
+                        </div>
+                        {if dr_is_app('shang')}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('最小打赏金额')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control " type="text" name="data[smin]" value="{$data['smin']}" /></label>
+                                <label>&nbsp;&nbsp;元</label>
+                                <span class="help-block">{dr_lang('模块内容打赏功能的最小打赏输入金额值')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

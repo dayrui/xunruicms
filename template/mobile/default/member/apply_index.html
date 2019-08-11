@@ -1,0 +1,85 @@
+{template "mheader.html"}
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet light ">
+
+                <div class="portlet-body form fc-form">
+                    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                        {$form}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">申请</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$group.name} </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 有效期 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {if $group.days}{$group.days}天{else}永久{/if} </p>
+                            </div>
+                        </div>
+                        {if $level}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 用户组级别 </label>
+                            <div class="col-md-9" style="padding-top: 10px">
+
+                                <div class="mt-radio-list">
+                                    {loop $level $t}
+                                    <label class="mt-radio mt-radio-line">
+                                        <input type="radio" name="lid" value="{$t.id}" >
+                                        {$t.name}
+                                        {if $group['unit']}
+                                        {intval($t.value)}{SITE_SCORE}
+                                        {else}
+                                        ￥{$t.value}元
+                                        {/if}
+                                        <span></span>
+                                    </label>
+                                    {/loop}
+                                </div>
+
+                            </div>
+                        </div>
+                        {else}
+                        {if $group.price>0}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 申请费用 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    {if $group.unit}
+                                        {intval($group.price)}{SITE_SCORE}
+                                    {else}
+                                        ￥{$group.price}元
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+                        {/if}
+                        {/if}
+
+                        {$myfield}
+                        {if $verify.status && $verify.content.note}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">审核信息</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static" style="color:red;"> {$verify.content.note} </p>
+                            </div>
+                        </div>
+                        {/if}
+
+                        <div class=" margin-top-40">
+                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{MEMBER_URL}')" class="btn red btn-block"> 提交申请 </button>
+                            <a href="{dr_member_url('recharge/index')}" class="btn red btn-outline btn-block"> 在线充值 </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{template "mfooter.html"}

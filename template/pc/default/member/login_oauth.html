@@ -1,0 +1,147 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MEMBER_URL}">用户中心</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>授权注册</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="fc-register portlet-title tabbable-line">
+                            <ul class="nav nav-tabs" style="float:left;">
+                                <li class="{if $type == 0}active{/if}">
+                                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 0])}" > 绑定账号 </a>
+                                </li>
+                                <li class="{if $type == 1}active{/if}">
+                                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 1])}" > 注册账号 </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="portlet-body">
+                            <form action="" class="form-horizontal form" method="post" name="myform" id="myform">
+                                {$form}
+                                <div class="form-body" style="padding-bottom:0">
+                                    <div class="form-group ">
+                                        <label class="col-md-2 control-label"> </label>
+                                        <div class="col-md-9 text-center input-large">
+                                            <p><img class="img-circle fc-member-avatar" src="{$oauth.avatar}"></p>
+                                            <p>{dr_html2emoji($oauth.nickname)}</p>
+                                        </div>
+                                    </div>
+                                    {if !$type}
+                                    <div class="form-group" id="dr_row_username">
+                                        <label class="col-md-2 control-label">账号</label>
+                                        <div class="col-md-9">
+                                            <label><input type="text" class="form-control input-large" name="data[username]" id="dr_username"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="dr_row_password">
+                                        <label class="col-md-2 control-label">密码</label>
+                                        <div class="col-md-9">
+                                            <label><input type="password" class="form-control input-large" name="data[password]" id="dr_password"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions" style="margin-top:30px">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-9" style="padding-left:5px;">
+                                            <label><button type="button" class="btn red" onclick="dr_ajax_member('{dr_now_url()}', 'myform');"> 立即绑定</button></label>
+                                            <label class="mt-checkbox mt-checkbox-outline" style="margin-left:20px;">
+                                                <input type="checkbox" name="is_protocol" value="1" checked> 我已阅读并同意
+                                                <span></span>
+                                            </label>
+                                            <label>
+                                                <a href="javascript:dr_show_protocol();">《用户注册协议》</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {else}
+                                    <div class="form-group ">
+                                        <label class="col-md-2 control-label">类型</label>
+                                        <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            {loop $register.group $i}
+                                            <label class="mt-radio">
+                                                <input type="radio" name="groupid" value="{$i}" {if $groupid==$i}checked=""{/if}> {$group[$i][name]}
+                                                <span></span>
+                                            </label>
+                                            {/loop}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    {if in_array('username', $register.field)}
+                                    <div class="form-group" id="dr_row_username">
+                                        <label class="col-md-2 control-label">账号</label>
+                                        <div class="col-md-9">
+                                            <label><input type="text" class="form-control input-large" name="data[username]" id="dr_username"></label>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {if in_array('email', $register.field)}
+                                    <div class="form-group " id="dr_row_email">
+                                        <label class="col-md-2 control-label">邮箱</label>
+                                        <div class="col-md-9">
+                                            <label><input type="text" class="form-control input-large" name="data[email]" id="dr_email"></label>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {if in_array('phone', $register.field)}
+                                    <div class="form-group " id="dr_row_phone">
+                                        <label class="col-md-2 control-label">手机号</label>
+                                        <div class="col-md-9">
+                                            <label><input type="text" class="form-control input-large" name="data[phone]" id="dr_phone"></label>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <div class="form-group " id="dr_row_password">
+                                        <label class="col-md-2 control-label">密码</label>
+                                        <div class="col-md-9">
+                                            <label><input type="password" class="form-control input-large" name="data[password]" id="dr_password"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="dr_row_password2">
+                                        <label class="col-md-2 control-label">确认密码</label>
+                                        <div class="col-md-9">
+                                            <label><input type="password" class="form-control input-large" name="data[password2]" id="dr_password2"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions" style="margin-top:30px">
+                                        <label class="col-md-2 control-label"></label>
+                                        <div class="col-md-9" style="padding-left:5px;">
+                                            <label><button type="button" class="btn red" onclick="dr_ajax_member('{dr_now_url()}', 'myform');"> 立即注册</button></label>
+                                            <label class="mt-checkbox mt-checkbox-outline" style="margin-left:20px;">
+                                                <input type="checkbox" name="is_protocol" value="1" checked> 我已阅读并同意
+                                                <span></span>
+                                            </label>
+                                            <label>
+                                                <a href="javascript:dr_show_protocol();">《用户注册协议》</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

@@ -1,0 +1,31 @@
+{template "header.html"}
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green-sharp">
+                    {$form_name}
+                </span>
+            </div>
+            <div class="actions">
+                <div class="btn-group">
+                    <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回')}</a>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-body">
+
+                {$myfield}
+                {$diyfield}
+                {$sysfield}
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+{template "footer.html"}

@@ -1,0 +1,63 @@
+<form action="{$pay_url}" class="form-horizontal" method="post" name="myform" id="payform">
+    {dr_form_hidden()}
+    <input type="hidden" name="pay[mark]" value="{$html.mark}" />
+    <input type="hidden" name="pay[title]" value="{$html.title}" />
+    <div class="form-body form">
+        <div class="form-group">
+            <label class="col-md-2 control-label">可用{SITE_SCORE}</label>
+            <div class="col-md-5">
+                <p class="form-control-static"> <span>{$member.score}</span> {SITE_SCORE}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">充值数量</label>
+            <div class="col-md-5">
+                <label>
+                    <input type="text" name="pay[money]" onblur="dr_get_money(this.value)" value="{$html.pay_value}" class="form-control">
+                </label>
+                <label>{SITE_SCORE}</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">付款金额</label>
+            <div class="col-md-5">
+                <p class="form-control-static fc-price-color"> <i class="fa fa-rmb"></i> <span id="dr_money_value">0</span> 元</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">账户余额</label>
+            <div class="col-md-5">
+                <p class="form-control-static fc-price-color"> <i class="fa fa-rmb"></i> {number_format($member.money, 2)} 元</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" style="padding-top:10px">付款方式</label>
+            <div class="col-md-8">
+                <div class="btn-group" data-toggle="buttons">
+                    {loop $html.pay_type $name $t}
+                    <label onclick="dr_select_paytype('{$name}')" class="btn btn-lg btn-default {if $name == $html.pay_default}active{/if}"> <input type="radio" class="toggle"> {$t['icon']} {$t['name']} </label>
+                    {/loop}
+                    <input type="hidden" name="pay[type]" value="{$html.pay_default}" id="dr_payselect">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions fc-form-actions">
+            <label class="col-md-2 control-label">  </label>
+            <div class="col-md-9 fc-form-submit">
+                <button type="submit"  class="btn btn-lg green"> 确认付款 </button>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script>
+function dr_get_money(value) {
+    $('#dr_money_value').html('0');
+    var value = value / {$ci->member_cache['pay']['convert']};
+    $('#dr_money_value').html(value);
+}
+</script>

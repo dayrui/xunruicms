@@ -1,0 +1,111 @@
+{template "header.html"}
+
+
+<div class="text-center">
+    <button type="button" id="dr_check_button" onclick="dr_checking();" class="btn green-meadow"> <i class="fa fa-refresh"></i> {dr_lang('立即开始')}</button>
+</div>
+
+
+<div id="dr_check_result" class="margin-top-30" style="display: none">
+
+</div>
+
+<div id="dr_check_div"  class="well margin-top-30" style="display: none">
+    <div class="scroller" style="height:300px" data-rail-visible="1"  id="dr_check_html">
+
+    </div>
+</div>
+
+<div id="dr_check_ing" style="display: none">
+    <div class="progress progress-striped">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        dr_checking();
+    });
+    function dr_checking() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{$count_url}",
+            success: function (json) {
+                if (json.code == 0) {
+                    $('#dr_check_div').show();
+                    $('#dr_check_html').html('<font color="red">'+json.msg+'</font>');
+                } else {
+                    $('#dr_check_html').html("");
+                    $('#dr_check_result').html($('#dr_check_ing').html());
+                    $('#dr_check_div').show();
+                    $('#dr_check_result').show();
+                    $('#dr_check_button').html('{dr_lang("正在初始化")}');
+                    $('#dr_check_button').attr('disabled', true);
+                    dr_ajax2ajax(1);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_ajax2ajax(page) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{$todo_url}&pp="+page,
+            success: function (json) {
+
+                $('#dr_check_html').append(json.msg);
+                document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+
+                $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+
+                if (json.code == 0) {
+                    $('#dr_check_button').attr('disabled', false);
+                    $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
+                } else {
+                    if (json.code == 100) {
+                        $('#dr_check_button').attr('disabled', false);
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
+                    } else {
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> '+json.code+'%');
+                        dr_ajax2ajax(json.code);
+                    }
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+<style>
+    #dr_check_html .p_error {
+        color: red;
+    }
+    #dr_check_html p {
+        margin: 10px 0;
+        clear: both;
+    }
+    #dr_check_html .rleft {
+        float: left;
+    }
+    #dr_check_html .rright .ok {
+        color: green;
+    }
+    #dr_check_html .rright .error {
+        color: red;
+    }
+    #dr_check_html .rright {
+        float: right;
+    }
+</style>
+
+{template "footer.html"}

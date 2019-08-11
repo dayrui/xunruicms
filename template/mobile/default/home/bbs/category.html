@@ -1,0 +1,58 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$cat.name}</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-content">
+
+    <div class="search-page search-content-1 margin-top-20">
+
+        <div class="bbs-table">
+            <div class="bbs-table-title">置顶贴子</div>
+            <ul class="bbs-list">
+                {module IN_isflag=1,2}
+                <li>
+                    <a class="bbs-avatar"><img src="{dr_avatar($t.uid)}" alt="{$t.author}"></a>
+                    <h2><a href="{dr_cat_value($t.catid, 'url')}" class="layui-badge">{dr_cat_value($t.catid, 'name')}</a>
+                        <a href="{$t.url}" {if $t.color}style="color:{$t.color} !important"{/if}>{dr_strcut($t.title, 30)}</a></h2>
+                    <div class="bbs-list-info">
+                        <span>{$t.author}</span>
+                        <span>{dr_fdate($t._inputtime)}</span>
+                        最后回复：<span><a rel="nofollow" href="{$t.url}">{dr_fdate($t._updatetime)}</a></span>
+                    </div>
+                    <div class="bbs-list-badge">
+                        <span class="layui-badge layui-bg-red"><i class="fa fa-eye"></i> {$t.hits}</span>
+                        <span class="layui-badge layui-bg-red"><i class="fa fa-comments"></i> {$t.comments}</span>
+                    </div>
+                </li>
+                {/module}
+
+            </ul>
+        </div>
+        <div class="bbs-table">
+            <div class="bbs-table-title">最新贴子</div>
+            <ul class="bbs-list">
+                {module NOTIN_isflag=1,2 catid=$catid num=10}
+                <li>
+                    <a class="bbs-avatar"><img src="{dr_avatar($t.uid)}" alt="{$t.author}"></a>
+                    <h2><a href="{dr_cat_value($t.catid, 'url')}" class="layui-badge">{dr_cat_value($t.catid, 'name')}</a>
+                        <a href="{$t.url}" {if $t.color}style="color:{$t.color} !important"{/if}>{dr_strcut($t.title, 30)}</a></h2>
+                    <div class="bbs-list-info">
+                        <span class="layui-badge layui-bg-red"><i class="fa fa-eye"></i> {$t.hits}</span>
+                        <span class="layui-badge layui-bg-red"><i class="fa fa-comments"></i> {$t.comments}</span>
+                        最后回复：<span><a rel="nofollow" href="{$t.url}">{dr_fdate($t._updatetime)}</a></span>
+                    </div>
+                </li>
+                {/module}
+            </ul>
+        </div>
+
+
+    </div>
+    </div>
+
+
+{template "footer.html"}

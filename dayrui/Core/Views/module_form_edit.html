@@ -1,0 +1,165 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('基本设置')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('后台显示字段')} </a>
+                </li>
+                <li class="{if $page==2}active{/if}">
+                    <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-user"></i> {dr_lang('用户中心')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('表单别名')}</label>
+                            <div class="col-md-9">
+                                <div class="form-control-static"><label><span class="label label-success"> {$data.table} </span></label></div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_row_name">
+                            <label class="col-md-2 control-label ">{dr_lang('表单名称')}</label>
+                            <div class="col-md-9">
+                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{$data.name}"></label>
+                                <span class="help-block"> {dr_lang('表单的描述名称')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_row_icon">
+                            <label class="col-md-2 control-label ">{dr_lang('菜单图标')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group" style="width:250px">
+                                    <input class="form-control" id="dr_icon" type="text" name="data[setting][icon]" value="{$data['setting']['icon']}" />
+                            <span class="input-group-btn">
+                                <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('前端发布功能')}</label>
+                            <div class="col-md-9">
+
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[setting][is_close_post]" value="0" {if !$data['setting']['is_close_post']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[setting][is_close_post]" value="1" {if $data['setting']['is_close_post']}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('前端用户（不是用户中心）是否开启发布功能；关闭后，仅前端用户的发布权限将会无效')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('提交成功跳转URL')}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control input-xlarge" name="data[setting][rt_url]" value="{$data['setting']['rt_url']}" >
+                                <span class="help-block"> {dr_lang('当用户提交表单成功之后跳转的链接')} </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+                        {loop $field $n $t}
+                        <div class="form-group field-{$n}">
+                            <label class="col-md-2 control-label">{dr_lang($t.name)} ({$t.fieldname})</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio">
+                                        <input type="radio" onclick="dr_field_show('{$n}', 1)" name="data[setting][list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['list_field'][$t.fieldname]['use']} checked{/if} > {dr_lang('显示')}
+                                        <span></span>
+                                    </label>
+                                    <label class="mt-radio">
+                                        <input type="radio" onclick="dr_field_show('{$n}', 0)" name="data[setting][list_field][{$t.fieldname}][use]" value="0" {if !$data['setting']['list_field'][$t.fieldname]['use']} checked{/if}> {dr_lang('隐藏')}
+                                        <span></span>
+                                    </label>
+                                </div>
+                                <div class="list-field-cog">
+                                    <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('排列顺序值由小到大')}');">{dr_lang('序列')}</a>
+                                        </span>
+                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['list_field'][$t.fieldname]['order'] ? $data['setting']['list_field'][$t.fieldname]['order'] : $n+100}" />
+                                    </div>
+                                </div>
+                                <div class="list-field-cog">
+                                    <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('列表的显示名称')}');">{dr_lang('名称')}</a>
+                                        </span>
+                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? $data['setting']['list_field'][$t.fieldname]['name'] : $t.name}" />
+                                    </div>
+                                </div>
+                                <div class="list-field-cog">
+                                    <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('不填宽度表示自动宽度')}');">{dr_lang('宽度')}</a>
+                                        </span>
+                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{$data['setting']['list_field'][$t.fieldname]['width']}" />
+                                    </div>
+                                </div>
+                                <div class="list-field-cog">
+                                    <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
+                                        </span>
+                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{$data['setting']['list_field'][$t.fieldname]['func']}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            $(function() {
+                                dr_field_show('{$n}', {intval($data['setting']['list_field'][$t.fieldname]['use'])});
+                            });
+                        </script>
+                        {/loop}
+                    </div>
+                </div>
+
+                <div class="tab-pane {if $page==2}active{/if}" id="tab_2">
+                    <div class="form-body">
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('用户管理内容')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][is_member]" value="1" {if $data['setting']['is_member']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('用户中心的内容管理右侧的入口链接显示、表单在用户中心是否可管理')}</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function dr_field_show(n, u) {
+        if (u) {
+            $('.field-'+n+' .list-field-cog').show();
+        } else {
+            $('.field-'+n+' .list-field-cog').hide();
+        }
+    }
+</script>
+{template "footer.html"}

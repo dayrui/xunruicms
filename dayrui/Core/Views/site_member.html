@@ -1,0 +1,266 @@
+{template "header.html"}
+<script>
+
+    function dr_show_catid(catid) {
+        if ($('.dr_cat_'+catid).is(":hidden")){
+            $('.fc-cat-user').hide();
+            $('.dr_cat_'+catid).show(200);
+        }else{
+            $('.dr_cat_'+catid).hide(200);
+        }
+    }
+    function dr_copy_catid(catid) {
+        dr_iframe('{dr_lang('复制')}', '{dr_url('site_member/edit')}&catid='+catid);
+    }
+    $(function(){
+        var table = $('.table-checkable');
+        table.find('.group-checkable').change(function () {
+            var set = jQuery(this).attr("data-set");
+            var checked = jQuery(this).is(":checked");
+            jQuery("."+set).each(function () {
+                if (checked) {
+                    $(this).prop("checked", true);
+                    $(this).parents('tr').addClass("active");
+                } else {
+                    $(this).prop("checked", false);
+                    $(this).parents('tr').removeClass("active");
+                }
+            });
+        });
+    });
+</script>
+<div class="note note-danger  my-content-top-tool">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<div class="row finecms-tool-row">
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-user font-dark"></i>
+                    <span class="caption-subject font-dark  "> {dr_lang('访问权限')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form id="form1">
+                    {dr_form_hidden()}
+                    <div class="form-body">
+                        <div class="table-scrollable">
+                            <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                                <thead>
+                                <tr class="heading">
+                                    <th class="myselect" style="height: 40px">
+                                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                            <input type="checkbox" class="checkboxes group-checkable home2" data-set="home2" />
+                                            <span></span>
+                                        </label>
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {loop $list $i $t}
+                                <tr class="odd gradeX">
+                                    <td class="myselect myselect">
+                                        {if !$t.level}
+                                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                            <input type="checkbox" {if !in_array($i, (array)$auth[home])} checked {/if} class="checkboxes home2" name="id[]" value="{$i}" />
+                                            <span></span>
+                                        </label>
+                                        {/if}
+                                    </td>
+                                    <td {$t.space}>{$t.name}</td>
+                                </tr>
+                                {/loop}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" onclick="dr_submit_post_todo('form1', '{dr_url('site_member/add')}&at=home')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存配置')}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if $categroy}
+<div class="portlet light bordered ">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-reorder font-dark"></i>
+            <span class="caption-subject font-dark"> {dr_lang('共享栏目权限')}</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form id="form3cate">
+            {dr_form_hidden()}
+            <div class="form-body">
+                <div class="table-scrollable">
+                    <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                        <thead>
+                        <tr class="heading">
+                            <th class="myselect">Id</th>
+                            <th>{dr_lang('栏目')}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $categroy $catid $cat}
+                        <tr class="">
+                            <td width="70"> {$cat.id}</td>
+                            <td> {$cat.spacer} {$cat.name}</td>
+                            <td>
+                                <button onclick="dr_iframe('{dr_lang('[%s]用户权限', $cat.name)}', '{dr_url('site_member/category_edit')}&catid={$catid}', '95%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('用户权限')}</button>
+                                <button onclick="dr_copy_catid({$catid})" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他栏目')}</button>
+                                <button onclick="dr_load_ajax('{dr_lang('你确定要初始化本栏目的权限配置吗？')}', '{dr_url('site_member/del')}&catid={$catid}', 1)" type="button" class="btn green btn-xs"> <i class="fa fa-trash"></i> {dr_lang('初始化权限')}</button>
+
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/if}
+
+{if $page}
+<div class="portlet light bordered ">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-safari font-dark"></i>
+            <span class="caption-subject font-dark"> {dr_lang('自定义页面权限')}</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form id="formpage">
+            {dr_form_hidden()}
+            <div class="form-body">
+                <div class="table-scrollable">
+                    <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                        <thead>
+                        <tr class="heading">
+                            <th class="myselect">Id</th>
+                            <th>{dr_lang('自定义页面')}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $page $catid $cat}
+                        <tr class="">
+                            <td width="70"> {$cat.id}</td>
+                            <td> {$cat.spacer} {$cat.name}</td>
+                            <td>
+                                <button onclick="dr_show_catid('page_{$catid}')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('用户权限')}</button>
+                            </td>
+                        </tr>
+                        <tr class="dr_cat_page_{$catid} fc-cat-user" style="display:none">
+                            <td colspan="3" class="fc-cat-info">
+                                <div class="table-scrollable">
+                                    <table class="fc-cat-table table table-striped table-bordered  table-checkable dataTable">
+                                        <thead>
+                                        <tr class="heading">
+                                            <th width="200"></th>
+                                            <th class="dr_option_xx">
+                                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    {dr_lang('访问')}
+                                                    <input type="checkbox" class="checkboxes group-checkable dr_p_{$catid}_show" data-set="dr_p_{$catid}_show" />
+                                                    <span></span>
+                                                </label>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {loop $list $i $t}
+                                        <tr class="odd gradeX">
+                                            {if $t.level}
+                                            <td colspan="99"> {$t.name} </td>
+                                            {else}
+                                            <td {$t.space}>{$t.name}</td>
+                                            <td class="dr_option_xx">
+                                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    {dr_lang('访问')}
+                                                    <input type="checkbox" class="checkboxes dr_p_{$catid}_show" {if !in_array($i, (array)$auth[page][$cat.id]['show'])} checked {/if} name="id[{$cat.id}][show][]" value="{$i}" />
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                            {/if}
+                                        </tr>
+                                        {/loop}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-actions text-center">
+                    <button type="button" onclick="dr_submit_post_todo('formpage', '{dr_url('site_member/add')}&at=page')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存配置')}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/if}
+
+{if $form}
+<div class="portlet light bordered ">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-list font-dark"></i>
+            <span class="caption-subject font-dark"> {dr_lang('表单权限')}</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form id="form7">
+            {dr_form_hidden()}
+            <div class="form-body">
+                <div class="table-scrollable">
+                    <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                        <thead>
+                        <tr class="heading">
+                            <th width="150"></th>
+                            <th>{dr_lang('表单')}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $form $catid $cat}
+                        <tr class="">
+                            <th>{$catid}</th>
+                            <td> {$cat.spacer} {$cat.name}</td>
+                            <td>
+                                <button onclick="dr_iframe('{dr_lang('网站表单[%s]', $cat.name)}', '{dr_url('site_member/form_edit')}&table={$catid}', '95%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('用户权限')}</button>
+
+                            </td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/if}
+
+<style>
+    .dr_option_xx {
+        text-align: left !important;
+    }
+    .dr_option_xx .mt-checkbox {
+        margin-right: 10px;
+        margin-bottom: 5px;
+    }
+</style>
+{template "footer.html"}

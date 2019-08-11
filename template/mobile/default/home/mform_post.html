@@ -1,0 +1,42 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>这里是{MODULE_NAME}模块表单提交页</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-wrapper-row full-height">
+    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+        {$form}
+        <div class="fc-form-body">
+            {$myfield}
+            {$diyfield}
+            {if $is_post_code}
+            <div class="form-group">
+                <label class="control-label col-md-2">{dr_lang('验证码')}</label>
+                <div class="col-md-9">
+                    <label>
+                        <div class="form-recaptcha">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="code">
+                                <div class="input-group-btn fc-code">
+                                    {dr_code(120, 35)}
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            {/if}
+        </div>
+
+        <div class="portlet-body form myfooter">
+            <div class="form-actions text-center">
+                <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$rt_url}')" class="btn green"> <i class="fa fa-save"></i> 提交内容</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{template "footer.html"}

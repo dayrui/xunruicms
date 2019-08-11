@@ -1,0 +1,33 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        <div class="form-group" id="dr_row_all">
+            <label class="col-xs-3 control-label ">{dr_lang('用户集')}</label>
+            <div class="col-xs-7">
+                <textarea class="form-control" rows="10" name="data[all]"></textarea>
+                <span class="help-block">{dr_lang('批量格式：用户名|密码|邮箱|手机|姓名')}</span>
+                <span class="help-block">{dr_lang('回车符换行，如果参数为空请填写null')}</span>
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_group">
+            <label class="col-xs-3 control-label ">{dr_lang('用户组')}</label>
+            <div class="col-xs-7">
+                <label>
+                    <select name="data[groupid]" class="form-control">
+                        <option value=""> -- </option>
+                        {loop $group $t}
+                        <option value="{$t.id}">{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+{template "footer.html"}

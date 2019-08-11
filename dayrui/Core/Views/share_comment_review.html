@@ -1,0 +1,25 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    <div class="form-body">
+
+        <div class="form-group">
+            <label class="col-xs-5 control-label ajax_name">{dr_lang('平均分')}</label>
+            <div class="col-xs-5">
+                <code class="form-control-static">{number_format($comment.avgsort, $review['point'])}</code>
+            </div>
+        </div>
+        {loop $review.option $i $t}
+        <div class="form-group">
+            <label class="col-xs-5 control-label ajax_name">{dr_lang($t)}</label>
+            <div class="col-xs-5">
+                <code class="form-control-static">{number_format($comment['sort'.$i], $review['point'])}</code>
+            </div>
+        </div>
+        {/loop}
+
+    </div>
+</form>
+
+
+{template "footer.html"}

@@ -1,0 +1,63 @@
+{template "mheader.html"}
+
+<div class="portlet light ">
+
+    <div class="portlet-body">
+
+        <form class="form-horizontal" role="form" id="myform">
+            {dr_form_hidden()}
+            <ul class="feeds fc-checkable">
+                {loop $list $t}
+                <li>
+                    <div class="col1">
+                        <div class="cont">
+                            <div class="cont-col2">
+                                <div class="desc" style="margin-left:10px;">
+                                    <a href="{$t.url}" target="_blank">
+                                        {$t.title} - {dr_strcut(dr_clearhtml($t.content), 30)}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {/loop}
+            </ul>
+
+        </form>
+        {if $mypages}
+        <div class="fc-pages text-center">{$mypages}</div>
+        {/if}
+    </div>
+</div>
+
+<script type="text/javascript">
+    // 顶部"..."弹出菜单
+    var menus = [];
+    var menu_url = [];
+    {php $i=0;}
+    {loop $module $t}
+    menus[{$i}] = "{$t.name}";
+    menu_url[{$i}] = "{$t.url}";
+    {php $i++;}
+    {/loop}
+
+
+    $(function() {
+        var table = $('.fc-checkable');
+        table.find('.group-checkable').change(function () {
+            var set = jQuery(this).attr("data-set");
+            var checked = jQuery(this).is(":checked");
+            jQuery(set).each(function () {
+                if (checked) {
+                    $(this).prop("checked", true);
+                    $(this).parents('div').addClass("active");
+                } else {
+                    $(this).prop("checked", false);
+                    $(this).parents('div').removeClass("active");
+                }
+            });
+        });
+    });
+</script>
+{template "mfooter.html"}

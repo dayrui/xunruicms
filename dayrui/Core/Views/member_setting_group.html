@@ -1,0 +1,142 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form class="form-horizontal myfbody" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable ">
+        <table class="table table-striped table-bordered  table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="100">AuthId</th>
+                <th width="300">{dr_lang('用户组')}</th>
+                <th>{dr_lang('操作')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $group $i $t}
+            <tr class="odd gradeX">
+                <td>{if $t.use}{$i}{/if}</td>
+                <td {$t.space}>{$t.name}</td>
+                <td>
+                    {if $t.use}
+                    <button onclick="dr_show_value('{$i}')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                    {/if}
+                </td>
+            </tr>
+            <tr class="dr_cat_{$i} fc-cat-user" style="display: none">
+                <td></td>
+                <td colspan="2">
+                    <div class="table-scrollable" style="padding-top:20px">
+
+                        {if $i != 0}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制上传头像')}</label>
+                            <div class="col-md-9">
+                                {if $data[config][avatar]}
+                                <p class="form-control-static"> {dr_lang('全局权限已开启')} </p>
+                                {else}
+                                <input type="checkbox" name="data[{$i}][avatar]" value="1" {if $data[auth][$i]['avatar']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制完善资料')}</label>
+                            <div class="col-md-9">
+                                {if $data[config][complete]}
+                                <p class="form-control-static"> {dr_lang('全局权限已开启')} </p>
+                                {else}
+                                <input type="checkbox" name="data[{$i}][complete]" value="1" {if $data[auth][$i]['complete']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制手机认证')}</label>
+                            <div class="col-md-9">
+                                {if $data[config][mobile]}
+                                <p class="form-control-static"> {dr_lang('全局权限已开启')} </p>
+                                {else}
+                                <input type="checkbox" name="data[{$i}][mobile]" value="1" {if $data[auth][$i]['mobile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件下载权限')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][downfile]" value="1" {if $data[auth][$i]['downfile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件上传权限')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][uploadfile]" value="1" {if $data[auth][$i]['uploadfile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        {if $i != 0}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('每日登录奖励')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <div class="input-group">
+                                        <input type="text" name="data[{$i}][login_score]" value="{$data[auth][$i]['login_score']}" class="form-control">
+                                        <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <div class="input-group">
+                                        <input type="text" name="data[{$i}][login_exp]" value="{$data[auth][$i]['login_exp']}" class="form-control">
+                                        <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('头像认证奖励')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <div class="input-group">
+                                        <input type="text" name="data[{$i}][avatar_score]" value="{$data[auth][$i]['avatar_score']}" class="form-control">
+                                        <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <div class="input-group">
+                                        <input type="text" name="data[{$i}][avatar_exp]" value="{$data[auth][$i]['avatar_exp']}" class="form-control">
+                                        <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        {/if}
+
+                    </div>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_url('member_setting_group/add')}', 'myform', '2000', '{dr_url('member_setting_group/index')}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script>
+    function dr_show_value(catid) {
+        if ($('.dr_cat_'+catid).is(":hidden")){
+            $('.fc-cat-user').hide();
+            $('.dr_cat_'+catid).show(200);
+        }else{
+            $('.dr_cat_'+catid).hide(200);
+        }
+    }
+    function dr_copy_value(catid) {
+        dr_iframe('{dr_lang('复制')}', '{dr_url('member_setting_group/edit')}&authid='+catid);
+    }
+
+</script>
+{template "footer.html"}

@@ -1,0 +1,87 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改配置之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="60" style="text-align:center">  </th>
+                <th width="330"> {dr_lang('名称')} / {dr_lang('目录')}</th>
+                <th width="150"> {dr_lang('开发者')} </th>
+                <th width="80"> {dr_lang('版本')} </th>
+                <th> {dr_lang('操作')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {php $i=1;}
+            {loop $list $dir $t}
+            <tr class="odd gradeX">
+                <td style="text-align:center">
+                    <span class="badge badge-success"> {$i} </span>
+                </td>
+                <td><i class="{$t.icon}"></i> {$t.name} / {$dir}</td>
+                <td>{if $t.store}<a href="{$t.store}" target="_blank">{$t.author}</a>{else}{$t.author}{/if}</td>
+                <td> <a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a> </td>
+                <td>
+                    {if $t.install}
+                    <label><a href="javascript:dr_load_ajax('{dr_lang('确定卸载此程序吗？')}', '{dr_url('cloud/uninstall', ['dir'=>$dir])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>
+                    {else}
+                    <label><a href="javascript:dr_load_ajax('{dr_lang('确定安装此程序吗？')}', '{dr_url('cloud/install', ['dir'=>$dir])}', 1);" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('安装')} </a></label>
+                    {/if}
+                    <label class="dr_check_version" id="dr_row_{$dir}"></label>
+                </td>
+            </tr>
+            {php $i++;}
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+
+</form>
+
+
+<script type="text/javascript">
+
+    $(function() {
+        {loop $list $dir $t}
+        {if $t.id}
+        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
+            success: function(json) {
+                if (json.code) {
+                    $("#dr_row_{$dir}").html(json.msg);
+                } else {
+                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
+            }
+        });
+        {/if}
+        {/loop}
+    });
+
+    function dr_show_log(id, v) {
+        layer.open({
+            type: 2,
+            title: '版本日志',
+            scrollbar: false,
+            resize: true,
+            maxmin: true, //开启最大化最小化按钮
+            shade: 0,
+            area: ['80%', '80%'],
+            content: '{dr_url("cloud/log_show")}&id='+id+'&version='+v,
+            //content: 'http://www.phpcmf.net/version.php?id='+id+'&version='+v,
+        });
+    }
+
+</script>
+{template "footer.html"}

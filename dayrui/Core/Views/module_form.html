@@ -1,0 +1,71 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('模块表单是对模块内容的扩展，相当于模块的子内容')}</p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+    <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+        <thead>
+        <tr class="heading">
+            {if $ci->_is_admin_auth('del')}
+            <th class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+            </th>
+            {/if}
+            <th width="150"> {dr_lang('名称')} </th>
+            <th width="160"> {dr_lang('表单别名')} </th>
+            <th width="240"> {dr_lang('模板文件')} </th>
+            <th>  </th>
+        </tr>
+        </thead>
+        <tbody>
+        {loop $list $t}
+        <tr class="odd gradeX" id="dr_row_{$t.id}">
+            {if $ci->_is_admin_auth('del')}
+            <td class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                    <span></span>
+                </label>
+            </td>
+            {/if}
+            <td>{$t.name}</td>
+            <td>{$t.table}</td>
+            <td>{$t.module}/form_{$t.table}.html</td>
+            <td>
+                {if $ci->_is_admin_auth('edit')}
+                <label><a href="{dr_url('module/form_edit', ['dir'=>$t.module, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>
+                {/if}
+                {if $ci->_is_admin_auth()}
+                <label><a href="{dr_url('field/index', ['rname'=>'mform-'.$t['module'], 'rid'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-code"></i> {dr_lang('自定义字段')} </a></label>
+                {/if}
+            </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+    </div>
+
+         <div class="row fc-list-footer table-checkable ">
+             <div class="col-md-5 fc-list-select">
+                {if $ci->_is_admin_auth('del')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                <button type="button" onclick="dr_ajax_option('{dr_url('module/form_del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+                {/if}
+            </div>
+             <div class="col-md-7 fc-list-page">
+                 {$mypages}
+             </div>
+         </div>
+
+</form>
+
+
+{template "footer.html"}

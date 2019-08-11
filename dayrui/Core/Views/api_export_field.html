@@ -1,0 +1,45 @@
+{template "header.html"}
+
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class=" myfbody ">
+
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-12 text-center">
+                    <div id="menu_body">
+                        {loop $field $k $t}
+                        <div class="menu-sort margin-bottom-10">
+                            <label><i class="fa fa-arrows"></i></label>
+                            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                <input type="checkbox" class="group-checkable" {if $t.use} checked{/if} value="1" name="data[{$k}][use]" data-set=".checkboxes" />
+                                <span></span>
+                            </label>
+                            <label><input class="form-control" disabled type="text" value="{$k}" /></label>
+                            <label><input class="form-control" type="text" name="data[{$k}][name]" value="{$t['name']}" /></label>
+                            <label><input placeholder="{dr_lang('自定义格式化字段函数')}" class="form-control input-large" type="text" name="data[{$k}][func]" value="{$t['func']}" /></label>
+                            <label><button type="button" onclick="dr_call_alert()" class="btn green">{dr_lang('说明')}</button></label>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$export_url}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存并下一步')}</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $("#menu_body").sortable({
+        items: "div"
+    });
+</script>
+{template "footer.html"}

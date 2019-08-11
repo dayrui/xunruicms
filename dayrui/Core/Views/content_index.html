@@ -1,0 +1,139 @@
+{template "header.html"}
+
+<div class="note note-danger {if $menu}{else} my-content-top-tool{/if}">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('操作之前请更新下全站缓存')}</a></p>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title tabbable-line">
+        <ul class="nav nav-tabs" style="float:left;">
+            <li class="{if $page==0}active{/if}">
+                <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-database"></i> {dr_lang('内容替换')} </a>
+            </li>
+            <li class="{if $page==1}active{/if}">
+                <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-code"></i> {dr_lang('执行SQL')} </a>
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body form">
+        <div class="tab-content">
+
+            <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                <form id="replaceform">
+                    {$form}
+                    <div class="form-body">
+
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label"> {dr_lang('表名称')} </label>
+                            <div class="col-md-9">
+                                <label><select name="bm" class="form-control" onchange="dr_fd(this.value)">
+                                    <option value="0">{dr_lang('选择表')}</option>
+                                    {loop $tables $t}
+                                    <option value="{$t.Name}">{$t.Name}{if $t.Comment}（{$t.Comment}）{/if}</option>
+                                    {/loop}
+                                </select></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label">{dr_lang('待替换字段')}</label>
+                            <div class="col-md-9">
+                                <label id="dr_fd"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label">{dr_lang('被替换内容')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="t1"></textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label">{dr_lang('替换后的内容')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="t2"></textarea>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label">&nbsp;</label>
+                            <div class="col-md-9" style="padding-left: 5px;">
+                                <button type="button" onclick="dr_submit_post_todo('replaceform', '{SELF}?s={APP_DIR}&c=content&m=replace_index')" class="btn blue"> <i class="fa fa-database"></i> {dr_lang('立即执行')}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+
+
+
+            <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                <form id="sqlform">
+                    {$form}
+                    <div class="form-body">
+
+
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label">{dr_lang('SQL语句')}</label>
+                            <div class="col-md-9">
+                                <textarea id="sql" class="form-control" style="height:200px" name="sql"></textarea>
+                                <p style="padding-top:9px;" class="help-block"> {dr_lang('当执行select语句时只能执行一条')} </p>
+                            </div>
+                        </div>
+
+                        {if $sql_cache}
+                        <div class="form-group row">
+                            <label class="col-md-2 control-label " style="padding-top: 8px">{dr_lang('最近执行')}</label>
+                            <div class="col-md-9">
+                                <select class="form-control" onchange="$('#sql').val(this.value)">
+                                    <option value="">--</option>
+                                {loop $sql_cache $t}
+                                    <option value="{$t}">{dr_strcut($t, 50)}</option>
+                                {/loop}
+                                </select>
+                            </div>
+                        </div>
+                        {/if}
+
+                        <div id="sql_result_id" class="form-group row">
+                            <label class="col-md-2 control-label">{dr_lang('执行结果')}</label>
+                            <div class="col-md-9" id="sql_result">
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <label class="col-md-2 control-label">&nbsp;</label>
+                            <div class="col-md-9" style="padding-left: 5px;">
+                                <button type="button" onclick="dr_submit_sql_todo('sqlform', '{SELF}?s={APP_DIR}&c=content&m=sql_index')" class="btn blue"> <i class="fa fa-database"></i> {dr_lang('立即执行')}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function dr_fd(v) {
+        $.ajax({type: "POST",dataType:"json", url: "{dr_url('content/field_index')}&table="+v,
+            success: function(json) {
+                if (json.code == 1) {
+                    $('#dr_fd').html(json.msg);
+                } else {
+                    dr_cmf_tips(0, json.msg);
+                }
+                return false;
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+{template "footer.html"}

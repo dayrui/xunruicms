@@ -1,0 +1,57 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="form-body">
+
+        {if $dirname == 'share'}
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
+            <div class="col-md-9">
+                <input type="checkbox" name="setting[html]" value="1" {if $data['setting']['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+            <div class="col-md-9">
+
+                <label>
+                    <select class="form-control" name="setting[urlrule]">
+                        <option value="0"> {dr_lang('动态地址')} </option>
+                        {list action=cache name=urlrule return=u}
+                        {if $u.type==3}<option value="{$u.id}" {if $u.id == $data['setting']['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                        {/list}
+                    </select>
+                </label>
+                <label style="margin-left:20px;">{dr_lang('<a href="'.dr_url('urlrule/index', ['hide_menu' => 1]).'" style="color:blue !important">[URL规则管理]</a>')} </label>
+
+            </div>
+        </div>
+        {/if}
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
+            <div class="col-md-9">
+                <textarea class="form-control " style="height:90px" name="seo[list_title]">{$data['setting']['seo']['list_title']}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('SEO关键字')}</label>
+            <div class="col-md-9">
+                <textarea class="form-control " style="height:90px" name="seo[list_keywords]">{$data['setting']['seo']['list_keywords']}</textarea>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('SEO描述信息')}</label>
+            <div class="col-md-9">
+                <textarea class="form-control " style="height:90px" name="seo[list_description]">{$data['setting']['seo']['list_description']}</textarea>
+
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{template "footer.html"}

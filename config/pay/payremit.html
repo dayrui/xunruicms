@@ -1,0 +1,28 @@
+{if $data.status == 2}
+<p>汇款信息已提交，我们会即快为您确认。</p>
+{else}
+<div class="fc-pay-remit">
+    <div class="fc-price-color">
+        ￥{number_format($data.value,2)}元
+    </div>
+    <div style="margin: 20px 0">
+        {nl2br($config.value)}
+    </div>
+    <h5>注意事项：汇款时需要注意以下信息，请牢记！</h5>
+    <ul class="list-unstyled">
+        <li>1. 您的汇款流水号为：<font color="red">{$data.id}</font> ，汇款时请将此流水号填写到汇款单【附言】栏内。</li>
+        <li>2. 请您在24小时内汇清款项，否则24小时系统会取消订单。</li>
+        <li>3. 汇款金额请与应付金额保持一致，请勿多汇款或者少汇款。</li>
+        <li>4. 汇款完成之后，请点击下方的“确认已汇款”按钮，到账周期一般为1-3个工作日。</li>
+    </ul>
+
+    <form action="" class="form-horizontal" method="post">
+        {dr_form_hidden()}
+        <input type="hidden" name="pay" value="1">
+        <p style="margin-top:20px"><button type="submit" class="btn red-sunglo">确认已汇款</button></p>
+    </form>
+</div>
+{/if}
+<p>
+    这是转账汇款页面模板config/pay/payremit.html
+</p>

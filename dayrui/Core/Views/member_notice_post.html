@@ -1,0 +1,82 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('提醒消息将会通过站内信的方式发送到该用户的用户中心消息之中')}</p>
+</div>
+<script type="application/javascript">
+    $(function(){
+        dr_set_value(0);
+    });
+    function dr_set_value(i) {
+        $('.dr_type').hide();
+        $('.dr_type_'+i).show();
+    }
+</script>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green "><i class="fa fa-bell"></i> {dr_lang('提醒消息')}</span>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+
+
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('接收人群')}</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            {loop $type $ii $name}
+                            <label class="mt-radio">
+                                <input onclick="dr_set_value('{$ii}')" {if $ii==$i}checked{/if} name="data[type]" type="radio" value="{$ii}"> {$name}
+                                <span></span>
+                            </label>
+                            {/loop}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group dr_type_1 dr_type"  style="display: none">
+                    <label class="control-label col-md-2"><span class="required" aria-required="true"> * </span>{dr_lang('用户账号')}</label>
+                    <div class="col-md-9">
+                        <div class="input-group" style="width:200px;">
+                            <input class="form-control " type="text" name="data[username]" id="dr_username" value="{$member.username}">
+                            <span class="input-group-btn">
+                                <a class="btn btn-success default" href="javascript:dr_show_member('username');"><i class="fa fa-user"></i> {dr_lang('资料')}</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group dr_type_2 dr_type"  style="display: none">
+                    <label class="col-md-2 control-label"><span class="required" aria-required="true"> * </span>{dr_lang('用户账号')}</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control" name="data[usernames]" rows="6"></textarea>
+                        <p class="help-block"> {dr_lang('批量发送一行一个用户账号')} </p>
+                    </div>
+                </div>
+
+                <div class="form-group" id="dr_row_note">
+                    <label class="col-md-2 control-label"><span class="required" aria-required="true"> * </span> {dr_lang('消息内容')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="dr_note" name="data[note]" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label ">{dr_lang('相关链接')}</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control " placeholder="{dr_lang('可选')}" name="data[url]" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_bfb_submit('{dr_lang('发送通知')}', 'myform', '{dr_url('member_notice/todo_add')}')" class="btn green"> <i class="fa fa-send"></i> {dr_lang('立即发送')} </button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

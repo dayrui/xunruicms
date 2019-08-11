@@ -1,0 +1,39 @@
+
+<div class="portlet portlet-sortable light bordered">
+<div class="portlet-title tabbable-line">
+    <div class="caption">
+        <i class="fa fa-bell"></i>
+        <span class="caption-subject"> <a style="color:#666" href="{dr_url('notice/my_index')}">{dr_lang('系统提醒')}</a> </span>
+    </div>
+</div>
+<div class="portlet-body">
+
+    <div class="scroller" style="height: 250px;" data-always-visible="1" data-rail-visible="0">
+        <?php $notice = \Phpcmf\Service::M('auth')->admin_notice();?>
+        {if !$notice}
+        <div style="padding-top: 30px;padding-bottom: 30px;text-align: center;color: #d7d8da;"> {dr_lang('无任何提醒')} </div>
+        {else}
+        <ul class="feeds" style="padding-bottom: 20px">
+            {loop $notice $t}
+            <li>
+                <div class="col1" style="padding-top: 2px;padding-left: 3px;">
+                    <div class="cont">
+                        <div class="cont-col1 user-avatar">
+                            <a href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
+                        </div>
+                        <div class="cont-col2">
+                            <div class="desc"><a href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col2">
+                    <div class="date"> {dr_fdate($t.inputtime)} </div>
+                </div>
+            </li>
+            {/loop}
+        </ul>
+        {/if}
+
+    </div>
+</div>
+</div>

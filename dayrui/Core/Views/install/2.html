@@ -1,0 +1,111 @@
+{template "install/header.html"}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-edit font-green"></i>
+            <span class="caption-subject font-green">网站信息</span>
+        </div>
+    </div>
+    <div class="portlet-body ">
+        <div class="scroller" style="height:300px" data-rail-visible="1">
+        <form action="#" id="myform" class="form-horizontal form-bordered ">
+            {dr_form_hidden()}
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3">网站名称</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[name]" value="我的网站" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">创始人账号</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[username]" value="admin" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">创始人邮箱</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[email]" value="" class="form-control" placeholder="此项必填">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">创始人密码</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[password]" value="admin" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">数据库地址</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[db_host]" value="127.0.0.1" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">数据库账号</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[db_user]" value="" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">数据库密码</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[db_pass]" value="" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">数据库名称</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[db_name]" value="" class="form-control" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">数据表前缀</label>
+                    <div class="col-md-7">
+                        <input type="text" name="data[db_prefix]" value="dr_" class="form-control" placeholder="">
+                    </div>
+                </div>
+                {if DR_CMS == 10}
+                <div class="form-group">
+                    <label class="control-label col-md-3">安装测试数据</label>
+                    <div class="col-md-7">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio">
+                                <input type="radio" name="is_install_db" value="1" checked=""> 安装
+                                <span></span>
+                            </label>
+                            <label class="mt-radio">
+                                <input type="radio" name="is_install_db" value="0"> 不安装
+                                <span></span>
+                            </label>
+                        </div>
+                        <p class="help-block"> 新手建议选择安装测试数据，方便快速入门 </p>
+                    </div>
+                </div>
+                {/if}
+            </div>
+
+        </form>
+    </div>
+    </div>
+    <div class="portlet-title" style="min-height: 18px;">
+    </div>
+    <div class="portlet-body text-center">
+        <a href="javascript:dr_next_install();" class="btn btn-success"> 下一步安装 </a>
+    </div>
+</div>
+<script>
+    function dr_next_install() {
+        $.ajax({type: "POST",dataType:"json", url: '{dr_now_url()}', data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    window.location.href = json.msg;
+                } else {
+                    layer.alert(json.msg);
+                }
+            }
+        });
+    }
+</script>
+{template "install/footer.html"}

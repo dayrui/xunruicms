@@ -1,37 +1,22 @@
-# 迅睿CMS建站程序-XunRuiCMS
+# 迅睿CMS建站程序
 
 #### 介绍
-迅睿CMS（原FineCMS）基于Codeigniter4框架，PHP中的真正完全开源免费CMS系统！
+迅睿CMS程序永久免费开源，允许商业建站使用，XunRuiCMS是自由开发的软件，属于所有PHPer及编程爱好者;
+有任何开发建议都可以向作者提出，作者联系邮箱：finecms@qqcom
 
-#### 软件架构
-软件架构说明
-
+#### 运行环境
+PHP7.2以上
+MySQL5以上，推荐5.7+
+Apache、Nginx、IIS都可以
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. 将代码下载到网站的根目录
+2. 运行安装文件/install.php
+3. 切忌不要放在子目录安装
 
 #### 使用说明
 
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 参与贡献
-
-1. Fork 本仓库
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
-
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+1. 使用文档：https://www.xunruicms.com/doc/
+2. 技术论坛：https://www.xunruicms.com/wenda/
+3. 正式版程序下载：https://www.xunruicms.com/down/

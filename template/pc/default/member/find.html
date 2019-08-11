@@ -1,0 +1,83 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MEMBER_URL}">用户中心</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>找回密码</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="search-page search-content-2">
+                        <div class="portlet light">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark">找回密码</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body form" style="">
+
+                                <form id="myform" class="form-horizontal" role="form">
+                                    {dr_form_hidden()}
+                                    <div class="form-body">
+                                        <div class="form-group" id="dr_row_value">
+                                            <label class="col-md-5 control-label">凭证</label>
+                                            <div class="col-md-5">
+                                                <label><input type="text" class="form-control" id="dr_value" name="data[value]" placeholder="输入邮箱或手机号码"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="dr_row_password">
+                                            <label class="col-md-5 control-label">新密码</label>
+                                            <div class="col-md-5">
+                                                <label><input type="password" class="form-control" id="dr_password" name="data[password]" placeholder="输入新的密码"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="dr_row_password2">
+                                            <label class="col-md-5 control-label">确认密码</label>
+                                            <div class="col-md-5">
+                                                <label><input type="password" class="form-control" id="dr_password2" name="data[password2]" placeholder="再次输入新的密码"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="dr_row_code">
+                                            <label class="col-md-5 control-label">验证码</label>
+                                            <div class="col-md-5">
+                                                <div class="input-group" style="width: 172px">
+                                                    <input type="text" id="dr_code" name="data[code]" class="form-control" placeholder="验证码">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn green" type="button" onclick="dr_ajax_url('{$api_url}&value='+$('#dr_value').val())">发送验证码</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions ">
+                                            <label class="col-md-5 control-label"></label>
+                                            <div class="col-md-5">
+                                                <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_member_url('login/index')}')" class="btn blue"> 提交验证</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

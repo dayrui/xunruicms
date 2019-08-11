@@ -1,0 +1,240 @@
+{template "header.html"}
+<script type="text/javascript">
+    $(function() {
+        {if empty($data['SITE_CLOSE'])}
+            $('.dr_close_msg').hide();
+        {else}
+            $('.dr_close_msg').show();
+        {/if}
+        dr_theme({$is_theme});
+    });
+    function dr_theme(id) {
+        if (id == 1) {
+            $("#dr_theme_html").html($("#dr_web").html());
+        } else {
+            $("#dr_theme_html").html($("#dr_local").html());
+        }
+    }
+</script>
+<div id="dr_local" style="display: none">
+    <label class="col-md-2 control-label">{dr_lang('主题风格')}</label>
+    <div class="col-md-9">
+        <label><select class="form-control" name="data[SITE_THEME]">
+            <option value="default"> -- </option>
+            {loop $theme $t}
+            <option{if $t==$data['SITE_THEME']} selected=""{/if} value="{$t}">{$t}</option>
+            {/loop}
+        </select></label>
+        <span class="help-block">{dr_lang('位于网站主站根目录下：/static/风格名称/')}</span>
+    </div>
+</div>
+<div id="dr_web" style="display: none">
+    <label class="col-md-2 control-label">{dr_lang('远程资源')}</label>
+    <div class="col-md-9">
+        <input class="form-control  input-xlarge" type="text" placeholder="http://" name="data[SITE_THEME2]" value="{php echo $data['SITE_THEME'];}">
+        <span class="help-block">{dr_lang('网站将调用此地址的css,js,图片等静态资源')}</span>
+    </div>
+</div>
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+{$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-globe"></i> {dr_lang('站点信息')} </a>
+                </li>
+                <li class="{if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-cog"></i> {dr_lang('参数设置')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-share-alt-square"></i> {dr_lang('域名设置')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SITE_INDEX_HTML]" value="1" {if $data['SITE_INDEX_HTML']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启之后首页将会自动生成静态文件')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站状态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="data[SITE_CLOSE]" value="0" {if empty($data['SITE_CLOSE'])}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="data[SITE_CLOSE]" value="1" {if $data['SITE_CLOSE']}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('当关闭网站时，除管理员之外的用户将无法访问（静态页面除外）')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_close_msg">
+                            <label class="col-md-2 control-label">{dr_lang('关闭理由')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="data[SITE_CLOSE_MSG]">{php echo $data['SITE_CLOSE_MSG'] ? $data['SITE_CLOSE_MSG'] : '网站升级中....';}</textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站LOGO')}</label>
+                            <div class="col-md-9">
+                                {$logofield}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站名称')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{$data['SITE_NAME']}"></label>
+                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('ICP备案信息')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{$data['SITE_ICP']}"></label>
+                             </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('第三方统计代码')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="data[SITE_TONGJI]">{$data['SITE_TONGJI']}</textarea>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站语言')}</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[SITE_LANGUAGE]">
+                                    <option value="zh-cn"> -- </option>
+                                    {loop $lang $t}
+                                    <option{if $t==$data['SITE_LANGUAGE']} selected=""{/if} value="{$t}">{$t}</option>
+                                    {/loop}
+                                </select></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('时间格式')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{$data['SITE_TIME_FORMAT']}"></label>
+                                <span class="help-block">{dr_lang('网站时间显示格式与date函数一致，默认Y-m-d H:i:s')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('风格模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_theme(1)" name="theme" value="1" {if $is_theme}checked{/if} /> {dr_lang('远程地址')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_theme(0)" name="theme" value="0" {if !$is_theme}checked{/if} /> {dr_lang('本站资源')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_theme_html">
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模板目录')}</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[SITE_TEMPLATE]">
+                                    <option value="default"> -- </option>
+                                    {loop $template_path $t}
+                                    <option{if $t==$data['SITE_TEMPLATE']} selected=""{/if} value="{$t}">{$t}</option>
+                                    {/loop}
+                                </select></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站时区')}</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[SITE_TIMEZONE]">
+                                    <option value=""> -- </option>
+                                    <option value="-12" {if $data['SITE_TIMEZONE']=="-12"}selected{/if}>(GMT -12:00)</option>
+                                    <option value="-11" {if $data['SITE_TIMEZONE']=="-11"}selected{/if}>(GMT -11:00)</option>
+                                    <option value="-10" {if $data['SITE_TIMEZONE']=="-10"}selected{/if}>(GMT -10:00)</option>
+                                    <option value="-9" {if $data['SITE_TIMEZONE']=="-9"}selected{/if}>(GMT -09:00)</option>
+                                    <option value="-8" {if $data['SITE_TIMEZONE']=="-8"}selected{/if}>(GMT -08:00)</option>
+                                    <option value="-7" {if $data['SITE_TIMEZONE']=="-7"}selected{/if}>(GMT -07:00)</option>
+                                    <option value="-6" {if $data['SITE_TIMEZONE']=="-6"}selected{/if}>(GMT -06:00)</option>
+                                    <option value="-5" {if $data['SITE_TIMEZONE']=="-5"}selected{/if}>(GMT -05:00)</option>
+                                    <option value="-4" {if $data['SITE_TIMEZONE']=="-4"}selected{/if}>(GMT -04:00)</option>
+                                    <option value="-3.5" {if $data['SITE_TIMEZONE']=="-3.5"}selected{/if}>(GMT -03:30)</option>
+                                    <option value="-3" {if $data['SITE_TIMEZONE']=="-3"}selected{/if}>(GMT -03:00)</option>
+                                    <option value="-2" {if $data['SITE_TIMEZONE']=="-2"}selected{/if}>(GMT -02:00)</option>
+                                    <option value="-1" {if $data['SITE_TIMEZONE']=="-1"}selected{/if}>(GMT -01:00)</option>
+                                    <option value="0" {if $data['SITE_TIMEZONE']=="0"}selected{/if}>(GMT)</option>
+                                    <option value="1" {if $data['SITE_TIMEZONE']=="1"}selected{/if}>(GMT +01:00)</option>
+                                    <option value="2" {if $data['SITE_TIMEZONE']=="2"}selected{/if}>(GMT +02:00)</option>
+                                    <option value="3" {if $data['SITE_TIMEZONE']=="3"}selected{/if}>(GMT +03:00)</option>
+                                    <option value="3.5" {if $data['SITE_TIMEZONE']=="3.5"}selected{/if}>(GMT +03:30)</option>
+                                    <option value="4" {if $data['SITE_TIMEZONE']=="4"}selected{/if}>(GMT +04:00)</option>
+                                    <option value="4.5" {if $data['SITE_TIMEZONE']=="4.5"}selected{/if}>(GMT +04:30)</option>
+                                    <option value="5" {if $data['SITE_TIMEZONE']=="5"}selected{/if}>(GMT +05:00)</option>
+                                    <option value="5.5" {if $data['SITE_TIMEZONE']=="5.5"}selected{/if}>(GMT +05:30)</option>
+                                    <option value="5.75" {if $data['SITE_TIMEZONE']=="5.75"}selected{/if}>(GMT +05:45)</option>
+                                    <option value="6" {if $data['SITE_TIMEZONE']=="6"}selected{/if}>(GMT +06:00)</option>
+                                    <option value="6.5" {if $data['SITE_TIMEZONE']=="6.6"}selected{/if}>(GMT +06:30)</option>
+                                    <option value="7" {if $data['SITE_TIMEZONE']=="7"}selected{/if}>(GMT +07:00)</option>
+                                    <option value="8" {if $data['SITE_TIMEZONE']=="" || $data['SITE_TIMEZONE']=="8"}selected{/if}>(GMT +08:00)</option>
+                                    <option value="9" {if $data['SITE_TIMEZONE']=="9"}selected{/if}>(GMT +09:00)</option>
+                                    <option value="9.5" {if $data['SITE_TIMEZONE']=="9.5"}selected{/if}>(GMT +09:30)</option>
+                                    <option value="10" {if $data['SITE_TIMEZONE']=="10"}selected{/if}>(GMT +10:00)</option>
+                                    <option value="11" {if $data['SITE_TIMEZONE']=="11"}selected{/if}>(GMT +11:00)</option>
+                                    <option value="12" {if $data['SITE_TIMEZONE']=="12"}selected{/if}>(GMT +12:00)</option>
+                                </select></label>
+                                <span class="help-block">{dr_lang('例如中国地区选择“GMT +08:00”表示东八区')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站域名')}</label>
+                            <div class="col-md-4">
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[SITE_DOMAIN]" id="dr_domain" value="{$data['SITE_DOMAIN']}" class="form-control">
+                                    <span class="input-group-btn">
+                                        {if SITE_ID == 1}
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        {else}
+                                        <a class="btn blue" href="{SITE_URL}" target="_blank"><i class="fa fa-send"></i> {dr_lang('访问')}</a>
+                                        {/if}
+                                    </span>
+                                </div>
+                                <span class="help-block" id="dr_domain_tips">{dr_lang('例如：www.test.com，不能包含/符号')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('其他域名')}</label>
+                            <div class="col-md-9">
+                                <label><textarea class="form-control input-large" style="height:150px" name="data[SITE_DOMAINS]">{str_replace(',',PHP_EOL, $data['SITE_DOMAINS'])}</textarea></label>
+                                <span class="help-block">{dr_lang('当前站点支持绑定多个域名，它们将会301到主域名，域名一行一个')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

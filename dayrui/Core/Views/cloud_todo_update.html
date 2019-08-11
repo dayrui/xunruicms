@@ -1,0 +1,159 @@
+{template "header.html"}
+
+
+<div class="text-center" id="dr_check_button">
+    <button type="button" id="dr_check_button_ing" disabled="disabled" class="btn green-meadow"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  准备中 </button>
+</div>
+
+<div id="dr_check_result" class="margin-top-30" style="display: none">
+
+</div>
+
+<div id="dr_check_div"  class="well margin-top-30" style="display: none">
+    <div class="scroller" style="height:250px" data-rail-visible="1"  id="dr_check_html">
+
+    </div>
+</div>
+
+<div id="dr_check_ing" style="display: none">
+    <div class="progress progress-striped">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        dr_checking();
+    });
+    function dr_checking() {
+        $('#dr_check_html').html("");
+        $('#dr_check_result').html($('#dr_check_ing').html());
+        $('#dr_check_div').show();
+        $('#dr_check_result').show();
+        $('#dr_check_reing').remove();
+        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').removeClass('red');
+        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
+        $('#dr_check_html').append('<p class=""><label class="rleft">正在验证服务端授权信息</label></p>');
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/update_file_count')}&ids={$ids}",
+            success: function (json) {
+                if (json.code == 0) {
+                    $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+                    $('#dr_check_button_ing').addClass('red');
+                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                    $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
+                } else {
+                    dr_ajax2ajax(1);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_ajax2ajax(page) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/update_file_app')}&ids={$ids}&page="+page,
+            success: function (json) {
+
+                $('#dr_check_html').append(json.msg);
+                document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+
+                if (json.code == 0) {
+                    $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+                    $('#dr_check_button_ing').addClass('red');
+                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                } else {
+                    $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+                    if (json.code == 100) {
+                        // 下在完成
+                        dr_checking_install();
+                    } else {
+                        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  下载进度 '+json.code+'%');
+                        dr_ajax2ajax(json.code);
+                    }
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_checking_install() {
+        $('#dr_check_html').html("");
+        $('#dr_check_result').html($('#dr_check_ing').html());
+        $('#dr_check_div').show();
+        $('#dr_check_result').show();
+        $('#dr_check_reing').remove();
+        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').removeClass('red');
+        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 升级中');
+        $('#dr_check_html').append('<p class=""><label class="rleft">正在验证程序文件使用权</label></p>');
+        dr_ajax2ajax_install(1);
+    }
+    function dr_ajax2ajax_install(page) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/update_install_file_app')}&ids={$ids}&page="+page,
+            success: function (json) {
+
+                $('#dr_check_html').append(json.msg);
+                document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+
+                if (json.code == 0) {
+                    $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+                    $('#dr_check_button_ing').addClass('red');
+                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking_install()" class="btn green"> <i class="fa fa-refresh"></i> 重新升级 </button>');
+                } else {
+                    $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+                    if (json.code == 100) {
+                        // 升级完成
+                        $('#dr_check_button').html('<button type="button" onclick="parent.location.reload()" class="btn green"> <i class="fa fa-refresh"></i> 刷新后台 </button>');
+                        $('#dr_check_html').html('<p>恭喜你，升级完成，请刷新后台之后再更新后台缓存</p>');
+                    } else {
+                        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  升级进度 '+json.code+'%');
+                        dr_ajax2ajax_install(json.code);
+                    }
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+<style>
+    #dr_check_html .p_error {
+        color: red;
+    }
+    #dr_check_html p {
+        margin: 10px 0;
+        clear: both;
+    }
+    #dr_check_html .rleft {
+        float: left;
+    }
+    #dr_check_html .rright .ok {
+        color: green;
+    }
+    #dr_check_html .rright .error {
+        color: red;
+    }
+    #dr_check_html .rright {
+        float: right;
+    }
+</style>
+
+{template "footer.html"}

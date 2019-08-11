@@ -1,0 +1,62 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是{MODULE_NAME}模块表单详情页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <a href="{$index.url}">{$index.title}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{Router::mform_list_url($form_table, $index.id, MOD_DIR)}">{$form_name}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>详情</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject  "> {$form_name}: {$index.title} </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+
+                            {$myfield}
+                            {$diyfield}
+                            {$sysfield}
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

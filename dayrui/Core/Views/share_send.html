@@ -1,0 +1,50 @@
+{template "header.html"}
+<script type="text/javascript">
+    $(function() {
+        $('.tabs-left').height($(document).height());
+    });
+</script>
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="portlet-body">
+        {if $page==0}
+        <div class="form-body"  style="margin-left:40px">
+            <div class="form-group">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio" onclick="$('.myflag').show()" name="clear"  value="0" checked=""> {dr_lang('启用')}
+                        <span></span>
+                    </label>
+                    <label class="mt-radio">
+                        <input type="radio" onclick="$('.myflag').hide()" name="clear"  value="1"> {dr_lang('清空推荐位')}
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            {if $module['setting']['flag']}
+            <div class="form-group myflag">
+                <div class="mt-checkbox-list">
+
+                    {loop $module['setting']['flag'] $i $t}
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <input name="flag[]" type="checkbox" value="{$i}"> <i class="{dr_icon($t.icon)}"></i> {$t.name}
+                        <span></span>
+                    </label>
+                    {/loop}
+                </div>
+            </div>
+            {else}
+            <div style="color:red">{dr_lang('推荐位尚未设置')}</div>
+            {/if}
+        </div>
+        {elseif $page==1}
+            <div class="form-group">
+                <div class="col-md-4"> {$select} </div>
+                <span class="help-block">{dr_lang('可以同步发送到多个栏目之中')}</span>
+            </div>
+        {/if}
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

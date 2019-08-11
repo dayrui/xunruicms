@@ -1,0 +1,75 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('member');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th width="44" class="{dr_sorting('id')}" name="id">Id</th>
+                <th width="150" class="{dr_sorting('name')}" name="name">{dr_lang('名称')}</th>
+                <th width="200" class="{dr_sorting('price')}" name="price">{dr_lang('星级')}</th>
+                <th width="120" class="{dr_sorting('value')}" name="price">{dr_lang('升级要求')}</th>
+                <th style="text-align:center" width="90" class="{dr_sorting('register')}" name="register">{dr_lang('允许升级')}</th>
+                <th>{dr_lang('操作')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td>{$t.id}</td>
+                <td>{$t.name}</td>
+                <td>{dr_show_stars($t.stars)}</td>
+                <td>{$t.value}</td>
+                <td style="text-align:center">
+                    <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url($uriprefix.'/apply_level_edit', ['id'=>$t.id])}', 0);" class="badge badge-{if !$t.apply}no{else}yes{/if}"><i class="fa fa-{if !$t.apply}times{else}check{/if}"></i></a>
+                </td>
+                <td>
+                    {if $ci->_is_admin_auth('edit')}
+                    <label><a href="{dr_url($uriprefix.'/level_edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                    {/if}
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+         <div class="row fc-list-footer table-checkable ">
+             <div class="col-md-5 fc-list-select">
+                {if $ci->_is_admin_auth('del')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                {/if}
+                {if $ci->_is_admin_auth('del')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/level_del')}', '{dr_lang('你确定要删除吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                {/if}
+             </div>
+             </div>
+</form>
+
+
+{template "footer.html"}

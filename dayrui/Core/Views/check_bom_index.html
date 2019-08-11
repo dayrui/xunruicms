@@ -1,0 +1,109 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>如果使用编辑器修改配置或者查看文件时没有注意编辑器设置将可能在被编辑的文件上附加BOM头, 从而造成系统功能异常</p>
+</div>
+
+<div class="text-center">
+    <button type="button" id="dr_check_button" onclick="dr_checking();" class="btn green-meadow"> <i class="fa fa-refresh"></i> 单击检测全站PHP文件的Bom字符</button>
+</div>
+
+<div id="dr_check_result" class="margin-top-30" style="display: none">
+
+</div>
+
+<div id="dr_check_div"  class="well margin-top-30" style="display: none">
+    <div class="scroller" style="height:300px" data-rail-visible="1"  id="dr_check_html">
+
+    </div>
+</div>
+
+<div id="dr_check_ing" style="display: none">
+    <div class="progress progress-striped">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function dr_checking() {
+        $('#dr_check_button').attr('disabled', true);
+        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 准备中');
+        $('#dr_check_bf').html("");
+        $('#dr_check_html').html("正在准备中");
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('check_bom/php_count_index')}",
+            success: function (json) {
+                if (json.code == 0) {
+                    dr_tips(0, '没有查询到php文件，请检查目录权限');
+                } else {
+                    $('#dr_check_html').html("");
+                    $('#dr_check_result').html($('#dr_check_ing').html());
+                    $('#dr_check_div').show();
+                    $('#dr_check_result').show();
+                    $('#dr_check_button').attr('disabled', true);
+                    dr_ajax2ajax(1);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_ajax2ajax(page) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('check_bom/php_check_index')}&page="+page,
+            success: function (json) {
+
+                $('#dr_check_html').append(json.msg);
+                document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+
+                if (json.code == 0) {
+                    $('#dr_check_button').attr('disabled', false);
+                    $('#dr_check_button').html('<i class="fa fa-refresh"></i> 重新检测全站PHP文件的Bom字符');
+                    dr_tips(0, '发现异常');
+                } else {
+                    $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+                    if (json.code == 100) {
+                        $('#dr_check_button').attr('disabled', false);
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 重新检测全站PHP文件的Bom字符');
+                    } else {
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 文件检测中 '+json.code+'%');
+                        dr_ajax2ajax(json.code);
+                    }
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+<style>
+#dr_check_html .p_error {
+    color: red;
+}
+#dr_check_html p {
+    margin: 10px 0;
+    clear: both;
+}
+#dr_check_html .rleft {
+    float: left;
+}
+#dr_check_html .rright .ok {
+    color: green;
+}
+#dr_check_html .rright .error {
+    color: red;
+}
+#dr_check_html .rright {
+    float: right;
+}
+</style>
+
+{template "footer.html"}

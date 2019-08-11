@@ -1,0 +1,115 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('管理员账号允许同时拥有多个角色组')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green-sharp">
+                    {dr_lang('管理员')}
+                </span>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+
+                {if $edit}
+                <div class="form-group">
+                    <label class="col-md-2 control-label ">{dr_lang('账号')}</label>
+                    <div class="col-md-9">
+                        <p class="form-control-static"> {$data.username} </p>
+                    </div>
+                </div>
+                {else}
+                <div class="form-group" id="dr_row_username">
+                    <label class="col-md-2 control-label">{dr_lang('账号')}</label>
+                    <div class="col-md-7">
+                        <label>
+                            <input type="text" onblur="dr_ck_username()" id="dr_username" name="data[username]" value="{$data.username}" class="form-control input-large">
+                        </label>
+                    </div>
+                </div>
+                {/if}
+                <div class="form-group fcreg">
+                    <label class="col-md-2 control-label">{dr_lang('姓名')}</label>
+                    <div class="col-md-7">
+                        <label>
+                            <input type="text" name="data[name]" value="{$data.name}" class="form-control input-large">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fcreg" id="dr_row_password">
+                    <label class="col-md-2 control-label">{dr_lang('密码')}</label>
+                    <div class="col-md-7">
+                        <label>
+                            <input type="text" name="data[password]" value=""  placeholder="{dr_lang('留空表示不修改密码')}" class="form-control input-large">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fcreg" id="dr_row_email">
+                    <label class="col-md-2 control-label">{dr_lang('邮箱')}</label>
+                    <div class="col-md-7">
+                        <label>
+                            <input type="text" name="data[email]" value="{$data.email}" class="form-control input-large">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fcreg" id="dr_row_phone">
+                    <label class="col-md-2 control-label">{dr_lang('手机')}</label>
+                    <div class="col-md-7">
+                        <label>
+                            <input type="text" name="data[phone]" value="{$data.phone}" class="form-control input-large">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="dr_row_role">
+                    <label class="col-md-2 control-label">{dr_lang('角色组')}</label>
+                    <div class="col-md-7" style="padding-top: 10px">
+                        <div class="mt-checkbox-list">
+                            {loop $ci->role $rid $t}
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <input type="checkbox" name="data[role][]" {if $data[role][$rid]} checked{/if} value="{$rid}"> {$t.name}
+                                <span></span>
+                            </label>
+                            {/loop}
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$post_url}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
+        </div>
+    </div>
+</form>
+{if !$edit}
+<script>
+    $('.fcreg').hide();
+    function dr_ck_username() {
+        var name = $('#dr_username').val();
+        $.ajax({type: "GET",dataType:"json", url: "{dr_url('root/ck_index')}&name="+name,
+            success: function(json) {
+                if (json.code) {
+                    // 没有注册
+                    $('.fcreg').show();
+                } else {
+                    $('.fcreg').hide();
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+</script>
+{/if}
+{template "footer.html"}

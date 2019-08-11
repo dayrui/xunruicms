@@ -1,0 +1,75 @@
+{template "header.html"}
+<script>
+    function {$js}(type, page) {
+        var index = layer.load(2, { time: 10000 });
+        $.ajax({type: "GET", url: "{$page_url}&type="+type+"&page="+page, dataType:"jsonp",
+        success: function (data) {
+            layer.close(index);
+            if (data.code) {
+                $("#dr_module_comment_{$index.id}").html(data.msg);
+            } else {
+                dr_tips(0, data.msg);
+            }
+        }
+    });
+    }
+</script>
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是{MODULE_NAME}模块评论页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {if !IS_SHARE}
+                    <li>
+                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    {/if}
+                    {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
+                    <li>
+                        <a href="{$index.url}">{$index.title}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>评论</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject  "> 评论: {$index.title} </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body" id="dr_module_comment_{$index.id}">
+
+
+                            {template "comment_ajax.html"}
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

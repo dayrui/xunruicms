@@ -1,0 +1,88 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_safe_replace_path($path)}</p>
+    {if IS_EDIT_TPL}
+    <p style="color: red;padding-top: 5px;">{dr_lang('目前已开启可编辑文件权限，此权限风险极高，建议尽快关闭')}</p>
+    {else}
+    <p style="color: green;padding-top: 5px;">{dr_lang('目前没有开启可编辑文件权限，只能查看和浏览文件')}</p>
+    {/if}
+</div>
+
+<form class="form-horizontal" role="form" id="myform">
+{dr_form_hidden()}
+<div class="table-scrollable">
+    <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+        <thead>
+        <tr class="heading">
+            {if $ci->_is_admin_auth('del')}
+            <th class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+            </th>
+            {/if}
+            <th>{dr_lang('文件名')}</th>
+            <th>{dr_lang('别名')}</th>
+            <th style="text-align:center" width="100">{dr_lang('大小')}</th>
+            <th width="166">{dr_lang('修改日期')}</th>
+            <th>{dr_lang('操作')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {loop $list $t}
+        <tr class="odd gradeX" id="dr_row_{$t.id}">
+            {if $ci->_is_admin_auth('del')}
+            <td class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.file}" />
+                    <span></span>
+                </label>
+            </td>
+            {/if}
+            <td>
+                <a href="{$t.url}">
+                    <img src="{$t.icon}" style="width:30px;margin-right:10px">{$t.name}
+                </a>
+                {if $is_root && $t.thumb}
+                <a href="javascript:dr_preview_image('{$t.thumb}');" style="margin-left: 10px;">
+                    <img src="{$t.thumb}" style="width:30px;">
+                </a>
+                {/if}
+            </td>
+            <td><a href="{$t.cname_edit}">{$t.cname}</a></td>
+            <td style="text-align:center">{$t.size}</td>
+            <td>{$t.time}</td>
+            <td>
+                {if $ci->_is_admin_auth('edit')}
+                {if $t.edit}
+                <label><a href="{$t.edit}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                {/if}
+                {if $t.zip}
+                <label><a href="{$t.zip}" class="btn btn-xs red"> <i class="fa fa-file-zip-o"></i> {dr_lang('解压')}</a></label>
+                {/if}
+                {/if}
+            </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+</div>
+
+<div class="row fc-list-footer table-checkable ">
+    <div class="col-md-5 fc-list-select">
+        {if $ci->_is_admin_auth('del')}
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+            <span></span>
+        </label>
+        <button type="button" onclick="dr_ajax_option('{$delete}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+        {/if}
+    </div>
+    <div class="col-md-7 fc-list-page">
+        {$mypages}
+    </div>
+</div>
+</form>
+
+{template "footer.html"}

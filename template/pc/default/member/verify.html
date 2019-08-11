@@ -1,0 +1,61 @@
+{template "header.html"}
+
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{MEMBER_URL}">用户中心</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>审核</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="search-page search-content-2">
+                        <div class="portlet light">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark">账号审核</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body" style="height:300px; padding-top:110px">
+
+                                <div class="row">
+                                    <div class="col-md-5 text-right" style="padding-top:6px">
+                                        账号激活验证码已经发送到{$verify_name}之中
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" id="dr_code" class="form-control" placeholder="验证码">
+                                                <span class="input-group-btn">
+                                                    <button class="btn green" type="button" onclick="dr_ajax_url('{$post_url}&code='+$('#dr_code').val())">验证</button>
+                                                </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3" style="padding-top:6px">
+                                        <a href="javascript:;" onclick="dr_ajax_url('{$verify_url}')">重发验证码</a>
+                                        <a style="color:red; margin-left: 10px" href="{dr_member_url('member/api/change')}">变更{if $verify_type == 'email'}邮箱{else}手机号码{/if}</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{template "footer.html", "/"}

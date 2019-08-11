@@ -1,0 +1,14 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body" style="padding: 0 10px">
+        <div class="form-group" id="dr_row_name">
+            {dr_lang('将导出的配置内容复制到下面编辑器中')}
+        </div>
+        <div class="form-group" id="dr_row_table">
+            <textarea name="code" class="form-control" style="height:300px;width: 100%"></textarea>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

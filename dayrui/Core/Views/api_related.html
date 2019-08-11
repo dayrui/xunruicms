@@ -1,0 +1,75 @@
+{template "header.html"}
+
+
+<div class="row table-search-tool">
+    <form action="{SELF}" method="get">
+        {$search}
+        <div class="col-xs-12">
+            <label>
+                {$select}
+            </label>
+            <label>
+                <select name="field" class="form-control">
+                    {loop $field $t}
+                    {if $t.ismain}
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    {/if}
+                    {/loop}
+                </select>
+            </label>
+            <label><i class="fa fa-caret-right"></i></label>
+            <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+
+            <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+        </div>
+    </form>
+</div>
+
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <input type="hidden" name="isajax" value="1">
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                <th width="100">Id</th>
+                <th width="200">{dr_lang('栏目')}</th>
+                <th>{dr_lang('主题')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                <td>{$t.id}</td>
+                <td>{$category[$t.catid][name]}</td>
+                <td><a href="{$t.url}" target="_blank">{$t.title}</a></td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-5 col-sm-5 fc-list-select">
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

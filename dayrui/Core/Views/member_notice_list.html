@@ -1,0 +1,91 @@
+{template "header.html"}
+
+<div class="row table-search-tool">
+    <form action="{SELF}" method="get">
+        {dr_form_search_hidden()}
+        <div class="col-md-12 col-sm-12">
+            <label>
+                <select name="field" class="form-control">
+                    {loop $field $t}
+                    {if $t.ismain}
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    {/if}
+                    {/loop}
+                </select>
+            </label>
+            <label><i class="fa fa-caret-right"></i></label>
+            <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+        </div>
+
+
+        <div class="col-md-12 col-sm-12">
+            <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+            <label><button type="button" onclick="dr_export('{$list_table}', '{$list_query}')" class="btn blue btn-sm" style="margin-top: 2px;"> <i class="fa fa-mail-forward"></i> {dr_lang('导出')}</button></label>
+        </div>
+    </form>
+</div>
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th style="text-align:center" width="70" class="{dr_sorting('type')}" name="type">{dr_lang('类型')}</th>
+                <th width="150"  class="{dr_sorting('username')}" name="username">{dr_lang('用户')}</th>
+                <th width="170" class="{dr_sorting('inputtime')}" name="inputtime">{dr_lang('通知时间')}</th>
+                <th>{dr_lang('内容')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td style="text-align:center">
+                    {php echo $type[$t.type]['name'];}
+                </td>
+                <td>{Function_list::uid($t.uid)}</td>
+                <td>{dr_date($t.inputtime, '', 'red')}</td>
+
+                <td><a href="javascript:dr_iframe_show('{dr_lang('查看内容')}', '{dr_url('member_notice/show')}&id={$t.id}');" >{dr_strcut($t.content, 55)}</a></td>
+
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-5 fc-list-select">
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                {/if}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+
+        </div>
+        <div class="col-md-7 fc-list-page">
+            {$mypages}
+        </div>
+    </div>
+</form>
+
+
+{template "footer.html"}

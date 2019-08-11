@@ -1,0 +1,26 @@
+{template "header.html"}
+    <div style="margin-top: -20px"><span style="padding-left: 10px">{$table}</span></div>
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="140" style="text-align: left;padding-left:9px">{dr_lang('字段')}</th>
+                <th width="150">{dr_lang('描述')}</th>
+                <th>{dr_lang('类型')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $i $t}
+            <tr class="odd gradeX">
+                <td style="text-align: left;padding-left:9px">{$t.Field}</td>
+                <td>{if $t.Comment}{$t.Comment}{else}{$t.Field}{/if}</td>
+                <td>{$t.Type}</td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+
+
+{template "footer.html"}

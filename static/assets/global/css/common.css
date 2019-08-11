@@ -1,0 +1,297 @@
+.table {
+    table-layout:fixed;
+}
+.comment-list-field-cog {
+    margin: 10px 0;
+}
+.dataTable>tbody>tr>td:first-child>label {
+    margin-bottom: 15px;
+}
+.dataTable>tbody>tr>td>label {
+    margin-bottom: 0
+}
+.fc-cat-table {
+    table-layout: inherit;
+}
+.table td, .table th {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.table-fc-upload {
+    table-layout: auto;
+}
+.fc-head-table thead th {
+    background-color: #edf2f7;
+}
+.myselect {
+    overflow: visible !important;
+}
+.my_pid_menu td {
+    background: #eff0f2 !important;
+    height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.fc-sku-group-name {
+    margin-top:10px;
+    margin-bottom:10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e7ecf1;
+}
+.fc-sku-group-value {
+    margin-top: 10px; ;
+}
+.fc-sku-group-body {
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.fc-sku-group-name-input {
+    font-weight: bold;
+}
+.fc-sku-group-name-input .name {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.fc-sku-table thead th {
+    background-color: #edf2f7;
+}
+.form-horizontal .form-group .mt-checkbox-inline, .form-horizontal .form-group .mt-radio-inline {
+    padding-bottom: 2px !important;
+}
+.table-fc-upload {
+    margin-bottom:0px !important;
+}
+.fc-pay-remit h5{
+    font-size: 16px;
+    font-weight: 800;
+}
+.fc-pay-remit li {
+    padding:5px 0 5px 0px;
+}
+.fc-pay-remit {
+    padding-top:20px;
+    padding-left:20px;
+    text-align:left;
+}
+.fc-pay-money {
+    font-size: 16px;
+    font-weight: 400;
+}
+.fc-pay-z {
+    color: #290;
+}
+.fc-pay-j {
+    color: #f60;
+}
+.fc-price-color {
+    color:#ff8208;
+}
+.fc-weixin-pay {
+    margin-top:15px;
+    width:210px;
+    height:50px;
+    border-radius: 15px;
+    background-color:#FE6714;
+    border:0px #FE6714 solid;
+    cursor: pointer;
+    color:white;
+    font-size:16px;
+}
+.fc-pay-result .fc-price-color{
+    font-size: 16px;
+    font-weight: 400;
+}
+.fc-pay-result {
+    padding-top:30px !important;
+    padding-bottom:30px !important;
+}
+@font-face {font-family: "iconfont";
+    src: url('../font/iconfont.eot?t=1474530644'); /* IE9*/
+    src: url('../font/iconfont.eot?t=1474530644#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../font/iconfont.woff?t=1474530644') format('woff'), /* chrome, firefox */
+    url('../font/iconfont.ttf?t=1474530644') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('../font/iconfont.svg?t=1474530644#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont {
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-rectangle390:before { content: "\e600"; }
+.icon-icon:before { content: "\e602"; }
+.icon-licaishouyi:before { content: "\e65e"; }
+.icon-zhifubaoa:before { content: "\e662"; }
+.icon-yiban:before { content: "\e63e"; }
+.icon-caifua:before { content: "\e668"; }
+.fc-table-note {
+    padding: 8px 0px;
+}
+.feeds li .col2>.date {
+    height: 20px;
+    overflow: hidden;
+}
+.fc-member-avatar {
+    height:50px;
+}
+.mt-comments .mt-comment .mt-comment-select {
+    width: 30px;
+    padding-top: 15px;
+    float: left;
+}
+.mt-commets-checkable {
+    padding-left:10px;
+}
+.order_sorting {
+    background: url("../img/sort_both.png") no-repeat scroll right center;
+    cursor: pointer;
+    padding-right: 10px;
+}
+.order_sorting_desc {
+    background:url("../img/sort_desc.png") no-repeat scroll right center;
+    cursor:pointer;
+    padding-right:10px
+}
+.order_sorting_asc {
+    background:url("../img/sort_asc.png") no-repeat scroll right center;
+    cursor:pointer;
+    padding-right:10px
+}
+.ajax_name {
+    text-align:right;
+    margin-top:8px !important;
+}
+.ajax_link>.form-control {
+    padding-left: 12px!important;
+}
+.admin_msg {
+    top:5px!important;
+}
+.fc-form {
+    margin-top: 30px;
+}
+.fc-form-actions {
+    margin-top: 30px!important;
+    padding-bottom: 10px!important;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e7ecf1;
+}
+.fc-form-submit {
+    padding-left:5px;
+}
+table.dataTable tfoot th, table.dataTable tfoot td {
+    border-top:1px solid #e7ecf1 !important;
+    padding-top:8px!important;
+    padding-bottom:8px!important;
+}
+table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 8px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    vertical-align: middle;
+}
+
+.datetimepicker table tr td span {
+    overflow: hidden !important;
+}
+.files_row .preview img {
+    max-height:50px;
+    overflow: hidden;
+}
+.used_preview img {
+    width:50px;
+    height:50px;
+    overflow: hidden;
+}
+.border_none td {
+    border-top:0 !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+    background-color: #ffffff !important;
+}
+table.dataTable tbody tr {
+    background-color: #fbfcfd !important;
+}
+
+.table-footer td {
+    border-top:0 !important;
+}
+.table-footer .myleft .mt-checkbox{
+    margin-right:10px !important;
+}
+.table-footer .pagination {
+    margin:0px !important;
+}
+.table-footer .mynull {
+    width:10%;
+}
+.table-footer .myright {
+    width:60%;
+    text-align: right !important;
+    padding-right: 0 !important;
+
+}
+.table-footer .myleft {
+    padding-top: 0px;
+    text-align: left !important;
+    padding-left: 9px !important;
+    width:40%;
+}
+.myselect {
+    width:40px !important;
+    min-width:40px !important;
+    max-width:40px !important;
+    padding:3px 2px!important;
+}
+.progress {
+    margin-bottom: 8px !important;
+}
+.portlet-body {
+    overflow: hidden;
+}
+code.form-control-static {
+    padding: 5px 10px;
+    min-height: 30px;
+}
+.finecms-file-ts {
+    margin-top: 3px !important;
+    margin-bottom: 8px !important;
+}
+.fc-form-body {
+    margin:30px 0;
+}
+.fc-code img {
+    height: 32px;
+}
+.fc-code {
+    border: 1px solid #c2cad8;
+    border-left: 0;
+}
+
+.fc-member-tbselect {
+    text-align:left!important;
+    padding-left:7px!important;
+}
+.fc-list-footer {
+    margin-top: 20px;
+}
+.fc-list-select button{
+    margin-right: 8px;
+}
+.fc-list-select .form-control{
+    height: 28px;
+    padding-top: 1px;
+}
+.fc-list-select {
+    padding-left: 28px;
+}
+.fc-list-page{
+    text-align: right;
+}
+.fc-list-page .pagination {
+    margin: 0;
+}

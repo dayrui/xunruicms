@@ -1,0 +1,47 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('字数控制在40字以内，请勿发布非法信息，一经发现账户会被禁用')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-table"></i> {dr_lang('短信内容')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('手机号码')}：</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="data[mobiles]" ></textarea>
+                                <span class="help-block">{dr_lang('多个手机号码按“回车符号”分隔，一行一个号码')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('发送内容')}：</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:100px" name="data[content]" ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-send"></i> {dr_lang('立即发送')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

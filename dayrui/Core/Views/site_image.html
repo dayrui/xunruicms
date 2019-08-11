@@ -1,0 +1,188 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('上传图片时会按照以上配置来生成对应尺寸的文件, 可以使用dr_image函数调用对应的图片')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+{$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-file-picture-o "></i> {dr_lang('缩略图设置')} </a>
+                </li>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-photo"></i> {dr_lang('水印设置')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('原始纵横比例')}：</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[ratio]" value="1" {if $data['ratio']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('指定是否在缩放或使用硬值的时候使图像保持原始的纵横比例')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('图片水印总开关')}：</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_image').show();dr_set_mw_type($('.dtype:checked').val());" name="data[watermark]" value="1" {if $data['watermark']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_image').hide();" name="data[watermark]" value="0" {if empty($data['watermark'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_image">
+                            <label class="col-md-2 control-label">{dr_lang('远程附件水印')}：</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[remote]" value="1" {if $data['remote']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('打开远程附件水印会降低服务器性能，建议远程附件不加水印')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_image">
+                            <label class="col-md-2 control-label">{dr_lang('文章内容图片水印')}：</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[content]" value="1" {if $data['content']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启后文章编辑器内容中上传的图片将会采用动态水印模式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_image">
+                            <label class="col-md-2 control-label">{dr_lang('对齐方式')}：</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[vrtalign]">
+                                    {loop $wm_vrt_alignment $t}
+                                    <option{if $t==$data['vrtalign']} selected=""{/if} value="{$t}">{$t}</option>
+                                    {/loop}
+                                </select> </label>
+                                <label> <select class="form-control" name="data[horalign]">
+                                    {loop $wm_hor_alignment $t}
+                                    <option{if $t==$data['horalign']} selected=""{/if} value="{$t}">{$t}</option>
+                                    {/loop}
+                                </select></label>
+                            </div>
+                        </div>
+                        <div class="form-group dr_image">
+                            <label class="col-md-2 control-label">{dr_lang('偏移量设置')}：</label>
+                            <div class="col-md-9">
+                                <label> <input class="form-control" type="text" name="data[vrtoffset]" value="{$data['vrtoffset']}" /></label>
+                                <label> <input class="form-control" type="text" name="data[horoffset]" value="{$data['horoffset']}" /></label>
+                                <span class="help-block">{dr_lang('这里可以设置水印图片/文字的偏移量来校正图片水印位置')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_image">
+                            <label class="col-md-2 control-label">{dr_lang('水印方式')}：</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" class="dtype" name="data[type]" value="1" onclick="dr_set_mw_type(1)" {if $data['type']}checked{/if} /> {dr_lang('图片水印')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" class="dtype" name="data[type]" value="0" onclick="dr_set_mw_type(0)" {if empty($data['type'])}checked{/if} /> {dr_lang('文字水印')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group dr_image dr_mw_1" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('选择水印图片')}：</label>
+                            <div class="col-md-9">
+                                <label><select class=" form-control" name="data[overlay]">
+                                    <option value="default.png"> -- </option>
+                                    {loop $wm_opacity $t}
+                                    <option{if $t==$data['overlay']} selected=""{/if} value="{$t}">{$t}</option>
+                                    {/loop}
+                                </select></label>
+                                <span class="help-block">{dr_lang('图片目录：“根目录/statics/watermark/”，必须是png格式的图片')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_mw_1 dr_image" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('图像不透明度')}：</label>
+                            <div class="col-md-9">
+                                <label> <input class="form-control" type="text" name="data[opacity]" value="{$data['opacity']}" /></label>
+                                <span class="help-block">{dr_lang('这将使水印模糊化，从而不会掩盖住底层原始图片的细节，通常设置为50')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_mw_0 dr_image" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('文字字体')}：</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select class="form-control" name="data[font]">
+                                        <option value="default.ttf"> -- </option>
+                                        {loop $wm_font_path $t}
+                                        <option{if $t==$data['font']} selected=""{/if} value="{$t}">{$t}</option>
+                                        {/loop}
+                                    </select>
+                                </label>
+                                <span class="help-block">{dr_lang('字体目录：“根目录/statics/watermark/”，必须是ttf格式的字体文件')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_mw_0 dr_image" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('字体颜色')}：</label>
+                            <div class="col-md-9">
+                                <label> {dr_field_input('color', 'Color', array('option'=>array('value'=>$data['color'])))}</label>
+
+                            </div>
+                        </div>
+                        <div class="form-group dr_mw_0 dr_image" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('字体大小')}：</label>
+                            <div class="col-md-9">
+                                <label> <input class="form-control" type="text" name="data[size]" value="{$data['size']}" /></label>
+
+                            </div>
+                        </div>
+                        <div class="form-group dr_mw_0 dr_image" style="display:none">
+                            <label class="col-md-2 control-label">{dr_lang('水印文字')}：</label>
+                            <div class="col-md-9">
+                                <label> <input class="form-control" type="text" name="data[text]" value="{$data['text']}" /></label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+
+                        {php for ($i = 1; $i <= 20; $i ++) {}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('参数（%s）', $i)}：</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-xsmall" type="text" name="data[thumb][{$i}][width]" value="{$data['thumb'][$i]['width']}" /></label>
+                                <label><i class="fa fa-times"></i></label>
+                                <label style="margin-right: 10px"><input class="form-control input-xsmall" type="text" name="data[thumb][{$i}][height]" value="{$data['thumb'][$i]['height']}" /> </label>
+                                <label><input type="checkbox" name="data[thumb][{$i}][crop]" {if $data['thumb'][$i]['crop']}checked{/if} value="1"></label>
+                                <label>{dr_lang('裁剪缩略图')}</label>
+                            </div>
+                        </div>
+                        {php }}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function() {
+        {if empty($data['watermark'])}
+        $('.dr_image').hide();
+        {else}
+        dr_set_mw_type({intval($data['type'])});
+        {/if}
+    });
+    function dr_set_mw_type(id) {
+        $(".dr_mw_1").hide();
+        $(".dr_mw_0").hide();
+        $(".dr_mw_"+id).show();
+    }
+</script>
+{template "footer.html"}

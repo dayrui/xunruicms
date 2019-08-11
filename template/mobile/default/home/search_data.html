@@ -1,0 +1,17 @@
+{search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=10 urlrule=$urlrule}
+<li class="search-item clearfix">
+    <a title="{$t.title}" href="{$t.url}">
+        <img src="{dr_thumb($t.thumb, 100, 90)}" width="100" height="90" style="margin-top: 15px;">
+    </a>
+    <div class="search-content text-left">
+        <h4 class="search-title">
+            <a title="{$t.title}" href="{$t.url}">{dr_strcut($t.title, 20)}</a>
+        </h4>
+        <p class="search-desc">{dr_strcut($t.description, 44)}</p>
+    </div>
+    <div class="search-post-foot">
+        <a href="{dr_cat_value('news',$t.catid, 'url')}"><i class="fa fa-list"></i> {dr_cat_value(MOD_DIR,$t.catid, 'name')}</a>
+        <a href="{$t.url}"><i class="fa fa-calendar"></i> {$t.updatetime}</a>
+    </div>
+</li>
+{/search}

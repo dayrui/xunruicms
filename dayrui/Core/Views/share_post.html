@@ -1,0 +1,364 @@
+{template "header.html"}
+
+
+<script>
+    {if $is_verify}
+    {else}
+    {$auto_form_data_ajax}
+    {/if}
+    function dr_syncat() {
+        var width = '40%';
+        var height = '60%';
+        var title = '<i class="fa fa-refresh"></i> {dr_lang('同步到其他栏目')}';
+        var url = '{dr_url(MOD_DIR.'/home/syncat_edit')}&catid='+$('#dr_syncatid').val();
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0,
+            area: [width, height],
+            btn: [lang['ok']],
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                $(body).find('.form-group').removeClass('has-error');
+                // 延迟加载
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 10000
+                });
+                $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code == 1) {
+                            layer.close(index);
+                            $('#dr_syncatid').val(json.data);
+                            $('#dr_syncat_text').show();
+                            $('#dr_syncat_num').html(json.msg);
+                        } else {
+                            dr_tips(json.code, json.msg);
+                        }
+                        return false;
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    }
+                });
+                return false;
+            },
+            content: url+'&is_ajax=1'
+        });
+    }
+
+    // 定时发布
+    function dr_ajax_time_submit() {
+
+        layer.open({
+            type: 2,
+            title: '<i class="fa fa-clock-o"></i> {dr_lang('定时发布')}',
+            fix:true,
+            scrollbar: false,
+            shadeClose: true,
+            shade: 0,
+            area: ["40%", "70%"],
+            btn: [lang['ok']],
+            success: function (json) {
+                if (json.code == 0) {
+                    layer.close();
+                    dr_tips(json.code, json.msg);
+                }
+            },
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                var loading = layer.load(2, {
+                    time: 10000
+                });
+                var url = '{dr_url(APP_DIR.'/time/add')}';
+                var posttime = $(body).find('#posttime').val();
+                if (posttime.length < 5) {
+                    layer.closeAll('loading');
+                    dr_tips(0, "{dr_lang('发布时间必须填写')}");
+                    return false;
+                }
+                $('#myform .form-group').removeClass('has-error');
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url+"&posttime="+posttime,
+                    data: $("#myform").serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code == 1) {
+                            dr_tips(1, json.msg);
+                            setTimeout("window.location.href = '{dr_url(APP_DIR.'/time/index')}'", 2000);
+                        } else {
+                            dr_tips(0, json.msg);
+                            if (json.data.field) {
+                                $('#dr_row_'+json.data.field).addClass('has-error');
+                                $('#dr_'+json.data.field).focus();
+                            }
+                        }
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    }
+                });
+
+                return false;
+            },
+            content: "{dr_url(APP_DIR.'/time/add')}&is_ajax=1"
+        });
+    }
+
+</script>
+{if $post_notice_msg}
+<div class="note note-danger">
+    <p>{$post_notice_msg}</p>
+</div>
+{/if}
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody">
+        <div class="row ">
+            <div class="{if $is_mobile}col-md-12{else}col-md-9{/if}">
+
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-green sbold ">{dr_lang('基本内容')}</span>
+                        </div>
+
+                        <div class="actions">
+                            {if $draft_list}
+                            <div class="btn-group">
+                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false">
+                                    {dr_lang('草稿')}
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{$draft_url}"> {dr_lang('查看原文')} </a>
+                                    </li>
+                                    {loop $draft_list $t}
+                                    <li>
+                                        <a href="{$draft_url}&did={$t.id}" {if $t.id==$did}style="color:red"{/if}> {dr_date($t.inputtime)} </a>
+                                    </li>
+                                    {/loop}
+                                </ul>
+                            </div>
+                            {/if}
+                            <div class="btn-group">
+                                <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="form-body">
+                            <div class="form-group {if !$is_category_show}hide{/if}">
+                                <label class="col-md-2 control-label">{dr_lang('栏目')}</label>
+                                <div class="col-md-9">
+                                    {if $module['category'][$catid]['setting']['notedit']}
+                                    <label style="margin-top: 7px;">
+                                        <span class="label label-sm label-success circle">{$module['category'][$catid]['name']}</span>
+                                    </label>
+                                    <input type="hidden" id="dr_catid" name="catid" value="{$catid}">
+                                    {else}
+                                        <label style="margin-right:10px">{$select}</label>
+                                        {if $module['setting']['sync_category']}
+                                        {if !$id || $is_sync_cat}
+                                        <label style="margin-right:10px"><a href="javascript:;" onclick="dr_syncat()">[{dr_lang('同步发布到其他栏目')}]</a></label>
+                                        <label>
+                                            <input id="dr_syncatid" name="sync_cat" type="hidden" value="{$is_sync_cat}" />
+                                            <span id="dr_syncat_text" class="label label-success" style="display: {if $is_sync_cat}blank{else}none{/if};"><b id="dr_syncat_num">{php echo substr_count($is_sync_cat, ',') + 1;}</b></span>
+                                        </label>
+                                        {else if $link_id != 0}
+                                        <label>{dr_lang('修改内容时会同步更新其他外联文档')}</label>
+                                        {/if}
+                                        {/if}
+                                    {/if}
+                                </div>
+                            </div>
+                            {str_replace('col-md-9', 'col-md-10', $myfield)}
+                        </div>
+                    </div>
+                </div>
+
+                {if $diyfield}
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-green sbold ">{dr_lang('其他内容')}</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="form-body">
+                            {str_replace('col-md-9', 'col-md-10', $diyfield)}
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+            </div>
+            <div class="{if $is_mobile}col-md-12{else}col-md-3{/if} my-sysfield">
+                <div class="portlet light bordered">
+                    <div class="portlet-body">
+                        <div class="form-body">
+                            {$sysfield}
+                            {if $weibo['use']}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('分享到官微')}</label>
+                                <div class="col-md-9">
+                                    <input type="checkbox" name="sync_weibo" value="1" {if $weibo['open']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                </div>
+                            </div>
+                            {/if}
+                            {if $module['setting']['flag']}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('推荐位设置')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-checkbox-list">
+                                        {loop $module['setting']['flag'] $i $t}
+                                        <label class="mt-checkbox mt-checkbox-outline">
+                                            <input name="flag[]" type="checkbox" {if @in_array($i, (array)$myflag)} checked="checked" {/if} value="{$i}"> <i class="{dr_icon($t.icon)}"></i> {$t.name}
+                                            <span></span>
+                                        </label>
+                                        {/loop}
+                                    </div>
+                                </div>
+                            </div>
+                            {/if}
+                            {if $is_post_time}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('定时发布时间')}</label>
+                                <div class="col-md-9">
+                                    <span class="form-date input-group">
+                                        <div class="input-group date field_date_post_inputtime">
+                                            <input id="posttime" name="posttime" type="text" style="width:160px;" value="{dr_date($posttime, 'Y-m-d H:i:s')}"  required="required" class="form-control ">
+                                            <span class="input-group-btn">
+                                                <button class="btn default date-set" type="button">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <script>
+                                        $(function(){
+                                            $(".field_date_post_inputtime").datetimepicker({
+                                                isRTL: App.isRTL(),
+                                                format: "yyyy-mm-dd hh:ii:ss",
+                                                showMeridian: true,
+                                                autoclose: true,
+                                                pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+                                                todayBtn: true
+                                            });
+                                        });
+                                        </script>
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {if $is_verify}
+        <div class="row ">
+            <div class="col-md-12 ">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-green sbold ">{dr_lang('内容审核')}</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="form-body">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('当前状态')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        {if $status}
+                                        <span class="label label-warning"> {dr_lang('%s审中', $status)} </span>
+                                        {else}
+                                        <span class="label label-danger"> {dr_lang('被拒绝')} </span>
+                                        {/if}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('下级审核')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static"> {$verify_step[$verify_next][name]} </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('操作状态')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="verify[status]" value="1" checked /> {dr_lang('通过')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="verify[status]" value="0" /> {dr_lang('拒绝')} <span></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group dr_close_msg" style="display:none">
+                                <label class="col-md-2 control-label">{dr_lang('拒绝理由')}</label>
+                                <div class="col-md-9">
+                                    <textarea id="dr_verify_msg" class="form-control" style="height:100px" name="verify[msg]"></textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group dr_close_msg" style="display:none">
+                                <label class="col-md-2 control-label">{dr_lang('常用理由')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <select class="form-control" onchange="javascript:$('#dr_verify_msg').val(this.value)">
+                                            <option value=""> -- </option>
+                                            {loop $verify_msg $t}
+                                            <option value="{$t}">{$t}</option>
+                                            {/loop}
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+
+    </div>
+
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            {if !defined('IS_MODULE_RECYCLE')}
+            {if $is_verify}
+            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交审核')}</button></label>
+            {else if $is_post_time}
+            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}&posttime={dr_date($posttime, 'Y-m-d H:i:s')}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button></label>
+            {else}
+            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button></label>
+            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$post_url}&catid='+$('#dr_catid').val())" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button></label>
+            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button></label>
+            <label><button type="button" onclick="$('#dr_is_draft').val(1);dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn red"> <i class="fa fa-pencil"></i> {dr_lang('保存草稿')}</button></label>
+            {if !$id}
+            <label><button type="button" onclick="dr_ajax_time_submit()" class="btn dark"> <i class="fa fa-clock-o"></i> {dr_lang('定时发布')}</button></label>
+            {/if}
+            {if $is_form_cache}
+            <label><button type="button" onclick="auto_form_data_delete()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('删除历史缓存')}</button></label>
+            {/if}
+            {/if}
+            {else}
+            <label><a href="{$reply_url}" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('返回列表')}</a></label>
+            {/if}
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

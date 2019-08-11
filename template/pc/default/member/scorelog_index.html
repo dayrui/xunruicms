@@ -1,0 +1,54 @@
+{template "mheader.html"}
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <ul class="nav nav-tabs" style="float:left;">
+            {loop $type $i $t}
+            <li class="{if $param.tid==$i}active{/if}">
+                <a href="{$t.url}"> {$t.name} </a>
+            </li>
+            {/loop}
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="fc-table-note">
+            账户{SITE_SCORE}：{$member.score}
+        </div>
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                <thead>
+                <tr class="heading">
+                    <th width="70" class="{dr_sorting('id')}" name="id">流水</th>
+                    <th width="150" class="{dr_sorting('inputtime')}" name="inputtime">时间</th>
+                    <th width="120" class="{dr_sorting('value')}" name="value" style="padding-left:15px">变动值</th>
+                    <th>说明</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $t}
+                <tr class="odd gradeX" id="dr_row_{$t.id}">
+                    <td>{$t.id}</td>
+                    <td>{dr_date($t.inputtime)}</td>
+                    <td><b>{dr_pay_money_html($t.value, 0)}</b></td>
+                    <td>
+                        {if $t.url}
+                        <a href="{$t.url}" target="_blank">{$t.note}</a>
+                        {else}
+                        {$t.note}
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+
+        {if $mypages}
+        <div class="fc-pages text-center">{$mypages}</div>
+        {/if}
+    </div>
+</div>
+
+
+
+{template "mfooter.html"}

@@ -1,0 +1,135 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>迅睿CMS终身免费开源</p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+<div class="row">
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green sbold ">迅睿CMS</span>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div class="form-body fc-yun-list">
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('框架版本')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="{dr_url('cloud/update')}">{$cmf_version.version}（{$cmf_version.updatetime}）</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('原创作者')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_show_info('联络邮件：finecms@qq.com<br>程序问题或功能建议问题请发送到本邮箱');">PHP码农</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('官方网站')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="http://www.xunruicms.com" target="_blank">www.xunruicms.com</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('产品论坛')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="http://www.xunruicms.com/wenda/" target="_blank">wenda.xunruicms.com</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('漏洞上报')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">finecms@qq.com</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('技术交流群')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="http://shang.qq.com/wpa/qunwpa?idkey=f0fbe4240aec09f99a7949701235c8cde6809f96ad9ee44775da41418632a105" target="_blank">QQ群 758974716 </a></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green sbold ">{dr_lang('服务器信息')}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-body fc-yun-list">
+
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('上传最大值')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("upload_max_filesize");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('POST最大值')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("post_max_size");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('PHP内存上限')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("memory_limit");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('提交表单数量')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static"><a href="javascript:dr_iframe_show('show', '{dr_url('api/config')}');">{php echo @ini_get("max_input_vars");}</a></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('Web网站目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{WEBPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('核心程序目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{FCPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('附件存储目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{SYS_UPLOAD_PATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('模板文件目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{TPLPATH}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">{dr_lang('应用程序目录')}</label>
+                        <div class="col-md-9">
+                            <div class="form-control-static">{APPSPATH}</div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</form>
+
+
+{template "footer.html"}

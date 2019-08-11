@@ -1,0 +1,89 @@
+{template "mheader.html"}
+
+<div class="portlet light ">
+
+    <div class="portlet-body">
+
+        <form class="form-horizontal" role="form" id="myform">
+            {dr_form_hidden()}
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                <thead>
+                <tr class="heading">
+                    <th class="myselect">
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                            <span></span>
+                        </label>
+                    </th>
+                    <th width="150" class="{dr_sorting('catid')}" name="catid">栏目</th>
+                    <th class="{dr_sorting('cid')}" name="cid">主题</th>
+                    <th width="150" class="{dr_sorting('inputtime')}" name="inputtime">编辑时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $t}
+                <?php
+                $c=dr_string2array($t.content);
+                if ($t.cid) {
+                $url=dr_member_url(APP_DIR.'/home/edit',array('id'=>$t.cid, 'did'=>$t.id));
+                } else {
+                $url=dr_member_url(APP_DIR.'/home/add',array('did'=>$t.id));
+                }
+                $t['url'] = SITE_URL.'index.php?s='.MOD_DIR.'&c=show&m=draft&id='.$t['id'];
+                ?>
+                <tr class="odd gradeX" id="dr_row_{$t.id}">
+                    <td class="myselect">
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                            <span></span>
+                        </label>
+                    </td>
+                    <td> {Function_list::catid($t['catid'])} </td>
+                    <td> {Function_list::title($c['title'], $param, $t)} </td>
+                    <td> {Function_list::datetime($t['inputtime'], $param, $t)} </td>
+                    <td>
+                        <label><a href="{$url}" class="btn btn-xs green"> <i class="fa fa-plus"></i> 发布</a></label>
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+
+        <table class="table table-footer table-checkable ">
+            <tbody>
+            <tr>
+                <td class="fc-member-tbselect myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                    <label><button type="button" onclick="dr_ajax_option('{dr_member_url($uriprefix.'/del')}', '{dr_lang('你确定要删除吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </form>
+
+        {if $mypages}
+        <div class="fc-pages text-center">{$mypages}</div>
+        {/if}
+    </div>
+</div>
+
+
+<script>
+    var menus = [];
+    var menu_url = [];
+    {php $i=0;}
+    {loop $module_memu $t}
+    menus[{$i}] = "{$t.name}";
+    menu_url[{$i}] = "{$t.url}";
+    {php $i++;}
+    {/loop}
+</script>
+
+{template "mfooter.html"}

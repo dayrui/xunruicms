@@ -1,0 +1,51 @@
+{template "mheader.html"}
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet light ">
+                <div class="portlet-body form fc-form">
+                    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                        {$form}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">账号</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$member.username} </p>
+                            </div>
+                        </div>
+                        {if $member.email}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 邮箱 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$member.email} </p>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $member.phone}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 手机 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$member.phone} </p>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group" id="dr_row_name">
+                            <label class="col-md-2 control-label"> 姓名 </label>
+                            <div class="col-md-9">
+                                <label><input type="text" id="dr_name" class="form-control" value="{$member.name}" name="data[name]"></label>
+                            </div>
+                        </div>
+                        {$myfield}
+                        <div class="form-group margin-top-40">
+                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class=" btn red btn-block"> 提交保存 </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{template "mfooter.html"}

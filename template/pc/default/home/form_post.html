@@ -1,0 +1,85 @@
+{template "header.html"}
+
+<script src="{THEME_PATH}assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<div class="page-wrapper-row full-height">
+    <div class="page-wrapper-middle">
+        <div class="page-head">
+            <div class="container">
+                <div class="page-title">
+                   这里是网站表单提交页
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="container">
+
+                <ul class="page-breadcrumb breadcrumb">
+                    <li>
+                        <a href="{SITE_URL}">网站首页</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <a href="{Router::form_list_url($form_table)}">{$form_name}</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>提交</span>
+                    </li>
+                </ul>
+
+                <div class="page-content-inner">
+                    <div class="portlet light">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <span class="caption-subject"> {$form_name}: {$index.title} </span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+
+
+                            <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                                {$form}
+                                <div class="fc-form-body">
+                                    {$myfield}
+                                    {$diyfield}
+                                    {$sysfield}
+                                    {if $is_post_code}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">{dr_lang('验证码')}</label>
+                                        <div class="col-md-9">
+                                            <label>
+                                                <div class="form-recaptcha">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="code">
+                                                        <div class="input-group-btn fc-code">
+                                                            {dr_code(120, 35)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+
+                                <div class="portlet-body form myfooter">
+                                    <div class="form-actions text-center">
+                                        <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$rt_url}')" class="btn green"> <i class="fa fa-save"></i> 提交内容</button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{template "footer.html"}

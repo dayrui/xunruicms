@@ -1,0 +1,71 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
+</div>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+            </th>
+            {/if}
+            <th width="300"> {dr_lang('角色组')} </th>
+            <th width="120" style="text-align:center"> {dr_lang('站点数')} </th>
+            <th>
+
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {loop $data $t}
+        <tr class="odd gradeX" id="dr_row_{$t.id}">
+            {if $ci->_is_admin_auth('del')}
+            <td>
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" {if $t.id==1}disabled{/if} class="checkboxes" name="ids[]" value="{$t.id}" />
+                    <span></span>
+                </label>
+            </td>
+            {/if}
+            <td>
+                {$t.name}
+            </td>
+            <td style="text-align:center">
+
+                <a {if $ci->_is_admin_auth('edit')}href="{if $t.id>1}javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/edit_site', ['id'=>$t.id])}', '500px', '50%');{else}javascript:;{/if}"{/if} class="badge badge-success">{if $t.id>1}{count($t.site)}{else}{dr_lang('全部')}{/if}</a>
+            </td>
+            <td>
+                {if $ci->_is_admin_auth('edit')}<a href="{if $t.id>1}{dr_url('role/edit_auth', ['id'=>$t.id])}{else}javascript:;{/if}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
+                {if $t.id>1}<a href="javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/edit_site', ['id'=>$t.id])}', '500px', '50%');"class="btn btn-xs red"> <i class="fa fa-cog"></i> {dr_lang('站点权限')}</a>{/if}
+                <a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '430px', '200px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
+             </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+    </div>
+         <div class="row fc-list-footer table-checkable ">
+             <div class="col-md-5 fc-list-select">
+                {if $ci->_is_admin_auth('del')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                <button type="button" onclick="dr_ajax_option('{dr_url('role/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button>
+                {/if}
+         </div>
+             <div class="col-md-7 fc-list-page">
+                 {$mypages}
+             </div>
+         </div>
+</form>
+
+
+{template "footer.html"}

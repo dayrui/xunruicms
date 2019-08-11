@@ -1,0 +1,55 @@
+{template "mheader.html"}
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet light ">
+
+                <div class="portlet-body form fc-form">
+                    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+                        {$form}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 账户余额 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> ￥{$member.money} 元 </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 账户{SITE_SCORE} </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$member.score} </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 兑换比例 </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> 1元兑换{$ci->member_cache['pay']['convert']}{SITE_SCORE} </p>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_row_value">
+                            <label class="col-md-2 control-label"> 输入兑换数 </label>
+                            <div class="col-md-9">
+                                <label><input type="text" id="dr_value" class="form-control"  name="value"></label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions fc-form-actions">
+                            <label class="col-md-2 control-label">  </label>
+                            <div class="col-md-9 fc-form-submit">
+                                <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> 确定兑换 </button>
+                            </div>
+
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{template "mfooter.html"}

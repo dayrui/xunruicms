@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh-cn" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="zh-cn" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh-cn">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <!-- 主要css开始 -->
+    <link href="{MOBILE_THEME_PATH}font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" type="text/css" />
+    <link href="{ROOT_THEME_PATH}assets/global/css/common.css" rel="stylesheet" type="text/css" />
+    <!-- 主要css结束 -->
+    <!-- 风格css开始 -->
+    <link href="{HOME_THEME_PATH}web/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="{HOME_THEME_PATH}web/css/default.css" rel="stylesheet" type="text/css" />
+    <link href="{MOBILE_THEME_PATH}css/custom.css" rel="stylesheet" type="text/css" />
+    <!-- 风格css结束 -->
+    <link rel="stylesheet" type="text/css" href="{MOBILE_THEME_PATH}css/mobile.css" />
+    <!--[if lt IE 9]>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/respond.min.js"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <!-- 系统关键js(所有自建模板必须引用) -->
+    <script type="text/javascript">var assets_path = '{ROOT_THEME_PATH}assets/';var is_mobile_cms = '1';</script>
+    <script src="{LANG_PATH}lang.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/layer/layer.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+    <!-- 系统关键js结束 -->
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/scripts/app.min.js" type="text/javascript"></script>
+    <script src="{HOME_THEME_PATH}web/scripts/layout.js" type="text/javascript"></script>
+    <script src="{MOBILE_THEME_PATH}js/mobile.js" type="text/javascript"></script>
+    {if in_array('store', [MOD_DIR, APP_DIR])}
+    <!-- 加载商城模块css -->
+    <link href="{HOME_THEME_PATH}web/store/style.css" rel="stylesheet" type="text/css" />
+    <script src="{HOME_THEME_PATH}web/store/js/mall.js"></script>
+    <script src="{HOME_THEME_PATH}web/store/js/jquery.counterup.min.js"></script>
+    <script>
+        $(function () {
+            dr_cart_nums();
+        });
+    </script>
+    {/if}
+</head>
+<body class="page-container-bg-solid">
+<div class="top-category-menu" style="display: none">
+    <div class="top-category-back" onclick="dr_m_top_category2()">
+        <i class="fa fa-angle-left"></i> 返回
+    </div>
+    <div class="top-category-list">
+        <div class="p1-nav">
+            <h5><a href="/">首页</a></h5>
+        </div>
+        <!--调用共享栏目-->
+        <!--第一层：调用pid=0表示顶级-->
+        {category module=share pid=0}
+        <div class="p1-nav">
+            <h5><a href="{$t.url}" class="{if IS_SHARE && in_array($catid, $t.catids)} active{/if}" title="{$t.name}">{$t.name}</a></h5>
+            {if $t.child}
+            <div class="p2-nav">
+                <!--第二层-->
+                {category module=share pid=$t.id return=t2}
+                <a href="{$t2.url}"  class="{if IS_SHARE && $catid && in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
+                {/category}
+            </div>
+            <div class="clearfix"></div>
+            {/if}
+        </div>
+        {/category}
+
+        <!--调用全部独立模块-->
+        {cache name=module-content return=m}
+        {if !$m.share}
+        <div class="p1-nav">
+            <h5><a href="{$m.url}" class="{if MOD_DIR==$m.dirname}active{/if}" title="{$m.name}">{$m.name}</a></h5>
+            {if $t.child}
+            <div class="p2-nav">
+                <!--调用独立模块下的栏目-->
+                {category module=$m.dirname pid=0 return=t2}
+                <a href="{$t2.url}"  class="{if MOD_DIR==$m.dirname && $catid && in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
+                {/category}
+            </div>
+            <div class="clearfix"></div>
+            {/if}
+        </div>
+
+
+        {/if}
+        {/cache}
+    </div>
+</div>
+
+<div class="top-search-menu" style="display: none">
+    <div class="top-search-back" onclick="dr_m_top_search2()">
+        <i class="fa fa-angle-left"></i> 返回
+    </div>
+    <div class="top-search-list">
+
+        <form class="search-form" action="/index.php" method="get">
+            <input type="hidden" name="s" value="api">
+            <input type="hidden" name="c" value="api">
+            <input type="hidden" name="m" value="search">
+            <input type="hidden" name="dir" id="dr_search_module_dir" >
+            <div class="input-group">
+                <div class="input-group-btn btn-group">
+                    <button id="dr_search_module_name" type="button" class="btn default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-angle-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <!--这是来列出全部可以搜索的内容模块-->
+                        {php $top_search=[];}
+                        {cache name=module-content}
+                        {if $t.search}
+                        {php !$top_search && $top_search=$t;}
+                        <li><a href="javascript:dr_search_module_select('{$t.dirname}', '{$t.name}');"> {$t.name} </a></li>
+                        {/if}
+                        {/cache}
+                    </ul>
+                </div>
+                <input type="text" placeholder="搜索内容..." name="keyword" class="fc-search-keyword form-control">
+                <div class="input-group-btn">
+                    <button class="btn default" type="submit"> 搜索 </button>
+                </div>
+            </div>
+            <script>
+                // 这段js是用来执行搜索的
+                function dr_search_module_select(dir, name) {
+                    $("#dr_search_module_dir").val(dir);
+                    $("#dr_search_module_name").html(name+' <i class="fa fa-angle-down"></i>');
+                }
+                dr_search_module_select('{php echo defined('MOD_DIR') ? MOD_DIR : $top_search.dirname}', '{php echo defined('MOD_DIR') ? MODULE_NAME : $top_search.name}');
+            </script>
+        </form>
+
+    </div>
+</div>

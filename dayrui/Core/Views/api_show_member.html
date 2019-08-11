@@ -1,0 +1,83 @@
+{template "header.html"}
+
+<div class="row">
+    <div class="col-xs-4">
+        <div class="text-center ">
+            <a href="{dr_url('member/alogin_index', ['id'=>$m.id])}" target="_blank"><img src="{$m.avatar}" style="border-radius:40%;height: 70px!important;"></a>
+        </div>
+        <div class="text-left fc-user-group">
+            {loop $m.group $g}
+            <h5 class=""> {$ci->member_cache['group'][$g.gid][name]}
+            {if $g.lid}
+            <br>
+            <span>
+                {$ci->member_cache['group'][$g.gid][level][$g.lid][name]}
+            </span>
+            {/if}</h5>
+            {/loop}
+        </div>
+    </div>
+    <div class="col-xs-8">
+        <ul class="u-ul">
+            <li>
+                <label class="u-name">Id</label>
+                <label class="u-value">{$m.id} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('账号')}</label>
+                <label class="u-value">{$m.username} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('邮箱')}</label>
+                <label class="u-value">{$m.email} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('手机')}</label>
+                <label class="u-value">{$m.phone} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('姓名')}</label>
+                <label class="u-value">{$m.name} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('余额')}</label>
+                <label class="u-value">￥{$m.money} &nbsp;&nbsp;({dr_lang('冻结')}&nbsp;&nbsp;￥{$m.freeze})</label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('消费')}</label>
+                <label class="u-value">{$m.spend} </label>
+            </li>
+            <li>
+                <label class="u-name">{SITE_SCORE}</label>
+                <label class="u-value">{$m.score} </label>
+                <label class="u-name">{SITE_EXPERIENCE}</label>
+                <label class="u-value">{$m.experience} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('注册')}</label>
+                <label class="u-value">{dr_date($m.regtime)} </label>
+            </li>
+            <li>
+                <label class="u-name">{dr_lang('随机码')}</label>
+                <label class="u-value">{$m.randcode} </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<style>
+    .u-ul, .u-ul li {
+        list-style: none;
+        padding: 0;
+    }
+    .u-ul li {
+        line-height: 30px;
+    }
+    .u-ul .u-value {
+        padding-left: 8px;
+    }
+    .u-ul .u-name {
+        width: 80px;
+        text-align: right;
+    }
+</style>
+{template "footer.html"}

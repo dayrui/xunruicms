@@ -1,0 +1,110 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p>{dr_lang('添加快捷菜单可以出现在后台首页之中，方便快速进入管理')}</p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <input type="hidden" id="dr_color" name="data[color]" value="{$admin.color}">
+    <div class="row myfbody">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green">{dr_lang('资料修改')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('密码')}</label>
+                            <div class="col-md-9">
+                                <label><input type="text" class="form-control input-large" name="password"></label>
+                                <span class="help-block"> {dr_lang('留空表示不修改密码')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('快捷链接')}</label>
+                            <div class="col-md-9">
+                                <div class="form-control-static">
+                                    <a class="btn green btn-xs" title="{dr_lang('添加')}" href="javascript:;" onClick="add_menu()"> <i class="fa fa-plus"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div id="menu_body">
+                                    {if !empty($admin['usermenu'])}
+                                    {loop $admin['usermenu'] $k $t}
+                                    <div class="menu-sort">
+                                        <label><i class="fa fa-arrows"></i></label><label><input class="form-control" type="text" name="data[usermenu][name][{$k}]" value="{$t['name']}" /></label><label><select class="form-control" name="data[usermenu][color][{$k}]">
+                                                {loop $color $tt}
+                                                <option value="{$tt}" {if $tt == $t['color']} selected{/if}> {$tt} </option>
+                                                {/loop}
+                                            </select></label><label><select class="form-control" name="data[usermenu][target][{$k}]">
+                                        {loop $target $ii $tt}
+                                        <option value="{$ii}" {if $ii == $t['target']} selected{/if}> {$tt} </option>
+                                        {/loop}
+                                    </select></label><label><input class="form-control input-large" type="text" name="data[usermenu][url][{$k}]" value="{$t['url']}" /></label><label><a class="btn red btn-xs" title="{dr_lang('删除')}" href="javascript:;" onClick="remove_menu(this)"> <i class="fa fa-trash"></i> </a></label>
+                                    </div>
+                                    {/loop}
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_row_code">
+                            <label class="col-md-2 control-label">{dr_lang('验证码')}</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <input style="padding-left: 5px !important;"type="text" class="form-control placeholder-no-fix" autocomplete="off" placeholder="{dr_lang('验证码')}" name="code" id="dr_code" >
+                                    </div>
+                                    <div class="input-group-btn fc-code" style="border-radius: 0 4px 0 0;">
+                                        {dr_code(120, 35)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function add_menu() {
+        var color = '{$select_color}';
+        var target = '{$select_target}';
+        var data = '<div class="menu-sort"><label><i class="fa fa-arrows"></i></label><label><input class="form-control" placeholder="{dr_lang('名称')}" type="text" name="data[usermenu][name][]" /></label><label><select class="form-control" name="data[usermenu][color][]">'+color+'</select></label><label><select class="form-control" name="data[usermenu][target][]">'+target+'</select></label><label><input placeholder="{dr_lang('URL')}" class="form-control  input-large" type="text" name="data[usermenu][url][]" /></label><label><a class="btn red btn-xs" title="{dr_lang('删除')}" href="javascript:;" onClick="remove_menu(this)"> <i class="fa fa-trash"></i> </a></label></div>';
+        $('#menu_body').append(data);
+    }
+    function remove_menu(_this) {
+        $(_this).parent().parent().remove();
+    }
+    function set_color(o, file) {
+        $('.btn-outline').removeClass('red');
+        $(o).addClass('red');
+        $(o).removeClass('default');
+        parent.$('#style_color').attr("href", "{THEME_PATH}assets/layouts/layout/css/themes/" + file + ".min.css");
+        $('#style_color').attr("href", "{THEME_PATH}assets/layouts/layout/css/themes/" + file + ".min.css");
+        $("#dr_color").val(file);
+    }
+    $("#menu_body").sortable({
+        items: "div"
+    });
+</script>
+{template "footer.html"}

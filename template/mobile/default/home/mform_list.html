@@ -1,0 +1,30 @@
+{template "header.html"}
+
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>这里是模块表单列表页</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-wrapper-row full-height">
+    <div class="portlet-body">
+
+
+        <ul class="list-unstyled fc-list-form">
+            {mform form=$form_table cid=$index.id page=1 urlrule=$urlrule pagesize=5}
+            <li>
+                <a href="{Router::mform_show_url($form_table, $t.id)}" class="title">{dr_strcut($t.title, 60)}</a>
+                <span>{$t.inputtime}</span>
+            </li>
+            {/mform}
+        </ul>
+
+        <div class="search-pagination text-center margin-top-30">
+            {$pages}
+        </div>
+
+    </div>
+</div>
+
+{template "footer.html"}

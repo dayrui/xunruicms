@@ -1,0 +1,63 @@
+{template "header.html"}
+
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$cat.name}</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+
+
+<div class="page-content">
+
+    <div class="search-page search-content-1">
+
+        <div class="search-container">
+            <!--分页显示列表数据-->
+            <ul class="search-container" id="content_list">
+                {template "list_data.html"}
+            </ul>
+
+        </div>
+
+        <div class="margin-top-20" id="is_ajax_btn">
+            <a href="javascript:dr_ajax_load_more();" class="btn default btn-block"> 加载更多 </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var Mpage=1;
+    //滚动显示更多
+    var scroll_get = true;  //做个标志,不要反反复复的加载
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if (scroll_get==true &&  (400 + $(window).scrollTop())>($(document).height() - $(window).height())) {
+                scroll_get = false;
+                layer.msg('内容加截中,请稍候',{time:1000});
+                dr_ajax_load_more();
+            }
+        });
+    });
+
+    function dr_ajax_load_more(){
+        Mpage++;
+        $.get('/index.php?s=api&c=api&m=template&name=list_data.html&module={MOD_DIR}&catid={$catid}&format=json&page='+Mpage+'&'+Math.random(),function(res){
+            $('.footer-cont').hide();
+            if(res.code==1){
+                if(res.msg==''){
+                    $('#is_ajax_btn').hide();
+                    layer.msg("已经显示完了",{time:500});
+                }else{
+                    $('#content_list').append(res.msg);
+                    scroll_get = true;
+                }
+            }else{
+                layer.msg(res.msg,{time:2500});
+            }
+        }, 'json');
+    }
+</script>
+{template "footer.html"}

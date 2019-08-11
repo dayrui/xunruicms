@@ -1,0 +1,55 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        {if !$data.id}
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('模式')}</label>
+            <div class="col-xs-8">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio"  name="_all" value="0" onclick="$('.dr_more').hide();$('.dr_one').show();" checked > {dr_lang('单个')}
+                        <span></span>
+                    </label>
+                    <label class="mt-radio">
+                        <input type="radio" name="_all" value="1" onclick="$('.dr_more').show();$('.dr_one').hide();"> {dr_lang('批量')}
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group" id="dr_row_pid">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('分类')}</label>
+            <div class="col-xs-7">
+                {$select}
+            </div>
+        </div>
+        <div class="form-group dr_one" id="dr_row_name">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('名称')}</label>
+            <div class="col-xs-7">
+                <input type="text" onblur="d_topinyin('cname', 'name')" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+                <span class="help-block"> {dr_lang('它的描述名称')} </span>
+            </div>
+        </div>
+        <div class="form-group dr_one" id="dr_row_cname">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('别名')}</label>
+            <div class="col-xs-7">
+                <input type="text" class="form-control" id="dr_cname" name="data[cname]" value="{$data.cname}">
+                <span class="help-block"> {dr_lang('别名只能由字母或者字母+数字组成')} </span>
+            </div>
+        </div>
+
+        <div class="form-group dr_more" style="display:none">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('批量')}</label>
+            <div class="col-xs-7">
+                <textarea name="data[all]" class="form-control" style="height:220px" rows="3"></textarea>
+
+                <span class="help-block"> {dr_lang('换行分隔多条数据')} </span>
+            </div>
+        </div>
+
+    </div>
+</form>
+{template "footer.html"}

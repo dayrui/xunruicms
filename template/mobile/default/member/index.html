@@ -1,0 +1,75 @@
+{template "mheader.html"}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="profile-sidebar-portlet pull-left">
+            <div class="profile-userpic">
+                <a href="{dr_member_url('account/avatar')}"><img src="{$member.avatar}" class="img-responsive"></a>
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name"> {$member.username} </div>
+            </div>
+        </div>
+        <div class="profile-sidebar-m pull-left">
+            <div class="user-body-title">
+                余额<span class="home-colon">:</span>
+            </div>
+            <div class="user-body-main">
+                <div class="user-balance-wrap">
+                    <div class="user-balance">
+                        <span class="user-balance-small ng-binding">{number_format($member.money, 2)}</span>
+                    </div>
+                    <div class="user-small">
+                        冻结 <i class="fa fa-rmb"></i> {number_format($member.freeze, 2)}
+                        <a href="{dr_member_url('recharge/index')}" class="btn green btn-xs"> 在线充值 </a>
+                    </div>
+
+                    <div class="user-bottom">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="profile-sidebar-r pull-left">
+            <div class="user-body-title">
+                {SITE_SCORE}<span class="home-colon">:</span>
+            </div>
+            <div class="user-body-main" style="height: 30px;">
+                <div class="user-balance-wrap">
+                    <div class="user-balance">
+                        <span class="user-balance-small">{$member.score}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mobile-hang"></div>
+
+<div class="hui-wrap">
+
+    {loop $menu $top}
+    {if dr_member_menu_show($top)}
+    <div class="hui-accordion">
+        <div class="hui-accordion-title"> <i class="{dr_icon($top.icon)}"></i>  {$top.name}</div>
+        <div class="hui-accordion-content hui-list">
+            {loop $top.link $t}
+            {if dr_member_menu_show($t)}
+            <a href="{if $t.url}{$t.url}{else}{dr_member_url($t.uri)}{/if}">
+                <div class="hui-list-icons"><i class="{dr_icon($t.icon)}"></i></div>
+                <div class="hui-list-text">
+                    {$t.name}<div class="hui-list-info hui-icons hui-icons-right"></div>
+                </div>
+            </a>
+            {/if}
+            {/loop}
+        </div>
+    </div>
+    {/if}
+    {/loop}
+
+</div>
+
+
+
+{template "mfooter.html"}

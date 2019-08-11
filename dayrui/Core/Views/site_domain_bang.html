@@ -1,0 +1,91 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="active">
+                    <a href="#tab_0" data-toggle="tab"> <i class="fa fa-code"></i> {dr_lang('本站点域名')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane active" id="tab_0">
+                    <div class="form-body">
+
+
+
+                        {if $data['site_domain']}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('本站电脑域名')}</label>
+                            <div class="col-md-9">
+                                <span class="form-control-static">{$data['site_domain']}</span>
+                                <span class="help-block">{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $data['mobile_domain']}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('本站手机域名')}</label>
+                            <div class="col-md-9">
+                                <span class="form-control-static">{$data['mobile_domain']}</span>
+                                <span class="help-block">{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/');}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $data['site_domains']}
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('本站其他域名')}</label>
+                            <div class="col-md-9">
+                                <span class="form-control-static">{str_replace(',', '&nbsp;&nbsp; ', $data['site_domains'])}</span>
+                                <span class="help-block">{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
+                            </div>
+                        </div>
+
+                        {/if}
+
+                        {loop $module $dir $t}
+                        {if !$t.error}
+                        {if $data['module_'.$dir]}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('%s电脑域名', $t.name)}</label>
+                            <div class="col-md-9">
+                                <span class="form-control-static">{$data['module_'.$dir]}</span>
+                                <span class="help-block">{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, '');}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $data['module_mobile_'.$dir]}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('%s手机域名', $t.name)}</label>
+                            <div class="col-md-9">
+                                <span class="form-control-static">{$data['module_mobile_'.$dir]}</span>
+                                <span class="help-block">{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, 'mobile/');}</span>
+                            </div>
+                        </div>
+                        {/if}
+
+                        {/if}
+                        {/loop}
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+{template "footer.html"}

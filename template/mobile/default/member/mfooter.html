@@ -1,0 +1,51 @@
+</div>
+
+</div>
+
+</div>
+
+<div class="hui-fooer-line"></div>
+<div id="hui-footer">
+    <a href="{SITE_MURL}">
+        <div class="hui-footer-icons hui-icons-home"></div>
+        <div class="hui-footer-text">首页</div>
+    </a>
+    <a href="{dr_member_url('recharge/index')}">
+        <div class="hui-footer-icons hui-icons-shop"></div>
+        <div class="hui-footer-text">充值</div>
+    </a>
+    <a href="{dr_member_url('account/index')}">
+        <div class="hui-footer-icons hui-icons-news"></div>
+        <div class="hui-footer-text">资料</div>
+    </a>
+    <a href="{dr_member_url('paylog/index')}">
+        <div class="hui-footer-icons hui-icons-like"></div>
+        <div class="hui-footer-text">交易</div>
+    </a>
+    <a href="{MEMBER_URL}" class="{if IS_MEMBER} hui-footer-active {/if}">
+        <div class="hui-footer-icons hui-icons-my"></div>
+        <div class="hui-footer-text">我的</div>
+    </a>
+</div>
+
+<script src="{MOBILE_THEME_PATH}js/mobile.js" type="text/javascript" charset="utf-8"></script>
+<script src="{MOBILE_THEME_PATH}js/accordion.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    hui('#hui-header-menu').click(function(){
+        hui.actionSheet(menus, "注销登录", function(e){
+            if (e.index == -1) {
+                dr_loginout()
+                // 退出
+            } else {
+                if (menu_url[e.index]) {
+                    window.location.href = menu_url[e.index];
+                }
+            }
+        });
+    });
+    hui.ready(function(){
+        hui.accordion(true, true);
+    });
+</script>
+</body>
+</html>

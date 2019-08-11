@@ -1,0 +1,68 @@
+{template "header.html"}
+
+<div class="row my-content-top-tool">
+    <div class="col-md-12 col-sm-12">
+
+        <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
+        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')}</a></label>
+        <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
+        <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
+    </div>
+</div>
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('module', 'module');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> {dr_lang('自定义URL')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('选择栏目')}</label>
+                            <div class="col-md-9">
+                                {$select}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
+                            <div class="col-md-9">
+
+                                <label>
+                                    <select class="form-control" name="urlrule">
+                                        <option value="0"> {dr_lang('动态地址')} </option>
+                                        {list action=cache name=urlrule return=u}
+                                        {if $u.type==3}<option value="{$u.id}"> {$u.name} </option>{/if}
+                                        {/list}
+                                    </select>
+                                </label>
+                                <label style="margin-left:20px;">{dr_lang('<a href="'.dr_url('urlrule/index', ['hide_menu' => 1]).'" style="color:blue !important">[URL规则管理]</a>')} </label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url(APP_DIR.'/category/index')}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

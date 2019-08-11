@@ -1,0 +1,183 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $module $i $t}
+                <li class="{if $page==$i}active{/if}">
+                    <a href="#tab_{$i}" data-toggle="tab" onclick="$('#dr_page').val('{$i}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+
+                {loop $module $i $m}
+                <div class="tab-pane {if $i == $page}active{/if}" id="tab_{$i}">
+                    <div class="form-body">
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" style="padding-top:5px;">{dr_lang('评论功能')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][use]" value="1" {if $m['comment']['use']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('选择关闭将不能进行评论')}</span>
+                            </div>
+                        </div>
+                        {if isset($m['config']['IS_PLUS_MALL'])}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('商城购物评论')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input onclick="$('.pt').hide()" type="radio" name="data[{$i}][buy]" value="1" {if $m['comment']['buy']}checked{/if} /> {dr_lang('电商评论模式')} <span></span></label>
+                                    <label class="mt-radio"><input onclick="$('.pt').show()" type="radio" name="data[{$i}][buy]" value="0" {if !$m['comment']['buy']}checked{/if} /> {dr_lang('通用评论模式')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group pt" {if $m['comment']['buy']}style="display:none"{/if}>
+                            <label class="col-md-2 control-label">{dr_lang('评论次数')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][num]" value="1" {if $m['comment']['num']}checked{/if} /> {dr_lang('评论一次')} <span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][num]" value="0" {if !$m['comment']['num']}checked{/if} /> {dr_lang('不限制')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt" {if $m['comment']['buy']}style="display:none"{/if}>
+                            <label class="col-md-2 control-label">{dr_lang('评论方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][my]" value="1" {if $m['comment']['my']}checked{/if} /> {dr_lang('不能对自己')} <span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][my]" value="0" {if !$m['comment']['my']}checked{/if} /> {dr_lang('不限制')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt" {if $m['comment']['buy']}style="display:none"{/if}>
+                            <label class="col-md-2 control-label">{dr_lang('评论回复权限')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][reply]" value="1" {if $m['comment']['reply']==1}checked{/if} /> {dr_lang('都允许')} <span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][reply]" value="2" {if $m['comment']['reply']==2}checked{/if} /> {dr_lang('仅自己')} <span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][reply]" value="0" {if !$m['comment']['reply']}checked{/if} /> {dr_lang('禁止所有')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group pt" {if $m['comment']['buy']}style="display:none"{/if}>
+                            <label class="col-md-2 control-label">{dr_lang('是否统计回复')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][ct_reply]" value="1" {if $m['comment']['ct_reply']==1}checked{/if} /> {dr_lang('统计')} <span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][ct_reply]" value="0" {if !$m['comment']['ct_reply']}checked{/if} /> {dr_lang('不统计')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('将评论回复也计算到评论总数之中')}</span>
+                            </div>
+                        </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">{dr_lang('电脑列表分页数量')}</label>
+                <div class="col-md-9">
+                    <label><input class="form-control" type="text" name="data[{$i}][pagesize]" value="{$m['comment']['pagesize']}" ></label>
+                    <span class="help-block">{dr_lang('用户中心数据列表在电脑网页每页显示数量')}</span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">{dr_lang('手机列表分页数量')}</label>
+                <div class="col-md-9">
+                    <label><input class="form-control" type="text" name="data[{$i}][pagesize_mobile]" value="{$m['comment']['pagesize_mobile']}" ></label>
+                    <span class="help-block">{dr_lang('用户中心数据列表在手机网页每页显示数量')}</span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">{dr_lang('API接口列表分页数量')}</label>
+                <div class="col-md-9">
+                    <label><input class="form-control" type="text" name="data[{$i}][pagesize_api]" value="{$m['comment']['pagesize_api']}" ></label>
+                    <span class="help-block">{dr_lang('用户中心数据列表在API数据请求时每页返回的数量')}</span>
+                </div>
+            </div>
+
+
+                        <div class="form-group" style="margin-top:50px">
+                            <label class="col-md-2 control-label">{dr_lang('开启点评')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][review][use]" value="1" {if $m['comment']['review']['use']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('总分形式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][score]" value="5" {if $m['comment']['review']['score']==5}checked{/if} /> {dr_lang('五分制')}<span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][score]" value="10" {if $m['comment']['review']['score']==10}checked{/if} /> {dr_lang('十分制')}<span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][score]" value="100" {if $m['comment']['review']['score']==100}checked{/if} /> {dr_lang('百分制')}<span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('显示主题的各个评分项的数值形式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('分数小数点')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][point]" value="0" {if !$m['comment']['review']['point']}checked{/if} /> {dr_lang('不显示')}<span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][point]" value="1" {if $m['comment']['review']['point']==1}checked{/if} /> {dr_lang('一位数')}<span></span></label>
+                                    <label class="mt-radio"><input type="radio" name="data[{$i}][review][point]" value="2" {if $m['comment']['review']['point']==2}checked{/if} /> {dr_lang('两位数')}<span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('各项得分的显示是否显示小数点')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_one">
+                            <label class="col-md-2 control-label">{dr_lang('点评星级')}</label>
+                            <div class="col-md-9">
+                                {loop $m[comment][review][value] $ii $t}
+                                <label><input class="form-control" type="text" name="data[{$i}][review][value][{$ii}][name]" value="{$t['name']}" size="15" /></label>
+                                {/loop}
+                            </div>
+                        </div>
+                        <div class="form-group dr_one">
+                            <label class="col-md-2 control-label">{dr_lang('点评选项')}</label>
+                            <div class="col-md-9">
+                                {loop $m[comment][review][option] $ii $t}
+                                <p>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[{$i}][review][option][{$ii}][use]" {if $t.use}checked{/if} value="1"> <span></span></label>
+                                    <label><input class="form-control  input-large" type="text" name="data[{$i}][review][option][{$ii}][name]" value="{$t['name']}" size="15" /></label>
+                                </p>
+                                {/loop}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                {/loop}
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+{template "footer.html"}

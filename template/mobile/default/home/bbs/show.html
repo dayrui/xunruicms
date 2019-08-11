@@ -1,0 +1,74 @@
+{template "header.html"}
+<header class="hui-header">
+    <div id="hui-back"></div>
+    <h1>{$title}</h1>
+    <a id="hui-search" href="javascript:dr_m_top_category();"><i class="fa fa-navicon"></i></a>
+</header>
+<div class="hui-header-line"></div>
+
+<div class="page-content margin-top-20">
+
+
+        <div class="search-page search-content-2">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-dark  ">{$title}</span>
+                    </div>
+                </div>
+                <div class="search-post-foot fc-content-tool">
+                    <div class="search-post-meta">
+                        <i class="fa fa-calendar font-blue"></i>
+                        <a href="javascript:;">{$updatetime}</a>
+                    </div>
+                    <div class="search-post-meta">
+                        <i class="fa fa-fire font-blue"></i>
+                        <a href="javascript:;">{dr_show_hits($id)}次</a>
+                    </div>
+                    <div class="search-post-meta">
+                        <i class="fa fa-comments font-blue"></i>
+                        <a href="{Router::comment_url($id)}">{$comments}</a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="height: auto;overflow: hidden;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {$content}
+                        </div>
+                        <div class="col-md-12">
+                            <div class="blog-single-foot fc-news-tag-list">
+                                <ul class="blog-post-tags">
+                                    {loop $tags $name $url}
+                                    <li class="uppercase">
+                                        <a href="{$url}">{$name}</a>
+                                    </li>
+                                    {/loop}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="news-comments-top">
+                    <h4>网友回帖</h4>
+                    <div class="count"><span class="num">{$comments}</span>条回帖</div>
+                </div>
+                <div class="news-comments-body">
+
+                    {if IS_COMMENT}
+                    {dr_module_comment(MOD_DIR, $id)}
+                    {else}
+                    没有开启评论功能
+                    {/if}
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+{template "footer.html"}
