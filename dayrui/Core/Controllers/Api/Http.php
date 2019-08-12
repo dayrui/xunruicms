@@ -33,22 +33,6 @@ class Http extends \Phpcmf\Common
      */
     public function index() {
 
-        $this->_api_auth();
-
-        $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        if (!$id) {
-            $this->_json(0, '未获取到接口id');
-        }
-
-        $data = $this->get_cache('api_http', $id);
-        if (!$data) {
-            $this->_json(0, '接口数据【'.$id.'】不存在');
-        }
-
-        $rt = \Phpcmf\Service::M('api')->get_api_data($data);
-        $this->_json($rt['code'], $rt['msg'], $rt['data']);
-
-        exit;
     }
 
     /**
