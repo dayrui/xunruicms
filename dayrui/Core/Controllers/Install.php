@@ -43,6 +43,9 @@ class Install extends \Phpcmf\Common
         if (version_compare(PHP_VERSION, '7.1.0') < 0) {
             echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
         }
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
+            echo "<font color=red>请先关闭HTTPS，安装后再开启HTTPS</font>";exit;
+        }
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
         define('IS_API_HTTP', 0);
