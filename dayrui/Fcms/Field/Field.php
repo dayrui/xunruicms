@@ -160,4 +160,28 @@ return [
         'name' => '用户组设定值',
         'namespace' => '',
     ],
+    [
+        'id' => 'Image',
+        'name' => '图片专用',
+        'used' => '',
+        'namespace' => '',
+    ],
+    [
+        'id' => 'Ftable',
+        'name' => '填写表格',
+        'used' => '',
+        'namespace' => '',
+    ],
+    [
+        'id' => 'Catids',
+        'name' => '副栏目',
+        'used' => ['module'],
+        'namespace' => '',
+    ],
+    [
+        'id' => 'Linkages',
+        'name' => '联动菜单（多选）',
+        'used' => '',
+        'namespace' => '',
+    ],
 ];
