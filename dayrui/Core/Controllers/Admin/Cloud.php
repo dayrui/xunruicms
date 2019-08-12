@@ -347,17 +347,15 @@ class Cloud extends \Phpcmf\Common
 
         $data = [];
 
-        if (is_file(CMSPATH.'Config/Version.php')) {
-            $data['phpcmf'] = require CMSPATH.'Config/Version.php';
-            $data['phpcmf']['id'] = 'cms-'.$data['phpcmf']['id'];
-            $data['phpcmf']['tname'] = '<a href="javascript:dr_help(538);">框架</a>';
-        }
+        $data['phpcmf'] = $this->cmf_version;
+        $data['phpcmf']['id'] = 'cms-'.$this->cmf_version['id'];
+        $data['phpcmf']['tname'] = '<a href="javascript:dr_help(538);">系统</a>';
 
-        if (is_file(MYPATH.'Config/Version.php')) {
+        if (!in_array($this->version['id'], [10, 11]) && is_file(MYPATH.'Config/Version.php')) {
             $data['my'] = require MYPATH.'Config/Version.php';
             $cms_id = $data['my']['id'];
             $data['my']['id'] = 'cms-'.$cms_id;
-            $data['my']['tname'] = '<a href="javascript:dr_help(539);">系统</a>';
+            $data['my']['tname'] = '<a href="javascript:dr_help(539);">程序</a>';
         }
 
         $local = dr_dir_map(APPSPATH, 1);

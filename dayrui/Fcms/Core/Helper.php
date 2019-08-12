@@ -23,6 +23,63 @@
  * */
 
 
+// ftable字段输出
+function dr_get_ftable($id, $value, $class = '') {
+
+    $field = \Phpcmf\Service::C()->get_cache('table-field', $id);
+    if (!$field) {
+        return 'Ftable字段没有得到缓存数据';
+    }
+
+    // class属性
+    !$class && $class = 'table table-nomargin table-bordered table-striped table-bordered table-advance';
+
+    // 字段默认值
+    $value = dr_string2array($value);
+    // 表单宽度设置
+    $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+
+    $str = '<table class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+    $str.= ' <thead><tr>';
+
+    if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
+        $str .= ' <th> ' . $field['setting']['option']['first_cname'] . ' </th>';
+    }
+    if ($field['setting']['option']['field']) {
+        foreach ($field['setting']['option']['field'] as $t) {
+            if ($t['type']) {
+                $style = $t['width'] ? 'style="width:'.$t['width'].(is_numeric($t['width']) ? 'px' : '').';"' : '';
+                $str.= ' <th '.$style.'>'.$t['name'].'</th>';
+            }
+        }
+    }
+    $str.= ' </tr></thead>';
+    $str.= ' <tbody>';
+
+    for ($i = 1; $i <= count($value); $i++) {
+
+        $str.= ' <tr>';
+        if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
+            $hname = $field['setting']['option']['hang'][$i]['name'] ? $field['setting']['option']['hang'][$i]['name'] : '未命名';
+            $str .= ' <td> ' . $hname . ' </td>';
+        }
+        if ($field['setting']['option']['field']) {
+            foreach ($field['setting']['option']['field'] as $n => $t) {
+                if ($t['type']) {
+                    $str.= ' <td>'.$value[$i][$n].'</td>';
+                }
+            }
+        }
+        $str.= ' </tr>';
+    }
+
+    $str.= ' </tbody>';
+    $str.= '</table>';
+
+    return $str;
+
+}
+
 // 判断搜索值是否是多重选择时的选中状态 1选中 0不选
 function dr_is_double_search($param, $value) {
 

@@ -478,7 +478,9 @@
             }
             // 组合组装
             foreach ($type as $i => $t) {
-                if (isset($t['used']) && is_array($t['used']) && in_array($name, $t['used'])) {
+                if (isset($t['used']) && is_array($t['used']) && !in_array($name, $t['used'])) {
+                    unset($type[$i]);
+                } elseif (isset($t['namespace']) && $t['namespace'] && $t['namespace'] != $this->app) {
                     unset($type[$i]);
                 }
             }
