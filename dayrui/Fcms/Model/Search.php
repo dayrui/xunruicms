@@ -98,7 +98,7 @@ class Search extends \Phpcmf\Model {
                 foreach ($sfield as $t) {
                     $t && $temp[] = '`'.$table.'`.`'.trim($t).'` LIKE "%'.$search_keyword.'%"';
                 }
-                $where[] = '('.implode(' OR ', $temp).')';
+                $temp && $where[] = '('.implode(' OR ', $temp).')';
             }
             // 字段过滤
             foreach ($mod_field as $name => $field) {
@@ -135,7 +135,7 @@ class Search extends \Phpcmf\Model {
                     foreach ($catids as $c) {
                         $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
                     }
-                    $where[0] = '('.implode(' OR ', $fwhere).')';
+                    $fwhere && $where[0] = '('.implode(' OR ', $fwhere).')';
                 } else {
                     // 无副栏目时
                     $where[0] = '`'.$table.'`.`catid`'.($module['category'][$catid]['child'] ? 'IN ('.$module['category'][$catid]['childids'].')' : '='.(int)$catid);
@@ -287,7 +287,7 @@ class Search extends \Phpcmf\Model {
                     }
                 }
             }
-            return '('.implode(' OR ', $where).')';
+            return $where ? '('.implode(' OR ', $where).')' : '';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkages') {
             // 联动菜单多选字段
             $arr = explode('|', $value);
@@ -317,7 +317,7 @@ class Search extends \Phpcmf\Model {
                     }
                 }
             }
-            return '('.implode(' OR ', $where).')';
+            return $where ? '('.implode(' OR ', $where).')' : '';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Checkbox') {
             // 复选字段
             $arr = explode('|', $value);
@@ -331,7 +331,7 @@ class Search extends \Phpcmf\Model {
                     $where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$')";
                 }
             }
-            return '('.implode(' OR ', $where).')';
+            return $where ? '('.implode(' OR ', $where).')' : '';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Radio') {
             // 单选字段
             $arr = explode('|', $value);
@@ -343,7 +343,7 @@ class Search extends \Phpcmf\Model {
                     $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
                 }
             }
-            return '('.implode(' OR ', $where).')';
+            return $where ? '('.implode(' OR ', $where).')' : '';
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
         } else {
