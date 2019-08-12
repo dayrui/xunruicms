@@ -125,8 +125,8 @@ class Search extends \Phpcmf\Model {
                 // 副栏目判断
                 if (isset($module['field']['catids']) && $module['field']['catids']['fieldtype'] = 'Catids') {
                     $fwhere = [];
-                    if ($module['category'][$catid]['child']) {
-                        $fwhere[] = '`'.$table.'`.`catid` IN ('.implode(',', $module['category'][$catid]['childids']).')';
+                    if ($module['category'][$catid]['child'] && $module['category'][$catid]['childids']) {
+                        $fwhere[] = '`'.$table.'`.`catid` IN ('.$module['category'][$catid]['childids'].')';
                         $catids = @explode(',', $module['category'][$catid]['childids']);
                     } else {
                         $fwhere[] = '`'.$table.'`.`catid` = '.$catid;
