@@ -169,14 +169,13 @@ class Urlrule extends \Phpcmf\Table
             'code' => $code,
             'note' => $note,
             'count' => $code ? dr_count(explode(PHP_EOL, $code)) : 0,
-            'rewrite_config' => is_file(MYPATH.'Model/Rewrite.php') ? 1 : 0,
         ]);
         \Phpcmf\Service::V()->display('urlrule_rewrite.html');
     }
 
     // 生成伪静态解析文件规则
     public function rewrite_add() {
-        $rt = \Phpcmf\Service::M('rewrite')->get_code();
+        $rt = \Phpcmf\Service::L('router')->get_rewrite_code();
         $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
 
