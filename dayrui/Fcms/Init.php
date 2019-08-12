@@ -260,7 +260,6 @@ require COREPATH.'Config/Constants.php';
 
 require BASEPATH.'Common.php';
 
-
 // 自动加载机制
 require COREPATH . 'Config/Modules.php';
 
@@ -279,6 +278,10 @@ $loader = CodeIgniter\Services::autoloader();
 $loader->initialize(new Config\Autoload(), new Config\Modules());
 $loader->register();    // Register the loader with the SPL autoloader stack.
 
+// Now load Composer's if it's available
+if (is_file(COMPOSER_PATH)) {
+    require_once COMPOSER_PATH;
+}
 
 // Load environment settings from .env files
 // into $_SERVER and $_ENV
