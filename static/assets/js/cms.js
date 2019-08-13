@@ -411,7 +411,7 @@ function dr_ajax_option(url, msg, remove) {
                         if (remove) {
                             // 批量移出去
                             var ids = json.data.ids;
-                            for(var i in ids){
+                            for ( var i = 0; i < ids.length; i++){
                                 $("#dr_row_"+ids[i]).remove();
                             }
                         }
@@ -549,7 +549,7 @@ function dr_loginout(msg) {
         success: function(json) {
             var oss_url = json.data.sso;
             // 发送同步登录信息
-            for(var i in oss_url){
+            for ( var i = 0; i < oss_url.length; i++){
                 $.ajax({
                     type: "GET",
                     url:oss_url[i],
@@ -586,7 +586,7 @@ function dr_ajax_member(url, form) {
             if (json.code == 1) {
                 var oss_url = json.data.sso;
                 // 发送同步登录信息
-                for(var i in oss_url){
+                for ( var i = 0; i < oss_url.length; i++){
                     //alert(oss_url[i]);
                     $.ajax({
                         type: "GET",
@@ -632,7 +632,7 @@ function dr_pc_or_mobile(url) {
             if (json.code == 1) {
                 var oss_url = json.data.sso;
                 // 发送同步cookie
-                for(var i in oss_url){
+                for ( var i = 0; i < oss_url.length; i++){
                     $.ajax({
                         type: "GET",
                         url:oss_url[i],

@@ -131,6 +131,11 @@ class Module extends \Phpcmf\Common
             return $data;
         }
 
+        // 验证
+        if (!in_array('donation', \Phpcmf\Service::M('table')->get_cache_field(SITE_ID.'_'.MOD_DIR)) ) {
+            $this->_msg(0, '当前模块没有安装打赏应用');exit;
+        }
+
         \Phpcmf\Service::V()->assign('meta_title', dr_lang('打赏作者').SITE_SEOJOIN.\Phpcmf\Service::V()->get_value('meta_title'));
         \Phpcmf\Service::V()->display('donation.html');
     }
