@@ -77,7 +77,7 @@ class Cloud extends \Phpcmf\Common
         $domain = dr_get_domain_name(ROOT_URL);
         $license_domain = 'https://www.xunruicms.com/license/domain/'.$domain;
         if ($this->license['domain']) {
-            $license_domain = $this->license['domain'].'&c=show&domain='.$domain;
+            $license_domain = trim($this->license['domain'], '/').'/index.php?s=license&m=show&domain='.$domain;
         }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
