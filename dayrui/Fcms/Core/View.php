@@ -631,7 +631,7 @@ class View {
         $params = explode(' ', $_params);
         in_array($params[0], $this->action) &&  $params[0] = 'action='.$params[0];
 
-        $sysadj = array('IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 'GT', 'EGT', 'LT', 'ELT', 'DAY', 'MONTH');
+        $sysadj = array('IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 'GT', 'EGT', 'LT', 'ELT', 'DAY', 'MONTH', 'JSON', 'FIND');
         foreach ($params as $t) {
             $var = substr($t, 0, strpos($t, '='));
             $val = substr($t, strpos($t, '=') + 1);
@@ -1828,6 +1828,14 @@ class View {
                             // 高版本写法
                             $string.= $join." JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($t['value'])."\"', '$')";
                         }
+                        break;
+
+                    case 'FIND':
+						$v = dr_safe_replace($t['value']);
+						if (!is_numeric($v)) {
+							$v = "'".$v."'";
+						}
+                        $string.= $join." FIND_IN_SET (".$v.", {$t['name']})";
                         break;
 
                     case 'LIKE':
