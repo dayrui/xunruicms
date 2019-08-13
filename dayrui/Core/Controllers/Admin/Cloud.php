@@ -28,6 +28,7 @@ class Cloud extends \Phpcmf\Common
 {
     private $admin_url;
     private $service_url;
+    private $license;
     private $version;
     private $license_sn;
 
@@ -51,6 +52,7 @@ class Cloud extends \Phpcmf\Common
 
         $this->license_sn = $this->license['license'];
         \Phpcmf\Service::V()->assign([
+            'license' => $this->license,
             'license_sn' => $this->license_sn,
             'cms_version' => $this->version,
             'cmf_version' => $this->cmf_version,
@@ -72,14 +74,20 @@ class Cloud extends \Phpcmf\Common
     // 我的网站
     public function index() {
 
+        $domain = dr_get_domain_name(ROOT_URL);
+        $license_domain = 'https://www.xunruicms.com/license/domain/'.$domain;
+        if ($this->license['domain']) {
+            $license_domain = $this->license['domain'].'&c=show&domain='.$domain;
+        }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '我的网站' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-cog'],
                 ]
             ),
+            'domain' => $domain,
             'ip_address' => \Phpcmf\Service::L('input')->ip_address(),
-            'domain' => dr_get_domain_name(ROOT_URL),
+            'license_domain' => $license_domain,
         ]);
         \Phpcmf\Service::V()->display('cloud_index.html');exit;
     }
