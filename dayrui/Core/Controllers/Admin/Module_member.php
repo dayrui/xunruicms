@@ -59,11 +59,7 @@ class Module_member extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '内容权限' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-user'],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname),
             'module' => $module,
             'dirname' => $dirname,
         ]);

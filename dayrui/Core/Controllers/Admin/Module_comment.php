@@ -53,11 +53,7 @@ class Module_comment extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '评论设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-comment'],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname),
             'module' => $module,
             'dirname' => $dirname,
         ]);

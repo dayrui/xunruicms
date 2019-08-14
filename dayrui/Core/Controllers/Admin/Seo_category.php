@@ -71,12 +71,7 @@ class Seo_category extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '栏目SEO' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-internet-explorer'],
-                    'help' => [496],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $one['dirname'], 496),
             'module' => $module,
             'dirname' => $one['dirname'],
         ]);

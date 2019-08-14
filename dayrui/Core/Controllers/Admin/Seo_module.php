@@ -53,12 +53,7 @@ class Seo_module extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '模块SEO' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-internet-explorer'],
-                    'help' => [495],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname, 495),
             'module' => $module,
             'dirname' => $dirname,
         ]);

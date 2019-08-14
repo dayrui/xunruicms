@@ -493,6 +493,25 @@ class Auth extends \Phpcmf\Model {
 
         return str_replace('{HIDE}', 'hidden', $_link);
     }
+	
+	// 多级框架菜单
+	public function _iframe_menu($list, $now, $help = 0) {
+		
+		$menu = '';
+		foreach ($list as $dir => $t) {
+			$class = '';
+            // 选中当前菜单
+            if ($now == $dir) {
+                $class = ' on';
+            }
+			$menu .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> <i class="fa fa-circle"></i> </li>';
+		}
+		if (CI_DEBUG && $help) {
+			$menu .= '<li> <a href="javascript:dr_help(\''.$help.'\');"><i class="fa fa-question-circle"></i> '.dr_lang('在线帮助').'</a> <i class="fa fa-circle"></i> </li>';
+		}
+		
+		return $menu;
+	}
 
     // 模块后台菜单
     public function _module_menu($module, $list_name, $list_url, $post_url) {

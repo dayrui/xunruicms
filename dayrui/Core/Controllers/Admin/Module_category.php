@@ -68,11 +68,7 @@ class Module_category extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '栏目管理' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-reorder'],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $one['dirname']),
             'module' => $module,
             'dirname' => $one['dirname'],
         ]);

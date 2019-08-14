@@ -46,7 +46,7 @@ class Module_content extends \Phpcmf\Common
             'name' => '内容维护',
             'icon' => 'fa fa-database',
             'title' => '内容维护',
-            'url' =>\Phpcmf\Service::L('Router')->url('content/index'),
+            'url' => \Phpcmf\Service::L('Router')->url('content/index'),
             'dirname' => 'system',
         ];
 
@@ -61,11 +61,7 @@ class Module_content extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '内容维护' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-wrench'],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname),
             'module' => $module,
             'dirname' => $dirname,
         ]);
