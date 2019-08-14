@@ -73,6 +73,7 @@
                     $('#dr_check_button_ing').removeClass('green-meadow');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
+                    clearInterval(interval_id);
                 } else {
 
                 }
@@ -97,7 +98,8 @@
                         $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                         $('#dr_check_button_ing').addClass('red');
                         $('#dr_check_button_ing').removeClass('green-meadow');
-                        $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                        $('#dr_check_button').html('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                        clearInterval(interval_id);
                     } else {
                         $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
                         if (json.code == 100) {
@@ -114,7 +116,6 @@
                         } else {
                             $('#dr_check_html').append(json.msg);
                             $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  下载进度 '+json.code+'%');
-                            dr_ajax2ajax(json.code);
                         }
                     }
                 },

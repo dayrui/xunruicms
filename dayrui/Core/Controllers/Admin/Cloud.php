@@ -403,7 +403,7 @@ class Cloud extends \Phpcmf\Common
 
         \Phpcmf\Service::L('cache')->init()->save('cloud-update-'.$id, $data['data'], 3600);
 
-        $this->_json(1, 'ok');
+        $this->_json(1, 'ok', $data['data']);
     }
     // 开始下载脚本
     public function update_file_down() {
@@ -425,7 +425,7 @@ class Cloud extends \Phpcmf\Common
                 $this->_json(0, '本站：无法写入远程文件', $cache['url']);
             }
             while (!feof($fp)) {
-                if (!file_exists($file)) {
+                if (!is_file($file)) {
                     // 如果临时文件被删除就取消下载
                     fclose($download_fp);
                     $this->_json(0, '本站：临时文件被删除', $cache['url']);
@@ -434,8 +434,10 @@ class Cloud extends \Phpcmf\Common
             }
             fclose($download_fp);
             fclose($fp);
+
             $this->_json(1, 'ok');
         } else {
+            unlink($file);
             $this->_json(0, '本站：fopen打开远程文件失败', $cache['url']);
         }
     }
@@ -445,7 +447,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证过期，请重试');
         } elseif (!$cache['size']) {
             $this->_json(0, '本站：关键数据不存在，请重试');
         }
@@ -453,9 +455,9 @@ class Cloud extends \Phpcmf\Common
         // 执行下载文件
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (is_file($file)) {
-            $now = filesize($file);
-            $jd = round($now / $cache['size'] * 100, 0);
-            $this->_json($jd, $now.'-'.$cache['size']);
+            $now = max(1, filesize($file));
+            $jd = max(1, round($now / $cache['size'] * 100, 0));
+            $this->_json($jd, '<p><label class="rleft">需下载文件大小：'.dr_format_file_size($cache['size']).'，已下载：'.dr_format_file_size($now).'</label><label class="rright"><span class="ok">'.$jd.'%</span></label></p>');
         } else {
             $this->_json(0, '本站：文件还没有被下载');
         }
