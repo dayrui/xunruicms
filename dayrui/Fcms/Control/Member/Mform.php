@@ -80,6 +80,12 @@ class Mform extends \Phpcmf\Table
             'order_by' => 'inputtime desc',
             'where_list' => 'cid='. $this->cid, // 自定义条件，显示本内容的表单
         ]);
+        $this->edit_where = $this->delete_where = 'cid='. $this->cid;
+        // 是否有验证码
+        $this->is_post_code = dr_member_auth(
+            $this->member_authid,
+            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['code']
+        );
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
@@ -93,7 +99,7 @@ class Mform extends \Phpcmf\Table
 
     // ========================
 
-    // 后台查看列表
+    // 查看列表
     protected function _Member_List() {
 
         list($tpl) = $this->_List(['cid' => $this->cid]);
@@ -115,7 +121,7 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
-    // 后台添加内容
+    // 添加内容
     protected function _Member_Add() {
 
         if (!$this->is_hcategory) {
@@ -137,7 +143,7 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
-    // 后台修改内容
+    // 修改内容
     protected function _Member_Edit() {
 
         if (!$this->is_hcategory) {
@@ -166,7 +172,7 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
-    // 后台批量保存排序值
+    // 批量保存排序值
     protected function _Member_Order() {
         $this->_Display_Order(
             intval(\Phpcmf\Service::L('input')->get('id')),
@@ -174,7 +180,7 @@ class Mform extends \Phpcmf\Table
         );
     }
 
-    // 后台删除内容
+    // 删除内容
     protected function _Member_Del() {
 
         if (!$this->is_hcategory) {

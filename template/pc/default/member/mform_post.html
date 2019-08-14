@@ -27,6 +27,23 @@
                             </div>
                         </div>
                         {str_replace('col-md-9', 'col-md-10', $myfield)}
+                        {if $is_post_code}
+                        <div class="form-group" id="dr_row_code">
+                            <label class="control-label col-md-2"><span class="required" aria-required="true"> * </span> {dr_lang('验证码')}</label>
+                            <div class="col-md-5">
+                                <label>
+                                    <div class="form-recaptcha" style="width:270px;">
+                                        <div class="input-group">
+                                            <input type="text" id="dr_code" class="form-control" name="code">
+                                            <div class="input-group-btn fc-code">
+                                                {dr_code(120, 35)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        {/if}
                     </div>
                 </div>
             </div>

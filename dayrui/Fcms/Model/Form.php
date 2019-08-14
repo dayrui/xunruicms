@@ -45,6 +45,7 @@ class Form extends \Phpcmf\Model
         $name = ucfirst($table);
         $files = [
             APPSPATH.'Form/Controllers/'.$name.'.php' => FCPATH.'Temp/Form/$NAME$.php',
+            APPSPATH.'Form/Controllers/Member/'.$name.'.php' => FCPATH.'Temp/Form/Member$NAME$.php',
             APPSPATH.'Form/Controllers/Admin/'.$name.'.php' => FCPATH.'Temp/Form/Admin$NAME$.php',
             APPSPATH.'Form/Controllers/Admin/'.$name.'_verify.php' => FCPATH.'Temp/Form/Admin$NAME$_verify.php',
         ];
@@ -52,6 +53,9 @@ class Form extends \Phpcmf\Model
         $ok = 0;
         foreach ($files as $file => $form) {
             if (!is_file($file)) {
+                if (!is_dir(dirname($file))) {
+                    dr_mkdirs(dirname($file));
+                }
                 $c = @file_get_contents($form);
                 $size = @file_put_contents($file, str_replace('$NAME$', $name, $c));
                 if (!$size && $call) {
@@ -149,6 +153,7 @@ class Form extends \Phpcmf\Model
             $name = ucfirst($row['table']);
             unlink(APPSPATH.'Form/Controllers/'.$name.'.php');
             unlink(APPSPATH.'Form/Controllers/Admin/'.$name.'.php');
+            unlink(APPSPATH.'Form/Controllers/Member/'.$name.'.php');
             unlink(APPPATH.'Controllers/Admin/'.$name.'_verify.php');
             // 删除表数据
             \Phpcmf\Service::M('Table')->delete_form($row);

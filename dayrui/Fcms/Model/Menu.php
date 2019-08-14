@@ -220,6 +220,24 @@ class Menu extends \Phpcmf\Model {
             }
         }
         // 用户菜单
+        $menu = $this->db->table('member_menu')->where('mark', 'form-'.$data['table'])->get()->getRowArray();
+        if ($menu) {
+            // 更新
+            $this->db->table('member_menu')->where('id', intval($menu['id']))->update([
+                'name' => dr_lang('%s管理', $data['name']),
+                'icon' => (string)$data['setting']['icon'],
+            ]);
+        } else {
+            // 新增菜单
+            $menu = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();
+            if ($menu) {
+                $this->_add('member', $menu['id'], [
+                    'name' => dr_lang('%s管理', $data['name']),
+                    'icon' => (string)$data['setting']['icon'],
+                    'uri' => 'form/'.$data['table'].'/index',
+                ], 'form-'.$data['table']);
+            }
+        }
 
     }
 

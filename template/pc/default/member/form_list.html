@@ -1,0 +1,95 @@
+{template "mheader.html"}
+
+<div class="row table-search-tool">
+    <form action="{SELF}" method="get">
+        {dr_form_search_hidden($p)}
+        {if $index}
+        <div class=" finecms-top-name" class="finecms-top-name" style="padding-left: 15px; padding-bottom: 20px"><a  href="{$index.url}" target="_blank"><code>{dr_strcut(dr_clearhtml($index.title), 50)}</code></a></div>
+        {/if}
+
+        <div class="col-md-12">
+            <label>
+                <select name="field" class="form-control">
+                    {loop $field $t}
+                    {if $t.ismain}
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    {/if}
+                    {/loop}
+                    <option value="id"> Id </option>
+                </select>
+            </label>
+            <label><i class="fa fa-caret-right"></i></label>
+            <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+            <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> 搜索</button></label>
+            {if $is_post}
+            <label><a href="{dr_member_url($uriprefix.'/add', ['cid' => $index.id])}" class="btn green btn-sm" > <i class="fa fa-plus"></i> 发布</a></label>
+            {/if}
+        </div>
+    </form>
+</div>
+
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $is_delete}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">排序</th>
+                <th class="{dr_sorting('title')}" name="title">主题</th>
+                <th style="text-align:center" width="70" class="{dr_sorting('status')}" name="status">状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX" id="dr_row_{$t.id}">
+                {if $is_delete}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_member_url($uriprefix.'/order_edit', ['id'=>$t.id, 'cid' => $t.cid])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+                <td>{dr_list_function('title', $t['title'], $param, $t)}</td>
+                <td style="text-align:center">{Function_list::status($t.status)}</td>
+                <td>
+                    {if $is_edit}
+                    <label><a href="{dr_member_url($uriprefix.'/edit', ['id'=>$t.id, 'cid'=>$t.cid])}" class="btn btn-xs red"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                    {/if}
+                    <label><a href="{Router::form_show_url($form_table, $t.id)}" target="_blank" class="btn btn-xs dark"> <i class="fa fa-search"></i> {dr_lang('查看')}</a></label>
+                </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-5 fc-list-select">
+            {if $is_delete}
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+            <label><button type="button" onclick="dr_ajax_option('{dr_member_url($uriprefix.'/del')}', '你确定要删除吗？', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button></label>
+            {/if}
+        </div>
+        <div class="col-md-7 fc-list-page">
+            {$mypages}
+        </div>
+    </div>
+</form>
+
+
+{template "mfooter.html"}

@@ -57,6 +57,16 @@
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('修改')}
+                            <input type="checkbox" class="checkboxes group-checkable dr_form_{$table}_edit" data-set="dr_form_{$table}_edit" />
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('删除')}
+                            <input type="checkbox" class="checkboxes group-checkable dr_form_{$table}_del" data-set="dr_form_{$table}_del" />
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('验证码')}
                             <input type="checkbox" class="checkboxes group-checkable dr_form_{$table}_code" data-set="dr_form_{$table}_code" />
                             <span></span>
@@ -85,6 +95,16 @@
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('发布')}
                             <input type="checkbox" class="checkboxes dr_form_{$table}_add" {if !in_array($i, (array)$auth[form][$table]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('修改')}
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_edit" {if !in_array($i, (array)$auth[form][$table]['edit'])} checked {/if} name="data[edit][]" value="{$i}"/>
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('删除')}
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_del" {if !in_array($i, (array)$auth[form][$table]['del'])} checked {/if} name="data[del][]" value="{$i}"/>
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">

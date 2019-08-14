@@ -170,6 +170,10 @@ class Form extends \Phpcmf\Table
             list($tpl, $data) = $cache;
         }
 
+        if (!$data['status']) {
+            $this->_msg(0, dr_lang('内容正在审核中'));
+        }
+
         \Phpcmf\Service::V()->assign($data);
 
         // seo
