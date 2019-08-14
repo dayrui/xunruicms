@@ -332,7 +332,7 @@ class Search extends \Phpcmf\Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '';
-        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Radio') {
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
             $where = [];
