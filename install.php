@@ -20,14 +20,14 @@ define('WEBPATH', dirname(__FILE__).'/');
 define('WRITEPATH', WEBPATH.'cache/');
 
 // 判断目录权限
-foreach ([
+foreach (array(
              WRITEPATH,
              WRITEPATH.'data/',
              WRITEPATH.'template/',
              WRITEPATH.'session/',
              WEBPATH.'config/',
              WEBPATH.'uploadfile/',
-         ] as $t) {
+         ) as $t) {
     if (!dr_check_put_path($t)) {
         exit('目录（'.$t.'）不可写');
     }
