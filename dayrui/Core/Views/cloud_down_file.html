@@ -40,7 +40,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/down_file_count')}&ls={$ls}&cid={$cid}",
+            url: "{dr_url('cloud/update_file')}&id={$app_id}",
             success: function (json) {
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
@@ -49,7 +49,7 @@
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                 } else {
-                    dr_ajax2ajax(1);
+                    dr_do_cron();
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -57,36 +57,73 @@
             }
         });
     }
-    function dr_ajax2ajax(page) {
+    // 执行下载
+    function dr_do_cron() {
+        // 开始下载他
+        $('#dr_check_html').append('<p class=""><label class="rleft">正在开始下载文件</label></p>');
+        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 下载中');
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/down_file_app')}&ls={$ls}&cid={$cid}&page="+page,
+            url: "{dr_url('cloud/update_file_down')}&id={$app_id}",
             success: function (json) {
-
-                $('#dr_check_html').append(json.msg);
-                document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
-
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                     $('#dr_check_button_ing').addClass('red');
                     $('#dr_check_button_ing').removeClass('green-meadow');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                    $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                 } else {
-                    $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
-                    if (json.code == 100) {
-                        $('#dr_check_button_ing').html('<i class="fa fa-check-circle"></i> 下载完成');
-                        $('#dr_check_button').append('<button type="button" id="dr_check_install" onclick="dr_install()" class="btn blue"> <i class="fa fa-cog"></i> 导入程序 </button>');
-                    } else {
-                        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  下载进度 '+json.code+'%');
-                        dr_ajax2ajax(json.code);
-                    }
+
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
             }
         });
+        // 检测下载结果
+        var is_ok_lock = 0;
+        var interval_id = window.setInterval(function() {
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "{dr_url('cloud/update_file_check')}&id={$app_id}",
+                success: function (json) {
+
+                    document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+
+                    if (json.code == 0) {
+                        $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+                        $('#dr_check_button_ing').addClass('red');
+                        $('#dr_check_button_ing').removeClass('green-meadow');
+                        $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                    } else {
+                        $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+                        if (json.code == 100) {
+                            // 下在完成
+                            clearInterval(interval_id);
+                            //dr_checking_install();
+                            if (is_ok_lock == 0) {
+                                $('#dr_check_html').append('<p class=""><label class="rleft">文件下载完成</label></p>');
+                                $('#dr_check_button_ing').html('<i class="fa fa-check-circle"></i> 下载完成');
+                                $('#dr_check_button').append('<button type="button" id="dr_check_install" onclick="dr_install()" class="btn blue"> <i class="fa fa-cog"></i> 导入程序 </button>');
+
+                            }
+                            is_ok_lock = 1;
+                        } else {
+                            $('#dr_check_html').append(json.msg);
+                            $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  下载进度 '+json.code+'%');
+                            dr_ajax2ajax(json.code);
+                        }
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
+
+        }, 1000);
     }
     function dr_install() {
         $('#dr_check_html').html("");
@@ -100,7 +137,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/install_app')}&cid={$cid}",
+            url: "{dr_url('cloud/install_app')}&id={$app_id}",
             success: function (json) {
                 if (json.code == 1) {
                     $('#dr_check_button_ing').html('<i class="fa fa-check-circle"></i> 下载完成');

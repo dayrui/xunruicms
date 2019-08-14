@@ -225,94 +225,35 @@ class Cloud extends \Phpcmf\Common
     function down_file() {
         \Phpcmf\Service::V()->assign([
             'ls' => intval($_GET['ls']),
-            'cid' => intval($_GET['cid']),
+            'app_id' => 'app-'.intval($_GET['cid']),
         ]);
         \Phpcmf\Service::V()->display('cloud_down_file.html');exit;
     }
 
-    // 服务器下载程序的目录结构和统计数量
-    function down_file_count() {
-
-        $cid = intval($_GET['cid']);
-        $surl = $this->service_url.'&action=down_file_count&get_http=1&ls='.intval($_GET['ls']).'&cid='.$cid;
-        $json = dr_catcher_data($surl);
-        if (!$json) {
-            $this->_json(0, '没有从服务端获取到数据');
-        }
-
-        $data = dr_string2array($json);
-        if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新下载：'.$json);
-        } elseif (!$data['code']) {
-            $this->_json(0, $data['msg']);
-        } elseif (dr_count($data['data']['file']) == 0) {
-            $this->_json(0, '程序包中没有文件');
-        }
-
-        \Phpcmf\Service::L('cache')->init()->save('cloud-down-'.$cid, $data['data'], 3600);
-
-        $this->_json(dr_count($data['data']['file']), 'ok');
-    }
-
-    // 服务器下载程序
-    function down_file_app() {
-
-        $ls = intval($_GET['ls']);
-        $cid = intval($_GET['cid']);
-        $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-down-'.$cid);
-        !$cache && $this->_json(0, '授权验证过期，请重试');
-        $data = $cache['file'][$page];
-        if ($data) {
-            $html = '';
-            foreach ($data as $filename) {
-                $surl = $this->service_url.'&action=down_file&get_http=1&ls='.$ls.'&cid='.$cid.'&page='.$page.'&file='.urlencode($filename);
-                $json = dr_catcher_data($surl);
-                if (!$json) {
-                    $this->_error_msg($filename, '没有从服务端获取到数据');
-                }
-                $data = dr_string2array($json);
-                if (!$data) {
-                    $this->_error_msg($filename, '服务端数据异常，请重新下载');
-                } elseif (!$data['code']) {
-                    $this->_error_msg($filename, $data['msg']);
-                } else {
-                    // 成功返回数据
-                    $file = WRITEPATH.'temp/'.$cid.$filename;
-                    dr_mkdirs(dirname($file));
-                    file_put_contents($file, base64_decode($data['msg']));
-                    /*
-                    if (strpos($filename, 'Config/Version.php')) {
-                        $cfg = require $file;
-                        if ($cfg['license'] != $this->license_sn) {
-                            $this->_error_msg($filename, '此插件授权证书不匹配，无法进行安装');
-                        }
-                    }*/
-                }
-
-                $html.= '<p class=""><label class="rleft">正在下载'.$filename.'</label><label class="rright"><span class="ok">完成</span></label></p>';
-            }
-            $this->_json($page + 1, $html);
-        }
-		
-        $cmspath = WRITEPATH.'temp/'.$cid.'/';
-		if (is_file($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock')) {
-			unlink($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock');
-		}
-
-        $this->_json(100, '');
-    }
 
     // 将下载程序安装到目录中
     function install_app() {
 
-        $cid = intval($_GET['cid']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-down-'.$cid);
-        !$cache && $this->_json(0, '授权验证过期，请重试');
-        !$cache['dir'] && $this->_json(0, '缺少程序安装目录名称');
-        $cmspath = WRITEPATH.'temp/'.$cid.'/';
-        !is_dir($cmspath) && $this->_json(0, '程序未下载成功');
-		
+        $id = dr_safe_replace($_GET['id']);
+        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        if (!$cache) {
+            $this->_json(0, '授权验证过期，请重试');
+        } elseif (!$cache['dir']) {
+            $this->_json(0, '缺少程序安装目录名称');
+        }
+
+        $file = WRITEPATH.'temp/'.$id.'.zip';
+        if (!is_file($file)) {
+            $this->_json(0, '本站：文件还没有被下载');
+        }
+
+        // 解压目录
+        $cmspath = WRITEPATH.'temp/'.$id.'/';
+        if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
+            cloud_msg(0, '本站：文件解压失败');
+        }
+        unlink($file);
+
 		if (is_file($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock')) {
 			unlink($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock');
 		}
@@ -348,7 +289,6 @@ class Cloud extends \Phpcmf\Common
 
         $this->_json(1, '程序导入完成<br>1、如果本程序是应用插件：请到【应用】-【应用管理】中手动安装本程序<br>2、如果本程序是组件：请按本组件的使用教程来操作；<br>3、如果本程序是模板：请按本模板使用教程来操作');
     }
-
 
     // 程序升级
     public function update() {
@@ -430,227 +370,183 @@ class Cloud extends \Phpcmf\Common
     // 执行更新程序的界面
     public function todo_update() {
 
-        $ids = $_GET['ids'];
-
         \Phpcmf\Service::V()->assign([
-            'ids' => implode(',', $ids),
+            'app_id' => dr_safe_replace($_GET['id']),
         ]);
         \Phpcmf\Service::V()->display('cloud_todo_update.html');exit;
     }
 
-    // 服务器更新程序的目录结构和统计数量
-    function update_file_count() {
+    // 服务器下载升级文件
+    public function update_file() {
 
-        $ids = $_GET['ids'];
-        if ($ids) {
-            // 查找本地程序的版本号
-            $data = [];
-            if (is_file(CMSPATH.'Config/Version.php')) {
-                $cms = require CMSPATH.'Config/Version.php';
-                $data['cms-'.$cms['id']] = $cms['version'];
-            }
-            $cms = require MYPATH.'Config/Version.php';
-            $data['cms-'.$cms['id']] = $cms['version'];
-            $local = dr_dir_map(APPSPATH, 1);
-            foreach ($local as $dir) {
-                if (is_file(APPSPATH.$dir.'/Config/App.php') && is_file(APPSPATH.$dir.'/Config/Version.php')) {
-                    $cfg = require APPSPATH.$dir.'/Config/App.php';
-                    if ($cfg['type'] != 'module') {
-                        $vsn = require APPSPATH.$dir.'/Config/Version.php';
-                        $vsn['id'] && $data[$cfg['type'].'-'.$vsn['id']] = $vsn['version'];
-                    }
-                }
-            }
-            // 查找选择程序的版本号
-            $post = [];
-            $ids = explode(',', $ids);
-            foreach ($ids as $i) {
-                $post[$i] = $data[$i];
-            }
-        } else {
+        $id = dr_safe_replace($_GET['id']);
+        if (!$id) {
             $this->_json(0, '没有选择任何升级程序');
         }
 
-        $surl = $this->service_url.'&action=update_file_count&get_http=1&post='.json_encode($post);
+        $surl = $this->service_url.'&action=update_file&get_http=1&appid='.$id;
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '没有从服务端获取到数据');
+            $this->_json(0, '没有从服务端获取到数据', $surl);
         }
 
         $data = dr_string2array($json);
         if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新下载');
+            $this->_json(0, '服务端数据异常，请重新下载', $json);
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
+        } elseif (!$data['data']['size']) {
+            $this->_json(0, '服务端文件总大小异常');
+        } elseif (!$data['data']['url']) {
+            $this->_json(0, '服务端文件下载地址异常');
         }
 
-        \Phpcmf\Service::L('cache')->init()->save('cloud-update-'.$_GET['ids'], $data['data'], 3600);
+        \Phpcmf\Service::L('cache')->init()->save('cloud-update-'.$id, $data['data'], 3600);
 
-        $this->_json(dr_count($data['data']), 'ok');
+        $this->_json(1, 'ok');
     }
+    // 开始下载脚本
+    public function update_file_down() {
+        $id = dr_safe_replace($_GET['id']);
+        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        if (!$cache) {
+            $this->_json(0, '授权验证过期，请重试');
+        } elseif (!$cache['size']) {
+            $this->_json(0, '关键数据不存在，请重试');
+        }
+        // 执行下载文件
+        $file = WRITEPATH.'temp/'.$id.'.zip';
 
-    // 服务器下载升级程序
-    function update_file_app() {
+        set_time_limit(0);
+        touch($file);
+        // 做些日志处理
+        if ($fp = fopen($cache['url'], "rb")) {
+            if (!$download_fp = fopen($file, "wb")) {
+                $this->_json(0, '本站：无法写入远程文件', $cache['url']);
+            }
+            while (!feof($fp)) {
+                if (!file_exists($file)) {
+                    // 如果临时文件被删除就取消下载
+                    fclose($download_fp);
+                    $this->_json(0, '本站：临时文件被删除', $cache['url']);
+                }
+                fwrite($download_fp, fread($fp, 1024 * 8 ), 1024 * 8);
+            }
+            fclose($download_fp);
+            fclose($fp);
+            $this->_json(1, 'ok');
+        } else {
+            $this->_json(0, '本站：fopen打开远程文件失败', $cache['url']);
+        }
+    }
+    // 检测下载进度
+    public function update_file_check() {
 
-        $ids = $_GET['ids'];
-        $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$ids);
-        !$cache && $this->_json(0, '授权验证过期，请重试');
-        $data = $cache['file'][$page];
-        if ($data) {
-            // 查找本地程序的版本号
-            $app = [];
-            if (is_file(CMSPATH.'Config/Version.php')) {
-                $cms = require CMSPATH . 'Config/Version.php';
-                $app['cms-' . $cms['id']] = $cms['name'];
-            }
-            $cms = require MYPATH.'Config/Version.php';
-            $app['cms-'.$cms['id']] = $cms['name'];
-            $local = dr_dir_map(APPSPATH, 1);
-            foreach ($local as $dir) {
-                if (is_file(APPSPATH.$dir.'/Config/App.php') && is_file(APPSPATH.$dir.'/Config/Version.php')) {
-                    $cfg = require APPSPATH.$dir.'/Config/App.php';
-                    if ($cfg['type'] != 'module') {
-                        $vsn = require APPSPATH.$dir.'/Config/Version.php';
-                        $vsn['id'] && $app[$cfg['type'].'-'.$vsn['id']] = $vsn['name'];
-                    }
-                }
-            }
-            // 开始下载
-            $html = '';
-            foreach ($data as $filename) {
-                $surl = $this->service_url.'&action=update_file&get_http=1&ids='.$ids.'&page='.$page.'&file='.urlencode($filename);
-                $json = dr_catcher_data($surl);
-                if (!$json) {
-                    $this->_error_msg($filename, '没有从服务端获取到数据');
-                }
-                $data = dr_string2array($json);
-                if (!$data) {
-                    $this->_error_msg($filename, '服务端数据异常，请重新下载');
-                } elseif (!$data['code']) {
-                    $this->_error_msg($filename, $data['msg']);
-                } else {
-                    // 成功返回数据
-                    $file = WRITEPATH.'temp/'.$ids.$filename;
-                    dr_mkdirs(dirname($file));
-                    file_put_contents($file, base64_decode($data['msg']));
-                }
-                $tmp = trim($filename, '/');
-                list($appid) = explode('/', $tmp);
-                $html.= '<p class=""><label class="rleft">正在下载'.str_replace('/'.$appid.'/', '/'.$app[$appid].'/', $filename).'</label><label class="rright"><span class="ok">完成</span></label></p>';
-            }
-            $this->_json($page + 1, $html);
+        $id = dr_safe_replace($_GET['id']);
+        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        if (!$cache) {
+            $this->_json(0, '授权验证过期，请重试');
+        } elseif (!$cache['size']) {
+            $this->_json(0, '本站：关键数据不存在，请重试');
         }
 
-        $this->_json(100, '');
+        // 执行下载文件
+        $file = WRITEPATH.'temp/'.$id.'.zip';
+        if (is_file($file)) {
+            $now = filesize($file);
+            $jd = round($now / $cache['size'] * 100, 0);
+            $this->_json($jd, $now.'-'.$cache['size']);
+        } else {
+            $this->_json(0, '本站：文件还没有被下载');
+        }
     }
-
-    // 版本日志
-    function log_show() {
-        $url = 'https://www.xunruicms.com/version.php?id='.\Phpcmf\Service::L('input')->get('id', true).'&version='.\Phpcmf\Service::L('input')->get('version', true);
-        \Phpcmf\Service::V()->assign([
-            'url' => $url,
-        ]);
-        \Phpcmf\Service::V()->display('cloud_online.html');exit;
-    }
-
     // 升级程序
-    function update_install_file_app() {
+    public function update_file_install() {
 
-        $ids = $_GET['ids'];
-
-        // cms
-        $cms = require MYPATH.'Config/Version.php';
-        $cmspath = WRITEPATH.'temp/'.$ids.'/cms-'.$cms['id'].'/';
-
-        $page = max(1, intval($_GET['page']));
-        switch ($page) {
-
-            case 1:
-                // 整理主程序升级文件
-                if (is_dir(WRITEPATH.'temp/'.$ids.'/cms-1/')) {
-                    // 存在phpcmf框架 同时存在主程序就合并
-                    !is_dir($cmspath) && dr_mkdirs($cmspath);
-                    $this->_copy_dir(WRITEPATH.'temp/'.$ids.'/cms-1/', $cmspath);
-                }
-                $html = '<p><label class="rleft">验证主程序升级文件的归属权限</label><label class="rright"><span class="ok">完成</span></label></p>';
-                $this->_json(10, $html);
-                break;
-
-            case 10:
-
-                // 升级主程序
-
-                if (is_dir($cmspath)) {
-
-                    // 缓存目录
-                    if (is_dir($cmspath.'cache')) {
-                        $this->_copy_dir($cmspath.'cache', WRITEPATH);
-                        dr_dir_delete($cmspath.'cache', 1);
-                    }
-                    // APP目录
-                    if (is_dir($cmspath.'dayrui/App')) {
-                        $this->_copy_dir($cmspath.'dayrui/App', APPSPATH);
-                        dr_dir_delete($cmspath.'dayrui/App', 1);
-                    }
-                    // MYAPP目录
-                    if (is_dir($cmspath.'dayrui/My')) {
-                        $this->_copy_dir($cmspath.'dayrui/My', MYPATH);
-                        dr_dir_delete($cmspath.'dayrui/My', 1);
-                    }
-                    // FCPACH目录
-                    if (is_dir($cmspath.'dayrui')) {
-                        $this->_copy_dir($cmspath.'dayrui', FCPATH);
-                        dr_dir_delete($cmspath.'dayrui', 1);
-                    }
-                    $this->_copy_dir($cmspath, ROOTPATH);
-
-                    $html = '<p class=""><label class="rleft">升级主程序文件</label><label class="rright"><span class="ok">完成</span></label></p>';
-                } else {
-                    $html = '<p class=""><label class="rleft">升级主程序文件</label><label class="rright"><span class="ok">跳过</span></label></p>';
-                }
-
-                $this->_json(20, $html);
-                break;
-
-            case 20:
-                // 升级插件
-
-                $local = dr_dir_map(WRITEPATH.'temp/'.$ids.'/', 1);
-                foreach ($local as $dir) {
-                    if (strpos($dir, 'app') === 0) {
-                        $apppath = WRITEPATH.'temp/'.$ids.'/'.$dir.'/';
-                        @unlink($apppath.'Install.php');
-                        $this->_copy_dir($apppath.'APPSPATH', APPSPATH);
-                    }
-                }
-
-                $html = '<p class=""><label class="rleft">升级应用【app】</label><label class="rright"><span class="ok">完成</span></label></p>';
-
-                $this->_json(40, $html);
-                break;
-
-            case 40:
-                // 运行升级脚本程序
-                if (is_file(FCPATH.'phpcmf.php')) {
-                    require FCPATH.'phpcmf.php';
-                    unlink(FCPATH.'phpcmf.php');
-                }
-                if (is_file(WRITEPATH.'cms.php')) {
-                    require FCPATH.'cms.php';
-                    unlink(FCPATH.'cms.php');
-                }
-                $html = '<p class=""><label class="rleft">运行升级脚本程序</label><label class="rright"><span class="ok">完成</span></label></p>';
-                $this->_json(60, $html);
-                break;
-
-            default:
-                break;
+        $id = dr_safe_replace($_GET['id']);
+        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        if (!$cache) {
+            $this->_json(0, '授权验证过期，请重试');
         }
 
-        dr_dir_delete(WRITEPATH.'temp/'.$ids, 1);
+        $file = WRITEPATH.'temp/'.$id.'.zip';
+        if (!is_file($file)) {
+            $this->_json(0, '本站：文件还没有被下载');
+        }
 
-        $this->_json(100, '');
+        // 解压目录
+        $cmspath = WRITEPATH.'temp/'.$id.'/';
+        if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
+            cloud_msg(0, '本站：文件解压失败');
+        }
+        unlink($file);
+
+        list($type) = explode('-', $id);
+        if ($type == 'cms') {
+            // cms
+
+            // 缓存目录
+            if (is_dir($cmspath.'cache')) {
+                $this->_copy_dir($cmspath.'cache', WRITEPATH);
+                dr_dir_delete($cmspath.'cache', 1);
+            }
+            // APP目录
+            if (is_dir($cmspath.'dayrui/App')) {
+                $this->_copy_dir($cmspath.'dayrui/App', APPSPATH);
+                dr_dir_delete($cmspath.'dayrui/App', 1);
+            }
+            // MYAPP目录
+            if (is_dir($cmspath.'dayrui/My')) {
+                $this->_copy_dir($cmspath.'dayrui/My', MYPATH);
+                dr_dir_delete($cmspath.'dayrui/My', 1);
+            }
+            // FCPACH目录
+            if (is_dir($cmspath.'dayrui')) {
+                $this->_copy_dir($cmspath.'dayrui', FCPATH);
+                dr_dir_delete($cmspath.'dayrui', 1);
+            }
+            $this->_copy_dir($cmspath, ROOTPATH);
+
+        } else {
+            // 插件部分
+
+            if (is_file($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock')) {
+                unlink($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock');
+            }
+
+            // 复制文件到程序
+            if (is_dir($cmspath.'APPSPATH')) {
+                $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
+            }
+            if (is_dir($cmspath.'WEBPATH')) {
+                $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
+            }
+            if (is_dir($cmspath.'ROOTPATH')) {
+                $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
+            }
+            if (is_dir($cmspath.'CSSPATH')) {
+                $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
+            }
+            if (is_dir($cmspath.'TPLPATH')) {
+                $this->_copy_dir($cmspath.'TPLPATH', TPLPATH);
+            }
+            if (is_dir($cmspath.'WRITEPATH')) {
+                $this->_copy_dir($cmspath.'WRITEPATH', WRITEPATH);
+            }
+            if (is_dir($cmspath.'FCPATH')) {
+                $this->_copy_dir($cmspath.'FCPATH', FCPATH);
+            }
+            if (is_dir($cmspath.'MYPATH')) {
+                $this->_copy_dir($cmspath.'MYPATH', MYPATH);
+            }
+            if (is_dir($cmspath.'COREPATH')) {
+                $this->_copy_dir($cmspath.'COREPATH', COREPATH);
+            }
+        }
+
+        dr_dir_delete($cmspath, 1);
+
+        $this->_json(1, '<p><label class="rleft">升级完成</label><label class="rright"><span class="ok">完成</span></label></p>');
     }
 
     // 文件对比
@@ -761,6 +657,36 @@ class Cloud extends \Phpcmf\Common
         closedir($dir);
     }
 
+    // 版本日志
+    function log_show() {
+        $url = 'https://www.xunruicms.com/version.php?id='.\Phpcmf\Service::L('input')->get('id', true).'&version='.\Phpcmf\Service::L('input')->get('version', true);
+        \Phpcmf\Service::V()->assign([
+            'url' => $url,
+        ]);
+        \Phpcmf\Service::V()->display('cloud_online.html');exit;
+    }
+
+    // 获取本地程序和应用的版本号
+    private function _get_app_version() {
+        $data = [];
+        if (is_file(CMSPATH.'Config/Version.php')) {
+            $cms = require CMSPATH.'Config/Version.php';
+            $data['cms-'.$cms['id']] = $cms['version'];
+        }
+        $cms = require MYPATH.'Config/Version.php';
+        $data['cms-'.$cms['id']] = $cms['version'];
+        $local = dr_dir_map(APPSPATH, 1);
+        foreach ($local as $dir) {
+            if (is_file(APPSPATH.$dir.'/Config/App.php') && is_file(APPSPATH.$dir.'/Config/Version.php')) {
+                $cfg = require APPSPATH.$dir.'/Config/App.php';
+                if ($cfg['type'] != 'module') {
+                    $vsn = require APPSPATH.$dir.'/Config/Version.php';
+                    $vsn['id'] && $data[$cfg['type'].'-'.$vsn['id']] = $vsn['version'];
+                }
+            }
+        }
+        return $data;
+    }
 
     // 错误进度
     private function _error_msg($filename, $msg) {
