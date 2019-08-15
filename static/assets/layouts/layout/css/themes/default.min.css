@@ -40,6 +40,9 @@ form .portlet.light .portlet-body {
 .portlet.light,.portlet.light.bordered {
     border:none !important;
 }
+.form-group .portlet.light.bordered {
+    border: 1px solid #e7ecf1!important;
+}
 .right-card-box .portlet.light {
     padding: 0;
 }
