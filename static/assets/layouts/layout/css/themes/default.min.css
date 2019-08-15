@@ -9,6 +9,9 @@
 .index-content {
     background: #f5f6f8!important
 }
+.well {
+    background-color: #ffffff!important;
+}
 .page-sidebar .page-sidebar-menu > li.active > a > .selected, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a > .selected {
     border-right: 12px solid #f5f6f8!important;
 }
