@@ -178,7 +178,6 @@ class Module extends \Phpcmf\Model
                 unset($CAT[$i]);
             }
             // 验证mid
-            /*
             if ($CAT[$t['id']]['catids']) {
                 $mid = [];
                 foreach ($CAT[$t['id']]['catids'] as $c_catid) {
@@ -191,7 +190,7 @@ class Module extends \Phpcmf\Model
                 } elseif (!isset($mid[$mdir])) {
                     unset($CAT[$t['id']]);
                 }
-            }*/
+            }
         }
 
         return $CAT;
@@ -671,6 +670,10 @@ class Module extends \Phpcmf\Model
             $cdir = $cache['dirname'];
             $category = $this->db->table($siteid.'_'.$cdir.'_category')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
         }
+
+        // 修复优化栏目
+        $category = \Phpcmf\Service::M('category')->init(['table' => $siteid.'_'.$cdir.'_category'])->repair($category, $cdir);
+
         // 栏目开始
 		$CAT = $CAT_DIR = $fenzhan = $level = [];
         if ($category) {
