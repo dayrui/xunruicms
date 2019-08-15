@@ -31,6 +31,9 @@ class Category extends \Phpcmf\Model
     protected $tablename;
     protected $categorys;
 
+    private $tree;
+    private $tree_html;
+
     // 初始化模型
     public function init($data) {
         parent::init($data);
@@ -411,5 +414,42 @@ class Category extends \Phpcmf\Model
             }
         }
         
+    }
+
+
+    // 递归栏目树形结构
+    public function _tree_html($pid = 0) {
+        $this->_tree_html.= '<ul>';
+        foreach ($this->_tree as $t) {
+            if ($t['pid'] == $pid) {
+                if ($t['child']) {
+                    // 下级
+                    $this->_tree_html.= ' <li> '.$t['name'];
+                    $this->_tree_html($t['id']);
+                    $this->_tree_html.= '</li>';
+                } else {
+                    $url = '';
+                    if ($t['tid'] == 1) {
+                        $url = dr_url($t['mid'].'/home/index', ['catid' => $t['id']]);
+                    } elseif ($t['tid'] == 2) {
+                        $url = dr_url('category/edit', ['id' => $t['id']]);
+                    } else {
+                        $url = dr_url('category/edit', ['id' => $t['id']]);
+                    }
+                    $this->_tree_html.= ' <li data-jstree=\'\'>
+                            <a href="'.$url.'"> '.$t['name'].' </a>
+                        </li>';
+                }
+            }
+        }
+        $this->_tree_html.= '</ul>';
+    }
+    public function get_tree_category($data) {
+
+        $this->_tree = $data;
+        $this->_tree_html = '';
+        $this->_tree_html(0);
+        return $this->_tree_html;
+
     }
 }
