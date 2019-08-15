@@ -879,8 +879,8 @@ class Router
                         $error.= "<p>".$cname."格式不正确</p>";
                     } elseif (!isset($rname['{modname}'])) {
                         $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{rewrite}'])) {
-                        $error.= "<p>".$cname."缺少{rewrite}标签</p>";
+                    } elseif (!isset($rname['{param}'])) {
+                        $error.= "<p>".$cname."缺少{param}标签</p>";
                     } else {
                         $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search&rewrite=$'.$rname['{param}'];
                         if (isset($write[$preg])) {
@@ -1020,8 +1020,8 @@ class Router
                         $error.= "<p>".$cname."格式不正确</p>";
                     } elseif (!isset($rname['{modname}'])) {
                         $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{rewrite}'])) {
-                        $error.= "<p>".$cname."缺少{rewrite}标签</p>";
+                    } elseif (!isset($rname['{param}'])) {
+                        $error.= "<p>".$cname."缺少{param}标签</p>";
                     } else {
                         $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search&rewrite=$'.$rname['{param}'];
                         if (isset($write[$preg])) {
