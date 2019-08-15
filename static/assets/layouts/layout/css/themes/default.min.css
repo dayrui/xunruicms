@@ -33,7 +33,7 @@
 .table-scrollable {
     border-radius: 4px;
 }
-.portlet.light .portlet-body {
+form .portlet.light .portlet-body {
     padding-top: 20px;
 }
 .portlet.light,.portlet.light.bordered {
