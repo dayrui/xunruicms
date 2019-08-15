@@ -1653,6 +1653,9 @@ function dr_get_page_pname($id, $symbol = '_', $page) {
     }
 
     $name[] = $page[$id]['name'];
+
+    $name = array_unique($name);
+
     krsort($name);
 
     return implode($symbol, $name);
@@ -3372,6 +3375,8 @@ function dr_get_cat_pname($mod, $catid, $symbol = '_') {
     }
 
     $name[] = $cat['name'];
+
+    $name = array_unique($name);
 
     krsort($name);
 
