@@ -27,19 +27,6 @@
 class Site_domain extends \Phpcmf\Common
 {
 
-    public function __construct(...$params)
-    {
-        parent::__construct(...$params);
-        \Phpcmf\Service::V()->assign([
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '域名设置' => ['site_domain/index', 'fa fa-cog'],
-                    '域名绑定说明' => ['site_domain/bang_index', 'fa fa-code'],
-                    'help' => ['407'],
-                ]
-            ),
-        ]);
-    }
 
     public function index() {
 
@@ -65,20 +52,19 @@ class Site_domain extends \Phpcmf\Common
             'page' => $page,
             'data' => $data,
             'form' => dr_form_hidden(['page' => $page]),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '域名设置' => ['site_domain/index', 'fa fa-cog'],
+                    'help' => ['407'],
+                ]
+            ),
             'module' => $module,
         ]);
         \Phpcmf\Service::V()->display('site_domain.html');
     }
 
     public function bang_index() {
-
-        list($module, $data) = \Phpcmf\Service::M('Site')->domain();
-
-        \Phpcmf\Service::V()->assign([
-            'data' => $data,
-            'module' => $module
-        ]);
-        \Phpcmf\Service::V()->display('site_domain_bang.html');
+        $this->index();
     }
 
     public function edit() {

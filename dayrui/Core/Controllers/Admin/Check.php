@@ -349,7 +349,7 @@ class Check extends \Phpcmf\Common
                             ));
                             $code = file_get_contents($url, 0, $context);
                             if ($code != 'phpcmf ok') {
-                                $tips[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
+                                $tips[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
                         }
                     }
