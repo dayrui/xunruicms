@@ -363,7 +363,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 var field_name = "'.$field['fieldname'].'_sku";
                 var sku_field_name = "'.$this->_js_var($sku_field_name).'";
                 var sku_field_id = '.dr_array2string($sku_field_id).';
-                arrayValue = '.dr_array2string($ovalue).';
+                arrayValue = '.($ovalue ? dr_array2string($ovalue) : 'new Array()').';
                 </script>
                 <script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/sku.js"></script>
                 <script type="text/javascript">
