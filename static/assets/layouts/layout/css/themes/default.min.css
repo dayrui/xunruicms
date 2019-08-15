@@ -35,6 +35,7 @@
 }
 form .portlet.light .portlet-body {
     padding-top: 20px;
+    padding-bottom: 20px;
 }
 .portlet.light,.portlet.light.bordered {
     border:none !important;
