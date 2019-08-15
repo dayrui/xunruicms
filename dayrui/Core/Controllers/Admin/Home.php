@@ -53,8 +53,8 @@ class Home extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '网站后台' => ['home/main', 'fa fa-home'],
-                    '自定义本页面' => ['home/edit', 'fa fa-edit'],
+                    '控制台' => ['home/main', 'fa fa-home'],
+                    '自定义控制台' => ['home/edit', 'fa fa-edit'],
                     '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
                 ]
             ),
@@ -90,8 +90,8 @@ class Home extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '网站后台' => ['home/main', 'fa fa-home'],
-                    '自定义后台首页界面' => ['home/edit', 'fa fa-edit'],
+                    '控制台' => ['home/main', 'fa fa-home'],
+                    '自定义控制台' => ['home/edit', 'fa fa-edit'],
                     'help' => [718],
                 ]
             ),
