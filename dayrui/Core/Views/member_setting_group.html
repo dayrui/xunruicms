@@ -2,6 +2,8 @@
 <div class="note note-danger">
     <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
 </div>
+
+<div class="right-card-box">
 <form class="form-horizontal myfbody" id="myform">
     {dr_form_hidden()}
     <div class="table-scrollable ">
@@ -125,6 +127,7 @@
         </div>
     </div>
 </form>
+</div>
 <script>
     function dr_show_value(catid) {
         if ($('.dr_cat_'+catid).is(":hidden")){

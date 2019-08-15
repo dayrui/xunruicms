@@ -4,6 +4,7 @@
     <p><a href="javascript:dr_update_cache('member');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
 </div>
 
+<div class="right-card-box">
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
     <div class="table-scrollable">
@@ -64,7 +65,7 @@
         </tbody>
     </table>
 </form>
-
+</div>
 <script type="text/javascript">
     function dr_delete(fid, gid) {
         {if !$ci->_is_admin_auth('del')}

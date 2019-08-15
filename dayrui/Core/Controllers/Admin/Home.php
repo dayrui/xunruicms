@@ -203,7 +203,7 @@ class Home extends \Phpcmf\Common
 				<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($_left ? '' : 'active open').' " style="'.($first==$tid ? '' : 'display:none').'">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="'.$left['icon'].'"></i>
-                        <span class="title">'.dr_lang($left['name']).'</span>
+                        <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
                         <span class="selected" style="'.($_left ? 'display:none' : '').'"></span>
                         <span class="arrow '.($_left ? '' : ' open').'"></span>
                     </a>

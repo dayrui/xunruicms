@@ -26,16 +26,6 @@
 
 class Site_watermark extends \Phpcmf\Common
 {
-	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
-		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
-			[
-				'图片水印' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-photo'],
-                'help' => [507],
-			]
-		));
-	}
 
 	public function index() {
 
@@ -72,6 +62,12 @@ class Site_watermark extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'page' => $page,
             'data' => $data['watermark'],
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '图片水印' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-photo'],
+                    'help' => [507],
+                ]
+            ),
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,
             'waterfont' => dr_file_map(WEBPATH.'config/font/', 1),
