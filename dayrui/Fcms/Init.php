@@ -75,7 +75,7 @@ foreach ($system as $var => $value) {
 $pageURL = 'http';
 ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
     || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
-    || (isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
+    || (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
 $pageURL.= '://';
 if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
     $url = explode(':', $_SERVER['HTTP_HOST']);
@@ -120,19 +120,19 @@ define('CMSURI', $uri);
 
 // 根据自定义URL规则来识别路由
 if (!IS_ADMIN && $uri && !defined('IS_API')) {
-	// 自定义URL解析规则
-	$routes = is_file(WEBPATH.'config/rewrite.php') ? require WEBPATH.'config/rewrite.php' : [];
+    // 自定义URL解析规则
+    $routes = is_file(WEBPATH.'config/rewrite.php') ? require WEBPATH.'config/rewrite.php' : [];
     $routes['rewrite-test.html'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
     $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
-	// 正则匹配路由规则
-	$is_404 = 1;
-	foreach ($routes as $key => $val) {
-		$rewrite = $match = [];
-		if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
-			unset($match[0]);
-			// 开始匹配
-			$is_404 = 0;
-			// 开始解析路由 URL参数模式
+    // 正则匹配路由规则
+    $is_404 = 1;
+    foreach ($routes as $key => $val) {
+        $rewrite = $match = [];
+        if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
+            unset($match[0]);
+            // 开始匹配
+            $is_404 = 0;
+            // 开始解析路由 URL参数模式
             $_GET = [];
             $queryParts = explode('&', str_replace('index.php?', '', $val));
             if ($queryParts) {
@@ -147,21 +147,21 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
             }
             !$_GET['c'] && $_GET['c'] = 'home';
             !$_GET['m'] && $_GET['m'] = 'index';
-			// 结束匹配
-			break;
-		}
-	}
-	// 自定义路由模式
-    if ($is_404 && is_file(WEBPATH.'config/router.php')) {
-	    require WEBPATH.'config/router.php';
+            // 结束匹配
+            break;
+        }
     }
-	// 说明是404
-	if ($is_404) {
-		$_GET['s'] = '';
-		$_GET['c'] = 'home';
-		$_GET['m'] = 's404';
-		$_GET['uri'] = $uri;
-	}
+    // 自定义路由模式
+    if ($is_404 && is_file(WEBPATH.'config/router.php')) {
+        require WEBPATH.'config/router.php';
+    }
+    // 说明是404
+    if ($is_404) {
+        $_GET['s'] = '';
+        $_GET['c'] = 'home';
+        $_GET['m'] = 's404';
+        $_GET['uri'] = $uri;
+    }
 }
 
 // API接口项目标识 放到后面是为了识别api 的伪静态
@@ -201,34 +201,34 @@ if (is_file(MYPATH.'Dev.php')) {
 
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
-	// 判断会员模块,排除后台调用
-	$dir = ucfirst($_GET['s']);
-	if (!IS_ADMIN && $dir == 'Member') {
-		// 会员
-		if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
-			// 模块应用
-			define('APPPATH', dr_get_app_dir($_GET['app']));
-			define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
-		} else {
-			// 表示会员模块
-			define('APPPATH', COREPATH);
-			define('APP_DIR', ''); // 模块目录名称
-		}
-		define('IS_MEMBER', TRUE);
-	} elseif (dr_is_app_dir($dir)) {
-		// 模块应用
-		define('APPPATH', dr_get_app_dir($dir));
-		define('APP_DIR', strtolower($dir)); // 应用目录名称
-		define('IS_MEMBER', FALSE);
-	} else {
-		// 不存在的应用
+    // 判断会员模块,排除后台调用
+    $dir = ucfirst($_GET['s']);
+    if (!IS_ADMIN && $dir == 'Member') {
+        // 会员
+        if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
+            // 模块应用
+            define('APPPATH', dr_get_app_dir($_GET['app']));
+            define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
+        } else {
+            // 表示会员模块
+            define('APPPATH', COREPATH);
+            define('APP_DIR', ''); // 模块目录名称
+        }
+        define('IS_MEMBER', TRUE);
+    } elseif (dr_is_app_dir($dir)) {
+        // 模块应用
+        define('APPPATH', dr_get_app_dir($dir));
+        define('APP_DIR', strtolower($dir)); // 应用目录名称
+        define('IS_MEMBER', FALSE);
+    } else {
+        // 不存在的应用
         exit('APP目录不存在: APPSPATH/'.$dir.'/');
-	}
+    }
 } else {
-	// 系统主目录
-	define('APPPATH', COREPATH);
-	define('APP_DIR', '');
-	define('IS_MEMBER', FALSE);
+    // 系统主目录
+    define('APPPATH', COREPATH);
+    define('APP_DIR', '');
+    define('IS_MEMBER', FALSE);
 }
 
 define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
@@ -236,9 +236,9 @@ define('TESTPATH', WRITEPATH.'tests/');
 
 // 显示错误提示
 if (CI_DEBUG) {
-   ini_set('display_errors', 1);
+    ini_set('display_errors', 1);
 } else {
-   ini_set('display_errors', 0);
+    ini_set('display_errors', 0);
 }
 
 /*
