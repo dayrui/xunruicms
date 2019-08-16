@@ -150,7 +150,8 @@ function dr_iframe(type, url, width, height, nogo) {
     }
 
     if (is_mobile_cms == 1) {
-        width = height = '50%';
+       width = '95%';
+       height = '90%';
     }
 
     layer.open({
@@ -234,7 +235,8 @@ function dr_iframe_show(type, url, width, height) {
     }
 
     if (is_mobile_cms == 1) {
-        width = height = '95%';
+        width = '95%';
+        height = '90%';
     }
 
     layer.open({
@@ -263,7 +265,8 @@ function dr_iframe_show(type, url, width, height) {
 function dr_insert_emoji(name) {
 
     if (is_mobile_cms == 1) {
-        width = height = '90%';
+        width = '95%';
+        height = '90%';
     } else {
         width = height = '70%';
     }

@@ -217,6 +217,7 @@ class File extends \Phpcmf\Library\A_Field {
 			$val.= '<input type="hidden" '.$attr.' id="dr_'.$name.'" name="data['.$name.']" value="" />';
 		}
 
+		$area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
         $use = '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
@@ -287,7 +288,7 @@ $(function() {
             scrollbar: false,
             shadeClose: true,
 			shade: 0,
-			area: ["60%", "70%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 				var body = layer.getChildFrame(\'body\', index);
@@ -353,7 +354,7 @@ $(function() {
             scrollbar: false,
             shadeClose: true,
 			shade: 0,
-			area: ["50%", "45%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 				var body = layer.getChildFrame(\'body\', index);
@@ -493,7 +494,7 @@ function dr_file_edit_'.$name.'(e) {
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('修改文件地址').'\',
 			shadeClose: true,
 			shade: 0,
-			area: ["50%", "45%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 				var body = layer.getChildFrame(\'body\', index);

@@ -220,6 +220,7 @@ class Files extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
         $count = intval($field['setting']['option']['count']);
         $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
         $size = intval($field['setting']['option']['size']) * 1024 * 1024;
@@ -362,7 +363,7 @@ $(function() {
             scrollbar: false,
             shadeClose: true,
 			shade: 0,
-			area: ["60%", "70%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 				var body = layer.getChildFrame(\'body\', index);
@@ -437,7 +438,7 @@ $(function() {
             scrollbar: false,
             shadeClose: true,
 			shade: 0,
-			area: ["50%", "45%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 				var body = layer.getChildFrame(\'body\', index);
@@ -593,7 +594,7 @@ function dr_file_edit_'.$name.'(e) {
             scrollbar: false,
             shadeClose: true,
 			shade: 0,
-			area: ["50%", "45%"],
+			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
 	

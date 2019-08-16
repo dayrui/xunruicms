@@ -112,6 +112,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 		// 禁止修改
 
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
         // 模块名称
 		$module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
 		//
@@ -162,7 +163,7 @@ class Related extends \Phpcmf\Library\A_Field {
                 fix:true,
                 shadeClose: true,
                 shade: 0,
-                area: ["70%", "65%"],
+                area: '.$area.',
                 btn: ["'.dr_lang('关联').'"],
                 success: function (json) {
                     if (json.code == 0) {
