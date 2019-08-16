@@ -37,6 +37,10 @@ form .portlet.light .portlet-body {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+.myfooter .form-actions {
+    background-color: #ecf0f1 !important;
+    padding: 15px !important;
+}
 .portlet.light,.portlet.light.bordered {
     border:none !important;
 }

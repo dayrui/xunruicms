@@ -2329,10 +2329,6 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .myfbody {
   margin-bottom:90px;
 }
-.form-actions {
-  background-color: #ecf0f1 !important;
-  padding: 15px !important;
-}
 .portlet.light > .portlet-title > .nav-tabs > li > a {
   font-size: 14px!important;
 }
