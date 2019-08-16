@@ -101,7 +101,7 @@ class View {
         // 可用action
         $this->action = [
             'category', 'module', 'content', 'related', 'share', 'table', 'form', 'mform', 'member', 'page',
-            'tag', 'hits', 'search', 'category_search_field', 'linkage', 'sql', 'function',
+            'tag', 'hits', 'search', 'category_search_field', 'linkage', 'sql', 'function', 'comment',
             'cache', 'navigator'
         ];
 
@@ -1300,6 +1300,92 @@ class View {
 
                 // 缓存查询结果
                 $name = 'list-action-mform-'.md5($sql);
+                $cache = \Phpcmf\Service::L('cache')->get_data($name);
+                if (!$cache && is_array($data)) {
+                    // 表的系统字段
+                    $fields['inputtime'] = array('fieldtype' => 'Date');
+                    $dfield = \Phpcmf\Service::L('Field')->app($dirname);
+                    foreach ($data as $i => $t) {
+                        $data[$i] = $dfield->format_value($fields, $t, 1);
+                    }
+                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
+                }
+
+                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                break;
+
+            case 'comment': // 模块评论调用
+
+                $comment = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname, 'comment');
+                // 判断是否存在
+                if (!$comment || !$comment['use']) {
+                    return $this->_return($system['return'], "模块{$dirname}没有开启评论功能"); // 参数判断
+                }
+
+                $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
+                if (!$tableinfo) {
+                    // 没有表结构缓存时返回空
+                    return $this->_return($system['return'], '表结构缓存不存在');
+                }
+
+                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname.'_comment'); // 模块主表
+                if (!isset($tableinfo[$table])) {
+                    return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
+                }
+
+                // 默认条件
+                $where[] = array(
+                    'adj' => '',
+                    'name' => 'status',
+                    'value' => 1
+                );
+
+                // 是否操作自定义where
+                if ($param['where']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => urldecode($param['where'])
+                    ];
+                    unset($param['where']);
+                }
+
+                var_dump(\Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname, 'comment'));
+
+                $fields = $comment['fields'];
+                $system['order'] = !$system['order'] ? 'inputtime_desc' : $system['order']; // 默认排序参数
+
+                $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
+                $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
+                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
+
+                $total = 0;
+                $fields = $comment['field']; // 主表的字段
+                $sql_from = $table; // sql的from子句
+                $sql_where = $this->_get_where($where); // sql的where子句
+                $sql_limit = $pages = '';
+
+                if ($system['page'] && $system['urlrule']) {
+                    $page = max(1, (int)$_GET['page']);
+                    $pagesize = (int) $system['pagesize'];
+                    $pagesize = $pagesize ? $pagesize : 10;
+                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                    $total = (int)$row['c'];
+                    // 没有数据时返回空
+                    if (!$total) {
+                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                    }
+                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
+                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                } elseif ($system['num']) {
+                    $sql_limit = "LIMIT {$system['num']}";
+                }
+
+                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                $data = $this->_query($sql, $system['db'], $system['cache']);
+
+                // 缓存查询结果
+                $name = 'list-action-comment-'.md5($sql);
                 $cache = \Phpcmf\Service::L('cache')->get_data($name);
                 if (!$cache && is_array($data)) {
                     // 表的系统字段
