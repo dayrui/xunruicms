@@ -287,6 +287,7 @@ class Cloud extends \Phpcmf\Common
             $this->_copy_dir($cmspath.'COREPATH', COREPATH);
         }
 
+        dr_dir_delete($cmspath, 1);
         $this->_json(1, '程序导入完成<br>1、如果本程序是应用插件：请到【应用】-【应用管理】中手动安装本程序<br>2、如果本程序是组件：请按本组件的使用教程来操作；<br>3、如果本程序是模板：请按本模板使用教程来操作');
     }
 
