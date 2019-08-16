@@ -104,15 +104,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('移动端强制UM').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][mobile_mini]" '.($option['mobile_mini'] == 0 ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mobile_mini]" '.($option['mobile_mini'] == 1 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('固定工具栏').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
@@ -362,86 +353,17 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 输出
         $str = '';
 
-        $is_mini = 0;
-
         $uri = \Phpcmf\Service::L('router')->uri();
         APP_DIR != 'member' && $uri = str_replace('member/', '', $uri);
 
         $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
 
-        if ($is_mini) {
-            // 防止重复加载JS
-            if (!defined('PHPCMF_FIELD_UEDITOR_MINI')) {
-                $str.= '
-            <link href="/api/umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet" />
-            <script type="text/javascript">var ueditmini_url = "/";</script>
-            <script type="text/javascript" src="/api/umeditor/editor_api.js"></script>
-            <script type="text/javascript" src="/api/umeditor/umeditor.config.js"></script>
-			<script type="text/javascript" src="'.LANG_PATH.'umeditor.js"></script>
-			';
-                define('PHPCMF_FIELD_UEDITOR_MINI', 1);
-            }
-            $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
-            // 编辑器模式
-            if (IS_ADMIN) {
-                $mode = $field['setting']['option']['mode'];
-            } else {
-                if ($is_mobile) {
-                    $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
-                    $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
-                } else {
-                    $mode = $field['setting']['option']['mode2'] ? $field['setting']['option']['mode2'] : $field['setting']['option']['mode'];
-                    $field['setting']['option']['tool'] = $field['setting']['option']['tool2'] ? $field['setting']['option']['tool2'] : $field['setting']['option']['tool'];
-                }
 
-            }
-            // 编辑器工具
-            switch ($mode) {
-                case 3: // 自定义
-                    $tool.= $field['setting']['option']['tool'];
-                    break;
-                case 2: // 精简
-                    $tool.= "'undo', 'redo', '|',
-						'bold', 'italic', 'underline', 'strikethrough','|', 'pasteplain', 'forecolor', 'fontfamily', 'fontsize','|','link', 'unlink'$pagebreak";
-                    break;
-                case 1: // 默认
-                    $tool.= "'source | undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
-            'insertorderedlist insertunorderedlist | selectall cleardoc paragraph | fontfamily fontsize' ,
-            '| justifyleft justifycenter justifyright justifyjustify |',
-            'link unlink | emotion image video  | map',
-            '| horizontal print preview  fullscreen', 'drafts', 'formula'";
-                    break;
-            }
-            $str.= "
-		<script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
-		<script type=\"text/javascript\">
-		    var editorOption = {
-				UMEDITOR_HOME_URL: \"/api/umeditor/\",
-                imagePath:\"\" ,
-				imageUrl:\"/index.php?s=api&c=file&m=umeditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
-				lang: \"".SITE_LANGUAGE."\",
-				toolbar: [
-					$tool
-				],
-				initialContent:\"\",
-				initialFrameWidth: \"".$width.(is_numeric($width) ? 'px' : '')."\",
-				initialFrameHeight: \"{$height}\",
-				initialStyle:\"body{font-size:14px}\",
-				wordCount:false,
-				elementPathEnabled:false,
-				autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
-				autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
-				charset:\"utf-8\",
-			};
-            var um = UM.getEditor(\"dr_$name\", editorOption);
-		</script>
-		";
-        } else {
             // 防止重复加载JS
             if (!defined('PHPCMF_FIELD_UEDITOR')) {
                 $str.= '
-			<script type="text/javascript" src="/api/ueditor/ueditor.config.js"></script>
-			<script type="text/javascript" src="/api/ueditor/ueditor.all.js"></script>
+			<script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js"></script>
+			<script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.all.js"></script>
 			<script type="text/javascript" src="'.LANG_PATH.'ueditor.js"></script>
 			';
                 define('PHPCMF_FIELD_UEDITOR', 1);
@@ -490,7 +412,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 		<script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
 		<script type=\"text/javascript\">
 			var editorOption = {
-				UEDITOR_HOME_URL: \"/api/ueditor/\",
+				UEDITOR_HOME_URL: \"".ROOT_URL."api/ueditor/\",
 				serverUrl:\"/index.php?s=api&c=file&m=ueditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
 				lang: \"".SITE_LANGUAGE."\",
 				toolbars: [
@@ -510,7 +432,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 			editor.render(\"dr_$name\");
 		</script>
 		";
-        }
 
 
         if ($field['setting']['option']['show_bottom_boot']) {

@@ -2,6 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+header('Access-Control-Allow-Origin:*'); //临时处理，后面在强化它
+header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
+
 chdir(__DIR__);
 
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
