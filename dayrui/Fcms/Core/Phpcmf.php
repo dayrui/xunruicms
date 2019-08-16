@@ -161,7 +161,7 @@ abstract class Common extends \CodeIgniter\Controller
         $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : $this->_is_mobile());
 
         // 后台域名
-        define('ADMIN_URL', dr_http_prefix(DOMAIN_NAME.'/'));
+        !defined('ADMIN_URL') && define('ADMIN_URL', dr_http_prefix(DOMAIN_NAME.'/'));
 
         // 站点共享变量
         define('SITE_URL', $this->site_info[SITE_ID]['SITE_URL']);

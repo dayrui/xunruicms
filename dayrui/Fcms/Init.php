@@ -77,6 +77,8 @@ $pageURL = 'http';
     || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
     || (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
 $pageURL.= '://';
+// 优先定义后台域名
+IS_ADMIN && define('ADMIN_URL', $pageURL.= $_SERVER['HTTP_HOST'].'/');
 if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
     $url = explode(':', $_SERVER['HTTP_HOST']);
     $url[0] ? $pageURL.= $_SERVER['HTTP_HOST'] : $pageURL.= $url[0];
