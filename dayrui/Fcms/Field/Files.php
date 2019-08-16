@@ -579,6 +579,11 @@ function fileupload_'.$name.'_edit() {
 }
 // 修改URL
 function dr_file_edit_'.$name.'(e) {
+    
+    var html = $(e).html();
+    if (html.indexOf("file_data") != -1) {
+        return;
+    }
 	var obj = $(e).parents(".files_row");
     var file = obj.find(".files_row_name").val();
     var name = obj.find(".files_row_title").val();

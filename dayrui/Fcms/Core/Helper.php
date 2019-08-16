@@ -1613,17 +1613,20 @@ function dr_file($url) {
 /**
  * 根据文件扩展名获取文件预览信息
  */
-function dr_file_preview_html($value) {
+function dr_file_preview_html($value, $target = 0) {
 
     $ext = trim(strtolower(strrchr($value, '.')), '.');
     if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg'])) {
-        return '<a href="javascript:dr_preview_image(\''.$value.'\');"><img src="'.$value.'"></a>';
+        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_image(\''.$value.'\');';
+        return '<a href="'.$url.'"><img src="'.$value.'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
         $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
-        return '<a href="javascript:dr_preview_url(\''.dr_file($value).'\');"><img src="'.$file.'"></a>';
+        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.dr_file($value).'\');';
+        return '<a href="'.$url.'"><img src="'.$file.'"></a>';
     } elseif (strpos($value, 'http://') === 0) {
         $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
-        return '<a href="javascript:dr_preview_url(\''.$value.'\');"><img src="'.$file.'"></a>';
+        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.$value.'\');';
+        return '<a href="'.$url.'"><img src="'.$file.'"></a>';
     } else {
         return $value;
     }
