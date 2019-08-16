@@ -1349,8 +1349,6 @@ class View {
                     unset($param['where']);
                 }
 
-                var_dump(\Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname, 'comment'));
-
                 $fields = $comment['fields'];
                 $system['order'] = !$system['order'] ? 'inputtime_desc' : $system['order']; // 默认排序参数
 
