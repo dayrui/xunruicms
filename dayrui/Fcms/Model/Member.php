@@ -100,6 +100,21 @@ class Member extends \Phpcmf\Model
             'useragent' => substr($agent, 0, 255),
         );
 
+        // 会员部分只保留20条登录记录
+        $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime asc')->get()->getResultArray();
+        if (dr_count($row) > 20) {
+            $del = [];
+            foreach ($row as $i => $t) {
+                $i > 19 && $del[] = (int)$t['id'];
+            }
+            $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
+        }
+
+        // 验证登录情况
+        if (dr_is_app('login')) {
+            \Phpcmf\Service::M('login', 'login')->check($data, $row, $log);
+        }
+
         // 同一天Ip一致时只更新一次更新时间
         if ($row = $this->db
                         ->table('member_login')
@@ -111,16 +126,6 @@ class Member extends \Phpcmf\Model
                         $this->db->table('member_login')->where('id', $row['id'])->update($log);
         } else {
             $this->db->table('member_login')->insert($log);
-        }
-
-        // 会员部分只保留20条登录记录
-        $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime asc')->get()->getResultArray();
-        if (dr_count($row) > 20) {
-            $del = [];
-            foreach ($row as $i => $t) {
-                $i > 19 && $del[] = (int)$t['id'];
-            }
-            $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
         }
 
         $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
@@ -805,7 +810,6 @@ class Member extends \Phpcmf\Model
 
         // 记录日志
         $this->_login_log($data);
-
 
         return dr_return_data(1, 'ok', [
             'auth'=> md5($data['passowrd'].$data['salt']), // API认证字符串,

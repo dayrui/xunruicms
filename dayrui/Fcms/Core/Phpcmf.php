@@ -375,14 +375,22 @@ abstract class Common extends \CodeIgniter\Controller
         // 初始化处理
         \Phpcmf\Service::M('member')->init_member($this->member);
 
-        // 判断网站访问权限
-        if (!IS_ADMIN && !IS_MEMBER && APP_DIR != 'api' && !dr_member_auth($this->member_authid, $this->member_cache['auth_site'][SITE_ID]['home'])) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
-        }
-
-        // 账户被锁定
-        if (!IS_ADMIN && $this->member && $this->member['is_lock']) {
-            $this->_msg(0, dr_lang('账号被锁定'));
+        if (!IS_ADMIN && !IS_API) {
+            // 判断网站访问权限
+            if (!IS_MEMBER && !dr_member_auth($this->member_authid, $this->member_cache['auth_site'][SITE_ID]['home'])) {
+                $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
+            }
+            // 账户被锁定
+            if ($this->member && $this->member['is_lock'] && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
+                if (dr_is_app('login') && $this->member['is_lock'] == 2) {
+                    // 被插件锁定
+                    if (APP_DIR != 'login') {
+                        $this->_msg(0, dr_lang('账号被锁定'), dr_url('login/home/index'));
+                    }
+                } else {
+                    $this->_msg(0, dr_lang('账号被锁定'));
+                }
+            }
         }
 
         \Phpcmf\Service::V()->assign([
