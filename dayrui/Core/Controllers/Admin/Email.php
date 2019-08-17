@@ -77,7 +77,7 @@ class Email extends \Phpcmf\Common
 	public function index() {
 
 		\Phpcmf\Service::V()->assign([
-			'list' => \Phpcmf\Service::M()->table('mail_smtp')->getAll(),
+			'list' => \Phpcmf\Service::M()->table('mail_smtp')->order_by('displayorder asc')->getAll(),
 		]);
 		\Phpcmf\Service::V()->display('email_index.html');
 	}
