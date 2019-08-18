@@ -2177,15 +2177,17 @@ class View {
             //$debug.= $data;
             $data = [];
         }
-		if ($this->_page_used) {
-			$debug.= '<p>分页数量：'.$pagesize.'</p>';
-			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
-		}
-		$debug.= '</pre>';
 
         $total = isset($total) ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
+		$debug.= '<p>总记录数'.$total.'</p>';
+		if ($this->_page_used) {
+			$debug.= '<p>分页数：'.$nums.'</p>';
+			$debug.= '<p>每页数量：'.$pagesize.'</p>';
+			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+		}
+		$debug.= '</pre>';
 
         // 返回数据格式
         if ($return) {
