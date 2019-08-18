@@ -2172,7 +2172,7 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0) {
 
-        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px"><p>SQL解析: '.$sql.'</p>';
+        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px"><p>SQL: '.$sql.'</p>';
         if ($data && !is_array($data)) {
             //$debug.= $data;
             $data = [];
@@ -2181,7 +2181,7 @@ class View {
         $total = isset($total) ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-		$debug.= '<p>总记录数'.$total.'</p>';
+		$debug.= '<p>总记录：'.$total.'</p>';
 		if ($this->_page_used) {
 			$debug.= '<p>分页数：'.$nums.'</p>';
 			$debug.= '<p>每页数量：'.$pagesize.'</p>';
