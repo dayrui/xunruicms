@@ -61,6 +61,8 @@ class View {
     private $loadjs = []; // 加载的js
 
     private $_page_config = []; // 分页参数
+    private $_page_urlrule = ''; // 分页地址参数
+    private $_page_used = 0; // 是否开启分页
 
 
     /**
@@ -1863,6 +1865,7 @@ class View {
      */
     public function _get_pagination($url, $pagesize, $total, $name = 'page', $first_url = '') {
 
+		$this->_page_used = 1;
         // 这里要支持移动端分页条件
         !$name && $name = 'page';
         $file = 'config/page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
@@ -1880,6 +1883,7 @@ class View {
 
         !$url && $url = '此标签没有设置urlrule参数';
 
+		$this->_page_urlrule = $url;
         $config['base_url'] = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
         $config['first_url'] = $first_url;
         $config['per_page'] = $pagesize;
@@ -2168,11 +2172,16 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0) {
 
-        $debug = $sql;
+        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px"><p>SQL解析: '.$sql.'</p>';
         if ($data && !is_array($data)) {
-            $debug.= $data;
+            //$debug.= $data;
             $data = [];
         }
+		if ($this->_page_used) {
+			$debug.= '<p>分页数量：'.$pagesize.'</p>';
+			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+		}
+		$debug.= '</pre>';
 
         $total = isset($total) ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
