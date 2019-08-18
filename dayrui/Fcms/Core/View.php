@@ -2183,7 +2183,7 @@ class View {
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
 		$debug.= '<p>总记录：'.$total.'</p>';
 		if ($this->_page_used) {
-			$debug.= '<p>分页数：'.$nums.'</p>';
+			$debug.= '<p>总页数：'.$nums.'</p>';
 			$debug.= '<p>每页数量：'.$pagesize.'</p>';
 			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
 		}
