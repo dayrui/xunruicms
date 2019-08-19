@@ -204,9 +204,9 @@ class Auth extends \Phpcmf\Model {
         if (!$data) {
             return dr_return_data(0, dr_lang('管理员账号不存在'));
         } elseif ($member['is_lock']) {
-            return dr_return_data(0, dr_lang('账号已被锁定'));
+            return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
         }
-
+        
         // 查询角色组
         $role_id = $this->_role($uid);
         if (!$role_id) {
