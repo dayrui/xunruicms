@@ -16,10 +16,10 @@
                 <div class="form-group row">
                     <label class="col-md-12">栏目分类</label>
                     <div class="col-md-9">
-                        <label><a class="label {if !$cat || $cat.child}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catdir', NULL)}">不限</a></label>
+                        <label><a class="label {if !$cat || $cat.child}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', NULL)}">不限</a></label>
                         <!--调用栏目分类，这种用法只能用于模块列表与搜索页面-->
                         {loop $related $t}
-                        <label><a class="label {if $t.id==$cat.id}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catdir', $t.dirname)}">{$t.name}</a></label>
+                        <label><a class="label {if $t.id==$cat.id}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', $t.id)}">{$t.name}</a></label>
                         {/loop}
                     </div>
                 </div>
