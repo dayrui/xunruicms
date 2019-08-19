@@ -101,7 +101,7 @@ class Member extends \Phpcmf\Model
         );
 
         // 会员部分只保留20条登录记录
-        $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime asc')->get()->getResultArray();
+        $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime desc')->get()->getResultArray();
         if (dr_count($row) > 20) {
             $del = [];
             foreach ($row as $i => $t) {

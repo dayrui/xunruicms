@@ -206,7 +206,7 @@ class Auth extends \Phpcmf\Model {
         } elseif ($member['is_lock']) {
             return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
         }
-        
+
         // 查询角色组
         $role_id = $this->_role($uid);
         if (!$role_id) {
