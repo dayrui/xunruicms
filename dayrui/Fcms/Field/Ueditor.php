@@ -412,7 +412,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 		<script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
 		<script type=\"text/javascript\">
 			var editorOption = {
-				UEDITOR_HOME_URL: \"".ROOT_URL."api/ueditor/\",
+				UEDITOR_HOME_URL: \"/api/ueditor/\",
 				serverUrl:\"/index.php?s=api&c=file&m=ueditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
 				lang: \"".SITE_LANGUAGE."\",
 				toolbars: [
