@@ -583,7 +583,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         if (!$url) {
             $backurl = $_SERVER['HTTP_REFERER'];
-            strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
+            $backurl && strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
         } else {
             $backurl = $url;
         }

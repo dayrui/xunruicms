@@ -105,7 +105,10 @@ class Member extends \Phpcmf\Model
         if (dr_count($row) > 20) {
             $del = [];
             foreach ($row as $i => $t) {
-                $i > 19 && $del[] = (int)$t['id'];
+                if ($i > 19) {
+                    $del[] = (int)$t['id'];
+                    unset($row[$i]);
+                }
             }
             $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
         }
