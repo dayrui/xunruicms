@@ -1016,9 +1016,10 @@ class View {
                     // 替换前缀
                     $sql = str_replace(
                         array('@#S', '@#'),
-                        array(\Phpcmf\Service::M()->dbprefix.$system['site'], \Phpcmf\Service::M()->dbprefix),
+                        array(\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()),
                         trim($sql[1])
                     );
+
                     stripos($sql, 'SELECT+') === 0 && $sql = urldecode($sql);
                     if (stripos($sql, 'SELECT') !== 0) {
                         return $this->_return($system['return'], 'SQL语句只能是SELECT查询语句');
