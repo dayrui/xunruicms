@@ -35,14 +35,14 @@ class Cloud extends \Phpcmf\Common
     public function __construct(...$params)
     {
         parent::__construct(...$params);
-        if (is_file(MYPATH.'Config/Version.php')) {
-            $this->version = require MYPATH.'Config/Version.php';
+        if (is_file(MYPATH . 'Config/Version.php')) {
+            $this->version = require MYPATH . 'Config/Version.php';
         } else {
             exit('程序需要更新到正式版，请在官网 http://www.xunruicms.com/down/ 下载[安装包]并覆盖dayrui目录');
         }
 
-        if (is_file(MYPATH.'Config/License.php')) {
-            $this->license = require MYPATH.'Config/License.php';
+        if (is_file(MYPATH . 'Config/License.php')) {
+            $this->license = require MYPATH . 'Config/License.php';
             if (!$this->license['license']) {
                 exit('程序不是最新，请在官网下载[安装包]并覆盖dayrui目录');
             }
@@ -51,22 +51,30 @@ class Cloud extends \Phpcmf\Common
         }
 
         $this->license_sn = $this->license['license'];
+        list($this->admin_url) = explode('?', FC_NOW_URL);
+        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->version['id'] . '&license=' . $this->license_sn;
+        if ($this->license['cloud']) {
+            $this->service_url = $this->license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->license_sn;
+        }
         \Phpcmf\Service::V()->assign([
+            'is_syy' => $this->license['cloud'] ? 1 : 0,
             'license' => $this->license,
             'license_sn' => $this->license_sn,
             'cms_version' => $this->version,
             'cmf_version' => $this->cmf_version,
         ]);
-        list($this->admin_url) = explode('?', FC_NOW_URL);
-        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain='.dr_get_domain_name(ROOT_URL).'&admin='.urlencode($this->admin_url).'&cms='.$this->version['id'].'&license='.$this->license_sn;
-
     }
 
     // 服务工单
     public function service() {
 
+        $url = 'https://www.xunruicms.com/service.php?cms='.$this->version['id'].'&license='.$this->license_sn;
+        if ($this->license['service']) {
+            $url = $this->license['service'];
+        }
+
         \Phpcmf\Service::V()->assign([
-            'url' => 'https://www.xunruicms.com/service.php?cms='.$this->version['id'].'&license='.$this->license_sn,
+            'url' => $url,
         ]);
         \Phpcmf\Service::V()->display('cloud_online.html');exit;
     }
