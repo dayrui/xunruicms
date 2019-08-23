@@ -258,7 +258,7 @@ $db[\'default\']	= [
 
                             // 写配置文件
                             $sys = [
-                                'SYS_DEBUG'                     => '0', //调试器开关
+                                'SYS_DEBUG'                     => '1', //调试器开关
                                 'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
                                 'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
                                 'SYS_AUTO_FORM'                 => '0', //自动存储表单数据

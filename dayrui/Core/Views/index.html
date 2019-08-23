@@ -100,6 +100,8 @@
                         <li><a href="{dr_url('error_php/index')}" target="right"><i class="fa fa-bug"></i> {dr_lang('PHP错误')}</a></li>
                         <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('系统错误')}</a></li>
                         <li><a href="{dr_url('content/index', ['p'=>1, 'page'=>1])}" target="right"><i class="fa fa-code"></i> {dr_lang('执行SQL')}</a></li>
+                        {/if}
+						{if SYS_DEBUG}
                         <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>
                         {/if}
                     </ul>
@@ -126,7 +128,7 @@
                     <!-- END SIDEBAR TOGGLER BUTTON -->
                 </li>
 
-                {if $admin.adminid==1}
+                {if SYS_DEBUG}
                 <li class="sidebar-search-wrapper hidden-xs hidden-sm">
                     <form class="sidebar-search" id="mysearchform">
                         <a href="javascript:;" class="remove">
