@@ -214,6 +214,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      */
     public function insert_value($field) {
 
+        $table = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
         // 第一张作为缩略图
@@ -255,6 +256,27 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 }
                                 if ($zj == 0) {
                                     // 可以下载文件
+                                    if (!$table) {
+                                        $table = \Phpcmf\Service::M('field')->get_table_name(SITE_ID, $field);
+                                    }
+                                    $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'ueditor_down_img', [
+                                        'url' => $img,
+                                        'table' => $table,
+                                        'field' => $field['fieldname'],
+                                        'siteid' => SITE_ID,
+                                        'member' => \Phpcmf\Service::C()->member,
+                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                    ]);
+                                    if (!$rt['code']) {
+                                        log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
+                                    }
+
+                                    $value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
+
+                                    $img = '';
+
+
+                                    /*
                                     // 下载远程文件
                                     $rt = \Phpcmf\Service::L('upload')->down_file([
                                         'url' => $img,
@@ -268,7 +290,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             $img = $att['code'];
                                         }
 
-                                    }
+                                    }*/
                                 }
                             }
 
@@ -277,7 +299,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     }
                 }
                 // 缩略图
-                if ($slt && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
+                if ($img && $slt && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
                     \Phpcmf\Service::L('Field')->data[1]['thumb'] = $img;
                 }
             }

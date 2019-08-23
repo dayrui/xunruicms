@@ -201,6 +201,8 @@ class Table extends \Phpcmf\Model
     // 创建
     public function create_form($data) {
 
+        $data['name'] = dr_safe_filename($data['name']);
+
         $pre = $this->dbprefix(SITE_ID.'_form');
         $sql = [
             "
@@ -314,6 +316,8 @@ class Table extends \Phpcmf\Model
 
     // 创建
     public function create_module_form($data) {
+
+        $data['name'] = dr_safe_filename($data['name']);
 
         $sql = [
             "

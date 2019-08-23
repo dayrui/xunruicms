@@ -73,6 +73,7 @@ class Cron extends \Phpcmf\Table
                 'weibo' => dr_lang('微博分享'),
                 'email' => dr_lang('邮件发送'),
                 'notice' => dr_lang('消息通知'),
+                'ueditor_down_img' => dr_lang('远程图片'),
             ],
             'list' => $data['list']
         ]);

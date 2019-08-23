@@ -111,6 +111,48 @@ class Cron extends \Phpcmf\Model
 
                 break;
 
+            case 'ueditor_down_img':
+                // 编辑器下载图片
+                $img = ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$cron['id'];
+                $value = dr_string2array($cron['value']);
+                // 下载远程文件
+                $rt = \Phpcmf\Service::L('upload')->down_file($value);
+                if ($rt['code']) {
+                    \Phpcmf\Service::M('attachment')->check($value['member'] ? $value['member'] : $this->member, $value['siteid'] ? $value['siteid'] : 1);
+                    $att = \Phpcmf\Service::M('attachment')->save_data($rt['data'], 'ueditor_down_img');
+                    if ($att['code']) {
+                        // 归档成功
+                        // $rt['data']['url']
+                        if (strpos($value['table'], '{tableid}') !== false) {
+                            for ($i = 0; $i < 200; $i ++) {
+                                $table = $this->dbprefix(str_replace('{tableid}', $i, $value['table']));
+                                if (!$this->db->query("SHOW TABLES LIKE '".$table."'")->getRowArray()) {
+                                    break;
+                                }
+                                // 替换
+                                $replace = '`'.$value['field'].'`=REPLACE(`'.$value['field'].'`, \''.addslashes($img).'\', \''.addslashes($rt['data']['url']).'\')';
+                                \Phpcmf\Service::M()->db->query('UPDATE `'.$table.'` SET '.$replace);
+                            }
+                        } else {
+                            $table = $this->dbprefix($value['table']);
+                            if ($this->db->query("SHOW TABLES LIKE '".$table."'")->getRowArray()) {
+                                $replace = '`'.$value['field'].'`=REPLACE(`'.$value['field'].'`, \''.addslashes($img).'\', \''.addslashes($rt['data']['url']).'\')';
+                                \Phpcmf\Service::M()->db->query('UPDATE `'.$table.'` SET '.$replace);
+                            }
+                        }
+                    }
+                } else {
+                    return $this->save_cron($cron, [
+                        'error' => '远程图片下载失败：'.$rt['msg'],
+                        'value' => $value,
+                    ]);
+                }
+                return $this->save_cron($cron, [
+                    'error' => '',
+                    'value' => $value,
+                ]);
+                break;
+
             default:
                 $this->table('cron')->delete($cron['id']);
                 log_message('error', '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在：'.FC_NOW_URL);

@@ -414,8 +414,11 @@ function dr_ajax_option(url, msg, remove) {
                         if (remove) {
                             // 批量移出去
                             var ids = json.data.ids;
-                            for ( var i = 0; i < ids.length; i++){
-                                $("#dr_row_"+ids[i]).remove();
+                            if (typeof ids != "undefined" ) {
+                                console.log(ids);
+                                for ( var i = 0; i < ids.length; i++){
+                                    $("#dr_row_"+ids[i]).remove();
+                                }
                             }
                         }
                         if (json.data.htmlfile) {
@@ -433,7 +436,6 @@ function dr_ajax_option(url, msg, remove) {
                         } else {
                             setTimeout("window.location.reload(true)", 3000)
                         }
-
                     }
                     dr_cmf_tips(json.code, json.msg);
                 },
