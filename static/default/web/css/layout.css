@@ -619,7 +619,11 @@ body {
   .page-head .page-title {
     display: inline-block;
     float: left;
-    padding: 19px 0; }
+    padding: 19px 0;
+
+    margin: 0;
+    font-size: 14px;
+  }
     .page-head .page-title > h1 {
       color: #697882;
       font-size: 22px;
@@ -704,6 +708,7 @@ body {
 .page-footer {
   font-size: 13px;
   font-weight: 300;
+  height: 50px;
   padding: 17px 0; }
   .page-footer a {
     color: #e6e6e6; }
