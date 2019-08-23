@@ -45,7 +45,7 @@ class Captcha
     public function create($width = 120, $height = 32) {
         $this->_code();
         $this->width = $width;
-        $this->height = $height;
+        $this->height = $height - 2;
         $this->_bg();
         $this->_line();
         $this->_font();

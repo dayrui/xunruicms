@@ -203,7 +203,7 @@ class Auth extends \Phpcmf\Model {
         $data = $this->db->table('admin')->where('uid', $uid)->get()->getRowArray();
         if (!$data) {
             return dr_return_data(0, dr_lang('管理员账号不存在'));
-        } elseif ($member['is_lock']) {
+        } elseif ($member['is_lock'] && !IS_DEV) {
             return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
         }
 

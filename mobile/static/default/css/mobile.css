@@ -1,5 +1,10 @@
 
-
+.form-horizontal {
+    margin-top: 20px;
+}
+.myfbody {
+    margin-bottom: 10px;
+}
 ul{list-style-type:none;
     margin: 0;
     padding: 0;

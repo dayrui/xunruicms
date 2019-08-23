@@ -11,11 +11,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link href="{THEME_PATH}assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
-    <link href="{THEME_PATH}assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/pages/css/login-4.min.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/xunruicms.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/login.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body class=" login" style="padding-top: 50px !important;">
 <div class="logo">
@@ -118,10 +115,10 @@
         return false;
     }
 
-    <?php $bg = array('"'.THEME_PATH.'assets/pages/media/bg/1.jpg"',
-            '"'.THEME_PATH.'assets/pages/media/bg/2.jpg"',
-            '"'.THEME_PATH.'assets/pages/media/bg/3.jpg"',
-            '"'.THEME_PATH.'assets/pages/media/bg/4.jpg"');
+    <?php $bg = array('"'.THEME_PATH.'assets/global/login/1.jpg"',
+            '"'.THEME_PATH.'assets/global/login/2.jpg"',
+            '"'.THEME_PATH.'assets/global/login/3.jpg"',
+            '"'.THEME_PATH.'assets/global/login/4.jpg"');
     shuffle($bg);
     ?>
     jQuery(document).ready(function() {
