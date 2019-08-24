@@ -101,7 +101,7 @@
                         <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('系统错误')}</a></li>
                         <li><a href="{dr_url('content/index', ['p'=>1, 'page'=>1])}" target="right"><i class="fa fa-code"></i> {dr_lang('执行SQL')}</a></li>
                         {/if}
-						{if SYS_DEBUG}
+						{if CI_DEBUG}
                         <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>
                         {/if}
                     </ul>
@@ -134,7 +134,7 @@
                             <i class="fa fa-close"></i>
                         </a>
                         <div class="input-group">
-							{if SYS_DEBUG}
+							{if CI_DEBUG}
                             <input type="text" id="mysearchform_kw" class="form-control" placeholder="{dr_lang('搜索帮助...')}">
                             <span class="input-group-btn">
                                 <a href="javascript:;" class="btn submit">
