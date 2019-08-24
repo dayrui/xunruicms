@@ -859,7 +859,7 @@ class View {
                 foreach ($module['category'][$catid]['field'] as $t) {
                     $data = dr_format_option_array($t['setting']['option']['options']);
                     if ($t['issearch'] && $t['ismain'] 
-						&& in_array($t['fieldtype'], ['Select', 'Radio', 'Checkbox', 'Linkages', 'Linkage']) && $data) {
+						&& in_array($t['fieldtype'], ['Select', 'Radio', 'Checkbox']) && $data) {
                         $list = [];
                         foreach ($data as $value => $name) {
                             $name && !is_null($value) && $list[] = array(
