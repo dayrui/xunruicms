@@ -60,7 +60,7 @@
                             <label class="col-md-2 control-label">{dr_lang('是否搜索')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[issearch]" value="1" {if $data['issearch']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('选择“是”时，栏目搜索时会用的到，无实际意义')}</span>
+                                <span class="help-block">{dr_lang('栏目模型字段搜索时，category_search_field标签使用，只支持Select、Radio、Checkbox、Linkages、Linkage')}</span>
                             </div>
                         </div>
                         {/if}
