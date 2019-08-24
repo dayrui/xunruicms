@@ -37,7 +37,6 @@
                     {else}
                     <label><a href="javascript:dr_load_ajax('{dr_lang('确定安装此程序吗？')}', '{dr_url('cloud/install', ['dir'=>$dir])}', 1);" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('安装')} </a></label>
                     {/if}
-                    <label class="dr_check_version" id="dr_row_{$dir}"></label>
                 </td>
             </tr>
             {php $i++;}
@@ -52,29 +51,6 @@
 
 <script type="text/javascript">
 
-    $(function() {
-        {loop $list $dir $t}
-        {if $t.id}
-        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "{dr_url('cloud/check_version', ['id'=>'app-'.$t.id, 'version' => $t.version])}",
-            success: function(json) {
-                if (json.code) {
-                    $("#dr_row_{$dir}").html(json.msg);
-                } else {
-                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
-                }
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
-            }
-        });
-        {/if}
-        {/loop}
-    });
-
     function dr_show_log(id, v) {
         layer.open({
             type: 2,
@@ -85,7 +61,6 @@
             shade: 0,
             area: ['80%', '80%'],
             content: '{dr_url("cloud/log_show")}&id='+id+'&version='+v,
-            //content: 'http://www.phpcmf.net/version.php?id='+id+'&version='+v,
         });
     }
 
