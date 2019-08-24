@@ -30,7 +30,7 @@
                 {if !$is_syy}
                 <td>{if $t.store}<a href="{$t.store}" target="_blank">{$t.author}</a>{else}{$t.author}{/if}</td>
                 {/if}
-                <td> <a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a> </td>
+                <td> <a href="javascript:dr_show_log('app-{$t.id}', '{$t.version}');">{$t.version}</a> </td>
                 <td>
                     {if $t.install}
                     <label><a href="javascript:dr_load_ajax('{dr_lang('确定卸载此程序吗？')}', '{dr_url('cloud/uninstall', ['dir'=>$dir])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>

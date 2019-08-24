@@ -159,7 +159,7 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
                     $data[$key] = [
-                        'id' => 'app-'.$vsn['id'],
+                        'id' => $vsn['id'],
                         'name' => $cfg['name'],
                         'type' => $cfg['type'],
                         'icon' => $cfg['icon'],
