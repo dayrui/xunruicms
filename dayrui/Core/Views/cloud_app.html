@@ -59,7 +59,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
+            url: "{dr_url('cloud/check_version', ['id'=>'app-'.$t.id, 'version' => $t.version])}",
             success: function(json) {
                 if (json.code) {
                     $("#dr_row_{$dir}").html(json.msg);
