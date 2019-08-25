@@ -202,17 +202,16 @@ class FileHandler extends BaseHandler implements \SessionHandlerInterface
 			rewind($this->fileHandle);
 		}
 
-		$session_data = file_get_contents(($this->filePath . $sessionID));
-		/*
+		$session_data = '';
 		for ($read = 0, $length = filesize($this->filePath . $sessionID); $read < $length; $read += strlen($buffer))
 		{
 			if (($buffer = fread($this->fileHandle, $length - $read)) === false)
 			{
 				break;
-			} 
+			}
 
 			$session_data .= $buffer;
-		}*/
+		}
 
 		$this->fingerprint = md5($session_data);
 
