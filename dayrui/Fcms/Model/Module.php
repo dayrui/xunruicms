@@ -535,11 +535,6 @@ class Module extends \Phpcmf\Model
             require $mpath.'Config/Install.php';
         }
 
-        // 不选择安装数据时不执行sql文件
-        if (isset($_GET['is_install_db']) && $_GET['is_install_db'] == 0) {
-            return dr_return_data(1, dr_lang('安装成功'), $module);
-        }
-
         // 执行自定义sql
         if (is_file($mpath.'Config/Install.sql')) {
             $sql = file_get_contents($mpath.'Config/Install.sql');
