@@ -106,6 +106,8 @@ class Check extends \Phpcmf\Common
                      $this->halt('PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
                 } elseif (!ini_get('allow_url_fopen')) {
                      $this->halt('allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                } elseif (!class_exists('ZipArchive')) {
+                     $this->halt('php_zip扩展未开启，无法使用应用市场功能', 0);
                 }
                 break;
 
