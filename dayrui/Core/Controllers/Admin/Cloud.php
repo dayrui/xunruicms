@@ -423,6 +423,8 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '授权验证过期，请重试');
         } elseif (!$cache['size']) {
             $this->_json(0, '关键数据不存在，请重试');
+        } elseif (!function_exists('fsockopen')) {
+            $this->_json(0, '本站：PHP环境不支持fsockopen');
         }
         // 执行下载文件
         $file = WRITEPATH.'temp/'.$id.'.zip';
