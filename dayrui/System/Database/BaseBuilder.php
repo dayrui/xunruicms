@@ -1472,7 +1472,7 @@ class BaseBuilder
 		}
 
 		$result = $returnSQL
-			? $this->getCompiledSelect()
+			? $this->getCompiledSelect($reset)
 			: $this->db->query($this->compileSelect(), $this->binds, false);
 
 		if ($reset === true)
@@ -1587,6 +1587,18 @@ class BaseBuilder
 		return (int) $row->numrows;
 	}
 
+	//--------------------------------------------------------------------
+	/**
+	 * Get compiled 'where' condition string
+	 *
+	 * Compiles the set conditions and returns the sql statement
+	 *
+	 * @return string
+	 */
+	public function getCompiledQBWhere()
+	{
+		return $this->QBWhere;
+	}
 	//--------------------------------------------------------------------
 
 	/**
