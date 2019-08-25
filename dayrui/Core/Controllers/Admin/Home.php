@@ -69,6 +69,13 @@ class Home extends \Phpcmf\Common
         ]);
 		\Phpcmf\Service::V()->display($table_data ? 'index_main.html' : 'main.html');exit;
 	}
+	public function init_edit() {
+
+	    $file = WRITEPATH.'config/main.php';
+		\Phpcmf\Service::L('Config')->file($file, '后台自定义面板', 32)->to_require([]);
+		
+		$this->_json(1, dr_lang('自定义面板恢复成功'));
+	}
 
 	public function edit() {
 
