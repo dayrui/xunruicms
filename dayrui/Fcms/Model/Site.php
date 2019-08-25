@@ -343,8 +343,8 @@ class Site extends \Phpcmf\Model
                     }
                 }
 				// 删除首页静态文件
-				@unlink($webpath[$t['id']]['site'].'index.html'));
-				@unlink($webpath[$t['id']]['site'].'mobile/index.html'));
+				@unlink($webpath[$t['id']]['site'].'index.html');
+				@unlink($webpath[$t['id']]['site'].'mobile/index.html');
             }
 
             /*
