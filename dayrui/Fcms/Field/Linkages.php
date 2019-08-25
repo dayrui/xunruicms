@@ -185,14 +185,14 @@ class Linkages extends \Phpcmf\Library\A_Field {
 			html = html.replace(/\{display\}/g, "blank");
 			html = html.replace(/\{value\}/g, "0");
 			$("#'.$name.'-sort-items").append(html);
-			dr_linkages_init(id);
+			dr_linkages_init_'.$name.'(id);
 		}
 		function dr_linkages_select_'.$name.'(id) {
             $("#dr_linkages_'.$name.'_select_"+id).show();
             $("#dr_linkages_'.$name.'_cxselect_"+id).hide();
-			dr_linkages_init(id);
+			dr_linkages_init_'.$name.'(id);
         }
-        function dr_linkages_init(id) {
+        function dr_linkages_init_'.$name.'(id) {
           var $ld5 = $(".finecms-selects-'.$name.'-"+id);					  
             $ld5.ld({ajaxOptions:{"url": "/index.php?s=api&c=api&m=linkage&code='.$field['setting']['option']['linkage'].'"},defaultParentId:0})
             var ld5_api = $ld5.ld("api");
