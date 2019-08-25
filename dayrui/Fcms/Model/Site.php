@@ -264,6 +264,7 @@ class Site extends \Phpcmf\Model
                 if ($t['id'] > 1 && !dr_is_app('sites')) {
                     break;
                 }
+
                 $t['setting'] = dr_string2array($t['setting']);
                 if ($t['setting']['config']) {
                     foreach ($t['setting']['config'] as $i => $v) {
@@ -341,6 +342,9 @@ class Site extends \Phpcmf\Model
                         continue;
                     }
                 }
+				// 删除首页静态文件
+				@unlink($webpath[$t['id']]['site'].'index.html'));
+				@unlink($webpath[$t['id']]['site'].'mobile/index.html'));
             }
 
             /*
