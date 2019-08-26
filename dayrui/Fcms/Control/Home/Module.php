@@ -552,6 +552,8 @@ class Module extends \Phpcmf\Common
                 $data = dr_string2array($row['content']);
                 if (!$data) {
                     $this->_msg(0, dr_lang('审核内容#%s不存在', $id));
+                } elseif (!$this->uid) {
+                    $this->_msg(0, dr_lang('需要登录之后才能查看'));
                 } elseif (($this->uid != $data['uid'] && !$this->member['is_admin'])) {
                     $this->_msg(0, dr_lang('无权限访问审核中的内容'));
                 }
@@ -562,8 +564,10 @@ class Module extends \Phpcmf\Common
                 $data = dr_string2array($row['content']);
                 if (!$data) {
                     $this->_msg(0, dr_lang('草稿内容#%s不存在', $id));
+                } elseif (!$this->uid) {
+                    $this->_msg(0, dr_lang('需要登录之后才能查看'));
                 } elseif (($this->uid != $data['uid'] && !$this->member['is_admin'])) {
-                    $this->_msg(0, dr_lang('无权限访问草稿箱内容'));
+                    $this->_msg(0, dr_lang('无权限访问别人的草稿箱内容'));
                 }
                 break;
 
