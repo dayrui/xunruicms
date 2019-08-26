@@ -247,8 +247,6 @@ class Cloud extends \Phpcmf\Common
         $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '授权验证过期，请重试');
-        } elseif (!$cache['dir']) {
-            $this->_json(0, '缺少程序安装目录名称');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
@@ -263,9 +261,18 @@ class Cloud extends \Phpcmf\Common
         }
         unlink($file);
 
-		if (is_file($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock')) {
-			unlink($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock');
-		}
+        // 查询插件目录
+        if (is_dir($cmspath.'APPSPATH/')) {
+            $p = dr_dir_map($cmspath.'APPSPATH/', 1);
+            foreach ($p as $name) {
+                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php')) {
+                    if (is_file($cmspath.'APPSPATH/'.$name.'/install.lock')) {
+                        unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
+                    }
+                    break;
+                }
+            }
+        }
 
         // 复制文件到程序
         if (is_dir($cmspath.'APPSPATH')) {
@@ -394,7 +401,7 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '没有选择任何升级程序');
         }
 
-        $surl = $this->service_url.'&action=update_file&get_http=1&appid='.$id;
+        $surl = $this->service_url.'&action=update_file&get_http=1&appid='.$id.'&ls='.dr_safe_replace($_GET['ls']);
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '没有从服务端获取到数据', $surl);
@@ -524,8 +531,17 @@ class Cloud extends \Phpcmf\Common
         } else {
             // 插件部分
 
-            if (is_file($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock')) {
-                unlink($cmspath.'APPSPATH/'.ucfirst($cache['dir']).'/install.lock');
+            // 查询插件目录
+            if (is_dir($cmspath.'APPSPATH/')) {
+                $p = dr_dir_map($cmspath.'APPSPATH/', 1);
+                foreach ($p as $name) {
+                    if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php')) {
+                        if (is_file($cmspath.'APPSPATH/'.$name.'/install.lock')) {
+                            unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
+                        }
+                        break;
+                    }
+                }
             }
 
             // 复制文件到程序
