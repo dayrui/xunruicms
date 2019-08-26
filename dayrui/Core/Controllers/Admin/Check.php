@@ -199,6 +199,20 @@ class Check extends \Phpcmf\Common
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `result` Text NOT NULL');
                                 }
                             }
+                            $table = $prefix.$siteid.'_'.$m['dirname'].'_support';
+                            if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                // 创建字段 游客点赞
+                                if (!\Phpcmf\Service::M()->db->fieldExists('agent', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `agent` VARCHAR(200) DEFAULT NULL');
+                                }
+                            }
+                            $table = $prefix.$siteid.'_'.$m['dirname'].'_oppose';
+                            if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                // 创建字段 游客点赞
+                                if (!\Phpcmf\Service::M()->db->fieldExists('agent', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `agent` VARCHAR(200) DEFAULT NULL');
+                                }
+                            }
                         }
                     }
                 }
