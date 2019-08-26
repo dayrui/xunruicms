@@ -252,6 +252,7 @@ abstract class Common extends \CodeIgniter\Controller
         /*
         if ($this->member_cache['config']['ucsso'] && is_file(ROOTPATH.'api/ucsso/config.php')) {
             include ROOTPATH.'api/ucsso/client.php';
+        
         }*/
 
         // 网站常量
