@@ -218,7 +218,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 设置终端模板
-        $is_auto_mobile_page = 0;
+        //$is_auto_mobile_page = 0;
         if (defined('IS_CLIENT')) {
             // 存在自定义终端
             define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
@@ -226,7 +226,7 @@ abstract class Common extends \CodeIgniter\Controller
         } elseif (defined('IS_MOBILE') || ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
             // 移动端模板 // 开启自动识别移动端
             \Phpcmf\Service::V()->init('mobile');
-            $is_auto_mobile_page = 1;
+            //$is_auto_mobile_page = 1;
         } else {
             // 默认情况下pc模板
             define('CLIENT_URL', SITE_URL);
