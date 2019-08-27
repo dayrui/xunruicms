@@ -130,13 +130,17 @@ class Upload
         }
 
         // 保存目录名称
-        if (isset($config['save_path']) && $config['save_path']) {
-            $path = $config['save_path'];
+        if (isset($config['save_file']) && $config['save_file']) {
+            $file_path = $config['save_file'];
         } else {
-            $path = isset($config['path']) && $config['path'] ? $config['path'].'/' : date('Ym', SYS_TIME).'/';
+            if (isset($config['save_path']) && $config['save_path']) {
+                $path = $config['save_path'];
+            } else {
+                $path = isset($config['path']) && $config['path'] ? $config['path'].'/' : date('Ym', SYS_TIME).'/';
+            }
+            $file_path = $path.$name.'.'.$file_ext;
         }
 
-        $file_path = $path.$name.'.'.$file_ext;
 
         // 开始上传存储文件
         $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment']);

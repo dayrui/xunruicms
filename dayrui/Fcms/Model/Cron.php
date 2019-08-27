@@ -149,7 +149,7 @@ class Cron extends \Phpcmf\Model
                 }
                 return $this->save_cron($cron, [
                     'error' => '',
-                    'value' => $value,
+                    'value' => '',
                 ]);
                 break;
 

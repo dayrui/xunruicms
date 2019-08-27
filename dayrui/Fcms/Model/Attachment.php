@@ -254,7 +254,7 @@ class Attachment extends \Phpcmf\Model {
                 'filesize' => $data['size'],
                 'inputtime' => SYS_TIME,
                 'attachment' => $data['file'],
-                'attachinfo' => $_SERVER['HTTP_REFERER'],
+                'attachinfo' => (string)$_SERVER['HTTP_REFERER'],
             ]);
         } else {
             // 随机存储

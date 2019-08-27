@@ -261,7 +261,9 @@ class Seo
         $data['catname'] = $cat['name'];
         $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], $data['join']);
         $data['modulename'] = $data['modname'] = $mod['name'];
-        $data['description'] = htmlspecialchars(dr_clearhtml($data['description']));
+
+        $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
+        $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));
 
         $meta_title = $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
