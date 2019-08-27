@@ -199,6 +199,9 @@ if (is_file(MYPATH.'Dev.php')) {
     function dr_get_app_css($name) {
         return THEME_PATH.$name.'/';
     }
+    function dr_get_app_css_dir($name) {
+        return WEBPATH.'static/'.$name.'/';
+    }
 }
 
 // 判断s参数,“应用程序”文件夹目录

@@ -202,7 +202,7 @@ class Api extends \Phpcmf\Common
         $this->member['randcode'] = rand(100000, 999999);
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($this->member['phone'], $this->member['randcode']);
-        !$rt && $this->_json(0, dr_lang('发送失败'));
+        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
 
         $this->session()->setTempdata($name, 1, 60);
         $this->_json(1, dr_lang('验证码发送成功'));

@@ -150,6 +150,13 @@ class View {
         $this->_dir = $this->_mdir = TPLPATH.$dir;
     }
 
+    /**
+     * 强制设置为当前默认的模板目录
+     */
+    public function set_dir($path) {
+        $this->_dir = $this->_mdir = $path;
+    }
+
 
     /**
      * 强制设置为后台模板目录
