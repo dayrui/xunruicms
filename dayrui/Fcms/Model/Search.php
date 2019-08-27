@@ -254,6 +254,7 @@ class Search extends \Phpcmf\Model {
 
     // 条件组合
     private function _where($table, $name, $value, $field) {
+
         $name = dr_safe_replace($name, ['\\', '/']);
         if (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
             // like 条件
@@ -261,7 +262,21 @@ class Search extends \Phpcmf\Model {
         } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
-            return '`'.$table.'`.`'.$name.'` BETWEEN '.(int)$s.' AND '.intval($e ? $e : SYS_TIME);
+            if (!$e) {
+                return '`'.$table.'`.`'.$name.'` > '.$s;
+            } else {
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+            }
+        } elseif ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
+            // 匹配时间字段
+            list($s, $e) = explode(',', $value);
+            $s = (int)strtotime($s);
+            $e = (int)strtotime($e);
+            if (!$e) {
+                return '`'.$table.'`.`'.$name.'` > '.$s;
+            } else {
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+            }
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
             // 百度地图
             if (SITE_MAP_LAT && SITE_MAP_LNG) {
