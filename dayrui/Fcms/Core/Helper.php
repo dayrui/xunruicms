@@ -22,6 +22,10 @@
  *
  * */
 
+// 站点信息输出
+function dr_site_info($name, $siteid = SITE_ID) {
+    return \Phpcmf\Service::C()->get_cache('site', $siteid, 'config', $name);
+}
 
 // ftable字段输出
 function dr_get_ftable($id, $value, $class = '') {
