@@ -36,7 +36,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     /**
      * 字段相关属性参数
      *
-     * @param	array	$value	值
+     * @param   array   $value  值
      * @return  string
      */
     public function option($option) {
@@ -84,7 +84,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>'.$wm.
-                '
+            '
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('底部工具栏').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
@@ -131,7 +131,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
             
-				<div class="form-group">
+                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('后台编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
@@ -141,14 +141,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>
-				<div class="form-group" id="bjqms1" '.($option['mode'] < 3 ? 'style="display:none"' : '').'>
+                <div class="form-group" id="bjqms1" '.($option['mode'] < 3 ? 'style="display:none"' : '').'>
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool]" style="height:90px;" class="form-control">'.$option['tool'].'</textarea>
-					<span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>
-				<div class="form-group">
+                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('前端编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
@@ -158,14 +158,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>
-				<div class="form-group" id="bjqms2" '.($option['mode2'] < 3 ? 'style="display:none"' : '').'>
+                <div class="form-group" id="bjqms2" '.($option['mode2'] < 3 ? 'style="display:none"' : '').'>
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool2]" style="height:90px;" class="form-control">'.$option['tool2'].'</textarea>
-					<span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>
-				<div class="form-group">
+                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('移动端编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
@@ -175,11 +175,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>
-				<div class="form-group" id="bjqms3" '.($option['mode3'] < 3 ? 'style="display:none"' : '').'>
+                <div class="form-group" id="bjqms3" '.($option['mode3'] < 3 ? 'style="display:none"' : '').'>
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool3]" style="height:90px;" class="form-control">'.$option['tool3'].'</textarea>
-					<span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>'.$this->attachment(isset($option['attachment']) ? $option['attachment'] : 0).'
                 <div class="form-group">
@@ -190,20 +190,20 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         <span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
                     </div>
                 </div>
-				'.$this->field_type($option['fieldtype'], $option['fieldlength']),
+                '.$this->field_type($option['fieldtype'], $option['fieldlength']),
 
             '<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-					    <span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+                        <span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
                     </div>
                 </div>
-				<div class="form-group">
+                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('控件高度').'</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control" name="data[setting][option][height]" value="'.$option['height'].'"></label>
-					    <label>px</label>
+                        <label>px</label>
                     </div>
                 </div>'
         ];
@@ -317,7 +317,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     /**
      * 字段输出
      *
-     * @param	array	$value	数据库值
+     * @param   array   $value  数据库值
      * @return  string
      */
     public function output($value) {
@@ -381,42 +381,41 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
 
 
-            // 防止重复加载JS
-            if (!defined('PHPCMF_FIELD_UEDITOR')) {
-                $str.= '
-			<script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js"></script>
-			<script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.all.js"></script>
-			<script type="text/javascript" src="'.LANG_PATH.'ueditor.js"></script>
-			';
-                define('PHPCMF_FIELD_UEDITOR', 1);
-            }
+        // 防止重复加载JS
+        if (!defined('PHPCMF_FIELD_UEDITOR')) {
+            $str.= '
+            <script type="text/javascript" src="/api/ueditor/ueditor.config.js"></script>
+            <script type="text/javascript" src="/api/ueditor/ueditor.all.min.js"></script>
+            ';
+            define('PHPCMF_FIELD_UEDITOR', 1);
+        }
 
-            $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
+        $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
 
-            // 编辑器模式
-            if (IS_ADMIN) {
-                $mode = $field['setting']['option']['mode'];
+        // 编辑器模式
+        if (IS_ADMIN) {
+            $mode = $field['setting']['option']['mode'];
+        } else {
+            if ($is_mobile) {
+                $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
+                $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
             } else {
-                if ($is_mobile) {
-                    $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
-                    $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
-                } else {
-                    $mode = $field['setting']['option']['mode2'] ? $field['setting']['option']['mode2'] : $field['setting']['option']['mode'];
-                    $field['setting']['option']['tool'] = $field['setting']['option']['tool2'] ? $field['setting']['option']['tool2'] : $field['setting']['option']['tool'];
-                }
-
+                $mode = $field['setting']['option']['mode2'] ? $field['setting']['option']['mode2'] : $field['setting']['option']['mode'];
+                $field['setting']['option']['tool'] = $field['setting']['option']['tool2'] ? $field['setting']['option']['tool2'] : $field['setting']['option']['tool'];
             }
-            // 编辑器工具
-            switch ($mode) {
-                case 3: // 自定义
-                    $tool.= $field['setting']['option']['tool'];
-                    break;
-                case 2: // 精简
-                    $tool.= "'undo', 'redo', '|',
-						'bold', 'italic', 'underline', 'strikethrough','|', 'pasteplain', 'forecolor', 'fontfamily', 'fontsize','|', 'link', 'simpleupload'$pagebreak";
-                    break;
-                case 1: // 默认
-                    $tool.= "'undo', 'redo', '|',
+
+        }
+        // 编辑器工具
+        switch ($mode) {
+            case 3: // 自定义
+                $tool.= $field['setting']['option']['tool'];
+                break;
+            case 2: // 精简
+                $tool.= "'undo', 'redo', '|',
+                        'bold', 'italic', 'underline', 'strikethrough','|', 'pasteplain', 'forecolor', 'fontfamily', 'fontsize','|', 'link', 'simpleupload'$pagebreak";
+                break;
+            case 1: // 默认
+                $tool.= "'undo', 'redo', '|',
             'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
             'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
             'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
@@ -427,33 +426,34 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
             'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
             'print', 'preview', 'searchreplace', 'drafts'$pagebreak";
-                    break;
-            }
+                break;
+        }
 
-            $str.= "
-		<script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
-		<script type=\"text/javascript\">
-			var editorOption = {
-				UEDITOR_HOME_URL: \"/api/ueditor/\",
-				serverUrl:\"/index.php?s=api&c=file&m=ueditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
-				lang: \"".SITE_LANGUAGE."\",
-				toolbars: [
-					[ $tool ]
-				],
-				initialContent:\"\",
-				initialFrameWidth: \"".$width.(is_numeric($width) ? 'px' : '')."\",
-				initialFrameHeight: \"{$height}\",
-				initialStyle:\"body{font-size:14px}\",
-				wordCount:false,
-				elementPathEnabled:false,
-				autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
-				autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
-				charset:\"utf-8\",
-			};
-			var editor = new baidu.editor.ui.Editor(editorOption);
-			editor.render(\"dr_$name\");
-		</script>
-		";
+        $str.= "
+        <script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
+        <script type=\"text/javascript\">
+            var editorOption = {
+                UEDITOR_HOME_URL: \"/api/ueditor/\",
+                serverUrl:\"/index.php?s=api&c=file&m=ueditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
+                lang: \"".SITE_LANGUAGE."\",
+                langPath: \"".ROOT_URL."config/language/\",
+                toolbars: [
+                    [ $tool ]
+                ],
+                initialContent:\"\",
+                initialFrameWidth: \"".$width.(is_numeric($width) ? 'px' : '')."\",
+                initialFrameHeight: \"{$height}\",
+                initialStyle:\"body{font-size:14px}\",
+                wordCount:false,
+                elementPathEnabled:false,
+                autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
+                autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
+                charset:\"utf-8\",
+            };
+            var editor = new baidu.editor.ui.Editor(editorOption);
+            editor.render(\"dr_$name\");
+        </script>
+        ";
 
 
         if ($field['setting']['option']['show_bottom_boot']) {

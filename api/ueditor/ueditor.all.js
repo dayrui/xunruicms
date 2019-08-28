@@ -6758,7 +6758,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
 
         }else{
             utils.loadFile(document, {
-                src: me.options.langPath + me.options.lang + "/" + me.options.lang + ".js",
+                src: me.options.langPath + me.options.lang + "/ueditor.js",
                 tag: "script",
                 type: "text/javascript",
                 defer: "defer"

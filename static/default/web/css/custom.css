@@ -3029,3 +3029,6 @@ ul,ol,li,dl{list-style-type:none;
 .badge-success {
     background-color: #3598DC !important;
 }
+.page-content-wrapper .page-content {
+    margin-left: 0px!important;
+}
