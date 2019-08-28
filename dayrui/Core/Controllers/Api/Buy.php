@@ -51,6 +51,7 @@ class Buy extends \Phpcmf\Common {
             'num' => $rt['num'],
             'price' => $rt['price'],
             'total' => $rt['total'],
+            'total_price' => $rt['total'],
             'payform' => dr_payform($rt['mid'], $rt['total'], $rt['title'].$rt['sku_string'], $rt['url']),
             'meta_title' => dr_lang('在线付款').SITE_SEOJOIN.SITE_NAME,
             'meta_keywords' => $this->get_cache('site', SITE_ID, 'config', 'SITE_KEYWORDS'),
