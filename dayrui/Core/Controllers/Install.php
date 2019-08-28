@@ -102,9 +102,18 @@ class Install extends \Phpcmf\Common
                         $error = 1;
                     }
                 }
-				$php = [];
-				$php['mb string扩展'] = function_exists('mb_substr') ? 1 : 0;
-				$php['Curl扩展'] = function_exists('curl_init') ? 1 : 0;
+				$php = [
+				    [
+				        'name' => 'mb string扩展',
+                        'code' => function_exists('mb_substr'),
+                        'help' => 'http://www.xunruicms.com/doc/742.html',
+                    ],
+				    [
+				        'name' => 'Curl扩展',
+                        'code' => function_exists('curl_init'),
+                        'help' => 'http://www.xunruicms.com/doc/743.html',
+                    ],
+                ];
 				
                 \Phpcmf\Service::V()->assign([
                     'php' => $php,

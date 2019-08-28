@@ -28,8 +28,12 @@
                 <div class="form-group">
                     <label class="control-label col-md-3">环境检测</label>
                     <div class="col-md-9" style="margin-top:-1px;">
-                        {loop $php $name $code}
-                        <p style="margin:10px 0;{if !$code}color:red{/if}"> {if !$code}[不支持]{else}[支持]{/if}&nbsp;&nbsp;{$name} </p>
+                        {loop $php $t}
+                        {if !$t.code}
+                        <p style="margin:10px 0;color:red"> <?php $error = 1;?>[不支持]&nbsp;&nbsp;{$t.name} &nbsp; &nbsp;<a href="{$t.help}" target="_blank">查看帮助</a></p>
+                        {else}
+                        <p style="margin:10px 0;"> [支持]&nbsp;&nbsp;{$t.name} </p>
+                        {/if}
                         {/loop}
                     </div>
                 </div>
