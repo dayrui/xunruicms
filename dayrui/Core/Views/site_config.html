@@ -101,11 +101,13 @@
                                 <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{$data['SITE_ICP']}"></label>
                              </div>
                         </div>
+                        {if $my_site_info}
+                        {load "$my_site_info"}
+                        {/if}
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('第三方统计代码')}</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" style="height:100px" name="data[SITE_TONGJI]">{$data['SITE_TONGJI']}</textarea>
-
                             </div>
                         </div>
 
