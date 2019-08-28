@@ -1634,10 +1634,12 @@ function dr_file_preview_html($value, $target = 0) {
     } else {
         return $value;
     }
-
-
 }
 
+// 文件是否是图片
+function dr_is_image($value) {
+	return in_array(trim(strtolower(strrchr($value, '.')), '.'), ['jpg', 'gif', 'png', 'jpeg']);
+}
 
 /**
  * 单页层次关系

@@ -70,6 +70,11 @@ class Local {
                 return dr_return_data(0, dr_lang('文件创建失败'));
             }
         }
+		
+		// 图片压缩处理
+		if (dr_is_image($this->fullname) && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image_reduce'))) {
+            \Phpcmf\Service::L('image')->reduce($this->fullname, $config);
+		}
 
         // 强制水印
         if ($this->watermark && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark'))) {
@@ -77,6 +82,7 @@ class Local {
             $config['dynamic_output'] = false;
             \Phpcmf\Service::L('image')->watermark($config);
         }
+
 
         // 上传成功
         return dr_return_data(1, 'ok', [

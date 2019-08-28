@@ -1653,6 +1653,12 @@ class Image
 
         return $cache_url.$cache_file;
     }
+	
+	// 图片压缩处理
+	public function reduce($file) {
+		
+		
+	}
 
     public function base64($file){
         $base64_file = '';

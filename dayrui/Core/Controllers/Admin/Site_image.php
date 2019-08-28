@@ -24,7 +24,7 @@
 
 
 
-class Site_watermark extends \Phpcmf\Common
+class Site_image extends \Phpcmf\Common
 {
 
 	public function index() {
@@ -35,8 +35,13 @@ class Site_watermark extends \Phpcmf\Common
                 'watermark',
                 \Phpcmf\Service::L('input')->post('data', true)
             );
+            \Phpcmf\Service::M('Site')->config(
+                SITE_ID,
+                'image_reduce',
+                \Phpcmf\Service::L('input')->post('image', true)
+            );
             \Phpcmf\Service::M('cache')->sync_cache('');
-            \Phpcmf\Service::L('input')->system_log('设置网站图片水印参数');
+            \Phpcmf\Service::L('input')->system_log('设置网站图片参数');
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -60,20 +65,21 @@ class Site_watermark extends \Phpcmf\Common
         ];
 
         \Phpcmf\Service::V()->assign([
-            'page' => $page,
-            'data' => $data['watermark'],
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '图片水印' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-photo'],
+                    '图片设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-photo'],
                     'help' => [507],
                 ]
             ),
+            'page' => $page,
+            'data' => $data['watermark'],
+            'image' => $data['image_reduce'],
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,
             'waterfont' => dr_file_map(WEBPATH.'config/font/', 1),
             'waterfile' => dr_file_map(WEBPATH.'config/watermark/', 1),
         ]);
-        \Phpcmf\Service::V()->display('site_watermark.html');
+        \Phpcmf\Service::V()->display('site_image.html');
 	}
 
 	

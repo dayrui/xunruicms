@@ -161,9 +161,9 @@ return [
                             'uri' => 'site_domain/index',
                         ],
                         [
-                            'name' => '水印设置',
+                            'name' => '图片设置',
                             'icon' => 'fa fa-photo',
-                            'uri' => 'site_watermark/index',
+                            'uri' => 'site_image/index',
                         ],
                     ]
                 ],
