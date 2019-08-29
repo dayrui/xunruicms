@@ -72,6 +72,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][watermark]" '.($option['watermark'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][watermark]" '.($option['watermark'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
+						<span class="help-block">上传的图片会加上水印图</span>
                     </div>
                 </div>';
 
@@ -82,6 +83,17 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').'</label>
                         </div>
+						<span class="help-block">自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
+                    </div>
+                </div>
+				<div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('下载图片模式').'</label>
+                    <div class="col-md-9" style="padding-left: 35px;">
+                        <div class="radio-list">
+                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 1 ? 'checked' : '').' > '.dr_lang('异步').'</label>
+                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 0 ? 'checked' : '').' > '.dr_lang('同步').'</label>
+                        </div>
+						<span class="help-block">同步模式是在编辑内容时一次性下载完图片，图片多的时候容易卡死；<br>异步模式是在编辑内容时不会马上下载图片，他会进入任务队列中进行延迟下载</span>
                     </div>
                 </div>'.$wm.
             '
@@ -92,6 +104,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
+						<span class="help-block">编辑器底部工具栏，有截取字符选择、提取缩略图、下载远程图等控制按钮</span>
                     </div>
                 </div>
                 <div class="form-group hidden">
@@ -110,6 +123,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
+						<span class="help-block">编辑器图标栏会固定在页面，不会随浏览器滚动</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -119,6 +133,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][autoheight]" '.($option['autoheight'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][autoheight]" '.($option['autoheight'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
+						
+						<span class="help-block">编辑器会自动增加高度</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -128,6 +144,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][page]" '.($option['page'] ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][page]" '.(!$option['page'] ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
+						<span class="help-block">文章内容的分页功能</span>
                     </div>
                 </div>
             
@@ -256,42 +273,45 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 }
                                 if ($zj == 0) {
                                     // 可以下载文件
-                                    if (!$table) {
-                                        $table = \Phpcmf\Service::M('field')->get_table_name(SITE_ID, $field);
-                                    }
-                                    $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'ueditor_down_img', [
-                                        'url' => $img,
-                                        'table' => $table,
-                                        'field' => $field['fieldname'],
-                                        'siteid' => SITE_ID,
-                                        'member' => \Phpcmf\Service::C()->member,
-                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-                                        'image_reduce' => $field['setting']['option']['image_reduce'],
-                                    ]);
-                                    if (!$rt['code']) {
-                                        log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
-                                    }
+									if ($field['setting']['option']['down_img_type']) {
+										// 异步模式
+										 if (!$table) {
+											$table = \Phpcmf\Service::M('field')->get_table_name(SITE_ID, $field);
+										}
+										$rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'ueditor_down_img', [
+											'url' => $img,
+											'table' => $table,
+											'field' => $field['fieldname'],
+											'siteid' => SITE_ID,
+											'member' => \Phpcmf\Service::C()->member,
+											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+											'image_reduce' => $field['setting']['option']['image_reduce'],
+										]);
+										if (!$rt['code']) {
+											log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
+										}
 
-                                    $value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
+										$value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
 
-                                    $img = '';
+										$img = '';
+									} else {
+										// 同步模式
+										// 下载远程文件
+										$rt = \Phpcmf\Service::L('upload')->down_file([
+											'url' => $img,
+											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+										]);
+										if ($rt['code']) {
+											$att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+											if ($att['code']) {
+												// 归档成功
+												$value = str_replace($img, $rt['data']['url'], $value);
+												$img = $att['code'];
+											}
 
-
-                                    /*
-                                    // 下载远程文件
-                                    $rt = \Phpcmf\Service::L('upload')->down_file([
-                                        'url' => $img,
-                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-                                    ]);
-                                    if ($rt['code']) {
-                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
-                                        if ($att['code']) {
-                                            // 归档成功
-                                            $value = str_replace($img, $rt['data']['url'], $value);
-                                            $img = $att['code'];
-                                        }
-
-                                    }*/
+										}
+									}
+                                    
                                 }
                             }
 
