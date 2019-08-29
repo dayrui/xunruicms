@@ -75,6 +75,7 @@ class File extends \Phpcmf\Common
             'exts' => $field['setting']['option']['ext'],
             'count' => max(1, (int)$field['setting']['option']['count']),
             'attachment' => $field['setting']['option']['attachment'],
+            'image_reduce' => $field['setting']['option']['image_reduce'],
         ];
     }
 
@@ -104,7 +105,7 @@ class File extends \Phpcmf\Common
             'form_name' => 'file_data',
             'file_exts' => @explode(',', $p['exts']),
             'file_size' => (int)$p['size'] * 1024 * 1024,
-            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment']),
+            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
         ]);
         !$rt['code'] && exit(dr_array2string($rt));
 
@@ -153,7 +154,7 @@ class File extends \Phpcmf\Common
                 // 下载远程文件
                 $rt = \Phpcmf\Service::L('upload')->down_file([
                     'url' => $post['url'],
-                    'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment']),
+                    'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
                 ]);
                 !$rt['code'] && exit(dr_array2string($rt));
 
@@ -358,7 +359,7 @@ class File extends \Phpcmf\Common
             $rt = \Phpcmf\Service::L('upload')->base64_image([
                 'ext' => $ext,
                 'content' => $content,
-                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment']),
+                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
             ]);
             !$rt['code'] && exit(dr_array2string($rt));
 

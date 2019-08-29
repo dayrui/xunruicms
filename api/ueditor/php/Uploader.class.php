@@ -69,6 +69,7 @@ class Uploader
         $this->rid = 'ueditor:'.str_replace('/', '-', $_GET['rid']);
         $this->watermark = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') ? 1 : intval($_GET['is_wm']);
         $this->attachment_info = $this->attachment_model->get_attach_info((int)$_GET['attachment']);
+        $this->attachment_info['image_reduce'] = (int)$_GET['image_reduce'];
 
         if ($type == "remote") {
             $this->saveRemote();

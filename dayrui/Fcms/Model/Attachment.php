@@ -291,17 +291,20 @@ class Attachment extends \Phpcmf\Model {
     }
 
     // 附件存储信息
-    public function get_attach_info($id = 0) {
+    public function get_attach_info($id = 0, $image_reduce = 0) {
 
         $remote = \Phpcmf\Service::C()->get_cache('attachment');
         if ($remote[$id]) {
-            return $remote[$id];
+            $rt = $remote[$id];
+            $rt['image_reduce'] = $image_reduce;
+            return $rt;
         }
 
         return [
             'id' => 0,
             'url' => SYS_UPLOAD_URL,
             'type' => 0,
+            'image_reduce' => $image_reduce,
             'value' => [
                 'path' => SYS_UPLOAD_PATH
             ]

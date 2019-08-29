@@ -1653,12 +1653,6 @@ class Image
 
         return $cache_url.$cache_file;
     }
-	
-	// 图片压缩处理
-	public function reduce($file) {
-		
-		
-	}
 
     public function base64($file){
         $base64_file = '';
@@ -1668,6 +1662,51 @@ class Image
             $base64_file = 'data:'.$mime_type.';base64,'.$base64_data;
         }
         return $base64_file;
+    }
+
+    //..////..//////.....//////////.......///////////
+
+    // 图片压缩处理
+    public function reduce($imgsrc, $cw) {
+
+        list($width, $height, $type) = getimagesize($imgsrc);
+
+        $new_width = $width;//压缩后的图片宽
+        $new_height = $height;//压缩后的图片高
+
+        if($width >= $cw){
+            $per = $cw / $width;//计算比例
+            $new_width = $width * $per;
+            $new_height = $height * $per;
+        }
+
+        switch ($type) {
+            case 1:
+                // gif
+                break;
+            case 2:
+                //header('Content-Type:image/jpeg');
+                $image_wp = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefromjpeg($imgsrc);
+                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                //90代表的是质量、压缩图片容量大小
+                imagejpeg($image_wp, $imgsrc, 90);
+                imagedestroy($image_wp);
+                imagedestroy($image);
+                break;
+            case 3:
+                header('Content-Type:image/png');
+                $image_wp = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefrompng($imgsrc);
+                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                //90代表的是质量、压缩图片容量大小
+                imagejpeg($image_wp, $imgsrc, 90);
+                imagedestroy($image_wp);
+                imagedestroy($image);
+                break;
+        }
+
+        return;
     }
 
 }

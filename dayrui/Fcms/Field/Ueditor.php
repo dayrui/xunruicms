@@ -181,7 +181,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <textarea name="data[setting][option][tool3]" style="height:90px;" class="form-control">'.$option['tool3'].'</textarea>
                     <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
-                </div>'.$this->attachment(isset($option['attachment']) ? $option['attachment'] : 0).'
+                </div>'.$this->attachment($option).'
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('默认存储值').'</label>
                     <div class="col-md-9">
@@ -266,6 +266,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         'siteid' => SITE_ID,
                                         'member' => \Phpcmf\Service::C()->member,
                                         'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                        'image_reduce' => $field['setting']['option']['image_reduce'],
                                     ]);
                                     if (!$rt['code']) {
                                         log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
@@ -434,7 +435,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         <script type=\"text/javascript\">
             var editorOption = {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
-                serverUrl:\"/index.php?s=api&c=file&m=ueditor&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
+                serverUrl:\"/index.php?s=api&c=file&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
                 lang: \"".SITE_LANGUAGE."\",
                 langPath: \"".ROOT_URL."config/language/\",
                 toolbars: [

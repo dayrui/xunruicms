@@ -44,7 +44,7 @@ class Image extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="jpg,gif,png,jpeg"></label>
 				</div>
-			</div>'.$this->attachment(isset($option['attachment']) ? $option['attachment'] : 0).'',
+			</div>'.$this->attachment($option).'',
 
             '<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
@@ -163,6 +163,7 @@ class Image extends \Phpcmf\Library\A_Field {
             'size' => intval($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'attachment' => $field['setting']['option']['attachment'],
+            'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE') : 0;
         $url = '/index.php?s=api&c=file&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 

@@ -52,6 +52,7 @@ class Cloud extends \Phpcmf\Common
             'is_syy' => $this->license['cloud'] ? 1 : 0,
             'license' => $this->license,
             'license_sn' => $this->license['license'],
+            'cms_version' => $this->cmf_version,
             'cmf_version' => $this->cmf_version,
         ]);
     }
@@ -304,7 +305,7 @@ class Cloud extends \Phpcmf\Common
         $data = [];
 
         $data['phpcmf'] = $this->cmf_version;
-        $data['phpcmf']['id'] = 'cms-'.$this->cmf_version['id'];
+        $data['phpcmf']['id'] = 'cms-1';
         $data['phpcmf']['tname'] = '<a href="javascript:dr_help(538);">系统</a>';
 
         $local = dr_dir_map(APPSPATH, 1);

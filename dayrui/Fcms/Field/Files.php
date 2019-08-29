@@ -78,7 +78,7 @@ class Files extends \Phpcmf\Library\A_Field {
 					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="'.$option['ext'].'"></label>
 					<span class="help-block">'.dr_lang('格式：jpg,gif,png,exe,html,php,rar,zip').'</span>
 				</div>
-			</div>'.$this->attachment(isset($option['attachment']) ? $option['attachment'] : 0).'',
+			</div>'.$this->attachment($option).'',
 
 			''];
 	}
@@ -229,6 +229,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'size' => intval($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'attachment' => $field['setting']['option']['attachment'],
+            'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE') : 0;
         $url = '/index.php?s=api&c=file&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
