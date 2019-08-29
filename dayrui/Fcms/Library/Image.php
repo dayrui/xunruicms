@@ -1671,39 +1671,35 @@ class Image
 
         list($width, $height, $type) = getimagesize($imgsrc);
 
-        $new_width = $width;//压缩后的图片宽
-        $new_height = $height;//压缩后的图片高
-
-        if($width >= $cw){
+        if ($width > $cw) {
             $per = $cw / $width;//计算比例
-            $new_width = $width * $per;
-            $new_height = $height * $per;
-        }
-
-        switch ($type) {
-            case 1:
-                // gif
-                break;
-            case 2:
-                //header('Content-Type:image/jpeg');
-                $image_wp = imagecreatetruecolor($new_width, $new_height);
-                $image = imagecreatefromjpeg($imgsrc);
-                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-                //90代表的是质量、压缩图片容量大小
-                imagejpeg($image_wp, $imgsrc, 90);
-                imagedestroy($image_wp);
-                imagedestroy($image);
-                break;
-            case 3:
-                header('Content-Type:image/png');
-                $image_wp = imagecreatetruecolor($new_width, $new_height);
-                $image = imagecreatefrompng($imgsrc);
-                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-                //90代表的是质量、压缩图片容量大小
-                imagejpeg($image_wp, $imgsrc, 90);
-                imagedestroy($image_wp);
-                imagedestroy($image);
-                break;
+            $new_width = $width * $per; //压缩后的图片宽
+            $new_height = $height * $per; //压缩后的图片高
+            switch ($type) {
+                case 1:
+                    // gif
+                    break;
+                case 2:
+                    //header('Content-Type:image/jpeg');
+                    $image_wp = imagecreatetruecolor($new_width, $new_height);
+                    $image = imagecreatefromjpeg($imgsrc);
+                    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                    //90代表的是质量、压缩图片容量大小
+                    imagejpeg($image_wp, $imgsrc, 90);
+                    imagedestroy($image_wp);
+                    imagedestroy($image);
+                    break;
+                case 3:
+                    header('Content-Type:image/png');
+                    $image_wp = imagecreatetruecolor($new_width, $new_height);
+                    $image = imagecreatefrompng($imgsrc);
+                    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                    //90代表的是质量、压缩图片容量大小
+                    imagejpeg($image_wp, $imgsrc, 90);
+                    imagedestroy($image_wp);
+                    imagedestroy($image);
+                    break;
+            }
         }
 
         return;

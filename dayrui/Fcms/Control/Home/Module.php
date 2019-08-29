@@ -255,17 +255,21 @@ class Module extends \Phpcmf\Common
             ),
         ];
 
+        // 栏目格式化
         $category = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $category, $page);
+        $top = $catid && $category['topid'] ? \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$category['topid']], 1) : $category;
+        $parent && $parent = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $parent, 1);
 
+        // 传入模板
         \Phpcmf\Service::V()->assign($this->content_model->_format_category_seo($this->module, $catid, $page));
         \Phpcmf\Service::V()->assign(array(
             'id' => $catid,
             'cat' => $category,
+            'top' => $top,
             'page' => $page,
             'catid' => $catid,
             'params' => ['catid' => $catid],
             'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
-            'top' => $category['topid'] ? $this->module['category'][$category['topid']] : $category,
             'parent' => $parent,
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->category_url($this->module, $category, '[page]'),
@@ -337,10 +341,15 @@ class Module extends \Phpcmf\Common
             $list = $rt['return'];
         }
 
+        // 栏目格式化
+        $cat = $catid && $this->module['category'][$catid] ? \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$catid], 1) : [];
+        $top = $catid && $cat['topid'] ? \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$cat['topid']], 1) : $cat;
+        $parent && $parent = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $parent, 1);
+
         \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
         \Phpcmf\Service::V()->assign(array(
-            'cat' => $catid && $this->module['category'][$catid] ? \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$catid], 1) : [],
-            'top' => $catid && $this->module['category'][$catid]['topid'] ? $this->module['category'][$this->module['category'][$catid]['topid']] : $this->module['category'][$catid],
+            'cat' => $cat,
+            'top' => $top,
             'get' => $get,
             'list' => $list,
             'catid' => $catid,
@@ -498,10 +507,17 @@ class Module extends \Phpcmf\Common
         // 判断内容唯一性
         !$rt && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($data['url'], $this->module['dirname']));
 
+        // 栏目格式化
+        $cat = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$catid], 1);
+        $top = $cat['topid'] ? \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$cat['topid']], 1) : $cat;
+        $parent = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $parent, 1);
+
+        // 传入模板
         \Phpcmf\Service::V()->assign($data);
         \Phpcmf\Service::V()->assign($this->content_model->_format_show_seo($this->module, $data, $page));
         \Phpcmf\Service::V()->assign([
-            'cat' => \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($this->module['category_field'], $this->module['category'][$catid], 1),
+            'cat' => $cat,
+            'top' => $top,
             'page' => $page,
             'params' => ['catid' => $catid],
             'parent' => $parent,
