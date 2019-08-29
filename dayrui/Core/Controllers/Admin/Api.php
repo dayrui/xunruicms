@@ -434,7 +434,9 @@ class Api extends \Phpcmf\Common
 	public function test_mobile() {
 
 	    $data = \Phpcmf\Service::L('input')->post('data');
-
+		if (is_file(WEBPATH.'config/mysms.php')) {
+			require_once WEBPATH.'config/mysms.php';
+		}
         $method = 'my_sendsms_code';
         if (function_exists($method)) {
             $rt =  call_user_func_array($method, [
