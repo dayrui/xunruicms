@@ -55,7 +55,7 @@ class Install extends \Phpcmf\Common
             $app = require MYPATH.'Config/Version.php';
         } else {
             $app = [
-                'id' => 10,
+                'id' => 1,
                 'name' => '迅睿CMS系统',
                 'version' => '开发版',
             ];

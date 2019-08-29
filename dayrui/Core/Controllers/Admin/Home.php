@@ -33,18 +33,6 @@ class Home extends \Phpcmf\Common
 
 	public function main() {
 
-	    if (is_file( MYPATH.'Config/Version.php')) {
-            $cms = require MYPATH.'Config/Version.php';
-        } else {
-            $cms = [
-                'id' => 10,
-                'name' => '迅睿CMS系统',
-                'version' => '开发版',
-            ];
-        }
-
-        $cmf = $this->cmf_version;
-
         $table_data = [];
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
@@ -62,10 +50,8 @@ class Home extends \Phpcmf\Common
             'domain' => dr_get_domain_name(ROOT_URL),
             'tables' => $this->_main_table(),
             'table_data' => $table_data,
-            'cms_update' => $cms['updatetime'],
-            'cmf_update' => $cmf['updatetime'],
-            'cms_version' => $cms['version'],
-            'cmf_version' => $cmf['version'],
+            'cmf_update' => $this->cmf_version['updatetime'],
+            'cmf_version' => $this->cmf_version['version'],
         ]);
 		\Phpcmf\Service::V()->display($table_data ? 'index_main.html' : 'main.html');exit;
 	}

@@ -88,7 +88,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 版本
-        if (!is_file(CMSPATH.'Config/Version.php')) {
+        if (!is_file(MYPATH.'Config/Version.php')) {
             define('CMF_VERSION', '开发版');
             $this->cmf_version = [
                 'id' => 1,
@@ -96,7 +96,7 @@ abstract class Common extends \CodeIgniter\Controller
                 'version' => '开发版',
             ];
         } else {
-            $this->cmf_version = require CMSPATH.'Config/Version.php';
+            $this->cmf_version = require MYPATH.'Config/Version.php';
             define('CMF_VERSION', $this->cmf_version['version']);
         }
 
@@ -1048,14 +1048,7 @@ abstract class Common extends \CodeIgniter\Controller
 
     // 版本检查
     protected function _api_version_cms() {
-
-        if (is_file(MYPATH.'Config/Version.php')) {
-            $v = require MYPATH.'Config/Version.php';
-            $json = dr_catcher_data('https://www.xunruicms.com/version.php?action=new&id='.$v['id'].'&v='.$v['version']);
-            exit($json);
-        }
-
-        $this->_json(0, '');
+        $this->_api_version_cmf();
     }
 
     // 搜索帮助

@@ -29,17 +29,10 @@ class Cloud extends \Phpcmf\Common
     private $admin_url;
     private $service_url;
     private $license;
-    private $version;
-    private $license_sn;
 
     public function __construct(...$params)
     {
         parent::__construct(...$params);
-        if (is_file(MYPATH . 'Config/Version.php')) {
-            $this->version = require MYPATH . 'Config/Version.php';
-        } else {
-            exit('程序需要更新到正式版，请在官网 http://www.xunruicms.com/down/ 下载[安装包]并覆盖dayrui目录');
-        }
 
         if (is_file(MYPATH . 'Config/License.php')) {
             $this->license = require MYPATH . 'Config/License.php';
@@ -50,17 +43,15 @@ class Cloud extends \Phpcmf\Common
             exit('程序需要更新到正式版，请在官网 http://www.xunruicms.com/down/ 下载[安装包]并覆盖dayrui目录');
         }
 
-        $this->license_sn = $this->license['license'];
         list($this->admin_url) = explode('?', FC_NOW_URL);
-        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->version['id'] . '&license=' . $this->license_sn;
+        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->license['license'];
         if ($this->license['cloud']) {
-            $this->service_url = $this->license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->license_sn;
+            $this->service_url = $this->license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->license['license'];
         }
         \Phpcmf\Service::V()->assign([
             'is_syy' => $this->license['cloud'] ? 1 : 0,
             'license' => $this->license,
-            'license_sn' => $this->license_sn,
-            'cms_version' => $this->version,
+            'license_sn' => $this->license['license'],
             'cmf_version' => $this->cmf_version,
         ]);
     }
@@ -68,7 +59,7 @@ class Cloud extends \Phpcmf\Common
     // 服务工单
     public function service() {
 
-        $url = 'https://www.xunruicms.com/service.php?cms='.$this->version['id'].'&license='.$this->license_sn;
+        $url = 'https://www.xunruicms.com/service.php?cms='.$this->cmf_version['id'].'&license='.$this->license['license'];
         if ($this->license['service']) {
             $url = $this->license['service'];
         }
@@ -316,13 +307,6 @@ class Cloud extends \Phpcmf\Common
         $data['phpcmf']['id'] = 'cms-'.$this->cmf_version['id'];
         $data['phpcmf']['tname'] = '<a href="javascript:dr_help(538);">系统</a>';
 
-        if (!in_array($this->version['id'], [10, 11]) && is_file(MYPATH.'Config/Version.php')) {
-            $data['my'] = require MYPATH.'Config/Version.php';
-            $cms_id = $data['my']['id'];
-            $data['my']['id'] = 'cms-'.$cms_id;
-            $data['my']['tname'] = '<a href="javascript:dr_help(539);">程序</a>';
-        }
-
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
             if (is_file(APPSPATH.$dir.'/Config/App.php')) {
@@ -352,7 +336,7 @@ class Cloud extends \Phpcmf\Common
                     'help' => [379],
                 ]
             ),
-            'cms_id' => $cms_id,
+            'cms_id' => $this->cmf_version['cms'],
             'domain_id' => $this->license['id'],
         ]);
         \Phpcmf\Service::V()->display('cloud_update.html');exit;
@@ -595,7 +579,7 @@ class Cloud extends \Phpcmf\Common
 
     public function bf_count() {
 
-        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->license_sn;
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '没有从服务端获取到数据');
@@ -698,13 +682,9 @@ class Cloud extends \Phpcmf\Common
 
     // 获取本地程序和应用的版本号
     private function _get_app_version() {
+
         $data = [];
-        if (is_file(CMSPATH.'Config/Version.php')) {
-            $cms = require CMSPATH.'Config/Version.php';
-            $data['cms-'.$cms['id']] = $cms['version'];
-        }
-        $cms = require MYPATH.'Config/Version.php';
-        $data['cms-'.$cms['id']] = $cms['version'];
+        $data['cms-1'] = $this->cmf_version['version'];
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
             if (is_file(APPSPATH.$dir.'/Config/App.php') && is_file(APPSPATH.$dir.'/Config/Version.php')) {
@@ -715,6 +695,7 @@ class Cloud extends \Phpcmf\Common
                 }
             }
         }
+
         return $data;
     }
 

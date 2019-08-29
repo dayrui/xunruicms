@@ -72,8 +72,8 @@ class Local {
         }
 		
 		// 图片压缩处理
-		if (dr_is_image($this->fullname) && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image_reduce'))) {
-            \Phpcmf\Service::L('image')->reduce($this->fullname, $config);
+		if (dr_is_image($this->fullname) && $this->attachment['image_reduce']) {
+            \Phpcmf\Service::L('image')->reduce($this->fullname, $this->attachment['image_reduce']);
 		}
 
         // 强制水印
