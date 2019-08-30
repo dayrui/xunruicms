@@ -41,6 +41,7 @@ class Check extends \Phpcmf\Common
         '10' => '数据负载优化检测',
         '11' => '域名绑定检测',
         '12' => '表单form最大提交数',
+        '13' => 'HTTPS检测',
 
     ];
 
@@ -390,6 +391,20 @@ class Check extends \Phpcmf\Common
                 break;
 
             case '13':
+                // https
+                if (SYS_HTTPS) {
+                    if (strpos(FC_NOW_URL, 'https://') !== false) {
+                        $this->_json(1,'正常');
+                    } else {
+                        $this->_json(0,'服务器无法识别HTTPS证书，<a href="javascript:dr_help(751);">查看解决方案</a>');
+                    }
+                } else {
+                    $this->_json(0,'系统没有开启HTTPS服务');
+                }
+
+                break;
+
+            case '99':
 
                 break;
 

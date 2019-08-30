@@ -75,6 +75,7 @@ foreach ($system as $var => $value) {
 $pageURL = 'http';
 ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
     || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
+    || (defined('IS_HTTPS_FIX') && IS_HTTPS_FIX)
     || (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
 $pageURL.= '://';
 // 优先定义后台域名
