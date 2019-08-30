@@ -2108,7 +2108,7 @@ ul,ol,li,dl{list-style-type:none;
 
 
 .tg_main_nav .h3 .s, .slide .prev, .slide .next, .erweima, .gonggao_mall .bd li, .gonggao_mall .ft, .tg_sys_list .prev, .tg_sys_list .next, .tg_sys_list .hd_1 .tit, .tg_sys_list .hd_1 .more, .tg_sys_list .hd_2 .more, .tg_sys_list .hd_2 .ico, .tg_sys_list2 .item .s, .tg_footer li s, .fixed_menu li a, .mt_fliter .bd .s, .mt_fliter .s_search .s_btn, .mt_fliter .hd a, .store_info .commitment_hd, .product_info .sel .b .item_btn.current .s, .product_info .num .increase, .product_info .num .reduce, .product_info .btn3 .addto, .product_detail .img .btn_prev, .product_detail .img .btn_next, .product_detail .img .cur .arrow, .navWrap .allCatTG .s, .ismiaosha, .addto_animate_ico {
-    background: url(../img/tg.png) no-repeat 0 0;
+    
 }
 .product_info {}
 .ismiaosha { display:block; position:absolute; z-index:3; left:-8px; top:-8px; width:100px; height:100px; overflow:hidden; text-indent:-999em; background-position:-10000px -10000px;}
