@@ -144,7 +144,13 @@ class Router
         }
 
         // 跳转
-        $url != dr_now_url() && dr_redirect($url, 'location', '301');
+        if ($url != dr_now_url()) {
+            if (IS_DEV) {
+                \Phpcmf\Service::C()->_admin_msg(1, dr_lang('当前URL与其本身地址不符，正在自动跳转本身地址'), $url);
+            } else {
+                dr_redirect($url, 'location', '301');
+            }
+        }
     }
 
 

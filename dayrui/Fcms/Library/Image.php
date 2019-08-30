@@ -1685,7 +1685,7 @@ class Image
                     $image = imagecreatefromjpeg($imgsrc);
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
                     //90代表的是质量、压缩图片容量大小
-                    imagejpeg($image_wp, $imgsrc, 90);
+                    imagejpeg($image_wp, $imgsrc, 100);
                     imagedestroy($image_wp);
                     imagedestroy($image);
                     break;
@@ -1695,7 +1695,7 @@ class Image
                     $image = imagecreatefrompng($imgsrc);
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
                     //90代表的是质量、压缩图片容量大小
-                    imagejpeg($image_wp, $imgsrc, 90);
+                    imagejpeg($image_wp, $imgsrc, 100);
                     imagedestroy($image_wp);
                     imagedestroy($image);
                     break;

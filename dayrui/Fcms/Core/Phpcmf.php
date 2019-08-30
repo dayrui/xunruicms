@@ -148,7 +148,8 @@ abstract class Common extends \CodeIgniter\Controller
                     if (in_array(DOMAIN_NAME, $client)) {
                         // 表示这个域名属于移动端,需要跳转到pc
                         if (IS_DEV) {
-                            $this->_admin_msg(1, dr_lang('当前终端属于电脑端，正在自动跳转到电脑端网页'), $this->site_info[SITE_ID]['SITE_URL']);
+                            $arr = array_flip($client);
+                            $this->_admin_msg(1, dr_lang('当前终端属于电脑端，正在自动跳转到电脑端网页'), dr_http_prefix($arr[DOMAIN_NAME].'/'));
                         } else {
                             dr_domain_301($this->site_info[SITE_ID]['SITE_URL']);
                         }
@@ -565,9 +566,9 @@ abstract class Common extends \CodeIgniter\Controller
     public function _admin_msg($code, $msg, $url = '', $time = 3) {
 
         if (\Phpcmf\Service::L('input')->get('callback')) {
-            $this->_jsonp($code, $msg);
+            $this->_jsonp($code, $msg, $url);
         } elseif ((\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
-            $this->_json($code, $msg);
+            $this->_json($code, $msg, $url);
         }
 
         $burl = $url ? $url : (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'php?') !== false ? $_SERVER['HTTP_REFERER'] : '');
@@ -608,9 +609,9 @@ abstract class Common extends \CodeIgniter\Controller
     public function _msg($code, $msg, $url = '', $time = 3) {
 
         if (\Phpcmf\Service::L('input')->get('callback')) {
-            $this->_jsonp($code, $msg);
+            $this->_jsonp($code, $msg, $url);
         } elseif ((\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
-            $this->_json($code, $msg);
+            $this->_json($code, $msg, $url);
         }
 
         if (!$url) {
