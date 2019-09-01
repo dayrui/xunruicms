@@ -104,11 +104,13 @@
                 if (json.code == 1) {
                     window.location.href = json.data.url;
                 } else {
+                    $('.fc-code img').click();
                     $('.alert-danger span', $('.login-form')).html(json.msg);
                     $('.alert-danger', $('.login-form')).show();
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
+                $('.fc-code img').click();
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
             }
         });

@@ -1946,6 +1946,21 @@ function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
     return $del_dir && $_level == 0 ? @rmdir($path) : TRUE;
 }
 
+// 评论表情
+function dr_comment_emotion() {
+
+    // 可用表情
+    $emotion = [];
+    if ($fp = @opendir(ROOTPATH.'static/assets/comment/emotions/')) {
+        while (FALSE !== ($file = readdir($fp))) {
+            $info = pathinfo($file);
+            @in_array($info['extension'], ['gif', 'png', 'jpg', 'jpeg']) && $emotion[$info['filename']] = ROOT_THEME_PATH.'assets/comment/emotions/'.$file;
+        }
+    }
+
+    return $emotion;
+}
+
 /**
  * discuz加密/解密
  */

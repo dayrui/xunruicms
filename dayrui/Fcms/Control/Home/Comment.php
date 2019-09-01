@@ -65,15 +65,6 @@ class Comment extends \Phpcmf\Common
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
-        // 可用表情
-        $emotion = [];
-        if ($fp = @opendir(ROOTPATH.'static/assets/comment/emotions/')) {
-            while (FALSE !== ($file = readdir($fp))) {
-                $info = pathinfo($file);
-                @in_array($info['extension'], ['gif', 'png', 'jpg', 'jpeg']) && $emotion[$info['filename']] = ROOT_THEME_PATH.'assets/comment/emotions/'.$file;
-            }
-        }
-        
         // 排序模式
         $type = (int)str_replace('#', '', \Phpcmf\Service::L('input')->get('type'));
         $order = 'inputtime desc';
@@ -132,7 +123,7 @@ class Comment extends \Phpcmf\Common
             'index' => $this->index,
             'catid' => (int)$this->index['catid'],
             'review' => $this->module['comment']['review'],
-            'emotion' => $emotion,
+            'emotion' => dr_comment_emotion(),
             'myfield' => $myfield,
             'comment' => $comment,
             'commnets' => $total,

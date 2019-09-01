@@ -132,6 +132,8 @@ class Upload
         // 保存目录名称
         if (isset($config['save_file']) && $config['save_file']) {
             $file_path = $config['save_file'];
+            $config['save_file'] = dirname($file_path);
+            $config['attachment']['value']['path'] = 'null';
         } else {
             if (isset($config['save_path']) && $config['save_path']) {
                 $path = $config['save_path'];
