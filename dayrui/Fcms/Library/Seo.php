@@ -122,13 +122,24 @@ class Seo
 
                     case 'Radio':
                     case 'Select':
+                    case 'Checkbox':
                         $opt = dr_format_option_array($myfield[$name]['setting']['option']['options']);
-                        isset($opt[$value]) && $opt[$value] && $param_value[] = $opt[$value];
+						$arr = explode('|', $value);
+						if ($arr) {
+							foreach ($arr as $a) {
+								isset($opt[$a]) && $opt[$a] && $param_value[] = $opt[$a];
+							}
+						}
                         break;
 
                     case 'Linkages':
                     case 'Linkage':
-                        $param_value[] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $value, $data['join']);
+						$arr = explode('|', $value);
+						if ($arr) {
+							foreach ($arr as $a) {
+								$param_value[] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
+							}
+						}
                         break;
 
                     default:

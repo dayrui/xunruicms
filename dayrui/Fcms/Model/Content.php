@@ -1286,12 +1286,12 @@ class Content extends \Phpcmf\Model {
         if (!$row['status']) {
             // 变更审核状态
             $this->db->table($this->mytable.'_comment')->where('id', $id)->update(['status' => 1]);
-            // 提醒
-            $row['reply']
-                ? \Phpcmf\Service::M('member')->notice($row['uid'], 2, dr_lang('您的评论被人回复'), $row['url'].'#comment')
-                : \Phpcmf\Service::M('member')->notice($row['cuid'], 2, dr_lang('您收到了新的评论'), $row['url'].'#comment');
         }
 
+        // 提醒
+        $row['reply']
+            ? \Phpcmf\Service::M('member')->notice($row['uid'], 2, dr_lang('您的评论被人回复'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid'])
+            : \Phpcmf\Service::M('member')->notice($row['cuid'], 2, dr_lang('您收到了新的评论'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid']);
 
         // 统计评论总数
         $this->comment_update_total($row);
