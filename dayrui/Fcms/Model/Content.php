@@ -651,9 +651,9 @@ class Content extends \Phpcmf\Model {
                 unset($in['inputtime']);
                 $this->table($this->mytable.'_index')->update($id, $in);
             } else {
-                $rt = $this->table($this->mysharetable.'_index')->insert(['mid' => $this->dirname]);
+                $rt = $this->table($this->mysharetable.'_index')->replace(['mid' => $this->dirname]);
                 $id = $in['id'] = (int)$rt['code'];
-                $this->table($this->mytable.'_index')->insert($in);
+                $this->table($this->mytable.'_index')->replace($in);
             }
         } else {
             // 独立模块
@@ -661,7 +661,7 @@ class Content extends \Phpcmf\Model {
                 unset($in['inputtime']);
                 $this->table($this->mytable.'_index')->update($id, $in);
             } else {
-                $rt = $this->table($this->mytable.'_index')->insert($in);
+                $rt = $this->table($this->mytable.'_index')->replace($in);
                 $id = (int)$rt['code'];
             }
         }

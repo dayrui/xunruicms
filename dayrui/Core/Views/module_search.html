@@ -37,7 +37,14 @@
                             <label class="col-md-2 control-label">{dr_lang('集成栏目页')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[{$i}][catsync]" value="1" {if $m['setting']['search']['catsync']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('开启之后访问栏目页会定向到搜索页面，使栏目模板无效')}</span>
+                                <span class="help-block">{dr_lang('访问栏目页会定向到搜索页面，使栏目模板无效')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_search">
+                            <label class="col-md-2 control-label">{dr_lang('集成模块首页')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][indexsync]" value="1" {if $m['setting']['search']['indexsync']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('访问模块首页会定向到搜索页面，使模块首页模板无效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">

@@ -39,73 +39,80 @@ class Module extends \Phpcmf\Common
         // 共享模块时禁止访问首页
         IS_SHARE && exit($this->goto_404_page(dr_lang('共享模块没有首页功能')));
 
-        // 判断URL重复问题
-        !$html && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix(MODULE_URL, $this->module['dirname']));
+        if ($this->module['setting']['search']['indexsync']) {
+            // 集成搜索
+            return $this->_Search(0);
+        } else {
+            // 判断URL重复问题
+            !$html && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix(MODULE_URL, $this->module['dirname']));
 
-        // 模板变量
-        \Phpcmf\Service::V()->assign([
-            'indexm' => 1,
-            'markid' => 'module-'.$this->module['dirname'],
-        ]);
-        \Phpcmf\Service::V()->assign($this->content_model->_format_home_seo($this->module));
+            // 模板变量
+            \Phpcmf\Service::V()->assign([
+                'indexm' => 1,
+                'markid' => 'module-'.$this->module['dirname'],
+            ]);
+            \Phpcmf\Service::V()->assign($this->content_model->_format_home_seo($this->module));
 
-        // 系统开启静态首页
-        if (!defined('SC_HTML_FILE') && $this->module['setting']['module_index_html']) {
+            // 系统开启静态首页
+            if (!defined('SC_HTML_FILE') && $this->module['setting']['module_index_html']) {
 
-            ob_start();
-            \Phpcmf\Service::V()->display('index.html');
-            $html = ob_get_clean();
+                ob_start();
+                \Phpcmf\Service::V()->display('index.html');
+                $html = ob_get_clean();
 
-            if ($this->module['domain']) {
-                // 绑定域名时
-                $file = 'index.html';
-            } else {
-                $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
-            }
+                if ($this->module['domain']) {
+                    // 绑定域名时
+                    $file = 'index.html';
+                } else {
+                    $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
+                }
 
-            if (!$file) {
-                echo $html;exit;
-            }
+                if (!$file) {
+                    echo $html;exit;
+                }
 
 
-            if (\Phpcmf\Service::IS_PC()) {
-                // 电脑端访问
-                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
-                // 生成移动端
-                if (SITE_IS_MOBILE_HTML) {
+                if (\Phpcmf\Service::IS_PC()) {
+                    // 电脑端访问
+                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
+                    // 生成移动端
+                    if (SITE_IS_MOBILE_HTML) {
+                        ob_start();
+                        \Phpcmf\Service::V()->init('mobile');
+                        \Phpcmf\Service::V()->assign([
+                            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 1) : '', // 修复静态下的当前url变量
+                        ]);
+                        \Phpcmf\Service::V()->display('index.html');
+                        file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), ob_get_clean());
+                    }
+                } else {
+                    // 移动端访问
+                    if (SITE_IS_MOBILE_HTML) {
+                        file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
+                    }
+                    // 生成电脑端
                     ob_start();
-                    \Phpcmf\Service::V()->init('mobile');
+                    \Phpcmf\Service::V()->init('pc');
                     \Phpcmf\Service::V()->assign([
-                        'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 1) : '', // 修复静态下的当前url变量
+                        'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 0) : '', // 修复静态下的当前url变量
                     ]);
                     \Phpcmf\Service::V()->display('index.html');
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), ob_get_clean());
+                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), ob_get_clean());
                 }
+
+                echo $html;
             } else {
-                // 移动端访问
-                if (SITE_IS_MOBILE_HTML) {
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
+
+                if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
+                    // 启用页面缓存
+                    $this->cachePage(SYS_CACHE_PAGE * 3600);
                 }
-                // 生成电脑端
-                ob_start();
-                \Phpcmf\Service::V()->init('pc');
-                \Phpcmf\Service::V()->assign([
-                    'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 0) : '', // 修复静态下的当前url变量
-                ]);
+
                 \Phpcmf\Service::V()->display('index.html');
-                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), ob_get_clean());
             }
-
-            echo $html;
-        } else {
-
-            if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                // 启用页面缓存
-                $this->cachePage(SYS_CACHE_PAGE * 3600);
-            }
-
-            \Phpcmf\Service::V()->display('index.html');
         }
+
+
     }
 
     // 模块打赏
@@ -855,8 +862,9 @@ class Module extends \Phpcmf\Common
 
         if (!$this->module['setting']['module_index_html']) {
             $this->_json(0, '当前模块未开启首页静态功能');
+        } elseif ($this->module['setting']['search']['indexsync']) {
+            $this->_json(0, '当前模块设置了集成搜索页，无法生成静态');
         }
-
 
         $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
         if ($this->module['domain']) {

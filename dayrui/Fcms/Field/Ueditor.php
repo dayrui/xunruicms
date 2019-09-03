@@ -429,7 +429,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 编辑器工具
         switch ($mode) {
             case 3: // 自定义
-                $tool.= $field['setting']['option']['tool'];
+                $tool.= trim($field['setting']['option']['tool'], ',').$pagebreak;
                 break;
             case 2: // 精简
                 $tool.= "'undo', 'redo', '|',

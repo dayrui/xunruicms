@@ -486,7 +486,8 @@ class Auth extends \Phpcmf\Model {
                 $_select = 1;
             }
             // 生成链接
-            $_link .= '<li class="' . $_li_class . '"> <a ' . $_attr . ' href="' . $url . '" class="' . $class . '">' . ($t[1] ? '<i class="' . $t[1] . '"></i> ' : '') . dr_lang($name) . '</a> <i class="fa fa-circle"></i> </li>';
+            $name = !\Phpcmf\Service::C()->_is_mobile() ? dr_lang($name) : dr_strcut(dr_lang($name), 4, '');
+            $_link .= '<li class="' . $_li_class . '"> <a ' . $_attr . ' href="' . $url . '" class="' . $class . '">' . ($t[1] ? '<i class="' . $t[1] . '"></i> ' : '') . $name . '</a> <i class="fa fa-circle"></i> </li>';
             $_i++;
         }
 
@@ -551,7 +552,7 @@ class Auth extends \Phpcmf\Model {
         // 非内容页面就显示返回链接
         if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
             && $this->_is_admin_auth($module['dirname'].'/home/index') ) {
-            $menu.= '<li> <a href="'.\Phpcmf\Service::L('Router')->get_back($module['dirname'].'/home/index').'" class=""> <i class="fa fa-reply"></i> '.dr_lang('%s管理', $module['cname']).'</a> <i class="fa fa-circle"></i> </li>';
+            $menu.= '<li> <a href="'.\Phpcmf\Service::L('Router')->get_back($module['dirname'].'/home/index').'" class=""> <i class="fa fa-reply"></i> '.dr_lang('返回').'</a> <i class="fa fa-circle"></i> </li>';
         }
 
         // 发布和编辑权限
