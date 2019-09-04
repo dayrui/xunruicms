@@ -39,7 +39,7 @@ class Form
     public function get_myfields() {
         return $this->myfields;
     }
-    
+
     // 获取表单临时存储数据
     public function auto_form_data($name, $data) {
         // 默认数据
@@ -50,7 +50,7 @@ class Form
         $dt['is_form_cache'] = 1;
         return $data ? $dt + $data : $dt;
     }
-    
+
     // 删除表单临时存储数据
     public function auto_form_data_delete($name) {
         \Phpcmf\Service::L('cache')->init('file')->delete($name);
@@ -149,7 +149,7 @@ class Form
                 }
             }
         }
-        
+
         // 自定义字段验证
         if ($fields) {
             $post = [];
@@ -160,9 +160,9 @@ class Form
                 $obj = \Phpcmf\Service::L('Field')->get($field['fieldtype']);
                 if (!$obj) {
                     continue; // 对象不存在
-                //} else if (IS_MEMBER && !$field['ismember']) {
+                    //} else if (IS_MEMBER && !$field['ismember']) {
                     //continue; // 前端字段筛选
-                } else if (IS_MEMBER && $field['setting']['validate']['isedit'] && $this->id) {
+                } else if (IS_MEMBER && $field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']]) {
                     if (defined('IS_MODULE_VERIFY')) {
 
                     } else {
@@ -266,7 +266,7 @@ class Form
 
             // 存储附件id
             $attach['add'] = $attach['del'] = [];
-            
+
             // 主表附表归类
             foreach ($fields as $field) {
                 // 验证字段对象的有效性
@@ -419,7 +419,7 @@ class Form
      * @return  flase不通过 , true通过
      */
     public function check_member($value) {
-        
+
         if (!$value) {
             return dr_return_data(0, dr_lang('账号不能为空'));
         } elseif (!\Phpcmf\Service::M('member')->uid($value)) {

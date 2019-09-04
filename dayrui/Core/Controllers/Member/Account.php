@@ -58,7 +58,7 @@ class Account extends \Phpcmf\Common
             } elseif (strlen($post['name']) > 20) {
                 $this->_json(0, dr_lang('姓名太长了'), ['field' => 'name']);
             }
-            list($data, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, null, $field, $this->member);
+            list($data, $return, $attach) = \Phpcmf\Service::L('form')->id($this->uid)->validation($post, null, $field, $this->member);
             // 输出错误
             $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
             \Phpcmf\Service::M()->table('member')->update($this->uid, [

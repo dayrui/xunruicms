@@ -100,7 +100,7 @@
                             </div>
                             <div class="actions">
                                 <div class="btn-group">
-                                    <a href="{Router::search_url($params, 'order', null)}" class="btn btn-default {if !$params.order || $param.order=='updatetime'}active{/if}"> <i class="fa fa-clock-o"></i> 时间排序 </a>
+                                    <a href="{Router::search_url($params, 'order', null)}" class="btn btn-default {if !$params.order || $params.order=='updatetime'}active{/if}"> <i class="fa fa-clock-o"></i> 时间排序 </a>
                                     <a href="{Router::search_url($params, 'order', 'hits')}" class="btn btn-default {if $params.order=='hits'}active{/if}"> <i class="fa fa-eye"></i> 点击排序 </a>
                                     <a href="{Router::search_url($params, 'order', 'comments')}" class="btn btn-default {if $params.order=='comments'}active{/if}"> <i class="fa fa-comments-o"></i> 评论排序 </a>
                                     <a href="{Router::search_url($params, 'order', 'avgsort')}" class="btn btn-default {if $params.order=='avgsort'}active{/if}"> <i class="fa fa-diamond"></i> 评分排序 </a>
