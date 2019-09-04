@@ -309,16 +309,18 @@ function dr_star_level($num, $shifen = 0) {
 /**
  * 301域名定位
  */
-function dr_domain_301($domain, $uri = '') {
+if (!function_exists('dr_domain_301')) {
+    function dr_domain_301($domain, $uri = '') {
 
-    !$uri && $uri = (isset($_SERVER['HTTP_X_REWRITE_URL']) && trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : ''));
+        !$uri && $uri = (isset($_SERVER['HTTP_X_REWRITE_URL']) && trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : ''));
 
-    $url = rtrim($domain, '/').'/'.$uri;
-    if (CI_DEBUG) {
-        \Phpcmf\Service::C()->_admin_msg(1, '正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
+        $url = rtrim($domain, '/').'/'.$uri;
+        if (IS_DEV) {
+            \Phpcmf\Service::C()->_admin_msg(1, '正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
+        }
+
+        dr_redirect($url, 'auto', 301);exit;
     }
-
-    dr_redirect($url, 'auto', 301);exit;
 }
 
 /**

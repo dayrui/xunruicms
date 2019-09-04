@@ -137,22 +137,14 @@ abstract class Common extends \CodeIgniter\Controller
                     // 这是移动端
                     if (isset($client[DOMAIN_NAME])) {
                         // 表示这个域名属于电脑端,需要跳转到移动端
-                        if (IS_DEV) {
-                            $this->_admin_msg(1, dr_lang('当前终端属于移动端，正在自动跳转到移动端网页'), dr_http_prefix($client[DOMAIN_NAME].'/'));
-                        } else {
-                            dr_domain_301(dr_http_prefix($client[DOMAIN_NAME].'/'));
-                        }
+                        dr_domain_301(dr_http_prefix($client[DOMAIN_NAME].'/'));
                     }
                 } else {
                     // 这是电脑端
                     if (in_array(DOMAIN_NAME, $client)) {
                         // 表示这个域名属于移动端,需要跳转到pc
-                        if (IS_DEV) {
-                            $arr = array_flip($client);
-                            $this->_admin_msg(1, dr_lang('当前终端属于电脑端，正在自动跳转到电脑端网页'), dr_http_prefix($arr[DOMAIN_NAME].'/'));
-                        } else {
-                            dr_domain_301($this->site_info[SITE_ID]['SITE_URL']);
-                        }
+                        $arr = array_flip($client);
+                        dr_domain_301(dr_http_prefix($arr[DOMAIN_NAME].'/'));
                     }
                 }
             }
