@@ -295,30 +295,68 @@ class Content extends \Phpcmf\Common
     // 执行sql
     protected function _Sql() {
 
-        $sql = \Phpcmf\Service::L('input')->post('sql');
-        if (preg_match('/select(.*)into outfile(.*)/i', $sql)) {
-            $this->_json(0, dr_lang('存在非法select'));
-        } elseif (preg_match('/select(.*)into dumpfile(.*)/i', $sql)) {
-            $this->_json(0, dr_lang('存在非法select'));
-        } elseif (stripos($sql, 'select ') === 0) {
-            // 查询语句
-            $db = \Phpcmf\Service::M()->db->query($sql);
-            !$db && $this->_json(0, dr_lang('查询出错'));
-            $rt = $db->getResultArray();
-            $rt && $this->_json(1, var_export($rt, true));
-            $rt = \Phpcmf\Service::M()->db->error();
-            \Phpcmf\Service::L('File')->add_sql_cache($sql);
-            $this->_json(0, $rt['message']);
-        } else {
-            // 执行语句
-            $rt = \Phpcmf\Service::M('Table')->_query($sql);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
-            list($count, $sqls) = $rt['data'];
-            foreach ($sqls as $sql) {
-                \Phpcmf\Service::L('File')->add_sql_cache($sql);
+        $msg = '';
+        $sqls = trim(\Phpcmf\Service::L('input')->post('sql'));
+        $replace = [];
+        $replace[0][] = '{dbprefix}';
+        $replace[1][] = \Phpcmf\Service::M()->db->DBPrefix;
+        $sql_data = explode(';SQL_FINECMS_EOL', trim(str_replace(array(PHP_EOL, chr(13), chr(10)), 'SQL_FINECMS_EOL', str_replace($replace[0], $replace[1], $sqls))));
+        if ($sql_data) {
+            foreach($sql_data as $query){
+                if (!$query) {
+                    continue;
+                }
+                $ret = '';
+                $queries = explode('SQL_FINECMS_EOL', trim($query));
+                foreach($queries as $query) {
+                    $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query;
+                }
+                $sql = trim($ret);
+                if (!$sql) {
+                    continue;
+                }
+                $ck = 0;
+                foreach (['select', 'create', 'drop', 'alter', 'insert', 'replace', 'update', 'delete'] as $key) {
+                    if (strpos(strtolower($sql), $key) === 0) {
+                        $ck = 1;
+                        break;
+                    }
+                }
+                if (!$ck) {
+                    $this->_json(0, dr_lang('存在不允许执行的SQL语句：%s', dr_strcut($sql, 20)));
+                }
+                if (preg_match('/select(.*)into outfile(.*)/i', $sql)) {
+                    $this->_json(0, dr_lang('存在非法select'));
+                } elseif (preg_match('/select(.*)into dumpfile(.*)/i', $sql)) {
+                    $this->_json(0, dr_lang('存在非法select'));
+                } elseif (strpos(strtolower($sql), '.php') !== false) {
+                    $this->_json(0, dr_lang('存在非法SQL语句'));
+                } elseif (stripos($sql, 'select') === 0) {
+                    // 查询语句
+                    $db = \Phpcmf\Service::M()->db->query($sql);
+                    !$db && $this->_json(0, dr_lang('查询出错'));
+                    $rt = $db->getResultArray();
+                    if ($rt) {
+                        $msg.= var_export($rt, true);
+                    } else {
+                        $rt = \Phpcmf\Service::M()->db->error();
+                        \Phpcmf\Service::L('File')->add_sql_cache($sql);
+                        $this->_json(0, $rt['message']);
+                    }
+                } else {
+                    // 执行语句
+                    $db = \Phpcmf\Service::M()->db->query($sql);
+                    if (!$db) {
+                        $rt = \Phpcmf\Service::M()->db->error();
+                        $this->_json(0, '查询错误：'.$rt['message']);
+                    }
+                }
             }
-            $this->_json(1, dr_lang('本次执行%s条语句', $count));
+            $this->_json(1, $msg ? $msg : dr_lang('执行完成'));
+        } else {
+            $this->_json(0, dr_lang('不存在的SQL语句'));
         }
+
     }
 
 }

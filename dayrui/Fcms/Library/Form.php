@@ -32,7 +32,7 @@ class Form
 
     // 初始化
     public function id($id) {
-        $this->id = $id;
+        $this->id = (int)$id;
         return $this;
     }
 
