@@ -253,6 +253,7 @@ class Cloud extends \Phpcmf\Common
         }
         unlink($file);
 
+		$is_app = 0;
         // 查询插件目录
         if (is_dir($cmspath.'APPSPATH/')) {
             $p = dr_dir_map($cmspath.'APPSPATH/', 1);
@@ -261,6 +262,7 @@ class Cloud extends \Phpcmf\Common
                     if (is_file($cmspath.'APPSPATH/'.$name.'/install.lock')) {
                         unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
                     }
+					$is_app = strtolower($name);
                     break;
                 }
             }
@@ -296,7 +298,14 @@ class Cloud extends \Phpcmf\Common
         }
 
         dr_dir_delete($cmspath, 1);
-        $this->_json(1, '程序导入完成<br>1、如果本程序是应用插件：请到【应用】-【应用管理】中手动安装本程序<br>2、如果本程序是组件：请按本组件的使用教程来操作；<br>3、如果本程序是模板：请按本模板使用教程来操作');
+		
+		if ($is_app) {
+			$msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
+		} else {
+			$msg = '程序导入完成<br>请按本商品的使用教程来操作';
+		}
+		
+        $this->_json(1, $msg);
     }
 
     // 程序升级
