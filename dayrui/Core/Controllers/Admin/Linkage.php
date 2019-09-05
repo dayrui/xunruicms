@@ -53,7 +53,7 @@ class Linkage extends \Phpcmf\Common
 	public function add() {
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
+			$data = \Phpcmf\Service::L('input')->post('data', true);
 			$this->_validation(0, $data);
 			\Phpcmf\Service::L('input')->system_log('创建联动菜单('.$data['name'].')');
 			$rt = \Phpcmf\Service::M('Linkage')->create($data);
@@ -269,7 +269,7 @@ class Linkage extends \Phpcmf\Common
 		!$link && $this->_admin_msg(0, dr_lang('联动菜单不存在'));
 		
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
+			$data = \Phpcmf\Service::L('input')->post('data', true);
 			$rt = \Phpcmf\Service::M('Linkage')->add_list($key, $data);
 			!$rt['code'] && $this->_json(0, $rt['msg']);
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存

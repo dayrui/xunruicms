@@ -127,7 +127,7 @@ class Input
 
         if (!$insert) {
             // 是否开启日志
-            if (!SYS_LOG || !IS_ADMIN) {
+            if (!SYS_ADMIN_LOG || !IS_ADMIN) {
                 return NULL;
             }
         }
@@ -136,7 +136,7 @@ class Input
             'ip' => $this->ip_address(),
             'uid' => (int)\Phpcmf\Service::C()->admin['uid'],
             'time' => SYS_TIME,
-            'action' => addslashes($action),
+            'action' => addslashes(dr_safe_replace($action)),
             'username' => \Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录',
         );
 
