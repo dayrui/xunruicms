@@ -34,5 +34,12 @@ define('FCPATH', dirname(__FILE__).'/dayrui/');
 // 显示错误提示
 IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT) : error_reporting(0);
 
+// 自动进入安装界面监测代码 
+if (!is_file(WRITEPATH.'install.lock')) {
+	require WEBPATH.'install.php';
+	exit;
+}
+
+
 // 执行主程序
 require FCPATH.'Fcms/Init.php';
