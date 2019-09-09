@@ -294,6 +294,24 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_msg(0, $this->get_cache('site', SITE_ID, 'config', 'SITE_CLOSE_MSG'));
         }
 
+        // 站群系统接入
+        if (is_file(ROOTPATH.'api/fclient/sync.php')) {
+            $sync = require ROOTPATH.'api/fclient/sync.php';
+            if ($sync['status'] == 4) {
+                if ($sync['close_url']) {
+                    dr_redirect($sync['close_url']);
+                } else {
+                    $this->_msg(0, '网站被关闭');
+                }
+            } elseif ($sync['status'] == 3 || ($sync['endtime'] && SYS_TIME > $sync['endtime'])) {
+                if ($sync['pay_url']) {
+                    dr_redirect($sync['pay_url']);
+                } else {
+                    $this->_msg(0, '网站已过期');
+                }
+            }
+        }
+
         if (IS_ADMIN) {
             // 开启session
             $this->session();

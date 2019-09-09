@@ -69,7 +69,14 @@ class Site_domain extends \Phpcmf\Common
 
     public function edit() {
 
+        $is_fclient = is_file(ROOTPATH.'api/fclient/index.php');
+
         if (IS_POST) {
+
+            if ($is_fclient) {
+                exit($this->_json(0, dr_lang('当前网站不能修改主域名')));
+            }
+
             $domain = trim(\Phpcmf\Service::L('input')->post('domain', true));
             if (!$domain) {
                 exit($this->_json(0, dr_lang('域名不能为空')));
@@ -82,6 +89,7 @@ class Site_domain extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
+            'is_fclient' => $is_fclient,
         ]);
         \Phpcmf\Service::V()->display('site_domain_edit.html');exit;
     }

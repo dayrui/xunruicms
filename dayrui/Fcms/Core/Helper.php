@@ -809,7 +809,10 @@ function dr_fieldform($field, $value = '', $remove_div  = 1) {
 
     if (!$field) {
         return '字段数据不存在';
-    } elseif (!$field['fieldtype']) {
+    }
+
+    $field = dr_string2array($field);
+    if (!$field['fieldtype']) {
         return '字段类别不存在';
     }
 

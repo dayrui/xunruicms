@@ -36,8 +36,8 @@ class Site extends \Phpcmf\Model
         }
 
         $site['setting'] = dr_string2array($site['setting']);
-        !$site['setting']['config']['SITE_NAME'] && $site['setting']['config']['SITE_NAME'] = $site['name'];
-        !$site['setting']['config']['SITE_DOMAIN'] && $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
+        $site['setting']['config']['SITE_NAME'] = $site['name'];
+        $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
 
         if ($name && $data) {
             // 更新数据
@@ -64,8 +64,8 @@ class Site extends \Phpcmf\Model
         }
 
         $site['setting'] = dr_string2array($site['setting']);
-        !$site['setting']['config']['SITE_NAME'] && $site['setting']['config']['SITE_NAME'] = $site['name'];
-        !$site['setting']['config']['SITE_DOMAIN'] && $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
+        $site['setting']['config']['SITE_NAME'] = $site['name'];
+        $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
 
         // 更新数据
         $data['SITE_NAME'] && $site['name'] = $data['SITE_NAME'];

@@ -4,10 +4,13 @@
     {$form}
     <div class="form-body">
 
+        {if $is_fclient}
+        {dr_lang('当前站点不能修改主域名，请到官方网站上修改主域名再进行数据通信操作')}
+        {else}
         <div class="form-group">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('新域名')}</label>
             <div class="col-xs-7">
-                <input type="text" id="dr_domain" class="form-control" name="domain">
+                <input type="text" id="dr_domain"  class="form-control" name="domain">
             </div>
         </div>
 
@@ -20,6 +23,7 @@
                 <p class="form-control-static" style="color: red"> {dr_lang('编辑器中的旧域名需要手动替换新域名')} </p>
             </div>
         </div>
+        {/if}
 
     </div>
 </form>
