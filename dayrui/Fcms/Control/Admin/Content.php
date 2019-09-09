@@ -62,7 +62,7 @@ class Content extends \Phpcmf\Common
     protected function _Url() {
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-        $psize = 100; // 每页处理的数量
+        $psize = 500; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
 
         // 计算数量
@@ -104,7 +104,7 @@ class Content extends \Phpcmf\Common
     protected function _Tag() {
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-        $psize = 100; // 每页处理的数量
+        $psize = 500; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
         $table = $this->content_model->mytable;
 
@@ -162,7 +162,7 @@ class Content extends \Phpcmf\Common
     protected function _Thumb() {
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-        $psize = 100; // 每页处理的数量
+        $psize = 500; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
         $table = $this->content_model->mytable;
 

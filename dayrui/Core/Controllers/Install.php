@@ -153,11 +153,9 @@ class Install extends \Phpcmf\Common
                     $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
                     if (!$mysqli) {
                         exit($this->_json(0, '您的PHP环境必须启用Mysqli扩展'));
-                    }
-                    if (!@mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
+                    } elseif (!@mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
                         exit($this->_json(0, '[mysqli_real_connect] 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
-                    }
-                    if (!@mysqli_select_db($mysqli, $data['db_name'])) {
+                    } elseif (!@mysqli_select_db($mysqli, $data['db_name'])) {
                         if (!@mysqli_query($mysqli, 'CREATE DATABASE '.$data['db_name'])) {
                             exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库'));
                         }
@@ -280,9 +278,18 @@ $db[\'default\']	= [
                                 'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
                                 'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
                                 'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-                                'SYS_EMAIL' => $data['email'],
+                                'SYS_EMAIL'                     => $data['email'],
                             ];
                             \Phpcmf\Service::M('System')->save_config($sys, $sys);
+
+                            // 删除app的install.lock
+                            $local = dr_dir_map(dr_get_app_list(), 1);
+                            foreach ($local as $dir) {
+                                $path = dr_get_app_dir($dir);
+                                if (is_file($path.'install.lock')) {
+                                    @unlink($path.'install.lock');
+                                }
+                            }
 
                             // 执行安装程序
                             $sql = file_get_contents(MYPATH.'Config/Install.sql');
@@ -295,18 +302,10 @@ $db[\'default\']	= [
                             if (is_file(MYPATH.'Config/Install.php')) {
                                 require MYPATH.'Config/Install.php';
                             }
+                            
                             // 创建后台默认菜单
                             \Phpcmf\Service::M('Menu')->init('admin');
                             \Phpcmf\Service::M('Menu')->init('member');
-
-                            // 删除app的install.lock
-                            $local = dr_dir_map(dr_get_app_list(), 1);
-                            foreach ($local as $dir) {
-                                $path = dr_get_app_dir($dir);
-                                if (is_file($path.'install.lock')) {
-                                    @unlink($path.'install.lock');
-                                }
-                            }
 
                             // 完成之后更新缓存
                             \Phpcmf\Service::M('cache')->update_cache();
