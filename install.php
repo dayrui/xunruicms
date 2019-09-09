@@ -13,7 +13,7 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
 
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
-    echo "<font color=red>本程序必须在域名根目录中安装</font>";exit;
+    echo "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：http://help.xunruicms.com/741.html";exit;
 }
 
 define('WEBPATH', dirname(__FILE__).'/');
