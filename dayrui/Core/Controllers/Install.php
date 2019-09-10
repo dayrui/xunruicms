@@ -302,7 +302,7 @@ $db[\'default\']	= [
                             if (is_file(MYPATH.'Config/Install.php')) {
                                 require MYPATH.'Config/Install.php';
                             }
-                            
+
                             // 创建后台默认菜单
                             \Phpcmf\Service::M('Menu')->init('admin');
                             \Phpcmf\Service::M('Menu')->init('member');

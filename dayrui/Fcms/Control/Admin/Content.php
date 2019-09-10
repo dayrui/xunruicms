@@ -330,6 +330,8 @@ class Content extends \Phpcmf\Common
                 } elseif (preg_match('/select(.*)into dumpfile(.*)/i', $sql)) {
                     $this->_json(0, dr_lang('存在非法select'));
                 } elseif (strpos(strtolower($sql), '.php') !== false) {
+                    $this->_json(0, dr_lang('存在非法SQL'));
+                } elseif (strpos(strtolower($sql), 'union') !== false) {
                     $this->_json(0, dr_lang('存在非法SQL语句'));
                 } elseif (stripos($sql, 'select') === 0) {
                     // 查询语句
