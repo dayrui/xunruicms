@@ -169,6 +169,7 @@ class Cloud extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '本地应用' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-puzzle-piece'],
+                    '应用市场' => [\Phpcmf\Service::L('Router')->class.'/app', 'fa fa-cloud'],
                     'help' => [574],
                 ]
             ),
