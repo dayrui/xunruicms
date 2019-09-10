@@ -49,7 +49,6 @@ class Content extends \Phpcmf\Model {
     // 保存内容
     public function save($id, $data, $old = []) {
 
-
         $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
 
         // 二次开发函数
@@ -188,11 +187,9 @@ class Content extends \Phpcmf\Model {
             $tid = intval($old['tableid']);
         } else {
             // 新增数据
-            $main['hits'] = 0;
-            $main['tableid'] = 0;
-            $main['comments'] = 0;
-            $main['avgsort'] = 0;
-            $main['displayorder'] = 0;
+            $main['hits'] = (int)$main['hits'];
+            $main['tableid'] =  $main['comments'] = $main['avgsort'] = 0;
+            $main['displayorder'] = (int)$main['displayorder'];
             $rt = $this->table($this->mytable)->replace($main);
             if (!$rt['code']) {
                 // 删除索引
