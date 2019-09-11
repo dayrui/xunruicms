@@ -82,7 +82,7 @@ class Site_config extends \Phpcmf\Common
 			'is_theme' => strpos($data['config']['SITE_THEME'], '/') !== false ? 1 : 0,
             'logofield' => dr_fieldform($field['logo'], $data['config']['logo']),
 			'template_path' => dr_dir_map(TPLPATH.'pc/', 1),
-			'my_site_info' => is_file(MYPATH.'Views/site_info.html') ? MYPATH.'Views/site_info.html' : '',
+			'my_site_info' => is_file(MYPATH.'View/site_info.html') ? MYPATH.'View/site_info.html' : '',
 		]);
 		\Phpcmf\Service::V()->display('site_config.html');
 	}
