@@ -356,8 +356,9 @@ class Table extends \Phpcmf\Common
         }
 
         // 默认获取表单自动存储的数据
-        defined('SYS_AUTO_FORM') && SYS_AUTO_FORM
-        && !$id && $this->auto_save && $data = \Phpcmf\Service::L('Form')->auto_form_data($name, $data);
+        if (defined('SYS_AUTO_FORM') && SYS_AUTO_FORM && !$id && $this->auto_save) {
+			$data = \Phpcmf\Service::L('Form')->auto_form_data($name, $data);
+		}
 
         // 当存在草稿时系统默认加载草稿数据
         $draft && $data = $draft;
@@ -379,7 +380,9 @@ class Table extends \Phpcmf\Common
         $data['catfield'] = \Phpcmf\Service::L('Field')->toform($id, $cat_field, $mydata);
 
         // 动态实时存储表单值
-        !$id && $this->auto_save && $data['auto_form_data_ajax'] = \Phpcmf\Service::L('Form')->auto_form_data_ajax($name);
+        if (defined('SYS_AUTO_FORM') && SYS_AUTO_FORM && !$id && $this->auto_save) {
+			$data['auto_form_data_ajax'] = \Phpcmf\Service::L('Form')->auto_form_data_ajax($name);
+		}
 
         // 表单隐藏域
         $data['form'] = dr_form_hidden([
