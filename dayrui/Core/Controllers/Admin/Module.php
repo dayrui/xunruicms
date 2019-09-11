@@ -210,63 +210,6 @@ class Module extends \Phpcmf\Common
         // 判断站点
         !$data['site'][SITE_ID] && $this->_admin_msg(0, dr_lang('当前站点尚未安装'));
 
-        // 默认显示字段
-        !$data['setting']['list_field'] && $data['setting']['list_field'] = [
-            'title' => [
-                'use' => 1,
-                'name' => dr_lang('主题'),
-                'func' => 'title',
-                'width' => 0,
-                'order' => 1,
-            ],
-            'catid' => [
-                'use' => 1,
-                'name' => dr_lang('栏目'),
-                'func' => 'catid',
-                'width' => 120,
-                'order' => 2,
-            ],
-            'author' => [
-                'use' => 1,
-                'name' => dr_lang('作者'),
-                'func' => 'author',
-                'width' => 100,
-                'order' => 3,
-            ],
-            'updatetime' => [
-                'use' => 1,
-                'name' => dr_lang('更新时间'),
-                'func' => 'datetime',
-                'width' => 160,
-                'order' => 4,
-            ],
-        ];
-        // 默认显示字段
-        !$data['setting']['comment_list_field'] && $data['setting']['comment_list_field'] = [
-            'content' => [
-                'use' => 1,
-                'name' => dr_lang('评论'),
-                'func' => 'comment',
-                'width' => 0,
-                'order' => 1,
-            ],
-            'author' => [
-                'use' => 1,
-                'name' => dr_lang('作者'),
-                'func' => 'author',
-                'width' => 100,
-                'order' => 3,
-            ],
-            'inputtime' => [
-                'use' => 1,
-                'name' => dr_lang('评论时间'),
-                'func' => 'datetime',
-                'width' => 160,
-                'order' => 4,
-            ],
-        ];
-
-
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', true);
             $rt = \Phpcmf\Service::M('Module')->config($data, $post);
