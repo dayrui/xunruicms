@@ -245,6 +245,8 @@ class Cloud extends \Phpcmf\Common
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (!is_file($file)) {
             $this->_json(0, '本站：文件还没有被下载');
+        } elseif (!class_exists('ZipArchive')) {
+            $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能');
         }
 
         // 解压目录

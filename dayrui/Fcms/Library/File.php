@@ -125,6 +125,10 @@ class File {
     // zip解压
     public function unzip($zipfile, $path = '') {
 
+        if (!class_exists('ZipArchive')) {
+            return 0;
+        }
+
         !$path && $path = dirname($zipfile); // 当前目录
 
         $zip = new \ZipArchive;//新建一个ZipArchive的对象
