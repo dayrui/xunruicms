@@ -38,7 +38,13 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" id="dr_domain" type="text" name="data[domain]" value="{$data['domain']}"></label>
+
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{$data['domain']}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn red" href="javascript:dr_help(506);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
+                                    </span>
+                                </div>
                                 <span class="help-block">{dr_lang('格式：m.test.com，不能包含/符号')}</span>
                             </div>
                         </div>

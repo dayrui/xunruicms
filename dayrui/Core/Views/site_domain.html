@@ -79,6 +79,7 @@
                 <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body form">
 
+
                         {loop $module $dir $t}
                         {if !$t.share}
                         <div class="form-group">
@@ -87,7 +88,12 @@
                                 {if $t.error}
                                 <span class="help-block" style="color:#ed6b75;margin-top:7px;">{$t.error}</span>
                                 {else}
-                                <label><input class="form-control input-large" type="text" name="data[module_{$dir}]" value="{$data['module_'.$dir]}"></label>
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" name="data[module_{$dir}]" value="{$data['module_'.$dir]}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
+                                    </span>
+                                </div>
                                 {/if}
                             </div>
                         </div>
@@ -97,7 +103,12 @@
                                 {if $t.error}
                                 <span class="help-block" style="color:#ed6b75;margin-top:7px;">{$t.error}</span>
                                 {else}
-                                <label><input class="form-control input-large" type="text" name="data[module_mobile_{$dir}]" value="{$data['module_mobile_'.$dir]}"></label>
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" name="data[module_mobile_{$dir}]" value="{$data['module_mobile_'.$dir]}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
+                                    </span>
+                                </div>
                                 <span class="help-block">{dr_lang('如果本站绑定了手机域名，这里必须要绑定域名')}</span>
                                 {/if}
                             </div>
