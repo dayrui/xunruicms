@@ -85,20 +85,24 @@ class Search extends \Phpcmf\Model {
                 !isset($mod_field[$i]) && $mod_field[$i] = ['ismain' => 1];
             }
 
-            // 搜索关键字条件
-            $where = [];
-            $where[] = '`'.$table.'`.`status` = 9';
+            // 默认搜索条件
+            $where = [
+				'`'.$table.'`.`status` = 9'
+			];
 
             // 关键字匹配条件
             if ($param['keyword'] != '') {
-                $sfield = explode(',', $module['setting']['search']['field'] ? $module['setting']['search']['field'] : 'title,keywords');
-                !$sfield && $sfield = 'title,keywords';
                 $temp = [];
+                $sfield = explode(',', $module['setting']['search']['field'] ? $module['setting']['search']['field'] : 'title,keywords');
                 $search_keyword = trim(str_replace([' ', '_'], '%', dr_safe_replace($param['keyword'])), '%');
-                foreach ($sfield as $t) {
-                    $t && $temp[] = '`'.$table.'`.`'.trim($t).'` LIKE "%'.$search_keyword.'%"';
+                if ($sfield) {
+					foreach ($sfield as $t) {
+						if ($t && in_array($t, $field)) {
+							$temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
+						}
+					}
                 }
-                $temp && $where[] = '('.implode(' OR ', $temp).')';
+                $where[] = $temp ? '('.implode(' OR ', $temp).')' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"';
             }
             // 字段过滤
             foreach ($mod_field as $name => $field) {
@@ -121,7 +125,6 @@ class Search extends \Phpcmf\Model {
             if ($catid) {
                 $more = 0;
                 $cat_field = $module['category'][$catid]['field'];
-
                 // 副栏目判断
                 if (isset($module['field']['catids']) && $module['field']['catids']['fieldtype'] = 'Catids') {
                     $fwhere = [];
@@ -160,7 +163,7 @@ class Search extends \Phpcmf\Model {
 
             // 筛选空值
             foreach ($where as $i => $t) {
-                if (!$t) {
+                if (strlen($t) == 0) {
                     unset($where[$i]);
                 }
             }
@@ -168,7 +171,6 @@ class Search extends \Phpcmf\Model {
 
             // 自定义组合查询
             $where = $this->mysearch($module, $where, $get);
-
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
 
             // 最大数据量
