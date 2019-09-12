@@ -39,8 +39,9 @@ class Install extends \Phpcmf\Common
     {
         parent::__construct(...$params);
         $this->lock = WRITEPATH.'install.lock';
-        is_file($this->lock) && exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');
-        if (version_compare(PHP_VERSION, '7.1.0') < 0) {
+        if (is_file($this->lock)) {
+            exit('安装程序已经被锁定，重新安装请删除：WRITEPATH/install.lock');
+        } elseif (version_compare(PHP_VERSION, '7.2.0') < 0) {
             echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
         } elseif ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
             echo "<font color=red>请先关闭HTTPS，安装后再开启HTTPS</font>";exit;
