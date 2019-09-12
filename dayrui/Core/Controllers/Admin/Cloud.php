@@ -325,7 +325,8 @@ class Cloud extends \Phpcmf\Common
             if (is_file(APPSPATH.$dir.'/Config/App.php')) {
                 $key = strtolower($dir);
                 $cfg = require APPSPATH.$dir.'/Config/App.php';
-                if ($cfg['type'] != 'module' && is_file(APPSPATH.$dir.'/Config/Version.php')) {
+                if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
+                    && is_file(APPSPATH.$dir.'/Config/Version.php')) {
                     $vsn = require APPSPATH.$dir.'/Config/Version.php';
                     $vsn['id'] && $data[$key] = [
                         'id' => $cfg['type'].'-'.$vsn['id'],
