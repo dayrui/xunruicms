@@ -94,6 +94,7 @@ class Mform extends \Phpcmf\Table
             'field' => $this->init['field'],
             'form_url' => dr_member_url(APP_DIR.'/'.$this->form['table'].'/index', ['cid' =>  $this->cid]),
             'is_verify' => $this->is_verify,
+            'is_post_code' => $this->is_post_code,
         ]);
     }
 
