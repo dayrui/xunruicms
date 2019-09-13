@@ -103,6 +103,17 @@
                                         {/loop}
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 control-label">复选字段-多条件</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.fuxuankuang}label-success{else}label-default{/if}" href="{Router::search_url($params, 'fuxuankuang', NULL)}">不限</a></label>
+                                        <!--调用单选字段数据方法-->
+                                        {php $field = dr_field_options($ci->module['field']['fuxuankuang']['id']);}
+                                        {loop $field $value $name}
+                                        <label><a class="label {if dr_is_double_search($params.fuxuankuang, $value)}label-success{else}label-default{/if}" href="{Router::search_url($params, 'fuxuankuang', dr_get_double_search($params.fuxuankuang, $value))}">{$name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
 
 
                                 <!--复选字段搜索-->
@@ -248,7 +259,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                {/search}
+                                {/search} {$search_sql}
                             </ul>
                             {if !$count}
                             <div class="row fc-search-null">
