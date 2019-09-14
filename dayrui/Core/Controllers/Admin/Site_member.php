@@ -104,7 +104,6 @@ class Site_member extends \Phpcmf\Common
 
 				
 				case 'form':
-                    $this->auth[SITE_ID][$at] = [];
                     foreach ($id as $fid => $t) {
                         $this->auth[SITE_ID][$at][$fid] = [
                             'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
@@ -154,7 +153,7 @@ class Site_member extends \Phpcmf\Common
 
             $t = \Phpcmf\Service::L('input')->post('data');
             $at = 'form';
-            if (isset($this->auth[SITE_ID][$at])) {
+            if (!isset($this->auth[SITE_ID][$at])) {
                 $this->auth[SITE_ID][$at] = [];
             }
             $this->auth[SITE_ID][$at][$table] = [

@@ -1919,13 +1919,18 @@ class View {
                 switch ($t['adj']) {
 
                     case 'JSON':
-                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                            // 兼容写法
-                            $string.= $join. " {$t['name']}  LIKE \"%\"".\Phpcmf\Service::M()->db->escapeString($t['value'], true)."\"%\"";
-                        } else {
-                            // 高版本写法
-                            $string.= $join." JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($t['value'])."\"', '$')";
-                        }
+						if ($t['value'] == '') {
+							$string.= " ".$t['name']." = ''";
+						} else {
+							if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+								// 兼容写法
+								$string.= $join. " {$t['name']}  LIKE \"%\"".\Phpcmf\Service::M()->db->escapeString($t['value'], true)."\"%\"";
+							} else {
+								// 高版本写法
+								$string.= $join." JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($t['value'])."\"', '$')";
+							}
+						}
+                        
                         break;
 
                     case 'FIND':

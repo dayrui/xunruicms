@@ -315,13 +315,15 @@ class Search extends \Phpcmf\Model {
                     if ($data['child']) {
                         $ids = explode(',', $data['childids']);
                         foreach ($ids as $id) {
-                            if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                                // 兼容写法
-                                $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($id).'\"%"';
-                            } else {
-                                // 高版本写法
-                                $where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$')";
-                            }
+                            if ($id) {
+								if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+									// 兼容写法
+									$where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($id).'\"%"';
+								} else {
+									// 高版本写法
+									$where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$')";
+								}
+							}
                         }
                     } else {
                         if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
@@ -340,13 +342,15 @@ class Search extends \Phpcmf\Model {
             $arr = explode('|', $value);
             $where = [];
             foreach ($arr as $value) {
-                if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                    // 兼容写法
-                    $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString($value, true).'\"%"';
-                } else {
-                    // 高版本写法
-                    $where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$')";
-                }
+                if ($value) {
+					if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+						// 兼容写法
+						$where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString($value, true).'\"%"';
+					} else {
+						// 高版本写法
+						$where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$')";
+					}
+				}
             }
             return $where ? '('.implode(' OR ', $where).')' : '';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
