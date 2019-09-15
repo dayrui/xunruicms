@@ -8,7 +8,7 @@
 
 
 // 通用接口处理
-class Api extends \Phpcmf\Home\Api
+class Api extends \Phpcmf\Common
 {
 
 	/**
