@@ -6,15 +6,15 @@
  **/
 
 
-class Date extends \Phpcmf\Library\A_Field {
+class Time extends \Phpcmf\Library\A_Field {
 
     /**
      * 构造函数
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->fieldtype = ['INT' => 10];
-        $this->defaulttype = 'INT';
+        $this->fieldtype = ['VARCHAR' => 100];
+        $this->defaulttype = 'VARCHAR';
     }
 
     /**
@@ -31,27 +31,11 @@ class Date extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<div class="mt-radio-inline">
 						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][format2]" value="0" '.(!$option['option']['format2'] ? 'checked' : '').'> '.dr_lang('日期时间格式').'
+							<input type="radio" name="data[setting][option][format2]" value="0" '.(!$option['option']['format2'] ? 'checked' : '').'> '.dr_lang('时分格式').'
 							<span></span>
 						</label>
 						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][format2]" value="1" '.($option['option']['format2'] ? 'checked' : '').'> '.dr_lang('日期格式').'
-							<span></span>
-						</label>
-					</div>
-					
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-md-2 control-label">'.dr_lang('图标显示').'</label>
-				<div class="col-md-9">
-					<div class="mt-radio-inline">
-						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][is_left]" value="0" '.(!$option['option']['is_left'] ? 'checked' : '').'> '.dr_lang('左侧图标').'
-							<span></span>
-						</label>
-						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][is_left]" value="1" '.($option['option']['is_left'] ? 'checked' : '').'> '.dr_lang('右侧图标').'
+							<input type="radio" name="data[setting][option][format2]" value="1" '.($option['option']['format2'] ? 'checked' : '').'> '.dr_lang('时分秒格式').'
 							<span></span>
 						</label>
 					</div>
@@ -94,7 +78,7 @@ class Date extends \Phpcmf\Library\A_Field {
      */
     public function create_sql($name, $option, $cname) {
         // 无符号int 10位
-        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` INT( 10 ) UNSIGNED NULL COMMENT \''.$cname.'\'';
+        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` VARCHAR( 100 ) DEFAULT NULL COMMENT \''.$cname.'\'';
         return $sql;
     }
 
@@ -102,7 +86,7 @@ class Date extends \Phpcmf\Library\A_Field {
      * 字段输出
      */
     public function output($value) {
-        return dr_date($value, null, 'red');
+        return $value;
     }
 
     /**
@@ -112,7 +96,7 @@ class Date extends \Phpcmf\Library\A_Field {
      * @return  void
      */
     public function insert_value($field) {
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = strtotime(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = (\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
     }
 
     /**
@@ -134,7 +118,7 @@ class Date extends \Phpcmf\Library\A_Field {
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
 
         // 表单宽度设置
-        $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 200);
+        $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 100);
 
         // 风格
         $style = 'style="width:'.$width.(is_numeric($width) ? 'px' : '').';"';
@@ -142,86 +126,64 @@ class Date extends \Phpcmf\Library\A_Field {
         // 表单附加参数
         $attr = $field['setting']['validate']['formattr'];
 
-        // 按钮颜色
-        $color = $field['setting']['option']['color'] ? $field['setting']['option']['color'] : 'default';
-
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
         // 格式显示
-        $format = (int)$field['setting']['option']['format2'];
+        $format = (int)$field['setting']['option']['format2'] ? 'H:i:s' : 'H:i';
+        // 按钮颜色
+        $color = $field['setting']['option']['color'] ? $field['setting']['option']['color'] : 'default';
 
         // 是否必填
         $required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
         $str = '';
-        if (!defined('PHPCMF_FIELD_DATE')) {
+        if (!defined('PHPCMF_FIELD_TIME')) {
             $str.= '
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-			
-        	<script src="'.ROOT_THEME_PATH.'assets/global/plugins/moment.min.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js" type="text/javascript"></script>
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
 			';
-            define('PHPCMF_FIELD_DATE', 1);//防止重复加载JS
+            define('PHPCMF_FIELD_TIME', 1);//防止重复加载JS
         }
 
         // 字段默认值
         !$value && $value = $this->get_default_value($field['setting']['option']['value']);
         if ($value == 'SYS_TIME') {
-            $value = SYS_TIME;
-        } elseif (strpos($value, '-') !== false) {
-            $value = strtotime($value);
+            $value = dr_date(SYS_TIME, $format);
         }
 
-        $value = $format ? dr_date($value, 'Y-m-d') : dr_date($value, 'Y-m-d H:i:s');
-        $shuru = '<input name="data['.$name.']" type="text" '.$style.' value="'.$value.'" '.$required.' class="form-control '.$field['setting']['option']['css'].'">';
-        $tubiao = '<span class="input-group-btn">
-					<button class="btn '.$color.' date-set" type="button">
-						<i class="fa fa-calendar"></i>
-					</button>
-				</span>';
-        $str.= '<div class="input-group date field_date_'.$name.'">';
-        $str.= $field['setting']['option']['is_left'] ? $tubiao.$shuru : $shuru.$tubiao;
-        $str.= '</div>';
+        $str.= '<div class="input-group ">';
+		$shuru = '<input name="data['.$name.']" type="text" '.$style.' value="'.$value.'" '.$required.' class="form-control timepicker field_time_'.$name.' '.$field['setting']['option']['css'].'">';
+        $tubiao = '<span class="input-group-btn"><button class="btn  '.$color.'" type="button">
+					<i class="fa fa-clock-o"></i>
+				</button>
+			</span>';
+		$str.= $field['setting']['option']['is_left'] ? $tubiao.$shuru : $shuru.$tubiao;
+		 
+		$str.= '</div>';
 
-        if ($format) {
-            // 日期
+
+ 
             $str.= '
 			<script>
 			$(function(){
-				$(".field_date_'.$name.'").datepicker({
-					isRTL: false,
-					format: "yyyy-mm-dd",
-					showMeridian: true,
+				$(".field_time_'.$name.'").timepicker({
 					autoclose: true,
-					pickerPosition: "bottom-right",
+					defaultTime:"'.($value ? $value : dr_date(SYS_TIME, $format)).'",
+					minuteStep: 1,
+					secondStep: 1,
+					showSeconds: '.($format == 'H:i:s' ? 'true' : 'false').',
+					showMeridian: false
+				});
+				$(".timepicker").parent(".input-group").on("click", ".input-group-btn", function(e){
+					$(this).parent(".input-group").find(".timepicker").timepicker("showWidget");
+				});
+				$( document ).scroll(function(){
+					$(".field_time_'.$name.'").timepicker("place");
 				});
 			});
 			</script>
 			';
-        } else {
-            // 日期 + 时间
-            $str.= '
-			<script>
-			$(function(){
-				$(".field_date_'.$name.'").datetimepicker({
-					isRTL: false,
-					format: "yyyy-mm-dd hh:ii:ss",
-					showMeridian: true,
-					autoclose: true,
-					pickerPosition: "bottom-right",
-					todayBtn: true
-				});
-			});
-			</script>
-			';
-        }
-
-        APP_DIR && $name == 'updatetime' && $str.= '<label><input name="no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
-
         $str.= $tips;
 
         return $this->input_format($name, $text, '<div class="form-date input-group">'.$str.'</div>');

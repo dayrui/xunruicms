@@ -65,7 +65,12 @@ return [
     ],
     [
         'id' => 'Date',
-        'name' => '日期时间',
+        'name' => '日期',
+        'namespace' => '',
+    ],
+    [
+        'id' => 'Time',
+        'name' => '时间',
         'namespace' => '',
     ],
     [
