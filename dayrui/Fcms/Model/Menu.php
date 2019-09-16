@@ -499,7 +499,7 @@ class Menu extends \Phpcmf\Model {
     public function gets($table) {
 
         $menu = [];
-        $data = $this->db->table($table.'_menu')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
+        $data = $this->db->table($table.'_menu')->where('mark<>"cloud"')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
 
         if ($data) {
 
@@ -517,6 +517,9 @@ class Menu extends \Phpcmf\Model {
                 if (isset($left[$t['pid']])) {
                     $data[$i]['mark'] = $t['uri'] ? $t['uri'] : $t['url'];
                     $data[$i]['tid'] = $left[$t['pid']];
+                }
+                if (strpos($t['uri'], 'cloud/') === 0 && substr_count($t['uri'], '/') == 1) {
+                    unset($data[$i]);
                 }
             }
 

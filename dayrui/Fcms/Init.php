@@ -264,7 +264,16 @@ class_alias('Config\Services', 'CodeIgniter\Services');
 
 $loader = CodeIgniter\Services::autoloader();
 //$loader->initialize(new Config\Autoload());
-$loader->initialize(new Config\Autoload(), new Config\Modules());
+$auto = new Config\Autoload();
+// 应用插件的自动识别
+if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
+    $app_auto = require APPPATH.'Config/Auto.php';
+    $app_auto['psr4'] && $auto->psr4 = array_merge($auto->psr4, $app_auto['psr4']);
+    $app_auto['classmap'] && $auto->classmap = array_merge($auto->classmap, $app_auto['classmap']);
+    unset($app_auto);
+}
+
+$loader->initialize($auto, new Config\Modules());
 $loader->register();    // Register the loader with the SPL autoloader stack.
 
 // Now load Composer's if it's available
