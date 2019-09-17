@@ -111,7 +111,7 @@ abstract class Common extends \CodeIgniter\Controller
         ) {
             if (isset($_COOKIE['is_mobile'])) {
                 // 表示来自切换,不跳转
-                $is_mobile = false;
+                //$is_mobile = false;
             } else {
                 if ($this->_is_mobile()) {
                     // 这是移动端

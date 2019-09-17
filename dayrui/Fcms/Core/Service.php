@@ -81,7 +81,6 @@ class Service
     public static function L( $name,  $namespace = '') {
 
         list($classFile, $extendFile) = self::_get_class_file($name, $namespace, 'Library');
-
         $_cname = md5($classFile.$extendFile);
         $className = ucfirst($name);
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
@@ -89,9 +88,9 @@ class Service
             // 自定义继承类
             if ($extendFile && is_file($extendFile)) {
                 require $extendFile;
-                $className = $namespace ? '\\Phpcmf\\Library\\'.ucfirst($namespace).'\\'.$className : '\\My\\Library\\'.$className;
+                $newClassName = $namespace ? '\\Phpcmf\\Library\\'.ucfirst($namespace).'\\'.$className : '\\My\\Library\\'.$className;
             } else {
-                $className = '\\Phpcmf\\Library\\'.$className;
+                $newClassName = '\\Phpcmf\\Library\\'.$className;
                 // 多个应用引用同一个类名称时的区别
                 if ($namespace) {
                     $newClassName2 = '\\Phpcmf\\Library\\'.ucfirst($namespace).'\\'.$className;
@@ -101,7 +100,7 @@ class Service
                     }
                 }
             }
-            static::$instances[$_cname] = new $className();
+            static::$instances[$_cname] = new $newClassName();
         }
 
         return static::$instances[$_cname];

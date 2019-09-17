@@ -1,0 +1,64 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('定义任务类型适用于二次开发，需要有PHP基础')}</p>
+</div>
+<form class="form-horizontal myfbody" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable ">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="40"> Id </th>
+                <th width="220"> {dr_lang('名称')} </th>
+                <th width="250"> {dr_lang('代码')} </th>
+                <th> {dr_lang('操作')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {php for ($i = 1; $i <= 20; $i ++) {}
+            <tr class="odd gradeX">
+                <td>{$i}</td>
+                <td><input class="form-control" name="data[{$i}][name]" type="text" value="{$data[$i]['name']}" placeholder="{dr_lang('任务名称')}"></td>
+                <td><input class="form-control" type="text" id="dr_code_{$i}" name="data[{$i}][code]" value="{$data[$i]['code']}" placeholder="{dr_lang('字母作为代码')}" /></td>
+                <td>
+                    <label><a href="javascript:;" onclick="dr_help('768')" class="btn btn-xs red"> <i class="fa fa-book"></i> {dr_lang('开发说明')} </a></label>
+                    <label><a href="javascript:;" onclick="dr_test_cron('{$i}')" class="btn btn-xs green"> <i class="fa fa-cog"></i> {dr_lang('测试')} </a></label>
+                    <label id="dr_status_{$i}"></label>
+                </td>
+            </tr>
+            {php }}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+    function dr_test_cron(id) {
+        var url = '{dr_url("cron/test_index")}&id='+$('#dr_code_'+id).val();
+        $('#dr_status_'+id).html('<img src="{THEME_PATH}assets/images/mloading.gif">');
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: url,
+            success: function(json) {
+                if (json.code) {
+                    $('#dr_status_'+id).html('<font color="green">'+json.msg+'</font>');
+                } else {
+                    $('#dr_status_'+id).html('<font color="red">'+json.msg+'</font>');
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+
+{template "footer.html"}

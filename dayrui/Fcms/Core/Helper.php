@@ -296,8 +296,12 @@ if (!function_exists('dr_domain_301')) {
     function dr_domain_301($domain, $uri = '') {
 
         !$uri && $uri = (isset($_SERVER['HTTP_X_REWRITE_URL']) && trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : ''));
-
         $url = rtrim($domain, '/').'/'.$uri;
+
+        if ($url == dr_now_url()) {
+            return;
+        }
+
         if (IS_DEV) {
             \Phpcmf\Service::C()->_admin_msg(1, '正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
         }

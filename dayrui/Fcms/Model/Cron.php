@@ -137,6 +137,38 @@ class Cron extends \Phpcmf\Model
                 break;
 
             default:
+
+                // 尝试自定义类别
+                $json = '';
+                if (is_file(WRITEPATH.'config/cron.php')) {
+                    require WRITEPATH.'config/cron.php';
+                }
+                $my = json_decode($json, true);
+                if ($my) {
+                    foreach ($my as $t) {
+                        if ($t['name'] && $t['code'] == $cron['type']) {
+                            // 找到了
+                            if (function_exists('my_cron_'.$cron['type'])) {
+                                $value = dr_string2array($cron['value']);
+                                $rt = call_user_func_array('my_cron_'.$cron['type'], [$value]);
+                                if (!$rt['code']) {
+                                    // 失败
+                                    return $this->save_cron($cron, [
+                                        'error' => '任务['.$t['name'].']执行失败：'.$rt['msg'],
+                                        'value' => $value,
+                                    ]);
+                                } else {
+                                    // 成功
+                                    return $this->save_cron($cron, [
+                                        'error' => '',
+                                        'value' => '',
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $this->table('cron')->delete($cron['id']);
                 log_message('error', '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在：'.FC_NOW_URL);
                 return dr_return_data(0, '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在');
