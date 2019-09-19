@@ -52,6 +52,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('开发模式')}</label>
                             <div class="col-md-9">
@@ -61,7 +62,7 @@
                                         <span></span>
                                     </label>
                                     <label class="mt-radio">
-                                        <input type="radio" onclick="dr_dev_show(1)" name="data[setting][dev]" value="1" {if $data['setting']['dev']} checked{/if} > {dr_lang('自定义')}
+                                        <input type="radio" onclick="dr_dev_show(1)" name="data[setting][dev]" value="{if $data['setting']['dev']}{$data['setting']['dev']}{else}1{/if}" {if $data['setting']['dev']} checked{/if} > {dr_lang('自定义')}
                                         <span></span>
                                     </label>
                                 </div>

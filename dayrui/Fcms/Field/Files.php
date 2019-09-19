@@ -211,12 +211,12 @@ class Files extends \Phpcmf\Library\A_Field {
         $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
         $size = intval($field['setting']['option']['size']) * 1024 * 1024;
 
-        $p = IS_ADMIN ? dr_authcode([
+        $p = dr_authcode([
             'size' => intval($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
-        ], 'ENCODE') : 0;
+        ], 'ENCODE');
         $url = '/index.php?s=api&c=file&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板

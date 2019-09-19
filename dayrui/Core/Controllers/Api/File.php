@@ -29,6 +29,7 @@ class File extends \Phpcmf\Common
         $fid = (int)\Phpcmf\Service::L('input')->get('fid');
         $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
         if (!$field) {
+            /*
             $is_admin = 0;
             if ($this->member['is_admin']) {
                 // 本是管理员
@@ -50,7 +51,10 @@ class File extends \Phpcmf\Common
                 !$p && $this->_json(0, dr_lang('字段参数有误'));
                 return $p;
             }
-            $this->_json(0, dr_lang('上传字段未定义'));
+            $this->_json(0, dr_lang('上传字段未定义'));*/
+            $p = dr_string2array(dr_authcode(\Phpcmf\Service::L('input')->get('p'), 'DECODE'));
+            !$p && $this->_json(0, dr_lang('字段参数有误'));
+            return $p;
         }
 
         return [

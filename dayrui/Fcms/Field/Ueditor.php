@@ -446,7 +446,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     [ $tool ]
                 ],
                 initialContent:\"\",
-                initialFrameWidth: \"".$width.(is_numeric($width) ? 'px' : '')."\",
+                initialFrameWidth: \"".$width."\",
                 initialFrameHeight: \"{$height}\",
                 initialStyle:\"body{font-size:14px}\",
                 wordCount:false,

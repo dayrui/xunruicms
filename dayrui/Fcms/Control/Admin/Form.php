@@ -143,8 +143,12 @@ class Form extends \Phpcmf\Table
     protected function _Format_Data($id, $data, $old) {
 
         // 后台添加时默认通过
-        !$id && !$this->is_verify && $data[1]['status'] = 1;
-        !$id && $data[1]['tableid'] = 0;
+        if (!$id) {
+            !$this->is_verify && $data[1]['status'] = 1;
+            $data[1]['tableid'] = 0;
+        }
+
+        $data[0]['uid'] = $data[1]['uid'];
 
         return $data;
     }

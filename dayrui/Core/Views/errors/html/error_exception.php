@@ -22,9 +22,13 @@
 			<h1><?= htmlspecialchars($title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
 			<p>
 				<?= $exception->getMessage() ?>
-				<a href="https://www.google.com/search?q=<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
-				   rel="noreferrer" target="_blank">search &rarr;</a>
+				<a href="http://www.xunruicms.com/index.php?s=bbs&c=search&keyword=<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
+				   rel="noreferrer" target="_blank">搜索问题 &rarr;</a>
 			</p>
+            <?php if (strpos($title, 'mysqli') !== false) : ?><p>
+                <?php echo \Phpcmf\Service::M()->get_sql_query(); ?>
+            </p>
+            <?php endif; ?>
 		</div>
 	</div>
 

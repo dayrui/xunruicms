@@ -59,7 +59,7 @@ class Table extends \Phpcmf\Common
     // 获取入库时的字段
     protected function _field_save($catid) {
 
-        $field = $this->sys_field && IS_ADMIN ? dr_array22array($this->sys_field, $this->field) : $this->field;
+        $field = $this->sys_field ? dr_array22array($this->sys_field, $this->field) : $this->field;
 
         // 栏目模型字段
         $this->is_category_data_field && $catid

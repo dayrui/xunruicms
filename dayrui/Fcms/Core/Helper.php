@@ -1954,7 +1954,7 @@ function dr_comment_emotion() {
 }
 
 /**
- * discuz加密/解密
+ * 基于本地存储的加解密算法
  */
 function dr_authcode($string, $operation = 'DECODE') {
 
@@ -1963,6 +1963,35 @@ function dr_authcode($string, $operation = 'DECODE') {
     }
 
     is_array($string) && $string = dr_array2string($string);
+
+    $code_path = WRITEPATH.'authcode/';
+    dr_mkdirs($code_path);
+
+    if ($operation == 'DECODE') {
+        // 解密
+        $code_file = $code_path.dr_safe_filename($string);
+        if (is_file($code_file)) {
+            $rt = file_get_contents($code_file);
+            if ($rt) {
+                return $rt;
+            }
+        }
+        return dr_dz_authcode($string, $operation);
+    } else {
+        // 加密
+        dr_mkdirs($code_path);
+        $code_file = $code_path.md5($string);
+        $rt = file_put_contents($code_file, $string, LOCK_EX);
+        if (!$rt) {
+            return dr_dz_authcode($string, $operation);
+        }
+        return md5($string);
+    }
+
+}
+
+// 传统算法
+function dr_dz_authcode($string, $operation = 'DECODE') {
 
     $string = str_replace(' ', '+', $string);
 
@@ -2014,7 +2043,6 @@ function dr_authcode($string, $operation = 'DECODE') {
         return $keyc . str_replace('=', '', base64_encode($result));
     }
 }
-
 
 
 /**

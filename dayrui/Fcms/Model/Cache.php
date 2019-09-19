@@ -170,10 +170,19 @@ class Cache extends \Phpcmf\Model
         \Phpcmf\Service::L('cache')->init('file')->clean();
 
         // 递归删除文件
-        dr_dir_delete(WRITEPATH.'html');
-        dr_dir_delete(WRITEPATH.'temp');
-        dr_dir_delete(WRITEPATH.'attach');
-        dr_dir_delete(WRITEPATH.'template');
+        $path = [
+            WRITEPATH.'html',
+            WRITEPATH.'temp',
+            WRITEPATH.'temp',
+            WRITEPATH.'attach',
+            WRITEPATH.'caching',
+            WRITEPATH.'authcode',
+            WRITEPATH.'template',
+        ];
+        foreach ($path as $p) {
+            dr_dir_delete($p);
+            file_put_contents($p.'/index.html', 'error');
+        }
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();

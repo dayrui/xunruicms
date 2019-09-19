@@ -215,8 +215,8 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
     }
 } else {
     // 系统主目录
-    define('APPPATH', COREPATH);
-    define('APP_DIR', '');
+    !defined('APPPATH') && define('APPPATH', COREPATH);
+    !defined('APP_DIR') && define('APP_DIR', '');
     define('IS_MEMBER', FALSE);
 }
 
