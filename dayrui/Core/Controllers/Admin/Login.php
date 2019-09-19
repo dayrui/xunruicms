@@ -28,7 +28,7 @@ class Login extends \Phpcmf\Common
             $data = \Phpcmf\Service::L('input')->post('data', true);
 			if (SYS_ADMIN_CODE && !\Phpcmf\Service::L('form')->check_captcha('code')) {
 				$this->_json(0, dr_lang('验证码不正确'));
-			} elseif (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {
+			} elseif (!IS_DEV && defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {
                 $this->_json(0, dr_lang('失败次数已达到%s次，已被禁止登录', SYS_ADMIN_LOGINS));
 			} elseif (empty($data['username']) || empty($data['password'])) {
 				$this->_json(0, dr_lang('账号或密码必须填写'));
