@@ -89,11 +89,12 @@
                         <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>
                         <li class="divider"> </li>
                         {if $ci->_is_admin_auth('cache/index')}
-                        <li><a href="{dr_url('cache/index')}" target="right"><i class="fa fa-refresh"></i> {dr_lang('系统更新')}</a></li>
+                        <li><a href="{dr_url('cache/index')}" target="right"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
                         {/if}
                         {if $ci->_is_admin_auth('check/index')}
                         <li><a href="{dr_url('check/index')}" target="right"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
                         {/if}
+                        <li><a href="javascript:dr_update_cache_all();" target="right"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
                         <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                         {if $admin.adminid==1}
                         <li class="divider"> </li>

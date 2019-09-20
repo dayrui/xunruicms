@@ -81,13 +81,24 @@ class View {
             $this->_dir = $this->_root = $this->get_client_home_path($this->_tname);
         }
 
-        // 可用action
+        // 系统action
         $this->action = [
             'category', 'module', 'content', 'related', 'share', 'table', 'form', 'mform', 'member', 'page',
             'tag', 'hits', 'search', 'category_search_field', 'linkage', 'sql', 'function', 'comment',
             'cache', 'navigator'
         ];
 
+        // 自定义action
+        if (is_dir(MYPATH.'Action/')) {
+            $ac = dr_file_map(MYPATH.'Action/');
+            if ($ac) {
+                foreach ($ac as $t) {
+                    if (strpos($t, '.php')) {
+                        $this->action[] = substr($t, 0, -4);
+                    }
+                }
+            }
+        }
     }
 
     // 终端路径
@@ -1809,7 +1820,15 @@ class View {
 
 
             default :
-                return $this->_return($system['return'], '无此标签('.$system['action'].')');
+
+                // 识别自定义标签
+                $myfile = MYPATH.'Action/'.dr_safe_filename($system['action']).'.php';
+                if (is_file($myfile)) {
+                    return require $myfile;
+                } else {
+                    return $this->_return($system['return'], '无此标签('.$system['action'].')');
+                }
+
                 break;
         }
     }
@@ -2167,16 +2186,17 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0) {
 
-        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px"><p>SQL: '.$sql.'</p>';
+        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px">';
+        $sql && $debug.= '<p>SQL: '.$sql.'</p>';
         if ($data && !is_array($data)) {
-            //$debug.= $data;
+            $debug.= '<p>'.$data.'</p>';
             $data = [];
         }
 
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-        $debug.= '<p>总记录：'.$total.'</p>';
+        $total && $debug.= '<p>总记录：'.$total.'</p>';
 		if ($this->_page_used) {
             $debug.= '<p>总记录：'.$total.'</p>';
 			$debug.= '<p>总页数：'.$nums.'</p>';
