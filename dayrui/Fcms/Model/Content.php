@@ -19,13 +19,19 @@ class Content extends \Phpcmf\Model {
     public $mytable; // 模块表名称
     public $mysharetable; // 共享模块表名称
     public $is_hcategory; // 模块不使用栏目
+    public $is_share; // 是否共享模块
 
     // 初始化模块
-    public function _init($dir, $siteid = SITE_ID) {
+    public function _init($dir, $siteid = SITE_ID, $is_share = 'null') {
         $this->siteid = $siteid;
         $this->dirname = $dir;
         $this->mytable = dr_module_table_prefix($dir, $siteid);
         $this->mysharetable = $siteid.'_share';
+        if ($is_share == 'null') {
+            $this->is_share = (int)\Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dir, 'share');
+        } else {
+            $this->is_share = $is_share;
+        }
         return $this;
     }
 
@@ -309,7 +315,7 @@ class Content extends \Phpcmf\Model {
         }
 
         $flag = $data['flag'];
-        $sync_weibo = $data['sync_weibo'];
+        //$sync_weibo = $data['sync_weibo'];
         unset($data['sync_weibo'], $data['flag']);
 
         // 主表字段
@@ -352,6 +358,12 @@ class Content extends \Phpcmf\Model {
         !$time && $time = SYS_TIME;
         $save[1]['updatetime'] = $save[1]['inputtime'] = $time;
 
+        $nid = $this->index(0, $save);
+        if (!$nid) {
+            return dr_return_data(0, dr_lang('内容索引id生成失败'));
+        }
+        $data[0]['id'] = $data[1]['id'] = $nid;
+
         $rt = $this->save(0, $save);
         if ($rt['code']) {
             // 发布成功
@@ -367,7 +379,7 @@ class Content extends \Phpcmf\Model {
             // 生成权限文件
             if (\Phpcmf\Service::C()->module['category'][$data['catid']]['setting']['html']) {
                 dr_html_auth(1);
-                $rt['data'] = '/index.php?'.(IS_SHARE ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
+                $rt['data'] = '/index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
 
             }
             // 推荐位
@@ -377,7 +389,7 @@ class Content extends \Phpcmf\Model {
                 }
             }
             // 同步到微博
-            $sync_weibo && $this->sync_weibo($save);
+            //$sync_weibo && $this->sync_weibo($save);
         } else {
             $this->db->table($this->mytable.'_time')->where('id', $row['id'])->update(['result' => $rt['msg']]);
         }
@@ -624,7 +636,7 @@ class Content extends \Phpcmf\Model {
             'inputtime' => $data[1]['inputtime'],
         );
 
-        if (defined('IS_SHARE') && IS_SHARE) {
+        if ($this->is_share) {
             // 共享模块
             if ($id) {
                 $this->table($this->mysharetable.'_index')->update($id, ['mid' => $this->dirname]);
@@ -952,7 +964,7 @@ class Content extends \Phpcmf\Model {
         $this->db->table($this->mytable.'_comment_index')->where('cid', $cid)->delete();
 
         // 共享模块删除
-        if ($module['share']) {
+        if ($this->is_share) {
             $this->table($this->mysharetable.'_index')->delete($cid);
         }
         // 删除草稿表

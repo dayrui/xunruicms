@@ -44,13 +44,11 @@ class Run extends \Phpcmf\Common
                         }
                     }
                     // 定时发布动作
-                    $db = \Phpcmf\Service::M('Content', $dir);
-                    $db->_init($dir, $siteid);
-                    $this->module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dir);
-                    $times = $db->table($siteid.'_'.$dir.'_time')->where('posttime < '.SYS_TIME)->getAll();
+                    $this->_module_init($dir, $siteid);
+                    $times = $this->content_model->table($siteid.'_'.$dir.'_time')->where('posttime < '.SYS_TIME)->getAll();
                     if ($times) {
                         foreach ($times as $t) {
-                            $rt = $db->post_time($t);
+                            $rt = $this->content_model->post_time($t);
                             if (!$rt['code']) {
                                 log_message('error', '定时发布（'.$t['id'].'）失败：'.$rt['msg']);
                             }

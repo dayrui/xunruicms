@@ -495,7 +495,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 初始化数据表
         $this->content_model = \Phpcmf\Service::M('Content', $dirname);
-        $this->content_model->_init($dirname, $siteid);
+        $this->content_model->_init($dirname, $siteid, $this->module['share']);
 
         // 兼容老版本
         define('MOD_DIR', $dirname);

@@ -779,6 +779,7 @@ class Module extends \Phpcmf\Table
                 'isnew' => $row['isnew'],
                 'backinfo' => $row['backinfo'],
             ];
+            $data['myflag'] = $data['flag'];
             $this->is_get_catid = $catid ? $catid : $data['catid'];
             return $data;
         } elseif (defined('IS_MODULE_TIME')) {
@@ -920,28 +921,27 @@ class Module extends \Phpcmf\Table
                 },
                 function ($id, $data, $old) {
 
-                    // 同步发送到其他栏目
-                    if ($data[1]['status'] == 9 && \Phpcmf\Service::L('input')->post('sync_cat')) {
-                        $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
-                    }
+                    // 审核通过后
+                    if ($data[1]['status'] == 9) {
 
-                    // 审核跳过
-                    if (defined('IS_MODULE_VERIFY')) {
-                        return $data;
-                    }
-                    // 处理推荐位
-                    $myflag = $old['myflag'];
-                    $update = \Phpcmf\Service::L('input')->post('flag');
-                    if ($update !== $myflag) {
-                        // 删除旧的
-                        $id && $myflag && $this->content_model->delete_flag($id, $myflag);
-                        // 增加新的
-                        if ($update) {
-                            foreach ($update as $i) {
-                                $this->content_model->insert_flag((int)$i, $id, $data[1]['uid'], $data[1]['catid']);
+                        // 同步发送到其他栏目
+                        \Phpcmf\Service::L('input')->post('sync_cat') && $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
+
+                        // 处理推荐位
+                        $myflag = $old['myflag'];
+                        $update = \Phpcmf\Service::L('input')->post('flag');
+                        if ($update !== $myflag) {
+                            // 删除旧的
+                            $id && $myflag && $this->content_model->delete_flag($id, $myflag);
+                            // 增加新的
+                            if ($update) {
+                                foreach ($update as $i) {
+                                    $this->content_model->insert_flag((int)$i, $id, $data[1]['uid'], $data[1]['catid']);
+                                }
                             }
                         }
                     }
+
                     $data[1]['id'] = $id;
 
                     return $data;

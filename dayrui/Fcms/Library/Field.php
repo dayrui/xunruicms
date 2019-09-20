@@ -285,7 +285,7 @@
                     'fieldname' => 'inputtime',
                     'setting' => array(
                         'option' => array(
-                            'width' => 160,
+                            'width' => 170,
                             'value' => 'SYS_TIME',
                             'is_left' => 1,
                         ),
@@ -302,7 +302,7 @@
                     'fieldname' => 'updatetime',
                     'setting' => array(
                         'option' => array(
-                            'width' => 160,
+                            'width' => 170,
                             'value' => 'SYS_TIME',
                             'is_left' => 1,
                         ),

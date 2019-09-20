@@ -204,51 +204,49 @@
                         <div class="form-body">
                             {$sysfield}
 
-                            {if !$is_verify}
-                                {if $module['setting']['flag']}
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label">{dr_lang('推荐位设置')}</label>
-                                    <div class="col-md-9">
-                                        <div class="mt-checkbox-list">
-                                            {loop $module['setting']['flag'] $i $t}
-                                            <label class="mt-checkbox mt-checkbox-outline">
-                                                <input name="flag[]" type="checkbox" {if @in_array($i, (array)$myflag)} checked="checked" {/if} value="{$i}"> <i class="{dr_icon($t.icon)}"></i> {$t.name}
-                                                <span></span>
-                                            </label>
-                                            {/loop}
+                            {if $module['setting']['flag']}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('推荐位设置')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-checkbox-list">
+                                        {loop $module['setting']['flag'] $i $t}
+                                        <label class="mt-checkbox mt-checkbox-outline">
+                                            <input name="flag[]" type="checkbox" {if @in_array($i, (array)$myflag)} checked="checked" {/if} value="{$i}"> <i class="{dr_icon($t.icon)}"></i> {$t.name}
+                                            <span></span>
+                                        </label>
+                                        {/loop}
+                                    </div>
+                                </div>
+                            </div>
+                            {/if}
+                            {if !$is_verify && $is_post_time}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('定时发布时间')}</label>
+                                <div class="col-md-9">
+                                    <span class="form-date input-group">
+                                        <div class="input-group date field_date_post_inputtime">
+                                            <input id="posttime" name="posttime" type="text" style="width:160px;" value="{dr_date($posttime, 'Y-m-d H:i:s')}"  required="required" class="form-control ">
+                                            <span class="input-group-btn">
+                                                <button class="btn default date-set" type="button">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
                                         </div>
-                                    </div>
-                                </div>
-                                {/if}
-                                {if $is_post_time}
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label">{dr_lang('定时发布时间')}</label>
-                                    <div class="col-md-9">
-                                        <span class="form-date input-group">
-                                            <div class="input-group date field_date_post_inputtime">
-                                                <input id="posttime" name="posttime" type="text" style="width:160px;" value="{dr_date($posttime, 'Y-m-d H:i:s')}"  required="required" class="form-control ">
-                                                <span class="input-group-btn">
-                                                    <button class="btn default date-set" type="button">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                            <script>
-                                            $(function(){
-                                                $(".field_date_post_inputtime").datetimepicker({
-                                                    isRTL: App.isRTL(),
-                                                    format: "yyyy-mm-dd hh:ii:ss",
-                                                    showMeridian: true,
-                                                    autoclose: true,
-                                                    pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
-                                                    todayBtn: true
-                                                });
+                                        <script>
+                                        $(function(){
+                                            $(".field_date_post_inputtime").datetimepicker({
+                                                isRTL: App.isRTL(),
+                                                format: "yyyy-mm-dd hh:ii:ss",
+                                                showMeridian: true,
+                                                autoclose: true,
+                                                pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+                                                todayBtn: true
                                             });
-                                            </script>
-                                        </span>
-                                    </div>
+                                        });
+                                        </script>
+                                    </span>
                                 </div>
-                                {/if}
+                            </div>
                             {/if}
                         </div>
                     </div>
