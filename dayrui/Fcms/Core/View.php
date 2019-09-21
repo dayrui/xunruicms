@@ -1631,7 +1631,6 @@ class View {
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$module['dirname']); // 模块主表`
-
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
@@ -1691,7 +1690,7 @@ class View {
                     unset($catids);
                 }
 
-                $where[] = array( 'adj' => '', 'name' => 'status', 'value' => 9);
+                $where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
 
@@ -1921,13 +1920,20 @@ class View {
 						if ($t['value'] == '') {
 							$string.= " ".$t['name']." = ''";
 						} else {
-							if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-								// 兼容写法
-								$string.= $join. " {$t['name']}  LIKE \"%\"".\Phpcmf\Service::M()->db->escapeString($t['value'], true)."\"%\"";
-							} else {
-								// 高版本写法
-								$string.= $join." JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($t['value'])."\"', '$')";
+							$arr = explode('|', $t['value']);
+							$json = [];
+							foreach ($arr as $value) {
+								if ($value) {
+									if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+										// 兼容写法
+										$json[] = $join. "{$t['name']}  LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
+									} else {
+										// 高版本写法
+										$json[] = $join."JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
+									}
+								}
 							}
+							$string.= $json ? '('.implode(' OR ', $json).')' : '';
 						}
                         
                         break;
