@@ -107,8 +107,9 @@ class Login extends \Phpcmf\Common
         $member = $oauth['uid'] ? \Phpcmf\Service::M()->table('member')->get($oauth['uid']) : [];
 
         // 跳转地址
-        $goto_url = MEMBER_URL;
+        $back = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('back')));
         $state = \Phpcmf\Service::L('input')->get('state');
+        $goto_url = $back ? $back : MEMBER_URL;
         if ($state && $state != 'member') {
             $goto_url = strpos($state, 'http') === 0 ? $state : ROOT_URL.'index.php?s=weixin&c='.$state.'&oid='.$oauth['oid'];
         }

@@ -1091,7 +1091,7 @@ class Member extends \Phpcmf\Model
     /**
      * 存储授权信息
      */
-    public function insert_oauth($uid, $type, $data, $state = '') {
+    public function insert_oauth($uid, $type, $data, $state = '', $back = '') {
 
         $row = $this->db->table('member_oauth')->where('oid', $data['oid'])->where('oauth', $data['oauth'])->get()->getRowArray();
         if (!$row) {
@@ -1124,7 +1124,7 @@ class Member extends \Phpcmf\Model
         // 存储session
         \Phpcmf\Service::C()->session()->set('member_auth_'.$type.'_'.$data['oauth'], $id);
 
-        return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['name' => $data['oauth'], 'state' => $state]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['name' => $data['oauth']]));
+        return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['name' => $data['oauth']]));
     }
 
     // 修改密码 

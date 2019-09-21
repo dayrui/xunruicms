@@ -17,6 +17,7 @@ class Oauth extends \Phpcmf\Common
 
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
         $type = dr_safe_replace(\Phpcmf\Service::L('input')->get('type'));
+        $back = dr_safe_replace(\Phpcmf\Service::L('input')->get('back'));
         $action = dr_safe_replace(\Phpcmf\Service::L('input')->get('action'));
 
         // 非授权登录时必须验证登录状态
@@ -27,7 +28,7 @@ class Oauth extends \Phpcmf\Common
         // 请求参数
         $appid = $this->member_cache['oauth'][$name]['id'];
         $appkey = $this->member_cache['oauth'][$name]['value'];
-        $callback_url = ROOT_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type;
+        $callback_url = ROOT_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.$back;
 
         switch ($name) {
 
@@ -54,7 +55,7 @@ class Oauth extends \Phpcmf\Common
                             'expire_at' => SYS_TIME,
                             'access_token' => 0,
                             'refresh_token' => $token['refresh_token'],
-                        ]);
+                        ], null,  $back);
                         if (!$rt['code']) {
                             $this->_msg(0, $rt['msg']);exit;
                         } else {
@@ -94,7 +95,7 @@ class Oauth extends \Phpcmf\Common
                                     'expire_at' => SYS_TIME,
                                     'access_token' => 0,
                                     'refresh_token' => $rt['refresh_token'],
-                                ]);
+                                ], null,  $back);
                                 if (!$rt['code']) {
                                     $this->_msg(0, $rt['msg']);exit;
                                 } else {
@@ -144,7 +145,7 @@ class Oauth extends \Phpcmf\Common
                                     'expire_at' => SYS_TIME,
                                     'access_token' => 0,
                                     'refresh_token' => '',
-                                ]);
+                                ], null, $back);
                                 if (!$rt['code']) {
                                     $this->_msg(0, $rt['msg']);exit;
                                 } else {
@@ -179,7 +180,7 @@ class Oauth extends \Phpcmf\Common
                     $this->_msg(0, $rt['msg']);
                 } else {
                     // 获取返回页面
-                    $url = \Phpcmf\Service::L('Security')->xss_clean($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
+                    $url = \Phpcmf\Service::L('Security')->xss_clean($back ? urldecode($back) : $_SERVER['HTTP_REFERER']);
                     if (!$url || strpos($url, 'login') !== false ) {
                         $url = $this->uid ? dr_member_url('account/oauth') : dr_member_url('home/index');
                     }

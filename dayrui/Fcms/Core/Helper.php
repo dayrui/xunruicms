@@ -3747,8 +3747,8 @@ function dr_form_show_url($table, $id, $page = 0)  {
     return \Phpcmf\Service::L('router')->form_show_url($table, $id, $page);
 }
 
-function dr_oauth_url($name, $type) {
-    return \Phpcmf\Service::L('router')->oauth_url($name, $type);
+function dr_oauth_url($name, $type, $gourl = '') {
+    return \Phpcmf\Service::L('router')->oauth_url($name, $type, $gourl);
 }
 
 function dr_member_url($url, $query = [],  $self = 'index.php') {
