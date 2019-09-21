@@ -159,10 +159,9 @@ class Api extends \Phpcmf\Common
 		// 基础uri
 		$uri = ($params['s'] ? $params['s'].'/' : '').($params['c'] ? $params['c'] : 'home').'/'.($params['m'] ? $params['m'] : 'index');
 		// 查询名称
-		$menu = \Phpcmf\Service::M()->db->table('admin_menu')->select('name')->like('uri', $uri)->get()->getRowArray();
+		$menu = \Phpcmf\Service::M()->db->table('admin_menu')->select('name')->where('uri', $uri)->get()->getRowArray();
 		$name = $menu ? $menu['name'] : '未知名称';
 		// 替换URL
-
 		$admin = \Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->get()->getRowArray();
 		if ($admin) {
 			$menu = dr_string2array($admin['usermenu']);
