@@ -192,13 +192,13 @@ class Baidumap extends \Phpcmf\Library\A_Field {
 			<div class="">
 				<div class="pull-left" style="width:85%;padding-right:10px">
 					<div class="input-group">
-					<input type="text" class="form-control" id="baidu_address_'.$name.'" placeholder="'.dr_lang('输入地址，需要精确到街道号').'...">
-					<span class="input-group-btn">
-						<a title="'.dr_lang('输入地址，需要精确到街道号').'" class="btn blue" href="javascript:baiduSearchAddress(mapObj_'.$name.', \''.$name.'\');">
-							<i class="fa fa-search"></i>
-						</a>
-					</span>
-				</div>
+                        <input type="text" class="form-control" id="baidu_address_'.$name.'" placeholder="'.dr_lang('输入地址，需要精确到街道号').'...">
+                        <span class="input-group-btn">
+                            <a title="'.dr_lang('输入地址，需要精确到街道号').'" class="btn blue" href="javascript:baiduSearchAddress(mapObj_'.$name.', \''.$name.'\');">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </span>
+                    </div>
 				</div>
 				<div class="pull-left">
 				<label>

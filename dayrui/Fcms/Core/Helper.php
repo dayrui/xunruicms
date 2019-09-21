@@ -113,7 +113,7 @@ function dr_get_content_img($value, $num = 0) {
             if ($num && $i+1 > $num) {
                 break;
             }
-            $rt[] = dr_file($img);
+            $rt[] = dr_file(trim($img, '"'));
         }
     }
     return $rt;
@@ -491,14 +491,17 @@ function dr_get_keywords($kw, $siteid = SITE_ID) {
         $info = @file_get_contents('http://zhannei.baidu.com/api/customsearch/keywords?title='.rawurlencode($kw));
         $info=rawurldecode($info);
         if ($info) {
-            $kws = array();
+            $kws = [];
             $comtxts = json_decode($info, true);
             $keyword_list = $comtxts['result']['res']['keyword_list'];
-            foreach ($keyword_list as $v) {
-                $kw = trim($v);
-                (strlen($kw) > 5) && $kws[] = $kw;
+            if ($keyword_list) {
+                foreach ($keyword_list as $v) {
+                    $kw = trim($v);
+                    (strlen($kw) > 5) && $kws[] = $kw;
+                }
+                $kws && $rt = @implode(',', $kws);
             }
-            $rt = @implode(',', $kws);
+
         }
     }
 

@@ -655,6 +655,45 @@ class Module extends \Phpcmf\Model
         // 栏目开始
 		$CAT = $CAT_DIR = $fenzhan = $level = [];
         if ($category) {
+            // 栏目的定义字段
+            $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', 'category-'.$cdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            if ($field) {
+                foreach ($field as $f) {
+                    $f['setting'] = dr_string2array($f['setting']);
+                    $cache['category_field'][$f['fieldname']] = $f;
+                }
+            }
+            $cache['category_field']['thumb'] = [
+                'name' => dr_lang('缩略图'),
+                'ismain' => 1,
+                'ismember' => 1,
+                'fieldtype' => 'File',
+                'fieldname' => 'thumb',
+                'setting' => array(
+                    'option' => array(
+                        'ext' => 'jpg,gif,png,jpeg',
+                        'size' => 10,
+                        'input' => 1,
+                        'attachment' => defined('SYS_FIELD_THUMB_ATTACH') ? SYS_FIELD_THUMB_ATTACH : 0,
+                    )
+                )
+            ];
+            if ($cache['share']) {
+                $cache['category_field']['content'] = [
+                    'name' => dr_lang('栏目内容'),
+                    'ismain' => 1,
+                    'fieldtype' => 'Ueditor',
+                    'fieldname' => 'content',
+                    'setting' => array(
+                        'option' => array(
+                            'mode' => 1,
+                            'height' => 300,
+                            'width' => '100%',
+                            'attachment' => defined('SYS_FIELD_CONTENT_ATTACH') ? SYS_FIELD_CONTENT_ATTACH : 0,
+                        )
+                    ),
+                ];
+            }
             foreach ($category as $c) {
                 $pid = explode(',', $c['pids']);
                 $level[] = substr_count($c['pids'], ',');
@@ -686,7 +725,8 @@ class Module extends \Phpcmf\Model
                 // 按分站生成url
                 // 统计栏目文章数量
                 $c['total'] = ($c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) ? 0 : $this->db->table($siteid.'_'.$c['mid'].'_index')->where('status', 9)->where('catid', intval($c['id']))->countAllResults();
-                $CAT[$c['id']] = $c;
+                // 格式化栏目
+                $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
                 $CAT_DIR[$c['dirname']] = $c['id'];
             }
             // 更新父栏目数量
@@ -697,14 +737,6 @@ class Module extends \Phpcmf\Model
                     foreach ($arr as $i) {
                         $CAT[$c['id']]['total']+= $CAT[$i]['total'];
                     }
-                }
-            }
-            // 栏目的定义字段
-            $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', 'category-'.$cdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
-            if ($field) {
-                foreach ($field as $f) {
-                    $f['setting'] = dr_string2array($f['setting']);
-                    $cache['category_field'][$f['fieldname']] = $f;
                 }
             }
 

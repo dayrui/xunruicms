@@ -28,46 +28,18 @@ class Category extends \Phpcmf\Table
         $this->is_scategory = $this->module['share'] || (isset($this->module['config']['scategory']) && $this->module['config']['scategory']);
         if ($this->is_scategory) {
             // 共享栏目时显示单页内容字段
-            $this->module['category_field']['content'] = [
-                'name' => dr_lang('栏目内容'),
-                'ismain' => 1,
-                'fieldtype' => 'Ueditor',
-                'fieldname' => 'content',
-                'setting' => array(
-                    'option' => array(
-                        'mode' => 1,
-                        'height' => 300,
-                        'width' => '100%',
-                        'attachment' => defined('SYS_FIELD_CONTENT_ATTACH') ? SYS_FIELD_CONTENT_ATTACH : 0,
-                    )
-                ),
-            ];
             if ($this->module['share'] && $dir != 'share') {
                 // 当共享模块进入了独立模块的栏目，就跳转条共享模块
                 dr_redirect(dr_url('category/index'));
             }
         } else {
+            unset($this->module['category_field']['content']);
             // 独立模块
             if (isset($this->module['config']['hcategory']) && $this->module['config']['hcategory']) {
                 $this->_admin_msg(0, dr_lang('模块【%s】禁止使用栏目', $dir));
             }
         }
 
-        $this->module['category_field']['thumb'] = [
-            'name' => dr_lang('缩略图'),
-            'ismain' => 1,
-            'ismember' => 1,
-            'fieldtype' => 'File',
-            'fieldname' => 'thumb',
-            'setting' => array(
-                'option' => array(
-                    'ext' => 'jpg,gif,png,jpeg',
-                    'size' => 10,
-                    'input' => 1,
-                    'attachment' => defined('SYS_FIELD_THUMB_ATTACH') ? SYS_FIELD_THUMB_ATTACH : 0,
-                )
-            )
-        ];
         // 初始化数据表
         $this->_init([
             'table' => SITE_ID.'_'.$dir.'_category',
@@ -769,7 +741,7 @@ class Category extends \Phpcmf\Table
         return parent::_Save($id, $data, $old,
             function ($id, $data, $old){
                 // 保存之前的判断
-                $save = \Phpcmf\Service::L('input')->post('data');
+                $save = \Phpcmf\Service::L('input')->post('system');
                 if (!$save['name']) {
                     return dr_return_data(0, dr_lang('栏目名称不能为空'), ['field' => 'name']);
                 } elseif (!$save['dirname']) {
