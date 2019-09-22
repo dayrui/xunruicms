@@ -76,7 +76,7 @@ class Content extends \Phpcmf\Model {
                 $data[0]['sync_cat'] = \Phpcmf\Service::L('input')->post('sync_cat');
             }
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
-            if ($verify) {
+            if (!$verify) {
                 $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
@@ -120,8 +120,13 @@ class Content extends \Phpcmf\Model {
                     'author' => $data[1]['author'],
                     'status' => (int)$data[1]['status'],
                     'content' => dr_array2string(array_merge($data[0], $data[1])),
-                    'backuid' => 0,
-                    'backinfo' => '',
+                    'backuid' => IS_ADMIN ? $this->uid : 0,
+                    'backinfo' => IS_ADMIN ? dr_array2string([
+                        'uid' => $this->uid,
+                        'author' => \Phpcmf\Service::C()->member['username'],
+                        'optiontime' => SYS_TIME,
+                        'backcontent' => $_POST['verify']['msg']
+                    ]) : '',
                     'inputtime' => SYS_TIME
                 );
                 $rt = $this->table($this->mytable.'_verify')->replace($verify);
@@ -130,13 +135,30 @@ class Content extends \Phpcmf\Model {
                     $this->table($this->mytable.'_index')->delete($data[1]['id']);
                     return $rt;
                 }
-                // 通知管理员
-                \Phpcmf\Service::M('member')->admin_notice(
-                    $this->siteid,
-                    'content',
-                    \Phpcmf\Service::C()->member,
-                    dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id']
-                );
+				if (IS_ADMIN && defined('IS_MODULE_TG') && $data[1]['status'] == 0) {
+					// 后台退稿
+					if (\Phpcmf\Service::L('input')->get('clear')) {
+						$this->table($this->mytable)->delete($data[1]['id']);
+						// 删除文件
+						$this->_delete_show_file($old);
+						var_dump($old);
+					}
+					// 通知用户
+					\Phpcmf\Service::M('member')->notice(
+						$data[1]['uid'],
+						3,
+						dr_lang('《%s》审核被拒绝', $data[1]['title']),
+						\Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
+					);
+				} else {
+					// 通知管理员
+					\Phpcmf\Service::M('member')->admin_notice(
+						$this->siteid,
+						'content',
+						\Phpcmf\Service::C()->member,
+						dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id']
+					);
+				}
             }
             return dr_return_data(1, 'ok', $verify);
         }
@@ -908,14 +930,7 @@ class Content extends \Phpcmf\Model {
             }
 
             // 删除文件
-            $file =\Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
-
-            $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->dirname);
-            $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
-            @unlink($hfile);
-
-            $hfile = dr_to_html_file($file, $root.'mobile/');
-            @unlink($hfile);
+            $this->_delete_show_file($row);
 
             // 删除执行的方法
             $this->_recycle_content($id, $row, $note);
@@ -923,6 +938,23 @@ class Content extends \Phpcmf\Model {
 
         return dr_return_data(1);
     }
+	
+	// 删除静态文件
+	protected function _delete_show_file($row) {
+		
+		if (!$row['url']) {
+			return;
+		}
+		
+		$file =\Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
+
+		$root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->dirname);
+		$hfile = dr_to_html_file($file, $root);  // 格式化生成文件
+		@unlink($hfile);
+
+		$hfile = dr_to_html_file($file, $root.'mobile/');
+		@unlink($hfile);
+	}
 
     // 删除回收站数据
     public function delete_for_recycle($ids) {

@@ -277,10 +277,12 @@ class Module extends \Phpcmf\Table
     // 批量推送
     protected function _Admin_Send() {
 
-        $ids = \Phpcmf\Service::L('input')->get('ids');
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
-
         $page = \Phpcmf\Service::L('input')->get('page');
+		if ($page != 5) {
+			$ids = \Phpcmf\Service::L('input')->get('ids');
+			!$ids && $this->_json(0, dr_lang('所选数据不存在'));
+		}
+
 
         if (IS_AJAX_POST) {
 
@@ -351,7 +353,6 @@ class Module extends \Phpcmf\Table
 
                     $this->_json(1, dr_lang('批量执行%s条', $c));
                     break;
-
             }
 
             exit;
@@ -557,6 +558,16 @@ class Module extends \Phpcmf\Table
             ),
         ]);
         \Phpcmf\Service::V()->display('share_list_time.html');
+    }
+
+    // 后台退稿
+    public function tuigao_edit() {
+        // 说明来退稿页面
+        define('IS_MODULE_TG', 1);
+		$id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $this->_Post($id);
+		$this->_json(1, dr_lang('操作异常'));
+		exit;
     }
 
     // 后台定时发布
@@ -916,7 +927,14 @@ class Module extends \Phpcmf\Table
                     if ($old['catid'] && $this->module['category'][$old['catid']]['setting']['notedit']) {
                         $data[1]['catid'] = $old['catid'];
                     }
-
+					// 是否退稿
+					if (defined('IS_MODULE_TG')) {
+						$data[1]['status'] = 0;
+						// 通知
+						$_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);
+						\Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
+					}
+					
                     return dr_return_data(1, 'ok', $data);
                 },
                 function ($id, $data, $old) {

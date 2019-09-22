@@ -1,6 +1,5 @@
 {template "header.html"}
 
-
 <script>
     {if $is_verify}
     {else}
@@ -106,6 +105,67 @@
                 return false;
             },
             content: "{dr_url(APP_DIR.'/time/add')}&is_ajax=1"
+        });
+    }
+	// 退稿
+	function dr_ajax_tui_submit() {
+
+        layer.open({
+            type: 2,
+            title: '<i class="fa fa-sign-out"></i> {dr_lang('退稿')}',
+            fix:true,
+            scrollbar: false,
+            shadeClose: true,
+            shade: 0,
+            area: ["40%", "70%"],
+            btn: [lang['ok']],
+            success: function (json) {
+                if (json.code == 0) {
+                    layer.close();
+                    dr_tips(json.code, json.msg);
+                }
+            },
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                var loading = layer.load(2, {
+                    time: 10000
+                });
+                var url = '{dr_url(APP_DIR.'/home/tuigao_edit')}&id={$id}';
+                var note = $(body).find('#dr_note').val();
+                var clear = $(body).find("input[name='clear']:checked").val();
+		
+                if (note.length < 5) {
+                    layer.closeAll('loading');
+                    dr_tips(0, "{dr_lang('退稿理由必须填写')}");
+                    return false;
+                }
+                $('#myform .form-group').removeClass('has-error');
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url+"&note="+note+"&clear="+clear,
+                    data: $("#myform").serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code == 1) {
+                            dr_tips(1, json.msg);
+                            setTimeout("window.location.href = '{dr_url(APP_DIR.'/home/index')}'", 2000);
+                        } else {
+                            dr_tips(0, json.msg);
+                            if (json.data.field) {
+                                $('#dr_row_'+json.data.field).addClass('has-error');
+                                $('#dr_'+json.data.field).focus();
+                            }
+                        }
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    }
+                });
+
+                return false;
+            },
+            content: "{dr_url(APP_DIR.'/home/tui_edit')}&page=5&is_ajax=1"
         });
     }
 
@@ -348,6 +408,9 @@
             {/if}
             {else}
             <label><a href="{$reply_url}" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('返回列表')}</a></label>
+            {/if}
+            {if $id && !$is_verify}
+			<label><button type="button" onclick="dr_ajax_tui_submit()" class="btn green"> <i class="fa fa-sign-out"></i> {dr_lang('退稿')}</button></label>
             {/if}
         </div>
     </div>

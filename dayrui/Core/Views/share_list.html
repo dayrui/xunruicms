@@ -19,7 +19,7 @@
         });
     }
     function dr_module_delete() {
-        var url = '{dr_url(APP_DIR.'/home/del')}';
+        var url = '{dr_url(APP_DIR.'/home/del')}&is_ajax=1';
         var width = '50%';
         var height = '60%';
         if (is_mobile_cms == 1) {
@@ -150,7 +150,6 @@
                 {/list}
 
                 <td style="overflow:visible">
-
                     {if $ci->_is_admin_auth('edit')}
                     <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs red"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
                     {/if}
