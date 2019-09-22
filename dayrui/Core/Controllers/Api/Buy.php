@@ -12,18 +12,28 @@ class Buy extends \Phpcmf\Common {
     public function index() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
+		if (!$id) {
+			$this->_msg(0, dr_lang('商品id参数不能为空'));
+		}
+		
         $fid = (int)\Phpcmf\Service::L('input')->get('fid');
-        (!$fid || !$id) && exit($this->_msg(0, dr_lang('支付参数不完整')));
+        if (!$fid) {
+			$this->_msg(0, dr_lang('支付字段fid参数不能为空'));
+		}
 
         $num = max(1, (int)\Phpcmf\Service::L('input')->get('num'));
         $sku = dr_safe_replace(\Phpcmf\Service::L('input')->get('sku'), 'undefined');
 
         $field = $this->get_cache('table-field', $fid);
-        !$field && exit($this->_msg(0, dr_lang('支付字段不存在')));
+        if (!$field) {
+			$this->_msg(0, dr_lang('支付字段不存在'));	
+		}
 
         // 获取付款价格
         $rt = \Phpcmf\Service::M('pay')->get_pay_info($id, $field, $num, $sku);
-        isset($rt['code']) && !$rt['code'] && exit($this->_msg(0, $rt['msg']));
+        if (isset($rt['code']) && !$rt['code']) {
+			$this->_msg(0, $rt['msg']);	
+		}
 
         // 挂钩点 购买商品之前
         \Phpcmf\Hooks::trigger('member_buy', $rt);
