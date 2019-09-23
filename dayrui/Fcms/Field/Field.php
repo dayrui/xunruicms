@@ -96,7 +96,8 @@ return [
     [
         'id' => 'Merge',
         'name' => '多行分组字段',
-        'namespace' => ['module', 'form', 'mform'],
+        'used' => ['module', 'form', 'mform'],
+        'namespace' => '',
     ],
     [
         'id' => 'Linkage',
