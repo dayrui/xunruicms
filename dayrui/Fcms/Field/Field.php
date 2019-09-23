@@ -118,7 +118,7 @@ return [
     [
         'id' => 'Redirect',
         'name' => '转向链接',
-        'uesd' => ['module'],
+        'used' => ['module'],
         'namespace' => '',
     ],
     [
