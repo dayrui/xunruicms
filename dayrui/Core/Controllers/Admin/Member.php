@@ -292,8 +292,8 @@ class Member extends \Phpcmf\Table
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
-        // 关闭分组字段
-        \Phpcmf\Service::L('Field')->is_hide_merge_group();
+        // 关闭分组字段?忘记了为什么要关闭分组字段？
+        //\Phpcmf\Service::L('Field')->is_hide_merge_group();
         $this->_Post($uid);
         
         \Phpcmf\Service::V()->assign([
