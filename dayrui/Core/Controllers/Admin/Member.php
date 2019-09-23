@@ -294,12 +294,34 @@ class Member extends \Phpcmf\Table
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         // 关闭分组字段?忘记了为什么要关闭分组字段？
         //\Phpcmf\Service::L('Field')->is_hide_merge_group();
-        $this->_Post($uid);
+        list($tpl, $data) = $this->_Post($uid);
+
+        // 获取该组可用字段
+        $field = [];
+        if (CI_DEBUG && $this->member_cache['field']) {
+            $member = \Phpcmf\Service::M('member')->get_member($uid);
+            $fieldid = [];
+            if ($member['groupid']) {
+                foreach ($member['groupid'] as $gid) {
+                    if ($this->member_cache['group'][$gid]['field']) {
+                        $fieldid = dr_array2array($fieldid, $this->member_cache['group'][$gid]['field']);
+                    }
+                }
+                if ($fieldid) {
+                    foreach ($this->member_cache['field'] as $fname => $t) {
+                        if (!in_array($fname, $fieldid)) {
+                            $field[$fname] = $t;
+                        }
+                    }
+                }
+            }
+        }
         
         \Phpcmf\Service::V()->assign([
             'uid' => $uid,
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
+            'field' => $field,
             'oauth' => \Phpcmf\Service::M()->table('member_oauth')->where('uid', $uid)->getAll(),
             'mygroup' => \Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll(),
         ]);

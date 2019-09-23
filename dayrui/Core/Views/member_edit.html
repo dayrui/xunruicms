@@ -1,6 +1,6 @@
 {template "header.html"}
 <div class="note note-danger">
-    <p>{dr_lang('用户账户详细资料')}</p>
+    <p>{dr_lang('用户详细资料')}</p>
 </div>
 
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
@@ -180,6 +180,16 @@
                             </div>
                         </div>
                         {$myfield}
+
+                        {if $field}
+                        <script>
+                            $(function () {
+                                {loop $field $f}
+                                $('#dr_row_{$f.fieldname} .col-md-9').append('<a style="color:red" href="javascript:dr_help(774);" class="help-block">{dr_lang('此字段在前端不可用')}</a>');
+                                {/loop}
+                            });
+                            </script>
+                        {/if}
                     </div>
                 </div>
                 <div class="tab-pane {if $page==2}active{/if}" id="tab_2">
@@ -194,36 +204,48 @@
                             <label class="col-md-2 control-label">{dr_lang('账号审核')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_verify]" value="1" {if $is_verify}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('当审核通过后才能正常操作网站')} </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('账号锁定')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_lock]" value="1" {if $is_lock}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('锁定账号后，不能登录此账号进行操作网站')} </p>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-md-2 control-label">{dr_lang('实名认证')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_auth]" value="1" {if $is_auth}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('强制进行实名认证')} </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('手机认证')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_mobile]" value="1" {if $is_mobile}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('强制进行手机号码认证')} </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('补全资料')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_complete]" value="1" {if $is_complete}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('强制进行账号资料补全')} </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('上传头像')}</label>
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_avatar]" value="1" {if $is_avatar}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <p class="help-block"> {dr_lang('强制用户上传头像')} </p>
                             </div>
                         </div>
 
