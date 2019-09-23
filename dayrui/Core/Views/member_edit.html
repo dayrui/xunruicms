@@ -185,7 +185,7 @@
                         <script>
                             $(function () {
                                 {loop $field $f}
-                                $('#dr_row_{$f.fieldname} .col-md-9').append('<a style="color:red" href="javascript:dr_help(774);" class="help-block">{dr_lang('此字段在前端不可用')}</a>');
+                                $('#dr_row_{$f.fieldname} .col-md-9').append('<a style="color:red" href="javascript:dr_help(774);" class="form-control-static">{dr_lang('此字段在前端不可用')}</a>');
                                 {/loop}
                             });
                             </script>
