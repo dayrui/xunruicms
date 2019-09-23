@@ -3621,7 +3621,7 @@ if ( ! function_exists('dr_directory_map'))
 // 判断是否购买// 0 没有购买 1 购买了
 if (!function_exists('dr_is_buy')) {
 
-    function dr_is_buy($fid, $id, $uid = 0) {
+    function dr_is_buy($fid, $id, $uid = 0, $sku = '') {
 
         $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
         if (!$field) {
@@ -3636,7 +3636,7 @@ if (!function_exists('dr_is_buy')) {
         !$uid && $uid = (int)\Phpcmf\Service::C()->uid;
 
         // 表名-主键id-字段id*** 模糊匹配
-        $mid = $data['table'].'-'.$id.'-'.$field['id'].'%';
+        $mid = $sku ? $data['table'].'-'.$id.'-'.$field['id'].'-%-'.$sku : $data['table'].'-'.$id.'-'.$field['id'].'%';
 
         return \Phpcmf\Service::M()->db->table('member_paylog')->where('uid', $uid)->where('status', 1)->like('mid', $mid)->countAllResults();
     }
