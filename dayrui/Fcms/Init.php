@@ -107,9 +107,13 @@ define('CMSURI', $uri);
 // 根据自定义URL规则来识别路由
 if (!IS_ADMIN && $uri && !defined('IS_API')) {
     // 自定义URL解析规则
-    $routes = is_file(WEBPATH.'config/rewrite.php') ? require WEBPATH.'config/rewrite.php' : [];
+    $routes = [];
     $routes['rewrite-test.html'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
     $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
+    if (is_file(WEBPATH.'config/rewrite.php')) {
+        $my = require WEBPATH.'config/rewrite.php';
+        $my && $routes = array_merge($routes, $my);
+    }
     // 正则匹配路由规则
     $is_404 = 1;
     foreach ($routes as $key => $val) {
