@@ -1540,14 +1540,15 @@ class Image
      * @param	intval	$width	输出宽度
      * @param	intval	$height	输出高度
      * @param	intval	$water	是否水印
+     * @param	intval	$model	图片模式
      * @return  url
      */
-    public function thumb($img, $width = 0, $height = 0, $water = 0) {
+    public function thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
 
         list($cache_path, $cache_url) = dr_thumb_path();
 
         // 图片缩略图文件
-        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'.jpg';
+        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
         if (is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }
@@ -1609,9 +1610,9 @@ class Image
             $config['height'] = $height;
             $config['dynamic_output'] = FALSE;
             $config['create_thumb'] = true;
-            $config['maintain_ratio'] = true;
+            $config['maintain_ratio'] = $mode == 'auto' ? false : true;
             $config['thumb_marker'] = '';
-            $config['master_dim'] = 'auto';
+            $config['master_dim'] = $mode;
             $this->initialize($config);
             $this->resize();
         } else {

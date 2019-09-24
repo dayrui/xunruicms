@@ -896,18 +896,18 @@ function dr_thumb_path() {
 }
 
 // 缩略图
-function dr_thumb($img, $width = 0, $height = 0, $water = 0) {
+function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
 
 
     if (is_numeric($img)) {
         list($cache_path, $cache_url) = dr_thumb_path();
 
         // 图片缩略图文件
-        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'.jpg';
+        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
         if (is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }
-        return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water);
+        return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode);
     }
 
     $file = dr_file($img);
