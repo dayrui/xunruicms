@@ -1313,9 +1313,11 @@ class Content extends \Phpcmf\Model {
         }
 
         // 提醒
+        /* 暂时不要回复站内信通知
         $row['reply']
-            ? \Phpcmf\Service::M('member')->notice($row['uid'], 2, dr_lang('您的评论被人回复'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid'])
-            : \Phpcmf\Service::M('member')->notice($row['cuid'], 2, dr_lang('您收到了新的评论'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid']);
+            ? \Phpcmf\Service::M('member')->notice($row['uid'], 2, dr_lang('评论被人回复'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid'])
+            : \Phpcmf\Service::M('member')->notice($row['cuid'], 2, dr_lang('收到了新的评论'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid']);
+        */
 
         // 统计评论总数
         $this->comment_update_total($row);
@@ -1341,6 +1343,8 @@ class Content extends \Phpcmf\Model {
         $index = $this->table($this->mytable)->get($row['cid']);
         $row['title'] = $index['title'];
         $row['index'] = $index;
+
+        // 评论通过后的通知消息
         \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_1', $row);
 
         // 挂钩点 评论完成之后
