@@ -1926,10 +1926,10 @@ class View {
 								if ($value) {
 									if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
 										// 兼容写法
-										$json[] = $join. "{$t['name']}  LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
+										$json[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
 									} else {
 										// 高版本写法
-										$json[] = $join."JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
+										$json[] = "JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
 									}
 								}
 							}
