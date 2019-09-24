@@ -192,7 +192,7 @@ class Module extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'del');
-            !isset($cat[$row['catid']]) && $this->_json(0, dr_lang('当前栏目没有删除权限'));
+            !isset($cat[$row['catid']]) && $this->_json(0, dr_lang('当前栏目[%s]没有删除权限', $this->module['category'][$row['catid']]['name']));
         } else {
             $this->content_model->_hcategory_member_del_auth();
         }
@@ -476,18 +476,18 @@ class Module extends \Phpcmf\Table
                         // 表示新增
                         $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'add');
                         if (!$cat[$data[1]['catid']]) {
-                            return dr_return_data(0, dr_lang('当前栏目(%s)没有发布权限', (int)$data[1]['catid']));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', (int)$data[1]['catid']));
                         }
                         // 判断日发布量
                         $day_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'day_post', $this->member['authid']);
-                        if ($this->uid && $day_post
+						if ($this->uid && $day_post
                             && \Phpcmf\Service::M()->db
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
                                     ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
                                     ->where('catid', $data[1]['catid'])
                                     ->countAllResults() >= $day_post) {
-                            return dr_return_data(0, dr_lang('当前栏目每天发布数量不能超过%s个', $day_post));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
                         }
                         // 判断发布总量
                         $total_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'total_post', $this->member['authid']);
@@ -497,12 +497,12 @@ class Module extends \Phpcmf\Table
                                     ->where('uid', $this->uid)
                                     ->where('catid', $data[1]['catid'])
                                     ->countAllResults() >= $day_post) {
-                            return dr_return_data(0, dr_lang('当前栏目的发布数量不能超过%s个', $total_post));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
                         }
                         // 金币验证
                         $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
                         if ($this->uid && $score + $this->member['score'] < 0) {
-                            return dr_return_data(0, dr_lang(SITE_SCORE.'不足，本次需要%s'.SITE_SCORE, abs($score)));
+                            return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
                         }
                     }
                     return dr_return_data(1, '', $data);
