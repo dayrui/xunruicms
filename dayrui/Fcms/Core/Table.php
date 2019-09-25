@@ -40,7 +40,7 @@ class Table extends \Phpcmf\Common
         $this->is_data = 0;
         $this->tpl_name = '';
         $this->auto_save = 1;
-        $this->tpl_prefix =\Phpcmf\Service::L('Router')->class.'_';
+        $this->tpl_prefix = \Phpcmf\Service::L('Router')->class.'_';
         $this->delete_where = '';
         $this->is_module_index = 0;
         $this->is_category_data_field = 0;

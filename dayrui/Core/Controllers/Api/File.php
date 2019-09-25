@@ -274,13 +274,13 @@ class File extends \Phpcmf\Common
                 if (FALSE === $handle) {
                     $this->_msg(0, dr_lang('文件已经损坏'));
                 }
+                
                 $filesize = filesize($info['file']);
                 header("Content-Type: application/zip"); //zip格式的
                 header("Accept-Ranges:bytes");
                 header("Accept-Length:".$filesize);
-                header("Content-Disposition: attachment; filename=".$info['filename'].'.'.$info['fileext']);
+                header("Content-Disposition: attachment; filename=".urlencode($info['filename'].'.'.$info['fileext']));
 
-                $contents = '';
                 while (!feof($handle)) {
                     $contents = fread($handle, 8192);
                     echo $contents;

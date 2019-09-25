@@ -551,7 +551,7 @@ class Model {
         $param = \Phpcmf\Service::L('input')->get();
         unset($param['s'], $param['c'], $param['m'], $param['d'], $param['page']);
         if (isset($param['keyword']) && $param['keyword']) {
-            $param['keyword'] = urldecode($param['keyword']);
+            $param['keyword'] = trim(urldecode($param['keyword']));
         }
 
         if ($size > 0 && !$total) {
