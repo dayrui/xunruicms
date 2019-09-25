@@ -91,7 +91,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 </div>
 			</div>
 			<div class="is_add_hang">
-            <div class="form-group is_first_hang">
+            <div class="form-group ">
 				<label class="col-md-2 control-label">'.dr_lang('表格行数').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][count]" value="'.$option['count'].'"></label>
@@ -246,7 +246,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
         }
         if ($field['setting']['option']['is_add']) {
-            $str.= ' <th width="50">'.dr_lang('删除').'</th>';
+            $str.= ' <th width="50" style="text-align: center">'.dr_lang('删除').'</th>';
         }
         $str.= ' </tr></thead>';
         $str.= ' <tbody id="dr_'.$name.'_body">';
@@ -261,7 +261,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     }
                 }
             }
-            $tpl.= ' <td><button type="button" class="btn red btn-sm" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
+            $tpl.= ' <td style="text-align: center"><button type="button" class="btn red btn-xs" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
             $tpl.= ' </tr>';
             $ksid = 0; // 开始ID
             if ($value) {
@@ -274,7 +274,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                             }
                         }
                     }
-                    $str.= ' <td><button type="button" class="btn red btn-sm" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
+                    $str.= ' <td style="text-align: center"><button type="button" class="btn red btn-xs" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
                     $str.= ' </tr>';
                     $ksid++;
                 }

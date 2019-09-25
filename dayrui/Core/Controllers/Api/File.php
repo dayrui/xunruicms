@@ -274,7 +274,7 @@ class File extends \Phpcmf\Common
                 if (FALSE === $handle) {
                     $this->_msg(0, dr_lang('文件已经损坏'));
                 }
-                
+
                 $filesize = filesize($info['file']);
                 header("Content-Type: application/zip"); //zip格式的
                 header("Accept-Ranges:bytes");

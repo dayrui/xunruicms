@@ -234,6 +234,7 @@ class View {
     public function get_file_name($file, $dir = null, $include = FALSE) {
 
         $dir = $dir ? $dir : $this->_disp_dir;
+        $file = dr_safe_filename($file); // 安全规范化模板名称引入
 
         if ($dir == 'admin' || $this->_is_admin) {
             // 后台操作时，不需要加载风格目录，如果文件不存在可以尝试调用主项目模板

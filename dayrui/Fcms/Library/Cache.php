@@ -56,12 +56,13 @@ class Cache {
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
-        $rt = @file_put_contents($cache_file, $value, LOCK_EX) ? true : false;
-        if (!$rt) {
+        $rt = @file_put_contents($cache_file, $value, LOCK_EX);
+
+        if ($rt === false) {
             log_message('error', '缓存文件['.$cache_file.']无法写入');
         }
 
-        return $rt;
+        return $rt ? true : false;
     }
 
     /**
