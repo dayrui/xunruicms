@@ -27,6 +27,8 @@ class Seo
             'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
         ];
 
+        !$seo['meta_title'] && $seo['meta_title'] = SITE_NAME;
+
         return $seo;
     }
 

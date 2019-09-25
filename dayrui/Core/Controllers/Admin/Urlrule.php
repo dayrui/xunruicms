@@ -88,9 +88,7 @@ class Urlrule extends \Phpcmf\Table
     // 伪静态
     public function rewrite_index() {
 
-        $name = $code = $note = '';
         $server = strtolower($_SERVER['SERVER_SOFTWARE']);
-
         if (strpos($server, 'apache') !== FALSE) {
             $name = 'Apache';
             $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到网站根目录</b></font>';
@@ -99,35 +97,6 @@ class Urlrule extends \Phpcmf\Table
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
                 .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php [NC,L]';
-        } elseif (strpos($server, 'iis/7') !== FALSE || strpos($server, 'iis/8') !== FALSE) {
-            $name = $server;
-            $note = '<font color=red><b>将以下内容保存为Web.config文件，放到网站根目录</b></font>';
-            $code = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL
-                .'<configuration>'.PHP_EOL
-                .'    <system.webServer>'.PHP_EOL
-                .'        <rewrite>'.PHP_EOL
-                .'            <rules>'.PHP_EOL
-                .'		<rule name="finecms" stopProcessing="true">'.PHP_EOL
-                .'		    <match url="^(.*)$" />'.PHP_EOL
-                .'		    <conditions logicalGrouping="MatchAll">'.PHP_EOL
-                .'		        <add input="{HTTP_HOST}" pattern="^(.*)$" />'.PHP_EOL
-                .'		        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />'.PHP_EOL
-                .'		        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />'.PHP_EOL
-                .'		    </conditions>'.PHP_EOL
-                .'		    <action type="Rewrite" url="index.php" /> '.PHP_EOL
-                .'                </rule>'.PHP_EOL
-                .'            </rules>'.PHP_EOL
-                .'        </rewrite>'.PHP_EOL
-                .'    </system.webServer> '.PHP_EOL
-                .'</configuration>';
-        } elseif (strpos($server, 'iis/6') !== FALSE) {
-            $name = $server;
-            $note = '建议使用isapi_rewrite第三版,老版本的rewrite不支持RewriteCond语法<br><font color=red><b>将以下内容保存为.htaccess文件，放到网站根目录</b></font>';
-            $code = 'RewriteEngine On'.PHP_EOL
-                .'RewriteBase /'.PHP_EOL
-                .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
-                .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
-                .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php';
         } elseif (strpos($server, 'nginx') !== FALSE) {
             $name = $server;
             $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码），您懂得！</b></font>';
@@ -144,7 +113,12 @@ class Urlrule extends \Phpcmf\Table
                 .'}';
         } else {
             $name = $server;
-            $note = '<font color=red><b>当前服务器不提供伪静态规则，请自己将所有页面定向到index.php文件</b></font>';
+            $note = '<font color=red><b>无法为此服务器提供伪静态规则，建议让运营商帮你把下面的Apache规则做转换</b></font>';
+            $code = 'RewriteEngine On'.PHP_EOL
+                .'RewriteBase /'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
+                .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php [NC,L]';
         }
 
         \Phpcmf\Service::V()->assign([

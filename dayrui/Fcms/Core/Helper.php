@@ -947,6 +947,11 @@ function dr_get_file($id) {
  * @return  array
  */
 function dr_down_file($id) {
+
+    if (!$id) {
+        return '文件参数不能为空';
+    }
+
     return ROOT_URL."index.php?s=api&c=file&m=down&id=".urlencode($id);
 }
 

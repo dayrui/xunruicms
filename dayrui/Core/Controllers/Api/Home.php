@@ -11,7 +11,6 @@ class Home extends \Phpcmf\Common
 
 	public function index() {
 
-
 	    if (IS_API === 'pay') {
 	        // 支付接口部分
 
@@ -28,15 +27,19 @@ class Home extends \Phpcmf\Common
 
             require $apifile;
 
+        } elseif (is_file(IS_API)) {
+            // 自定义任意目录的api
+
+            require IS_API;
+
+        } else {
+
+            $myfile = MYPATH.'Api/'.ucfirst(IS_API).'.php';
+            !is_file($myfile) && exit('api file is error');
+            require $myfile;
             exit;
         }
-
-        $myfile = MYPATH.'Api/'.ucfirst(IS_API).'.php';
-
-		!is_file($myfile) && exit('api file is error');
-
-		require $myfile;
-		exit;
+        exit;
 	}
 
 }

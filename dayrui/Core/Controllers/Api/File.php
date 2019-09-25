@@ -267,7 +267,7 @@ class File extends \Phpcmf\Common
             $info = $this->get_attachment($id);
             if (!$info) {
                 // 不存在
-                $this->_msg(0, dr_lang('附件不存在'));
+                $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             } elseif (is_file($info['file'])) {
                 set_time_limit(0);  //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
                 $handle = fopen($info['file'],"rb");
@@ -297,7 +297,7 @@ class File extends \Phpcmf\Common
             $info = dr_file($id);
             if (!$info) {
                 // 不存在
-                $this->_msg(0, dr_lang('附件不存在'));
+                $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             }
             dr_redirect($info);
         }

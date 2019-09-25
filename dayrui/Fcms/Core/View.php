@@ -1917,24 +1917,24 @@ class View {
                 switch ($t['adj']) {
 
                     case 'JSON':
-						if ($t['value'] == '') {
-							$string.= " ".$t['name']." = ''";
-						} else {
-							$arr = explode('|', $t['value']);
-							$json = [];
-							foreach ($arr as $value) {
-								if ($value) {
-									if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-										// 兼容写法
-										$json[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
-									} else {
-										// 高版本写法
-										$json[] = "JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
-									}
-								}
-							}
-							$string.= $json ? '('.implode(' OR ', $json).')' : '';
-						}
+                        if ($t['value'] == '') {
+                            $string.= " ".$t['name']." = ''";
+                        } else {
+                            $arr = explode('|', $t['value']);
+                            $json = [];
+                            foreach ($arr as $value) {
+                                if ($value) {
+                                    if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                                        // 兼容写法
+                                        $json[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
+                                    } else {
+                                        // 高版本写法
+                                        $json[] = "JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
+                                    }
+                                }
+                            }
+                            $string.= $json ? $join.' ('.implode(' OR ', $json).')' : '';
+                        }
                         
                         break;
 
