@@ -463,8 +463,10 @@ class Module extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
-        if (!$data) {
-            $this->_admin_msg(0, dr_lang('内容不存在'));
+        if (!$data['id']) {
+            // 删除审核提醒
+            \Phpcmf\Service::M('member')->delete_admin_notice(APP_DIR.'/verify/edit:id/'.$id, SITE_ID);
+            $this->_admin_msg(0, dr_lang('审核内容不存在'));
         } elseif ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($data['catid'], $data['uid'])) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
         }
@@ -784,14 +786,20 @@ class Module extends \Phpcmf\Table
         if (defined('IS_MODULE_VERIFY')) {
             // 判断是否来至审核
             $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
-            $data = dr_string2array($row['content']);
-            $data['verify'] = [
-                'uid' => $row['backuid'],
-                'isnew' => $row['isnew'],
-                'backinfo' => $row['backinfo'],
-            ];
-            $data['myflag'] = $data['flag'];
-            $this->is_get_catid = $catid ? $catid : $data['catid'];
+            if ($row) {
+                $data = dr_string2array($row['content']);
+                $data['verify'] = [
+                    'uid' => $row['backuid'],
+                    'isnew' => $row['isnew'],
+                    'backinfo' => $row['backinfo'],
+                ];
+                $data['myflag'] = $data['flag'];
+                $this->is_get_catid = $catid ? $catid : $data['catid'];
+            } else {
+                $data = [
+                    'id' => 0,
+                ];
+            }
             return $data;
         } elseif (defined('IS_MODULE_TIME')) {
             // 判断是否来至定时发布
