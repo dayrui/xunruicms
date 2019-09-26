@@ -76,7 +76,8 @@ class Content extends \Phpcmf\Model {
                 $data[0]['sync_cat'] = \Phpcmf\Service::L('input')->post('sync_cat');
             }
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
-            if (!$verify) {
+            if ($verify) {
+				// 修改审核
                 $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
@@ -112,6 +113,7 @@ class Content extends \Phpcmf\Model {
                     \Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
                 );
             } else {
+				// 新增审核
                 $verify = array(
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
@@ -141,7 +143,6 @@ class Content extends \Phpcmf\Model {
 						$this->table($this->mytable)->delete($data[1]['id']);
 						// 删除文件
 						$this->_delete_show_file($old);
-						var_dump($old);
 					}
 					// 通知用户
 					\Phpcmf\Service::M('member')->notice(
