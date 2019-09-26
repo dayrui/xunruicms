@@ -144,6 +144,8 @@ class Check extends \Phpcmf\Common
                 $lang = file_get_contents(LANG_PATH.'lang.js');
                 if (strlen($lang) < 10) {
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
+                } elseif (strpos($lang, 'finecms_datepicker_lang') === false) {
+                    $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
                 }
 
                 // 模板文件

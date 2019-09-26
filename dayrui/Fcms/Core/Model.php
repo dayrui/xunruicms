@@ -663,7 +663,7 @@ class Model {
 
     // 获取当前执行后的sql语句
     public function get_sql_query() {
-        return str_replace(PHP_EOL, ' ', $this->db->getLastQuery()->getOriginalQuery());
+        return str_replace(PHP_EOL, ' ', $this->db->getLastQuery()->getQuery());
     }
     
     private function _clear() {

@@ -18,12 +18,12 @@
         <div class="col-md-12 col-sm-12">
             <label>
                 <select name="field" class="form-control">
+                    <option value="id"> Id </option>
                     {loop $field $t}
                     {if $t.ismain}
                     <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
                     {/if}
                     {/loop}
-                    <option value="id"> Id </option>
                 </select>
             </label>
             <label><i class="fa fa-caret-right"></i></label>
