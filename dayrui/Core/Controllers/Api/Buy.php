@@ -36,7 +36,7 @@ class Buy extends \Phpcmf\Common {
 		}
 
         // 挂钩点 购买商品之前
-        \Phpcmf\Hooks::trigger('member_buy', $rt);
+        \Phpcmf\Hooks::trigger('member_buy_before', $rt);
 
         \Phpcmf\Service::V()->assign($rt);
         \Phpcmf\Service::V()->assign([

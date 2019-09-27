@@ -116,8 +116,8 @@ class Pay extends \Phpcmf\Model
             $sku_string = '';
         }
 
-        // 表名-主键id-字段id-数量-sku
-        $mid = $table .'-'. $id .'-'. $field['id'] .'-'. max(1, (int)$num) .'-'. ($sku ? $sku : 'null');
+        // buy-表名-主键id-字段id-数量-sku
+        $mid = 'buy-'.$table .'-'. $id .'-'. $field['id'] .'-'. max(1, (int)$num) .'-'. ($sku ? $sku : 'null');
 
         return [
             'mid' => $mid,
@@ -226,6 +226,11 @@ class Pay extends \Phpcmf\Model
                     case 'gathering':
                         // 收款插件
                         return '<span class="label label-danger"> '.dr_lang('收款').' </span>';
+                        break;
+
+                    case 'buy':
+                        // 快速下单
+                        return '<span class="label label-danger"> '.dr_lang('下单').' </span>';
                         break;
 
                     case 'my':
@@ -526,6 +531,11 @@ class Pay extends \Phpcmf\Model
                     } else {
                         log_message('error', '打赏付款(#'.$id.')回调失败：'.$rt['msg']);
                     }
+                    break;
+
+                case 'buy':
+                    // 快速下单
+                    \Phpcmf\Hooks::trigger('member_buy_after', $data);
                     break;
 
                 case 'order':
