@@ -125,6 +125,10 @@ class Cloud extends \Phpcmf\Common
     // 本地应用
     public function local() {
 
+        if (SITE_ID > 1) {
+            $this->_admin_msg(0, '请切换到[主站点]操作');exit;
+        }
+
         $data = [];
         $local = dr_dir_map(dr_get_app_list(), 1);
         foreach ($local as $dir) {
