@@ -3641,7 +3641,7 @@ if (!function_exists('dr_is_buy')) {
         !$uid && $uid = (int)\Phpcmf\Service::C()->uid;
 
         // buy-表名-主键id-字段id*** 模糊匹配
-        $mid = $sku ? 'buy-'.$data['table'].'-'.$id.'-'.$field['id'].'-%-'.$sku : 'pay-'.$data['table'].'-'.$id.'-'.$field['id'].'%';
+        $mid = $sku ? 'buy-'.$data['table'].'-'.$id.'-'.$field['id'].'-%-'.$sku : 'buy-'.$data['table'].'-'.$id.'-'.$field['id'].'%';
 
         return \Phpcmf\Service::M()->db->table('member_paylog')->where('uid', $uid)->where('status', 1)->like('mid', $mid)->countAllResults();
     }

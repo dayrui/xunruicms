@@ -26,7 +26,7 @@ class Buy extends \Phpcmf\Common {
 
         $field = $this->get_cache('table-field', $fid);
         if (!$field) {
-			$this->_msg(0, dr_lang('支付字段不存在'));	
+			$this->_msg(0, dr_lang('支付字段[%s]不存在', $fid));
 		}
 
         // 获取付款价格

@@ -250,13 +250,14 @@ class Pay extends \Phpcmf\Model
 
                     default:
                         // 来自自定义字段
+                        /*
                         $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
                         if ($field['relatedname'] == 'module') {
                             // 模块
                             return '<span class="label label-success"> '.dr_lang('模块').' </span>';
                         } elseif (function_exists('dr_paytype_'.$mark)) {
                             return call_user_func('dr_paytype_'.$mark);
-                        }
+                        }*/
                         return '<span class="label label-warning"> '.dr_lang('其他').' </span>';
                         break;
                 }
@@ -376,12 +377,16 @@ class Pay extends \Phpcmf\Model
                         $value = ceil($value);
                         break;
 
-                    default:
-                        // 来自自定义字段
-                        $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
+                    case 'buy':
+                        // 快速下单
+                        $field = \Phpcmf\Service::C()->get_cache('table-field', $num);
                         if (!$field) {
-                            return dr_lang('支付字段不存在');
+                            return dr_lang('支付字段[%s]不存在', $num);
                         }
+                        break;
+
+                    default:
+                        return dr_return_data(0, dr_lang('未定义的支付方式'));
                         break;
                 }
                 break;
@@ -675,8 +680,7 @@ class Pay extends \Phpcmf\Model
 
             // 其他来自自定义字段
             default:
-                list($rname, $rid, $fid, $num, $sku) = explode('-', $post['mark']);
-
+                list($rname, $rid, $fid, $num, $sku, $ff) = explode('-', $post['mark']);
                 switch ($rname) {
 
                     case 'gathering':
@@ -759,16 +763,16 @@ class Pay extends \Phpcmf\Model
                         $tousername = ''; // 收款方为统系
                         break;
 
-                    default:
-                        // 来自自定义字段
-                        $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
+                    case 'buy':
+                        // 快速下单 buy-1_book-992-185-1-null" $rname-$rid-$fid- $num-$sku- $ff
+                        $field = \Phpcmf\Service::C()->get_cache('table-field', $num);
                         if (!$field) {
-                            return dr_return_data(0, dr_lang('支付字段不存在'));
+                            return dr_return_data(0, dr_lang('支付字段[%s]不存在', $num));
                         }
                         // 获取付款价格
-                        $rt = $this->get_pay_info($rid, $field, $num, $sku);
+                        $rt = $this->get_pay_info($fid, $field, $sku, $ff);
                         if ($rt['total'] <= 0) {
-                            return dr_return_data(0, dr_lang('金额不规范'));
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $rt['total']));
                         } elseif ($rt['mid'] != $post['mark']) {
                             return dr_return_data(0, dr_lang('支付信息验证失败'));
                         }
@@ -779,6 +783,10 @@ class Pay extends \Phpcmf\Model
                         if ($this->uid == $touid) {
                             return dr_return_data(0, dr_lang('不能对自己付款'));
                         }
+                        break;
+
+                    default:
+                        return dr_return_data(0, dr_lang('未定义的支付方式'));
                         break;
                 }
 

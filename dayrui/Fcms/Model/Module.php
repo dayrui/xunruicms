@@ -179,6 +179,251 @@ class Module extends \Phpcmf\Model
         return $CAT;
     }
 
+    // 安装模块
+    public function install($dir, $config = [], $is_app = 0) {
+
+        $mpath = dr_get_app_dir($dir);
+        if (!$config) {
+            if (!is_file($mpath.'Config/App.php')) {
+                return dr_return_data(0, dr_lang('模块配置文件不存在'));
+            }
+            $config = require $mpath.'Config/App.php';
+        }
+
+        $table = $this->dbprefix(dr_module_table_prefix($dir)); // 当前表前缀
+        $system_table = require CMSPATH.'Config/SysTable.php';
+        if (!$system_table ) {
+            return dr_return_data(0, dr_lang('系统表配置文件不存在'));
+        }
+
+        // 判断是否强制独立模块或共享模块
+        isset($config['mtype']) && $config['mtype'] && $config['share'] = $config['mtype'] == 2 ? 0 : 1;
+
+        // 模块内容表结构和字段结构
+        if (is_file($mpath.'Config/Content.php')) {
+            $content_table = require $mpath.'Config/Content.php';
+        } else {
+            $content_table = require CMSPATH.'Config/Content.php';
+        }
+
+        $module = $this->db->table('module')->where('dirname', $dir)->get()->getRowArray();
+        if (!$module) {
+            if (isset($config['ftype']) && $config['ftype'] == 'module' && $is_app == 0) {
+                // 首次安装模块时，验证应用模块
+                return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去安装'));
+            }
+            $module = [
+                'site' => dr_array2string([
+                    SITE_ID => [
+                        'html' => 0,
+                        'theme' => 'default',
+                        'domain' => '',
+                        'template' => 'default',
+                    ]
+                ]),
+                'share' => intval($config['share']),
+                'dirname' => $dir,
+                'setting' => '{"order":"displayorder DESC,updatetime DESC","verify_msg":"","delete_msg":"","list_field":{"title":{"use":"1","order":"1","name":"主题","width":"","func":"title"},"catid":{"use":"1","order":"2","name":"栏目","width":"130","func":"catid"},"author":{"use":"1","order":"3","name":"作者","width":"120","func":"author"},"updatetime":{"use":"1","order":"4","name":"更新时间","width":"160","func":"datetime"}},"comment_list_field":{"content":{"use":"1","order":"1","name":"评论","width":"","func":"comment"},"author":{"use":"1","order":"3","name":"作者","width":"100","func":"author"},"inputtime":{"use":"1","order":"4","name":"评论时间","width":"160","func":"datetime"}},"flag":null,"param":null,"search":{"use":"1","field":"title,keywords","total":"500","length":"4","param_join":"-","param_rule":"0","param_field":"","param_join_field":["","","","","","",""],"param_join_default_value":"0"}}',
+                'comment' => '{"use":"1","num":"0","my":"0","reply":"0","ct_reply":"0","pagesize":"","pagesize_mobile":"","pagesize_api":"","review":{"score":"10","point":"0","value":{"1":{"name":"1星评价"},"2":{"name":"2星评价"},"3":{"name":"3星评价"},"4":{"name":"4星评价"},"5":{"name":"5星评价"}},"option":{"1":{"name":"选项1"},"2":{"name":"选项2"},"3":{"name":"选项3"},"4":{"name":"选项4"},"5":{"name":"选项5"},"6":{"name":"选项6"},"7":{"name":"选项7"},"8":{"name":"选项8"},"9":{"name":"选项9"}}}}',
+                'disabled' => 0,
+                'displayorder' => 0,
+            ];
+            $rt = $this->table('module')->insert($module);
+            if (!$rt['code']) {
+                return dr_return_data(0, $rt['msg']);
+            }
+            $module['id'] = $rt['code'];
+            $module['site'] = dr_string2array($module['site']);
+        } else {
+            $module['site'] = dr_string2array($module['site']);
+            $module['site'][SITE_ID] = [
+                'html' => 0,
+                'theme' => 'default',
+                'domain' => '',
+                'template' => 'default',
+            ];
+            $this->table('module')->update($module['id'], [
+                'site' => dr_array2string($module['site'])
+            ]);
+        }
+
+        $siteid = 1;
+        if (dr_count($module['site']) > 1) {
+            // 多站点的情况下作为站点安装
+            foreach ($module['site'] as $sid => $t) {
+                if ($sid != SITE_ID) {
+                    $siteid = $sid;
+                    break;
+                }
+            }
+            // 多站点时的复制站点表$siteid
+        }
+
+
+        // 创建内容表字段
+        foreach ([1, 0] as $is_main) {
+            $t = $content_table['field'][$is_main];
+            if ($t) {
+                foreach ($t as $field) {
+                    $this->_add_field($field, $is_main, $module['id'], 'module');
+                }
+            }
+        }
+        $system_table[''] = $content_table['table'][1];
+        $system_table['_data_0'] = $content_table['table'][0];
+        // 创建系统表
+        foreach ($system_table as $name => $sql) {
+            if (dr_count($module['site']) == 1) {
+                // 表示第一个站就创建
+                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
+            } else {
+                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
+                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
+                $sql = str_replace(
+                    array($sql['Table'], 'CREATE TABLE'),
+                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                    $sql['Create Table']
+                );
+                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
+            }
+        }
+        // 创建相关栏目表字段
+        if (isset($config['scategory']) && $config['scategory']) {
+            if (!\Phpcmf\Service::M()->db->fieldExists('tid', $table.'_category')) {
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `tid` tinyint(1) NOT NULL COMMENT \'栏目类型，0单页，1模块，2外链\'');
+            }
+            if (!\Phpcmf\Service::M()->db->fieldExists('content', $table.'_category')) {
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `content` mediumtext NOT NULL COMMENT \'单页内容\'');
+            }
+        }
+        // 第一次安装模块
+        // system = 2 2菜单不出现在内容下，由开发者自定义
+        if ($config['system'] == 2 && dr_count($module['site']) == 1 && $is_app == 0 && is_file($mpath.'Config/Menu.php')) {
+            \Phpcmf\Service::M('Menu')->add_app($dir);
+        }
+
+        // =========== 这里是公共部分 ===========
+
+        // 创建评论
+        $comment = require CMSPATH.'Config/Comment.php';
+        foreach ($comment as $name => $sql) {
+            if (dr_count($module['site']) == 1) {
+                // 表示第一个站就创建
+                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
+            } else {
+                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
+                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
+                $sql = str_replace(
+                    array($sql['Table'], 'CREATE TABLE'),
+                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                    $sql['Create Table']
+                );
+                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
+            }
+        }
+
+        // 创建表单
+        if (dr_count($module['site']) == 1) {
+            // 表示第一个站就创建表单
+            if (is_file($mpath.'Config/Form.php')) {
+                $form = require $mpath.'Config/Form.php';
+                if ($form) {
+                    foreach ($form as $ftable => $t) {
+                        // 插入表单数据
+                        $rt = $this->table('module_form')->insert(array(
+                            'name' => $t['form']['name'],
+                            'table' => $ftable,
+                            'module' => $dir,
+                            'setting' => $t['form']['setting'],
+                            'disabled' => 0,
+                        ));
+                        if ($rt['code']) {
+                            // 插入sql
+                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable, trim($t['table'][1])));
+                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable.'_data_0', trim($t['table'][0])));
+                            // 插入自定义字段
+                            foreach ([1, 0] as $is_main) {
+                                $f = $t['field'][$is_main];
+                                if ($f) {
+                                    foreach ($f as $field) {
+                                        $this->_add_field($field, $is_main, $rt['code'], 'mform-'.$dir);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // 创建模块已经存在的表单
+            $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
+            if ($form) {
+                foreach ($form as $t) {
+                    $mytable = $table.'_form_'.$t['table'];
+                    // 主表
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."`")->getRowArray();
+                    $sql = str_replace(
+                        array($sql['Table'], 'CREATE TABLE'),
+                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                        $sql['Create Table']
+                    );
+                    $sql = trim(str_replace('{tablename}', $mytable, $sql));
+                    $this->db->query($sql);
+                    // 附表
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."_data_0`")->getRowArray();
+                    $sql = str_replace(
+                        array($sql['Table'], 'CREATE TABLE'),
+                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                        $sql['Create Table']
+                    );
+                    $sql = trim(str_replace('{tablename}', $mytable.'_data_0', $sql));
+                    $this->db->query($sql);
+                }
+            }
+        }
+
+        if (is_file($mpath.'Config/Install.php')) {
+            require $mpath.'Config/Install.php';
+        }
+
+        // 执行自定义sql
+        if (is_file($mpath.'Config/Install.sql')) {
+            $sql = file_get_contents($mpath.'Config/Install.sql');
+            $sql && \Phpcmf\Service::M('table')->_query(
+                $sql,
+                [
+                    [
+                        '{moduleid}',
+                        '{dbprefix}',
+                        '{tablename}',
+                        '{dirname}',
+                        '{siteid}'
+                    ],
+                    [
+                        $module['id'],
+                        $this->dbprefix(),
+                        $table,
+                        $dir,
+                        $siteid
+                    ],
+                ]
+            );
+        }
+
+        // 执行站点sql语句
+        if (is_file($mpath.'Config/Install_site.sql')) {
+            $sql = file_get_contents($mpath.'Config/Install_site.sql');
+            foreach ($this->site as $siteid) {
+                $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
+                if ($rt) {
+                    return dr_return_data(0, $rt);
+                }
+            }
+        }
+
+        return dr_return_data(1, dr_lang('操作成功，请刷新后台页面'), $module);
+    }
+
     // 卸载模块
     public function uninstall($dir, $config = [], $is_app = 0) {
 
@@ -312,248 +557,6 @@ class Module extends \Phpcmf\Model
         }
 
         return dr_return_data(1, dr_lang('卸载成功'));
-    }
-
-    // 安装模块
-    public function install($dir, $config = [], $is_app = 0) {
-
-        $mpath = dr_get_app_dir($dir);
-        if (!$config) {
-            if (!is_file($mpath.'Config/App.php')) {
-                return dr_return_data(0, dr_lang('模块配置文件不存在'));
-            }
-            $config = require $mpath.'Config/App.php';
-        }
-
-        $table = $this->dbprefix(dr_module_table_prefix($dir)); // 当前表前缀
-        $system_table = require CMSPATH.'Config/SysTable.php';
-        if (!$system_table ) {
-            return dr_return_data(0, dr_lang('系统表配置文件不存在'));
-        }
-
-        // 判断是否强制独立模块或共享模块
-        isset($config['mtype']) && $config['mtype'] && $config['share'] = $config['mtype'] == 2 ? 0 : 1;
-
-        // 模块内容表结构和字段结构
-        if (is_file($mpath.'Config/Content.php')) {
-            $content_table = require $mpath.'Config/Content.php';
-        } else {
-            $content_table = require CMSPATH.'Config/Content.php';
-        }
-
-        $module = $this->db->table('module')->where('dirname', $dir)->get()->getRowArray();
-        if (!$module) {
-            if (isset($config['ftype']) && $config['ftype'] == 'module' && $is_app == 0) {
-                // 首次安装模块时，验证应用模块
-                return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去安装'));
-            }
-            $module = [
-                'site' => dr_array2string([
-                    SITE_ID => [
-                        'html' => 0,
-                        'theme' => 'default',
-                        'domain' => '',
-                        'template' => 'default',
-                    ]
-                ]),
-                'share' => intval($config['share']),
-                'dirname' => $dir,
-                'setting' => '{"order":"displayorder DESC,updatetime DESC","verify_msg":"","delete_msg":"","list_field":{"title":{"use":"1","order":"1","name":"主题","width":"","func":"title"},"catid":{"use":"1","order":"2","name":"栏目","width":"130","func":"catid"},"author":{"use":"1","order":"3","name":"作者","width":"120","func":"author"},"updatetime":{"use":"1","order":"4","name":"更新时间","width":"160","func":"datetime"}},"comment_list_field":{"content":{"use":"1","order":"1","name":"评论","width":"","func":"comment"},"author":{"use":"1","order":"3","name":"作者","width":"100","func":"author"},"inputtime":{"use":"1","order":"4","name":"评论时间","width":"160","func":"datetime"}},"flag":null,"param":null,"search":{"use":"1","field":"title,keywords","total":"500","length":"4","param_join":"-","param_rule":"0","param_field":"","param_join_field":["","","","","","",""],"param_join_default_value":"0"}}',
-                'comment' => '{"use":"1","num":"0","my":"0","reply":"0","ct_reply":"0","pagesize":"","pagesize_mobile":"","pagesize_api":"","review":{"score":"10","point":"0","value":{"1":{"name":"1星评价"},"2":{"name":"2星评价"},"3":{"name":"3星评价"},"4":{"name":"4星评价"},"5":{"name":"5星评价"}},"option":{"1":{"name":"选项1"},"2":{"name":"选项2"},"3":{"name":"选项3"},"4":{"name":"选项4"},"5":{"name":"选项5"},"6":{"name":"选项6"},"7":{"name":"选项7"},"8":{"name":"选项8"},"9":{"name":"选项9"}}}}',
-                'disabled' => 0,
-                'displayorder' => 0,
-            ];
-            $rt = $this->table('module')->insert($module);
-            if (!$rt['code']) {
-                return dr_return_data(0, $rt['msg']);
-            }
-            $module['id'] = $rt['code'];
-        } else {
-            $module['site'] = dr_string2array($module['site']);
-            $module['site'][SITE_ID] = [
-                'html' => 0,
-                'theme' => 'default',
-                'domain' => '',
-                'template' => 'default',
-            ];
-            $this->table('module')->update($module['id'], [
-                'site' => dr_array2string($module['site'])
-            ]);
-        }
-
-        $siteid = 1;
-        $site = dr_string2array($module['site']);
-        if (dr_count($site) > 1) {
-            foreach ($site as $sid => $t) {
-                if ($sid != SITE_ID) {
-                    $siteid = $sid;
-                    break;
-                }
-            }
-        }
-
-        // 创建内容表字段
-        foreach ([1, 0] as $is_main) {
-            $t = $content_table['field'][$is_main];
-            if ($t) {
-                foreach ($t as $field) {
-                    $this->_add_field($field, $is_main, $module['id'], 'module');
-                }
-            }
-        }
-        $system_table[''] = $content_table['table'][1];
-        $system_table['_data_0'] = $content_table['table'][0];
-        // 创建系统表
-        foreach ($system_table as $name => $sql) {
-            if (dr_count($site) == 1) {
-                // 表示第一个站就创建
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
-            } else {
-                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
-                $sql = str_replace(
-                    array($sql['Table'], 'CREATE TABLE'),
-                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                    $sql['Create Table']
-                );
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
-            }
-        }
-        // 创建相关栏目表字段
-        if (isset($config['scategory']) && $config['scategory']) {
-            if (!\Phpcmf\Service::M()->db->fieldExists('tid', $table.'_category')) {
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `tid` tinyint(1) NOT NULL COMMENT \'栏目类型，0单页，1模块，2外链\'');
-            }
-            if (!\Phpcmf\Service::M()->db->fieldExists('content', $table.'_category')) {
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `content` mediumtext NOT NULL COMMENT \'单页内容\'');
-            }
-        }
-        // 第一次安装模块
-        // system = 2 2菜单不出现在内容下，由开发者自定义
-        if ($config['system'] == 2 && dr_count($site) == 1 && $is_app == 0 && is_file($mpath.'Config/Menu.php')) {
-            \Phpcmf\Service::M('Menu')->add_app($dir);
-        }
-
-        // =========== 这里是公共部分 ===========
-
-        // 创建评论
-        $comment = require CMSPATH.'Config/Comment.php';
-        foreach ($comment as $name => $sql) {
-            if (dr_count($site) == 1) {
-                // 表示第一个站就创建
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
-            } else {
-                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
-                $sql = str_replace(
-                    array($sql['Table'], 'CREATE TABLE'),
-                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                    $sql['Create Table']
-                );
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, trim($sql)));
-            }
-        }
-
-        // 创建表单
-        if (dr_count($site) == 1) {
-            // 表示第一个站就创建表单
-            if (is_file($mpath.'Config/Form.php')) {
-                $form = require $mpath.'Config/Form.php';
-                if ($form) {
-                    foreach ($form as $ftable => $t) {
-                        // 插入表单数据
-                        $rt = $this->table('module_form')->insert(array(
-                            'name' => $t['form']['name'],
-                            'table' => $ftable,
-                            'module' => $dir,
-                            'setting' => $t['form']['setting'],
-                            'disabled' => 0,
-                        ));
-                        if ($rt['code']) {
-                            // 插入sql
-                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable, trim($t['table'][1])));
-                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable.'_data_0', trim($t['table'][0])));
-                            // 插入自定义字段
-                            foreach ([1, 0] as $is_main) {
-                                $f = $t['field'][$is_main];
-                                if ($f) {
-                                    foreach ($f as $field) {
-                                        $this->_add_field($field, $is_main, $rt['code'], 'mform-'.$dir);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            // 创建模块已经存在的表单
-            $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
-            if ($form) {
-                foreach ($form as $t) {
-                    $mytable = $table.'_form_'.$t['table'];
-                    // 主表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."`")->getRowArray();
-                    $sql = str_replace(
-                        array($sql['Table'], 'CREATE TABLE'),
-                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                        $sql['Create Table']
-                    );
-                    $sql = trim(str_replace('{tablename}', $mytable, $sql));
-                    $this->db->query($sql);
-                    // 附表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."_data_0`")->getRowArray();
-                    $sql = str_replace(
-                        array($sql['Table'], 'CREATE TABLE'),
-                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                        $sql['Create Table']
-                    );
-                    $sql = trim(str_replace('{tablename}', $mytable.'_data_0', $sql));
-                    $this->db->query($sql);
-                }
-            }
-        }
-
-        if (is_file($mpath.'Config/Install.php')) {
-            require $mpath.'Config/Install.php';
-        }
-
-        // 执行自定义sql
-        if (is_file($mpath.'Config/Install.sql')) {
-            $sql = file_get_contents($mpath.'Config/Install.sql');
-            $sql && \Phpcmf\Service::M('table')->_query(
-                $sql,
-                [
-                    [
-                        '{moduleid}',
-                        '{dbprefix}',
-                        '{tablename}',
-                        '{dirname}',
-                        '{siteid}'
-                    ],
-                    [
-                        $module['id'],
-                        $this->dbprefix(),
-                        $table,
-                        $dir,
-                        $siteid
-                    ],
-                ]
-            );
-        }
-
-        // 执行站点sql语句
-        if (is_file($mpath.'Config/Install_site.sql')) {
-            $sql = file_get_contents($mpath.'Config/Install_site.sql');
-            foreach ($this->site as $siteid) {
-                $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
-                if ($rt) {
-                    return dr_return_data(0, $rt);
-                }
-            }
-        }
-
-        return dr_return_data(1, dr_lang('操作成功，请刷新后台页面'), $module);
     }
 
     /**
