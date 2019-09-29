@@ -63,10 +63,10 @@ class Content extends \Phpcmf\Common
                 if (!$t) {
                     continue;
                 }
-                $url =\Phpcmf\Service::L('Router')->show_url($this->module, $t);
+                $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
                 $t['id'] = $i; // 替换成当前id
             } else {
-                $url =\Phpcmf\Service::L('Router')->show_url($this->module, $t);
+                $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
             }
             $this->content_model->update_url($t, $url);
         }

@@ -110,12 +110,13 @@ class Cache extends \Phpcmf\Model
 
         // 执行插件自己的缓存程序
         $local = dr_dir_map(dr_get_app_list(), 1);
+        $app_cache = [];
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Cache.php')) {
                 $_cache = require $path.'Config/Cache.php';
-                $_cache && $cache = dr_array22array($cache, $_cache);
+                $_cache && $app_cache[$dir] = $_cache;
             }
         }
 
@@ -125,10 +126,17 @@ class Cache extends \Phpcmf\Model
             \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
             foreach ($cache as $m => $namespace) {
-                if ($namespace) {
-                    \Phpcmf\Service::C()->init_file($namespace);
-                }
                 \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+            }
+
+            // 插件缓存
+            if ($app_cache) {
+                foreach ($app_cache as $namespace => $c) {
+                    \Phpcmf\Service::C()->init_file($namespace);
+                    foreach ($c as $i => $apt) {
+                        \Phpcmf\Service::M(is_numeric($i) ? $apt : $i, $namespace)->cache($t['id']);
+                    }
+                }
             }
         }
 

@@ -828,8 +828,6 @@ class Module extends \Phpcmf\Table
             return [];
         }
 
-        $this->is_get_catid = $catid ? $catid : $row['catid'];
-
         // 判断是同步栏目数据
         if ($row['link_id'] > 0) {
             $row = $this->content_model->get_data($row['link_id']);
@@ -838,6 +836,8 @@ class Module extends \Phpcmf\Table
             }
             $this->replace_id = $id = $row['id'];
         }
+
+        $this->is_get_catid = $catid ? $catid : $row['catid'];
 
         // 推荐位
         $row['myflag'] = $id ? $this->content_model->get_flag($id) : [];

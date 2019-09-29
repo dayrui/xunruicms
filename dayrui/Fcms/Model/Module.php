@@ -269,6 +269,7 @@ class Module extends \Phpcmf\Model
                 }
             }
         }
+
         $system_table[''] = $content_table['table'][1];
         $system_table['_data_0'] = $content_table['table'][0];
         // 创建系统表
