@@ -301,7 +301,7 @@ class Table extends \Phpcmf\Common
             // 验证码验证
             $this->is_post_code && !\Phpcmf\Service::L('Form')->check_captcha('code') && $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
             // 验证数据
-            $post = \Phpcmf\Service::L('input')->post('data');
+            $post = \Phpcmf\Service::L('input')->post('data', false);
             list($post, $return, $attach) = \Phpcmf\Service::L('Form')->validation(
                 $post, 
                 $this->form_rule,

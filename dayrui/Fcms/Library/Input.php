@@ -19,7 +19,7 @@ class Input
     }
     
     // post解析
-    public function post($name, $xss = false) {
+    public function post($name, $xss = true) {
         $value = isset($_POST[$name]) ? $_POST[$name] : false;
         return $xss ? $this->xss_clean($value) : $value;
     }
