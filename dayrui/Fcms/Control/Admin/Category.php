@@ -263,7 +263,7 @@ class Category extends \Phpcmf\Table
 
         if (IS_AJAX_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data');
+            $post = \Phpcmf\Service::L('input')->post('data', true);
             $list = explode(PHP_EOL, $post['list']);
             !$list && $this->_json(0, dr_lang('内容填写不完整'));
 
@@ -351,7 +351,7 @@ class Category extends \Phpcmf\Table
 
             $c = 0;
             $catid = \Phpcmf\Service::L('input')->post('catid');
-            $urlrule = \Phpcmf\Service::L('input')->post('urlrule');
+            $urlrule = \Phpcmf\Service::L('input')->post('urlrule', true);
 
             foreach ($this->module['category'] as $id => $t) {
                 if (in_array($id, $catid)) {
@@ -741,7 +741,7 @@ class Category extends \Phpcmf\Table
         return parent::_Save($id, $data, $old,
             function ($id, $data, $old){
                 // 保存之前的判断
-                $save = \Phpcmf\Service::L('input')->post('system');
+                $save = \Phpcmf\Service::L('input')->post('system', true);
                 if (!$save['name']) {
                     return dr_return_data(0, dr_lang('栏目名称不能为空'), ['field' => 'name']);
                 } elseif (!$save['dirname']) {
