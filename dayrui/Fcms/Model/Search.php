@@ -213,14 +213,14 @@ class Search extends \Phpcmf\Model {
     // 获取搜索参数
     public function get_param($module) {
 
-        $get =  $_GET;
+        $get = $_GET;
         $get = isset($get['rewrite']) ? dr_search_rewrite_decode($get['rewrite'], $module['setting']['search']) : $get;
         $get && $get = \Phpcmf\Service::L('input')->xss_clean($get);
 
         $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
         unset($get['s'], $get['c'], $get['m'], $get['id']);
         if (!$get && IS_API_HTTP) {
-            $get = $_POST;
+            $get = \Phpcmf\Service::L('input')->xss_clean($_POST);
         }
 
         $_GET['page'] = $get['page'];
