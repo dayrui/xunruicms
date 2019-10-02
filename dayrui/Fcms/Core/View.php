@@ -882,7 +882,7 @@ class View {
 
                 $navigator = \Phpcmf\Service::C()->get_cache('navigator-'.$system['site']); // 导航缓存
                 if (!$navigator) {
-                    return $this->_return($system['return'], '导航数据为空');
+                    return $this->_return($system['return'], '没有查询到内容');
                 }
 
                 $i = 0;
