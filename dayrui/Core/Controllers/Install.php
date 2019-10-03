@@ -179,8 +179,8 @@ $db[\'default\']	= [
 
             case 3:
 
-                $error = '';
                 $data = dr_string2array(file_get_contents(WRITEPATH.'install.info'));
+                $error = '';
                 file_put_contents(WRITEPATH.'install.error', '');
                 if (empty($data)) {
                     $error = '临时数据获取失败，请返回前一页重新执行';
@@ -311,6 +311,7 @@ $db[\'default\']	= [
 
         }
         \Phpcmf\Service::V()->assign([
+            'data' => $data,
             'step' => $step,
             'error' => $error,
             'pre_url' => 'index.php?c=install&m=index&step='.($step-1),

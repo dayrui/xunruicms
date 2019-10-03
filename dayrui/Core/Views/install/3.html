@@ -7,7 +7,7 @@
             <span class="caption-subject font-green">安装结果</span>
         </div>
     </div>
-    <div class="portlet-body " style="padding: 50px;">
+    <div class="portlet-body " style="padding:0 50px;">
         <div class="scroller" style="height:300px" data-rail-visible="1">
 
 
@@ -17,11 +17,14 @@
             </div>
             {else}
             <div class="row">
-                <div class="col-md-4 text-right" style="padding: 50px;">
+                <div class="col-md-4 text-center" style="padding-top: 120px;">
                     <i class="fa fa-check-circle font-green" style="font-size: 80px;"></i>
                 </div>
-                <div class="col-md-8 text-left font-green" style="padding-top:35px;font-size: 30px;">
-                    安装完成
+                <div class="col-md-8 text-left font-green" style="padding-top: 50px;">
+                    <p style="padding-top:15px;font-size: 30px;">安装完成</p>
+                    <p>账号：{$data.username}</p>
+                    <p>密码：{$data.password}</p>
+					<p style="padding-top: 20px;"><a href="admin.php?c=login" class="btn btn-success"> 登录网址后台 </a></p>
                 </div>
             </div>
             {/if}
@@ -33,8 +36,6 @@
     <div class="portlet-body text-center">
         {if $error}
         <a href="{$pre_url}" class="btn btn-success"> 返回上一步 </a>
-        {else}
-        <a href="admin.php?c=login" class="btn btn-success"> 登录网址后台 </a>
         {/if}
     </div>
 </div>

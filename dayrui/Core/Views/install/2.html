@@ -19,15 +19,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">创始人账号</label>
+                    <label class="control-label col-md-3">创始人邮箱</label>
                     <div class="col-md-7">
-                        <input type="text" name="data[username]" value="admin" class="form-control" placeholder="">
+                        <input type="text" name="data[email]" value="finecms@qq.com" class="form-control" placeholder="此项必填">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">创始人邮箱</label>
+                    <label class="control-label col-md-3">创始人账号</label>
                     <div class="col-md-7">
-                        <input type="text" name="data[email]" value="" class="form-control" placeholder="此项必填">
+                        <input type="text" name="data[username]" value="admin" class="form-control" placeholder="">
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,16 +94,33 @@
     </div>
 </div>
 <script>
-    function dr_next_install() {
-        $.ajax({type: "POST",dataType:"json", url: '{dr_now_url()}', data: $("#myform").serialize(),
-            success: function(json) {
-                if (json.code == 1) {
-                    window.location.href = json.msg;
-                } else {
-                    layer.alert(json.msg);
-                }
-            }
-        });
-    }
+function dr_next_install() {
+	var loading = layer.load(2, {
+		shade: [0.3,'#fff'], //0.1透明度的白色背景
+		time: 100000000
+	});
+	$.ajax({type: "POST",dataType:"json", url: '{dr_now_url()}', data: $("#myform").serialize(),
+		success: function(json) {
+			if (json.code == 1) {
+				window.location.href = json.msg;
+			} else {
+				layer.close(loading);
+				layer.alert(json.msg);
+			}
+		},
+		error: function(HttpRequest, ajaxOptions, thrownError) {
+			layer.closeAll('loading');
+			layer.open({
+                type: 1,
+                title: "系统故障",
+                fix:true,
+                shadeClose: true,
+                shade: 0,
+                area: ['50%', '50%'],
+                content: "<div style=\"padding:10px;\">"+HttpRequest.responseText+"</div>"
+            });
+		}
+	});
+}
 </script>
 {template "install/footer.html"}
