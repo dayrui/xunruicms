@@ -303,7 +303,7 @@ if (!function_exists('dr_domain_301')) {
         }
 
         if (IS_DEV) {
-            \Phpcmf\Service::C()->_admin_msg(1, '正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
+            \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
         }
 
         dr_redirect($url, 'auto', 301);exit;
