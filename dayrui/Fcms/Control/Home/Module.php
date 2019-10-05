@@ -621,6 +621,17 @@ class Module extends \Phpcmf\Common
             return dr_return_data(0, '栏目#'.$catid.'不存在');
         } elseif ($this->module['setting']['search']['catsync'] && $cat['tid'] == 1) {
             return dr_return_data(0, '此模块开启了搜索集成栏目页，因此栏目无法生成静态');
+        } elseif ($this->module['setting']['html']) {
+            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
+        }
+
+        // 无权限访问栏目内容
+        if ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show']) {
+            return dr_return_data(0, '请关闭栏目访问权限');
+        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
+            return dr_return_data(0, '请关闭模块访问权限');
+        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
+            return dr_return_data(0, '请关闭站点访问权限');
         }
 
         $url = $page > 0 ?\Phpcmf\Service::L('Router')->category_url($this->module, $cat, $page) : $cat['url'];
@@ -642,15 +653,6 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->init('pc');
         $this->_Category($catid, '', $page);
         $html = ob_get_clean();
-
-        // 无权限访问栏目内容
-        if ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show']) {
-            return dr_return_data(0, '请关闭栏目访问权限');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            return dr_return_data(0, '请关闭模块访问权限');
-        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            return dr_return_data(0, '请关闭站点访问权限');
-        }
 
         // 格式化生成文件
         if (!@file_put_contents($hfile, $html, LOCK_EX)) {
@@ -701,6 +703,8 @@ class Module extends \Phpcmf\Common
             return dr_return_data(0, '请关闭模块访问权限');
         } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
             return dr_return_data(0, '请关闭站点访问权限');
+        } elseif ($this->module['setting']['html']) {
+            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
         }
 
         // 同步数据不执行生成
