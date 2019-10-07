@@ -2580,17 +2580,15 @@ function dr_safe_replace_path($path) {
  */
 function dr_strcut($string, $length = 100, $dot = '...') {
 
-    if (strlen($string) <= $length) {
+    if (strlen($string) <= $length || !$length) {
         return $string;
     }
 
     if (function_exists('mb_substr')) {
         $strcut = mb_substr($string, 0, $length);
     } else {
-        $string = str_replace(array('&amp;', '&quot;', '&lt;', '&gt;'), array('&', '"', '<', '>'), $string);
-        $strcut = '';
-
         $n = $tn = $noc = 0;
+        $string = str_replace(array('&amp;', '&quot;', '&lt;', '&gt;'), array('&', '"', '<', '>'), $string);
         while ($n < strlen($string)) {
             $t = ord($string[$n]);
             if ($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {

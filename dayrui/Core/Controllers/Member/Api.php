@@ -152,7 +152,7 @@ class Api extends \Phpcmf\Common
         }
 
         // 验证操作间隔
-        $name = 'member-verify-phone-'.$this->uid;
+        $name = 'member-verify-email-'.$this->uid;
         $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
 
         $this->member['randcode'] = rand(100000, 999999);
@@ -199,6 +199,9 @@ class Api extends \Phpcmf\Common
         // 获取返回页面
         $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
         strpos($url, 'login') !== false && $url = MEMBER_URL;
+
+        // 挂钩点 短信验证之前
+        \Phpcmf\Hooks::trigger('member_verify_before', $this->member);
 
         if (!$this->member) {
             $this->_json(0, dr_lang('账号未登录'));
