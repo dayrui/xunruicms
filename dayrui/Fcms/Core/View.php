@@ -751,6 +751,7 @@ class View {
                 if (!$dirname) {
                     return $this->_return($system['return'], 'module参数不能为空');
                 }
+
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
                     return $this->_return($system['return'], "模块({$dirname})尚未安装");
@@ -777,7 +778,7 @@ class View {
                     } elseif (isset($system['more']) && !$system['more']) {
                         unset($t['field'], $t['setting']);
                     }
-                    $t['url'] = dr_url_prefix($t['url'], $dirname);
+                    $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
                     $return[] = $t;
                     $i ++;
                 }
@@ -1550,7 +1551,7 @@ class View {
                     $fields['updatetime'] = array('fieldtype' => 'Date');
                     // 格式化显示自定义字段内容
                     $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
-                    $data['url'] = dr_url_prefix($data['url'], $dirname);
+                    $data['url'] = dr_url_prefix($data['url'], $dirname, $system['site'], $this->_is_mobile);
                     $data = $dfield->format_value($fields, $data, 1);
                     $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
@@ -1809,7 +1810,7 @@ class View {
                     // 格式化显示自定义字段内容
                     $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
                     foreach ($data as $i => $t) {
-                        $t['url'] = dr_url_prefix($t['url'], $dirname);
+                        $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
                     $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;

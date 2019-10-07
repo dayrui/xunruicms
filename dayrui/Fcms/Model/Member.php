@@ -1016,7 +1016,7 @@ class Member extends \Phpcmf\Model
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
-        
+
         // 没有账号，随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix'].$rt['code']));
