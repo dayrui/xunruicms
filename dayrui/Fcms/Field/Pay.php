@@ -30,7 +30,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
 	    <div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('模板文件').'</label>
 			<div class="col-md-9">
-				<label><input type="text" class="form-control" size="20" name="data[setting][option][payfile]" value="'.$option['width'].'"></label>
+				<label><input type="text" class="form-control" size="20" name="data[setting][option][payfile]" value="'.$option['payfile'].'"></label>
 				<span class="help-block">'.dr_lang('模板位于./config/pay/模板文件名').'</span>
 			</div>
 		</div>
@@ -46,7 +46,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
 		<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
-				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['payfile'].'"></label>
+				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
 				<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
 			</div>
 		</div>

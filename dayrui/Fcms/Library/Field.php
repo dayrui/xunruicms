@@ -425,6 +425,7 @@
 
             $this->post = $post;
             $this->objects[$name]->id = $id;
+            $this->objects[$name]->app = $this->app;
 
             return $this->objects[$name];
         }
@@ -568,6 +569,7 @@
         public $id; // 当前数据id 存在id表示修改数据
         public $remove_div; // 去掉div盒模块
         public $close_xss; // 是否关闭xss
+        public $app; // 当前app目录，option可用
 
         protected $fieldtype; // 可用字段类型
         protected $defaulttype;	// 默认字段类型

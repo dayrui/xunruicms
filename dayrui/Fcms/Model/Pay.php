@@ -692,7 +692,7 @@ class Pay extends \Phpcmf\Model
                         }
                         $money = floatval($row['price'] > 0 ? $row['price'] : $post['money']);
                         if ($money <= 0) {
-                            return dr_return_data(0, dr_lang('金额不规范'));
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
                         }
                         $title = $row['title'];
                         $money = -$money;
@@ -714,7 +714,7 @@ class Pay extends \Phpcmf\Model
 
                         $money = floatval($row['price']);
                         if ($money <= 0) {
-                            return dr_return_data(0, dr_lang('金额不规范'));
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
                         }
                         $title = $row['title'];
                         $money = -$money;
@@ -727,7 +727,7 @@ class Pay extends \Phpcmf\Model
                         $field = $this->myfield[$rname];
                         $money = (float)$post['money'];
                         if ($money <= 0) {
-                            return dr_return_data(0, dr_lang('金额不规范'));
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
                         }
                         // 获取文章信息
                         $rt = $this->get_module_row($rid, $fid, $num);
