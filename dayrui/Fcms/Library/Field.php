@@ -476,8 +476,6 @@
          *
          * @param	string	$field	字段类型
          * @param	string	$value	字段值
-         * @param	array	$cfg	字段配置信息
-         * @param	string	$dirname模块目录
          * @return
          */
         function get_value($field, $value) {
@@ -700,6 +698,17 @@
          */
         public function get_value($name, $data) {
             return isset($data[$name]) ? $data[$name] : '';
+        }
+
+        /**
+         * 验证字段值
+         *
+         * @param	string	$field	字段类型
+         * @param	string	$value	字段值
+         * @return
+         */
+        public function check_value($field, $value) {
+            return '';
         }
 
         /**

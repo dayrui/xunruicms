@@ -155,12 +155,18 @@ class Form
                         continue; // 前端禁止修改时
                     }
                 }
+                // 验证字段
                 $name = $field['fieldname']; // 字段名称
                 $validate = $field['setting']['validate']; // 字段验证规则
                 // 编辑器默认关闭xss
                 $validate['xss'] = !isset($validate['xss']) || $obj->close_xss ? 1 : $validate['xss'];
                 // 从表单获取值
                 $post[$name] = $value = $validate['xss'] ? $data[$name] : $this->xss($data[$name]);
+                // 验证字段值
+                $frt = $obj->check_value($field, $value);
+                if ($frt) {
+                    return [[], ['name' => $name, 'error' => $frt]];
+                }
                 // 验证必填字段
                 if ($field['fieldtype'] != 'Group' && $validate['required']) {
                     if ($value == '') {
