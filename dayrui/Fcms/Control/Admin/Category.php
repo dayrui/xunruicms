@@ -657,7 +657,7 @@ class Category extends \Phpcmf\Table
         }
 
         if (IS_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data');
+            $post = \Phpcmf\Service::L('input')->post('data', false);
             \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['content' => ($post['content'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目内容: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
