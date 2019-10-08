@@ -364,10 +364,21 @@ code.form-control-static {
     margin: 0;
 }
  /*plugins*/
- 
- 
- 
- 
+
+
+
+.template-download {
+    padding:10px 0;
+    border-bottom: 1px dotted #e2e2e2;
+}
+.files_row_preview img{
+    width: 70px;
+    height: 70px;
+}
+.files_row_preview {
+    margin-right: 10px;
+}
+
  
  
  

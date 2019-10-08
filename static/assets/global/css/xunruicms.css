@@ -2899,10 +2899,10 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     padding:10px 0;
     border-bottom: 1px dotted #e2e2e2;
 }
-.template-download .files_row_preview img{
+.files_row_preview img{
     width: 70px;
     height: 70px;
 }
-.template-download .files_row_preview {
+.files_row_preview {
     margin-right: 10px;
 }

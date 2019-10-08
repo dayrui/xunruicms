@@ -172,8 +172,8 @@ class File extends \Phpcmf\Library\A_Field {
 		$url = '/index.php?s=api&c=file&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'];
 
 		// 显示模板
-		$tpl = '<div style="margin-bottom: 10px;" id="dr_'.$name.'_files_row" class="template-download files_row">';
-		$tpl.= '<div >';
+		$tpl = '<div style="margin-bottom: 10px;padding: 10px 0;" id="dr_'.$name.'_files_row" class="files_row">';
+		$tpl.= '<div>';
 		$tpl.= '<span class="files_row_preview preview">{preview}</span>';
 		$tpl.= '</div>';
 		$tpl.= '<input type="hidden" '.$attr.' id="dr_'.$name.'" class="files_row_id" name="data['.$name.']" value="{id}" />';
