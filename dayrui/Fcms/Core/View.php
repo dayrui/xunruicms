@@ -1762,6 +1762,7 @@ class View {
                     $sql_where = ($sql_where ? $sql_where.' AND' : '')."`$table`.`id` IN (".implode(',', $in).")";
                     unset($flag, $in);
                 }
+
                 $first_url = '';
                 if ($system['page']) {
                     $page = max(1, (int)$_GET['page']);
@@ -1775,8 +1776,11 @@ class View {
                             } else {
                                 $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['pagesize'];
                             }
+                            if ($system['action'] == 'module') {
+                                //  防止栏目生成第一页问题
+                                $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
+                            }
                         }
-                        $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
                     }
                     $pagesize = (int)$system['pagesize'];
                     !$pagesize && $pagesize = 10;
