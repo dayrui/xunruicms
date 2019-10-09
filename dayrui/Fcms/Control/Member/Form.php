@@ -29,12 +29,10 @@ class Form extends \Phpcmf\Table
         $this->tpl_name = $this->form['table'];
         // 表单显示名称
         $this->name = dr_lang('网站表单（%s）', $this->form['name']);
-        $sysfield = ['inputtime', 'displayorder'];
         // 初始化数据表
         $this->_init([
             'table' => SITE_ID.'_form_'.$this->form['table'],
             'field' => $this->form['field'],
-            'sys_field' => $sysfield,
             'date_field' => 'inputtime',
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],

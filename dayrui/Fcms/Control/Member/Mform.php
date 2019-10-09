@@ -47,12 +47,10 @@ class Mform extends \Phpcmf\Table
             $this->_msg(0, dr_lang('模块表单【%s】没有cid参数', $this->form['name']));
         }
 
-        $sysfield = ['inputtime', 'inputip', 'displayorder', 'author'];
         // 初始化数据表
         $this->_init([
             'field' => $this->form['field'],
             'table' => dr_module_table_prefix(APP_DIR).'_form_'.$this->form['table'],
-            'sys_field' => $sysfield,
             'date_field' => 'inputtime',
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
