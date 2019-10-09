@@ -263,16 +263,12 @@ class Account extends \Phpcmf\Common
      */
     public function oauth() {
 
-        $name = ['qq', 'weixin', 'weibo'];
+        $name = ['qq', 'weixin', 'weibo', 'wechat'];
         foreach ($name as $key => $value) {
             if (!isset($this->member_cache['oauth'][$value]['id'])
                 || !$this->member_cache['oauth'][$value]['id']) {
                 unset($name[$key]);
             }
-        }
-
-        if (dr_is_app('weixin')) {
-            $name[] = 'wechat';
         }
 
         \Phpcmf\Service::V()->assign([

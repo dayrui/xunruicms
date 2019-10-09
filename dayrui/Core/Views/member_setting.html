@@ -267,6 +267,12 @@
                                         <td><input class="form-control" name="data[oauth][weibo][value]" type="text" value="{$data['oauth']['weibo']['value']}"></td>
                                         <td style="text-align: center"><a href="javascript:dr_help(588);">{dr_lang('申请接口')}</a></td>
                                     </tr>
+                                    <tr class="odd gradeX">
+                                        <td>微信公众号</td>
+                                        <td colspan="3">
+										{if dr_is_app('weixin')}<input type="checkbox" name="data[oauth][wechat][id]" value="1" {if $data['oauth']['wechat']['id']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+											&nbsp;用于关注微信公众号绑定账号使用{else}<font color="red">没有安装[微信]插件，无法使用此功能</font>{/if}</td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
