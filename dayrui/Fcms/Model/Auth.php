@@ -200,7 +200,7 @@ class Auth extends \Phpcmf\Model {
         $role = \Phpcmf\Service::C()->get_cache('auth');
 
         // 角色信息
-        $data['role'] =  $data['roleid'] = $data['site'] = $data['system'] = $data['module'] = [];
+        $data['role'] = $data['roleid'] = $data['site'] = $data['system'] = $data['module'] = [];
         foreach ($role_id as $i) {
             $data['role'][$i] = $role[$i]['name'] ? $role[$i]['name'] : [];
             $data['roleid'][$i] = $i;
