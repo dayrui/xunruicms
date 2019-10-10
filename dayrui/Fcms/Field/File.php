@@ -431,6 +431,12 @@ $(function() {
          
          	fileupload_'.$name.'_edit();
         },
+		fail: function (e, data) {
+			//console.log(data.errorThrown);
+			dr_tips(0, "系统故障："+data.errorThrown);
+			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
+			$("#fileupload_'.$name.' .fileupload-progress").hide();
+		},
 	});
     
 	fileupload_'.$name.'_edit();
@@ -466,6 +472,12 @@ function fileupload_'.$name.'_edit() {
         	$(this).parents(".files_row").find(".files_row_preview").html(data.result.info.preview);
          
         },
+		fail: function (e, data) {
+			//console.log(data.errorThrown);
+			dr_tips(0, "系统故障："+data.errorThrown);
+			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
+			$("#fileupload_'.$name.' .fileupload-progress").hide();
+		},
 	});
 }
 // 修改URL
