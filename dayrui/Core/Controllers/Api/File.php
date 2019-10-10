@@ -280,7 +280,8 @@ class File extends \Phpcmf\Common
 					// 大文件转向
 					dr_redirect($info['url']);exit;
 				}
-                header("Content-Type: application/zip"); //zip格式的
+				
+				header('Content-Type: application/octet-stream');
                 header("Accept-Ranges:bytes");
                 header("Accept-Length:".$filesize);
                 header("Content-Disposition: attachment; filename=".urlencode($info['filename'].'.'.$info['fileext']));
