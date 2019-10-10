@@ -5,6 +5,15 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+// 通过数组值查找数组key
+function dr_get_array_key($array, $value) {
+	if (!in_array($value, $array)) {
+		return false;
+	}
+	$new = array_flip($array);
+	return isset($new[$value]) ? $new[$value] : false;
+}
+
 // 站点信息输出
 function dr_site_info($name, $siteid = SITE_ID) {
     return \Phpcmf\Service::C()->get_cache('site', $siteid, 'config', $name);
