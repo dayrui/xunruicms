@@ -276,17 +276,22 @@ class File extends \Phpcmf\Common
                 }
 
                 $filesize = filesize($info['file']);
+				if ($filesize > 1024 * 1024 * 50) {
+					// 大文件转向
+					dr_redirect($info['url']);exit;
+				}
                 header("Content-Type: application/zip"); //zip格式的
                 header("Accept-Ranges:bytes");
                 header("Accept-Length:".$filesize);
                 header("Content-Disposition: attachment; filename=".urlencode($info['filename'].'.'.$info['fileext']));
 
                 while (!feof($handle)) {
-                    $contents = fread($handle, 8192);
+                    $contents = fread($handle, 4096);
                     echo $contents;
                     @ob_flush();  //把数据从PHP的缓冲中释放出来
                     flush();      //把被释放出来的数据发送到浏览器
                 }
+				
                 fclose($handle);
                 exit;
             } else {
