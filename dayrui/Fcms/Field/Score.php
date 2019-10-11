@@ -20,7 +20,7 @@ class Score extends \Phpcmf\Library\A_Field  {
      * 创建sql语句
      */
     public function create_sql($name, $value, $cname) {
-        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` INT(10) NULL , ADD `'.$name.'_sku` TEXT NULL';
+        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` varchar(255) NULL , ADD `'.$name.'_sku` TEXT NULL';
         return $sql;
     }
 
@@ -67,11 +67,11 @@ class Score extends \Phpcmf\Library\A_Field  {
             // 用户组
             $sku = $_POST['data'][$field['fieldname'].'_sku'];
             $price = min($sku);
-            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = (int)$price;
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $price;
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname'].'_sku'] = dr_array2string($sku);
         } else {
             // 单一
-            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = (int)$_POST['data'][$field['fieldname']];
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $_POST['data'][$field['fieldname']];
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname'].'_sku'] = '';
         }
 
@@ -91,7 +91,7 @@ class Score extends \Phpcmf\Library\A_Field  {
      * @return  string
      */
     public function output($value) {
-        return (int)$value;
+        return $value;
     }
 
     /**

@@ -84,14 +84,17 @@ class Function_list
         } else {
             $member = $value;
         }
-        return '<a class="fc_member_show" href="javascript:;" member="'.$member.'">'.dr_strcut($value, 10).'</a>';
+        return $value ? '<a class="fc_member_show" href="javascript:;" member="'.$member.'">'.dr_strcut($value, 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表显示作者
     function uid($uid, $param = [], $data = []) {
         // 查询username
+        if (strlen($uid) > 12) {
+            return dr_lang('游客');
+        }
         $this->uid_data[$uid] = isset($this->uid_data[$uid]) && $this->uid_data[$uid] ? $this->uid_data[$uid] : \Phpcmf\Service::M('member')->username($uid);
-        return '<a class="fc_member_show" href="javascript:;" member="'.$this->uid_data[$uid].'">'.dr_strcut($this->uid_data[$uid], 10).'</a>';
+        return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" member="'.$this->uid_data[$uid].'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表显示ip地址

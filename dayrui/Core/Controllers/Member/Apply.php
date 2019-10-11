@@ -29,8 +29,12 @@ class Apply extends \Phpcmf\Common
 
         // 判断是否已经申请
         $verify = \Phpcmf\Service::M()->db->table('member_group_verify')->where('uid', $this->uid)->where('gid', $gid)->get()->getRowArray();
-        $verify && !$verify['status'] && exit($this->_msg(0, dr_lang('正在审核之中')));
-        $verify && $verify['content'] = dr_string2array($verify['content']);
+        if ($verify) {
+            if (!$verify['status']) {
+                $this->_msg(0, dr_lang('正在审核之中'));
+            }
+            $verify['content'] = dr_string2array($verify['content']);
+        }
 
         $level = $group['level'] && !$group['setting']['level']['auto'] ? $group['level'] : [];
 
@@ -224,19 +228,23 @@ class Apply extends \Phpcmf\Common
     public function level() {
 
         $gid = intval(\Phpcmf\Service::L('input')->get('gid'));
-        !$this->member['groupid'][$gid] && exit($this->_msg(0, dr_lang('你还不是该用户组成员')));
+        if (!$this->member['groupid'][$gid]) {
+            $this->_msg(0, dr_lang('你还不是该用户组成员'));
+        }
 
         $group = $this->member_cache['group'][$gid];
-        $group['setting']['level']['auto'] && exit($this->_msg(0, dr_lang('此用户组是自动升级模式')));
-        !$group['level'] && exit($this->_msg(0, dr_lang('此用户组没有创建用户级别')));
+        if ($group['setting']['level']['auto']) {
+            $this->_msg(0, dr_lang('此用户组是自动升级模式'));
+        } elseif (!$group['level']) {
+            $this->_msg(0, dr_lang('此用户组没有创建用户级别'));
+        }
 
         $mylid = (int)$this->member['levelid'][$gid]; // 我的当前级别
         $myvalue = !$group['setting']['level']['price'] ? (int)$group['level'][$mylid]['value'] : 0; // 我的当前级别的升级值
 
         if (!$group['level'][$mylid]['apply']) {
-            exit($this->_msg(0, dr_lang('当前级别不允许升级')));
+            $this->_msg(0, dr_lang('当前级别不允许升级'));
         }
-
 
         // 列出当前可用的升级级别
         $level = [];
@@ -249,18 +257,19 @@ class Apply extends \Phpcmf\Common
             $t['value'] = $t['value'] - $myvalue;
             $level[$t['id']] = $t;
         }
-
-        !$level && exit($this->_msg(0, dr_lang('没有可用的用户组级别')));
+        if (!$level) {
+            $this->_msg(0, dr_lang('没有可用的用户组级别'));
+        }
 
         if (IS_POST) {
 
             $lid = intval($_POST['lid']);
             if (!$level[$lid]) {
-                exit($this->_msg(0, dr_lang('用户组级别不存在')));
+                $this->_msg(0, dr_lang('用户组级别不存在'));
             } elseif (!$level[$lid]['apply']) {
-                exit($this->_msg(0, dr_lang('用户组级别不允许升级')));
+                $this->_msg(0, dr_lang('用户组级别不允许升级'));
             } elseif ($level[$lid]['value'] < 0) {
-                exit($this->_msg(0, dr_lang('用户组级别升级值不规范')));
+                $this->_msg(0, dr_lang('用户组级别升级值不规范'));
             }
 
             $price = (int)$level[$lid]['value'];
@@ -315,9 +324,9 @@ class Apply extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
             'level' => $level,
             'group' => $group,
-            'form' => dr_form_hidden(),
             'myvalue' => $myvalue,
             'meta_title' => dr_lang('升级用户组级别').SITE_SEOJOIN.dr_lang('用户中心')
         ]);
