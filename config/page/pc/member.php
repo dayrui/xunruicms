@@ -43,10 +43,6 @@ return array(
 	
 	// 是否显示数字链接
 	'display_pages' => TRUE,
-	
-	// 给每一个链接添加 CSS 类
-	'anchor_class' => '',
-
     // 显示的分页数字个数
     'num_links' => 4,
 	
