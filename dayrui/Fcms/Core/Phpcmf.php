@@ -1007,7 +1007,11 @@ abstract class Common extends \CodeIgniter\Controller
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Main.php')) {
                 $_data = require $path.'Config/Main.php';
-                $_data && $cache = dr_array22array($data, $_data);
+                if ($_data) {
+                    foreach ($_data as $key => $name) {
+                        $data[strtolower($dir).'-'.$key] = $name;
+                    }
+                }
             }
         }
 
