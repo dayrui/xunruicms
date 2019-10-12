@@ -165,6 +165,18 @@ class Radio extends \Phpcmf\Library\A_Field {
 
         if ($field['setting']['option']['is_field_ld'] && $field['setting']['option']['field_ld']) {
             $str.= '<script>function field_ld_'.$name.'(v) {';
+            $show = [];
+            foreach ($field['setting']['option']['field_ld'] as $ii => $t) {
+                if ($t['hide']) {
+                    foreach ($t['hide'] as $f) {
+                        if (in_array($f, $show)) {
+                            continue;
+                        }
+                        $show[] = $f;
+                        $str.= PHP_EOL.'$("#dr_row_'.$f.'").show();';
+                    }
+                }
+            }
             foreach ($field['setting']['option']['field_ld'] as $ii => $t) {
                 $str.= PHP_EOL.'if (v == "'.($ii == 'dr_null' ? '' : $ii).'") {';
                 /*
