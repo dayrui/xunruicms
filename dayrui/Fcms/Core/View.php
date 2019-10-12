@@ -1192,8 +1192,22 @@ class View {
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
                 $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
 
-                $total = 0;
                 $sql_from = $table; // sql的from子句
+                // 关联表
+                if ($system['join'] && $system['on']) {
+                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
+                    if (!$tableinfo[$table_more]) {
+                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    }
+                    list($a, $b) = explode(',', $system['on']);
+                    $b = $b ? $b : $a;
+                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
+                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
+                    $_order[$table_more] = $tableinfo[$table_more];
+                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                }
+
+                $total = 0;
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
@@ -1277,9 +1291,23 @@ class View {
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
                 $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
 
+                $sql_from = $table; // sql的from子句
+                // 关联表
+                if ($system['join'] && $system['on']) {
+                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
+                    if (!$tableinfo[$table_more]) {
+                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    }
+                    list($a, $b) = explode(',', $system['on']);
+                    $b = $b ? $b : $a;
+                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
+                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
+                    $_order[$table_more] = $tableinfo[$table_more];
+                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                }
+
                 $total = 0;
                 $fields = $form['field']; // 主表的字段
-                $sql_from = $table; // sql的from子句
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
@@ -1361,9 +1389,23 @@ class View {
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
                 $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
 
+                $sql_from = $table; // sql的from子句
+                // 关联表
+                if ($system['join'] && $system['on']) {
+                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
+                    if (!$tableinfo[$table_more]) {
+                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    }
+                    list($a, $b) = explode(',', $system['on']);
+                    $b = $b ? $b : $a;
+                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
+                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
+                    $_order[$table_more] = $tableinfo[$table_more];
+                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                }
+
                 $total = 0;
                 $fields = $comment['field']; // 主表的字段
-                $sql_from = $table; // sql的from子句
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
@@ -1418,7 +1460,6 @@ class View {
 
                 $fields = \Phpcmf\Service::C()->get_cache('member', 'field');
 
-
                 // 是否操作自定义where
                 if ($param['where']) {
                     $where[] = [
@@ -1471,6 +1512,20 @@ class View {
                     $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$more], $more); // 给显示字段加上表前缀
                     $_order[$more] = $tableinfo[$more];
                     $sql_from.= " LEFT JOIN $more ON `$table`.`id`=`$more`.`id`"; // sql的from子句
+                }
+
+                // 关联表
+                if ($system['join'] && $system['on']) {
+                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
+                    if (!$tableinfo[$table_more]) {
+                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    }
+                    list($a, $b) = explode(',', $system['on']);
+                    $b = $b ? $b : $a;
+                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
+                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
+                    $_order[$table_more] = $tableinfo[$table_more];
+                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
                 }
 
                 $total = 0;

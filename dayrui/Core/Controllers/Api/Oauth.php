@@ -40,17 +40,24 @@ class Oauth extends \Phpcmf\Common
                         // 获取access_token
                         $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$appid.'&secret='.$appkey.'&code='.$_REQUEST['code'].'&grant_type=authorization_code';
                         $token = json_decode(dr_catcher_data($url), true);
-                        !$token && exit($this->_msg(0, dr_lang('无法获取到远程信息')));
-                        $token['errmsg'] && $this->_msg(0, $token['errmsg']);
+                        if (!$token) {
+                            $this->_msg(0, dr_lang('无法获取到远程信息'));
+                        } elseif ($token['errmsg']) {
+                            $this->_msg(0, $token['errmsg']);
+                        }
                         // 获取用户信息
                         $url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$token['access_token'].'&openid='.$token['openid'];
                         $user = json_decode(dr_catcher_data($url), true);
-                        !$user && exit($this->_msg(0, dr_lang('无法获取到用户信息')));
-                        $user['errmsg'] && $this->_msg(0, $user['errmsg']);
+                        if (!$user) {
+                            $this->_msg(0, dr_lang('无法获取到用户信息'));
+                        } elseif ($user['errmsg']) {
+                            $this->_msg(0, $user['errmsg']);
+                        }
                         $rt = \Phpcmf\Service::M('member')->insert_oauth($this->uid, $type, [
                             'oid' => $token['openid'],
                             'oauth' => 'weixin',
                             'avatar' => $user['headimgurl'],
+                            'unionid' => (string)$user['unionid'],
                             'nickname' => dr_emoji2html($user['nickname']),
                             'expire_at' => SYS_TIME,
                             'access_token' => 0,
@@ -91,6 +98,7 @@ class Oauth extends \Phpcmf\Common
                                     'oid' => $open['openid'],
                                     'oauth' => 'qq',
                                     'avatar' => $user['figureurl_qq_2'] ? $user['figureurl_qq_2'] : $user['figureurl_qq_1'],
+                                    'unionid' => (string)$user['unionid'],
                                     'nickname' => dr_emoji2html($user['nickname']),
                                     'expire_at' => SYS_TIME,
                                     'access_token' => 0,
@@ -141,6 +149,7 @@ class Oauth extends \Phpcmf\Common
                                     'oid' => $token['uid'],
                                     'oauth' => 'weibo',
                                     'avatar' => $user['avatar_large'] ? $user['avatar_large'] : $user['profile_image_url'],
+                                    'unionid' => '',
                                     'nickname' => dr_emoji2html($user['name']),
                                     'expire_at' => SYS_TIME,
                                     'access_token' => 0,

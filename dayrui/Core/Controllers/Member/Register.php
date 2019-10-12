@@ -33,8 +33,15 @@ class Register extends \Phpcmf\Common
         }
 
         // 获取返回URL
-        $url = \Phpcmf\Service::L('Security')->xss_clean($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
-        strpos($url, 'register') !== false && $url = MEMBER_URL;
+        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
+        $url && parse_str($url, $arr);
+        if (isset($arr['back']) && $arr['back']) {
+            $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
+        } elseif (strpos($url, 'register') !== false) {
+            $url = MEMBER_URL;
+        } else {
+            $url = \Phpcmf\Service::L('input')->xss_clean($url);
+        }
         
         // 初始化自定义字段类
         \Phpcmf\Service::L('Field')->app(APP_DIR);

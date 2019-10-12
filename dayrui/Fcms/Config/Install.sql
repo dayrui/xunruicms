@@ -452,15 +452,16 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_oauth` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `uid` mediumint(8) unsigned NOT NULL COMMENT '会员uid',
   `oid` varchar(255) NOT NULL COMMENT 'OAuth返回id',
-  `oauth` varchar(255) NOT NULL,
-  `avatar` varchar(255) NOT NULL,
-  `nickname` varchar(255) NOT NULL,
-  `expire_at` int(10) unsigned NOT NULL,
-  `access_token` varchar(255) DEFAULT NULL,
-  `refresh_token` varchar(255) DEFAULT NULL,
+  `oauth` varchar(255) NOT NULL COMMENT '运营商',
+  `avatar` varchar(255) NOT NULL COMMENT '头像',
+  `unionid` varchar(255) DEFAULT NULL COMMENT 'unionId',
+  `nickname` varchar(255) NOT NULL COMMENT '昵称',
+  `expire_at` int(10) unsigned NOT NULL COMMENT '绑定时间',
+  `access_token` varchar(255) DEFAULT NULL COMMENT '保留',
+  `refresh_token` varchar(255) DEFAULT NULL COMMENT '保留',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='用户OAuth授权表';
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='快捷登录用户OAuth授权表';
 
 DROP TABLE IF EXISTS `{dbprefix}member_paylog`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}member_paylog` (

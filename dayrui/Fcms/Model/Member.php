@@ -861,6 +861,8 @@ class Member extends \Phpcmf\Model
 
         // 更改状态
         $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $data['id']]);
+
+        // 更新微信插件粉丝表
         dr_is_app('weixin') && $oauth['oauth'] == 'wechat' && $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
             'uid' => $data['id'],
             'username' => $data['username'],
@@ -1095,6 +1097,10 @@ class Member extends \Phpcmf\Model
     public function insert_oauth($uid, $type, $data, $state = '', $back = '') {
 
         $row = $this->db->table('member_oauth')->where('oid', $data['oid'])->where('oauth', $data['oauth'])->get()->getRowArray();
+        if (!$row && $data['unionid']) {
+            // 没找到尝试 unionid
+            $row = $this->db->table('member_oauth')->where('unionid', $data['unionid'])->get()->getRowArray();
+        }
         if (!$row) {
             // 插入授权信息
             $data['uid'] = (int)$uid;
