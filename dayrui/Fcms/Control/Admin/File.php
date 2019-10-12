@@ -262,7 +262,7 @@ class File extends \Phpcmf\Common
                         }
 
                         // 备份数据
-                        $code = \Phpcmf\Service::L('input')->post('code');
+                        $code = \Phpcmf\Service::L('input')->post('code', false);
                         if ($content != $code && $is_diff == 0) {
                             !is_dir($this->backups_path.$dir.'/') && mkdir($this->backups_path.$dir.'/', 0777);
                             $size = file_put_contents($this->backups_path.$dir.'/'.SYS_TIME, $content);
