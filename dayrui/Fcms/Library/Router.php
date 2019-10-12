@@ -282,7 +282,7 @@ class Router
         if ($rule && $rule['list']) {
             // URL模式为自定义，且已经设置规则
             $data['fid'] = $fid;
-            $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['modname'];
+            $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
             $data['pdirname'].= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $rep = new \php5replace($data);
