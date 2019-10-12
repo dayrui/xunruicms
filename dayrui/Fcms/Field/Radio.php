@@ -103,7 +103,7 @@ class Radio extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					'.$ld.'
 					<span class="help-block">'.dr_lang('当选择某一个选项时会联动显示或隐藏指定的字段').'</span>
-					<span class="help-block">'.dr_lang('需要把参与的字段属性设置不要设置为必填字段').'</span>
+					<span class="help-block">'.dr_lang('需要把参与的字段属性不要设置为必填字段').'</span>
 				</div>
 			</div>
 			<div class="form-group">
