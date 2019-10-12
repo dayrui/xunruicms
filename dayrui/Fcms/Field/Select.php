@@ -26,7 +26,7 @@ class Select extends \Phpcmf\Library\A_Field {
 	 */
 	public function option($option) {
 
-		$option['options'] = isset($option['options']) ? $option['options'] : 'name1|value1'.PHP_EOL.'name2|value2';
+        $option['options'] = isset($option['options']) ? $option['options'] : '选项名称1|1'.PHP_EOL.'选项名称2|2';
 
 		return [
 			'
@@ -35,6 +35,7 @@ class Select extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<textarea class="form-control" name="data[setting][option][options]" style="height:150px;width:400px;">'.$option['options'].'</textarea>
 					<span class="help-block">'.dr_lang('格式：选项名称|选项值[回车换行]选项名称2|值2....').'</span>
+					<span class="help-block">'.dr_lang('选项值建议使用从1开始的数字，不得带符号，也可以省略不写').'</span>
 				</div>
 			</div>
 			<div class="form-group">

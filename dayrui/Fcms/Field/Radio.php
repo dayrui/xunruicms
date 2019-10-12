@@ -17,6 +17,24 @@ class Radio extends \Phpcmf\Library\A_Field {
 		$this->fieldtype = TRUE; // TRUE表全部可用字段类型,自定义格式为 array('可用字段类型名称' => '默认长度', ... )
 		$this->defaulttype = 'VARCHAR'; // 当用户没有选择字段类型时的缺省值
     }
+
+    // 调出字段遍历出来
+    private function _get_select_field($option, $field, $id, $at) {
+
+        $str = '<div class="mt-checkbox-list">';
+        foreach ($field as $t) {
+            if ($t['disabled']) {
+                continue;
+            }
+            $str.= '<label class="mt-checkbox mt-checkbox-outline">';
+            $str.= '<input type="checkbox" '.(in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '.$t['name'].' ';
+            $str.= '<span></span>';
+            $str.= '</label>';
+        }
+        $str.= '</div>';
+
+        return $str;
+    }
 	
 	/**
 	 * 字段相关属性参数
@@ -24,9 +42,36 @@ class Radio extends \Phpcmf\Library\A_Field {
 	 * @param	array	$value	值
 	 * @return  string
 	 */
-	public function option($option) {
+	public function option($option, $field = NULL) {
 
-		$option['options'] = isset($option['options']) ? $option['options'] : 'name1|value1'.PHP_EOL.'name2|value2';
+        $data = dr_format_option_array($option['options']);
+        if (!$data) {
+            $ld = '需要保存字段配置后才能配置联动关系';
+        } else {
+            $ld = '<div class="table-scrollable">';
+            $ld.= '<table class="table table-striped table-bordered table-advance ">';
+            $ld.= '<thead>';
+            $ld.= '<tr>';
+            $ld.= '<th width="120">选项</th>';
+            $ld.= '<th>隐藏字段</th>';
+            $ld.= '</tr>';
+            $ld.= '</thead>';
+            $ld.= '<tbody>';
+            $data['dr_null'] = '未选择时';
+            foreach ($data as $id => $name) {
+                $ld.= '<tr>';
+                $ld.= '<td>'.$name.'</td>';
+                $ld.= '<td>'.$this->_get_select_field($option, $field, $id, 'hide').'</td>';
+                $ld.= '</tr>';
+            }
+            $ld.= '</tbody>';
+            $ld.= '</table>';
+            $ld.= '</div>';
+        }
+
+		$option['options'] = isset($option['options']) ? $option['options'] : '选项名称1|1'.PHP_EOL.'选项名称2|2';
+
+
 
 		return [
 			'
@@ -35,6 +80,30 @@ class Radio extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<textarea class="form-control" name="data[setting][option][options]" style="height:150px;width:400px;">'.$option['options'].'</textarea>
 					<span class="help-block">'.dr_lang('格式：选项名称|选项值[回车换行]选项名称2|值2....').'</span>
+					<span class="help-block">'.dr_lang('选项值建议使用从1开始的数字，不得带符号，也可以省略不写').'</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 control-label">'.dr_lang('条件联动关联').'</label>
+				<div class="col-md-9">
+					<div class="mt-radio-inline">
+						<label class="mt-radio  mt-radio-outline">
+							<input type="radio" name="data[setting][option][is_field_ld]" onclick="$(\'#ldtjxx\').hide()" value="0" '.(!$option['is_field_ld'] ? 'checked' : '').'> '.dr_lang('关闭').'
+							<span></span>
+						</label>
+						<label class="mt-radio  mt-radio-outline">
+							<input type="radio" name="data[setting][option][is_field_ld]" onclick="$(\'#ldtjxx\').show()" value="1" '.($option['is_field_ld'] ? 'checked' : '').'> '.dr_lang('启用').'
+							<span></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group" id="ldtjxx" style="'.(!$option['is_field_ld'] ? 'display: none' : '').'">
+				<label class="col-md-2 control-label">'.dr_lang('设置条件').'</label>
+				<div class="col-md-9">
+					'.$ld.'
+					<span class="help-block">'.dr_lang('当选择某一个选项时会联动显示或隐藏指定的字段').'</span>
+					<span class="help-block">'.dr_lang('需要把参与的字段属性设置不要设置为必填字段').'</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -93,6 +162,31 @@ class Radio extends \Phpcmf\Library\A_Field {
 
 		// 显示方式
 		$show_type = (int)$field['setting']['option']['show_type'];
+
+        if ($field['setting']['option']['is_field_ld'] && $field['setting']['option']['field_ld']) {
+            $str.= '<script>function field_ld_'.$name.'(v) {';
+            foreach ($field['setting']['option']['field_ld'] as $ii => $t) {
+                $str.= PHP_EOL.'if (v == "'.($ii == 'dr_null' ? '' : $ii).'") {';
+                /*
+                if ($t['show']) {
+                    foreach ($t['show'] as $f) {
+                        $str.= PHP_EOL.'$("#dr_row_'.$f.'").show();';
+                    }
+                }*/
+                if ($t['hide']) {
+                    foreach ($t['hide'] as $f) {
+                        $str.= PHP_EOL.'$("#dr_row_'.$f.'").hide();';
+                    }
+                }
+                $str.= PHP_EOL.'}';
+            }
+            $str.= '}';
+            $str.= '$(function(){
+                field_ld_'.$name.'("'.$value.'");
+            });';
+            $str.= '</script>';
+            $field['setting']['validate']['formattr'].= ' onclick="field_ld_'.$name.'(this.value)"';
+        }
 
 		// 表单选项
 		$options = dr_format_option_array($field['setting']['option']['options']);
