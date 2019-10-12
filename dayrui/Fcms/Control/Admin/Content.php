@@ -218,8 +218,11 @@ class Content extends \Phpcmf\Common
     // 共享的内容维护
     protected function _Replace() {
 
-        $tables = [];
         $bm = \Phpcmf\Service::L('input')->post('bm');
+        if (!$bm) {
+            $this->_json(0, dr_lang('表名不能为空'));
+        }
+        $tables = [];
         if (strpos($bm, '[tableid]')) {
             for ($i = 0; $i < 200; $i ++) {
                 $table = str_replace('[tableid]', $i, $bm);
