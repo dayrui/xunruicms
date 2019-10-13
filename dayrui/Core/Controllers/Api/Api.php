@@ -507,7 +507,6 @@ class Api extends \Phpcmf\Common
             }
             \Phpcmf\Service::L('input')->set_cookie('is_mobile', $value, $value ? 3600 : -3600);
             $url = str_replace($host, $domain[$host], $url);
-            //$url = '';
             $sync = [];
             foreach ($domain as $url1 => $url2) {
                 $sync[] = dr_http_prefix($url1).'/index.php?s=api&c=api&m=client&value='.$value;
