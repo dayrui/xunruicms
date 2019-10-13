@@ -44,6 +44,8 @@ class View {
     private $_page_urlrule = ''; // 分页地址参数
     private $_page_used = 0; // 是否开启分页
 
+    public $call_value; // 动态模板返回调用
+
 
     /**
      * 初始化环境

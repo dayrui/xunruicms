@@ -211,31 +211,35 @@ class Api extends \Phpcmf\Common
         $file = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
         $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
 
-        if ($module) {
-            $this->_module_init($module);
-            \Phpcmf\Service::V()->module($module);
+        $data = [
+            'file' => $file,
+            'module' => $module,
+        ];
+
+        if (!$file) {
+            $html = 'name不能为空';
+        } else {
+            if ($module) {
+                $this->_module_init($module);
+                \Phpcmf\Service::V()->module($module);
+            }
+
+            \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('input')->get('', true));
+            ob_start();
+            \Phpcmf\Service::V()->display($file);
+            $html = ob_get_contents();
+            ob_clean();
+
+            $data['call_value'] = \Phpcmf\Service::V()->call_value;
         }
 
-        \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('input')->get('', true));
-
-        ob_start();
-        \Phpcmf\Service::V()->display($file);
-        $html = ob_get_contents();
-        ob_clean();
-
         if (isset($_GET['format']) && $_GET['format'] == 'json') {
-            $this->_json(1, $html, [
-                'file' => $file,
-                'module' => $module,
-            ]);
+            $this->_json(1, $html, $data);
         } else if (isset($_GET['format']) && $_GET['format'] == 'text') {
             exit($html);
         }
 
-        $this->_jsonp(1, $html, [
-            'file' => $file,
-            'module' => $module,
-        ]);
+        $this->_jsonp(1, $html, $data);
     }
 
     /**
