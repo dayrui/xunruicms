@@ -160,26 +160,26 @@
                         <div class="form-body" id="dr_css">
 
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('字段提示信息')}</label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="text" name="data[setting][validate][tips]" value="{$data['setting']['validate']['tips']}" />
+                                <span class="help-block">{dr_lang('对字段简短的提示，来说明这个字段是用来干什么的')}</span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('Css样式表')}</label>
                             <div class="col-md-9">
                                 <input class="form-control" type="text" name="data[setting][option][css]" value="{$data['setting']['option']['css']}" />
-                                <span class="help-block">{dr_lang('对字段进行样式控制，使用开发者自定义的css样式')}</span>
+                                <span class="help-block">{dr_lang('[不建议使用] 仅少数字段可用，对字段进行样式控制，使用开发者自定义的css样式')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('表单附加属性')}</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" style="height:120px" name="data[setting][validate][formattr]">{$data['setting']['validate']['formattr']}</textarea>
-                                <span class="help-block">{dr_lang('可以通过此处加入js事件、ajax验证、css等')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('字段提示信息')}</label>
-                            <div class="col-md-9">
-                                <input class="form-control" type="text" name="data[setting][validate][tips]" value="{$data['setting']['validate']['tips']}" />
-                                <span class="help-block">{dr_lang('对字段简短的提示，来说明这个字段是用来干什么的')}</span>
+                                <span class="help-block">{dr_lang('[不建议使用] 仅少数字段可用，可以通过此处加入js事件、ajax验证、css等')}</span>
                             </div>
                         </div>
 
