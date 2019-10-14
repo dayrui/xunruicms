@@ -151,7 +151,7 @@
 
 <script>
     function dr_fd(v) {
-        $.ajax({type: "POST",dataType:"json", url: "{dr_url('content/field_index')}&table="+v,
+        $.ajax({type: "get",dataType:"json", url: "{dr_url('content/field_index')}&table="+v,
             success: function(json) {
                 if (json.code == 1) {
                     $('#dr_fd').html(json.msg);
