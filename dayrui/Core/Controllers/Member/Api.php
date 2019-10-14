@@ -311,6 +311,28 @@ class Api extends \Phpcmf\Common
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
+    /**
+     * 发送验证码
+     */
+    public function send_code() {
+
+        $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
+        if (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
+            $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+        }
+
+        // 验证操作间隔
+        $name = 'member-send-phone-'.$phone;
+        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+
+        $code = rand(100000, 999999);
+        $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
+        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+
+        $this->session()->setTempdata($name, $code, 60);
+        $this->_json(1, dr_lang('验证码发送成功'));
+    }
+
 
     /**
      * 注册协议
