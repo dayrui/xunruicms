@@ -34,8 +34,7 @@ $end = $start + $size;
 $data = \Phpcmf\Service::M()->db->table('attachment_data')
                 ->where('uid', (int)$this->member['id'])
                 ->whereIn('fileext', $allowFiles)
-                ->like('related', 'ueditor:%')
-                ->orderBy('inputtime desc')->limit(50)
+                ->orderBy('inputtime desc')->limit(100)
                 ->get()->getResultArray();
 $files = [];
 if ($data) {
