@@ -85,8 +85,6 @@ class Scorelog extends \Phpcmf\Table
                 $this->_json(0, dr_lang('系统没有设置兑换比例'));
             } elseif (!$value) {
                 $this->_json(0, dr_lang('兑换数量必须填写'), ['field' => 'value']);
-            } elseif ($value % $this->member_cache['pay']['convert'] != 0) {
-                $this->_json(0, dr_lang('兑换数量必须比例数的倍数'), ['field' => 'value']);
             }
 
             $price = floatval($value / $this->member_cache['pay']['convert']);

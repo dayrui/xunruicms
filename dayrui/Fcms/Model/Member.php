@@ -326,9 +326,9 @@ class Member extends \Phpcmf\Model
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 余额不足 删除
-                                $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->delete();
                                 // 提醒通知
                                 $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
+                                $this->delete_group($uid, $group['gid']);
                                 continue;
                             }
                             $group['etime'] = dr_member_group_etime($group_info['days']);
@@ -378,9 +378,9 @@ class Member extends \Phpcmf\Model
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 金币不足 删除
-                                $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->delete();
                                 // 提醒通知
                                 $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
+                                $this->delete_group($uid, $group['gid']);
                                 continue;
                             }
                             // 自动续费
@@ -410,9 +410,9 @@ class Member extends \Phpcmf\Model
                     }
                 } else {
                     // 未开通自动续费直接删除
-                    $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->delete();
                     // 提醒通知
                     $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
+                    $this->delete_group($uid, $group['gid']);
                 }
 
             }
@@ -453,6 +453,9 @@ class Member extends \Phpcmf\Model
             \Phpcmf\Service::C()->init_file('weixin');
             \Phpcmf\Service::M('user', 'weixin')->delete_member_group($uid, $gid);
         }
+
+        $call = $this->member_info($uid);
+        \Phpcmf\Hooks::trigger('member_del_group_after', $call);
     }
 
     // 新增用户组
