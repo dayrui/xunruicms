@@ -663,7 +663,19 @@ class Model {
 
     // 获取当前执行后的sql语句
     public function get_sql_query() {
-        return str_replace(PHP_EOL, ' ', $this->db->getLastQuery()->getQuery());
+
+        if (!$this->db) {
+            return '';
+        } elseif (!method_exists($this->db, 'getLastQuery')) {
+            return '';
+        }
+
+        $my = $this->db->getLastQuery();
+        if (!method_exists($my, 'getQuery')) {
+            return '';
+        }
+
+        return str_replace(PHP_EOL, ' ', $my->getQuery());
     }
     
     private function _clear() {

@@ -5,6 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+use Throwable;
 
 /**
  * 继承异常类，用于Services.php
@@ -22,6 +23,44 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         if (!in_array($severity, [E_NOTICE, E_WARNING])) { //E_WARNING
             throw new \ErrorException($message, 0, $severity, $file, $line);
         }
+    }
+
+    /**
+     * 错误日志增加最后执行的sql语句
+     *
+     * @param \Throwable $exception
+     */
+    public function exceptionHandler(Throwable $exception)
+    {
+        $codes      = $this->determineCodes($exception);
+        $statusCode = $codes[0];
+        $exitCode   = $codes[1];
+
+        // Log it
+        if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))
+        {
+            log_message('critical',$exception->getMessage()."\n# " .\Phpcmf\Service::M()->get_sql_query(). "\n{trace}", [
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        }
+
+        if (! is_cli())
+        {
+            $this->response->setStatusCode($statusCode);
+            $header = "HTTP/{$this->request->getProtocolVersion()} {$this->response->getStatusCode()} {$this->response->getReason()}";
+            header($header, true, $statusCode);
+
+            if (strpos($this->request->getHeaderLine('accept'), 'text/html') === false)
+            {
+                $this->respond(ENVIRONMENT === 'development' ? $this->collectVars($exception, $statusCode) : '', $statusCode)->send();
+
+                exit($exitCode);
+            }
+        }
+
+        $this->render($exception, $statusCode);
+
+        exit($exitCode);
     }
 
     /**
@@ -80,6 +119,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             $msg .= '行号: '.$line."\n";
             $msg .= '错误: '.str_replace(PHP_EOL, '<br>', $message)."\n";
             $msg .= json_encode(['html' => $is_kz ? var_export($_POST, true) : self::highlightFile($file, $line)], JSON_UNESCAPED_UNICODE)."\n";
+            $msg .= '查询: '.\Phpcmf\Service::M()->get_sql_query()."\n";
             $msg .= '地址: '.FC_NOW_URL."\n";
             $msg .= '来源: '.$_SERVER['HTTP_REFERER']."\n";
             $msg .= "\n\n";
