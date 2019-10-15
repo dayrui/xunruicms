@@ -173,6 +173,11 @@ class Member_menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($data);
+            if ($data['uri']
+                && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
+                // 链接菜单判断重复
+                $this->_json(0, dr_lang('此菜单的系统路径已经存在'), ['field' => 'uri']);
+            }
 			\Phpcmf\Service::L('input')->system_log('添加用户中心菜单: '.$data['name']);
             if (\Phpcmf\Service::M('Menu')->_add('member', $pid, $data)) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -202,6 +207,11 @@ class Member_menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($data);
+			if ($data['uri']
+                && \Phpcmf\Service::M()->table('member_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
+			    // 链接菜单判断重复
+                $this->_json(0, dr_lang('此菜单的系统路径已经存在'), ['field' => 'uri']);
+            }
 			\Phpcmf\Service::M('Menu')->_update('member', $id, $data);
 			\Phpcmf\Service::L('input')->system_log('修改用户中心菜单: '.$data['name']);
 
@@ -279,6 +289,7 @@ class Member_menu extends \Phpcmf\Common
 			if ($data['url']) unset($this->form['uri']);
 			if ($data['uri']) unset($this->form['url']);
 		}
+
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
 
