@@ -218,11 +218,12 @@ class File extends \Phpcmf\Common
             $this->_json(1, dr_lang('已选择%s个文件', $data['count']), $data);
         }
 
+        $num = 50;
         $exts = dr_safe_replace($p['exts']);
 
         $list = [
-            'unused' => $exts ? \Phpcmf\Service::M()->table('attachment_unused')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll(30) : \Phpcmf\Service::M()->table('attachment_unused')->order_by('id desc')->getAll(30),
-            'used' => $exts ? \Phpcmf\Service::M()->table('attachment_data')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll(30) : \Phpcmf\Service::M()->table('attachment_data')->order_by('id desc')->getAll(30),
+            'used' => $exts ? \Phpcmf\Service::M()->table('attachment_data')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll($num) : \Phpcmf\Service::M()->table('attachment_data')->order_by('id desc')->getAll($num),
+            'unused' => $exts ? \Phpcmf\Service::M()->table('attachment_unused')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll($num) : \Phpcmf\Service::M()->table('attachment_unused')->order_by('id desc')->getAll($num),
         ];
 
         \Phpcmf\Service::V()->admin();
