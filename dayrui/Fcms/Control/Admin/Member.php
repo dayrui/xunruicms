@@ -155,6 +155,8 @@ class Member extends \Phpcmf\Common
             $this->auth[SITE_ID][MOD_DIR][$at][$table] = [
                 'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
                 'add' => dr_member_auth_id($this->member_cache['authid'], $t['add']),
+                'del' => dr_member_auth_id($this->member_cache['authid'], $t['del']),
+                'edit' => dr_member_auth_id($this->member_cache['authid'], $t['edit']),
                 'code' => dr_member_auth_id($this->member_cache['authid'], $t['code']),
                 'verify' => dr_member_auth_id($this->member_cache['authid'], $t['verify']),
                 'exp' => $t['exp'],
