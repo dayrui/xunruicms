@@ -21,6 +21,9 @@
         private $app;
         private $objects = [];
 
+        // 格式化字段输入表单
+        private $format;
+
         /**
          * 设置应用
          */
@@ -31,6 +34,35 @@
 
         public function get_myfields() {
             return $this->myfields;
+        }
+
+        // 格式化字段输入表单
+        public function get_field_format() {
+
+            if ($this->format) {
+                return $this->format;
+            }
+
+            if (is_file(WEBPATH.'config/field.php')) {
+                $field = require WEBPATH.'config/field.php';
+                if (IS_ADMIN && isset($field['admin']) && $field['admin']) {
+                    $this->format = $field['admin'];
+                } elseif (IS_ADMIN && isset($field['member']) && $field['member']) {
+                    $this->format = $field['member'];
+                } elseif (IS_ADMIN && isset($field['home']) && $field['home']) {
+                    $this->format = $field['home'];
+                }
+            }
+
+            if (!$this->format) {
+                $this->format = '
+<div class="form-group" id="dr_row_{name}">
+    <label class="control-label col-md-2">{text}</label>
+    <div class="col-md-9">{value}</div>
+</div>';
+            }
+
+            return $this->format;
         }
 
         // 关闭分组字段
@@ -47,15 +79,14 @@
          */
         public function toform($id, $field, $data = [], $show = 0) {
 
-
             if (!$field) {
                 return '';
             }
 
+            $myfield =  '';
+            $mygroup = $mymerge = $merge = $group = [];
             $this->value = $data;
             $this->myfields = $field;
-            $mygroup = $mymerge = $merge = $group = [];
-            $myfield =  '';
 
             if (!$this->is_hide_merge_group) {
                 // 分组字段筛选
@@ -567,9 +598,9 @@
     abstract class A_Field  {
 
         public $id; // 当前数据id 存在id表示修改数据
-        public $remove_div; // 去掉div盒模块
-        public $close_xss; // 是否关闭xss
         public $app; // 当前app目录，option可用
+        public $close_xss; // 是否关闭xss
+        public $remove_div; // 去掉div盒模块
 
         protected $fieldtype; // 可用字段类型
         protected $defaulttype;	// 默认字段类型
@@ -589,22 +620,11 @@
 
         ];
 
-        // 格式化字段输入表单
-        static public $format = '
-<div class="form-group" id="dr_row_{name}">
-    <label class="control-label col-md-2">{text}</label>
-    <div class="col-md-9">{value}</div>
-</div>';
-
         /**
          * 构造函数
          */
         public function __construct(...$params) {
 
-        }
-
-        static function set_input_format($value) {
-            self::$format = $value;
         }
 
         /**
@@ -898,7 +918,7 @@
                 return $value;
             }
 
-            $fomart = self::$format;
+            $fomart = \Phpcmf\Service::L('field')->get_field_format();
             // 来自移动端替换div class
             if (\Phpcmf\Service::C()->is_mobile) {
                 $fomart = str_replace(['control-label col-md-2', 'col-md-9'], ['control-label col-md-12', 'col-md-12'], $fomart);

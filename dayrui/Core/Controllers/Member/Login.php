@@ -22,7 +22,7 @@ class Login extends \Phpcmf\Common
             \Phpcmf\Hooks::trigger('member_login_before', $post);
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
-                $this->_json(0, dr_lang('验证码不正确'));
+                $this->_json(0, dr_lang('图片验证码不正确'));
             } elseif (empty($post['username']) || empty($post['password'])) {
                 $this->_json(0, dr_lang('账号或密码必须填写'));
             } else {
@@ -58,7 +58,7 @@ class Login extends \Phpcmf\Common
             $post = \Phpcmf\Service::L('input')->post('data', true);
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
-                $this->_json(0, dr_lang('验证码不正确'));
+                $this->_json(0, dr_lang('图片验证码不正确'));
             } elseif (empty($post['phone'])) {
                 $this->_json(0, dr_lang('手机号码必须填写'));
             } else {
@@ -290,7 +290,7 @@ class Login extends \Phpcmf\Common
             }
 
             if ((!$post['code'] || !$data['randcode'] || $post['code'] != $data['randcode'])) {
-                $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
+                $this->_json(0, dr_lang('凭证验证码不正确'), ['field' => 'code']);
             } elseif (!$post['password']) {
                 $this->_json(0, dr_lang('密码不能为空'), ['field' => 'password']);
             } elseif ($post['password'] != $post['password2']) {

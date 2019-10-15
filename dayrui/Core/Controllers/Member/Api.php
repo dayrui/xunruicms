@@ -82,7 +82,7 @@ class Api extends \Phpcmf\Common
         if (IS_POST) {
             $value = dr_safe_replace(\Phpcmf\Service::L('input')->post('value'));
             if (!\Phpcmf\Service::L('Form')->check_captcha('code')) {
-                $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
             } elseif (empty($value)) {
                 $this->_json(0, dr_lang('新邮箱或者手机号码必须填写'));
             } elseif ($this->member_cache['register']['verify'] == 'email' && !\Phpcmf\Service::L('Form')->check_email($value)) {
@@ -206,9 +206,9 @@ class Api extends \Phpcmf\Common
         if (!$this->member) {
             $this->_json(0, dr_lang('账号未登录'));
         } elseif (!$this->member['randcode']) {
-            $this->_json(0, dr_lang('验证码已过期'));
+            $this->_json(0, dr_lang('审核验证码已过期'));
         } elseif (\Phpcmf\Service::L('input')->get('code') != $this->member['randcode']) {
-            $this->_json(0, dr_lang('验证码不正确'));
+            $this->_json(0, dr_lang('审核验证码不正确'));
         }
 
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => 0]);

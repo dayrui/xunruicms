@@ -168,11 +168,11 @@ class Account extends \Phpcmf\Common
             $value = dr_safe_replace($post['phone']);
             $cache = $this->session()->get('member-mobile-code-'.$this->member['randcode']);
             if (!$this->member['randcode']) {
-                $this->_json(0, dr_lang('验证码已过期'));
+                $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
-                $this->_json(0, dr_lang('验证码不正确'));
+                $this->_json(0, dr_lang('手机验证码不正确'));
             } elseif (!$cache) {
-                $this->_json(0, dr_lang('验证码储存过期'));
+                $this->_json(0, dr_lang('手机验证码储存过期'));
             } elseif ($cache != $value) {
                 $this->_json(0, dr_lang('手机号码或验证码不正确'));
             }

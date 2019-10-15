@@ -299,7 +299,7 @@ class Table extends \Phpcmf\Common
             !$data && $id && $this->_json(0, dr_lang('数据#%s不存在', $id));
             \Phpcmf\Service::L('field')->value = $data;
             // 验证码验证
-            $this->is_post_code && !\Phpcmf\Service::L('Form')->check_captcha('code') && $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
+            $this->is_post_code && !\Phpcmf\Service::L('Form')->check_captcha('code') && $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
             // 验证数据
             $post = \Phpcmf\Service::L('input')->post('data', false);
             list($post, $return, $attach) = \Phpcmf\Service::L('Form')->validation(

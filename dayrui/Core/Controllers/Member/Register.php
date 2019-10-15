@@ -61,7 +61,7 @@ class Register extends \Phpcmf\Common
                 $this->_json(0, dr_lang('你没有同意注册协议'));
             } elseif ($this->member_cache['register']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
-                $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
             } elseif (in_array('username', $this->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_username($post['username'])) {
                 $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'username']);
