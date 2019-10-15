@@ -372,7 +372,6 @@ function dr_member_menu_show($t) {
         $is_site = 1; // 当前站可用
     }
 
-
     // 判断用户组显示权限
     if ($is_site && (!$t['group'] || array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
         return 1;

@@ -386,7 +386,6 @@ class Seo
     // 用户中心seo
     function member($menu) {
 
-
         $seo = [
             'menu' => $menu['url'],
             'page_bar' => '<div class="page-bar">
@@ -400,7 +399,6 @@ class Seo
                 </ul>
             </div>',
         ];
-
 
         // 自定义菜单显示
         if (function_exists('dr_my_member_menu')) {

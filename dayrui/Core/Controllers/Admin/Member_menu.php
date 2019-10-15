@@ -289,6 +289,13 @@ class Member_menu extends \Phpcmf\Common
 			if ($data['url']) unset($this->form['uri']);
 			if ($data['uri']) unset($this->form['url']);
 		}
+		if ($data['mark']) {
+            list($a, $b) = explode('-', $data['mark']);
+            if ($a == 'module' && !is_dir(dr_get_app_dir($b))) {
+                $this->_json(0, dr_lang('模块[%s]不存在', $b), ['field' => 'mark']);
+            }
+        }
+
 
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
