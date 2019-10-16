@@ -950,6 +950,7 @@
 			<label class="col-md-2 control-label">'.dr_lang('附件存储策略').' </label>
 			<div class="col-md-9">
 				'.$html.'
+                <span class="help-block">远程附件存储建议设置小文件存储，推荐10MB内，大文件会导致数据传输失败</span>
 			</div>
 		</div><div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('图片压缩大小').' </label>
