@@ -45,6 +45,7 @@ $system = is_file(WRITEPATH.'config/system.php') ? require WRITEPATH.'config/sys
     'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
     'SYS_KEY'                       => '', //安全密匙
     'SYS_CSRF'                      => 1, //安全密匙
+    'SYS_CAT_ZSHOW'                 => 1, //安全密匙
     'SYS_HTTPS'                     => '0', //https模式
     'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
     'SYS_ATTACHMENT_PATH'           => '', //附件上传路径

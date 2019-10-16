@@ -25,6 +25,7 @@ class System extends \Phpcmf\Common
 
                 'SYS_CAT_RNAME' => (int)$post['SYS_CAT_RNAME'],
                 'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
+                'SYS_CAT_ZSHOW' => (int)$post['SYS_CAT_ZSHOW'],
 
                 'SYS_EMAIL' => $post['SYS_EMAIL'],
                 'SYS_ADMIN_LOG' => intval($post['SYS_ADMIN_LOG']),

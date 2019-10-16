@@ -353,7 +353,7 @@ class Tree {
                 $spacer = $adds ? $adds.$j : '';
                 $selected = $id == $sid ? 'selected' : '';
                 $class = 'dr_catid_'.$value['id'];
-                $parent = !$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;';
+                $parent = SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
                 @extract($value);
 

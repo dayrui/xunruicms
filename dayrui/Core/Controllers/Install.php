@@ -254,6 +254,7 @@ $db[\'default\']	= [
                                 'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
                                 'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
                                 'SYS_CAT_RNAME'                 => '0', //栏目目录允许重复
+                                'SYS_CAT_ZSHOW'                 => '0', //栏目目录允许重复
                                 'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
                                 'SYS_CSRF'                      => '1', //跨站验证提交
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙

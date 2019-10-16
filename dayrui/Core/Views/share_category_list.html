@@ -106,6 +106,7 @@
         });
     }
     $(function() {
+        {if SYS_CAT_ZSHOW}
         $(".select-cat").click(function(){
             var action = $(this).attr("action");
             var childs = $(this).attr("childs");
@@ -149,6 +150,7 @@
                 }
             }
         });
+        {/if}
     });
     function dr_scjt() {
         $.ajax({
