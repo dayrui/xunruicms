@@ -75,9 +75,19 @@ class Menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($type, $data);
-            \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-			\Phpcmf\Service::L('input')->system_log('添加后台菜单: '.$data['name']);
-			\Phpcmf\Service::M('Menu')->_add('admin', $pid, $data) ? exit($this->_json(1, dr_lang('操作成功'))) : exit($this->_json(0, dr_lang('操作失败')));
+            if ($data['uri']
+                && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+                // 链接菜单判断重复
+                $this->_json(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
+            }
+			$rt = \Phpcmf\Service::M('menu')->_add('admin', $pid, $data);
+			if ($rt['code']) {
+                \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+                \Phpcmf\Service::L('input')->system_log('添加后台菜单: '.$data['name']);
+                $this->_json(1, dr_lang('操作成功'));
+            } else {
+                $this->_json(0, $rt['msg']);
+            }
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -101,7 +111,12 @@ class Menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($type, $data);
-			\Phpcmf\Service::M('Menu')->_update('admin', $id, $data);
+            if ($data['uri']
+                && \Phpcmf\Service::M()->table('admin_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
+                // 链接菜单判断重复
+                $this->_json(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
+            }
+			\Phpcmf\Service::M('menu')->_update('admin', $id, $data);
             \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改后台菜单: '.$data['name']);
 			exit($this->_json(1, dr_lang('操作成功')));

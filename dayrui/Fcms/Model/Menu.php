@@ -13,15 +13,22 @@ class Menu extends \Phpcmf\Model {
     protected $ids;
 
     // 新增后台菜单
-    public function _add($table, $pid, $data, $mark = '') {
+    public function _add($table, $pid, $data, $mark = '', $is_return = false) {
 
-        if (!$data['name'] && !$data['uri']) {
-            return;
+        if (!$data['name']) {
+            return $is_return ? 0 : dr_return_data(0, dr_lang('名称不能为空'));
         }
 
         !$mark && ($mark = $data['mark'] ? $data['mark'] : '');
 
         if ($table == 'admin') {
+            // 重复判断
+            if ($data['uri'] && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+                // 链接菜单判断重复
+                return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
+            } elseif ($mark && \Phpcmf\Service::M()->table('admin_menu')->where('mark', $mark)->counts()) {
+                return $is_return ? 0 : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
+            }
             $this->db->table('admin_menu')->replace([
                 'pid' => $pid,
                 'name' => $data['name'],
@@ -33,6 +40,13 @@ class Menu extends \Phpcmf\Model {
                 'displayorder' => (int)$data['displayorder'],
             ]);
         } else {
+            // 重复判断
+            if ($data['uri']  && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
+                // 链接菜单判断重复
+                return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
+            } elseif ($mark && \Phpcmf\Service::M()->table('member_menu')->where('mark', $mark)->counts()) {
+                return $is_return ? 0 : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
+            }
             $group = [];
             if ($data['group']) {
                 foreach ($data['group'] as $i) {
@@ -59,12 +73,11 @@ class Menu extends \Phpcmf\Model {
             ]);
         }
 
-        return $this->db->insertID();
+        return $is_return ? $this->db->insertID() : dr_return_data($this->db->insertID(), 'ok');
     }
 
     // 修改菜单
     public function _edit($table, $id, $data) {
-
 
         if ($table == 'admin') {
             $this->db->table('admin_menu')->where('id', (int)$id)->update($data);
@@ -300,12 +313,12 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['admin'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $top['name'] ? $this->_add('admin', 0, $top, $mark) : $this->_get_id_for_mark('admin', $mark);
+                $top_id = $top['name'] ? $this->_add('admin', 0, $top, $mark, true) : $this->_get_id_for_mark('admin', $mark);
                 // 插入分组菜单
                 if ($top_id && $top['left']) {
                     foreach ($top['left'] as $mark2 => $left) {
                         $mark2 = strlen($mark2) > 2 ? $mark2 : '';
-                        $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2) : $this->_get_id_for_mark('admin', $mark2);
+                        $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2, true) : $this->_get_id_for_mark('admin', $mark2);
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $link) {
@@ -325,7 +338,7 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $top['name'] ? $this->_add('member', 0, $top, $mark) : $this->_get_id_for_mark('member', $mark);
+                $top_id = $top['name'] ? $this->_add('member', 0, $top, $mark, true) : $this->_get_id_for_mark('member', $mark);
                 // 插入链接菜单
                 if ($top_id && $top['link']) {
                     foreach ($top['link'] as $mark2 => $link) {
@@ -453,12 +466,12 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['admin'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $this->_add('admin', 0, $top, $mark);
+                $top_id = $this->_add('admin', 0, $top, $mark, true);
                 // 插入分组菜单
                 if ($top_id) {
                     foreach ($top['left'] as $mark2 => $left) {
                         $mark2 = strlen($mark2) > 2 ? $mark2 : '';
-                        $left_id = $this->_add('admin', $top_id, $left, $mark2);
+                        $left_id = $this->_add('admin', $top_id, $left, $mark2, true);
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $link) {
@@ -475,7 +488,7 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $this->_add('member', 0, $top, $mark);
+                $top_id = $this->_add('member', 0, $top, $mark, true);
                 // 插入链接菜单
                 if ($top_id) {
                     foreach ($top['link'] as $mark2 => $link) {

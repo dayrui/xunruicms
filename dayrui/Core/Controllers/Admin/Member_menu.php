@@ -173,17 +173,13 @@ class Member_menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($data);
-            if ($data['uri']
-                && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
-                // 链接菜单判断重复
-                $this->_json(0, dr_lang('此菜单的系统路径已经存在'), ['field' => 'uri']);
-            }
 			\Phpcmf\Service::L('input')->system_log('添加用户中心菜单: '.$data['name']);
-            if (\Phpcmf\Service::M('Menu')->_add('member', $pid, $data)) {
+            $rt = \Phpcmf\Service::M('Menu')->_add('member', $pid, $data);
+            if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
                 $this->_json(1, dr_lang('操作成功'));
             } else {
-                $this->_json(0, dr_lang('操作失败'));
+                $this->_json(0, $rt['msg']);
             }
 		}
 
@@ -210,7 +206,7 @@ class Member_menu extends \Phpcmf\Common
 			if ($data['uri']
                 && \Phpcmf\Service::M()->table('member_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
 			    // 链接菜单判断重复
-                $this->_json(0, dr_lang('此菜单的系统路径已经存在'), ['field' => 'uri']);
+                $this->_json(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
             }
 			\Phpcmf\Service::M('Menu')->_update('member', $id, $data);
 			\Phpcmf\Service::L('input')->system_log('修改用户中心菜单: '.$data['name']);
@@ -289,6 +285,7 @@ class Member_menu extends \Phpcmf\Common
 			if ($data['url']) unset($this->form['uri']);
 			if ($data['uri']) unset($this->form['url']);
 		}
+
 		if ($data['mark']) {
             list($a, $b) = explode('-', $data['mark']);
             if ($a == 'module' && !is_dir(dr_get_app_dir($b))) {
