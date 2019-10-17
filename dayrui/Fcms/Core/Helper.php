@@ -213,7 +213,7 @@ function dr_upload_temp_path() {
 /**
  * 内容文章显示内链
  */
-function dr_content_link($tags, $content, $num = 0) {
+function dr_content_link($tags, $content, $num = -1) {
 
     if (!$tags || !$content) {
         return $content;
