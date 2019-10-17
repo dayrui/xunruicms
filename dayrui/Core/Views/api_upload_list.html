@@ -1,10 +1,5 @@
 {template "header.html"}
-<style>
-    .preview img {
-        max-width: 60px !important;
-        max-height: 50px !important;
-    }
-</style>
+
 <form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
     {$form}
     <input type="hidden" name="is_ajax" value="1">
@@ -30,7 +25,7 @@
                         <div class="files">
                         {loop $list.unused $i $t}
                         {php $url = dr_get_file_url($t);}
-                        <div class="template-download files_row {if $i==0}border_none{/if}">
+                        <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
                             <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                 <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
                                 <span></span>
@@ -50,7 +45,7 @@
                         <div class="files">
                         {loop $list.used $i $t}
                         {php $url = dr_get_file_url($t);}
-                        <div class="template-download files_row">
+                        <div class="template-download yl_files_row files_row">
                             <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                 <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
                                 <span></span>

@@ -2898,12 +2898,15 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .template-download {
     padding:10px 0;
     border-bottom: 1px dotted #e2e2e2;
+}
+.yl_files_row {
     width: 45%;
+    height:70px;
     float: left;
 }
 .files_row_preview img{
-    width: 50px;
-    max-height: 50px;
+    width: 60px !important;
+    height: 50px !important;
 }
 .files_row_preview {
     margin-right: 10px;
