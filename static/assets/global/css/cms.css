@@ -365,11 +365,11 @@ code.form-control-static {
 }
  /*plugins*/
 
-
-
 .template-download {
     padding:10px 0;
     border-bottom: 1px dotted #e2e2e2;
+    width: 45%;
+    float: left;
 }
 .files_row_preview img{
     width: 50px;

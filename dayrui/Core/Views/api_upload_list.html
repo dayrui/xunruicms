@@ -35,12 +35,10 @@
                                 <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
                                 <span></span>
                             </label>
-                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
-
-                                <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                            <label class="label label-sm label-default">{$t.filename}</label>
-                                <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
-
+                            <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                            <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
+                            <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
+                            <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
                         </div>
                         {/loop}
                         </div>
@@ -59,7 +57,7 @@
                             </label>
                             <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
                             <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                            <label class="label label-sm label-default">{$t.filename}</label>
+                            <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                         </div>
                         {/loop}
                         </div>

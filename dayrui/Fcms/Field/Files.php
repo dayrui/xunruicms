@@ -206,7 +206,7 @@ class Files extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "60%"]';
         $count = intval($field['setting']['option']['count']);
         $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
         $size = intval($field['setting']['option']['size']) * 1024 * 1024;
@@ -236,9 +236,9 @@ class Files extends \Phpcmf\Library\A_Field {
         $tpl .= '</div>';
 
         if ($field['setting']['option']['desc']) {
-        $tpl.= '<div class="col-md-12 files_show_description" style="margin-top: 10px;">';
-        $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
-        $tpl.= '</div>';
+            $tpl.= '<div class="col-md-12 files_show_description" style="margin-top: 10px;">';
+            $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
+            $tpl.= '</div>';
         }
 		$tpl.= '</div>';
 		$tpl.= '</td>';
@@ -248,8 +248,6 @@ class Files extends \Phpcmf\Library\A_Field {
 		$tpl.= '<label><button onclick="dr_file_edit_'.$name.'(this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
 		$tpl.= '</td>';
 		$tpl.= '</tr>';
-
-
 
 		
 		// 已保存数据
