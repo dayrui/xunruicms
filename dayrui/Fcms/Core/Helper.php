@@ -35,7 +35,7 @@ function dr_get_ftable($id, $value, $class = '') {
     // 表单宽度设置
     $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
-    $str = '<table class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+    $str = '<table id="dr_table_'.$field['fieldname'].'" class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
     $str.= ' <thead><tr>';
 
     if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
