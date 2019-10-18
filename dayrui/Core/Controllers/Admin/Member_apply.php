@@ -77,6 +77,8 @@ class Member_apply extends \Phpcmf\Table
         !$data && $this->_admin_msg(0, dr_lang('申请记录不存在'));
 
         $my = dr_string2array($data['content']);
+        $user = dr_member_info($data['uid']);
+        $my = dr_array22array($user, $my);
 
         // 获取该组可用字段
         $field = [

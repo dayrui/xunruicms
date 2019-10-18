@@ -572,35 +572,13 @@ function dr_file_remove_'.$name.'() {
 
         if ($value) {
             // 显示模板
-            $tpl = '<tr class="template-download files_row">';
-            $tpl.= '<td style="text-align:center;width:90px;border-top:0">';
-            $tpl.= '<span class="files_row_preview preview">{preview}</span>';
-            $tpl.= '</td>';
-            $tpl.= '<td style="border-top:0">';
-            $tpl.= '{filepath}';
-            $tpl.= '</td>';
-            $tpl.= '</tr>';
             $file = \Phpcmf\Service::C()->get_attachment($value);
             if ($file) {
                 $preview = dr_file_preview_html($file['url']);
-                $filepath = $file['attachment'];
-                $title = $file['filename'];
-                $upload = '';
             } else {
-                $filepath = $value;
                 $preview = dr_file_preview_html($value);
-                $upload = '';
-                $title = '';
             }
-            $html.= '<table role="presentation" class="table table-striped table-fc-upload clearfix">';
-            $html.= '<tbody class="files">';
-            $html.= str_replace(
-                ['{title}', '{id}', '{filepath}', '{preview}', '{upload}'],
-                [$title, $value, $filepath, $preview, $upload],
-                $tpl
-            );
-            $html.= '</tbody>';
-            $html.= '</table>';
+            $html = '<div class="files_row_preview" style="width: 70px; height: 70px;">'.$preview.'</div>';
         }
 
         return $this->input_format($field['fieldname'], $field['name'], $html);
