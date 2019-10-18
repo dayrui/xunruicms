@@ -269,10 +269,10 @@ class Content extends \Phpcmf\Model {
         $id && $old['link_id'] && $this->sync_update_cat($old['link_id'], $data);
 
         // 站长工具
-        if (dr_is_app_dir('bdts')) {
+        if (dr_is_app('bdts')) {
             \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
-        if (dr_is_app_dir('bdxz')) {
+        if (dr_is_app('bdxz')) {
             \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
 
@@ -867,10 +867,10 @@ class Content extends \Phpcmf\Model {
             $row['url'] = dr_url_prefix($row['url'], MOD_DIR, SITE_ID, 0);
 
             // 站长工具
-            if (dr_is_app_dir('bdts')) {
+            if (dr_is_app('bdts')) {
                 \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, $row['url'], 'del');
             }
-            if (dr_is_app_dir('bdxz')) {
+            if (dr_is_app('bdxz')) {
                 \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, $row['url'], 'del');
             }
 
@@ -1002,17 +1002,19 @@ class Content extends \Phpcmf\Model {
         }
         // 删除草稿表
         $this->db->table($this->mytable.'_draft')->where('cid', $cid)->delete();
-        if (dr_is_app('favorite')) {
+        // 删除相关插件表
+        if ($this->is_table_exists($this->mytable.'_favorite')) {
             $this->db->table($this->mytable.'_favorite')->where('cid', $cid)->delete();
         }
-        if (dr_is_app('zan')) {
+        if ($this->is_table_exists($this->mytable.'_support')) {
             $this->db->table($this->mytable.'_support')->where('cid', $cid)->delete();
+        }
+        if ($this->is_table_exists($this->mytable.'_oppose')) {
             $this->db->table($this->mytable.'_oppose')->where('cid', $cid)->delete();
         }
-        if (dr_is_app('shang')) {
+        if ($this->is_table_exists($this->mytable.'_donation')) {
             $this->db->table($this->mytable.'_donation')->where('cid', $cid)->delete();
         }
-
         // 删除内容
         $tid = $this->_table_id($cid);
         $this->table($this->mytable.'_data_'.$tid)->delete($cid);

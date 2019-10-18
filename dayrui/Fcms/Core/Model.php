@@ -116,6 +116,7 @@ class Model {
             return 0;
         }
 
+        $table = strpos($table, $this->prefix) === 0 ? $table : $this->dbprefix($table);
         return $this->db->tableExists($table) ? 1 : 0;
     }
 
@@ -126,6 +127,7 @@ class Model {
             return 0;
         }
 
+        $table = strpos($table, $this->prefix) === 0 ? $table : $this->dbprefix($table);
         return $this->db->fieldExists($name, $table) ? 1 : 0;
     }
 
