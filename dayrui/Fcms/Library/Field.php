@@ -536,18 +536,26 @@
 
             foreach ($data as $n => $value) {
                 if (isset($fields[$n]) && $fields[$n]) {
-                    if ($n == 'content' && $fields[$n]['fieldtype'] == 'Ueditor' && strpos($value, '_ueditor_page_break_tag_') !== FALSE) {
-                        // 编辑器分页
-                        $page = 1;
-                        $match = explode('_ueditor_page_break_tag_', $value);
-                        $content = [];
-                        foreach ($match as $i => $t) {
-                            $content[$page] = $this->get_value($fields[$n]['fieldtype'], $t);
-                            $page ++;
+                    if ($n == 'content' && $fields[$n]['fieldtype'] == 'Ueditor') {
+                        $value = $this->get_value($fields[$n]['fieldtype'], $value);
+                        if (strpos($value, '<hr class="pagebreak">') !== FALSE) {
+                            // 编辑器分页
+                            $page = 1;
+                            $match = explode('<hr class="pagebreak">', $value);
+                            $content = [];
+                            foreach ($match as $i => $t) {
+                                $content[$page] = $t;
+                                $page ++;
+                            }
+                            $page = max(1, min($page, $curpage));
+                            $data[$n] = $content[$page]; // 默认内容字段为当前页的内容
+                            $data[$n.'_page'] = $content; // 全部分页
+                        } else {
+                            // 不分页
+                            $data[$n] = $value;
                         }
-                        $page = max(1, min($page, $curpage));
-                        $data[$n] = $content[$page]; // 默认内容字段为当前页的内容
-                        $data[$n.'_page'] = $content; // 全部分页
+
+                        /* 老版本吧的分页
                     } elseif ($fields[$n]['fieldtype'] == 'Ueditor'
                         && strpos($value, '<p class="pagebreak">') !== FALSE
                         && preg_match_all('/<p class="pagebreak">(.*)<\/p>/Us', $value, $match)
@@ -569,7 +577,7 @@
                         $page = max(1, min($page, $curpage));
                         $data[$n] = $content[$page]['body'];
                         $data[$n.'_page'] = $content;
-                        $data[$n.'_title'] = $title[$page];
+                        $data[$n.'_title'] = $title[$page];*/
                     } elseif ($fields[$n]['fieldtype'] == 'Pays') {
                         $data[$n.'_sku'] = dr_string2array($data[$n.'_sku']);
                         $data[$n.'_quantity'] = intval($data[$n.'_quantity']);

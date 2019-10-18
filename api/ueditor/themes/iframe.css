@@ -2,3 +2,16 @@
 .edui-upload-video {
 
 }
+
+.pagebreak {
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: rgb(128, 128, 128);
+    border-right-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
+    border-left-color: rgb(128, 128, 128);
+    background-color: rgb(128, 128, 128);
+    height: 3px;
+}

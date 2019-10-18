@@ -315,6 +315,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             \Phpcmf\Service::L('Field')->data[1]['description'] = trim(dr_strcut(dr_clearhtml($value), 200));
         }
 
+        // 替换分页
+        $value = str_replace('_ueditor_page_break_tag_', '<hr class="pagebreak">', $value);
 
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
     }

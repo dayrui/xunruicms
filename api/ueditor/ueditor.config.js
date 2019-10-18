@@ -352,7 +352,7 @@
 
         //默认过滤规则相关配置项目
         //,disabledTableInTable:true  //禁止表格嵌套
-        //,allowDivTransToP:true      //允许进入编辑器的div标签自动变成p标签
+        ,allowDivTransToP:false      //允许进入编辑器的div标签自动变成p标签
         //,rgb2Hex:true               //默认产出的数据中的color自动从rgb格式变成16进制格式
 
 		// xss 过滤是否开启,inserthtml等操作
@@ -398,7 +398,7 @@
 			h5:     ['class', 'style'],
 			h6:     ['class', 'style'],
 			header: [],
-			hr:     [],
+			hr:     ['class', 'style'],
 			i:      ['class', 'style'],
 			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class'],
 			ins:    ['datetime'],
