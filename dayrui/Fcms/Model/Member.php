@@ -443,6 +443,10 @@ class Member extends \Phpcmf\Model
     // 删除用户组
     public function delete_group($uid, $gid) {
 
+        // 回调信息
+        $call = $this->member_info($uid);
+        $call['group'] = $this->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->getRow();
+
         $this->db->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->delete();
 
         // 提醒
@@ -454,12 +458,12 @@ class Member extends \Phpcmf\Model
             \Phpcmf\Service::M('user', 'weixin')->delete_member_group($uid, $gid);
         }
 
-        $call = $this->member_info($uid);
         \Phpcmf\Hooks::trigger('member_del_group_after', $call);
     }
 
     // 新增用户组
     public function insert_group($uid, $gid, $is_notice = 1) {
+
         $data = [
             'uid' => $uid,
             'gid' => $gid,
@@ -467,13 +471,20 @@ class Member extends \Phpcmf\Model
             'stime' => SYS_TIME,
             'etime' => dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days']),
         ];
-        $this->table('member_group_index')->insert($data);
+        $rt = $this->table('member_group_index')->insert($data);
+        if (!$rt['code']) {
+            return;
+        }
+        $data['id'] = $rt['code'];
+
         // 挂钩点 用户组变更之后
         $call = $this->member_info($uid);
+        $call['group'] = $data;
         $call['group_gid'] = $call['gid'] = $gid;
         $call['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['name'];
         $is_notice && \Phpcmf\Service::L('Notice')->send_notice('member_edit_group', $call);
         \Phpcmf\Hooks::trigger('member_edit_group_after', $call);
+
         // 判断微信标记组
         if (dr_is_app('weixin')) {
             \Phpcmf\Service::C()->init_file('weixin');
