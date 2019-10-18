@@ -226,9 +226,14 @@ class Api extends \Phpcmf\Common
      */
     public function find_code() {
 
+		$code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         if (!$value) {
-            $this->_json(0, dr_lang('账号凭证不能为空'));
+            $this->_json(0, dr_lang('账号凭证不能为空'), ['field' => 'value']);
+        } elseif (!$code) {
+            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         }
 
         // 验证操作间隔
@@ -239,7 +244,7 @@ class Api extends \Phpcmf\Common
             // 邮箱模式
             $data = \Phpcmf\Service::M()->db->table('member')->where('email', $value)->get()->getRowArray();
             if (!$data) {
-                $this->_json(0, dr_lang('账号凭证不存在'));
+                $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
             }
             $data['randcode'] = $rand = rand(100000, 999999);
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
@@ -249,14 +254,14 @@ class Api extends \Phpcmf\Common
             // 手机
             $data = \Phpcmf\Service::M()->db->table('member')->where('phone', $value)->get()->getRowArray();
             if (!$data) {
-                $this->_json(0, dr_lang('账号凭证不存在'));
+                $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
             }
             $rand = rand(100000, 999999);
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
             $rt = \Phpcmf\Service::M('member')->sendsms_code($value, $rand);
             !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
         } else {
-            $this->_json(0, dr_lang('账号凭证格式不正确'));
+            $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
         $this->session()->setTempdata($name, 1, 60);
@@ -268,16 +273,23 @@ class Api extends \Phpcmf\Common
      */
     public function register_code() {
 
+		$code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
-        if (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
+        if (!$phone) {
+            $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+        } elseif (!$code) {
+            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         } elseif (\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
             $this->_json(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
         }
 
         // 验证操作间隔
         $name = 'member-register-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
@@ -292,16 +304,23 @@ class Api extends \Phpcmf\Common
      */
     public function login_code() {
 
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
-        if (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
+        if (!$phone) {
+            $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+        } elseif (!$code) {
+            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         } elseif (!\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
             $this->_json(0, dr_lang('手机号码未注册'), ['field' => 'phone']);
         }
 
         // 验证操作间隔
         $name = 'member-login-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
@@ -316,9 +335,16 @@ class Api extends \Phpcmf\Common
      */
     public function send_code() {
 
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
-        if (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
+        if (!$phone) {
+            $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+        } elseif (!$code) {
+            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         }
 		
         // 挂钩点 短信验证之前
@@ -326,7 +352,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-send-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);

@@ -357,6 +357,21 @@ class Form
         return false;
     }
 
+    // 验证码类：只比较不删除
+    public function check_captcha_value($data) {
+
+        if (!$data) {
+            return false;
+        }
+
+        $code = \Phpcmf\Service::C()->session()->get('captcha');
+        if (strtolower($data) == strtolower($code)) {
+            return true;
+        }
+
+        return false;
+    }
+
     // 验证手机号码
     public function check_phone($value) {
 

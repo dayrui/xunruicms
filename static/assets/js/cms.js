@@ -332,6 +332,13 @@ function dr_ajax_url(url) {
         dataType: "json",
         success: function (json) {
             layer.close(index);
+			if (json.code == 0) {
+                $('.fc-code img').click();
+                if (json.data.field) {
+                    $('#dr_row_'+json.data.field).addClass('has-error');
+                    $('#dr_'+json.data.field).focus();
+                }
+			}
             dr_cmf_tips(json.code, json.msg);
             if (json.data.url) {
                 setTimeout("window.location.href = '"+json.data.url+"'", 2000);
