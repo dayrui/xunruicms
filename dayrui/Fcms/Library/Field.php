@@ -47,9 +47,9 @@
                 $field = require WEBPATH.'config/field.php';
                 if (IS_ADMIN && isset($field['admin']) && $field['admin']) {
                     $this->format = $field['admin'];
-                } elseif (IS_ADMIN && isset($field['member']) && $field['member']) {
+                } elseif (IS_MEMBER && isset($field['member']) && $field['member']) {
                     $this->format = $field['member'];
-                } elseif (IS_ADMIN && isset($field['home']) && $field['home']) {
+                } elseif (isset($field['home']) && $field['home']) {
                     $this->format = $field['home'];
                 }
             }
