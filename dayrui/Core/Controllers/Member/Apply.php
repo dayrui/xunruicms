@@ -65,7 +65,7 @@ class Apply extends \Phpcmf\Common
             $post = \Phpcmf\Service::L('input')->post('data');
             $my_verify = $attach = [];
             if ($field) {
-                list($data, $return, $attach) = \Phpcmf\Service::L('Form')->validation($post, null, $field, $verify ? dr_string2array($verify['content']) : '');
+                list($data, $return, $attach) = \Phpcmf\Service::L('Form')->id($this->uid)->validation($post, null, $field, $verify ? dr_string2array($verify['content']) : $this->member);
                 // 输出错误
                 $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
             }
@@ -216,7 +216,7 @@ class Apply extends \Phpcmf\Common
             'level' => $level,
             'group' => $group,
             'verify' => $verify,
-            'myfield' => \Phpcmf\Service::L('Field')->toform($this->uid, $field, $verify ? dr_string2array($verify['content']) : ''),
+            'myfield' => \Phpcmf\Service::L('Field')->toform($this->uid, $field, $verify ? dr_string2array($verify['content']) : $this->member),
             'meta_title' => dr_lang('申请用户组').SITE_SEOJOIN.dr_lang('用户中心')
         ]);
         \Phpcmf\Service::V()->display('apply_index.html');
