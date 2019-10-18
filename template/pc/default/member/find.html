@@ -66,7 +66,7 @@
                                             <label class="col-md-4 control-label">获得验证码</label>
                                             <div class="col-md-5">
 												<div class="input-group input-large">
-                                                    <input type="text" id="dr_code" name="data[code]" class="form-control" placeholder="验证码">
+                                                    <input type="text" name="data[code]" class="form-control" placeholder="验证码">
                                                     <span class="input-group-btn">
                                                         <button class="btn green" type="button" onclick="dr_ajax_url('{$api_url}&code='+$('#dr_code').val()+'&value='+$('#dr_value').val())">发送验证码</button>
                                                     </span>
