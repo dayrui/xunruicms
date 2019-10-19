@@ -39,7 +39,10 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         // Log it
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))
         {
-            log_message('critical',$exception->getMessage()."\n# " .\Phpcmf\Service::M()->get_sql_query(). "\n{trace}", [
+            log_message('critical',$exception->getMessage()
+			."\n# " . FC_NOW_URL
+			."\n# " .\Phpcmf\Service::M()->get_sql_query()
+			. "\n{trace}", [
                 'trace' => $exception->getTraceAsString(),
             ]);
         }
