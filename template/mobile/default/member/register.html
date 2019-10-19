@@ -58,21 +58,21 @@
                     {if $register.sms}
                     <div class="form-group" id="dr_row_sms">
                         <label class="col-md-2 control-label">短信验证</label>
-                        <div class="col-md-9">
-                            <div class="input-group ">
+                        <div class="col-md-10">
+                            <div class="input-group input-large">
                                 <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_sms" name="sms">
                                 <div class="input-group-btn">
-                                    <button class="btn blue" onclick="dr_ajax_url('/index.php?s=member&c=api&m=register_code&id='+$('#dr_phone').val())" type="button">获取手机验证码</button>
+                                    <button class="btn blue" onclick="dr_ajax_url('/index.php?s=member&c=api&m=register_code&id='+$('#dr_phone').val()+'&code='+$('#dr_code').val())" type="button">获取手机验证码</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {/if}
-                    {if $register.code}
+                    {if $register.sms || $register.code}
                     <div class="form-group" id="dr_row_code">
                         <label class="col-md-2 control-label">验证码</label>
                         <div class="col-md-9">
-                            <div class="input-group ">
+                            <div class="input-group input-large">
                                 <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_code" name="code">
                                 <div class="input-group-btn fc-code">
                                     {dr_code(120, 35)}

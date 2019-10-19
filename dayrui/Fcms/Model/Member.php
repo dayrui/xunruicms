@@ -328,7 +328,7 @@ class Member extends \Phpcmf\Model
                                 // 余额不足 删除
                                 // 提醒通知
                                 $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
-                                $this->delete_group($uid, $group['gid']);
+                                $this->delete_group($uid, $group['gid'], 0);
                                 continue;
                             }
                             $group['etime'] = dr_member_group_etime($group_info['days']);
@@ -373,14 +373,13 @@ class Member extends \Phpcmf\Model
                     } else {
                         // 金币
                         $price = (int)$price;
-
                         if ($price > 0) {
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 金币不足 删除
                                 // 提醒通知
                                 $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
-                                $this->delete_group($uid, $group['gid']);
+                                $this->delete_group($uid, $group['gid'], 0);
                                 continue;
                             }
                             // 自动续费
@@ -412,7 +411,7 @@ class Member extends \Phpcmf\Model
                     // 未开通自动续费直接删除
                     // 提醒通知
                     $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
-                    $this->delete_group($uid, $group['gid']);
+                    $this->delete_group($uid, $group['gid'], 0);
                 }
 
             }
@@ -440,8 +439,8 @@ class Member extends \Phpcmf\Model
         return $g;
     }
 
-    // 删除用户组
-    public function delete_group($uid, $gid) {
+    // 删除用户组 is_admin 是否是管理员删除，否则就是过期删除
+    public function delete_group($uid, $gid, $is_admin = 1) {
 
         // 回调信息
         $call = $this->member_info($uid);
@@ -449,13 +448,19 @@ class Member extends \Phpcmf\Model
 
         $this->db->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->delete();
 
-        // 提醒
-        $this->notice($uid, 2, dr_lang('您的用户组（%s）被取消', \Phpcmf\Service::C()->member_cache['group'][$gid]['name']));
+        // 管理员删除时提醒
+        $is_admin && $this->notice($uid, 2, dr_lang('您的用户组（%s）被取消', \Phpcmf\Service::C()->member_cache['group'][$gid]['name']));
 
         // 判断微信标记组
         if (dr_is_app('weixin')) {
             \Phpcmf\Service::C()->init_file('weixin');
             \Phpcmf\Service::M('user', 'weixin')->delete_member_group($uid, $gid);
+        }
+
+        // 过期后变更
+        if (!$is_admin && \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid']
+            && \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid'] != $gid) {
+            $this->insert_group($uid, \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid']);
         }
 
         \Phpcmf\Hooks::trigger('member_del_group_after', $call);

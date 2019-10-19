@@ -387,7 +387,7 @@ class Member extends \Phpcmf\Table
         $gid = (int)\Phpcmf\Service::L('input')->get('gid');
         $uid = (int)\Phpcmf\Service::L('input')->get('uid');
 
-        \Phpcmf\Service::M('member')->delete_group($uid, $gid);
+        \Phpcmf\Service::M('member')->delete_group($uid, $gid, 1);
 
         $this->_json(1, dr_lang('操作成功'));
     }

@@ -28,12 +28,23 @@
                         </div>
                     </div>
                     <div class="form-group" id="dr_row_code">
-                        <label class="col-md-5 control-label">验证码</label>
+                        <label class="col-md-5 control-label">图片验证码</label>
                         <div class="col-md-5">
-                            <div class="input-group">
-                                <input type="text" id="dr_code" name="data[code]" class="form-control" placeholder="验证码">
+                            <div class="input-group input-large">
+                                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_code">
+                                <div class="input-group-btn fc-code">
+                                    {dr_code(120, 35)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label">获得验证码</label>
+                        <div class="col-md-5">
+                            <div class="input-group input-large">
+                                <input type="text" name="data[code]" class="form-control" placeholder="验证码">
                                 <span class="input-group-btn">
-                                                        <button class="btn green" type="button" onclick="dr_ajax_url('{$api_url}&value='+$('#dr_value').val())">发送验证码</button>
+                                                        <button class="btn green" type="button" onclick="dr_ajax_url('{$api_url}&code='+$('#dr_code').val()+'&value='+$('#dr_value').val())">发送验证码</button>
                                                     </span>
                             </div>
                         </div>
