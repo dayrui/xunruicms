@@ -335,20 +335,22 @@ class Api extends \Phpcmf\Common
      */
     public function send_code() {
 
-        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
         if (!$phone) {
             $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
         } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-        } elseif (!$code) {
+        }
+
+        // 挂钩点 短信验证之前
+        \Phpcmf\Hooks::trigger('member_send_phone_before', $phone);
+
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        if (!$code) {
             $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
         } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
             $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         }
-		
-        // 挂钩点 短信验证之前
-        \Phpcmf\Hooks::trigger('member_send_phone_before', $phone);
 
         // 验证操作间隔
         $name = 'member-send-phone-'.$phone;
