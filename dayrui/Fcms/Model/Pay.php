@@ -139,7 +139,6 @@ class Pay extends \Phpcmf\Model
         ];
     }
 
-
     // 获取支付信息的表名
     public function _get_table_name($relatedid, $relatedname) {
 
@@ -318,7 +317,6 @@ class Pay extends \Phpcmf\Model
         }
     }
 
-
     /**
      * 支付表单调用
      * mark     表名-主键id-字段id
@@ -447,14 +445,39 @@ class Pay extends \Phpcmf\Model
             if ($data['touid']) {
                 if ($data['touid'] == $data['uid']) {
                     // 表示为自己充值
-                    $this->add_money($data['uid'], $data['value']);
+                    if ($data['type'] != 'finecms') {
+                        // 充值必须判断type不是余额付款模式
+                        $this->add_money($data['uid'], $data['value']);
+                    }
                 } else {
                     // 扣除自己的钱
-                    $this->add_money($data['uid'], -abs($data['value']));
+                    if ($data['type'] == 'finecms') {
+                        // 判断type是余额付款模式,才进行扣款
+                        $this->add_money($data['uid'], -abs($data['value']));
+                    } else {
+                        // 记录消费
+                        $member = $this->member_info($data['uid']);
+                        if ($member) {
+                            $this->table('member')->update($data['uid'], [
+                                'spend' => max(0, $member['spend'] + abs($data['value'])),
+                            ]);
+                        }
+                    }
                 }
             } else {
                 // 扣除自己的钱 touid为空表示系统收款直接扣
-                $this->add_money($data['uid'], -abs($data['value']));
+                if ($data['type'] == 'finecms') {
+                    // 判断type是余额付款模式,才进行扣款
+                    $this->add_money($data['uid'], -abs($data['value']));
+                } else {
+                    // 记录消费
+                    $member = $this->member_info($data['uid']);
+                    if ($member) {
+                        $this->table('member')->update($data['uid'], [
+                            'spend' => max(0, $member['spend'] + abs($data['value'])),
+                        ]);
+                    }
+                }
             }
 
             // 支付成功
