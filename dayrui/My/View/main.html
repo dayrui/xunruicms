@@ -26,6 +26,18 @@
             <div class="portlet-body">
 
                 <ul class="use-info" style="margin:-10px 0 30px 10px;">
+                    {if $license.name && $license.url}
+                    <li>
+                        <span>框架版本：</span>
+                        <a target="_blank" href="{$license.url}">{$cmf_version}</a>
+                        <a id="dr_cmf_update" href="{dr_url('cloud/update')}" style="margin-left: 10px;display: none" class="badge badge-danger badge-roundless">  </a>
+                    </li>
+
+                    <li>
+                        <span>官方网站：</span>
+                        <a target="_blank" href="{$license.url}" style="margin-right: 10px;">{$license.name}</a>
+                    </li>
+                    {else}
                     <li>
                         <span>框架版本：</span>
                         <a target="_blank" href="http://www.xunruicms.com/">{$cmf_version}</a>
@@ -49,6 +61,7 @@
                         <a target="_blank" href="http://www.xunruicms.com/wenda/" style="margin-right: 10px;">产品论坛</a>
                         <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=f0fbe4240aec09f99a7949701235c8cde6809f96ad9ee44775da41418632a105" style="margin-right: 10px;">用户QQ群</a>
                     </li>
+                    {/if}
 
                 </ul>
             </div>

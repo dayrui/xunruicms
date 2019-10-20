@@ -21,6 +21,11 @@ class Home extends \Phpcmf\Common
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
         }
+        
+        $license = [];
+        if (is_file(MYPATH.'Config/License.php')) {
+            $license = require MYPATH.'Config/License.php';
+        }
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
@@ -33,6 +38,7 @@ class Home extends \Phpcmf\Common
             'color' => ['blue', 'red', 'green', 'dark', 'yellow'],
             'domain' => dr_get_domain_name(ROOT_URL),
             'tables' => $this->_main_table(),
+            'license' => $license,
             'table_data' => $table_data,
             'cmf_update' => $this->cmf_version['updatetime'],
             'cmf_version' => $this->cmf_version['version'],
