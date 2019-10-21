@@ -265,6 +265,11 @@ class Field extends \Phpcmf\Model
             || $data['setting']['option']['fieldlength'] != $_data['setting']['option']['fieldlength'])
         && $this->update_table($sql, $_data['ismain']);
 
+        // 自定义属性不变
+        if (isset($_data['setting']['diy'])) {
+            $data['setting']['diy'] = $_data['setting']['diy'];
+        }
+
         $data['setting'] = dr_array2string($data['setting']);
         $data['issearch'] = (int)$data['issearch'];
         $data['ismember'] = (int)$data['ismember'];

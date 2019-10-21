@@ -226,7 +226,9 @@ class Field extends \Phpcmf\Common
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$page = max((int)\Phpcmf\Service::L('input')->get('page'), 0);
 		$data = \Phpcmf\Service::M()->table('field')->get($id);
-		!$data && exit($this->_json(0, dr_lang('数据#%s不存在', $id)));
+		if (!$data) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 		$data['setting'] = dr_string2array($data['setting']);
 
 		if (IS_AJAX_POST) {
@@ -237,7 +239,9 @@ class Field extends \Phpcmf\Common
 				$post,
 				$field->alter_sql($data['fieldname'], $post['setting']['option'], $data['name'])
 			);
-			!$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
+			if (!$rt['code']) {
+			    $this->_json(0, dr_lang($rt['msg']));
+            }
             $this->_cache(); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
 			exit($this->_json(1, dr_lang('操作成功')));
@@ -505,18 +509,27 @@ class Field extends \Phpcmf\Common
                     list($module, $s) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
                     !$cache && $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-                    $this->data = $cache['category'][$this->relatedid];
-                    !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
-                    if ($module == 'share') {
-                        $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
-                        $this->data['dirname'] = $this->data['mid'];
-                        $this->backurl =\Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
-                        $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                    if ($this->relatedid) {
+                        $this->data = $cache['category'][$this->relatedid];
+                        !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                        if ($module == 'share') {
+                            $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
+                            $this->data['dirname'] = $this->data['mid'];
+                            $this->backurl =\Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
+                            $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                        } else {
+                            $this->data['dirname'] = $module;
+                            $this->backurl =\Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
+                            $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                        }
                     } else {
-                        $this->data['dirname'] = $module;
-                        $this->backurl =\Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
-                        $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                        $this->data = [
+                            'dirname' => $module,
+                        ];
+                        $this->name = '模块【'.$module.'】栏目公共模型字段';
+                        $this->backurl = \Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir' => $module]); // 返回uri地址
                     }
+
                     \Phpcmf\Service::M('Field')->func = 'category_data'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
                     $this->namespace = $module;

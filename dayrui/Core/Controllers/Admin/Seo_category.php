@@ -128,7 +128,9 @@ class Seo_category extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table(SITE_ID.'_'.$dir.'_category')->where('id', $id)->getRow();
-        !$data && $this->_admin_msg(0, dr_lang('栏目#%s不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('栏目#%s不存在', $id));
+        }
         $data['setting'] = dr_string2array($data['setting']);
 
         if (IS_AJAX_POST) {

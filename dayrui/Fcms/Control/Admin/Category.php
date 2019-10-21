@@ -71,13 +71,6 @@ class Category extends \Phpcmf\Table
             $t['child'] = $t['pcatpost'] ? 0 : $t['child'];
             $t['setting'] = dr_string2array($t['setting']);
             $option = '';
-            if ($this->_is_admin_auth()) {
-                if ($this->module['share']) {
-                    $t['tid'] == 1 && $option.= '<a class="btn btn-xs dark" href='.\Phpcmf\Service::L('Router')->url('field/index', ['rname' => ('share').'-'.SITE_ID, 'rid' => $t['id']]).'> <i class="fa fa-code"></i> '.dr_lang('模型字段').'('.dr_count($this->module['category'][$t['id']]['field']).')</a>';
-                } else {
-                    $option.= '<a class="btn btn-xs dark" href='.\Phpcmf\Service::L('Router')->url('field/index', ['rname' => (APP_DIR).'-'.SITE_ID, 'rid' => $t['id']]).'> <i class="fa fa-code"></i> '.dr_lang('模型字段').'('.dr_count($this->module['category'][$t['id']]['field']).')</a>';
-                }
-            }
             $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
             if ($t['tid'] != 2 && $this->_is_admin_auth('add')) {
                 // 非外链添加子类
@@ -437,7 +430,9 @@ class Category extends \Phpcmf\Table
         $at = \Phpcmf\Service::L('input')->get('at');
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
         $row = \Phpcmf\Service::M('Category')->init($this->init)->get($catid);
-        !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+        if (!$row) {
+            $this->_json(0, dr_lang('栏目数据不存在'));
+        }
 
         if (IS_AJAX_POST) {
 
@@ -445,8 +440,8 @@ class Category extends \Phpcmf\Table
             if (!$catids) {
                 $this->_json(0, dr_lang('你还没有选择栏目呢'));
             }
-            $row['setting'] = dr_string2array($row['setting']);
             $c = 0;
+            $row['setting'] = dr_string2array($row['setting']);
             if (isset($catids[0]) && $catids[0] == 0) {
                 foreach ($this->module['category'] as $id => $t) {
                     $c ++;

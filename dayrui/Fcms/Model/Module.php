@@ -745,17 +745,31 @@ class Module extends \Phpcmf\Model
             }
 
             // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
-            $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', $cdir.'-'.$siteid)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            $like = [$cache['dirname'].'-'.$siteid];
+            if ($cache['share']) {
+                $like[] = 'share-'.$siteid;
+            }
+            $field = $this->db->table('field')->where('disabled', 0)->whereIn('relatedname', $like)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
                     $f['setting'] = dr_string2array($f['setting']);
-                    if (isset($CAT[$f['relatedid']]['childids']) && $CAT[$f['relatedid']]['childids']) {
-                        // 将该字段同时归类至其子栏目
-                        $child = explode(',', $CAT[$f['relatedid']]['childids']);
-                        foreach ($child as $catid) {
-                            $CAT[$catid] && $CAT[$catid]['field'][$f['fieldname']] = $f;
+                    //
+                    if ($f['relatedid']) {
+                        $f['setting']['diy']['cat_field_catids'][] = $f['relatedid'];
+                    }
+                    $fcatids = array_unique($f['setting']['diy']['cat_field_catids']);
+                    if ($fcatids) {
+                        foreach ($fcatids as $fcid) {
+                            if (isset($CAT[$fcid]['childids']) && $CAT[$fcid]['childids']) {
+                                // 将该字段同时归类至其子栏目
+                                $child = explode(',', $CAT[$fcid]['childids']);
+                                foreach ($child as $catid) {
+                                    $CAT[$catid] && $CAT[$catid]['field'][$f['fieldname']] = $f;
+                                }
+                            }
                         }
                     }
+
                 }
             }
 

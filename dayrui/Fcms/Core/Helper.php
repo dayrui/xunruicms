@@ -1996,8 +1996,7 @@ function dr_authcode($string, $operation = 'DECODE') {
     } else {
         // 加密
         dr_mkdirs($code_path);
-        $code_file = $code_path.md5($string);
-        $rt = file_put_contents($code_file, $string, LOCK_EX);
+        $rt = file_put_contents($code_path.md5($string), $string, LOCK_EX);
         if (!$rt) {
             return dr_dz_authcode($string, $operation);
         }

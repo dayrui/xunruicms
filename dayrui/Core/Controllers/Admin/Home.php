@@ -21,7 +21,7 @@ class Home extends \Phpcmf\Common
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
         }
-        
+
         $license = [];
         if (is_file(MYPATH.'Config/License.php')) {
             $license = require MYPATH.'Config/License.php';

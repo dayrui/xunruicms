@@ -10,7 +10,7 @@
 class Module_create extends \Phpcmf\Common
 {
 
-    private $jname = ['case', 'class', 'extends', 'new', 'var'];
+    private $jname = ['case', 'class', 'extends', 'new', 'var', 'member', 'category', 'module', 'form'];
 
     // 创建模块
     public function index() {
