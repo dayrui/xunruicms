@@ -86,7 +86,7 @@ class Module_category extends \Phpcmf\Common
                 $f['select'] = \Phpcmf\Service::L('Tree')->select_category(
                     $module['category'],
                     $f['setting']['diy']['cat_field_catids'],
-                    'name=\'data['.$f['id'].'][]\' multiple="multiple" style="height:200px"',
+                    'name=\'data['.$f['id'].'][]\' multiple="multiple" class="multi-select" style="height:200px"',
                     '',
                     0,
                     0
