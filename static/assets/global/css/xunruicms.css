@@ -2916,7 +2916,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 ::-webkit-scrollbar  
 {  
     width: 8px;  
-    height: 110px;  
+    height: 8px;  
     background-color: #F5F5F5;  
 }  
 /*定义滚动条轨道 内阴影+圆角*/  
