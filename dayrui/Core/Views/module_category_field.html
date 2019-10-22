@@ -26,6 +26,10 @@
                     {/loop}
 
                 </div>
+
+                {if !$list}
+                <div class="alert"> {dr_lang('你没有创建自定义栏目模型字段')} </div>
+                {/if}
             </div>
         </div>
         <div class="portlet-body form myfooter">

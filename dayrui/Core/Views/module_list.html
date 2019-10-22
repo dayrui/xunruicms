@@ -50,7 +50,7 @@
                     {if $ci->_is_admin_auth()}
                     <label><a href="{dr_url('field/index', ['rname'=>'comment-module-'.$t.dirname, 'rid'=>0])}" class="btn btn-xs grey-mint"> <i class="fa fa-comments"></i> {dr_lang('评论字段')} </a></label>
                     <label><a href="{dr_url('field/index', ['rname'=>'module', 'rid'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-code"></i> {dr_lang('内容字段')} </a></label>
-                    <label><a href="{dr_url('module_category/field_index', ['dir'=>$t.dirname])}" class="btn btn-xs dark"> <i class="fa fa-reorder"></i> {dr_lang('模型字段')} </a></label>
+                    <label><a href="{dr_url('module_category/field_index', ['dir'=>$t.dirname])}" class="btn btn-xs dark"> <i class="fa fa-reorder"></i> {dr_lang('栏目模型字段')} </a></label>
                     <label><a href="javascript:dr_load_ajax('{dr_lang('确定将此模块从当前站点中删除吗？')}', '{dr_url('module/uninstall', ['dir'=>$t.dirname])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>
                     {/if}
                     {else}
