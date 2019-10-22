@@ -7,6 +7,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2014-2017 British Columbia Institute of Technology
+ * Copyright (c) 2019 CodeIgniter Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -193,6 +194,17 @@ class Encryption
 		}
 
 		return null;
+	}
+
+	/**
+	 * __isset() magic, providing checking for some of our protected properties
+	 *
+	 * @param  string $key Property name
+	 * @return boolean
+	 */
+	public function __isset($key): bool
+	{
+		return in_array($key, ['key', 'digest', 'driver', 'drivers'], true);
 	}
 
 }
