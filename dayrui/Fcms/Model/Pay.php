@@ -440,6 +440,7 @@ class Pay extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('此账单已经支付'));
         } else {
             // 分析订单来源
+            $user = \Phpcmf\Service::M('Member')->member_info($data['uid']);
             list($a, $b, $c, $d, $e, $f) = explode('-', $data['mid']);
             // 付款到账号余额中 // touid为空表示系统收款直接扣
             if ($data['touid']) {
@@ -456,10 +457,9 @@ class Pay extends \Phpcmf\Model
                         $this->add_money($data['uid'], -abs($data['value']));
                     } else {
                         // 记录消费
-                        $member = $this->member_info($data['uid']);
-                        if ($member) {
+                        if ($user) {
                             $this->table('member')->update($data['uid'], [
-                                'spend' => max(0, $member['spend'] + abs($data['value'])),
+                                'spend' => max(0, $user['spend'] + abs($data['value'])),
                             ]);
                         }
                     }
@@ -471,10 +471,9 @@ class Pay extends \Phpcmf\Model
                     $this->add_money($data['uid'], -abs($data['value']));
                 } else {
                     // 记录消费
-                    $member = $this->member_info($data['uid']);
-                    if ($member) {
+                    if ($user) {
                         $this->table('member')->update($data['uid'], [
-                            'spend' => max(0, $member['spend'] + abs($data['value'])),
+                            'spend' => max(0, $user['spend'] + abs($data['value'])),
                         ]);
                     }
                 }
@@ -492,7 +491,6 @@ class Pay extends \Phpcmf\Model
             $data['paytime'] = SYS_TIME;
             $data['url'] = \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id' => $data['id']]);
 
-            $user = \Phpcmf\Service::M('Member')->member_info($data['uid']);
             if ($user) {
                 $data['phone'] = $user['phone'];
                 $data['email'] = $user['email'];
