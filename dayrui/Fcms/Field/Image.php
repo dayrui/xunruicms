@@ -203,18 +203,13 @@ class Image extends \Phpcmf\Library\A_Field {
         // 表单输出
         $str = '
 			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
-                     
                             </div>
 		';
 
         if (!defined('POSCMS_FIELD_IMAGES')) {
             $str.= '
-				
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
-			
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-			
 			';
             define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
         }
