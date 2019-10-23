@@ -628,7 +628,7 @@ class Cloud extends \Phpcmf\Common
                 }
                 $html.= '<p class="'.$class.'"><label class="rleft">'.$cname.'</label><label class="rright">'.$ok.'</label></p>';
                 if ($class) {
-                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.$ofile.'</label><label class="rright">'.$ok.'</label></p>';
+                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.(CI_DEBUG ? $ofile : $cname).'</label><label class="rright">'.$ok.'</label></p>';
                 }
             }
             $this->_json($page + 1, $html);
