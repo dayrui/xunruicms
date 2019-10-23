@@ -89,7 +89,9 @@ class Mform extends \Phpcmf\Table
     // 后台添加内容
     protected function _Admin_Add() {
 
-        ! $this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         list($tpl) = $this->_Post(0);
 
@@ -102,14 +104,20 @@ class Mform extends \Phpcmf\Table
     // 后台修改内容
     protected function _Admin_Edit() {
 
-        ! $this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
 
-        !$data && $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-         $this->cid != $data['cid'] && $this->_admin_msg(0, dr_lang('cid不匹配'));
-        $this->is_verify && $data['status'] && $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
+        } elseif ($this->cid != $data['cid']) {
+            $this->_admin_msg(0, dr_lang('cid不匹配'));
+        } elseif ($this->is_verify && $data['status']) {
+            $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        }
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
@@ -120,14 +128,20 @@ class Mform extends \Phpcmf\Table
     // 后台查看内容
     protected function _Admin_Show() {
 
-        ! $this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Show($id);
 
-        !$data && $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-         $this->cid != $data['cid'] && $this->_admin_msg(0, dr_lang('cid不匹配'));
-        $this->is_verify && $data['status'] && $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
+        } elseif ($this->cid != $data['cid']) {
+            $this->_admin_msg(0, dr_lang('cid不匹配'));
+        } elseif ($this->is_verify && $data['status']) {
+            $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        }
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
@@ -153,6 +167,8 @@ class Mform extends \Phpcmf\Table
                 foreach ($rows as $t) {
                     \Phpcmf\Service::M('member')->delete_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$t['cid'].'/id/'.$t['id'], SITE_ID);// clear
                     \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_from_'.$this->form['table'].'_show_id_'.$t['id']);
+                    // 统计数量
+                    $this->content_model->update_form_total($t['cid'], $this->form['table']);
                 }
             },
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
@@ -163,17 +179,23 @@ class Mform extends \Phpcmf\Table
     protected function _Admin_Status() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         // 格式化
         $in = [];
         foreach ($ids as $i) {
             $i && $in[] = intval($i);
         }
-        !$in && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$in) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         $rows = \Phpcmf\Service::M()->db->table($this->init['table'])->whereIn('id', $in)->get()->getResultArray();
-        !$rows && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$rows) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         foreach ($rows as $row) {
             if (!$row['status']){

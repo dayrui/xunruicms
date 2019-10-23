@@ -71,7 +71,9 @@ class Member extends \Phpcmf\Common
         if (IS_AJAX_POST) {
 
             $at = \Phpcmf\Service::L('input')->get('at');
-            !$at && $this->_json(0, dr_lang('参数错误'));
+            if (!$at) {
+                $this->_json(0, dr_lang('参数错误'));
+            }
 
             $id = \Phpcmf\Service::L('input')->post('id');
             switch ($at) {
@@ -240,10 +242,14 @@ class Member extends \Phpcmf\Common
         if (IS_AJAX_POST) {
 
             $auth = $this->auth[SITE_ID][MOD_DIR]['category'][$catid];
-            !$auth && $this->_json(0, dr_lang('当前栏目没有配置权限规则'));
+            if (!$auth) {
+                $this->_json(0, dr_lang('当前栏目没有配置权限规则'));
+            }
 
             $catids = \Phpcmf\Service::L('input')->post('catid');
-            !$catids && $this->_json(0, dr_lang('你还没有选择栏目呢'));
+            if (!$catids) {
+                $this->_json(0, dr_lang('你还没有选择栏目呢'));
+            }
 
             $c = 0;
             if (isset($catids[0]) && $catids[0] == 0) {

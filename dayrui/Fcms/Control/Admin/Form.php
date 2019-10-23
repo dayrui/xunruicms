@@ -112,17 +112,23 @@ class Form extends \Phpcmf\Table
     protected function _Admin_Status() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         // 格式化
         $in = [];
         foreach ($ids as $i) {
             $i && $in[] = intval($i);
         }
-        !$in && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$in) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         $rows = \Phpcmf\Service::M()->db->table($this->init['table'])->whereIn('id', $in)->get()->getResultArray();
-        !$rows && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$rows) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         foreach ($rows as $row) {
             !$row['status'] && $this->_verify($row);

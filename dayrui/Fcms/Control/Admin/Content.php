@@ -47,12 +47,16 @@ class Content extends \Phpcmf\Common
 
         // 计算数量
         !$total && $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_index')->where('status', 9)->countAllResults();
-        !$total && $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$total) {
+            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        }
 
         $tpage = ceil($total / $psize); // 总页数
 
         // 更新完成
-        $page > $tpage && $this->_html_msg(1, dr_lang('更新完成'));
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table($this->content_model->mytable)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         foreach ($data as $t) {
@@ -109,12 +113,16 @@ class Content extends \Phpcmf\Common
 
         // 计算数量
         !$total && $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
-        !$total && $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$total) {
+            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        }
 
         $tpage = ceil($total / $psize); // 总页数
 
         // 更新完成
-        $page > $tpage && $this->_html_msg(1, dr_lang('更新完成'));
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         foreach ($data as $t) {
@@ -167,12 +175,16 @@ class Content extends \Phpcmf\Common
 
         // 计算数量
         !$total && $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
-        !$total && $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$total) {
+            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        }
 
         $tpage = ceil($total / $psize); // 总页数
 
         // 更新完成
-        $page > $tpage && $this->_html_msg(1, dr_lang('更新完成'));
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         foreach ($data as $t) {

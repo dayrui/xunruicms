@@ -178,6 +178,8 @@ class Mform extends \Phpcmf\Table
                 foreach ($rows as $t) {
                     \Phpcmf\Service::M('member')->delete_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$t['cid'].'/id/'.$t['id'], SITE_ID);// clear
                     \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_from_'.$this->form['table'].'_show_id_'.$t['id']);
+                    // 统计数量
+                    $this->content_model->update_form_total($t['cid'], $this->form['table']);
                 }
             },
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
