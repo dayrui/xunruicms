@@ -358,8 +358,8 @@ class Auth extends \Phpcmf\Model {
             return false;
         }
 
-        list($a, $action) = explode('_', $method);
-        !$action && $action = $a;
+        // 找到下划线的控制器
+        $action = strpos($method, '_') !== false ? str_replace('_', '', trim(strtolower(strrchr($method, '_')), '_')) : $method;
 
         // 查看的index URI
         $uri_arr[dr_count($uri_arr) - 1] = $action;

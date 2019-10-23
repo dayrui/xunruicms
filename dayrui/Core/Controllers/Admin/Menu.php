@@ -102,7 +102,9 @@ class Menu extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('Menu')->getRowData('admin', $id);
-		!$data && exit($this->_json(0, dr_lang('数据#%s不存在', $id)));
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
 		$pid = intval($data['pid']);
 		$top = \Phpcmf\Service::M('Menu')->get_top('admin');

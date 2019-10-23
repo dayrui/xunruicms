@@ -65,7 +65,9 @@ class Role extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
-		!$data && exit($this->_json(0, dr_lang('数据#%s不存在', $id)));
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
@@ -89,7 +91,9 @@ class Role extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
-		!$data && $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
+		if (!$data) {
+		    $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
+        }
 		
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
@@ -152,7 +156,9 @@ class Role extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
-		!$data && $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
+		if (!$data) {
+		    $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
+        }
 		
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
@@ -172,8 +178,11 @@ class Role extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
-		in_array(1, $ids) && exit($this->_json(0, dr_lang('超级管理员角色组不能删除')));
+		if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        } elseif (in_array(1, $ids)) {
+            $this->_json(0, dr_lang('超级管理员角色组不能删除'));
+        }
 
 		\Phpcmf\Service::M('auth')->delete_role($ids);
         \Phpcmf\Service::M('cache')->sync_cache('auth');
