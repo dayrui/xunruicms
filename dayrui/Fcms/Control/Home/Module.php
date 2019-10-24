@@ -478,7 +478,7 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign($this->content_model->_format_show_seo($this->module, $data, $page));
         \Phpcmf\Service::V()->assign([
             'cat' => $this->module['category'][$catid],
-            'top' => $cat['topid'] ? $this->module['category'][$cat['topid']] : $this->module['category'][$catid],
+            'top' => $this->module['category'][$catid]['topid'] ? $this->module['category'][$this->module['category'][$catid]['topid']] : $this->module['category'][$catid],
             'page' => $page,
             'params' => ['catid' => $catid],
             'parent' => $parent,

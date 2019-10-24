@@ -686,11 +686,15 @@ class Content extends \Phpcmf\Model {
 
     // 按自定义字段获取内容
     public function find_row($field, $value) {
+
         if (!$field) {
             return [];
         } elseif (!strlen($value)) {
             return [];
+        } elseif (!isset(\Phpcmf\Service::C()->module['field'][$field]['ismain'])) {
+            return [];
         }
+        
         return $this->db->table($this->mytable)->where($field, dr_safe_replace($value))->get()->getRowArray();
     }
 
