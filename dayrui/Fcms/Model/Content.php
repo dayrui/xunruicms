@@ -948,13 +948,15 @@ class Content extends \Phpcmf\Model {
 		}
 		
 		$file =\Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
-
 		$root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->dirname);
-		$hfile = dr_to_html_file($file, $root);  // 格式化生成文件
-		@unlink($hfile);
 
-		$hfile = dr_to_html_file($file, $root.'mobile/');
-		@unlink($hfile);
+		// 删除文件
+		if (is_file($root.$file)) {
+            @unlink($root.$file);
+        }
+        if (is_file($root.'mobile/'.$file)) {
+            @unlink($root.'mobile/'.$file);
+        }
 	}
 
     // 删除回收站数据

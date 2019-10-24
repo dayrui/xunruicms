@@ -21,10 +21,10 @@ class Cloud extends \Phpcmf\Common
         if (is_file(MYPATH . 'Config/License.php')) {
             $this->license = require MYPATH . 'Config/License.php';
             if (!$this->license['license']) {
-                exit('程序不是最新，请在官网下载[安装包]并覆盖dayrui目录');
+                exit('程序不是最新，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
             }
         } else {
-            exit('程序需要更新到正式版，请在官网 http://www.xunruicms.com/down/ 下载[安装包]并覆盖dayrui目录');
+            exit('当前程序版本：'.$this->cmf_version['version'].'，需要更新到正式版，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
         }
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
