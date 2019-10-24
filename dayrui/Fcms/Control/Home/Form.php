@@ -241,12 +241,13 @@ class Form extends \Phpcmf\Table
             }
         }
 
-
-        $data[1]['status'] && $this->_json(1, dr_lang('操作成功'));
+        $data[1]['status'] && $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
 
         // 提醒
         \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
-        $this->_json(1, dr_lang('操作成功，等待管理员审核'), ['url' => $this->form['setting']['rt_url']]);
+
+        $data['url'] = $this->form['setting']['rt_url'];
+        $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
     }
 
     // 前端回调处理类

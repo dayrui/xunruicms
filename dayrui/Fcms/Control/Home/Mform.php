@@ -347,8 +347,12 @@ class Mform extends \Phpcmf\Table
      * */
     protected function _Call_Post($data) {
 
-        $data[1]['status'] && $this->_json(1, dr_lang('操作成功'));
-        $this->_json(1, dr_lang('操作成功，等待管理员审核'));
+        if ($data[1]['status']) {
+            $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
+        } else {
+            $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+        }
+
     }
 
     // 前端回调处理类
