@@ -11,6 +11,13 @@ class App extends \Phpcmf\Model
 {
     public $cfg_cache;
 
+    // 是否是系统保留的app目录
+    public function is_sys_dir($dir) {
+        return in_array($dir, ['case', 'class', 'extends',
+            'new', 'var', 'member', 'category',
+            'module', 'form', 'admin']);
+    }
+
     // 开始安装app
     public function install($dir) {
 

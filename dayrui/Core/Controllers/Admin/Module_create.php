@@ -10,8 +10,6 @@
 class Module_create extends \Phpcmf\Common
 {
 
-    private $jname = ['case', 'class', 'extends', 'new', 'var', 'member', 'category', 'module', 'form'];
-
     // 创建模块
     public function index() {
 
@@ -34,8 +32,8 @@ class Module_create extends \Phpcmf\Common
                 $this->_json(0, dr_lang('模块图标格式不正确，格式为：fa fa-code'), ['field' => 'icon']);
             } elseif (!dr_check_put_path(APPSPATH)) {
                 $this->_json(0, dr_lang('服务器没有创建目录的权限'), ['field' => 'dirname']);
-            } elseif (in_array($data['dirname'], $this->jname)) {
-                $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称，请重命名', $data['dirname']));
+            } elseif (\Phpcmf\Service::M('app')->is_sys_dir($data['dirname'])) {
+                $this->_json(0, dr_lang('目录[%s]名称是系统保留名称，请重命名', $data['dirname']));
             }
 
             // 开始复制到指定目录
