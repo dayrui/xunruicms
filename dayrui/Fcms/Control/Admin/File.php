@@ -226,7 +226,9 @@ class File extends \Phpcmf\Common
             case 'file':
 
                 // 文件修改
-                !is_file($filename) && $this->_admin_msg(0, dr_lang('文件%s不存在', $file));
+                if (!is_file($filename)) {
+                    $this->_admin_msg(0, dr_lang('文件%s不存在', $file));
+                }
 
                 if (in_array($fileext, ['html', 'htm', 'css', 'js', 'map', 'ini', 'php'])) {
                     // 文件内容编辑模式
@@ -247,7 +249,7 @@ class File extends \Phpcmf\Common
 
                     if (IS_AJAX_POST) {
 
-                        $code = \Phpcmf\Service::L('input')->post('code');
+                        $code = \Phpcmf\Service::L('input')->post('code', false);
                         if (!IS_EDIT_TPL) {
                             $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                         } elseif (!$code) {
@@ -256,22 +258,35 @@ class File extends \Phpcmf\Common
 
                         // 解析模板
                         if ($fileext == 'html') {
+                            // 模板解析时 预加载全部的自定义函数
+                            // 执行插件自己的缓存程序
+                            $local = dr_dir_map(dr_get_app_list(), 1);
+                            foreach ($local as $dir) {
+                                $path = dr_get_app_dir($dir);
+                                if (is_file($path.'install.lock')
+                                    && is_file($path.'Config/Init.php')) {
+                                    require $path.'Config/Init.php';
+                                }
+                            }
                             ob_start();
                             require \Phpcmf\Service::V()->code2php($code, SYS_TIME, 0);
                             $html = ob_get_clean();
                         }
 
                         // 备份数据
-                        $code = \Phpcmf\Service::L('input')->post('code', false);
                         if ($content != $code && $is_diff == 0) {
                             !is_dir($this->backups_path.$dir.'/') && mkdir($this->backups_path.$dir.'/', 0777);
                             $size = file_put_contents($this->backups_path.$dir.'/'.SYS_TIME, $content);
-                            $size === false && $this->_json(0, dr_lang('备份目录/cache/backups/无法存储'));
+                            if ($size === false) {
+                                $this->_json(0, dr_lang('备份目录/cache/backups/无法存储'));
+                            }
                         }
 
                         // 替换现有的文件
                         $size = file_put_contents($filename, $code);
-                        $size === false && $this->_json(0, dr_lang('模板目录无法写入'));
+                        if ($size === false) {
+                            $this->_json(0, dr_lang('模板目录无法写入'));
+                        }
 
                         $cname = \Phpcmf\Service::L('input')->post('cname');
                         $cname && $this->_save_name_ini($filename, $cname);
