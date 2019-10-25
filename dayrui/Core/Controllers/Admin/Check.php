@@ -321,13 +321,13 @@ class Check extends \Phpcmf\Common
             case '11':
 
                 // 域名检测
+                if (!function_exists('stream_context_create')) {
+                    $this->halt('函数没有被启用：stream_context_create', 0);
+                }
+
+                $tips = [];
                 list($module, $data) = \Phpcmf\Service::M('Site')->domain();
                 if ($data) {
-                    if (!function_exists('stream_context_create')) {
-                        $this->halt('函数没有被启用：stream_context_create', 0);
-                    }
-
-                    $tips = [];
                     foreach ($data as $name => $domain) {
                         $url = '';
                         if ($name == 'mobile_domain') {
@@ -360,13 +360,37 @@ class Check extends \Phpcmf\Common
                             }
                         }
                     }
+                }
 
-                    if ($tips) {
-
-                        $this->_json(0,implode('<br>', $tips));
+                // 验证附件域名
+                list($a, $b) = dr_thumb_path();
+                list($c, $d) = dr_avatar_path();
+                $domain = [
+                    ['name' => '附件域名', 'path' => SYS_UPLOAD_PATH, 'url' => SYS_UPLOAD_URL],
+                    ['name' => '缩略图域名', 'path' => $a, 'url' => $b],
+                    ['name' => '头像域名', 'path' => $c, 'url' => $d],
+                ];
+                foreach ($domain as $t) {
+                    if (!file_put_contents($t['path'].'api.html', 'phpcmf ok')) {
+                        $this->_json(1,$t['path'].' 无法写入文件');
+                    }
+                    $context = stream_context_create(array(
+                        'http' => array(
+                            'timeout' => 5 //超时时间，单位为秒
+                        )
+                    ));
+                    $code = file_get_contents($t['url'].'api.html', 0, $context);
+                    if ($code != 'phpcmf ok') {
+                        $tips[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
                     }
                 }
-                $this->_json(1,'通过');
+                
+
+                if ($tips) {
+                    $this->_json(0,implode('<br>', $tips));
+                } else {
+                    $this->_json(1,'通过');
+                }
 
                 break;
 

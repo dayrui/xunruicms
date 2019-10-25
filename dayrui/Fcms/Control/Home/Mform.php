@@ -10,6 +10,7 @@ class Mform extends \Phpcmf\Table
 {
     public $cid; // 内容id
     public $form; // 表单信息
+    public $index; // 模块内容信息
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -18,7 +19,9 @@ class Mform extends \Phpcmf\Table
 
         // 判断表单是否操作
         $this->form = $this->module['form'][\Phpcmf\Service::L('Router')->class];
-        !$this->form && exit($this->_msg(0, dr_lang('模块表单【%s】不存在',\Phpcmf\Service::L('Router')->class)));
+        if (!$this->form) {
+            exit($this->_msg(0, dr_lang('模块表单【%s】不存在',\Phpcmf\Service::L('Router')->class)));
+        }
 
         // 支持附表存储
         $this->is_data = 1;
@@ -64,7 +67,9 @@ class Mform extends \Phpcmf\Table
         // 获取父级内容
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->_Module_Row($this->cid);
-        !$this->index && exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+        if (!$this->index) {
+            exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+        }
 
         // seo
         \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('Seo')->mform_list(
@@ -110,7 +115,9 @@ class Mform extends \Phpcmf\Table
         // 获取父级内容
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->_Module_Row($this->cid);
-        !$this->index && exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+        if (!$this->index) {
+            $this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid));
+        };
 
         list($tpl) = $this->_Post(0);
 
@@ -134,7 +141,6 @@ class Mform extends \Phpcmf\Table
     // 显示内容
     protected function _Home_Show() {
 
-
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
             // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
@@ -154,11 +160,15 @@ class Mform extends \Phpcmf\Table
         $cache = \Phpcmf\Service::L('cache')->init()->get($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
-            !$data && exit($this->_msg(0, dr_lang('表单内容【id#%s】不存在', $id)));
+            if (!$data) {
+                $this->_msg(0, dr_lang('表单内容【id#%s】不存在', $id));
+            }
             // 获取父级内容
             $this->cid = intval($data['cid']);
             $this->index = $this->_Module_Row($this->cid);
-            !$this->index && exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+            if (!$this->index) {
+                exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+            }
             // 模块的处理
             $data = $this->_Call_Show($data);
             $cache = [
