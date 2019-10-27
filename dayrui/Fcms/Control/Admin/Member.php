@@ -151,7 +151,7 @@ class Member extends \Phpcmf\Common
 
             $t = \Phpcmf\Service::L('input')->post('data');
             $at = 'form';
-            if (isset($this->auth[SITE_ID][MOD_DIR][$at])) {
+            if (!isset($this->auth[SITE_ID][MOD_DIR][$at])) {
                 $this->auth[SITE_ID][MOD_DIR][$at] = [];
             }
             $this->auth[SITE_ID][MOD_DIR][$at][$table] = [
