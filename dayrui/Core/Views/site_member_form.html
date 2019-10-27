@@ -72,8 +72,13 @@
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                            {dr_lang('审核')}
+                            {dr_lang('发布审核')}
                             <input type="checkbox" class="checkboxes group-checkable dr_form_{$table}_verify" data-set="dr_form_{$table}_verify" />
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('修改审核')}
+                            <input type="checkbox" class="checkboxes group-checkable dr_form_{$table}_verify2" data-set="dr_form_{$table}_verify2" />
                             <span></span>
                         </label>
                     </th>
@@ -113,8 +118,13 @@
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                            {dr_lang('审核')}
+                            {dr_lang('发布审核')}
                             <input type="checkbox" class="checkboxes dr_form_{$table}_verify" {if !in_array($i, (array)$auth[form][$table]['verify'])} checked {/if} name="data[verify][]" value="{$i}" />
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('修改审核')}
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_verify2" {if !in_array($i, (array)$auth[form][$table]['verify2'])} checked {/if} name="data[verify2][]" value="{$i}" />
                             <span></span>
                         </label>
                         <br>

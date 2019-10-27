@@ -256,7 +256,15 @@ class Mform extends \Phpcmf\Table
             $data[1]['inputtime'] = SYS_TIME;
             $data[1]['tableid'] = 0;
             $data[1]['displayorder'] = 0;
-        }
+        } else {
+			// 修改时
+			 // 审核状态
+            $is_verify = dr_member_auth(
+                $this->member_authid,
+                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['verify2']
+            );
+            $data[1]['status'] = $is_verify ? 0 : 1;
+		}
 
         return $data;
     }

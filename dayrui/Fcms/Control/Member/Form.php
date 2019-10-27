@@ -152,14 +152,6 @@ class Form extends \Phpcmf\Table
     protected function _Format_Data($id, $data, $old) {
 
 
-        // 审核状态
-        $is_verify = dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['verify']
-        );
-        $data[1]['status'] = $is_verify ? 0 : 1;
-
-
         // 新增数据
         if (!$old) {
             // 判断日发布量
@@ -186,6 +178,12 @@ class Form extends \Phpcmf\Table
                     ->countAllResults() >= $total_post) {
                 $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
             }
+			// 审核状态
+			$is_verify = dr_member_auth(
+				$this->member_authid,
+				$this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['verify']
+			);
+			$data[1]['status'] = $is_verify ? 0 : 1;
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
@@ -194,7 +192,15 @@ class Form extends \Phpcmf\Table
             $data[1]['inputtime'] = SYS_TIME;
             $data[1]['tableid'] = 0;
             $data[1]['displayorder'] = 0;
-        }
+        } else {
+			// 修改时
+			// 审核状态
+			$is_verify = dr_member_auth(
+				$this->member_authid,
+				$this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['verify2']
+			);
+			$data[1]['status'] = $is_verify ? 0 : 1;
+		}
 
 
         return $data;
