@@ -398,7 +398,7 @@ class Module extends \Phpcmf\Table
 
         // 默认数据
         $data[1]['uid'] = $data[0]['uid'] = $this->uid;
-        $data[1]['author'] = $this->member['username'];
+        $data[1]['author'] = $this->member ? $this->member['username'] : 'guest';
         $data[1]['catid'] = $data[0]['catid'] = $catid;
         $data[1]['updatetime'] = SYS_TIME;
 
@@ -478,31 +478,31 @@ class Module extends \Phpcmf\Table
                         if (!$cat[$data[1]['catid']]) {
                             return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', (int)$data[1]['catid']));
                         }
-                        // 判断日发布量
-                        $day_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'day_post', $this->member['authid']);
-						if ($this->uid && $day_post
-                            && \Phpcmf\Service::M()->db
+                        if ($this->uid) {
+                            // 判断日发布量
+                            $day_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'day_post', $this->member['authid']);
+                            if ($day_post && \Phpcmf\Service::M()->db
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
                                     ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
                                     ->where('catid', $data[1]['catid'])
                                     ->countAllResults() >= $day_post) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
-                        }
-                        // 判断发布总量
-                        $total_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'total_post', $this->member['authid']);
-                        if ($this->uid && $total_post
-                            && \Phpcmf\Service::M()->db
+                                return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
+                            }
+                            // 判断发布总量
+                            $total_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'total_post', $this->member['authid']);
+                            if ($total_post && \Phpcmf\Service::M()->db
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
                                     ->where('catid', $data[1]['catid'])
                                     ->countAllResults() >= $day_post) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
-                        }
-                        // 金币验证
-                        $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
-                        if ($this->uid && $score + $this->member['score'] < 0) {
-                            return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
+                                return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
+                            }
+                            // 金币验证
+                            $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
+                            if ($this->uid && $score + $this->member['score'] < 0) {
+                                return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
+                            }
                         }
                     }
                     return dr_return_data(1, '', $data);

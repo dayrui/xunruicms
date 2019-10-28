@@ -281,7 +281,7 @@
                                         <input type="checkbox" class="checkboxes comment_verify" {if !in_array($i, (array)$auth[comment]['verify'])} checked {/if} name="id[verify][]" value="{$i}" />
                                         <span></span>
                                     </label>
-
+                                    {if $i>0}
                                     <div class="input-inline input-small">
                                         <div class="input-group">
                                             <input type="text" name="id[exp][{$i}]" value="{$auth[comment]['exp'][$i]}" class="form-control" placeholder="">
@@ -294,6 +294,7 @@
                                             <span class="input-group-addon">+{SITE_SCORE}</span>
                                         </div>
                                     </div>
+                                    {/if}
                                 </td>
                                 {/if}
                             </tr>

@@ -96,6 +96,7 @@
                             <input type="checkbox" class="checkboxes dr_cat_{$catid}_add" {if !in_array($i, (array)$auth[category][$cat.id]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
                             <span></span>
                         </label>
+                        {if $i>0}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('修改')}
                             <input type="checkbox" class="checkboxes dr_cat_{$catid}_edit" {if !in_array($i, (array)$auth[category][$cat.id]['edit'])} checked {/if} name="data[edit][]" value="{$i}" />
@@ -106,6 +107,18 @@
                             <input type="checkbox" class="checkboxes dr_cat_{$catid}_del" {if !in_array($i, (array)$auth[category][$cat.id]['del'])} checked {/if} name="data[del][]" value="{$i}" />
                             <span></span>
                         </label>
+                        {else}
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('修改')}
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_edit" disabled />
+                            <span></span>
+                        </label>
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            {dr_lang('删除')}
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_del" disabled />
+                            <span></span>
+                        </label>
+                        {/if}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('验证码')}
                             <input type="checkbox" class="checkboxes dr_cat_{$catid}_code" {if !in_array($i, (array)$auth[category][$cat.id]['code'])} checked {/if} name="data[code][]" value="{$i}" />
@@ -120,6 +133,7 @@
                                 {/loop}
                             </select>
                         </label>
+                        {if $i>0}
                         <div class="input-inline input-small">
                             <div class="input-group">
                                 <input type="text" name="data[exp][{$i}]" value="{$auth[category][$cat.id]['exp'][$i]}" class="form-control" placeholder="">
@@ -144,6 +158,7 @@
                                 <span class="input-group-addon">{dr_lang('投稿总数')}</span>
                             </div>
                         </div>
+                        {/if}
                         {/if}
 
                     </td>

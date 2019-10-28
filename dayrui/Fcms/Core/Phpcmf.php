@@ -346,12 +346,21 @@ abstract class Common extends \CodeIgniter\Controller
             $this->session();
             // 登录状态验证
             if (!$this->member && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api', 'pay'])) {
-                IS_API_HTTP && $this->_json(0, dr_lang('无法获取到登录用户信息'));
-                // 会话超时，请重新登录
-                \Phpcmf\Service::L('Router')->go_member_login(dr_now_url());
-                exit;
+                if (APP_DIR && dr_is_module(APP_DIR)
+                    && \Phpcmf\Service::L('Router')->class == 'home' && \Phpcmf\Service::L('Router')->method == 'add') {
+                    // 游客发布权限
+                } else {
+                    // 会话超时，请重新登录
+                    if (IS_API_HTTP) {
+                        $this->_json(0, dr_lang('无法获取到登录用户信息'));
+                    } else {
+                        \Phpcmf\Service::L('Router')->go_member_login(dr_now_url());
+                    }
+                }
+
+
             }
-            // 判断用户状态
+            // 判断用户的权限
             if ($this->member && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
                 $this->_member_option(0);
             }

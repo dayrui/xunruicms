@@ -154,29 +154,31 @@ class Form extends \Phpcmf\Table
 
         // 新增数据
         if (!$old) {
-            // 判断日发布量
-            $day_post = $this->_member_value(
-                $this->member_authid,
-                $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['day_post']
-            );
-            if ($day_post && \Phpcmf\Service::M()->db
-                    ->table($this->init['table'])
-                    ->where('uid', $this->uid)
-                    ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
-                    ->countAllResults() >= $day_post) {
-                $this->_json(0, dr_lang('每天发布数量不能超过%s个', $day_post));
-            }
+            if ($this->uid) {
+                // 判断日发布量
+                $day_post = $this->_member_value(
+                    $this->member_authid,
+                    $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['day_post']
+                );
+                if ($day_post && \Phpcmf\Service::M()->db
+                        ->table($this->init['table'])
+                        ->where('uid', $this->uid)
+                        ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
+                        ->countAllResults() >= $day_post) {
+                    $this->_json(0, dr_lang('每天发布数量不能超过%s个', $day_post));
+                }
 
-            // 判断发布总量
-            $total_post = $this->_member_value(
-                $this->member_authid,
-                $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['total_post']
-            );
-            if ($total_post && \Phpcmf\Service::M()->db
-                    ->table($this->init['table'])
-                    ->where('uid', $this->uid)
-                    ->countAllResults() >= $total_post) {
-                $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
+                // 判断发布总量
+                $total_post = $this->_member_value(
+                    $this->member_authid,
+                    $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['total_post']
+                );
+                if ($total_post && \Phpcmf\Service::M()->db
+                        ->table($this->init['table'])
+                        ->where('uid', $this->uid)
+                        ->countAllResults() >= $total_post) {
+                    $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
+                }
             }
 			// 审核状态
 			$is_verify = dr_member_auth(
@@ -187,7 +189,7 @@ class Form extends \Phpcmf\Table
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
-            $data[1]['author'] = $this->member['username'];
+            $data[1]['author'] = $this->member['username'] ? $this->member['username'] : 'guest';
             $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_address();
             $data[1]['inputtime'] = SYS_TIME;
             $data[1]['tableid'] = 0;

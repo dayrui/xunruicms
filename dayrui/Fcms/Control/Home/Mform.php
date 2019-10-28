@@ -251,33 +251,36 @@ class Mform extends \Phpcmf\Table
     protected function _Format_Data($id, $data, $old) {
 
         // 验证父数据
-        !$this->index && $this->_json(0, dr_lang('关联内容不存在'));
-
-        // 判断日发布量
-        $day_post = $this->_member_value(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['day_post']
-        );
-        if ($this->uid && $day_post
-            && \Phpcmf\Service::M()->db
-                ->table($this->init['table'])
-                ->where('uid', $this->uid)
-                ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
-                ->countAllResults() >= $day_post) {
-            $this->_json(0, dr_lang('每天发布数量不能超过%s个', $day_post));
+        if (!$this->index) {
+            $this->_json(0, dr_lang('关联内容不存在'));
         }
 
-        // 判断发布总量
-        $total_post = $this->_member_value(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['total_post']
-        );
-        if ($this->uid && $total_post
-            && \Phpcmf\Service::M()->db
-                ->table($this->init['table'])
-                ->where('uid', $this->uid)
-                ->countAllResults() >= $total_post) {
-            $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
+        if ($this->uid) {
+
+            // 判断日发布量
+            $day_post = $this->_member_value(
+                $this->member_authid,
+                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['day_post']
+            );
+            if ($day_post && \Phpcmf\Service::M()->db
+                    ->table($this->init['table'])
+                    ->where('uid', $this->uid)
+                    ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
+                    ->countAllResults() >= $day_post) {
+                $this->_json(0, dr_lang('每天发布数量不能超过%s个', $day_post));
+            }
+
+            // 判断发布总量
+            $total_post = $this->_member_value(
+                $this->member_authid,
+                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['total_post']
+            );
+            if ($total_post && \Phpcmf\Service::M()->db
+                    ->table($this->init['table'])
+                    ->where('uid', $this->uid)
+                    ->countAllResults() >= $total_post) {
+                $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
+            }
         }
 
         // 审核状态
