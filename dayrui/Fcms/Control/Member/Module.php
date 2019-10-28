@@ -96,7 +96,9 @@ class Module extends \Phpcmf\Table
                     '', 1, 1
                 );
             }
-            !$category[$catid] && exit($this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$catid)));
+            if (!$category[$catid]) {
+                exit($this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$catid)));
+            }
             $this->is_post_code = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['code']);
         } else {
             // 不走栏目权限，走自定义权限
@@ -119,7 +121,11 @@ class Module extends \Phpcmf\Table
             'is_post_code' =>  $this->is_post_code,
             'category_field_url' =>  $this->is_post_code || $this->module['category_data_field'] ? \Phpcmf\Service::L('Router')->member_url($this->module['dirname'].'/home/add') : ''
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        if (!$this->uid && is_file(dr_tpl_path().'guest_post.html')) {
+            \Phpcmf\Service::V()->display('guest_post.html');
+        } else {
+            \Phpcmf\Service::V()->display($tpl);
+        }
     }
 
     // 修改内容
