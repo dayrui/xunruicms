@@ -962,20 +962,38 @@ class View {
                     return $this->_return($system['return'], '没有安装Tag关键词库应用');
                 }
 
-                $system['order'] = dr_safe_replace($system['order'] ? ($system['order'] == 'rand' ? 'RAND()' : $system['order']) : 'displayorder asc');
+                $system['table'] = $system['site'].'_tag';
+                $tableinfo = \Phpcmf\Service::L('cache')->get_data('table-'.$system['table']);
+                if (!$tableinfo) {
+                    $tableinfo = \Phpcmf\Service::M('Table')->get_field($system['table']);
+                    \Phpcmf\Service::L('cache')->set_data('table-'.$system['table'], $tableinfo, 36000);
+                }
+                if (!$tableinfo) {
+                    return $this->_return($system['return'], '表('.$system['table'].')结构不存在');
+                }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_tag'); // tag表
-                $where = '';
+                // 是否操作自定义where
+                if ($param['where']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => urldecode($param['where'])
+                    ];
+                    unset($param['where']);
+                }
+
+                $table = \Phpcmf\Service::M()->dbprefix($system['table']);
+
                 if ($param['tag']) {
                     $in = $tag = $sql = [];
                     $array = explode(',', $param['tag']);
                     foreach ($array as $name) {
                         $name && $sql[] = '`name`="'.dr_safe_replace($name).'"';
                     }
-                    $sql && $tag = $this->_query("SELECT code FROM {$table} WHERE ".implode(' OR ', $sql), $system['db'], $system['cache']);
+                    $sql && $tag = $this->_query("SELECT code,id FROM {$table} WHERE ".implode(' OR ', $sql), $system['db'], $system['cache']);
                     if ($tag) {
                         $cache = \Phpcmf\Service::C()->get_cache('tag-'.$system['site']); // tag缓存
                         foreach ($tag as $t) {
+                            $in[] = $t['id'];
                             if ($cache[$t['code']]['childids']) {
                                 foreach ($cache[$t['code']]['childids'] as $i) {
                                     $in[] = $i;
@@ -983,10 +1001,22 @@ class View {
                             }
                         }
                     }
-                    $in && $where = 'WHERE id IN ('.implode(',', $in).')';
+                    $in && $where[] = [
+                        'adj' => 'SQL',
+                        'value' => 'id IN ('.implode(',', $in).')',
+                    ];
                 }
 
-                $sql = "SELECT * FROM {$table} {$where} ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
+                $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
+                $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo, $table); // 给显示字段加上表前缀
+                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo, $table); // 给排序字段加上表前缀
+                !$system['order'] && $system['order'] = 'displayorder asc';
+
+                $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
+                $sql_where = $this->_get_where($where); // sql的where子句
+
+
+                $sql = "SELECT * FROM {$table} ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 没有查询到内容
@@ -1072,7 +1102,6 @@ class View {
                 if (!$tableinfo) {
                     return $this->_return($system['return'], '表('.$system['table'].')结构不存在');
                 }
-
 
                 // 是否操作自定义where
                 if ($param['where']) {
