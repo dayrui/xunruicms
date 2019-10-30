@@ -180,7 +180,9 @@ class Module extends \Phpcmf\Table
         if (IS_POST) {
 
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
-            !$ids && $this->_json(0, dr_lang('参数不存在'));
+            if (!$ids) {
+                $this->_json(0, dr_lang('参数不存在'));
+            }
 
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
 
@@ -239,7 +241,9 @@ class Module extends \Phpcmf\Table
         if (IS_AJAX_POST) {
 
             $catid = \Phpcmf\Service::L('input')->post('catid');
-            !$catid && $this->_json(0, dr_lang('你没有选择同步的栏目'));
+            if (!$catid) {
+                $this->_json(0, dr_lang('你没有选择同步的栏目'));
+            }
 
             $syncat = [];
             foreach ($catid as $i) {
@@ -257,7 +261,9 @@ class Module extends \Phpcmf\Table
                 }
             }
 
-            !$syncat && $this->_json(0, dr_lang('所选栏目无效'));
+            if (!$syncat) {
+                $this->_json(0, dr_lang('所选栏目无效'));
+            }
 
             $this->_json(1, dr_count($syncat), implode(',', $syncat));
         }
@@ -280,7 +286,9 @@ class Module extends \Phpcmf\Table
         $page = \Phpcmf\Service::L('input')->get('page');
 		if ($page != 5) {
 			$ids = \Phpcmf\Service::L('input')->get('ids');
-			!$ids && $this->_json(0, dr_lang('所选数据不存在'));
+			if (!$ids) {
+			    $this->_json(0, dr_lang('所选数据不存在'));
+            }
 		}
 
 
@@ -291,17 +299,23 @@ class Module extends \Phpcmf\Table
                 $i && $in[] = intval($i);
             }
 
-            !$in && $this->_json(0, dr_lang('所选数据不存在'));
+            if (!$in) {
+                $this->_json(0, dr_lang('所选数据不存在'));
+            }
 
             switch ($page) {
 
                 case 1: // 推送到其他栏目
 
                     $catids = \Phpcmf\Service::L('input')->post('catid');
-                    !$catids && $this->_json(0, dr_lang('你还没有选择同步的栏目'));
+                    if (!$catids) {
+                        $this->_json(0, dr_lang('你还没有选择同步的栏目'));
+                    }
 
                     $data = \Phpcmf\Service::M()->db->table($this->init['table'])->whereIn('id', $in)->where('link_id<=0')->get()->getResultArray();
-                    !$data && $this->_json(0, dr_lang('没有可用数据'));
+                    if (!$data) {
+                        $this->_json(0, dr_lang('没有可用数据'));
+                    }
 
                     $c = 0;
                     foreach ($data as $t) {
@@ -335,13 +349,19 @@ class Module extends \Phpcmf\Table
 
                     $flag = \Phpcmf\Service::L('input')->post('flag');
                     $clear = \Phpcmf\Service::L('input')->post('clear');
-                    !$clear && !$flag && $this->_json(0, dr_lang('你还没有选择推荐位'));
+                    if (!$clear && !$flag) {
+                        $this->_json(0, dr_lang('你还没有选择推荐位'));
+                    }
 
                     \Phpcmf\Service::M()->db->table($this->init['table'].'_flag')->whereIn('id', $in)->delete();
-                    $clear && $this->_json(1, dr_lang('推荐位清除成功'));
+                    if ($clear) {
+                        $this->_json(1, dr_lang('推荐位清除成功'));
+                    }
 
                     $data = \Phpcmf\Service::M()->db->table($this->init['table'].'_index')->whereIn('id', $in)->get()->getResultArray();
-                    !$data && $this->_json(0, dr_lang('所选数据不存在'));
+                    if (!$data) {
+                        $this->_json(0, dr_lang('所选数据不存在'));
+                    }
 
                     $c = 0;
                     foreach ($data as $t) {
@@ -357,20 +377,32 @@ class Module extends \Phpcmf\Table
 
             exit;
         } else if ($page == 3) {
-            !$this->get_cache('site', SITE_ID, 'weibo', 'module', MOD_DIR, 'use') && $this->_json(0, dr_lang('当前模块没有启用微博分享'));
+		    /*
+            if (!$this->get_cache('site', SITE_ID, 'weibo', 'module', MOD_DIR, 'use')) {
+                $this->_json(0, dr_lang('当前模块没有启用微博分享'));
+            }
             foreach ($ids as $id) {
                 $data = $this->content_model->get_data($id);
-                !$data && $this->_json(0, dr_lang('内容#%s不存在', $id));
+                if (!$data) {
+                    $this->_json(0, dr_lang('内容#%s不存在', $id));
+                }
                 $rt = $this->content_model->sync_weibo($data);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
             }
-            $this->_json(1, dr_lang('任务添加成功'));
+            $this->_json(1, dr_lang('任务添加成功'));*/
         } else if ($page == 2) {
-            dr_count($ids) > 9 && $this->_json(0, dr_lang('微信推送不能超过9条数据'));
-            !dr_is_app('weixin') && $this->_json(0, '没有安装[微信]应用');
+            if (dr_count($ids) > 9) {
+                $this->_json(0, dr_lang('微信推送不能超过9条数据'));
+            } elseif (!dr_is_app('weixin')) {
+                $this->_json(0, '没有安装[微信]应用');
+            }
             \Phpcmf\Service::C()->init_file('weixin');
             $rt = \Phpcmf\Service::M('Weixin', 'Weixin')->send_for_module(APP_DIR, $ids);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             dr_redirect(\Phpcmf\Service::L('Router')->url('weixin/send/add', ['id' => $rt['code']]));
             exit;
         } else if ($page == 4) {
@@ -579,12 +611,16 @@ class Module extends \Phpcmf\Table
         if ($at == 'post') {
             // 批量发布
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
-            !$ids && $this->_json(0, dr_lang('还没有选择呢'));
+            if (!$ids) {
+                $this->_json(0, dr_lang('还没有选择呢'));
+            }
             $html = [];
             foreach ($ids as $id) {
                 $rt = $this->content_model->post_time(\Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id));
                 $rt['data'] && $html[] = $rt['data'];
-                !$rt['code'] && $this->_json(0, $rt['msg'], ['htmlfile' => $html]);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['htmlfile' => $html]);
+                }
             }
             $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $html]);
             exit;
@@ -604,7 +640,9 @@ class Module extends \Phpcmf\Table
         define('IS_MODULE_TIME', 1);
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
-        !$data && $this->_admin_msg(0, dr_lang('内容不存在'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('内容不存在'));
+        }
 
         $select = \Phpcmf\Service::L('Tree')->select_category(
             $this->module['category'],
@@ -669,7 +707,9 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Recycle_Del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('参数不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('参数不存在'));
+        }
 
         $rt = $this->content_model->delete_for_recycle($ids);
 
@@ -694,7 +734,9 @@ class Module extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Show($id);
-        !$data && $this->_admin_msg(0, dr_lang('内容不存在'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('内容不存在'));
+        }
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
@@ -714,7 +756,9 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Recovery() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('参数不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('参数不存在'));
+        }
 
         $rt = $this->content_model->recovery($ids);
 
@@ -731,7 +775,9 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Flag_List() {
 
         $flag = intval(\Phpcmf\Service::L('input')->get('flag'));
-        !$this->module['setting']['flag'][$flag] && $this->_admin_msg(0, dr_lang('推荐位不存在: '.$flag));
+        if (!$this->module['setting']['flag'][$flag]) {
+            $this->_admin_msg(0, dr_lang('推荐位不存在: '.$flag));
+        }
 
         $this->_init([
             'table' => SITE_ID.'_'.APP_DIR,
@@ -999,11 +1045,11 @@ class Module extends \Phpcmf\Table
     // 获取当前栏目的时候流程
     private function _get_verify($uid, $catid) {
 
-        $authid = \Phpcmf\Service::M('member')->authid($uid);
         $auth = $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['category'][$catid]['verify'];
         $cache = $this->get_cache('verify');
         if ($cache && $auth) {
             $verify = [];
+            $authid = \Phpcmf\Service::M('member')->authid($uid);
             foreach ($authid as $aid) {
                 if (isset($auth[$aid]) && $auth[$aid] && isset($cache[$auth[$aid]])) {
                     $verify = $cache[$auth[$aid]];

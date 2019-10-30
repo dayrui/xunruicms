@@ -23,7 +23,9 @@ class Mform extends \Phpcmf\Table
         $this->is_verify = strpos(\Phpcmf\Service::L('Router')->class, '_verify') !== false;
         // 判断表单是否操作
         $this->form = $this->module['form'][str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)];
-        !$this->form && $this->_admin_msg(0, dr_lang('模块表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+        if (!$this->form) {
+            $this->_admin_msg(0, dr_lang('模块表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+        }
         // 支持附表存储
         $this->is_data = 1;
         // 模板前缀(避免混淆)
@@ -228,7 +230,9 @@ class Mform extends \Phpcmf\Table
     protected function _Format_Data($id, $data, $old) {
 
         // 验证父数据
-        !$this->index && $this->_json(0, dr_lang('关联内容不存在'));
+        if (!$this->index) {
+            $this->_json(0, dr_lang('关联内容不存在'));
+        }
 
         // 默认数据
         $data[0]['uid'] = (int)$data[1]['uid'];

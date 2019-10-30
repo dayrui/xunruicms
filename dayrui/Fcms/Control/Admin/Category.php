@@ -237,7 +237,9 @@ class Category extends \Phpcmf\Table
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
         list($tpl, $data) = $this->_Post($id, null, 1);
-        !$data['data'] && $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        if (!$data['data']) {
+            $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        }
 
         \Phpcmf\Service::V()->assign([
             'page' => $page,
@@ -258,11 +260,16 @@ class Category extends \Phpcmf\Table
 
             $post = \Phpcmf\Service::L('input')->post('data', true);
             $list = explode(PHP_EOL, $post['list']);
-            !$list && $this->_json(0, dr_lang('内容填写不完整'));
+            if (!$list) {
+                $this->_json(0, dr_lang('内容填写不完整'));
+            }
 
             $pid = intval($post['pid']);
-            $pid && !$this->module['category'][$pid] && $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
-            $this->module['category'][$pid]['tid'] == 2 && $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
+            if ($pid && !$this->module['category'][$pid]) {
+                $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
+            } elseif ($this->module['category'][$pid]['tid'] == 2) {
+                $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
+            }
 
             $count = 0;
 
@@ -291,10 +298,14 @@ class Category extends \Phpcmf\Table
                     $data['mid'] = $post['mid'];
                     // 作为内容模块的栏目判断
                     if ($data['tid'] == 1) {
-                        !$data['mid'] && $this->_json(0, dr_lang('必须选择一个模块'));
+                        if (!$data['mid']) {
+                            $this->_json(0, dr_lang('必须选择一个模块'));
+                        }
                         // 判断逐个父级栏目的mid值
                         list($pmid, $ids) = \Phpcmf\Service::M('Category')->get_parent_mid($this->module['category'], $pid);
-                        $pmid && $pmid != $data['mid'] && $this->_json(0, dr_lang('必须选择与上级栏目相同的内容模块（%s）', $pmid));
+                        if ($pmid && $pmid != $data['mid']) {
+                            $this->_json(0, dr_lang('必须选择与上级栏目相同的内容模块（%s）', $pmid));
+                        }
                     }
                 }
                 $data['setting'] = dr_array2string(isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
@@ -312,7 +323,9 @@ class Category extends \Phpcmf\Table
                     ],
                 ]);
                 $rt = \Phpcmf\Service::M('Category')->insert($data);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
                 $count ++;
             }
             // 自动更新缓存
@@ -373,7 +386,9 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选栏目不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选栏目不存在'));
+        }
 
         // 重新获取数据
         $category = \Phpcmf\Service::M('Category')->data_for_delete();
@@ -406,12 +421,16 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Html_All_Edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选栏目不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选栏目不存在'));
+        }
 
         foreach ($ids as $id) {
 
             $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
-            !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+            if (!$row) {
+                $this->_json(0, dr_lang('栏目数据不存在'));
+            }
 
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['html'] = 1;
@@ -480,12 +499,16 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Php_All_Edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选栏目不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选栏目不存在'));
+        }
 
         foreach ($ids as $id) {
 
             $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
-            !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+            if (!$row) {
+                $this->_json(0, dr_lang('栏目数据不存在'));
+            }
 
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['html'] = 0;
@@ -510,7 +533,9 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Move_Edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选栏目不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选栏目不存在'));
+        }
 
         $topid = (int)\Phpcmf\Service::L('input')->post('catid');
 
@@ -563,7 +588,9 @@ class Category extends \Phpcmf\Table
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
-        !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+        if (!$row) {
+            $this->_json(0, dr_lang('栏目数据不存在'));
+        }
 
         $v = $row['show'] ? 0 : 1;
         \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['show' => $v]);
@@ -579,7 +606,9 @@ class Category extends \Phpcmf\Table
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
-        !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+        if (!$row) {
+            $this->_json(0, dr_lang('栏目数据不存在'));
+        }
 
         if ($this->module['share']) {
             // 共享模块
@@ -599,7 +628,9 @@ class Category extends \Phpcmf\Table
             $v = $html ? 0 : 1;
             $name = $v ? '静态模式' : '动态模式';
             $module = \Phpcmf\Service::M()->db->table('module')->where('id', $this->module['id'])->get()->getRowArray();
-            !$module && exit($this->_json(0, dr_lang('模块不存在')));
+            if (!$module) {
+                exit($this->_json(0, dr_lang('模块不存在')));
+            }
             $site = dr_string2array($module['site']);
             $site[SITE_ID]['html'] = $v;
             \Phpcmf\Service::M()->db->table('module')->where('id', $this->module['id'])->update([
@@ -616,7 +647,9 @@ class Category extends \Phpcmf\Table
     public function scjt_edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('没有选择任何栏目'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('没有选择任何栏目'));
+        }
 
         if (IS_SHARE) {
             $this->_json(1, dr_url('html/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
@@ -629,7 +662,9 @@ class Category extends \Phpcmf\Table
     public function scjt2_edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('没有选择任何栏目'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('没有选择任何栏目'));
+        }
 
         if (IS_SHARE) {
             $this->_json(1, dr_url('html/show_index', ['app' => '', 'catids' => implode(',', $ids)]));
@@ -687,8 +722,12 @@ class Category extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
-        !$row && $this->_json(0, dr_lang('栏目数据不存在'));
+        if (!$row) {
+            $this->_json(0, dr_lang('栏目数据不存在'));
+        }
+
         $row['setting'] = dr_string2array($row['setting']);
+
         if (IS_POST) {
             $row['setting']['linkurl'] = \Phpcmf\Service::L('input')->post('url');
             \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);

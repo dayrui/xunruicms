@@ -75,7 +75,9 @@ class Site_member extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$at = \Phpcmf\Service::L('input')->get('at');
-			!$at && $this->_json(0, dr_lang('参数错误'));
+			if (!$at) {
+			    $this->_json(0, dr_lang('参数错误'));
+            }
 
 			$id = \Phpcmf\Service::L('input')->post('id');
 			switch ($at) {
@@ -209,6 +211,11 @@ class Site_member extends \Phpcmf\Common
             exit;
         }
 
+        // 默认游客不发布
+        if (!isset($this->auth[SITE_ID]['category'][$catid])) {
+            $this->auth[SITE_ID]['category'][$catid]['add'][0] = 0;
+        }
+
         \Phpcmf\Service::V()->assign([
             'cat' => $this->tree[$catid],
             'auth' => $this->auth[SITE_ID],
@@ -228,10 +235,14 @@ class Site_member extends \Phpcmf\Common
 
             $mid = $this->tree[$catid]['mid'] ? $this->tree[$catid]['mid'] :'share';
 			$auth = $this->auth_module[SITE_ID][$mid]['category'][$catid];
-			!$auth && $this->_json(0, dr_lang('当前栏目没有配置权限规则'));
+			if (!$auth) {
+			    $this->_json(0, dr_lang('当前栏目没有配置权限规则'));
+            }
 
 			$catids = \Phpcmf\Service::L('input')->post('catid');
-			!$catids && $this->_json(0, dr_lang('你还没有选择栏目呢'));
+			if (!$catids) {
+			    $this->_json(0, dr_lang('你还没有选择栏目呢'));
+            }
 
 			$c = 0;
             if (isset($catids[0]) && $catids[0] == 0) {

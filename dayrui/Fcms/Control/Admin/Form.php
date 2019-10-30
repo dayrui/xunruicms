@@ -20,7 +20,9 @@ class Form extends \Phpcmf\Table
         // 判断表单是否操作
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)];
-        !$this->form && $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+        if (!$this->form) {
+            $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+        }
         // 支持附表存储
         $this->is_data = 1;
         // 模板前缀(避免混淆)
@@ -70,17 +72,25 @@ class Form extends \Phpcmf\Table
 
     // 后台修改表单内容
     protected function _Admin_Edit() {
+
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
-        !$data && $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-        $this->is_verify && $data['status'] && $this->_admin_msg(0, dr_lang('已经通过了审核'));
+
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
+        } elseif ($this->is_verify && $data['status']) {
+            $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        }
+
         \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台查看表单内容
     protected function _Admin_Show() {
         list($tpl, $data) = $this->_Show(intval(\Phpcmf\Service::L('input')->get('id')));
-        !$data && $this->_admin_msg(0, dr_lang('数据#%s不存在', $_GET['id']));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据#%s不存在', $_GET['id']));
+        }
         \Phpcmf\Service::V()->display($tpl);
     }
 

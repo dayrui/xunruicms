@@ -104,7 +104,6 @@ class Comment extends \Phpcmf\Table
 
         list($tpl) = $this->_List(['cid' => $this->cid]);
 
-
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' =>  $this->cid],
         ]);
@@ -114,7 +113,9 @@ class Comment extends \Phpcmf\Table
     // 后台添加内容
     protected function _Admin_Add() {
 
-        !$this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         list($tpl, $data) = $this->_Post();
 
@@ -129,14 +130,20 @@ class Comment extends \Phpcmf\Table
     // 后台修改内容
     protected function _Admin_Edit() {
 
-        ! $this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
 
-        !$data && $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-         $this->cid != $data['cid'] && $this->_admin_msg(0, dr_lang('cid不匹配'));
-        $this->is_verify && $data['status'] && $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
+        } elseif ($this->cid != $data['cid']) {
+            $this->_admin_msg(0, dr_lang('cid不匹配'));
+        } elseif ($this->is_verify && $data['status']) {
+            $this->_admin_msg(0, dr_lang('已经通过了审核'));
+        }
 
         \Phpcmf\Service::V()->assign([
             'data' => $data,
@@ -158,13 +165,18 @@ class Comment extends \Phpcmf\Table
     // 后台查看内容
     protected function _Admin_Show() {
 
-        ! $this->cid && $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        if (!$this->cid) {
+            $this->_admin_msg(0, dr_lang('缺少cid参数'));
+        }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Show($id);
 
-        !$data && $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-         $this->cid != $data['cid'] && $this->_admin_msg(0, dr_lang('cid不匹配'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
+        } elseif ($this->cid != $data['cid']) {
+            $this->_admin_msg(0, dr_lang('cid不匹配'));
+        }
 
         \Phpcmf\Service::V()->display($tpl);
     }
@@ -173,17 +185,23 @@ class Comment extends \Phpcmf\Table
     protected function _Admin_Status() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         // 格式化
         $in = [];
         foreach ($ids as $i) {
             $i && $in[] = intval($i);
         }
-        !$in && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$in) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         $rows = \Phpcmf\Service::M()->init($this->init)->where_in('id', $in)->getAll();
-        !$rows && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$rows) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         foreach ($rows as $row) {
             !$row['status'] && $this->content_model->verify_comment($row);
@@ -231,7 +249,9 @@ class Comment extends \Phpcmf\Table
     protected function _Format_Data($id, $data, $old) {
 
         // 验证父数据
-        !$this->index && $this->_json(0, dr_lang('关联内容不存在'));
+        if (!$this->index) {
+            $this->_json(0, dr_lang('关联内容不存在'));
+        }
 
         // 默认数据
         $data[1]['cid'] =  $this->cid;

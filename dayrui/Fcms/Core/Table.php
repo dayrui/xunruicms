@@ -152,19 +152,25 @@ class Table extends \Phpcmf\Common
 
         // 查询数据
         $row = \Phpcmf\Service::M()->init($this->init)->get($id);
-        !$row && $this->_json(0, dr_lang('数据%s不存在', $id));
+        if (!$row) {
+            $this->_json(0, dr_lang('数据%s不存在', $id));
+        }
 
         $rt = \Phpcmf\Service::M()->init($this->init)->save($id, 'displayorder', $value, $this->edit_where);
-        !$rt['code'] && $this->_json(0, $rt['msg']);
+        if (!$rt['code']) {
+            $this->_json(0, $rt['msg']);
+        }
 
         \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$row[$this->init['show_field']].')排序值为'.$value);
 
         // 自动更新缓存
         IS_ADMIN && \Phpcmf\Service::M('cache')->sync_cache();
+
         // 提交之后的操作
         if ($after) {
             call_user_func_array($after, [$row]);
         }
+
         $this->_json(1, dr_lang('操作成功'));
 
     }

@@ -224,6 +224,11 @@ class Member extends \Phpcmf\Common
             exit;
         }
 
+        // 默认游客不发布
+        if (!isset($this->auth[SITE_ID]['category'][$catid])) {
+            $this->auth[SITE_ID]['category'][$catid]['add'][0] = 0;
+        }
+
         \Phpcmf\Service::V()->assign([
             'cat' => $this->tree[$catid],
             'auth' => $this->auth[SITE_ID][MOD_DIR],
