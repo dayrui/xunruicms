@@ -113,7 +113,7 @@ function dr_tips(code, msg, time) {
     }
     var tip = '<i class="fa fa-info-circle"></i>';
     //var theme = 'teal';
-    if (code == 1) {
+    if (code >= 1) {
         tip = '<i class="fa fa-check-circle"></i>';
         //theme = 'lime';
     } else if (code == 0) {
@@ -174,7 +174,7 @@ function dr_iframe(type, url, width, height, nogo) {
             $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
                 success: function(json) {
                     layer.close(loading);
-                    if (json.code == 1) {
+                    if (json.code) {
                         layer.close(index);
                         if (json.data.tourl) {
                             setTimeout("window.location.href = '"+json.data.tourl+"'", 2000);
@@ -304,7 +304,7 @@ function dr_ajax_confirm_url(url, msg, tourl) {
                 url: url,
                 success: function(json) {
                     layer.close(loading);
-                    if (json.code == 1) {
+                    if (json.code) {
                         if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
                         } else {
@@ -417,7 +417,7 @@ function dr_ajax_option(url, msg, remove) {
                 data: $("#myform").serialize(),
                 success: function(json) {
                     layer.close(loading);
-                    if (json.code == 1) {
+                    if (json.code) {
                         if (remove) {
                             // 批量移出去
                             var ids = json.data.ids;
@@ -475,7 +475,7 @@ function dr_ajax_option_url(url, msg, tourl) {
                 data: $("#myform").serialize(),
                 success: function(json) {
                     layer.close(loading);
-                    if (json.code == 1) {
+                    if (json.code) {
                         if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
                         } else {
@@ -510,7 +510,7 @@ function dr_ajax_submit(url, form, time, go) {
         data: $("#"+form).serialize(),
         success: function(json) {
             layer.close(loading);
-            if (json.code == 1) {
+            if (json.code) {
                 dr_cmf_tips(1, json.msg);
                 if (json.data.htmlfile) {
                     // 执行生成htmljs
@@ -595,7 +595,7 @@ function dr_ajax_member(url, form) {
         data: $("#"+form).serialize(),
         success: function(json) {
             layer.close(loading);
-            if (json.code == 1) {
+            if (json.code) {
                 var oss_url = json.data.sso;
                 // 发送同步登录信息
                 for ( var i = 0; i < oss_url.length; i++){
@@ -641,7 +641,7 @@ function dr_pc_or_mobile(url) {
         url: '/index.php?s=api&c=api&m=client&at=select&url='+encodeURIComponent(url.replace(/http:\/\//, '')),
         success: function(json) {
             layer.close(loading);
-            if (json.code == 1) {
+            if (json.code) {
                 var oss_url = json.data.sso;
                 // 发送同步cookie
                 for ( var i = 0; i < oss_url.length; i++){
