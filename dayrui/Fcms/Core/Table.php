@@ -296,11 +296,14 @@ class Table extends \Phpcmf\Common
 
         if (IS_AJAX_POST || $is_post) {
             // 内容不存在
-            !$data && $id && $this->_json(0, dr_lang('数据#%s不存在', $id));
-            \Phpcmf\Service::L('field')->value = $data;
-            // 验证码验证
-            $this->is_post_code && !\Phpcmf\Service::L('Form')->check_captcha('code') && $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
+            if (!$data && $id) {
+                $this->_json(0, dr_lang('数据#%s不存在', $id));
+            } elseif ($this->is_post_code && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
+                // 验证码验证
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
+            }
             // 验证数据
+            \Phpcmf\Service::L('field')->value = $data;
             $post = \Phpcmf\Service::L('input')->post('data', false);
             list($post, $return, $attach) = \Phpcmf\Service::L('Form')->validation(
                 $post, 
@@ -309,12 +312,16 @@ class Table extends \Phpcmf\Common
                 $data
             );
             // 输出错误
-            $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+            if ($return) {
+                $this->_json(0, $return['error'], ['field' => $return['name']]);
+            }
             // 格式化数据
             $post = $this->_Format_Data($id, $post, $data);
             // 保存数据
             $rt = $this->_Save($id, $post, $data);
-            !$rt['code'] && $this->_json(0, $rt['msg'], $rt['data']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg'], $rt['data']);
+            }
             $post['id'] = $rt['code'];
             // 记录日志
             $logname = isset($post[$this->init['show_field']]) && $post[$this->init['show_field']] ? $post[$this->init['show_field']] : $data[$this->init['show_field']];
@@ -442,15 +449,21 @@ class Table extends \Phpcmf\Common
      * */ 
     protected function _Del($ids, $before = null, $after = null, $attach = 0) {
 
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         $rows = \Phpcmf\Service::M()->init($this->init)->where_in('id', $ids)->getAll();
-        !$rows && $this->_json(0, dr_lang('所选数据不存在2'));
+        if (!$rows) {
+            $this->_json(0, dr_lang('所选数据不存在2'));
+        }
 
         // 删除之前执行
         if ($before) {
             $rt = call_user_func_array($before, [$rows]);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             $rt['data'] && $rows = $rt['data'];
         }
         
@@ -459,11 +472,15 @@ class Table extends \Phpcmf\Common
         foreach ($rows as $t) {
             $id = intval($t['id']);
             $rt = \Phpcmf\Service::M()->init($this->init)->delete($id, $this->delete_where);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             if ($this->is_data) {
                 // 附表存储
                 $rt = \Phpcmf\Service::M()->init($this->init)->table($this->init['table'].'_data_'.intval($t['tableid']))->delete($id, $this->delete_where);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
             }
             // 删除附件
             SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->cid_delete((int)$t['uid'], $id, $attach);

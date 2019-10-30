@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}attachment` (
   `siteid` mediumint(5) unsigned NOT NULL COMMENT '站点id',
   `related` varchar(50) NOT NULL COMMENT '相关表标识',
   `tableid` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '附件副表id',
-  `download` mediumint(8) NOT NULL DEFAULT '0' COMMENT '下载次数',
+  `download` mediumint(8) NOT NULL DEFAULT '0' COMMENT '无用保留',
   `filesize` int(10) unsigned NOT NULL COMMENT '文件大小',
   `fileext` varchar(20) NOT NULL COMMENT '文件扩展名',
   `filemd5` varchar(50) NOT NULL COMMENT '文件md5值',
