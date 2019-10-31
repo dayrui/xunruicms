@@ -314,11 +314,15 @@ class Api extends \Phpcmf\Common
 	// 邮件发送测试
 	public function email_test() {
 
-		!SYS_EMAIL && $this->_json(0, dr_lang('系统邮箱没有设置'));
+		if (!SYS_EMAIL) {
+		    $this->_json(0, dr_lang('系统邮箱没有设置'));
+        }
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M()->table('mail_smtp')->get($id);
-		!$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
 		$dmail = \Phpcmf\Service::L('email')->set([
 			'host' => $data['host'],
@@ -341,8 +345,11 @@ class Api extends \Phpcmf\Common
 	public function site() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        !$this->site_info[$id] && $this->_admin_msg(0, dr_lang('站点不存在'));
-        !$this->admin && $this->_admin_msg(0, dr_lang('你还没有登录'));
+        if (!$this->site_info[$id]) {
+            $this->_admin_msg(0, dr_lang('站点不存在'));
+        } elseif (!$this->admin) {
+            $this->_admin_msg(0, dr_lang('你还没有登录'));
+        }
 
         // 判断站点权限
         \Phpcmf\Service::L('cache')->init('', 'site')->save('admin_login_site', $this->admin, 300);
@@ -555,6 +562,26 @@ class Api extends \Phpcmf\Common
         $v = \Phpcmf\Service::L('input')->get('v');
         if (!$v) {
             $this->_json(0, dr_lang('目录为空'));
+        } elseif (strpos($v, ' ') === 0) {
+            $this->_json(0, dr_lang('不能用空格开头'));
+        }
+        $path = dr_get_dir_path($v);
+        if (is_dir($path)) {
+            $this->_json(1, dr_lang('目录正常'));
+        } else {
+            $this->_json(0, dr_lang('目录[%s]不存在', $path));
+        }
+
+    }
+
+    /**
+     * 测试附件目录是否可用
+     */
+    public function test_attach_dir() {
+
+        $v = \Phpcmf\Service::L('input')->get('v');
+        if (!$v) {
+            $this->_json(1, dr_lang('默认目录'));
         } elseif (strpos($v, ' ') === 0) {
             $this->_json(0, dr_lang('不能用空格开头'));
         }

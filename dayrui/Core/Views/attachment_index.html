@@ -44,7 +44,12 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="data[SYS_ATTACHMENT_PATH]" value="{$data['SYS_ATTACHMENT_PATH']}" >
+                                    <div class="input-group input-xlarge">
+                                        <input class="form-control " type="text" id="dr_attachment_dir" name="data[SYS_ATTACHMENT_PATH]" value="{$data['SYS_ATTACHMENT_PATH']}" >
+                                        <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain_dir('dr_attachment_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
+                                        </span>
+                                    </div>
                                     <span class="help-block">{dr_lang('此目录必须有读写权限，绝对路径请以“/”开头')}</span>
                                 </div>
                             </div>
@@ -71,7 +76,12 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="image[cache_path]" value="{$image['cache_path']}" >
+                                    <div class="input-group input-xlarge">
+                                        <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{$image['cache_path']}" >
+                                        <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain_dir('dr_cache_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
+                                        </span>
+                                    </div>
                                     <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认uploadfile/thumb/')}</span>
                                 </div>
                             </div>
@@ -99,8 +109,14 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('头像存储目录')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="image[avatar_path]" value="{$image['avatar_path']}" >
-                                    <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认/api/member/')}</span>
+
+                                    <div class="input-group input-xlarge">
+                                        <input class="form-control " type="text" id="dr_avatar_dir" name="image[avatar_path]" value="{$image['avatar_path']}" >
+                                        <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain_dir('dr_avatar_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
+                                        </span>
+                                    </div>
+                                    <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认api/member/')}</span>
                                 </div>
                             </div>
                         </div>
@@ -166,5 +182,16 @@
     </div>
 </form>
 
-
+<script>
+    function dr_test_domain_dir(id) {
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_attach_dir&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                dr_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
 {template "footer.html"}
