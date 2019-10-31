@@ -23,8 +23,7 @@ class Check extends \Phpcmf\Common
         '09' => '网站安全性检测',
         '10' => '数据负载优化检测',
         '11' => '域名绑定检测',
-        '12' => '表单form最大提交数',
-        '13' => 'HTTPS检测',
+        '12' => 'HTTPS检测',
 
     ];
 
@@ -325,7 +324,7 @@ class Check extends \Phpcmf\Common
                     $this->halt('函数没有被启用：stream_context_create', 0);
                 }
 
-                $tips = [];
+                $error = $tips = [];
                 list($module, $data) = \Phpcmf\Service::M('Site')->domain();
                 if ($data) {
                     foreach ($data as $name => $domain) {
@@ -356,7 +355,7 @@ class Check extends \Phpcmf\Common
                             ));
                             $code = file_get_contents($url, 0, $context);
                             if ($code != 'phpcmf ok') {
-                                $tips[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
+                                $error[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
                         }
                     }
@@ -372,7 +371,7 @@ class Check extends \Phpcmf\Common
                 ];
                 foreach ($domain as $t) {
                     if (!file_put_contents($t['path'].'api.html', 'phpcmf ok')) {
-                        $this->_json(1,$t['path'].' 无法写入文件');
+                        $this->_json(0, $t['path'].' 无法写入文件');
                     }
                     $context = stream_context_create(array(
                         'http' => array(
@@ -381,30 +380,22 @@ class Check extends \Phpcmf\Common
                     ));
                     $code = file_get_contents($t['url'].'api.html', 0, $context);
                     if ($code != 'phpcmf ok') {
-                        $tips[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
+                        $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
                     }
                 }
                 
 
-                if ($tips) {
-                    $this->_json(0,implode('<br>', $tips));
+                if ($error) {
+                    $this->_json(0, implode('<br>', $error));
+                } elseif ($tips) {
+                    $this->_json(1, implode('<br>', $tips));
                 } else {
-                    $this->_json(1,'通过');
+                    $this->_json(1, '通过');
                 }
 
                 break;
 
             case '12':
-
-                $value = @ini_get("max_input_vars");
-                if ($value < 3000) {
-                    $this->_json(1,$value.'，建议调整到10000');
-                } else {
-                    $this->_json(1, $value);
-                }
-                break;
-
-            case '13':
                 // https
                 if (SYS_HTTPS) {
                     if (strpos(FC_NOW_URL, 'https://') !== false) {
