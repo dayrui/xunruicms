@@ -454,8 +454,8 @@ abstract class Common extends \CodeIgniter\Controller
         if (isset($this->site_info[SITE_ID]['SITE_CLOSE']) && $this->site_info[SITE_ID]['SITE_CLOSE']) {
             // 网站关闭状态时不进行缓存页面
             return;
-        } elseif (!$this->site_info[SITE_ID]['SITE_MOBILE'] && $this->site_info[SITE_ID]['SITE_AUTO']) {
-            // 没有绑定移动端域名，开启了自动识别，不进行缓存
+        } elseif ($this->site_info[SITE_ID]['SITE_AUTO']) {
+            // 开启了自动识别移动端，不进行缓存
             return;
         }
         parent::cachePage($time);
