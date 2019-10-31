@@ -172,12 +172,18 @@ class View {
 
         $start = microtime(true);
 
+		// 定义当前模板的url地址
         if (!$this->_options['my_web_url']) {
             $this->_options['my_web_url'] = $this->_options['fix_html_now_url'] ? $this->_options['fix_html_now_url'] : dr_now_url();
         }
+		
+		// 定义当前url参数值
+		if (!isset($this->_options['get'])) {
+			$this->_options['get'] = \Phpcmf\Service::L('input')->xss_clean($_GET);
+		}
 
+        // 如果是来自api就不解析模板，直接输出变量
         if (IS_API_HTTP) {
-            // 如果是来自api就不解析模板，直接输出变量
             $call = \Phpcmf\Service::L('input')->request('api_call_function');
             if ($call) {
                 $call = dr_safe_replace($call);
@@ -192,7 +198,6 @@ class View {
         extract($this->_options, EXTR_PREFIX_SAME, 'data');
 
         $this->_filename = str_replace('..', '[removed]', $_name);
-
 
         // 加载编译后的缓存文件
         $this->_disp_dir = $_dir;
@@ -633,9 +638,14 @@ class View {
         }
 
         $params = explode(' ', $_params);
-        in_array($params[0], $this->action) &&  $params[0] = 'action='.$params[0];
+        in_array($params[0], $this->action) && $params[0] = 'action='.$params[0];
 
-        $sysadj = array('IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 'GT', 'EGT', 'LT', 'ELT', 'DAY', 'MONTH', 'JSON', 'FIND');
+        $sysadj = [
+			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
+			'GT', 'EGT', 'LT', 'ELT',
+			'DAY', 'MONTH',
+			'JSON', 'FIND'
+		];
         foreach ($params as $t) {
             $var = substr($t, 0, strpos($t, '='));
             $val = substr($t, strpos($t, '=') + 1);
@@ -655,17 +665,17 @@ class View {
                     foreach ($_pre as $p) {
                         in_array($p, $sysadj) && $_adj = $p;
                     }
-                    $where[$match[2]] = array(
+                    $where[$match[2]] = [
                         'adj' => $_adj,
                         'name' => $match[2],
                         'value' => $val
-                    );
+                    ];
                 } else {
-                    $where[$var] = array(
+                    $where[$var] = [
                         'adj' => '',
                         'name' => $var,
                         'value' => $val
-                    );
+                    ];
                 }
                 $param[$var] = $val; // 用于特殊action
             }
@@ -673,7 +683,7 @@ class View {
 
         // 替换order中的非法字符
         isset($system['order']) && $system['order'] && $system['order'] = str_ireplace(
-            array('"', "'", ')', '(', ';', 'select', 'insert', '`'),
+            ['"', "'", ')', '(', ';', 'select', 'insert', '`'],
             '',
             $system['order']
         );
@@ -1713,8 +1723,9 @@ class View {
                 }
 
                 $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
+				
+                // 没有表结构缓存时返回空
                 if (!$tableinfo) {
-                    // 没有表结构缓存时返回空
                     return $this->_return($system['return'], '表结构缓存不存在');
                 }
 
@@ -1772,7 +1783,7 @@ class View {
                     }
                     $fwhere && $where[] = [
                         'adj' => 'SQL',
-                        'value' => urldecode('('.implode(' OR ', $fwhere).')')
+                        'value' => urldecode(count($fwhere) == 1 ? $fwhere[0] : '('.implode(' OR ', $fwhere).')')
                     ];
                     unset($fwhere);
                     unset($catids);

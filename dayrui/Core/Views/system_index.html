@@ -47,17 +47,17 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('栏目目录允许重复')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_CAT_RNAME]" value="1" {if $data['SYS_CAT_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('栏目开启之后请不要使用目录作为伪静态关键字')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('栏目折叠显示')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_CAT_ZSHOW]" value="1" {if $data['SYS_CAT_ZSHOW']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('适用于栏目数量过多时的折叠缩放显示效果')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('栏目目录允许重复')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_CAT_RNAME]" value="1" {if $data['SYS_CAT_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('栏目开启之后请不要使用目录作为伪静态关键字')}</span>
                             </div>
                         </div>
                         {if dr_is_app('page')}
@@ -65,7 +65,7 @@
                             <label class="col-md-2 control-label">{dr_lang('自定义页面目录允许重复')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_PAGE_RNAME]" value="1" {if $data['SYS_PAGE_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('自定义页面开启之后请不要使用目录作为伪静态关键字')}</span>
+                                <span class="help-block">{dr_lang('[自定义页面插件]开启之后请不要使用目录作为伪静态关键字')}</span>
                             </div>
                         </div>
                         {/if}
