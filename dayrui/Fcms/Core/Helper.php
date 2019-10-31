@@ -1815,6 +1815,7 @@ function dr_file_map($source_dir) {
     return FALSE;
 }
 
+// 兼容错误提示
 function show_error($msg, $code = '', $o = '') {
 
     exit($msg);

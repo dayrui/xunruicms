@@ -15,7 +15,7 @@ class Login extends \Phpcmf\Common
         // 获取返回页面
         $url = \Phpcmf\Service::L('Security')->xss_clean($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
         strpos($url, 'login') !== false && $url = MEMBER_URL;
-        
+
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', true);
             // 支付回调钩子
@@ -266,11 +266,15 @@ class Login extends \Phpcmf\Common
             if (strpos($value, '@') !== false) {
                 // 邮箱模式
                 $data = \Phpcmf\Service::M()->db->table('member')->where('email', $value)->get()->getRowArray();
-                !$data && $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
-            } else if (is_numeric($value) && strlen($value) == 11) {
+                if (!$data) {
+                    $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
+                }
+            } elseif (is_numeric($value) && strlen($value) == 11) {
                 // 手机
                 $data = \Phpcmf\Service::M()->db->table('member')->where('phone', $value)->get()->getRowArray();
-                !$data && $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
+                if (!$data) {
+                    $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
+                }
             } else {
                 $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
             }

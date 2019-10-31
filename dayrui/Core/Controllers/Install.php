@@ -60,7 +60,7 @@ class Install extends \Phpcmf\Common
                 $gsname = '四川迅睿云软件开发有限公司';
                 if (is_file(MYPATH.'Config/License.php')) {
                     $ls = require MYPATH.'Config/License.php';
-                    if ($ls['name']) {
+                    if (isset($ls['name']) && $ls['name']) {
                         $gsname = $ls['name'];
                     }
                 }
@@ -264,6 +264,12 @@ $db[\'default\']	= [
                                 'SYS_ATTACHMENT_URL'            => '', //附件访问地址
                                 'SYS_EMAIL'                     => $data['email'],
                             ];
+                            if (is_file(MYPATH.'Config/License.php')) {
+                                $ls = require MYPATH.'Config/License.php';
+                                if (isset($ls['name']) && $ls['name']) {
+                                    $sys['SYS_DEBUG'] = 0;
+                                }
+                            }
                             \Phpcmf\Service::M('System')->save_config($sys, $sys);
 
                             // 删除app的install.lock

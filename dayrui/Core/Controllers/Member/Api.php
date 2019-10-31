@@ -75,9 +75,9 @@ class Api extends \Phpcmf\Common
             IS_API_HTTP && $this->_json(0, dr_lang('系统已经关闭了审核机制'));
             dr_redirect(MEMBER_URL);
             exit;
+        } elseif ($this->member_cache['register']['verify'] == 'admin') {
+            $this->_msg(0, dr_lang('请等待管理员的审核'));
         }
-
-        $this->member_cache['register']['verify'] == 'admin' && $this->_msg(0, dr_lang('请等待管理员的审核'));
 
         if (IS_POST) {
             $value = dr_safe_replace(\Phpcmf\Service::L('input')->post('value'));
@@ -153,12 +153,16 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-email-'.$this->uid;
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        if ($this->session()->get($name)) {
+            $this->_json(0, dr_lang('已经发送稍后再试'));
+        }
 
         $this->member['randcode'] = rand(100000, 999999);
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
         $rt = \Phpcmf\Service::M('member')->sendmail($this->member['email'], dr_lang('注册邮件验证'), 'member_verify.html', $this->member);
-        !$rt['code'] && $this->_json(0, dr_lang('邮件发送失败'));
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang('邮件发送失败'));
+        }
 
         $this->session()->setTempdata($name, 1, 60);
         $this->_json(1, dr_lang('验证码发送成功'));
@@ -184,7 +188,9 @@ class Api extends \Phpcmf\Common
         $this->member['randcode'] = rand(100000, 999999);
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($this->member['phone'], $this->member['randcode']);
-        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang('发送失败'));
+        }
 
         $this->session()->setTempdata($name, 1, 60);
         $this->_json(1, dr_lang('验证码发送成功'));
@@ -205,6 +211,8 @@ class Api extends \Phpcmf\Common
 
         if (!$this->member) {
             $this->_json(0, dr_lang('账号未登录'));
+        } elseif ($this->member['is_verify']) {
+            $this->_json(1, dr_lang('已经验证成功'), ['url' => $url ? $url : MEMBER_URL]);
         } elseif (!$this->member['randcode']) {
             $this->_json(0, dr_lang('验证码已过期'));
         } elseif (\Phpcmf\Service::L('input')->get('code') != $this->member['randcode']) {
@@ -238,7 +246,9 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-find-password';
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        if ($this->session()->get($name)) {
+            $this->_json(0, dr_lang('已经发送稍后再试'));
+        }
 
         if (strpos($value, '@') !== false) {
             // 邮箱模式
@@ -249,7 +259,9 @@ class Api extends \Phpcmf\Common
             $data['randcode'] = $rand = rand(100000, 999999);
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
             $rt = \Phpcmf\Service::M('member')->sendmail($value, dr_lang('找回密码'), 'member_find.html', $data);
-            !$rt['code'] && $this->_json(0, dr_lang('邮件发送失败'));
+            if (!$rt['code']) {
+                $this->_json(0, dr_lang('邮件发送失败'));
+            }
         } else if (is_numeric($value) && strlen($value) == 11) {
             // 手机
             $data = \Phpcmf\Service::M()->db->table('member')->where('phone', $value)->get()->getRowArray();
@@ -259,7 +271,9 @@ class Api extends \Phpcmf\Common
             $rand = rand(100000, 999999);
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
             $rt = \Phpcmf\Service::M('member')->sendsms_code($value, $rand);
-            !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+            if (!$rt['code']) {
+                $this->_json(0, dr_lang('发送失败'));
+            }
         } else {
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
@@ -289,11 +303,15 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-register-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
+        if ($this->session()->get($name)) {
+            $this->_json(1, dr_lang('已经发送稍后再试'));
+        }
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
-        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang('发送失败'));
+        }
 
         $this->session()->setTempdata($name, $code, 60);
         $this->_json(1, dr_lang('验证码发送成功'));
@@ -320,11 +338,15 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-login-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
+        if ($this->session()->get($name)) {
+            $this->_json(1, dr_lang('已经发送稍后再试'));
+        }
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
-        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang('发送失败'));
+        }
 
         $this->session()->setTempdata($name, $code, 60);
         $this->_json(1, dr_lang('验证码发送成功'));
@@ -354,11 +376,15 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-send-phone-'.$phone;
-        $this->session()->get($name) && $this->_json(1, dr_lang('已经发送稍后再试'));
+        if ($this->session()->get($name)) {
+            $this->_json(1, dr_lang('已经发送稍后再试'));
+        }
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
-        !$rt['code'] && $this->_json(0, dr_lang('发送失败'));
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang('发送失败'));
+        }
 
         $this->session()->setTempdata($name, $code, 60);
         $this->_json(1, dr_lang('验证码发送成功'));
