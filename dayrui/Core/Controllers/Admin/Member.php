@@ -103,14 +103,14 @@ class Member extends \Phpcmf\Table
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->request('keyword'));
         
         if ($name && $value && isset($this->my_field[$name])) {
-            $p[$name] = $value;
             $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
+            $p[$name] = $value;
         }
         
         $groupid = (int)\Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
-            $p['groupid'] = $groupid;
             $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$groupid.')';
+            $p['groupid'] = $groupid;
         }
         
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
@@ -218,10 +218,14 @@ class Member extends \Phpcmf\Table
                 }
                 // 上传图片到服务器
                 copy($temp, $file);
-                !is_file($file) && $this->_json(0, dr_lang('头像存储失败'));
+                if (!is_file($file)) {
+					$this->_json(0, dr_lang('头像存储失败'));
+				} 
                 if (defined('UCSSO_API')) {
                     $rt = ucsso_avatar($uid, $content);
-                    !$rt['code'] && $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
+                    if (!$rt['code']) {
+						$this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
+					}
                 }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'));
@@ -442,10 +446,14 @@ class Member extends \Phpcmf\Table
     public function group_all_edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选用户不存在'));
+        if (!$ids) {
+			$this->_json(0, dr_lang('所选用户不存在'));
+		} 
 
         $gid = \Phpcmf\Service::L('input')->post('groupid');
-        !$gid && $this->_json(0, dr_lang('所选用户组不存在'));
+		if (!$gid) {
+			$this->_json(0, dr_lang('所选用户组不存在'));
+		}
 
         $c = 0;
         foreach ($ids as $i) {
