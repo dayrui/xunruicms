@@ -77,6 +77,8 @@ class Member extends \Phpcmf\Table
             'table' => 'member',
             'field' => $this->member_cache['field'],
             'order_by' => 'id desc',
+            // 不是超级管理员,排除超管账号
+            'where_list' => !in_array(1, $this->admin['roleid']) ? '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)' : '',
         ]);
         $this->group = $this->member_cache['group'];
         \Phpcmf\Service::V()->assign([
@@ -141,7 +143,9 @@ class Member extends \Phpcmf\Table
                     'name' => (string)$post['name'],
                     'password' => dr_safe_password($post['password']),
                 ]);
-                !$rt['code'] && $this->_json(0, $rt['msg'], ['field' => $rt['data']['field']]);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['field' => $rt['data']['field']]);
+                }
             }
             $this->_json(1, dr_lang('操作成功'));
         }
@@ -154,6 +158,7 @@ class Member extends \Phpcmf\Table
 
     // 头像设置空
     public function avatar_del() {
+
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         $member = dr_member_info($uid);
         if (!$member) {
@@ -274,9 +279,7 @@ class Member extends \Phpcmf\Table
                     $error ++;
 
                 }
-
             }
-
 
             $this->_json(1, dr_lang('批量注册%s个用户，失败%s个', $ok, $error));
         }
@@ -292,9 +295,13 @@ class Member extends \Phpcmf\Table
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
-        // 关闭分组字段?忘记了为什么要关闭分组字段？
-        //\Phpcmf\Service::L('Field')->is_hide_merge_group();
-        list($tpl, $data) = $this->_Post($uid);
+        // 不是超级管理员,排除超管账号
+        if (!in_array(1, $this->admin['roleid'])
+            && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->where('roleid', 1)->counts()) {
+            $this->_admin_msg(0, dr_lang('无权限编辑'));
+        }
+
+        $this->_Post($uid);
 
         // 获取该组可用字段
         $field = [];

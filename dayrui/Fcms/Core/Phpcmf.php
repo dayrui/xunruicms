@@ -357,8 +357,6 @@ abstract class Common extends \CodeIgniter\Controller
                         \Phpcmf\Service::L('Router')->go_member_login(dr_now_url());
                     }
                 }
-
-
             }
             // 判断用户的权限
             if ($this->member && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
@@ -405,7 +403,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 插件目录初始化
         APP_DIR && $this->init_file(APP_DIR);
 
-        // 分站id
+        // 预览开发的id
         !defined('SITE_FID') && define('SITE_FID', 0);
 
         // 挂钩点 程序初始化之后
@@ -489,9 +487,16 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 判断模块是否存在
         if (!$this->module) {
-            $dirname == 'share' && IS_ADMIN && $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
-            IS_ADMIN && $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
-            $this->_msg(0, dr_lang('模块【%s】不存在', $dirname));
+            if (IS_ADMIN) {
+                if ($dirname == 'share') {
+                    $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+                } else {
+                    $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                }
+            } else {
+                $this->_msg(0, dr_lang('模块【%s】不存在', $dirname));
+            }
+
             return;
         }
 
