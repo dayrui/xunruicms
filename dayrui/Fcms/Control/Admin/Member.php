@@ -161,6 +161,7 @@ class Member extends \Phpcmf\Common
                 'edit' => dr_member_auth_id($this->member_cache['authid'], $t['edit']),
                 'code' => dr_member_auth_id($this->member_cache['authid'], $t['code']),
                 'verify' => dr_member_auth_id($this->member_cache['authid'], $t['verify']),
+                'verify2' => dr_member_auth_id($this->member_cache['authid'], $t['verify2']),
                 'exp' => $t['exp'],
                 'score' => $t['score'],
                 'day_post' => $t['day_post'],
