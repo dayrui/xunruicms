@@ -103,7 +103,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (!IS_API // api不跳转
             && !IS_ADMIN // 后台不跳转
             && !IS_MEMBER // 会员中心不跳
-            && !defined('IS_NOT_301') // 定义禁止301不跳
+            //&& !defined('IS_NOT_301') // 定义禁止301不跳
             && $client // 没有客户端不跳
             && $this->site_info[SITE_ID]['SITE_MOBILE'] // 没有绑定移动端域名不跳
             //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时

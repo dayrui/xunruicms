@@ -37,6 +37,7 @@ class System extends \Phpcmf\Common
                 'SYS_KEY' => $post['SYS_KEY'] == '***' ? $data['SYS_KEY'] : $post['SYS_KEY'],
                 'SYS_HTTPS' => (int)$post['SYS_HTTPS'],
                 'SYS_CSRF' => (int)$post['SYS_CSRF'],
+                'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
                 'SYS_BDMAP_API' => $post['SYS_BDMAP_API'],
             ];
             foreach ($data as $name => $value) {

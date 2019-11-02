@@ -32,6 +32,7 @@ class System extends \Phpcmf\Model
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
         'SYS_ATTACHMENT_URL'	=> '附件访问地址',
         'SYS_BDMAP_API'	=> '百度地图API',
+        'SYS_API_CODE'	=> 'API请求时验证码开关',
         'SYS_THEME_ROOT'	=> '风格目录引用作用域',
 
         'SYS_FIELD_THUMB_ATTACH'	=> '缩略图字段存储策略',

@@ -343,6 +343,11 @@ class Form
     // 验证码类
     public function check_captcha($id) {
 
+		// API请求时，是否进行验证图片
+		if (IS_API_HTTP && defined('SYS_API_CODE') && !SYS_API_CODE) {
+			return true;
+		}
+
         $data = \Phpcmf\Service::L('input')->post($id);
         if (!$data) {
             return false;
@@ -360,7 +365,10 @@ class Form
     // 验证码类：只比较不删除
     public function check_captcha_value($data) {
 
-        if (!$data) {
+		// API请求时，是否进行验证图片
+		if (IS_API_HTTP && defined('SYS_API_CODE') && !SYS_API_CODE) {
+			return true;
+		} elseif (!$data) {
             return false;
         }
 
