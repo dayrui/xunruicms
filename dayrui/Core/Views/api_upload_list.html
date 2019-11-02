@@ -24,7 +24,7 @@
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
                         {loop $list.unused $i $t}
-                        {php $url = dr_get_file_url($t);}
+                        {php $url = dr_get_file_url($t, 50, 50);}
                         <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
                             <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                 <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
@@ -44,7 +44,7 @@
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
                         {loop $list.used $i $t}
-                        {php $url = dr_get_file_url($t);}
+                        {php $url = dr_get_file_url($t, 50, 50);}
                         <div class="template-download yl_files_row files_row">
                             <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                 <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />

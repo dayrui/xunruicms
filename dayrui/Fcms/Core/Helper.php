@@ -969,13 +969,15 @@ function dr_down_file($id) {
  * @param	array	$data
  * @return  string
  */
-function dr_get_file_url($data) {
+function dr_get_file_url($data, $w = 0, $h = 0) {
 
     if (!$data) {
         return '文件信息不存在';
     } elseif ($data['remote'] && ($info = \Phpcmf\Service::C()->get_cache('attachment', $data['remote']))) {
         return $info['url'].$data['attachment'];
-    }
+    } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+		return dr_thumb($data['id'], $w, $h);
+	}
 
     return SYS_UPLOAD_URL.$data['attachment'];
 }

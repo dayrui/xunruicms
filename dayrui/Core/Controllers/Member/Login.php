@@ -92,8 +92,9 @@ class Login extends \Phpcmf\Common
      */
     public function oauth() {
 
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        $oauth_id = $this->session()->get('member_auth_login_'.$name);
+        $oauth_id = \Phpcmf\Service::L('cache')->init()->get('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
             $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }

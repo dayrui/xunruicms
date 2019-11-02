@@ -205,7 +205,7 @@ class View {
         $_view_name = str_replace([TPLPATH, FCPATH, APPSPATH], ['TPLPATH/', 'FCPATH/', 'APPSPATH/'], $_view_file);
 
         if (IS_DEV || (IS_ADMIN && SYS_DEBUG)) {
-            echo "<!--当前页面的模板文件是：$_view_name （本代码只在开发者模式下显示）-->".PHP_EOL;
+            echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
         } else {
             $this->_options = null;
         }

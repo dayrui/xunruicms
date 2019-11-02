@@ -1147,11 +1147,11 @@ class Member extends \Phpcmf\Model
             }
         }
 
-        // 存储session
-        \Phpcmf\Service::C()->session()->set('member_auth_'.$type.'_'.$data['oauth'], $id);
+        // 存储
+		\Phpcmf\Service::L('cache')->init()->save('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
 
-        return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['name' => $data['oauth']]));
-    }
+        return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
+	}
 
     // 修改密码 
     public function edit_password($member, $password) {

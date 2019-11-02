@@ -259,7 +259,7 @@ class File extends \Phpcmf\Common
             } else {
                 $this->_msg(0, dr_lang('您的用户组不允许下载附件'));
             }
-        }
+        }\
 
         // 读取附件信息
         $id = urldecode(\Phpcmf\Service::L('input')->get('id'));
