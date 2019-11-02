@@ -17,7 +17,7 @@ class Category extends \Phpcmf\Home\Module
 
 		$module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share');
 		if (!$module) {
-		    $this->_msg(0, dr_lang('模块缓存不存在'));
+		    $this->_msg(0, dr_lang('共享栏目缓存不存在'));
             return;
         }
 
