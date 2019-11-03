@@ -82,7 +82,7 @@ class Api extends \Phpcmf\Common
         if (IS_POST) {
             $value = dr_safe_replace(\Phpcmf\Service::L('input')->post('value'));
             if (!\Phpcmf\Service::L('Form')->check_captcha('code')) {
-                $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
             } elseif (empty($value)) {
                 $this->_json(0, dr_lang('新邮箱或者手机号码必须填写'));
             } elseif ($this->member_cache['register']['verify'] == 'email' && !\Phpcmf\Service::L('Form')->check_email($value)) {
@@ -153,7 +153,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-email-'.$this->uid;
-        if ($this->session()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
             $this->_json(0, dr_lang('已经发送稍后再试'));
         }
 
@@ -164,7 +164,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('邮件发送失败'));
         }
 
-        $this->session()->setTempdata($name, 1, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
@@ -183,7 +184,9 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-phone-'.$this->uid;
-        $this->session()->get($name) && $this->_json(0, dr_lang('已经发送稍后再试'));
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+			$this->_json(0, dr_lang('已经发送稍后再试'));
+		} 
 
         $this->member['randcode'] = rand(100000, 999999);
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
@@ -192,7 +195,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        $this->session()->setTempdata($name, 1, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
@@ -245,10 +249,10 @@ class Api extends \Phpcmf\Common
         }
 
         // 验证操作间隔
-        $name = 'member-find-password';
-        if ($this->session()->get($name)) {
-            $this->_json(0, dr_lang('已经发送稍后再试'));
-        }
+        $name = 'member-find-password-'.$value;
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+			$this->_json(0, dr_lang('已经发送稍后再试'));
+		} 
 
         if (strpos($value, '@') !== false) {
             // 邮箱模式
@@ -278,7 +282,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
-        $this->session()->setTempdata($name, 1, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
@@ -303,9 +308,9 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-register-phone-'.$phone;
-        if ($this->session()->get($name)) {
-            $this->_json(1, dr_lang('已经发送稍后再试'));
-        }
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+			$this->_json(0, dr_lang('已经发送稍后再试'));
+		} 
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
@@ -313,7 +318,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        $this->session()->setTempdata($name, $code, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $code, 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
@@ -338,9 +344,9 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-login-phone-'.$phone;
-        if ($this->session()->get($name)) {
-            $this->_json(1, dr_lang('已经发送稍后再试'));
-        }
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+			$this->_json(0, dr_lang('已经发送稍后再试'));
+		} 
 
         $code = rand(100000, 999999);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
@@ -348,7 +354,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        $this->session()->setTempdata($name, $code, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $code, 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
@@ -376,7 +383,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-send-phone-'.$phone;
-        if ($this->session()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
             $this->_json(1, dr_lang('已经发送稍后再试'));
         }
 
@@ -386,7 +393,9 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        $this->session()->setTempdata($name, $code, 60);
+		$this->session()->setTempdata($name, $code, 60);
+        \Phpcmf\Service::L('cache')->init()->save($name, $code, 60);
+		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 

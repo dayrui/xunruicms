@@ -62,7 +62,7 @@ class Login extends \Phpcmf\Common
             } elseif (empty($post['phone'])) {
                 $this->_json(0, dr_lang('手机号码必须填写'));
             } else {
-                $sms = $this->session()->get('member-login-phone-'.$post['phone']);
+                $sms = \Phpcmf\Service::L('cache')->init()->get('member-login-phone-'.$post['phone']);
                 if (!$sms) {
                     $this->_json(0, dr_lang('未发送手机验证码'), ['field' => 'sms']);
                 } elseif (!$_POST['sms']) {
@@ -262,7 +262,7 @@ class Login extends \Phpcmf\Common
 
         if (IS_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             $value = dr_safe_replace($post['value']);
             if (strpos($value, '@') !== false) {
                 // 邮箱模式

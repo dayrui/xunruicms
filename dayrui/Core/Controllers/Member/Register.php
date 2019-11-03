@@ -80,7 +80,7 @@ class Register extends \Phpcmf\Common
                 \Phpcmf\Hooks::trigger('member_register_before', $post);
                 // 验证操作
                 if ($this->member_cache['register']['sms']) {
-                    $sms = $this->session()->get('member-register-phone-'.$post['phone']);
+                    $sms = \Phpcmf\Service::L('cache')->init()->get('member-register-phone-'.$post['phone']);
                     if (!$sms) {
                         $this->_json(0, dr_lang('未发送手机验证码'), ['field' => 'sms']);
                     } elseif (!$_POST['sms']) {
