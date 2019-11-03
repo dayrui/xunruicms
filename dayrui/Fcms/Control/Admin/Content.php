@@ -108,7 +108,7 @@ class Content extends \Phpcmf\Common
         }
 
         $keyword = \Phpcmf\Service::L('input')->get('keyword');
-        $keyword && $where.= ' AND keywords=""';
+        !$keyword && $where.= ' AND keywords=""';
         $url.= '&keywords='.$keyword;
 
         // 计算数量
@@ -170,7 +170,7 @@ class Content extends \Phpcmf\Common
         }
 
         $thumb = \Phpcmf\Service::L('input')->get('thumb');
-        $thumb && $where.= ' AND thumb=""';
+        !$thumb && $where.= ' AND thumb=""';
         $url.= '&thumb='.$thumb;
 
         // 计算数量

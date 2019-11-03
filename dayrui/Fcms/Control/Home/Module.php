@@ -348,7 +348,6 @@ class Module extends \Phpcmf\Common
     // $param 自定义字段检索
     protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
 
-
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
             // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
@@ -361,7 +360,7 @@ class Module extends \Phpcmf\Common
             $is_id = 0;
         }
 
-        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id;
+        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.($page > 1 ? $page : '');
         $data = \Phpcmf\Service::L('cache')->init()->get($name);
         if (!$data) {
             $data = $this->content_model->get_data($is_id ? $id : 0, 0, $param);
