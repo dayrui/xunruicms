@@ -1106,6 +1106,8 @@ class Member extends \Phpcmf\Model
                 \Phpcmf\Service::M('yq', 'yaoqing')->register($puid, $data);
             }
         }
+		
+		$data['auth'] = md5($data['passowrd'].$data['salt']); // API认证字符串,
 
         return dr_return_data(1, 'ok', $data);
     }
