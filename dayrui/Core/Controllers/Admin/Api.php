@@ -57,7 +57,9 @@ class Api extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table('admin_notice')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('该数据不存在'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('该数据不存在'));
+        }
 
         // 权限判断
         if (!isset($this->admin['roleid'][1])) {
@@ -497,19 +499,25 @@ class Api extends \Phpcmf\Common
 	public function export_field() {
 
         $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('table'));
-        !$table && $this->_json(0, '表【'.$table.'】不存在');
+        if (!$table) {
+            $this->_json(0, '表【'.$table.'】不存在');
+        }
 
         if (IS_AJAX_POST) {
 
             $post = \Phpcmf\Service::L('input')->post('data');
-            !$post && $this->_json(0, dr_lang('存储内容不正确'));
+            if (!$post) {
+                $this->_json(0, dr_lang('存储内容不正确'));
+            }
 
             \Phpcmf\Service::M('Table')->save_export_field_name($table, $post);
             $this->_json(1, dr_lang('操作成功'));
         }
 
         $field = \Phpcmf\Service::M('Table')->get_export_field_name($table, 1);
-        !$field && $this->_json(0, '表【'.$table.'】的字段不存在');
+        if (!$field) {
+            $this->_json(0, '表【'.$table.'】的字段不存在');
+        }
 
         \Phpcmf\Service::V()->assign([
             'field' => $field,
@@ -524,10 +532,16 @@ class Api extends \Phpcmf\Common
 	 */
 	public function export_list() {
 
+        $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('table'));
+        if (!$table) {
+            $this->_admin_msg(0, '表【'.$table.'】不存在');
+        } elseif (!\Phpcmf\Service::M()->db->tableExists($table)) {
+            $this->_admin_msg(0, '表【'.$table.'】不存在');
+        }
+
         $sql = str_replace('+', ' ', dr_authcode(urldecode($_GET['sql'])));
         $db = \Phpcmf\Service::M()->db->query($sql);
         $list = $db ? $db->getResultArray() : [];
-        $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('table'));
         $field = \Phpcmf\Service::M('Table')->get_export_field_name($table, 1);
 
         \Phpcmf\Service::V()->assign([
@@ -545,7 +559,9 @@ class Api extends \Phpcmf\Common
 
 		$name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
 		$data = \Phpcmf\Service::M('member')->get_member(0, $name);
-		!$data && $this->_json(0, dr_lang('此账号%s不存在', $name));
+		if (!$data) {
+		    $this->_json(0, dr_lang('此账号%s不存在', $name));
+        }
 
 		\Phpcmf\Service::V()->assign([
 			'm' => $data,
