@@ -574,30 +574,7 @@ function dr_show_file_code(title, url) {
 
 // 导出页面控制
 function dr_export(table, sql) {
-    layer.load(2, {
-        shade: [0.3,'#fff'], //0.1透明度的白色背景
-        time: 1000
-    });
-    layer.open({
-        type: 2,
-        title: '数据导出',
-        scrollbar: false,
-        shadeClose: true,
-        maxmin: true, //开启最大化最小化按钮
-        shade: 0,
-        area: ['90%', '90%'],
-        success: function(layero, index){
-            // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.closeAll(index);
-                dr_tips(0, obj.msg);
-            }
-        },
-        content: admin_file+'?c=api&m=export_field&sql='+sql+'&table='+table
-    });
+    dr_tips(0, '此功能不可用');
 }
 
 // 提交生成静态页面

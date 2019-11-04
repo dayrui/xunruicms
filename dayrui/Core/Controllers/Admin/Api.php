@@ -443,113 +443,18 @@ class Api extends \Phpcmf\Common
 
     }
 
-    /**
-     * 微博授权更新
-     */
-    public function weibo() {
-
-        // 请求参数
-        $cache = $this->get_cache('site', SITE_ID, 'weibo');
-        $callback_url = ADMIN_URL.dr_url('api/weibo');
-
-        define("WB_AKEY", $cache['key']);
-        define("WB_SKEY", $cache['secret']);
-
-        require FCPATH.'ThirdParty/Weibo/saetv2.ex.class.php';
-        $o = new \SaeTOAuthV2(WB_AKEY, WB_SKEY);
-
-        // 表示回调返回
-        if (isset($_REQUEST['code']) && $_REQUEST['code']) {
-            $keys = [];
-            $keys['code'] = $_REQUEST['code'];
-            $keys['redirect_uri'] = $callback_url;
-            $token = $o->getAccessToken('code', $keys);
-            if (is_array($token)) {
-                // 回调成功
-                $c = new \SaeTClientV2(WB_AKEY, WB_SKEY, $token['access_token']);
-                //根据ID获取用户等基本信息
-                $user = $c->show_user_by_id($token['uid']);
-                if ($user) {
-                    // 存储
-                    $save = [
-                        'avatar' => $user['profile_image_url'],
-                        'nickname' => dr_emoji2html($user['name']),
-                        'expire_at' => SYS_TIME + $token['expires_in'],
-                        'access_token' => $token['access_token'],
-                    ];
-                    \Phpcmf\Service::L('cache')->init_file('weibo')->set_file(SITE_ID, $save);
-                    $this->_admin_msg(1, dr_lang('更新授权成功'));
-                } else {
-                    $this->_admin_msg(0, dr_lang('获取微博用户信息失败'));exit;
-                }
-            } else {
-                // 回调失败
-                $this->_admin_msg(0, $token);exit;
-            }
-        } else {
-            // 跳转授权页面
-            dr_redirect($o->getAuthorizeURL($callback_url));
-        }
-
-    }
-
 	/**
 	 * 导出 字段设置
 	 */
 	public function export_field() {
-
-        $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('table'));
-        if (!$table) {
-            $this->_json(0, '表【'.$table.'】不存在');
-        }
-
-        if (IS_AJAX_POST) {
-
-            $post = \Phpcmf\Service::L('input')->post('data');
-            if (!$post) {
-                $this->_json(0, dr_lang('存储内容不正确'));
-            }
-
-            \Phpcmf\Service::M('Table')->save_export_field_name($table, $post);
-            $this->_json(1, dr_lang('操作成功'));
-        }
-
-        $field = \Phpcmf\Service::M('Table')->get_export_field_name($table, 1);
-        if (!$field) {
-            $this->_json(0, '表【'.$table.'】的字段不存在');
-        }
-
-        \Phpcmf\Service::V()->assign([
-            'field' => $field,
-            'export_url' =>\Phpcmf\Service::L('Router')->url('api/export_list', ['sql'=> $_GET['sql'], 'table' =>$table]),
-        ]);
-        \Phpcmf\Service::V()->display('api_export_field.html');
-        exit;
+        exit('此功能不可用');
     }
 
 	/**
 	 * 导出
 	 */
 	public function export_list() {
-
-        $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('table'));
-        if (!$table) {
-            $this->_admin_msg(0, '表【'.$table.'】不存在');
-        } elseif (!\Phpcmf\Service::M()->db->tableExists($table)) {
-            $this->_admin_msg(0, '表【'.$table.'】不存在');
-        }
-
-        $sql = str_replace('+', ' ', dr_authcode(urldecode($_GET['sql'])));
-        $db = \Phpcmf\Service::M()->db->query($sql);
-        $list = $db ? $db->getResultArray() : [];
-        $field = \Phpcmf\Service::M('Table')->get_export_field_name($table, 1);
-
-        \Phpcmf\Service::V()->assign([
-            'list' => $list,
-            'field' => $field,
-        ]);
-        \Phpcmf\Service::V()->display('api_export_list.html');
-        exit;
+        $this->_admin_msg(0, '此功能不可用');
     }
 
 	/**

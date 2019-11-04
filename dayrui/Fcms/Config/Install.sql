@@ -16,15 +16,6 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}cron` (
   KEY `inputtime` (`inputtime`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='任务管理';
 
-DROP TABLE IF EXISTS `{dbprefix}export`;
-CREATE TABLE IF NOT EXISTS `{dbprefix}export` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Id',
-  `name` varchar(100) NOT NULL COMMENT '表名称',
-  `value` text CHARACTER SET utf8 NOT NULL COMMENT '字段配置项目',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='导出数据字段配置';
-
 DROP TABLE IF EXISTS `{dbprefix}urlrule`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}urlrule` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
