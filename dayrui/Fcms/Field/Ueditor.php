@@ -74,7 +74,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('下载图片模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 1 ? 'checked' : '').' > '.dr_lang('异步').'</label>
+                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 1 ? 'checked' : '').' > '.dr_lang('异步').'（Beta）</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 0 ? 'checked' : '').' > '.dr_lang('同步').'</label>
                         </div>
 						<span class="help-block">同步模式是在编辑内容时一次性下载完图片，图片多的时候容易卡死；<br>异步模式是在编辑内容时不会马上下载图片，他会进入任务队列中进行延迟下载</span>
