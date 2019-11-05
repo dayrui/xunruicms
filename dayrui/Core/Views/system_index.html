@@ -159,11 +159,25 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('百度地图Api（AK）')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('百度地图Api-AK')}</label>
                             <div class="col-md-5">
                                 <label><input class="form-control input-large" type="text" name="data[SYS_BDMAP_API]" value="{$data['SYS_BDMAP_API']}"  ></label>
                                 <label><a class="btn btn-sm blue" href="javascript:dr_help(584);"> {dr_lang('立即申请')} </a></label>
                                 <span class="help-block">{dr_lang('用于百度地图调用')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('百度自然语言处理-AK')}</label>
+                            <div class="col-md-5">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_BDNLP_AK]" value="{$data['SYS_BDNLP_AK']}"  ></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('百度自然语言处理-SK')}</label>
+                            <div class="col-md-5">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_BDNLP_SK]" value="{$data['SYS_BDNLP_SK']}"  ></label>
+                                <label><a class="btn btn-sm blue" href="javascript:dr_help(810);"> {dr_lang('立即申请')} </a></label>
+                                <span class="help-block">{dr_lang('百度自然语言处理相关接口，例如关键词获取等')}</span>
                             </div>
                         </div>
 

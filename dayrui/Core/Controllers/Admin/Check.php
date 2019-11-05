@@ -75,6 +75,8 @@ class Check extends \Phpcmf\Common
                     $this->_json(0, 'PHP不支持mbstring扩展，必须开启');
                 } elseif (!function_exists('curl_init')) {
                      $this->halt('PHP不支持CURL扩展，必须开启', 0);
+                } elseif (!function_exists('mb_convert_encoding')) {
+                     $this->halt('PHP的mb函数不支持，无法使用百度关键词接口', 0);
                 } elseif (!function_exists('imagecreatetruecolor')) {
                      $this->halt('PHP的GD库版本太低，无法支持验证码图片', 0);
 				} elseif (!function_exists('ini_get')) {

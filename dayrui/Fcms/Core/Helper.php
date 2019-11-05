@@ -485,35 +485,38 @@ function dr_get_keywords($kw, $siteid = SITE_ID) {
         return '';
     }
 
-    $rt = '';
+    $rt = [];
 
     //tag数据
     $tags = \Phpcmf\Service::L('cache')->get('tag-'.$siteid);
     if ($tags) {
         foreach ($tags as $t) {
-            strpos($kw, $t['name']) !== false && $rt.= ','.$t['tags']; // 找到了
-        }
-    }
-
-    if (!$rt) {
-        $info = @file_get_contents('http://zhannei.baidu.com/api/customsearch/keywords?title='.rawurlencode($kw));
-        $info=rawurldecode($info);
-        if ($info) {
-            $kws = [];
-            $comtxts = json_decode($info, true);
-            $keyword_list = $comtxts['result']['res']['keyword_list'];
-            if ($keyword_list) {
-                foreach ($keyword_list as $v) {
-                    $kw = trim($v);
-                    (strlen($kw) > 5) && $kws[] = $kw;
-                }
-                $kws && $rt = @implode(',', $kws);
+            if (strpos($kw, $t['name']) !== false) {
+                $rt[] = $t['tags']; // 找到了
             }
-
         }
     }
 
-    return $rt;
+    if (!$rt && function_exists('mb_convert_encoding')) {
+
+        $data = [
+            'title' => $kw,
+            'content' => $kw,
+        ];
+
+        $data = mb_convert_encoding(json_encode($data), 'GBK', 'UTF8');
+
+        $baidu = \Phpcmf\ThirdParty\BaiduApi::get_data('https://aip.baidubce.com/rpc/2.0/nlp/v1/keyword', $data, 1);
+        if (!$baidu['code']) {
+            CI_DEBUG && log_message('error', $baidu['msg']);
+        } elseif ($baidu && $baidu['data']['items']) {
+            foreach ($baidu['data']['items'] as $t) {
+                $rt[] = $t['tag']; // 找到了
+            }
+        }
+    }
+
+    return @implode(',', $rt);;
 }
 
 // 会员头像路径和url
