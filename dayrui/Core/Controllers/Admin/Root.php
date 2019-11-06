@@ -21,6 +21,7 @@ class Root extends \Phpcmf\Table
                     '添加' => [\Phpcmf\Service::L('Router')->class.'/add', 'fa fa-plus'],
                     '修改' => ['hide:'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
                     '登录记录' => ['hide:root/login_index', 'fa fa-calendar'],
+                    'help' => [813],
                 ]
             ),
         ]);

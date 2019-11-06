@@ -17,7 +17,9 @@ class Module extends \Phpcmf\Common
         $this->_module_init();
 
         // 共享模块时禁止访问首页
-        IS_SHARE && exit($this->goto_404_page(dr_lang('共享模块没有首页功能')));
+        if (IS_SHARE) {
+            exit($this->goto_404_page(dr_lang('共享模块没有首页功能')));
+        }
 
         if ($this->module['setting']['search']['indexsync']) {
             // 集成搜索
@@ -312,6 +314,15 @@ class Module extends \Phpcmf\Common
         $cat = $catid && $this->module['category'][$catid] ? $this->module['category'][$catid] : [];
         $top = $catid && $cat['topid'] ? $this->module['category'][$cat['topid']] : $cat;
 
+        // 分页地址
+        $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
+
+        // 识别自定义地址，301定向
+        if (strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
+            $get['page'] > 1 && $data['params']['page'] = $get['page'];
+            dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
+        }
+
         \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
         \Phpcmf\Service::V()->assign(array(
             'cat' => $cat,
@@ -323,7 +334,7 @@ class Module extends \Phpcmf\Common
             'params' => $data['params'],
             'keyword' => $data['keyword'],
             'related' => $related,
-            'urlrule' => \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}'),
+            'urlrule' => $urlrule,
             'sototal' => $sototal,
             'searchid' => $data['id'],
             'search_id' => $data['id'],
@@ -782,7 +793,9 @@ class Module extends \Phpcmf\Common
     protected function _Show_Html_File() {
 
         // 判断权限
-        !dr_html_auth() && $this->_json(0, '权限验证超时，请重新执行生成');
+        if (!dr_html_auth()) {
+            $this->_json(0, '权限验证超时，请重新执行生成');
+        }
 
         // 初始化模块
         $this->_module_init();
@@ -855,7 +868,9 @@ class Module extends \Phpcmf\Common
     protected function _Show_Html() {
 
         // 判断权限
-        !dr_html_auth() && $this->_json(0, '权限验证超时，请重新执行生成');
+        if (!dr_html_auth()) {
+            $this->_json(0, '权限验证超时，请重新执行生成');
+        }
 
         $page = max(1, intval($_GET['pp']));
         $name = 'show-'.APP_DIR.'-html-file';

@@ -77,8 +77,6 @@ class Member extends \Phpcmf\Table
             'table' => 'member',
             'field' => $this->member_cache['field'],
             'order_by' => 'id desc',
-            // 不是超级管理员,排除超管账号
-            'where_list' => !in_array(1, $this->admin['roleid']) ? '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)' : '',
         ]);
         $this->group = $this->member_cache['group'];
         \Phpcmf\Service::V()->assign([
@@ -111,6 +109,11 @@ class Member extends \Phpcmf\Table
         if ($groupid) {
             $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$groupid.')';
             $p['groupid'] = $groupid;
+        }
+
+        // 不是超级管理员,排除超管账号
+        if (!in_array(1, $this->admin['roleid'])) {
+            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)';
         }
         
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
