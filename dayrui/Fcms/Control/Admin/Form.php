@@ -160,7 +160,8 @@ class Form extends \Phpcmf\Table
 
         // 后台添加时默认通过
         if (!$id) {
-            !$this->is_verify && $data[1]['status'] = 1;
+            // !$this->is_verify &&
+            $data[1]['status'] = 1;
             $data[1]['tableid'] = 0;
         }
 

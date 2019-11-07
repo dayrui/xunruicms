@@ -238,8 +238,13 @@ class Mform extends \Phpcmf\Table
         $data[0]['uid'] = (int)$data[1]['uid'];
         $data[1]['cid'] = $data[0]['cid'] =  $this->cid;
         $data[1]['catid'] = $data[0]['catid'] = (int)$this->index['catid'];
-        $data[1]['status'] = 1;
-        !$id && $data[1]['tableid'] = 0;
+
+        // 后台添加时默认通过
+        if (!$id) {
+            // !$this->is_verify &&
+            $data[1]['status'] = 1;
+            $data[1]['tableid'] = 0;
+        }
 
         return $data;
     }
