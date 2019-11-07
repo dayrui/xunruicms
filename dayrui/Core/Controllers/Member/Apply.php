@@ -16,8 +16,6 @@ class Apply extends \Phpcmf\Common
         $gid = intval(\Phpcmf\Service::L('input')->get('gid'));
         if ($this->member['groupid'][$gid]) {
             exit($this->_msg(0, dr_lang('无需重复申请')));
-        } elseif (!$this->member_cache['config']['groups'] && dr_count($this->member['groupid']) > 0) {
-            exit($this->_msg(0, dr_lang('不能申请其他用户组')));
         }
 
         $group = $this->member_cache['group'][$gid];
@@ -98,19 +96,27 @@ class Apply extends \Phpcmf\Common
                             // 金币
                             $price = (int)$group['level'][$lid]['value'];
                             // 金币不足
-                            $this->member['score'] - $price < 0 && $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
+                            if ($this->member['score'] - $price < 0) {
+                                $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
+                            }
                             // 扣分
                             $rt = \Phpcmf\Service::M('member')->add_score($this->uid, -$price, dr_lang('申请用户组（%s）: %s', $group['name'], $group['level'][$lid]['name']));
-                            !$rt['code'] && $this->_json(0, $rt['msg']);
+                            if (!$rt['code']) {
+                                $this->_json(0, $rt['msg']);
+                            }
                             // 提醒通知
                             \Phpcmf\Service::M('member')->notice($this->uid, 2, dr_lang('申请用户组（%s）: %s', $group['name'], $group['level'][$lid]['name']));
                         } else {
                             // rmb
                             $price = (int)$group['level'][$lid]['value'];
-                            $this->member['money'] - $price < 0 && $this->_json(0, dr_lang('账户余额不足'));
+                            if ($this->member['money'] - $price < 0) {
+                                $this->_json(0, dr_lang('账户余额不足'));
+                            }
                             // 扣钱
                             $rt = \Phpcmf\Service::M('Pay')->add_money($this->uid, -$price);
-                            !$rt['code'] && $this->_json(0, $rt['msg']);
+                            if (!$rt['code']) {
+                                $this->_json(0, $rt['msg']);
+                            }
                             // 增加到交易流水
                             $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                                 'uid' => $this->member['id'],
@@ -141,19 +147,27 @@ class Apply extends \Phpcmf\Common
                         // 金币
                         $price = (int)$group['price'];
                         // 金币不足
-                        $this->member['score'] - $price < 0 && $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
+                        if ($this->member['score'] - $price < 0 ) {
+                            $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
+                        }
                         // 扣分
                         $rt = \Phpcmf\Service::M('member')->add_score($this->uid, -$price, dr_lang('申请用户组（%s）', $group['name']));
-                        !$rt['code'] && $this->_json(0, $rt['msg']);
+                        if (!$rt['code']) {
+                            $this->_json(0, $rt['msg']);
+                        }
                         // 提醒通知
                         \Phpcmf\Service::M('member')->notice($this->uid, 2, dr_lang('申请用户组（%s）', $group['name']));
                     } else {
                         // rmb
                         $price = (int)$group['price'];
-                        $this->member['money'] - $price < 0 && $this->_json(0, dr_lang('账户余额不足'));
+                        if ($this->member['money'] - $price < 0) {
+                            $this->_json(0, dr_lang('账户余额不足'));
+                        }
                         // 扣钱
                         $rt = \Phpcmf\Service::M('Pay')->add_money($this->uid, -$price);
-                        !$rt['code'] && $this->_json(0, $rt['msg']);
+                        if (!$rt['code']) {
+                            $this->_json(0, $rt['msg']);
+                        }
                         // 增加到交易流水
                         $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                             'uid' => $this->member['id'],
@@ -192,7 +206,9 @@ class Apply extends \Phpcmf\Common
                 } else {
                     $rt = \Phpcmf\Service::M()->table('member_group_verify')->insert($my_verify);
                 }
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
                 // 提醒
                 \Phpcmf\Service::M('member')->admin_notice(0, 'member', $this->member, dr_lang('用户组申请'), 'member_apply/edit:id/'.$rt['code']);
                 // 审核

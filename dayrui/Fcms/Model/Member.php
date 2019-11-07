@@ -480,6 +480,7 @@ class Member extends \Phpcmf\Model
         if (!$rt['code']) {
             return;
         }
+
         $data['id'] = $rt['code'];
 
         // 挂钩点 用户组变更之后
@@ -494,6 +495,16 @@ class Member extends \Phpcmf\Model
         if (dr_is_app('weixin')) {
             \Phpcmf\Service::C()->init_file('weixin');
             \Phpcmf\Service::M('user', 'weixin')->add_member_group($uid, $gid);
+        }
+
+        if (!\Phpcmf\Service::C()->member_cache['config']['groups']) {
+            // 没开启多个组时，关闭之前的用户组
+            $data2 =  $this->db->table('member_group_index')->where('uid', $uid)->where('gid<>' . $gid)->get()->getResultArray();
+            if ($data2) {
+                foreach ($data2 as $t) {
+                    $this->delete_group($uid, $t['gid'], 1);
+                }
+            }
         }
     }
     
