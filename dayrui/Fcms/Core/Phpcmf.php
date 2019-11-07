@@ -496,7 +496,6 @@ abstract class Common extends \CodeIgniter\Controller
             } else {
                 $this->_msg(0, dr_lang('模块【%s】不存在', $dirname));
             }
-
             return;
         }
 
@@ -515,16 +514,16 @@ abstract class Common extends \CodeIgniter\Controller
         define('MOD_DIR', $dirname);
         define('IS_SHARE', $this->module['share']);
         define('IS_COMMENT', $this->module['comment']);
-        define('MODULE_URL', IS_SHARE ? '/' : $this->module['url']); // 共享模块没有模块url
+        define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
         define('MODULE_NAME', $this->module['name']);
 
         $this->content_model->is_hcategory = $this->is_hcategory = isset($this->module['config']['hcategory']) && $this->module['config']['hcategory'];
 
         // 设置模板到模块下
-        !IS_SHARE && \Phpcmf\Service::V()->module(MOD_DIR);
+        !$this->module['url'] && \Phpcmf\Service::V()->module($dirname);
 
         // 初始化加载
-        $this->init_file(MOD_DIR);
+        $this->init_file($dirname);
     }
 
     /**

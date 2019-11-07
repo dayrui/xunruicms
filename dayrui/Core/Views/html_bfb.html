@@ -41,9 +41,9 @@
                     $('#dr_check_html').html('<font color="red">'+json.msg+'</font>');
                 } else {
                     $('#dr_check_html').html("");
-                    $('#dr_check_result').html($('#dr_check_ing').html());
+                    //$('#dr_check_result').html($('#dr_check_ing').html());
                     $('#dr_check_div').show();
-                    $('#dr_check_result').show();
+                    //$('#dr_check_result').show();
                     $('#dr_check_button').html('{dr_lang("正在初始化")}');
                     $('#dr_check_button').attr('disabled', true);
                     dr_ajax2ajax(1);
@@ -64,17 +64,17 @@
                 $('#dr_check_html').append(json.msg);
                 document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
 
-                $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
+                //$('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
 
                 if (json.code == 0) {
                     $('#dr_check_button').attr('disabled', false);
                     $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
                 } else {
-                    if (json.code == 100) {
+                    if (json.code == -1) {
                         $('#dr_check_button').attr('disabled', false);
                         $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
                     } else {
-                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> '+json.code+'%');
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 正在生成第'+json.code+'页 / 共'+json.data.pcount+'页');
                         dr_ajax2ajax(json.code);
                     }
                 }

@@ -623,7 +623,7 @@ class View {
             'action' => '', // 动作标识
             'return' => '', // 返回变量
             'sbpage' => '', // 不按默认分页
-            'module' => MOD_DIR, // 模块名称
+            'module' => '', // 模块名称
             'urlrule' => '', // 自定义分页规则
             'pagesize' => '', // 自定义分页数量
             'pagefile' => '', // 自定义分页配置文件
@@ -694,7 +694,7 @@ class View {
         // 默认站点参数
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
         // 默认模块参数
-        $system['module'] = $dirname = $system['module'] ? $system['module'] : MOD_DIR;
+        $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
 
         // action
         switch ($system['action']) {

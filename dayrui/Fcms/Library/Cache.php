@@ -172,7 +172,7 @@ class Cache {
     // 删除缓存
     public function clear($name) {
 
-        $this->init()->delete('site-'.SITE_ID.'-'.$name);
+        $this->init()->delete('cache-'.SITE_ID.'-'.$name);
         $this->init()->delete(md5('cache-'.SITE_ID.'-'.$name));
 
         // 重置Zend OPcache

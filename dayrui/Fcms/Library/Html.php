@@ -20,13 +20,15 @@ class Html
     public function get_category_data($app, $cat) {
 
         // 获取生成栏目
-        !$cat && \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
+        if (!$cat) {
+            \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
+        }
 
-        $data = [];
+        $list = [];
         foreach ($cat as $t) {
             if ($t['tid'] == 0) {
                 // 单网页
-                $data[] = [
+                $list[$t['mid']][] = [
                     'id' => $t['id'],
                     'mid' => $t['mid'],
                     'url' => $t['url'],
@@ -38,7 +40,7 @@ class Html
                 // 模块
                 if ($t['child'] && $t['setting']['template']['list'] != $t['setting']['template']['category']) {
                     // 判断是封面页面
-                    $data[] = [
+                    $list[$t['mid']][] = [
                         'id' => $t['id'],
                         'url' => $t['url'],
                         'mid' => $t['mid'],
@@ -51,7 +53,7 @@ class Html
                     $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
                     $t['child'] ? $db->whereIn('catid', @implode(',', $t['childids'])) : $db->where('catid', (int)$t['id']);
                     $total = $db->countAllResults(); // 统计栏目的数据量
-                    $data[] = [
+                    $list[$t['mid']][] = [
                         'id' => $t['id'],
                         'mid' => $t['mid'],
                         'url' => $t['url'],
@@ -70,7 +72,7 @@ class Html
                         $count = ceil($total/$pagesize); // 计算总页数
                         if ($count > 1) {
                             for ($i = 1; $i <= $count; $i++) {
-                                $data[] = [
+                                $list[$t['mid']][] = [
                                     'id' => $t['id'],
                                     'mid' => $t['mid'],
                                     'url' => $t['url'],
@@ -85,12 +87,29 @@ class Html
             }
         }
 
-        $data = dr_save_bfb_data($data);
-        !dr_count($data) && \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
+        if (!dr_count($list)) {
+            \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
+        }
 
-        $name = 'category-'.($app ? $app : '').'-html-file';
-        \Phpcmf\Service::L('cache')->init()->save($name, $data, 3600);
-        \Phpcmf\Service::C()->_json(1, $name);
+        $name = 'category-'.$app.'-html-file';
+        $psize = 20; // 每页生成多少条
+        $ct = 0;
+
+        $cache = [];
+        foreach ($list as $data) {
+            $ct+= dr_count($data);
+            $arr = array_chunk($data, $psize);
+            $cache = dr_array2array($cache, $arr);
+        }
+        foreach ($cache as $i => $t) {
+            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+        }
+
+        $count = dr_count($cache);
+
+        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+
+        \Phpcmf\Service::C()->_json(1, '共'.$ct.'个，分'.$count.'页');
     }
 
     // 内容的数量统计
@@ -151,11 +170,22 @@ class Html
             $data = $db->get()->getResultArray(); // 获取需要生成的内容索引
         }
 
-        $data = dr_save_bfb_data($data);
-        !dr_count($data) && \Phpcmf\Service::C()->_json(0, '没有可用生成的内容数据');
+        if (!dr_count($data)) {
+            \Phpcmf\Service::C()->_json(0, '没有可用生成的内容数据');
+        }
 
-        \Phpcmf\Service::L('cache')->init()->save('show-'.$app.'-html-file', $data, 3600);
-        \Phpcmf\Service::C()->_json(1, 'ok');
+        $name = 'show-'.$app.'-html-file';
+        $psize = 20; // 每页生成多少条
+
+        $arr = array_chunk($data, $psize);
+        $count = dr_count($arr);
+        foreach ($arr as $i => $t) {
+            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+        }
+
+        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+
+        \Phpcmf\Service::C()->_json(1, '共'.dr_count($data).'条，分'.$count.'页');
     }
 
     // 网站文件生成地址

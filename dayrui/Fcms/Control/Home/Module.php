@@ -17,7 +17,7 @@ class Module extends \Phpcmf\Common
         $this->_module_init();
 
         // 共享模块时禁止访问首页
-        if (IS_SHARE) {
+        if ($this->module['share']) {
             exit($this->goto_404_page(dr_lang('共享模块没有首页功能')));
         }
 
@@ -207,7 +207,7 @@ class Module extends \Phpcmf\Common
         }
 
         // 无权限访问栏目
-        if ((IS_SHARE) && $category['tid'] == 0) {
+        if (($this->module['share']) && $category['tid'] == 0) {
             // 识别栏目单网页
             if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID]['share']['category'][$catid]['show'])) {
                 $this->_msg(0, dr_lang('您的用户组无权限访问栏目'));
@@ -225,7 +225,7 @@ class Module extends \Phpcmf\Common
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
-            !IS_SHARE ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
+            !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
             $catid
         );
 
@@ -246,7 +246,7 @@ class Module extends \Phpcmf\Common
         ));
 
         // 识别栏目单网页模板
-        if ((IS_SHARE || (isset($this->module['config']['scategory']) && $this->module['config']['scategory'])) && $category['tid'] == 0) {
+        if (($this->module['share'] || (isset($this->module['config']['scategory']) && $this->module['config']['scategory'])) && $category['tid'] == 0) {
             \Phpcmf\Service::V()->assign($category);
             \Phpcmf\Service::V()->assign(array(
                 'pageid' => $catid,
@@ -295,7 +295,7 @@ class Module extends \Phpcmf\Common
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
-            !IS_SHARE ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
+            !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
             $catid
         );
 
@@ -468,7 +468,7 @@ class Module extends \Phpcmf\Common
             }
             // 获取同级栏目及父级栏目
             list($parent, $related) = dr_related_cat(
-                !IS_SHARE ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
+                !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
                 $data['catid']
             );
         }
@@ -591,7 +591,7 @@ class Module extends \Phpcmf\Common
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
-            !IS_SHARE ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
+            !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
             $data['catid']
         );
 
@@ -628,7 +628,7 @@ class Module extends \Phpcmf\Common
 
         $cat = $this->module['category'][$catid];
         if (!$cat) {
-            return dr_return_data(0, '栏目#'.$catid.'不存在');
+            return dr_return_data(0, '模块['.$this->module['name'].']栏目#'.$catid.'不存在');
         } elseif ($this->module['setting']['search']['catsync'] && $cat['tid'] == 1) {
             return dr_return_data(0, '此模块开启了搜索集成栏目页，因此栏目无法生成静态');
         } elseif ($this->module['setting']['html']) {
@@ -702,7 +702,7 @@ class Module extends \Phpcmf\Common
         // 开启ob函数
         ob_start();
         \Phpcmf\Service::V()->init('pc');
-        \Phpcmf\Service::V()->module(IS_SHARE ? 'share' : $this->module['dirname']);
+        \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
         $data = $this->_Show($id, '', $page);
         $html = ob_get_clean();
 
@@ -741,7 +741,7 @@ class Module extends \Phpcmf\Common
         if (SITE_IS_MOBILE && SITE_IS_MOBILE_HTML) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');
-            \Phpcmf\Service::V()->module(IS_SHARE ? 'share' : $this->module['dirname']);
+            \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
             $data = $this->_Show($id, '', $page);
             $html = ob_get_clean();
             $hfile = dr_to_html_file($file, $root.'mobile/');
@@ -873,57 +873,63 @@ class Module extends \Phpcmf\Common
         }
 
         $page = max(1, intval($_GET['pp']));
-        $name = 'show-'.APP_DIR.'-html-file';
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
-        !$cache && $this->_json(0, '临时缓存数据缓存不存在：'.$name);
-
-        $data = $cache[$page];
-        if ($data) {
-            $html = '';
-            foreach ($data as $t) {
-
-                // 初始化模块
-                if (!APP_DIR) {
-                    if (!$t['is_module_dirname']) {
-                        $this->module = null;
-                    } else {
-                        $this->is_module_init = false;
-                        $this->_module_init($t['is_module_dirname']);
-                    }
-                } else {
-                    $this->_module_init(APP_DIR);
-                }
-
-                $class = '';
-                if (!$this->module) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
-                    $class = ' p_error';
-                } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
-                    $class = ' p_error';
-                } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                    $class = ' p_error';
-                } else {
-                    $rt = $this->_Create_Show_Html($t['id']);
-                    if ($rt['code']) {
-                        $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
-                    } else {
-                        $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
-                        $class = ' p_error';
-                    }
-
-                }
-
-                $html.= '<p class="'.$class.'"><label class="rleft">'.$t['title'].'</label><label class="rright">'.$ok.'</label></p>';
-
-            }
-            $this->_json($page + 1, $html);
+        $name2 = 'show-'.APP_DIR.'-html-file';
+        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        if (!$pcount) {
+            $this->_json(0, '临时缓存数据缓存不存在：'.$name2);
+        } elseif ($page > $pcount) {
+            // 完成
+            $this->_json(-1, '');
         }
 
-        // 完成
+        $name = 'show-'.APP_DIR.'-html-file-'.$page;
+        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        if (!$cache) {
+            $this->_json(0, '临时缓存数据缓存不存在：'.$name);
+        }
+
+        $html = '';
+        foreach ($cache as $t) {
+
+            // 初始化模块
+            if (!APP_DIR) {
+                if (!$t['is_module_dirname']) {
+                    $this->module = null;
+                } else {
+                    $this->is_module_init = false;
+                    $this->_module_init($t['is_module_dirname']);
+                }
+            } else {
+                $this->_module_init(APP_DIR);
+            }
+
+            $class = '';
+            if (!$this->module) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
+                $class = ' p_error';
+            } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
+                $class = ' p_error';
+            } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
+                $class = ' p_error';
+            } else {
+                $rt = $this->_Create_Show_Html($t['id']);
+                if ($rt['code']) {
+                    $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
+                } else {
+                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
+                    $class = ' p_error';
+                }
+            }
+
+            $html.= '<p class="'.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['title'].'</label><label class="rright">'.$ok.'</label></p>';
+
+        }
+
         \Phpcmf\Service::L('cache')->clear($name);
-        $this->_json(100, '');
+
+        $this->_json($page + 1, $html, ['pcount' => $pcount]);
     }
 
     // 生成内容静态选项
@@ -935,49 +941,61 @@ class Module extends \Phpcmf\Common
         }
 
         $page = max(1, intval($_GET['pp']));
-        $name = 'category-'.($this->module['share'] ? '' : APP_DIR).'-html-file';
+        $name2 = 'category-'.APP_DIR.'-html-file';
+        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        if (!$pcount) {
+            $this->_json(0, '临时缓存数据缓存不存在：'.$name2);
+        } elseif ($page > $pcount) {
+            // 完成
+            $this->_json(-1, '');
+        }
+
+        $name = 'category-'.APP_DIR.'-html-file-'.$page;
         $cache = \Phpcmf\Service::L('cache')->init()->get($name);
         if (!$cache) {
             $this->_json(0, '临时缓存数据缓存不存在：'.$name);
         }
 
-        $data = $cache[$page];
-        if ($data) {
-            $html = '';
-            foreach ($data as $t) {
-
-                // 初始化模块
-                !$this->module && $this->_module_init($t['mid'] ? $t['mid'] : 'share');
-
-                $class = '';
-                if (!$this->module) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
-                    $class = ' p_error';
-                } elseif (!$t['html']) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
-                    $class = ' p_error';
-                } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                    $class = ' p_error';
-                } else {
-                    $rt = $this->_Create_Category_Html($t['id'], $t['page']);
-                    if ($rt['code']) {
-                        $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
-                    } else {
-                        $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
-                        $class = ' p_error';
-                    }
-
-                }
-                $html.= '<p class="'.$class.'"><label class="rleft">'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
-
-            }
-            $this->_json($page + 1, $html);
+        if (APP_DIR) {
+            $this->_module_init(APP_DIR);
         }
 
-        // 完成
+        $html = '';
+        foreach ($cache as $t) {
+
+            if (!APP_DIR) {
+                // 初始化模块
+                $this->_module_init($t['mid'] ? $t['mid'] : 'share');
+            }
+
+            $class = '';
+            if (!$this->module) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
+                $class = ' p_error';
+            } elseif (!$t['html']) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
+                $class = ' p_error';
+            } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
+                $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
+                $class = ' p_error';
+            } else {
+                $rt = $this->_Create_Category_Html($t['id'], $t['page']);
+                if ($rt['code']) {
+                    $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
+                } else {
+                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
+                    $class = ' p_error';
+                }
+
+            }
+            $html.= '<p class="'.$class.'"><label class="rleft">'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
+
+        }
+
         \Phpcmf\Service::L('cache')->clear($name);
-        $this->_json(100, '');
+
+        $this->_json($page + 1, $html, ['pcount' => $pcount]);
+
     }
 
     // 前端模块回调处理类

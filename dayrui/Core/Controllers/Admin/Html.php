@@ -104,7 +104,9 @@ class Html extends \Phpcmf\Common
     // 内容
     public function show_index() {
 
-        $this->member_cache['auth_site'][SITE_ID]['home'] && $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
+            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        }
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = \Phpcmf\Service::L('input')->get('catids');
