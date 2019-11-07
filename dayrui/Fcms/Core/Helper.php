@@ -41,6 +41,7 @@ function dr_get_ftable($id, $value, $class = '') {
     if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
         $str .= ' <th> ' . $field['setting']['option']['first_cname'] . ' </th>';
     }
+
     if ($field['setting']['option']['field']) {
         foreach ($field['setting']['option']['field'] as $t) {
             if ($t['type']) {
@@ -49,6 +50,7 @@ function dr_get_ftable($id, $value, $class = '') {
             }
         }
     }
+
     $str.= ' </tr></thead>';
     $str.= ' <tbody>';
 
@@ -59,6 +61,7 @@ function dr_get_ftable($id, $value, $class = '') {
             $hname = $field['setting']['option']['hang'][$i]['name'] ? $field['setting']['option']['hang'][$i]['name'] : '未命名';
             $str .= ' <td> ' . $hname . ' </td>';
         }
+
         if ($field['setting']['option']['field']) {
             foreach ($field['setting']['option']['field'] as $n => $t) {
                 if ($t['type']) {
@@ -66,6 +69,7 @@ function dr_get_ftable($id, $value, $class = '') {
                 }
             }
         }
+
         $str.= ' </tr>';
     }
 
@@ -114,7 +118,7 @@ function dr_get_double_search($param, $value) {
 // 获取内容中的缩略图
 function dr_get_content_img($value, $num = 0) {
 
-    $rt = array();
+    $rt = [];
     $value = preg_replace('/\.(gif|jpg|jpeg|png)@(.*)(\'|")/iU', '.$1$3', $value);
     if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", $value, $imgs)) {
         $imgs[3] = array_unique($imgs[3]);
@@ -178,7 +182,7 @@ function dr_sec2time($times){
  */
 function dr_get_files($value) {
 
-    $data = array();
+    $data = [];
     $value = dr_string2array($value);
     if (!$value) {
         return $data;
@@ -187,11 +191,11 @@ function dr_get_files($value) {
     }
 
     foreach ($value['file'] as $i => $file) {
-        $data[] = array(
+        $data[] = [
             'file' => $file, // 对应文件或附件id
             'title' => $value['title'][$i], // 对应标题
             'description' => $value['description'][$i], // 对应描述
-        );
+        ];
     }
 
     return $data;
@@ -224,7 +228,7 @@ function dr_content_link($tags, $content, $num = 0) {
     foreach ($tags as $name => $url) {
         if ($name && $url) {
             $url = '<a href="'.$url.'" target="_blank">'.$name.'</a>';
-            $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(array("'", '-'), array("\'", '\-'), preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
+            $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
                 $url,
                 $content,
                 $num ? $num : -1
@@ -247,7 +251,7 @@ function dr_neilian($content, $blank = 1, $num = 1) {
             if ($data) {
                 foreach ($data as $name) {
                     $url = '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$name.'</a>';
-                    $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(array("'", '-'), array("\'", '\-'), preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
+                    $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
                         $url,
                         $content,
                         $num ? $num : -1
@@ -402,7 +406,7 @@ function dr_cat_value(...$get) {
     }
 
     $i = 0;
-    $param = array();
+    $param = [];
     foreach ($get as $t) {
         if ($i == 0) {
             $param[] = $name;
@@ -412,7 +416,7 @@ function dr_cat_value(...$get) {
         $i = 1;
     }
 
-    return call_user_func_array(array(\Phpcmf\Service::C(), 'get_cache'), $param);
+    return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
 }
 
 
@@ -435,7 +439,7 @@ function dr_share_cat_value($id, $field='') {
     }
 
     $i = 0;
-    $param = array();
+    $param = [];
     foreach ($get as $t) {
         if ($i == 0) {
             $param[] = 'module-'.SITE_ID.'-share';
@@ -615,7 +619,7 @@ function dr_list_function($func, $value, $param = [], $data = []) {
 
     $obj = \Phpcmf\Service::L('Function_list');
     if (method_exists($obj, $func)) {
-        return call_user_func_array(array($obj, $func), ['value'=>$value, 'param' => $param, $data]);
+        return call_user_func_array([$obj, $func], ['value'=>$value, 'param' => $param, $data]);
     } elseif (function_exists($func)) {
         return call_user_func_array($func, ['value'=>$value, 'param' => $param, $data]);
     } else {
@@ -646,8 +650,9 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
         return '';
     }
 
-    $name = array();
+    $name = [];
     $array = explode(',', $cat[$catid]['pids']);
+    $array[] = $catid;
     foreach ($array as $id) {
         if ($id && $cat[$id]) {
             if ($url_call_func && function_exists($url_call_func)) {
@@ -655,17 +660,11 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
             } else {
                 $murl = $cat[$id]['url'];
             }
-            $name[] = $url ? ($html ? str_replace(array('[url]', '[name]'), array($murl, $cat[$id]['name']), $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
+            $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], [$murl, $cat[$id]['name']], $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
         }
     }
-    if ($url_call_func && function_exists($url_call_func)) {
-        $murl = $url_call_func($cat[$catid]);
-    } else {
-        $murl = $cat[$catid]['url'];
-    }
-    $name[] = $url ? ($html ? str_replace(array('[url]', '[name]'), array($murl, $cat[$catid]['name']), $html): "<a href=\"{$murl}\">{$cat[$catid]['name']}</a>") : $cat[$catid]['name'];
 
-    return implode($symbol, $name);
+    return implode($symbol, array_unique($name));
 }
 
 /**
@@ -697,16 +696,16 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
     }
 
     $name = [];
-    $pids = @explode(',', $data['pids']);
+    $array = @explode(',', $data['pids']);
+    $array[] = $data['ii'];
 
-    foreach ($pids as $pid) {
-        $pid && $pid != $data['ii'] && ($name[] = $url ? ($html ? str_replace(array('[url]', '[name]'), array(str_replace(['[linkage]', '{linkage}'], $cids[$pid], $url), $link[$cids[$pid]]['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $cids[$pid], $url)."\">{$link[$cids[$pid]]['name']}</a>") : $link[$cids[$pid]]['name']);
+    foreach ($array as $ii) {
+        if ($ii) {
+            $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url), $link[$cids[$ii]]['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url)."\">{$link[$cids[$ii]]['name']}</a>") : $link[$cids[$ii]]['name'];
+        }
     }
 
-    $name[] = $url ? ($html ? str_replace(array('[url]', '[name]'), array(str_replace(['[linkage]', '{linkage}'], $id, $url), $data['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $id, $url)."\">{$data['name']}</a>") : $data['name'];
-
-
-    return implode($symbol, $name);
+    return implode($symbol, array_unique($name));
 }
 
 /**
@@ -778,17 +777,16 @@ function dr_page_catpos($id, $symbol = ' > ', $html = '') {
 
     $name = [];
     $array = explode(',', $page[$id]['pids']);
+    $array[] = $id;
+
     foreach ($array as $i) {
         if ($i && $page[$i]) {
             $murl = $page[$i]['url'];
-            $name[] = $html ? str_replace(array('[url]', '[name]'), array($murl, $page[$i]['name']), $html) : "<a href=\"{$murl}\">{$page[$i]['name']}</a>";
+            $name[] = $html ? str_replace(['[url]', '[name]'], [$murl, $page[$i]['name']], $html) : "<a href=\"{$murl}\">{$page[$i]['name']}</a>";
         }
     }
 
-    $murl = $page[$id]['url'];
-    $name[] = $html ? str_replace(array('[url]', '[name]'), array($murl, $page[$id]['name']), $html) : "<a href=\"{$murl}\">{$page[$id]['name']}</a>";
-
-    return implode($symbol, $name);
+    return implode($symbol, array_unique($name));
 }
 
 /**
@@ -832,6 +830,7 @@ function dr_donation($id, $title = '', $dir = null, $remove_div  = 1) {
 function dr_is_favorite($dir, $id, $uid = 0) {
 
     !$uid && $uid = \Phpcmf\Service::C()->uid;
+
     if (!$uid) {
         return 0;
     } elseif (!$dir) {
@@ -909,8 +908,8 @@ function dr_thumb_path() {
 // 缩略图
 function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
 
-
     if (is_numeric($img)) {
+
         list($cache_path, $cache_url) = dr_thumb_path();
 
         // 图片缩略图文件
@@ -918,6 +917,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
         if (is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }
+
         return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode);
     }
 
@@ -1880,7 +1880,7 @@ function dr_form_search_hidden($p = []) {
  */
 function dr_base64_encode($string) {
     $data = base64_encode($string);
-    $data = str_replace(array('+', '/', '='), array('-', '_', ''), $data);
+    $data = str_replace(['+', '/', '='], ['-', '_', ''], $data);
     return $data;
 }
 
@@ -1891,7 +1891,7 @@ function dr_base64_encode($string) {
  * @return	string
  */
 function dr_base64_decode($string) {
-    $data = str_replace(array('-', '_'), array('+', '/'), $string);
+    $data = str_replace(['-', '_'], ['+', '/'], $string);
     $mod4 = strlen($data) % 4;
     $mod4 && $data.= substr('====', $mod4);
     return base64_decode($data);
