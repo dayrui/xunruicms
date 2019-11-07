@@ -15,6 +15,7 @@
 class Html
 {
     private $webpath;
+    private $psize = 50; // 每页生成多少条
 
     // 栏目的数量统计
     public function get_category_data($app, $cat) {
@@ -92,13 +93,12 @@ class Html
         }
 
         $name = 'category-'.$app.'-html-file';
-        $psize = 20; // 每页生成多少条
         $ct = 0;
 
         $cache = [];
         foreach ($list as $data) {
             $ct+= dr_count($data);
-            $arr = array_chunk($data, $psize);
+            $arr = array_chunk($data, $this->psize);
             $cache = dr_array2array($cache, $arr);
         }
         foreach ($cache as $i => $t) {
@@ -175,9 +175,8 @@ class Html
         }
 
         $name = 'show-'.$app.'-html-file';
-        $psize = 20; // 每页生成多少条
 
-        $arr = array_chunk($data, $psize);
+        $arr = array_chunk($data, $this->psize);
         $count = dr_count($arr);
         foreach ($arr as $i => $t) {
             \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
