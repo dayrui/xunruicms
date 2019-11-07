@@ -144,17 +144,23 @@ class Form
                 // 验证字段对象的有效性
                 $obj = \Phpcmf\Service::L('Field')->get($field['fieldtype']);
                 if (!$obj) {
+                    unset($fields[$fid]);
                     continue; // 对象不存在
-                    //} else if (IS_MEMBER && !$field['ismember']) {
-                    //continue; // 前端字段筛选
-                } else if (IS_MEMBER && $field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']]) {
-                    if (defined('IS_MODULE_VERIFY')) {
-
-                    } else {
+                }
+                // 非后台时
+                if (!IS_ADMIN) {
+                    if (!$field['ismember']) {
+                        unset($fields[$fid]);
+                        continue; // 前端字段筛选
+                    } elseif ($field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']] && !defined('IS_MODULE_VERIFY')) {
                         unset($fields[$fid]);
                         continue; // 前端禁止修改时
+                    } elseif ($field['setting']['show_member'] && array_intersect(\Phpcmf\Service::C()->member['groupid'], $field['setting']['show_member'])) {
+                        unset($fields[$fid]);
+                        continue; // 非后台时 判断用户权限
                     }
                 }
+
                 // 验证字段
                 $name = $field['fieldname']; // 字段名称
                 $validate = $field['setting']['validate']; // 字段验证规则

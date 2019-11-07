@@ -56,7 +56,7 @@ class Ip
      */
     public function city($ip) {
         if ($ip == '127.0.0.1') {
-            return '本地';
+            return '';
         }
         $this->set($ip);
         if (preg_match('/省(.+)市/U', $this->address, $m)) {
@@ -70,6 +70,33 @@ class Ip
                 '新疆'
             ], '', $m[1]);
         } else {
+            list($name) = explode(' ', $this->address);
+            return $name;
+        }
+    }
+
+    /**
+     * IP地址解析省
+     */
+    public function province($ip) {
+        if ($ip == '127.0.0.1') {
+            return '';
+        }
+        $this->set($ip);
+        if (preg_match('/(.+)省/U', $this->address, $m)) {
+            return $m[1];
+        } else {
+            foreach ([
+                         '西藏',
+                         '内蒙古',
+                         '青海',
+                         '宁夏',
+                         '新疆'
+                     ] as $t) {
+                if (strpos($this->address, $t) !== false) {
+                    return $t;
+                }
+            }
             list($name) = explode(' ', $this->address);
             return $name;
         }
