@@ -602,6 +602,12 @@ class Model {
         $this->param['where'][] = strlen($value) ? [$name, $value] : $name;
         return $this;
     }
+
+    // 条件
+    public function like($name, $value = '') {
+        $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
+        return $this;
+    }
     
     // in条件
     public function where_in($name, $value) {

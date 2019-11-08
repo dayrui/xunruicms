@@ -35,7 +35,7 @@ class Mform extends \Phpcmf\Table
         // 获取父级内容
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         if ($this->cid) {
-            $this->index = $this->content_model->get_row( $this->cid);
+            $this->index = $this->content_model->get_data( $this->cid);
             if ($this->index) {
                 if ($this->index['uid'] != $this->uid) {
                     $this->_msg(0, dr_lang('模块表单【%s】父内容[%s]不是你创建', $this->form['name'], $this->cid));

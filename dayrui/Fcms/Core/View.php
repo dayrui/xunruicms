@@ -2153,15 +2153,28 @@ class View {
             if (in_array($t['name'], $field)) {
                 $where[$i]['use'] = 1;
                 $where[$i]['name'] = "`$prefix`.`{$t['name']}`";
-                if ($myfield && $myfield[$t['name']]['fieldtype'] == 'Linkage') {
-                    // 联动菜单
-                    $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);
-                    if ($data) {
-                        if ($data['child']) {
-                            $where[$i]['adj'] = 'IN';
-                            $where[$i]['value'] = $data['childids'];
-                        } else {
-                            $where[$i]['value'] = intval($data['ii']);
+                if ($myfield) {
+                    if ($myfield[$t['name']]['fieldtype'] == 'Linkages') {
+                        // 联动多选
+                        $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);
+                        if ($data) {
+                            $where[$i]['adj'] = 'JSON';
+                            if ($data['child']) {
+                                $where[$i]['value'] = str_replace(',', '|', $data['childids']);
+                            } else {
+                                $where[$i]['value'] = intval($data['ii']);
+                            }
+                        }
+                    } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
+                        // 联动菜单
+                        $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);
+                        if ($data) {
+                            if ($data['child']) {
+                                $where[$i]['adj'] = 'IN';
+                                $where[$i]['value'] = $data['childids'];
+                            } else {
+                                $where[$i]['value'] = intval($data['ii']);
+                            }
                         }
                     }
                 }

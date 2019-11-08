@@ -56,7 +56,7 @@ class Ip
      */
     public function city($ip) {
         if ($ip == '127.0.0.1') {
-            return '';
+            return '本地';
         }
         $this->set($ip);
         if (preg_match('/省(.+)市/U', $this->address, $m)) {
@@ -80,7 +80,7 @@ class Ip
      */
     public function province($ip) {
         if ($ip == '127.0.0.1') {
-            return '';
+            return '本地';
         }
         $this->set($ip);
         if (preg_match('/(.+)省/U', $this->address, $m)) {
