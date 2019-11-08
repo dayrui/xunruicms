@@ -68,11 +68,11 @@
 
                 if (json.code == 0) {
                     $('#dr_check_button').attr('disabled', false);
-                    $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
+                    $('#dr_check_button').html('<i class="fa fa-times-circle"></i> {dr_lang("重新开始")}');
                 } else {
                     if (json.code == -1) {
                         $('#dr_check_button').attr('disabled', false);
-                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> {dr_lang("重新开始")}');
+                        $('#dr_check_button').html('<i class="fa fa-check-circle"></i> {dr_lang("生成完毕")}');
                     } else {
                         $('#dr_check_button').html('<i class="fa fa-refresh"></i> 正在生成第'+json.code+'页 / 共'+json.data.pcount+'页');
                         dr_ajax2ajax(json.code);
