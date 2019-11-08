@@ -35,14 +35,15 @@ return [
           `displayorder` int(10) DEFAULT '0' COMMENT '排序值',
           PRIMARY KEY (`id`),
           KEY `uid` (`uid`),
-          KEY `catid` (`catid`,`updatetime`),
+          KEY `catid` (`catid`),
           KEY `link_id` (`link_id`),
           KEY `comments` (`comments`),
           KEY `avgsort` (`avgsort`),
           KEY `status` (`status`),
           KEY `updatetime` (`updatetime`),
           KEY `hits` (`hits`),
-          KEY `displayorder` (`displayorder`,`updatetime`)
+          KEY `category` (`catid`, `status`),
+          KEY `displayorder` (`displayorder`)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='内容主表';
         ",
 
