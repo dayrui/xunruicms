@@ -91,6 +91,9 @@ class Home extends \Phpcmf\Common
         ob_start();
 		$this->is_html = 1;
         \Phpcmf\Service::V()->init("pc");
+        \Phpcmf\Service::V()->assign([
+            'fix_html_now_url' => SITE_URL, // 修复静态下的当前url变量
+        ]);
 		$this->_index();
 		$html = ob_get_clean();
 		$pc = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html, LOCK_EX);
@@ -100,6 +103,9 @@ class Home extends \Phpcmf\Common
             ob_start();
             $this->is_html = 1;
             \Phpcmf\Service::V()->init("mobile");
+            \Phpcmf\Service::V()->assign([
+                'fix_html_now_url' => SITE_MURL, // 修复静态下的当前url变量
+            ]);
             $this->_index();
             $html = ob_get_clean();
             $mobile = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html, LOCK_EX);

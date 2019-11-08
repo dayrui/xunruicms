@@ -613,6 +613,9 @@ class Category extends \Phpcmf\Table
         if ($this->module['share']) {
             // 共享模块
             $row['setting'] = dr_string2array($row['setting']);
+            if (!$row['setting']['urlrule']) {
+                $this->_json(0, dr_lang('此栏目是动态地址，无法开启静态'));
+            }
             $html = (int)$row['setting']['html'];
             $v = $html ? 0 : 1;
             $name = $v ? '静态模式' : '动态模式';
@@ -633,6 +636,9 @@ class Category extends \Phpcmf\Table
             }
             $site = dr_string2array($module['site']);
             $site[SITE_ID]['html'] = $v;
+            if (!$site[SITE_ID]['urlrule']) {
+                $this->_json(0, dr_lang('此模块是动态地址，无法开启静态'));
+            }
             \Phpcmf\Service::M()->db->table('module')->where('id', $this->module['id'])->update([
                 'site' => dr_array2string($site)
             ]);
