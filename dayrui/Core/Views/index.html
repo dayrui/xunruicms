@@ -56,7 +56,7 @@
                                 {loop $ci->site_info $i $t}
                                 {if \Phpcmf\Service::M('auth')->_check_site($i)}
                                 <li>
-                                    <a href="javascript:;" onclick="dr_select_site('{$i}')" title="{$t.SITE_NAME}" {if SITE_ID == $i}class="on"{/if}>
+                                    <a href="javascript:;" onclick="dr_select_site('{$i}')" title="{$t.SITE_NAME}" {if SITE_ID == $i}style="color:red"{/if}>
                                     <span class="task">
                                             <span class="desc"> {dr_strcut($t.SITE_NAME, 30)} </span>
                                         </span>
