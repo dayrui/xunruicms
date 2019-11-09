@@ -123,11 +123,11 @@ class Security {
 	 */
 	public function xss_clean($str, $is_image = FALSE)
 	{
-	    if (!strlen($str)) {
-	        return '';
-        } elseif (is_numeric($str)) {
+		if (is_numeric($str)) {
 			return $str;
-		}
+		} elseif (!$str) {
+	        return '';
+        } 
 
 		// Is the string an array?
 		if (is_array($str))
