@@ -479,50 +479,6 @@ function dr_save_bfb_data($data) {
     return $cache;
 }
 
-
-/**
- * 提取关键字
- */
-function dr_get_keywords($kw, $siteid = SITE_ID) {
-
-    if (!$kw) {
-        return '';
-    }
-
-    $rt = [];
-
-    //tag数据
-    $tags = \Phpcmf\Service::L('cache')->get('tag-'.$siteid);
-    if ($tags) {
-        foreach ($tags as $t) {
-            if (strpos($kw, $t['name']) !== false) {
-                $rt[] = $t['tags']; // 找到了
-            }
-        }
-    }
-
-    if (!$rt && function_exists('mb_convert_encoding')) {
-
-        $data = [
-            'title' => $kw,
-            'content' => $kw,
-        ];
-
-        $data = mb_convert_encoding(json_encode($data), 'GBK', 'UTF8');
-
-        $baidu = \Phpcmf\ThirdParty\BaiduApi::get_data('https://aip.baidubce.com/rpc/2.0/nlp/v1/keyword', $data, 1);
-        if (!$baidu['code']) {
-            CI_DEBUG && log_message('error', $baidu['msg']);
-        } elseif ($baidu && $baidu['data']['items']) {
-            foreach ($baidu['data']['items'] as $t) {
-                $rt[] = $t['tag']; // 找到了
-            }
-        }
-    }
-
-    return @implode(',', $rt);;
-}
-
 // 会员头像路径和url
 function dr_avatar_path() {
 
@@ -3561,6 +3517,51 @@ if (!function_exists('is_php')) {
 }
 
 
+if (! function_exists('dr_get_keywords')) {
+    /**
+     * 提取关键字
+     */
+    function dr_get_keywords($kw, $siteid = SITE_ID)
+    {
+
+        if (!$kw) {
+            return '';
+        }
+
+        $rt = [];
+
+        //tag数据
+        $tags = \Phpcmf\Service::L('cache')->get('tag-' . $siteid);
+        if ($tags) {
+            foreach ($tags as $t) {
+                if (strpos($kw, $t['name']) !== false) {
+                    $rt[] = $t['tags']; // 找到了
+                }
+            }
+        }
+
+        if (!$rt && function_exists('mb_convert_encoding')) {
+
+            $data = [
+                'title' => $kw,
+                'content' => $kw,
+            ];
+
+            $data = mb_convert_encoding(json_encode($data), 'GBK', 'UTF8');
+
+            $baidu = \Phpcmf\ThirdParty\BaiduApi::get_data('https://aip.baidubce.com/rpc/2.0/nlp/v1/keyword', $data, 1);
+            if (!$baidu['code']) {
+                CI_DEBUG && log_message('error', $baidu['msg']);
+            } elseif ($baidu && $baidu['data']['items']) {
+                foreach ($baidu['data']['items'] as $t) {
+                    $rt[] = $t['tag']; // 找到了
+                }
+            }
+        }
+
+        return @implode(',', $rt);;
+    }
+}
 
 if (! function_exists('dr_redirect'))
 {
