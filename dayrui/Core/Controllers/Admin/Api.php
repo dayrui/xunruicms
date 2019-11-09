@@ -486,8 +486,11 @@ class Api extends \Phpcmf\Common
         } elseif (strpos($v, ' ') === 0) {
             $this->_json(0, dr_lang('不能用空格开头'));
         }
+		
         $path = dr_get_dir_path($v);
-        if (is_dir($path)) {
+		if (is_file($path.SELF)) {
+			$this->_json(0, dr_lang('目录不能是网站根目录'));
+		} elseif (is_dir($path)) {
             $this->_json(1, dr_lang('目录正常'));
         } else {
             $this->_json(0, dr_lang('目录[%s]不存在', $path));
