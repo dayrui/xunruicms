@@ -142,6 +142,13 @@ class Model {
                 dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
             }
         }
+
+        // in条件
+        if ($this->param['where_in']) {
+            foreach ($this->param['where_in'] as $v) {
+                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
+            }
+        }
         
         $rt = $builder->where($name, $value)->where($this->key.'<>', $id)->countAllResults();
 
@@ -160,6 +167,13 @@ class Model {
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
                 dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+            }
+        }
+
+        // in条件
+        if ($this->param['where_in']) {
+            foreach ($this->param['where_in'] as $v) {
+                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
             }
         }
         

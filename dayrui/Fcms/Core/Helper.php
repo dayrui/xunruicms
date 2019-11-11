@@ -2549,7 +2549,7 @@ function dr_safe_replace_path($path) {
  */
 function dr_strcut($string, $length = 100, $dot = '...') {
 
-    if (strlen($string) <= $length || !$length) {
+    if (!$string || strlen($string) <= $length || !$length) {
         return $string;
     }
 
