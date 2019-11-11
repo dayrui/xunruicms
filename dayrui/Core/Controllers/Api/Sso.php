@@ -25,14 +25,19 @@ class Sso extends \Phpcmf\Common
             case 'login': // 前台同步登录
 
                 $code = dr_authcode(\Phpcmf\Service::L('input')->get('code'), 'DECODE');
-                !$code && $this->_jsonp(0, '解密失败');
+                if (!$code) {
+                    $this->_jsonp(0, '解密失败');
+                }
 
                 list($uid, $salt) = explode('-', $code);
-                (!$uid || !$salt) && $this->_jsonp(0, '格式错误');
+                if (!$uid || !$salt) {
+                    $this->_jsonp(0, '格式错误');
+                }
 
                 $member = \Phpcmf\Service::M()->db->table('member')->select('password,salt')->where('id', $uid)->get()->getRowArray();
-                !$member && $this->_jsonp(0, '账号不存在');
-                if ($salt != $member['salt']) {
+                if (!$member) {
+                    $this->_jsonp(0, '账号不存在');
+                } elseif ($salt != $member['salt']) {
                     $this->_jsonp(0, '账号验证失败');
                 }
 
@@ -46,15 +51,18 @@ class Sso extends \Phpcmf\Common
             case 'alogin': // 后台登录授权
 
                 $code = dr_authcode(\Phpcmf\Service::L('input')->get('code'), 'DECODE');
-                !$code && $this->_jsonp(0, '解密失败');
+                if (!$code) {
+                    $this->_jsonp(0, '解密失败');
+                }
 
                 list($uid, $password) = explode('-', $code);
 
                 $admin = \Phpcmf\Service::L('cache')->get_data('admin_login_member');
-                !$admin && $this->_jsonp(0, '缓存失败');
-
-                $mycode = md5($admin['id'].$admin['password']);
-                $password != $mycode && $this->_jsonp(0, '验证失败');
+                if (!$admin) {
+                    $this->_jsonp(0, '缓存失败');
+                } elseif ($password != md5($admin['id'].$admin['password'])) {
+                    $this->_jsonp(0, '验证失败');
+                }
 
                 // 存储状态
                 header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
@@ -65,15 +73,18 @@ class Sso extends \Phpcmf\Common
             case 'slogin': // 后台登录其他站点
 
                 $code = dr_authcode(\Phpcmf\Service::L('input')->get('code'), 'DECODE');
-                !$code && $this->_jsonp(0, '解密失败');
+                if (!$code) {
+                    $this->_jsonp(0, '解密失败');
+                }
 
                 list($uid, $password) = explode('-', $code);
 
                 $admin = \Phpcmf\Service::L('cache')->init('', 'site')->get('admin_login_site');
-                !$admin && $this->_jsonp(0, '缓存失败');
-
-                $mycode = md5($admin['uid'].$admin['password']);
-                $password != $mycode && $this->_jsonp(0, '验证失败');
+                if (!$admin) {
+                    $this->_jsonp(0, '缓存失败');
+                } elseif ($password != md5($admin['uid'].$admin['password']) ) {
+                    $this->_jsonp(0, '验证失败');
+                }
 
                 // 存储状态
                 header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');

@@ -24,36 +24,17 @@ class File extends \Phpcmf\Common
 
         // 验证用户权限
         $rt = \Phpcmf\Service::M('Attachment')->check($this->member, $this->siteid);
-        !$rt['code'] && exit(dr_array2string($rt));
+        if (!$rt['code']) {
+            exit(dr_array2string($rt));
+        }
 
         $fid = (int)\Phpcmf\Service::L('input')->get('fid');
         $field = \Phpcmf\Service::C()->get_cache('table-field', $fid);
         if (!$field) {
-            /*
-            $is_admin = 0;
-            if ($this->member['is_admin']) {
-                // 本是管理员
-                $is_admin = 1;
-            } elseif ($cookie = \Phpcmf\Service::L('input')->get_cookie('admin_login_member')) {
-                // 授权登录
-                list($uid, $aid) = explode('-', $cookie);
-                if ($uid == $this->uid) {
-                    $user = dr_member_info($aid);
-                    if ($user['is_admin']) {
-                        $is_admin = 1;
-                    }
-                }
-            }
-
-            if ($is_admin) {
-                // 管理员不验证字段
-                $p = dr_string2array(dr_authcode(\Phpcmf\Service::L('input')->get('p'), 'DECODE'));
-                !$p && $this->_json(0, dr_lang('字段参数有误'));
-                return $p;
-            }
-            $this->_json(0, dr_lang('上传字段未定义'));*/
             $p = dr_string2array(dr_authcode(\Phpcmf\Service::L('input')->get('p'), 'DECODE'));
-            !$p && $this->_json(0, dr_lang('字段参数有误'));
+            if (!$p) {
+                $this->_json(0, dr_lang('字段参数有误'));
+            }
             return $p;
         }
 
@@ -94,11 +75,15 @@ class File extends \Phpcmf\Common
             'file_size' => (int)$p['size'] * 1024 * 1024,
             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
         ]);
-        !$rt['code'] && exit(dr_array2string($rt));
+        if (!$rt['code']) {
+            exit(dr_array2string($rt));
+        }
 
         // 附件归档
         $data = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
-        !$data['code'] && exit(dr_array2string($data));
+        if (!$data['code']) {
+            exit(dr_array2string($data));
+        }
 
         // 上传成功
         if (IS_API_HTTP) {
@@ -143,11 +128,15 @@ class File extends \Phpcmf\Common
                     'url' => $post['url'],
                     'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
                 ]);
-                !$rt['code'] && exit(dr_array2string($rt));
+                if (!$rt['code']) {
+                    exit(dr_array2string($rt));
+                }
 
                 // 附件归档
                 $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
-                !$att['code'] && exit(dr_array2string($att));
+                if (!$att['code']) {
+                    exit(dr_array2string($att));
+                }
 
                 $data = [
                     'id' => $att['code'],
@@ -315,7 +304,6 @@ class File extends \Phpcmf\Common
      * 百度编辑器处理接口
      */
     public function ueditor() {
-
         require ROOTPATH.'api/ueditor/php/controller.php';exit;
     }
 
@@ -324,7 +312,6 @@ class File extends \Phpcmf\Common
      * 百度编辑器处理接口
      */
     public function umeditor() {
-
         require ROOTPATH.'api/umeditor/php/imageUp.php';exit;
     }
 
@@ -354,12 +341,15 @@ class File extends \Phpcmf\Common
                 'content' => $content,
                 'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
             ]);
-            !$rt['code'] && exit(dr_array2string($rt));
+            if (!$rt['code']) {
+                exit(dr_array2string($rt));
+            }
 
             // 附件归档
             $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
-            !$att['code'] && exit(dr_array2string($att));
-
+            if (!$att['code']) {
+                exit(dr_array2string($att));
+            }
 
             $data = [
                 'id' => $att['code'],

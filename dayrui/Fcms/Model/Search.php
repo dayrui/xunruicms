@@ -241,18 +241,7 @@ class Search extends \Phpcmf\Model {
     private function _where($table, $name, $value, $field) {
 
         $name = dr_safe_replace($name, ['\\', '/']);
-        if (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
-            // like 条件
-            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
-        } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
-            // BETWEEN 条件
-            list($s, $e) = explode(',', $value);
-            if (!$e) {
-                return '`'.$table.'`.`'.$name.'` > '.$s;
-            } else {
-                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
-            }
-        } elseif ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
+        if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
             // 匹配时间字段
             list($s, $e) = explode(',', $value);
             $s = (int)strtotime($s);
@@ -264,14 +253,14 @@ class Search extends \Phpcmf\Model {
             }
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
             // 百度地图
-            if (SITE_MAP_LAT && SITE_MAP_LNG) {
+            list($a, $km) = explode('|', $value);
+            list($lng, $lat) = explode(',', $a);
+            if ($lat && $lng) {
                 // 获取Nkm内的数据
-                $lat = '`'.$table.'`.`'.$name.'_lat`';
-                $lng = '`'.$table.'`.`'.$name.'_lng`';
-                $squares = dr_square_point(SITE_MAP_LNG, SITE_MAP_LAT, $value);
-                return "({$lat} between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and ({$lng} between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
+                $squares = dr_square_point($lng, $lat, $km);
+                return "(`".$table."`.`".$name."_lat` between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and (`".$table."`.`".$name."_lng` between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
             } else {
-                \Phpcmf\Service::C()->goto_404_page(dr_lang('没有定位到您的坐标'));
+                //\Phpcmf\Service::C()->goto_404_page(dr_lang('没有定位到您的坐标'));
             }
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkage') {
             // 联动菜单字段
@@ -348,6 +337,17 @@ class Search extends \Phpcmf\Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '';
+        } elseif (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
+            // like 条件
+            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
+        } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
+            // BETWEEN 条件
+            list($s, $e) = explode(',', $value);
+            if (!$e) {
+                return '`'.$table.'`.`'.$name.'` > '.$s;
+            } else {
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+            }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
         } else {

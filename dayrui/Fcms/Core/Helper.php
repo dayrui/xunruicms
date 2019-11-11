@@ -2127,13 +2127,14 @@ function dr_baidu_map_js($ak = SYS_BDMAP_API) {
 /**
  * 百度地图调用
  */
-function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS_BDMAP_API, $class= '') {
+function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS_BDMAP_API, $class= '', $tips = '') {
 
     if (!$value) {
         return '没有坐标值';
     }
 
     $id = 'dr_map_'.rand(0, 99);
+    !$ak && $ak = SYS_BDMAP_API;
     $width = $width ? $width : '100%';
     list($lngX, $latY) = explode(',', $value);
 
@@ -2160,6 +2161,7 @@ function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS
 		var point = new BMap.Point(lngX,latY);
 		var marker = new BMap.Marker(point, {icon: myIcon});
 		mapObj.addOverlay(marker);
+		'.($tips ? 'mapObj.openInfoWindow(new BMap.InfoWindow("'.str_replace('"', '\'', $tips).'",{offset:new BMap.Size(0,-17)}),point);' : '').'
 	}
 	</script>';
 }
@@ -2917,17 +2919,17 @@ function dr_discount($price, $nowprice) {
 
 /**
  *  @desc 根据两点间的经纬度计算距离
- *  @param float $lat 纬度值
- *  @param float $lng 经度值
+ *  @param 当前坐标
+ *  @param 目标坐标
+ *  @param 单位
  */
-function dr_distance($lat1, $lng1, $lat2, $lng2, $mark = '米,千米') {
+function dr_distance($new, $to, $mark = '米,千米') {
 
-    $earthRadius = 6367000; // approximate radius of earth in meters
+    list($lng1, $lat1) = explode(',', $new);
+    list($lng2, $lat2) = explode(',', $to);
 
-    /*
-      Convert these degrees to radians
-      to work with the formula
-    */
+    list($lat1) = explode('|', $lat1);
+    list($lat2) = explode('|', $lat2);
 
     $lat1 = ($lat1 * pi() ) / 180;
     $lng1 = ($lng1 * pi() ) / 180;
@@ -2935,18 +2937,11 @@ function dr_distance($lat1, $lng1, $lat2, $lng2, $mark = '米,千米') {
     $lat2 = ($lat2 * pi() ) / 180;
     $lng2 = ($lng2 * pi() ) / 180;
 
-    /*
-      Using the
-      Haversine formula
-
-      http://en.wikipedia.org/wiki/Haversine_formula
-
-      calculate the distance
-    */
-
     $calcLongitude = $lng2 - $lng1;
     $calcLatitude = $lat2 - $lat1;
     $stepOne = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);  $stepTwo = 2 * asin(min(1, sqrt($stepOne)));
+
+    $earthRadius = 6367000; // approximate radius of earth in meters
     $calculatedDistance = $earthRadius * $stepTwo;
     $value = round($calculatedDistance);
 
@@ -2977,8 +2972,8 @@ function dr_distance($lat1, $lng1, $lat2, $lng2, $mark = '米,千米') {
  */
 function dr_square_point($lng, $lat, $distance = 0.5){
 
-    $distance = $distance ? $distance : 1;
     $r = 6371; //地球半径，平均半径为6371km
+    $distance = $distance ? $distance : 1;
     $dlng =  2 * asin(sin($distance / (2 * $r)) / cos(deg2rad($lat)));
     $dlng = rad2deg($dlng);
 
@@ -2986,10 +2981,10 @@ function dr_square_point($lng, $lat, $distance = 0.5){
     $dlat = rad2deg($dlat);
 
     return array(
-        'left-top'=>array('lat'=>$lat + $dlat,'lng'=>$lng-$dlng),
-        'right-top'=>array('lat'=>$lat + $dlat, 'lng'=>$lng + $dlng),
-        'left-bottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng - $dlng),
-        'right-bottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng + $dlng)
+        'left-top'=>array('lat'=> round($lat + $dlat, 6),'lng'=> round($lng-$dlng, 6)),
+        'right-top'=>array('lat'=> round($lat + $dlat, 6), 'lng'=> round($lng + $dlng, 6)),
+        'left-bottom'=>array('lat'=> round($lat - $dlat, 6), 'lng'=> round($lng - $dlng, 6)),
+        'right-bottom'=>array('lat'=> round($lat - $dlat, 6), 'lng'=> round($lng + $dlng, 6))
     );
 }
 

@@ -90,10 +90,7 @@ class Api extends \Phpcmf\Common
         $module = dr_safe_replace(\Phpcmf\Service::L('input')->get('module'));
 
         // 判断参数
-        (!$title || !$module) && exit('');
-
-        // 判断模块
-        !\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module) && exit('');
+        (!$title || !$module || !\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module)) && exit('');
 
         // 判断是否重复存在
         $num = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$module)->where('id<>', $id)->where('title', $title)->countAllResults();
@@ -104,9 +101,7 @@ class Api extends \Phpcmf\Common
      * 提取关键字
      */
     public function getkeywords() {
-
-        $kw = dr_get_keywords(dr_safe_replace(\Phpcmf\Service::L('input')->get('title')));
-        exit($kw);
+        exit(dr_get_keywords(dr_safe_replace(\Phpcmf\Service::L('input')->get('title'))));
     }
 
     /**
@@ -251,18 +246,24 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
 
         // 登陆判断
-        !$this->uid && $this->_json(0, dr_lang('会话超时，请重新登录'));
+        if (!$this->uid) {
+            $this->_json(0, dr_lang('会话超时，请重新登录'));
+        }
 
         // 参数判断
         $dirname = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
-        !$dirname && $this->_json(0, dr_lang('module参数不存在'));
+        if (!$dirname) {
+            $this->_json(0, dr_lang('module参数不存在'));
+        }
 
         // 站点选择
         $site = max(1, (int)$_GET['site']);
 
         // 模块缓存判断
         $module = $this->get_cache('module-'.$site.'-'.$dirname);
-        !$module && $this->_json(0, dr_lang('模块（%s）不存在', $dirname));
+        if (!$module) {
+            $this->_json(0, dr_lang('模块（%s）不存在', $dirname));
+        }
 
         $module['field']['id'] = array(
             'name' => 'Id',
@@ -286,17 +287,20 @@ class Api extends \Phpcmf\Common
         $limit = (int)$_GET['limit'];
         $limit = $limit ? $limit : 50;
 
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
-            !$ids && $this->_json(0, dr_lang('没有选择项'));
-            $id = array();
+            if (!$ids) {
+                $this->_json(0, dr_lang('没有选择项'));
+            }
+            $id = [];
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
             $builder->whereIn('id', $id);
             $list = $builder->limit($limit)->orderBy('updatetime DESC')->get()->getResultArray();
-            !$list && $this->_json(0, dr_lang('没有相关数据'));
+            if (!$list) {
+                $this->_json(0, dr_lang('没有相关数据'));
+            }
             $rt = [];
             foreach ($list as $t) {
                 $rt[] = [
@@ -318,7 +322,7 @@ class Api extends \Phpcmf\Common
                 $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
                 if ($data['field'] == 'id') {
                     // id搜索
-                    $id = array();
+                    $id = [];
                     $ids = explode(',', $data['keyword']);
                     foreach ($ids as $i) {
                         $id[] = (int)$i;
@@ -360,8 +364,9 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
 
         // 登陆判断
-        !$this->uid && $this->_json(0, dr_lang('会话超时，请重新登录'));
-
+        if (!$this->uid) {
+            $this->_json(0, dr_lang('会话超时，请重新登录'));
+        }
 
         $field = array(
             'id' => array(
@@ -398,22 +403,24 @@ class Api extends \Phpcmf\Common
 
         $builder = \Phpcmf\Service::M()->db->table('member');
 
-
         // 搜索结果显示条数
         $limit = (int)$_GET['limit'];
         $limit = $limit ? $limit : 50;
 
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
-            !$ids && $this->_json(0, dr_lang('没有选择项'));
-            $id = array();
+            if (!$ids) {
+                $this->_json(0, dr_lang('没有选择项'));
+            }
+            $id = [];
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
             $builder->whereIn('id', $id);
             $list = $builder->limit($limit)->orderBy('id DESC')->get()->getResultArray();
-            !$list && $this->_json(0, dr_lang('没有相关数据'));
+            if (!$list) {
+                $this->_json(0, dr_lang('没有相关数据'));
+            }
             $rt = [];
             foreach ($list as $t) {
                 $rt[] = [
@@ -488,23 +495,29 @@ class Api extends \Phpcmf\Common
         $at = \Phpcmf\Service::L('input')->get('at');
         if ($at == 'select') {
             $url = urldecode(\Phpcmf\Service::L('input')->get('url'));
-            !is_file(WRITEPATH.'config/domain_client.php') && $this->_json(0, dr_lang('配置文件domain_client不存在'));
+            if (!is_file(WRITEPATH.'config/domain_client.php')) {
+                $this->_json(0, dr_lang('配置文件domain_client不存在'));
+            }
 
             $domain = require WRITEPATH.'config/domain_client.php';
-            !$domain && $this->_json(0, dr_lang('系统没有绑定手机域名'));
+            if (!$domain) {
+                $this->_json(0, dr_lang('系统没有绑定手机域名'));
+            }
 
             $url = dr_http_prefix($url);
             $temp = parse_url($url);
             $host = $temp['host'];
-            $value = 0;
             if (isset($domain[$host])) {
                 // 如果现在是电脑端,我们就找对应的移动端域名
                 $value = 0;
             } else {
                 $domain = array_flip($domain);
-                !isset($domain[$host]) && $this->_json(0, dr_lang('域名%s切换失败', $host));
+                if (!isset($domain[$host])) {
+                    $this->_json(0, dr_lang('域名%s切换失败', $host));
+                }
                 $value = 1;
             }
+
             \Phpcmf\Service::L('input')->set_cookie('is_mobile', $value, $value ? 3600 : -3600);
             $url = str_replace($host, $domain[$host], $url);
             $sync = [];

@@ -57,12 +57,17 @@ class Pay extends \Phpcmf\Common
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M()->table('member_paylog')->get($id);
-		!$data && $this->_jsonp(0, dr_lang('支付记录不存在'));
-		$data['status'] && $this->_jsonp(1, dr_lang('已经支付完成'));
+		if (!$data) {
+		    $this->_jsonp(0, dr_lang('支付记录不存在'));
+        } elseif ($data['status']) {
+		    $this->_jsonp(1, dr_lang('已经支付完成'));
+        }
 
 		// 调用接口
 		$apifile = ROOTPATH.'api/pay/'.$data['type'].'/notify_js.php';
-		!is_file($apifile) && $this->_jsonp(0, dr_lang('支付接口文件不存在'));
+		if (!is_file($apifile)) {
+		    $this->_jsonp(0, dr_lang('支付接口文件不存在'));
+        }
 
 		$return = [];
 		$result = dr_string2array($data['result']);
@@ -83,7 +88,9 @@ class Pay extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table('member_paylog')->get($id);
-        !$data && $this->_msg(0, dr_lang('支付记录不存在'));
+        if (!$data) {
+            $this->_msg(0, dr_lang('支付记录不存在'));
+        }
 
         // 支付回调钩子
         \Phpcmf\Hooks::trigger('pay_call', $data);
@@ -91,7 +98,6 @@ class Pay extends \Phpcmf\Common
         if (!$this->uid) {
             $this->_msg(1, dr_lang('支付成功'));
         }
-
 
         if (SITE_IS_MOBILE && $this->_is_mobile()) {
             // 开启了移动端时，支付判断模板是否是移动端的
