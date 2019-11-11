@@ -50,7 +50,7 @@ class Storage {
                     $local = dr_dir_map($path, 1);
                     foreach ($local as $dir) {
                         if (is_file($path.$dir.'/App.php')) {
-                            $cfg = require $this->path.$dir.'/App.php';
+                            $cfg = require $path.$dir.'/App.php';
                             if ($cfg['id'] && $cfg['id'] == $attachment['type']) {
                                 $newClassName2 = '\\Phpcmf\\ThirdParty\\Storage\\'.ucfirst($dir);
                                 $this->object = new $newClassName2;

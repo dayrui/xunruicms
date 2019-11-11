@@ -3563,6 +3563,7 @@ if (! function_exists('dr_get_keywords')) {
     }
 }
 
+
 if (! function_exists('dr_redirect'))
 {
     /**
