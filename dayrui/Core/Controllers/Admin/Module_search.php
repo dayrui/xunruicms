@@ -58,9 +58,10 @@ class Module_search extends \Phpcmf\Common
 
         if (IS_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             foreach ($post as $dir => $t) {
                 $all[$dir]['setting']['search'] = $t;
+                $all[$dir]['setting']['search']['field'] = implode(',', $_POST['search_field'][$dir]);
                 \Phpcmf\Service::M()->db->table('module')->where('dirname', $dir)->update([
                     'setting' => dr_array2string($all[$dir]['setting']),
                 ]);
@@ -78,6 +79,9 @@ class Module_search extends \Phpcmf\Common
             'order' => dr_lang('排序'),
             'page' => dr_lang('分页'),
         ];
+        if (!$data['setting']['search']['field']) {
+            $data['setting']['search']['field'] = 'title,keywords';
+        }
         $field = \Phpcmf\Service::M()->db->table('field')
             ->where('disabled', 0)
             ->where('ismain', 1)
@@ -92,6 +96,7 @@ class Module_search extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'page' => $dir,
             'form' =>  dr_form_hidden(),
+            'field' =>  $field,
             'module' => [$dir => $data],
             'save_url' => dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]),
             'site_name' => $this->site_info[SITE_ID]['SITE_NAME'],

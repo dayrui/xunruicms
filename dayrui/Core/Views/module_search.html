@@ -50,7 +50,11 @@
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('关键词匹配字段')}</label>
                             <div class="col-md-9">
-                                <input class="form-control input-xlarge" type="text" name="data[{$i}][field]" value="{if $m['setting']['search']['field']}{$m['setting']['search']['field']}{else}title,keywords{/if}" >
+                                <div class="mt-checkbox-inline">
+                                    {loop $field $f}
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if @in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {$f.name} <span></span></label>
+                                    {/loop}
+                                </div>
                                 <span class="help-block">{dr_lang('默认关键词匹配字段是title,keywords，只能设置主表字段，以逗号分隔')}</span>
                             </div>
                         </div>
