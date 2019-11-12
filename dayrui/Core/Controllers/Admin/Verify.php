@@ -22,6 +22,7 @@ class Verify extends \Phpcmf\Table
                     '审核流程' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-sort-numeric-asc'],
                     '添加' => [\Phpcmf\Service::L('Router')->class.'/add', 'fa fa-plus'],
                     '修改' => ['hide:'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
+					'help' => ['825'],
                 ]
             ),
         ]);

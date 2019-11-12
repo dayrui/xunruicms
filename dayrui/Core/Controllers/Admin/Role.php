@@ -16,6 +16,7 @@ class Role extends \Phpcmf\Common
 				'角色权限' => ['role/index', 'fa fa-users'],
 				'添加' => ['add:role/add', 'fa fa-plus', '430px', '200px'],
 				'权限划分' => ['hide:role/edit_auth', 'fa fa-user-md'],
+				'help' => ['824'],
 			]
 		));
 		// 表单验证配置
