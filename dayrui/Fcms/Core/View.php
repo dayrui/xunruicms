@@ -2308,7 +2308,7 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0) {
 
-        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px">';
+        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto;">';
         $sql && $debug.= '<p>SQL: '.$sql.'</p>';
         if ($data && !is_array($data)) {
             $debug.= '<p>'.$data.'</p>';
@@ -2325,6 +2325,8 @@ class View {
 			$debug.= '<p>每页数量：'.$pagesize.'</p>';
 			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
 		}
+
+		isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
 		$debug.= '</pre>';
 
         // 返回数据格式
