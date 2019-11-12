@@ -368,13 +368,14 @@ class Linkage extends \Phpcmf\Model
             foreach ($linkage as $link) {
                 $cid = $data = $lv = [];
                 $list = $this->repair($link, $siteid);
+                $field = $this->get_fields($link['id']);
                 if ($list) {
                     foreach ($list as $t) {
                         $lv[] = substr_count($t['pids'], ',');
                         $t['ii'] = $t['id'];
                         $t['id'] = $t['cname'];
                         $cid[$t['ii']] = $t['id'];
-                        $data[$t['cname']] = $t;
+                        $data[$t['cname']] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t);
                     }
                 }
                 \Phpcmf\Service::L('cache')->set_file('linkage-'.$siteid.'-'.$link['code'], $data);

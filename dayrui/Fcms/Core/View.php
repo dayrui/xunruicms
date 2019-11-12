@@ -906,7 +906,6 @@ class View {
                     return $this->_return($system['return'], '没有查询到内容');
                 }
 
-                $field = \Phpcmf\Service::L('cache')->get('navigator-'.$system['site'].'-field');
                 $return = [];
                 foreach ($data as $t) {
                     if ($system['num'] && $i >= $system['num']) {
@@ -918,7 +917,7 @@ class View {
                     } elseif (!$t['show'] && !$show) {
                         continue;
                     }
-                    $return[] = \Phpcmf\Service::L('Field')->format_value($field, $t, 1);
+                    $return[] = $t;
                     $i ++;
                 }
 
@@ -938,8 +937,7 @@ class View {
 
                 $i = 0;
                 $show = isset($param['show']) ? 1 : 0; // 有show参数表示显示隐藏栏目
-                $field = \Phpcmf\Service::L('cache')->get('page-'.$system['site'].'-field');
-                $return = array();
+                $return = [];
                 foreach ($data as $id => $t) {
                     if (!is_numeric($id)) {
                         continue;
@@ -953,7 +951,7 @@ class View {
                         continue;
                     }
                     $t['setting'] = dr_string2array($t['setting']);
-                    $return[] = \Phpcmf\Service::L('Field')->format_value($field, $t, 1);
+                    $return[] = $t;
                     $i ++;
                 }
 
@@ -965,7 +963,6 @@ class View {
                 break;
 
             case 'tag': // 调用tag
-
 
                 // aninstall
                 if (!dr_is_app('tag')) {
@@ -1024,7 +1021,6 @@ class View {
 
                 $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
                 $sql_where = $this->_get_where($where); // sql的where子句
-
 
                 $sql = "SELECT * FROM {$table} ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
                 $data = $this->_query($sql, $system['db'], $system['cache']);
