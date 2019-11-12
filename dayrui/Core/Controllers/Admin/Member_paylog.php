@@ -113,12 +113,14 @@ class Member_paylog extends \Phpcmf\Table
     // edit
     public function edit() {
         list($tpl, $data) = $this->_Post((int)\Phpcmf\Service::L('input')->get('id'), [], 1);
-        !$data && $this->_admin_msg(0, dr_lang('支付记录不存在'));
+        if (!$data) {
+			$this->_admin_msg(0, dr_lang('支付记录不存在'));
+		} 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '资金流水' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/'.($data['status'] ? 'index' : 'not_index'), 'fa fa-calendar'],
-                    '详情' => ['hide:'.APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
+                    '付款详情' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
                 ]
             ),
         ]);
@@ -129,21 +131,31 @@ class Member_paylog extends \Phpcmf\Table
     public function system_edit() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $data =  \Phpcmf\Service::M('Pay')->table('member_paylog')->get($id);
-        !$data && $this->_json(0, dr_lang('支付记录不存在'));
-        1 != $data['status'] && $this->_json(0, dr_lang('支付记录不满足回收条件'));
-        $data['value'] < 0 && $this->_json(0, dr_lang('付款金额不满足回收条件'));
-        $data['mid'] != 'recharge' && $this->_json(0, dr_lang('只能回收充值金额'));
+        $data = \Phpcmf\Service::M('Pay')->table('member_paylog')->get($id);
+        if (!$data) {
+			$this->_json(0, dr_lang('支付记录不存在'));
+		} elseif (1 != $data['status']) {
+			$this->_json(0, dr_lang('支付记录不满足回收条件'));
+		} elseif ($data['value'] < 0) {
+			$this->_json(0, dr_lang('付款金额不满足回收条件'));
+		} elseif ($data['mid'] != 'recharge') {
+			$this->_json(0, dr_lang('只能回收充值金额'));
+		}
 
         $user = \Phpcmf\Service::M('member')->table('member')->get($data['uid']);
-        !$user && $this->_json(0, dr_lang('用户记录不存在'));
+        if (!$user) {
+			$this->_json(0, dr_lang('用户记录不存在'));
+		} 
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            $user['money'] - $data['value'] < 0 && $this->_json(0, dr_lang('付款账号余额不足'));
-            !$post['note'] && $this->_json(0, dr_lang('回收备注一定要填写'), ['field' => 'note']);
+            if ($user['money'] - $data['value'] < 0) {
+				$this->_json(0, dr_lang('付款账号余额不足'));
+			} elseif (!$post['note']) {
+				$this->_json(0, dr_lang('回收备注一定要填写'), ['field' => 'note']);
+			} 
             // 扣除付款方的钱
-            $rt =  \Phpcmf\Service::M('Pay')->add_money($data['uid'], -$data['value']);
+            $rt = \Phpcmf\Service::M('Pay')->add_money($data['uid'], -$data['value']);
             !$rt['code'] && $this->_json(0, $rt['msg']);
             // 增加到交易流水
             $rt =  \Phpcmf\Service::M('Pay')->add_paylog([
@@ -176,11 +188,15 @@ class Member_paylog extends \Phpcmf\Table
     public function notice_del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$ids) {
+			$this->_json(0, dr_lang('所选数据不存在'));
+		} 
 
         $sql = 'select phone from `'.\Phpcmf\Service::M()->dbprefix('member').'` where `id` in (select `uid` from `'.\Phpcmf\Service::M()->dbprefix('member_paylog').'` where `id` in ('.implode(',', $ids).') )';
         $data = \Phpcmf\Service::M()->db->query($sql)->getResultArray();
-        !$data && $this->_json(0, dr_lang('所选数据不存在'));
+        if (!$data) {
+			$this->_json(0, dr_lang('所选数据不存在'));
+		} 
 
         $i = 0;
         foreach ($data as $t) {
