@@ -426,10 +426,10 @@ class Check extends \Phpcmf\Common
                                 if (strpos($name, "'") !== false) {
                                     continue;
                                 }
-                                if (in_array($name, $func)) {
-                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']被重复定义');
+                                if (isset($func[$name]) && $func[$name]) {
+                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']存在于'.$func[$name].'之中，不能被重复定义');
                                 }
-                                $func[] = $name;
+                                $func[$name] = $dir;
                                 if (function_exists($name)) {
                                     $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
                                 }
