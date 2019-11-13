@@ -645,7 +645,7 @@ class Module extends \Phpcmf\Common
         }
 
         $url = $page > 0 ?\Phpcmf\Service::L('Router')->category_url($this->module, $cat, $page) : $cat['url'];
-        $file =\Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
+        $file = \Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
 
         $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
 
@@ -988,7 +988,7 @@ class Module extends \Phpcmf\Common
                 }
 
             }
-            $html.= '<p class="'.$class.'"><label class="rleft">'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
+            $html.= '<p class="'.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
 
         }
 
