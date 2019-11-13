@@ -24,6 +24,7 @@ class Check extends \Phpcmf\Common
         '10' => '数据负载优化检测',
         '11' => '域名绑定检测',
         '12' => 'HTTPS检测',
+        '13' => '应用插件兼容性检测',
 
     ];
 
@@ -408,6 +409,35 @@ class Check extends \Phpcmf\Common
                 } else {
                     $this->_json(0,'系统没有开启HTTPS服务');
                 }
+
+                break;
+
+            case '13':
+                // 应用插件
+                $func = [];
+                $local = dr_dir_map(dr_get_app_list(), 1);
+                foreach ($local as $dir) {
+                    $path = dr_get_app_dir($dir);
+                    if (is_file($path.'Config/App.php') && is_file($path.'Config/Init.php')) {
+                        $code = file_get_contents($path.'Config/Init.php');
+                        if (preg_match_all("/\s+function (.+)\(/", $code, $arr)) {
+                            foreach ($arr[1] as $a) {
+                                $name = trim($a);
+                                if (strpos($name, "'") !== false) {
+                                    continue;
+                                }
+                                if (in_array($name, $func)) {
+                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']被重复定义');
+                                }
+                                $func[] = $name;
+                                if (function_exists($name)) {
+                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                                }
+                            }
+                        }
+                    }
+                }
+                $this->_json(1, '通过');
 
                 break;
 
