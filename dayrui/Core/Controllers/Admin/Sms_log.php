@@ -46,7 +46,7 @@ class Sms_log extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign(array(
 			'list' => $list,
 			'total' => $total,
-			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url('sms_log/lindex'), $total, 'admin')
+			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url('sms_log/index'), $total, 'admin')
 		));
 		\Phpcmf\Service::V()->display('sms_log.html');
 	}
