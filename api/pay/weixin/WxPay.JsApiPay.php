@@ -113,6 +113,11 @@ class JsApiPay
 		//取出openid
 		$data = json_decode($res,true);
 		$this->data = $data;
+		if (!$data) {
+			exit($res.' 不是一个有效的json数据');
+		} elseif (isset($data['errcode']) && $data['errcode']) {
+			exit('错误代码（'.$data['errcode'].'）：'.$data['errmsg']);
+		}
 		$openid = $data['openid'];
 		return $openid;
 	}
