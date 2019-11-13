@@ -119,7 +119,13 @@ class Search extends \Phpcmf\Model {
                         $catids = [ $catid ];
                     }
                     foreach ($catids as $c) {
-                        $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
+                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                            // 兼容写法
+                            $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
+                        } else {
+                            // 高版本写法
+                            $fwhere[] = "(`{$table}`.`catids` <>'' AND JSON_CONTAINS (`{$table}`.`catids`->'$[*]', '\"".intval($c)."\"', '$'))";
+                        }
                     }
                     $fwhere && $where[0] = '('.implode(' OR ', $fwhere).')';
                 } else {
@@ -293,7 +299,7 @@ class Search extends \Phpcmf\Model {
 									$where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($id).'\"%"';
 								} else {
 									// 高版本写法
-									$where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$')";
+									$where[] = "(`{$table}`.`{$name}`<>'' AND JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$'))";
 								}
 							}
                         }
@@ -303,7 +309,7 @@ class Search extends \Phpcmf\Model {
                             $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($data['ii']).'\"%"';
                         } else {
                             // 高版本写法
-                            $where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$')";
+                            $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$'))";
                         }
                     }
                 }
@@ -320,7 +326,7 @@ class Search extends \Phpcmf\Model {
 						$where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString($value, true).'\"%"';
 					} else {
 						// 高版本写法
-						$where[] = " JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$')";
+						$where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$'))";
 					}
 				}
             }
