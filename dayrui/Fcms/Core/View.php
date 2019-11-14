@@ -2393,6 +2393,9 @@ class View {
             case 'member_group':
                 $data = \Phpcmf\Service::C()->member_cache['group'];
                 break;
+            case 'site_info':
+                $data = \Phpcmf\Service::C()->site_info;
+                break;
             case 'urlrule':
                 $data = \Phpcmf\Service::L('cache')->get('urlrule');
                 break;
