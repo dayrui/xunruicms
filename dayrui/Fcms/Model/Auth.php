@@ -10,6 +10,8 @@
 
 class Auth extends \Phpcmf\Model {
 
+    private $_is_post_user = -1;
+
     // 编辑时的获取自定义面板
     public function edit_main_table($table, $name, $tid = 12) {
 
@@ -266,7 +268,7 @@ class Auth extends \Phpcmf\Model {
             'name' => $data['name'],
             'system' => '',
             'module' => '',
-            'application' => '',
+            'application' => dr_string2array($data['application']),
         ]);
     }
 
@@ -286,6 +288,7 @@ class Auth extends \Phpcmf\Model {
     }
 
     public function update_role($id, $data) {
+        $data['application'] = dr_array2string($data['application']);
         $this->table('admin_role')->update($id, $data);
     }
 
@@ -293,7 +296,29 @@ class Auth extends \Phpcmf\Model {
         $ids && $this->db->table('admin_role')->whereIn('id', $ids)->delete();
     }
 
+    // 账号是否是投稿员
+    public function is_post_user() {
 
+        if ($this->_is_post_user >= 0) {
+            return $this->_is_post_user;
+        }
+
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            $this->_is_post_user = 0;
+            return $this->_is_post_user;
+        }
+
+        $auth = \Phpcmf\Service::C()->get_cache('auth');
+        foreach (\Phpcmf\Service::C()->admin['roleid'] as $aid) {
+            if (isset($auth[$aid]['application']['tid']) && $auth[$aid]['application']['tid']) {
+                $this->_is_post_user = 1;
+                return $this->_is_post_user;
+            }
+        }
+
+        $this->_is_post_user = 0;
+        return $this->_is_post_user;
+    }
 
     /**
      * 后台登录判断

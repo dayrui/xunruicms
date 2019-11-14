@@ -82,8 +82,8 @@ class Content extends \Phpcmf\Model {
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
                     'content' => dr_array2string(@array_merge($data[0], $data[1])),
-                    'backuid' => IS_ADMIN ? $this->uid : 0,
-                    'backinfo' => IS_ADMIN ? dr_array2string([
+                    'backuid' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? $this->uid : 0,
+                    'backinfo' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? dr_array2string([
                         'uid' => $this->uid,
                         'author' => \Phpcmf\Service::C()->member['username'],
                         'optiontime' => SYS_TIME,
@@ -106,7 +106,7 @@ class Content extends \Phpcmf\Model {
                     dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id']
                 );
                 // 通知用户
-                IS_ADMIN && $data[1]['status'] == 0 && \Phpcmf\Service::M('member')->notice(
+                IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() && $data[1]['status'] == 0 && \Phpcmf\Service::M('member')->notice(
                     $data[1]['uid'],
                     3,
                     dr_lang('《%s》审核被拒绝', $data[1]['title']),
@@ -1144,7 +1144,6 @@ class Content extends \Phpcmf\Model {
     // 变更栏目的一些联动操作
     private function _edit_category_id($t, $catid) {
 
-
         $id = intval($t['id']);
         $this->db->table($this->mytable.'_comment')->where('cid', $id)->update(['catid' => $catid]);
         $this->db->table($this->mytable.'_comment_index')->where('cid', $id)->update(['catid' => $catid]);
@@ -1616,6 +1615,33 @@ class Content extends \Phpcmf\Model {
     // 按5w分表
     public function _table_id($id) {
         return floor($id / 50000);
+    }
+
+
+    ////////////////////后台权限开放////////////////////
+
+    // 后台内容列表条件
+    public function get_admin_list_where() {
+
+        if (\Phpcmf\Service::M('auth')->is_post_user()) {
+            // 作为投稿者只能允许看自己的记录
+            return 'uid = '.$this->uid;
+        }
+
+        return dr_is_app('cqx') ? \Phpcmf\Service::M('content', 'cqx')->get_list_where() : '';
+    }
+
+    // 后台内容编辑权限
+    public function admin_is_edit($data) {
+
+        if (\Phpcmf\Service::M('auth')->is_post_user()) {
+            if ($data['uid'] == $this->uid) {
+                return false;
+            }
+            return !$data['uid'] ? false : true;
+        }
+
+        return dr_is_app('cqx') ? \Phpcmf\Service::M('content', 'cqx')->is_edit((int)$data['catid'], (int)$data['uid']) : true;
     }
 
     ////////////////////二次开发调用////////////////////

@@ -14,7 +14,7 @@ class Role extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'角色权限' => ['role/index', 'fa fa-users'],
-				'添加' => ['add:role/add', 'fa fa-plus', '430px', '200px'],
+				'添加' => ['add:role/add', 'fa fa-plus', '500px', '400px'],
 				'权限划分' => ['hide:role/edit_auth', 'fa fa-user-md'],
 				'help' => ['824'],
 			]
@@ -80,6 +80,7 @@ class Role extends \Phpcmf\Common
 		}
 
 		\Phpcmf\Service::V()->assign([
+		    'id' => $id,
 			'data' => $data,
 			'form' => dr_form_hidden(),
 		]);

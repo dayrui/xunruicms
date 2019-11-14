@@ -304,13 +304,15 @@ class Module extends \Phpcmf\Table
         if (IS_AJAX_POST) {
 
             $catid = \Phpcmf\Service::L('input')->post('catid');
-            !$catid && $this->_json(0, dr_lang('你没有选择同步的栏目'));
+            if (!$catid) {
+                $this->_json(0, dr_lang('你没有选择同步的栏目'));
+            }
 
             $syncat = [];
             foreach ($catid as $i) {
-                if ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($i)) {
-                    $this->_json(0, dr_lang('当前角色无权限管理此栏目'));
-                }
+                //if ($this->where_list_sql && $this->content_model->admin_is_edit(['catid' => $i])) {
+                    //$this->_json(0, dr_lang('当前角色无权限管理此栏目'));
+                //}
                 if (!$this->module['category'][$i]) {
                     continue;
                 } elseif ($this->module['category'][$i]['tid'] != 1) {
@@ -322,9 +324,11 @@ class Module extends \Phpcmf\Table
                 }
             }
 
-            !$syncat && $this->_json(0, dr_lang('所选栏目无效'));
-
-            $this->_json(1, dr_count($syncat), implode(',', $syncat));
+            if (!$syncat) {
+                $this->_json(0, dr_lang('所选栏目无效'));
+            } else {
+                $this->_json(1, dr_count($syncat), implode(',', $syncat));
+            }
         }
 
         \Phpcmf\Service::V()->admin();

@@ -210,12 +210,12 @@ class Module extends \Phpcmf\Common
         if (($this->module['share']) && $category['tid'] == 0) {
             // 识别栏目单网页
             if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID]['share']['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'));
+                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), dr_url('login/home/index'));
                 return;
             }
         } else {
             if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'));
+                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), dr_url('login/home/index'));
                 return;
             }
         }
@@ -280,7 +280,7 @@ class Module extends \Phpcmf\Common
             if (!isset($this->module['setting']['search']['use']) || !$this->module['setting']['search']['use']) {
                 exit($this->_msg(0, dr_lang('此模块已经关闭了搜索功能')));
             } elseif (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home'])) {
-                exit($this->_msg(0, dr_lang('您的用户组无权限搜索')));
+                exit($this->_msg(0, dr_lang('您的用户组无权限搜索'), dr_url('login/home/index')));
             } elseif ($get['keyword'] && strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
                 exit($this->_msg(0, dr_lang('关键字不得少于系统规定的长度')));
             } elseif (strlen($get['keyword']) > 100) {
@@ -457,7 +457,7 @@ class Module extends \Phpcmf\Common
         } else {
             // 无权限访问栏目内容
             if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'));
+                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), dr_url('login/home/index'));
                 return;
             }
             // 判断是否同步栏目

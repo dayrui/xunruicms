@@ -88,7 +88,11 @@
                 </td>
                 <td>{Function_list::title($c.title, null, $t)}</td>
                 <td style="text-align:center">
+                    {if $t.status}
                     <span class="label label-warning"> {dr_lang('%s审中', $t.status)} </span>
+                    {else}
+                    <span class="label label-danger"> {dr_lang('被退稿')} </span>
+                    {/if}
                 </td>
                 <td>{Function_list::uid($t.uid, null, $t)}</td>
                 <td>{dr_date($t.inputtime)}</td>

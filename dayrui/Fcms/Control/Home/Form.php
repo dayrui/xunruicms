@@ -54,7 +54,7 @@ class Form extends \Phpcmf\Table
             $this->member_authid,
             $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['show'])
         ) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问表单'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), dr_url('login/home/index'));
             return;
         }
 
@@ -122,7 +122,7 @@ class Form extends \Phpcmf\Table
             $this->member_authid,
             $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['show'])
         ) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问表单'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), dr_url('login/home/index'));
             return;
         }
 

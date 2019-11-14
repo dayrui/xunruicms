@@ -376,7 +376,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (!IS_ADMIN && !IS_API) {
             // 判断网站访问权限
             if (!IS_MEMBER && !dr_member_auth($this->member_authid, $this->member_cache['auth_site'][SITE_ID]['home'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
+                $this->_msg(0, dr_lang('您的用户组无权限访问站点'), dr_url('login/home/index'));
             }
             // 账户被锁定
             if ($this->member && $this->member['is_lock'] && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
@@ -502,7 +502,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 无权限访问模块
         if (!IS_ADMIN && !IS_MEMBER
             && !dr_member_auth($this->member_authid, $this->member_cache['auth_module'][$siteid][$dirname]['home'])) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问模块'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问模块'), dr_url('login/home/index'));
             return;
         }
 

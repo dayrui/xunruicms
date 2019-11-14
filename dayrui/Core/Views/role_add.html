@@ -4,9 +4,30 @@
     {$form}
     <div class="form-body">
         <div class="form-group" id="dr_row_name">
-            <label class="col-xs-3 control-label ajax_name">{dr_lang('角色名称')}</label>
-            <div class="col-xs-8">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('名称')}</label>
+            <div class="col-xs-7">
                 <input type="text" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('身份')}</label>
+            <div class="col-xs-8">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio" name="data[application][tid]" value="0" {if !$data['application']['tid']} checked{/if} > {dr_lang('管理者')}
+                        <span></span>
+                    </label>
+                    {if $id > 1}
+                    <label class="mt-radio">
+                        <input type="radio" name="data[application][tid]" value="1" {if $data['application']['tid']} checked{/if}> {dr_lang('投稿者')}
+                        <span></span>
+                    </label>
+                    {/if}
+                </div>
+                <p class="help-block">{dr_lang('管理者：可管理全部用户的投稿内容')}</p>
+                {if $id > 1}
+                <p class="help-block">{dr_lang('投稿者：只能管理自己的投稿内容，自己投稿会进入审核流程')}</p>
+                {/if}
             </div>
         </div>
 

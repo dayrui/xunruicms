@@ -11,6 +11,7 @@ class Module extends \Phpcmf\Table
 {
     protected $post_time; // 定时发布时间
     protected $module_menu; // 是否显示模块菜单
+    protected $is_post_user; // 投稿者权限
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -28,7 +29,8 @@ class Module extends \Phpcmf\Table
         $this->tpl_name = APP_DIR;
         // 模块显示名称
         $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, $this->module['cname']);
-        $this->where_list_sql = dr_is_app('cqx') ? \Phpcmf\Service::M('content', 'cqx')->get_list_where() : '';
+        $this->is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
+        $this->where_list_sql = $this->content_model->get_admin_list_where();
         // 初始化数据表
         $this->_init([
             'table' => SITE_ID.'_'.APP_DIR,
@@ -47,6 +49,7 @@ class Module extends \Phpcmf\Table
             'weibo' => $this->get_cache('site', SITE_ID, 'weibo', 'module', MOD_DIR),
             'module' => $this->module,
             'post_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])]),
+            'is_post_user' => $this->is_post_user,
             'is_hcategory' => $this->is_hcategory,
             'is_category_show' => $this->is_hcategory ? 0 : (dr_count($this->module['category']) == 1 ? 0 : 1),
         ]);
@@ -146,7 +149,7 @@ class Module extends \Phpcmf\Table
         list($tpl, $data) = $this->_Post($id, $draft);
         if (!$data) {
             $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
-        } elseif ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($data['catid'], $data['uid'])) {
+        } elseif ($this->where_list_sql && $this->content_model->admin_is_edit($data)) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
         }
 
@@ -185,11 +188,13 @@ class Module extends \Phpcmf\Table
             }
 
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
-
-            // 写入日志
-            $rt['code'] && \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：放入回收站('.implode(', ', $ids).')');
-
-            $rt['code'] ? $this->_json(1, dr_lang('所选内容已被放入回收站中')) : $this->_json(0, $rt['msg']);
+            if ($rt['code']) {
+                // 写入日志
+                \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：放入回收站('.implode(', ', $ids).')');
+                $this->_json(1, dr_lang('所选内容已被放入回收站中'));
+            } else {
+                $this->_json(0, $rt['msg']);
+            }
         } else {
             // 选择选项
             $ids = $_GET['ids'];
@@ -221,16 +226,18 @@ class Module extends \Phpcmf\Table
             $this->_json(0, dr_lang('目标栏目未选择'));
         } elseif (!$this->content_model->admin_category_auth($catid, 'edit')) {
             $this->_json(0, dr_lang('无权限操作此栏目'));
-        } elseif ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($catid)) {
+        } elseif ($this->where_list_sql && $this->content_model->admin_is_edit(['catid' => $catid])) {
             $this->_json(0, dr_lang('当前角色无权限管理此栏目'));
         }
 
         $rt = $this->content_model->move_category($ids, $catid);
 
         // 写入日志
-        $rt['code'] && \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：批量修改栏目('.implode(', ', $ids).')');
-
-        $rt['code'] ? $this->_json(1, dr_lang('操作成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：批量修改栏目('.implode(', ', $ids).')');
+            $this->_json(1, dr_lang('操作成功'));
+        }
+        $this->_json(0, $rt['msg']);
     }
 
     // 同步栏目选择器
@@ -247,10 +254,9 @@ class Module extends \Phpcmf\Table
 
             $syncat = [];
             foreach ($catid as $i) {
-                if ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($i)) {
+                if ($this->where_list_sql && $this->content_model->admin_is_edit(['catid' => $i])) {
                     $this->_json(0, dr_lang('当前角色无权限管理此栏目'));
-                }
-                if (!$this->module['category'][$i]) {
+                } elseif (!$this->module['category'][$i]) {
                     continue;
                 } elseif ($this->module['category'][$i]['tid'] != 1) {
                     continue;
@@ -291,7 +297,6 @@ class Module extends \Phpcmf\Table
             }
 		}
 
-
         if (IS_AJAX_POST) {
 
             $in = [];
@@ -322,7 +327,7 @@ class Module extends \Phpcmf\Table
                         $u = 0;
                         foreach ($catids as $catid) {
                             if ($catid && $catid != $t['catid']) {
-                                if ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($catid)) {
+                                if ($this->where_list_sql && $this->content_model->admin_is_edit(['catid' => $catid])) {
                                     $this->_json(0, dr_lang('当前角色无权限管理此栏目'));
                                 }
                                 // 插入到同步栏目中
@@ -332,7 +337,7 @@ class Module extends \Phpcmf\Table
                                 $new[1]['tableid'] = 0;
                                 $new[1]['id'] = $this->content_model->index(0, $new);
                                 if ($new[1]['id']) {
-                                    $rt = $this->content_model->table($this->init['table'])->replace($new[1]);
+                                    $this->content_model->table($this->init['table'])->replace($new[1]);
                                     $c ++;
                                     $u = 1;
                                 }
@@ -472,7 +477,7 @@ class Module extends \Phpcmf\Table
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => 'status > 0'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => 'status >= 0'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         $this->_List();
@@ -499,7 +504,7 @@ class Module extends \Phpcmf\Table
             // 删除审核提醒
             \Phpcmf\Service::M('member')->delete_admin_notice(APP_DIR.'/verify/edit:id/'.$id, SITE_ID);
             $this->_admin_msg(0, dr_lang('审核内容不存在'));
-        } elseif ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($data['catid'], $data['uid'])) {
+        } elseif ($this->where_list_sql && $this->content_model->admin_is_edit($data)) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
         }
 
@@ -552,7 +557,7 @@ class Module extends \Phpcmf\Table
         ]);
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids(), function ($rows) {
             foreach ($rows as $t) {
-                if ($this->where_list_sql && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['catid'], $t['uid'])) {
+                if ($this->where_list_sql && $this->content_model->admin_is_edit($t)) {
                     return dr_return_data(0, dr_lang('当前角色无权限管理此栏目'));
                 }
             }
@@ -837,7 +842,7 @@ class Module extends \Phpcmf\Table
                 $data['verify'] = [
                     'uid' => $row['backuid'],
                     'isnew' => $row['isnew'],
-                    'backinfo' => $row['backinfo'],
+                    'backinfo' => dr_string2array($row['backinfo']),
                 ];
                 $data['myflag'] = $data['flag'];
                 $this->is_get_catid = $catid ? $catid : $data['catid'];
@@ -907,7 +912,17 @@ class Module extends \Phpcmf\Table
         $data[1]['catid'] = $data[0]['catid'] = $catid;
 
         // 验证状态
-        $data[1]['status'] = 9;
+        if ($this->is_post_user) {
+            // 投稿者
+            $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member_authid) : $this->content_model->get_verify_status(
+                $id,
+                $this->member_authid,
+                $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['verify']
+            );
+        } else {
+            $data[1]['status'] = 9;
+        }
+
         $data[1]['uid'] = (int)$data[1]['uid'];
 
         // 默认数据
@@ -960,26 +975,35 @@ class Module extends \Phpcmf\Table
             // 正常存储
             return parent::_Save($id, $data, $old,
                 function ($id, $data, $old) {
-                    // 发布之前判断是否来自审核
-                    if ($old && defined('IS_MODULE_VERIFY')) {
-                        if ($_POST['verify']['status']) {
-                            // 通过
-                            $step = $this->_get_verify($data[1]['uid'], $data[1]['catid']);
-                            $status = intval($old['status']);
-                            $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
-                            // 任务执行成功
-                            \Phpcmf\Service::M('member')->todo_admin_notice( MOD_DIR.'/verify/edit:id/'.$id, SITE_ID);
-                        } else {
-                            // 拒绝
-                            $data[1]['status'] = 0;
-                            // 通知
-                            $old['note'] = $_POST['verify']['msg'];
-                            \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
-                        }
-                    }
                     // 禁止修改栏目
                     if ($old['catid'] && $this->module['category'][$old['catid']]['setting']['notedit']) {
                         $data[1]['catid'] = $old['catid'];
+                    }
+                    // 发布之前判断是否来自审核
+                    if ($old && defined('IS_MODULE_VERIFY')) {
+                        if ($this->is_post_user) {
+                            // 投稿者编辑
+                            $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member_authid) : $this->content_model->get_verify_status(
+                                $data[1]['id'],
+                                $this->member_authid,
+                                $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$data[1]['catid']]['verify']
+                            );
+                        } else {
+                            if ($_POST['verify']['status']) {
+                                // 通过
+                                $step = $this->_get_verify($data[1]['uid'], $data[1]['catid']);
+                                $status = intval($old['status']);
+                                $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
+                                // 任务执行成功
+                                \Phpcmf\Service::M('member')->todo_admin_notice( MOD_DIR.'/verify/edit:id/'.$id, SITE_ID);
+                            } else {
+                                // 拒绝
+                                $data[1]['status'] = 0;
+                                // 通知
+                                $old['note'] = $_POST['verify']['msg'];
+                                \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
+                            }
+                        }
                     }
 					// 是否退稿
 					if (defined('IS_MODULE_TG')) {
@@ -1038,6 +1062,12 @@ class Module extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $html, 'listfile' => $list]);
         } else {
+            if ($this->is_post_user) {
+                // 投稿者
+                $this->_json(1, dr_lang('操作成功，等待管理员审核'), [
+                    'url' => dr_url(MOD_DIR.'/verify/index')
+                ]);
+            }
             $this->_json(1, dr_lang('操作成功'));
         }
     }

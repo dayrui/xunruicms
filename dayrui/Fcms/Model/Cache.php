@@ -189,6 +189,7 @@ class Cache extends \Phpcmf\Model
         ];
         foreach ($path as $p) {
             dr_dir_delete($p);
+            @mkdir($p, 0777);
             file_put_contents($p.'/index.html', 'error');
         }
 

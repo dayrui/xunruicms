@@ -58,7 +58,7 @@
                         <select name="value[role][{$i}]" class="form-control">
                             <option value=""> {dr_lang('不审核')} </option>
                             {loop $ci->role $t}
-                            {if $t.id != 1}
+                            {if $t.id != 1 && !$t.application.tid}
                             <option value="{$t.id}" {if $t.id == $value[role][$i]} selected{/if}> {dr_lang($t.name)} </option>
                             {/if}
                             {/loop}
