@@ -39,7 +39,7 @@ class Module extends \Phpcmf\Table
             'date_field' => 'updatetime',
             'show_field' => 'title',
             'where_list' => $this->where_list_sql,
-            'order_by' => $this->module['setting']['order'],
+            'order_by' => dr_safe_replace($this->module['setting']['order']),
             'list_field' => $this->module['setting']['list_field'],
         ]);
         $this->content_model->init($this->init); // 初始化内容模型
