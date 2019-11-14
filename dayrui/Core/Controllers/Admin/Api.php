@@ -518,6 +518,28 @@ class Api extends \Phpcmf\Common
 
     }
 
+    /**
+     * 测试缓存是否可用
+     */
+    public function test_cache() {
+
+        $config = new \Config\Cache();
+
+        $adapter = new $config->validHandlers[$config->handler]($config);
+        if (!$adapter->isSupported()) {
+            $this->_json(0, dr_lang('缓存方式[%s]不支持', $config->handler));
+        }
+
+        $adapter->initialize();
+        $adapter->save('test', 'phpcmf', 60);
+        if ($adapter->get('test') == 'phpcmf') {
+            $this->_json(1, dr_lang('缓存方式[%s]已生效', $config->handler));
+        } else {
+            $this->_json(0, dr_lang('缓存方式[%s]未生效', $config->handler));
+        }
+
+    }
+
     // 短信接口查询
     public function sms_info() {
         exit($this->_api_sms_info());

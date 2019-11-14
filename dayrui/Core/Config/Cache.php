@@ -18,7 +18,7 @@ class Cache extends BaseConfig
 	| it is not available, the $backupHandler will be used in its place.
 	|
 	*/
-	public $handler = 'file';
+	public $handler = SYS_CACHE_TYPE  == 1 ? 'memcached' : (SYS_CACHE_TYPE  == 2 ? 'redis' : 'file');
 
 	/*
 	|--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ class Cache extends BaseConfig
 	| always available, though that's not always practical for the app.
 	|
 	*/
-	public $backupHandler = 'dummy';
+	public $backupHandler = 'file';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -122,4 +122,15 @@ class Cache extends BaseConfig
 		'redis'     => \CodeIgniter\Cache\Handlers\RedisHandler::class,
 		'wincache'  => \CodeIgniter\Cache\Handlers\WincacheHandler::class,
 	];
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (is_file(ROOTPATH.'config/redis.php')) {
+            $this->redis = require ROOTPATH.'config/redis.php';
+        }
+        if (is_file(ROOTPATH.'config/memcached.php')) {
+            $this->memcached = require ROOTPATH.'config/memcached.php';
+        }
+    }
 }

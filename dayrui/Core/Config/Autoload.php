@@ -64,6 +64,7 @@ class Autoload extends \CodeIgniter\Config\AutoloadConfig
 			'Config'                        => COREPATH.'Config',
 
             'Phpcmf\Controllers'            => APPPATH.'Controllers',
+			'Phpcmf\Config'                 => CMSPATH.'Config',
 			'Phpcmf\Extend'                 => CMSPATH.'Extend',
             'Phpcmf\Library'                => CMSPATH.'Library',
             'Phpcmf\Field'                  => CMSPATH.'Field',

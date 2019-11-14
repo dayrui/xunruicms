@@ -33,6 +33,17 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('缓存方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="0" {if empty($data['SITE_CLOSE'])}checked{/if} /> {dr_lang('文件')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="1" {if $data['SYS_CACHE_TYPE'] == 1}checked{/if} /> Memcached <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="2" {if $data['SYS_CACHE_TYPE'] == 2}checked{/if} /> Redis <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+
                         {loop $cache_var $value $name}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang($name)}</label>
@@ -110,6 +121,7 @@
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
             <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+            <button type="button" onclick="dr_test_cache()" class="btn red"> <i class="fa fa-cloud"></i> {dr_lang('测试')}</button>
         </div>
     </div>
 </form>
@@ -117,6 +129,23 @@
     function dr_to_key() {
         $.get("{dr_url('api/syskey')}", function(data){
             $("#sys_key").val(data);
+        });
+    }  function dr_test_cache() {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('api/test_cache')}",
+            success: function(json) {
+                layer.close(loading);
+                dr_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
         });
     }
 </script>

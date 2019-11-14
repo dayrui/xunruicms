@@ -83,6 +83,7 @@ if (is_file(WRITEPATH.'config/cache.php')) {
 }
 foreach ([
              'SYS_CACHE',
+             'SYS_CACHE_TYPE',
              'SYS_CACHE_SHOW',
              'SYS_CACHE_PAGE',
              'SYS_CACHE_ATTACH',
