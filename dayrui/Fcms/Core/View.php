@@ -1686,6 +1686,11 @@ class View {
                 } elseif (!$param['id']) {
                     return $this->_return($system['return'], 'id参数为空', '', 0);
                 }
+                
+                $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
+                if (!$module) {
+                    return $this->_return($system['return'], "模块({$dirname})未安装");
+                }
 
                 if ($where) {
                     foreach ($where as $i => $t) {
@@ -1696,11 +1701,22 @@ class View {
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
-                $index = $this->_query('SELECT `contentid` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
-                $where[] = [
-                    'adj' => 'SQL',
-                    'value' => '(`'.$table.'`.`id` IN('.($index ? $index['contentid'] : 0).'))'
-                ];
+                $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
+                
+				// 存在限制总数时
+				if ($module['setting']['search']['total']) {
+					$where[] = [
+						'adj' => 'SQL',
+						'value' => '(`'.$table.'`.`id` IN('.($index ? $index['contentid'] : 0).'))'
+					];	
+                } else {
+                	$p = dr_string2array($index['params']);
+					$where[] = [
+						'adj' => 'SQL',
+						'value' => '(`'.$table.'`.`id` IN('.($p['sql'] ? $p['sql'] : 0).'))'
+					];		
+                }
+               
                 unset($param['id']);
 
                 $system['sbpage'] = 1;
@@ -1791,7 +1807,11 @@ class View {
                     unset($catids);
                 }
 
-                $where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
+				// 不是搜索标签就加上状态判断
+				if ($system['action'] != 'search') {
+					$where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
+				}
+				
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
 

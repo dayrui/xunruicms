@@ -163,10 +163,10 @@ class Search extends \Phpcmf\Model {
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
 
             // 最大数据量
-            $limit = (int)$module['setting']['search']['total'] ? ' LIMIT '.(int)$module['setting']['search']['total'] : ' LIMIT 10000';
+            $limit = (int)$module['setting']['search']['total'] ? ' LIMIT '.(int)$module['setting']['search']['total'] : '';
 
             // 组合sql查询结果
-            $sql = "SELECT `{$table}`.`id` FROM {$from} {$where} ORDER BY NULL".$limit;
+            $sql = "SELECT `{$table}`.`id` FROM {$from} {$where} ORDER BY id ".$limit;
 
             // 重新生成缓存文件
             $result = $this->db->query($sql)->getResultArray();
