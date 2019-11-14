@@ -70,7 +70,7 @@ class Cache extends BaseConfig
 	| if you run multiple applications with the same cache engine.
 	|
 	*/
-	public $prefix = '';
+	public $prefix = SYS_KEY;
 
 	/*
 	| -------------------------------------------------------------------------
