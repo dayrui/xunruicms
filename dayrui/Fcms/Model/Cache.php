@@ -33,7 +33,7 @@ class Cache extends \Phpcmf\Model
             exit(\Phpcmf\Service::C()->_json(1, dr_lang('无可用附件更新'), 0));
         }
 
-        $psize = 50;
+        $psize = 300;
         $tpage = ceil($total/$psize);
         $result = $this->db->table('attachment')->orderBy('id ASC')
             ->limit($psize, $psize * ($page - 1))->get()->getResultArray();
