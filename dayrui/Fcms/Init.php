@@ -217,7 +217,14 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
         define('IS_MEMBER', FALSE);
     } else {
         // 不存在的应用
-        exit('APP目录不存在: APPSPATH/'.$dir.'/');
+        define('APPPATH', COREPATH);
+        define('APP_DIR', '');
+        define('IS_MEMBER', FALSE);
+        $_GET['s'] = '';
+        $_GET['c'] = 'home';
+        $_GET['m'] = 's404';
+        $_GET['uri'] = '应用程序('.$dir.')不存在';
+        //exit();
     }
 } else {
     // 系统主目录
