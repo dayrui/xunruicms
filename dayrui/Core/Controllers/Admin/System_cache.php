@@ -54,7 +54,7 @@ class System_cache extends \Phpcmf\Common
             'module' => $module,
             'cache_var' => [
                 'SHOW' => '模块内容',
-                'ATTACH' => '网站附件',
+                //'ATTACH' => '网站附件',
                 'LIST' => '查询标签',
                 'SEARCH' => '内容搜索',
             ],

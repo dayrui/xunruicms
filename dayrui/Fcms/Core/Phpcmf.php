@@ -643,16 +643,16 @@ abstract class Common extends \CodeIgniter\Controller
      */
     public function get_attachment($id) {
 
-        $id = (int)$id;
         if (!$id) {
             return null;
         }
 
-        $data = \Phpcmf\Service::L('cache')->init()->get('attach-info-'.$id);
+        $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
         if ($data) {
             return $data;
         }
 
+        $id = (int)$id;
         $data = \Phpcmf\Service::M()->db->table('attachment')->where('id', $id)->get()->getRowArray();
         if (!$data) {
             return null;
@@ -692,9 +692,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         $info['url'] = dr_get_file_url($info);
 
-        if (SYS_CACHE && SYS_CACHE_ATTACH) {
-            \Phpcmf\Service::L('cache')->init()->save('attach-info-'.$id, $info, SYS_CACHE_ATTACH * 3600);
-        }
+        \Phpcmf\Service::L('cache')->set_file('attach-info-'.$id, $info, 'attach');
 
         return $info;
     }

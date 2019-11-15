@@ -18,11 +18,13 @@ class Cache extends \Phpcmf\Model
 
         $page = intval($_GET['page']);
         if (!$page) {
+			/*
             if (!SYS_CACHE) {
                 exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未开启缓存功能').'</a>', 1));
             } elseif (!SYS_CACHE_ATTACH) {
                 exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未设置附件缓存时间').'</a>', 1));
-            }
+            }*/
+			dr_mkdirs(WRITEPATH.'attach');
             exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1));
         }
 
@@ -181,8 +183,7 @@ class Cache extends \Phpcmf\Model
         $path = [
             WRITEPATH.'html',
             WRITEPATH.'temp',
-            WRITEPATH.'temp',
-            WRITEPATH.'attach',
+            //WRITEPATH.'attach',
             WRITEPATH.'caching',
             WRITEPATH.'authcode',
             WRITEPATH.'template',
