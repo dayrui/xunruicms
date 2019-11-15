@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}bbs_cat_count` (
   `last_time` int(10) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `catid` (`catid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='板块统计';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='板块统计';

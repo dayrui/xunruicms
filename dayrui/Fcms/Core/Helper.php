@@ -5,6 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+
 // 通过数组值查找数组key
 function dr_get_array_key($array, $value) {
 	if (!in_array($value, $array)) {
@@ -321,6 +322,11 @@ if (!function_exists('dr_domain_301')) {
 
         dr_redirect($url, 'auto', 301);exit;
     }
+}
+
+// 格式化sql创建
+function dr_format_create_sql($sql) {
+    return trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
 }
 
 /**

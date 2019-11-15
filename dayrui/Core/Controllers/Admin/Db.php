@@ -34,9 +34,13 @@ class Db extends \Phpcmf\Common
 
 	public function check_index() {
         $table = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
-        !$table && $this->_json(0, dr_lang('表错误'));
+        if (!$table) {
+            $this->_json(0, dr_lang('表错误'));
+        }
         $data = \Phpcmf\Service::M()->db->query('CHECK TABLE `'.$table.'`')->getRowArray();
-        !$data && $this->_json(0, dr_lang('表信息读取失败'));
+        if (!$data) {
+            $this->_json(0, dr_lang('表信息读取失败'));
+        }
         $this->_json(1, $data['Msg_text']);
     }
 
@@ -56,9 +60,12 @@ class Db extends \Phpcmf\Common
 	public function all() {
 
 	    $at = \Phpcmf\Service::L('input')->get('at');
-        $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('没有选择表'));
+        $ids = \Phpcmf\Service::L('input')->post('ids');
+        if (!$ids) {
+            $this->_json(0, dr_lang('没有选择表'));
+        }
 
+        $i = 0;
         foreach ($ids as $table) {
 
             if (!$table) {
@@ -80,10 +87,11 @@ class Db extends \Phpcmf\Common
                     break;
 
             }
+            $i++;
 
         }
 
-        $this->_json(1, dr_lang('操作成功'));
+        $this->_json(1, dr_lang('批量执行%s个表', $i));
     }
 
 }

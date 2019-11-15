@@ -165,7 +165,7 @@ class Table extends \Phpcmf\Model
                 if (!$ret) {
                     continue;
                 }
-                if ($this->db->simpleQuery($ret)) {
+                if ($this->db->simpleQuery(dr_format_create_sql($ret))) {
                     $todo[] = $ret;
                     $count++;
                 } else {
@@ -204,18 +204,18 @@ class Table extends \Phpcmf\Model
 			  KEY `status` (`status`),
 			  KEY `inputtime` (`inputtime`),
 			  KEY `displayorder` (`displayorder`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='".$data['name']."表单表';"
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='".$data['name']."表单表';"
             ,
             "CREATE TABLE IF NOT EXISTS `".$pre.'_'.$data['table']."_data_0` (
 			  `id` int(10) unsigned NOT NULL,
 			  `uid` int(10) unsigned DEFAULT 0 COMMENT '录入者uid',
 			  UNIQUE KEY `id` (`id`),
 			  KEY `uid` (`uid`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='".$data['name']."表单附表';"
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='".$data['name']."表单附表';"
         ];
 
         foreach ($sql as $s) {
-            $this->db->simpleQuery(trim($s));
+            $this->db->simpleQuery(dr_format_create_sql($s));
         }
 
         // 默认字段
@@ -324,7 +324,7 @@ class Table extends \Phpcmf\Model
 			  KEY `status` (`status`),
 			  KEY `displayorder` (`displayorder`),
 			  KEY `inputtime` (`inputtime`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='模块表单".$data['name']."表';"
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块表单".$data['name']."表';"
             ,
             "CREATE TABLE IF NOT EXISTS `{tablename}_data_0` (
 			  `id` int(10) unsigned NOT NULL,
@@ -335,7 +335,7 @@ class Table extends \Phpcmf\Model
 			  KEY `cid` (`cid`),
               KEY `catid` (`catid`),
 			  KEY `uid` (`uid`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='模块表单".$data['name']."附表';"
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块表单".$data['name']."附表';"
         ];
 
         // 为全部站点模块创建表单
@@ -347,7 +347,7 @@ class Table extends \Phpcmf\Model
                 continue;
             }
             foreach ($sql as $s) {
-                $this->db->simpleQuery(str_replace('{tablename}', $pre, trim($s)));
+                $this->db->simpleQuery(str_replace('{tablename}', $pre, dr_format_create_sql($s)));
             }
             // 加上统计字段
             if ($this->is_field_exists($par, $data['table']."_total")) {
@@ -436,7 +436,7 @@ class Table extends \Phpcmf\Model
 
 
         $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_form')."`");
-        $this->db->simpleQuery(trim("
+        $this->db->simpleQuery(dr_format_create_sql("
 		CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_form')."` (
 		  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
 		  `name` varchar(50) NOT NULL COMMENT '名称',
@@ -444,12 +444,12 @@ class Table extends \Phpcmf\Model
 		  `setting` text DEFAULT NULL COMMENT '配置信息',
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `table` (`table`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='表单模型表';
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单模型表';
 		"));
 
 
         $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_category')."`");
-        $this->db->simpleQuery(trim("
+        $this->db->simpleQuery(dr_format_create_sql("
         CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_category')."` (
           `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
           `tid` tinyint(1) NOT NULL COMMENT '栏目类型，0单页，1模块，2外链',
@@ -474,17 +474,17 @@ class Table extends \Phpcmf\Model
           KEY `show` (`show`),
           KEY `dirname` (`dirname`),
           KEY `module` (`pid`,`displayorder`,`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
         "));
 
         $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_index')."`");
-        $this->db->simpleQuery(trim("
+        $this->db->simpleQuery(dr_format_create_sql("
         CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_index')."` (
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `mid` varchar(20) NOT NULL COMMENT '模块目录',
           PRIMARY KEY (`id`),
           KEY `mid` (`mid`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='共享模块内容索引表';
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块内容索引表';
         "));
 
 

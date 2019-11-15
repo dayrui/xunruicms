@@ -10,6 +10,8 @@
 class Search extends \Phpcmf\Model {
 
     public $mytable; // 模块表名称
+    protected $_is_catid = 1; // 是否使用栏目
+    protected $_where; // 默认条件
 
     // 初始化搜索主表
     public function init($table) {
@@ -25,9 +27,6 @@ class Search extends \Phpcmf\Model {
         // 模块表名称
         $table = $this->dbprefix($this->mytable);
 
-        // 栏目模型表
-        $table_more = $this->dbprefix($this->mytable.'_category_data');
-
         // 排序查询参数
         ksort($get);
         $param = $get;
@@ -35,14 +34,12 @@ class Search extends \Phpcmf\Model {
         unset($get['order'], $get['page']);
 
         // 查询缓存
-        $id = md5(MOD_DIR.dr_array2string($get));
+        $id = md5($table.dr_array2string($get));
         if (SYS_CACHE_SEARCH) {
             $data = $this->db->table($this->mytable.'_search')->where('id', $id)->get()->getRowArray();
             $time = intval(SYS_CACHE_SEARCH) * 3600;
             if ($data && $data['inputtime'] < SYS_TIME - $time) {
                 $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
-                //$this->db->table($this->mytable.'_search_index')->where('id', $id)->delete();
-                //$this->db->query('REPAIR TABLE  `'.$table.'_search_index`');
                 $data = [];
             }
         } else {
@@ -54,8 +51,6 @@ class Search extends \Phpcmf\Model {
 
             $get['keyword'] = $get['catid'] = null;
             unset($get['keyword'], $get['catid']);
-
-            $from = '`'.$table.'`';
 
             // 主表的字段
             $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, $this->dbprefix($this->mytable));
@@ -69,9 +64,7 @@ class Search extends \Phpcmf\Model {
             }
 
             // 默认搜索条件
-            $where = [
-				'`'.$table.'`.`status` = 9'
-			];
+            $where = $this->_where ? $this->_where : [ '`'.$table.'`.`status` = 9' ];
 
             // 关键字匹配条件
             if ($param['keyword'] != '') {
@@ -93,19 +86,10 @@ class Search extends \Phpcmf\Model {
                     continue;
                 }
                 isset($get[$name]) && strlen($get[$name]) && $where[] = $this->_where($table, $name, $get[$name], $field);
-                // 地图坐标排序，这里不用它，默认id
-                /*
-                if (isset($_order_by[$name])) {
-                    if (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
-                        $order_by[] =   '`id` desc ';
-                    } else {
-                        $order_by[] = '`'.$table.'`.`'.$name.'` '.$_order_by[$name];
-                    }
-                }*/
             }
 
             // 栏目的字段
-            if ($catid) {
+            if ($catid && $this->_is_catid) {
                 $more = 0;
                 $cat_field = $module['category'][$catid]['field'];
                 // 副栏目判断
@@ -134,7 +118,9 @@ class Search extends \Phpcmf\Model {
                 }
 
                 if ($cat_field) {
+                    // 栏目模型表
                     $more_where = [];
+                    $table_more = $this->dbprefix($this->mytable.'_category_data');
                     foreach ($cat_field as $name => $field) {
                         if (isset($get[$name]) && strlen($get[$name])) {
                             $more = 1;
@@ -157,7 +143,6 @@ class Search extends \Phpcmf\Model {
                 }
             }
 
-
             // 自定义组合查询
             $where = $this->mysearch($module, $where, $get);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
@@ -166,7 +151,7 @@ class Search extends \Phpcmf\Model {
             $limit = (int)$module['setting']['search']['total'] ? ' LIMIT '.(int)$module['setting']['search']['total'] : '';
 
             // 组合sql查询结果
-            $sql = "SELECT `{$table}`.`id` FROM {$from} {$where} ORDER BY id ".$limit;
+            $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY id ".$limit;
 
             // 重新生成缓存文件
             $result = $this->db->query($sql)->getResultArray();
@@ -174,15 +159,8 @@ class Search extends \Phpcmf\Model {
                 $cid = [];
                 // 删除旧数据
                 $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
-                //$this->db->table($this->mytable.'_search_index')->where('id', $id)->delete();
                 // 入库索引表
                 foreach ($result as $t) {
-                    /*
-                    $this->db->table($this->mytable.'_search_index')->insert([
-                        'id' => $id,
-                        'cid' => $t['id'],
-                        'inputtime' => SYS_TIME
-                    ]);*/
                     $cid[] = $t['id'];
                 }
                 // 缓存入库

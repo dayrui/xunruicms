@@ -23,7 +23,7 @@ return [
       KEY `cid` (`cid`),
       KEY `catid` (`catid`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='内容草稿表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容草稿表';",
 
     '_verify' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL,
@@ -42,7 +42,7 @@ return [
       KEY `status` (`status`),
       KEY `inputtime` (`inputtime`),
       KEY `backuid` (`backuid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='内容审核表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容审核表';",
 
     '_hits' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL COMMENT '文章id',
@@ -56,7 +56,7 @@ return [
       KEY `week_hits` (`week_hits`),
       KEY `month_hits` (`month_hits`),
       KEY `year_hits` (`year_hits`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='时段点击量统计';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='时段点击量统计';",
 
     '_index' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -69,7 +69,7 @@ return [
       KEY `catid` (`catid`),
       KEY `status` (`status`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='内容索引表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容索引表';",
 
     '_category' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
         `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
@@ -87,7 +87,7 @@ return [
         PRIMARY KEY (`id`),
         KEY `show` (`show`),
         KEY `module` (`pid`,`displayorder`,`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='栏目表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='栏目表';",
 
     '_category_data' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -96,7 +96,7 @@ return [
       PRIMARY KEY (`id`),
       KEY `uid` (`uid`),
       KEY `catid` (`catid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='栏目模型表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='栏目模型表';",
 
     '_category_data_0' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -105,7 +105,7 @@ return [
       PRIMARY KEY (`id`),
       KEY `uid` (`uid`),
       KEY `catid` (`catid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='栏目模型表的附表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='栏目模型表的附表';",
     
     '_flag' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `flag` tinyint(2) unsigned NOT NULL DEFAULT '1' COMMENT '文档标记id',
@@ -114,7 +114,7 @@ return [
       `catid` mediumint(8) unsigned NOT NULL COMMENT '栏目id',
       KEY `flag` (`flag`,`id`,`uid`),
       KEY `catid` (`catid`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='标记表';
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='标记表';
     ",
 
     '_search' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
@@ -129,7 +129,7 @@ return [
       KEY `catid` (`catid`),
       KEY `keyword` (`keyword`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='搜索表';
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='搜索表';
     ",
 
 
@@ -146,7 +146,7 @@ return [
       KEY `cid` (`cid`),
       KEY `catid` (`catid`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='内容回收站表';
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容回收站表';
     ",
 
     '_time' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
@@ -162,7 +162,7 @@ return [
       KEY `catid` (`catid`),
       KEY `posttime` (`posttime`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='内容定时发布表';
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容定时发布表';
     ",
     
 ];

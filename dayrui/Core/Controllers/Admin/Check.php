@@ -243,7 +243,7 @@ class Check extends \Phpcmf\Common
   `displayorder` smallint(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY (`displayorder`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT=\'邮件账户表\';');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'邮件账户表\';');
                 }*/
 
                 /*

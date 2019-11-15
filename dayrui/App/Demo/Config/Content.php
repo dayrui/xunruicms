@@ -65,7 +65,7 @@ return array (
   KEY `hits` (`hits`),
   KEY `displayorder` (`displayorder`,`updatetime`),
   KEY `fkbd_total` (`fkbd_total`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT=\'内容主表\'',
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT=\'内容主表\'',
             0 => 'CREATE TABLE IF NOT EXISTS `{tablename}` (
   `id` int(10) unsigned NOT NULL,
   `uid` mediumint(8) unsigned NOT NULL COMMENT \'作者uid\',
@@ -74,7 +74,7 @@ return array (
   UNIQUE KEY `id` (`id`),
   KEY `uid` (`uid`),
   KEY `catid` (`catid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT=\'内容附表\'',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'内容附表\'',
         ),
     'field' =>
         array (

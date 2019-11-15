@@ -350,7 +350,7 @@ $db[\'default\']	= [
             if (!$ret) {
                 continue;
             }
-            if (!$this->db->simpleQuery($ret)) {
+            if (!$this->db->simpleQuery(dr_format_create_sql($ret))) {
                 $rt = $this->db->error();
                 $error = '**************************************************************************'
                     .PHP_EOL.$ret.PHP_EOL.$rt['message'].PHP_EOL;

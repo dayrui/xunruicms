@@ -49,7 +49,7 @@ return [
       KEY `status` (`status`),
       KEY `aa` (`cid`,`status`,`inputtime`),
       KEY `inputtime` (`inputtime`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='评论内容表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论内容表';",
 
     '_comment_index' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
@@ -77,7 +77,7 @@ return [
       KEY `comments` (`comments`),
       KEY `avgsort` (`avgsort`),
       KEY `tableid` (`tableid`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='评论索引表';",
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论索引表';",
 
     
 ];

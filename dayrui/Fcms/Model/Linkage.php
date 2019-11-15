@@ -52,7 +52,7 @@ class Linkage extends \Phpcmf\Model
 		  KEY `cname` (`cname`),
 		  KEY `hidden` (`hidden`),
 		  KEY `list` (`site`,`displayorder`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='联动菜单".dr_safe_replace($data['name'])."数据表'"));
+		) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='联动菜单".dr_safe_replace($data['name'])."数据表'"));
         if (!$rt['code']) {
             // 创建失败删除数据
             $this->table('linkage')->delete($id);

@@ -674,7 +674,7 @@ class Model {
             if (!$ret) {
                 continue;
             }
-            if (!$this->db->simpleQuery($ret)) {
+            if (!$this->db->simpleQuery(dr_format_create_sql($ret))) {
                 $rt = $this->db->error();
                 return $ret.': '.$rt['message'];
             }
