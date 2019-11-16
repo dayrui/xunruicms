@@ -223,7 +223,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
         $_GET['s'] = '';
         $_GET['c'] = 'home';
         $_GET['m'] = 's404';
-        $_GET['uri'] = '应用程序('.$dir.')不存在';
+        $_GET['uri'] = '应用程序('.strtolower($dir).')不存在';
         //exit();
     }
 } else {

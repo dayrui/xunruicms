@@ -1073,7 +1073,7 @@ class View {
                     $pages = '';
 
                     // 如存在分页条件才进行分页查询
-                    if ($system['page'] && $system['urlrule']) {
+                    if ($system['page']) {
                         $page = max(1, (int)$_GET['page']);
                         $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system['db'], $system['cache'], FALSE);
                         $total = (int)$row['c'];
@@ -1145,7 +1145,7 @@ class View {
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-                if ($system['page'] && $system['urlrule']) {
+                if ($system['page']) {
                     $page = max(1, (int)$_GET['page']);
                     $urlrule = $system['urlrule'];
                     $pagesize = (int) $system['pagesize'];
@@ -1248,7 +1248,7 @@ class View {
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-                if ($system['page'] && $system['urlrule']) {
+                if ($system['page']) {
                     $page = max(1, (int)$_GET['page']);
                     $pagesize = (int) $system['pagesize'];
                     $pagesize = $pagesize ? $pagesize : 10;
@@ -1348,7 +1348,7 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
-                if ($system['page'] && $system['urlrule']) {
+                if ($system['page']) {
                     $page = max(1, (int)$_GET['page']);
                     $pagesize = (int) $system['pagesize'];
                     $pagesize = $pagesize ? $pagesize : 10;
@@ -1446,7 +1446,7 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
-                if ($system['page'] && $system['urlrule']) {
+                if ($system['page']) {
                     $page = max(1, (int)$_GET['page']);
                     $pagesize = (int) $system['pagesize'];
                     $pagesize = $pagesize ? $pagesize : 10;
@@ -1572,7 +1572,7 @@ class View {
 
                 $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
 
-                if ($system['page'] && $system['urlrule']) { // 如存在分页条件才进行分页查询
+                if ($system['page']) { // 如存在分页条件才进行分页查询
                     $page = max(1, (int)$_GET['page']);
                     $pagesize = (int) $system['pagesize'];
                     $pagesize = $pagesize ? $pagesize : 10;
@@ -2342,11 +2342,13 @@ class View {
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
         $total && $debug.= '<p>总记录：'.$total.'</p>';
 		if ($this->_page_used) {
-            $debug.= '<p>总记录：'.$total.'</p>';
+            $debug.= '<p>分页：已开启</p>';
 			$debug.= '<p>总页数：'.$nums.'</p>';
 			$debug.= '<p>每页数量：'.$pagesize.'</p>';
 			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
-		}
+		} else {
+            $debug.= '<p>分页：未开启</p>';
+        }
 
 		isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
 		$debug.= '</pre>';

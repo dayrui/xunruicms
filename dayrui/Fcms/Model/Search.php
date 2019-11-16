@@ -10,8 +10,6 @@
 class Search extends \Phpcmf\Model {
 
     public $mytable; // 模块表名称
-    protected $_is_catid = 1; // 是否使用栏目
-    protected $_where; // 默认条件
 
     // 初始化搜索主表
     public function init($table) {
@@ -64,7 +62,7 @@ class Search extends \Phpcmf\Model {
             }
 
             // 默认搜索条件
-            $where = $this->_where ? $this->_where : [ '`'.$table.'`.`status` = 9' ];
+            $where = [ '`'.$table.'`.`status` = 9' ];
 
             // 关键字匹配条件
             if ($param['keyword'] != '') {
@@ -89,7 +87,7 @@ class Search extends \Phpcmf\Model {
             }
 
             // 栏目的字段
-            if ($catid && $this->_is_catid) {
+            if ($catid) {
                 $more = 0;
                 $cat_field = $module['category'][$catid]['field'];
                 // 副栏目判断
@@ -222,7 +220,7 @@ class Search extends \Phpcmf\Model {
     }
 
     // 条件组合
-    private function _where($table, $name, $value, $field) {
+    protected function _where($table, $name, $value, $field) {
 
         $name = dr_safe_replace($name, ['\\', '/']);
         if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
