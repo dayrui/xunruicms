@@ -258,12 +258,11 @@ class Member extends \Phpcmf\Table
             $error = $ok = 0;
             foreach ($all as $t) {
                 list($username, $password, $email, $phone, $name) = explode('|', $t);
-                $username = trim($username == 'null' ? '' : $username);
-                $password = trim($password == 'null' ? '' : $password);
+                $name = trim($name == 'null' ? '' : $name);
                 $phone = trim($phone == 'null' ? '' : $phone);
                 $email = trim($email == 'null' ? '' : $email);
-                $name = trim($name == 'null' ? '' : $name);
-
+                $username = trim($username == 'null' ? '' : $username);
+                $password = trim($password == 'null' ? '' : $password);
                 if (in_array('username', $this->member_cache['register']['field'])
                     && !\Phpcmf\Service::L('form')->check_username($username)) {
                     $this->_json(0, dr_lang('账号[%s]格式不正确', $username), ['field' => 'all']);
