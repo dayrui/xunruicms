@@ -261,6 +261,7 @@ class Member extends \Phpcmf\Table
                 $username = trim($username == 'null' ? '' : $username);
                 $password = trim($password == 'null' ? '' : $password);
                 $phone = trim($phone == 'null' ? '' : $phone);
+                $email = trim($email == 'null' ? '' : $email);
                 $name = trim($name == 'null' ? '' : $name);
 
                 if (in_array('username', $this->member_cache['register']['field'])
