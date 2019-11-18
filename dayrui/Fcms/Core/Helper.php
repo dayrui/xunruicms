@@ -1378,7 +1378,7 @@ function dr_level_next_value($array, $id) {
  */
 function dr_html_auth($is = 0) {
 
-    $file = WRITEPATH.'html/'.md5($_SERVER['HTTP_USER_AGENT']).'.auth';
+    $file = WRITEPATH.'authcode/'.md5($_SERVER['HTTP_USER_AGENT']).'.auth';
     if ($is) {
         // 存储值
         return file_put_contents($file, SYS_TIME);

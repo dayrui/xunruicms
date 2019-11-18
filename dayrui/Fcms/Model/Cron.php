@@ -195,6 +195,22 @@ class Cron extends \Phpcmf\Model
             \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $cron['id'] ]);
         }
 
+        // 遍历文件
+        if ($fp = @opendir(WRITEPATH.'authcode/')) {
+            while (FALSE !== ($file = readdir($fp))) {
+                if ($file === '.' OR $file === '..'
+                    OR $file[0] === '.'
+                    OR !@is_file(WRITEPATH.'authcode/'.$file)) {
+                    continue;
+                }
+                if (SYS_TIME - filemtime(WRITEPATH.'authcode/'.$file) > 3600 * 24) {
+                    // 超过24小时删除
+                    @unlink(WRITEPATH.'authcode/'.$file);
+                }
+            }
+            closedir($fp);
+        }
+
         return dr_count($crons);
 
     }

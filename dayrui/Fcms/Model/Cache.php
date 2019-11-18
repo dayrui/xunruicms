@@ -185,7 +185,7 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'temp',
             //WRITEPATH.'attach',
             WRITEPATH.'caching',
-            WRITEPATH.'authcode',
+            //WRITEPATH.'authcode',
             WRITEPATH.'template',
         ];
         foreach ($path as $p) {
