@@ -284,11 +284,11 @@ class Member extends \Phpcmf\Table
                     $ok ++;
                 } else {
                     $error ++;
-
+                    log_message('error', dr_lang('后台批量注册会员失败（%s）：%s', trim($t), $rt['msg']));
                 }
             }
 
-            $this->_json(1, dr_lang('批量注册%s个用户，失败%s个', $ok, $error));
+            $this->_json(1, dr_lang('批量注册%s个用户，失败%s个（查看系统错误日志）', $ok, $error));
         }
 
         \Phpcmf\Service::V()->assign([

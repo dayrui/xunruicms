@@ -1589,7 +1589,7 @@ class Image
                     return $attach['url'].$remote['value']['image'];
                 }
                 //输出直接地址
-               return $attach['url'];
+                return $attach['url'];
             }
             $data = dr_catcher_data($attach['url']);
             if (!$data) {
