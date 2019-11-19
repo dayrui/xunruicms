@@ -531,8 +531,10 @@ class Api extends \Phpcmf\Common
         }
 
         $adapter->initialize();
-        $adapter->save('test', 'phpcmf', 60);
-        if ($adapter->get('test') == 'phpcmf') {
+        $rt = $adapter->save('test', 'phpcmf', 60);
+        if (!$rt) {
+            $this->_json(1, dr_lang('缓存方式[%s]存储失败', $config->handler));
+        } elseif ($adapter->get('test') == 'phpcmf') {
             $this->_json(1, dr_lang('缓存方式[%s]已生效', $config->handler));
         } else {
             $this->_json(0, dr_lang('缓存方式[%s]未生效', $config->handler));

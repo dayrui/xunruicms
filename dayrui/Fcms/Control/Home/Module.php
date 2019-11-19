@@ -876,7 +876,7 @@ class Module extends \Phpcmf\Common
         $name2 = 'show-'.APP_DIR.'-html-file';
         $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
         if (!$pcount) {
-            $this->_json(0, '临时缓存数据缓存不存在：'.$name2);
+            $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
             // 完成
             $this->_json(-1, '');
@@ -885,7 +885,7 @@ class Module extends \Phpcmf\Common
         $name = 'show-'.APP_DIR.'-html-file-'.$page;
         $cache = \Phpcmf\Service::L('cache')->init()->get($name);
         if (!$cache) {
-            $this->_json(0, '临时缓存数据缓存不存在：'.$name);
+            $this->_json(0, '临时缓存数据不存在：'.$name);
         }
 
         $html = '';
@@ -944,7 +944,7 @@ class Module extends \Phpcmf\Common
         $name2 = 'category-'.APP_DIR.'-html-file';
         $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
         if (!$pcount) {
-            $this->_json(0, '临时缓存数据缓存不存在：'.$name2);
+            $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
             // 完成
             $this->_json(-1, '');
@@ -953,7 +953,7 @@ class Module extends \Phpcmf\Common
         $name = 'category-'.APP_DIR.'-html-file-'.$page;
         $cache = \Phpcmf\Service::L('cache')->init()->get($name);
         if (!$cache) {
-            $this->_json(0, '临时缓存数据缓存不存在：'.$name);
+            $this->_json(0, '临时缓存数据不存在：'.$name);
         }
 
         if (APP_DIR) {
