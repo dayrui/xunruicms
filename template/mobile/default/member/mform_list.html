@@ -80,7 +80,7 @@
                 <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
                 <span></span>
             </label>
-            <label><button type="button" onclick="dr_ajax_option('{dr_member_url($uriprefix.'/del')}', '你确定要删除吗？', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button></label>
+            <label><button type="button" onclick="dr_ajax_option('{dr_member_url($uriprefix.'/del', ['cid' => $index.id])}', '你确定要删除吗？', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button></label>
             {/if}
         </div>
         <div class="col-md-7 fc-list-page">
