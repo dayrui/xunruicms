@@ -227,7 +227,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证过期，请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
