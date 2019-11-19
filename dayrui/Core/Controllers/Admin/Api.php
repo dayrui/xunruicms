@@ -359,6 +359,31 @@ class Api extends \Phpcmf\Common
         exit;
     }
 
+    /**
+     * 后台授权登录
+     */
+    public function alogin() {
+
+        $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        $code = md5($this->admin['id'].$this->admin['password']);
+
+        \Phpcmf\Service::L('cache')->set_data('admin_login_member', $this->admin, 300);
+
+        $sso = '';
+        $url = \Phpcmf\Service::M('member')->get_sso_url();
+        foreach ($url as $u) {
+            $sso.= '<script src="'.$u.'index.php?s=api&c=sso&action=alogin&code='.dr_authcode($uid.'-'.$code, 'ENCODE').'"></script>';
+        }
+        \Phpcmf\Service::V()->assign([
+            'menu' => '',
+        ]);
+
+        $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
+        !$url && $url = MEMBER_URL;
+
+        $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, $url, 0);exit;
+    }
+
 	/**
 	 * 预览移动端网站
 	 */

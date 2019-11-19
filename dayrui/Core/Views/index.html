@@ -85,7 +85,7 @@
                     </a>
                     {/if}
                     <ul class="dropdown-menu dropdown-menu-default">
-                        <li><a href="{dr_url('member/alogin_index', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
+                        <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
                         <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>
                         <li class="divider"> </li>
                         {if $ci->_is_admin_auth('cache/index')}
