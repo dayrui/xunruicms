@@ -464,7 +464,7 @@ class Member extends \Phpcmf\Table
             if (!$uid) {
                 continue;
             } elseif (!$this->member_cache['config']['groups']
-                && dr_count(\Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()) > 0) {
+                && dr_count(\Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()) > 1) {
                 $this->_json(0, dr_lang('不能同时拥有多个用户组'));
             } elseif (!\Phpcmf\Service::M()->counts('member_group_index', 'uid='.$uid.' and gid='.$gid)) {
                 \Phpcmf\Service::M('member')->insert_group($uid, $gid);
