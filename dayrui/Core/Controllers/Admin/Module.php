@@ -66,15 +66,22 @@ class Module extends \Phpcmf\Common
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
         $type = (int)\Phpcmf\Service::L('input')->get('type');
 
-        !preg_match('/^[a-z]+$/U', $dir) && $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
-        in_array($dir, $this->jname) && $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称，请重命名', $dir));
+        if (!preg_match('/^[a-z]+$/U', $dir)) {
+            $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
+        } elseif (in_array($dir, $this->jname)) {
+            $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称，请重命名', $dir));
+        }
 
         $path = dr_get_app_dir($dir);
-        !is_dir($path) && $this->_json(0, dr_lang('模块目录[%s]不存在', $path));
+        if (!is_dir($path)) {
+            $this->_json(0, dr_lang('模块目录[%s]不存在', $path));
+        }
 
         // 对当前模块属性判断
         $cfg = require $path.'Config/App.php';
-        !$cfg && $this->_json(0, dr_lang('文件[%s]不存在', 'App/'.ucfirst($dir).'/Config/App.php'));
+        if (!$cfg) {
+            $this->_json(0, dr_lang('文件[%s]不存在', 'App/'.ucfirst($dir).'/Config/App.php'));
+        }
 
         $cfg['share'] = $type ? 0 : 1;
 
@@ -87,13 +94,19 @@ class Module extends \Phpcmf\Common
     public function uninstall() {
 
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !preg_match('/^[a-z]+$/U', $dir) && $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
+        if (!preg_match('/^[a-z]+$/U', $dir)) {
+            $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
+        }
 
         $path = dr_get_app_dir($dir);
-        !is_dir($path) && $this->_json(0, dr_lang('模块目录[%s]不存在', $path));
+        if (!is_dir($path)) {
+            $this->_json(0, dr_lang('模块目录[%s]不存在', $path));
+        }
 
         $cfg = require $path.'Config/App.php';
-        !$cfg && $this->_json(0, dr_lang('文件[%s]不存在', 'App/'.ucfirst($dir).'/Config/App.php'));
+        if (!$cfg) {
+            $this->_json(0, dr_lang('文件[%s]不存在', 'App/'.ucfirst($dir).'/Config/App.php'));
+        }
 
         $rt = \Phpcmf\Service::M('Module')->uninstall($dir, $cfg);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -134,7 +147,6 @@ class Module extends \Phpcmf\Common
                     $t['version'] = $list[$dir]['version'];
                     $site = dr_string2array($t['site']);
                     $t['install'] = isset($site[SITE_ID]) && $site[SITE_ID] ? 1 : 0;
-                    $t['site'] = dr_count($site);
                     $my[$dir] = $t;
                     unset($list[$dir]);
                 }
@@ -154,11 +166,15 @@ class Module extends \Phpcmf\Common
         // 查询数据
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $row = \Phpcmf\Service::M('Module')->table('module')->get($id);
-        !$row && $this->_json(0, dr_lang('数据#%s不存在', $id));
+        if (!$row) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
         $value = (int)\Phpcmf\Service::L('input')->get('value');
         $rt = \Phpcmf\Service::M('Module')->table('module')->save($id, 'displayorder', $value);
-        !$rt['code'] && $this->_json(0, $rt['msg']);
+        if (!$rt['code']) {
+            $this->_json(0, $rt['msg']);
+        }
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
         \Phpcmf\Service::L('input')->system_log('修改模块('.$row['dirname'].')的排序值为'.$value);
@@ -170,7 +186,9 @@ class Module extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $row = \Phpcmf\Service::M('Module')->table('module')->get($id);
-        !$row && $this->_json(0, dr_lang('数据#%s不存在', $id));
+        if (!$row) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
         $v = $row['disabled'] ? 0 : 1;
         \Phpcmf\Service::M('Module')->table('module')->update($id, ['disabled' => $v]);
@@ -184,14 +202,18 @@ class Module extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table('module')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        }
 
         // 格式转换
         $data['site'] = dr_string2array($data['site']);
         $data['setting'] = dr_string2array($data['setting']);
 
         // 判断站点
-        !$data['site'][SITE_ID] && $this->_admin_msg(0, dr_lang('当前站点尚未安装'));
+        if (!$data['site'][SITE_ID]) {
+            $this->_admin_msg(0, dr_lang('当前站点尚未安装'));
+        }
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', true);
@@ -251,7 +273,9 @@ class Module extends \Phpcmf\Common
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M('Module')->table('module')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        }
 
         // 格式转换
         $data['setting'] = dr_string2array($data['setting']);
@@ -313,7 +337,9 @@ class Module extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->table('module_form')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('模块表单（%s）不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('模块表单（%s）不存在', $id));
+        }
 
         $data['setting'] = dr_string2array($data['setting']);
         !$data['setting']['list_field'] && $data['setting']['list_field'] = [
@@ -380,10 +406,14 @@ class Module extends \Phpcmf\Common
     public function form_del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+        if (!$ids) {
+            exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
         $rt = \Phpcmf\Service::M('Module')->delete_form($ids);
-        !$rt['code'] && exit($this->_json(0, $rt['msg']));
+        if (!$rt['code']) {
+            exit($this->_json(0, $rt['msg']));
+        }
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
         \Phpcmf\Service::L('input')->system_log('批量删除模块表单: '. @implode(',', $ids));
@@ -404,7 +434,9 @@ class Module extends \Phpcmf\Common
     public function form_init_index() {
 
         $data = \Phpcmf\Service::M()->table('module_form')->getAll();
-        !$data && $this->_json(0, dr_lang('没有任何可用表单'));
+        if (!$data) {
+            $this->_json(0, dr_lang('没有任何可用表单'));
+        }
 
         $ct = $file = 0;
         foreach ($data as $t) {
@@ -413,7 +445,9 @@ class Module extends \Phpcmf\Common
                 continue; // 当前站点没有安装
             }
             $rt = \Phpcmf\Service::M('Module')->create_form_file($t['module'], $t['table'], 1);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             $file+= (int)$rt['msg'];
             $ct++;
             // 创建统计字段

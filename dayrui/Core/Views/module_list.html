@@ -14,7 +14,6 @@
                 <th width="70" style="text-align:center"> {dr_lang('排序')} </th>
                 <th width="60" style="text-align:center"> {dr_lang('类型')} </th>
                 <th width="200"> {dr_lang('名称')} / {dr_lang('目录')}</th>
-                <th width="60" style="text-align:center"> {dr_lang('站点数')} </th>
                 <th> {dr_lang('操作')} </th>
             </tr>
             </thead>
@@ -39,7 +38,6 @@
                     {/if}
                 </td>
                 <td><a {if !$t.share}href="/index.php?s={$t.dirname}" target="_blank"{/if}>{$t.name} / {$t.dirname}</a></td>
-                <td style="text-align:center">{$t.site}</td>
                 <td>
                     {if $t.install}
                     {if $ci->_is_admin_auth('edit')}
