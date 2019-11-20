@@ -313,7 +313,7 @@ class Module extends \Phpcmf\Model
                 $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
             } else {
                 // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
+                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, 1).$name)."`")->getRowArray();
                 $sql = str_replace(
                     array($sql['Table'], 'CREATE TABLE'),
                     array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
@@ -362,7 +362,7 @@ class Module extends \Phpcmf\Model
                 foreach ($form as $t) {
                     $mytable = $table.'_form_'.$t['table'];
                     // 主表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."`")->getRowArray();
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_'.$dir).'_form_'.$t['table']."`")->getRowArray();
                     $sql = str_replace(
                         array($sql['Table'], 'CREATE TABLE'),
                         array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
@@ -371,7 +371,7 @@ class Module extends \Phpcmf\Model
                     $sql = dr_format_create_sql(str_replace('{tablename}', $mytable, $sql));
                     $this->db->query($sql);
                     // 附表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$mytable."_data_0`")->getRowArray();
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_'.$dir).'_form_'.$t['table']."_data_0`")->getRowArray();
                     $sql = str_replace(
                         array($sql['Table'], 'CREATE TABLE'),
                         array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
