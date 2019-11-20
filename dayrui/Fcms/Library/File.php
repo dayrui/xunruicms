@@ -13,6 +13,7 @@
 class File {
 
     /**
+     * 复制文件
      * $fromFile  要复制谁
      * $toFile    复制到那
      */
@@ -34,7 +35,9 @@ class File {
         }
     }
 
-    function copy_dir($basedir, $filepath, $savepath){
+    // 复制目录
+    // 源文件目录$basedir，源文件目录$filepath，新文件目录$savepath
+    public function copy_dir($basedir, $filepath, $savepath){
         if ($dh = opendir($basedir)) {
             while (($file = readdir($dh)) !== false) {
                 if (strpos($file, '.') !== 0){

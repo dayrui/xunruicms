@@ -400,7 +400,8 @@ class View {
         $cache_file = $this->_cache.str_replace(array(WEBPATH, '/', '\\', DIRECTORY_SEPARATOR), array('', '_', '_', '_'), $name).($this->_is_mobile ? '.mobile.' : '').'.cache.php';
 
         // 当缓存文件不存在时或者缓存文件创建时间少于了模板文件时,再重新生成缓存文件
-        if (!is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
+        // 开发者模式下关闭缓存
+        if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
             $content = $this->handle_view_file(file_get_contents($name));
             @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && show_error('请将模板缓存目录（/cache/template/）权限设为777', 404, '无写入权限');
         }
@@ -695,6 +696,8 @@ class View {
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
         // 默认模块参数
         $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
+        // 开发者模式下关闭缓存
+        IS_DEV && $system['cache'] = 0;
 
         // action
         switch ($system['action']) {

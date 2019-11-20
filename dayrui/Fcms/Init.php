@@ -80,6 +80,7 @@ unset($system);
 $cache = [];
 if (is_file(WRITEPATH.'config/cache.php')) {
     $cache = require WRITEPATH.'config/cache.php';
+    IS_DEV && $cache['SYS_CACHE'] = 0; // 开发者模式下关闭缓存
 }
 foreach ([
              'SYS_CACHE',

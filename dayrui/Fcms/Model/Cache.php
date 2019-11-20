@@ -270,6 +270,7 @@ class Cache extends \Phpcmf\Model
         if (!$path) {
             return '目录为空';
         }
+
         dr_mkdirs($path);
         if (!is_dir($path)) {
             return '目录['.$path.']不存在';
@@ -302,6 +303,10 @@ class Cache extends \Phpcmf\Model
             }
         }
 
+        // 复制百度编辑器
+        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+
+        return '';
     }
 
     private function _error_msg($msg) {

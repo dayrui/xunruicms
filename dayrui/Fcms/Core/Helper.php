@@ -243,22 +243,20 @@ function dr_content_link($tags, $content, $num = 0) {
 
 // 内容加内链
 function dr_neilian($content, $blank = 1, $num = 1) {
-    if (!$content) return '';
+
+    if (!$content) {
+        return '';
+    }
 
     $tags = \Phpcmf\Service::L('cache')->get('tag-'.SITE_ID);
     if ($tags) {
         foreach ($tags as $t) {
-            $data = explode(',', $t['tags']);
-            if ($data) {
-                foreach ($data as $name) {
-                    $url = '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$name.'</a>';
-                    $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                        $url,
-                        $content,
-                        $num ? $num : -1
-                    );
-                }
-            }
+            $url = '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$t['name'].'</a>';
+            $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
+                $url,
+                $content,
+                $num ? $num : -1
+            );
         }
     }
 
