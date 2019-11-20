@@ -613,19 +613,33 @@ class Model {
 
     // 条件
     public function where($name, $value = '') {
+
+        if (!$name) {
+            return $this;
+        }
+
         $this->param['where'][] = strlen($value) ? [$name, $value] : $name;
         return $this;
     }
 
     // 条件
     public function like($name, $value = '') {
+
+        if (!$name) {
+            return $this;
+        }
+
         $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
         return $this;
     }
     
     // in条件
     public function where_in($name, $value) {
-        
+
+        if (!$name) {
+            return $this;
+        }
+
         if (is_array($value) && $value) {
             $this->param['where_in'][] = [$name, $value];
         }
@@ -641,7 +655,6 @@ class Model {
 
     // 运行SQL
     public function query_sql($sql, $more = 0) {
-
 
         $sql = str_replace('{dbprefix}', $this->prefix, $sql);
         $query = $this->db->query($sql);
