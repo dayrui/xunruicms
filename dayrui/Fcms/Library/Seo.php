@@ -392,7 +392,7 @@ class Seo
                 <ul class="page-breadcrumb">
                     <li>
                         <i class="fa fa-home"></i>
-                        <span>'.dr_lang('用户中心').'</span>
+                        <a href="'.dr_member_url('/').'">'.dr_lang('用户中心').'</a>
                         <i class="fa fa-angle-right"></i>
                     </li>
                     {value}
@@ -424,7 +424,7 @@ class Seo
                     </li>
                     <li>
                         <i class="'.dr_icon($menu['uri'][$uri]['icon']).'"></i>
-                        <span>'.dr_lang($menu['uri'][$uri]['name']).'</span>
+                        <a href="'.dr_member_url($uri).'">'.dr_lang($menu['uri'][$uri]['name']).'</a>
                     </li>
                     ', $seo['page_bar']);
             $seo['mymenu'] = [$menu['uri'][$uri]['id'], $menu['uri'][$uri]['pid']]; // 当前菜单id和pid
