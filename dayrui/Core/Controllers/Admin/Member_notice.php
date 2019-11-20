@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
 
 
 // 提醒
@@ -90,12 +88,6 @@ class Member_notice extends \Phpcmf\Table
             $type['g'.$id] = $t['name'];
         }
 
-        if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data');
-
-            $this->_json(1, dr_lang('操作成功'));
-        }
-
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
             'type' => $type,
@@ -106,6 +98,7 @@ class Member_notice extends \Phpcmf\Table
 
     // 内容查看
     public function show() {
+
         $id = intval($_GET['id']);
         $data = \Phpcmf\Service::M()->table('member_notice')->get($id);
 
@@ -163,9 +156,11 @@ class Member_notice extends \Phpcmf\Table
 
         $cache && $cache = array_unique($cache);
 
-        !dr_count($cache) && $this->_json(0, dr_lang('无可用账号'));
-        !$post['note'] && $this->_json(0, dr_lang('消息内容不存在'));
-
+        if (!dr_count($cache)) {
+            $this->_json(0, dr_lang('无可用账号'));
+        } elseif (!$post['note']) {
+            $this->_json(0, dr_lang('消息内容不存在'));
+        }
 
         // 存储文件
         \Phpcmf\Service::L('cache')->init()->save('member-notice-send', [
@@ -192,7 +187,9 @@ class Member_notice extends \Phpcmf\Table
     public function show_count_index() {
 
         $data = \Phpcmf\Service::L('cache')->init()->get('member-notice-send');
-        !dr_count($data) && $this->_json(0, dr_lang('无可用缓存内容'));
+        if (!dr_count($data)) {
+            $this->_json(0, dr_lang('无可用缓存内容'));
+        }
 
         $this->_json(dr_count($data['usernames']), 'ok');
     }
@@ -201,7 +198,9 @@ class Member_notice extends \Phpcmf\Table
 
         $page = max(1, intval($_GET['pp']));
         $cache = \Phpcmf\Service::L('cache')->init()->get('member-notice-send');
-        !$cache && $this->_json(0, dr_lang('缓存不存在'));
+        if (!$cache) {
+            $this->_json(0, dr_lang('缓存不存在'));
+        }
 
         $data = $cache['usernames'][$page];
         if ($data) {

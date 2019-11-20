@@ -2495,7 +2495,7 @@ function dr_safe_replace($string, $diy = null) {
  */
 function dr_safe_filename($string) {
     return str_replace(
-        ['..', "/", '\\', ' ', '<', '>', "{", '}', ';', '[', ']', '\'', '"'],
+        ['..', "/", '\\', ' ', '<', '>', "{", '}', ';', '[', ']', '\'', '"', '*', '?'],
         '',
         $string
     );

@@ -34,7 +34,7 @@ class System extends \Phpcmf\Common
                 'SYS_ADMIN_LOGIN_TIME' => intval($post['SYS_ADMIN_LOGIN_TIME']),
                 'SYS_ADMIN_PAGESIZE' => intval($post['SYS_ADMIN_PAGESIZE']),
 
-                'SYS_KEY' => $post['SYS_KEY'] == '************' ? $data['SYS_KEY'] : $post['SYS_KEY'],
+                'SYS_KEY' => dr_safe_filename($post['SYS_KEY'] == '************' ? $data['SYS_KEY'] : $post['SYS_KEY']),
                 'SYS_HTTPS' => (int)$post['SYS_HTTPS'],
                 'SYS_CSRF' => (int)$post['SYS_CSRF'],
                 'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
