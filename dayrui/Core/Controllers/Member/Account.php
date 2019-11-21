@@ -133,9 +133,9 @@ class Account extends \Phpcmf\Common
                 $this->_json(0, dr_lang('密码不能为空'), ['field' => 'password2']);
             } elseif ($post['password3'] != $post['password2']) {
                 $this->_json(0, dr_lang('两次密码不一致'), ['field' => 'password3']);
-            } elseif (md5(md5($password).$this->member['salt'].md5($password)) != $this->member['password']) {
+            } elseif ($this->member['password'] && md5(md5($password).$this->member['salt'].md5($password)) != $this->member['password']) {
                 $this->_json(0, dr_lang('原密码不正确'), ['field' => 'password']);
-            } elseif (md5(md5($post['password2']).$this->member['salt'].md5($post['password2'])) == $this->member['password']) {
+            } elseif ($this->member['password'] && md5(md5($post['password2']).$this->member['salt'].md5($post['password2'])) == $this->member['password']) {
                 $this->_json(0, dr_lang('原密码不能与新密码相同'), ['field' => 'password2']);
             }
             // 修改密码
