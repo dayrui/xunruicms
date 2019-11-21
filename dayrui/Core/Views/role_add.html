@@ -17,7 +17,7 @@
                         <input type="radio" name="data[application][tid]" value="0" {if !$data['application']['tid']} checked{/if} > {dr_lang('管理者')}
                         <span></span>
                     </label>
-                    {if $id > 1}
+                    {if $id != 1}
                     <label class="mt-radio">
                         <input type="radio" name="data[application][tid]" value="1" {if $data['application']['tid']} checked{/if}> {dr_lang('投稿者')}
                         <span></span>

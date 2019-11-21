@@ -133,7 +133,13 @@ class Auth extends \Phpcmf\Model {
     // 提醒我的消息
     public function admin_notice($num = 7) {
 
-        $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ((`to_uid`='.$this->uid.') '.($this->admin['roleid'] ? ' or (`to_rid` IN ('.implode(',', $this->admin['roleid']).'))' : '').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            // 超管
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
+        } else {
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ((`to_uid`='.$this->uid.') '.(' or (`to_rid` IN ('.implode(',', \Phpcmf\Service::C()->admin['roleid']).'))').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
+        }
+
         $query = $this->db->query($sql);
         return $query ? $query->getResultArray() : [];
     }
@@ -318,6 +324,33 @@ class Auth extends \Phpcmf\Model {
 
         $this->_is_post_user = 0;
         return $this->_is_post_user;
+    }
+
+
+    // 后台内容审核列表的权限
+    public function get_admin_verify_status() {
+
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            return []; // 超管用户
+        }
+
+        $verify = \Phpcmf\Service::C()->get_cache('verify');
+        if (!$verify) {
+            return []; // 没有审核流程时
+        }
+
+        $my = [];
+        foreach ($verify as $t) {
+            if ($t['value']['role']) {
+                foreach ($t['value']['role'] as $status => $rid) {
+                    if (in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
+                        $my[] = $status;
+                    }
+                }
+            }
+        }
+
+        return $my ? $my : [99];
     }
 
     /**

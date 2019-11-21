@@ -19,8 +19,38 @@
                 <div class="portlet-body form">
 
                     <div class="form-body">
+
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('密码')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('账号')}</label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">{$admin.username}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('身份')}</label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">
+
+                                    {if $is_post_user}<span class="label label-danger">{dr_lang('投稿者')}{else}<span class="label label-success">{dr_lang('管理者')}{/if}
+                                   </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('角色组')}</label>
+                            <div class="col-md-9">
+                                <label class="form-control-static">
+                                    {loop $admin.role $t}
+                                    <span class="label label-success"> {$t} </span>
+                                    {/loop}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('登录密码')}</label>
                             <div class="col-md-9">
                                 <label><input type="text" class="form-control input-large" name="password"></label>
                                 <span class="help-block"> {dr_lang('留空表示不修改密码')} </span>

@@ -47,9 +47,11 @@
                 <a {if $ci->_is_admin_auth('edit')}href="{if $t.id>1}javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/edit_site', ['id'=>$t.id])}', '500px', '50%');{else}javascript:;{/if}"{/if} class="badge badge-success">{if $t.id>1}{count($t.site)}{else}{dr_lang('全部')}{/if}</a>
             </td>
             <td>
-                {if $ci->_is_admin_auth('edit')}<a href="{if $t.id>1}{dr_url('role/edit_auth', ['id'=>$t.id])}{else}javascript:;{/if}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
-                {if $t.id>1}<a href="javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/edit_site', ['id'=>$t.id])}', '500px', '50%');"class="btn btn-xs red"> <i class="fa fa-cog"></i> {dr_lang('站点权限')}</a>{/if}
-                <a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '400px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
+                {if $ci->_is_admin_auth('edit') && $t.id>1}
+                <a href="{dr_url('role/edit_auth', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
+                <a href="javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/edit_site', ['id'=>$t.id])}', '500px', '50%');"class="btn btn-xs red"> <i class="fa fa-cog"></i> {dr_lang('站点权限')}</a>
+                {/if}
+                {if $ci->_is_admin_auth('edit')}<a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '400px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
              </td>
         </tr>
         {/loop}

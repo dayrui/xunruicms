@@ -45,6 +45,7 @@ class Home extends \Phpcmf\Common
         ]);
 		\Phpcmf\Service::V()->display($table_data ? 'index_main.html' : 'main.html');exit;
 	}
+
 	public function init_edit() {
 
 	    $file = WRITEPATH.'config/main.php';

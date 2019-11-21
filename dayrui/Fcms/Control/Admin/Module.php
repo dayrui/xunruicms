@@ -472,12 +472,13 @@ class Module extends \Phpcmf\Table
     // 后台查看审核列表
     protected function _Admin_Verify_List() {
 
+        $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
         $this->_init([
             'db' => SITE_ID,
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => 'status >= 0'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => ($status ? 'status IN('.implode(',', $status).')' : 'status>=0').($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         $this->_List();
@@ -506,6 +507,11 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('审核内容不存在'));
         } elseif ($this->where_list_sql && $this->content_model->admin_is_edit($data)) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
+        }
+
+        $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
+        if ($status && !in_array($data['status'], $status)) {
+            $this->_admin_msg(0, dr_lang('当前角色无权限审核此内容'));
         }
 
         $select = \Phpcmf\Service::L('Tree')->select_category(
