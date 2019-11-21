@@ -122,6 +122,34 @@ class Member extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
+    public function username_edit() {
+
+        $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        $member = dr_member_info($uid);
+        if (!$member) {
+            $this->_json(0, dr_lang('该用户不存在'));
+        }
+
+        if (IS_POST) {
+
+            $name = trim(\Phpcmf\Service::L('input')->post('name', true));
+            if (!$name) {
+                exit($this->_json(0, dr_lang('账号不能为空')));
+            } elseif (!\Phpcmf\Service::L('form')->check_username($name)) {
+                $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'name']);
+            }
+
+            \Phpcmf\Service::M('member')->edit_username($uid, $name);
+            exit($this->_json(1, dr_lang('操作成功')));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'member' => $member,
+        ]);
+        \Phpcmf\Service::V()->display('member_edit_username.html');exit;
+    }
+
     // 后台添加
     public function add() {
         

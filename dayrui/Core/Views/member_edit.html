@@ -117,19 +117,24 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label ">{dr_lang('账号')}</label>
                             <div class="col-md-9">
-                                <p class="form-control-static"> {$username} </p>
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" readonly value="{$username}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更")}', '{dr_url("member/username_edit", ['id' => $id])}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_name">
                             <label class="col-md-2 control-label ">{dr_lang('姓名')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" id="dr_name" name="member[name]" value="{$name}"></label>
+                                <label><input type="text" class="form-control input-large" id="dr_name" name="member[name]" value="{$name}"></label>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_phone">
                             <label class="col-md-2 control-label ">{dr_lang('手机')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" id="dr_phone" name="member[phone]" value="{$phone}"></label>
+                                <label><input type="text" class="form-control input-large" id="dr_phone" name="member[phone]" value="{$phone}"></label>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_email">

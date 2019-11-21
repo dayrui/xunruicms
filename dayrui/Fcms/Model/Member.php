@@ -1536,7 +1536,7 @@ class Member extends \Phpcmf\Model
             if ($form) {
                 foreach ($form as $t) {
                     $table = $siteid.'_form_'.$t['table'];
-                    $this->db->table($table)->where('uid', $id)->delete();
+                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table)) && $this->db->table($table)->where('uid', $id)->delete();
                     for ($i = 0; $i < 200; $i ++) {
                         if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table).'_data_'.$i."'")->getRowArray()) {
                             break;
@@ -1564,6 +1564,22 @@ class Member extends \Phpcmf\Model
                             $mdb->delete_content($t['id']);
                         }
                     }
+                    $form = $this->db->table('module_form')->where('module', $mdir)->get()->getResultArray();
+                    if ($form) {
+                        foreach ($form as $t) {
+                            $mytable = $table.'_form_'.$t['table'];
+                            if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($mytable)."'")->getRowArray()) {
+                                break;
+                            }
+                            $this->db->table($mytable)->where('uid', $id)->delete();
+                            for ($i = 0; $i < 200; $i ++) {
+                                if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($mytable).'_data_'.$i."'")->getRowArray()) {
+                                    break;
+                                }
+                                $this->db->table($mytable.'_data_'.$i)->where('uid', $id)->delete();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -1571,6 +1587,60 @@ class Member extends \Phpcmf\Model
 
         // 同步删除动作
         \Phpcmf\Service::M('Sync')->delete_member($id);
+
+    }
+
+    // 修改账号
+    public function edit_username($uid, $username) {
+
+        $this->table('member')->update($uid, [
+            'username' => $username,
+        ]);
+        // 按站点数据删除
+        foreach ($this->site as $siteid) {
+            // 表单
+            $form = $this->init(['table' => $siteid.'_form'])->getAll();
+            if ($form) {
+                foreach ($form as $t) {
+                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_form_'.$t['table']))
+                    && $this->db->table($siteid.'_form_'.$t['table'])->where('uid', $uid)->update([
+                        'author' => $username,
+                    ]);
+                }
+            }
+            // 模块
+            $module = $this->table('module')->getAll();
+            if ($module) {
+                foreach ($module as $m) {
+                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname']))
+                    && $this->db->table($siteid.'_'.$m['dirname'])->where('uid', $uid)->update([
+                        'author' => $username,
+                    ]);
+                    $form = $this->db->table('module_form')->where('module', $m['dirname'])->get()->getResultArray();
+                    if ($form) {
+                        foreach ($form as $t) {
+                            \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname'].'_form_'.$t['table']))
+                            && $this->db->table($siteid.'_'.$m['dirname'].'_form_'.$t['table'])->where('uid', $uid)->update([
+                                'author' => $username,
+                            ]);
+                        }
+                    }
+                    // 评论
+                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname'].'_comment'))
+                    && $this->db->table($siteid.'_'.$m['dirname'].'_comment')->where('uid', $uid)->update([
+                        'author' => $username,
+                    ]);
+                }
+            }
+        }
+
+        $this->db->table('member_paylog')->where('uid', $uid)->update([ 'username' => $username ]);
+        $this->db->table('member_paylog')->where('touid', $uid)->update([ 'tousername' => $username ]);
+        $this->db->table('member_scorelog')->where('uid', $uid)->update([ 'username' => $username ]);
+        $this->db->table('member_group_verify')->where('uid', $uid)->update([ 'username' => $username ]);
+        $this->db->table('member_explog')->where('uid', $uid)->update([ 'username' => $username ]);
+
+        \Phpcmf\Service::L('cache')->set_data('member-info-'.$uid, '', 1);
 
     }
 
