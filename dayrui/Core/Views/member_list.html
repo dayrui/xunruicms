@@ -71,7 +71,7 @@
                     </label>
                 </td>
                 {/if}
-                <td style="text-align:center"> <a class="fc_member_show" href="javascript:;" member="{$t.username}"><img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"></a> </td>
+                <td style="text-align:center"> <a class="fc_member_show" href="javascript:;" uid="{$t.id}"><img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"></a> </td>
                 <td class="member_info_p">
                     <p>{Function_list::uid($t.id)}</p>
                     <p>{$t.email}</p>

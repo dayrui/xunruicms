@@ -489,10 +489,18 @@ class Api extends \Phpcmf\Common
 	 */
 	public function member() {
 
-		$name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-		$data = \Phpcmf\Service::M('member')->get_member(0, $name);
-		if (!$data) {
-		    $this->_json(0, dr_lang('此账号%s不存在', $name));
+		$uid = intval(\Phpcmf\Service::L('input')->get('uid'));
+		if ($uid) {
+            $data = \Phpcmf\Service::M('member')->get_member($uid);
+            if (!$data) {
+                $this->_json(0, dr_lang('此账号%s不存在', $uid));
+            }
+        } else {
+            $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+            $data = \Phpcmf\Service::M('member')->get_member(0, $name);
+            if (!$data) {
+                $this->_json(0, dr_lang('此账号%s不存在', $name));
+            }
         }
 
 		\Phpcmf\Service::V()->assign([

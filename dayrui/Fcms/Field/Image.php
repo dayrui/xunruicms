@@ -8,6 +8,8 @@
 
 class Image extends \Phpcmf\Library\A_Field {
 
+    private $img_ext;
+
     /**
      * 构造函数
      */
@@ -16,6 +18,7 @@ class Image extends \Phpcmf\Library\A_Field {
         $this->close_xss = 1; // 关闭xss验证
         $this->fieldtype = ['TEXT' => ''];
         $this->defaulttype = 'TEXT';
+        $this->img_ext = 'jpg,gif,png,jpeg,svg,webp';
     }
 
     /**
@@ -47,7 +50,7 @@ class Image extends \Phpcmf\Library\A_Field {
 			<div class="form-group hidden">
 				<label class="col-md-2 control-label">'.dr_lang('扩展名').'</label>
 				<div class="col-md-9">
-					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="jpg,gif,png,jpeg"></label>
+					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="'.$this->img_ext.'"></label>
 				</div>
 			</div>'.$this->attachment($option).'',
 
@@ -166,7 +169,7 @@ class Image extends \Phpcmf\Library\A_Field {
 
         $p = dr_authcode([
             'size' => intval($field['setting']['option']['size']),
-            'exts' => $field['setting']['option']['ext'],
+            'exts' => $this->img_ext,
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');

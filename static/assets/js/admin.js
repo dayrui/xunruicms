@@ -69,8 +69,9 @@ jQuery(document).ready(function() {
         var index = layer.load(2, { time: 5000 });
     });
     $('.fc_member_show').click(function(){
+        var uid = $(this).attr("uid");
         var name = $(this).attr("member");
-        var url = admin_file+"?c=api&m=member&name="+name;
+        var url = admin_file+"?c=api&m=member&name="+name+"&uid="+uid;
         if (is_mobile_cms == 1) {
             width = height = '90%';
         } else {
