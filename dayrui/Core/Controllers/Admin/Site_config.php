@@ -22,7 +22,7 @@ class Site_config extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 		    $tj = $_POST['data']['SITE_TONGJI'];
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             $post['SITE_TONGJI'] = $tj;
             if ($_POST['theme']) {
                 // 远程资源

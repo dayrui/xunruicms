@@ -165,6 +165,19 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('cloud_app.html');exit;
     }
 
+    // 安装模板
+    public function install_tpl() {
+
+        $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
+        !$dir && $this->_json(0, dr_lang('缺少模板参数'));
+		
+		\Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
+		\Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
+        
+        \Phpcmf\Service::M('cache')->sync_cache('');
+        $this->_json(1, dr_lang('当前站点模板安装成功，请访问前台预览'));
+    }
+
     // 安装程序
     public function install() {
 
@@ -245,11 +258,26 @@ class Cloud extends \Phpcmf\Common
         unlink($file);
 
 		$is_app = 0;
+		$is_tpl = 0;
         // 查询插件目录
-        if (is_dir($cmspath.'APPSPATH/')) {
+		if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
+			$ins = require $cmspath.'Install.php';
+			if (isset($ins['type']) && $ins['type'] == 'app') {
+				if ($ins['name'] && is_file($cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php')) {
+					$is_app = $ins['name'];
+				}
+			} elseif (isset($ins['type']) && $ins['type'] == 'tpl') {
+				if ($ins['name']) {
+					$is_tpl = $ins['name'];
+				}
+			}
+		}
+		
+        if (!$is_tpl && !$is_app && is_dir($cmspath.'APPSPATH/')) {
             $p = dr_dir_map($cmspath.'APPSPATH/', 1);
             foreach ($p as $name) {
-                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php')) {
+                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php') 
+					&& is_file($cmspath.'APPSPATH/'.$name.'/Config/Version.php')) {
                     if (is_file($cmspath.'APPSPATH/'.$name.'/install.lock')) {
                         unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
                     }
@@ -292,6 +320,8 @@ class Cloud extends \Phpcmf\Common
 		
 		if ($is_app) {
 			$msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
+		} elseif ($is_tpl) {
+			$msg = '模板导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
 		} else {
 			$msg = '程序导入完成<br>请按本商品的使用教程来操作';
 		}
@@ -473,7 +503,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证过期，请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';

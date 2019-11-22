@@ -8,6 +8,38 @@
 
 class Site extends \Phpcmf\Model
 {
+	
+	// 设置风格
+	public function set_theme($name, $siteid) {
+		
+		$site = $this->table('site')->get($siteid);
+        if (!$site) {
+            return [];
+        }
+
+        $site['setting'] = dr_string2array($site['setting']);
+        $site['setting']['config']['SITE_THEME'] = $name;
+		
+		$this->table('site')->update($siteid, [
+			'setting' => dr_array2string($site['setting']),
+		]);
+	}
+	
+	// 设置模板
+	public function set_template($name, $siteid) {
+		
+		$site = $this->table('site')->get($siteid);
+        if (!$site) {
+            return [];
+        }
+
+        $site['setting'] = dr_string2array($site['setting']);
+        $site['setting']['config']['SITE_TEMPLATE'] = $name;
+		
+		$this->table('site')->update($siteid, [
+			'setting' => dr_array2string($site['setting']),
+		]);
+	}
 
     // 获取网站配置
     public function config($siteid, $name = '', $data = []) {
