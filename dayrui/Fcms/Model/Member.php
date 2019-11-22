@@ -1043,7 +1043,7 @@ class Member extends \Phpcmf\Model
         $member['regip'] = (string)\Phpcmf\Service::L('input')->ip_address();
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = rand(100000, 999999);
-        !$member['username'] && $member['username'] = '';
+        $member['username'] = $member['username'] ? dr_safe_filename($member['username']) : '';
         $rt = $this->table('member')->insert($member);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
