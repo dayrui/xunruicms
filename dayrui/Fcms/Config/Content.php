@@ -84,7 +84,6 @@ return [
                                 ),
                             'validate' =>
                                 array (
-                                    'xss' => 1,
                                     'required' => 1,
                                     'formattr' => 'onblur="check_title();get_keywords(\'keywords\');"',
                                 ),
@@ -140,7 +139,6 @@ return [
                                 ),
                             'validate' =>
                                 array (
-                                    'xss' => 1,
                                     'formattr' => ' data-role="tagsinput"', // tag属性
                                 ),
                         ),
@@ -170,7 +168,6 @@ return [
                                 ),
                             'validate' =>
                                 array (
-                                    'xss' => 1,
                                     'filter' => 'dr_clearhtml',
                                 ),
                         ),
