@@ -285,11 +285,14 @@ class Comment extends \Phpcmf\Table
         return parent::_Save($id, $data, $old, null,
             function ($id, $data, $old) {
                 // 保存之后
-                //审核通知
                 if ($this->is_verify && $data[1]['status']) {
-                    $data[1]['orderid'] = $old['orderid'];
+					//审核通知
                     $this->content_model->verify_comment($old);
+                } elseif (!$id) {
+					// 后台新增
+                    $this->content_model->verify_comment($data[1]);
                 } else {
+					// 修改数据
                     $this->content_model->comment_update_total($data[1]);
                     $this->content_model->comment_update_review($data[1]);
                 }

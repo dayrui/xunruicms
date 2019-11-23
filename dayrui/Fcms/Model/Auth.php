@@ -339,7 +339,7 @@ class Auth extends \Phpcmf\Model {
             return []; // 没有审核流程时
         }
 
-        $my = [];
+        $my = [0];
         foreach ($verify as $t) {
             if ($t['value']['role']) {
                 foreach ($t['value']['role'] as $status => $rid) {
@@ -350,7 +350,7 @@ class Auth extends \Phpcmf\Model {
             }
         }
 
-        return $my ? $my : [99];
+        return $my;
     }
 
     /**
