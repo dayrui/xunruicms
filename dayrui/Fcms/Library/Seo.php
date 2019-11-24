@@ -159,7 +159,7 @@ class Seo
         $seo['meta_title'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $meta_title);
         $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_title']);
         $seo['meta_title'] = trim(str_replace($data['join'].$data['join'], $data['join'], $seo['meta_title']), $data['join']);
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']);
+        $seo['meta_title'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']));
         unset($rep);
 
         $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));

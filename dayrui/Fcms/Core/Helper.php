@@ -2840,8 +2840,23 @@ function dr_format_file_size($fileSize, $round = 2) {
  * @param	string	$keyword	关键字
  * @return	string
  */
-function dr_keyword_highlight($string, $keyword) {
-    return $keyword != '' ? str_ireplace($keyword, '<font color=red><strong>' . $keyword . '</strong></font>', $string) : $string;
+function dr_keyword_highlight($string, $keyword, $rule = '') {
+
+    if (!$keyword) {
+        return $string;
+    }
+
+    $arr = explode(' ', trim(str_replace('%', ' ', urldecode($keyword)), '%'));
+    if (!$arr) {
+       return $string;
+    }
+
+    !$rule && $rule = '<font color=red><strong>[value]</strong></font>';
+    foreach ($arr as $t) {
+        $string = str_ireplace($t, str_replace('[value]', $t, $rule), $string);
+    }
+
+    return $string;
 }
 
 function dollar($value, $include_cents = TRUE) {
