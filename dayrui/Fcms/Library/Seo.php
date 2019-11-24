@@ -165,7 +165,7 @@ class Seo
         $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));
         $seo['meta_keywords'].= $mod['site'][SITE_ID]['search_keywords'];
 
-        $seo['meta_keywords'] = trim($seo['meta_keywords'], ',');
+        $seo['meta_keywords'] = str_replace('%', ',', trim($seo['meta_keywords'], ','));
         $seo['meta_description'] = $mod['site'][SITE_ID]['search_description'];
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
         $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
