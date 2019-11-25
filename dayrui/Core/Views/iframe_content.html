@@ -34,7 +34,7 @@
         var str=getWindowSize();
         var strs= new Array(); //定义一数组
         strs=str.toString().split(","); //字符分割
-        var heights = strs[0]-30,Body = $('body');
+        var heights = strs[0]-$('.page-bar').height(),Body = $('body');
         $('#module-content-right').height(heights);
     }
 
