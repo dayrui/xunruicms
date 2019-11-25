@@ -41,7 +41,7 @@ class Form extends \Phpcmf\Table
             'date_field' => 'inputtime',
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
-            'order_by' => 'inputtime desc',
+            'order_by' => 'displayorder DESC,inputtime DESC',
             'where_list' => $this->is_verify ? 'status=0' : 'status=1',
         ]);
         $menu = $this->is_verify ? \Phpcmf\Service::M('auth')->_admin_menu([

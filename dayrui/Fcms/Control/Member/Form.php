@@ -36,7 +36,7 @@ class Form extends \Phpcmf\Table
             'date_field' => 'inputtime',
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
-            'order_by' => 'inputtime desc',
+            'order_by' => 'displayorder DESC,inputtime DESC',
             'where_list' => 'uid='.$this->uid,
         ]);
         $this->edit_where = $this->delete_where = 'uid='.$this->uid;
