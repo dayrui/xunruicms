@@ -205,20 +205,25 @@ abstract class Common extends \CodeIgniter\Controller
             define('CLIENT_URL', SITE_URL);
             \Phpcmf\Service::V()->init('pc');
         }
+        !defined('IS_CLIENT') && define('IS_CLIENT', '');
 
         // 用户系统
         $this->member_cache = $this->get_cache('member');
-        if (\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['domain'])
-            && $this->member_cache['domain'][SITE_ID]['domain']) {
-            // 电脑端绑定域名时
-            define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['domain'].'/'));
-        } elseif (!\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
-            && $this->member_cache['domain'][SITE_ID]['mobile_domain']) {
-            // 移动端绑定域名时
-            define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['mobile_domain'].'/'));
+        if (IS_CLIENT) {
+            define('MEMBER_URL', CLIENT_URL.(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
         } else {
-            // 默认域名
-            define('MEMBER_URL', (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
+            if (\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['domain'])
+                && $this->member_cache['domain'][SITE_ID]['domain']) {
+                // 电脑端绑定域名时
+                define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['domain'].'/'));
+            } elseif (!\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
+                && $this->member_cache['domain'][SITE_ID]['mobile_domain']) {
+                // 移动端绑定域名时
+                define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['mobile_domain'].'/'));
+            } else {
+                // 默认域名
+                define('MEMBER_URL', (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
+            }
         }
 
         // 加载UCSSO客户端

@@ -101,6 +101,8 @@ class Router
             return; // 排除生成
         } elseif (intval($_GET['page']) > 1) {
             return; // 排除分页
+        } elseif (IS_CLIENT) {
+            return; // 排除终端
         }
 
         // 跳转
@@ -126,6 +128,8 @@ class Router
             return; // 排除生成
         } elseif (intval($_GET['page']) > 1) {
             return; // 排除分页
+        } elseif (IS_CLIENT) {
+            return; // 排除终端
         }
 
         // 跳转
@@ -216,7 +220,7 @@ class Router
      * @param    array $query 相关参数
      * @return    string    地址
      */
-    function member_url($url = '', $query = [], $self = 'index.php')
+    function member_url($url = '', $query = [], $null = '')
     {
 
         if (!$url || $url == 'home/index' || $url == '/') {
@@ -255,7 +259,7 @@ class Router
         $query && $uri = @array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL) . $self . '?' . @http_build_query($uri);
+        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL)) . $self . '?' . @http_build_query($uri);
     }
 
     /**
@@ -326,7 +330,7 @@ class Router
             $data['y'] = date('Y', $inputtime);
             $data['m'] = date('m', $inputtime);
             $data['d'] = date('d', $inputtime);
-            $data['fid'] = defined('IS_PLUS_FENZHAN') ? dr_get_show_fid($data) : 0;
+            //$data['fid'] = defined('IS_PLUS_FENZHAN') ? dr_get_show_fid($data) : 0;
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
             $url = ltrim($page ? $rule['show_page'] : $rule['show'], '/');
             $rep = new \php5replace($data);
@@ -500,7 +504,7 @@ class Router
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value');
         if ($rule && $rule['search']) {
-            $fid && $data['fid'] = $fid;
+            //$fid && $data['fid'] = $fid;
             $data['modname'] = $mod['dirname'];
             $data['param'] = dr_search_rewrite_encode($params, $mod['setting']['search']);
             if ($params && !$data['param']) {
@@ -675,13 +679,13 @@ class Router
     {
 
         if (!$fid) {
-            return SITE_URL;
+            return IS_CLIENT ? CLIENT_URL : SITE_URL;
         }
 
         // 自定义规则
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', SITE_REWRITE, 'value');
         if ($rule && $rule['findex']) {
-            return SITE_URL . str_replace('{fid}', $fid, ltrim($rule['findex'], '/'));
+            return (IS_CLIENT ? CLIENT_URL : SITE_URL) . str_replace('{fid}', $fid, ltrim($rule['findex'], '/'));
         } else {
             return $this->url_prefix('php', [], [], $fid);
         }
