@@ -150,7 +150,6 @@ class Cache extends \Phpcmf\Model
     // 重建索引
     public function update_search_index() {
 
-
         $site_cache = $this->table('site')->getAll();
         $module_cache = $this->table('module')->getAll();
         if (!$module_cache) {
@@ -252,7 +251,6 @@ class Cache extends \Phpcmf\Model
                     }
                 }
             }
-
         }
 
     }
@@ -276,6 +274,7 @@ class Cache extends \Phpcmf\Model
             return '目录['.$path.']不存在';
         }
 
+        // 创建入口文件
         foreach ([
                      'admin.php',
                      'index.php',
@@ -303,8 +302,17 @@ class Cache extends \Phpcmf\Model
             }
         }
 
-        // 复制百度编辑器
-        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+        // 复制百度编辑器到当前目录
+        if (!is_file($path.'api/ueditor/lock.php')) {
+            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+            @unlink($path.'api/ueditor/lock.php');
+        }
+
+        // 复制百度编辑器到移动端站点
+        if (!is_file($path.'mobile/api/ueditor/lock.php')) {
+            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+            @unlink($path.'mobile/api/ueditor/lock.php');
+        }
 
         return '';
     }

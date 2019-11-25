@@ -600,6 +600,10 @@ class View {
         return $value;
     }
 
+    // 存储缓存
+    private function _save_cache_data($cache_name, $data, $time) {
+        \Phpcmf\Service::L('cache')->set_data($cache_name, $data, $time);
+    }
 
     // list 标签解析
     public function list_tag($_params) {
@@ -698,6 +702,14 @@ class View {
         $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
         // 开发者模式下关闭缓存
         IS_DEV && $system['cache'] = 0;
+
+        $cache_name = 'cache_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url());
+        if ($system['cache']) {
+            $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
+            if ($cache_data) {
+                return $this->_return($system['return'], $cache_data, '这是缓存数据');
+            }
+        }
 
         // action
         switch ($system['action']) {
@@ -858,7 +870,10 @@ class View {
                     }
                 }
 
-                return $this->_return($system['return'], isset($param['call']) && $param['call'] ? @array_reverse($return) : $return, '');
+                $return = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
+                $system['cache'] && $this->_save_cache_data($cache_name, $return, $system['cache']);
+
+                return $this->_return($system['return'], $return, '');
                 break;
 
             case 'category_search_field': // 栏目搜索字段筛选
@@ -1033,23 +1048,18 @@ class View {
                     return $this->_return($system['return'], '没有查询到内容', $sql);
                 }
 
-                // 缓存查询结果
-                $name = 'list-action-tag-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-
-                if (!$cache) {
-                    foreach ($data as $i => $t) {
-                        // 读缓存
-                        $data[$i]['url'] = '/';
-                        $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t['name']);
-                        if ($file) {
-                            $data[$i]['url'] = file_get_contents($file);
-                        }
+                foreach ($data as $i => $t) {
+                    // 读缓存
+                    $data[$i]['url'] = '/';
+                    $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t['name']);
+                    if ($file) {
+                        $data[$i]['url'] = file_get_contents($file);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache, $sql);
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql);
                 break;
 
             case 'sql': // 直接sql查询
@@ -1090,6 +1100,8 @@ class View {
                     }
 
                     $data = $this->_query($sql, $system['db'], $system['cache']);
+
+                    $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
 
                     return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 } else {
@@ -1166,17 +1178,13 @@ class View {
                     $sql_limit = "LIMIT {$system['num']}";
                 }
 
-                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                $name = 'list-action-table-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
-                }
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
 
-                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
 
@@ -1268,23 +1276,22 @@ class View {
                     $sql_limit = "LIMIT {$system['num']}";
                 }
 
-                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                // 缓存查询结果
-                $name = 'list-action-form-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app('form');
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                // 缓存查询结果
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
             case 'mform': // 模块表单调用
@@ -1368,23 +1375,22 @@ class View {
                     $sql_limit = "LIMIT {$system['num']}";
                 }
 
-                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                // 缓存查询结果
-                $name = 'list-action-mform-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                // 缓存查询结果
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
             case 'comment': // 模块评论调用
@@ -1466,23 +1472,22 @@ class View {
                     $sql_limit = "LIMIT {$system['num']}";
                 }
 
-                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                $name = 'list-action-comment-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
             case 'member': // 会员信息
@@ -1572,7 +1577,6 @@ class View {
                 $sql_limit = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-
                 $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
 
                 if ($system['page']) { // 如存在分页条件才进行分页查询
@@ -1592,13 +1596,11 @@ class View {
                     $sql_limit = "LIMIT {$system['num']}";
                 }
 
-                $sql = "SELECT ".($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}")." $sql_limit";
+                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                $name = 'list-action-member-'.md5($sql);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 系统字段
                     $fields['regtime'] = array('fieldtype' => 'Date');
                     // 格式化显示自定义字段内容
@@ -1606,10 +1608,11 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache, $sql, $total, $pages, $pagesize);
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
 
@@ -1927,9 +1930,7 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                $name = 'list-action-module-'.md5($sql.$this->_is_mobile);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 模块表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $fields['updatetime'] = array('fieldtype' => 'Date');
@@ -1939,10 +1940,11 @@ class View {
                         $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
                 }
 
-                return $this->_return($system['return'], $cache ? $cache : $data, $sql, $total, $pages, $pagesize);
+                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
 
@@ -2230,6 +2232,32 @@ class View {
         return $select;
     }
 
+
+    // 格式化查询参数
+    private function _get_select_field($field) {
+
+        if ($field != '*') {
+            $my = [];
+            $array = explode(',', $field);
+            foreach ($array as $t) {
+                if (strpos($t, '`') !== false) {
+                    $my[] = $t;
+                    continue;
+                }
+            }
+            if (!$my) {
+                $field = '*';
+            } else {
+                $field = implode(',', $my);
+            }
+        }
+
+        // 定位范围搜索
+        $this->pos_order && (\Phpcmf\Service::C()->my_position ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.\Phpcmf\Service::C()->my_position['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order : \Phpcmf\Service::C()->msg('没有定位到您的坐标'));
+
+        return $field;
+    }
+
     // 给排序字段加上多表前缀
     public function _set_orders_field_prefix($order, $fields) {
 
@@ -2320,14 +2348,6 @@ class View {
         }
 
         return NULL;
-    }
-
-    // 格式化查询参数
-    private function _get_select_field($field) {
-
-        $this->pos_order && (\Phpcmf\Service::C()->my_position ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.\Phpcmf\Service::C()->my_position['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order : \Phpcmf\Service::C()->msg('没有定位到您的坐标'));
-
-        return $field;
     }
 
     // list 返回

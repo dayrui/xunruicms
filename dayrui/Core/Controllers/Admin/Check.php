@@ -301,13 +301,15 @@ class Check extends \Phpcmf\Common
                     foreach ($module as $m) {
                         $site = dr_string2array($m['site']);
                         $mform = \Phpcmf\Service::M()->table('module_form')->where('module', $m['dirname'])->getAll();
-                        foreach ($site as $siteid => $s) {
-                            $r = $this->_check_table_counts($siteid.'_'.$m['dirname'], $m['dirname'].'模块主表');
-                            $r && $rt[] = $r;
-                            if ($mform) {
-                                foreach ($mform as $mm) {
-                                    $r = $this->_check_table_counts($siteid.'_'.$m['dirname'].'_form_'.$mm['table'], $m['dirname'].'模块'.$mm['name'].'表');
-                                    $r && $rt[] = $r;
+                        foreach ($this->site_info as $siteid => $s) {
+                            if (isset($site[$siteid]) && $site[$siteid]) {
+                                $r = $this->_check_table_counts($siteid . '_' . $m['dirname'], $m['dirname'] . '模块主表');
+                                $r && $rt[] = $r;
+                                if ($mform) {
+                                    foreach ($mform as $mm) {
+                                        $r = $this->_check_table_counts($siteid . '_' . $m['dirname'] . '_form_' . $mm['table'], $m['dirname'] . '模块' . $mm['name'] . '表');
+                                        $r && $rt[] = $r;
+                                    }
                                 }
                             }
                         }
@@ -416,6 +418,7 @@ class Check extends \Phpcmf\Common
                 // 应用插件
                 $func = [];
                 $local = dr_dir_map(dr_get_app_list(), 1);
+                $custom = file_get_contents(ROOTPATH.'config/custom.php');
                 foreach ($local as $dir) {
                     $path = dr_get_app_dir($dir);
                     if (is_file($path.'Config/App.php') && is_file($path.'Config/Init.php')) {
@@ -431,7 +434,11 @@ class Check extends \Phpcmf\Common
                                 }
                                 $func[$name] = $dir;
                                 if (function_exists($name)) {
-                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                                    if (preg_match("/\s+function ".$name."\(/", $custom)) {
+                                        // 存在于自定义函数库中
+                                    } else {
+                                        $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                                    }
                                 }
                             }
                         }
