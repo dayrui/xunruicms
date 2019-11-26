@@ -200,6 +200,7 @@ abstract class Common extends \CodeIgniter\Controller
             // 移动端模板 // 开启自动识别移动端
             \Phpcmf\Service::V()->init('mobile');
             //$is_auto_mobile_page = 1;
+            define('CLIENT_URL', SITE_MURL);
         } else {
             // 默认情况下pc模板
             define('CLIENT_URL', SITE_URL);
