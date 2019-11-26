@@ -99,36 +99,6 @@ abstract class Common extends \CodeIgniter\Controller
             dr_domain_301(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
         }
 
-        // 开启自动跳转手机端(api、admin、member不跳转)
-        if (!IS_API // api不跳转
-            && !IS_ADMIN // 后台不跳转
-            && !IS_MEMBER // 会员中心不跳
-            //&& !defined('IS_NOT_301') // 定义禁止301不跳
-            && $client // 没有客户端不跳
-            && $this->site_info[SITE_ID]['SITE_MOBILE'] // 没有绑定移动端域名不跳
-            //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
-            && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
-        ) {
-            if (isset($_COOKIE['is_mobile'])) {
-                // 表示来自切换,不跳转
-                //$is_mobile = false;
-            } else {
-                if ($this->_is_mobile()) {
-                    // 这是移动端
-                    if (isset($client[DOMAIN_NAME])) {
-                        // 表示这个域名属于电脑端,需要跳转到移动端
-                        dr_domain_301(dr_http_prefix($client[DOMAIN_NAME].'/'));
-                    }
-                } else {
-                    // 这是电脑端
-                    if (in_array(DOMAIN_NAME, $client)) {
-                        // 表示这个域名属于移动端,需要跳转到pc
-                        $arr = array_flip($client);
-                        dr_domain_301(dr_http_prefix($arr[DOMAIN_NAME].'/'));
-                    }
-                }
-            }
-        }
 
         // 客户端识别
         $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : $this->_is_mobile());
@@ -272,6 +242,40 @@ abstract class Common extends \CodeIgniter\Controller
             if ($this->member && !\Phpcmf\Service::M('member')->check_member_cookie($this->member)) {
                 $this->uid = 0;
                 $this->member = [];
+            }
+        }
+
+        // 开启自动跳转手机端(api、admin、member不跳转)
+        if (!IS_API // api不跳转
+            && !IS_ADMIN // 后台不跳转
+            && !IS_MEMBER // 会员中心不跳
+            && !IS_API_HTTP // API请求不跳
+            && !IS_CLIENT // 终端不跳
+            //&& !defined('IS_NOT_301') // 定义禁止301不跳
+            //&& !defined('IS_NOT_301') // 定义禁止301不跳
+            && $client // 没有客户端不跳
+            && $this->site_info[SITE_ID]['SITE_MOBILE'] // 没有绑定移动端域名不跳
+            //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
+            && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
+        ) {
+            if (isset($_COOKIE['is_mobile'])) {
+                // 表示来自切换,不跳转
+                //$is_mobile = false;
+            } else {
+                if ($this->_is_mobile()) {
+                    // 这是移动端
+                    if (isset($client[DOMAIN_NAME])) {
+                        // 表示这个域名属于电脑端,需要跳转到移动端
+                        dr_domain_301(dr_http_prefix($client[DOMAIN_NAME].'/'));
+                    }
+                } else {
+                    // 这是电脑端
+                    if (in_array(DOMAIN_NAME, $client)) {
+                        // 表示这个域名属于移动端,需要跳转到pc
+                        $arr = array_flip($client);
+                        dr_domain_301(dr_http_prefix($arr[DOMAIN_NAME].'/'));
+                    }
+                }
             }
         }
 

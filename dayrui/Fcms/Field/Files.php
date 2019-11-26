@@ -8,28 +8,28 @@
 
 
 class Files extends \Phpcmf\Library\A_Field {
-	
-	/**
+
+    /**
      * 构造函数
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->close_xss = 1; // 关闭xss验证
-		$this->fieldtype = ['TEXT' => ''];
-		$this->defaulttype = 'TEXT';
+        $this->fieldtype = ['TEXT' => ''];
+        $this->defaulttype = 'TEXT';
     }
-	
-	/**
-	 * 字段相关属性参数
-	 *
-	 * @param	array	$value	值
-	 * @return  string
-	 */
-	public function option($option) {
-	
+
+    /**
+     * 字段相关属性参数
+     *
+     * @param	array	$value	值
+     * @return  string
+     */
+    public function option($option) {
 
 
-		return ['
+
+        return ['
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
@@ -66,130 +66,130 @@ class Files extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>'.$this->attachment($option).'',
 
-			''];
-	}
-	
-	/**
-	 * 字段输出
-	 */
-	public function output($value) {
-	
-		$data = array();
-		$value = dr_string2array($value);
-		if (!$value) {
+            ''];
+    }
+
+    /**
+     * 字段输出
+     */
+    public function output($value) {
+
+        $data = array();
+        $value = dr_string2array($value);
+        if (!$value) {
             return $data;
         } elseif (!isset($value['file'])) {
             return $value;
         }
-		
-		foreach ($value['file'] as $i => $file) {
-			$data[] = array(
-				'file' => $file, // 对应文件或附件id
-				'title' => $value['title'][$i], // 对应标题
-				'description' => $value['description'][$i], // 对应描述
-			);
-		}
-		
-		return $data;
-	}
-	
-	/**
-	 * 获取附件id
-	 */
-	public function get_attach_id($value) {
+
+        foreach ($value['file'] as $i => $file) {
+            $data[] = array(
+                'file' => $file, // 对应文件或附件id
+                'title' => $value['title'][$i], // 对应标题
+                'description' => $value['description'][$i], // 对应描述
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * 获取附件id
+     */
+    public function get_attach_id($value) {
 
 
-		$data = array();
+        $data = array();
         $value = dr_string2array($value);
 
-		if (!$value) {
+        if (!$value) {
             return $data;
         } elseif (!isset($value['file'])) {
             return $value;
         }
-		
-		foreach ($value['file'] as $i => $file) {
-			is_numeric($file) && $data[] = $file;
-		}
-		
-		return $data;
-	}
-	
-	/**
-	 * 字段入库值
-	 */
-	public function insert_value($field) {
 
-		$data = [];
-		$value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-		if ($value) {
-			foreach ($value['title'] as $id => $title) {
-				$data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
-				$data['title'][$id] = $title;
-				$data['description'][$id] = $value['description'][$id] ? $value['description'][$id] : '';
-			}
-		}
+        foreach ($value['file'] as $i => $file) {
+            is_numeric($file) && $data[] = $file;
+        }
 
-		/*
-		// 第一张作为缩略图
-		if (isset($_POST['data']['thumb']) && !$_POST['data']['thumb'] && isset($data['file'][0]) && $data['file'][0]) {
+        return $data;
+    }
+
+    /**
+     * 字段入库值
+     */
+    public function insert_value($field) {
+
+        $data = [];
+        $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
+        if ($value) {
+            foreach ($value['title'] as $id => $title) {
+                $data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
+                $data['title'][$id] = $title;
+                $data['description'][$id] = $value['description'][$id] ? $value['description'][$id] : '';
+            }
+        }
+
+        /*
+        // 第一张作为缩略图
+        if (isset($_POST['data']['thumb']) && !$_POST['data']['thumb'] && isset($data['file'][0]) && $data['file'][0]) {
             $info = \Phpcmf\Service::C()->get_attachment($data['file'][0]);
-			in_array($info['fileext'], array('jpg', 'jpeg', 'png', 'gif')) && \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data['file'][0];
+            in_array($info['fileext'], array('jpg', 'jpeg', 'png', 'gif')) && \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data['file'][0];
             unset($info);
-		}*/
+        }*/
 
-		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
-	}
-	
-	/**
-	 * 附件处理
-	 */
-	public function attach($data, $_data) {
-		
-		$data = dr_string2array($data);
-		$_data = dr_string2array($_data);
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
+    }
+
+    /**
+     * 附件处理
+     */
+    public function attach($data, $_data) {
+
+        $data = dr_string2array($data);
+        $_data = dr_string2array($_data);
 
         !isset($_data['file']) && $_data = array('file' => NULL);
         !isset($data['file']) && $data = array('file' => NULL);
 
-		// 新旧数据都无附件就跳出
-		if (!$data['file'] && !$_data['file']) {
-			return NULL;
-		}
-		
-		// 新旧数据都一样时表示没做改变就跳出
-		if ($data['file'] === $_data['file']) {
-			return NULL;
-		}
-		
-		// 当无新数据且有旧数据表示删除旧附件
-		if (!$data['file'] && $_data['file']) {
-			return [ [], $_data['file'] ];
-		}
-		
-		// 当无旧数据且有新数据表示增加新附件
-		if ($data['file'] && !$_data['file']) {
-			return [$data['file'], []];
-		}
+        // 新旧数据都无附件就跳出
+        if (!$data['file'] && !$_data['file']) {
+            return NULL;
+        }
 
-		// 剩下的情况就是删除旧文件增加新文件
-		
-		// 新旧附件的交集，表示固定的
-		$intersect = @array_intersect($data['file'], $_data['file']);
-		
-		return [
-			@array_diff($data['file'], $intersect), // 固有的与新文件中的差集表示新增的附件
-			@array_diff($_data['file'], $intersect), // 固有的与旧文件中的差集表示待删除的附件
+        // 新旧数据都一样时表示没做改变就跳出
+        if ($data['file'] === $_data['file']) {
+            return NULL;
+        }
+
+        // 当无新数据且有旧数据表示删除旧附件
+        if (!$data['file'] && $_data['file']) {
+            return [ [], $_data['file'] ];
+        }
+
+        // 当无旧数据且有新数据表示增加新附件
+        if ($data['file'] && !$_data['file']) {
+            return [$data['file'], []];
+        }
+
+        // 剩下的情况就是删除旧文件增加新文件
+
+        // 新旧附件的交集，表示固定的
+        $intersect = @array_intersect($data['file'], $_data['file']);
+
+        return [
+            @array_diff($data['file'], $intersect), // 固有的与新文件中的差集表示新增的附件
+            @array_diff($_data['file'], $intersect), // 固有的与旧文件中的差集表示待删除的附件
         ];
-	}
+    }
 
 
-	/**
-	 * 字段表单输入
-	 *
-	 * @return  string
-	 */
-	public function input($field, $value = '')
+    /**
+     * 字段表单输入
+     *
+     * @return  string
+     */
+    public function input($field, $value = '')
     {
 
         // 字段禁止修改时就返回显示字符串
@@ -240,47 +240,44 @@ class Files extends \Phpcmf\Library\A_Field {
             $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
             $tpl.= '</div>';
         }
-		$tpl.= '</div>';
-		$tpl.= '</td>';
+        $tpl.= '</div>';
+        $tpl.= '</td>';
 
-		$tpl.= '<td style="text-align:center;">';
-		$tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
-		$tpl.= '<label><button onclick="dr_file_edit_'.$name.'(this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
-		$tpl.= '</td>';
-		$tpl.= '</tr>';
+        $tpl.= '<td style="text-align:center;">';
+        $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
+        $tpl.= '<label><button onclick="dr_file_edit_'.$name.'(this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
+        $tpl.= '</td>';
+        $tpl.= '</tr>';
 
-		
-		// 已保存数据
-		$val = '';
-		if ($value) {
-			$value = dr_string2array($value);
-            if (isset($value['title']) && $value['title']) {
-                foreach ($value['title'] as $i => $title) {
-                    $id = $value['id'][$i] ? $value['id'][$i] : $value['file'][$i];
-                    $file = \Phpcmf\Service::C()->get_attachment($id);
-                    $description = $value['description'][$i] ? $value['description'][$i] : '';
-                    if ($file) {
-                        $disabled = 'readonly';
-                        $preview = dr_file_preview_html($file['url']);
-                        $filepath = dr_strcut($file['attachment'], 30);
-                        $upload = '<input type="file" name="file_data">';
-                    } else {
-                        $disabled = '';
-                        $filepath = $id;
-                        $preview = dr_file_preview_html($id);
-                        $upload = '';
-                        $id = '';
-                    }
-                    $val.= str_replace(
-                        ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
-                        [$title, $description, $id, $filepath, $disabled, $preview, $upload],
-                        $tpl
-                    );
+        // 已保存数据
+        $val = '';
+        $value = dr_get_files($value);
+        if ($value) {
+            foreach ($value as $i => $t) {
+                $id = $t['id'] ? $t['id'] : $t['file'];
+                $file = \Phpcmf\Service::C()->get_attachment($id);
+                $description = $t['description'] ? $t['description'] : '';
+                if ($file) {
+                    $disabled = 'readonly';
+                    $preview = dr_file_preview_html($file['url']);
+                    $filepath = dr_strcut($file['attachment'], 30);
+                    $upload = '<input type="file" name="file_data">';
+                } else {
+                    $disabled = '';
+                    $filepath = $id;
+                    $preview = dr_file_preview_html($id);
+                    $upload = '';
+                    $id = '';
                 }
+                $val.= str_replace(
+                    ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
+                    [$t['title'], $description, $id, $filepath, $disabled, $preview, $upload],
+                    $tpl
+                );
             }
-		}
+        }
 
-		$use = '<button type="button" class="btn red btn-sm fileinput-unused">
+        $use = '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
 					</button>';
@@ -288,8 +285,8 @@ class Files extends \Phpcmf\Library\A_Field {
 						<i class="fa fa-edit"></i>
 						<span> '.dr_lang('地址').' </span>
 					</button>' : '';
-		// 表单输出
-		$str = '
+        // 表单输出
+        $str = '
 			<div class="row fileupload-buttonbar" id="fileupload_'.$name.'">
 				<div class="col-lg-12">
 					<span class="btn blue btn-sm fileinput-button">
@@ -314,8 +311,8 @@ class Files extends \Phpcmf\Library\A_Field {
 			</table>
 		';
 
-		if (!defined('PHPCMF_FIELD_FILE')) {
-			$str.= '
+        if (!defined('PHPCMF_FIELD_FILE')) {
+            $str.= '
 				
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />
@@ -326,12 +323,12 @@ class Files extends \Phpcmf\Library\A_Field {
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
 			
 			';
-			define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS
-		}
+            define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS
+        }
 
-		$ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
+        $ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
-		$str.= '
+        $str.= '
 		
 <script type="text/javascript">
 
@@ -654,9 +651,9 @@ function dr_file_edit_'.$name.'(e) {
 		';
 
 
-		// 输出最终表单显示
-		return $this->input_format($name, $text, $str.$tips);
-	}
+        // 输出最终表单显示
+        return $this->input_format($name, $text, $str.$tips);
+    }
 
     /**
      * 字段表单显示
@@ -668,48 +665,44 @@ function dr_file_edit_'.$name.'(e) {
     public function show($field, $value = null) {
 
         $html = '';
-
-
+        $value = dr_get_files($value);
         if ($value) {
 
-            $value = dr_string2array($value);
-            if (isset($value['title']) && $value['title']) {
-                // 显示模板
-                $tpl = '<tr class="template-download files_row">';
-                $tpl.= '<td style="text-align:center;width:90px;border-top:0">';
-                $tpl.= '<span class="files_row_preview preview">{preview}</span>';
-                $tpl.= '</td>';
-                $tpl.= '<td style="border-top:0">';
-                $tpl.= '{title} {description}';
-                $tpl.= '</td>';
-                $tpl.= '</tr>';
-                $html.= '<table role="presentation" class="table table-striped table-fc-upload clearfix">';
-                $html.= '<tbody class="files">';
-                foreach ($value['title'] as $i => $title) {
-                    $id = $value['id'][$i] ? $value['id'][$i] : $value['file'][$i];
-                    $file = \Phpcmf\Service::C()->get_attachment($id);
-                    $description = $value['description'][$i] ? $value['description'][$i] : '';
-                    if ($file) {
-                        $preview = dr_file_preview_html($file['url']);
-                        $filepath = $file['attachment'];
-                        $upload = '';
-                    } else {
-                        $filepath = $id;
-                        $preview = dr_file_preview_html($id);
-                        $upload = '';
-                    }
-                    $html.= str_replace(
-                        ['{title}', '{description}', '{id}', '{filepath}', '{preview}', '{upload}'],
-                        [$title, $description, $value, $filepath, $preview, $upload],
-                        $tpl
-                    );
+            // 显示模板
+            $tpl = '<tr class="template-download files_row">';
+            $tpl.= '<td style="text-align:center;width:90px;border-top:0">';
+            $tpl.= '<span class="files_row_preview preview">{preview}</span>';
+            $tpl.= '</td>';
+            $tpl.= '<td style="border-top:0">';
+            $tpl.= '{title} {description}';
+            $tpl.= '</td>';
+            $tpl.= '</tr>';
+            $html.= '<table role="presentation" class="table table-striped table-fc-upload clearfix">';
+            $html.= '<tbody class="files">';
+            foreach ($value as $i => $t) {
+                $id = $t['id'] ? $t['id'] : $t['file'];
+                $file = \Phpcmf\Service::C()->get_attachment($id);
+                $description = $t['description'] ? $t['description'] : '';
+                if ($file) {
+                    $preview = dr_file_preview_html($file['url']);
+                    $filepath = $file['attachment'];
+                    $upload = '';
+                } else {
+                    $filepath = $id;
+                    $preview = dr_file_preview_html($id);
+                    $upload = '';
                 }
-                $html.= '</tbody>';
-                $html.= '</table>';
+                $html.= str_replace(
+                    ['{title}', '{description}', '{id}', '{filepath}', '{preview}', '{upload}'],
+                    [$t['title'], $description, $value, $filepath, $preview, $upload],
+                    $tpl
+                );
             }
+            $html.= '</tbody>';
+            $html.= '</table>';
         }
 
         return $this->input_format($field['fieldname'], $field['name'], $html);
     }
-	
+
 }

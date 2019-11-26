@@ -746,7 +746,6 @@ class Content extends \Phpcmf\Model {
             }
         }
 
-
         $row = $this->_format_content_data($row);
 
         if ($is_table) {
