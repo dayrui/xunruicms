@@ -2872,6 +2872,9 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .jquery-notific8-container {
     margin-top:80px;
 }
+.mymain .portlet-sortable:not(.portlet-fullscreen)>.portlet-title {
+    cursor: default !important;
+}
 
 .index-content {
     background:url("../../images/loading-0.gif");
