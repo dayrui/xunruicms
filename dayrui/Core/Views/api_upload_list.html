@@ -2,21 +2,18 @@
 
 <form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
     {$form}
-    <input type="hidden" name="is_ajax" value="1">
-    <input type="hidden" name="is_page" id="dr_page" value="0">
-
     <div class="portlet  light " style="padding: 0">
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
                 {if $list.unused}
-                <li class="active">
+                <li class=" {if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> {dr_lang('未使用的附件')} </a>
                 </li>
                 {else}
                 <?php $page=1;?>
                 {/if}
                 <li class="dev {if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> {dr_lang('已使用的附件')} </a>
+                    <a href="{$search_url}&page=1"> {dr_lang('已使用的附件')} </a>
                 </li>
             </ul>
         </div>
@@ -24,43 +21,57 @@
             <div class="tab-content">
 
                 {if $list.unused}
-                <div class="tab-pane active" id="tab_0">
+                <div class="tab-pane  {if $page==0}active{/if}" id="tab_0">
 
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
-                        {loop $list.unused $i $t}
-                        {php $url = dr_get_file_url($t, 50, 50);}
-                        <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
-                            <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
-                                <span></span>
-                            </label>
-                            <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
-                            <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                            <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
-                            <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
-                        </div>
-                        {/loop}
+                            {loop $list.unused $i $t}
+                            {php $url = dr_get_file_url($t, 50, 50);}
+                            <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                                <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
+                                <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
+                                <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
+                            </div>
+                            {/loop}
                         </div>
                     </div>
                 </div>
                 {/if}
                 <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
 
+                    <div class="row  margin-bottom-20 template-download">
+                            <div class="col-md-12 text-center margin-bottom-20">
+                                <label><select  id="dr_field_name"class="form-control">
+                                    {loop $sfield $i $t}
+                                    <option value="{$i}" {if $param.name == $i} selected{/if}>{$t}</option>
+                                    {/loop}
+                                </select></label>
+                                <label>
+                                    <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
+                                </label>
+                                <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
+                            </div>
+                    </div>
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
+
                         <div class="files">
-                        {loop $list.used $i $t}
-                        {php $url = dr_get_file_url($t, 50, 50);}
-                        <div class="template-download yl_files_row files_row">
-                            <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
-                                <span></span>
-                            </label>
-                            <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
-                            <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                            <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
-                        </div>
-                        {/loop}
+                            {loop $list.used $i $t}
+                            {php $url = dr_get_file_url($t, 50, 50);}
+                            <div class="template-download yl_files_row files_row">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                                <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
+                                <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
+                            </div>
+                            {/loop}
                         </div>
                     </div>
                 </div>
@@ -69,6 +80,15 @@
     </div>
 
 
+    <input type="hidden" name="is_ajax" value="1">
+    <input type="hidden" name="is_page" id="dr_page" value="{$page}">
 </form>
+
+<script>
+    function dr_fsearch() {
+        var url = '{$search_url}&page=1&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
+        window.location.href = url;
+    }
+</script>
 
 {template "footer.html"}
