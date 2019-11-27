@@ -513,7 +513,7 @@ class Api extends \Phpcmf\Common
             } else {
                 $domain = array_flip($domain);
                 if (!isset($domain[$host])) {
-                    $this->_json(0, dr_lang('域名%s切换失败', $host));
+                    $this->_json(0, dr_lang('域名[%s]切换失败', $host));
                 }
                 $value = 1;
             }
