@@ -338,6 +338,7 @@ class Module extends \Phpcmf\Common
             'sototal' => $sototal,
             'searchid' => $data['id'],
             'search_id' => $data['id'],
+            'content_id' => $data['contentid'],
             'search_sql' => $data['sql'],
             'is_search_page' => 1,
         ));

@@ -2081,11 +2081,11 @@ class View {
                         break;
 
                     case 'IN':
-                        $string.= $join." {$t['name']} IN (".dr_safe_replace($t['value']).")";
+                        $string.= $join." {$t['name']} IN (".trim(dr_safe_replace($t['value']), ',').")";
                         break;
 
                     case 'NOTIN':
-                        $string.= $join." {$t['name']} NOT IN (".dr_safe_replace($t['value']).")";
+                        $string.= $join." {$t['name']} NOT IN (".trim(dr_safe_replace($t['value']), ',').")";
                         break;
 
                     case 'NOT':
