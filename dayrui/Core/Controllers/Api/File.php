@@ -195,6 +195,7 @@ class File extends \Phpcmf\Common
                     'id' => $t['id'],
                     'name' => $t['filename'],
                     'file' => $t['attachment'],
+                    'url' => dr_get_file($t['id']),
                     'preview' => dr_file_preview_html(dr_get_file_url($t)),
                     'upload' => '<input type="file" name="file_data"></button>',
                 ];
