@@ -142,7 +142,7 @@ class Property extends \Phpcmf\Library\A_Field {
             <th width="45"> </th>
         </tr>
         </thead>
-        <tbody id="'.$name.'-sort-items">';
+        <tbody id="property_'.$name.'-sort-items">';
 		$i = 0;
 
         unset($field['setting']['width']);
@@ -212,13 +212,14 @@ class Property extends \Phpcmf\Library\A_Field {
 		$str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
 		$str.= '</p>';
 		$str.= '<script type="text/javascript">
+		$("#property_'.$name.'-sort-items").sortable();
 		function dr_add_property_'.$name.'() {
-			var id=($("#'.$name.'-sort-items tr").size() + 1) * 10;
+			var id=($("#property_'.$name.'-sort-items tr").size() + 1) * 10;
 			var html = "<tr id=\"dr_items_'.$name.'_"+id+"\">";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][name]\"></td>";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][value]\"></td>";
 			html+= "<td><a class=\"btn btn-xs red\" href=\"javascript:;\" onclick=\"$(\'#dr_items_'.$name.'_"+id+"\').remove()\"> <i class=\"fa fa-trash\"></i> </a></td></tr>";
-			$("#'.$name.'-sort-items").append(html);
+			$("#property_'.$name.'-sort-items").append(html);
 		}
 		</script><span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
 		return $this->input_format($field['fieldname'], $text, $str);
