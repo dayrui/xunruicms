@@ -90,6 +90,16 @@ class Account extends \Phpcmf\Common
                 if (strlen($content) > 30000000) {
                     $this->_json(0, dr_lang('图片太大了'));
                 }
+                $data = strtolower($content);
+                if (strpos($data, '<?php') !== false) {
+                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                } elseif (strpos($data, 'eval(') !== false) {
+                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                } elseif (strpos($data, '.php') !== false) {
+                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                } elseif (strpos($data, 'base64_decode(') !== false) {
+                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                }
                 $file = $cache_path.$this->uid.'.jpg';
                 $temp = dr_upload_temp_path().'member.'.$this->uid.'.jpg';
                 $size = @file_put_contents($temp, $content);
@@ -103,7 +113,9 @@ class Account extends \Phpcmf\Common
                 }
                 // 上传图片到服务器
                 copy($temp, $file);
-                !is_file($file) && $this->_json(0, dr_lang('头像存储失败'));
+                if (!is_file($file)) {
+                    $this->_json(0, dr_lang('头像存储失败'));
+                }
                 if (defined('UCSSO_API')) {
                     $rt = ucsso_avatar($this->uid, $content);
                     !$rt['code'] && $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
@@ -186,7 +198,7 @@ class Account extends \Phpcmf\Common
                     $this->_json(0, dr_lang('手机号码已经注册'));
                 } elseif (defined('UCSSO_API') && $rt = ucsso_edit_phone($this->uid, $value)) {
                     if (!$rt['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
+                        $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
                     }
                 }
                 \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['phone' => $value]);

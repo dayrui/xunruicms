@@ -119,7 +119,7 @@ class Related extends \Phpcmf\Library\A_Field {
             <th width="50"> </th>
         </tr>
         </thead>
-        <tbody id="'.$name.'-sort-items">';
+        <tbody id="related_'.$name.'-sort-items">';
 
         $value = @trim($value, ',');
         if ($value && is_string($value)) {
@@ -141,6 +141,8 @@ class Related extends \Phpcmf\Library\A_Field {
         $str.= $tips;
         $str.= '
 		<script type="text/javascript">
+		
+        $("#related_'.$name.'-sort-items").sortable();
 		function dr_add_related_'.$name.'() {
 		
             layer.open({
@@ -182,7 +184,7 @@ class Related extends \Phpcmf\Library\A_Field {
                                     tpl = tpl.replace(/\{value\}/g, v.value);
                                     html+= tpl;
                                 }
-                                $(\'#'.$name.'-sort-items\').append(html);
+                                $(\'#related_'.$name.'-sort-items\').append(html);
                                 dr_tips(1, json.msg);
                             } else {
                                 dr_tips(0, json.msg);
