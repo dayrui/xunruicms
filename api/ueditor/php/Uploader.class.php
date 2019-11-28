@@ -92,15 +92,14 @@ class Uploader
         if (!$file) {
             $this->stateInfo = $this->getStateInfo("ERROR_FILE_NOT_FOUND");
             return;
-        }
-        if ($this->file['error']) {
-            $this->stateInfo = $this->getStateInfo($file['error']);
-            return;
-        } else if (!file_exists($file['tmp_name'])) {
+        } elseif (!file_exists($file['tmp_name'])) {
             $this->stateInfo = $this->getStateInfo("ERROR_TMP_FILE_NOT_FOUND");
             return;
         } else if (!is_uploaded_file($file['tmp_name'])) {
             $this->stateInfo = $this->getStateInfo("ERROR_TMPFILE");
+            return;
+        }   elseif ($this->file['error']) {
+            $this->stateInfo = $this->getStateInfo($file['error']);
             return;
         }
 
@@ -276,7 +275,7 @@ class Uploader
      */
     private function getStateInfo($errCode)
     {
-        return !$this->stateMap[$errCode] ? $this->stateMap["ERROR_UNKNOWN"] : $this->stateMap[$errCode];
+        return !$this->stateMap[$errCode] ? '上传错误('.$errCode.')' : $this->stateMap[$errCode];
     }
 
     /**

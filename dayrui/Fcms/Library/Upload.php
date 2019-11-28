@@ -167,12 +167,12 @@ class Upload
 
         if (!$file) {
             return dr_return_data(0, $this->error['ERROR_TMP_FILE_NOT_FOUND']);
-        } else if (isset($file['error']) && $file['error']) {
-            return dr_return_data(0, $this->_error_msg($file['error']));
         } else if (!file_exists($file['tmp_name'])) {
             return dr_return_data(0, $this->error['ERROR_TMP_FILE_NOT_FOUND']);
         } else if (!is_uploaded_file($file['tmp_name'])) {
             return dr_return_data(0, $this->error['ERROR_TMPFILE']);
+        } else if (isset($file['error']) && $file['error']) {
+            return dr_return_data(0, $this->_error_msg($file['error']));
         }
 
         $file_ext = $this->_file_ext($file['name']); // 扩展名
@@ -316,7 +316,7 @@ class Upload
      * 上传错误
      */
     private function _error_msg($code) {
-        return !$this->error[$code] ? $this->error["ERROR_UNKNOWN"] : $this->error[$code];
+        return !$this->error[$code] ? '上传错误('.$code.')' : $this->error[$code];
     }
 
     /**
