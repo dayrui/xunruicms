@@ -952,7 +952,7 @@ class Content extends \Phpcmf\Model {
 			return;
 		}
 		
-		$file =\Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
+		$file = \Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
 		$root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->dirname);
 
 		// 删除文件

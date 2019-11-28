@@ -843,7 +843,7 @@ class Pay extends \Phpcmf\Model
 
         $id = $data['id']; // 支付记录的id
         // 生成唯一支付id 接口使用
-        $sn = $pid = \Phpcmf\Service::C()->member_cache['pay']['prefix'].date('YmdHis', $data['inputtime']).'-'.$id;
+        $sn = $pid = str_replace('-', '', \Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', $data['inputtime']).'-'.$id;
 
         // 接口配置参数
         $config = \Phpcmf\Service::C()->member_cache['payapi'][$data['type']];

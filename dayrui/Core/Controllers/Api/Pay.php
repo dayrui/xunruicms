@@ -89,7 +89,7 @@ class Pay extends \Phpcmf\Common
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table('member_paylog')->get($id);
         if (!$data) {
-            $this->_msg(0, dr_lang('支付记录不存在'));
+            $this->_msg(0, dr_lang('支付记录[%s]不存在', $id));
         }
 
         // 支付回调钩子

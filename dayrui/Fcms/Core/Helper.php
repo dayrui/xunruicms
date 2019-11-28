@@ -895,7 +895,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
 function dr_get_file($id) {
 
     if (!$id) {
-        return '';
+        return '文件参数没有值';
     }
 
     if (is_numeric($id)) {
@@ -908,7 +908,7 @@ function dr_get_file($id) {
 
     $file = dr_file($id);
 
-    return $file ? $file : '';
+    return $file ? $file : $id;
 }
 
 /**
