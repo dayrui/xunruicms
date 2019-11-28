@@ -370,9 +370,16 @@ code.form-control-static {
     border-bottom: 1px dotted #e2e2e2;
 }
 .yl_files_row {
-    width: 45%;
+    width: 50%;
     height:70px;
     float: left;
+}
+@media (max-width: 768px) {
+    .yl_files_row {
+        width: 100%;
+        height:70px;
+        float: none;
+    }
 }
 .files_row_preview img{
     width: 60px !important;

@@ -2907,6 +2907,13 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     height:70px;
     float: left;
 }
+@media (max-width: 768px) {
+    .yl_files_row {
+        width: 100%;
+        height:70px;
+        float: none;
+    }
+}
 .files_row_preview img{
     width: 60px !important;
     height: 50px !important;
