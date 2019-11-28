@@ -224,7 +224,7 @@ class Attachment extends \Phpcmf\Model {
             return $rt;
         }
         $id = $rt['code'];
-        if (strpos($related, 'ueditor:') === 0 ? 0 : SYS_ATTACHMENT_DB) {
+        if (strpos($related, 'ueditor') === 0 ? 0 : SYS_ATTACHMENT_DB) {
             // 归档存储
             $rt = $this->table('attachment_unused')->insert([
                 'id' => $id,
