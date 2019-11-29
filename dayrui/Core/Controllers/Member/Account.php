@@ -186,7 +186,8 @@ class Account extends \Phpcmf\Common
             } elseif (!$cache) {
                 $this->_json(0, dr_lang('手机验证码储存过期'));
             } elseif ($cache != $value) {
-                $this->_json(0, dr_lang('手机号码或验证码不正确'));
+                // caceh存储的是手机号码，验证手机号码是否匹配
+                $this->_json(0, dr_lang('手机号码不匹配'));
             }
 
             // 更新手机号
@@ -250,7 +251,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('发送失败'));	
 		}
 
-		\Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+		\Phpcmf\Service::L('cache')->init()->save($name, $value, 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

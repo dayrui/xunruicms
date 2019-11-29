@@ -729,7 +729,7 @@ class View {
                     $cache = [
                         $rt
                     ];
-                    \Phpcmf\Service::L('cache')->init()->save($name, $cache, $system['cache']);
+                    $system['cache'] && \Phpcmf\Service::L('cache')->init()->save($name, $cache, $system['cache']);
                 }
 
                 return $this->_return($system['return'], $cache, '');

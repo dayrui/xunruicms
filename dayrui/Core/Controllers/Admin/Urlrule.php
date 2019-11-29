@@ -91,7 +91,7 @@ class Urlrule extends \Phpcmf\Table
         $server = strtolower($_SERVER['SERVER_SOFTWARE']);
         if (strpos($server, 'apache') !== FALSE) {
             $name = 'Apache';
-            $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到网站根目录</b></font>';
+            $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录</b></font>';
             $code = 'RewriteEngine On'.PHP_EOL
                 .'RewriteBase /'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
@@ -121,11 +121,28 @@ class Urlrule extends \Phpcmf\Table
                 .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php [NC,L]';
         }
 
+        $domain = [];
+        list($module, $site) = \Phpcmf\Service::M('Site')->domain();
+        $domain[$site['site_domain']] = dr_lang('本站电脑域名');
+        $site['mobile_domain'] && $domain[$site['mobile_domain']] = dr_lang('本站手机域名');
+        if ($module) {
+            foreach ($module as $dir => $t) {
+                if ($site['module_'.$dir]) {
+                    $domain[$site['module_'.$dir]] = dr_lang('%s电脑域名', $t['name']);
+                }
+                if ($site['module_mobile_'.$dir]) {
+                    $domain[$site['module_mobile_'.$dir]] = dr_lang('%s手机域名', $t['name']);
+                }
+            }
+        }
+
         \Phpcmf\Service::V()->assign([
             'name' => $name,
             'code' => $code,
             'note' => $note,
+            'site' => $site,
             'count' => $code ? dr_count(explode(PHP_EOL, $code)) : 0,
+            'domain' => $domain,
         ]);
         \Phpcmf\Service::V()->display('urlrule_rewrite.html');
     }

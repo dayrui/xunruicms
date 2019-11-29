@@ -56,6 +56,11 @@ class Module extends \Phpcmf\Common
             $this->_jsonp(1, $data['hits']);exit;
         }
 
+        $name = 'module-'.md5($this->tablename).'-'.$id;
+        if (\Phpcmf\Service::L('input')->get_cookie($name)) {
+            $this->_jsonp(1, $data['hits']);
+        }
+
         $hits = (int)$data['hits'] + $plus;
 
         // 更新主表
@@ -74,6 +79,9 @@ class Module extends \Phpcmf\Common
             'month_hits' => (date('Ym', $data['updatetime']) == date('Ym', SYS_TIME)) ? ($total['month_hits'] + $plus) : $plus,
             'year_hits' => (date('Ymd', $data['updatetime']) == date('Ymd', strtotime('-1 day'))) ? $hits : $total['year_hits'],
         ]);
+
+        //session()->save($name, $id, 300); 考虑并发性能还是不用session了
+        \Phpcmf\Service::L('input')->set_cookie($name, $id, 300);
 
         // 输出
         $this->_jsonp(1, $hits);
