@@ -303,8 +303,11 @@ class Category extends \Phpcmf\Model
                 $mod = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content', $t['mid']);
                if ($mod && $t['mid']) {
                    // 删除栏目模型字段
-                   $this->db->table('field')->where('relatedid', $t['id'])
+					$this->db->table('field')->where('relatedid', $t['id'])
                        ->where('relatedname', 'share-'.SITE_ID)->delete();
+					if (!$this->db->tableExists($this->dbprefix(SITE_ID.'_'.$t['mid']))) {
+					   continue;
+					}   
                    // 删除内容
                    $this->table(SITE_ID.'_'.$t['mid'])->where('catid', $t['id'])->delete();
                    $this->table(SITE_ID.'_'.$t['mid'].'_draft')->where('catid', $t['id'])->delete();
