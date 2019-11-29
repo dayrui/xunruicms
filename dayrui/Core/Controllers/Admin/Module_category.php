@@ -12,7 +12,9 @@ class Module_category extends \Phpcmf\Common
     public function index() {
 
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
-        !$module && $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
+        if (!$module) {
+            $this->_admin_msg(0, dr_lang('系统没有安装内容模块'), dr_url('module/index'));
+        }
 
         $share = 0;
 
@@ -43,7 +45,9 @@ class Module_category extends \Phpcmf\Common
             $one = reset($module);
         }
 
-        !$module && $this->_admin_msg(0, dr_lang('系统没有可用内容模块'));
+        if (!$module) {
+            $this->_admin_msg(0, dr_lang('系统没有可用内容模块'), dr_url('module/index'));
+        }
 
         // 只存在一个项目
         dr_count($module) == 1 && dr_redirect($one['url']);
