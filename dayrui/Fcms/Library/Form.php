@@ -363,6 +363,8 @@ class Form
             return false;
         } elseif (!preg_match('/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/', $value)) {
             return false;
+        } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
+            return false;
         }
 
         return true;
@@ -378,6 +380,8 @@ class Form
             return false;
         } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']
             && in_array($value, \Phpcmf\Service::C()->member_cache['register']['notallow'])) {
+            return false;
+        } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
             return false;
         }
 
