@@ -158,7 +158,7 @@ class Module extends \Phpcmf\Table
             // 可编辑的栏目
             $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
             if (!$category[$data['catid']]) {
-                exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', "#" . $this->module['category'][$data['catid']]['name'])));
+                exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name'])));
             }
         } else {
             $this->content_model->_hcategory_member_edit_auth();
@@ -480,7 +480,7 @@ class Module extends \Phpcmf\Table
                         // 表示修改
                         $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
                         if (!$cat[$old['catid']]) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', "#".$this->module['category'][$old['catid']]['name']));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$old['catid']]['name']));
                         }
                         // 禁止修改栏目
                         if ($this->module['category'][$old['catid']]['setting']['notedit']) {
