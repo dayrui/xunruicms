@@ -1043,18 +1043,17 @@ class Member extends \Phpcmf\Model
         $member['regip'] = (string)\Phpcmf\Service::L('input')->ip_address();
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = rand(100000, 999999);
-        $member['username'] = $member['username'] ? dr_safe_filename($member['username']) : '';
-        $rt = $this->table('member')->insert($member);
-        if (!$rt['code']) {
-            return dr_return_data(0, $rt['msg']);
-        }
 
         // 没有账号，随机一个默认登录账号
         if (!$member['username']) {
-            $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix'].$rt['code']));
-            $this->table('member')->update($rt['code'], [
-                'username' => $member['username']
-            ]);
+            $member['username'] = $this->_rand_username(\Phpcmf\Service::C()->member_cache['register']['unprefix'], $member);
+        } else {
+            $member['username'] =  dr_safe_filename($member['username']);
+        }
+
+        $rt = $this->table('member')->insert($member);
+        if (!$rt['code']) {
+            return dr_return_data(0, $rt['msg']);
         }
 
         // 附表信息
@@ -1588,6 +1587,28 @@ class Member extends \Phpcmf\Model
         // 同步删除动作
         \Phpcmf\Service::M('Sync')->delete_member($id);
 
+    }
+
+    // 随机账号
+    private function _rand_username($prefix, $member, $rand = 0) {
+
+        if ($member['phone']) {
+            $name = $member['phone'];
+        } elseif ($member['name']) {
+            $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
+        } elseif ($member['email']) {
+            list($name) = explode('@', $member['email']);
+        } else {
+            $name = rand(10000, 99999999);
+        }
+
+        $name = trim(strtolower($prefix.$name)).($rand ? rand(10000, 99999999) : '');
+
+        if ($this->table('member')->where('username', $name)->counts()) {
+            return $this->_rand_username($prefix, $member, 1);
+        }
+
+        return $name;
     }
 
     // 修改账号
