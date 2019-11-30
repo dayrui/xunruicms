@@ -157,7 +157,9 @@ class Module extends \Phpcmf\Table
         if (!$this->is_hcategory) {
             // 可编辑的栏目
             $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
-            !$category[$data['catid']] && exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', "#" . $data['catid'])));
+            if (!$category[$data['catid']]) {
+                exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', "#" . $this->module['category'][$data['catid']]['name'])));
+            }
         } else {
             $this->content_model->_hcategory_member_edit_auth();
         }
@@ -198,7 +200,9 @@ class Module extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'del');
-            !isset($cat[$row['catid']]) && $this->_json(0, dr_lang('当前栏目[%s]没有删除权限', $this->module['category'][$row['catid']]['name']));
+            if (!isset($cat[$row['catid']])) {
+                $this->_json(0, dr_lang('当前栏目[%s]没有删除权限', $this->module['category'][$row['catid']]['name']));
+            }
         } else {
             $this->content_model->_hcategory_member_del_auth();
         }
@@ -476,7 +480,7 @@ class Module extends \Phpcmf\Table
                         // 表示修改
                         $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
                         if (!$cat[$old['catid']]) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', "#".$old['catid']));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', "#".$this->module['category'][$old['catid']]['name']));
                         }
                         // 禁止修改栏目
                         if ($this->module['category'][$old['catid']]['setting']['notedit']) {
@@ -486,7 +490,7 @@ class Module extends \Phpcmf\Table
                         // 表示新增
                         $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'add');
                         if (!$cat[$data[1]['catid']]) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', (int)$data[1]['catid']));
+                            return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][(int)$data[1]['catid']]['name']));
                         }
                         if ($this->uid) {
                             // 判断日发布量
