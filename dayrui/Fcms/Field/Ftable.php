@@ -308,14 +308,14 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $str.= '<script>
                 var ks_'.$name.' = '.json_encode(['tpl' => $tpl, 'id' => $ksid]).';
                 function dr_del_table_'.$name.'(e) {
-		    layer.confirm(\'确定删除本条数据吗？\', {
-            shade: 0,
-            title: \'提示\',
-            }, function(index, layero){
-               layer.close(index);
-                $(e).parent().parent().remove();
-            });
-		}
+                    layer.confirm(\'确定删除本条数据吗？\', {
+                    shade: 0,
+                    title: \'提示\',
+                    }, function(index, layero){
+                       layer.close(index);
+                        $(e).parent().parent().remove();
+                    });
+                }
                 function dr_add_table_'.$name.'() {
                   var tpl = ks_'.$name.'.tpl;
                   ks_'.$name.'.id ++;
@@ -325,6 +325,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 </script>';
             $str.= '</div>';
         }
+        $str.= '<script> $("#dr_'.$name.'_body").sortable();</script>';
 
         return $this->input_format($name, $text, $str.$tips);
     }

@@ -387,38 +387,40 @@ class Module extends \Phpcmf\Model
             require $mpath.'Config/Install.php';
         }
 
-        // 执行自定义sql
-        if (is_file($mpath.'Config/Install.sql')) {
-            $sql = file_get_contents($mpath.'Config/Install.sql');
-            $sql && \Phpcmf\Service::M('table')->_query(
-                $sql,
-                [
+        // 首次安装模块执行它
+        if (dr_count($module['site']) == 1) {
+            // 执行自定义sql
+            if (is_file($mpath.'Config/Install.sql')) {
+                $sql = file_get_contents($mpath.'Config/Install.sql');
+                $sql && \Phpcmf\Service::M('table')->_query(
+                    $sql,
                     [
-                        '{moduleid}',
-                        '{dbprefix}',
-                        '{tablename}',
-                        '{dirname}',
-                        '{siteid}'
-                    ],
-                    [
-                        $module['id'],
-                        $this->dbprefix(),
-                        $table,
-                        $dir,
-                        $siteid
-                    ],
-                ]
-            );
+                        [
+                            '{moduleid}',
+                            '{dbprefix}',
+                            '{tablename}',
+                            '{dirname}',
+                            '{siteid}'
+                        ],
+                        [
+                            $module['id'],
+                            $this->dbprefix(),
+                            $table,
+                            $dir,
+                            $siteid
+                        ],
+                    ]
+                );
+            }
         }
+
 
         // 执行站点sql语句
         if (is_file($mpath.'Config/Install_site.sql')) {
             $sql = file_get_contents($mpath.'Config/Install_site.sql');
-            foreach ($this->site as $siteid) {
-                $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
-                if ($rt) {
-                    return dr_return_data(0, $rt);
-                }
+            $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
+            if ($rt) {
+                return dr_return_data(0, $rt);
             }
         }
 

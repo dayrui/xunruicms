@@ -50,15 +50,15 @@ class App extends \Phpcmf\Model
             // 如果是内容模块，就进入内容模块安装模式
             \Phpcmf\Service::M('module')->install($dir, $config, 1);
         } else {
-            // 执行sql语句
-            if (is_file($path.'Config/Install.sql')) {
+            // 执行sql语句，主站的才执行
+            if (SITE_ID == 1 && is_file($path.'Config/Install.sql')) {
                 $rt = $this->query_all(file_get_contents($path.'/Config/Install.sql'));
                 if ($rt) {
                     return dr_return_data(0, $rt);
                 }
             }
 
-            // 执行站点sql语句
+            // 执行各个站点sql语句
             if (is_file($path.'Config/Install_site.sql')) {
                 $sql = file_get_contents($path.'Config/Install_site.sql');
                 foreach ($this->site as $siteid) {

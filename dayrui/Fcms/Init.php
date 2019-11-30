@@ -111,7 +111,7 @@ define('CMSURI', $uri);
 if (!IS_ADMIN && $uri && !defined('IS_API')) {
     // 自定义URL解析规则
     $routes = [];
-    $routes['rewrite-test.html'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
+    $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
     $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
     if (is_file(WEBPATH.'config/rewrite.php')) {
         $my = require WEBPATH.'config/rewrite.php';

@@ -1,22 +1,26 @@
 {template header.html}
 <script type="text/javascript">
-    function dr_test(name, domain) {
+    function dr_test(obj, name, domain) {
+        $(obj).html('{dr_lang('在检测中')}');
         $.ajax({
-            type: "GET",
             url: domain+"/rewrite-test.html",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data.code) {
-                    dr_tips(1, data.msg);
-                } else {
-                    alert('域名【'+name+'】不支持伪静态，首先需要确定服务器支持rewrite模块并开启了，其次需要正确配置上面的方法');
-                }
-            },
-            error: function (msg) {
+            type: 'GET',
+            timeout: 1000,
+            dataType: "jsonp",
+            jsonp: "callback",
+            jsonpCallback: "callback"
+        }).done(function(data) {
+            $(obj).html('{dr_lang('环境检测')}');
+            if (data.code) {
+                dr_tips(1, data.msg);
+            } else {
                 alert('域名【'+name+'】不支持伪静态，首先需要确定服务器支持rewrite模块并开启了，其次需要正确配置上面的方法');
             }
+        }) .fail(function() {
+            $(obj).html('{dr_lang('环境检测')}');
+            alert('域名【'+name+'】不支持伪静态，首先需要确定服务器支持rewrite模块并开启了，其次需要正确配置上面的方法');
         });
+
     }
     function dr_rewrite_config() {
         $('#dr_write').hide();
@@ -57,14 +61,12 @@
         <p>{$note}</p>
         {if $code}
         <p><textarea class="form-control" style="width:90%; height:{php echo $count * 40;}px;">{$code}</textarea></p>
-            {/if}
+        {/if}
 
         <ul class="list-group" style="width:90%;">
-
-
         {loop $domain $name $cname}
             <li class="list-group-item">{$cname}：{$name}
-                <span class="badge badge badge-danger" style="cursor: pointer"  onClick="dr_test('{$name}', '{dr_http_prefix($name)}')">{dr_lang('环境检测')} </span>
+                <span class="badge badge badge-danger" style="cursor: pointer"  onClick="dr_test(this, '{$name}', '{dr_http_prefix($name)}')">{dr_lang('环境检测')} </span>
             </li>
         {/loop}
         </ul>

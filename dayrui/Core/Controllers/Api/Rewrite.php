@@ -11,7 +11,7 @@ class Rewrite extends \Phpcmf\Common
 
 	// test
 	public function test() {
-		$this->_json(1, '服务器支持伪静态功能，可以自定义URL规则和解析规则了');
+		$this->_jsonp(1, '服务器支持伪静态功能，可以自定义URL规则和解析规则了');
 	}
 
 	// 网站地图
