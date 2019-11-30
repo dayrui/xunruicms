@@ -414,7 +414,6 @@ class Module extends \Phpcmf\Model
             }
         }
 
-
         // 执行站点sql语句
         if (is_file($mpath.'Config/Install_site.sql')) {
             $sql = file_get_contents($mpath.'Config/Install_site.sql');

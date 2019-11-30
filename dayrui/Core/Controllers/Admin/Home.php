@@ -115,6 +115,22 @@ class Home extends \Phpcmf\Common
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
                     continue; // 没有分组菜单就不要
+                } elseif ($top['mark'] && strpos($top['mark'], 'app-') === 0) {
+                    // 判断应用模块权限
+                    list($a, $mm) = explode('-', $top['mark']);
+                    if ($mm) {
+                        $mp = dr_get_app_dir($mm);
+                        if (is_file($mp.'Config/App.php')) {
+                            $config = require $mp.'Config/App.php';
+                            // 如果是内容模块
+                            if ((isset($config['ftype']) && $config['ftype'] == 'module') || $config['type'] == 'module') {
+                                if (!$this->get_cache('module-'.SITE_ID.'-content', $mm)) {
+                                    unset($top[$tid]);
+                                    continue;
+                                }
+                            }
+                        }
+                    }
                 }
                 $_left = 0; // 是否第一个分组菜单，0表示第一个
                 $_link = 0; // 是否第一个链接菜单，0表示第一个
