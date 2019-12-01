@@ -1055,6 +1055,15 @@ class Member extends \Phpcmf\Model
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
+		
+		// 再次判断没有账号，随机一个默认登录账号
+        if (!$member['username']) {
+            $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix']
+			.intval($rt['code']+date('Ymd'))));
+            $this->table('member')->update($rt['code'], [
+                'username' => $member['username']
+            ]);
+        }
 
         // 附表信息
         $data['id'] = $member['uid'] = $uid = $rt['code'];
