@@ -96,8 +96,10 @@ class Module extends \Phpcmf\Table
                     '', 1, 1
                 );
             }
-            if (!$category[$catid]) {
-                exit($this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$catid)));
+			if (!$catid) {
+                $this->_msg(0, dr_lang('没有可用的栏目发布权限'));
+            } elseif (!$category[$catid]) {
+                $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', $this->module['category'][$catid]['name']));
             }
             $this->is_post_code = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['code']);
         } else {
