@@ -22,12 +22,13 @@ class Home extends \Phpcmf\Common
 	public function index() {
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
         // 系统开启静态首页
-        if ($this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
+        if (!IS_CLIENT && $this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
             ob_start();
             $this->_index();
             $html = ob_get_clean();
-            if (\Phpcmf\Service::IS_PC()) {
-                // 电脑端访问
+            if (!\Phpcmf\Service::V()->_is_mobile) {
+                // 表示 电脑端访问
+                // 生成电脑端界面
                 file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html);
                 // 生成移动端
                 if (SITE_IS_MOBILE_HTML) {
@@ -40,7 +41,8 @@ class Home extends \Phpcmf\Common
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), ob_get_clean());
                 }
             } else {
-                // 移动端访问
+                // 表示 移动端访问
+                // 生成移动端界面
                 if (SITE_IS_MOBILE_HTML) {
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html);
                 }
@@ -55,8 +57,8 @@ class Home extends \Phpcmf\Common
             }
             echo $html;
         } else {
+            // 启用页面缓存
             if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                // 启用页面缓存
                 $this->cachePage(SYS_CACHE_PAGE * 3600);
             }
             $this->_index();

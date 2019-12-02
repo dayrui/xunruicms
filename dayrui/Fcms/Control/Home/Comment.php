@@ -44,9 +44,8 @@ class Comment extends \Phpcmf\Common
     // 评论列表
     protected function _Index() {
 
-
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -115,6 +114,7 @@ class Comment extends \Phpcmf\Common
             'myfield' => $myfield,
             'comment' => $comment,
             'commnets' => $total,
+            'pagesize' => $pagesize,
             'post_url' => '/index.php?s='.MOD_DIR.'&c=comment&id='. $this->cid,
             'page_url' => '/index.php?s='.MOD_DIR.'&c=comment&m=index&id='. $this->cid,
             'is_reply' => (int)$this->module['comment']['reply'],
