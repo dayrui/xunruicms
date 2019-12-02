@@ -31,9 +31,7 @@
                             <label class="col-md-2 control-label">{dr_lang('身份')}</label>
                             <div class="col-md-9">
                                 <label class="form-control-static">
-
-                                    {if $is_post_user}<span class="label label-danger">{dr_lang('投稿者')}{else}<span class="label label-success">{dr_lang('管理者')}{/if}
-                                   </span>
+                                    {if $is_post_user}<span class="label label-danger">{dr_lang('投稿者')}</span>{else}<span class="label label-success">{dr_lang('管理者')}</span>{/if}
                                 </label>
                             </div>
                         </div>
@@ -85,6 +83,27 @@
                                 </div>
                             </div>
                         </div>
+                        {if $oauth_data}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('快捷登录')}</label>
+                            <div class="col-md-4">
+                                <ul class="list-group">
+                                {loop $oauth_data $name}
+                                <li class="list-group-item">
+                                    <img src="{THEME_PATH}assets/oauth/{$name}.png">
+                                    {dr_html2emoji($oauth_list[$name]['nickname'])}
+                                    {if $oauth_list[$name]}
+                                    <a style="margin-top: 5px;" target="_blank" href="{dr_url('api/alogin', ['id' => $admin.uid, 'url' => dr_member_url('account/oauth')])}" class="badge badge-danger"> <i class="fa fa-user-times"></i> 解绑</a>
+                                    {else}
+                                    <a style="margin-top: 5px;"  target="_blank" href="{dr_url('api/alogin', ['id' => $admin.uid, 'url' => dr_member_url('account/oauth')])}" class="badge badge-success"> <i class="fa fa-user-plus"></i> 绑定</a>
+                                    {/if}
+                                </li>
+                                {/loop}
+                                </ul>
+                            </div>
+                        </div>
+                        {/if}
+
                         <div class="form-group" id="dr_row_code">
                             <label class="col-md-2 control-label">{dr_lang('验证码')}</label>
                             <div class="col-md-4">

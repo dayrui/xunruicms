@@ -86,6 +86,11 @@ class Auth extends \Phpcmf\Model {
         return $id;
     }
 
+    // 存储授权登录信息
+    public function save_login_auth($name, $uid) {
+        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, SYS_TIME, 300);
+    }
+
     // 后台管理员登录
     public function login($username, $password) {
 
@@ -111,15 +116,22 @@ class Auth extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('此账号不是管理员'));
         }
 
-        // 管理员登录日志记录
-        $this->_login_log($uid);
-
         // 保存会话
-        \Phpcmf\Service::C()->session()->set('uid', $uid);
-        \Phpcmf\Service::L('input')->set_cookie('member_uid', $uid, SITE_LOGIN_TIME);
-        \Phpcmf\Service::L('input')->set_cookie('member_cookie', substr(md5(SYS_KEY . $data['password']), 5, 20), SITE_LOGIN_TIME);
+        $this->login_session($data);
 
         return dr_return_data($uid);
+    }
+
+    // 存储会话
+    public function login_session($data) {
+
+        // 保存会话
+        \Phpcmf\Service::C()->session()->set('uid', $data['id']);
+        \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], SITE_LOGIN_TIME);
+        \Phpcmf\Service::L('input')->set_cookie('member_cookie', substr(md5(SYS_KEY . $data['password']), 5, 20), SITE_LOGIN_TIME);
+
+        // 管理员登录日志记录
+        $this->_login_log($data['id']);
     }
 
     // 或后天最近两次登录信息
@@ -369,6 +381,8 @@ class Auth extends \Phpcmf\Model {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
                 if (\Phpcmf\Service::L('router')->method == 'search_help') {
+                    return FALSE;
+                } elseif (\Phpcmf\Service::L('router')->method == 'oauth') {
                     return FALSE;
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));

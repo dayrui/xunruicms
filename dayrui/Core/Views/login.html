@@ -4,7 +4,6 @@
 <!--[if !IE]><!-->
 <html lang="zh-cn">
 <!--<![endif]-->
-<!-- BEGIN HEAD -->
 <head>
     <meta charset="utf-8" />
     <title>{dr_lang('%s - 后台管理平台', SITE_NAME)}</title>
@@ -66,6 +65,11 @@
         <div class="form-actions">
             <button type="submit" class="btn default btn-block  "> {dr_lang('登录后台')} </button>
         </div>
+        <div class="login-oauth">
+            {loop $oauth $t}
+            <a href="{$t.url}"><i class="fa fa-{$t.name}"></i></a>
+            {/loop}
+        </div>
     </form>
 </div>
 {if $license.name}
@@ -92,11 +96,9 @@
 <script src="{LANG_PATH}lang.js" type="text/javascript"></script>
 <script src="{THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
 <script type="text/javascript">
-
     if (typeof parent.layer == 'function') {
         parent.layer.closeAll('loading');
     }
-
     function dr_submit() {
         $('.alert-danger', $('.login-form')).hide();
         $.ajax({type: "POST",dataType:"json", url: '{dr_now_url()}', data: $(".login-form").serialize(),
@@ -116,7 +118,6 @@
         });
         return false;
     }
-
     <?php $bg = array('"'.THEME_PATH.'assets/global/login/1.jpg"',
             '"'.THEME_PATH.'assets/global/login/2.jpg"',
             '"'.THEME_PATH.'assets/global/login/3.jpg"',
@@ -139,8 +140,6 @@
         });
 
     });
-
-
 </script>
 {if isset($_GET['isback']) && $_GET['isback']}
 <script type="text/javascript">
@@ -150,5 +149,4 @@
 </script>
 {/if}
 </body>
-
 </html>

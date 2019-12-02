@@ -827,6 +827,11 @@ function dr_block($id, $type = 0, $site = 0) {
     return \Phpcmf\Service::C()->get_cache('block-'.($site ? $site : SITE_ID), $id, $type);
 }
 
+// 是否是微信公众号
+function dr_is_weixin_app() {
+    return strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger');
+}
+
 /**
  * 全局变量调用
  *

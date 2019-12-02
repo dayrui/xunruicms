@@ -174,7 +174,7 @@ class Form
                     return [[], ['name' => $name, 'error' => $frt]];
                 }
                 // 验证必填字段
-                if ($field['fieldtype'] != 'Group' && $validate['required']) {
+                if (!IS_ADMIN && $field['fieldtype'] != 'Group' && $validate['required']) {
                     if ($value == '') {
                         // 验证值为空
                         return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];

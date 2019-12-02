@@ -25,7 +25,7 @@ class Login extends \Phpcmf\Common
                     \Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
                 }
             }
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
 			if (SYS_ADMIN_CODE && !\Phpcmf\Service::L('form')->check_captcha('code')) {
 				$this->_json(0, dr_lang('验证码不正确'));
 			} elseif (!IS_DEV && defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {
@@ -60,17 +60,40 @@ class Login extends \Phpcmf\Common
             $license = require MYPATH.'Config/License.php';
         }
 
+        $url = ADMIN_URL.SELF.'?c=api&m=oauth&is_admin_call=1&name=';
+        $name = ['qq', 'weixin', 'weibo', 'wechat'];
+        $oauth = [];
+        foreach ($name as $key => $value) {
+            if (!isset($this->member_cache['oauth'][$value]['id'])
+                || !$this->member_cache['oauth'][$value]['id']) {
+                unset($name[$key]);
+            }
+            if (in_array($value, ['weixin', 'wechat'])) {
+                if (dr_is_weixin_app()) {
+                    dr_is_app('weixin') && $oauth['wechat'] = [
+                        'name' => 'wechat',
+                        'url' => ROOT_URL . 'index.php?s=weixin&c=member&m=login_url&back='.urlencode($url.'wechat'),
+                    ];
+                } else {
+                    $oauth[$value] = [
+                        'name' => $value,
+                        'url' => ROOT_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
+                    ];
+                }
+            } else {
+                $oauth[$value] = [
+                    'name' => $value,
+                    'url' => ROOT_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
+                ];
+            }
+        }
+
 		\Phpcmf\Service::V()->assign(array(
 			'form' => dr_form_hidden(),
+            'oauth' => $oauth,
 			'license' => $license,
 		));
 		\Phpcmf\Service::V()->display('login.html');exit;
-	}
-
-	public function ajax() {
-
-
-
 	}
 
 	public function out() {

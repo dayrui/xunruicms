@@ -11,6 +11,36 @@
 class Api extends \Phpcmf\Common
 {
 
+    // 来自快捷登录
+    public function oauth() {
+
+        $uid = intval(\Phpcmf\Service::L('input')->get('uid'));
+        $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+        if (!$uid) {
+            $this->_admin_msg(0, dr_lang('uid参数传递失败'));
+        }
+        $oauth = \Phpcmf\Service::L('cache')->init()->get('admin_auth_login_'.$name.'_'.$uid);
+        if (!$oauth) {
+            $this->_admin_msg(0, dr_lang('授权信息(%s)获取失败', $name));
+        } elseif (SYS_TIME - $oauth > 60) {
+            $this->_admin_msg(0, dr_lang('授权信息(%s)验证超时', $name));
+        }
+
+        $data = \Phpcmf\Service::M('member')->get_member($uid);
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('账号(%s)不存在', $uid));
+        } elseif (!$data['is_admin']) {
+            $this->_admin_msg(0, dr_lang('账号(%s)不是管理员', $data['username']));
+        }
+
+        // 保存会话
+        \Phpcmf\Service::M('auth')->login_session($data);
+        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, 0, 10);
+
+        // 转向后台
+        dr_redirect(ADMIN_URL.SELF);
+    }
+
     // 添加后台面板页面
     public function add_main_table() {
 
@@ -132,6 +162,14 @@ class Api extends \Phpcmf\Common
             $select2.= '<option value="'.$i.'">'.$t.'</option>';
         }
 
+        $name = ['qq', 'weixin', 'weibo', 'wechat'];
+        foreach ($name as $key => $value) {
+            if (!isset($this->member_cache['oauth'][$value]['id'])
+                || !$this->member_cache['oauth'][$value]['id']) {
+                unset($name[$key]);
+            }
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
 				[
@@ -141,6 +179,8 @@ class Api extends \Phpcmf\Common
 			),
             'color' => $color,
             'target' => $target,
+            'oauth_data' => $name,
+            'oauth_list' => \Phpcmf\Service::M('member')->oauth($this->uid),
             'select_color' => $select,
             'is_post_user' => \Phpcmf\Service::M('auth')->is_post_user(),
             'select_target' => $select2,

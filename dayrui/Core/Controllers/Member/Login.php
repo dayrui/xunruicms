@@ -105,7 +105,7 @@ class Login extends \Phpcmf\Common
         }
 
         // 查询关联用户
-        $member = $oauth['uid'] ? \Phpcmf\Service::M()->table('member')->get($oauth['uid']) : [];
+        $member = $oauth['uid'] ? \Phpcmf\Service::M('member')->get_member($oauth['uid']) : [];
 
         // 跳转地址
         $back = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('back')));
@@ -124,8 +124,16 @@ class Login extends \Phpcmf\Common
             foreach ($rt as $url) {
                 $sso.= '<script src="'.$url.'"></script>';
             }
-            
-            $this->_msg(1, dr_lang('%s，欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
+
+            if (strpos($goto_url, 'is_admin_call')) {
+                // 存储后台回话
+                \Phpcmf\Service::M('auth')->save_login_auth($name, $member['uid']);
+                $goto_url.= '&name='.$name.'&uid='.$member['uid'];
+                $this->_admin_msg(1, dr_lang('%s，欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
+            } else {
+                $this->_msg(1, dr_lang('%s，欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
+            }
+
         } else {
             
             // 用户组判断

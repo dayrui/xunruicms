@@ -194,11 +194,17 @@ class Oauth extends \Phpcmf\Common
                         $url = $this->uid ? dr_member_url('account/oauth') : dr_member_url('home/index');
                     }
 
+                    $notify_url = '/index.php?s=api&c=oauth&m=wxbang&ep='.$rt['data']['action_info']['scene']['scene_str'];
+                    if (strpos($url, 'is_admin_call')) {
+                        // 后台回话
+                        $notify_url.= '&is_admin_call='.urlencode($url);
+                    }
+
                     \Phpcmf\Service::V()->admin();
                     \Phpcmf\Service::V()->assign([
                         'back_url' => $url,
                         'qrcode_url' => $rt['msg'],
-                        'notify_url' => '/index.php?s=api&c=oauth&m=wxbang&ep='.$rt['data']['action_info']['scene']['scene_str'],
+                        'notify_url' => $notify_url,
                     ]);
                     \Phpcmf\Service::V()->display('api_weixin_bang.html');
                 }
@@ -223,10 +229,19 @@ class Oauth extends \Phpcmf\Common
                 $this->uid = $rt['uid'];
                 $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);
                 \Phpcmf\Service::M('member')->save_cookie($this->member);
+                // 存储后台回话
+                if (isset($_GET['is_admin_call'])) {
+                    \Phpcmf\Service::M('auth')->save_login_auth('wechat', $this->uid);
+                    $this->_json(1, 'ok', [
+                        'url' => urldecode($_GET['is_admin_call']).'&uid='.$this->uid,
+                        'sso' => \Phpcmf\Service::M('member')->sso($this->member, 1),
+                    ]);
+                } else {
+                    $this->_json(1, 'ok', [
+                        'sso' => \Phpcmf\Service::M('member')->sso($this->member, 1),
+                    ]);
+                }
 
-                $this->_json(1, 'ok', [
-                    'sso' => \Phpcmf\Service::M('member')->sso($this->member, 1)
-                ]);
             }
         } else {
             $rt = \Phpcmf\Service::M()->table('member_oauth')->where('uid', $this->uid)->where('oauth', 'wechat')->getRow();
@@ -244,7 +259,18 @@ class Oauth extends \Phpcmf\Common
                     @file_put_contents($cache_path.$this->uid.'.jpg', $img);
                 }
             }
-            $this->_json($rt['access_token'] ? 0 : 1, 'ok', $rt);
+            // 存储后台回话
+            if (isset($_GET['is_admin_call'])) {
+                \Phpcmf\Service::M('auth')->save_login_auth('wechat', $this->uid);
+                $this->_json($rt['access_token'] ? 0 : 1, 'ok', [
+                    'url' => urldecode($_GET['is_admin_call']).'&uid='.$this->uid,
+                    'sso' => \Phpcmf\Service::M('member')->sso($this->member, 1),
+                ]);
+            } else {
+                $this->_json($rt['access_token'] ? 0 : 1, 'ok', $rt);
+            }
+
+
         }
     }
 

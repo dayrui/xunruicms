@@ -50,7 +50,13 @@
                             error: function(){ }
                         });
                     }
-                    setTimeout("window.location.href = '{$back_url}'", 2000);
+                    if (json.data.url) {
+                        setTimeout("window.location.href = '"+json.data.url+"'", 2000);
+                    } else{
+                        setTimeout("window.location.href = '{$back_url}'", 2000);
+                    }
+
+
                 }
             },
             error:function(){ }

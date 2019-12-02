@@ -99,7 +99,6 @@ abstract class Common extends \CodeIgniter\Controller
             dr_domain_301(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
         }
 
-
         // 客户端识别
         $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : $this->_is_mobile());
 
