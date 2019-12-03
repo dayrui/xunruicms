@@ -38,8 +38,6 @@ class Content extends \Phpcmf\Model {
     // 保存内容
     public function save($id, $data, $old = []) {
 
-        $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
-
         // 二次开发函数
         $data = $this->_content_post_before($id, $data, $old);
 
@@ -761,6 +759,12 @@ class Content extends \Phpcmf\Model {
         isset($data[1]['uid']) && $data[0]['uid'] = (int)$data[1]['uid'];
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
         !$data[1]['description'] && $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), 100));
+
+        if (isset($data[1]['keywords'])) {
+            !$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
+            $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
+            $data[1]['keywords'] = str_replace(',,', ',', $data[1]['keywords']);
+        }
 
         return $data;
     }
