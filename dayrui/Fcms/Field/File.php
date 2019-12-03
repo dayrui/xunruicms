@@ -205,7 +205,7 @@ class File extends \Phpcmf\Library\A_Field {
 			$val.= '<input type="hidden" '.$attr.' id="dr_'.$name.'" name="data['.$name.']" value="" />';
 		}
 
-		$area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["80%", "85%"]';
+		$area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "70%"]';
         $use = '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
@@ -275,7 +275,7 @@ $(function() {
             fix:true,
             scrollbar: false,
             shadeClose: true,
-			shade: 0.1,
+			shade: 0,
 			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){
