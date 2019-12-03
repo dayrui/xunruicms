@@ -55,9 +55,9 @@
                                     <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
                                 </label>
                                 <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
-                                <span id="all" class="btn green btn-sm">全选</span>
-                                <span id="allno" class="btn green btn-sm">全不选</span>
-                                <span id="other" class="btn green btn-sm">反选</span>
+                                <span id="all" class="btn green btn-sm">{dr_lang('全选')}</span>
+                                <span id="allno" class="btn green btn-sm">{dr_lang('全不选')}</span>
+                                <span id="other" class="btn green btn-sm">{dr_lang('反选')}</span>
                             </div>
                     </div>
                     <div role="presentation" class="table table-fc-upload table-striped clearfix template-download-2">
@@ -71,7 +71,6 @@
                                 <span class="checkbox"></span>
                                 <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
                                 {dr_file_preview_html($url, 1)}
-
                                 <i class="name" > {dr_format_file_size($t.filesize)} </i>
                                 <i class="size" title="{$t.filename}">{dr_strcut($t.filename, 10)}</i>
   
