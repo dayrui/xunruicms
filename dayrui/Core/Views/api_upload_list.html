@@ -44,7 +44,7 @@
                 {/if}
                 <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
 
-                     <div class="row  margin-bottom-20 template-download-2">
+                    <div class="row  margin-bottom-20 template-download">
                             <div class="col-md-12 text-center margin-bottom-20">
                                 <label><select  id="dr_field_name"class="form-control">
                                     {loop $sfield $i $t}
@@ -55,78 +55,35 @@
                                     <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
                                 </label>
                                 <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
-                                <span id="all" class="btn green btn-sm">{dr_lang('全选')}</span>
-                                <span id="allno" class="btn green btn-sm">{dr_lang('全不选')}</span>
-                                <span id="other" class="btn green btn-sm">{dr_lang('反选')}</span>
                             </div>
                     </div>
-                    <div role="presentation" class="table table-fc-upload table-striped clearfix template-download-2">
-
-
+                    <div role="presentation" class="table table-fc-upload table-striped clearfix">
 
                         <div class="files">
                             {loop $list.used $i $t}
                             {php $url = dr_get_file_url($t, 50, 50);}
                             <div class="template-download yl_files_row files_row">
-                                <span class="checkbox"></span>
-                                <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
-                                {dr_file_preview_html($url, 1)}
-                                <i class="name" > {dr_format_file_size($t.filesize)} </i>
-                                <i class="size" title="{$t.filename}">{dr_strcut($t.filename, 10)}</i>
-  
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                                <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
+                                <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                             </div>
                             {/loop}
                         </div>
-
-
-
+						
                     </div>
-					
-					
                 </div>
             </div>
         </div>
     </div>
-
-
     <input type="hidden" name="is_ajax" value="1">
     <input type="hidden" name="is_page" id="dr_page" value="{$page}">
 </form>
 
-<script src="{THEME_PATH}assets/js/ds.min.js" type="text/javascript"></script>
 <script>
-var ds = new DragSelect({
-  selectables: document.getElementsByClassName('files_row'),
-  multiSelectMode: true,
-  //选中
-  onElementSelect: function(element){
-    $(element).addClass('on').find('input[type="checkbox"]').prop('checked', true);
-  },
-  //取消选中
-  onElementUnselect: function(element){
-    $(element).removeClass('on').find('input[type="checkbox"]').prop('checked', false);
-  }
-});
-
-$(function(){
-  //区域内的所有可选元素
-  var selects = ds.selectables;
-
-  //全选
-  $('#all').click(function(){
-    ds.setSelection(selects);
-  });
-
-  //全不选
-  $('#allno').click(function(){
-    ds.clearSelection();
-  });
-
-  //反选
-  $('#other').click(function(){
-    ds.toggleSelection(selects);
-  });
-});
     function dr_fsearch() {
         var url = '{$search_url}&page=1&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
         window.location.href = url;
