@@ -118,4 +118,13 @@ class Function_list
     }
 
 
+    // 用于指定插件调用
+    function fstatus($value, $param = [], $data = []) {
+        if (!dr_is_app('fstatus')) {
+            return '[模块内容开关]插件未安装';
+        }
+        return '<a href="javascript:;" onclick="dr_ajax_open_close(this, \''.dr_url('fstatus/home/edit', ['id'=>$data['id'], 'mid'=>APP_DIR]).'\', 0);" class="badge badge-'.($value == 1 ? 'yes' : 'no').'"><i class="fa fa-'.($value == 1 ? 'check' : 'times').'"></i></a>';
+    }
+
+
 }

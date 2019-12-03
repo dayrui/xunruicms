@@ -1025,6 +1025,22 @@ abstract class Common extends \CodeIgniter\Controller
             'uri' => APP_DIR.'/home/edit',
             'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
         ];
+
+        if (dr_is_app('fstatus') && $this->module['field']['fstatus']) {
+            $data[] = [
+                'icon' => 'fa fa-times-circle',
+                'name' => dr_lang('设置为关闭状态'),
+                'uri' => 'fstatus/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url('fstatus/home/close_edit', ['mid' => APP_DIR]).'\')',
+            ];
+            $data[] = [
+                'icon' => 'fa fa-check-circle',
+                'name' => dr_lang('设置为开启状态'),
+                'uri' => 'fstatus/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url('fstatus/home/open_edit', ['mid' => APP_DIR]).'\')',
+            ];
+        }
+
         if (is_file(APPPATH.'Config/Cbottom.php')) {
             $data = require APPPATH.'Config/Cbottom.php';
         }

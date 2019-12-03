@@ -61,6 +61,18 @@ class Module extends \Phpcmf\Table
     protected function _Admin_List() {
 
         list($tpl, $data) = $this->_List([]);
+        if (dr_is_app('fstatus') && $this->module['field']['fstatus']) {
+            $list_field = \Phpcmf\Service::V()->get_value('list_field');
+            $list_field['fstatus'] = [
+                'use' => 1,
+                'order' => 1,
+                'order' => 1,
+                'width' => 60,
+                'func' => 'fstatus',
+                'name' => dr_lang('状态'),
+            ];
+            \Phpcmf\Service::V()->set_value('list_field', $list_field);
+        }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
