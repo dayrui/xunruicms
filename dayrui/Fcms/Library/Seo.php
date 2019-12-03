@@ -293,6 +293,7 @@ class Seo
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
         $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
         $seo['meta_keywords'] = str_replace('"', '', $seo['meta_keywords']);
+        $seo['meta_keywords'] = str_replace(',,', ',', $seo['meta_keywords']);
         $seo['meta_title'] = str_replace('"', '', $seo['meta_title']);
 
         return $seo;

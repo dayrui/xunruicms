@@ -763,7 +763,6 @@ class Content extends \Phpcmf\Model {
         if (isset($data[1]['keywords'])) {
             !$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
             $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
-            $data[1]['keywords'] = str_replace(',,', ',', $data[1]['keywords']);
         }
 
         return $data;
