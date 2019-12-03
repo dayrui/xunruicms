@@ -369,25 +369,61 @@ code.form-control-static {
     padding:10px 0;
     border-bottom: 1px dotted #e2e2e2;
 }
-.yl_files_row {
+.template-download .yl_files_row {
     width: 50%;
     height:70px;
     float: left;
 }
 @media (max-width: 768px) {
-    .yl_files_row {
+    .template-download .yl_files_row {
         width: 100%;
         height:70px;
         float: none;
     }
 }
-.files_row_preview img{
+.template-download .files_row_preview img{
     width: 60px !important;
     height: 50px !important;
 }
-.files_row_preview {
+.template-download .files_row_preview {
     margin-right: 10px;
 }
+
+
+
+.template-download-2 .files_row{
+	position:relative;
+    width:11%; float:left; margin-bottom:40px; overflow: hidden; text-align: center; 
+	margin:10px 10px; height:120px; background-color:#ddd;
+	border-radius: 5px; border:solid 1px #ddd;
+}
+@media (max-width: 768px) {
+    .template-download-2 .files_row {
+        width: 42% !important;
+    }
+}
+
+.template-download-2 .files_row i.name,.files_row i.size{ color: #fff; height: 20px; line-height: 20px;  position:absolute;  left:0;  font-style: normal; width: 100%!important; font-size: 12px;}
+.template-download-2 .files_row i.name{ background: #36c6d3; bottom:0px;}
+.template-download-2 .files_row i.size{ background: #666;bottom:20px;}
+
+.template-download-2 .files_row .checkboxes{visibility:hidden; position:absolute; top:5px; left:5px;}
+.template-download-2 .files_row .checkbox {
+  width:25px; height:25px!important; min-height: 25px!important;
+  position:absolute; top:5px; right:5px;
+  background: url(../../images/icon_item_hover.png);
+  
+}
+.template-download-2 .files_row span{display: none;}
+.template-download-2 .files_row img{max-width: 100%; }
+.template-download-2 .files_row:hover i,.template-download-2 .files_row:hover img { opacity: 0.6 }
+.template-download-2 .files_row:hover .mar{ background: #333; }
+.template-download-2 .files_row:hover .checkbox{ display:block; }
+
+.template-download-2 .files_row.on .checkbox {background: url(../../images/icon_item_cur.png); display:block; }
+.template-download-2 .files_row.on span{display:block; }
+.template-download-2 .files_row.on { background: #333; }
+.template-download-2 .files_row.on i,.files_row.on img{ opacity: 0.3 }
 
  
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
