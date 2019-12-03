@@ -157,18 +157,14 @@
                     {/if}
 
                     {loop $clink $a}
-                    {if !$a.uri || ($a.uri && $ci->_is_admin_auth($a.uri))}
-                    <label><a class="btn green btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
-                    {/if}
+                    <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
                     {/loop}
-
 
                     {loop $module.form $a}
                     {if $ci->_is_admin_auth(APP_DIR.'/'.$a.table.'/index')}
                     <label><a class="btn blue btn-xs" href="{dr_url(APP_DIR.'/'.$a.table.'/index', ['cid'=>$t.id])}"><i class="{dr_icon($a.setting.icon)}"></i> {dr_lang($a.name)} {if isset($t[$a.table.'_total'])} ({intval($t[$a.table.'_total'])}) {/if} </a></label>
                     {/if}
                     {/loop}
-
 
                     {if $module.comment && $ci->_is_admin_auth(APP_DIR.'/comment/index')}
                     <label><a href="{dr_url(APP_DIR.'/comment/index', ['cid'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-comments"></i> {dr_lang('%s(%s)', '评论', intval($t['comments']))} </a></label>
@@ -201,26 +197,10 @@
                         <i class="fa fa-angle-up"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="javascript:;" onclick="dr_module_send('{dr_lang("推荐位")}', '{dr_url(APP_DIR.'/home/tui_edit')}&page=0')"><i class="fa fa-flag"></i> {dr_lang('推送到推荐位')} </a>
-                        </li>
-                        {if $module[setting][sync_category]}
-                        <li>
-                            <a href="javascript:;" onclick="dr_module_send('{dr_lang("发布")}', '{dr_url(APP_DIR.'/home/tui_edit')}&page=1')"><i class="fa fa-refresh"></i> {dr_lang('发布到其他栏目')} </a>
-                        </li>
-                        {/if}
-                        <li>
-                            <a href="javascript:;" onclick="dr_module_send('{dr_lang("微信")}', '{dr_url(APP_DIR.'/home/tui_edit')}&page=2')"><i class="fa fa-weixin"></i>  {dr_lang('发送到微信公众号')} </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" onclick="dr_module_send_ajax('{dr_url(APP_DIR.'/home/tui_edit')}&page=4')"><i class="fa fa-clock-o"></i>  {dr_lang('更新时间')} </a>
-                        </li>
                         {loop $cbottom $a}
-                        {if !$a.uri || ($a.uri && $ci->_is_admin_auth($a.uri))}
                         <li>
                             <a href="{str_replace('{mid}', APP_DIR, urldecode($a.url))}"> <i class="{$a.icon}"></i> {dr_lang($a.name)} </a>
                         </li>
-                        {/if}
                         {/loop}
 
                     </ul>

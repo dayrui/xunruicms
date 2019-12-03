@@ -969,6 +969,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (is_file(APPPATH.'Config/Clink.php')) {
             $data = require APPPATH.'Config/Clink.php';
         }
+
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
             if (is_file(APPSPATH.$dir.'/install.lock') && is_file(APPSPATH.$dir.'/Config/Clink.php')) {
@@ -976,6 +977,14 @@ abstract class Common extends \CodeIgniter\Controller
                 if ($_clink) {
                     // 需要判断此模块是否得到插件的授权
                     $data = $data + $_clink;
+                }
+            }
+        }
+
+        if ($data) {
+            foreach ($data as $i => $t) {
+                if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                    unset($data[$i]); // 无权限的不要
                 }
             }
         }
@@ -988,7 +997,34 @@ abstract class Common extends \CodeIgniter\Controller
      */
     protected function _app_cbottom()
     {
+
         $data = [];
+        $data[] = [
+            'icon' => 'fa fa-flag',
+            'name' => dr_lang('推送到推荐位'),
+            'uri' => APP_DIR.'/home/edit',
+            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("推荐位").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=0\')',
+        ];
+        if ($this->module['setting']['sync_category']) {
+            $data[] = [
+                'icon' => 'fa fa-refresh',
+                'name' => dr_lang('发布到其他栏目'),
+                'uri' => APP_DIR.'/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
+            ];
+        }
+        $data[] = [
+            'icon' => 'fa fa-weixin',
+            'name' => dr_lang('发送到微信公众号'),
+            'uri' => APP_DIR.'/home/edit',
+            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发送到微信公众号").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=2\')',
+        ];
+        $data[] = [
+            'icon' => 'fa fa-clock-o',
+            'name' => dr_lang('更新时间'),
+            'uri' => APP_DIR.'/home/edit',
+            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
+        ];
         if (is_file(APPPATH.'Config/Cbottom.php')) {
             $data = require APPPATH.'Config/Cbottom.php';
         }
@@ -999,6 +1035,14 @@ abstract class Common extends \CodeIgniter\Controller
                 $_clink = require $path.'Config/Cbottom.php';
                 if ($_clink) {
                     $data = $data + $_clink;
+                }
+            }
+        }
+
+        if ($data) {
+            foreach ($data as $i => $t) {
+                if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                    unset($data[$i]); // 无权限的不要
                 }
             }
         }
