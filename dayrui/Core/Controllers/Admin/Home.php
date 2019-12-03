@@ -157,6 +157,10 @@ class Home extends \Phpcmf\Common
                                 unset($left['link'][$i]);
                                 continue;
                             }
+                        } elseif (SITE_ID > 1 && $link['uri'] && $link['uri'] == 'cloud/local') {
+                            // 多站点不显示应用
+                            unset($left['link'][$i]);
+                            continue;
                         } elseif ($link['mark'] && $left['mark'] == 'content-form') {
                             // 网站表单权限判断
                             list($ac, $name) = explode('-', $link['mark']);
