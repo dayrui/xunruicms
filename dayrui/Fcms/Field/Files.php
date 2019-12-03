@@ -206,7 +206,7 @@ class Files extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "60%"]';
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["80%", "85%"]';
         $count = intval($field['setting']['option']['count']);
         $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
         $size = intval($field['setting']['option']['size']) * 1024 * 1024;
@@ -344,7 +344,7 @@ $(function() {
             fix:true,
             scrollbar: false,
             shadeClose: true,
-			shade: 0,
+			shade: 0.1,
 			area: '.$area.',
 			btn: ["'.dr_lang('确定').'"],
 			yes: function(index, layero){

@@ -209,11 +209,6 @@
                             <a href="javascript:;" onclick="dr_module_send('{dr_lang("发布")}', '{dr_url(APP_DIR.'/home/tui_edit')}&page=1')"><i class="fa fa-refresh"></i> {dr_lang('发布到其他栏目')} </a>
                         </li>
                         {/if}
-                        {if $weibo['use']}
-                        <li>
-                            <a href="javascript:;" onclick="dr_module_send_ajax('{dr_url(APP_DIR.'/home/tui_edit')}&page=3')"><i class="fa fa-weibo"></i> {dr_lang('分享到官方微博')} </a>
-                        </li>
-                        {/if}
                         <li>
                             <a href="javascript:;" onclick="dr_module_send('{dr_lang("微信")}', '{dr_url(APP_DIR.'/home/tui_edit')}&page=2')"><i class="fa fa-weixin"></i>  {dr_lang('发送到微信公众号')} </a>
                         </li>
