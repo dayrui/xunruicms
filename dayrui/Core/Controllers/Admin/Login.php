@@ -66,7 +66,7 @@ class Login extends \Phpcmf\Common
         foreach ($name as $key => $value) {
             if (!isset($this->member_cache['oauth'][$value]['id'])
                 || !$this->member_cache['oauth'][$value]['id']) {
-                unset($name[$key]);
+                continue;
             }
             if (in_array($value, ['weixin', 'wechat'])) {
                 if (dr_is_weixin_app()) {
