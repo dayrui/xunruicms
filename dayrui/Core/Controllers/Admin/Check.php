@@ -155,6 +155,13 @@ class Check extends \Phpcmf\Common
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
                 }
 
+                $lang = file_get_contents(LANG_PATH.'ueditor.js');
+                if (strlen($lang) < 10) {
+                    $this->halt('百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js', 0);
+                } elseif (strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
+                    $this->halt('百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js', 0);
+                }
+
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
                     $this->halt('网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
