@@ -2916,11 +2916,11 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
         float: none;
     }
 }
-.template-download .files_row_preview img{
+.files_row_preview img{
     width: 60px !important;
     height: 50px !important;
 }
-.template-download .files_row_preview {
+.files_row_preview {
     margin-right: 10px;
 }
 
