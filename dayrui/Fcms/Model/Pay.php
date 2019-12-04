@@ -694,8 +694,8 @@ class Pay extends \Phpcmf\Model
                 }
                 $money = (int)$post['money'];
                 $title = dr_lang('用户（%s）充值%s：%s', $post['username'], SITE_SCORE, $money);
-                $touid = $post['uid']; // 收款方为自己
-                $tousername = $post['username']; // 收款方为自己
+                $touid = 0; // 属于消费，收款方为系统
+                $tousername = '';
                 $money = - $money / \Phpcmf\Service::C()->member_cache['pay']['convert'];
                 break;
 
