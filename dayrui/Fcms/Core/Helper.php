@@ -3561,6 +3561,7 @@ if (! function_exists('dr_get_keywords')) {
 
         if (!$rt && function_exists('mb_convert_encoding')) {
 
+            $kw = dr_strcut($kw, 30);
             $data = [
                 'title' => $kw,
                 'content' => $kw,
