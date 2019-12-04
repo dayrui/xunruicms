@@ -1611,7 +1611,7 @@ class Member extends \Phpcmf\Model
             $name = rand(10000, 99999999);
         }
 
-        $name = trim(strtolower($prefix.$name)).($rand ? rand(10000, 99999999) : '');
+        $name = trim(strtolower($prefix.str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
 
         if ($this->table('member')->where('username', $name)->counts()) {
             return $this->_rand_username($prefix, $member, 1);
