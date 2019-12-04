@@ -93,7 +93,7 @@ return [
                             'uri' => 'db/index',
                         ],
                         [
-                            'name' => 'Bom检测',
+                            'name' => '文件检测',
                             'icon' => 'fa fa-code',
                             'uri' => 'check_bom/index',
                         ],

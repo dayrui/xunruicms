@@ -23,9 +23,9 @@ class Comment extends \Phpcmf\Home\Comment
     // 格式化评论内容，方便二次开发和重写
     public function _safe_replace($data) {
 
-        $value = $_POST['data']['content'];
+        $value = trim($_POST['data']['content']);
         if (isset($_POST['editorValue']) && $_POST['editorValue']) {
-            $value = $_POST['editorValue'];
+            $value = trim($_POST['editorValue']);
         }
 
         return str_replace(['<p><br/></p>'], '', $value);

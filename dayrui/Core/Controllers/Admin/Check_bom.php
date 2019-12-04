@@ -15,7 +15,8 @@ class Check_bom extends \Phpcmf\Common
 		parent::__construct(...$params);
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
-				'Bom检测' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-code'],
+				'程序文件检测' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-code'],
+                'help' => [856],
 			]
 		));
 		
@@ -31,6 +32,9 @@ class Check_bom extends \Phpcmf\Common
         // 读取文件到缓存
         $this->_file_map(WEBPATH, 1);
         $this->_file_map(WEBPATH.'config/');
+        if (is_file(MYPATH.'Dev.php')) {
+            $this->_file_map(WEBPATH.'cloud/');
+        }
         $this->_file_map(WRITEPATH);
         $this->_file_map(FCPATH);
         $this->_file_map(MYPATH);
@@ -59,12 +63,21 @@ class Check_bom extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['page']));
         $cache = \Phpcmf\Service::L('cache')->init()->get('check-index');
-        !$cache && $this->_json(0, '数据缓存不存在');
+        if (!$cache) {
+            $this->_json(0, '数据缓存不存在');
+        }
 
         $data = $cache[$page];
         if ($data) {
             $html = '';
             foreach ($data as $filename) {
+                if (strpos($filename, '/dayrui') === 0) {
+                    $cname = 'FCPATH'.substr($filename, 7);
+                    $ofile = FCPATH.substr($filename, 8);
+                } else {
+                    $cname = 'WEBPATH'.$filename;
+                    $ofile = WEBPATH.substr($filename, 1);
+                }
                 $contents = file_get_contents ( $filename );
                 $charset [1] = substr ( $contents, 0, 1 );
                 $charset [2] = substr ( $contents, 1, 1 );
@@ -72,13 +85,29 @@ class Check_bom extends \Phpcmf\Common
                 $class = '';
                 if (ord ( $charset [1] ) == 239 && ord ( $charset [2] ) == 187 && ord ( $charset [3] ) == 191) {
                     // BOM 的前三个字符的ASCII 码分别为 239 187 191
-                    $ok = "<span class='error'>异常</span>";
+                    $ok = "<span class='error'>BOM异常</span>";
                     $class = ' p_error';
+                } elseif (strpos($filename, APPSPATH) !== false && strpos($contents, '$_POST[')) {
+                    if (strpos($contents, '=$_POST[') || strpos($contents, '= $_POST[')) {
+                        $ok = "<span class='error'>POST不安全</span>";
+                        $class = ' p_error';
+                    } else {
+                        $ok = "<span class='ok'>正常</span>";
+                    }
+                } elseif (strpos($filename, APPSPATH) !== false && strpos($contents, '$_GET[')) {
+                    if (strpos($contents, '=$_GET[') || strpos($contents, '= $_GET[')) {
+                        $ok = "<span class='error'>GET不安全</span>";
+                        $class = ' p_error';
+                    } else {
+                        $ok = "<span class='ok'>正常</span>";
+                    }
                 } else {
                     $ok = "<span class='ok'>正常</span>";
                 }
                 $html.= '<p class="'.$class.'"><label class="rleft">'.dr_safe_replace_path($filename).'</label><label class="rright">'.$ok.'</label></p>';
-                $class && $this->_json(0, $html);
+                if ($class) {
+                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.(CI_DEBUG ? $ofile : $cname).'</label><label class="rright">'.$ok.'</label></p>';
+                }
             }
             $this->_json($page + 1, $html);
         }

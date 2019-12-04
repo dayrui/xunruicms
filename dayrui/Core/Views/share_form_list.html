@@ -72,7 +72,9 @@
                     </label>
                 </th>
                 {/if}
+                {if $ci->_is_admin_auth('edit')}
                 <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('排序')}</th>
+                {/if}
                 {loop $list_field $i $t}
                 <th {if $t.width} width="{$t.width}"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
                 {/loop}
@@ -91,7 +93,9 @@
                     </label>
                 </td>
                 {/if}
+                {if $ci->_is_admin_auth('edit')}
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url($uriprefix.'/edit_order', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+                {/if}
                 {loop $list_field $i $tt}
                 <td>{dr_list_function($tt.func, $t[$i], $param, $t)}</td>
                 {/list}
