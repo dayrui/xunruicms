@@ -965,7 +965,7 @@ abstract class Common extends \CodeIgniter\Controller
      */
     protected function _app_clink()
     {
-        
+
         $data = [];
         if (is_file(APPPATH.'Config/Clink.php')) {
             $data = require APPPATH.'Config/Clink.php';

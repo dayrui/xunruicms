@@ -527,7 +527,6 @@ class Table extends \Phpcmf\Common
         } else {
             $size = $this->list_pagesize;
         }
-
         // 查询数据结果
         list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size);
         $p && $param = $p + $param;

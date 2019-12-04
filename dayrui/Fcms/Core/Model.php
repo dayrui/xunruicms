@@ -472,6 +472,124 @@ class Model {
         return -1;
     }
 
+    // 条件组合
+    protected function _where($table, $name, $value, $field) {
+
+        $name = dr_safe_replace($name, ['\\', '/']);
+        if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
+            // 匹配时间字段
+            list($s, $e) = explode(',', $value);
+            $s = (int)strtotime($s);
+            $e = (int)strtotime($e);
+            if (!$e) {
+                return '`'.$table.'`.`'.$name.'` > '.$s;
+            } else {
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+            }
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
+            // 百度地图
+            list($a, $km) = explode('|', $value);
+            list($lng, $lat) = explode(',', $a);
+            if ($lat && $lng) {
+                // 获取Nkm内的数据
+                $squares = dr_square_point($lng, $lat, $km);
+                return "(`".$table."`.`".$name."_lat` between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and (`".$table."`.`".$name."_lng` between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
+            } else {
+                //\Phpcmf\Service::C()->goto_404_page(dr_lang('没有定位到您的坐标'));
+            }
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkage') {
+            // 联动菜单字段
+            $arr = explode('|', $value);
+            $where = [];
+            foreach ($arr as $value) {
+                $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                if ($data) {
+                    if ($data['child']) {
+                        $where[] = '`'.$table.'`.`'.$name.'` IN ('.$data['childids'].')';
+                    } else {
+                        $where[] = '`'.$table.'`.`'.$name.'`='.intval($data['ii']);
+                    }
+                }
+            }
+            return $where ? '('.implode(' OR ', $where).')' : '';
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkages') {
+            // 联动菜单多选字段
+            $arr = explode('|', $value);
+            $where = [];
+            foreach ($arr as $value) {
+                $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                if ($data) {
+                    if ($data['child']) {
+                        $ids = explode(',', $data['childids']);
+                        foreach ($ids as $id) {
+                            if ($id) {
+                                if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                                    // 兼容写法
+                                    $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($id).'\"%"';
+                                } else {
+                                    // 高版本写法
+                                    $where[] = "(`{$table}`.`{$name}`<>'' AND JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$'))";
+                                }
+                            }
+                        }
+                    } else {
+                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                            // 兼容写法
+                            $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($data['ii']).'\"%"';
+                        } else {
+                            // 高版本写法
+                            $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$'))";
+                        }
+                    }
+                }
+            }
+            return $where ? '('.implode(' OR ', $where).')' : '';
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Checkbox') {
+            // 复选字段
+            $arr = explode('|', $value);
+            $where = [];
+            foreach ($arr as $value) {
+                if ($value) {
+                    if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                        // 兼容写法
+                        $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString($value, true).'\"%"';
+                    } else {
+                        // 高版本写法
+                        $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$'))";
+                    }
+                }
+            }
+            return $where ? '('.implode(' OR ', $where).')' : '';
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
+            // 单选字段
+            $arr = explode('|', $value);
+            $where = [];
+            foreach ($arr as $value) {
+                if (is_numeric($value)) {
+                    $where[] = '`'.$table.'`.`'.$name.'`='.$value;
+                } else {
+                    $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
+                }
+            }
+            return $where ? '('.implode(' OR ', $where).')' : '';
+        } elseif (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
+            // like 条件
+            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
+        } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
+            // BETWEEN 条件
+            list($s, $e) = explode(',', $value);
+            if (!$e) {
+                return '`'.$table.'`.`'.$name.'` > '.$s;
+            } else {
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+            }
+        } elseif (is_numeric($value)) {
+            return '`'.$table.'`.`'.$name.'`='.$value;
+        } else {
+            return '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
+        }
+    }
+
     /**
      * 条件查询
      *
@@ -553,6 +671,14 @@ class Model {
                 $cat = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.MOD_DIR, 'category', $param['catid']);
                 $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
             }
+            // 其他自定义字段查询
+            $where = [];
+            foreach ($param as $i => $v) {
+                if (!in_array($i, ['keyword', 'catid', 'date_form', 'date_to', 'field', 'total']) && isset($field[$i]) && $field[$i]['ismain'] && strlen($v)) {
+                    $where[] = str_replace('`{finecms_table}`.', '', $this->_where('{finecms_table}', $i, $v, $field));
+                }
+            }
+            $where && $select->where(implode(' AND ', $where));
         }
 
         return $param;
