@@ -965,6 +965,7 @@ abstract class Common extends \CodeIgniter\Controller
      */
     protected function _app_clink()
     {
+        
         $data = [];
         if (is_file(APPPATH.'Config/Clink.php')) {
             $data = require APPPATH.'Config/Clink.php';
@@ -972,11 +973,17 @@ abstract class Common extends \CodeIgniter\Controller
 
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
-            if (is_file(APPSPATH.$dir.'/install.lock') && is_file(APPSPATH.$dir.'/Config/Clink.php')) {
-                $_clink = require APPSPATH.ucfirst($dir).'/Config/Clink.php';
+            $path = dr_get_app_dir($dir);
+            if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php')) {
+                $_clink = require $path.'Config/Clink.php';
                 if ($_clink) {
-                    // 需要判断此模块是否得到插件的授权
-                    $data = $data + $_clink;
+                    if (is_file($path.'Models/Auth.php')) {
+                        if (\Phpcmf\Service::M('auth', $dir)->is_link_auth(APP_DIR)) {
+                            $data = array_merge($data , $_clink);
+                        }
+                    } else {
+                        $data = array_merge($data , $_clink);
+                    }
                 }
             }
         }
@@ -1026,31 +1033,23 @@ abstract class Common extends \CodeIgniter\Controller
             'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
         ];
 
-        if (dr_is_app('fstatus') && $this->module['field']['fstatus']) {
-            $data[] = [
-                'icon' => 'fa fa-times-circle',
-                'name' => dr_lang('设置为关闭状态'),
-                'uri' => 'fstatus/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url('fstatus/home/close_edit', ['mid' => APP_DIR]).'\')',
-            ];
-            $data[] = [
-                'icon' => 'fa fa-check-circle',
-                'name' => dr_lang('设置为开启状态'),
-                'uri' => 'fstatus/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url('fstatus/home/open_edit', ['mid' => APP_DIR]).'\')',
-            ];
-        }
-
         if (is_file(APPPATH.'Config/Cbottom.php')) {
             $data = require APPPATH.'Config/Cbottom.php';
         }
+
         $local = dr_dir_map(dr_get_app_list(), 1);
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
             if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom.php')) {
                 $_clink = require $path.'Config/Cbottom.php';
                 if ($_clink) {
-                    $data = $data + $_clink;
+                    if (is_file($path.'Models/Auth.php')) {
+                        if (\Phpcmf\Service::M('auth', $dir)->is_bottom_auth(APP_DIR)) {
+                            $data = array_merge($data , $_clink);
+                        }
+                    } else {
+                        $data = array_merge($data , $_clink);
+                    }
                 }
             }
         }
