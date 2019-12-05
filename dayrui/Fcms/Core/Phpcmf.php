@@ -729,10 +729,11 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 生成静态时的跳转提示
      */
-    protected function _html_msg($code, $msg, $url = '') {
+    protected function _html_msg($code, $msg, $url = '', $note = '') {
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
             'url' => $url,
+            'note' => $note,
             'mark' => $code
         ]);
         \Phpcmf\Service::V()->display('html_msg.html', 'admin');exit;
