@@ -380,10 +380,8 @@ class Auth extends \Phpcmf\Model {
         if (!$member || $uid != $member['uid']) {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
-                if (\Phpcmf\Service::L('router')->method == 'search_help') {
-                    return FALSE;
-                } elseif (\Phpcmf\Service::L('router')->method == 'oauth') {
-                    return FALSE;
+                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help'])) {
+                    return FALSE; // 跳过的控制器
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
             }

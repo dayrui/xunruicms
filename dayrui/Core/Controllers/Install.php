@@ -33,7 +33,7 @@ class Install extends \Phpcmf\Common
         define('IS_API_HTTP', 0);
         define('THEME_PATH', '/static/');
         define('ROOT_THEME_PATH', '/static/');
-        define('LANG_PATH', '/config/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', '/api/language/'.SITE_LANGUAGE.'/'); // 语言包
         if (is_file(MYPATH.'Config/Version.php')) {
             $app = require MYPATH.'Config/Version.php';
         } else {

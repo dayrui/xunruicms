@@ -121,7 +121,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 全局URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
-        define('LANG_PATH', ROOT_URL.'config/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
 
         !defined('THEME_PATH') && define('THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径

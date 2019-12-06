@@ -52,7 +52,7 @@ class Site_config extends \Phpcmf\Common
 			'page' => $page,
 			'data' => $data['config'],
 			'form' => dr_form_hidden(['page' => $page]),
-			'lang' => dr_dir_map(ROOTPATH.'config/language/', 1),
+			'lang' => dr_dir_map(ROOTPATH.'api/language/', 1),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '网站设置' => ['site_config/index', 'fa fa-cog'],

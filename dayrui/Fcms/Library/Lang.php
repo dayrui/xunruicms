@@ -20,8 +20,8 @@ class Lang {
      * 加载自定义语言
      */
     public function __construct(...$params) {
-        if (is_file(ROOTPATH.'config/language/'.SITE_LANGUAGE.'/lang.php')) {
-            $this->lang = require ROOTPATH.'config/language/'.SITE_LANGUAGE.'/lang.php';
+        if (is_file(ROOTPATH.'api/language/'.SITE_LANGUAGE.'/lang.php')) {
+            $this->lang = require ROOTPATH.'api/language/'.SITE_LANGUAGE.'/lang.php';
         } else {
             $this->lang = [];
         }

@@ -147,6 +147,11 @@ class Check extends \Phpcmf\Common
 
             case '06':
 
+                // 语言文件兼容处理
+                if (is_dir(ROOTPATH.'config/language/') && !is_dir(ROOTPATH.'api/language/')) {
+                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'config/language/', ROOTPATH.'config/language/', ROOTPATH.'api/language/');
+                }
+
                 // 语言文件
                 $lang = file_get_contents(LANG_PATH.'lang.js');
                 if (strlen($lang) < 10) {
