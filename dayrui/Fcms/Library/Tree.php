@@ -226,7 +226,7 @@ class Tree {
                 }
 
                 // 栏目发布权限判断,主要筛选栏目下是否有空白选项
-                unset($t['catids'][$t['id']]);
+                //unset($t['catids'][$t['id']]);
                 if ($is_push && $t['child'] == 1 && $t['catids']) {
                     $ispost = 0;
                     foreach ($t['catids'] as $i) {
