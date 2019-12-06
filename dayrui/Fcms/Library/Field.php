@@ -43,8 +43,8 @@
                 return $this->format;
             }
 
-            if (is_file(WEBPATH.'config/field.php')) {
-                $field = require WEBPATH.'config/field.php';
+            if (is_file(ROOTPATH.'config/field.php')) {
+                $field = require ROOTPATH.'config/field.php';
                 if (IS_ADMIN && isset($field['admin']) && $field['admin']) {
                     $this->format = $field['admin'];
                 } elseif (IS_MEMBER && isset($field['member']) && $field['member']) {

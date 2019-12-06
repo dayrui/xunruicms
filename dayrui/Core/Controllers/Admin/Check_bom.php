@@ -31,7 +31,7 @@ class Check_bom extends \Phpcmf\Common
 
         // 读取文件到缓存
         $this->_file_map(WEBPATH, 1);
-        $this->_file_map(WEBPATH.'config/');
+        $this->_file_map(ROOTPATH.'config/');
         if (is_file(MYPATH.'Dev.php')) {
             $this->_file_map(WEBPATH.'cloud/');
         }

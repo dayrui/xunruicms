@@ -912,13 +912,13 @@ class Image
             // 文字水印
             $config['wm_text'] = $data['wm_text'];
             $config['wm_type'] = 'text';
-            $config['wm_font_path'] = WEBPATH.'config/font/'.$data['wm_font_path'];
+            $config['wm_font_path'] = ROOTPATH.'config/font/'.$data['wm_font_path'];
             $config['wm_font_size'] = $data['wm_font_size'];
             $config['wm_font_color'] = $data['wm_font_color'];
         } else {
             // 图片水印
             $config['wm_type'] = 'overlay';
-            $config['wm_overlay_path'] = WEBPATH.'config/watermark/'.$data['wm_overlay_path'];
+            $config['wm_overlay_path'] = ROOTPATH.'config/watermark/'.$data['wm_overlay_path'];
             $config['wm_opacity'] = $data['wm_opacity'];
         }
 

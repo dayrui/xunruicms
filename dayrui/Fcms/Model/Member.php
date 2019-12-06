@@ -1282,8 +1282,8 @@ class Member extends \Phpcmf\Model
 
         $config = require_once $file;
         if ($config['third']) {
-            if (is_file(WEBPATH.'config/mysms.php')) {
-                require_once WEBPATH.'config/mysms.php';
+            if (is_file(ROOTPATH.'config/mysms.php')) {
+                require_once ROOTPATH.'config/mysms.php';
             }
             $method = 'my_sendsms_'.$type;
             if (function_exists($method)) {

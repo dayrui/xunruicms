@@ -18,9 +18,9 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     {
         parent::__construct(...$params);
         // 自定义函数库
-        if (is_file(WEBPATH.'config/custom.php'))
+        if (is_file(ROOTPATH.'config/custom.php'))
         {
-            require WEBPATH.'config/custom.php';
+            require ROOTPATH.'config/custom.php';
         }
         if (is_file(MYPATH.'Helper.php'))
         {

@@ -22,7 +22,7 @@ class Captcha
     private $randstring = ['*', '@', '$', '%', '&', '!'];
 
     public function __construct(...$params) {
-        $this->font = WEBPATH.'config/font/1.ttf';
+        $this->font = ROOTPATH.'config/font/1.ttf';
     }
 
     // todo

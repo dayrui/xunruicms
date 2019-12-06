@@ -113,8 +113,8 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
     $routes = [];
     $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
     $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
-    if (is_file(WEBPATH.'config/rewrite.php')) {
-        $my = require WEBPATH.'config/rewrite.php';
+    if (is_file(ROOTPATH.'config/rewrite.php')) {
+        $my = require ROOTPATH.'config/rewrite.php';
         $my && $routes = array_merge($routes, $my);
     }
     // 正则匹配路由规则
@@ -145,8 +145,8 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
         }
     }
     // 自定义路由模式
-    if ($is_404 && is_file(WEBPATH.'config/router.php')) {
-        require WEBPATH.'config/router.php';
+    if ($is_404 && is_file(ROOTPATH.'config/router.php')) {
+        require ROOTPATH.'config/router.php';
     }
     // 说明是404
     if ($is_404) {

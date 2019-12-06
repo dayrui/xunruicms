@@ -23,7 +23,7 @@ class Hooks extends \CodeIgniter\Events\Events
         {
             return;
         }
-        require WEBPATH.'config/hooks.php';
+        require ROOTPATH.'config/hooks.php';
 
         self::on('pre_system', function () {
             while (\ob_get_level() > 0)
