@@ -22,7 +22,7 @@
 			<h1><?= htmlspecialchars($title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
 			<p>
 				<?= $exception->getMessage() ?>
-				<a href="http://www.xunruicms.com/index.php?s=bbs&c=search&keyword=<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
+				<a href="https://www.baidu.com/s?ie=UTF-8&wd=<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
 				   rel="noreferrer" target="_blank">搜索问题 &rarr;</a>
 			</p>
             <?php if (strpos($title, 'mysqli') !== false) : ?><p>

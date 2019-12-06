@@ -235,7 +235,7 @@ class Home extends \Phpcmf\Common
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        '.implode($mleft_string, '<li class="divider"> </li>').'
+                        '.implode('<li class="divider"> </li>', $mleft_string).'
                     </ul>
                 </li>';
                 unset($top['left']);
