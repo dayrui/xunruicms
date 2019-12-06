@@ -484,7 +484,42 @@ class Module extends \Phpcmf\Table
     // 后台查看审核列表
     protected function _Admin_Verify_List() {
 
+        // 说明来自审核页面
+        define('IS_MODULE_VERIFY', 1);
         $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
+
+        if (isset($_GET['is_all']) && intval($_GET['is_all']) == 1) {
+            // 批量操作
+            $ids = \Phpcmf\Service::L('input')->get('ids');
+            if (!$ids) {
+                $this->_json(0, dr_lang('没有选中内容'));
+            }
+
+            $list = [];
+            $note = \Phpcmf\Service::L('input')->get('note');
+            foreach ($ids as $id) {
+                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
+                if (!$row) {
+                    $this->_json(0, dr_lang('选中内容[#%s]不存在', $id));
+                }
+                if (intval($_GET['at']) == 1) {
+                    $list[$id] = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&id='.$id;
+                } else {
+                    if (!$note) {
+                        $this->_json(0, dr_lang('没有填写拒绝理由'));
+                    }
+                    $list[$id] = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&note='.$note.'&id='.$id;
+                }
+            }
+
+            \Phpcmf\Service::V()->assign([
+                'list' => $list,
+                'back_url' => dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index').'&rand='.SYS_TIME,
+            ]);
+            \Phpcmf\Service::V()->display('share_list_verify_all.html');
+            exit;
+        }
+
         $this->_init([
             'db' => SITE_ID,
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
@@ -560,6 +595,7 @@ class Module extends \Phpcmf\Table
             'verify_msg' => $verify_msg,
             'verify_step' => $step,
             'verify_next' => dr_count($step) - 1 <= $data['status'] ? 9 : $data['status'] + 1,
+            'back_note' => \Phpcmf\Service::L('input')->get('note'),
         ]);
         \Phpcmf\Service::V()->display('share_post.html');
     }

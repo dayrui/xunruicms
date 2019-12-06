@@ -168,7 +168,15 @@
             content: "{dr_url(APP_DIR.'/home/tui_edit')}&page=5&is_ajax=1"
         });
     }
-
+    function dr_ajax_verify_submit() {
+        $('#dr_is_draft').val(0);
+        dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}');
+    }
+    $(function () {
+        {if isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']}
+        dr_ajax_verify_submit();
+        {/if}
+    });
 </script>
 {if $post_notice_msg}
 <div class="note note-danger">
@@ -383,15 +391,15 @@
                                 <label class="col-md-2 control-label">{dr_lang('操作状态')}</label>
                                 <div class="col-md-9">
                                     <div class="mt-radio-inline">
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="verify[status]" value="1" checked /> {dr_lang('通过')} <span></span></label>
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="verify[status]" value="0" /> {dr_lang('拒绝')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="verify[status]" value="1" {if !$back_note} checked{/if} /> {dr_lang('通过')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="verify[status]" value="0" {if $back_note} checked{/if} /> {dr_lang('拒绝')} <span></span></label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group dr_close_msg" style="display:none">
                                 <label class="col-md-2 control-label">{dr_lang('拒绝理由')}</label>
                                 <div class="col-md-9">
-                                    <textarea id="dr_verify_msg" class="form-control" style="height:100px" name="verify[msg]"></textarea>
+                                    <textarea id="dr_verify_msg" class="form-control" style="height:100px" name="verify[msg]">{$back_note}</textarea>
 
                                 </div>
                             </div>
@@ -426,7 +434,7 @@
         <div class="form-actions text-center">
             {if !defined('IS_MODULE_RECYCLE')}
             {if $is_verify}
-            <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交审核')}</button></label>
+            <label><button type="button" onclick="dr_ajax_verify_submit()" class="btn green"> <i class="fa fa-save"></i> {dr_lang('提交审核')}</button></label>
             {else if $is_post_time}
             <label><button type="button" onclick="$('#dr_is_draft').val(0);dr_ajax_submit('{dr_now_url()}&posttime={dr_date($posttime, 'Y-m-d H:i:s')}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button></label>
             {else}
