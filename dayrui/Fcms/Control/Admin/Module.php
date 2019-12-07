@@ -530,12 +530,21 @@ class Module extends \Phpcmf\Table
 
         $this->_List();
 
+        $verify_msg = [
+            dr_lang('词文不对'),
+        ];
+        if ($this->module['setting']['verify_msg']) {
+            $msg = @explode(PHP_EOL, $this->module['setting']['verify_msg']);
+            $msg && $verify_msg = $msg;
+        }
+
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
                 ]
             ),
+            'verify_msg' => $verify_msg,
         ]);
         \Phpcmf\Service::V()->display('share_list_verify.html');
     }

@@ -5,7 +5,14 @@
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
-
+<div id="dr_cyshly" style="display: none">
+    <label style="width:320px; margin-bottom: 20px"><select class="form-control" onchange="javascript:$('#dr_verify_msg').val(this.value)">
+        <option value=""> -- </option>
+        {loop $verify_msg $t}
+        <option value="{$t}">{$t}</option>
+        {/loop}
+    </select></label>
+</div>
 
 <script type="text/javascript">
     if (App.isAngularJsApp() === false) {
@@ -97,7 +104,7 @@
     }
     function dr_ajax_option_verify_back(url) {
 
-        var msg = "<div style='width: 500px;'><p>{dr_lang('拒绝理由')}：</p><p><textarea id=\"dr_verify_msg\" class=\"form-control\" style=\"width:320px;height:100px\"></textarea></p></div>";
+        var msg = "<div style='width: 500px;'><p>{dr_lang('拒绝理由')}：</p><p><textarea id=\"dr_verify_msg\" class=\"form-control\" style=\"width:320px;height:100px\"></textarea></p>"+$('#dr_cyshly').html()+"</div>";
         layer.confirm(
             msg,
             {
