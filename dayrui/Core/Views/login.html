@@ -65,11 +65,13 @@
         <div class="form-actions">
             <button type="submit" class="btn default btn-block  "> {dr_lang('登录后台')} </button>
         </div>
+        {if SYS_ADMIN_OAUTH && $oauth}
         <div class="login-oauth">
             {loop $oauth $t}
             <a href="{$t.url}"><i class="fa fa-{$t.name}"></i></a>
             {/loop}
         </div>
+        {/if}
     </form>
 </div>
 {if $license.name}

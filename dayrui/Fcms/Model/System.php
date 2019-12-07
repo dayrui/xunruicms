@@ -27,6 +27,7 @@ class System extends \Phpcmf\Model
         'SYS_HTTPS'	=> 'https模式',
         'SYS_ADMIN_LOGINS'	=> '登录失败N次后，系统将锁定登录',
         'SYS_ADMIN_LOGIN_TIME'	=> '登录失败锁定后在x分钟内禁止登录',
+        'SYS_ADMIN_OAUTH'    => '后台启用快捷登录',
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',

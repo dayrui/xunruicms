@@ -116,6 +116,13 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('快捷方式登录')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_ADMIN_OAUTH]" value="1" {if $data['SYS_ADMIN_OAUTH']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录失败次数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" ></label>
