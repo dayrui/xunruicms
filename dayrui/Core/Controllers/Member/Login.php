@@ -135,6 +135,11 @@ class Login extends \Phpcmf\Common
             }
 
         } else {
+
+            if (strpos($goto_url, 'is_admin_call')) {
+                // 来自后台
+                $this->_admin_msg(0, dr_lang('%s，没有绑定本站账号', dr_html2emoji($oauth['nickname'])));
+            }
             
             // 用户组判断
             if ($this->member_cache['register']['close']) {
