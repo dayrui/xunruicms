@@ -32,6 +32,7 @@ class View {
     private $_include_file; // 引用计数
 
     private $pos_order; // 是否包含有地图定位的排序
+    private $pos_baidu; // 百度地图定位坐标
 
     private $action; // 指定action
 
@@ -648,7 +649,7 @@ class View {
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
 			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH',
+			'DAY', 'MONTH', 'MAP',
 			'JSON', 'FIND'
 		];
         foreach ($params as $t) {
@@ -2043,8 +2044,31 @@ class View {
                     continue;
                 }
                 $join = $string ? ' AND' : '';
-                //
+                // 条件组装
                 switch ($t['adj']) {
+
+                    case 'MAP':
+                        // 百度地图
+                        if ($t['value'] == '') {
+                            $string.= $join." ".$t['name']." = ''";
+                        } else {
+                            list($a, $km) = explode('|', $t['value']);
+                            list($lng, $lat) = explode(',', $a);
+                            if ($lat && $lng) {
+                                $this->pos_baidu = [
+                                    'lng' => $lng,
+                                    'lat' => $lat,
+                                    'km' => $km,
+                                ];
+                                // 获取Nkm内的数据
+                                $squares = dr_square_point($lng, $lat, $km);
+                                $string.= $join." (".$t['prefix']."`".$t['name']."_lat` between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and (".$t['prefix']."`".$t['name']."_lng` between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
+                            } else {
+                                $string.= $join." ".$t['name']." = '没有定位到您的坐标'";
+                            }
+                        }
+
+                        break;
 
                     case 'JSON':
                         if ($t['value'] == '') {
@@ -2208,6 +2232,9 @@ class View {
             } elseif (!$t['name'] && $t['value']) {
                 // 标示只有where的条件查询
                 $where[$i]['use'] = 1;
+            } elseif ($t['adj'] == 'MAP' && in_array($t['name'].'_lat', $field) && in_array($t['name'].'_lng', $field)) {
+                $where[$i]['use'] = 1;
+                $where[$i]['prefix'] = "`$prefix`.";
             } else {
                 $where[$i]['use'] = $t['use'] ? 1 : 0;
             }
@@ -2253,7 +2280,7 @@ class View {
         }
 
         // 定位范围搜索
-        $this->pos_order && (\Phpcmf\Service::C()->my_position ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.\Phpcmf\Service::C()->my_position['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order : \Phpcmf\Service::C()->msg('没有定位到您的坐标'));
+        $this->pos_order && ($this->pos_baidu ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_baidu['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_baidu['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_baidu['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
 
         return $field;
     }
@@ -2288,11 +2315,11 @@ class View {
                 if (in_array($a, $field)) {
                     $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
                 } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                    if (\Phpcmf\Service::C()->my_position) {
-                        $my[$i] = $a.' ASC';
+                    if ($this->pos_baidu) {
+                        $my[$i] = $a.'_map ASC';
                         $this->pos_order = $a;
                     } else {
-                        \Phpcmf\Service::C()->msg('没有定位到您的坐标');
+                        exit('没有定位到您的坐标');
                     }
                 }
             }
@@ -2333,11 +2360,11 @@ class View {
                     if (in_array($a, $field)) {
                         $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
                     } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                        if (\Phpcmf\Service::C()->my_position) {
+                        if ($this->pos_baidu) {
                             $my[$i] = $a.' ASC';
                             $this->pos_order = $a;
                         } else {
-                            \Phpcmf\Service::C()->msg('没有定位到您的坐标');
+                            $my[$i] = '没有定位到您的坐标';
                         }
                     }
                 }
@@ -2359,6 +2386,8 @@ class View {
             $debug.= '<p>'.$data.'</p>';
             $data = [];
         }
+
+        $this->pos_baidu = $this->pos_order = null;
 
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
