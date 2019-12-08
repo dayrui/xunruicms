@@ -27,13 +27,17 @@ class Captcha
 
     // todo
     public function create($width = 120, $height = 32) {
+
         $this->_code();
-        $this->width = $width;
-        $this->height = $height - 2;
+
+        $this->width = min(200, $width);
+        $this->height = min(100, $height - 2);
+
         $this->_bg();
         $this->_line();
         $this->_font();
         $this->_show();
+
         return $this->code;
     }
 
