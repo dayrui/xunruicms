@@ -109,12 +109,15 @@ class Api extends \Phpcmf\Common
      */
     public function save_form_data() {
 
-        $rt = \Phpcmf\Service::L('cache')->init('file')->save(
-            dr_safe_filename(\Phpcmf\Service::L('input')->get('name')),
-            \Phpcmf\Service::L('input')->post('data'),
-            7200
-        );
-        var_dump($rt);
+        if (IS_POST && $this->member && $this->member['is_admin']) {
+            $rt = \Phpcmf\Service::L('cache')->init('file')->save(
+                dr_safe_filename(\Phpcmf\Service::L('input')->get('name')),
+                \Phpcmf\Service::L('input')->post('data'),
+                7200
+            );
+            var_dump($rt);
+        }
+
         exit;
     }
 
@@ -143,15 +146,21 @@ class Api extends \Phpcmf\Common
      * 汉字转换拼音
      */
     public function pinyin() {
+
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        !$name && exit('');
+        if (!$name) {
+            exit('');
+        }
+
         $py = \Phpcmf\Service::L('pinyin')->result($name);
         if (strlen($py) > 12) {
             $sx = \Phpcmf\Service::L('pinyin')->result($name, 0);
-            $sx && exit($sx);
+            if ($sx) {
+                exit($sx);
+            }
         }
-        exit($py);
 
+        exit($py);
     }
 
 
