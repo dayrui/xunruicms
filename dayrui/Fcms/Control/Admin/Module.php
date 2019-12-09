@@ -486,13 +486,17 @@ class Module extends \Phpcmf\Table
 
         // 说明来自审核页面
         define('IS_MODULE_VERIFY', 1);
+
         $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
+        $is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
 
         if (isset($_GET['is_all']) && intval($_GET['is_all']) == 1) {
             // 批量操作
             $ids = \Phpcmf\Service::L('input')->get('ids');
             if (!$ids) {
                 $this->_json(0, dr_lang('没有选中内容'));
+            } elseif ($is_post_user) {
+                $this->_json(0, dr_lang('投稿者身份不允许审核操作'));
             }
 
             $list = [];
@@ -545,6 +549,7 @@ class Module extends \Phpcmf\Table
                 ]
             ),
             'verify_msg' => $verify_msg,
+            'is_post_user' => $is_post_user,
         ]);
         \Phpcmf\Service::V()->display('share_list_verify.html');
     }
@@ -1125,7 +1130,10 @@ class Module extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $html, 'listfile' => $list]);
         } else {
-            if ($this->is_post_user) {
+            if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
+                // 草稿
+                $this->_json(1, dr_lang('保存草稿成功'));
+            } elseif ($this->is_post_user) {
                 // 投稿者
                 $this->_json(1, dr_lang('操作成功，等待管理员审核'), [
                     'url' => dr_url(MOD_DIR.'/verify/index')

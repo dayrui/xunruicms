@@ -24,6 +24,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('TPLPATH') && define('TPLPATH', ROOTPATH.'template/');
 // 是否可编辑后模板
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
+// tests
+define('TESTPATH', WRITEPATH.'tests/');
 
 // 是否来自ajax提交
 define('IS_AJAX', (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'));
@@ -34,25 +36,32 @@ define('IS_AJAX_POST', IS_POST);
 // 当前系统时间戳
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
 
+
 // 系统变量
-$system = is_file(WRITEPATH.'config/system.php') ? require WRITEPATH.'config/system.php' : [
-    'SYS_DEBUG'                     => '0', //调试器开关
-    'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
-    'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
-    'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
-    'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
-    'SYS_CAT_RNAME'                 => '1', //栏目目录允许重复
-    'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
-    'SYS_KEY'                       => '', //安全密匙
-    'SYS_CSRF'                      => 1, //安全密匙
-    'SYS_CAT_ZSHOW'                 => 1, //安全密匙
-    'SYS_ADMIN_OAUTH'               => 0, //安全密匙
-    'SYS_HTTPS'                     => '0', //https模式
-    'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
-    'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
-    'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-    'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-];
+if (is_file(WRITEPATH.'config/system.php')) {
+    $system = require WRITEPATH.'config/system.php';
+    define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
+} else {
+    // 默认系统变量
+    $system = [
+        'SYS_DEBUG'                     => '1', //调试器开关
+        'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
+        'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
+        'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
+        'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
+        'SYS_CAT_RNAME'                 => '1', //栏目目录允许重复
+        'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
+        'SYS_KEY'                       => '', //安全密匙
+        'SYS_CSRF'                      => 1, //安全密匙
+        'SYS_CAT_ZSHOW'                 => 1, //安全密匙
+        'SYS_ADMIN_OAUTH'               => 0, //安全密匙
+        'SYS_HTTPS'                     => '0', //https模式
+        'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
+        'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
+        'SYS_ATTACHMENT_URL'            => '', //附件访问地址
+    ];
+    define('CI_DEBUG', 1);
+}
 foreach ($system as $var => $value) {
     !defined($var) && define($var, $value);
 }
@@ -234,9 +243,6 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
     !defined('APP_DIR') && define('APP_DIR', '');
     define('IS_MEMBER', FALSE);
 }
-
-define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
-define('TESTPATH', WRITEPATH.'tests/');
 
 // 显示错误提示
 if (CI_DEBUG) {
