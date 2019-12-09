@@ -1661,7 +1661,7 @@ class View {
             case 'related': // 模块的相关文章
 
                 if (!$param['tag']) {
-                    return $this->_return($system['return'], '没有查询到内容'); // 没有查询到内容
+                    return $this->_return($system['return'], '没有传入tag参数的内容'); // 没有查询到内容
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
@@ -1671,11 +1671,14 @@ class View {
                 foreach ($array as $name) {
                     $name && $sql[] = '(`'.$table.'`.`title` LIKE "%'.dr_safe_replace($name).'%" OR `'.$table.'`.`keywords` LIKE "%'.dr_safe_replace($name).'%")';
                 }
-                $sql = $where[] = [
+                $where[] = [
                     'adj' => 'SQL',
                     'value' => '('.implode(' OR ', $sql).')'
                 ];
                 unset($param['tag']);
+                if (isset($where['tag'])) {
+                    unset($where['tag']);
+                }
                 // 跳转到module方法
                 goto module;
                 break;
