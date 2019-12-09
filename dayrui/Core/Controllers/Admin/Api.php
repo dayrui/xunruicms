@@ -594,6 +594,37 @@ class Api extends \Phpcmf\Common
     }
 
     /**
+     * 测试附件域名是否可用
+     */
+    public function test_attach_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('data');
+        if (!$data['SYS_ATTACHMENT_PATH']) {
+            $note = dr_lang('上传目录留空时，采用系统默认分配的目录');
+            $data['SYS_ATTACHMENT_PATH'] = 'uploadfile';
+        } elseif (!$data['SYS_ATTACHMENT_URL']) {
+            $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['SYS_ATTACHMENT_PATH'], '/') === 0 || strpos($data['SYS_ATTACHMENT_PATH'], ':') !== false)
+            && is_dir($data['SYS_ATTACHMENT_PATH'])) {
+            // 相对于根目录
+            // 附件上传目录
+            $path = rtrim($data['SYS_ATTACHMENT_PATH'], DIRECTORY_SEPARATOR).'/';
+            // 附件访问URL
+            $url = trim($data['SYS_ATTACHMENT_URL'], '/').'/';
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['SYS_ATTACHMENT_PATH'], '/');
+            $url = ROOT_URL.trim($data['SYS_ATTACHMENT_PATH'], '/');
+            $note = dr_lang('上传目录不是绝对的路径时采用，系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('附件上传目录：%s', $path) .'<br>' . dr_lang('附件访问地址：%s', $url));
+    }
+
+    /**
      * 测试缓存是否可用
      */
     public function test_cache() {

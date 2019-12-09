@@ -31,7 +31,6 @@
                     <div class="form-body">
 
 
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('附件归档')}</label>
                                 <div class="col-md-9">
@@ -39,8 +38,6 @@
                                     <span class="help-block">{dr_lang('开启之后附件将分为已使用的附件和未使用的附件，归档存储')}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                                 <div class="col-md-9">
@@ -53,14 +50,22 @@
                                     <span class="help-block">{dr_lang('此目录必须有读写权限，绝对路径请以“/”开头')}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-body">
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('附件URL地址')}</label>
-                                <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="data[SYS_ATTACHMENT_URL]" value="{$data['SYS_ATTACHMENT_URL']}" >
-                                    <span class="help-block">{dr_lang('可以为附件目录指定域名，用于分离附件，留空表示默认本站地址（站外保存时必须指定域名）')}</span>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件URL地址')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" name="data[SYS_ATTACHMENT_URL]" value="{$data['SYS_ATTACHMENT_URL']}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain()" type="button"><i class="fa fa-code"></i> {dr_lang('检测')}</button>
+                                        </span>
                                 </div>
+                                <span class="help-block">{dr_lang('可以为附件目录指定域名，用于分离附件，留空表示默认本站地址（站外保存时必须指定域名）')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: none" id="dr_test_domain">
+                            <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
+                            <div class="col-md-9" style="padding-top: 3px; line-height: 25px; color:green" id="dr_test_domain_result">
+
                             </div>
                         </div>
 
@@ -72,7 +77,6 @@
 
 
 
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
                                 <div class="col-md-9">
@@ -85,16 +89,21 @@
                                     <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认uploadfile/thumb/')}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-body">
+
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('缩略图访问URL地址')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="image[cache_url]" value="{$image['cache_url']}" >
+                                    <div class="input-group input-xlarge">
+                                        <input class="form-control " type="text" name="image[cache_url]" value="{$image['cache_url']}" >
+                                        <span class="input-group-btn">
+                                            <a href="{dr_url('check/index')}" class="btn green" type="button"><i class="fa fa-wrench"></i> {dr_lang('检验')}</a>
+                                        </span>
+                                    </div>
+
                                     <span class="help-block">{dr_lang('缩略图文件访问地址，可单独指定域名，默认/uploadfile/thumb/')}</span>
                                 </div>
                             </div>
-                        </div>
+
 
                     </div>
                 </div>
@@ -105,7 +114,6 @@
 
 
 
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('头像存储目录')}</label>
                                 <div class="col-md-9">
@@ -119,16 +127,18 @@
                                     <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认api/member/')}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('头像访问URL地址')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control input-xlarge" type="text" name="image[avatar_url]" value="{$image['avatar_url']}" >
+                                    <div class="input-group input-xlarge">
+                                        <input class="form-control " type="text" name="image[avatar_url]" value="{$image['avatar_url']}" >
+                                        <span class="input-group-btn">
+                                            <a href="{dr_url('check/index')}" class="btn green" type="button"><i class="fa fa-wrench"></i> {dr_lang('检验')}</a>
+                                        </span>
+                                    </div>
                                     <span class="help-block">{dr_lang('头像文件访问地址，可单独指定域名，默认/api/member/')}</span>
                                 </div>
                             </div>
-                        </div>
 
                     </div>
                 </div>
@@ -139,7 +149,6 @@
 
 
 
-                        <div class="form-body">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('缩略图存储策略')}</label>
                                 <div class="col-md-9">
@@ -152,8 +161,7 @@
                                     <span class="help-block">{dr_lang('适用于：共享栏目、独立模块栏目')}</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-body">
+
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('内容编辑器存储策略')}</label>
                                 <div class="col-md-9">
@@ -166,7 +174,6 @@
                                     <span class="help-block">{dr_lang('适用于：共享栏目、独立模块栏目')}</span>
                                 </div>
                             </div>
-                        </div>
 
                     </div>
                 </div>
@@ -183,6 +190,25 @@
 </form>
 
 <script>
+    function dr_test_domain() {
+        // 延迟加载
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $('#dr_test_domain').hide();
+        $.ajax({type: "POST",dataType:"json", url: admin_file+"?c=api&m=test_attach_domain", data: $('#myform').serialize(),
+            success: function(json) {
+                layer.close(loading);
+                $('#dr_test_domain').show();
+                $('#dr_test_domain_result').html(json.msg);
+                return false;
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
     function dr_test_domain_dir(id) {
         $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_attach_dir&v="+encodeURIComponent($("#"+id).val()),
             success: function(json) {
