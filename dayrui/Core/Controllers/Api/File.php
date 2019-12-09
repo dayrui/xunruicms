@@ -140,16 +140,16 @@ class File extends \Phpcmf\Common
 
                 $data = [
                     'id' => $att['code'],
-                    'name' => $post['name'],
-                    'file' => $rt['data']['file'],
+                    'name' => htmlspecialchars($post['name']),
+                    'file' => htmlspecialchars($rt['data']['file']),
                     'preview' => $rt['data']['preview'],
                     'upload' => '<input type="file" name="file_data"></button>',
                 ];
             } else {
                 $data = [
                     'id' => $post['url'],
-                    'name' => $post['name'] ? $post['name'] : '',
-                    'file' => $post['url'],
+                    'name' => $post['name'] ? htmlspecialchars($post['name']) : '',
+                    'file' => htmlspecialchars($post['url']),
                     'preview' => dr_file_preview_html($post['url']),
                     'upload' => '',
                 ];
@@ -162,8 +162,8 @@ class File extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
             'one' => \Phpcmf\Service::L('input')->get('one'),
-            'file' => \Phpcmf\Service::L('input')->get('file'),
-            'name' => \Phpcmf\Service::L('input')->get('name'),
+            'file' => htmlspecialchars(\Phpcmf\Service::L('input')->get('file')),
+            'name' => htmlspecialchars(\Phpcmf\Service::L('input')->get('name')),
             'form' => dr_form_hidden()
         ]);
         \Phpcmf\Service::V()->display('api_upload_url.html');

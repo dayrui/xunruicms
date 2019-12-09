@@ -256,7 +256,7 @@ class Files extends \Phpcmf\Library\A_Field {
             foreach ($value as $i => $t) {
                 $id = $t['id'] ? $t['id'] : $t['file'];
                 $file = \Phpcmf\Service::C()->get_attachment($id);
-                $description = $t['description'] ? $t['description'] : '';
+                $description = $t['description'] ? htmlspecialchars($t['description']) : '';
                 if ($file) {
                     $disabled = 'readonly';
                     $preview = dr_file_preview_html($file['url']);
@@ -264,14 +264,14 @@ class Files extends \Phpcmf\Library\A_Field {
                     $upload = '<input type="file" name="file_data">';
                 } else {
                     $disabled = '';
-                    $filepath = $id;
+                    $filepath = htmlspecialchars($id);
                     $preview = dr_file_preview_html($id);
                     $upload = '';
                     $id = '';
                 }
                 $val.= str_replace(
                     ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
-                    [$t['title'], $description, $id, $filepath, $disabled, $preview, $upload],
+                    [htmlspecialchars($t['title']), $description, $id, $filepath, $disabled, $preview, $upload],
                     $tpl
                 );
             }
