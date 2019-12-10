@@ -85,9 +85,10 @@
                     <label>{if $t.status}<a href="javascript:;" onclick="dr_iframe_show('{dr_lang('执行情况')}', '{dr_url($uriprefix.'/show')}&id={$t.id}')" class="label label-sm label-danger">{dr_lang('查看错误')}</a>{else}<span class="label label-sm label-warning">{dr_lang('待执行')}</span>{/if}</label>
                 </td>
                 <td>
+					<label><a href="javascript:;" class="btn blue btn-xs" onclick="dr_ajax_option('{dr_url($uriprefix.'/do_add')}&id={$t.id}', '{dr_lang('你确定要立即执行它吗？')}', 1)"> <i class="fa fa-refresh"></i> {dr_lang('立即执行')}</a> </label>
                     <label><a href="javascript:;" class="btn green btn-xs" onclick="dr_iframe_show('{dr_lang('执行情况')}', '{dr_url($uriprefix.'/show')}&id={$t.id}')">{dr_lang('查看参数')}</a></label>
                     {if $t.error}
-                    <label><a href="javascript:;" class="btn red btn-xs" onclick="dr_iframe_show('{dr_lang('执行情况')}', '{dr_url($uriprefix.'/show')}&id={$t.id}')">{dr_lang('执行%s次', $t.status)}</a></label>
+                    <label><a href="javascript:;" class="btn red btn-xs" onclick="dr_iframe_show('{dr_lang('执行情况')}', '{dr_url($uriprefix.'/show')}&id={$t.id}')">{dr_lang('已经执行%s次', $t.status)}</a></label>
                     {/if}
                 </td>
             </tr>
@@ -105,7 +106,7 @@
             {if $ci->_is_admin_auth('del')}
             <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
             {/if}
-            <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/post_add')}', '{dr_lang('你确定要立即执行它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-refresh"></i> {dr_lang('立即执行')}</button>
+            <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/post_add')}', '{dr_lang('你确定要批量执行它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-refresh"></i> {dr_lang('批量执行')}</button>
         </div>
         <div class="col-md-7 fc-list-page">
             {$mypages}

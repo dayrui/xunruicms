@@ -43,7 +43,7 @@ class Cron extends \Phpcmf\Table
         ]);
         // 任务类别
         $this->type = [
-            'weibo' => dr_lang('微博分享'),
+            //'weibo' => dr_lang('微博分享'),
             'email' => dr_lang('邮件发送'),
             'notice' => dr_lang('消息通知'),
             'ueditor_down_img' => dr_lang('远程图片'),
@@ -117,6 +117,21 @@ class Cron extends \Phpcmf\Table
         } else {
             $this->_json(0, dr_lang('所选数据不存在'));
         }
+    }
+
+    // 单个执行任务
+    public function do_add() {
+
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+		if (!$id) {
+			$this->_json(0, dr_lang('所选数据不存在'));
+		}
+        $rt = \Phpcmf\Service::M('cron')->do_cron_id($id);
+		if (!$rt['code']) {
+			$this->_json(0, $rt['msg']);
+		}
+		
+        $this->_json(1, dr_lang('任务执行完成'));
     }
 
 
