@@ -614,11 +614,12 @@ class Api extends \Phpcmf\Common
             $path = rtrim($data['SYS_ATTACHMENT_PATH'], DIRECTORY_SEPARATOR).'/';
             // 附件访问URL
             $url = trim($data['SYS_ATTACHMENT_URL'], '/').'/';
+            $note = dr_lang('已使用自定义上传目录和自定义访问地址');
         } else {
             // 在当前网站目录
-            $path = ROOTPATH.trim($data['SYS_ATTACHMENT_PATH'], '/');
-            $url = ROOT_URL.trim($data['SYS_ATTACHMENT_PATH'], '/');
-            $note = dr_lang('上传目录不是绝对的路径时采用，系统分配的URL地址');
+            $path = ROOTPATH.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
+            $url = ROOT_URL.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
+            !$note && $note = dr_lang('上传目录不是绝对的路径时采用，系统分配的URL地址');
         }
 
         $this->_json(1, $note.'<br>'.dr_lang('附件上传目录：%s', $path) .'<br>' . dr_lang('附件访问地址：%s', $url));
