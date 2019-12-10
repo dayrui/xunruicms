@@ -125,6 +125,8 @@ class Install extends \Phpcmf\Common
                         $this->_json(0, '数据库账号不能为空');
                     } elseif (empty($data['db_name'])) {
                         $this->_json(0, '数据库名称不能为空');
+                    } elseif (empty($data['db_pass'])) {
+                        $this->_json(0, '数据库密码不能为空');
                     } elseif (empty($data['db_prefix'])) {
                         $this->_json(0, '数据表前缀不能为空');
                     } elseif (is_numeric($data['db_name'])) {
