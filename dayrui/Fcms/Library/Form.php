@@ -174,17 +174,22 @@ class Form
                     return [[], ['name' => $name, 'error' => $frt]];
                 }
                 // 验证必填字段
-                if (!IS_ADMIN && $field['fieldtype'] != 'Group' && $validate['required']) {
-                    if ($value == '') {
-                        // 验证值为空
-                        return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
-                    } elseif ($field['fieldtype'] == 'Linkage' && !$value) {
-                        // 当类别为联动时判定0值
-                        return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
-                    }
-                    // 正则验证
-                    if (!is_array($value) && $validate['pattern'] && !preg_match($validate['pattern'], $value)) {
-                        return [[], ['name' => $name, 'error' => $field['name'].'：'.($validate['errortips'] ? $validate['errortips'] : dr_lang('格式不正确'))]];
+                if ($field['fieldtype'] != 'Group' && $validate['required']) {
+                    if (IS_ADMIN && in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+                        // 后台超管不验证必填
+                    } else {
+                        // 开始验证必填字段
+                        if ($value == '') {
+                            // 验证值为空
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                        } elseif ($field['fieldtype'] == 'Linkage' && !$value) {
+                            // 当类别为联动时判定0值
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                        }
+                        // 正则验证
+                        if (!is_array($value) && $validate['pattern'] && !preg_match($validate['pattern'], $value)) {
+                            return [[], ['name' => $name, 'error' => $field['name'].'：'.($validate['errortips'] ? $validate['errortips'] : dr_lang('格式不正确'))]];
+                        }
                     }
                 }
                 // 编辑器长度判断
