@@ -216,7 +216,23 @@ class Module extends \Phpcmf\Common
         }
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post['setting']['list_field']) {
+                foreach ($post['setting']['list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
+            if ($post['setting']['comment_list_field']) {
+                foreach ($post['setting']['comment_list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
             $rt = \Phpcmf\Service::M('Module')->config($data, $post);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -367,7 +383,15 @@ class Module extends \Phpcmf\Common
         ];
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
+            if ($data['setting']['list_field']) {
+                foreach ($data['setting']['list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
             \Phpcmf\Service::M('Module')->table('module_form')->update($id,
                 [
                     'name' => $data['name'],

@@ -403,15 +403,20 @@ class Module extends \Phpcmf\Common
                 }
             }
 
+            // 关闭插件嵌入
+            $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
+
             // 上一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
             $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id<', $id)->orderBy('id desc');
             $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
 
             // 下一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
             $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id>', $id)->orderBy('id asc');
             $data['next_page'] = $builder->limit(1)->get()->getRowArray();
 

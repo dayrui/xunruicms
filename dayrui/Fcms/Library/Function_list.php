@@ -102,9 +102,35 @@ class Function_list
         return '<a href="http://www.ip138.com/ips138.asp?ip='.$value.'&action=2" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len).'</a>';
     }
 
-    // 用于列表显示作者
+    // 用于列表显示多文件
     function files($value, $param = [], $data = []) {
         return dr_lang($value ? '有' : '无');
+    }
+
+    // 用于列表显示单文件
+    function file($value, $param = [], $data = []) {
+        if ($value) {
+            $file = \Phpcmf\Service::C()->get_attachment($value);
+            if ($file) {
+                $value = $file['url'];
+            }
+            $ext = trim(strtolower(strrchr($value, '.')), '.');
+            if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg'])) {
+                $url = 'javascript:dr_preview_image(\''.$value.'\');';
+                return '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
+            } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
+                $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
+                $url = 'javascript:dr_preview_url(\''.dr_file($value).'\');';
+                return '<a href="'.$url.'"><img src="'.$file.'"></a>';
+            } elseif (strpos($value, 'http://') === 0) {
+                $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
+                $url = 'javascript:dr_preview_url(\''.$value.'\');';
+                return '<a href="'.$url.'"><img src="'.$file.'"></a>';
+            } else {
+                return $value;
+            }
+        }
+        return dr_lang('无');
     }
 
     // 用于列表显示价格

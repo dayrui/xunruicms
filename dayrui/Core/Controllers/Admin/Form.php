@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
-
 
 class Form extends \Phpcmf\Common
 {
@@ -58,7 +55,9 @@ class Form extends \Phpcmf\Common
 	public function init_index() {
 
 		$data = \Phpcmf\Service::M('Form')->getAll();
-		!$data && $this->_json(0, dr_lang('没有任何可用表单'));
+		if (!$data) {
+		    $this->_json(0, dr_lang('没有任何可用表单'));
+        }
 
 		$ok = 0;
 		foreach ($data as $t) {
@@ -78,11 +77,13 @@ class Form extends \Phpcmf\Common
 	public function add() {
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation(0, $data);
 			\Phpcmf\Service::L('input')->system_log('创建网站表单('.$data['name'].')');
 			$rt = \Phpcmf\Service::M('Form')->create($data);
-			!$rt['code'] && $this->_json(0, $rt['msg']);
+			if (!$rt['code']) {
+			    $this->_json(0, $rt['msg']);
+            }
             \Phpcmf\Service::M('cache')->sync_cache('form', '', 1); // 自动更新缓存
 			exit($this->_json(1, dr_lang('操作成功，请刷新后台页面')));
 		}
@@ -98,7 +99,10 @@ class Form extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('Form')->get($id);
-		!$data && $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+		if (!$data) {
+		    $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+        }
+
 		$data['setting'] = dr_string2array($data['setting']);
 		!$data['setting']['list_field'] && $data['setting']['list_field'] = [
 			'title' => [
@@ -125,7 +129,15 @@ class Form extends \Phpcmf\Common
 		];
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
+            if ($data['setting']['list_field']) {
+                foreach ($data['setting']['list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
 			\Phpcmf\Service::M('Form')->update($id,
 				[
 					'name' => $data['name'],
@@ -162,10 +174,14 @@ class Form extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+		if (!$ids) {
+		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
 		$rt = \Phpcmf\Service::M('Form')->delete_form($ids);
-		!$rt['code'] && exit($this->_json(0, $rt['msg']));
+		if (!$rt['code']) {
+		    exit($this->_json(0, $rt['msg']));
+        }
 
         \Phpcmf\Service::M('cache')->sync_cache('form', '', 1); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('批量删除网站表单: '. @implode(',', $ids));
@@ -186,7 +202,9 @@ class Form extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M('Form')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+        }
 
         // 字段
         $data['field'] = \Phpcmf\Service::M()->db->table('field')->where('relatedname', 'form-'.SITE_ID)->where('relatedid', $id)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
@@ -216,7 +234,7 @@ class Form extends \Phpcmf\Common
     public function import_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('code', true);
+            $data = \Phpcmf\Service::L('input')->post('code');
             $data = dr_string2array($data);
             if (!is_array($data)) {
                 $this->_json(0, dr_lang('导入信息验证失败'));
@@ -228,7 +246,9 @@ class Form extends \Phpcmf\Common
                 $this->_json(0, dr_lang('数据结构不完整'));
             }
             $rt = \Phpcmf\Service::M('Form')->import($data);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             \Phpcmf\Service::M('cache')->sync_cache('form', '', 1); // 自动更新缓存
             \Phpcmf\Service::L('input')->system_log('导入网站表单('.$data['name'].')');
             exit($this->_json(1, dr_lang('操作成功')));
