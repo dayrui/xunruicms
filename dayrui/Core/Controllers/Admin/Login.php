@@ -16,6 +16,9 @@ class Login extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
             $sn = 0;
+            // 回调钩子
+            $data = \Phpcmf\Service::L('input')->post('data');
+            \Phpcmf\Hooks::trigger('admin_login_before', $data);
             if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
                 $sn = (int)$this->session()->get('fclogin_error_sn');
                 $time = (int)$this->session()->get('fclogin_error_time');
@@ -25,7 +28,6 @@ class Login extends \Phpcmf\Common
                     \Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
                 }
             }
-            $data = \Phpcmf\Service::L('input')->post('data');
 			if (SYS_ADMIN_CODE && !\Phpcmf\Service::L('form')->check_captcha('code')) {
 				$this->_json(0, dr_lang('验证码不正确'));
 			} elseif (!IS_DEV && defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {

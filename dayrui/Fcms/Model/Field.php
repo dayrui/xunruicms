@@ -441,6 +441,10 @@ class Field extends \Phpcmf\Model
     }
     // 字段是否存在
     private function _field_member($name) {
+        // 保留
+        if (in_array($name, ['role', 'uid', 'authid', 'adminid', 'tableid', 'group', 'groupid', 'levelid'])) {
+            return 1;
+        }
         // 主表
         $table = $this->dbprefix('member_data');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);

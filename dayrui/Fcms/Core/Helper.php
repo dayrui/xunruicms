@@ -561,10 +561,8 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
  * @return
  */
 function dr_member_invite($uid, $name = 'uid') {
-
     $data = \Phpcmf\Service::M()->db->where('rid', $uid)->get('member_invite')->row_array();
     return $data[$name] ? $data[$name] : '';
-
 }
 
 
@@ -1010,7 +1008,6 @@ function dr_notice_info() {
         ],
 
     ];
-
 }
 
 /**

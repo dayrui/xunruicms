@@ -109,15 +109,18 @@ class Auth extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('密码不正确'));
         }
 
-        $uid = (int)$data['id'];
+        $data['uid'] = $uid = (int)$data['id'];
         // 查询角色组
-        $role = $this->_role($uid);
+        $data['role'] = $role = $this->_role($uid);
         if (!$role) {
             return dr_return_data(0, dr_lang('此账号不是管理员'));
         }
 
         // 保存会话
         $this->login_session($data);
+
+        // 登录后的钩子
+        \Phpcmf\Hooks::trigger('admin_login_after', $data);
 
         return dr_return_data($uid);
     }

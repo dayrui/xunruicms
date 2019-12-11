@@ -18,7 +18,7 @@ class Login extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', true);
-            // 支付回调钩子
+            // 回调钩子
             \Phpcmf\Hooks::trigger('member_login_before', $post);
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
