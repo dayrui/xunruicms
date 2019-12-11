@@ -704,11 +704,13 @@ class View {
         // 开发者模式下关闭缓存
         IS_DEV && $system['cache'] = 0;
 
-        $cache_name = 'cache_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url());
+        $cache_name = 'cache_view_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
-                return $this->_return($system['return'], $cache_data, '这是缓存数据');
+                $this->_page_used = $cache_data['page_used'];
+                $this->_page_urlrule = $cache_data['page_urlrule'];
+                return $this->_return($system['return'], $cache_data['data'], '【缓存数据】'.$cache_data['sql'], $cache_data['total'], $cache_data['pages'], $cache_data['pagesize']);
             }
         }
 
@@ -871,10 +873,21 @@ class View {
                     }
                 }
 
-                $return = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
-                $system['cache'] && $this->_save_cache_data($cache_name, $return, $system['cache']);
+                $data = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
 
-                return $this->_return($system['return'], $return, '');
+                // 存储缓存
+                $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => '',
+                    'total' => '',
+                    'pages' => '',
+                    'pagesize' => '',
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
+
+
+                return $this->_return($system['return'], $data, '');
                 break;
 
             case 'category_search_field': // 栏目搜索字段筛选
@@ -1058,7 +1071,16 @@ class View {
                     }
                 }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => 0,
+                    'pages' => 0,
+                    'pagesize' => 0,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql);
                 break;
@@ -1102,7 +1124,16 @@ class View {
 
                     $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                    $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
 
                     return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 } else {
@@ -1182,8 +1213,16 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1287,10 +1326,18 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1386,10 +1433,18 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1484,9 +1539,19 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1609,9 +1674,18 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1641,9 +1715,7 @@ class View {
                 $data = $db->get_data(intval($param['id']));
 
                 // 缓存查询结果
-                $name = 'list-action-content-'.md5($table.$param['id'].$this->_is_mobile);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data)) {
                     // 模块表的系统字段
                     $fields = $module['field']; // 主表的字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
@@ -1652,10 +1724,21 @@ class View {
                     $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
                     $data['url'] = dr_url_prefix($data['url'], $dirname, $system['site'], $this->_is_mobile);
                     $data = $dfield->format_value($fields, $data, 1);
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
+
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => '',
+                        'total' => 0,
+                        'pages' => 0,
+                        'pagesize' => 0,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+
                 }
 
-                return $this->_return($system['return'], [$cache ? $cache : $data]);
+                return $this->_return($system['return'], $data);
                 break;
 
             case 'related': // 模块的相关文章
@@ -1946,7 +2029,16 @@ class View {
                     }
                 }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;

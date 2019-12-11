@@ -529,7 +529,7 @@ class Module extends \Phpcmf\Table
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => ($status ? 'status IN('.implode(',', $status).')' : 'status>=0').($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : '').($status ? 'status IN('.implode(',', $status).')' : 'status>=0') .')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         $this->_List();
