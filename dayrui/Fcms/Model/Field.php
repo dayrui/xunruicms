@@ -635,6 +635,10 @@ class Field extends \Phpcmf\Model
     }
     // 字段是否存在
     private function _field_module($name) {
+        // 保留字段
+        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus'])) {
+            return 1;
+        }
         // 主表
         $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname']);
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
