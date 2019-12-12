@@ -892,3 +892,27 @@
 #search .searchList .clearFloat{
     clear: both;
 }
+
+
+@media (max-width: 600px) {
+    .wrapper {
+        width: 320px;
+    }
+    .alignBar {
+        display: none;
+    }
+    #upload .filelist {
+        margin-top: 50px;
+        clear: both;
+    }
+    #upload .statusBar .btns {
+        position: initial;
+        margin-top: 20px;
+    }
+    #remote .right {
+        display: none;
+    }
+    #remote .top {
+        margin-bottom: 20px;
+    }
+}

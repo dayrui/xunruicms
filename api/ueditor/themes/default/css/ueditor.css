@@ -1326,7 +1326,7 @@ div.edui-box {
 /*link-dialog*/
 .edui-default .edui-for-link .edui-dialog-content {
     width: 420px;
-    height: 200px;
+    height: 280px;
     overflow: hidden;
 }
 /*background-dialog*/
@@ -1461,6 +1461,121 @@ div.edui-box {
     height: 360px;
 }
 
+
+/*使用移动端*/
+
+@media (max-width: 600px) {
+
+
+    /*link-dialog*/
+    .edui-default .edui-for-link .edui-dialog-content {
+        width: 320px;
+        height: 280px;
+        overflow: hidden;
+    }
+    .edui-default .edui-for-emotion .edui-dialog-content {
+        width: 320px;
+        overflow: hidden;
+    }
+    /*image-dialog*/
+    .edui-default .edui-for-insertimage .edui-dialog-content {
+        width: 340px;
+        height: 400px;
+        overflow: hidden;
+    }
+    /*scrawl-dialog*/
+    .edui-default .edui-for-scrawl .edui-dialog-content {
+        width: 340px;
+        *width: 340px;
+        height: 360px;
+    }
+    /*video-dialog*/
+    .edui-default .edui-for-insertvideo .edui-dialog-content {
+        width: 340px;
+        height: 390px;
+    }
+    /*attachment-dialog*/
+    .edui-default .edui-for-attachment .edui-dialog-content {
+        width: 340px;
+        height: 400px;
+        overflow: hidden;
+    }
+    /*map-dialog*/
+    .edui-default .edui-for-map .edui-dialog-content {
+        width: 340px;
+        height: 400px;
+    }
+
+    /*gmap-dialog*/
+    .edui-default .edui-for-gmap .edui-dialog-content {
+        width: 340px;
+        height: 400px;
+    }
+    /*template-dialog*/
+    .edui-default .edui-for-template .edui-dialog-content {
+        width: 340px;
+        height: 390px;
+        overflow: hidden;
+    }/*background-dialog*/
+    .edui-default .edui-for-background .edui-dialog-content {
+        width: 340px;
+        height: 280px;
+        overflow: hidden;
+    }
+
+    /*wordImage-dialog*/
+    .edui-default .edui-for-wordimage .edui-dialog-content {
+        width: 340px;
+        height: 380px;
+        overflow: hidden;
+    }
+
+    /*spechars-dialog*/
+    .edui-default .edui-for-spechars .edui-dialog-content {
+        width: 340px;
+        height: 500px;
+        *width: 340px;
+        *height: 570px;
+    }
+
+    /*image-dialog*/
+    .edui-default .edui-for-insertimage .edui-dialog-content {
+        width: 340px;
+        height: 400px;
+        overflow: hidden;
+    }
+    /*webapp-dialog*/
+    .edui-default .edui-for-webapp .edui-dialog-content {
+        width: 340px;
+        _width: 340px;
+        height: 450px;
+        overflow: hidden;
+    }
+
+    /*music-dialog*/
+    .edui-default .edui-for-music .edui-dialog-content {
+        width: 340px;
+        height: 360px;
+    }
+
+    /*edittable-dialog*/
+    .edui-default .edui-for-edittable .edui-dialog-content {
+        width: 340px;
+        _width:340px;
+        height: 335px;
+    }
+    /*edittable-dialog*/
+    .edui-default .edui-for-edittable .edui-dialog-content {
+        width: 340px;
+        _width:340px;
+        height: 335px;
+    }
+
+
+
+}
+
+
 /*段落弹出菜单*/
 .edui-default .edui-for-paragraph .edui-listitem-label {
     font-family: Tahoma, Verdana, Arial, Helvetica;
@@ -1567,7 +1682,7 @@ div.edui-box {
     margin-right: 1px;
     font-size: 12px;
     line-height: 14px;
-    height: 14px;
+    height: 20px;
     border: 1px solid #333;
     padding: 3px 5px;
     cursor: pointer;

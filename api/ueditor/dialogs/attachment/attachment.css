@@ -679,3 +679,36 @@ i.file-preview.file-type-png,
 i.file-preview.file-type-psd{
     background-position: -140px center;
 }
+
+@media (max-width: 400px) {
+    .wrapper {
+        width: 320px;
+    }
+    #videoUrl {
+        width: 300px;
+    }
+    #preview {
+        width: 300px;
+    }
+    #upload_left {
+        width: 300px;
+        float: initial;
+    }
+    .alignBar {
+        display: none;
+    }
+    #upload .filelist {
+        margin-top: 50px;
+        clear: both;
+    }
+    #upload .statusBar .btns {
+        position: initial;
+        margin-top: 20px;
+    }
+    #remote .right {
+        display: none;
+    }
+    #remote .top {
+        margin-bottom: 20px;
+    }
+}

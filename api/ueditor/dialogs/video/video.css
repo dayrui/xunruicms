@@ -1,6 +1,6 @@
 @charset "utf-8";
 .wrapper{ width: 570px;_width:575px;margin: 10px auto; zoom:1;position: relative}
-.tabbody{height: 335px;}
+.tabbody{height: 355px;}
 .tabbody .panel {
     position: absolute;
     width: 0;
@@ -21,8 +21,9 @@
     height: 21px;
     line-height: 21px;
     margin: 8px 5px;
-    background: #FFF;
-    border: 1px solid #d7d7d7;
+    background: #FFF;border:1px solid #c2cad8;
+    padding: 3px 0px;
+    border-radius: 4px;
 }
 #videoSearchTxt{margin-left:15px;background: #FFF;width:200px;height:21px;line-height:21px;border: 1px solid #d7d7d7;}
 #searchList{width: 570px;overflow: auto;zoom:1;height: 270px;}
@@ -632,4 +633,46 @@ i.file-preview.file-type-bmp,
 i.file-preview.file-type-png,
 i.file-preview.file-type-psd{
     background-position: -140px center;
+}
+
+.xrtable {
+    padding: 5px;
+}
+.xr-table-tr {
+    margin: 5px 0;
+}
+.xr-table-td {
+    margin: 3px 0;
+}
+@media (max-width: 400px) {
+    .wrapper {
+        width: 320px;
+    }
+    #videoUrl {
+        width: 300px;
+    }
+    #preview {
+        width: 300px;
+    }
+    #upload_left {
+        width: 300px;
+        float: initial;
+    }
+    .alignBar {
+        display: none;
+    }
+    #upload .filelist {
+        margin-top: 50px;
+        clear: both;
+    }
+    #upload .statusBar .btns {
+        position: initial;
+        margin-top: 20px;
+    }
+    #remote .right {
+        display: none;
+    }
+    #remote .top {
+        margin-bottom: 20px;
+    }
 }

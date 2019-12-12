@@ -8,33 +8,44 @@
     <style type="text/css">
         *{margin:0;padding:0;color: #838383;}
         table{font-size: 12px;margin: 10px;line-height: 30px}
-        .txt{width:300px;height:21px;line-height:21px;border:1px solid #d7d7d7;}
+        .txt{width:100%;height:21px;line-height:21px;border:1px solid #c2cad8;
+            padding: 3px 0px;
+            border-radius: 4px;}
+        .xrtable {
+            padding: 10px;
+        }
+        .xr-table-tr {
+            margin: 10px 0;
+        }
+        .xr-table-td {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
-    <table>
-        <tr>
-            <td><label for="text"> <var id="lang_input_text"></var></label></td>
-            <td><input class="txt" id="text" type="text" disabled="true"/></td>
-        </tr>
-        <tr>
-            <td><label for="href"> <var id="lang_input_url"></var></label></td>
-            <td><input class="txt" id="href" type="text" /></td>
-        </tr>
-        <tr>
-            <td><label for="title"> <var id="lang_input_title"></var></label></td>
-            <td><input class="txt" id="title" type="text"/></td>
-        </tr>
-        <tr>
-             <td colspan="2">
+    <div class="xrtable">
+        <div class="xr-table-tr">
+            <div class="xr-table-td"><label for="text"> <var id="lang_input_text"></var></label></div>
+            <div class="xr-table-td"><input class="txt" id="text" type="text" disabled="true"/></div>
+        </div>
+        <div class="xr-table-tr">
+            <div class="xr-table-td"><label for="href"> <var id="lang_input_url"></var></label></div>
+            <div class="xr-table-td"><input class="txt" id="href" type="text" /></div>
+        </div>
+        <div class="xr-table-tr">
+            <div class="xr-table-td"><label for="title"> <var id="lang_input_title"></var></label></div>
+            <div class="xr-table-td"><input class="txt" id="title" type="text"/></div>
+        </div>
+        <div class="xr-table-tr">
+             <div class="xr-table-td" >
                  <label for="target"><var id="lang_input_target"></var></label>
                  <input id="target" type="checkbox"/>
-             </td>
-        </tr>
-        <tr>
-            <td colspan="2" id="msg"></td>
-        </tr>
-    </table>
+             </div>
+        </div>
+        <div class="xr-table-tr">
+            <div  class="xr-table-td" id="msg"></div>
+        </div>
+    </div>
 <script type="text/javascript">
     var range = editor.selection.getRange(),
         link = range.collapsed ? editor.queryCommandValue( "link" ) : editor.selection.getStart(),

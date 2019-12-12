@@ -69,4 +69,12 @@ em{font-style: normal;}
 .brushIcon{display: inline-block;width:16px;height:16px;background-image: url('images/brush.png')}
 .eraserIcon{display: inline-block;width:16px;height:16px;background-image: url('images/eraser.png')}
 
+@media (max-width: 600px) {
+    .hot {
+        float: initial;
+        margin-bottom: 20px;
+    }.drawToolbar {
+         float: initial;
+     }
+}
 

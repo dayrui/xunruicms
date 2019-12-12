@@ -92,3 +92,41 @@ div.alignment,#custom{margin-left: 23px;margin-left: 28px\9;}
     border: 3px solid #1094fa;
     background-position: 72px 72px;
 }
+.txt{height:21px;line-height:21px;
+    width:100%;border:1px solid #c2cad8;
+    padding: 3px 0px;
+    border-radius: 4px;
+}
+
+@media (max-width: 400px) {
+    .wrapper {
+        width: 320px;
+    }
+    #videoUrl {
+        width: 300px;
+    }
+    #preview {
+        width: 300px;
+    }
+    #upload_left {
+        width: 300px;
+        float: initial;
+    }
+    .alignBar {
+        display: none;
+    }
+    #upload .filelist {
+        margin-top: 50px;
+        clear: both;
+    }
+    #upload .statusBar .btns {
+        position: initial;
+        margin-top: 20px;
+    }
+    #remote .right {
+        display: none;
+    }
+    #remote .top {
+        margin-bottom: 20px;
+    }
+}
