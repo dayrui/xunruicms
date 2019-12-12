@@ -242,6 +242,9 @@
                                         <label>{dr_lang('修改内容时会同步更新其他外联文档')}</label>
                                         {/if}
                                         {/if}
+										{if !$module['category']}
+										<label style="margin-right:10px"><a href="{dr_url($module['dirname'].'/category/index')}">[{dr_lang('栏目管理')}]</a></label>
+										{/if}
                                     {/if}
                                 </div>
                             </div>
