@@ -119,6 +119,9 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_LANGUAGE', strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
         define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
+        // 设置时区
+        date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
+
         // 全局URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
         define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
