@@ -392,7 +392,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         if (!defined('PHPCMF_FIELD_UEDITOR')) {
             $str.= '
             <script type="text/javascript" src="/api/ueditor/ueditor.config.js"></script>
-            <script type="text/javascript" src="/api/ueditor/ueditor.all.min.js"></script>
+            <script type="text/javascript" src="/api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js"></script>
             ';
             define('PHPCMF_FIELD_UEDITOR', 1);
         }

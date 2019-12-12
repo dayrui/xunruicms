@@ -40,7 +40,7 @@ define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time())
 // 系统变量
 if (is_file(WRITEPATH.'config/system.php')) {
     $system = require WRITEPATH.'config/system.php';
-    define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
+    define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && $system['SYS_DEBUG']);
 } else {
     // 默认系统变量
     $system = [
@@ -84,7 +84,6 @@ if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
 define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
 define('FC_NOW_HOST', $pageURL.'/');
 unset($system);
-
 
 // 缓存变量
 $cache = [];
