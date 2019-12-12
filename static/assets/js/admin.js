@@ -682,7 +682,8 @@ function dr_call_alert() {
         '此处填写函数名称即可<br>函数需要开发者自己定义，函数定义格式为: <br>function($value, $param); <br>$value是传入值，$param是列表搜索参数<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
-        '多文件: files<br>'+
+        '多文件: files （只显示有或无）<br>'+
+        '单文件: file<br>'+
         'uid会员: uid<br>'+
         '地区联动: linkage_address<br>'+
         '栏目: catid<br>'+
