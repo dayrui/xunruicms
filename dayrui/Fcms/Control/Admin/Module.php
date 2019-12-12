@@ -117,14 +117,14 @@ class Module extends \Phpcmf\Table
                 $this->module['category'],
                 $catid,
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '', 1, 1, 1
+                '--', 1, 1, 1
             );
         } else {
             $select = \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $catid,
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '', 1, 1
+                '--', 1, 1
             );
         }
 
@@ -169,7 +169,7 @@ class Module extends \Phpcmf\Table
             $this->module['category'],
             $data['catid'],
             'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-            '', 1, 1
+            '--', 1, 1
         );
 
         \Phpcmf\Service::V()->assign([

@@ -86,14 +86,14 @@ class Module extends \Phpcmf\Table
                     $category,
                     $catid,
                     'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                    '', 1, 1, 1
+                    '--', 1, 1, 1
                 );
             } else {
                 $select = \Phpcmf\Service::L('Tree')->select_category(
                     $category,
                     $catid,
                     'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                    '', 1, 1
+                    '--', 1, 1
                 );
             }
 			if (!$catid) {
@@ -173,7 +173,7 @@ class Module extends \Phpcmf\Table
                 $category,
                 $data['catid'],
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '', 1, 1
+                '--', 1, 1
             ),
             'is_verify' => defined('IS_MODULE_VERIFY') ? 1 : 0,
             'is_sync_cat' => defined('IS_MODULE_VERIFY') ? $data['sync_cat'] : '',

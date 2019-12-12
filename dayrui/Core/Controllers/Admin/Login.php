@@ -43,6 +43,11 @@ class Login extends \Phpcmf\Common
                     $sync = [];
                     // 写入日志
                     \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
+					if ($sn) {
+						// 解除禁止登陆
+						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
+						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
+					}
                     $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url)]);
                 } else {
                     // 登录失败
