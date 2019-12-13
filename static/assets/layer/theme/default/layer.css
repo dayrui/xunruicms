@@ -5,9 +5,8 @@
 	left:0;margin:0;padding:0;
 	background-color:#fff;
 	-webkit-background-clip:content;
-	border-radius:2px;
 	/*box-shadow:1px 1px 50px rgba(0,0,0,.3);*/
-    border-radius: 5px;
+    border-radius: 3px;
 }
 .layui-layer-close{position:absolute}.layui-layer-content{position:relative}
 .layui-layer-border{ border:1px solid #B2B2B2;border:1px solid rgba(0,0,0,.1);box-shadow:1px 1px 5px rgba(0,0,0,.2) }
