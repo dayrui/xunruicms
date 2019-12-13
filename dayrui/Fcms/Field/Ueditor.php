@@ -364,10 +364,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
-        
+
         if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
             // 来自批量审核内容
-            $str = '<textarea class="form-control"  name="data['.$name.']" id="dr_'.$name.'">'.$value.'</textarea>';
+            $str = '<textarea class="form-control"  name="data['.$name.']" id="dr_'.$name.'">'.htmlspecialchars($value).'</textarea>';
             return $this->input_format($field['fieldname'], $text, $str);
         }
 
