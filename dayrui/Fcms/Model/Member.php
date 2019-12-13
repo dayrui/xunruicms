@@ -1611,6 +1611,11 @@ class Member extends \Phpcmf\Model
             $name = rand(10000, 99999999);
         }
 
+        // 两个字母加点随机数
+        if (strlen($name) < 3) {
+            $name.= rand(1000, 9999);
+        }
+
         $name = trim(strtolower($prefix.str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
 
         if ($this->table('member')->where('username', $name)->counts()) {
