@@ -359,15 +359,20 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             return $this->show($field, $value);
         }
 
-        $is_mobile = \Phpcmf\Service::C()->_is_mobile();
-
         // 字段存储名称
         $name = $field['fieldname'];
 
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+        
+        if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
+            // 来自批量审核内容
+            $str = '<textarea class="form-control"  name="data['.$name.']" id="dr_'.$name.'">'.$value.'</textarea>';
+            return $this->input_format($field['fieldname'], $text, $str);
+        }
 
         // 表单宽度设置
+        $is_mobile = \Phpcmf\Service::C()->_is_mobile();
         $width = $is_mobile ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
         // 表单高度设置
@@ -379,14 +384,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 字段默认值
         $value = htmlspecialchars_decode(strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']));
 
-        // 输出
-        $str = '';
-
         $uri = \Phpcmf\Service::L('router')->uri();
         APP_DIR != 'member' && $uri = str_replace('member/', '', $uri);
 
-        $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
-
+        // 输出
+        $str = '';
 
         // 防止重复加载JS
         if (!defined('PHPCMF_FIELD_UEDITOR')) {
@@ -412,7 +414,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
 
         }
+
         // 编辑器工具
+        $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
         switch ($mode) {
             case 3: // 自定义
                 $tool.= trim($field['setting']['option']['tool'], ',').$pagebreak;
