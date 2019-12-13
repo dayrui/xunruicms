@@ -24,34 +24,24 @@
 </head>
 
 <body style="background: #ffffff">
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+<div style="padding: 20px;">
+    <ul class="list-group">
 
-<div class="page-404-full-page" style="padding-top:10px">
-    <div class="row">
-        <div class="col-xs-12 page-404">
 
-            <div class="admin_msg number font-green-turquoise"> <i class="fa fa-check-circle-o"></i> </div>
+        {loop $list $id $t}
+        <li class="list-group-item">
+            {$t.title}
+            <span id="content_{$id}" style="margin-top: 5px;float: right;"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> </span>
+            <iframe scrolling="yes" src="{$t.url}" style="width:100%; display: none" frameborder=1></iframe>
+        </li>
 
-            <div class="details">
-                <h4>{dr_lang('审核信息已提交（选择数量越多时处理时间会长一些）')}</h4>
-                <p class="alert_btnleft">
-                    <a href="javascript:dr_iframe_close();" >{dr_lang('点击返回到审核列表')}</a>
-                </p>
+        {/loop}
 
-            </div>
-        </div>
-    </div>
+    </ul>
+
 </div>
-<script>
-    function dr_iframe_close() {
-        parent.location.href = "{$back_url}";
-        parent.layer.closeAll();
-    }
-</script>
-{loop $list $id $t}
-
-<iframe id="post_{$id}" name="post_{$id}" scrolling="yes" src="{$t}" style="width:100%; display: none" frameborder=1></iframe>
-
-{/loop}
-
+</form>
 </body>
 </html>

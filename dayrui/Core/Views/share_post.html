@@ -174,7 +174,47 @@
     }
     $(function () {
         {if isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']}
-        dr_ajax_verify_submit();
+        $('#dr_is_draft').val(0);
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: '{dr_now_url()}',
+            data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code) {
+                    if (json.data.htmlfile) {
+                        // 执行生成htmljs
+                        $.ajax({
+                            type: "GET",
+                            url: json.data.htmlfile,
+                            dataType: "jsonp",
+                            success: function(json){ },
+                            error: function(){ }
+                        });
+                    }
+                    if (json.data.htmllist) {
+                        // 执行生成htmljs
+                        $.ajax({
+                            type: "GET",
+                            url: json.data.htmllist,
+                            dataType: "jsonp",
+                            success: function(json){ },
+                            error: function(){ }
+                        });
+                    }
+                    parent.$('#content_{$id}').addClass("badge badge-success");
+                    parent.$('#content_{$id}').html('{dr_lang("成功")}');
+                } else {
+                    parent.$('#content_{$id}').addClass("badge badge-danger");
+                    parent.$('#content_{$id}').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                parent.$('#content_{$id}').addClass("badge badge-danger");
+                parent.$('#content_{$id}').html('{dr_lang("执行失败")}');
+            }
+        });
+
         {/if}
     });
 </script>

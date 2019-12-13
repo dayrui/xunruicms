@@ -491,6 +491,11 @@ class Module extends \Phpcmf\Table
         $is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
 
         if (isset($_GET['is_all']) && intval($_GET['is_all']) == 1) {
+
+            if (IS_POST) {
+                $this->_json(1, dr_lang('操作成功'));
+            }
+
             // 批量操作
             $ids = \Phpcmf\Service::L('input')->get('ids');
             if (!$ids) {
@@ -507,13 +512,18 @@ class Module extends \Phpcmf\Table
                     $this->_json(0, dr_lang('选中内容[#%s]不存在', $id));
                 }
                 if (intval($_GET['at']) == 1) {
-                    $list[$id] = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&id='.$id;
+                    $url = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&id='.$id;
                 } else {
                     if (!$note) {
                         $this->_json(0, dr_lang('没有填写拒绝理由'));
                     }
-                    $list[$id] = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&note='.$note.'&id='.$id;
+                    $url = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&note='.$note.'&id='.$id;
                 }
+                $t = dr_string2array($row['content']);
+                $list[$id] = [
+                    'url' => $url,
+                    'title' => $t['title'],
+                ];
             }
 
             \Phpcmf\Service::V()->assign([
