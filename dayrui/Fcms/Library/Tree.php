@@ -241,13 +241,17 @@ class Tree {
                         continue;
                     }
                 }
+                // 第一个可用子栏目
+                if ($first == 0 && $t['child'] == 0) {
+                    $first = $t['id'];
+                    if (!$id) {
+                        $id = $first;
+                    }
+                }
                 // 选中操作
                 $t['selected'] = (is_array($id) ? in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
                 // 是否可选子栏目
                 $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
-
-                // 第一个可用子栏目
-                $first == 0 && $t['child'] == 0 && $first = $t['id'];
                 if (isset($t['setting'])) {
                     unset($t['setting']);
                 }

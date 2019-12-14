@@ -63,6 +63,9 @@ class Search extends \Phpcmf\Model {
 
             // 默认搜索条件
             $where = [ '`'.$table.'`.`status` = 9' ];
+            if (dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain']) {
+                $where[] = [ '`'.$table.'`.`fstatus` = 1' ];
+            }
 
             // 关键字匹配条件
             if ($param['keyword'] != '') {
