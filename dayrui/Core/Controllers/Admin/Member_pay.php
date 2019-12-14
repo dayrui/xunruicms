@@ -13,7 +13,7 @@ class Member_pay extends \Phpcmf\Common
     public function index() {
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['username'])->get()->getRowArray();
             if (!$user) {
                 $this->_json(0, dr_lang('账号[%s]不存在', $post['username']), ['field' => 'username']);
@@ -31,15 +31,31 @@ class Member_pay extends \Phpcmf\Common
                 }
                 // 付款方的钱
                 $rt = \Phpcmf\Service::M('member')->add_score($user['id'], $post['value'], $post['note']);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
                 $this->_json(1, dr_lang('充值%s成功', SITE_SCORE.$post['value']));
+            } elseif ($post['unit'] == 3) {
+                // 升级
+                if ($post['value'] < 0) {
+                    $this->_json(0, dr_lang('%s不能是负数', SITE_EXPERIENCE), ['field' => 'value']);
+                }
+                // 付款方的钱
+                $rt = \Phpcmf\Service::M('member')->add_experience($user['id'], $post['value'], $post['note']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
+                $this->_json(1, dr_lang('充值%s成功', SITE_EXPERIENCE.$post['value']));
             } else {
+                // rmb
                 if ($user['money'] + $post['value'] < 0) {
                     $this->_json(0, dr_lang('账号余额不足'), ['field' => 'value']);
                 }
                 // 付款方的钱
                 $rt = \Phpcmf\Service::M('Pay')->add_money($user['id'], $post['value']);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
                 // 增加到交易流水
                 $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                     'uid' => $user['id'],
@@ -55,7 +71,9 @@ class Member_pay extends \Phpcmf\Common
                     'paytime' => SYS_TIME,
                     'inputtime' => SYS_TIME,
                 ]);
-                !$rt['code'] && $this->_json(0, $rt['msg']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
 
                 $call = [
                     'uid' => $user['id'],

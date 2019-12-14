@@ -86,7 +86,7 @@
                 </td>
                 <td class="member_info_p">
                     <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_scorelog/index', 'member_scorelog/index', ['field'=>'uid','keyword'=>$t.id])}">{SITE_SCORE}: {$t.score}</a></p>
-                    <p>{SITE_EXPERIENCE}: {$t.experience}</p>
+                    <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_explog/index', 'member_explog/index', ['field'=>'uid','keyword'=>$t.id])}">{SITE_EXPERIENCE}: {$t.experience}</a></p>
                 </td>
                 <td class="member_info_p">
                     <p>{dr_date($t.regtime, 'Y-m-d H:i:s', 'red')}</p>

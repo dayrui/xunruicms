@@ -97,7 +97,7 @@
                                 {if $t[setting][level][unit]}
                                 消费额{$member.spend} >= {$next.value}
                                 {else}
-                                {SITE_SCORE}{$member.score} >= {$next.value}
+                                {SITE_EXPERIENCE} >= {$next.value}
                                 {/if}
                             {else}
                             <a href="{dr_member_url('apply/level', ['gid'=>$gid])}" class="btn green btn-xs "> 我要升级 </a>

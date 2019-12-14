@@ -297,13 +297,17 @@ class Apply extends \Phpcmf\Common
                     $this->member['score'] - $price < 0 && $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
                     // 扣分
                     $rt = \Phpcmf\Service::M('member')->add_score($this->uid, -$price, dr_lang('用户组（%s）升级: %s', $group['name'], $group['level'][$lid]['name']));
-                    !$rt['code'] && $this->_json(0, $rt['msg']);
+                    if (!$rt['code']) {
+                        $this->_json(0, $rt['msg']);
+                    }
                 } else {
                     // rmb
                     $this->member['money'] - $price < 0 && $this->_json(0, dr_lang('账户余额不足'));
                     // 扣钱
                     $rt = \Phpcmf\Service::M('Pay')->add_money($this->uid, -$price);
-                    !$rt['code'] && $this->_json(0, $rt['msg']);
+                    if (!$rt['code']) {
+                        $this->_json(0, $rt['msg']);
+                    }
                     // 增加到交易流水
                     \Phpcmf\Service::M('Pay')->add_paylog([
                         'uid' => $this->member['id'],

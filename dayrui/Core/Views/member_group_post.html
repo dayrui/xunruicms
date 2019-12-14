@@ -117,7 +117,7 @@
                                     <label class="mt-radio mt-radio-outline"><input name="setting[level][unit]" type="radio" value="1" {if $setting.level.unit}checked{/if} /> {dr_lang('消费额')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input name="setting[level][unit]" type="radio" value="0" {if !$setting.level.unit}checked{/if} /> {SITE_EXPERIENCE} <span></span></label>
                                 </div>
-                                <span class="help-block"> {dr_lang('消费额指账户消费金额的累计，经验值指通过用户规则获得奖励值')} </span>
+                                <span class="help-block"> {dr_lang('消费额指账户消费金额的累计，%s指通过用户规则获得奖励值', SITE_EXPERIENCE)} </span>
                             </div>
                         </div>
                         <div class="form-group">

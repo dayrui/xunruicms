@@ -1438,10 +1438,15 @@ class Member extends \Phpcmf\Model
 
         // 判断次数
         if ($mark && $count && $this->db->table('member_scorelog')->where('uid', $uid)->where('mark', $mark)->countAllResults() >= $count) {
-            return dr_return_data(0, dr_lang('本次不能累计增减金币'));
+            return dr_return_data(0, dr_lang('本次不能累计增减%s', SITE_SCORE));
         }
 
-        $value = max(0, (int)$user['score'] + $val); // 不允许小于0
+        $value = (int)$user['score'] + $val; // 不允许小于0
+        if ($value < 0) {
+            return dr_return_data(0, dr_lang('账户可用%s不足', SITE_SCORE));
+        }
+
+
         $this->db->table('member')->where('id', (int)$uid)->update(['score' => $value]);
 
         // 交易记录
@@ -1469,8 +1474,13 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('用户不存在'));
         }
 
+        $money = $member['money'] + $value;
+        if ($money < 0) {
+            return dr_return_data(0, dr_lang('账户可用余额不足'));
+        }
+
         $update = [
-            'money' => max(0, $member['money'] + $value),
+            'money' => $money,
         ];
         $value < 0 && $update['spend'] = max(0, $member['spend'] + abs($value));
 

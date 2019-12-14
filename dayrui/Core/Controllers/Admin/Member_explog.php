@@ -7,9 +7,8 @@
  **/
 
 
-
-// 金币流水
-class Member_scorelog extends \Phpcmf\Table
+// 升级经验值记录
+class Member_explog extends \Phpcmf\Table
 {
 
     public function __construct(...$params)
@@ -44,10 +43,10 @@ class Member_scorelog extends \Phpcmf\Table
             ),
         );
         // 表单显示名称
-        $this->name = SITE_SCORE;
+        $this->name = SITE_EXPERIENCE;
         // 初始化数据表
         $this->_init([
-            'table' => 'member_scorelog',
+            'table' => 'member_explog',
             'field' => $this->my_field,
             'order_by' => 'inputtime desc',
             'date_field' => 'inputtime',
@@ -55,8 +54,8 @@ class Member_scorelog extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    dr_lang('虚拟金币：%s', SITE_SCORE)  => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-diamond'],
-                    'help' => [ 599 ],
+                    dr_lang('升级经验：%s', SITE_EXPERIENCE) => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-compass'],
+                    'help' => [ 870 ],
                 ]
             ),
             'field' => $this->my_field,
