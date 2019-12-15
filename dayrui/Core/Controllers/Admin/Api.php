@@ -464,7 +464,15 @@ class Api extends \Phpcmf\Common
         $value = $data['value'][$type];
         if (!$value) {
             $this->_json(0, dr_lang('参数不存在'));
-        }
+        } elseif ($type == 0) {
+			if ((strpos($value['path'], '/') === 0 || strpos($value['path'], ':') !== false)) {
+				if (!is_dir($value['path'])) {
+					$this->_json(0, dr_lang('本地路径不存在'));
+				}
+			} else {
+				$this->_json(0, dr_lang('本地路径请填写绝对路径'));
+			}
+		} 
 
         $rt = \Phpcmf\Service::L('upload')->save_file(
             'content',
