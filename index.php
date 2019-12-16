@@ -1,11 +1,13 @@
 <?php
 
 /**
- * Cms 主程序
+ * 迅睿CMS框架入口程序
+ * 开发者可在这里定义系统目录变量
  */
 
 declare(strict_types=1);
 header('Content-Type: text/html; charset=utf-8');
+header('X-Frame-Options: SAMEORIGIN'); // 防止被站外加入iframe中浏览
 
 // 是否是开发者模式（1开启、0关闭）
 define('IS_DEV', 0);
@@ -39,7 +41,6 @@ if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
 	require WEBPATH.'install.php';
 	exit;
 }
-
 
 // 执行主程序
 require FCPATH.'Fcms/Init.php';
