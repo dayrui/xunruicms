@@ -726,13 +726,13 @@ class View {
                 }
 
                 $name = 'function-'.md5(dr_array2string($param));
-                $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+                $cache = \Phpcmf\Service::L('cache')->get_data($name);
                 if (!$cache) {
                     $rt = call_user_func($param['name'], $param['param']);
                     $cache = [
                         $rt
                     ];
-                    $system['cache'] && \Phpcmf\Service::L('cache')->init()->save($name, $cache, $system['cache']);
+                    $system['cache'] && \Phpcmf\Service::L('cache')->set_data($name, $cache, $system['cache']);
                 }
 
                 return $this->_return($system['return'], $cache, '');

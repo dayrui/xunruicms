@@ -88,7 +88,7 @@ class Auth extends \Phpcmf\Model {
 
     // 存储授权登录信息
     public function save_login_auth($name, $uid) {
-        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, SYS_TIME, 300);
+        \Phpcmf\Service::L('cache')->set_data('admin_auth_login_'.$name.'_'.$uid, SYS_TIME, 300);
     }
 
     // 后台管理员登录

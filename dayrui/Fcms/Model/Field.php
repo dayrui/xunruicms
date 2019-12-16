@@ -153,7 +153,7 @@ class Field extends \Phpcmf\Model
     public function get_mytable_field($table, $siteid = 0) {
 
         $name = 'table-'.$table;
-        $value = \Phpcmf\Service::L('cache')->init()->get($name);
+        $value = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$value) {
             $field = $this->db->table('field')
                         ->where('disabled', 0)
@@ -168,7 +168,7 @@ class Field extends \Phpcmf\Model
                     $value[$t['fieldname']] = $t;
                 }
             }
-            \Phpcmf\Service::L('cache')->init()->save($name, $value);
+            \Phpcmf\Service::L('cache')->set_data($name, $value);
         }
 
         return $value;

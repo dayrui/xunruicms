@@ -178,7 +178,7 @@ class Account extends \Phpcmf\Common
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             $value = dr_safe_replace($post['phone']);
-			$cache = \Phpcmf\Service::L('cache')->init()->get('member-mobile-code-'.$this->uid);
+			$cache = \Phpcmf\Service::L('cache')->get_data('member-mobile-code-'.$this->uid);
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
@@ -237,7 +237,7 @@ class Account extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-mobile-code-'.$this->uid;
-		if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+		if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} elseif ((!is_numeric($value) || strlen($value) != 11)) {
 			$this->_json(0, dr_lang('手机号码格式不正确'));
@@ -251,7 +251,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('发送失败'));	
 		}
 
-		\Phpcmf\Service::L('cache')->init()->save($name, $value, 60);
+		\Phpcmf\Service::L('cache')->set_data($name, $value, 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

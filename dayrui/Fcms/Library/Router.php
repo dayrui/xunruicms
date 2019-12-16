@@ -60,7 +60,7 @@ class Router
     public function get_back($uri, $param = [])
     {
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
-        $value = \Phpcmf\Service::L('cache')->init()->get($name);
+        $value = \Phpcmf\Service::L('cache')->get_data($name);
         if ($value) {
             $uri = $value[0];
             $param = dr_array22array($param, $value[1]);
@@ -73,7 +73,7 @@ class Router
     {
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $param['page'] = $_GET['page'];
-        \Phpcmf\Service::L('cache')->init()->save(
+        \Phpcmf\Service::L('cache')->set_data(
             $name,
             [$nuri ? $nuri : $uri, $param],
             3600

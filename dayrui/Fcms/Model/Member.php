@@ -1169,7 +1169,7 @@ class Member extends \Phpcmf\Model
         }
 
         // 存储
-		\Phpcmf\Service::L('cache')->init()->save('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
+		\Phpcmf\Service::L('cache')->set_data('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
 
         return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
 	}

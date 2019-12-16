@@ -102,12 +102,12 @@ class Html
             $cache = dr_array2array($cache, $arr);
         }
         foreach ($cache as $i => $t) {
-            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
         }
 
         $count = dr_count($cache);
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
 
         \Phpcmf\Service::C()->_json(1, '共'.$ct.'个，分'.$count.'页');
     }
@@ -179,10 +179,10 @@ class Html
         $arr = array_chunk($data, $this->psize);
         $count = dr_count($arr);
         foreach ($arr as $i => $t) {
-            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
 
         \Phpcmf\Service::C()->_json(1, '共'.dr_count($data).'条，分'.$count.'页');
     }

@@ -53,7 +53,6 @@ class Module extends \Phpcmf\Common
                     echo $html;exit;
                 }
 
-
                 if (\Phpcmf\Service::IS_PC()) {
                     // 电脑端访问
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
@@ -85,8 +84,8 @@ class Module extends \Phpcmf\Common
                 echo $html;
             } else {
 
+                // 启用页面缓存
                 if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                    // 启用页面缓存
                     $this->cachePage(SYS_CACHE_PAGE * 3600);
                 }
 
@@ -100,8 +99,8 @@ class Module extends \Phpcmf\Common
     // 模块打赏
     protected function _Donation($id = 0, $rt = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -262,8 +261,8 @@ class Module extends \Phpcmf\Common
     // 模块搜索
     protected function _Search($_catid = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -360,8 +359,8 @@ class Module extends \Phpcmf\Common
     // $param 自定义字段检索
     protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -373,7 +372,7 @@ class Module extends \Phpcmf\Common
         }
 
         $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.($page > 1 ? $page : '');
-        $data = \Phpcmf\Service::L('cache')->init()->get($name);
+        $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             $data = $this->content_model->get_data($is_id ? $id : 0, 0, $param);
             if (!$data) {
@@ -437,10 +436,10 @@ class Module extends \Phpcmf\Common
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $data, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $data, SYS_CACHE_SHOW * 3600);
                     if (!$is_id) {
                         // 表示自定义查询，再缓存一次ID
-                        \Phpcmf\Service::L('cache')->init()->save(str_replace($id, $data['id'], $name), $data, SYS_CACHE_SHOW * 3600);
+                        \Phpcmf\Service::L('cache')->set_data(str_replace($id, $data['id'], $name), $data, SYS_CACHE_SHOW * 3600);
                     }
                 }
             }
@@ -880,7 +879,7 @@ class Module extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'show-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
         if (!$pcount) {
             $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
@@ -889,7 +888,7 @@ class Module extends \Phpcmf\Common
         }
 
         $name = 'show-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             $this->_json(0, '临时缓存数据不存在：'.$name);
         }
@@ -948,7 +947,7 @@ class Module extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'category-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
         if (!$pcount) {
             $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
@@ -957,7 +956,7 @@ class Module extends \Phpcmf\Common
         }
 
         $name = 'category-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             $this->_json(0, '临时缓存数据不存在：'.$name);
         }

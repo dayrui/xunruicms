@@ -94,7 +94,7 @@ class Login extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        $oauth_id = \Phpcmf\Service::L('cache')->init()->get('member_auth_login_'.$name.'_'.$id);
+        $oauth_id = \Phpcmf\Service::L('cache')->get_data('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
             $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
@@ -300,11 +300,11 @@ class Login extends \Phpcmf\Common
             } else {
                 // 普通验证
                 $sn = 'fc_passwrod_find_'.date('Ymd', SYS_TIME).$value;
-                $count = (int)\Phpcmf\Service::L('cache')->init()->get($sn);
+                $count = (int)\Phpcmf\Service::L('cache')->get_data($sn);
                 if ($count > 20) {
                     $this->_json(0, dr_lang('今日找回密码次数达到上限'));
                 }
-                \Phpcmf\Service::L('cache')->init()->save($sn, $count + 1, 3600 * 24);
+                \Phpcmf\Service::L('cache')->set_data($sn, $count + 1, 3600 * 24);
             }
 
             if ((!$post['code'] || !$data['randcode'] || $post['code'] != $data['randcode'])) {

@@ -49,7 +49,7 @@ class Html extends \Phpcmf\Common
     public function page_count_index() {
         $data = dr_save_bfb_data($this->get_cache('page-'.SITE_ID, 'data'));
         !dr_count($data) && $this->_json(0, '没有可用生成的自定义页面数据');
-        \Phpcmf\Service::L('cache')->init()->save('page-html-file', $data, 3600);
+        \Phpcmf\Service::L('cache')->set_data('page-html-file', $data, 3600);
         $this->_json(1, 'ok');
     }
 

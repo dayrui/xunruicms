@@ -250,7 +250,7 @@ class Cloud extends \Phpcmf\Common
     function install_app() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '本站：授权验证过期，请重试');
         }
@@ -449,14 +449,14 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '服务端文件下载地址异常');
         }
 
-        \Phpcmf\Service::L('cache')->init()->save('cloud-update-'.$id, $data['data'], 3600);
+        \Phpcmf\Service::L('cache')->set_data('cloud-update-'.$id, $data['data'], 3600);
 
         $this->_json(1, 'ok', $data['data']);
     }
     // 开始下载脚本
     public function update_file_down() {
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '授权验证过期，请重试');
         } elseif (!$cache['size']) {
@@ -495,7 +495,7 @@ class Cloud extends \Phpcmf\Common
     public function update_file_check() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '本站：授权验证过期，请重试');
         } elseif (!$cache['size']) {
@@ -516,7 +516,7 @@ class Cloud extends \Phpcmf\Common
     public function update_file_install() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '本站：授权验证过期，请重试');
         }
@@ -639,7 +639,7 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, $data['msg']);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save('cloud-bf', $data['data'], 3600);
+        \Phpcmf\Service::L('cache')->set_data('cloud-bf', $data['data'], 3600);
 
         $this->_json(dr_count($data['data']), $data['msg']);
     }
@@ -647,7 +647,7 @@ class Cloud extends \Phpcmf\Common
     public function bf_check() {
 
         $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-bf');
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-bf');
         !$cache && $this->_json(0, '数据缓存不存在');
 
         $data = $cache[$page];

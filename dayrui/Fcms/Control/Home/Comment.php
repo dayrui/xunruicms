@@ -25,7 +25,7 @@ class Comment extends \Phpcmf\Common
         }
         // 关联内容数据
         $this->cid = intval(\Phpcmf\Service::L('input')->get('id'));
-        $this->index = \Phpcmf\Service::L('cache')->init()->get('module_'.MOD_DIR.'_show_id_'.$this->cid);
+        $this->index = \Phpcmf\Service::L('cache')->get_data('module_'.MOD_DIR.'_show_id_'.$this->cid);
         if (!$this->index) {
             $this->index = $this->content_model->get_data($this->cid);
             if (!$this->index) {

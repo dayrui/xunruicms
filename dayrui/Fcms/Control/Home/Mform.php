@@ -157,7 +157,7 @@ class Mform extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = 'module_'.MOD_DIR.'_from_'.$this->form['table'].'_show_id_'.$id;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
             if (!$data) {
@@ -183,7 +183,7 @@ class Mform extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $cache, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $cache, SYS_CACHE_SHOW * 3600);
                 }
             }
         } else {
@@ -226,7 +226,7 @@ class Mform extends \Phpcmf\Table
         }
 
         $name = 'module_mform_'.$this->form['table'].'_id_'.$id;
-        $data = \Phpcmf\Service::L('cache')->init()->get($name);
+        $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             // 处理缓存机制
             $data = $this->content_model->get_form_row($id, $this->form['table']);
@@ -238,7 +238,7 @@ class Mform extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $data, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $data, SYS_CACHE_SHOW * 3600);
                 }
             }
         }
@@ -335,7 +335,7 @@ class Mform extends \Phpcmf\Table
     // 操作主内容
     protected function _Module_Row($id) {
 
-        $data = \Phpcmf\Service::L('cache')->init()->get('module_'.MOD_DIR.'_show_id_'.$id);
+        $data = \Phpcmf\Service::L('cache')->get_data('module_'.MOD_DIR.'_show_id_'.$id);
         if ($data) {
             return $data;
         }

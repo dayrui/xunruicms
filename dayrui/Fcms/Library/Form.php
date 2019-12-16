@@ -299,12 +299,12 @@ class Form
 	
 	// 获取已发短信验证码
 	public function get_mobile_code($phone) {
-		return \Phpcmf\Service::L('cache')->init()->get('phone-code-'.$phone);
+		return \Phpcmf\Service::L('cache')->get_data('phone-code-'.$phone);
 	}
 	
 	// 储存已发短信验证码
 	public function set_mobile_code($phone, $code) {
-		return \Phpcmf\Service::L('cache')->init()->save('phone-code-'.$phone, $code, 60);
+		return \Phpcmf\Service::L('cache')->set_data('phone-code-'.$phone, $code, 60);
 	}
 
     // 验证码类

@@ -19,7 +19,7 @@ class Api extends \Phpcmf\Common
         if (!$uid) {
             $this->_admin_msg(0, dr_lang('uid参数传递失败'));
         }
-        $oauth = \Phpcmf\Service::L('cache')->init()->get('admin_auth_login_'.$name.'_'.$uid);
+        $oauth = \Phpcmf\Service::L('cache')->get_data('admin_auth_login_'.$name.'_'.$uid);
         if (!$oauth) {
             $this->_admin_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         } elseif (SYS_TIME - $oauth > 60) {
@@ -35,7 +35,7 @@ class Api extends \Phpcmf\Common
 
         // 保存会话
         \Phpcmf\Service::M('auth')->login_session($data);
-        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, 0, 10);
+        \Phpcmf\Service::L('cache')->set_data('admin_auth_login_'.$name.'_'.$uid, 0, 10);
 
         // 转向后台
         dr_redirect(ADMIN_URL.SELF);

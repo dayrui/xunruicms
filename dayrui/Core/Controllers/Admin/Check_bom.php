@@ -54,7 +54,7 @@ class Check_bom extends \Phpcmf\Common
         }
 
         // 存储文件
-        \Phpcmf\Service::L('cache')->init()->save('check-index', $cache, 3600);
+        \Phpcmf\Service::L('cache')->set_data('check-index', $cache, 3600);
 
         $this->_json($cache ? count($cache) : 0, 'ok');
 	}
@@ -62,7 +62,7 @@ class Check_bom extends \Phpcmf\Common
 	public function php_check_index() {
 
         $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('check-index');
+        $cache = \Phpcmf\Service::L('cache')->get_data('check-index');
         if (!$cache) {
             $this->_json(0, '数据缓存不存在');
         }

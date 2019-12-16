@@ -153,7 +153,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-email-'.$this->uid;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
             $this->_json(0, dr_lang('已经发送稍后再试'));
         }
 
@@ -164,7 +164,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('邮件发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -184,7 +184,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-phone-'.$this->uid;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} 
 
@@ -195,7 +195,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -250,7 +250,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-find-password-'.$value;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} 
 
@@ -282,7 +282,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

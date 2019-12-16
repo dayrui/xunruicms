@@ -163,7 +163,7 @@ class Member_notice extends \Phpcmf\Table
         }
 
         // 存储文件
-        \Phpcmf\Service::L('cache')->init()->save('member-notice-send', [
+        \Phpcmf\Service::L('cache')->set_data('member-notice-send', [
             'usernames' => dr_save_bfb_data($cache),
             'note' => $post['note'],
             'url' => $post['url'],
@@ -186,7 +186,7 @@ class Member_notice extends \Phpcmf\Table
     // 内容数量统计
     public function show_count_index() {
 
-        $data = \Phpcmf\Service::L('cache')->init()->get('member-notice-send');
+        $data = \Phpcmf\Service::L('cache')->get_data('member-notice-send');
         if (!dr_count($data)) {
             $this->_json(0, dr_lang('无可用缓存内容'));
         }
@@ -197,7 +197,7 @@ class Member_notice extends \Phpcmf\Table
     public function send_add() {
 
         $page = max(1, intval($_GET['pp']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('member-notice-send');
+        $cache = \Phpcmf\Service::L('cache')->get_data('member-notice-send');
         if (!$cache) {
             $this->_json(0, dr_lang('缓存不存在'));
         }

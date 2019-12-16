@@ -128,7 +128,7 @@ class Form extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = 'from_'.$this->form['table'].'_show_id_'.$id;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
             !$data && $this->_msg(0, dr_lang('网站表单内容不存在'));
@@ -143,7 +143,7 @@ class Form extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $cache, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $cache, SYS_CACHE_SHOW * 3600);
                 }
             }
         } else {
