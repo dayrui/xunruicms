@@ -72,9 +72,8 @@
 	<div class="wrap">
 		<h1>404 - 页面不存在</h1>
 
-		<p>
-            <?php echo IS_DEV ? FC_NOW_URL : ''; ?>
-		</p>
+		<?php echo IS_DEV ? '<p>'.FC_NOW_URL.'</p>' : ''; ?>
+
 	</div>
 </body>
 </html>
