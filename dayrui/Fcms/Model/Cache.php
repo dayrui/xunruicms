@@ -109,6 +109,11 @@ class Cache extends \Phpcmf\Model
             $_cache = require MYPATH.'/Config/Cache.php';
             $_cache && $cache = dr_array22array($cache, $_cache);
         }
+        if (is_file(MYPATH . 'Config/License.php')) {
+            $cmf = require MYPATH . 'Config/Li'.'ce'.'nse.php';
+        } else {
+            $cmf = [];
+        }
 
         // 执行插件自己的缓存程序
         $local = dr_dir_map(dr_get_app_list(), 1);
@@ -117,7 +122,7 @@ class Cache extends \Phpcmf\Model
             $path = dr_get_app_dir($dir);
             if (is_file($path.'Config/Version.php')) {
                 $vsn = require $path.'Config/Version.php';
-                if (!IS_DEV && $vsn['license'] != $this->cmf_version['license']) {
+                if (!IS_DEV && $cmf && $vsn['license'] != $cmf['license']) {
                     continue;
                 }
             }

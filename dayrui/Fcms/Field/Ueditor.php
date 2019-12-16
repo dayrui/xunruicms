@@ -318,7 +318,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 替换分页
         $value = str_replace('_ueditor_page_break_tag_', '<hr class="pagebreak">', $value);
 
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
+        // 入库操作
+        if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
+            // 来自批量审核内容
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = ($value);
+        } else {
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
+        }
     }
 
     /**
