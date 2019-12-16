@@ -557,6 +557,7 @@ class Module extends \Phpcmf\Table
                     '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
                 ]
             ),
+            'clink' => $this->_app_clink(),
             'verify_msg' => $verify_msg,
             'is_post_user' => $is_post_user,
         ]);
