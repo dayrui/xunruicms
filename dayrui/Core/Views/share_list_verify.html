@@ -271,6 +271,9 @@
                         {else}
                         {if $ci->_is_admin_auth('edit')}
                         <label><a href="{dr_url($uriprefix.'/edit', ['id' => $t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('处理')}</a></label>
+                        {loop $clink $a}
+                        <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
+                        {/loop}
                         {/if}
                         {/if}
                     </td>
