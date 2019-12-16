@@ -66,7 +66,9 @@ class Form extends \Phpcmf\Common
                 continue;
             }
 			$rt = \Phpcmf\Service::M('Form')->create_file($t['table'], 1);
-			!$rt['code'] && $this->_json(0, $rt['msg']);
+			if (!$rt['code']) {
+			    $this->_json(0, $rt['msg']);
+            }
 			$ok+= (int)$rt['msg'];
 		}
 
@@ -78,7 +80,12 @@ class Form extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation(0, $data);
+            if (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['table'])) {
+                $this->_json(0, dr_lang('表单别名不规范'));
+            } elseif (\Phpcmf\Service::M('app')->is_sys_dir($data['table'])) {
+                $this->_json(0, dr_lang('名称[%s]是系统保留名称，请重命名', $data['table']));
+            }
+            $this->_validation(0, $data);
 			\Phpcmf\Service::L('input')->system_log('创建网站表单('.$data['name'].')');
 			$rt = \Phpcmf\Service::M('Form')->create($data);
 			if (!$rt['code']) {

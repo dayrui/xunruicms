@@ -140,7 +140,6 @@ class Module extends \Phpcmf\Common
             foreach ($module as $t) {
                 $dir = $t['dirname'];
                 if ($list[$dir]) {
-                    $t['key'] = $t['key'];
                     $t['name'] = $list[$dir]['name'];
                     $t['mtype'] = $list[$dir]['mtype'];
                     $t['system'] = $list[$dir]['system'];
@@ -329,7 +328,12 @@ class Module extends \Phpcmf\Common
     public function form_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
+            if (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['table'])) {
+                $this->_json(0, dr_lang('表单别名不规范'));
+            } elseif (\Phpcmf\Service::M('app')->is_sys_dir($data['table'])) {
+                $this->_json(0, dr_lang('名称[%s]是系统保留名称，请重命名', $data['table']));
+            }
             $this->_validation(0, $data);
             \Phpcmf\Service::L('input')->system_log('创建模块['.$this->dir.']表单('.$data['name'].')');
             $rt = \Phpcmf\Service::M('Module')->create_form($this->dir, $data);

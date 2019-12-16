@@ -15,7 +15,7 @@ class Module_create extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
 
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
 
             // 参数判断
             if (!$data['name']) {

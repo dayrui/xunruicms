@@ -642,7 +642,7 @@ class Api extends \Phpcmf\Common
 
         $adapter = new $config->validHandlers[$config->handler]($config);
         if (!$adapter->isSupported()) {
-            $this->_json(0, dr_lang('缓存方式[%s]不支持', $config->handler));
+            $this->_json(0, dr_lang('缓存方式[%s]，PHP环境不支持', $config->handler));
         }
 
         $adapter->initialize();

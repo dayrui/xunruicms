@@ -66,7 +66,6 @@ class Module extends \Phpcmf\Table
             $list_field['fstatus'] = [
                 'use' => 1,
                 'order' => 1,
-                'order' => 1,
                 'width' => 60,
                 'func' => 'fstatus',
                 'name' => dr_lang('状态'),
@@ -117,14 +116,14 @@ class Module extends \Phpcmf\Table
                 $this->module['category'],
                 $catid,
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '--', 1, 1, 1
+                '', 1, 1, 1
             );
         } else {
             $select = \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $catid,
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '--', 1, 1
+                '', 1, 1
             );
         }
 
@@ -169,7 +168,7 @@ class Module extends \Phpcmf\Table
             $this->module['category'],
             $data['catid'],
             'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-            '--', 1, 1
+            '', 1, 1
         );
 
         \Phpcmf\Service::V()->assign([
@@ -885,6 +884,8 @@ class Module extends \Phpcmf\Table
                 $data['param']['catid'],
                 'name="catid"', '--', 1, 1
             ),
+            'clink' => $this->_app_clink(),
+            'cbottom' => $this->_app_cbottom(),
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
                 ' <i class="'.dr_icon($this->module['setting']['flag'][$flag]['icon']).'"></i>  '.dr_lang($this->module['setting']['flag'][$flag]['name']),
