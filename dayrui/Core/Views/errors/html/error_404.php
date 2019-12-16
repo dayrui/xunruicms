@@ -73,7 +73,7 @@
 		<h1>404 - 页面不存在</h1>
 
 		<p>
-            <?= FC_NOW_URL ?>
+            <?php echo IS_DEV ? FC_NOW_URL : ''; ?>
 		</p>
 	</div>
 </body>
