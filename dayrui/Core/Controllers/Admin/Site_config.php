@@ -32,7 +32,9 @@ class Site_config extends \Phpcmf\Common
             }
 
             $rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $post);
-			!is_array($rt) && $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+			if (!is_array($rt)) {
+			    $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+            }
 
 			\Phpcmf\Service::L('input')->system_log('设置网站参数');
 

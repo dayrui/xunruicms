@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 // 审核流程
 class Verify extends \Phpcmf\Table
 {
@@ -79,14 +77,18 @@ class Verify extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->db->table('admin_verify')->where('id', $id)->get()->getRowArray();
-        !$data && $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        }
 
         unset($data['id']);
         $data['name'].= '_copy';
 
         $rt = \Phpcmf\Service::M()->table('admin_verify')->insert($data);
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang($rt['msg']));
+        }
 
-        !$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
         \Phpcmf\Service::M('cache')->sync_cache('verify');
         $this->_json(1, dr_lang('复制成功'));
     }
@@ -96,7 +98,9 @@ class Verify extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->db->table('admin_verify')->where('id', $id)->get()->getRowArray();
-        !$data && $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        }
 
         \Phpcmf\Service::V()->assign([
             'value' => dr_string2array($data['verify']),

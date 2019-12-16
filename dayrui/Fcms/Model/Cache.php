@@ -101,8 +101,8 @@ class Cache extends \Phpcmf\Model
 
         // 按站点更新的缓存
         $cache = [
-            'linkage' => '',
             'form' => '',
+            'linkage' => '',
         ];
 
         if (is_file(MYPATH.'/Config/Cache.php')) {
@@ -122,7 +122,7 @@ class Cache extends \Phpcmf\Model
             $path = dr_get_app_dir($dir);
             if (is_file($path.'Config/Version.php')) {
                 $vsn = require $path.'Config/Version.php';
-                if (!IS_DEV && $cmf && $vsn['license'] != $cmf['license']) {
+                if (!IS_DEV && $cmf && strlen($vsn['license']) > 20 && $vsn['license'] != $cmf['license']) {
                     continue;
                 }
             }

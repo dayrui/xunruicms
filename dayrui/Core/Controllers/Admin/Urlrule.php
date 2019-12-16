@@ -170,14 +170,18 @@ class Urlrule extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->db->table('urlrule')->where('id', $id)->get()->getRowArray();
-        !$data && $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        }
 
         unset($data['id']);
         $data['name'].= '_copy';
 
         $rt = \Phpcmf\Service::M()->table('urlrule')->insert($data);
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang($rt['msg']));
+        }
 
-        !$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
         \Phpcmf\Service::M('cache')->sync_cache('urlrule');
         $this->_json(1, dr_lang('复制成功'));
     }
@@ -204,7 +208,9 @@ class Urlrule extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->table('urlrule')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('URL规则（%s）不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('URL规则（%s）不存在', $id));
+        }
 
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
@@ -216,7 +222,7 @@ class Urlrule extends \Phpcmf\Table
     public function import_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('code', true);
+            $data = \Phpcmf\Service::L('input')->post('code');
             $data = dr_string2array($data);
             if (!is_array($data)) {
                 $this->_json(0, dr_lang('导入信息验证失败'));
@@ -225,7 +231,9 @@ class Urlrule extends \Phpcmf\Table
             }
             unset($data['id']);
             $rt = \Phpcmf\Service::M()->table('urlrule')->insert($data);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             \Phpcmf\Service::M('cache')->sync_cache('urlrule');
             exit($this->_json(1, dr_lang('操作成功')));
         }

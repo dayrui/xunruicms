@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 class Sms_log extends \Phpcmf\Common
 {
 	
@@ -19,8 +17,7 @@ class Sms_log extends \Phpcmf\Common
 		));
 	}
 
-	
-	
+
 	public function index() {
 
 		$data = $list = [];
@@ -52,8 +49,6 @@ class Sms_log extends \Phpcmf\Common
 	}
 
 	public function del() {
-
-
 
 		@unlink(WRITEPATH.'sms_log.php');
 
