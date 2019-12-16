@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
-
 
 // 用户组申请
 class Member_apply extends \Phpcmf\Table
@@ -74,7 +71,9 @@ class Member_apply extends \Phpcmf\Table
     public function edit() {
 
         list($tpl, $data) = $this->_Post((int)\Phpcmf\Service::L('input')->get('id'), [], 1);
-        !$data && $this->_admin_msg(0, dr_lang('申请记录不存在'));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('申请记录不存在'));
+        }
 
         $my = dr_string2array($data['content']);
         $user = dr_member_info($data['uid']);
@@ -142,7 +141,9 @@ class Member_apply extends \Phpcmf\Table
             // 表单操作类
             \Phpcmf\Service::L('form')->id($id); // 初始化id
             list($post, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, [], $field, []);
-            $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+            if ($return) {
+                $this->_json(0, $return['error'], ['field' => $return['name']]);
+            }
             unset($post[1]['uid']);
             unset($post[1]['username']);
 

@@ -5,7 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
 class Email extends \Phpcmf\Common
 {
 	private $form; // 表单验证配置

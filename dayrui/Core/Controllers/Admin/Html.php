@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
 
 // 生成静态
 class Html extends \Phpcmf\Common
@@ -15,7 +13,9 @@ class Html extends \Phpcmf\Common
         parent::__construct(...$params);
 
         // 生成权限文件
-        !dr_html_auth(1) && $this->_admin_msg(0, dr_lang('/cache/html/ 无法写入文件'));
+        if (!dr_html_auth(1)) {
+            $this->_admin_msg(0, dr_lang('/cache/html/ 无法写入文件'));
+        }
     }
 
     // 生成静态
@@ -36,7 +36,9 @@ class Html extends \Phpcmf\Common
     // 生成单页
     public function page_index() {
 
-        $this->member_cache['auth_site'][SITE_ID]['home'] && $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
+            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        }
 
         \Phpcmf\Service::V()->assign([
             'todo_url' => '/index.php?s=page&m=htmlfile',
@@ -48,7 +50,9 @@ class Html extends \Phpcmf\Common
     // 单页生成的数量统计
     public function page_count_index() {
         $data = dr_save_bfb_data($this->get_cache('page-'.SITE_ID, 'data'));
-        !dr_count($data) && $this->_json(0, '没有可用生成的自定义页面数据');
+        if (!dr_count($data)) {
+            $this->_json(0, '没有可用生成的自定义页面数据');
+        }
         \Phpcmf\Service::L('cache')->set_data('page-html-file', $data, 3600);
         $this->_json(1, 'ok');
     }
@@ -56,7 +60,9 @@ class Html extends \Phpcmf\Common
     // 栏目
     public function category_index() {
 
-        $this->member_cache['auth_site'][SITE_ID]['home'] && $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
+            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+        }
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = \Phpcmf\Service::L('input')->get('ids');

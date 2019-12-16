@@ -115,6 +115,12 @@ class Cache extends \Phpcmf\Model
         $app_cache = [];
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
+            if (is_file($path.'Config/Version.php')) {
+                $vsn = require $path.'Config/Version.php';
+                if (!IS_DEV && $vsn['license'] != $this->cmf_version['license']) {
+                    continue;
+                }
+            }
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Cache.php')) {
                 $_cache = require $path.'Config/Cache.php';

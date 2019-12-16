@@ -46,7 +46,10 @@ class Seo_search extends \Phpcmf\Common
 
         $dir = \Phpcmf\Service::L('input')->get('dir');
         $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
-        !$data && $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        }
+
         $data['site'] = dr_string2array($data['site']);
 
         \Phpcmf\Service::V()->assign([
@@ -62,7 +65,10 @@ class Seo_search extends \Phpcmf\Common
 
         $dir = \Phpcmf\Service::L('input')->get('dir');
         $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
-        !$data && $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        }
+
         $data['site'] = dr_string2array($data['site']);
 
         if (IS_AJAX_POST) {

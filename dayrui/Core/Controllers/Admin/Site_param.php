@@ -16,7 +16,9 @@ class Site_param extends \Phpcmf\Common
                 'param',
                 \Phpcmf\Service::L('input')->post('data', true)
             );
-            !is_array($rt) && $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+            if (!is_array($rt)) {
+                $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+            }
 			\Phpcmf\Service::L('input')->system_log('设置网站自定义参数');
             \Phpcmf\Service::M('cache')->sync_cache('');
 			exit($this->_json(1, dr_lang('操作成功')));

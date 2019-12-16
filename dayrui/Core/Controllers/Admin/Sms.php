@@ -27,7 +27,9 @@ class Sms extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data', true);
-			strlen($data['note']) > 30 && $this->_json(0, dr_lang('短信签名超出了范围'));
+			if (strlen($data['note']) > 30) {
+			    $this->_json(0, dr_lang('短信签名超出了范围'));
+            }
 
 			if ($_POST['aa'] == 0) {
 				unset($data['third']);
@@ -48,15 +50,21 @@ class Sms extends \Phpcmf\Common
 	public function add() {
 
 		$file = WRITEPATH.'config/sms.php';
-		!is_file($file) && $this->_admin_msg(0, dr_lang('没有配置短信账号，不能使用发送功能'));
+		if (!is_file($file)) {
+		    $this->_admin_msg(0, dr_lang('没有配置短信账号，不能使用发送功能'));
+        }
 		
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data');
-			strlen($data['content']) > 150 && exit($this->_json(0, dr_lang('短信内容过长，不得超过70个汉字')));
+			if (strlen($data['content']) > 150) {
+			    exit($this->_json(0, dr_lang('短信内容过长，不得超过70个汉字')));
+            }
 
 			$mobile = trim(str_replace(',,', ',', str_replace(array(PHP_EOL, chr(13), chr(10)), ',', $data['mobiles'])), ',');
-			substr_count($mobile, ',') > 40 && exit($this->_json(0, dr_lang('群发一次不得超过40个，数量过多时请分批发送')));
+			if (substr_count($mobile, ',') > 40) {
+			    exit($this->_json(0, dr_lang('群发一次不得超过40个，数量过多时请分批发送')));
+            }
 			
 			\Phpcmf\Service::L('input')->system_log('发送系统短信'); // 记录日志
 			

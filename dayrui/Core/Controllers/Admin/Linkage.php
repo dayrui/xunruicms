@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 // 联动菜单
 class Linkage extends \Phpcmf\Common
 {

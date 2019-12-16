@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 class Notice extends \Phpcmf\Common
 {
 	
@@ -111,7 +109,9 @@ class Notice extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && $this->_json(0, dr_lang('所选数据不存在'));
+		if (!$ids) {
+		    $this->_json(0, dr_lang('所选数据不存在'));
+        }
 
         \Phpcmf\Service::M()->db->table('admin_notice')->whereIn('id', $ids)->delete();
 

@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
 
 // 云服务
 class Cloud extends \Phpcmf\Common
@@ -87,6 +85,9 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
                     && is_file(dr_get_app_dir($dir).'Config/Version.php')) {
                     $vsn = require dr_get_app_dir($dir).'Config/Version.php';
+                    if (!IS_DEV && $vsn['license'] != $this->license['license']) {
+                        continue;
+                    }
                     $vsn['id'] && $id[] = $vsn['id'];
                 }
             }
@@ -138,6 +139,9 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
+                    if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->license['license']) {
+                        continue;
+                    }
                     $data[$key] = [
                         'id' => $vsn['id'],
                         'name' => $cfg['name'],
@@ -170,7 +174,9 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !$dir && $this->_json(0, dr_lang('缺少模板参数'));
+        if (!$dir) {
+            $this->_json(0, dr_lang('缺少模板参数'));
+        }
 		
 		\Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
 		\Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
@@ -189,11 +195,15 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !is_file(dr_get_app_dir($dir).'Config/App.php') && $this->_json(0, dr_lang('安装程序App.php不存在'));
+        if (!is_file(dr_get_app_dir($dir).'Config/App.php')) {
+            $this->_json(0, dr_lang('安装程序App.php不存在'));
+        }
 
         // 开始安装
         $rt = \Phpcmf\Service::M('App')->install($dir);
-        !$rt['code'] && $this->_json(0, $rt['msg']);
+        if (!$rt['code']) {
+            $this->_json(0, $rt['msg']);
+        }
 
         // 运行安装脚本
         if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
@@ -208,10 +218,14 @@ class Cloud extends \Phpcmf\Common
     public function uninstall() {
 
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !preg_match('/^[a-z]+$/U', $dir) && $this->_json(0, dr_lang('目录[%s]格式不正确', $dir));
+        if (!preg_match('/^[a-z]+$/U', $dir)) {
+            $this->_json(0, dr_lang('目录[%s]格式不正确', $dir));
+        }
 
         $path = dr_get_app_dir($dir);
-        !is_dir($path) && $this->_json(0, dr_lang('目录[%s]不存在', $path));
+        if (!is_dir($path)) {
+            $this->_json(0, dr_lang('目录[%s]不存在', $path));
+        }
 
         $rt = \Phpcmf\Service::M('App')->uninstall($dir);
 
@@ -648,7 +662,9 @@ class Cloud extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['page']));
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-bf');
-        !$cache && $this->_json(0, '数据缓存不存在');
+        if (!$cache) {
+            $this->_json(0, '数据缓存不存在');
+        }
 
         $data = $cache[$page];
         if ($data) {
