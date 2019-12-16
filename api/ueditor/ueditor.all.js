@@ -1,7 +1,6 @@
 /*!
  * UEditor
- * version: ueditor
- * build: Thu Jun 16 2016 12:33:50 GMT+0800 (CST)
+ * version: ueditor xunruicms fix
  */
 
 (function(){
@@ -25,7 +24,7 @@ UE.I18N = {};
 
 UE._customizeUI = {};
 
-UE.version = "1.4.3";
+UE.version = "1.5.0";
 
 var dom = UE.dom = {};
 
@@ -7475,7 +7474,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 doc = me.document,
                 win = me.window;
             me._proxyDomEvent = utils.bind(me._proxyDomEvent, me);
-            domUtils.on(doc, ['click', 'contextmenu', 'mousedown', 'keydown', 'keyup', 'keypress', 'mouseup', 'mouseover', 'mouseout', 'selectstart'], me._proxyDomEvent);
+            domUtils.on(doc, ['click', 'mousedown', 'keydown', 'keyup', 'keypress', 'mouseup', 'mouseover', 'mouseout', 'selectstart'], me._proxyDomEvent);
             domUtils.on(win, ['focus', 'blur'], me._proxyDomEvent);
             domUtils.on(me.body,'drop',function(e){
                 //阻止ff下默认的弹出新页面打开图片
