@@ -45,7 +45,7 @@ class Function_list
     // 用于列表显示联动菜单值
     function linkage_address($value, $param = [], $data = []) {
 
-        return dr_linkage('address', $value, 0, 'name');
+        return dr_linkagepos('address', $value, '-');
     }
 
     // 用于列表显示状态
@@ -150,6 +150,62 @@ class Function_list
             return '[模块内容开关]插件未安装';
         }
         return '&nbsp;&nbsp;<a href="javascript:;" onclick="dr_ajax_open_close(this, \''.dr_url('fstatus/home/edit', ['id'=>$data['id'], 'mid'=>APP_DIR]).'\', 0);" class="badge badge-'.($value == 1 ? 'yes' : 'no').'"><i class="fa fa-'.($value == 1 ? 'check' : 'times').'"></i></a>';
+    }
+
+    // 单选字段name
+    function radio_name($value, $param = [], $data = [], $field = []) {
+
+        if ($field) {
+            $options = dr_format_option_array($field['setting']['option']['options']);
+            if ($options && isset($options[$value])) {
+                return $options[$value];
+            }
+        }
+
+        return $value;
+    }
+
+    // 下拉字段name值
+    function select_name($value, $param = [], $data = [], $field = []) {
+
+        if ($field) {
+            $options = dr_format_option_array($field['setting']['option']['options']);
+            if ($options && isset($options[$value])) {
+                return $options[$value];
+            }
+        }
+
+        return $value;
+    }
+
+    // checkbox字段name值
+    function checkbox_name($value, $param = [], $data = [], $field = []) {
+
+        $arr = dr_string2array($value);
+        if ($field && is_array($arr)) {
+            $options = dr_format_option_array($field['setting']['option']['options']);
+            if ($options) {
+                $rt = [];
+                foreach ($options as $i => $v) {
+                    if (in_array($i, $arr)) {
+                        $rt[] = $v;
+                    }
+                }
+                return implode('、', $rt);
+            }
+        }
+
+        return $value;
+    }
+
+    // 联动字段name值
+    function linkage_name($value, $param = [], $data = [], $field = []) {
+
+        if ($field && $field['setting']['option']['linkage']) {
+            return dr_linkagepos($field['setting']['option']['linkage'], $value, '-');
+        }
+
+        return $value;
     }
 
 

@@ -95,7 +95,7 @@
                 </td>
                 {/if}
                 {loop $list_field $i $tt}
-                <td>{dr_list_function($tt.func, $t[$i], $param, $t)}</td>
+                <td>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
                 {/list}
                 <td style="text-align:center">{Function_list::status($t.status)}</td>
                 <td>

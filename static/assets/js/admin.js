@@ -679,13 +679,17 @@ function dr_submit_sql_todo(myform, url) {
 
 function dr_call_alert() {
     layer.alert('回调是用于在列表显示时对其值进行格式化<br>'+
-        '此处填写函数名称即可<br>函数需要开发者自己定义，函数定义格式为: <br>function($value, $param); <br>$value是传入值，$param是列表搜索参数<br><br>'+
+        '此处填写函数名称即可<br>函数需要开发者自己定义，函数定义格式请参考手册<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
         '多文件: files （只显示有或无）<br>'+
         '单文件: file<br>'+
         'uid会员: uid<br>'+
         '地区联动: linkage_address<br>'+
+        '地区联动名称: linkage_name<br>'+
+        '单选字段名称: radio_name<br>'+
+        '下拉字段名称: select_name<br>'+
+        '复选框字段名称: checkbox_name<br>'+
         '栏目: catid<br>'+
         '时间: datetime<br>会员信息: author', {
         title: '',

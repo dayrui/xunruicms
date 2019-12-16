@@ -527,6 +527,7 @@ class Table extends \Phpcmf\Common
         } else {
             $size = $this->list_pagesize;
         }
+
         // 查询数据结果
         list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size);
         $p && $param = $p + $param;
@@ -534,7 +535,7 @@ class Table extends \Phpcmf\Common
 
         // 分页URL格式
         $this->url_params && $param = dr_array22array($param, $this->url_params);
-        $uri =\Phpcmf\Service::L('Router')->uri();
+        $uri = \Phpcmf\Service::L('Router')->uri();
         $url = IS_ADMIN ?\Phpcmf\Service::L('Router')->url($uri, $param) :\Phpcmf\Service::L('Router')->member_url($uri, $param);
         $url = $url.'&page={page}';
 
@@ -589,26 +590,6 @@ class Table extends \Phpcmf\Common
             'list_query' => urlencode(dr_authcode($sql, 'ENCODE')), // 查询列表的sql语句
             'list_table' => $list_table, // 查询列表的数据表名称
         ];
-
-        // 过滤搜索变量
-        $field = \Phpcmf\Service::V()->get_value('field');
-        if ($field) {
-            foreach ($field as $i => $t) {
-                if (!$t['fieldtype']) {
-                    continue;
-                } elseif (!in_array($t['fieldtype'], [
-                    'Text',
-                    'Textarea',
-                    'Textbtn',
-                    'Ueditor',
-                    'Select',
-                    'Radio',
-                ])) {
-                    unset($field[$i]);
-                }
-            }
-            $data['field'] = $field;
-        }
 
         \Phpcmf\Service::V()->assign($data);
 

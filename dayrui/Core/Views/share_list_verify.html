@@ -265,6 +265,9 @@
                     <td>
                         {if $is_post_user}
                         <label><a href="{$t.url}" class="btn btn-xs blue" target="_blank"> <i class="fa fa-send"></i> {dr_lang('查看')}</a></label>
+                        {if $ci->_is_admin_auth('edit') && $t.uid == $member.uid && $t.status == 0}
+                        <label><a href="{dr_url($uriprefix.'/edit', ['id' => $t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                        {/if}
                         {else}
                         {if $ci->_is_admin_auth('edit')}
                         <label><a href="{dr_url($uriprefix.'/edit', ['id' => $t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('处理')}</a></label>

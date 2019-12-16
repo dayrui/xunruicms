@@ -97,7 +97,7 @@
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url($uriprefix.'/edit_order', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
                 {/if}
                 {loop $list_field $i $tt}
-                <td>{dr_list_function($tt.func, $t[$i], $param, $t)}</td>
+                <td>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
                 {/list}
                 <td style="text-align:center">{Function_list::status($t.status)}</td>
                 <td>
