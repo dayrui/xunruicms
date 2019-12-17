@@ -975,7 +975,7 @@ abstract class Common extends \CodeIgniter\Controller
             $data = require APPPATH.'Config/Clink.php';
         }
 
-        $local = dr_dir_map(APPSPATH, 1);
+        $local = dr_dir_map(dr_get_app_list(), 1);
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
             if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php')) {
@@ -983,10 +983,10 @@ abstract class Common extends \CodeIgniter\Controller
                 if ($_clink) {
                     if (is_file($path.'Models/Auth.php')) {
                         if (\Phpcmf\Service::M('auth', $dir)->is_link_auth(APP_DIR)) {
-                            $data = array_merge($data , $_clink);
+                            $data = array_merge($data , $_clink) ;
                         }
                     } else {
-                        $data = array_merge($data , $_clink);
+                        $data = array_merge($data , $_clink) ;
                     }
                 }
             }

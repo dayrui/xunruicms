@@ -113,7 +113,7 @@ class Content extends \Phpcmf\Model {
                 );
             } else {
 				// 新增审核
-                $verify = array(
+                $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
                     'isnew' => $id ? 0 : 1,
@@ -129,13 +129,17 @@ class Content extends \Phpcmf\Model {
                         'backcontent' => $_POST['verify']['msg']
                     ]) : '',
                     'inputtime' => SYS_TIME
-                );
+                ];
                 $rt = $this->table($this->mytable.'_verify')->replace($verify);
                 if (!$rt['code']) {
                     // 删除索引
                     $this->table($this->mytable.'_index')->delete($data[1]['id']);
                     return $rt;
                 }
+
+                // 挂钩点 模块内容审核处理之后
+                \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+
 				if (IS_ADMIN && defined('IS_MODULE_TG') && $data[1]['status'] == 0) {
 					// 后台退稿
 					if (\Phpcmf\Service::L('input')->get('clear')) {
