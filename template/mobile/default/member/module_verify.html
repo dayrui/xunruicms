@@ -50,6 +50,9 @@
                     <td>
                         <label><a href="{$url}" class="btn btn-xs green"> <i class="fa fa-search"></i> 查看</a></label>
                         <label><a href="{dr_member_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs red"> <i class="fa fa-edit"></i> 修改</a></label>
+                        {loop $clink $a}
+                        <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.murl)}"><i class="{$a.icon}"></i> {$a.name} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
+                        {/loop}
                     </td>
                 </tr>
                 {/loop}

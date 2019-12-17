@@ -994,9 +994,16 @@ abstract class Common extends \CodeIgniter\Controller
 
         if ($data) {
             foreach ($data as $i => $t) {
-                if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
-                    unset($data[$i]); // 无权限的不要
+                if (IS_ADMIN) {
+                    if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                        unset($data[$i]); // 无权限的不要
+                    }
+                } else {
+                    if (!$t['murl']) {
+                        unset($data[$i]); // 非后台必须验证murl
+                    }
                 }
+
             }
         }
 

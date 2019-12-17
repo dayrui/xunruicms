@@ -61,7 +61,7 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'mcid' => 'list',
             'mform' => $mform,
-            'clink' => [], //$this->_app_clink()这里后面做权限判断
+            'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }
@@ -86,14 +86,14 @@ class Module extends \Phpcmf\Table
                     $category,
                     $catid,
                     'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                    '--', 1, 1, 1
+                    '', 1, 1, 1
                 );
             } else {
                 $select = \Phpcmf\Service::L('Tree')->select_category(
                     $category,
                     $catid,
                     'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                    '--', 1, 1
+                    '', 1, 1
                 );
             }
 			if (!$catid) {
@@ -230,7 +230,8 @@ class Module extends \Phpcmf\Table
         $this->_List();
 
         \Phpcmf\Service::V()->assign([
-            'mcid' => 'verify'
+            'mcid' => 'verify',
+            'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
         \Phpcmf\Service::V()->display('module_verify.html');
     }

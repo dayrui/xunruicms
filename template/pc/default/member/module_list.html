@@ -34,9 +34,7 @@
                     <td> {Function_list::datetime($t['updatetime'], $param, $t)} </td>
                     <td>
                         {loop $clink $a}
-                        {if !$a.uri}
-                        <label><a class="btn green btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {$a.name} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
-                        {/if}
+                        <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.murl)}"><i class="{$a.icon}"></i> {$a.name} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
                         {/loop}
                         {loop $mform $a}
                         <label><a class="btn blue btn-xs" href="{dr_member_url(APP_DIR.'/'.$a.table.'/index', ['cid'=>$t.id])}"><i class="{dr_icon($a.setting.icon)}"></i> {dr_lang($a.name)} {if isset($t[$a.table.'_total'])} ({intval($t[$a.table.'_total'])}) {/if} </a></label>
