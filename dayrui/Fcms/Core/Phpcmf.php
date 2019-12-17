@@ -40,6 +40,9 @@ abstract class Common extends \CodeIgniter\Controller
     {
         //parent::initController(...$params);
 
+        // 部分虚拟主机会报500错误
+        \Config\Services::response()->removeHeader('Content-Type');
+
         self::$instance =& $this;
 
         if (defined('IS_INSTALL')) {

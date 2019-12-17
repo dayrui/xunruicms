@@ -47,11 +47,7 @@ class Input
     }
     
     public function set_cookie($name, $value = '', $expire = '') {
-
-        $response = \Config\Services::response();
-        $response->setcookie($name, $value, $expire);
-        $response->removeHeader('Content-Type'); // 部分虚拟主机会报500错误
-        $response->send();
+        \Config\Services::response()->setcookie($name, $value, $expire)->send();
     }
     
     public function get_cookie($name) {
