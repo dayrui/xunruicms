@@ -109,6 +109,12 @@ jQuery(document).ready(function() {
 			});
 		}
     });
+	$(".table td").each(function(){
+        var td = $(this);
+		var text = td.html();
+		text = text.replace(/href=\"*\"/g, "");
+		td.html(text);
+    });
 	
 
     // 关闭框架的加载提示
