@@ -98,6 +98,15 @@ jQuery(document).ready(function() {
         });
     });
 
+
+    $(".table td").dblclick(function(){
+        var td = $(this);
+        var text = td.text();
+        layer.tips(text, td, {
+            time: 4000
+        });
+    });
+
     // 关闭框架的加载提示
     //if (typeof parent.layer.closeAll == 'function') {
         //parent.layer.closeAll('loading');
