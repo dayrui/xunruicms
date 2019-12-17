@@ -560,13 +560,13 @@ class View {
         $view_content = str_replace([
             '$ci->',
             'IS_PC',
-            'IS_MOBILE',
             'IS_MOBILE_USER',
+            'IS_MOBILE',
         ], [
             '\Phpcmf\Service::C()->',
             '\Phpcmf\Service::IS_PC()',
-            '\Phpcmf\Service::IS_MOBILE()',
             '\Phpcmf\Service::C()->_is_mobile()',
+            '\Phpcmf\Service::IS_MOBILE()',
         ], $view_content);
 
         return $view_content;
