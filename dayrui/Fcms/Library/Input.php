@@ -50,6 +50,7 @@ class Input
 
         $response = \Config\Services::response();
         $response->setcookie($name, $value, $expire);
+        $response->removeHeader('Content-Type'); // 部分虚拟主机会报500错误
         $response->send();
     }
     
