@@ -1318,7 +1318,7 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app('form');
@@ -1425,7 +1425,7 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
@@ -1531,14 +1531,13 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-
 
                     // 存储缓存
                     $system['cache'] && $this->_save_cache_data($cache_name, [
@@ -1665,7 +1664,7 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 系统字段
                     $fields['regtime'] = array('fieldtype' => 'Date');
                     // 格式化显示自定义字段内容
@@ -1714,7 +1713,7 @@ class View {
                 $data = $db->get_data(intval($param['id']));
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 模块表的系统字段
                     $fields = $module['field']; // 主表的字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
@@ -1726,7 +1725,7 @@ class View {
 
                     // 存储缓存
                     $system['cache'] && $this->_save_cache_data($cache_name, [
-                        'data' => $data,
+                        'data' => [$data],
                         'sql' => '',
                         'total' => 0,
                         'pages' => 0,
@@ -1736,8 +1735,7 @@ class View {
                     ], $system['cache']);
 
                 }
-
-                return $this->_return($system['return'], $data);
+                return $this->_return($system['return'], [$data]);
                 break;
 
             case 'related': // 模块的相关文章
@@ -2016,7 +2014,7 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 模块表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $fields['updatetime'] = array('fieldtype' => 'Date');
