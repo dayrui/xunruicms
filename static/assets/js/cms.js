@@ -48,6 +48,25 @@ $(function(){
     }
 });
 
+// 是否有隐藏区域
+function dr_isEllipsis(dom) {
+	var checkDom = dom.cloneNode(), parent, flag;
+	checkDom.style.width = dom.offsetWidth + 'px';
+	checkDom.style.height = dom.offsetHeight + 'px';
+	checkDom.style.overflow = 'auto';
+	checkDom.style.position = 'absolute';
+	checkDom.style.zIndex = -1;
+	checkDom.style.opacity = 0;
+	checkDom.style.whiteSpace = "nowrap";
+	checkDom.innerHTML = dom.innerHTML;
+
+	parent = dom.parentNode;
+	parent.appendChild(checkDom);
+	flag = checkDom.scrollWidth > checkDom.offsetWidth;
+	parent.removeChild(checkDom);
+	return flag;
+};
+
 // 判断当前终端是否是移动设备
 function dr_is_mobile() {
 	var ua = navigator.userAgent,

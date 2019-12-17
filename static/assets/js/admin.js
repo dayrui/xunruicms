@@ -98,14 +98,18 @@ jQuery(document).ready(function() {
         });
     });
 
-
-    $(".table td").dblclick(function(){
+	// 当存在隐藏时单击显示区域
+    $(".table td,.table th").click(function(){
         var td = $(this);
-        var text = td.text();
-        layer.tips(text, td, {
-            time: 4000
-        });
+		if (dr_isEllipsis(td[0]) == true) {
+			var text = td.html();
+			layer.tips(text, td, {
+				tips: [1, '#fff'],
+				time: 5000
+			});
+		}
     });
+	
 
     // 关闭框架的加载提示
     //if (typeof parent.layer.closeAll == 'function') {
