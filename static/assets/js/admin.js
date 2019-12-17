@@ -112,9 +112,11 @@ jQuery(document).ready(function() {
     });
 	$(".table td").each(function(){
         var td = $(this);
-		var text = td.html();
-		text = text.replace(/href=\"/g, "_href_=\"");
-		td.html(text);
+		if (dr_isEllipsis(td[0]) == true) {
+			var text = td.html();
+			text = text.replace(/href=\"/g, "_href_=\"");
+			td.html(text);
+		}
     });
 	
 
