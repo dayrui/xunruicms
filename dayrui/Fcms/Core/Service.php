@@ -40,11 +40,6 @@ class Service
         return static::C()->_is_mobile();
     }
 
-    // 当前客户端是否是移动端访问
-    public static function IS_MOBILE2() {
-        return static::C()->_is_mobile();
-    }
-
     /**
      * 模板视图对象实例
      *

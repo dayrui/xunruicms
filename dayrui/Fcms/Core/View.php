@@ -546,7 +546,6 @@ class View {
             $replace_array[] = "<?php } } ?>";
         }
 
-
         $view_content = preg_replace($regex_array, $replace_array, $view_content);
 
         $view_content = preg_replace_callback("/_get_var\('(.*)'\)/Ui", function ($match) {
@@ -562,12 +561,12 @@ class View {
             '$ci->',
             'IS_PC',
             'IS_MOBILE',
-            'IS_MOBILE2',
+            'IS_MOBILE_USER',
         ], [
             '\Phpcmf\Service::C()->',
             '\Phpcmf\Service::IS_PC()',
             '\Phpcmf\Service::IS_MOBILE()',
-            '\Phpcmf\Service::IS_MOBILE2()',
+            '\Phpcmf\Service::C()->_is_mobile()',
         ], $view_content);
 
         return $view_content;
