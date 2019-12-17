@@ -556,7 +556,7 @@ class View {
             return "list_tag(\"".preg_replace('#\[\'(\w+)\'\]#Ui', '[\\1]', $match[1])."\")";
         }, $view_content);
 
-        // 替换$ci  IS_PC   IS_MOBILE
+        // 替换$ci  IS_PC   IS_MOBILE  USER
         $view_content = str_replace([
             '$ci->',
             'IS_PC',
