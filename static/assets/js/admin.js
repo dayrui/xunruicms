@@ -103,6 +103,7 @@ jQuery(document).ready(function() {
         var td = $(this);
 		if (dr_isEllipsis(td[0]) == true) {
 			var text = td.html();
+			text = text.replace(/\_href\_=\"/g, "href=\"");
 			layer.tips(text, td, {
 				tips: [1, '#fff'],
 				time: 5000
@@ -112,7 +113,7 @@ jQuery(document).ready(function() {
 	$(".table td").each(function(){
         var td = $(this);
 		var text = td.html();
-		text = text.replace(/href=\"*\"/g, "");
+		text = text.replace(/href=\"/g, "_href_=\"");
 		td.html(text);
     });
 	
