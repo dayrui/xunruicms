@@ -36,7 +36,6 @@ define('IS_AJAX_POST', IS_POST);
 // 当前系统时间戳
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
 
-
 // 系统变量
 if (is_file(WRITEPATH.'config/system.php')) {
     $system = require WRITEPATH.'config/system.php';
@@ -65,6 +64,7 @@ if (is_file(WRITEPATH.'config/system.php')) {
 foreach ($system as $var => $value) {
     !defined($var) && define($var, $value);
 }
+
 // 当前URL
 $pageURL = 'http';
 ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
