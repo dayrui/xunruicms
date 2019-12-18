@@ -6,7 +6,7 @@
  */
 
 declare(strict_types=1);
-header('Content-Type: text/html; charset=utf-8');
+//header('Content-Type: text/html; charset=utf-8');
 header('X-Frame-Options: SAMEORIGIN'); // 防止被站外加入iframe中浏览
 
 // 是否是开发者模式（1开启、0关闭）
