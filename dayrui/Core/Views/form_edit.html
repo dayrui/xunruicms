@@ -99,13 +99,12 @@
                                     {dr_lang('显示')}
                                 </th>
                                 <th width="180"> {dr_lang('字段')} </th>
-                                <th width="100"> {dr_lang('序列号')} </th>
                                 <th width="150"> {dr_lang('名称')} </th>
                                 <th width="100"> {dr_lang('宽度')} </th>
                                 <th> {dr_lang('回调方法')} </th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="field-sort-items">
                             {loop $field $n $t}
                             <tr class="odd gradeX">
                                 <td class="myselect">
@@ -115,7 +114,6 @@
                                     </label>
                                 </td>
                                 <td>{dr_lang($t.name)} ({$t.fieldname})</td>
-                                <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['list_field'][$t.fieldname]['order'] ? $data['setting']['list_field'][$t.fieldname]['order'] : $n+100}" /></td>
                                 <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? $data['setting']['list_field'][$t.fieldname]['name'] : $t.name}" /></td>
                                 <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{$data['setting']['list_field'][$t.fieldname]['width']}" /></td>
                                 <td> <div class="input-group" style="width:250px">
@@ -205,14 +203,8 @@
 
     $(function () {
         dr_dev_show({intval($data['setting']['dev'])});
+        $(".field-sort-items").sortable();
     });
-    function dr_field_show(n, u) {
-        if (u) {
-            $('.field-'+n+' .list-field-cog').show();
-        } else {
-            $('.field-'+n+' .list-field-cog').hide();
-        }
-    }
     function dr_dev_show(u) {
         if (u) {
             $('.dev').hide();

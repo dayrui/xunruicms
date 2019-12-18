@@ -220,22 +220,15 @@ class Module extends \Phpcmf\Common
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
                         $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
-                    } elseif (isset($order[$t['order']]) && $order[$t['order']]) {
-                        $this->_json(0, dr_lang('字段[%s]的序列号与字段[%s]不能相同', $t['name'], $order[$t['order']]));
                     }
-                    $order[$t['order']] = $t['name'];
                 }
             }
             if ($post['setting']['comment_list_field']) {
-                $order = [];
                 foreach ($post['setting']['comment_list_field'] as $t) {
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
                         $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
-                    } elseif (isset($order[$t['order']]) && $order[$t['order']]) {
-                        $this->_json(0, dr_lang('字段[%s]的序列号与字段[%s]不能相同', $t['name'], $order[$t['order']]));
                     }
-                    $order[$t['order']] = $t['name'];
                 }
             }
             $rt = \Phpcmf\Service::M('Module')->config($data, $post);
@@ -256,8 +249,7 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'author', 'inputtime', 'updatetime', 'hits']);
-        sort($sys_field);
-        $field = dr_array2array($sys_field, $field);
+        $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
         // 评论字段
         $comment_field = \Phpcmf\Service::M()->db->table('field')
@@ -267,7 +259,7 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['content', 'author', 'inputtime']);
-        $comment_field = dr_array2array($sys_field, $comment_field);
+		$comment_field = dr_list_field_value($data['setting']['comment_list_field'], $sys_field, $field);
 
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
@@ -395,15 +387,11 @@ class Module extends \Phpcmf\Common
         if (IS_AJAX_POST) {
             $data = \Phpcmf\Service::L('input')->post('data');
             if ($data['setting']['list_field']) {
-                $order = [];
                 foreach ($data['setting']['list_field'] as $t) {
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
                         $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
-                    } elseif (isset($order[$t['order']]) && $order[$t['order']]) {
-                        $this->_json(0, dr_lang('字段[%s]的序列号与字段[%s]不能相同', $t['name'], $order[$t['order']]));
                     }
-                    $order[$t['order']] = $t['name'];
                 }
             }
             \Phpcmf\Service::M('Module')->table('module_form')->update($id,
@@ -427,7 +415,6 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'author', 'inputtime']);
-        sort($sys_field);
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
@@ -435,7 +422,7 @@ class Module extends \Phpcmf\Common
             'data' => $data,
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
-            'field' => dr_array2array($sys_field, $field),
+			'field' => dr_list_field_value($data['setting']['list_field'], $sys_field, $field),
         ]);
         \Phpcmf\Service::V()->display('module_form_edit.html');
     }

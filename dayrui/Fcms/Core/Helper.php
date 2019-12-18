@@ -1501,26 +1501,42 @@ function dr_list_field_order($field) {
         return [];
     }
 
-    $order = [];
-    foreach ($field as $name => $m) {
-        $m['order'] && $order[$m['order']] = $name;
-    }
-
-    ksort($order);
-
     $rt = [];
-    foreach ($order as $name) {
-        $field[$name]['use'] && $rt[$name] = $field[$name];
+    foreach ($field as $name => $m) {
+        $m['use'] && $rt[$name] = $m;
     }
-
+	
     return $rt;
+}
+
+function dr_list_field_value($value, $sys_field, $field) {
+	
+	foreach ($field as $t) {
+		$sys_field[$t['fieldname']] = $t;
+	}
+	
+	$rt = [];
+	foreach ($value as $name => $t) {
+		$rt[$name] = $sys_field[$name];
+		unset($sys_field[$name]);
+	}
+	
+	if (!$sys_field) {
+		return $rt;
+	}
+	
+	foreach ($sys_field as $name => $t) {
+		$rt[$name] = $t;
+	}
+	
+	return $rt;
 }
 
 /**
  * 格式化搜索关键词参数
  */
 function dr_get_keyword($s) {
-    return dr_safe_replace(str_replace(array('+', ' '), '%', urldecode($s)));
+    return dr_safe_replace(str_replace(['+', ' '], '%', urldecode($s)));
 }
 
 /**
