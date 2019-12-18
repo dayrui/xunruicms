@@ -56,6 +56,11 @@ class Model {
     public function set_where_list($where) {
         $this->param['where_list'] = $where;
     }
+
+    // 追加列表搜索条件
+    public function add_where_list($where) {
+        $this->param['where'][] = $where;
+    }
     
     // 设置操作主键
     public function id($id = '') {

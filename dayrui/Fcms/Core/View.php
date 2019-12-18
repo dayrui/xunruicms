@@ -11,6 +11,7 @@
 class View {
 
     private $_is_admin; // 是否后台模板
+    private $_is_return; // 是否返回模板名称不输出模板
     private $_disp_dir; // display传人的目录参数
 
     private $_dir; // 模板目录
@@ -137,7 +138,6 @@ class View {
         return $this->_dir;
     }
 
-
     /**
      * 强制设置为当前默认的模板目录(一般用于api外部接入)
      */
@@ -152,6 +152,12 @@ class View {
         $this->_dir = $this->_mdir = $path;
     }
 
+    /**
+     * 设置是否返回模板名称不显示
+     */
+    public function set_return($is) {
+        $this->_is_return = $is;
+    }
 
     /**
      * 强制设置为后台模板目录
@@ -170,6 +176,10 @@ class View {
      * @return  void
      */
     public function display($_name, $_dir = '') {
+
+        if ($this->_is_return) {
+            return $_name;
+        }
 
         $start = microtime(true);
 
