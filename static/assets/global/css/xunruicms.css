@@ -81,9 +81,6 @@ body,h1,h2,h3,h4,h5,h6{font-family:"Open Sans",sans-serif}.bold.btn,.sbold.btn{l
 .fc-head-table thead th {
     background-color: #edf2f7;
 }
-.myselect {
-    overflow: visible !important;
-}
 .my_pid_menu td {
     background: #eff0f2 !important;
     height: 50px;
@@ -298,10 +295,11 @@ table.dataTable tbody tr {
     width:40%;
 }
 .myselect {
-    width:40px !important;
-    min-width:40px !important;
-    max-width:40px !important;
+    width:50px !important;
+    min-width:50px !important;
+    max-width:50px !important;
     padding:3px 2px!important;
+    overflow: visible !important;
 }
 .progress {
     margin-bottom: 8px !important;

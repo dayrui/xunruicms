@@ -75,120 +75,87 @@
 
                 <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
                     <div class="form-body">
-                        {loop $field $n $t}
-                        <div class="form-group field-{$n}">
-                            <label class="col-md-2 control-label">{dr_lang($t.name)} ({$t.fieldname})</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio">
-                                        <input type="radio" onclick="dr_field_show('{$n}', 1)" name="data[setting][list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['list_field'][$t.fieldname]['use']} checked{/if} > {dr_lang('显示')}
+                        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                            <thead>
+                            <tr class="heading">
+                                <th class="myselect">
+                                    {dr_lang('显示')}
+                                </th>
+                                <th width="180"> {dr_lang('字段')} </th>
+                                <th width="100"> {dr_lang('序列号')} </th>
+                                <th width="150"> {dr_lang('名称')} </th>
+                                <th width="100"> {dr_lang('宽度')} </th>
+                                <th> {dr_lang('回调方法')} </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop $field $n $t}
+                            <tr class="odd gradeX">
+                                <td class="myselect">
+                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="checkboxes" name="data[setting][list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['list_field'][$t.fieldname]['use']} checked{/if} />
                                         <span></span>
                                     </label>
-                                    <label class="mt-radio">
-                                        <input type="radio" onclick="dr_field_show('{$n}', 0)" name="data[setting][list_field][{$t.fieldname}][use]" value="0" {if !$data['setting']['list_field'][$t.fieldname]['use']} checked{/if}> {dr_lang('隐藏')}
-                                        <span></span>
-                                    </label>
-                                </div>
-                                <div class="list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('排列顺序值由小到大')}');">{dr_lang('序列')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['list_field'][$t.fieldname]['order'] ? $data['setting']['list_field'][$t.fieldname]['order'] : $n+100}" />
-                                    </div>
-                                </div>
-                                <div class="list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('列表的显示名称')}');">{dr_lang('名称')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? $data['setting']['list_field'][$t.fieldname]['name'] : $t.name}" />
-                                    </div>
-                                </div>
-                                <div class="list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('不填宽度表示自动宽度')}');">{dr_lang('宽度')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{$data['setting']['list_field'][$t.fieldname]['width']}" />
-                                    </div>
-                                </div>
-                                <div class="list-field-cog">
-                                    <div class="input-group" style="width:250px">
+                                </td>
+                                <td>{dr_lang($t.name)} ({$t.fieldname})</td>
+                                <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['list_field'][$t.fieldname]['order'] ? $data['setting']['list_field'][$t.fieldname]['order'] : $n+100}" /></td>
+                                <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? $data['setting']['list_field'][$t.fieldname]['name'] : $t.name}" /></td>
+                                <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{$data['setting']['list_field'][$t.fieldname]['width']}" /></td>
+                                <td> <div class="input-group" style="width:250px">
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
                                         </span>
-                                        <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{$data['setting']['list_field'][$t.fieldname]['func']}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            $(function() {
-                                dr_field_show('{$n}', {intval($data['setting']['list_field'][$t.fieldname]['use'])});
-                            });
-                        </script>
-                        {/loop}
+                                    <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{$data['setting']['list_field'][$t.fieldname]['func']}" />
+                                </div></td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+                        </table>
+
+
                     </div>
                 </div>
 
 
                 <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
                     <div class="form-body">
-                        {loop $comment_field $n $t}
-                        <div class="form-group comment-field-{$n}">
-                            <label class="col-md-2 control-label">{dr_lang($t.name)} ({$t.fieldname})</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio">
-                                        <input type="radio" onclick="dr_field_show_comment('{$n}', 1)" name="data[setting][comment_list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['comment_list_field'][$t.fieldname]['use']} checked{/if} > {dr_lang('显示')}
+
+                        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                            <thead>
+                            <tr class="heading">
+                                <th class="myselect">
+                                    {dr_lang('显示')}
+                                </th>
+                                <th width="180"> {dr_lang('字段')} </th>
+                                <th width="100"> {dr_lang('序列号')} </th>
+                                <th width="150"> {dr_lang('名称')} </th>
+                                <th width="100"> {dr_lang('宽度')} </th>
+                                <th> {dr_lang('回调方法')} </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop $comment_field $n $t}
+                            <tr class="odd gradeX">
+                                <td class="myselect">
+                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="checkboxes" name="data[setting][comment_list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['comment_list_field'][$t.fieldname]['use']} checked{/if} />
                                         <span></span>
                                     </label>
-                                    <label class="mt-radio">
-                                        <input type="radio" onclick="dr_field_show_comment('{$n}', 0)" name="data[setting][comment_list_field][{$t.fieldname}][use]" value="0" {if !$data['setting']['comment_list_field'][$t.fieldname]['use']} checked{/if}> {dr_lang('隐藏')}
-                                        <span></span>
-                                    </label>
-                                </div>
-                                <div class="comment-list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('排列顺序值由小到大')}');">{dr_lang('序列')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['comment_list_field'][$t.fieldname]['order'] ? $data['setting']['comment_list_field'][$t.fieldname]['order'] : $n+100}" />
-                                    </div>
-                                </div>
-                                <div class="comment-list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('列表的显示名称')}');">{dr_lang('名称')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['comment_list_field'][$t.fieldname]['name'] ? $data['setting']['comment_list_field'][$t.fieldname]['name'] : $t.name}" />
-                                    </div>
-                                </div>
-                                <div class="comment-list-field-cog">
-                                    <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:layer.msg('{dr_lang('不填宽度表示自动宽度')}');">{dr_lang('宽度')}</a>
-                                        </span>
-                                        <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][width]" value="{$data['setting']['comment_list_field'][$t.fieldname]['width']}" />
-                                    </div>
-                                </div>
-                                <div class="comment-list-field-cog">
-                                    <div class="input-group" style="width:250px">
+                                </td>
+                                <td>{dr_lang($t.name)} ({$t.fieldname})</td>
+                                <td><input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][order]" value="{php echo $data['setting']['comment_list_field'][$t.fieldname]['order'] ? $data['setting']['comment_list_field'][$t.fieldname]['order'] : $n+100}" /></td>
+                                <td><input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['comment_list_field'][$t.fieldname]['name'] ? $data['setting']['comment_list_field'][$t.fieldname]['name'] : $t.name}" /></td>
+                                <td> <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][width]" value="{$data['setting']['comment_list_field'][$t.fieldname]['width']}" /></td>
+                                <td> <div class="input-group" style="width:250px">
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
                                         </span>
-                                        <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][func]" value="{$data['setting']['comment_list_field'][$t.fieldname]['func']}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            $(function() {
-                                dr_field_show_comment('{$n}', {intval($data['setting']['comment_list_field'][$t.fieldname]['use'])});
-                            });
-                        </script>
-                        {/loop}
+                                    <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][func]" value="{$data['setting']['comment_list_field'][$t.fieldname]['func']}" />
+                                </div></td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
