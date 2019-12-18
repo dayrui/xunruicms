@@ -138,11 +138,15 @@ class Form extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
             if ($data['setting']['list_field']) {
+                $order = [];
                 foreach ($data['setting']['list_field'] as $t) {
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
                         $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    } elseif (isset($order[$t['order']]) && $order[$t['order']]) {
+                        $this->_json(0, dr_lang('字段[%s]的序列号与字段[%s]不能相同', $t['name'], $order[$t['order']]));
                     }
+                    $order[$t['order']] = $t['name'];
                 }
             }
 			\Phpcmf\Service::M('Form')->update($id,
