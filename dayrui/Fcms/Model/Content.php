@@ -76,7 +76,7 @@ class Content extends \Phpcmf\Model {
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
             if ($verify) {
 				// 修改审核
-                $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], [
+                $update = [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
                     'content' => dr_array2string(@array_merge($data[0], $data[1])),
@@ -87,7 +87,8 @@ class Content extends \Phpcmf\Model {
                         'optiontime' => SYS_TIME,
                         'backcontent' => $_POST['verify']['msg']
                     ]) : '',
-                ]);
+                ];
+                $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], $update);
                 if (!$rt['code']) {
                     return $rt;
                 }
@@ -96,6 +97,9 @@ class Content extends \Phpcmf\Model {
                     'status' => 3,
                     'updatetime' => SYS_TIME,
                 ]);
+
+                // 挂钩点 模块内容审核处理之后
+                \Phpcmf\Hooks::trigger('module_verify_after', array_merge($verify, $update));
                 // 通知管理员
                 $data[1]['status'] > 0 && \Phpcmf\Service::M('member')->admin_notice(
                     $this->siteid,
@@ -137,9 +141,6 @@ class Content extends \Phpcmf\Model {
                     return $rt;
                 }
 
-                // 挂钩点 模块内容审核处理之后
-                \Phpcmf\Hooks::trigger('module_verify_after', $verify);
-
 				if (IS_ADMIN && defined('IS_MODULE_TG') && $data[1]['status'] == 0) {
 					// 后台退稿
 					if (\Phpcmf\Service::L('input')->get('clear')) {
@@ -154,6 +155,9 @@ class Content extends \Phpcmf\Model {
 						dr_lang('《%s》审核被拒绝', $data[1]['title']),
 						\Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
 					);
+
+                    // 挂钩点 模块内容审核处理之后
+                    \Phpcmf\Hooks::trigger('module_verify_after', $verify);
 				} else {
 					// 通知管理员
 					\Phpcmf\Service::M('member')->admin_notice(
@@ -276,6 +280,7 @@ class Content extends \Phpcmf\Model {
         if (dr_is_app('bdts')) {
             \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
+
         if (dr_is_app('bdxz')) {
             \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
@@ -285,17 +290,26 @@ class Content extends \Phpcmf\Model {
             $this->auto_save_tag($data[1]['keywords']);
         }
 
-        // 如果来自审核页面
+        // 如果来自审核页面,表示完成审核
         if (defined('IS_MODULE_VERIFY')) {
 
             // 通知用户
             \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
 
+            $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
+            $verify['status'] = 9;
+            $verify['content'] = dr_array2string(array_merge($data[1], $data[0]));
+            $verify['backuid'] = IS_ADMIN ? $this->uid : 0;
+            $verify['backinfo'] = dr_array2string($old['verify']['backinfo']);
+
             // 删除审核表
             $this->table($this->mytable.'_verify')->delete($data[1]['id']);
 
+            // 挂钩点 模块内容审核处理之后
+            \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+
             // 执行审核后的回调
-            $this->_call_verify($data[1], $old['verify']);
+            $this->_call_verify($data[1], $verify);
         }
 
         // 表示新发布
