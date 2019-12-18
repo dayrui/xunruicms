@@ -715,7 +715,7 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 引用404页面
      */
-    protected function goto_404_page($msg) {
+    public function goto_404_page($msg) {
 
         IS_API_HTTP && exit($this->_json(0, $msg));
 
