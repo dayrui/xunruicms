@@ -692,7 +692,7 @@ function dr_submit_sql_todo(myform, url) {
 
 function dr_call_alert() {
     layer.alert('回调是用于在列表显示时对其值进行格式化<br>'+
-        '此处填写函数名称即可<br>函数需要开发者自己定义，函数定义格式请参考手册<br><br>'+
+        '函数需要开发者自己定义<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
         '多文件: files （只显示有或无）<br>'+
