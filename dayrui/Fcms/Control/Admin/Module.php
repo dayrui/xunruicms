@@ -95,7 +95,7 @@ class Module extends \Phpcmf\Table
                 '--'
             ),
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台添加内容
@@ -146,7 +146,7 @@ class Module extends \Phpcmf\Table
             ),
             'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add') : ''
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台修改内容
@@ -185,7 +185,7 @@ class Module extends \Phpcmf\Table
             ),
             'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]) : ''
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台删除内容

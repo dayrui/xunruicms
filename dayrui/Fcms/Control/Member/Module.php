@@ -63,7 +63,7 @@ class Module extends \Phpcmf\Table
             'mform' => $mform,
             'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 添加内容
@@ -233,7 +233,7 @@ class Module extends \Phpcmf\Table
             'mcid' => 'verify',
             'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
-        \Phpcmf\Service::V()->display('module_verify.html');
+        return \Phpcmf\Service::V()->display('module_verify.html');
     }
 
     // 修改审核内容
@@ -285,7 +285,7 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'mcid' => 'draft'
         ]);
-        \Phpcmf\Service::V()->display('module_draft.html');
+        return \Phpcmf\Service::V()->display('module_draft.html');
     }
 
     // 删除草稿内容

@@ -85,7 +85,7 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' =>  $this->cid],
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台添加内容

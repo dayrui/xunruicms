@@ -96,7 +96,7 @@ class Mform extends \Phpcmf\Table
             'p' => ['cid' => $this->cid],
             'is_delete' => $del,
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 添加内容

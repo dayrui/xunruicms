@@ -104,7 +104,7 @@ class Form extends \Phpcmf\Table
     // 查看表单列表
     protected function _Member_List() {
         list($tpl) = $this->_List();
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 删除表单内容

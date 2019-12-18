@@ -67,7 +67,7 @@ class Form extends \Phpcmf\Table
     // 后台添加表单内容
     protected function _Admin_Add() {
         list($tpl) = $this->_Post(0);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台修改表单内容
@@ -97,7 +97,7 @@ class Form extends \Phpcmf\Table
     // 后台查看表单列表
     protected function _Admin_List() {
         list($tpl) = $this->_List();
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台删除表单内容
