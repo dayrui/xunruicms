@@ -1801,8 +1801,15 @@ class View {
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
-                $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
-                
+                $index = \Phpcmf\Service::L('cache')->get_data('search-'.$dirname.'-'.$param['id']);
+                if (!$index) {
+                    $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
+                    if ($index) {
+                        $index['params'] = dr_string2array($index['params']);
+                        $index['sql'] = $index['sql'];
+                    };
+                }
+
 				// 存在限制总数时
 				if ($module['setting']['search']['total']) {
 					$where[] = [
@@ -1810,10 +1817,9 @@ class View {
 						'value' => '(`'.$table.'`.`id` IN('.($index ? $index['contentid'] : 0).'))'
 					];	
                 } else {
-                	$p = dr_string2array($index['params']);
 					$where[] = [
 						'adj' => 'SQL',
-						'value' => '(`'.$table.'`.`id` IN('.($p['sql'] ? $p['sql'] : 0).'))'
+						'value' => '(`'.$table.'`.`id` IN('.($index['sql'] ? $index['sql'] : 0).'))'
 					];		
                 }
                

@@ -289,7 +289,9 @@ class Module extends \Phpcmf\Common
 
         // 搜索数据
         $data = $search->get($this->module, $get, $catid);
-        isset($data['code']) && $data['code'] == 0 && $data['msg'] && exit($this->_msg(0, $data['msg']));
+        if (isset($data['code']) && $data['code'] == 0 && $data['msg']) {
+            exit($this->_msg(0, $data['msg']));
+        }
         unset($data['params']['page']);
 
         // 获取同级栏目及父级栏目
@@ -298,7 +300,17 @@ class Module extends \Phpcmf\Common
             $catid
         );
 
-        $sototal = $data['contentid'] ? substr_count($data['contentid'], ',') + 1 : 0;
+        // 获取搜索总量
+        if (!$this->module['setting']['search']['total']) {
+            $sototal = intval($data['contentid']);
+        } else {
+            $sototal = $data['contentid'] ? substr_count($data['contentid'], ',') + 1 : 0;
+        }
+
+        // 存储缓存以便标签中使用
+        if ($data['id'] && $sototal) {
+            \Phpcmf\Service::L('cache')->set_data('search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
+        }
 
         $list = [];
         if (IS_API_HTTP && $data['id']) {

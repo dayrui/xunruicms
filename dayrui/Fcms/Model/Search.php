@@ -36,7 +36,7 @@ class Search extends \Phpcmf\Model {
         if (SYS_CACHE_SEARCH) {
             $data = $this->db->table($this->mytable.'_search')->where('id', $id)->get()->getRowArray();
             $time = intval(SYS_CACHE_SEARCH) * 3600;
-            if ($data && $data['inputtime'] < SYS_TIME - $time) {
+            if ($data && $data['inputtime'] + $time < SYS_TIME) {
                 $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
                 $data = [];
             }
@@ -150,38 +150,61 @@ class Search extends \Phpcmf\Model {
 
             // 最大数据量
             $limit = (int)$module['setting']['search']['total'] ? ' LIMIT '.(int)$module['setting']['search']['total'] : '';
-
             // 组合sql查询结果
             $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY id ".$limit;
 
-            // 重新生成缓存文件
-            $result = $this->db->query($sql)->getResultArray();
-            if ($result) {
-                $cid = [];
-                // 删除旧数据
-                $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
-                // 入库索引表
-                foreach ($result as $t) {
-                    $cid[] = $t['id'];
+            if ($limit) {
+                // 重新生成缓存文件
+                $result = $this->db->query($sql)->getResultArray();
+                if ($result) {
+                    $cid = [];
+                    // 删除旧数据
+                    $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
+                    // 入库索引表
+                    foreach ($result as $t) {
+                        $cid[] = $t['id'];
+                    }
+                    // 缓存入库
+                    $data = [
+                        'id' => $id,
+                        'catid' => intval($catid),
+                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
+                        'contentid' => @implode(',', $cid),
+                        'inputtime' => SYS_TIME
+                    ];
+                    $this->db->table($this->mytable.'_search')->replace($data);
+                } else {
+                    $data = [
+                        'id' => $id,
+                        'catid' => intval($catid),
+                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
+                        'contentid' => '',
+                    ];
                 }
-                // 缓存入库
-                $data = [
-                    'id' => $id,
-                    'catid' => intval($catid),
-                    'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                    'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                    'contentid' => @implode(',', $cid),
-                    'inputtime' => SYS_TIME
-                ];
-                $this->db->table($this->mytable.'_search')->replace($data);
             } else {
-                $data = [
-                    'id' => $id,
-                    'catid' => intval($catid),
-                    'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                    'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                    'contentid' => '',
-                ];
+                // 不限搜索数量
+                $ct = $this->db->query("SELECT count(*) as t FROM `".$table."` {$where} ORDER BY id ")->getRowArray();
+                if ($ct['t']) {
+                    $data = [
+                        'id' => $id,
+                        'catid' => intval($catid),
+                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
+                        'contentid' => intval($ct['t']),
+                        'inputtime' => SYS_TIME
+                    ];
+                    $this->db->table($this->mytable.'_search')->replace($data);
+                } else {
+                    $data = [
+                        'id' => $id,
+                        'catid' => intval($catid),
+                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
+                        'contentid' => '',
+                    ];
+                }
             }
         }
 

@@ -20,8 +20,8 @@ class Function_list
     // 用于列表显示栏目
     function catid($catid, $param = [], $data = []) {
 
-        $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value(APP_DIR, $catid, 'url'), MOD_DIR).'" target="_blank';
-        $value = dr_cat_value(APP_DIR, $catid, 'name');
+        $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value(MOD_DIR, $catid, 'url'), MOD_DIR).'" target="_blank';
+        $value = dr_cat_value(MOD_DIR, $catid, 'name');
 
         return '<a href="'.$url.'">'.dr_strcut($value, 10).'</a>';
     }

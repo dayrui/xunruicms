@@ -569,7 +569,7 @@ function dr_member_invite($uid, $name = 'uid') {
 /**
  * 执行函数
  */
-function dr_list_function($func, $value, $param = [], $data = [], $name = '', $field = []) {
+function dr_list_function($func, $value, $param = [], $data = [], $field = []) {
 
     if (!$func) {
         return $value;
@@ -577,9 +577,9 @@ function dr_list_function($func, $value, $param = [], $data = [], $name = '', $f
 
     $obj = \Phpcmf\Service::L('Function_list');
     if (method_exists($obj, $func)) {
-        return call_user_func_array([$obj, $func], [$value, $param, $data, $name, $field]);
+        return call_user_func_array([$obj, $func], [$value, $param, $data, $field]);
     } elseif (function_exists($func)) {
-        return call_user_func_array($func, [$value, $param, $data, $name, $field]);
+        return call_user_func_array($func, [$value, $param, $data, $field]);
     } else {
         log_message('error', '你没有定义字段列表回调函数：'.$func);
     }
