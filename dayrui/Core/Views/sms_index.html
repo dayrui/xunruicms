@@ -70,6 +70,22 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('验证码有效期')}</label>
+                            <div class="col-md-9">
+                                <div class="input-inline input-medium">
+                                    <div class="input-group">
+                                        <input type="text" name="SYS_CACHE_SMS" value="{php echo max(60, intval($cache['SYS_CACHE_SMS']));}" class="form-control">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="help-inline"> {dr_lang('单位秒，最低60秒，发送验证码后的有效期时间')} </span>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>

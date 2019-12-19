@@ -108,9 +108,9 @@ class Member extends \Phpcmf\Table
             $p['groupid'] = $groupid;
         }
 
-        // 不是超级管理员,排除超管账号
+        // 不是超级管理员排除角色账号
         if (!in_array(1, $this->admin['roleid'])) {
-            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)';
+            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
         }
         
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
@@ -331,10 +331,8 @@ class Member extends \Phpcmf\Table
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
-        // 不是超级管理员,排除超管账号
-        if (!in_array(1, $this->admin['roleid'])
-            && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->where('roleid', 1)->counts()) {
-            $this->_admin_msg(0, dr_lang('无权限编辑'));
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
         $this->_Post($uid);
@@ -381,7 +379,11 @@ class Member extends \Phpcmf\Table
             function ($rows) {
                 $ids = [];
                 foreach ($rows as $t) {
-                    $ids[] = $id = intval($t['id']);
+                    $id = intval($t['id']);
+                    if (!\Phpcmf\Service::M('auth')->cleck_edit_member($id)) {
+                        continue;
+                    }
+                    $ids[] = $id;
                     \Phpcmf\Service::M('member')->member_delete($id);
 
                 }
@@ -396,6 +398,10 @@ class Member extends \Phpcmf\Table
     public function jb_del() {
 
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $tid = dr_safe_filename(\Phpcmf\Service::L('input')->get('tid'));
 
         \Phpcmf\Service::M()->table('member_oauth')->where('uid', $uid)->where('oauth', $tid)->delete();
@@ -415,6 +421,10 @@ class Member extends \Phpcmf\Table
     public function login_index() {
         
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $list = \Phpcmf\Service::M()->table('member_login')->where('uid', $uid)->order_by('logintime desc')->getAll();
 
         \Phpcmf\Service::V()->assign([
@@ -429,6 +439,9 @@ class Member extends \Phpcmf\Table
 
         $gid = (int)\Phpcmf\Service::L('input')->get('gid');
         $uid = (int)\Phpcmf\Service::L('input')->get('uid');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
 
         \Phpcmf\Service::M('member')->delete_group($uid, $gid, 1);
 
@@ -439,6 +452,10 @@ class Member extends \Phpcmf\Table
     public function group_edit() {
 
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $groups = \Phpcmf\Service::M('member')->update_group(
             \Phpcmf\Service::M()->table('member')->get($uid),
             \Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()
@@ -491,6 +508,8 @@ class Member extends \Phpcmf\Table
         foreach ($ids as $i) {
             $uid = intval($i);
             if (!$uid) {
+                continue;
+            } elseif (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
                 continue;
             } elseif (!$this->member_cache['config']['groups']
                 && dr_count(\Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()) > 1) {

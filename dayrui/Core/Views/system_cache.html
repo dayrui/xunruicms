@@ -44,6 +44,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="data[SYS_CACHE_SMS]" value="{intval($data['SYS_CACHE_SMS'])}">
+
                         {loop $cache_var $value $name}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang($name)}</label>

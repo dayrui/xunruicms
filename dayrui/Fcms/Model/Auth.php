@@ -12,6 +12,23 @@ class Auth extends \Phpcmf\Model {
 
     private $_is_post_user = -1;
 
+    // 验证操作其他用户身份权限
+    public function cleck_edit_member($uid) {
+
+        // 超管不验证
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            return true;
+        } elseif ($this->uid == $uid) {
+            // 自己不验证
+            return true;
+        } elseif (\Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->counts()) {
+            // 此账号属于管理账号，禁止操作
+            return false;
+        }
+
+        return true;
+    }
+
     // 编辑时的获取自定义面板
     public function edit_main_table($table, $name, $tid = 12) {
 

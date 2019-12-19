@@ -195,7 +195,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -282,7 +282,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
-        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

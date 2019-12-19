@@ -96,9 +96,9 @@ foreach ([
              'SYS_CACHE_TYPE',
              'SYS_CACHE_SHOW',
              'SYS_CACHE_PAGE',
-             'SYS_CACHE_ATTACH',
              'SYS_CACHE_LIST',
              'SYS_CACHE_SEARCH',
+             'SYS_CACHE_SMS',
          ] as $name) {
     define($name, (int)$cache[$name]);
 }

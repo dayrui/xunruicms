@@ -404,6 +404,10 @@ class Api extends \Phpcmf\Common
     public function alogin() {
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $code = md5($this->admin['id'].$this->admin['password']);
 
         \Phpcmf\Service::L('cache')->set_data('admin_login_member', $this->admin, 300);

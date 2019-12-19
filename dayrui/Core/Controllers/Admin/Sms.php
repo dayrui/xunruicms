@@ -22,10 +22,12 @@ class Sms extends \Phpcmf\Common
 	public function index() {
 
 		$file = WRITEPATH.'config/sms.php';
+        $cfile = WRITEPATH.'config/cache.php';
+        $cache = is_file($cfile) ? require $cfile : [];
 
 		if (IS_AJAX_POST) {
 
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
 			if (strlen($data['note']) > 30) {
 			    $this->_json(0, dr_lang('短信签名超出了范围'));
             }
@@ -34,7 +36,14 @@ class Sms extends \Phpcmf\Common
 				unset($data['third']);
 			}
 
-			!\Phpcmf\Service::L('Config')->file($file, '短信配置文件')->to_require_one($data) && $this->_json(0, dr_lang('配置文件写入失败'));
+			$cache['SYS_CACHE_SMS'] = (int)\Phpcmf\Service::L('input')->post('SYS_CACHE_SMS');
+            if (!\Phpcmf\Service::L('Config')->file($cfile, '缓存配置文件')->to_require_one($cache)) {
+                $this->_json(0, dr_lang('配置文件写入失败'));
+            }
+
+			if (!\Phpcmf\Service::L('Config')->file($file, '短信配置文件')->to_require_one($data)) {
+			    $this->_json(0, dr_lang('配置文件写入失败'));
+            }
 
 			\Phpcmf\Service::L('input')->system_log('配置短信接口'); // 记录日志
 			$this->_json(1, dr_lang('操作成功'));
@@ -42,6 +51,7 @@ class Sms extends \Phpcmf\Common
 
 		\Phpcmf\Service::V()->assign(array(
 			'data' => is_file($file) ? require $file : [],
+			'cache' => $cache,
 		));
 		\Phpcmf\Service::V()->display('sms_index.html');
 	}
