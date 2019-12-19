@@ -95,20 +95,6 @@ class Api extends \Phpcmf\Common
                 $this->_json(0, dr_lang('手机号码%s已经注册', $value), ['field' => 'value']);
             }
 
-            if (defined('UCSSO_API')) {
-                if ($this->member_cache['register']['verify'] == 'phone') {
-                    $rt = ucsso_edit_phone($this->uid, $value);
-                    if (!$rt['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
-                } else {
-                    $rt = ucsso_edit_email($this->uid, $value);
-                    if (!$rt['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
-                }
-            }
-
             $this->member['randcode'] = rand(100000, 999999);
             \Phpcmf\Service::M()->db->table('member')->where('id', $this->uid)->update([
                 'randcode' => $this->member['randcode'],

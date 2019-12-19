@@ -116,10 +116,6 @@ class Account extends \Phpcmf\Common
                 if (!is_file($file)) {
                     $this->_json(0, dr_lang('头像存储失败'));
                 }
-                if (defined('UCSSO_API')) {
-                    $rt = ucsso_avatar($this->uid, $content);
-                    !$rt['code'] && $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
-                }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             } else {
@@ -197,10 +193,6 @@ class Account extends \Phpcmf\Common
                     $this->_json(0, dr_lang('手机号码格式不正确'));
                 } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'.$this->member['id'])->where('phone', $value)->countAllResults()) {
                     $this->_json(0, dr_lang('手机号码已经注册'));
-                } elseif (defined('UCSSO_API') && $rt = ucsso_edit_phone($this->uid, $value)) {
-                    if (!$rt['code']) {
-                        $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
                 }
                 \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['phone' => $value]);
             }

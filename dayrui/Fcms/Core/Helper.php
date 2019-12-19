@@ -509,10 +509,6 @@ function dr_avatar_path() {
 function dr_avatar($uid) {
 
     if ($uid) {
-        if (defined('UCSSO_API')) {
-            return ucsso_get_avatar($uid);
-        }
-
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
             return $cache_url.$uid.'.jpg';

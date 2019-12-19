@@ -204,12 +204,6 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        // 加载UCSSO客户端
-        /*
-        if ($this->member_cache['config']['ucsso'] && is_file(ROOTPATH.'api/ucsso/config.php')) {
-            include ROOTPATH.'api/ucsso/client.php';
-        }*/
-
         // 网站常量
         define('SITE_ICP', $this->get_cache('site', SITE_ID, 'config', 'SITE_ICP'));
         define('SITE_TONGJI', $this->get_cache('site', SITE_ID, 'config', 'SITE_TONGJI'));
@@ -224,20 +218,7 @@ abstract class Common extends \CodeIgniter\Controller
             && \Phpcmf\Service::L('input')->request('appsecret')) {
             define('IS_API_HTTP', 1);
             $this->_api_auth();
-            // 获取当前的登录记录
-            $auth = \Phpcmf\Service::L('input')->request('api_auth_code');
-            if ($auth) {
-                // 通过接口的post认证
-                $this->uid = (int)\Phpcmf\Service::L('input')->get('api_auth_uid');
-                $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);
-                // 表示登录成功
-                if (!$this->member) {
-                    // 不存在的账号
-                    $this->_json(0, dr_lang('api_auth_uid 账号不存在'));
-                } elseif (md5($this->member['passowrd'].$this->member['salt']) != $auth) {
-                    $this->_json(0, dr_lang('登录超时，请重新登录'));
-                }
-            }
+            \Phpcmf\Service::M('http', 'httpapi')->check_auth();
         } else {
             define('IS_API_HTTP', 0);
             $this->uid = (int)\Phpcmf\Service::M('member')->member_uid();

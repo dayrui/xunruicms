@@ -318,7 +318,7 @@ class View {
             exit('模板文件 ('.$error.') 不存在');
         }
 
-        exit('模板文件 ('.str_replace(TPLPATH, '/', $error).') 不存在');
+        show_error('模板文件不存在');
     }
 
 
@@ -379,7 +379,7 @@ class View {
         $fname = md5($file);
         isset($this->_include_file[$fname]) ? $this->_include_file[$fname] ++ : $this->_include_file[$fname] = 0;
 
-        $this->_include_file[$fname] > 500 && exit('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }
@@ -395,7 +395,7 @@ class View {
         $fname = md5($file);
         $this->_include_file[$fname] ++;
 
-        $this->_include_file[$fname] > 500 && exit('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }

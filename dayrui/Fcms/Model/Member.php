@@ -96,9 +96,17 @@ class Member extends \Phpcmf\Model
             $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
         }
 
-        // 验证登录情况
-        if (dr_is_app('login')) {
-            \Phpcmf\Service::M('login', 'login')->check($data, $row, $log);
+        $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
+        if (date('Ymd') != date('Ymd', $time)) {
+            // 登录后的通知
+            \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
+            // 登录后的钩子
+            $data['log'] = [
+                'now' => $log,
+                'before' => $row,
+            ];
+            \Phpcmf\Hooks::trigger('member_login_after', $data);
+            \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
         }
 
         // 同一天Ip一致时只更新一次更新时间
@@ -112,15 +120,6 @@ class Member extends \Phpcmf\Model
                         $this->db->table('member_login')->where('id', $row['id'])->update($log);
         } else {
             $this->db->table('member_login')->insert($log);
-        }
-
-        $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
-        if (date('Ymd') != date('Ymd', $time)) {
-            // 登录后的通知
-            \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
-            // 登录后的钩子
-            \Phpcmf\Hooks::trigger('member_login_after', $data);
-            \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
         }
 
     }
@@ -181,17 +180,6 @@ class Member extends \Phpcmf\Model
         } elseif (!$cookie) {
             return 0;
         } elseif (substr(md5(SYS_KEY.$member['password']), 5, 20) !== $cookie) {
-            if (defined('UCSSO_API')) {
-                $rt = ucsso_get_password($member['id']);
-                if ($rt['code']) {
-                    // 变更本地库
-                    $this->db->table('member')->where('id', $member['id'])->update(array(
-                        'salt' => $rt['data']['salt'],
-                        'password' => $rt['data']['password'],
-                    ));
-                    return 1;
-                }
-            }
             return 0;
         }
 
@@ -643,13 +631,6 @@ class Member extends \Phpcmf\Model
     public function sso($data, $remember = 0) {
 
         $sso = [];
-        // 同步登录地址
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_synlogin($data['id']);
-            if ($rt && preg_match_all('/<script type=\"text\/javascript\" src=\"(.+)\"/iU', $rt, $mt)) {
-                $sso = $mt[1];
-            }
-        }
         $url = $this->get_sso_url();
         foreach ($url as $u) {
             $code = dr_authcode($data['id'].'-'.$data['salt'], 'ENCODE');
@@ -669,13 +650,6 @@ class Member extends \Phpcmf\Model
         \Phpcmf\Service::L('input')->set_cookie('admin_login_member', '', -100000000);
 
         $sso = [];
-        // 同步退出地址
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_synlogout();
-            if ($rt && preg_match_all('/<script type=\"text\/javascript\" src=\"(.+)\"/iU', $rt, $mt)) {
-                $sso = $mt[1];
-            }
-        }
         $url = $this->get_sso_url();
         foreach ($url as $u) {
             $sso[]= $u.'index.php?s=api&c=sso&action=logout';
@@ -731,87 +705,21 @@ class Member extends \Phpcmf\Model
      */
     public function login($username, $password, $remember = 0) {
 
-        // 同步登录
-        if (defined('UCSSO_API')) {
-            /*
-                    1:表示用户登录成功
-                   -1:用户名不合法
-                   -2:密码不合法
-                   -3:用户名不存在
-                   -4:密码不正确
-               */
-            $rt = ucsso_login($username, $password);
-            if ($rt['code'] <= 0) {
-                if ($rt['code'] == -3) {
-                    // 当ucsso用户不存在时，在验证本地库
-                    $data = $this->_find_member_info($username);
-                    if ($data) {
-                        //如果本地库有，我们就同步到服务器去
-                        $rt = ucsso_register($username, $password, $data['email'], $data['phone']);
-                        /*
-                            大于 0:返回用户 ID，表示用户注册成功
-                             0:失败
-                            -1:用户名不合法
-                            -2:用户名已经存在
-                            -3:Email 格式有误
-                            -4:该 Email 已经被注册
-                            -5:该 手机号码格式有误
-                            -6:该 手机号码已经被注册
-                        */
-                        if ($rt['code'] > 0) {
-                            // 注册成功了
-                            $rt2 = ucsso_syncuid($rt['code'], $data['uid']); // 上报uid
-                            if (!$rt2['code']) {
-                                return dr_return_data(0, dr_lang('通信失败：%s', $rt2['msg']));
-                            }
-                        } else {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                } else {
-                    return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                }
-            } else {
-                // 登录成功
-                if (!$rt['data']['uid']) {
-                    // 表示ucsso存在这个账号，但没有注册uid
-                    $data = $this->_find_member_info($username);
-                    $ucsso_id = $rt['data']['ucsso_id'];
-                    if (!$data) {
-                        // 本地有会员不存在时就重新注册
-                        $rt = $this->register(0, array(
-                            'username' => $username,
-                            'password' => $password,
-                            'email' => $rt['data']['email'],
-                            'phone' => $rt['data']['phone'],
-                        ), [], 0);
-                        if (!$rt['code']) {
-                            return dr_return_data(0, $rt['msg']);
-                        }
-                        $data = $rt['data'];
-                    }
-                    // 上报uid
-                    $rt2 = ucsso_syncuid($ucsso_id, $data['id']);
-                    if (!$rt2['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt2['msg']));
-                    }
-                }
-            }
-            // 同步操作之后再查找用户
-            !$data && $data = $this->_find_member_info($username);
-            if (!$data) {
-                return dr_return_data(0, dr_lang('用户不存在'));
-            }
-        } else {
-            $data = $this->_find_member_info($username);
-            if (!$data) {
-                return dr_return_data(0, dr_lang('用户不存在'));
-            }
-            // 密码验证
-            $password = dr_safe_password($password);
-            if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
-                return dr_return_data(0, dr_lang('密码不正确'));
-            }
+        // 登录
+        $data = $this->_find_member_info($username);
+        if (!$data) {
+            return dr_return_data(0, dr_lang('用户不存在'));
+        }
+        // 密码验证
+        $password2 = dr_safe_password($password);
+        if (md5(md5($password2).$data['salt'].md5($password2)) != $data['password']) {
+            \Phpcmf\Hooks::trigger('member_login_password_error', [
+                'member' => $data,
+                'password' => $password,
+                'ip' => (string)\Phpcmf\Service::L('input')->ip_address(),
+                'time' => SYS_TIME,
+            ]);
+            return dr_return_data(0, dr_lang('密码不正确'));
         }
 
         // 验证管理员登录
@@ -1011,27 +919,6 @@ class Member extends \Phpcmf\Model
             }
         }
 
-        $ucsso_id = 0;
-        if ($sync && defined('UCSSO_API')) {
-            /*
-                大于 0:返回用户 ID，表示用户注册成功
-                 0:失败
-                -1:用户名不合法
-                -2:用户名已经存在
-                -3:Email 格式有误
-                -4:该 Email 已经被注册
-                -5:该 手机号码 格式有误
-                -6:该 手机号码 已经被注册
-            */
-            $rt = ucsso_register($member['username'], $member['password'], $member['email'], $member['phone']);
-            if ($rt['code'] > 0) {
-                // 注册成功
-                $ucsso_id = (int)$rt['code'];
-            } else {
-                return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-            }
-        }
-
         $member['name'] = !$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), '');
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
         $member['password'] = $member['password'] ? md5(md5($member['password']).$member['salt'].md5($member['password'])) : '';
@@ -1080,15 +967,6 @@ class Member extends \Phpcmf\Model
             // 删除主表
             $this->table('member')->delete($uid);
             return dr_return_data(0, $rt['msg']);
-        }
-
-        // uid 同步
-        if ($ucsso_id && defined('UCSSO_API')) {
-            $rt = ucsso_syncuid($ucsso_id, $uid);
-            if (!$rt['code']) {
-                // 同步失败
-                log_message('error', 'UCSSO同步uid失败：'.$rt['msg']);
-            }
         }
 
         // 归属用户组
@@ -1181,14 +1059,6 @@ class Member extends \Phpcmf\Model
         $password = dr_safe_password($password);
         if (!$id || !$password) {
             return false;
-        }
-
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_edit_password($id, $password);
-            // 修改失败
-            if (!$rt['code']) {
-                return false;
-            }
         }
 
         $update['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码

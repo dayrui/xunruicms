@@ -252,13 +252,7 @@ class Member extends \Phpcmf\Table
                 copy($temp, $file);
                 if (!is_file($file)) {
 					$this->_json(0, dr_lang('头像存储失败'));
-				} 
-                if (defined('UCSSO_API')) {
-                    $rt = ucsso_avatar($uid, $content);
-                    if (!$rt['code']) {
-						$this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
-					}
-                }
+				}
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'));
             } else {
@@ -387,7 +381,6 @@ class Member extends \Phpcmf\Table
                     \Phpcmf\Service::M('member')->member_delete($id);
 
                 }
-                defined('UCSSO_API') && ucsso_delete($ids);
                 return dr_return_data(1, 'ok');
             },
             \Phpcmf\Service::M()->dbprefix('member')
@@ -562,18 +555,6 @@ class Member extends \Phpcmf\Table
                 } elseif ($member['phone'] && \Phpcmf\Service::M()->db->table('member')->where('id<>'. $id)->where('phone', $member['phone'])->countAllResults()) {
                     return dr_return_data(0, dr_lang('手机号码%s已经注册', $member['phone']), ['field' => 'phone']);
                 }
-                if (defined('UCSSO_API')) {
-                    if ($member['phone'] != $old['phone'] && $rt = ucsso_edit_phone($id, $member['phone'])) {
-                        if (!$rt['code']) {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                    if ($member['email'] != $old['email'] && $rt = ucsso_edit_email($id, $member['email'])) {
-                        if (!$rt['code']) {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                }
                 // 保存附表内容
                 $status = \Phpcmf\Service::L('input')->post('status');
                 $member_data = $data[1] ? $data[1] : [];
@@ -593,7 +574,6 @@ class Member extends \Phpcmf\Table
                 if ($password) {
                     $member = \Phpcmf\Service::M()->table('member')->get($id);
                     \Phpcmf\Service::M('member')->edit_password($member, $password);
-                    defined('UCSSO_API') && ucsso_edit_password($id, $password);
                 }
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');
