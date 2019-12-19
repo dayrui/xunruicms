@@ -74,7 +74,7 @@ class Seo
 
         $data['page'] = $page > 1 ? $page : '';
         $data['join'] = SITE_SEOJOIN ? SITE_SEOJOIN : '_';
-        $data['modulename'] = $data['modname'] = $mod['name'];
+        $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
         $data['param'] = '';
         $data['keyword'] = '';
 
@@ -201,7 +201,7 @@ class Seo
         $cat['join'] = SITE_SEOJOIN;
         $cat['name'] = $cat['catname'] = $cat['name'];
         $cat['catpname'] = dr_get_cat_pname($mod, $catid, $cat['join']);
-        $cat['modulename'] = $cat['modname'] = $mod['title'];
+        $cat['modulename'] = $cat['modname'] = dr_lang($mod['name']);
 
         $rep = new \php5replace($cat);
 
@@ -257,7 +257,7 @@ class Seo
         $data['title'] = dr_clearhtml($data['title']);
         $data['catname'] = $cat['name'];
         $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], $data['join']);
-        $data['modulename'] = $data['modname'] = $mod['name'];
+        $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
 
         $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
         $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));
@@ -304,7 +304,7 @@ class Seo
     function comment($mod, $data) {
 
         $seo = [
-            'meta_title' => dr_lang('评论: %s', $data['title']).SITE_SEOJOIN.$mod['name'],
+            'meta_title' => dr_lang('评论: %s', $data['title']).SITE_SEOJOIN.dr_lang($mod['name']),
             'meta_keywords' => $data['keywords'],
             'meta_description' => $data['description'],
         ];
@@ -316,7 +316,7 @@ class Seo
     function mform_list($form, $index, $page = 1) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.$form['name'],
+            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
@@ -328,7 +328,7 @@ class Seo
     function mform_post($form, $index) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.$form['name'],
+            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
@@ -340,7 +340,7 @@ class Seo
     function mform_show($form, $index, $data) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.$form['name'],
+            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
@@ -352,7 +352,7 @@ class Seo
     function form_list($form, $page = 1) {
 
         $seo = [
-            'meta_title' => $form['name'],
+            'meta_title' => dr_lang($form['name']),
             'meta_keywords' => '',
             'meta_description' => '',
         ];
@@ -364,7 +364,7 @@ class Seo
     function form_post($form) {
 
         $seo = [
-            'meta_title' => $form['name'],
+            'meta_title' => dr_lang($form['name']),
             'meta_keywords' => '',
             'meta_description' => '',
         ];
@@ -376,7 +376,7 @@ class Seo
     function form_show($form, $data) {
 
         $seo = [
-            'meta_title' => $data['title'].SITE_SEOJOIN.$form['name'],
+            'meta_title' => $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
             'meta_keywords' => '',
             'meta_description' => '',
         ];

@@ -1638,7 +1638,6 @@ class Member extends \Phpcmf\Model
     // 修改账号
     public function edit_username($uid, $username) {
 
-        $username = dr_safe_filename($username);
         $this->table('member')->update($uid, [
             'username' => $username,
         ]);

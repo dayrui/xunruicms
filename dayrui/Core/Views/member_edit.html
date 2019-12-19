@@ -105,7 +105,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label "></label>
                             <div class="col-md-9">
-                                <a href="javascript:dr_iframe_show('{dr_lang('头像设置')}', '{dr_url('member/avatar_edit', ['id'=>$id])}');"><img class="img-circle" src="{dr_avatar($id)}" style="width:50px;height:50px"></a>
+                                <a href="javascript:dr_iframe_show('{dr_lang('头像设置')}', '{dr_url('member/avatar_edit', ['id'=>$id])}', '500px');"><img class="img-circle" src="{dr_avatar($id)}" style="width:50px;height:50px"></a>
                             </div>
                         </div>
                         <div class="form-group">
@@ -120,7 +120,7 @@
                                 <div class="input-group" style="width: 300px;">
                                     <input type="text" readonly value="{$username}" class="form-control">
                                     <span class="input-group-btn">
-                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更")}', '{dr_url("member/username_edit", ['id' => $id])}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更")}', '{dr_url("member/username_edit", ['id' => $id])}', '500px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
                                     </span>
                                 </div>
                             </div>

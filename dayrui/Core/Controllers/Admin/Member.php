@@ -129,11 +129,15 @@ class Member extends \Phpcmf\Table
 
         if (IS_POST) {
 
-            $name = trim(\Phpcmf\Service::L('input')->post('name', true));
+            $name = trim(dr_safe_filename(\Phpcmf\Service::L('input')->post('name')));
             if (!$name) {
-                exit($this->_json(0, dr_lang('账号不能为空')));
+                $this->_json(0, dr_lang('新账号不能为空'));
+            } elseif ($member['username'] == $name) {
+                $this->_json(0, dr_lang('新账号不能和原始账号相同'));
             } elseif (!\Phpcmf\Service::L('form')->check_username($name)) {
-                $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'name']);
+                $this->_json(0, dr_lang('新账号格式不正确'), ['field' => 'name']);
+            } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $name)->countAllResults()) {
+                $this->_json(0, dr_lang('新账号%s已经注册', $name), ['field' => 'name']);
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);

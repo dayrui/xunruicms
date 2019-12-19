@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             {loop $my $t}
-            <tr class="odd gradeX" id="dr_row_{$t.id}">
+            <tr class="odd gradeX">
                 <td style="text-align:center">
                     <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('module/hidden_edit', ['id'=>$t.id])}', 1);" class="badge badge-{if $t.disabled}no{else}yes{/if}"><i class="fa fa-{if $t.disabled}times{else}check{/if}"></i></a>
                 </td>
@@ -61,7 +61,7 @@
             {/loop}
             {if $ci->_is_admin_auth()}
             {loop $list $t}
-            <tr class="odd gradeX" id="dr_row_{$t.id}">
+            <tr class="odd gradeX">
                 <td style="text-align:center"> -- </td>
                 <td style="text-align:center"> -- </td>
                 <td style="text-align:center"> -- </td>

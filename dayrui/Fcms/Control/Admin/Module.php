@@ -862,6 +862,17 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('推荐位不存在: '.$flag));
         }
 
+        if (IS_POST) {
+            $ids = \Phpcmf\Service::L('input')->get_post_ids();
+            if (!$ids) {
+                $this->_json(0, dr_lang('所选内容不存在'));
+            }
+            foreach ($ids as $id) {
+                $this->content_model->delete_flag($id, $flag);
+            }
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
         $this->_init([
             'table' => SITE_ID.'_'.APP_DIR,
             'date_field' => 'inputtime',
@@ -875,6 +886,12 @@ class Module extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'p' => ['flag' => $flag],
+            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
+                $this->module,
+                ' <i class="'.dr_icon($this->module['setting']['flag'][$flag]['icon']).'"></i>  '.dr_lang($this->module['setting']['flag'][$flag]['name']),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/flag/index', ['flag' => $flag]),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
+            ),
             'category_select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['param']['catid'],
@@ -887,12 +904,7 @@ class Module extends \Phpcmf\Table
             ),
             'clink' => $this->_app_clink(),
             'cbottom' => $this->_app_cbottom(),
-            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
-                $this->module,
-                ' <i class="'.dr_icon($this->module['setting']['flag'][$flag]['icon']).'"></i>  '.dr_lang($this->module['setting']['flag'][$flag]['name']),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/flag/index', ['flag' => $flag]),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
-            ),
+            'is_flag' => 1,
         ]);
         \Phpcmf\Service::V()->display('share_list.html');
 

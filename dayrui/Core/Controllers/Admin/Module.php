@@ -138,7 +138,7 @@ class Module extends \Phpcmf\Common
             foreach ($module as $t) {
                 $dir = $t['dirname'];
                 if ($list[$dir]) {
-                    $t['name'] = $list[$dir]['name'];
+                    $t['name'] = dr_lang($list[$dir]['name']);
                     $t['mtype'] = $list[$dir]['mtype'];
                     $t['system'] = $list[$dir]['system'];
                     $t['version'] = $list[$dir]['version'];
