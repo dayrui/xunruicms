@@ -304,7 +304,7 @@ class Form
 	
 	// 储存已发短信验证码
 	public function set_mobile_code($phone, $code) {
-		return \Phpcmf\Service::L('cache')->set_data('phone-code-'.$phone, $code, 60);
+		return \Phpcmf\Service::L('cache')->set_data('phone-code-'.$phone, $code, SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 	}
 
     // 验证码类
