@@ -778,8 +778,9 @@ class Content extends \Phpcmf\Model {
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
         !$data[1]['description'] && $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), 100));
 
-        if (isset($data[1]['keywords'])) {
-            !$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
+        if (isset($data[1]['keywords']) && $data[1]['keywords']) {
+			// 不要自动获取关键词，容易卡顿，引起发布延迟
+            //!$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
             $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
         }
 
