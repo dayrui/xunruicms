@@ -9,22 +9,17 @@
 // 系统缓存
 class Cache extends \Phpcmf\Model
 {
-    private $is_sync_cache;
     private $site_cache;
     private $module_cache;
+    private $is_sync_cache;
 
     // 更新附件缓存
     public function update_attachment() {
 
         $page = intval($_GET['page']);
         if (!$page) {
-			/*
-            if (!SYS_CACHE) {
-                exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未开启缓存功能').'</a>', 1));
-            } elseif (!SYS_CACHE_ATTACH) {
-                exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未设置附件缓存时间').'</a>', 1));
-            }*/
-			dr_mkdirs(WRITEPATH.'attach');
+            dr_mkdirs(WRITEPATH.'attach');
+            dr_dir_delete(WRITEPATH.'attach');
             exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1));
         }
 
