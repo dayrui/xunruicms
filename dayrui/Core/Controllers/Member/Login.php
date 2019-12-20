@@ -23,8 +23,10 @@ class Login extends \Phpcmf\Common
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
                 $this->_json(0, dr_lang('图片验证码不正确'));
-            } elseif (empty($post['username']) || empty($post['password'])) {
-                $this->_json(0, dr_lang('账号或密码必须填写'));
+            } elseif (empty($post['password'])) {
+                $this->_json(0, dr_lang('密码必须填写'));
+            } elseif (empty($post['username'])) {
+                $this->_json(0, dr_lang('账号必须填写'));
             } else {
                 $rt = \Phpcmf\Service::M('member')->login(dr_safe_username($post['username']), $post['password'], (int)$_POST['remember']);
                 if ($rt['code']) {

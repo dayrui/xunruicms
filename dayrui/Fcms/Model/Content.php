@@ -99,6 +99,7 @@ class Content extends \Phpcmf\Model {
                 ]);
 
                 // 挂钩点 模块内容审核处理之后
+                $verify['old'] = $old;
                 \Phpcmf\Hooks::trigger('module_verify_after', array_merge($verify, $update));
                 // 通知管理员
                 $data[1]['status'] > 0 && \Phpcmf\Service::M('member')->admin_notice(
@@ -157,6 +158,7 @@ class Content extends \Phpcmf\Model {
 					);
 
                     // 挂钩点 模块内容审核处理之后
+                    $verify['old'] = $old;
                     \Phpcmf\Hooks::trigger('module_verify_after', $verify);
 				} else {
 					// 通知管理员

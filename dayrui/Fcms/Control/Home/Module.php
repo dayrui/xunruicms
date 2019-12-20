@@ -335,7 +335,7 @@ class Module extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
-        \Phpcmf\Service::V()->assign(array(
+        \Phpcmf\Service::V()->assign([
             'cat' => $cat,
             'top' => $top,
             'get' => $get,
@@ -352,7 +352,7 @@ class Module extends \Phpcmf\Common
             'content_id' => $data['contentid'],
             'search_sql' => $data['sql'],
             'is_search_page' => 1,
-        ));
+        ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
 
         // 挂钩点 搜索完成之后
