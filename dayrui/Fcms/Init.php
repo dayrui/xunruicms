@@ -204,6 +204,12 @@ if (is_file(MYPATH.'Dev.php')) {
     }
 }
 
+// 兼容错误提示
+function dr_show_error($msg) {
+    $url = CI_DEBUG ? '<p>'.FC_NOW_URL.'</p>' : '';
+    exit("<!DOCTYPE html><html lang=\"zh-cn\"><head><meta charset=\"utf-8\"><title>系统错误</title><style>        div.logo {            height: 200px;            width: 155px;            display: inline-block;            opacity: 0.08;            position: absolute;            top: 2rem;            left: 50%;            margin-left: -73px;        }        body {            height: 100%;            background: #fafafa;            font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;            color: #777;            font-weight: 300;        }        h1 {            font-weight: lighter;            letter-spacing: 0.8;            font-size: 3rem;            margin-top: 0;            margin-bottom: 0;            color: #222;        }        .wrap {            max-width: 1024px;            margin: 5rem auto;            padding: 2rem;            background: #fff;            text-align: center;            border: 1px solid #efefef;            border-radius: 0.5rem;            position: relative;        }        pre {            white-space: normal;            margin-top: 1.5rem;        }        code {            background: #fafafa;            border: 1px solid #efefef;            padding: 0.5rem 1rem;            border-radius: 5px;            display: block;        }        p {            margin-top: 1.5rem;        }        .footer {            margin-top: 2rem;            border-top: 1px solid #efefef;            padding: 1em 2em 0 2em;            font-size: 85%;            color: #999;        }        a:active,        a:link,        a:visited {            color: #dd4814;        }</style></head><body><div class=\"wrap\"><p>{$msg}</p>    {$url}</div></body></html>");
+}
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
@@ -227,14 +233,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
         define('IS_MEMBER', FALSE);
     } else {
         // 不存在的应用
-        define('APPPATH', COREPATH);
-        define('APP_DIR', '');
-        define('IS_MEMBER', FALSE);
-        $_GET['s'] = '';
-        $_GET['c'] = 'home';
-        $_GET['m'] = 's404';
-        $_GET['uri'] = '应用程序('.strtolower($dir).')不存在';
-        //exit();
+        dr_show_error(CI_DEBUG ? '应用程序('.dr_get_app_dir($dir).')不存在' : '应用程序('.strtolower($dir).')不存在');
     }
 } else {
     // 系统主目录

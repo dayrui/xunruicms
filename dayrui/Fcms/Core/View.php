@@ -312,13 +312,11 @@ class View {
             return TPLPATH.'pc/default/home/msg.html';
         }
 
-
         if (CI_DEBUG) {
-            echo FC_NOW_URL.PHP_EOL.'<hr>';
-            exit('模板文件 ('.$error.') 不存在');
+            dr_show_error('模板文件 ('.$error.') 不存在');
+        } else {
+            dr_show_error('模板文件不存在');
         }
-
-        show_error('模板文件不存在');
     }
 
 
@@ -379,7 +377,7 @@ class View {
         $fname = md5($file);
         isset($this->_include_file[$fname]) ? $this->_include_file[$fname] ++ : $this->_include_file[$fname] = 0;
 
-        $this->_include_file[$fname] > 500 && show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }
@@ -395,7 +393,7 @@ class View {
         $fname = md5($file);
         $this->_include_file[$fname] ++;
 
-        $this->_include_file[$fname] > 500 && show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }
@@ -414,7 +412,7 @@ class View {
         // 开发者模式下关闭缓存
         if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
             $content = $this->handle_view_file(file_get_contents($name));
-            @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && show_error('请将模板缓存目录（/cache/template/）权限设为777', 404, '无写入权限');
+            @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && dr_show_error('请将模板缓存目录（/cache/template/）权限设为777');
         }
 
         return $cache_file;

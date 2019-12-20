@@ -148,6 +148,8 @@ function dr_tips(code, msg, time) {
 
     if (!time) {
         time = 3000;
+    } else {
+        time = time * 1000;
     }
     var tip = '<i class="fa fa-info-circle"></i>';
     //var theme = 'teal';
@@ -159,7 +161,7 @@ function dr_tips(code, msg, time) {
         //theme = 'ruby';
     }
 
-    layer.msg(tip+'&nbsp;&nbsp;'+msg);
+    layer.msg(tip+'&nbsp;&nbsp;'+msg, {time: time});
 }
 function dr_cmf_tips(code, msg, time) {
     dr_tips(code, msg, time);
