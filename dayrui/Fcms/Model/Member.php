@@ -210,6 +210,9 @@ class Member extends \Phpcmf\Model
     public function get_member($uid = 0, $name = '') {
 
         $uid = intval($uid);
+        if ($uid == $this->member['id']) {
+            return $this->member;
+        }
 
         if ($uid) {
             $data = $this->db->table('member')->where('id', $uid)->get()->getRowArray();
@@ -217,6 +220,7 @@ class Member extends \Phpcmf\Model
             $data = $this->db->table('member')->where('username', $name)->get()->getRowArray();
             $uid = (int)$data['id'];
         }
+
         if (!$data) {
             return null;
         }
@@ -590,6 +594,9 @@ class Member extends \Phpcmf\Model
         $this->db->table('member_data')->where('id', $uid)->update(['is_verify' => 1]);
         // 后台提醒
         $this->todo_admin_notice('member_verify/index:field/id/keyword/'.$uid, 0);
+        // 审核提醒
+        // 注册审核后的通知
+        \Phpcmf\Service::L('Notice')->send_notice('member_register_verify', $this->get_member($uid));
     }
 
     /**

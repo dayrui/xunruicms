@@ -131,7 +131,9 @@ class Member_verify extends \Phpcmf\Table
     public function edit() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('所选用户不存在'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选用户不存在'));
+        }
 
         foreach ($ids as $id) {
             \Phpcmf\Service::M('member')->verify_member($id);
