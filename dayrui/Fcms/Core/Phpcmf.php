@@ -1017,12 +1017,14 @@ abstract class Common extends \CodeIgniter\Controller
                 'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
             ];
         }
-        $data[] = [
-            'icon' => 'fa fa-weixin',
-            'name' => dr_lang('发送到微信公众号'),
-            'uri' => APP_DIR.'/home/edit',
-            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发送到微信公众号").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=2\')',
-        ];
+        if (dr_is_app('weixin')) {
+            $data[] = [
+                'icon' => 'fa fa-weixin',
+                'name' => dr_lang('发送到微信公众号'),
+                'uri' => APP_DIR.'/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发送到微信公众号").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=2\')',
+            ];
+        }
         $data[] = [
             'icon' => 'fa fa-clock-o',
             'name' => dr_lang('更新时间'),

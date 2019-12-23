@@ -15,7 +15,7 @@ class App extends \Phpcmf\Model
     public function is_sys_dir($dir) {
         return in_array($dir, ['case', 'class', 'extends',
             'new', 'var', 'member', 'category',
-            'module', 'form', 'admin']);
+            'module', 'form', 'admin', 'weixin']);
     }
 
     // 开始安装app

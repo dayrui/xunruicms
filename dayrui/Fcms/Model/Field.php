@@ -640,7 +640,7 @@ class Field extends \Phpcmf\Model
     // 字段是否存在
     private function _field_module($name) {
         // 保留字段
-        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus'])) {
+        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old'])) {
             return 1;
         }
         // 主表

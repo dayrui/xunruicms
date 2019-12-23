@@ -10,7 +10,6 @@ class Module extends \Phpcmf\Common
 
     private $dir;
     private $form;
-    private $jname = ['case', 'class', 'extends', 'new', 'var'];
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -66,7 +65,7 @@ class Module extends \Phpcmf\Common
 
         if (!preg_match('/^[a-z]+$/U', $dir)) {
             $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
-        } elseif (in_array($dir, $this->jname)) {
+        } elseif (\Phpcmf\Service::M('app')->is_sys_dir($dir)) {
             $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称，请重命名', $dir));
         }
 
