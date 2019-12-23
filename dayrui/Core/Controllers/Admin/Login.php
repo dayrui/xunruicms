@@ -75,6 +75,9 @@ class Login extends \Phpcmf\Common
                 || !$this->member_cache['oauth'][$value]['id']) {
                 continue;
             }
+            if ($value == 'wechat' && !dr_is_app('weixin')) {
+                continue;
+            }
             if (in_array($value, ['weixin', 'wechat'])) {
                 if (dr_is_weixin_app()) {
                     dr_is_app('weixin') && $oauth['wechat'] = [

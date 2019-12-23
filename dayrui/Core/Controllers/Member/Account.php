@@ -278,6 +278,9 @@ class Account extends \Phpcmf\Common
                 || !$this->member_cache['oauth'][$value]['id']) {
                 unset($name[$key]);
             }
+            if ($value == 'wechat' && !dr_is_app('weixin')) {
+                unset($name[$key]);
+            }
         }
 
         \Phpcmf\Service::V()->assign([

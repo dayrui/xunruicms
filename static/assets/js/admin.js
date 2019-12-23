@@ -103,6 +103,15 @@ jQuery(document).ready(function() {
         var td = $(this);
 		if (dr_isEllipsis(td[0]) == true) {
 			var text = td.html();
+			if (text.indexOf("checkbox") != -1) {
+			    return;
+            } else if (text.indexOf("<input") != -1) {
+                return;
+            } else if (text.indexOf("class=\"btn") != -1) {
+			    // 存在按钮
+            } else if (text.indexOf("href=\"") != -1) {
+			    return;
+            }
 			layer.tips(text, td, {
 				tips: [1, '#fff'],
 				time: 5000
