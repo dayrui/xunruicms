@@ -5,10 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
-
-class Input
-{
+class Input {
 
     private $ip_address;
 
@@ -47,19 +44,18 @@ class Input
     }
     
     public function set_cookie($name, $value = '', $expire = '') {
-        \Config\Services::response()->setcookie($name, $value, $expire)->send();
+        \Config\Services::response()->setcookie($name.md5($this->ip_address()), $value, $expire)->send();
     }
     
     public function get_cookie($name) {
-        $name = dr_safe_replace($name);
+        $name = dr_safe_replace($name).md5($this->ip_address());
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
     }
 
     // 获取访客ip地址
     public function ip_address() {
 
-        if ($this->ip_address)
-        {
+        if ($this->ip_address) {
             return $this->ip_address;
         }
 
@@ -97,8 +93,7 @@ class Input
 	
 	// 安全过滤
 	public function get_user_agent() {
-		$str = \Config\Services::request(null, true)->getUserAgent();
-		return \Phpcmf\Service::L('Security')->xss_clean($str);
+		return \Phpcmf\Service::L('Security')->xss_clean(\Config\Services::request(null, true)->getUserAgent());
 	}
 
     /**
@@ -106,24 +101,24 @@ class Input
      */
     public function system_log($action, $insert = 0) {
 
-        if (!$insert) {
+        if (!$insert && (!SYS_ADMIN_LOG || !IS_ADMIN)) {
             // 是否开启日志
-            if (!SYS_ADMIN_LOG || !IS_ADMIN) {
-                return NULL;
-            }
+            return NULL;
         }
 
-        $data = array(
+        $data = [
             'ip' => $this->ip_address(),
             'uid' => (int)\Phpcmf\Service::C()->admin['uid'],
             'time' => SYS_TIME,
             'action' => addslashes(dr_safe_replace($action)),
             'username' => \Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录',
-        );
+        ];
 
         $path = WRITEPATH.'log/'.date('Ym', SYS_TIME).'/';
         $file = $path.date('d', SYS_TIME).'.php';
-        !is_dir($path) && dr_mkdirs($path);
+        if (!is_dir($path)) {
+            dr_mkdirs($path);
+        }
 
         file_put_contents($file, PHP_EOL.dr_array2string($data), FILE_APPEND);
     }
@@ -165,13 +160,8 @@ class Input
 
     /**
      * XSS Clean
-     *
-     * @param	string|string[]	$str		Input data
-     * @param 	bool		$is_image	Whether the input is an image
-     * @return	string
      */
-    public function xss_clean($str, $is_image = FALSE)
-    {
+    public function xss_clean($str, $is_image = FALSE) {
         return \Phpcmf\Service::L('Security')->xss_clean($str, $is_image);
     }
 

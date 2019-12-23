@@ -75,6 +75,7 @@ class Module_search extends \Phpcmf\Common
 
         // 搜索字段
         $data['search_field'] = [
+            'catid' => dr_lang('栏目'),
             'keyword' => dr_lang('关键词'),
             'order' => dr_lang('排序'),
             'page' => dr_lang('分页'),

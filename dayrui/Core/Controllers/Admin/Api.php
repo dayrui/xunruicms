@@ -619,6 +619,9 @@ class Api extends \Phpcmf\Common
         if ((strpos($data['SYS_ATTACHMENT_PATH'], '/') === 0 || strpos($data['SYS_ATTACHMENT_PATH'], ':') !== false)
             && is_dir($data['SYS_ATTACHMENT_PATH'])) {
             // 相对于根目录
+            if (!$data['SYS_ATTACHMENT_URL']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置附件URL地址').'</font>');
+            }
             // 附件上传目录
             $path = rtrim($data['SYS_ATTACHMENT_PATH'], DIRECTORY_SEPARATOR).'/';
             // 附件访问URL
@@ -632,6 +635,70 @@ class Api extends \Phpcmf\Common
         }
 
         $this->_json(1, $note.'<br>'.dr_lang('附件上传目录：%s', $path) .'<br>' . dr_lang('附件访问地址：%s', $url));
+    }
+
+    /**
+     * 测试缩略图域名是否可用
+     */
+    public function test_thumb_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('image');
+        if (!$data['cache_path']) {
+            $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
+            $data['cache_path'] = 'uploadfile/thumb/';
+        } elseif (!$data['cache_url']) {
+            $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['cache_path'], '/') === 0 || strpos($data['cache_path'], ':') !== false) && is_dir($data['cache_path'])) {
+            // 相对于根目录
+            $path = rtrim($data['cache_path'], DIRECTORY_SEPARATOR).'/';
+            if (!$data['cache_url']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
+            }
+            $url = trim($data['cache_url'], '/').'/';
+            $note = dr_lang('已使用自定义存储目录和自定义访问地址');
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['cache_path'], '/').'/';
+            $url = ROOT_URL.trim($data['cache_path'], '/').'/';
+            !$note && $note = dr_lang('存储目录不是绝对的路径时采用，系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('存储目录：%s', $path) .'<br>' . dr_lang('访问地址：%s', $url));
+    }
+
+    /**
+     * 测试头像域名是否可用
+     */
+    public function test_avatar_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('image');
+        if (!$data['avatar_path']) {
+            $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
+            $data['avatar_path'] = 'api/member/';
+        } elseif (!$data['cache_url']) {
+            $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['avatar_path'], '/') === 0 || strpos($data['avatar_path'], ':') !== false) && is_dir($data['avatar_path'])) {
+            // 相对于根目录
+            $path = rtrim($data['avatar_path'], DIRECTORY_SEPARATOR).'/';
+            if (!$data['avatar_url']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
+            }
+            $url = trim($data['avatar_url'], '/').'/';
+            $note = dr_lang('已使用自定义存储目录和自定义访问地址');
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['avatar_path'], '/').'/';
+            $url = ROOT_URL.trim($data['avatar_path'], '/').'/';
+            !$note && $note = dr_lang('存储目录不是绝对的路径时采用，系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('存储目录：%s', $path) .'<br>' . dr_lang('访问地址：%s', $url));
     }
 
     /**

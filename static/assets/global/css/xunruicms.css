@@ -1665,7 +1665,7 @@ Page content
     margin: 0;
     list-style: none; }
 .page-bar .page-breadcrumb > li {
-    display: inline-block; }
+    display: inline-block;     margin-right: 10px;}
 .ie8 .page-bar .page-breadcrumb > li {
     margin-right: 1px; }
 .page-bar .page-breadcrumb > li > a,

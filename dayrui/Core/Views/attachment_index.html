@@ -56,7 +56,7 @@
                                 <div class="input-group input-xlarge">
                                     <input class="form-control " type="text" name="data[SYS_ATTACHMENT_URL]" value="{$data['SYS_ATTACHMENT_URL']}" >
                                     <span class="input-group-btn">
-                                            <button class="btn blue" onclick="dr_test_domain()" type="button"><i class="fa fa-code"></i> {dr_lang('检测')}</button>
+                                            <button class="btn blue" onclick="dr_test_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
                                 </div>
                                 <span class="help-block">{dr_lang('可以为附件目录指定域名，用于分离附件，留空表示默认本站地址（站外保存时必须指定域名）')}</span>
@@ -77,32 +77,40 @@
 
 
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
-                                <div class="col-md-9">
-                                    <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{$image['cache_path']}" >
-                                        <span class="input-group-btn">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{$image['cache_path']}" >
+                                    <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_cache_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
-                                    </div>
-                                    <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认uploadfile/thumb/')}</span>
                                 </div>
+                                <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认uploadfile/thumb/')}</span>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('缩略图访问URL地址')}</label>
-                                <div class="col-md-9">
-                                    <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" name="image[cache_url]" value="{$image['cache_url']}" >
-                                        <span class="input-group-btn">
-                                            <a href="{dr_url('check/index')}" class="btn green" type="button"><i class="fa fa-wrench"></i> {dr_lang('检验')}</a>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('缩略图访问URL地址')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " id="dr_cache_url" type="text" name="image[cache_url]" value="{$image['cache_url']}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_thumb_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
-                                    </div>
-
-                                    <span class="help-block">{dr_lang('缩略图文件访问地址，可单独指定域名，默认/uploadfile/thumb/')}</span>
                                 </div>
+
+                                <span class="help-block">{dr_lang('缩略图文件访问地址，可单独指定域名，默认/uploadfile/thumb/')}</span>
                             </div>
+                        </div>
+
+                        <div class="form-group" style="display: none" id="dr_test_thumb_domain">
+                            <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
+                            <div class="col-md-9" style="padding-top: 3px; line-height: 25px; color:green" id="dr_test_thumb_domain_result">
+
+                            </div>
+                        </div>
+
 
 
                     </div>
@@ -131,14 +139,21 @@
                                 <label class="col-md-2 control-label">{dr_lang('头像访问URL地址')}</label>
                                 <div class="col-md-9">
                                     <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" name="image[avatar_url]" value="{$image['avatar_url']}" >
+                                        <input class="form-control " type="text" id="dr_avatar_url" name="image[avatar_url]" value="{$image['avatar_url']}" >
                                         <span class="input-group-btn">
-                                            <a href="{dr_url('check/index')}" class="btn green" type="button"><i class="fa fa-wrench"></i> {dr_lang('检验')}</a>
+                                            <button class="btn blue" onclick="dr_test_avatar_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
                                     </div>
                                     <span class="help-block">{dr_lang('头像文件访问地址，可单独指定域名，默认/api/member/')}</span>
                                 </div>
                             </div>
+
+                        <div class="form-group" style="display: none" id="dr_test_avatar_domain">
+                            <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
+                            <div class="col-md-9" style="padding-top: 3px; line-height: 25px; color:green" id="dr_test_avatar_domain_result">
+
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -202,6 +217,44 @@
                 layer.close(loading);
                 $('#dr_test_domain').show();
                 $('#dr_test_domain_result').html(json.msg);
+                return false;
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    function dr_test_thumb_domain() {
+        // 延迟加载
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $('#dr_test_domain').hide();
+        $.ajax({type: "POST",dataType:"json", url: admin_file+"?c=api&m=test_thumb_domain", data: $('#myform').serialize(),
+            success: function(json) {
+                layer.close(loading);
+                $('#dr_test_thumb_domain').show();
+                $('#dr_test_thumb_domain_result').html(json.msg);
+                return false;
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+    function dr_test_avatar_domain() {
+        // 延迟加载
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $('#dr_test_domain').hide();
+        $.ajax({type: "POST",dataType:"json", url: admin_file+"?c=api&m=test_avatar_domain", data: $('#myform').serialize(),
+            success: function(json) {
+                layer.close(loading);
+                $('#dr_test_avatar_domain').show();
+                $('#dr_test_avatar_domain_result').html(json.msg);
                 return false;
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
