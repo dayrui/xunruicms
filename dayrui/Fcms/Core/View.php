@@ -1914,6 +1914,10 @@ class View {
 				// 不是搜索标签就加上状态判断
 				if ($system['action'] != 'search') {
 					$where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
+					/*
+                    if (dr_is_app('fstatus') && isset($module['field']['fstatus']) && $module['field']['fstatus']['ismain']) {
+                        $where[] = ['adj' => '', 'name' => 'fstatus', 'value' => 1];
+                    }*/
 				}
 				
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀

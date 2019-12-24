@@ -243,7 +243,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('发送失败'));	
 		}
 
-		\Phpcmf\Service::L('cache')->set_data($name, $value, SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
+		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

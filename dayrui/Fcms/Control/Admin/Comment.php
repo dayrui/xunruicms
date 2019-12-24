@@ -62,7 +62,9 @@ class Comment extends \Phpcmf\Table
         $this->is_verify = strpos(\Phpcmf\Service::L('Router')->class, '_verify') !== false;
         // 自定义条件
         $where = $this->is_verify ? 'status=0' : 'status=1';
-         $this->cid && $where.= ' and cid='. $this->cid;
+        $this->cid && $where.= ' and cid='. $this->cid;
+        $cwhere = $this->content_model->get_admin_list_where();
+        $cwhere && $where.= ' AND '. $cwhere;
         $sysfield = ['inputtime', 'inputip', 'author'];
         $this->is_verify && $sysfield[] = 'status';
         // 初始化数据表

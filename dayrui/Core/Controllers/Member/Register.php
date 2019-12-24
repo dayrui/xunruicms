@@ -56,7 +56,7 @@ class Register extends \Phpcmf\Common
         }
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             if (!\Phpcmf\Service::L('input')->post('is_protocol')) {
                 $this->_json(0, dr_lang('你没有同意注册协议'));
             } elseif ($this->member_cache['register']['code']

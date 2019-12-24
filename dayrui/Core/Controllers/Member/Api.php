@@ -66,13 +66,17 @@ class Api extends \Phpcmf\Common
         if (!$this->member) {
             $this->_msg(0, dr_lang('账号未登录'));
         } elseif ($this->member['is_verify']) {
-            IS_API_HTTP && $this->_json(0, dr_lang('此用户已经通过审核了'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('此用户已经通过审核了'));
+            }
             dr_redirect(MEMBER_URL);
             exit;
         } elseif (!$this->member['is_verify'] && !$this->member_cache['register']['verify']) {
             // 如果系统已经关闭了审核机制就自动通过
             \Phpcmf\Service::M('member')->verify_member($this->member['uid']);
-            IS_API_HTTP && $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            }
             dr_redirect(MEMBER_URL);
             exit;
         } elseif ($this->member_cache['register']['verify'] == 'admin') {
@@ -181,7 +185,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -268,7 +272,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
-        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
