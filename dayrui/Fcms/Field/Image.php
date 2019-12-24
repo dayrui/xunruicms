@@ -202,7 +202,7 @@ class Image extends \Phpcmf\Library\A_Field {
             }
         }
         $ucount = $count - $i;
-        $ts = dr_lang('单击上传图片，单张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
+        $ts = dr_lang('单击上传图片，每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
         $str = '
