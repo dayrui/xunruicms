@@ -202,10 +202,13 @@ class Image extends \Phpcmf\Library\A_Field {
             }
         }
         $ucount = $count - $i;
+        $ts = dr_lang('单张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
         $str = '
 			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
+                            
+                                <p style="text-align: center;color:#d9dbdd"> '.$ts.' </p>
                             </div>
 		';
 
@@ -216,8 +219,6 @@ class Image extends \Phpcmf\Library\A_Field {
 			';
             define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
         }
-
-        $ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
         $str.= '
 		
