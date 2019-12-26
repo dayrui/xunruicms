@@ -7474,7 +7474,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 doc = me.document,
                 win = me.window;
             me._proxyDomEvent = utils.bind(me._proxyDomEvent, me);
-            domUtils.on(doc, ['click', 'mousedown', 'keydown', 'keyup', 'keypress', 'mouseup', 'mouseover', 'mouseout', 'selectstart'], me._proxyDomEvent);
+            domUtils.on(doc, ['click', 'contextmenu', 'mousedown', 'keydown', 'keyup', 'keypress', 'mouseup', 'mouseover', 'mouseout', 'selectstart'], me._proxyDomEvent);
             domUtils.on(win, ['focus', 'blur'], me._proxyDomEvent);
             domUtils.on(me.body,'drop',function(e){
                 //阻止ff下默认的弹出新页面打开图片
@@ -21926,6 +21926,9 @@ UE.plugins['tablesort'] = function () {
  */
 
 UE.plugins['contextmenu'] = function () {
+    if (typeof is_mobile_cms != "undefined" && is_mobile_cms == 1) {
+        return;
+    }
     var me = this;
     me.setOpt('enableContextMenu',true);
     if(me.getOpt('enableContextMenu') === false){
