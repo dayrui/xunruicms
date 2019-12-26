@@ -36,7 +36,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $option['width'] = isset($option['width']) ? $option['width'] : '100%';
         $option['height'] = isset($option['height']) ? $option['height'] : 300;
         $option['fieldtype'] = isset($option['fieldtype']) ? $option['fieldtype'] : '';
-        $option['autofloat'] = isset($option['autoheight']) ? $option['autoheight'] : 0;
+        $option['autofloat'] = isset($option['autofloat']) ? $option['autofloat'] : 0;
         $option['autoheight'] = isset($option['autoheight']) ? $option['autoheight'] : 0;
         $option['fieldlength'] = isset($option['fieldlength']) ? $option['fieldlength'] : '';
         $option['watermark'] = isset($option['watermark']) ? $option['watermark'] : '';

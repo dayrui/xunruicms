@@ -54,11 +54,13 @@ class Upload
         // 检查系统保留文件格式
         if (in_array($file_ext, $this->notallowed)) {
             return dr_return_data(0, $this->error['ERROR_SYSTEM_TYPE_NOT_ALLOWED']);
+        } elseif (!$file_ext) {
+            return dr_return_data(0, dr_lang('无法读取文件扩展名'));
         }
 
         // 验证扩展名格式
         if (!preg_match('/^[a-z0-9]+$/i', $file_ext)) {
-            return dr_return_data(0, dr_lang('此文件扩展名不安全，禁止上传'));
+            return dr_return_data(0, dr_lang('此文件扩展名[%s]不安全，禁止上传', $file_ext));
         }
 
         // 验证伪装图片
