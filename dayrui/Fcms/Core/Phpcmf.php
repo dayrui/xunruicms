@@ -759,30 +759,24 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        (IS_API_HTTP || IS_POST) && $call = 1;
-
         if (!$this->member['is_verify']) {
             // 审核
-            $call && $this->_json(0, dr_lang('账号还没有通审核'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('api/verify'), 'auto');
+            $this->_msg(0, dr_lang('账号还没有通审核'), dr_member_url('api/verify'));
         } elseif ($this->member_cache['config']['complete']
             && !$this->member['is_complete']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制完善资料
-            $call && $this->_json(0, dr_lang('账号必须完善资料'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/index'), 'auto');
+            $this->_msg(0, dr_lang('账号必须完善资料'), dr_member_url('account/index'));
         } elseif ($this->member_cache['config']['mobile']
             && !$this->member['is_mobile']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制手机认证
-            $call && $this->_json(0, dr_lang('账号必须手机认证'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/mobile'), 'auto');
+            $this->_msg(0, dr_lang('账号必须手机认证'), dr_member_url('account/mobile'));
         } elseif ($this->member_cache['config']['avatar']
             && !$this->member['is_avatar']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制头像上传
-            $call && $this->_json(0, dr_lang('账号必须上传头像'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/avatar'), 'auto');
+            $this->_msg(0, dr_lang('账号必须上传头像'), dr_member_url('account/avatar'));
         }
     }
 
