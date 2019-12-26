@@ -210,7 +210,7 @@ class Member extends \Phpcmf\Model
     public function get_member($uid = 0, $name = '') {
 
         $uid = intval($uid);
-        if ($uid == $this->member['id']) {
+        if ($uid && $uid == $this->member['id']) {
             return $this->member;
         }
 
