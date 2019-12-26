@@ -42,6 +42,14 @@
                         </div>
                     </div>
                     {/if}
+                    {if in_array('name', $register.field)}
+                    <div class="form-group " id="dr_row_name">
+                        <label class="col-md-2 control-label">姓名</label>
+                        <div class="col-md-9">
+                            <label><input type="text" class="form-control input-large" name="data[name]" id="dr_name"></label>
+                        </div>
+                    </div>
+                    {/if}
                     <div class="form-group " id="dr_row_password">
                         <label class="col-md-2 control-label">密码</label>
                         <div class="col-md-9">

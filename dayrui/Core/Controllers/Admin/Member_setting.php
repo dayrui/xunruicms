@@ -24,7 +24,7 @@ class Member_setting extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $save = ['register', 'login', 'oauth', 'config'];
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             foreach ($save as $name) {
                 \Phpcmf\Service::M()->db->table('member_setting')->replace([
                     'name' => $name,

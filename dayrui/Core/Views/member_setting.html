@@ -158,6 +158,7 @@
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="username" {if @in_array('username', (array)$data.register.field)} checked{/if} /> {dr_lang('账号')} <span></span></label>
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="phone" {if @in_array('phone', (array)$data.register.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="email" {if @in_array('email', (array)$data.register.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="name" {if @in_array('name', (array)$data.register.field)} checked{/if} /> {dr_lang('姓名')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('至少选择一个字段或多个字段组合')}</span>
                             </div>
