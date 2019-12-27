@@ -105,6 +105,7 @@ class Check extends \Phpcmf\Common
                     WRITEPATH => '无法生成系统缓存文件',
                     $avatar_path => '无法上传头像',
                     WRITEPATH.'data/' => '无法生成系统配置文件，会导致系统配置无效',
+                    WRITEPATH.'caching/' => '无法生成系统缓存文件，会导致系统无法运行',
                     $thumb_path => '无法生成缩略图缓存文件',
                     SYS_UPLOAD_PATH => '无法上传附件',
                     APPSPATH => '无法创建模块、创建表单、下载应用插件',
