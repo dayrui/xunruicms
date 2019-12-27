@@ -614,12 +614,12 @@ class Module extends \Phpcmf\Table
             ),
             'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
             'select' => $select,
-            'is_sync_cat' => $data['sync_cat'],
             'is_verify' => 1,
+            'back_note' => \Phpcmf\Service::L('input')->get('note'),
             'verify_msg' => $verify_msg,
             'verify_step' => $step,
+            'is_sync_cat' => $data['sync_cat'],
             'verify_next' => dr_count($step) - 1 <= $data['status'] ? 9 : $data['status'] + 1,
-            'back_note' => \Phpcmf\Service::L('input')->get('note'),
         ]);
         \Phpcmf\Service::V()->display('share_post.html');
     }
@@ -659,8 +659,8 @@ class Module extends \Phpcmf\Table
 
         $this->_init([
             'table' => SITE_ID.'_'.APP_DIR.'_time',
-            'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
+            'date_field' => 'inputtime',
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
         ]);
 
@@ -797,7 +797,7 @@ class Module extends \Phpcmf\Table
         $rt = $this->content_model->delete_for_recycle($ids);
 
         // 删除附件
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->id_delete(
+        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
             $this->member['id'],
             $ids,
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
@@ -806,7 +806,11 @@ class Module extends \Phpcmf\Table
         // 写入日志
         \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：删除('.implode(', ', $ids).')');
 
-        $rt['code'] ? $this->_json(1, dr_lang('操作成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            $this->_json(1, dr_lang('操作成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
     // 后台恢复查看
@@ -848,7 +852,11 @@ class Module extends \Phpcmf\Table
         // 写入日志
         \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：恢复('.implode(', ', $ids).')');
 
-        $rt['code'] ? $this->_json(1, dr_lang('操作成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            $this->_json(1, dr_lang('操作成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
 
@@ -1148,7 +1156,9 @@ class Module extends \Phpcmf\Table
             $html = '';
             if ($this->module['category'][$data[1]['catid']]['setting']['html']) {
                 // 生成权限文件
-                !dr_html_auth(1) && $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                if (!dr_html_auth(1)) {
+                    $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                }
                 $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }

@@ -210,7 +210,11 @@ class Module extends \Phpcmf\Table
         }
 
         $rt = $this->content_model->delete_to_recycle([$id]);
-        $rt['code'] ? $this->_json(1, dr_lang('删除成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            $this->_json(1, dr_lang('删除成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
 
@@ -261,6 +265,8 @@ class Module extends \Phpcmf\Table
             foreach ($rows as $t) {
                 // 删除索引
                 $t['isnew'] && \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_index')->delete($t['id']);
+                // 删除审核提醒
+                \Phpcmf\Service::M('member')->delete_admin_notice($this->module['dirname'].'/verify/edit:id/'.$t['id'], SITE_ID);
             }
             return dr_return_data(1, 'ok');
         });
@@ -275,8 +281,8 @@ class Module extends \Phpcmf\Table
         $this->_init([
             'db' => SITE_ID,
             'table' => SITE_ID.'_'.$this->module['dirname'].'_draft',
-            'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
+            'date_field' => 'inputtime',
             'where_list' => 'uid='.$this->uid,
         ]);
 
