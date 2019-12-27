@@ -74,8 +74,8 @@ class Register extends \Phpcmf\Common
                 && !\Phpcmf\Service::L('Form')->check_phone($post['phone'])) {
                 $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
             } elseif (in_array('name', $this->member_cache['register']['field'])
-                && empty($post['name'])) {
-                $this->_json(0, dr_lang('姓名必须填写'), ['field' => 'password']);
+                && !\Phpcmf\Service::L('Form')->check_name($post['name'])) {
+                $this->_json(0, dr_lang('姓名格式不正确'), ['field' => 'name']);
             } elseif (empty($post['password'])) {
                 $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
             } elseif ($post['password'] != $post['password2']) {

@@ -3759,6 +3759,14 @@ if(!function_exists('mime_content_type')) {
     }
 }
 
+if (!function_exists('mb_strlen'))
+{
+    function mb_strlen($str)
+    {
+        return strlen($str);
+    }
+}
+
 if (!function_exists('array_key_first')) {
     function array_key_first(array $arr) {
         foreach($arr as $key => $unused) {

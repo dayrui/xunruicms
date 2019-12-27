@@ -914,11 +914,11 @@ class Member extends \Phpcmf\Model
 
         // 验证唯一性
         if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('账号%s已经注册', $member['username']), ['field' => 'username']);
+            return dr_return_data(0, dr_lang('账号[%s]已经注册', $member['username']), ['field' => 'username']);
         } elseif ($member['email'] && $this->db->table('member')->where('email', $member['email'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('邮箱%s已经注册', $member['email']), ['field' => 'email']);
+            return dr_return_data(0, dr_lang('邮箱[%s]已经注册', $member['email']), ['field' => 'email']);
         } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('手机号码%s已经注册', $member['phone']), ['field' => 'phone']);
+            return dr_return_data(0, dr_lang('手机号码[%s]已经注册', $member['phone']), ['field' => 'phone']);
         }
 
         if ($member['username'] == 'guest') {
@@ -926,7 +926,7 @@ class Member extends \Phpcmf\Model
         } elseif (!IS_ADMIN && \Phpcmf\Service::C()->member_cache['register']['notallow']) {
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $mt) {
                 if ($mt && stripos($member['username'], $mt) !== false) {
-                    return dr_return_data(0, dr_lang('账号%s禁止包含关键字[%s]', $member['username'], $mt), ['field' => 'username']);
+                    return dr_return_data(0, dr_lang('账号[%s]禁止包含关键字[%s]', $member['username'], $mt), ['field' => 'username']);
                 }
             }
         }
@@ -1107,13 +1107,13 @@ class Member extends \Phpcmf\Model
         }
 
         $content = $msg;
-        if (trim(strtolower(strrchr($msg, '.')), '.') == 'html') {
+        if (strlen($msg) <= 30 && trim(strtolower(strrchr($msg, '.')), '.') == 'html') {
             $my = WEBPATH.'config/notice/email/'.$msg;
             $default = ROOTPATH.'config/notice/email/'.$msg;
             $content = is_file($my) ? file_get_contents($my) : file_get_contents($default);
             if (!$content) {
                 log_message('error', '邮件模板不存在：'.$msg);
-                return dr_return_data(0, dr_lang('邮件模板#%s不存在', $msg));
+                return dr_return_data(0, dr_lang('邮件模板[#%s]不存在', $msg));
             }
             ob_start();
             extract($data, EXTR_PREFIX_SAME, 'data');
@@ -1325,7 +1325,7 @@ class Member extends \Phpcmf\Model
 
         $value = (int)$user['score'] + $val; // 不允许小于0
         if ($value < 0) {
-            return dr_return_data(0, dr_lang('账户可用%s不足', SITE_SCORE));
+            return dr_return_data(0, dr_lang('账户可用[%s]不足', SITE_SCORE));
         }
 
 

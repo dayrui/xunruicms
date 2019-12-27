@@ -393,6 +393,18 @@ class Form
         return true;
     }
 
+    // 验证姓名
+    public function check_name($value) {
+
+        if (!$value) {
+            return false;
+        } elseif (\Phpcmf\Service::C()->member_cache['register']['cutname'] && mb_strlen($value) > \Phpcmf\Service::C()->member_cache['register']['cutname']) {
+            return false;
+        }
+
+        return true;
+    }
+
 
 
     //=====校验方法=========
