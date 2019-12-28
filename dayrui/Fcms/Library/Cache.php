@@ -131,6 +131,12 @@ class Cache {
         return self::init()->get(md5('cache-'.SITE_ID.'-'.$name));
     }
 
+    // 删除内容
+    public function del_data($name) {
+        function_exists('opcache_reset') && opcache_reset();
+        return self::init()->delete(md5('cache-'.SITE_ID.'-'.$name));
+    }
+
     // 使用框架
     public function get() {
 

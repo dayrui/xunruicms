@@ -178,17 +178,17 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('注册验证码')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[register][code]" value="1" {if $data['register']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册短信验证')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[register][sms]" value="1" {if $data['register']['sms']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('注册字段必须包含手机号码才能使用此功能，用于手机短信验证码')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('注册图片验证码')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[register][code]" value="1" {if $data['register']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
                             </div>
                         </div>
                         <div class="form-group">
