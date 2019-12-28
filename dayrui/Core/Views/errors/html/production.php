@@ -14,9 +14,9 @@
 
 	<div class="container text-center">
 
-		<h1 class="headline">系统故障!</h1>
+		<h1 class="headline">系统故障</h1>
 
-		<p class="lead">您的系统遇到了故障，请联系程序官方处理：finecms@qq.com</p>
+		<p class="lead">您的系统遇到了故障，请联系管理员处理</p>
 
 	</div>
 
