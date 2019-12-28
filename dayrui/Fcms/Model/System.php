@@ -51,7 +51,13 @@ class System extends \Phpcmf\Model
     public function save_config($system, $data) {
 
         foreach ($this->config as $name => $s) {
-            isset($data[$name]) && $system[$name] = $data[$name];
+            if (isset($data[$name])) {
+                $value = $data[$name];
+                if ($name == 'SYS_ADMIN_PAGESIZE') {
+                    $value = min(1, $value);
+                }
+                $system[$name] = $value;
+            }
         }
 
         \Phpcmf\Service::L('config')->file(WRITEPATH.'config/system.php', '系统配置文件', 32)->to_require_one(
