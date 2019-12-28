@@ -3483,12 +3483,12 @@ function dr_mobile_url($url = SITE_MURL) {
     $host = $a['host'];
     $domain = require WRITEPATH.'config/domain_client.php';
     if (!$domain) {
-        return $url;
+        return IS_DEV ? '【开发者模式下】未找到域名的终端配置文件' : $url;
     } elseif (!isset($domain[$host])) {
-        return $url;
+        return IS_DEV ? '【开发者模式下】未找到PC域名['.$host.']所对应的移动端域名' : $url;
     }
 
-    return str_replace($host, $domain[$host], $url);
+    return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
 ////////////////////////////////////////////////////////////
