@@ -54,7 +54,7 @@ class System extends \Phpcmf\Model
             if (isset($data[$name])) {
                 $value = $data[$name];
                 if ($name == 'SYS_ADMIN_PAGESIZE') {
-                    $value = min(1, $value);
+                    $value = max(1, $value);
                 }
                 $system[$name] = $value;
             }
