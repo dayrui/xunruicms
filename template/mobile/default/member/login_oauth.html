@@ -6,10 +6,10 @@
         <div class="fc-register portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
                 <li class="{if $type == 0}active{/if}">
-                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 0])}" > 绑定账号 </a>
+                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 0, 'id' => $id])}" > 绑定账号 </a>
                 </li>
                 <li class="{if $type == 1}active{/if}">
-                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 1])}" > 注册账号 </a>
+                    <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 1, 'id' => $id])}" > 注册账号 </a>
                 </li>
             </ul>
         </div>

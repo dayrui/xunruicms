@@ -138,13 +138,10 @@ class Login extends \Phpcmf\Common
 
         } else {
 
+            // 来自后台
             if (strpos($goto_url, 'is_admin_call')) {
-                // 来自后台
                 $this->_admin_msg(0, dr_lang('%s，没有绑定本站账号', dr_html2emoji($oauth['nickname'])));
-            }
-            
-            // 用户组判断
-            if ($this->member_cache['register']['close']) {
+            } elseif ($this->member_cache['register']['close']) {
                 $this->_msg(0, dr_lang('系统关闭了注册功能'));
             } elseif (!$this->member_cache['register']['group']) {
                 $this->_msg(0, dr_lang('系统没有可注册的用户组'));
@@ -163,6 +160,7 @@ class Login extends \Phpcmf\Common
             }
 
             \Phpcmf\Service::V()->assign([
+                'id' => $id,
                 'name' => $name,
                 'oauth' => $oauth,
                 'group' => $this->member_cache['group'],
