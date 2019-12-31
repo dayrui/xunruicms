@@ -197,20 +197,8 @@ class Auth extends \Phpcmf\Model {
             'logintime' => SYS_TIME,
             'useragent' => substr($agent, 0, 255),
         );
-
-        // 同一天Ip一致时只更新一次更新时间 今天
-        if ($row = $this->db
-                        ->table('admin_login')
-                        ->where('uid', $uid)
-                        ->where('loginip', $ip)
-                        ->where('DATEDIFF(from_unixtime(logintime),now())=0')
-                        ->get()
-                        ->getRowArray()) {
-            $this->db->table('admin_login')->where('id', $row['id'])->update($data);
-        } else {
-            $this->db->table('admin_login')->insert($data);
-        }
-
+        
+        $this->db->table('admin_login')->insert($data);
     }
 
     /**
