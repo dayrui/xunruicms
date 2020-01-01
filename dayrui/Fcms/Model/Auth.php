@@ -181,24 +181,17 @@ class Auth extends \Phpcmf\Model {
      */
     private function _login_log($uid) {
 
-        $ip = \Phpcmf\Service::L('input')->ip_address();
-        if (!$ip || !$uid) {
+
+        if (!$uid) {
             return;
         }
 
-        $agent = \Phpcmf\Service::L('input')->get_user_agent();
-        if (strlen($agent) <= 5) {
-            return;
-        }
-
-        $data = array(
+        $this->db->table('admin_login')->insert([
             'uid' => $uid,
-            'loginip' => $ip,
+            'loginip' => (string)\Phpcmf\Service::L('input')->ip_address(),
             'logintime' => SYS_TIME,
-            'useragent' => substr($agent, 0, 255),
-        );
-
-        $this->db->table('admin_login')->insert($data);
+            'useragent' => substr(\Phpcmf\Service::L('input')->get_user_agent(), 0, 255),
+        ]);
     }
 
     /**

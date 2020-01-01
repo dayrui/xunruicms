@@ -83,7 +83,7 @@ class Root extends \Phpcmf\Table
             'list' => $data['list'],
             'user' => dr_member_info($uid),
         ]);
-        \Phpcmf\Service::V()->display('root_login.html');exit;
+        \Phpcmf\Service::V()->display('root_login.html');
 
     }
 

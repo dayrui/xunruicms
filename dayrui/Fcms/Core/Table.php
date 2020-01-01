@@ -24,6 +24,7 @@ class Table extends \Phpcmf\Common
 
     protected $edit_where; // 修改数据时的条件
     protected $delete_where; // 删除数据时的条件
+    protected $is_diy_where_list; // 是否支持自定义参数查询的条件
 
     protected $name; // 定义一个操作显示名称
     protected $tpl_name; // 模板命名名称
@@ -44,6 +45,7 @@ class Table extends \Phpcmf\Common
         $this->delete_where = '';
         $this->is_module_index = 0;
         $this->is_category_data_field = 0;
+        $this->is_diy_where_list = 0;
     }
     
     // 数据表初始化
@@ -52,6 +54,7 @@ class Table extends \Phpcmf\Common
         $this->field = $data['field'] ? $data['field'] : $this->field;
         $this->sys_field = $data['sys_field'] ? \Phpcmf\Service::L('Field')->sys_field($data['sys_field']) : [];
         $data['field'] = $this->sys_field && $this->field ? $this->field + $this->sys_field : ($this->field ? $this->field : $this->sys_field);
+        $data['is_diy_where_list'] = $this->is_diy_where_list;
         $this->init = $data;
         return $this;
     }

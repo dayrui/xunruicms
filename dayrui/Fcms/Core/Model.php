@@ -44,6 +44,7 @@ class Model {
         isset($data['order_by']) && $this->param['order_list'] = $data['order_by'];
         isset($data['order_list']) && $this->param['order_list'] = $data['order_list'];
         isset($data['where_list']) && $this->param['where_list'] = $data['where_list'];
+        isset($data['is_diy_where_list']) && $this->param['is_diy_where_list'] = $data['is_diy_where_list'];
         isset($data['join_list']) && $this->param['join_list'] = $data['join_list'];
         isset($data['select_list']) && $this->param['select_list'] = $data['select_list'];
 
@@ -677,13 +678,15 @@ class Model {
                 $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
             }
             // 其他自定义字段查询
-            $where = [];
-            foreach ($param as $i => $v) {
-                if (!in_array($i, ['keyword', 'catid', 'date_form', 'date_to', 'field', 'total']) && isset($field[$i]) && $field[$i]['ismain'] && strlen($v)) {
-                    $where[] = str_replace('`{finecms_table}`.', '', $this->_where('{finecms_table}', $i, $v, $field));
+            if (isset($this->param['is_diy_where_list']) && $this->param['is_diy_where_list']) {
+                $where = [];
+                foreach ($param as $i => $v) {
+                    if (!in_array($i, ['id', 'keyword', 'catid', 'date_form', 'date_to', 'field', 'total']) && isset($field[$i]) && $field[$i]['ismain'] && strlen($v)) {
+                        $where[] = str_replace('`{finecms_table}`.', '', $this->_where('{finecms_table}', $i, $v, $field));
+                    }
                 }
+                $where && $select->where(implode(' AND ', $where));
             }
-            $where && $select->where(implode(' AND ', $where));
         }
 
         return $param;
