@@ -197,7 +197,7 @@ class Auth extends \Phpcmf\Model {
             'logintime' => SYS_TIME,
             'useragent' => substr($agent, 0, 255),
         );
-        
+
         $this->db->table('admin_login')->insert($data);
     }
 

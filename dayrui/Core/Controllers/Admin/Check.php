@@ -13,7 +13,6 @@ class Check extends \Phpcmf\Common
         '01' => '文件上传检测',
         '03' => '目录权限检测',
         '02' => 'PHP环境检测',
-        '14' => '服务器环境检测',
         '04' => '后台入口名称检测',
         '05' => '数据库权限检测',
         '06' => '模板完整性检测',
@@ -24,12 +23,13 @@ class Check extends \Phpcmf\Common
         '11' => '域名绑定检测',
         '12' => 'HTTPS检测',
         '13' => '应用插件兼容性检测',
+        '14' => '服务器环境检测',
 
     ];
 
-	public function index() {
+    public function index() {
 
-	    if (is_file(WRITEPATH.'install.info')) {
+        if (is_file(WRITEPATH.'install.info')) {
             @unlink(WRITEPATH.'install.info');
             @unlink(WRITEPATH.'install.error');
         }
@@ -44,14 +44,14 @@ class Check extends \Phpcmf\Common
             ),
             'list' => $this->_list,
         ]);
-		\Phpcmf\Service::V()->display('check_index.html');
-	}
+        \Phpcmf\Service::V()->display('check_index.html');
+    }
 
-	public function do_index() {
+    public function do_index() {
 
-	    $id = $_GET['id'];
+        $id = $_GET['id'];
 
-	    switch ($id) {
+        switch ($id) {
 
             case '01':
 
@@ -71,28 +71,28 @@ class Check extends \Phpcmf\Common
 
             case '02':
 
-				if (!function_exists('mb_substr')) {
+                if (!function_exists('mb_substr')) {
                     $this->_json(0, 'PHP不支持mbstring扩展，必须开启');
                 } elseif (!function_exists('curl_init')) {
-                     $this->halt('PHP不支持CURL扩展，必须开启', 0);
+                    $this->halt('PHP不支持CURL扩展，必须开启', 0);
                 } elseif (!function_exists('mb_convert_encoding')) {
-                     $this->halt('PHP的mb函数不支持，无法使用百度关键词接口', 0);
+                    $this->halt('PHP的mb函数不支持，无法使用百度关键词接口', 0);
                 } elseif (!function_exists('imagecreatetruecolor')) {
-                     $this->halt('PHP的GD库版本太低，无法支持验证码图片', 0);
-				} elseif (!function_exists('ini_get')) {
+                    $this->halt('PHP的GD库版本太低，无法支持验证码图片', 0);
+                } elseif (!function_exists('ini_get')) {
                     $this->_json(0, '系统函数ini_get未启用，将无法获取到系统环境参数');
                 } elseif (!function_exists('gzopen')) {
                     $this->halt('zlib扩展未启用，您将无法进行在线升级、无法下载应用插件等', 0);
                 } elseif (!function_exists('gzinflate')) {
-                     $this->halt('函数gzinflate未启用，您将无法进行在线升级、无法下载应用插件等', 0);
+                    $this->halt('函数gzinflate未启用，您将无法进行在线升级、无法下载应用插件等', 0);
                 } elseif (!function_exists('fsockopen')) {
-                     $this->halt('PHP不支持fsockopen，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                    $this->halt('PHP不支持fsockopen，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
                 } elseif (!function_exists('openssl_open')) {
-                     $this->halt('PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                    $this->halt('PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
                 } elseif (!ini_get('allow_url_fopen')) {
-                     $this->halt('allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                    $this->halt('allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
                 } elseif (!class_exists('ZipArchive')) {
-                     $this->halt('php_zip扩展未开启，无法使用应用市场功能', 0);
+                    $this->halt('php_zip扩展未开启，无法使用应用市场功能', 0);
                 }
                 break;
 
@@ -250,17 +250,17 @@ class Check extends \Phpcmf\Common
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
                 }
-/*
-                $table = $prefix.'email';
-                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `value` text NOT NULL COMMENT \'配置信息\',
-  `displayorder` smallint(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY (`displayorder`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'邮件账户表\';');
-                }*/
+                /*
+                                $table = $prefix.'email';
+                                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+                  `value` text NOT NULL COMMENT \'配置信息\',
+                  `displayorder` smallint(5) DEFAULT NULL,
+                  PRIMARY KEY (`id`),
+                  KEY (`displayorder`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'邮件账户表\';');
+                                }*/
 
                 /*
                 // 创建member_notice username字段
@@ -404,7 +404,7 @@ class Check extends \Phpcmf\Common
                         $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
                     }
                 }
-                
+
 
                 if ($error) {
                     $this->_json(0, implode('<br>', $error));
@@ -479,8 +479,8 @@ class Check extends \Phpcmf\Common
         $this->_json(1,'完成');
     }
 
-	public function php_index() {
-	    phpinfo();
+    public function php_index() {
+        phpinfo();
     }
 
 
@@ -490,12 +490,12 @@ class Check extends \Phpcmf\Common
 
     private function _check_table_counts($table, $name) {
 
-	    $ptable = \Phpcmf\Service::M()->dbprefix($table);
-	    if (!\Phpcmf\Service::M()->db->tableExists($ptable)) {
+        $ptable = \Phpcmf\Service::M()->dbprefix($table);
+        if (!\Phpcmf\Service::M()->db->tableExists($ptable)) {
             return '数据表【'.$name.'/'.$ptable.'】不存在，请创建';
         }
-	    $counts = \Phpcmf\Service::M()->table($table)->counts();
-	    if ($counts > 100000) {
+        $counts = \Phpcmf\Service::M()->table($table)->counts();
+        if ($counts > 100000) {
             return '<font color="green">数据表【'.$name.'/'.$ptable.'】数据量超过10万，会影响加载速度，建议对其进行数据优化</font>';
         }
     }

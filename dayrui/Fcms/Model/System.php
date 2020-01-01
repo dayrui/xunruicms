@@ -32,6 +32,8 @@ class System extends \Phpcmf\Model
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
         'SYS_ATTACHMENT_URL'	=> '附件访问地址',
+        'SYS_AVATAR_PATH'	=> '头像上传路径',
+        'SYS_AVATAR_URL'	=> '头像访问地址',
         'SYS_BDMAP_API'	=> '百度地图API',
         'SYS_API_CODE'	=> 'API请求时验证码开关',
         'SYS_THEME_ROOT'	=> '风格目录引用作用域',

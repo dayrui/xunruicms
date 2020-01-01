@@ -37,7 +37,8 @@ class Attachment extends \Phpcmf\Common
         $data = is_file(WRITEPATH.'config/system.php') ? require WRITEPATH.'config/system.php' : [];
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            $image = \Phpcmf\Service::L('input')->post('image');
             \Phpcmf\Service::M('System')->save_config($data,
                 [
                     'SYS_FIELD_THUMB_ATTACH' => (int)$post['SYS_FIELD_THUMB_ATTACH'],
@@ -45,9 +46,12 @@ class Attachment extends \Phpcmf\Common
                     'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
                     'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
                     'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),
+                    'SYS_AVATAR_URL' => $image['avatar_url'],
+                    'SYS_AVATAR_PATH' => addslashes($image['avatar_path']),
                 ]
             );
-            \Phpcmf\Service::M('Site')->config(SITE_ID, 'image', \Phpcmf\Service::L('input')->post('image'));
+            unset($image['avatar_url'], $image['avatar_path']);
+            \Phpcmf\Service::M('site')->config(SITE_ID, 'image', $image);
             \Phpcmf\Service::L('input')->system_log('设置附件参数');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache('');
@@ -56,6 +60,9 @@ class Attachment extends \Phpcmf\Common
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         $site = \Phpcmf\Service::M('Site')->config(SITE_ID);
+        $image = $site['image'];
+        $image['avatar_url'] = defined('SYS_AVATAR_URL') ? SYS_AVATAR_URL : '';
+        $image['avatar_path'] = defined('SYS_AVATAR_PATH') ? SYS_AVATAR_PATH : '';
 
         \Phpcmf\Service::V()->assign([
             'page' => $page,
@@ -68,7 +75,7 @@ class Attachment extends \Phpcmf\Common
                     'help' => [359],
                 ]
             ),
-            'image' => $site['image'],
+            'image' => $image,
             'remote' =>  \Phpcmf\Service::C()->get_cache('attachment'),
         ]);
         \Phpcmf\Service::V()->display('attachment_index.html');

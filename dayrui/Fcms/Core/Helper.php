@@ -486,12 +486,15 @@ function dr_save_bfb_data($data) {
 // 会员头像路径和url
 function dr_avatar_path() {
 
-    $config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
+    //$config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
+    $config = [
+        'avatar_url' => defined('SYS_AVATAR_URL') ? SYS_AVATAR_URL : '',
+        'avatar_path' => defined('SYS_AVATAR_PATH') ? SYS_AVATAR_PATH : '',
+    ];
+
     if (!$config['avatar_path'] || !$config['avatar_url']) {
         return [ROOTPATH.'api/member/', ROOT_URL.'api/member/'];
-    }
-
-    if ((strpos($config['avatar_path'], '/') === 0 || strpos($config['avatar_path'], ':') !== false) && is_dir($config['avatar_path'])) {
+    } elseif ((strpos($config['avatar_path'], '/') === 0 || strpos($config['avatar_path'], ':') !== false) && is_dir($config['avatar_path'])) {
         // 相对于根目录
         return [rtrim($config['avatar_path'], DIRECTORY_SEPARATOR).'/', trim($config['avatar_url'], '/').'/'];
     } else {
