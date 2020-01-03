@@ -173,9 +173,9 @@ class Module extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'did' => $did,
-            'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
+            'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
             'select' => $select,
-            'draft_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]),
+            'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
@@ -462,7 +462,7 @@ class Module extends \Phpcmf\Table
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
             ),
         ]);
-        \Phpcmf\Service::V()->display('share_list_draft.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('list_draft'));
     }
 
     // 后台删除草稿内容
@@ -561,7 +561,7 @@ class Module extends \Phpcmf\Table
             'verify_msg' => $verify_msg,
             'is_post_user' => $is_post_user,
         ]);
-        \Phpcmf\Service::V()->display('share_list_verify.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('list_verify'));
     }
 
     // 后台修改审核内容
@@ -621,7 +621,7 @@ class Module extends \Phpcmf\Table
             'is_sync_cat' => $data['sync_cat'],
             'verify_next' => dr_count($step) - 1 <= $data['status'] ? 9 : $data['status'] + 1,
         ]);
-        \Phpcmf\Service::V()->display('share_post.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
     }
 
     // 后台删除审核内容
@@ -674,7 +674,7 @@ class Module extends \Phpcmf\Table
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
             ),
         ]);
-        \Phpcmf\Service::V()->display('share_list_time.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('list_time'));
     }
 
     // 后台退稿
@@ -713,7 +713,8 @@ class Module extends \Phpcmf\Table
         define('IS_MODULE_TIME', 1);
 
         $this->_Post();
-        \Phpcmf\Service::V()->display('share_time.html');exit;
+        \Phpcmf\Service::V()->display('share_time.html');
+        exit;
     }
 
     // 后台修改定时内容
@@ -745,7 +746,7 @@ class Module extends \Phpcmf\Table
             'select' => $select,
             'is_post_time' => 1,
         ]);
-        \Phpcmf\Service::V()->display('share_post.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
     }
 
     // 后台删除定时内容
@@ -783,7 +784,7 @@ class Module extends \Phpcmf\Table
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
             ),
         ]);
-        \Phpcmf\Service::V()->display('share_list_recycle.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('list_recycle'));
     }
 
     // 后台删除内容
@@ -835,7 +836,7 @@ class Module extends \Phpcmf\Table
             'catid' => $data['catid'],
             'select' => '<label style="padding-top: 9px">'.$this->module['category'][$data['catid']]['name'].'</label>',
         ]);
-        \Phpcmf\Service::V()->display('share_post.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
 
     }
 
@@ -914,7 +915,7 @@ class Module extends \Phpcmf\Table
             'cbottom' => $this->_app_cbottom(),
             'is_flag' => 1,
         ]);
-        \Phpcmf\Service::V()->display('share_list.html');
+        \Phpcmf\Service::V()->display($this->_tpl_filename('list'));
 
     }
 
