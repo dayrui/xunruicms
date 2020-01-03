@@ -173,16 +173,17 @@ class Related extends \Phpcmf\Library\A_Field {
                                 var temp = \''.$tpl.'\';
                                 var html = "";
                                 for(var i in json.data.result){
-                                    var tpl = temp;
                                     var v = json.data.result[i];
-                                    if($("#dr_items_'.$name.'_"+v.id).length>0)
-                                    {
-                                      dr_tips(0, "'.dr_lang('已经存在').'");
-                                      return;
+                                    if (typeof v.id != "undefined") {
+                                        if($("#dr_items_'.$name.'_"+v.id).length>0) {
+                                          dr_tips(0, "'.dr_lang('已经存在').'");
+                                          return;
+                                        }
+                                        var tpl = temp;
+                                        tpl = tpl.replace(/\{id\}/g, v.id);
+                                        tpl = tpl.replace(/\{value\}/g, v.value);
+                                        html+= tpl;
                                     }
-                                    tpl = tpl.replace(/\{id\}/g, v.id);
-                                    tpl = tpl.replace(/\{value\}/g, v.value);
-                                    html+= tpl;
                                 }
                                 $(\'#related_'.$name.'-sort-items\').append(html);
                                 dr_tips(1, json.msg);
