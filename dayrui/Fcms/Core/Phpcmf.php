@@ -268,7 +268,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 判断网站是否关闭
-        if (!IS_ADMIN && $this->site_info[SITE_ID]['SITE_CLOSE'] && (!$this->member || !$this->member['is_admin'])) {
+        if (!IS_DEV && !IS_ADMIN && !IS_API && $this->site_info[SITE_ID]['SITE_CLOSE'] && (!$this->member || !$this->member['is_admin'])) {
             $this->_msg(0, $this->get_cache('site', SITE_ID, 'config', 'SITE_CLOSE_MSG'));
         }
 
