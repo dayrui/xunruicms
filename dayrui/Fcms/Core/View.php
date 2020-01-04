@@ -210,6 +210,9 @@ class View {
 
         $this->_filename = str_replace('..', '[removed]', $_name);
 
+        // 挂钩点 模板加载之后
+        \Phpcmf\Hooks::trigger('cms_view', $this->_options);
+
         // 加载编译后的缓存文件
         $this->_disp_dir = $_dir;
         $_view_file = $this->get_file_name($this->_filename, $_dir);
