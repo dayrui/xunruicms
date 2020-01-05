@@ -24,7 +24,7 @@
         <div class="portlet-body">
             <div class="tab-content">
 
-                <div class="tab-pane active" id="tab_0">
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
 
                         <div class="form-group">
@@ -85,7 +85,7 @@
 
                     </div>
                 </div>
-                <div class="tab-pane" id="tab_1">
+                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('是否必填')}</label>
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab_3">
+                <div class="tab-pane  {if $page==3}active{/if}" id="tab_3">
                     <div class="form-body">
 
                         <div class="form-body" id="dr_css">
@@ -185,7 +185,7 @@
 
                     </div>
                 </div>
-                <div class="tab-pane" id="tab_2">
+                <div class="tab-pane  {if $page==2}active{/if}" id="tab_2">
                     <div class="form-body">
 
                         <div class="form-group">
