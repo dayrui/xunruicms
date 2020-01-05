@@ -202,7 +202,9 @@ class Field extends \Phpcmf\Common
 				$this->_json(0, dr_lang('字段已经存在'));
 			} else {
 				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
-				!$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
+				if (!$rt['code']) {
+					$this->_json(0, dr_lang($rt['msg']));
+				}
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
 				$this->_json(1, dr_lang('操作成功'));
@@ -263,7 +265,9 @@ class Field extends \Phpcmf\Common
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M()->table('field')->get($id);
-		!$data && exit($this->_json(0, dr_lang('字段不存在')));
+		if (!$data) {
+			exit($this->_json(0, dr_lang('字段不存在')));
+		}
 		
 		switch (\Phpcmf\Service::L('input')->get('op')) {
 			case 'disabled':
@@ -303,10 +307,14 @@ class Field extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+		if (!$ids) {
+			exit($this->_json(0, dr_lang('你还没有选择呢')));
+		}
 
 		$rt = \Phpcmf\Service::M('Field')->delete_field($ids);
-		!$rt['code'] && exit($this->_json(0, $rt['msg']));
+		if (!$rt['code']) {
+			exit($this->_json(0, $rt['msg']));
+		} 
 
         $this->_cache(); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('删除字段'. $this->name.' '. @implode(',', $ids));
@@ -393,7 +401,9 @@ class Field extends \Phpcmf\Common
                 // 网站表单 form-站点id, 表单id
                 list($a, $siteid) = explode('-', $this->relatedname);
                 $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
+                if (!$this->data) {
+					$this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
+				} 
                 $this->name = '网站表单【'.$this->data['name'].'】字段';
                 $this->backurl =\Phpcmf\Service::L('Router')->url('form/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
@@ -459,7 +469,9 @@ class Field extends \Phpcmf\Common
             case 'module':
                 // 模块字段
                 $this->data = \Phpcmf\Service::M()->table('module')->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                if (!$this->data) {
+					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+				}
                 $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
                 $this->name = '模块【'.$this->data['dirname'].'】字段';
                 \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
@@ -470,7 +482,9 @@ class Field extends \Phpcmf\Common
             case 'mform':
                 // 模块表单
                 $this->data = \Phpcmf\Service::M()->table('module_form')->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                if (!$this->data) {
+					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+				} 
                 $this->backurl =\Phpcmf\Service::L('Router')->url('module/form_index', ['dir' => $a]); // 返回uri地址
                 $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
                 \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
@@ -493,7 +507,9 @@ class Field extends \Phpcmf\Common
                     $ismain = 1;
                     list($a, $b, $module) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
-                    !$cache && $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                    if (!$cache) {
+						$this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+					}
                     $this->name = '模块【'.$cache['dirname'].'】评论字段';
                     $this->data = $cache['dirname'];
                     $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
@@ -506,10 +522,14 @@ class Field extends \Phpcmf\Common
                     $iscategory = 1;
                     list($module, $s) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
-                    !$cache && $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                    if (!$cache) {
+						$this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+					} 
                     if ($this->relatedid) {
                         $this->data = $cache['category'][$this->relatedid];
-                        !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                        if (!$this->data) {
+							$this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+						} 
                         if ($module == 'share') {
                             $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
                             $this->data['dirname'] = $this->data['mid'];
