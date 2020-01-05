@@ -41,7 +41,7 @@ if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
 	require WEBPATH.'install.php';
 	exit;
 }
-// 结束，安装可以删除此段代码
+// 结束，安装之后可以删除此段代码
 
 // 执行主程序
 require FCPATH.'Fcms/Init.php';
