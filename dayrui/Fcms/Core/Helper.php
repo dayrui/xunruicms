@@ -2622,26 +2622,6 @@ function dr_strcut($string, $length = 100, $dot = '...') {
 }
 
 /**
- * 清除HTML标记
- *
- * @param	string	$str
- * @return  string
- */
-function dr_clearhtml($str) {
-
-    $str = str_replace(
-        array('&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'), array(' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'), $str
-    );
-
-    $str = preg_replace("/\<[a-z]+(.*)\>/iU", "", $str);
-    $str = preg_replace("/\<\/[a-z]+\>/iU", "", $str);
-    $str = str_replace(array(PHP_EOL, chr(13), chr(10), '&nbsp;'), '', $str);
-    $str = strip_tags($str);
-
-    return trim($str);
-}
-
-/**
  * 随机颜色
  *
  * @return	string
@@ -3541,6 +3521,28 @@ if (!function_exists('is_php')) {
     }
 }
 
+
+if (! function_exists('dr_clearhtml')) {
+    /**
+     * 清除HTML标记
+     *
+     * @param	string	$str
+     * @return  string
+     */
+    function dr_clearhtml($str) {
+
+        $str = str_replace(
+            array('&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'), array(' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'), $str
+        );
+
+        $str = preg_replace("/\<[a-z]+(.*)\>/iU", "", $str);
+        $str = preg_replace("/\<\/[a-z]+\>/iU", "", $str);
+        $str = str_replace(array(PHP_EOL, chr(13), chr(10), '&nbsp;'), '', $str);
+        $str = strip_tags($str);
+
+        return trim($str);
+    }
+}
 
 if (! function_exists('dr_get_keywords')) {
     /**
