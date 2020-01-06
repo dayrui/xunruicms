@@ -12,7 +12,7 @@
         <table class="table table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
             <tr class="heading">
-                {if $ci->_is_admin_auth('del')}
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
                 <th class="myselect">
                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                         <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
@@ -20,7 +20,7 @@
                     </label>
                 </th>
                 {/if}
-                <th width="44" class="{dr_sorting('id')}" name="id">Id</th>
+                <th width="50" class="{dr_sorting('id')}" name="id">Id</th>
                 <th width="150" class="{dr_sorting('name')}" name="name">{dr_lang('名称')}</th>
                 <th width="200" class="{dr_sorting('price')}" name="price">{dr_lang('星级')}</th>
                 <th width="120" class="{dr_sorting('value')}" name="price">{dr_lang('升级要求')}</th>
@@ -42,7 +42,7 @@
                 <td>{$t.id}</td>
                 <td>{$t.name}</td>
                 <td>{dr_show_stars($t.stars)}</td>
-                <td>{$t.value}</td>
+                <td>{$t.value} {if $group.unit}{SITE_SCORE}{else}{dr_lang('元')}{/if}</td>
                 <td style="text-align:center">
                     <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url($uriprefix.'/apply_level_edit', ['id'=>$t.id])}', 0);" class="badge badge-{if !$t.apply}no{else}yes{/if}"><i class="fa fa-{if !$t.apply}times{else}check{/if}"></i></a>
                 </td>

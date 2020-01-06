@@ -39,8 +39,13 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label ">{dr_lang('价格要求')}</label>
                             <div class="col-md-9">
+                                {if $is_level && !$setting['level']['auto']}
+                                <label><input type="hidden" class="form-control" name="data[price]" value="{$price}"></label>
+                                <p class="form-control-static" style="color: #da3f3f"> {dr_lang('请在等级制度管理中设置对应的价格')} </p>
+                                {else}
                                 <label><input type="text" class="form-control" name="data[price]" value="{$price}"></label>
                                 <span class="help-block"> {dr_lang('0或者留空表示免费组')} </span>
+                                {/if}
                             </div>
                         </div>
                         <div class="form-group">
@@ -104,13 +109,13 @@
                             <label class="col-md-2 control-label">{dr_lang('升级方式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[level][auto]" type="radio" value="1" {if $setting.level.auto}checked{/if} /> {dr_lang('自动')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[level][auto]" type="radio" value="0" {if !$setting.level.auto}checked{/if} /> {dr_lang('手动')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[level][auto]" onclick="dr_set_sjms(this.value)" type="radio" value="1" {if $setting.level.auto}checked{/if} /> {dr_lang('自动')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[level][auto]" onclick="dr_set_sjms(this.value)" type="radio" value="0" {if !$setting.level.auto}checked{/if} /> {dr_lang('手动')} <span></span></label>
                                 </div>
                                 <span class="help-block"> {dr_lang('自动升级指当满足升级条件时系统自动变更等级')} </span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dr_sjms_1">
                             <label class="col-md-2 control-label">{dr_lang('自动升级条件')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
@@ -120,7 +125,7 @@
                                 <span class="help-block"> {dr_lang('消费额指账户消费金额的累计，%s指通过用户规则获得奖励值', SITE_EXPERIENCE)} </span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group dr_sjms_0">
                             <label class="col-md-2 control-label">{dr_lang('手动升级模式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
@@ -155,7 +160,9 @@
 </form>
 <script type="text/javascript">
     $(function() {
-        dr_set_post("{intval($data['setting']['post'])}");
+        $(".dr_sjms_1").hide();
+        $(".dr_sjms_0").hide();
+        dr_set_sjms("{intval($setting['level']['auto'])}");
     });
     function dr_field_show(n, u) {
         if (u) {
@@ -164,11 +171,13 @@
             $('.field-'+n+' .list-field-cog').hide();
         }
     }
-    function dr_set_post(id) {
+    function dr_set_sjms(id) {
         if (id == 1) {
-            $(".dr_post").show();
+            $(".dr_sjms_1").show();
+            $(".dr_sjms_0").hide();
         } else {
-            $(".dr_post").hide();
+            $(".dr_sjms_1").hide();
+            $(".dr_sjms_0").show();
         }
     }
 </script>

@@ -38,6 +38,7 @@
                         <label class="col-xs-2 control-label">{dr_lang('升级值要求')}</label>
                         <div class="col-xs-8">
                             <label><input type="text" class="form-control" name="data[value]" value="{$value}"></label>
+                            <label>{if $group.unit}{SITE_SCORE}{else}{dr_lang('元')}{/if}</label>
                             <span class="help-block">{dr_lang('该等级需要的升级值，升级值越低越排在前面，0表示初始等级')}</span>
                         </div>
                     </div>

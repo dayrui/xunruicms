@@ -59,7 +59,7 @@ class Member_group extends \Phpcmf\Table
         ]);
     }
 
-    private function _init_level() {
+    private function _init_level($gid) {
         $this->type = 0;
         // 表单显示名称
         $this->name = dr_lang('用户组等级');
@@ -70,14 +70,21 @@ class Member_group extends \Phpcmf\Table
             'sys_field' => [],
             'order_by' => '`value` asc',
             'list_field' => [],
-            'where_list' => 'gid='.(int)\Phpcmf\Service::L('input')->get('gid'),
+            'where_list' => 'gid='.$gid,
         ]);
+        \Phpcmf\Service::V()->assign('group', \Phpcmf\Service::M()->table('member_group')->get($gid));
     }
 
     // 管理
     public function index() {
         $this->_init_group();
-        list($tpl) = $this->_List(null, -1);
+        list($tpl, $data) = $this->_List(null, -1);
+        if ($data['list']) {
+            foreach ($data['list'] as $i => $t) {
+                $data['list'][$i]['level'] = \Phpcmf\Service::M()->table('member_level')->where('gid', $t['id'])->order_by('`value` asc')->getAll();
+            }
+            \Phpcmf\Service::V()->assign('list', $data['list']);
+        }
         \Phpcmf\Service::V()->display($tpl);
     }
 
@@ -91,11 +98,14 @@ class Member_group extends \Phpcmf\Table
     // 修改
     public function edit() {
         $this->_init_group();
-        list($tpl) = $this->_Post(intval(\Phpcmf\Service::L('input')->get('id')));
+        $gid = intval(\Phpcmf\Service::L('input')->get('id'));
+        list($tpl) = $this->_Post($gid);
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
+        $is_level = \Phpcmf\Service::M()->table('member_level')->where('gid', $gid)->getRow();
         \Phpcmf\Service::V()->assign([
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
+            'is_level' => $is_level,
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }
@@ -117,7 +127,9 @@ class Member_group extends \Phpcmf\Table
         $this->_init_group();
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = $this->_Data($id);
-        !$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
         $value = $data['register'] ? 0 : 1;
         \Phpcmf\Service::M()->table('member_group')->save($id, 'register', $value);
         \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
@@ -129,7 +141,9 @@ class Member_group extends \Phpcmf\Table
         $this->_init_group();
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = $this->_Data($id);
-        !$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
         $value = $data['apply'] ? 0 : 1;
         \Phpcmf\Service::M()->table('member_group')->save($id, 'apply', $value);
         \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
@@ -152,10 +166,11 @@ class Member_group extends \Phpcmf\Table
 
     // 等级管理
     public function level_index() {
-        $this->_init_level();
+        $gid = intval($_GET['gid']);
+        $this->_init_level($gid);;
         list($tpl) = $this->_List([], -1);
         \Phpcmf\Service::V()->assign([
-            'gid' => intval($_GET['gid']),
+            'gid' => $gid,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '用户组管理' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-users'],
@@ -170,8 +185,8 @@ class Member_group extends \Phpcmf\Table
 
     // 添加等级
     public function level_add() {
-        $this->_init_level();
         $gid = intval($_GET['gid']);
+        $this->_init_level($gid);
         list($tpl) = $this->_Post(0);
         \Phpcmf\Service::V()->assign([
             'gid' => $gid,
@@ -182,7 +197,8 @@ class Member_group extends \Phpcmf\Table
 
     // 修改等级
     public function level_edit() {
-        $this->_init_level();
+        $gid = intval($_GET['gid']);
+        $this->_init_level($gid);
         list($tpl, $data) = $this->_Post(intval(\Phpcmf\Service::L('input')->get('id')));
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(['gid' => intval($data['gid'])]),
@@ -192,10 +208,13 @@ class Member_group extends \Phpcmf\Table
 
     // 允许申请等级
     public function apply_level_edit() {
-        $this->_init_level();
+        $gid = intval($_GET['gid']);
+        $this->_init_level($gid);
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = $this->_Data($id);
-        !$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
         $value = $data['apply'] ? 0 : 1;
         \Phpcmf\Service::M()->table('member_level')->save($id, 'apply', $value);
         \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
@@ -204,7 +223,8 @@ class Member_group extends \Phpcmf\Table
 
     // 删除等级
     public function level_del() {
-        $this->_init_level();
+        $gid = intval($_GET['gid']);
+        $this->_init_level($gid);
         $this->_Del(
             \Phpcmf\Service::L('input')->get_post_ids(),
             null,
