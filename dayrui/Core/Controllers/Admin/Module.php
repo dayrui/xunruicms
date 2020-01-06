@@ -258,7 +258,7 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['content', 'author', 'inputtime']);
-		$comment_field = dr_list_field_value($data['setting']['comment_list_field'], $sys_field, $field);
+		$comment_field = dr_list_field_value($data['setting']['comment_list_field'], $sys_field, $comment_field);
 
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
