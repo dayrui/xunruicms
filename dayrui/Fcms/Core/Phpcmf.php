@@ -168,7 +168,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 设置终端模板
-        //$is_auto_mobile_page = 0;
+        $is_auto_mobile_page = 0;
         if (defined('IS_CLIENT')) {
             // 存在自定义终端
             define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
@@ -176,7 +176,7 @@ abstract class Common extends \CodeIgniter\Controller
         } elseif (defined('IS_MOBILE') || ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
             // 移动端模板 // 开启自动识别移动端
             \Phpcmf\Service::V()->init('mobile');
-            //$is_auto_mobile_page = 1;
+            $is_auto_mobile_page = 1;
             define('CLIENT_URL', SITE_MURL);
         } else {
             // 默认情况下pc模板
@@ -190,17 +190,17 @@ abstract class Common extends \CodeIgniter\Controller
         if (IS_CLIENT) {
             define('MEMBER_URL', CLIENT_URL.(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
         } else {
-            if (\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['domain'])
+            if (!$is_auto_mobile_page && isset($this->member_cache['domain'][SITE_ID]['domain'])
                 && $this->member_cache['domain'][SITE_ID]['domain']) {
                 // 电脑端绑定域名时
                 define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['domain'].'/'));
-            } elseif (!\Phpcmf\Service::IS_PC() && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
+            } elseif ($is_auto_mobile_page && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
                 && $this->member_cache['domain'][SITE_ID]['mobile_domain']) {
                 // 移动端绑定域名时
                 define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['mobile_domain'].'/'));
             } else {
                 // 默认域名
-                define('MEMBER_URL', (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
+                define('MEMBER_URL', (!$is_auto_mobile_page ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
             }
         }
 
@@ -500,7 +500,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 无权限访问模块
         if (!IS_ADMIN && !IS_MEMBER
             && !dr_member_auth($this->member_authid, $this->member_cache['auth_module'][$siteid][$dirname]['home'])) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问模块'), dr_url('login/home/index'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问模块'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
             return;
         }
 
