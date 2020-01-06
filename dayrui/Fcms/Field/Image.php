@@ -194,14 +194,13 @@ class Image extends \Phpcmf\Library\A_Field {
                         $tpl.=     '<a class="dz-remove" href="javascript:dr_delete_image_'.$name.'('.$id.');" title="'.dr_lang('删除图片').'">';
                         $tpl.=      '   <i class="fa fa-times-circle"></i>';
                         $tpl.=    ' </a>';
-                        $tpl.=    '<input type="hidden" name="data['.$name.'][]" value="'.$id.'" />';
+                        $tpl.=    '<input class="dr_dropzone_'.$name.'" type="hidden" name="data['.$name.'][]" value="'.$id.'" />';
                         $tpl.= '</div>';
                         $i++;
                     }
                 }
             }
         }
-        $ucount = $count - $i;
         $ts = dr_lang('单击上传图片，每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
@@ -229,16 +228,23 @@ $(function() {
     Dropzone.autoDiscover = false;
     $("#my-dropzone-'.$name.'").dropzone({ 
         addRemoveLinks:true,
-        maxFiles:'.$ucount.',//一次性上传的文件数量上限
+        maxFiles:'.$count.',//一次性上传的文件数量上限
         maxFilesize: '.$size.', //MB
         acceptedFiles: "image/*",
-        dictMaxFilesExceeded: "'.dr_lang("您最多只能上传%s张图片", $count).'",
-        dictResponseError: \'文件上传失败!\',
-        dictInvalidFileType: "你不能上传该类型文件,文件类型只能是*.jpg,*.gif,*.png。",
+        dictMaxFilesExceeded: "'.dr_lang("最多只能上传%s张图片", $count).'",
+        dictResponseError: \'文件上传失败\',
+        dictInvalidFileType: "不能上传该类型文件",
         dictFallbackMessage:"浏览器不受支持",
-        dictFileTooBig:"文件过大上传文件最大支持.",
+        dictFileTooBig:"文件过大上传文件最大支持",
         url: "'.$url.'",
         init: function() {
+           
+           this.on("addedfile", function(file) { 
+            //上传文件时触发的事件
+                var nums = $(".dr_dropzone_'.$name.'").length;
+                this.options.maxFiles = '.$count.' - nums;
+            });
+            
             //res为服务器响应回来的数据
             this.on("success", function(file, res) {
  
@@ -249,9 +255,8 @@ $(function() {
                 //file.path = res;
                  
                 if(rt.code){
-                    var input = \'<input type="hidden" name="data['.$name.'][]" value="\'+rt.id+\'" />\';
+                    var input = \'<input class="dr_dropzone_'.$name.'" type="hidden" name="data['.$name.'][]" value="\'+rt.id+\'" />\';
                     $(file.previewElement).append(input);
- 
                 }else{
                     dr_tips(0, rt.msg);
                     file.previewElement.classList.remove("dz-success");
@@ -272,9 +277,9 @@ $(function() {
                         }
                 }
                  
- 
-                 
             });
+            
+            
  
         }
      });
