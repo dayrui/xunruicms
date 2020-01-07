@@ -266,7 +266,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证缓存过期，请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
@@ -472,7 +472,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证过期，请重试');
+            $this->_json(0, '授权验证缓存过期，请重试');
         } elseif (!$cache['size']) {
             $this->_json(0, '关键数据不存在，请重试');
         } elseif (!function_exists('fsockopen')) {
@@ -511,7 +511,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证缓存过期，请重试');
         } elseif (!$cache['size']) {
             $this->_json(0, '本站：关键数据不存在，请重试');
         }
@@ -532,7 +532,7 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站：授权验证缓存过期，请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
