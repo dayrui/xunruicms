@@ -32,7 +32,7 @@ class PaysText extends \Phpcmf\Library\A_Field {
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-				<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+				<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 			</div>
 		</div>
 		

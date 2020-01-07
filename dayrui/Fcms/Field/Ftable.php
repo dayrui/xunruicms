@@ -112,7 +112,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<div class="form-control-static">
 					    <p>'.dr_lang('列名称：是表格列的显示名称').'</p>
-					    <p>'.dr_lang('列宽度：是表格列的宽度，[整数]表示固定宽带；[整数%]表示百分比').'</p>
+					    <p>'.dr_lang('列宽度：是表格列的宽度，[整数]表示固定宽度；[整数%]表示百分比').'</p>
 					    <p>'.dr_lang('选择项：用于下拉选择框的选项，多个选项用半角,分开').'</p>
 					    <p>'.dr_lang('行名称：是表格每一行的显示名称，如果不填就按照默认行名称显示，如果默认行名称也没有填写就不显示行名').'</p>
 					    <span class="help-block"> <a href="javascript:dr_help(\'644\');"> '.dr_lang('了解此字段的使用方法').'</a> </span>
@@ -124,7 +124,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-					<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+					<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 				</div>
 			</div>
 			<div class="form-group">
