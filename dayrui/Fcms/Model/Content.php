@@ -733,13 +733,16 @@ class Content extends \Phpcmf\Model {
                 return [];
             }
 			$row = $this->find_row($param['field'], $param['value']);
+            if (!$row) {
+                return [];
+            }
+            $id = $row['id'];
         } else {
 			$row = $this->table($table)->get($id);
+            if (!$row) {
+                return [];
+            }
 		}
-
-        if (!$row) {
-            return [];
-        }
 		
         $cdata[$table] = $row;
 

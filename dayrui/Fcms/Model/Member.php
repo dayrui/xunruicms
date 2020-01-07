@@ -557,7 +557,7 @@ class Member extends \Phpcmf\Model
      */
     public function admin_notice($site, $type, $member, $msg, $uri, $to = []) {
 
-        $this->db->table('admin_notice')->insert([
+        $data = [
             'site' => (int)$site,
             'type' => $type,
             'msg' => dr_strcut(dr_clearhtml($msg), 100),
@@ -571,7 +571,11 @@ class Member extends \Phpcmf\Model
             'op_username' => '',
             'updatetime' => 0,
             'inputtime' => SYS_TIME,
-        ]);
+        ];
+        $this->db->table('admin_notice')->insert($data);
+
+        // 挂钩点
+        \Phpcmf\Hooks::trigger('admin_notice', $data);
     }
     
     // 执行提醒

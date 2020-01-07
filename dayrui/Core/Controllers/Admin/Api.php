@@ -322,8 +322,8 @@ class Api extends \Phpcmf\Common
 			$t1 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_index')->where('status=9')->where('DATEDIFF(from_unixtime(inputtime),now())=0')->countAllResults();
 			$t2 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_index')->where('status=9')->countAllResults();
 			$t3 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_verify')->where(($status ? 'status IN('.implode(',', $status).')' : 'status>=0'))->countAllResults();
-			$t4 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_recycle')->where('uid', $this->uid)->countAllResults();
-			$t5 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_time')->where('uid', $this->uid)->countAllResults();
+			$t4 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_recycle')->countAllResults();
+			$t5 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_time')->countAllResults();
 		}
 		echo '$("#'.$dir.'_today").html('.$t1.');';
 		echo '$("#'.$dir.'_all").html('.$t2.');';
@@ -340,16 +340,12 @@ class Api extends \Phpcmf\Common
 
 	// 常用配置
 	public function config() {
-
-		\Phpcmf\Service::V()->display('api_config.html');
-        exit;
+		\Phpcmf\Service::V()->display('api_config.html');exit;
 	}
 
 	// phpinfo
 	public function phpinfo() {
-
-		phpinfo();
-		exit;
+		phpinfo();exit;
 	}
 
 	// 邮件发送测试
