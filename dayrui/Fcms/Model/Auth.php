@@ -663,6 +663,11 @@ class Auth extends \Phpcmf\Model {
     // 菜单点击url
     public function _menu_link_url($select, $uri = '', $param = []) {
 
+        if ($uri && !$this->_is_admin_auth($uri)) {
+            // 没权限
+            return 'javascript:;';
+        }
+
         !$uri && $uri = $select;
         $menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri', $select);
         if ($menu) {
