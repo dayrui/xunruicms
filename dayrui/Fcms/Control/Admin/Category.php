@@ -91,6 +91,10 @@ class Category extends \Phpcmf\Table
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {
                 $option.= '<a class="btn btn-xs dark" href="javascript:dr_link_url('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑地址').'</a>';
             }
+            if ($this->_is_admin_auth('edit')
+                && ( (!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
+                $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
+            }
 
             $t['option'] = $option;
             // 判断显示和隐藏开关
@@ -209,7 +213,9 @@ class Category extends \Phpcmf\Table
         ];
 
         if ($pid) {
-            !$this->module['category'][$pid] && $this->_admin_msg(0, dr_lang('栏目【%s】缓存不存在', $pid));
+            if (!$this->module['category'][$pid]) {
+                $this->_admin_msg(0, dr_lang('栏目【%s】缓存不存在', $pid));
+            }
             $value['setting'] = $this->module['category'][$pid]['setting'];
         }
 
@@ -748,7 +754,76 @@ class Category extends \Phpcmf\Table
             'myurl' => $row['setting']['linkurl'],
         ]);
         \Phpcmf\Service::V()->display('share_category_linkurl.html');exit;
+    }
 
+    // 编辑自定义字段
+    public function field_edit() {
+
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        if (!$row) {
+            $this->_json(0, dr_lang('栏目数据不存在'));
+        }
+
+        $row['setting'] = dr_string2array($row['setting']);
+
+        if (IS_POST) {
+            $post = \Phpcmf\Service::L('input')->post('ids');
+            $save = $row['setting']['cat_field'] ? $row['setting']['cat_field'] : [];
+            foreach ($this->module['category_field'] as $t) {
+                if ($t['id']) {
+                    if (in_array($t['fieldname'], $post)) {
+                        // 说明勾选了这个字段
+                        if (isset($save[$t['fieldname']])) {
+                            unset($save[$t['fieldname']]);
+                        }
+                    } else {
+                        // 没勾选
+                        $save[$t['fieldname']] = 1;
+                    }
+                }
+            }
+            $row['setting']['cat_field'] = $save;
+            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::L('input')->system_log('修改栏目自定义字段权限: '. $row['name'] . '['. $id.']');
+
+            $catids = \Phpcmf\Service::L('input')->post('catid');
+            if ($catids) {
+                $c = 0;
+                $row['setting'] = dr_string2array($row['setting']);
+                if (isset($catids[0]) && $catids[0] == 0) {
+                    foreach ($this->module['category'] as $id => $t) {
+                        $c ++;
+                        // 全部栏目
+                        \Phpcmf\Service::M('Category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                    }
+                } else {
+                    foreach ($catids as $id) {
+                        $c ++;
+                        // 指定栏目
+                        \Phpcmf\Service::M('Category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                    }
+                }
+            }
+            // 自动更新缓存
+            \Phpcmf\Service::M('cache')->sync_cache();
+            $this->_json(1, dr_lang('操作成功'));
+            exit;
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'field' => $this->module['category_field'],
+            'select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                0,
+                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
+                dr_lang('全部栏目'),
+                0,
+                0
+            ),
+            'cat_field' => $row['setting']['cat_field'],
+        ]);
+        \Phpcmf\Service::V()->display('share_category_field.html');exit;
     }
 
 
@@ -766,6 +841,13 @@ class Category extends \Phpcmf\Table
         }
 
         $row['setting'] = dr_string2array($row['setting']);
+        if ($row['setting']['cat_field']) {
+            foreach ($row['setting']['cat_field'] as $key => $v) {
+                unset($this->init['field'][$key]);
+            }
+        }
+
+        $this->_init($this->init);
 
         return $row;
     }
@@ -839,6 +921,9 @@ class Category extends \Phpcmf\Table
                         }
                     }
                 }
+
+                // 不出现在编辑器中的字段
+                $save['setting']['cat_field'] = $old['setting']['cat_field'];
 
                 // 数组json化
                 $save['setting'] = dr_array2string($save['setting']);

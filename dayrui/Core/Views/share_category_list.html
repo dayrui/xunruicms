@@ -1,10 +1,13 @@
 {template "header.html"}
 <script>
     function dr_page_content(id) {
-        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url(APP_DIR.'/category/content_edit')}&id='+id, '90%', '90%');
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url(APP_DIR.'/category/content_edit')}&id='+id, '90%', '90%', 'nogo');
     }
     function dr_link_url(id) {
         dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url(APP_DIR.'/category/link_edit')}&id='+id, '50%', '40%');
+    }
+    function dr_cat_field(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('设置栏目自定义字段权限')}','{dr_url(APP_DIR.'/category/field_edit')}&id='+id, '50%', '70%', 'nogo');
     }
     // ajax关闭或启用
     function dr_cat_ajax_open_close(e, url, fan) {
@@ -195,7 +198,7 @@
 <div class="row my-content-top-tool">
     <div class="col-md-12 col-sm-12">
         <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
-        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')}</a></label>
+        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义栏目字段')}</a></label>
         <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
         <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
     </div>

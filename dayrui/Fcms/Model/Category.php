@@ -283,6 +283,8 @@ class Category extends \Phpcmf\Model
             $row['setting']['seo'] = $setting['seo'];
             $row['setting']['html'] = $setting['html'];
             $row['setting']['urlrule'] = $setting['urlrule'];
+        } else {
+            $row['setting'][$at] = $setting[$at];
         }
 
         $this->table($this->tablename)->update($id, [
