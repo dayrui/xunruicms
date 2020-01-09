@@ -245,6 +245,8 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
 // 显示错误提示
 if (CI_DEBUG) {
     ini_set('display_errors', 1);
+    // 重置Zend OPcache
+    function_exists('opcache_reset') && opcache_reset();
 } else {
     ini_set('display_errors', 0);
 }
