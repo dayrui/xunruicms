@@ -2,6 +2,9 @@
 
 <script>
     {if $is_verify}
+    $(function () {
+        $('#dr_row_hits').hide();
+    });
     {else}
     {$auto_form_data_ajax}
     {/if}

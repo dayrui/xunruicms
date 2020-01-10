@@ -1104,6 +1104,7 @@ class Module extends \Phpcmf\Table
                                 $old['note'] = $_POST['verify']['msg'];
                                 \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
                             }
+                            $data[1]['hits'] = max(1, intval($old['hits']));
                         }
                     }
 					// 是否退稿

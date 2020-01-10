@@ -1,4 +1,5 @@
 <?php namespace Phpcmf\Controllers\Api;
+use function Composer\Autoload\includeFile;
 
 /**
  * http://www.xunruicms.com
@@ -28,7 +29,7 @@ class Oauth extends \Phpcmf\Common
         // 请求参数
         $appid = $this->member_cache['oauth'][$name]['id'];
         $appkey = $this->member_cache['oauth'][$name]['value'];
-        $callback_url = ROOT_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.$back;
+        $callback_url = ROOT_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.urlencode($back);
 
         switch ($name) {
 
@@ -121,7 +122,9 @@ class Oauth extends \Phpcmf\Common
                 } else {
                     // 跳转授权页面
                     $rt = $qc->qq_login($appid, $callback_url);
-                    !$rt = $this->_msg(0, dr_lang('授权执行失败'));
+                    if (!$rt) {
+                        $this->_msg(0, dr_lang('授权执行失败'));
+                    };
                 }
                 break;
 
@@ -269,8 +272,6 @@ class Oauth extends \Phpcmf\Common
             } else {
                 $this->_json($rt['access_token'] ? 0 : 1, 'ok', $rt);
             }
-
-
         }
     }
 
