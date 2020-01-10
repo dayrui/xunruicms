@@ -937,7 +937,7 @@ class Module extends \Phpcmf\Model
                 }
 
                 // 更新内容模块菜单
-                $menu_model->update_module($mdir, $config, $cache['form']);
+                $menu_model->update_module($mdir, $config, $cache['form'], $cache['comment']['cname']);
                 !$cache['title'] && $cache['title'] = $cache['name'];
 
                 // 执行模块自己的缓存程序

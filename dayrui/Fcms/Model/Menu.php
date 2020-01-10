@@ -89,7 +89,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 从模块中更新菜单
-    public function update_module($mdir, $config, $form) {
+    public function update_module($mdir, $config, $form, $comment_cname = '') {
 
         // 作为应用模块时不需要菜单
         if (isset($config['ftpye']) && $config['ftpye'] == 'module') {
@@ -131,7 +131,7 @@ class Menu extends \Phpcmf\Model {
                 $save = [
                     'uri' => $mdir.'/comment_verify/index',
                     'mark' => 'verify-comment-'.$mdir,
-                    'name' => $menu && $menu['name'] ? $menu['name'] : dr_lang('%s评论', $config['name']),
+                    'name' => $menu && $menu['name'] ? $menu['name'] : dr_lang('%s%s', $config['name'], dr_comment_cname($comment_cname)),
                     'icon' => 'fa fa-comments',
                     'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
                 ];

@@ -888,6 +888,16 @@ function dr_thumb($img, $width = 100, $height = 100, $water = 0, $mode = 'auto')
     return $file ? $file : ROOT_THEME_PATH.'assets/images/nopic.gif';
 }
 
+// 评论名称
+function dr_comment_cname($name) {
+
+    if (!$name) {
+        return dr_lang('评论');
+    }
+
+    return dr_lang($name);
+}
+
 /**
  * 文件真实地址
  *
@@ -1516,8 +1526,10 @@ function dr_list_field_value($value, $sys_field, $field) {
 	
 	$rt = [];
 	foreach ($value as $name => $t) {
-		$rt[$name] = $sys_field[$name];
-		unset($sys_field[$name]);
+        if ($t['name']) {
+            $rt[$name] = $sys_field[$name];
+            unset($sys_field[$name]);
+        }
 	}
 	
 	if (!$sys_field) {

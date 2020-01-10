@@ -304,7 +304,7 @@ class Seo
     function comment($mod, $data) {
 
         $seo = [
-            'meta_title' => dr_lang('评论: %s', $data['title']).SITE_SEOJOIN.dr_lang($mod['name']),
+            'meta_title' => dr_lang('%s: %s', dr_comment_cname($mod['comment']['cname']), $data['title']).SITE_SEOJOIN.dr_lang($mod['name']),
             'meta_keywords' => $data['keywords'],
             'meta_description' => $data['description'],
         ];

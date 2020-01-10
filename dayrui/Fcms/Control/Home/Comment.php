@@ -20,8 +20,10 @@ class Comment extends \Phpcmf\Common
         $this->_module_init();
         // 是否启用判断
         if (!$this->module['comment']) {
-            !\Phpcmf\Service::L('input')->get('callback') && $this->_msg(0, dr_lang('模块【%s】没有启用评论', MOD_DIR));
-            exit('未开启评论'); // jsonp请求时不输出
+            if (!\Phpcmf\Service::L('input')->get('callback')) {
+                $this->_msg(0, dr_lang('模块【%s】没有启用%s', MOD_DIR, dr_comment_cname($this->module['comment']['cname'])));
+            }
+            exit('未开启'.dr_comment_cname($this->module['comment']['cname'])); // jsonp请求时不输出
         }
         // 关联内容数据
         $this->cid = intval(\Phpcmf\Service::L('input')->get('id'));
@@ -76,7 +78,7 @@ class Comment extends \Phpcmf\Common
         // 获取评论数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            exit($this->_msg(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid)));
+            exit($this->_msg(0, dr_lang('内容【id#%s】索引数据读取失败',  $this->cid)));
         }
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
@@ -144,19 +146,19 @@ class Comment extends \Phpcmf\Common
 
         if ($this->module['comment']['my'] && $this->index['uid'] == $this->uid) {
             // 判断不能对自己评论
-            $this->_json(0, dr_lang('系统禁止对自己评论'));
+            $this->_json(0, dr_lang('系统禁止对自己提交'));
         } elseif (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['comment']['add'])) {
             // 判断用户评论权限
-            $this->_json(0, dr_lang('您的用户组无权限评论'));
+            $this->_json(0, dr_lang('您的用户组无权限提交'));
         } elseif ($this->index['is_comment'] == 1) {
             // 判断内容设置的评论权限
-            $this->_json(0, dr_lang('该主题禁止评论'));
+            $this->_json(0, dr_lang('该主题禁止提交'));
         } elseif ($this->module['comment']['buy']) {
             // 购买之后才能评论
-            $this->_json(0, dr_lang('请到我的订单中评论该商品'));
+            $this->_json(0, dr_lang('请到我的订单中操作'));
         } elseif ($this->module['comment']['num'] && \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_comment')->where('cid',  $this->cid)->where('uid', $this->uid)->countAllResults()) {
             // 只允许评论一次
-            $this->_json(0, dr_lang('您已经评论过了，请勿再次评论'));
+            $this->_json(0, dr_lang('请勿重复提交'));
         }
 
         $rid = (int)\Phpcmf\Service::L('input')->get('rid');
@@ -169,7 +171,7 @@ class Comment extends \Phpcmf\Common
             // 查询主题
             $row = $this->content_model->table($this->content_model->mytable.'_comment')->get($rid);
             if (!$row || $this->cid != $row['cid']) {
-                $this->_json(0, dr_lang('您回复的评论主体不存在'));
+                $this->_json(0, dr_lang('您回复的主体不存在'));
             } elseif ($row['reply']) {
                 $rid = $row['reply']; // 如果他本是就是回帖内容
             } elseif ($this->module['comment']['reply'] == 2 && !(($this->member['uid'] == $row['uid'] && $row['uid'] == $this->index['uid']) || $this->member['is_admin'])) {
@@ -190,13 +192,13 @@ class Comment extends \Phpcmf\Common
         // 获取评论数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            $this->_json(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid));
+            $this->_json(0, dr_lang('内容【id#%s】索引数据读取失败',  $this->cid));
         }
 
         // 判断评论内容
         $content = $this->_safe_replace(\Phpcmf\Service::L('input')->post('content', true));
         if (!$content) {
-            $this->_json(0, dr_lang('评论内容不能为空'));
+            $this->_json(0, dr_lang('%s内容不能为空', dr_comment_cname($this->module['comment']['cname'])));
         }
 
         // 开启点评功能时，判断各项点评数，回复不做点评
@@ -204,7 +206,9 @@ class Comment extends \Phpcmf\Common
         if (!$rid && $this->module['comment']['review'] && $this->module['comment']['review']['option']) {
             foreach ($this->module['comment']['review']['option'] as $i => $name) {
                 $review[$i] = (int)$_POST['review'][$i];
-                !$review[$i] && $this->_json(0, dr_lang('选项[%s]未评分', $name));
+                if (!$review[$i]) {
+                    $this->_json(0, dr_lang('选项[%s]未评分', $name));
+                }
             }
         }
 
@@ -217,7 +221,9 @@ class Comment extends \Phpcmf\Common
                 $this->module['comment']['field']
             );
             // 输出错误
-            $return && $this->_json(0, $return['error']);
+            if ($return) {
+                $this->_json(0, $return['error']);
+            }
             $my = $post[1];
         }
 
@@ -238,8 +244,8 @@ class Comment extends \Phpcmf\Common
             ],
             $my
         );
+        // 评论失败
         if (!$rt['code']) {
-            // 评论失败
             $this->_json(0, $rt['msg']);
         }
 
@@ -253,7 +259,7 @@ class Comment extends \Phpcmf\Common
         // 间隔30秒
         $this->session()->setTempdata($name, 1, 30);
 
-        $status ? $this->_json(1, dr_lang('评论成功')) : $this->_json(1, dr_lang('评论成功，等待管理员审核'));
+        $status ? $this->_json(1, dr_lang('操作成功')) : $this->_json(1, dr_lang('操作成功，等待管理员审核'));
     }
     
     // 操作动作
@@ -265,13 +271,13 @@ class Comment extends \Phpcmf\Common
         // 查询评论是否存在
         $data = $this->content_model->table($this->content_model->mytable.'_comment')->get($id);
         if (!$data) {
-            $this->_json(0, dr_lang('评论主题不存在'));
+            $this->_json(0, dr_lang('主题不存在'));
         }
 
         // 获取评论索引数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            $this->_msg(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid));
+            $this->_msg(0, dr_lang('内容【id#%s】索引数据读取失败',  $this->cid));
         }
 
         // 验证操作间隔

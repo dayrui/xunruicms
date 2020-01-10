@@ -29,7 +29,7 @@ class Content extends \Phpcmf\Table
         }
 
         if (!$this->module) {
-            $this->_msg(0, dr_lang('系统没有对内容模块开启评论功能'));
+            $this->_msg(0, dr_lang('系统没有对内容模块开启%s功能', dr_comment_cname($this->module['comment']['cname'])));
         }
 
         $dir = \Phpcmf\Service::L('input')->get('module');

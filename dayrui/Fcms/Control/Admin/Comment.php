@@ -17,7 +17,9 @@ class Comment extends \Phpcmf\Table
         parent::__construct(...$params);
         // 初始化模块
         $this->_module_init(APP_DIR);
-        !$this->module['comment'] && $this->_admin_msg(0, dr_lang('模块【%s】没有启用评论', APP_DIR));
+        if (!$this->module['comment']) {
+            $this->_admin_msg(0, dr_lang('模块【%s】没有启用%s', APP_DIR, dr_comment_cname($this->module['comment']['cname'])));
+        }
         // 支持附表存储
         $this->is_data = 0;
         // 模板前缀(避免混淆)
@@ -25,7 +27,7 @@ class Comment extends \Phpcmf\Table
         // 单独模板命名
         $this->tpl_name = 'comment_content';
         // 模块显示名称
-        $this->name = dr_lang('内容模块[%s]评论', APP_DIR);
+        $this->name = dr_lang('内容模块[%s]%s', APP_DIR, dr_comment_cname($this->module['comment']['cname']));
         // 获取父级内容
          $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
          $this->cid && $this->index = $this->content_model->get_row( $this->cid);
@@ -84,7 +86,7 @@ class Comment extends \Phpcmf\Table
                 '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
             ]) : \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
-                ' <i class="fa fa-comments"></i>  '.dr_lang('评论管理'),
+                ' <i class="fa fa-comments"></i>  '.dr_lang('%s管理', dr_comment_cname($this->module['comment']['cname'])),
                \Phpcmf\Service::L('Router')->url(APP_DIR.'/comment/index', ['cid' =>  $this->cid]),
                  $this->cid ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/comment/add', ['cid' =>  $this->cid]) : ''
             ).($this->module['comment']['review'] &&  $this->cid ? '<li> <a href="javascript:dr_iframe_show(\'show\', \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/comment/review_index', ['cid' =>  $this->cid]).'\', \'30%\', \'50%\');"> <i class="fa fa-thumbs-o-up"></i> '.dr_lang('查看评分').'</a> <i class="fa fa-circle"></i> </li>' : '');
