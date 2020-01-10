@@ -393,9 +393,11 @@ class Auth extends \Phpcmf\Model {
         }
 
         $rt = $this->member($member, 1);
-        !$rt['code'] ? \Phpcmf\Service::C()->_admin_msg(0, $rt['msg']) : $data = $rt['data'];
+        if (!$rt['code']) {
+            \Phpcmf\Service::C()->_admin_msg(0, $rt['msg']);
+        }
 
-        return $data;
+        return $rt['data'];
     }
 
     /**

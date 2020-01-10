@@ -51,7 +51,13 @@ class Site_domain extends \Phpcmf\Common
 
     public function edit() {
 
+        $name = '';
         $is_fclient = is_file(ROOTPATH.'api/fclient/index.php');
+        if ($is_fclient && is_file(MYPATH . 'Config/License.php')) {
+            $license = require MYPATH . 'Config/License.php';
+            $name = $license['name'];
+        }
+        !$name && $name = dr_lang('软件服务商');
 
         if (IS_POST) {
 
@@ -71,6 +77,7 @@ class Site_domain extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
+            'fcname' => $name,
             'is_fclient' => $is_fclient,
         ]);
         \Phpcmf\Service::V()->display('site_domain_edit.html');exit;

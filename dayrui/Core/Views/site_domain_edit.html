@@ -5,7 +5,7 @@
     <div class="form-body">
 
         {if $is_fclient}
-        {dr_lang('当前站点不能修改主域名，请到官方网站上修改主域名再进行数据通信操作')}
+        {dr_lang('当前站点不能修改主域名，请到[%s]网站上修改主域名再进行数据通信操作', $fcname)}
         {else}
         <div class="form-group">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('新域名')}</label>
