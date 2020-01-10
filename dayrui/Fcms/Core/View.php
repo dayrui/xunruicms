@@ -1705,6 +1705,8 @@ class View {
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
                     return $this->_return($system['return'], "模块({$dirname})未安装");
+                } elseif (!$param['id']) {
+                    return $this->_return($system['return'], "模块({$dirname})缺少id参数");
                 }
 
                 $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
