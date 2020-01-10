@@ -294,12 +294,11 @@ class Site extends \Phpcmf\Model
                         }
                     }
                 }
-                $logo = dr_get_file($t['setting']['config']['logo']);
                 $config[$t['id']] = [
                     'SITE_NAME' => $t['name'],
                     'SITE_DOMAIN' => $t['domain'],
                     'SITE_DOMAINS' => $t['setting']['config']['SITE_DOMAINS'],
-                    'SITE_LOGO' => $logo ? $logo : ROOT_THEME_PATH.'assets/logo-web.png',
+                    'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
                     'SITE_MOBILE' => (string)$t['setting']['mobile']['domain'],
                     'SITE_AUTO' => (string)$t['setting']['mobile']['auto'],
                     'SITE_IS_MOBILE_HTML' => (string)$t['setting']['mobile']['tohtml'],
