@@ -90,6 +90,8 @@ class Pay extends \Phpcmf\Common
         $data = \Phpcmf\Service::M()->table('member_paylog')->get($id);
         if (!$data) {
             $this->_msg(0, dr_lang('支付记录[%s]不存在', $id));
+        } elseif (!$data['status']) {
+            $this->_msg(0, dr_lang('支付记录[%s]未完成支付', $id));
         }
 
         // 支付回调钩子
