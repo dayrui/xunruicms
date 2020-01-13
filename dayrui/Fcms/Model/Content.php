@@ -672,30 +672,33 @@ class Content extends \Phpcmf\Model {
      */
     public function index($id, $data) {
 
-        $in = array(
+        $in = [
             'uid' => $data[1]['uid'],
             'catid' => $data[1]['catid'],
             'status' => $data[1]['status'],
             'inputtime' => $data[1]['inputtime'],
-        );
+        ];
 
         if ($this->is_share) {
             // 共享模块
             if ($id) {
+                // 修改
                 $this->table($this->mysharetable.'_index')->update($id, ['mid' => $this->dirname]);
-                unset($in['inputtime']);
-                $this->table($this->mytable.'_index')->update($id, $in);
+                $in['id'] = $id;
+                $this->table($this->mytable.'_index')->replace($in);
             } else {
+                // 新增
                 $rt = $this->table($this->mysharetable.'_index')->replace(['mid' => $this->dirname]);
                 $id = $in['id'] = (int)$rt['code'];
-                $this->table($this->mytable.'_index')->replace($in);
             }
         } else {
             // 独立模块
             if ($id) {
-                unset($in['inputtime']);
-                $this->table($this->mytable.'_index')->update($id, $in);
+                // 修改
+                $in['id'] = $id;
+                $this->table($this->mytable.'_index')->replace($in);
             } else {
+                // 新增
                 $rt = $this->table($this->mytable.'_index')->replace($in);
                 $id = (int)$rt['code'];
             }

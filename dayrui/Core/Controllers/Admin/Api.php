@@ -315,7 +315,7 @@ class Api extends \Phpcmf\Common
 	// 统计
 	public function mtotal() {
 
-		$t1 = $t2 = $t3 = $t4 = $t5 =0;
+		$t1 = $t2 = $t3 = $t4 = $t5 = 0;
 		$dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
         $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
 		if (is_dir(APPSPATH.ucfirst($dir))) {

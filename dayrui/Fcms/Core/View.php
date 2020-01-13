@@ -2510,6 +2510,7 @@ class View {
         $total && $debug.= '<p>总记录：'.$total.'</p>';
 		if ($this->_page_used) {
             $debug.= '<p>分页：已开启</p>';
+			$debug.= '<p>当前页：'.$page.'</p>';
 			$debug.= '<p>总页数：'.$nums.'</p>';
 			$debug.= '<p>每页数量：'.$pagesize.'</p>';
 			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
