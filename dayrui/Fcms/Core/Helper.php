@@ -3239,7 +3239,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
     // 指定域名判断
     if (!$domain) {
-        if (defined('IS_CLIENT')) {
+        if (IS_CLIENT) {
             // 来自客户端
             $domain = CLIENT_URL;
         } elseif ($siteid > 1 && \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL']) {

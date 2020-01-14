@@ -131,9 +131,8 @@ class Module extends \Phpcmf\Common
     // 模块栏目页
     protected function _Category($catid = 0, $catdir = null, $page = 1) {
 
-
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
