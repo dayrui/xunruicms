@@ -683,7 +683,7 @@ class Content extends \Phpcmf\Model {
             // 共享模块
             if ($id) {
                 // 修改
-                $this->table($this->mysharetable.'_index')->update($id, ['mid' => $this->dirname]);
+                //$this->table($this->mysharetable.'_index')->replace(['id' => $id, 'mid' => $this->dirname ]);
                 $in['id'] = $id;
             } else {
                 // 新增
