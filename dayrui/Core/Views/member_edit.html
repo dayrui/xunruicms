@@ -208,7 +208,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('审核状态')}</label>
                             <div class="col-md-9" style="padding-top:3px">
-                                <input type="checkbox" name="status[is_verify]" value="1" {if $is_verify}checked{/if} data-on-text="{dr_lang('审核通过')}" data-off-text="{dr_lang('未审核')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <input type="checkbox" name="status[is_verify]" value="1" {if $is_verify}checked{/if} data-on-text="{dr_lang('已审核')}" data-off-text="{dr_lang('未审核')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 
                                 <p class="help-block"> {dr_lang('当审核通过后才能正常操作网站')} </p>
                             </div>
@@ -226,7 +226,7 @@
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_auth]" value="1" {if $is_auth}checked{/if} data-on-text="{dr_lang('已认证')}" data-off-text="{dr_lang('未认证')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 
-                                <p class="help-block"> {dr_lang('是否进行实名认证')} </p>
+                                <p class="help-block"> {dr_lang('账号是否实名认证')} </p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -234,7 +234,7 @@
                             <div class="col-md-9" style="padding-top:3px">
                                 <input type="checkbox" name="status[is_mobile]" value="1" {if $is_mobile}checked{/if} data-on-text="{dr_lang('已认证')}" data-off-text="{dr_lang('未认证')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 
-                                <p class="help-block"> {dr_lang('手机号码是否认证')} </p>
+                                <p class="help-block"> {dr_lang('账号的手机号码是否认证')} </p>
                             </div>
                         </div>
                         <div class="form-group">
