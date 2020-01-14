@@ -970,13 +970,20 @@ class Member extends \Phpcmf\Model
 
         // 附表信息
         $data['id'] = $member['uid'] = $uid = $rt['code'];
-        $data['is_lock'] = 0;
         $data['is_auth'] = 0;
         $data['is_admin'] = 0;
         $data['is_avatar'] = 0;
         // 审核状态值
-        $data['is_verify'] = IS_ADMIN ? 1 : (\Phpcmf\Service::C()->member_cache['register']['verify'] ? 0 : 1);
-        $data['is_mobile'] = 0;
+        if (IS_ADMIN) {
+            $status = \Phpcmf\Service::L('input')->post('status');
+            $data['is_lock'] = intval($status['is_lock']);
+            $data['is_verify'] = intval($status['is_verify']);
+            $data['is_mobile'] = intval($status['is_mobile']);
+        } else {
+            $data['is_lock'] = 0;
+            $data['is_verify'] = \Phpcmf\Service::C()->member_cache['register']['verify'] ? 0 : 1;
+            $data['is_mobile'] = 0;
+        }
         $data['is_complete'] = 0;
         $rt = $this->table('member_data')->insert($data);
         if (!$rt['code']) {

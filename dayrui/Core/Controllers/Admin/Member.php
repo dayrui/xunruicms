@@ -272,7 +272,7 @@ class Member extends \Phpcmf\Table
 
         if (IS_AJAX_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             if (!$post['all']) {
                 $this->_json(0, dr_lang('用户集未填写'), ['field' => 'all']);
             }
