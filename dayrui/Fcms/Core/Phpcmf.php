@@ -572,17 +572,6 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_json($code, $msg, $url);
         }
 
-        $burl = $url ? $url : (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'php?') !== false ? $_SERVER['HTTP_REFERER'] : '');
-
-        if (!$code && $burl && strpos($burl, '&isback=') === false && strpos($burl, 'c=home&m=home') === false) {
-            // 存在URL返回提示
-            $burl = str_replace(array('&isback=', '&iscode=', $msg), '&', $burl).'&isback='.$msg.'&iscode='.$code;
-            // 避免重复定向
-            if (urldecode(dr_now_url()) != urldecode($burl)) {
-                dr_redirect($burl, 'auto');
-            }
-        }
-
         if (!$url) {
             $backurl = $_SERVER['HTTP_REFERER'];
             $backurl && strpos(dr_now_url(), $backurl) === 0 && $backurl = '';

@@ -37,11 +37,6 @@
     <script src="{THEME_PATH}assets/js/admin.js" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/js/jquery.cookie.js" type="text/javascript"></script>
     <script type="text/javascript">
-    {if isset($_GET['isback']) && $_GET['isback']}
-        $(function(){
-            dr_tips({intval($_GET['iscode'])}, "{$_GET['isback']}")
-        });
-    {/if}
         function dr_update_cache_all() {
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
