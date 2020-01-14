@@ -673,10 +673,10 @@ class Content extends \Phpcmf\Model {
     public function index($id, $data) {
 
         $in = [
-            'uid' => $data[1]['uid'],
-            'catid' => $data[1]['catid'],
-            'status' => $data[1]['status'],
-            'inputtime' => $data[1]['inputtime'],
+            'uid' => (int)$data[1]['uid'],
+            'catid' => (int)$data[1]['catid'],
+            'status' => (int)$data[1]['status'],
+            'inputtime' => (int)$data[1]['inputtime'],
         ];
 
         if ($this->is_share) {
@@ -685,12 +685,13 @@ class Content extends \Phpcmf\Model {
                 // 修改
                 $this->table($this->mysharetable.'_index')->update($id, ['mid' => $this->dirname]);
                 $in['id'] = $id;
-                $this->table($this->mytable.'_index')->replace($in);
             } else {
                 // 新增
                 $rt = $this->table($this->mysharetable.'_index')->replace(['mid' => $this->dirname]);
                 $id = $in['id'] = (int)$rt['code'];
             }
+            // 更新模块索引
+            $this->table($this->mytable.'_index')->replace($in);
         } else {
             // 独立模块
             if ($id) {
