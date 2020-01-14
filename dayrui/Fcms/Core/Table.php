@@ -343,7 +343,8 @@ class Table extends \Phpcmf\Common
             // 删除临时存储数据
             \Phpcmf\Service::L('Form')->auto_form_data_delete($name);
             // 执行回调方法
-            $this->_Call_Post($rt['data']);
+            $cp = $this->_Call_Post($rt['data']);
+            $this->_json($cp['code'], $cp['msg'], $cp['data']);
         }
 
         // 内容不存在

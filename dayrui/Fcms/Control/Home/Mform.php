@@ -361,9 +361,9 @@ class Mform extends \Phpcmf\Table
     protected function _Call_Post($data) {
 
         if ($data[1]['status']) {
-            $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
+            return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
         } else {
-            $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+            return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
         }
 
     }

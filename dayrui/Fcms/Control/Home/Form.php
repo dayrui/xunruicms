@@ -111,9 +111,8 @@ class Form extends \Phpcmf\Table
     // 显示内容
     protected function _Home_Show() {
 
-
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -223,9 +222,6 @@ class Form extends \Phpcmf\Table
      * */
     protected function _Call_Post($data) {
 
-        // 挂钩点
-        \Phpcmf\Hooks::trigger('form_post_after', $data);
-
         // 提醒通知
         if ($this->form['setting']['notice']['use']) {
             if ($this->form['setting']['notice']['username']) {
@@ -242,13 +238,16 @@ class Form extends \Phpcmf\Table
 
         $data['url'] = $this->form['setting']['rt_url'];
         if ($data[1]['status']) {
-            $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
+            return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
         }
 
         // 提醒
         \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
 
-        $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+        // 挂钩点
+        \Phpcmf\Hooks::trigger('form_post_after', $data);
+
+        return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
     }
 
     // 前端回调处理类

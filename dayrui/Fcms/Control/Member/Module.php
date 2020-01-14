@@ -552,13 +552,19 @@ class Module extends \Phpcmf\Table
             $html = '';
             if ($this->module['category'][$data[1]['catid']]['setting']['html']) {
                 // 生成权限文件
-                !dr_html_auth(1) && $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                if (!dr_html_auth(1)) {
+                    return dr_return_data(0, dr_lang('/cache/html/ 无法写入文件'));
+                }
                 $html = '/index.php?s='.$this->module['dirname'].'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.$this->module['dirname'].'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
+            return dr_return_data(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
         } else {
-            \Phpcmf\Service::L('input')->post('is_draft') ? $this->_json(1, dr_lang('操作成功，已存储到草稿箱')) : $this->_json(1, dr_lang('操作成功，等待管理员审核'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
+            if (\Phpcmf\Service::L('input')->post('is_draft')) {
+                return dr_return_data(1, dr_lang('操作成功，已存储到草稿箱'));
+            } else {
+                return dr_return_data(1, dr_lang('操作成功，等待管理员审核'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
+            }
         }
     }
 }
