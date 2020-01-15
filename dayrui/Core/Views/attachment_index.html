@@ -32,9 +32,37 @@
                                 <label class="col-md-2 control-label">{dr_lang('附件归档')}</label>
                                 <div class="col-md-9">
                                     <input type="checkbox" name="data[SYS_ATTACHMENT_DB]" value="1" {if $data['SYS_ATTACHMENT_DB']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                    <span class="help-block">{dr_lang('开启之后附件将分为已使用的附件和未使用的附件，归档存储')}</span>
+                                    <span class="help-block">{dr_lang('附件将分为已使用的附件和未使用的附件，归档存储')}</span>
                                 </div>
                             </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('栏目缩略图')}</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[SYS_FIELD_THUMB_ATTACH]">
+                                    <option value="0"> {dr_lang('本地存储')} </option>
+                                    {loop $remote $i $t}
+                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_THUMB_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
+                                    {/loop}
+                                </select></label>
+                                <span class="help-block">{dr_lang('适用于栏目缩略图的存储策略')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('栏目编辑器')}</label>
+                            <div class="col-md-9">
+                                <label><select class="form-control" name="data[SYS_FIELD_CONTENT_ATTACH]">
+                                    <option value="0"> {dr_lang('本地存储')} </option>
+                                    {loop $remote $i $t}
+                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_CONTENT_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
+                                    {/loop}
+                                </select></label>
+                                <span class="help-block">{dr_lang('适用于栏目内容的编辑器附件存储策略')}</span>
+                            </div>
+                        </div>
+
+
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                                 <div class="col-md-9">
@@ -63,32 +91,6 @@
                             <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
                             <div class="col-md-9" style="padding-top: 3px; line-height: 25px; color:green" id="dr_test_domain_result">
 
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('缩略图存储策略')}</label>
-                            <div class="col-md-9">
-                                <label><select class="form-control" name="data[SYS_FIELD_THUMB_ATTACH]">
-                                    <option value="0"> {dr_lang('本地存储')} </option>
-                                    {loop $remote $i $t}
-                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_THUMB_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
-                                    {/loop}
-                                </select></label>
-                                <span class="help-block">{dr_lang('适用于：共享栏目、独立模块栏目')}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('内容编辑器存储策略')}</label>
-                            <div class="col-md-9">
-                                <label><select class="form-control" name="data[SYS_FIELD_CONTENT_ATTACH]">
-                                    <option value="0"> {dr_lang('本地存储')} </option>
-                                    {loop $remote $i $t}
-                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_CONTENT_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
-                                    {/loop}
-                                </select></label>
-                                <span class="help-block">{dr_lang('适用于：共享栏目、独立模块栏目')}</span>
                             </div>
                         </div>
 

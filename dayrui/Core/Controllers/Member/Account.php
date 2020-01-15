@@ -114,7 +114,7 @@ class Account extends \Phpcmf\Common
                 // 上传图片到服务器
                 copy($temp, $file);
                 if (!is_file($file)) {
-                    $this->_json(0, dr_lang('头像存储失败'));
+                    $this->_json(0, dr_lang('头像复制失败'));
                 }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
