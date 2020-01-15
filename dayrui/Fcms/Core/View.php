@@ -626,6 +626,8 @@ class View {
             'page' => '', // 是否分页
             'site' => '', // 站点id
             'flag' => '', // 推荐位id
+            'flag' => '', // 推荐位id
+            'not_flag' => '', // 排除推荐位id
             'more' => '', // 是否显示栏目模型表
             'catid' => '', // 栏目id，支持多id
             'field' => '', // 显示字段
@@ -1980,19 +1982,15 @@ class View {
 
                 // 推荐位调用
                 if ($system['flag']) {
-                    $in = array();
-                    $flag = $this->_query("select id from {$table}_flag where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']), $system['db'], $system['cache']);
-                    if ($flag) {
-                        foreach ($flag as $t) {
-                            $in[] = $t['id'];
-                        }
-                    }
-                    // 没有查询到内容
-                    if (!$in) {
-                        return $this->_return($system['return'], '没有查询到推荐位内容');
-                    }
-                    $sql_where = ($sql_where ? $sql_where.' AND' : '')."`$table`.`id` IN (".implode(',', $in).")";
-                    unset($flag, $in);
+                    $flag = "select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
+                    $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` IN (".$flag.")";
+                    unset($flag);
+                }
+                // 排除推荐位
+                if ($system['not_flag']) {
+                    $flag = "select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$system['not_flag'].')' : '`flag`='.(int)$system['not_flag']);
+                    $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` NOT IN (".$flag.")";
+                    unset($flag);
                 }
 
                 $first_url = '';

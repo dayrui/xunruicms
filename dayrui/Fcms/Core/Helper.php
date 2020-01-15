@@ -868,7 +868,7 @@ function dr_thumb_path() {
 }
 
 // 缩略图
-function dr_thumb($img, $width = 100, $height = 100, $water = 0, $mode = 'auto') {
+function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto') {
 
     if (is_numeric($img)) {
 
