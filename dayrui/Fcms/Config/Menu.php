@@ -578,11 +578,6 @@ return [
                             'uri' => 'cloud/app',
                         ],
                         [
-                            'name' => '组件商城',
-                            'icon' => 'fa fa-plug',
-                            'uri' => 'cloud/func',
-                        ],
-                        [
                             'name' => '模板商城',
                             'icon' => 'fa fa-html5',
                             'uri' => 'cloud/template',
@@ -601,10 +596,6 @@ return [
                 ],
             ],
         ],
-
-
-
-
 
     ],
 
@@ -680,8 +671,6 @@ return [
             ],
         ],
 
-
-
         'content-module' => [
             'name' => '内容管理',
             'icon' => 'fa fa-th-large',
@@ -693,7 +682,6 @@ return [
                 ],
             ],
         ],
-
 
 
     ],
