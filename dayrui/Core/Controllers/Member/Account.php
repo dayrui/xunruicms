@@ -33,7 +33,7 @@ class Account extends \Phpcmf\Common
         }
 
         if (IS_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             if (!$post['name']) {
                 $this->_json(0, dr_lang('姓名没有填写'), ['field' => 'name']);
             } elseif (strlen($post['name']) > 20) {
@@ -41,9 +41,11 @@ class Account extends \Phpcmf\Common
             }
             list($data, $return, $attach) = \Phpcmf\Service::L('form')->id($this->uid)->validation($post, null, $field, $this->member);
             // 输出错误
-            $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+            if ($return) {
+                $this->_json(0, $return['error'], ['field' => $return['name']]);
+            }
             \Phpcmf\Service::M()->table('member')->update($this->uid, [
-                'name' => dr_safe_replace($post['name']),
+                'name' => dr_strcut(dr_safe_replace($post['name']), 20, ''),
             ]);
             $data[1]['is_complete'] = 1;
             \Phpcmf\Service::M()->table('member_data')->update($this->uid, $data[1]);
@@ -135,7 +137,7 @@ class Account extends \Phpcmf\Common
     public function password() {
 
         if (IS_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             $password = dr_safe_password($post['password']);
             if ((empty($post['password2']) || empty($post['password3']))) {
                 $this->_json(0, dr_lang('密码不能为空'), ['field' => 'password2']);

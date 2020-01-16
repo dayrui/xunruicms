@@ -32,13 +32,17 @@ class Api extends \Phpcmf\Common
         (strpos($url, 'verify') !== false || !$url) && $url = MEMBER_URL;
 
         if ($this->member['is_verify']) {
-            IS_API_HTTP && $this->_json(0, dr_lang('此用户已经通过审核了'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('此用户已经通过审核了'));
+            }
             dr_redirect($url);
             exit;
         } elseif (!$this->member['is_verify'] && !$this->member_cache['register']['verify']) {
             // 如果系统已经关闭了审核机制就自动通过
             \Phpcmf\Service::M('member')->verify_member($this->member['uid']);
-            IS_API_HTTP && $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            }
             dr_redirect($url);
             exit;
         } elseif ($this->member_cache['register']['verify'] == 'admin') {
@@ -372,7 +376,6 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-		$this->session()->setTempdata($name, $code, 60);
 		\Phpcmf\Service::L('Form')->set_mobile_code($phone, $code);
 		
         $this->_json(1, dr_lang('验证码发送成功'));

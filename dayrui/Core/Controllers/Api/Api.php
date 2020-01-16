@@ -541,8 +541,6 @@ class Api extends \Phpcmf\Common
             $this->_jsonp(1, 'ok');
         }
         exit;
-
     }
-
 
 }

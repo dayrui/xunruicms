@@ -24,7 +24,7 @@
                 <td>{$t.tname}</td>
                 <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
                 <td> {$t.updatetime} </td>
-                <td> <a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a> </td>
+                <td>{if !$is_syy}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
                 <td>
                     {if !$is_syy}
                     <label style="display: none" id="dr_update_{$dir}">

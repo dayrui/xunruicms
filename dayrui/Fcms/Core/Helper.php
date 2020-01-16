@@ -2641,7 +2641,6 @@ function dr_strcut($string, $length = 100, $dot = '...') {
 function dr_random_color() {
 
     $str = '#';
-
     for ($i = 0; $i < 6; $i++) {
         $randNum = rand(0, 15);
         switch ($randNum) {
