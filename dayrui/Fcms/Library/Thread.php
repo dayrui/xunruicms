@@ -28,12 +28,10 @@ class Thread
         // 执行任务
         if (function_exists('fsockopen') || function_exists('pfsockopen')) {
             // 异步非堵塞执行
-            $this->_fsockopen($url, $block);
+            return $this->_fsockopen($url, $block);
         } else {
-            file_get_contents($url);
+            return file_get_contents($url);
         }
-
-        return;
     }
 
     /**
@@ -41,7 +39,7 @@ class Thread
      */
     private function _fsockopen($url, $block = 0) {
 
-        $return = '';
+        $rt = 0;
         $uri = parse_url($url);
         $timeout = 10;
 
@@ -73,9 +71,10 @@ class Thread
         } else {
             $fp = false;
         }
+		
         if (!$fp) {
             log_message('error', 'fsockopen函数调用失败');
-            return ''; //note $errstr : $errno \r\n
+            return $rt; //note $errstr : $errno \r\n
         } else {
             //集阻塞/非阻塞模式流,$block==true则应用流模式
             stream_set_blocking($fp, $block);
@@ -107,7 +106,7 @@ class Thread
                 }
             }*/
             @fclose($fp);
-            return $return;
+            return 1;
         }
     }
 

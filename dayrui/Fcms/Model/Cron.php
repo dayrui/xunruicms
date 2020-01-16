@@ -193,6 +193,7 @@ class Cron extends \Phpcmf\Model
 
         foreach ($crons as $cron) {
             \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $cron['id'] ]);
+			//$this->do_cron($cron); 直接执行 可能影响效率
         }
 
         // 遍历文件

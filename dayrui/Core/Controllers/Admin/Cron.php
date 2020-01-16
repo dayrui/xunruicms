@@ -72,7 +72,6 @@ class Cron extends \Phpcmf\Table
             }
         }
 
-
         \Phpcmf\Service::V()->assign([
             'type' => $this->type,
             'list' => $data['list']
@@ -108,8 +107,8 @@ class Cron extends \Phpcmf\Table
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if ($ids) {
             foreach ($ids as $id) {
-                //\Phpcmf\Service::M('cron')->do_cron_id($id);
-                \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $id ], 1);
+                \Phpcmf\Service::M('cron')->do_cron_id($id);
+                //\Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $id ], 1);
             }
             $this->_json(1, dr_lang('任务已提交，等待执行结果'));
         } else {
@@ -124,6 +123,7 @@ class Cron extends \Phpcmf\Table
 		if (!$id) {
 			$this->_json(0, dr_lang('所选数据不存在'));
 		}
+		
         $rt = \Phpcmf\Service::M('cron')->do_cron_id($id);
 		if (!$rt['code']) {
 			$this->_json(0, $rt['msg']);

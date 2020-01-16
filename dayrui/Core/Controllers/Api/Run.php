@@ -54,7 +54,6 @@ class Run extends \Phpcmf\Common
                             }
                         }
                     }
-
                 }
             }
 
@@ -88,10 +87,8 @@ class Run extends \Phpcmf\Common
                 }
             }
         }
-
-
+		
         exit('Run '.$i);
-
 	}
 
 
@@ -120,8 +117,12 @@ class Run extends \Phpcmf\Common
 
                 $id = intval(\Phpcmf\Service::L('input')->get('id'));
                 $oauth = \Phpcmf\Service::M()->table('member_oauth')->get($id);
-                !$oauth && exit;
-                !$oauth['uid'] && exit;
+                if (!$oauth) {
+					exit('oauth不存在');
+				} elseif (!$oauth['uid']) {
+					exit('oauth没有绑定账号');
+				}
+				
                 foreach (['png', 'jpg', 'gif', 'jpeg'] as $ext) {
                     if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.'.$ext)) {
                         exit('头像已经存在');
