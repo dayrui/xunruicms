@@ -23,7 +23,7 @@ class Thread
         $param['auth'] = md5(dr_array2string($param));
         file_put_contents(WRITEPATH.'thread/'.$param['auth'].'.auth', SYS_TIME);
 
-        $url = ROOT_URL.'index.php?s=api&c=run&m=cron&'.http_build_query($param);
+        $url = FC_NOW_HOST.'index.php?s=api&c=run&m=cron&'.http_build_query($param);
 
         // 执行任务
         if (function_exists('fsockopen') || function_exists('pfsockopen')) {
