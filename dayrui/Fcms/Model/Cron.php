@@ -62,38 +62,6 @@ class Cron extends \Phpcmf\Model
                 ]);
                 break;
 
-            case 'weibo':
-
-                // 同步微博
-                $value = dr_string2array($cron['value']);
-                // 请求参数
-                require_once FCPATH.'ThirdParty/Weibo/saetv2.ex.class.php';
-
-                $siteid = max(1, intval($cron['site']));
-                $config = \Phpcmf\Service::L('cache')->init_file('weibo')->get_file($siteid);
-                ($siteid > 1 && $config['share'] == 1) && $config = \Phpcmf\Service::L('cache')->init_file('weibo')->get_file(1);
-
-                // 初始化类
-                $cache = \Phpcmf\Service::C()->get_cache('site', $siteid, 'weibo');
-                $auth = new \SaeTClientV2($cache['key'], $cache['secret'], $config['access_token']);
-
-                $call = $auth->upload(dr_strcut($value['content'], 250).' '.$value['url'], $value['image']);
-
-                // 加入队列并执行
-                if (isset($call['error']) && $call['error']) {
-                    return $this->save_cron($cron, [
-                        'error' => $call['error'].' ('.$call['error_code'].')',
-                        'value' => $value,
-                    ]);
-                } else {
-                    return $this->save_cron($cron, [
-                        'error' => '',
-                        'value' => '',
-                    ]);
-                }
-
-                break;
-
             case 'ueditor_down_img':
                 // 编辑器下载图片
                 $img = ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$cron['id'];
@@ -192,8 +160,11 @@ class Cron extends \Phpcmf\Model
         }
 
         foreach ($crons as $cron) {
-            \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $cron['id'] ]);
-			//$this->do_cron($cron); 直接执行 可能影响效率
+            if (isset($_GET['is_cdn'])) {
+                $this->do_cron($cron);
+            } else {
+                \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $cron['id'] ]);
+            }
         }
 
         // 遍历文件

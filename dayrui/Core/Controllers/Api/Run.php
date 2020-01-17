@@ -130,8 +130,13 @@ class Run extends \Phpcmf\Common
                 }
 
                 $avatar = dr_catcher_data($oauth['avatar']);
-                $avatar && @file_put_contents(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg', $avatar);
-                is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg') && \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
+                if ($avatar) {
+                    @file_put_contents(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg', $avatar);
+                }
+
+                if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg')) {
+                    \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
+                }
 
                 break;
 

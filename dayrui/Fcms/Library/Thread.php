@@ -6,7 +6,6 @@
  **/
 
 
-
 /**
  * 线程处理
  */
@@ -39,7 +38,6 @@ class Thread
      */
     private function _fsockopen($url, $block = 0) {
 
-        $rt = 0;
         $uri = parse_url($url);
         $timeout = 10;
 
@@ -63,7 +61,6 @@ class Thread
         $host = defined('SYS_HTTPS') && SYS_HTTPS ? 'ssl://'.$host : $host;
         $port = defined('SYS_HTTPS') && SYS_HTTPS ? 443 : $port;
 
-
         if (function_exists('fsockopen')) {
             $fp = @fsockopen($host, $port, $errno, $errstr, $timeout);
         } elseif (function_exists('pfsockopen')) {
@@ -74,16 +71,15 @@ class Thread
 		
         if (!$fp) {
             log_message('error', 'fsockopen函数调用失败');
-            return $rt; //note $errstr : $errno \r\n
+            return 0; //note $errstr : $errno \r\n
         } else {
+            $limit = 500000;
+            $return = '';
             //集阻塞/非阻塞模式流,$block==true则应用流模式
             stream_set_blocking($fp, $block);
             //设置流的超时时间
             stream_set_timeout($fp, $timeout);
             @fwrite($fp, $out);
-            //$status = stream_get_meta_data($fp);
-            //var_dump($status);
-            /*
             //从封装协议文件指针中取得报头／元数据
             $status = stream_get_meta_data($fp);
             //timed_out如果在上次调用 fread() 或者 fgets() 中等待数据时流超时了则为 TRUE,下面判断为流没有超时的情况
@@ -104,7 +100,7 @@ class Thread
                         $stop = $limit <= 0;
                     }
                 }
-            }*/
+            }
             @fclose($fp);
             return 1;
         }
