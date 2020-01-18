@@ -94,7 +94,7 @@ class Date extends \Phpcmf\Library\A_Field {
      */
     public function create_sql($name, $option, $cname) {
         // 无符号int 10位
-        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` INT( 10 ) UNSIGNED NULL COMMENT \''.$cname.'\'';
+        $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` INT( 10 ) DEFAULT \'0\' COMMENT \''.$cname.'\'';
         return $sql;
     }
 
