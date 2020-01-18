@@ -44,11 +44,11 @@ class Input {
     }
     
     public function set_cookie($name, $value = '', $expire = '') {
-        \Config\Services::response()->setcookie($name.md5($this->ip_address()), $value, $expire)->send();
+        \Config\Services::response()->setcookie(dr_safe_replace($name), $value, $expire)->send();
     }
     
     public function get_cookie($name) {
-        $name = dr_safe_replace($name).md5($this->ip_address());
+        $name = dr_safe_replace($name);
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
     }
 
