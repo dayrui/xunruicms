@@ -317,7 +317,6 @@ class Files extends \Phpcmf\Library\A_Field {
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />
 			
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
