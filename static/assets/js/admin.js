@@ -1,7 +1,4 @@
-
-
 var Demo = function() {
-
     // Handle Theme Settings
     var handleTheme = function() {
         var panel = $('.theme-panel');
@@ -16,22 +13,14 @@ var Demo = function() {
             $('.theme-panel > .theme-options').hide();
         });
     };
-
-
-
     return {
         init: function() {
             if (App.isAngularJsApp() === false) {
                 handleTheme();
             }
-
         }
     };
-
 }();
-
-
-
 
 // 显示用户资料信息
 function dr_show_member(name) {
@@ -118,8 +107,6 @@ jQuery(document).ready(function() {
 			});
 		}
     });
-	
-
     // 关闭框架的加载提示
     //if (typeof parent.layer.closeAll == 'function') {
         //parent.layer.closeAll('loading');
