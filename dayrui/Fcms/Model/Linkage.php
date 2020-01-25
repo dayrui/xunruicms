@@ -11,9 +11,9 @@
 class Linkage extends \Phpcmf\Model
 {
 
-    protected $categorys;
     protected $pids;
     protected $cache;
+    protected $categorys;
 
     // 创建菜单
     public function create($data) {
@@ -371,6 +371,9 @@ class Linkage extends \Phpcmf\Model
                 $field = $this->get_fields($link['id']);
                 if ($list) {
                     foreach ($list as $t) {
+                        if ($t['hidden']) {
+                            continue;
+                        }
                         $lv[] = substr_count($t['pids'], ',');
                         $t['ii'] = $t['id'];
                         $t['id'] = $t['cname'];
