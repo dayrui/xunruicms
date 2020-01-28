@@ -102,6 +102,11 @@ class Function_list
         return '<a href="http://www.ip138.com/ips138.asp?ip='.$value.'&action=2" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len).'</a>';
     }
 
+    // url链接输出
+    function url($value, $param = [], $data = []) {
+        return '<a href="'.$value.'" target="_blank">'.$value.'</a>';
+    }
+
     // 用于列表显示多文件
     function files($value, $param = [], $data = []) {
         return dr_lang($value ? '有' : '无');

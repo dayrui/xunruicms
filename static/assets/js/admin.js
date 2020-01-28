@@ -700,6 +700,7 @@ function dr_call_alert() {
         '下拉字段名称: select_name<br>'+
         '复选框字段名称: checkbox_name<br>'+
         '栏目: catid<br>'+
+        'URL地址: url<br>'+
         '时间: datetime<br>会员信息: author', {
         title: '',
         shade: 0,
