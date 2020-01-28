@@ -668,23 +668,25 @@ class Module extends \Phpcmf\Model
                     $cache['category_field'][$f['fieldname']] = $f;
                 }
             }
-            $cache['category_field']['thumb'] = [
-                'name' => dr_lang('缩略图'),
-                'ismain' => 1,
-                'ismember' => 1,
-                'fieldtype' => 'File',
-                'fieldname' => 'thumb',
-                'setting' => array(
-                    'option' => array(
-                        'ext' => 'jpg,gif,png,jpeg',
-                        'size' => 10,
-                        'input' => 1,
-                        'attachment' => defined('SYS_FIELD_THUMB_ATTACH') ? SYS_FIELD_THUMB_ATTACH : 0,
+            if (!isset($cache['category_field']['thumb'])) {
+                $this->_add_field([
+                    'name' => dr_lang('缩略图'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'File',
+                    'fieldname' => 'thumb',
+                    'setting' => array(
+                        'option' => array(
+                            'ext' => 'jpg,gif,png,jpeg',
+                            'size' => 10,
+                            'input' => 1,
+                            'attachment' => 0,
+                        )
                     )
-                )
-            ];
-            if ($cache['share']) {
-                $cache['category_field']['content'] = [
+                ], 1, 0, 'category-'.$cdir);
+            }
+            if ($cache['share'] && !isset($cache['category_field']['content'])) {
+                $this->_add_field([
                     'name' => dr_lang('栏目内容'),
                     'ismain' => 1,
                     'fieldtype' => 'Ueditor',
@@ -694,10 +696,10 @@ class Module extends \Phpcmf\Model
                             'mode' => 1,
                             'height' => 300,
                             'width' => '100%',
-                            'attachment' => defined('SYS_FIELD_CONTENT_ATTACH') ? SYS_FIELD_CONTENT_ATTACH : 0,
+                            'attachment' => 0,
                         )
                     ),
-                ];
+                ], 1, 0, 'category-'.$cdir);
             }
             foreach ($category as $c) {
                 $pid = explode(',', $c['pids']);
