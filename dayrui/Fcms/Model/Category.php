@@ -10,18 +10,25 @@
 
 class Category extends \Phpcmf\Model
 {
-
-    protected $tablename;
-    protected $categorys;
-
     private $tree;
     private $tree_html;
+    protected $tablename;
+    protected $categorys;
 
     // 初始化模型
     public function init($data) {
         parent::init($data);
         $this->tablename = $data['table'];
         return $this;
+    }
+
+    // 检查栏目数据量
+    public function check_nums() {
+        $nums = 100;
+        if (!IS_DEV && $this->table($this->tablename)->counts() > $nums) {
+            return dr_return_data(0, dr_lang('栏目最多可创建%s个', $nums));
+        }
+        return dr_return_data(1, 'ok');
     }
 
     // 检查目录是否可用
@@ -173,7 +180,7 @@ class Category extends \Phpcmf\Model
             return;
         }
 
-        $mid = array();
+        $mid = [];
 
         foreach ($ids as $id) {
             $id
@@ -432,6 +439,7 @@ class Category extends \Phpcmf\Model
         }
         $this->_tree_html.= '</ul>';
     }
+
     public function get_tree_category($data) {
 
         $this->_tree = $data;

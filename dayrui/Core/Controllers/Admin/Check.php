@@ -327,9 +327,15 @@ class Check extends \Phpcmf\Common
                                         $r && $rt[] = $r;
                                     }
                                 }
+                                if (\Phpcmf\Service::M()->table($siteid.'_'.$m['dirname'].'_category')->counts() > 100) {
+                                    $rt[] = '<font color="#ff4500"">模块【'.$m['name'].'/'.$m['dirname'].'】的栏目数据量超过100，会影响加载速度，建议栏目数保持100个以内</font>';
+                                }
                             }
                         }
                     }
+                }
+                if (\Phpcmf\Service::M()->table(SITE_ID.'_share_category')->counts() > 100) {
+                    $rt[] = '<font color="#ff4500">共享栏目数据量超过100，会影响加载速度，建议栏目数保持100个以内</font>';
                 }
                 if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);

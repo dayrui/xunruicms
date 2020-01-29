@@ -289,6 +289,10 @@ class Category extends \Phpcmf\Table
                 $data['dirname'] = trim($dir);
                 !$data['dirname'] && $data['dirname'] = \Phpcmf\Service::L('pinyin')->result($data['name']);
                 \Phpcmf\Service::M('Category')->check_dirname(0, $data['dirname']) && $data['dirname'].= rand(0,99);
+                $rs = \Phpcmf\Service::M('Category')->check_nums();
+                if (!$rs['code']) {
+                    $this->_json(0, $rs['msg']);
+                }
                 $data['pid'] = $pid;
                 $data['show'] = 1;
                 $data['thumb'] = '';
@@ -863,13 +867,21 @@ class Category extends \Phpcmf\Table
         return parent::_Save($id, $data, $old,
             function ($id, $data, $old){
                 // 保存之前的判断
-                $save = \Phpcmf\Service::L('input')->post('system', true);
+                $save = \Phpcmf\Service::L('input')->post('system');
                 if (!$save['name']) {
                     return dr_return_data(0, dr_lang('栏目名称不能为空'), ['field' => 'name']);
                 } elseif (!$save['dirname']) {
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
                 } elseif (\Phpcmf\Service::M('Category')->check_dirname($id, $save['dirname'])) {
                     return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
+                }
+
+                // 新增时
+                if (!$id) {
+                    $rs = \Phpcmf\Service::M('Category')->check_nums();
+                    if (!$rs['code']) {
+                        $this->_json(0, $rs['msg']);
+                    }
                 }
 
                 // 默认数据
@@ -926,8 +938,8 @@ class Category extends \Phpcmf\Table
                 $save['setting']['cat_field'] = $old['setting']['cat_field'];
 
                 // 数组json化
-                $save['setting'] = dr_array2string($save['setting']);
                 $save['pids'] = '';
+                $save['setting'] = dr_array2string($save['setting']);
                 $save['pdirname'] = '';
                 $save['childids'] = '';
 
