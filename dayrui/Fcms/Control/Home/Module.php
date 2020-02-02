@@ -392,13 +392,15 @@ class Module extends \Phpcmf\Common
             }
 
             // 检测转向字段
-            foreach ($this->module['field'] as $t) {
-                if ($t['fieldtype'] == 'Redirect' && $data[$t['fieldname']]) {
-                    // 存在转向字段时的情况
-                    \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$this->module['dirname'])->where('id', $id)->set('hits', 'hits+1', FALSE)->update();
-                    \Phpcmf\Service::V()->assign('goto_url', $data[$t['fieldname']]);
-                    \Phpcmf\Service::V()->display('goto_url');
-                    return;
+            if (!$rt) {
+                foreach ($this->module['field'] as $t) {
+                    if ($t['fieldtype'] == 'Redirect' && $data[$t['fieldname']]) {
+                        // 存在转向字段时的情况
+                        \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$this->module['dirname'])->where('id', $id)->set('hits', 'hits+1', FALSE)->update();
+                        \Phpcmf\Service::V()->assign('goto_url', $data[$t['fieldname']]);
+                        \Phpcmf\Service::V()->display('goto_url');
+                        return;
+                    }
                 }
             }
 
