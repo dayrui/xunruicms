@@ -39,7 +39,7 @@ class Function_list
         $title = dr_replace_emotion(dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']));
         !$title && $title = '...';
 
-        return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" title="'.$value.'">'.$title.'</a>' : $title;
+        return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
     }
 
     // 用于列表显示联动菜单值
@@ -61,7 +61,7 @@ class Function_list
         $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
         !$title && $title = '...';
 
-        return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
+        return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
     }
 
     // 用于列表显示时间日期格式
