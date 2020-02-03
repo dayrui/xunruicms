@@ -3059,7 +3059,7 @@ function dr_delete_html_file($url, $root = WEBPATH) {
 function dr_tpl_path($is_member = IS_MEMBER) {
 
     $tpl = dr_get_app_tpl(APP_DIR && APP_DIR != 'member' ? APP_DIR : '');
-    $path = $is_member ? $tpl.(\Phpcmf\Service::IS_MOBILE() && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/member/' : $tpl.(\Phpcmf\Service::IS_MOBILE() && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/home/';
+    $path = $is_member ? $tpl.(\Phpcmf\Service::V()->_is_mobile && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/member/' : $tpl.(\Phpcmf\Service::V()->_is_mobile && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/home/';
 
     APP_DIR && APP_DIR != 'member' && $path.= APP_DIR.'/';
 
