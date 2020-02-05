@@ -320,9 +320,9 @@ class Form
             return false;
         }
 
-        $code = \Phpcmf\Service::C()->session()->get('captcha');
-        if (strtolower($data) == strtolower($code)) {
-            \Phpcmf\Service::C()->session()->remove('captcha');
+        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->get('captcha');
+        if ($code && strtolower($data) == strtolower($code)) {
+            IS_API_HTTP ? \Phpcmf\Service::L('cache')->del_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->remove('captcha');
             return true;
         }
 
@@ -339,8 +339,8 @@ class Form
             return false;
         }
 
-        $code = \Phpcmf\Service::C()->session()->get('captcha');
-        if (strtolower($data) == strtolower($code)) {
+        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->get('captcha');
+        if ($code && strtolower($data) == strtolower($code)) {
             return true;
         }
 

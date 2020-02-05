@@ -922,6 +922,8 @@ abstract class Common extends \CodeIgniter\Controller
         $appid = (int)\Phpcmf\Service::L('input')->request('appid');
         $appsecret = (string)\Phpcmf\Service::L('input')->request('appsecret');
 
+        define('IS_API_HTTP_CODE', md5($appid.$appsecret));
+
         // 格式验证
         if (!dr_is_app('httpapi')) {
             $this->_json(0, '没有安装[API接口]应用');

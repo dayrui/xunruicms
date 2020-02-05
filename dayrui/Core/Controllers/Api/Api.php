@@ -135,10 +135,14 @@ class Api extends \Phpcmf\Common
      */
     public function captcha() {
 
-        $w = intval($_GET['width']);
-        $h = intval($_GET['height']);
-        $code = \Phpcmf\Service::L('captcha')->create($w, $h);
-        $this->session()->set('captcha', $code);
+        $code = \Phpcmf\Service::L('captcha')->create(intval($_GET['width']), intval($_GET['height']));
+
+        if (IS_API_HTTP) {
+            \Phpcmf\Service::L('cache')->set_data('api-captcha-'.md5(IS_API_HTTP_CODE), $code, 300);
+        } else {
+            $this->session()->set('captcha', $code);
+        }
+
         exit();
     }
 
