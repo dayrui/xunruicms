@@ -217,7 +217,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-        $url = '/index.php?s=api&c=file&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
+        $url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板
         $tpl = '<tr class="template-download files_row">';
@@ -336,7 +336,7 @@ $(function() {
 	// 未使用的附件
 	$(\'#fileupload_'.$name.' .fileinput-unused\' ).click(function(){
 		var c = $(\'#fileupload_'.$name.' .files_row\').length;
-		var url = "/index.php?s=api&c=file&m=input_file_list&p='.$p.'&fid='.$field['id'].'&ct="+c+"&rand=" + Math.random();
+		var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&m=input_file_list&p='.$p.'&fid='.$field['id'].'&ct="+c+"&rand=" + Math.random();
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-folder-open"></i> '.dr_lang('浏览').'\',
@@ -411,7 +411,7 @@ $(function() {
 	
      // 输入地址
 	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
-		var url = "/index.php?s=api&c=file&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&m=input_file_url";
+		var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&m=input_file_url";
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('输入文件地址').'\',
@@ -584,7 +584,7 @@ function dr_file_edit_'.$name.'(e) {
 	if (only == "readonly" || only == true) {
 		return;
 	}
-	var url = "/index.php?s=api&c=file&m=input_file_url&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&file="+file+"&name="+name;
+	var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&m=input_file_url&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&file="+file+"&name="+name;
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('修改文件地址').'\',

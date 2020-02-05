@@ -1836,6 +1836,11 @@ function dr_form_hidden($data = []) {
     return $form;
 }
 
+// 验证字符串
+function dr_get_csrf_token() {
+    return md5(csrf_token().csrf_hash());
+}
+
 /**
  * 搜索表单隐藏域
  */

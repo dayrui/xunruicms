@@ -48,15 +48,27 @@ class File extends \Phpcmf\Common
     }
 
     // 验证权限脚本
-    private function _check_upload_auth() {
-        // 判断权限
-        if ($this->member && $this->member['is_admin']) {
+    public function _check_upload_auth($editor = 0) {
+
+        $error = '';
+        if (defined('SYS_CSRF') && SYS_CSRF && dr_get_csrf_token() != (string)$_GET['token']) {
+            $error = '跨站验证禁止此操作';
+        } elseif ($this->member && $this->member['is_admin']) {
             return;
         } elseif (!$this->_member_auth_value($this->member_authid, 'uploadfile')) {
-            $this->_json(0, dr_lang('您的用户组不允许上传文件'));
+            $error = '您的用户组不允许上传文件';
         } elseif (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload($this->uid)) {
-            $this->_json(0, '用户存储空间已满');
+            $error = '用户存储空间已满';
         }
+
+        if ($error) {
+            if ($editor) {
+                return $error;
+            } else {
+                $this->_json(0, $error);
+            }
+        }
+
         return;
     }
 
@@ -102,7 +114,6 @@ class File extends \Phpcmf\Common
      * 输入一个附件
      */
     public function input_file_url() {
-
 
         $p = $this->_get_upload_params();
 

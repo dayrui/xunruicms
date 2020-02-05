@@ -169,7 +169,7 @@ class File extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-		$url = '/index.php?s=api&c=file&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'];
+		$url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'];
 
 		// 显示模板
 		$tpl = '<div style="margin-bottom: 10px;padding: 10px 0;" id="dr_'.$name.'_files_row" class="files_row">';
@@ -334,7 +334,7 @@ $(function() {
 	
      // 输入地址
 	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
-		var url = "/index.php?s=api&c=file&m=input_file_url&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&one=1";
+		var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&one=1";
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('输入文件地址').'\',
@@ -488,7 +488,7 @@ function dr_file_edit_'.$name.'(e) {
 		// 本身是文件时跳过
 		return;
 	}
-	var url = "/index.php?s=api&c=file&m=input_file_url&one=1&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file="+file;
+	var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&one=1&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file="+file;
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('修改文件地址').'\',

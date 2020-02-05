@@ -10,8 +10,9 @@ chdir(__DIR__);
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
 $action = $_GET['action'];
 
-if ($this->uid) {
-
+$error = $this->_check_upload_auth(1);
+if (!$error) {
+    // 验证了才能上传
     switch ($action) {
         case 'config':
             $result =  json_encode($CONFIG);
@@ -39,7 +40,7 @@ if ($this->uid) {
 
         /* 抓取远程文件 */
         case 'catchimage':
-            $result = include("action_crawler.php");
+            //$result = include("action_crawler.php");
             break;
 
         default:
@@ -52,7 +53,7 @@ if ($this->uid) {
     $result = json_encode($CONFIG);
 } else {
     $result = json_encode(array(
-        'state'=> '请登录在操作'
+        'state'=> $error ? $error : '请登录在操作'
     ));
 }
 

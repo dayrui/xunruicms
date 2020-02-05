@@ -451,7 +451,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         <script type=\"text/javascript\">
             var editorOption = {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
-                serverUrl:\"/index.php?s=api&c=file&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
+                serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
                 lang: \"".SITE_LANGUAGE."\",
                 langPath: \"".ROOT_URL."api/language/\",
                 toolbars: [
