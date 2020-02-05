@@ -172,7 +172,7 @@ class Linkage extends \Phpcmf\Common
 		$this->_json(1, dr_lang('操作成功'));
 	}
 
-	// 隐藏或者启用
+	// 禁用或者启用
 	public function hidden_edit() {
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
@@ -188,7 +188,7 @@ class Linkage extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改联动菜单状态: '. $i);
-		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
+		exit($this->_json(1, dr_lang($v ? '此菜单已被禁用' : '此菜单已被启用'), ['value' => $v]));
 
 	}
 
