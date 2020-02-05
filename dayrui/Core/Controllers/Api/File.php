@@ -51,7 +51,8 @@ class File extends \Phpcmf\Common
     public function _check_upload_auth($editor = 0) {
 
         $error = '';
-        if (defined('SYS_CSRF') && SYS_CSRF && dr_get_csrf_token() != (string)$_GET['token']) {
+        if (!IS_API_HTTP && defined('SYS_CSRF') && SYS_CSRF
+            && dr_get_csrf_token() != (string)$_GET['token']) {
             $error = '跨站验证禁止此操作';
         } elseif ($this->member && $this->member['is_admin']) {
             return;
