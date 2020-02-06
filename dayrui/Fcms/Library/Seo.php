@@ -316,7 +316,7 @@ class Seo
     function mform_list($form, $index, $page = 1) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_title' => dr_lang($form['name']).SITE_SEOJOIN.$index['title'],
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
@@ -328,7 +328,7 @@ class Seo
     function mform_post($form, $index) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_title' => dr_lang($form['name']).SITE_SEOJOIN.$index['title'],
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
@@ -340,7 +340,7 @@ class Seo
     function mform_show($form, $index, $data) {
 
         $seo = [
-            'meta_title' => $index['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_title' => ($data['title'] ? $data['title'].SITE_SEOJOIN : '').$index['title'],
             'meta_keywords' => $index['keywords'],
             'meta_description' => $index['description'],
         ];
