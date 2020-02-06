@@ -193,6 +193,22 @@ class Module extends \Phpcmf\Common
         exit($this->_json(1, dr_lang($v ? '模块已被禁用' : '模块已被启用'), ['value' => $v]));
     }
 
+    // 隐藏或者启用
+    public function mhidden_edit() {
+
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        $row = \Phpcmf\Service::M('Module')->table('module_form')->get($id);
+        if (!$row) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
+
+        $v = $row['disabled'] ? 0 : 1;
+        \Phpcmf\Service::M('Module')->table('module_form')->update($id, ['disabled' => $v]);
+
+        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+        exit($this->_json(1, dr_lang($v ? '模块表单已被禁用' : '模块表单已被启用'), ['value' => $v]));
+    }
+
     // 模块配置
     public function edit() {
 

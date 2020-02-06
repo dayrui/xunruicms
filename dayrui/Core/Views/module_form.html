@@ -18,6 +18,7 @@
                 </label>
             </th>
             {/if}
+            <th width="50" style="text-align:center"> {dr_lang('可用')} </th>
             <th width="150"> {dr_lang('名称')} </th>
             <th width="160"> {dr_lang('表单别名')} </th>
             <th width="240"> {dr_lang('模板文件')} </th>
@@ -35,6 +36,9 @@
                 </label>
             </td>
             {/if}
+            <td style="text-align:center">
+                <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('module/mhidden_edit', ['id'=>$t.id])}', 1);" class="badge badge-{if $t.disabled}no{else}yes{/if}"><i class="fa fa-{if $t.disabled}times{else}check{/if}"></i></a>
+            </td>
             <td>{$t.name}</td>
             <td>{$t.table}</td>
             <td>{$t.module}/form_{$t.table}.html</td>

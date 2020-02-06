@@ -895,7 +895,6 @@ class Module extends \Phpcmf\Model
                         $t['setting'] = dr_string2array($t['setting']);
                         // 排列table字段顺序
                         $t['setting']['list_field'] = dr_list_field_order($t['setting']['list_field']);
-                        $t['permission'] = dr_string2array($t['permission']);
                         $cache['form'][$t['table']] = $t;
                     }
                 }

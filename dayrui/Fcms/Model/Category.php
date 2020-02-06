@@ -24,7 +24,7 @@ class Category extends \Phpcmf\Model
 
     // 检查栏目数据量
     public function check_nums() {
-        $nums = 100;
+        $nums = 200;
         if (!IS_DEV && $this->table($this->tablename)->counts() > $nums) {
             return dr_return_data(0, dr_lang('栏目最多可创建%s个', $nums));
         }
