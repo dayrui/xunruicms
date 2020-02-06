@@ -1041,11 +1041,11 @@ class Member extends \Phpcmf\Model
         if (!$row && $data['unionid']) {
             // 没找到尝试 unionid
             $row = $this->db->table('member_oauth')->where('unionid', $data['unionid'])->get()->getRowArray();
-            $is_update = 0; // 不更新授权
+            $ins = 1; // 新插入授权
         } else {
-            $is_update = 1;
+            $ins = 0;
         }
-        if (!$row) {
+        if (!$row || $ins) {
             // 插入授权信息
             $data['uid'] = (int)$uid;
             $rt = $this->table('member_oauth')->insert($data);
@@ -1056,7 +1056,7 @@ class Member extends \Phpcmf\Model
         } else {
             // 更新授权信息
             $uid && $data['uid'] = $uid;
-            $is_update && $this->db->table('member_oauth')->where('id', $row['id'])->update($data);
+            $this->db->table('member_oauth')->where('id', $row['id'])->update($data);
             $id = $row['id'];
         }
 
