@@ -60,8 +60,8 @@ class Member extends \Phpcmf\Model
     /**
      * 登录记录
      *
-     * @param	intval	$data		会员
-     * @param	string	$OAuth		登录方式
+     * @param   intval  $data       会员
+     * @param   string  $OAuth      登录方式
      */
     private function _login_log($data, $type = '') {
 
@@ -517,9 +517,9 @@ class Member extends \Phpcmf\Model
     /**
      * 添加一条通知
      *
-     * @param	string	$uid
-     * @param	string	$note
-     * @return	null
+     * @param   string  $uid
+     * @param   string  $note
+     * @return  null
      */
     public function notice($uid, $type, $note, $url = '') {
 
@@ -545,11 +545,11 @@ class Member extends \Phpcmf\Model
     /**
      * 系统提醒
      *
-     * @param	site    站点id,公共部分0
-     * @param	type    system系统  content内容相关  member会员相关 app应用相关 pay 交易相关
-     * @param	msg     提醒内容
-     * @param	uri     后台对应的链接
-     * @param	to      通知对象 留空表示全部对象
+     * @param   site    站点id,公共部分0
+     * @param   type    system系统  content内容相关  member会员相关 app应用相关 pay 交易相关
+     * @param   msg     提醒内容
+     * @param   uri     后台对应的链接
+     * @param   to      通知对象 留空表示全部对象
      * array(
      *      to_uid 指定人
      *      to_rid 指定角色组
@@ -710,9 +710,9 @@ class Member extends \Phpcmf\Model
     /**
      * 验证登录
      *
-     * @param	string	$username	用户名
-     * @param	string	$password	明文密码
-     * @param	intval	$remember	是否记住密码
+     * @param   string  $username   用户名
+     * @param   string  $password   明文密码
+     * @param   intval  $remember   是否记住密码
      */
     public function login($username, $password, $remember = 0) {
 
@@ -904,9 +904,9 @@ class Member extends \Phpcmf\Model
      * 用户注册
      *
      * @param   用户组
-     * @param	注册账户信息
-     * @param	自定义字段信息
-     * @param	是否注册到服务器
+     * @param   注册账户信息
+     * @param   自定义字段信息
+     * @param   是否注册到服务器
      */
     public function register($groupid, $member, $data = [], $sync = 1) {
         
@@ -958,11 +958,11 @@ class Member extends \Phpcmf\Model
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
-		
-		// 再次判断没有账号，随机一个默认登录账号
+        
+        // 再次判断没有账号，随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix']
-			.intval($rt['code']+date('Ymd'))));
+            .intval($rt['code']+date('Ymd'))));
             $this->table('member')->update($rt['code'], [
                 'username' => $member['username']
             ]);
@@ -1026,8 +1026,8 @@ class Member extends \Phpcmf\Model
                 \Phpcmf\Service::M('yq', 'yaoqing')->register($puid, $data);
             }
         }
-		
-		$data['auth'] = md5($data['passowrd'].$data['salt']); // API认证字符串,
+        
+        $data['auth'] = md5($data['passowrd'].$data['salt']); // API认证字符串,
 
         return dr_return_data(1, 'ok', $data);
     }
@@ -1041,6 +1041,9 @@ class Member extends \Phpcmf\Model
         if (!$row && $data['unionid']) {
             // 没找到尝试 unionid
             $row = $this->db->table('member_oauth')->where('unionid', $data['unionid'])->get()->getRowArray();
+            $is_update = 0; // 不更新授权
+        } else {
+            $is_update = 1;
         }
         if (!$row) {
             // 插入授权信息
@@ -1053,7 +1056,7 @@ class Member extends \Phpcmf\Model
         } else {
             // 更新授权信息
             $uid && $data['uid'] = $uid;
-            $this->db->table('member_oauth')->where('id', $row['id'])->update($data);
+            $is_update && $this->db->table('member_oauth')->where('id', $row['id'])->update($data);
             $id = $row['id'];
         }
 
@@ -1070,10 +1073,10 @@ class Member extends \Phpcmf\Model
         }
 
         // 存储
-		\Phpcmf\Service::L('cache')->set_data('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
+        \Phpcmf\Service::L('cache')->set_data('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
 
         return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
-	}
+    }
 
     // 修改密码 
     public function edit_password($member, $password) {
@@ -1233,11 +1236,11 @@ class Member extends \Phpcmf\Model
     /**
      * 发送微信通知模板
      *
-     * $uid	会员id
-     * $id 	微信模板id
-     * $data	通知内容
-     * $url	详细地址
-     * $color	top颜色
+     * $uid 会员id
+     * $id  微信模板id
+     * $data    通知内容
+     * $url 详细地址
+     * $color   top颜色
      */
     public function weixin_template($uid, $id, $data, $url = '', $color = '') {
         return $this->wexin_template($uid, $id, $data, $url, $color);
@@ -1269,12 +1272,12 @@ class Member extends \Phpcmf\Model
     /**
      * 增加经验
      *
-     * @param	intval	$uid	会员id
-     * @param	intval	$value	分数变动值
-     * @param	string	$mark	标记
-     * @param	string	$note	备注
-     * @param	intval	$count	统计次数
-     * @return	intval
+     * @param   intval  $uid    会员id
+     * @param   intval  $value  分数变动值
+     * @param   string  $mark   标记
+     * @param   string  $note   备注
+     * @param   intval  $count  统计次数
+     * @return  intval
      */
     public function add_experience($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
@@ -1311,12 +1314,12 @@ class Member extends \Phpcmf\Model
     /**
      * 增加金币
      *
-     * @param	intval	$uid	会员id
-     * @param	intval	$value	分数变动值
-     * @param	string	$mark	标记
-     * @param	string	$note	备注
-     * @param	intval	$count	统计次数
-     * @return	intval
+     * @param   intval  $uid    会员id
+     * @param   intval  $value  分数变动值
+     * @param   string  $mark   标记
+     * @param   string  $note   备注
+     * @param   intval  $count  统计次数
+     * @return  intval
      */
     public function add_score($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
@@ -1434,7 +1437,7 @@ class Member extends \Phpcmf\Model
         //$this->db->table('member_cashlog')->where('uid', $id)->delete();
         $this->db->table('member_explog')->where('uid', $id)->delete();
         $this->db->table('member_group_verify')->where('uid', $id)->delete();
-        $this->db->table('member_oauth')->where('uid', $id)->delete();
+        //$this->db->table('member_oauth')->where('uid', $id)->delete();
         $this->db->table('member_paylog')->where('uid', $id)->delete();
         $this->db->table('member_scorelog')->where('uid', $id)->delete();
         SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->uid_delete($id);
