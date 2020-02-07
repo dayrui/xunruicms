@@ -32,21 +32,27 @@ class Account extends \Phpcmf\Common
             }
         }
 
+        // 是否允许更新姓名
+        $is_update_name = $this->member_cache['config']['edit_name'] || !$this->member['name'];
+
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            if (!$post['name']) {
-                $this->_json(0, dr_lang('姓名没有填写'), ['field' => 'name']);
-            } elseif (strlen($post['name']) > 20) {
-                $this->_json(0, dr_lang('姓名太长了'), ['field' => 'name']);
-            }
+            \Phpcmf\Hooks::trigger('member_edit_before', $post);
             list($data, $return, $attach) = \Phpcmf\Service::L('form')->id($this->uid)->validation($post, null, $field, $this->member);
             // 输出错误
             if ($return) {
                 $this->_json(0, $return['error'], ['field' => $return['name']]);
             }
-            \Phpcmf\Service::M()->table('member')->update($this->uid, [
-                'name' => dr_strcut(dr_safe_replace($post['name']), 20, ''),
-            ]);
+            if ($is_update_name) {
+                if (!$post['name']) {
+                    $this->_json(0, dr_lang('姓名没有填写'), ['field' => 'name']);
+                } elseif (strlen($post['name']) > 20) {
+                    $this->_json(0, dr_lang('姓名太长了'), ['field' => 'name']);
+                }
+                \Phpcmf\Service::M()->table('member')->update($this->uid, [
+                    'name' => dr_strcut(dr_safe_replace($post['name']), 20, ''),
+                ]);
+            }
             $data[1]['is_complete'] = 1;
             \Phpcmf\Service::M()->table('member_data')->update($this->uid, $data[1]);
             // 附件归档
@@ -55,6 +61,7 @@ class Account extends \Phpcmf\Common
                 \Phpcmf\Service::M()->dbprefix('member').'-'.$this->uid,
                 $attach
             );
+            \Phpcmf\Hooks::trigger('member_edit_after', $data[1]);
             $this->_json(1, dr_lang('保存成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             exit;
         }
@@ -62,6 +69,7 @@ class Account extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
             'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, $this->member),
+            'is_update_name' => $is_update_name,
         ]);
         \Phpcmf\Service::V()->display('account_index.html');
     }

@@ -17,7 +17,7 @@ class Login extends \Phpcmf\Common
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             // 回调钩子
             \Phpcmf\Hooks::trigger('member_login_before', $post);
             if ($this->member_cache['login']['code']
