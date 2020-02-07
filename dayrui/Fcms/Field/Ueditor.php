@@ -274,15 +274,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 										if (!$rt['code']) {
 											log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
 										}
-
 										$value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
-
 										$img = '';
 									} else {
 										// 同步模式
 										// 下载远程文件
 										$rt = \Phpcmf\Service::L('upload')->down_file([
 											'url' => $img,
+											'timeout' => 5,
 											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
 										]);
 										if ($rt['code']) {
@@ -292,10 +291,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 												$value = str_replace($img, $rt['data']['url'], $value);
 												$img = $att['code'];
 											}
-
 										}
 									}
-                                    
                                 }
                             }
 

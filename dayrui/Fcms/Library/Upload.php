@@ -201,7 +201,7 @@ class Upload
      */
     public function down_file($config) {
 
-        $data = dr_catcher_data($config['url']);
+        $data = dr_catcher_data($config['url'], (int)$config['timeout']);
         if (!$data) {
             log_message('error', '服务器无法下载文件：'.$config['url']);
             return dr_return_data(0, dr_lang('文件下载失败'));

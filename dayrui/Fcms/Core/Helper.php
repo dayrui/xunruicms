@@ -2358,17 +2358,13 @@ function dr_show_module_total($name, $id, $dom) {
  * 调用远程数据
  *
  * @param	string	$url
+ * @param	intval	$timeout 超时时间，0不超时
  * @return	string
  */
-function dr_catcher_data($url) {
-
-    $data = @file_get_contents($url);
-    if ($data !== FALSE) {
-        return $data;
-    }
+function dr_catcher_data($url, $timeout = 0) {
 
     // curl模式
-    if (function_exists('curl_init') && function_exists('curl_exec')) {
+    if (function_exists('curl_init')) {
         $ch = curl_init($url);
         if (substr($url, 0, 8) == "https://") {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
@@ -2376,12 +2372,35 @@ function dr_catcher_data($url) {
         }
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // 最大执行时间
+        $timeout && curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($ch);
         curl_close($ch);
         return $data;
     }
 
-    return '';
+    //设置超时参数
+    if ($timeout && function_exists('stream_context_create')) {
+        // 解析协议
+        $opt = [
+            'http' => [
+                'method'  => 'GET',
+                'timeout' => $timeout,
+            ],
+            'https' => [
+                'method'  => 'GET',
+                'timeout' => $timeout,
+            ]
+        ];
+        $ptl = substr($url, 0, 8) == "https://" ? 'https' : 'http';
+        $data = @file_get_contents($url, 0, stream_context_create([
+            $ptl => $opt[$ptl]
+        ]));
+    } else {
+        $data = @file_get_contents($url);
+    }
+
+    return $data;
 }
 
 

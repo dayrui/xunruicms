@@ -31,6 +31,7 @@ class View {
     private $_options; // 模板变量
     private $_filename; // 主模板名称
     private $_include_file; // 引用计数
+    private $_list_is_count; // 是否是统计标签
 
     private $pos_order; // 是否包含有地图定位的排序
     private $pos_baidu; // 百度地图定位坐标
@@ -486,6 +487,8 @@ class View {
             '#{list\s+(.+?)return=(.+?)\s?}#i',
             '#{list\s+(.+?)\s?}#i',
             '#{\s?\/list\s?}#i',
+            // count标签
+            '#{count\s+(.+?)\s?}#i',
             // if判断语句
             '#{\s?if\s+(.+?)\s?}#i',
             '#{\s?else\sif\s+(.+?)\s?}#i',
@@ -529,6 +532,7 @@ class View {
             "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { foreach (\$return_\\2 as \$key_\\2=>\$\\2) {  \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
             "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return); \$count=dr_count(\$return);} if (is_array(\$return)) { foreach (\$return as \$key=>\$t) { \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
+            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count); } echo intval(\$return_count[0]['ct']);  ?>",
             "<?php if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
@@ -626,7 +630,6 @@ class View {
             'page' => '', // 是否分页
             'site' => '', // 站点id
             'flag' => '', // 推荐位id
-            'flag' => '', // 推荐位id
             'not_flag' => '', // 排除推荐位id
             'more' => '', // 是否显示栏目模型表
             'catid' => '', // 栏目id，支持多id
@@ -653,6 +656,14 @@ class View {
         if (preg_match('/where=\'(.+)\'/sU', $_params, $match)) {
             $param['where'] = $match[1];
             $_params = str_replace($match[0], '', $_params);
+        }
+
+        // 判断是否是统计
+        if (stripos($_params, 'count') === 0) {
+            $_params = trim(substr($_params, 5));
+            $this->_list_is_count = 1;
+        } else {
+            $this->_list_is_count = 0;
         }
 
         $params = explode(' ', $_params);
@@ -716,7 +727,7 @@ class View {
         // 开发者模式下关闭缓存
         IS_DEV && $system['cache'] = 0;
 
-        $cache_name = 'cache_view_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url().$this->_tname);
+        $cache_name = 'cache_view_'.$this->_list_is_count.md5(dr_array2string($system)).'_'.md5($_params).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
@@ -724,6 +735,12 @@ class View {
                 $this->_page_urlrule = $cache_data['page_urlrule'];
                 return $this->_return($system['return'], $cache_data['data'], '【缓存数据】'.$cache_data['sql'], $cache_data['total'], $cache_data['pages'], $cache_data['pagesize']);
             }
+        }
+
+        // 统计排除
+        if ($this->_list_is_count && !in_array($action,
+                ['sql', 'module', 'member', 'form', 'mform', 'comment', 'table', 'tag', 'related'])) {
+            return $this->_return($system['return'], 'count标签不支持[acntion='.$action.']的统计');
         }
 
         // action
@@ -1066,7 +1083,7 @@ class View {
                 $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-                $sql = "SELECT * FROM {$table} ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
+                $sql = "SELECT ".($this->_list_is_count ? 'count(*) as ct' : '*')." FROM {$table} ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 没有查询到内容
@@ -1120,18 +1137,23 @@ class View {
                     $total = 0;
                     $pages = '';
 
-                    // 如存在分页条件才进行分页查询
-                    if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
-                        $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system['db'], $system['cache'], FALSE);
-                        $total = (int)$row['c'];
-                        $pagesize = $system['pagesize'] ? $system['pagesize'] : 10;
-                        // 没有数据时返回空
-                        if (!$total) {
-                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                    // 统计标签
+                    if ($this->_list_is_count) {
+                        $sql = preg_replace('/select .* from /iUs', 'SELECT count(*) as ct FROM ', $sql);
+                    } else {
+                        // 如存在分页条件才进行分页查询
+                        if ($system['page']) {
+                            $page = max(1, (int)$_GET['page']);
+                            $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system['db'], $system['cache'], FALSE);
+                            $total = (int)$row['c'];
+                            $pagesize = $system['pagesize'] ? $system['pagesize'] : 10;
+                            // 没有数据时返回空
+                            if (!$total) {
+                                return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                            }
+                            $sql.= ' LIMIT '.$pagesize * ($page - 1).','.$pagesize;
+                            $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
                         }
-                        $sql.= ' LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
                     }
 
                     $data = $this->_query($sql, $system['db'], $system['cache']);
@@ -1204,25 +1226,30 @@ class View {
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-                if ($system['page']) {
-                    $page = max(1, (int)$_GET['page']);
-                    $urlrule = $system['urlrule'];
-                    $pagesize = (int) $system['pagesize'];
-                    $pagesize = $pagesize ? $pagesize : 10;
-                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                    $total = (int)$row['c'];
-                    // 没有数据时返回空
-                    if (!$total) {
-                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    if ($system['page']) {
+                        $page = max(1, (int)$_GET['page']);
+                        $urlrule = $system['urlrule'];
+                        $pagesize = (int) $system['pagesize'];
+                        $pagesize = $pagesize ? $pagesize : 10;
+                        $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
+                        if (!$total) {
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
+                        $pages = $this->_get_pagination($urlrule, $pagesize, $total, $system['pagefile']);
+                    } elseif ($system['num']) {
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                    $pages = $this->_get_pagination($urlrule, $pagesize, $total, $system['pagefile']);
-                } elseif ($system['num']) {
-                    $sql_limit = "LIMIT {$system['num']}";
+                    $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 }
 
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 存储缓存
@@ -1311,24 +1338,30 @@ class View {
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
 
-                if ($system['page']) {
-                    $page = max(1, (int)$_GET['page']);
-                    $pagesize = (int) $system['pagesize'];
-                    $pagesize = $pagesize ? $pagesize : 10;
-                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                    $total = (int)$row['c'];
-                    // 没有数据时返回空
-                    if (!$total) {
-                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    if ($system['page']) {
+                        $page = max(1, (int)$_GET['page']);
+                        $pagesize = (int)$system['pagesize'];
+                        $pagesize = $pagesize ? $pagesize : 10;
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
+                        if (!$total) {
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                    } elseif ($system['num']) {
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
-                } elseif ($system['num']) {
-                    $sql_limit = "LIMIT {$system['num']}";
+
+                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
                 }
 
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 if (is_array($data) && $data) {
@@ -1338,7 +1371,6 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-
                     // 存储缓存
                     $system['cache'] && $this->_save_cache_data($cache_name, [
                         'data' => $data,
@@ -1418,24 +1450,30 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
-                if ($system['page']) {
-                    $page = max(1, (int)$_GET['page']);
-                    $pagesize = (int) $system['pagesize'];
-                    $pagesize = $pagesize ? $pagesize : 10;
-                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                    $total = (int)$row['c'];
-                    // 没有数据时返回空
-                    if (!$total) {
-                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    if ($system['page']) {
+                        $page = max(1, (int)$_GET['page']);
+                        $pagesize = (int)$system['pagesize'];
+                        $pagesize = $pagesize ? $pagesize : 10;
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
+                        if (!$total) {
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                    } elseif ($system['num']) {
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
-                } elseif ($system['num']) {
-                    $sql_limit = "LIMIT {$system['num']}";
+
+                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
                 }
 
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 if (is_array($data) && $data) {
@@ -1523,24 +1561,29 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
                 $sql_limit = $pages = '';
 
-                if ($system['page']) {
-                    $page = max(1, (int)$_GET['page']);
-                    $pagesize = (int) $system['pagesize'];
-                    $pagesize = $pagesize ? $pagesize : 10;
-                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                    $total = (int)$row['c'];
-                    // 没有数据时返回空
-                    if (!$total) {
-                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    if ($system['page']) {
+                        $page = max(1, (int)$_GET['page']);
+                        $pagesize = (int)$system['pagesize'];
+                        $pagesize = $pagesize ? $pagesize : 10;
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
+                        if (!$total) {
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                    } elseif ($system['num']) {
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
-                } elseif ($system['num']) {
-                    $sql_limit = "LIMIT {$system['num']}";
-                }
 
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
+                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
+                }
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
@@ -1656,24 +1699,30 @@ class View {
 
                 $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
 
-                if ($system['page']) { // 如存在分页条件才进行分页查询
-                    $page = max(1, (int)$_GET['page']);
-                    $pagesize = (int) $system['pagesize'];
-                    $pagesize = $pagesize ? $pagesize : 10;
-                    $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                    $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                    $total = (int)$row['c'];
-                    if (!$total) {
-                        // 没有数据时返回空
-                        return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    if ($system['page']) { // 如存在分页条件才进行分页查询
+                        $page = max(1, (int)$_GET['page']);
+                        $pagesize = (int)$system['pagesize'];
+                        $pagesize = $pagesize ? $pagesize : 10;
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        if (!$total) {
+                            // 没有数据时返回空
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        $sql_limit = ' LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                    } elseif ($system['num']) {
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $sql_limit = ' LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
-                } elseif ($system['num']) {
-                    $sql_limit = "LIMIT {$system['num']}";
+
+                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
@@ -1993,45 +2042,51 @@ class View {
                     unset($flag);
                 }
 
-                $first_url = '';
-                if ($system['page']) {
-                    $page = max(1, (int)$_GET['page']);
-                    if ($system['catid'] && is_numeric($system['catid'])) {
-                        if (!$system['urlrule']) {
-                            $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
-                        }
-                        if (!$system['sbpage']) {
-                            if ($this->_is_mobile) {
-                                $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['mpagesize'];
-                            } else {
-                                $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['pagesize'];
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    $first_url = '';
+                    if ($system['page']) {
+                        $page = max(1, (int)$_GET['page']);
+                        if ($system['catid'] && is_numeric($system['catid'])) {
+                            if (!$system['urlrule']) {
+                                $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
                             }
-                            if ($system['action'] == 'module') {
-                                //  防止栏目生成第一页问题
-                                $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
+                            if (!$system['sbpage']) {
+                                if ($this->_is_mobile) {
+                                    $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['mpagesize'];
+                                } else {
+                                    $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['pagesize'];
+                                }
+                                if ($system['action'] == 'module') {
+                                    //  防止栏目生成第一页问题
+                                    $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
+                                }
                             }
                         }
-                    }
-                    $pagesize = (int)$system['pagesize'];
-                    !$pagesize && $pagesize = 10;
-                    if (!$total) {
-                        $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                        $total = (int)$row['c'];
-                        // 没有数据时返回空
+                        $pagesize = (int)$system['pagesize'];
+                        !$pagesize && $pagesize = 10;
                         if (!$total) {
-                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                            $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                            $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                            $total = (int)$row['c'];
+                            // 没有数据时返回空
+                            if (!$total) {
+                                return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                            }
                         }
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
+                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                    } elseif ($system['num']) {
+                        $pages = '';
+                        $sql_limit = "LIMIT {$system['num']}";
                     }
-                    $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
-                    $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
-                } elseif ($system['num']) {
-                    $pages = '';
-                    $sql_limit = "LIMIT {$system['num']}";
+
+                    $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
+                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : '*') . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
-                $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
-                $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : '*')." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "").($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
@@ -2505,41 +2560,52 @@ class View {
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-        $total && $debug.= '<p>总记录：'.$total.'</p>';
-		if ($this->_page_used) {
-            $debug.= '<p>分页：已开启</p>';
-			$debug.= '<p>当前页：'.$page.'</p>';
-			$debug.= '<p>总页数：'.$nums.'</p>';
-			$debug.= '<p>每页数量：'.$pagesize.'</p>';
-			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
-		} else {
-            $debug.= '<p>分页：未开启</p>';
-        }
 
-		isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
-		$debug.= '</pre>';
-
-        // 返回数据格式
-        if ($return) {
+        if ($this->_list_is_count) {
+            $debug.= '<p>统计数：'.intval($data[0]['ct']).'</p>';
+            $debug.= '</pre>';
             return [
-                'nums_'.$return => $nums,
-                'page_'.$return => $page,
-                'pages_'.$return => $pages,
-                'debug_'.$return => $debug,
-                'total_'.$return => $total,
-                'return_'.$return => $data,
-                'pagesize_'.$return => $pagesize,
+                'debug_count' => $debug,
+                'return_count' => $data,
             ];
         } else {
-            return [
-                'nums' => $nums,
-                'debug' => $debug,
-                'page' => $page,
-                'total' => $total,
-                'pages' => $pages,
-                'return' => $data,
-                'pagesize' => $pagesize,
-            ];
+            $total && $debug.= '<p>总记录：'.$total.'</p>';
+            if ($this->_page_used) {
+                $debug.= '<p>分页：已开启</p>';
+                $debug.= '<p>当前页：'.$page.'</p>';
+                $debug.= '<p>总页数：'.$nums.'</p>';
+                $debug.= '<p>每页数量：'.$pagesize.'</p>';
+                $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+            } else {
+                $debug.= '<p>分页：未开启</p>';
+            }
+
+            isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
+
+            $debug.= '</pre>';
+
+            // 返回数据格式
+            if ($return) {
+                return [
+                    'nums_'.$return => $nums,
+                    'page_'.$return => $page,
+                    'pages_'.$return => $pages,
+                    'debug_'.$return => $debug,
+                    'total_'.$return => $total,
+                    'return_'.$return => $data,
+                    'pagesize_'.$return => $pagesize,
+                ];
+            } else {
+                return [
+                    'nums' => $nums,
+                    'debug' => $debug,
+                    'page' => $page,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'return' => $data,
+                    'pagesize' => $pagesize,
+                ];
+            }
         }
     }
 

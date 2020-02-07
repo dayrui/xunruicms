@@ -70,7 +70,7 @@ class Thread
         }
 		
         if (!$fp) {
-            log_message('error', 'fsockopen函数调用失败');
+            log_message('error', 'fsockopen函数调用失败：'.FC_NOW_URL);
             return 0; //note $errstr : $errno \r\n
         } else {
             $limit = 500000;

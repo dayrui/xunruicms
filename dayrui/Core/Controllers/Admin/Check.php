@@ -375,12 +375,7 @@ class Check extends \Phpcmf\Common
                         }
 
                         if ($url) {
-                            $context = stream_context_create(array(
-                                'http' => array(
-                                    'timeout' => 5 //超时时间，单位为秒
-                                )
-                            ));
-                            $code = file_get_contents($url, 0, $context);
+                            $code = dr_catcher_data($url, 5);
                             if ($code != 'phpcmf ok') {
                                 $error[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
@@ -400,12 +395,7 @@ class Check extends \Phpcmf\Common
                     if (!file_put_contents($t['path'].'api.html', 'phpcmf ok')) {
                         $this->_json(0, $t['path'].' 无法写入文件');
                     }
-                    $context = stream_context_create(array(
-                        'http' => array(
-                            'timeout' => 5 //超时时间，单位为秒
-                        )
-                    ));
-                    $code = file_get_contents($t['url'].'api.html', 0, $context);
+                    $code = dr_catcher_data($t['url'].'api.html', 5);
                     if ($code != 'phpcmf ok') {
                         $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
                     }
