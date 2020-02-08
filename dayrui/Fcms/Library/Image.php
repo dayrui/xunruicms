@@ -1626,6 +1626,12 @@ class Image
         // 水印处理
         if ($water) {
             $data = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark');
+            list($nw, $nh) = getimagesize($cache_path.$cache_file);
+            if ($data['width'] && $data['width'] > $nw) {
+                return $cache_url.$cache_file;
+            } elseif ($data['height'] && $data['height'] > $nh) {
+                return $cache_url.$cache_file;
+            }
             if ($data) {
                 $data['source_image'] = $cache_path.$cache_file;
                 $data['dynamic_output'] = false;

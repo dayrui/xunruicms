@@ -133,18 +133,37 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('水印图片偏移量')}</label>
                             <div class="col-md-9">
-                                <label><input name="data[wm_hor_offset]" value="{$data[wm_hor_offset]}" type="text" style="width: 120px" class="form-control" placeholder="{dr_lang('水平 px')}"></label>
-                                <label><input name="data[wm_vrt_offset]" value="{$data[wm_vrt_offset]}" type="text" style="width: 120px" class="form-control" placeholder="{dr_lang('垂直 px')}"></label>
-
+                                <div class="input-inline input-small">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{dr_lang('水平')}</span>
+                                        <input type="text"  name="data[wm_hor_offset]" value="{$data[wm_hor_offset]}" class="form-control" placeholder="px">
+                                    </div>
+                                </div>
+                                <div class="input-inline input-small">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{dr_lang('垂直')}</span>
+                                        <input type="text"  name="data[wm_vrt_offset]" value="{$data[wm_vrt_offset]}" class="form-control" placeholder="px">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 						
 						<div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('图片大小限制')}</label>
                             <div class="col-md-9">
-                                <label><input name="data[width]" value="{$data[width]}" type="text" style="width: 70px" class="form-control" placeholder="{dr_lang('宽 px')}"></label>
-                                <label><input name="data[height]" value="{$data[height]}" type="text" style="width: 70px" class="form-control" placeholder="{dr_lang('高 px')}"></label>
-                                <span class="help-block">{dr_lang('对超过设定值的图片附件加水印，例如小尺寸的图片不水印')}</span>
+                                <div class="input-inline input-small">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{dr_lang('宽大于')}</span>
+                                        <input type="text"  name="data[width]" value="{$data[width]}" class="form-control" placeholder="px">
+                                    </div>
+                                </div>
+                                <div class="input-inline input-small">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">{dr_lang('高大于')}</span>
+                                        <input type="text"  name="data[height]" value="{$data[height]}" class="form-control" placeholder="px">
+                                    </div>
+                                </div>
+                               <span class="help-block">{dr_lang('对超过设定值的图片附件加水印，例如小尺寸的图片不水印')}</span>
                             </div>
                         </div>
                         <div class="form-group">
