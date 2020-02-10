@@ -284,4 +284,9 @@ class App extends BaseConfig
 
 	//--------------------------------------------------------------------
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->sessionCookieName = md5(SYS_KEY).'_xunruicms';
+    }
 }
