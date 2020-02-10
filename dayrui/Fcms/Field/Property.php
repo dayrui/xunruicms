@@ -133,7 +133,9 @@ class Property extends \Phpcmf\Library\A_Field {
 		// 字段默认值
 		$value = $value ? dr_string2array($value) : array();
         $str = '';
-		$str.= '
+		$str.= '	<div class="scroller_'.$name.'_files">
+                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+        
         <table class="table fc-sku-table table-striped table-bordered table-hover">
         <thead>
         <tr>
@@ -142,7 +144,7 @@ class Property extends \Phpcmf\Library\A_Field {
             <th width="45"> </th>
         </tr>
         </thead>
-        <tbody id="property_'.$name.'-sort-items">';
+        <tbody id="property_'.$name.'-sort-items" class="scroller_body">';
 		$i = 0;
 
         unset($field['setting']['width']);
@@ -207,12 +209,13 @@ class Property extends \Phpcmf\Library\A_Field {
 		
 		$str.= '
             </tbody>
-        </table>';
+        </table></div></div>';
 		$str.= '<p>';
 		$str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
 		$str.= '</p>';
 		$str.= '<script type="text/javascript">
 		$("#property_'.$name.'-sort-items").sortable();
+        dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_property_'.$name.'() {
 			var id=($("#property_'.$name.'-sort-items tr").size() + 1) * 10;
 			var html = "<tr id=\"dr_items_'.$name.'_"+id+"\">";
@@ -220,6 +223,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][value]\"></td>";
 			html+= "<td><a class=\"btn btn-xs red\" href=\"javascript:;\" onclick=\"$(\'#dr_items_'.$name.'_"+id+"\').remove()\"> <i class=\"fa fa-trash\"></i> </a></td></tr>";
 			$("#property_'.$name.'-sort-items").append(html);
+            dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		}
 		</script><span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
 		return $this->input_format($field['fieldname'], $text, $str);

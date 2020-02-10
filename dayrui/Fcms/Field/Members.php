@@ -90,6 +90,8 @@ class Members extends \Phpcmf\Library\A_Field {
 
         $str = '';
         $str.= '
+			<div class="scroller_'.$name.'_files">
+                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
         <table class="table table-striped table-bordered fc-sku-table table-hover">
         <thead>
         <tr>
@@ -98,7 +100,7 @@ class Members extends \Phpcmf\Library\A_Field {
             <th width="50"> </th>
         </tr>
         </thead>
-        <tbody id="rmember_'.$name.'-sort-items">';
+        <tbody id="rmember_'.$name.'-sort-items" class="scroller_body">';
 
         $value = @trim($value, ',');
         if ($value && is_string($value)) {
@@ -113,7 +115,7 @@ class Members extends \Phpcmf\Library\A_Field {
             }
 		}	
 		$str.= '</tbody>';
-		$str.= '</table>';
+		$str.= '</table></div></div>';
 		$str.= '<p>';
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_rmember_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联用户').'</button>';
         $str.= '</p>';
@@ -121,6 +123,7 @@ class Members extends \Phpcmf\Library\A_Field {
         $str.= '
 		<script type="text/javascript">
         $("#rmember_'.$name.'-sort-items").sortable();
+        dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_rmember_'.$name.'() {
 		
             layer.open({
@@ -163,6 +166,7 @@ class Members extends \Phpcmf\Library\A_Field {
                                     html+= tpl;
                                 }
                                 $(\'#rmember_'.$name.'-sort-items\').append(html);
+                                dr_slimScroll_init(".scroller_'.$name.'_files", 300);
                                 dr_tips(1, json.msg);
                             } else {
                                 dr_tips(0, json.msg);

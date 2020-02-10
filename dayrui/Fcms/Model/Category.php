@@ -22,15 +22,6 @@ class Category extends \Phpcmf\Model
         return $this;
     }
 
-    // 检查栏目数据量
-    public function check_nums() {
-        $nums = 200;
-        if (!IS_DEV && $this->table($this->tablename)->counts() > $nums) {
-            return dr_return_data(0, dr_lang('栏目最多可创建%s个', $nums));
-        }
-        return dr_return_data(1, 'ok');
-    }
-
     // 检查目录是否可用
     public function check_dirname($id, $value) {
         

@@ -99,7 +99,7 @@ class Files extends \Phpcmf\Library\A_Field {
     public function get_attach_id($value) {
 
 
-        $data = array();
+        $data = [];
         $value = dr_string2array($value);
 
         if (!$value) {
@@ -226,17 +226,12 @@ class Files extends \Phpcmf\Library\A_Field {
         $tpl .= '</td>';
         $tpl .= '<td class="files_show_info">';
         $tpl .= '<div class="row">';
-
-        $tpl .= '<div class="col-md-6 hidden-mobile files_show_name">';
-        $tpl .= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
-        $tpl .= '<input class="form-control files_row_name" {disabled} type="text" name="data[' . $name . '][file][]" value="{filepath}">';
-        $tpl .= '</div>';
-        $tpl .= '<div class="col-md-6 col-xs-12 files_show_title">';
+        $tpl .= '<div class="col-md-12 files_show_title_html">';
         $tpl .= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+        $tpl .= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
         $tpl .= '</div>';
-
         if ($field['setting']['option']['desc']) {
-            $tpl.= '<div class="col-md-12 files_show_description" style="margin-top: 10px;">';
+            $tpl.= '<div class="col-md-12 files_show_description_html">';
             $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
             $tpl.= '</div>';
         }
@@ -306,9 +301,13 @@ class Files extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>
 			<p class="finecms-file-ts">'.$ts.'</p>
-			<table role="presentation" class="table table-striped table-fc-upload clearfix">
-				<tbody id="fileupload_'.$name.'_files" class="files">'.$val.'</tbody>
-			</table>
+			<div class="scroller_'.$name.'_files">
+                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+                    <table role="presentation" class="table table-striped table-fc-upload clearfix">
+                        <tbody id="fileupload_'.$name.'_files" class="files scroller_body">'.$val.'</tbody>
+                    </table>
+                </div>
+			</div>
 		';
 
         if (!defined('PHPCMF_FIELD_FILE')) {
@@ -333,6 +332,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
 $(function() {
     $("#fileupload_'.$name.'_files").sortable();
+    dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 	// 未使用的附件
 	$(\'#fileupload_'.$name.' .fileinput-unused\' ).click(function(){
 		var c = $(\'#fileupload_'.$name.' .files_row\').length;
@@ -378,6 +378,7 @@ $(function() {
 								html+= tpl;
 							}
 							$(\'#fileupload_'.$name.'_files\').append(html);
+                            dr_slimScroll_init(".scroller_'.$name.'_files", 300);
          					fileupload_'.$name.'_edit();
 							dr_tips(1, json.msg);
 						} else {
@@ -519,6 +520,7 @@ $(function() {
 			tpl = tpl.replace(/\{upload\}/g, "<input type=\"file\" name=\"file_data\"></button>");
 			$(\'#fileupload_'.$name.'_files\').append(tpl);
          
+            dr_slimScroll_init(".scroller_'.$name.'_files", 300);
          	fileupload_'.$name.'_edit();
         },
 		fail: function (e, data) {

@@ -289,10 +289,7 @@ class Category extends \Phpcmf\Table
                 $data['dirname'] = trim($dir);
                 !$data['dirname'] && $data['dirname'] = \Phpcmf\Service::L('pinyin')->result($data['name']);
                 \Phpcmf\Service::M('Category')->check_dirname(0, $data['dirname']) && $data['dirname'].= rand(0,99);
-                $rs = \Phpcmf\Service::M('Category')->check_nums();
-                if (!$rs['code']) {
-                    $this->_json(0, $rs['msg']);
-                }
+
                 $data['pid'] = $pid;
                 $data['show'] = 1;
                 $data['thumb'] = '';
@@ -874,14 +871,6 @@ class Category extends \Phpcmf\Table
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
                 } elseif (\Phpcmf\Service::M('Category')->check_dirname($id, $save['dirname'])) {
                     return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
-                }
-
-                // 新增时
-                if (!$id) {
-                    $rs = \Phpcmf\Service::M('Category')->check_nums();
-                    if (!$rs['code']) {
-                        $this->_json(0, $rs['msg']);
-                    }
                 }
 
                 // 默认数据

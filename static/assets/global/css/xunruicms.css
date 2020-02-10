@@ -2933,6 +2933,13 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .files_row_preview {
     margin-right: 10px;
 }
+.files_show_description_html {
+    margin-top: 10px;
+}
+.file_row_html {
+    margin-bottom: 10px;padding: 10px 0;
+}
+
 
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/

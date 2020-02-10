@@ -110,7 +110,9 @@ class Related extends \Phpcmf\Library\A_Field {
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
 
         $str = '';
-        $str.= '
+        $str.= '	<div class="scroller_'.$name.'_files">
+                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+        
         <table class="table table-striped table-bordered fc-sku-table table-hover">
         <thead>
         <tr>
@@ -119,7 +121,7 @@ class Related extends \Phpcmf\Library\A_Field {
             <th width="50"> </th>
         </tr>
         </thead>
-        <tbody id="related_'.$name.'-sort-items">';
+        <tbody id="related_'.$name.'-sort-items" class="scroller_body">';
 
         $value = @trim($value, ',');
         if ($value && is_string($value)) {
@@ -134,7 +136,7 @@ class Related extends \Phpcmf\Library\A_Field {
             }
 		}	
 		$str.= '</tbody>';
-		$str.= '</table>';
+		$str.= '</table></div></div>';
 		$str.= '<p>';
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_related_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联内容').'</button>';
         $str.= '</p>';
@@ -142,6 +144,7 @@ class Related extends \Phpcmf\Library\A_Field {
         $str.= '
 		<script type="text/javascript">
 		
+        dr_slimScroll_init(".scroller_'.$name.'_files", 300);
         $("#related_'.$name.'-sort-items").sortable();
 		function dr_add_related_'.$name.'() {
 		
@@ -186,6 +189,7 @@ class Related extends \Phpcmf\Library\A_Field {
                                     }
                                 }
                                 $(\'#related_'.$name.'-sort-items\').append(html);
+                                dr_slimScroll_init(".scroller_'.$name.'_files", 300);
                                 dr_tips(1, json.msg);
                             } else {
                                 dr_tips(0, json.msg);

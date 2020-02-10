@@ -172,7 +172,7 @@ class File extends \Phpcmf\Library\A_Field {
 		$url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'];
 
 		// 显示模板
-		$tpl = '<div style="margin-bottom: 10px;padding: 10px 0;" id="dr_'.$name.'_files_row" class="files_row">';
+		$tpl = '<div  id="dr_'.$name.'_files_row" class="file_row_html files_row">';
 		$tpl.= '<div>';
 		$tpl.= '<span class="files_row_preview preview">{preview}</span>';
 		$tpl.= '</div>';

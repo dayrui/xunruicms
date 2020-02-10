@@ -395,6 +395,12 @@ code.form-control-static {
 .files_row_preview {
     margin-right: 10px;
 }
+.files_show_description_html {
+    margin-top: 10px;
+}
+.file_row_html {
+    margin-bottom: 10px;padding: 10px 0;
+}
 
 
 
