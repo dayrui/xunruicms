@@ -2375,14 +2375,23 @@ class View {
                 if ($myfield) {
                     if ($myfield[$t['name']]['fieldtype'] == 'Linkages') {
                         // 联动多选
-                        $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);
-                        if ($data) {
-                            $where[$i]['adj'] = 'JSON';
-                            if ($data['child']) {
-                                $where[$i]['value'] = str_replace(',', '|', $data['childids']);
-                            } else {
-                                $where[$i]['value'] = intval($data['ii']);
+                        $arr = explode('|', $t['value']);
+                        $link_where = [];
+                        foreach ($arr as $value) {
+                            $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                            if ($data) {
+                                if ($data['child']) {
+                                    $link_where[] = dr_array2array($link_where, explode(',',  $data['childids']));
+                                } else {
+                                    $link_where[] = intval($data['ii']);
+                                }
                             }
+                        }
+                        if ($link_where) {
+                            $where[$i]['adj'] = 'JSON';
+                            $where[$i]['value'] = implode('|', array_unique($link_where));
+                        } else {
+                            $where[$i]['value'] = md5($t['value']);
                         }
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
@@ -2394,6 +2403,10 @@ class View {
                             } else {
                                 $where[$i]['value'] = intval($data['ii']);
                             }
+                        } else {
+                            // 没找到
+                            $where[$i]['adj'] = 'SQL';
+                            $where[$i]['value'] = '`id` = 0';
                         }
                     }
                 }

@@ -87,7 +87,9 @@ class Search extends \Phpcmf\Model {
                 if (isset($field['ismain']) && !$field['ismain']) {
                     continue;
                 }
-                isset($get[$name]) && strlen($get[$name]) && $where[] = $this->_where($table, $name, $get[$name], $field);
+                if (isset($get[$name]) && strlen($get[$name])) {
+                    $where[] = $this->_where($table, $name, $get[$name], $field);
+                }
             }
 
             // 栏目的字段

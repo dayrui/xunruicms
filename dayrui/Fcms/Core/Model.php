@@ -481,6 +481,11 @@ class Model {
     // 条件组合
     protected function _where($table, $name, $value, $field) {
 
+        if (!$value && strlen($value) == 0) {
+            return ''; //空值
+        }
+
+
         $name = dr_safe_replace($name, ['\\', '/']);
         if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
             // 匹配时间字段
@@ -517,7 +522,7 @@ class Model {
                     }
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '';
+            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkages') {
             // 联动菜单多选字段
             $arr = explode('|', $value);
@@ -549,7 +554,7 @@ class Model {
                     }
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '';
+            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Checkbox') {
             // 复选字段
             $arr = explode('|', $value);
@@ -565,7 +570,7 @@ class Model {
                     }
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '';
+            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
@@ -577,7 +582,7 @@ class Model {
                     $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '';
+            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
             // like 条件
             return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
