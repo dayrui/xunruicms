@@ -115,7 +115,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
 
         // 表单宽度设置
         $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
-		$str.= '<div class="dropzone-file-area" style="text-align:left" id="'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+		$str.= '<div class="dropzone-file-area" style="text-align:left" id="linkages-'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
 		$level = 1;
 
 
@@ -163,13 +163,14 @@ class Linkages extends \Phpcmf\Library\A_Field {
         $str.= '<div class="margin-top-10">	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_linkages_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
         $str.= '</div>';
         $str.= '<script type="text/javascript">
+        $("#linkages-'.$name.'-sort-items").sortable();
 		function dr_add_linkages_'.$name.'() {
-			var id=($("#'.$name.'-sort-items .linkages_'.$name.'_row").size() + 1) * 10;
+			var id=($("#linkages-'.$name.'-sort-items .linkages_'.$name.'_row").size() + 1) * 10;
 			var html = "'.addslashes($tpl).'";
 			html = html.replace(/\{id\}/g, id);
 			html = html.replace(/\{display\}/g, "blank");
 			html = html.replace(/\{value\}/g, "0");
-			$("#'.$name.'-sort-items").append(html);
+			$("#linkages-'.$name.'-sort-items").append(html);
 			dr_linkages_init_'.$name.'(id);
 		}
 		function dr_linkages_select_'.$name.'(id) {

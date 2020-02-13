@@ -104,7 +104,7 @@ class Catids extends \Phpcmf\Library\A_Field {
 
         // 表单宽度设置
         $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
-		$str.= '<div class="dropzone-file-area" style="text-align:left" id="'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+		$str.= '<div class="dropzone-file-area" style="text-align:left" id="catids-'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
 
         // 输出默认菜单
         $tpl = '<div class="catids_'.$name.'_row" id="dr_catids_'.$name.'_row_{id}">';
@@ -140,11 +140,12 @@ class Catids extends \Phpcmf\Library\A_Field {
         $str.= '<div class="margin-top-10">	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_catids_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
         $str.= '</div>';
         $str.= '<script type="text/javascript">
+        $("#catids-'.$name.'-sort-items").sortable();
 		function dr_add_catids_'.$name.'() {
-			var id=($("#'.$name.'-sort-items .catids_'.$name.'_row").size() + 1) * 10;
+			var id=($("#catids-'.$name.'-sort-items .catids_'.$name.'_row").size() + 1) * 10;
 			var html = "'.addslashes(str_replace(PHP_EOL, '', $tpl)).'";
 			html = html.replace(/\{id\}/g, id);
-			$("#'.$name.'-sort-items").append(html);
+			$("#catids-'.$name.'-sort-items").append(html);
 		}
 		
 		</script><span class="help-block">'.$tips.'</span>';
