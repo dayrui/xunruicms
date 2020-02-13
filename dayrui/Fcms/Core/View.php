@@ -2391,7 +2391,8 @@ class View {
                             $where[$i]['adj'] = 'JSON';
                             $where[$i]['value'] = implode('|', array_unique($link_where));
                         } else {
-                            $where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
+                            // 没有找到就当做普通数据库查询
+                            //$where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
