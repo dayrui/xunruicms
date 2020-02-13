@@ -20,6 +20,7 @@
                 {/if}
                 <th width="70" style="text-align:center"> {dr_lang('排序')} </th>
                 <th width="60" style="text-align:center"> {dr_lang('状态')} </th>
+                <th width="70"> Id </th>
                 <th> {dr_lang('名称 / 别名')} </th>
                 <th>
                     {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key,'pid'=>$pid])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
@@ -42,6 +43,7 @@
                 <td style="text-align:center">
                     <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('linkage/hidden_edit', ['key'=>$key,'id'=>$t.id])}', 1);" class="badge badge-{if $t.hidden}no{else}yes{/if}"><i class="fa fa-{if $t.hidden}times{else}check{/if}"></i></a>
                 </td>
+                <td>{$t.id}</td>
                 <td>{$t.name} / {$t.cname}</td>
                 <td>
                     {if $ci->_is_admin_auth('add')}<label><a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key, 'pid'=>$t.id])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a></label>{/if}
