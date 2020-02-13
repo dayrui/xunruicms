@@ -2387,11 +2387,12 @@ class View {
                                 }
                             }
                         }
+                        $where[$i]['adj'] = 'JSON';
                         if ($link_where) {
-                            $where[$i]['adj'] = 'JSON';
                             $where[$i]['value'] = implode('|', array_unique($link_where));
                         } else {
                             // 没有找到就当做普通数据库查询
+                            $where[$i]['value'] = $t['value'];
                             //$where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
@@ -2406,7 +2407,7 @@ class View {
                             }
                         } else {
                             // 没找到
-                            $where[$i]['value'] = '没有找到对应的联动菜单['.$myfield[$t['name']]['setting']['option']['linkage'].']的别名值['.$t['value'].']';
+                            $where[$i]['value'] = '联动单选字段('.$t['name'].')没有找到对应的联动菜单['.$myfield[$t['name']]['setting']['option']['linkage'].']的别名值['.$t['value'].']';
                         }
                     }
                 }
