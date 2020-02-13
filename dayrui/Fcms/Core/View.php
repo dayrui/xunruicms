@@ -2372,7 +2372,7 @@ class View {
             if (in_array($t['name'], $field)) {
                 $where[$i]['use'] = 1;
                 $where[$i]['name'] = "`$prefix`.`{$t['name']}`";
-                if ($myfield) {
+                if ($myfield && $t['value']) {
                     if ($myfield[$t['name']]['fieldtype'] == 'Linkages') {
                         // 联动多选
                         $arr = explode('|', $t['value']);
@@ -2406,7 +2406,7 @@ class View {
                             }
                         } else {
                             // 没找到
-                            $where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
+                            $where[$i]['value'] = '没有找到对应的联动菜单['.$myfield[$t['name']]['setting']['option']['linkage'].']的别名值['.$t['value'].']';
                         }
                     }
                 }
