@@ -2378,10 +2378,10 @@ class View {
                         $arr = explode('|', $t['value']);
                         $link_where = [];
                         foreach ($arr as $value) {
-                            $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                            $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $value);
                             if ($data) {
                                 if ($data['child']) {
-                                    $link_where[] = dr_array2array($link_where, explode(',',  $data['childids']));
+                                    $link_where = dr_array2array($link_where, explode(',',  $data['childids']));
                                 } else {
                                     $link_where[] = intval($data['ii']);
                                 }
