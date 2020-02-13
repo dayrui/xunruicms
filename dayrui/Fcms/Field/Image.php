@@ -96,10 +96,11 @@ class Image extends \Phpcmf\Library\A_Field {
         $_data = dr_string2array($_data);
 
         if (!isset($_data)) {
-            $_data = array();
+            $_data = [];
         }
+
         if (!isset($data)) {
-            $data = array();
+            $data = [];
         }
 
         // 新旧数据都无附件就跳出
@@ -115,7 +116,7 @@ class Image extends \Phpcmf\Library\A_Field {
         // 当无新数据且有旧数据表示删除旧附件
         if (!$data && $_data) {
             return array(
-                array(),
+                [],
                 $_data
             );
         }
@@ -124,7 +125,7 @@ class Image extends \Phpcmf\Library\A_Field {
         if ($data && !$_data) {
             return array(
                 $data,
-                array()
+                []
             );
         }
 
