@@ -2391,7 +2391,7 @@ class View {
                             $where[$i]['adj'] = 'JSON';
                             $where[$i]['value'] = implode('|', array_unique($link_where));
                         } else {
-                            $where[$i]['value'] = md5($t['value']);
+                            $where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
@@ -2405,8 +2405,7 @@ class View {
                             }
                         } else {
                             // 没找到
-                            $where[$i]['adj'] = 'SQL';
-                            $where[$i]['value'] = '`id` = 0';
+                            $where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
                     }
                 }
