@@ -137,7 +137,7 @@
                 var note = $(body).find('#dr_note').val();
                 var clear = $(body).find("input[name='clear']:checked").val();
 		
-                if (note.length < 5) {
+                if (note.length == 0) {
                     layer.closeAll('loading');
                     dr_tips(0, "{dr_lang('退稿理由必须填写')}");
                     return false;

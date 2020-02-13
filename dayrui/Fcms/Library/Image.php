@@ -1558,7 +1558,11 @@ class Image
 
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
-            if (!$attach || !in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
+            if (!$attach) {
+                return ROOT_THEME_PATH.'assets/images/nopic.gif';
+            } elseif ($attach['fileext'] == 'gif') {
+                return $attach['url'];
+            } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg'])) {
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         } else {
