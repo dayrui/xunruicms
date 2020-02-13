@@ -253,7 +253,8 @@ class Home extends \Phpcmf\Common
 				'grey' => '#697380',
 				'light' => '#F9FAFD',
 				'light2' => '#F1F1F1',
-			]
+			],
+            'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
 		\Phpcmf\Service::V()->display('index.html');exit;
 	}

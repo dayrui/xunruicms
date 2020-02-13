@@ -24,9 +24,9 @@
                 <td>{$t.tname}</td>
                 <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
                 <td> {$t.updatetime} </td>
-                <td>{if !$is_syy}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
+                <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
                 <td>
-                    {if !$is_syy}
+                    {if !$is_oem}
                     <label style="display: none" id="dr_update_{$dir}">
 					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
 					{if $dir == 'phpcmf'}
@@ -47,7 +47,7 @@
             {if dr_is_app('beifen')}
             <label><button type="button" onclick="dr_beifen_cms('{dr_url('beifen/home/add')}', '{dr_lang('你确定要备份全站文件吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('备份全站')}</button></label>
             {/if}
-            {if !$is_syy}
+            {if !$is_oem}
             <label><a href="javascript:dr_help('610');" class="btn blue btn-sm"> <i class="fa fa-book"></i> {dr_lang('离线升级程序')}</a></label>
             {/if}
         </div>

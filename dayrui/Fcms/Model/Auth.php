@@ -508,7 +508,7 @@ class Auth extends \Phpcmf\Model {
                 $uri = substr($uri, 5);
                 $url = 'javascript:dr_iframe_show(\''.$name.'\', \'' . \Phpcmf\Service::L('router')->url($uri, $p) . '\', \'' . $w . '\',\'' . $h . '\');';
             } elseif (in_array($name, ['help', 'ba'])) {
-                if (CI_DEBUG) {
+                if (CI_DEBUG && !IS_OEM_CMS) {
                     $t[1] = 'fa fa-question-circle';
                     $name = dr_lang('在线帮助');
                     $url = 'javascript:dr_help(\''.$uri.'\');';

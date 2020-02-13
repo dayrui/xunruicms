@@ -106,8 +106,14 @@ class Install extends \Phpcmf\Common
                 break;
 
             case 2:
-
                 // 安装信息填写
+
+                $is_oem = 0;
+                if (is_file(MYPATH.'Config/License.php')) {
+                    $ls = require MYPATH.'Config/License.php';
+                    $is_oem = isset($ls['oem']) && $ls['oem'] ? 1 : 0;
+                }
+
                 if (IS_AJAX_POST) {
 
                     $data = $_POST['data'];
@@ -173,9 +179,12 @@ $db[\'default\']	= [
                         $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
                     }
 
-                    $this->_json(1, 'index.php?c=install&m=index&is_install_db='.intval($_POST['is_install_db']).'&step='.($step+1));
+                    $this->_json(1, 'index.php?c=install&m=index&is_install_db='.($is_oem ? 0 : intval($_POST['is_install_db'])).'&step='.($step+1));
                 }
 
+                \Phpcmf\Service::V()->assign([
+                    'is_oem' => $is_oem,
+                ]);
 
                 break;
 

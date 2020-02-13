@@ -10,30 +10,27 @@ class Cloud extends \Phpcmf\Common
 {
     private $admin_url;
     private $service_url;
-    private $license;
 
     public function __construct(...$params)
     {
         parent::__construct(...$params);
 
-        if (is_file(MYPATH . 'Config/License.php')) {
-            $this->license = require MYPATH . 'Config/License.php';
-            if (!$this->license['license']) {
-                exit('程序不是最新，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
-            }
-        } else {
+        if (!$this->cmf_license) {
             exit('当前程序版本：'.$this->cmf_version['version'].'，需要更新到正式版，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
+        } elseif (!$this->cmf_license['license']) {
+            exit('程序不是最新，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
         }
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
-        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->license['license'];
-        if ($this->license['cloud']) {
-            $this->service_url = $this->license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->license['license'];
+        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->cmf_license['license'];
+        if ($this->cmf_license['cloud']) {
+            $this->service_url = $this->cmf_license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->cmf_license['license'];
         }
+
         \Phpcmf\Service::V()->assign([
-            'is_syy' => $this->license['cloud'] ? 1 : 0,
-            'license' => $this->license,
-            'license_sn' => $this->license['license'],
+            'is_oem' => $this->cmf_license['oem'] ? 1 : 0,
+            'license' => $this->cmf_license,
+            'license_sn' => $this->cmf_license['license'],
             'cms_version' => $this->cmf_version,
             'cmf_version' => $this->cmf_version,
         ]);
@@ -42,9 +39,9 @@ class Cloud extends \Phpcmf\Common
     // 服务工单
     public function service() {
 
-        $url = 'https://www.xunruicms.com/service.php?cms='.$this->cmf_version['id'].'&license='.$this->license['license'];
-        if ($this->license['service']) {
-            $url = $this->license['service'];
+        $url = 'https://www.xunruicms.com/service.php?cms='.$this->cmf_version['id'].'&license='.$this->cmf_license['license'];
+        if ($this->cmf_license['service']) {
+            $url = $this->cmf_license['service'];
         }
 
         \Phpcmf\Service::V()->assign([
@@ -58,8 +55,8 @@ class Cloud extends \Phpcmf\Common
 
         $domain = dr_get_domain_name(ROOT_URL);
         $license_domain = 'https://www.xunruicms.com/license/domain/'.$domain;
-        if ($this->license['domain']) {
-            $license_domain = trim($this->license['domain'], '/').'/index.php?s=license&m=show&domain='.$domain;
+        if ($this->cmf_license['domain']) {
+            $license_domain = trim($this->cmf_license['domain'], '/').'/index.php?s=license&m=show&domain='.$domain;
         }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
@@ -85,7 +82,7 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
                     && is_file(dr_get_app_dir($dir).'Config/Version.php')) {
                     $vsn = require dr_get_app_dir($dir).'Config/Version.php';
-                    if (!IS_DEV && $vsn['license'] != $this->license['license']) {
+                    if (!IS_DEV && $vsn['license'] != $this->cmf_license['license']) {
                         continue;
                     }
                     $vsn['id'] && $id[] = $vsn['id'];
@@ -139,7 +136,7 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
-                    if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->license['license']) {
+                    if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->cmf_license['license']) {
                         continue;
                     }
                     $data[$key] = [
@@ -365,7 +362,7 @@ class Cloud extends \Phpcmf\Common
 
         $data['phpcmf'] = $this->cmf_version;
         $data['phpcmf']['id'] = 'cms-1';
-        $data['phpcmf']['tname'] = '<a href="javascript:dr_help(538);">系统</a>';
+        $data['phpcmf']['tname'] = $this->cmf_license['oem'] ? '系统' : '<a href="javascript:dr_help(538);">系统</a>';
 
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
@@ -379,7 +376,7 @@ class Cloud extends \Phpcmf\Common
                         'id' => $cfg['type'].'-'.$vsn['id'],
                         'name' => $cfg['name'],
                         'type' => $cfg['type'],
-                        'tname' => '<a href="javascript:dr_help(540);">应用</a>',
+                        'tname' => $this->cmf_license['oem'] ? '应用' : '<a href="javascript:dr_help(540);">应用</a>',
                         'version' => $vsn['version'],
                         'license' => $vsn['license'],
                         'updatetime' => $vsn['updatetime'],
@@ -388,17 +385,20 @@ class Cloud extends \Phpcmf\Common
             }
         }
 
+        $menu = [
+            '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
+            '文件对比' => [\Phpcmf\Service::L('Router')->class.'/bf', 'fa fa-code'],
+            'help' => [379],
+        ];
+        if ($this->cmf_license['oem']) {
+            unset($menu['文件对比']);
+        }
+
         \Phpcmf\Service::V()->assign([
             'list' => $data,
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
-                    '文件对比' => [\Phpcmf\Service::L('Router')->class.'/bf', 'fa fa-code'],
-                    'help' => [379],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
             'cms_id' => $this->cmf_version['cms'],
-            'domain_id' => $this->license['id'],
+            'domain_id' => $this->cmf_license['id'],
         ]);
         \Phpcmf\Service::V()->display('cloud_update.html');exit;
     }
@@ -419,14 +419,20 @@ class Cloud extends \Phpcmf\Common
                 MYPATH,
             ];
             foreach ($dir as $t) {
-                !dr_check_put_path($t) && $this->_json(0, dr_lang('目录【%s】不可写', $t));
+                if (!dr_check_put_path($t)) {
+                    $this->_json(0, dr_lang('目录【%s】不可写', $t));
+                }
             }
         }
 
         $vid = dr_safe_replace($_GET['version']);
         $surl = $this->service_url.'&action=check_version&get_http=1&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
-        !$json ? $this->_json(0, '没有从服务端获取到数据') : exit($json);
+        if (!$json) {
+            $this->_json(0, '没有从服务端获取到数据');
+        }
+        $rt = json_decode($json, true);
+        $this->_json($rt['code'], $this->cmf_license['oem'] ? dr_clearhtml($rt['msg']) : $rt['msg']);
     }
 
     // 执行更新程序的界面
@@ -627,6 +633,10 @@ class Cloud extends \Phpcmf\Common
     // 文件对比
     public function bf() {
 
+        if ($this->cmf_license['oem']) {
+            $this->_admin_msg(0, '无法使用此功能');
+        }
+
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -640,7 +650,7 @@ class Cloud extends \Phpcmf\Common
 
     public function bf_count() {
 
-        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->license['license'];
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '没有从服务端获取到数据');

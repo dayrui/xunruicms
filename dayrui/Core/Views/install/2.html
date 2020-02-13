@@ -66,6 +66,7 @@
                         <input type="text" name="data[db_prefix]" value="dr_" class="form-control" placeholder="">
                     </div>
                 </div>
+                {if !$is_oem}
                 <div class="form-group">
                     <label class="control-label col-md-3">安装测试数据</label>
                     <div class="col-md-7">
@@ -82,6 +83,7 @@
                         <p class="help-block"> 新手建议选择安装测试数据，方便快速入门 </p>
                     </div>
                 </div>
+                {/if}
             </div>
 
         </form>
