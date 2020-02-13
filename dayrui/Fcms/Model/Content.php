@@ -861,6 +861,10 @@ class Content extends \Phpcmf\Model {
     // 同步到其他栏目
     public function sync_cat($catid, $data) {
 
+        if (!$catid) {
+            return;
+        }
+
         $id = (int)$data[1]['id'];
         $sync = @explode(',', $catid);
         if ($sync && $id) {

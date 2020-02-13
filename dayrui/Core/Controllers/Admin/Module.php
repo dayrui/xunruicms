@@ -309,9 +309,8 @@ class Module extends \Phpcmf\Common
         $data['setting'] = dr_string2array($data['setting']);
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('flag', true);
             $rt = \Phpcmf\Service::M('Module')->config($data, null, [
-                'flag' => $post,
+                'flag' => \Phpcmf\Service::L('input')->post('flag'),
             ]);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -324,6 +323,7 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'flag' => $data['setting']['flag'],
             'form' => dr_form_hidden(),
+            'role' => \Phpcmf\Service::C()->get_cache('auth'),
         ]);
         \Phpcmf\Service::V()->display('module_flag.html');
     }

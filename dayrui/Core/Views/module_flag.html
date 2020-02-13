@@ -11,7 +11,7 @@
                 <th width="40"> Id </th>
                 <th width="250"> {dr_lang('名称')} </th>
                 <th width="180"> {dr_lang('图标')} </th>
-                <th> {dr_lang('操作')} </th>
+                <th> {dr_lang('后台角色使用权限')}</th>
             </tr>
             </thead>
             <tbody>
@@ -21,17 +21,15 @@
                 <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{$flag[$i]['name']}" placeholder="{dr_lang('推荐位名称')}"></td>
                 <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{$flag[$i]['icon']}" placeholder="{dr_lang('fa fa-user')}" />
                 </td>
-                <td>
-                    {cache name=member.group return=group}
-                    {if $group.id > 2}
-                    {loop $group.level $level}
-                    {php $iid=$group['id'].'_'.$level['id'];}
-                    <input name="flag[{$i}][value][{$iid}]" class="dr_flag_{$i}" iid="{$iid}" id="dr_flag_{$i}_{$iid}" type="hidden" value="{intval($flag[$i]['value'][$iid])}" />
-                    {/loop}
+                <td><div class="table-scrollable" style="border: 0;margin: 0 !important;">
+                    {php $ii = 1;}
+                    {loop $role $a}
+                    {if $a['id'] > 1}
+                    <label class="mt-checkbox mt-checkbox-outline"><input <?php echo ($flag[$i]['role'][$a['id']] ? 'checked' : '');?> type="checkbox" name="flag[{$i}][role][{$a['id']}]" value="1"/> {$a['name']} <span></span> </label>&nbsp;&nbsp;
+                    {if $ii%5 == 0}<br>{/if}
+                    {php $ii ++;}
                     {/if}
-                    {/cache}
-                    <label class="hide"><a href="javascript:;" onclick="dr_set_flag('{$i}')" class="btn btn-xs green"> <i class="fa fa-cog"></i> {dr_lang('收费设置')} </a></label>
-                    <label id="dr_status_{$i}"></label>
+                    {/loop}</div>
                 </td>
             </tr>
             {php }}
@@ -49,10 +47,15 @@
 
 <script type="text/javascript">
     function dr_set_flag(id) {
+
         var url = '{dr_url("module/flag_save_edit")}&id='+id;
+        $(".dr_flag_"+id).each(function(){
+            url+= '&data['+ $(this).attr('iid')+']='+ $(this).val()
+        });
+
         layer.open({
             type: 2,
-            title: '{dr_lang('收费设置')}',
+            title: '{dr_lang('后台权限设置')}',
             shadeClose: true,
             shade: 0.3,
             area: ['500px', '50%'],

@@ -43,6 +43,19 @@ class Module extends \Phpcmf\Table
             'list_field' => $this->module['setting']['list_field'],
         ]);
         $this->content_model->init($this->init); // 初始化内容模型
+        // 子管理员推荐位权限
+        if (!in_array(1, $this->admin['roleid']) && $this->module['setting']['flag']) {
+            foreach ($this->module['setting']['flag'] as $i => $t) {
+                if (!$t['role']) {
+                    unset($this->module['setting']['flag'][$i]);
+                    continue;
+                } elseif (array_intersect_key($this->admin['roleid'], $t['role'])) {
+                    continue;
+                } else {
+                    unset($this->module['setting']['flag'][$i]);
+                }
+            }
+        }
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'field' => $this->init['field'],
@@ -1123,14 +1136,27 @@ class Module extends \Phpcmf\Table
                     if ($data[1]['status'] == 9) {
 
                         // 同步发送到其他栏目
-                        \Phpcmf\Service::L('input')->post('sync_cat') && $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
+                        $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
 
                         // 处理推荐位
                         $myflag = $old['myflag'];
                         $update = \Phpcmf\Service::L('input')->post('flag');
                         if ($update !== $myflag) {
                             // 删除旧的
-                            $id && $myflag && $this->content_model->delete_flag($id, $myflag);
+                            if ($id && $myflag) {
+                                $this->content_model->delete_flag($id, $myflag);
+                            }
+
+                            // 子管理员验证推荐位
+                            if ($myflag && !in_array(1, $this->admin['roleid'])) {
+                                foreach ($myflag as $i) {
+                                    if (!isset($this->module['setting']['flag'][$i])) {
+                                        // 不存在的推荐位就作为新加推荐位
+                                        $update[] = $i;
+                                    }
+                                }
+                            }
+
                             // 增加新的
                             if ($update) {
                                 foreach ($update as $i) {
