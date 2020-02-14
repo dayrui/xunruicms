@@ -141,6 +141,10 @@ class Member extends \Phpcmf\Table
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
+			
+			\Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
+			\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$name);
+			
             exit($this->_json(1, dr_lang('操作成功')));
         }
 
@@ -575,6 +579,10 @@ class Member extends \Phpcmf\Table
                     $member = \Phpcmf\Service::M()->table('member')->get($id);
                     \Phpcmf\Service::M('member')->edit_password($member, $password);
                 }
+				
+				\Phpcmf\Service::L('cache')->del_data('member-info-'.$id);
+				\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$old['username']);
+				
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');
                 $old['is_verify'] == 0 && $status['is_verify'] == 1 && \Phpcmf\Service::M('member')->verify_member($id);

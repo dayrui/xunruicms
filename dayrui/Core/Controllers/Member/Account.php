@@ -62,6 +62,8 @@ class Account extends \Phpcmf\Common
                 $attach
             );
             \Phpcmf\Hooks::trigger('member_edit_after', $data[1]);
+			\Phpcmf\Service::L('cache')->del_data('member-info-'.$this->uid);
+			\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$this->member['username']);
             $this->_json(1, dr_lang('保存成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             exit;
         }
