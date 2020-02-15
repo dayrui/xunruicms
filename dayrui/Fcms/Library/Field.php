@@ -283,7 +283,7 @@
                     'setting' => array()
                 ),
                 'author' => array(
-                    'name' => dr_lang('作者信息'),
+                    'name' => dr_lang('账号'),
                     'ismain' => 1,
                     'ismember' => 1,
                     'fieldtype' => 'Textbtn',
