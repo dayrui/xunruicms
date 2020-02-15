@@ -672,7 +672,7 @@ class View {
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
 			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH', 'MAP',
+			'DAY', 'MONTH', 'MAP', 'YEAR',
 			'JSON', 'FIND'
 		];
         foreach ($params as $t) {
@@ -2336,6 +2336,18 @@ class View {
                             $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day');
                         } else {
                             $stime = strtotime('-'.intval($t['value']).' month');
+                            $etime = SYS_TIME;
+                        }
+                        $string.= $join." {$t['name']}  BETWEEN ".strtotime(date('Y-m-01 00:00:00', $stime))." AND ".$etime;
+                        break;
+
+                    case 'YEAR':
+                        if (substr($t['value'], 0, 1) == 'E') {
+                            // 今年
+                            $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
+                            $etime = strtotime(date('Y', $stime).'-12-31 23:59:59');
+                        } else {
+                            $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = SYS_TIME;
                         }
                         $string.= $join." {$t['name']}  BETWEEN ".strtotime(date('Y-m-01 00:00:00', $stime))." AND ".$etime;
