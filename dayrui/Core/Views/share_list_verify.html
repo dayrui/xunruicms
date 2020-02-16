@@ -191,6 +191,13 @@
     <div class="row table-search-tool">
         <form action="{SELF}" method="get">
             {dr_form_search_hidden()}
+            {if $is_category_show}
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    {$category_select}
+                </label>
+            </div>
+            {/if}
             <div class="col-md-12 col-sm-12">
                 <label>
                     <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
@@ -224,6 +231,7 @@
                     {/if}
                     <th style="text-align:center" class="{dr_sorting('isnew')}" name="isnew" width="70">{dr_lang('类型')}</th>
                     <th class="{dr_sorting('cid')}" name="cid">{dr_lang('主题')}</th>
+                    {if $is_category_show}<th class="{dr_sorting('catid')}" name="catid" width="120">{dr_lang('栏目')}</th>{/if}
                     <th class="{dr_sorting('status')}" name="status" width="90" style="text-align:center">{dr_lang('状态')}</th>
                     <th class="{dr_sorting('uid')}" name="uid" width="150">{dr_lang('作者')}</th>
                     <th class="{dr_sorting('inputtime')}" name="inputtime" width="160">{dr_lang('提交时间')}</th>
@@ -253,6 +261,7 @@
                         {/if}
                     </td>
                     <td>{Function_list::title($c.title, null, $t)}</td>
+                    {if $is_category_show}<td>{Function_list::catid($t.catid, null, $t)}</td>{/if}
                     <td style="text-align:center">
                         {if $t.status}
                         <span class="label label-warning"> {dr_lang('%s审中', $t.status)} </span>

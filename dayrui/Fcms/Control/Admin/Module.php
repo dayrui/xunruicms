@@ -554,7 +554,7 @@ class Module extends \Phpcmf\Table
             'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : '').($status ? 'status IN('.implode(',', $status).')' : 'status>=0') .')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
-        $this->_List();
+        list($tpl, $data) = $this->_List();
 
         $verify_msg = [
             dr_lang('词文不对'),
@@ -573,6 +573,12 @@ class Module extends \Phpcmf\Table
             'clink' => $this->_app_clink(),
             'verify_msg' => $verify_msg,
             'is_post_user' => $is_post_user,
+            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['param']['catid'],
+                'name="catid"',
+                '--'
+            ),
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_verify'));
     }
