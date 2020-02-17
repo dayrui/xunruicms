@@ -277,7 +277,7 @@ $db[\'default\']	= [
                             ];
                             if (is_file(MYPATH.'Config/License.php')) {
                                 $ls = require MYPATH.'Config/License.php';
-                                if (isset($ls['name']) && $ls['name']) {
+                                if (isset($ls['oem']) && $ls['oem']) {
                                     $sys['SYS_DEBUG'] = 0;
                                 }
                             }
