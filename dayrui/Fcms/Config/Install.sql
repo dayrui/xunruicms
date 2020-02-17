@@ -402,6 +402,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_group_verify` (
   `gid` smallint(5) unsigned NOT NULL COMMENT '用户组id',
   `lid` smallint(5) unsigned NOT NULL COMMENT '用户组等级id',
   `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
+  `price` decimal(10,2) NOT NULL COMMENT '已费用',
   `content` text NOT NULL COMMENT '自定义字段信息',
   `inputtime` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),

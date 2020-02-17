@@ -161,6 +161,7 @@ class Member_apply extends \Phpcmf\Table
                 'content' => dr_array2string($post),
                 'status' => 1, // 拒绝
             ]);
+            // 不退回金额
         }
 
         // 通知 钩子
@@ -176,9 +177,59 @@ class Member_apply extends \Phpcmf\Table
             foreach ($rows as $t) {
                 // 删除审核提醒
                 \Phpcmf\Service::M('member')->delete_admin_notice('member_apply/edit:id/'.$t['id'], SITE_ID);
+                // 退回金额
+                $this->_call_score($t);
             }
             return dr_return_data(1, 'ok');
         });
     }
-    
+
+    // 退回金额
+    private function _call_score($t) {
+
+        if ($t['price'] > 0) {
+            $group = $this->member_cache['group'][$t['gid']];
+            $notice = $t['lid'] ? dr_lang('[退回]申请用户组（%s）: %s', $group['name'], $group['level'][$t['lid']]['name']) : dr_lang('[退回]申请用户组（%s）', $group['name']);
+            if ($this->member_cache['group'][$t['gid']]['unit']) {
+                // 金币
+                // 扣分
+                $rt = \Phpcmf\Service::M('member')->add_score($t['uid'], (int)$t['price'], $notice, '', '');
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
+                // 提醒通知
+                \Phpcmf\Service::M('member')->notice($t['uid'], 2, $notice);
+            } else {
+                // rmb
+                $rt = \Phpcmf\Service::M('Pay')->add_money($t['uid'], $t['price']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
+                // 增加到交易流水
+                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                    'uid' => $t['uid'],
+                    'username' => $t['username'],
+                    'touid' => 0,
+                    'tousername' => '',
+                    'mid' => 'system',
+                    'title' => $notice,
+                    'value' => $t['price'],
+                    'type' => 'finecms',
+                    'status' => 1,
+                    'result' => '',
+                    'paytime' => SYS_TIME,
+                    'inputtime' => SYS_TIME,
+                ]);
+                // 提醒通知
+                \Phpcmf\Service::M('member')->notice(
+                    $t['uid'],
+                    2,
+                    $notice,
+                    \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id'=>$rt['code']])
+                );
+
+            }
+
+        }
+    }
 }

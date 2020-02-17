@@ -110,7 +110,12 @@
                         <td> 无 </td>
                         <td> {if $t.days}{$t.days}天{else}永久{/if} </td>
                         <td>
+                            {php $sq=\Phpcmf\Service::M()->table('member_group_verify')->where('uid', $member.uid)->where('gid', $t.id)->getRow();}
+                            {if $sq}
+                            <a href="{dr_member_url('apply/index', ['gid'=>$gid])}" class="btn red  btn-xs "> {if $sq.status}被拒绝{else}审核中{/if} </a>
+                            {else}
                             <a href="{dr_member_url('apply/index', ['gid'=>$gid])}" class="btn red  btn-xs "> 申请开通 </a>
+                            {/if}
                         </td>
                     </tr>
                     {/if}

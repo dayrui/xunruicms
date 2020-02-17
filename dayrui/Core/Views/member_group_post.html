@@ -99,6 +99,16 @@
                                 <span class="help-block"> {dr_lang('已经注册成功的用户可以申请到该用户组下')} </span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('申请审核')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[verify]" type="radio" value="1" {if $setting.verify}checked{/if} /> {dr_lang('审核')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[verify]" type="radio" value="0" {if !$setting.verify}checked{/if} /> {dr_lang('不审核')} <span></span></label>
+                                </div>
+                                <span class="help-block"> {dr_lang('当开启申请时是否进入后台审核流程')} </span>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -133,16 +143,6 @@
                                     <label class="mt-radio mt-radio-outline"><input name="setting[level][price]" type="radio" value="0" {if !$setting.level.price}checked{/if} /> {dr_lang('补差价')} <span></span></label>
                                 </div>
                                 <span class="help-block"> {dr_lang('补差价模式值当前价格减去以前升级的价格')} </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('申请审核')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[verify]" type="radio" value="1" {if $setting.verify}checked{/if} /> {dr_lang('审核')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[verify]" type="radio" value="0" {if !$setting.verify}checked{/if} /> {dr_lang('不审核')} <span></span></label>
-                                </div>
-                                <span class="help-block"> {dr_lang('当开启申请时是否进入后台审核流程')} </span>
                             </div>
                         </div>
 

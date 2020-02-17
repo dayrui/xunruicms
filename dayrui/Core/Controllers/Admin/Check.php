@@ -231,6 +231,11 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
                 }
 
+                $table = $prefix.'member_group_verify';
+                if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) NOT NULL COMMENT \'已费用\'');
+                }
+
                 $table = $prefix.'member_scorelog';
                 if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) NOT NULL');

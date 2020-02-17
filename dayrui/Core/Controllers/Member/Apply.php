@@ -100,7 +100,7 @@ class Apply extends \Phpcmf\Common
                                 $this->_json(0, dr_lang('账户%s不足', SITE_SCORE));
                             }
                             // 扣分
-                            $rt = \Phpcmf\Service::M('member')->add_score($this->uid, -$price, dr_lang('申请用户组（%s）: %s', $group['name'], $group['level'][$lid]['name']));
+                            $rt = \Phpcmf\Service::M('member')->add_score($this->uid, -$price, dr_lang('申请用户组（%s）: %s', $group['name'], $group['level'][$lid]['name']), '', '');
                             if (!$rt['code']) {
                                 $this->_json(0, $rt['msg']);
                             }
@@ -204,6 +204,8 @@ class Apply extends \Phpcmf\Common
                 if ($verify['id']) {
                     $rt = \Phpcmf\Service::M()->table('member_group_verify')->update($verify['id'], $my_verify);
                 } else {
+                    // 被拒再次提交不重复扣款
+                    $my_verify['price'] = $price;
                     $rt = \Phpcmf\Service::M()->table('member_group_verify')->insert($my_verify);
                 }
                 if (!$rt['code']) {
