@@ -121,7 +121,7 @@
                         && array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['setting']['show_member'])) {
                         continue; // 非后台时 判断用户权限
                     }
-                } elseif (IS_ADMIN && !in_array(1, \Phpcmf\Service::C()->admin['roleid'])
+                } elseif (IS_ADMIN && $t['setting']['show_admin'] && !in_array(1, \Phpcmf\Service::C()->admin['roleid'])
                     && @array_intersect(\Phpcmf\Service::C()->admin['roleid'], $t['setting']['show_admin'])) {
                     continue; // 后台时 判断管理员权限
                 }
