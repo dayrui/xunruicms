@@ -578,6 +578,11 @@ return [
                             'uri' => 'cloud/app',
                         ],
                         [
+                            'name' => '模板商城',
+                            'icon' => 'fa fa-html5',
+                            'uri' => 'cloud/template',
+                        ],
+                        [
                             'name' => '版本升级',
                             'icon' => 'fa fa-refresh',
                             'uri' => 'cloud/update',
