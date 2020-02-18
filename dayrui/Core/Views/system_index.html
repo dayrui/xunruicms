@@ -97,8 +97,9 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">HTTPS</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('采用https地址模式，需要网站支持https访问，才能开启此功能')}</span>
+                                <label><input type="checkbox" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small"></label>
+                                <label><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
+                                <span class="help-block">{dr_lang('全站采用https安全模式，开启之前需要测试是否支持https')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -205,6 +206,36 @@
     function dr_to_key() {
         $.get("{dr_url('api/syskey')}", function(data){
             $("#sys_key").val(data);
+        });
+    }
+    function dr_test_https() {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 100000000
+        });
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('api/test_https')}",
+            success: function(json) {
+                layer.close(loading);
+                if (json.code == 1) {
+                    dr_cmf_tips(json.code, json.msg);
+                } else {
+                    layer.open({
+                        type: 1,
+                        title: '{dr_lang("测试失败")}',
+                        fix:true,
+                        shadeClose: true,
+                        shade: 0,
+                        area: ['50%', '50%'],
+                        content: "<div style=\"padding:30px 10px; color:red; text-align: center\">"+json.msg+"</div>"
+                    });
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
         });
     }
 </script>

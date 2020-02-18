@@ -698,6 +698,19 @@ class Api extends \Phpcmf\Common
     }
 
     /**
+     * 测试https是否可用
+     */
+    public function test_https() {
+        $url = str_replace('http://', 'https://', ROOT_URL);
+        $code = dr_catcher_data($url.'index.php?s=api&c=test', 5);
+        if ($code && strpos($code, 'Xunruicms') !== false) {
+            $this->_json(1, dr_lang('支持HTTPS访问'));
+        } else {
+            $this->_json(0, dr_lang('无法访问：%s', $url));
+        }
+    }
+
+    /**
      * 测试缓存是否可用
      */
     public function test_cache() {
