@@ -106,6 +106,28 @@ class Login extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('login.html');exit;
 	}
 
+    public function fclient() {
+
+        $sync = require ROOTPATH.'api/fclient/sync.php';
+        if (!$_GET['id'] || !$_GET['sync']) {
+            $this->_admin_msg(0, '通信密钥验证为空');
+        } elseif ($_GET['id'] != md5($sync['id'])) {
+            $this->_admin_msg(0, '通信ID验证失败');
+        } elseif ($_GET['sync'] != $sync['sn']) {
+            $this->_admin_msg(0, '通信密钥验证失败');
+        }
+
+        $prefix = \Phpcmf\Service::M()->dbprefix('');
+        $member = \Phpcmf\Service::M()->db->query('select * from '.$prefix.'member where id in(select uid from '.$prefix.'admin_role_index order by roleid asc) order by id asc limit 1')->getRowArray();
+        if (!$member) {
+            $this->_admin_msg(0, '没有找到本站管理员账号', SELF);
+        }
+
+        \Phpcmf\Service::M('auth')->login_session($member);
+
+        $this->_admin_msg(1, '授权登录成功', SELF);
+    }
+
 	public function out() {
 		$this->session()->remove('uid');
 		$this->session()->remove('admin');
