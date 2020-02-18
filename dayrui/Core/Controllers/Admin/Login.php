@@ -106,6 +106,7 @@ class Login extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('login.html');exit;
 	}
 
+    // 子站客户端自动登录
     public function fclient() {
 
 	    if (!is_file(ROOTPATH.'api/fclient/sync.php')) {
