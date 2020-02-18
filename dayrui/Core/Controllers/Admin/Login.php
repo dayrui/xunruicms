@@ -108,6 +108,10 @@ class Login extends \Phpcmf\Common
 
     public function fclient() {
 
+	    if (!is_file(ROOTPATH.'api/fclient/sync.php')) {
+            $this->_admin_msg(0, '子站客户端程序未安装');
+        }
+
         $sync = require ROOTPATH.'api/fclient/sync.php';
         if (!$_GET['id'] || !$_GET['sync']) {
             $this->_admin_msg(0, '通信密钥验证为空');
