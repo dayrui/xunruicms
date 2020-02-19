@@ -70,7 +70,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 						<span class="help-block">自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
                     </div>
                 </div>
-				<div class="form-group">
+				<div class="form-group hide">
                     <label class="col-md-2 control-label">'.dr_lang('下载图片模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
@@ -215,7 +215,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      */
     public function insert_value($field) {
 
-        $table = [];
+        //$table = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
         // 第一张作为缩略图
@@ -257,6 +257,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 }
                                 if ($zj == 0) {
                                     // 可以下载文件
+                                    /*
 									if ($field['setting']['option']['down_img_type']) {
 										// 异步模式
 										 if (!$table) {
@@ -277,6 +278,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 										$value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
 										$img = '';
 									} else {
+                                    */
 										// 同步模式
 										// 下载远程文件
 										$rt = \Phpcmf\Service::L('upload')->down_file([
@@ -292,7 +294,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 												$img = $att['code'];
 											}
 										}
-									}
+									//}
                                 }
                             }
 
