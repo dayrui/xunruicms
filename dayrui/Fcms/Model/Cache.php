@@ -289,7 +289,11 @@ class Cache extends \Phpcmf\Model
                      'mobile/index.php',
                  ] as $file) {
             if (is_file(FCPATH.'Temp/'.$name.'/'.$file)) {
-                $dst = $path.$file;
+                if ($file == 'admin.php') {
+                    $dst = $path.(SELF == 'index.php' ? 'admin.php' : SELF);
+                } else {
+                    $dst = $path.$file;
+                }
                 dr_mkdirs(dirname($dst));
                 $size = file_put_contents($dst, str_replace([
                     '{CLIENT}',

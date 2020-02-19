@@ -70,6 +70,7 @@ class Thread
         }
 		
         if (!$fp) {
+            dr_catcher_data($url, 10);
             log_message('error', 'fsockopen函数调用失败（'.$url.'）：'.FC_NOW_URL);
             return 0; //note $errstr : $errno \r\n
         } else {

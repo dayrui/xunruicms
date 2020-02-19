@@ -1116,6 +1116,15 @@ class Module extends \Phpcmf\Table
                                 $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
                                 // 任务执行成功
                                 \Phpcmf\Service::M('member')->todo_admin_notice( MOD_DIR.'/verify/edit:id/'.$id, SITE_ID);
+                                if ($data[1]['status'] == 9 && $old) {
+                                    // 审核通过时读取最新数据
+                                    $new = \Phpcmf\Service::M()->table_site(MOD_DIR)->get($old['id']);
+                                    if ($new) {
+                                        $data[1]['hits'] = $new['hits'];
+                                        $data[1]['comments'] = $new['comments'];
+                                        $data[1]['avgsort'] = $new['avgsort'];
+                                    }
+                                }
                             } else {
                                 // 拒绝
                                 $data[1]['status'] = 0;
@@ -1123,7 +1132,6 @@ class Module extends \Phpcmf\Table
                                 $old['note'] = $_POST['verify']['msg'];
                                 \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
                             }
-                            $data[1]['hits'] = max(1, intval($old['hits']));
                         }
                     }
 					// 是否退稿
