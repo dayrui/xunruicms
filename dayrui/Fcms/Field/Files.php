@@ -229,7 +229,7 @@ class Files extends \Phpcmf\Library\A_Field {
         $tpl .= '<div class="col-md-12 files_show_title_html">';
         $tpl .= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
         $tpl .= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
-        $tpl .= '<input class="files_row_name" type="hidden" value="{filepath}">';
+        $tpl .= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
         $tpl .= '</div>';
         if ($field['setting']['option']['desc']) {
             $tpl.= '<div class="col-md-12 files_show_description_html">';
