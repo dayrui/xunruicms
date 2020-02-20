@@ -12,7 +12,7 @@
             <tr class="heading">
                 <th width="60" style="text-align:center">  </th>
                 <th width="330"> {dr_lang('名称')} / {dr_lang('目录')}</th>
-                {if !$is_syy}
+                {if !$is_oem}
                 <th width="150"> {dr_lang('开发者')} </th>
                 {/if}
                 <th width="80"> {dr_lang('版本')} </th>
@@ -27,10 +27,10 @@
                     <span class="badge badge-success"> {$i} </span>
                 </td>
                 <td><i class="{$t.icon}"></i> {$t.name} / {$dir}</td>
-                {if !$is_syy}
+                {if !$is_oem}
                 <td>{if $t.store}<a href="{$t.store}" target="_blank">{$t.author}</a>{else}{$t.author}{/if}</td>
                 {/if}
-                <td> <a href="javascript:dr_show_log('app-{$t.id}', '{$t.version}');">{$t.version}</a> </td>
+                <td> {if $is_oem}{$t.version}{else}<a href="javascript:dr_show_log('app-{$t.id}', '{$t.version}');">{$t.version}</a>{/if}</td>
                 <td>
                     {if $t.install}
                     <label><a href="javascript:dr_load_ajax('{dr_lang('确定卸载此程序吗？')}', '{dr_url('cloud/uninstall', ['dir'=>$dir])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>

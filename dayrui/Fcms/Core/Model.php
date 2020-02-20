@@ -104,7 +104,7 @@ class Model {
     
     // 附表不存在时创建附表
     public function is_data_table($table, $tid) {
-        if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table.$tid)."'")->getRowArray()) {
+        if ($tid > 0 && !$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table.$tid)."'")->getRowArray()) {
             // 附表不存在时创建附表
             $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($table)."0`")->getRowArray();
             $this->db->query(str_replace(

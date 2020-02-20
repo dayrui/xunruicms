@@ -1137,6 +1137,9 @@ class Content extends \Phpcmf\Model {
                 $id = intval($t['id']);
                 $this->table($this->mytable)->update($id, ['catid' => $catid]);
                 $this->table($this->mytable.'_index')->update($id, ['catid' => $catid]);
+                // 判断附表是否存在,不存在则创建
+                $this->is_data_table($this->mytable.'_data_', $t['tableid']);
+                $this->is_data_table($this->mytable.'_category_data_', $t['tableid']);
                 $this->db->table($this->mytable.'_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
                 $this->db->table($this->mytable.'_category_data')->where('id', $id)->update(['catid' => $catid]);
                 $this->db->table($this->mytable.'_category_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
