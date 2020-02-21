@@ -434,22 +434,18 @@ class Table extends \Phpcmf\Model
 
         // 创建数据表
 
-
-        $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_form')."`");
-        $this->db->simpleQuery(dr_format_create_sql("
-		CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_form')."` (
-		  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-		  `name` varchar(50) NOT NULL COMMENT '名称',
-		  `table` varchar(50) NOT NULL COMMENT '表名',
-		  `setting` text DEFAULT NULL COMMENT '配置信息',
-		  PRIMARY KEY (`id`),
-		  UNIQUE KEY `table` (`table`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单模型表';
-		"));
-
-
-        $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_category')."`");
-        $this->db->simpleQuery(dr_format_create_sql("
+        if ($siteid > 1) {
+            // 复制站点1的栏目结构
+            $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_share_category')."`")->getRowArray();
+            $sql = str_replace(
+                array($sql['Table'], 'CREATE TABLE'),
+                array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                $sql['Create Table']
+            );
+            $this->db->simpleQuery(str_replace('{tablename}', $this->dbprefix($siteid.'_share_category'), dr_format_create_sql($sql)));
+        } else {
+            $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_category')."`");
+            $this->db->simpleQuery(dr_format_create_sql("
         CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_category')."` (
           `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
           `tid` tinyint(1) NOT NULL COMMENT '栏目类型，0单页，1模块，2外链',
@@ -476,6 +472,22 @@ class Table extends \Phpcmf\Model
           KEY `module` (`pid`,`displayorder`,`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
         "));
+        }
+
+        $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_form')."`");
+        $this->db->simpleQuery(dr_format_create_sql("
+		CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_form')."` (
+		  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+		  `name` varchar(50) NOT NULL COMMENT '名称',
+		  `table` varchar(50) NOT NULL COMMENT '表名',
+		  `setting` text DEFAULT NULL COMMENT '配置信息',
+		  PRIMARY KEY (`id`),
+		  UNIQUE KEY `table` (`table`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单模型表';
+		"));
+
+
+
 
         $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_index')."`");
         $this->db->simpleQuery(dr_format_create_sql("

@@ -1623,6 +1623,7 @@ function dr_file_preview_html($value, $target = 0) {
 
     $ext = trim(strtolower(strrchr($value, '.')), '.');
     if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg'])) {
+        $value = dr_file($value);
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_image(\''.$value.'\');';
         return '<a href="'.$url.'"><img src="'.$value.'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
