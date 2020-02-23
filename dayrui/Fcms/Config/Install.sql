@@ -425,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_menu` (
   `name` text NOT NULL COMMENT '菜单语言名称',
   `uri` varchar(255) DEFAULT NULL COMMENT 'uri字符串',
   `url` varchar(255) DEFAULT NULL COMMENT '外链地址',
-  `mark` varchar(20) DEFAULT NULL COMMENT '菜单标识',
+  `mark` varchar(255) DEFAULT NULL COMMENT '菜单标识',
   `hidden` tinyint(1) unsigned DEFAULT NULL COMMENT '是否隐藏',
   `icon` varchar(255) DEFAULT NULL COMMENT '图标标示',
   `group` text NOT NULL COMMENT '用户组划分',

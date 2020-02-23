@@ -321,11 +321,16 @@ class Menu extends \Phpcmf\Model {
                         $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2, true) : $this->_get_id_for_mark('admin', $mark2);
                         // 插入链接菜单
                         if ($left_id) {
-                            foreach ($left['link'] as $link) {
+                            foreach ($left['link'] as $key => $link) {
                                 if ($this->counts('admin_menu', 'pid='.$left_id.' and `uri`="'.$link['uri'].'"')) {
                                     continue;
                                 }
-                                $this->_add('admin', $left_id, $link);
+                                $id = $this->_add('admin', $left_id, $link, $link['mark'], 1);
+                                if (!$link['mark']) {
+                                    $this->_edit('admin', $id, [
+                                        'mark' => 'app-'.$dir.'-'.$id,
+                                    ]);
+                                }
                             }
                         }
                     }
@@ -345,7 +350,12 @@ class Menu extends \Phpcmf\Model {
                         if ($this->counts('member_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
                             continue;
                         }
-                        $this->_add('member', $top_id, $link);
+                        $id = $this->_add('member', $top_id, $link, $link['mark'], 1);
+                        if (!$link['mark']) {
+                            $this->_edit('member', $id, [
+                                'mark' => 'app-'.$dir.'-'.$id,
+                            ]);
+                        }
                     }
                 }
 
