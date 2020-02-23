@@ -390,7 +390,7 @@ abstract class Common extends \CodeIgniter\Controller
                 if (dr_is_app('login') && $this->member['is_lock'] == 2) {
                     // 被插件锁定
                     if (APP_DIR != 'login') {
-                        $this->_msg(0, dr_lang('账号被锁定'), dr_member_url('login/index'));
+                        $this->_msg(0, dr_lang('账号被锁定'), dr_url('login/home/index'));
                     }
                 } else {
                     $this->_msg(0, dr_lang('账号被锁定'));
