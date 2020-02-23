@@ -71,7 +71,7 @@ class Attachment extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '附件设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
-                    '远程附件' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
+                    '存储策略' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
                     'help' => [359],
                 ]
             ),
@@ -88,7 +88,7 @@ class Attachment extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '附件设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
-                    '远程附件' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
+                    '存储策略' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
                     '添加' => [\Phpcmf\Service::L('Router')->class.'/add', 'fa fa-plus'],
                     'help' => [88],
                 ]
@@ -107,7 +107,9 @@ class Attachment extends \Phpcmf\Common
                 'url' => (string)$data['url'],
                 'value' => dr_array2string($data['value']),
             ]);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache('attachment');
             $this->_json(1, dr_lang('操作成功'));
@@ -118,7 +120,7 @@ class Attachment extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '附件设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
-                    '远程附件' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
+                    '存储策略' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
                     '添加' => [\Phpcmf\Service::L('Router')->class.'/add', 'fa fa-plus'],
                     'help' => [88],
                 ]
@@ -157,7 +159,7 @@ class Attachment extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '附件设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
-                    '远程附件' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
+                    '存储策略' => [\Phpcmf\Service::L('Router')->class.'/remote_index', 'fa fa-cloud'],
                     '添加' => [\Phpcmf\Service::L('Router')->class.'/add', 'fa fa-plus'],
                     '修改' => ['hide:'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
                     'help' => [88],
@@ -170,7 +172,9 @@ class Attachment extends \Phpcmf\Common
 	public function del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+        if (!$ids) {
+            exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
         \Phpcmf\Service::M()->table('attachment_remote')->deleteAll($ids);
         \Phpcmf\Service::L('input')->system_log('批量删除远程附件策略: '. @implode(',', $ids));
