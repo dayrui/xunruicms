@@ -36,7 +36,10 @@ class Local {
             $this->filename = trim($filename, DIRECTORY_SEPARATOR);
             $this->filepath = dirname($filename);
             $this->filepath == '.' && $this->filepath = '';
-            $attachment['value']['path'] = rtrim($attachment['value']['path'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            if (is_dir(SYS_UPLOAD_PATH.$attachment['value']['path'])) {
+                // 相对路径
+                $attachment['value']['path'] = SYS_UPLOAD_PATH.$attachment['value']['path'];
+            }
         }
         $this->attachment = $attachment;
         $this->fullpath = $this->attachment['value']['path'].$this->filepath;

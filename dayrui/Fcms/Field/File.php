@@ -181,6 +181,7 @@ class File extends \Phpcmf\Library\A_Field {
 
 		// 已保存数据
 		$val = '';
+		$file_url = '';
 		$show_delete = 0;
 		if ($value) {
 			$file = \Phpcmf\Service::C()->get_attachment($value);
@@ -190,7 +191,7 @@ class File extends \Phpcmf\Library\A_Field {
 				$title = $file['filename'];
 				$upload = '';
 			} else {
-				$filepath = $value;
+				$file_url = $filepath = $value;
 				$preview = dr_file_preview_html($value);
 				$upload = '';
 				$title = '';
@@ -334,7 +335,7 @@ $(function() {
 	
      // 输入地址
 	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
-		var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&one=1";
+		var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1";
 		layer.open({
 			type: 2,
 			title: \'<i class="fa fa-edit"></i> '.dr_lang('输入文件地址').'\',
@@ -479,71 +480,6 @@ function fileupload_'.$name.'_edit() {
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},
 	});
-}
-// 修改URL
-function dr_file_edit_'.$name.'(e) {
-	var obj = $(e).parents(".files_row");
-    var file = $("#dr_'.$name.'").val();
-	if ($(e).html().length > 50) {
-		// 本身是文件时跳过
-		return;
-	}
-	var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&one=1&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file="+file;
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-edit"></i> '.dr_lang('修改文件地址').'\',
-			shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-							var tpl = \''.$tpl.'\';
-							tpl = tpl.replace(/\{preview\}/g, json.data.preview);
-							tpl = tpl.replace(/\{id\}/g, json.data.id);
-							tpl = tpl.replace(/\{filepath\}/g, json.data.file);
-							tpl = tpl.replace(/\{title\}/g, json.data.name);
-							tpl = tpl.replace(/\{upload\}/g, json.data.upload);
-							obj.remove();
-							$(\'#fileupload_'.$name.'_files\').append(tpl);
-                            $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').show();
-         					fileupload_'.$name.'_edit();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				return false;
-			},
-            success: function(layero, index){
-                // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-            },
-			content: url+\'&is_ajax=1\'
-		});
 }
 
 function dr_file_remove_'.$name.'() {

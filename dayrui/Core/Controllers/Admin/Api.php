@@ -462,12 +462,16 @@ class Api extends \Phpcmf\Common
         if (!$value) {
             $this->_json(0, dr_lang('参数不存在'));
         } elseif ($type == 0) {
-			if ((strpos($value['path'], '/') === 0 || strpos($value['path'], ':') !== false)) {
+            if (substr($value['path'],-1, 1) != '/') {
+                $this->_json(0, dr_lang('存储路径目录一定要以“/”结尾'));
+            } elseif ((strpos($value['path'], '/') === 0 || strpos($value['path'], ':') !== false)) {
 				if (!is_dir($value['path'])) {
-					$this->_json(0, dr_lang('本地路径不存在'));
+					$this->_json(0, dr_lang('本地路径[%s]不存在', $value['path']));
 				}
+			} elseif (is_dir(SYS_UPLOAD_PATH.$value['path'])) {
+
 			} else {
-				$this->_json(0, dr_lang('本地路径请填写绝对路径'));
+				$this->_json(0, dr_lang('本地路径[%s]不存在', SYS_UPLOAD_PATH.$value['path']));
 			}
 		} 
 

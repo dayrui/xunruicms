@@ -10,7 +10,7 @@
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
                 <li class="{if $page==0}active{/if}">
-                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cloud"></i> {dr_lang('远程附件')} </a>
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cloud"></i> {dr_lang('存储策略')} </a>
                 </li>
             </ul>
         </div>
@@ -44,10 +44,10 @@
                             </div>
                         </div>
                         <div class="form-group r r0">
-                            <label class="col-md-2 control-label">{dr_lang('本地绝对路径')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('本地存储路径')}</label>
                             <div class="col-md-7">
                                 <input class="form-control" type="text" name="data[value][0][path]" value="{$data['value']['path']}" />
-                                <span class="help-block">{dr_lang('填写磁盘绝对路径，一定要以“/”结尾')}</span>
+                                <span class="help-block">{dr_lang('填写磁盘绝对路径或者相当于附件目录的目录路径，一定要以“/”结尾')}</span>
                             </div>
                         </div>
 
