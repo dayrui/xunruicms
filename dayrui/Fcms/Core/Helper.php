@@ -3091,7 +3091,6 @@ function dr_tpl_path($is_member = IS_MEMBER) {
     return $path;
 }
 
-
 // 获取网站表单发布页面需要的变量值
 function dr_get_form_post_value($table) {
 
@@ -3153,7 +3152,6 @@ function dr_get_form_post_value($table) {
 
 // 获取模块表单发布页面需要的变量值
 function dr_get_mform_post_value($mid, $table, $cid) {
-
 
     $rt = [
         'form' => dr_form_hidden(),

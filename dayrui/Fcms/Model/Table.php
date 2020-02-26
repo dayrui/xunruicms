@@ -443,6 +443,7 @@ class Table extends \Phpcmf\Model
                 $sql['Create Table']
             );
             $this->db->simpleQuery(str_replace('{tablename}', $this->dbprefix($siteid.'_share_category'), dr_format_create_sql($sql)));
+            $this->db->table($siteid.'_share_category')->truncate();
         } else {
             $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_category')."`");
             $this->db->simpleQuery(dr_format_create_sql("
