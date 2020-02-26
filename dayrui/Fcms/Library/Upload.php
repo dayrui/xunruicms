@@ -131,7 +131,7 @@ class Upload
 
 
         // 开始上传存储文件
-        $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment']);
+        $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment'], (int)$config['watermark']);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
@@ -227,7 +227,7 @@ class Upload
         $file_path = $path.$name.'.'.$file_ext;
 
         // 开始上传存储文件
-        $rt = $this->save_file('content', $data, $file_path, $config['attachment']);
+        $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
@@ -276,7 +276,7 @@ class Upload
         $file_path = $path.$name.'.'.$file_ext;
 
         // 开始上传存储文件
-        $rt = $this->save_file('content', $data, $file_path, $config['attachment']);
+        $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }

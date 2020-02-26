@@ -284,6 +284,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 										$rt = \Phpcmf\Service::L('upload')->down_file([
 											'url' => $img,
 											'timeout' => 5,
+											'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
 											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
 										]);
 										if ($rt['code']) {
