@@ -207,9 +207,8 @@ class Image extends \Phpcmf\Library\A_Field {
         // 表单输出
         $str = '
 			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
-                            
-                                <p style="text-align: center;color:#d9dbdd"> '.$ts.' </p>
-                            </div>
+                <div style="text-align: center;color:#d9dbdd; cursor: pointer;"> '.$ts.' </div>
+            </div>
 		';
 
         if (!defined('POSCMS_FIELD_IMAGES')) {
