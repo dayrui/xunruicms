@@ -398,9 +398,13 @@ class Model {
         
         // 排序
         $this->param['order'] && $builder->orderBy($this->param['order']);
-        
+
         // 数量控制
-        $num && $builder->limit($num);
+        if ($this->param['limit']) {
+            $builder->limit($this->param['limit']);
+        } elseif ($num) {
+            $builder->limit($num);
+        }
 
         $query = $builder->get();
         if (!$query) {
@@ -783,6 +787,21 @@ class Model {
             $this->param['where_in'][] = [$name, $value];
         }
         
+        return $this;
+    }
+
+    /**
+     * 指定查询数量
+     * @access public
+     * @param int $offset 起始位置
+     * @param int $length 查询数量
+     * @return $this
+     */
+    public function limit(int $offset, int $length = null)
+    {
+
+        $this->param['limit'] = $offset . ($length ? ',' . $length : '');
+
         return $this;
     }
 

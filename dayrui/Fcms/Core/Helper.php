@@ -2376,8 +2376,12 @@ function dr_catcher_data($url, $timeout = 0) {
         // 最大执行时间
         $timeout && curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($ch);
+        $code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
         curl_close($ch);
-        return $data;
+        if ($code == 200) {
+            return $data;
+        }
+        return '';
     }
 
     //设置超时参数

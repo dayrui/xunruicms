@@ -201,6 +201,18 @@ class Upload
      */
     public function down_file($config) {
 
+        /*
+        $client = \Config\Services::curlrequest();
+        $res = $client->get($config['url'], [
+            'timeout' => (int)$config['timeout'],
+        ]);
+        if ($res->getStatusCode() == 200) {
+            $data = $res->getBody();
+        } else {
+            log_message('error', '服务器无法下载文件：'.$config['url']);
+            return dr_return_data(0, dr_lang('文件下载失败'));
+        }*/
+
         $data = dr_catcher_data($config['url'], (int)$config['timeout']);
         if (!$data) {
             log_message('error', '服务器无法下载文件：'.$config['url']);
