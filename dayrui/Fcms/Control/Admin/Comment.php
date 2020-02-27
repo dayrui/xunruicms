@@ -292,7 +292,7 @@ class Comment extends \Phpcmf\Table
                 if ($this->is_verify && $data[1]['status']) {
 					//审核通知
                     $this->content_model->verify_comment($old);
-                } elseif (!$id) {
+                } elseif (!$old) {
 					// 后台新增
                     $this->content_model->verify_comment($data[1]);
                 } else {
