@@ -489,7 +489,6 @@ class Model {
             return ''; //空值
         }
 
-
         $name = dr_safe_replace($name, ['\\', '/']);
         if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
             // 匹配时间字段

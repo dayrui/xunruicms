@@ -1333,7 +1333,7 @@ class Content extends \Phpcmf\Model {
 
         if (!$insert['status']) {
             // 需要审核时直接返回
-            \Phpcmf\Service::M('member')->admin_notice($this->siteid, 'content', \Phpcmf\Service::C()->member, dr_lang('%s: 新评论审核', MODULE_NAME), $this->dirname.'/comment_verify/edit:cid/'.$insert['cid'].'/id/'.$id);
+            \Phpcmf\Service::M('member')->admin_notice($this->siteid, 'content', \Phpcmf\Service::C()->member, dr_lang('%s: 新%s审核', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $this->dirname.'/comment_verify/edit:cid/'.$insert['cid'].'/id/'.$id);
             return dr_return_data($id, 'verify');
         } else {
             // 直接通过的评论
@@ -1374,11 +1374,11 @@ class Content extends \Phpcmf\Model {
 
         // 增减金币
         $score = \Phpcmf\Service::C()->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['comment']['score']);
-        $score && \Phpcmf\Service::M('member')->add_score($row['uid'], $score, dr_lang('%s发布评论', MODULE_NAME), $row['curl']);
+        $score && \Phpcmf\Service::M('member')->add_score($row['uid'], $score, dr_lang('%s发布%s', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $row['curl']);
 
         // 增减经验
         $exp = \Phpcmf\Service::C()->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['comment']['exp']);
-        $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s发布评论', MODULE_NAME), $row['curl']);
+        $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s发布%s', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $row['curl']);
 
         // 更新评分
         $this->comment_update_review($row);
@@ -1397,6 +1397,11 @@ class Content extends \Phpcmf\Model {
         // 挂钩点 评论完成之后
         \Phpcmf\Hooks::trigger('comment_after', $row);
         $this->_comment_after($row);
+
+        // 评论后通知内容作者
+        $row['uid'] = $index['uid'];
+        $row['author'] = $index['author'];
+        \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_2', $row);
 
         \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
     }
@@ -1441,7 +1446,7 @@ class Content extends \Phpcmf\Model {
     }
 
     // 删除评论
-    public function delete_comment($id, $cid) {
+    public function delete_comment($id, $cid = 0) {
 
         if (!$id) {
             return 0;
