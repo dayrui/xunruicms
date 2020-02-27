@@ -121,7 +121,7 @@ class Module extends \Phpcmf\Common
 
         // 验证
         if (!in_array('donation', \Phpcmf\Service::M('table')->get_cache_field(SITE_ID.'_'.MOD_DIR)) ) {
-            $this->_msg(0, '当前模块没有安装打赏应用');exit;
+            $this->goto_404_page('当前模块没有安装打赏应用');exit;
         }
 
         \Phpcmf\Service::V()->assign('meta_title', dr_lang('打赏作者').SITE_SEOJOIN.\Phpcmf\Service::V()->get_value('meta_title'));
@@ -529,9 +529,9 @@ class Module extends \Phpcmf\Common
                 $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_time')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
-                    $this->_msg(0, dr_lang('定时内容#%s不存在', $id));
+                    $this->goto_404_page(dr_lang('定时内容#%s不存在', $id));
                 } elseif (($this->uid != $data['uid'] && !$this->member['is_admin'])) {
-                    $this->_msg(0, dr_lang('定时内容只能自己访问'));
+                    $this->goto_404_page(dr_lang('定时内容只能自己访问'));
                 }
                 break;
 
@@ -539,11 +539,11 @@ class Module extends \Phpcmf\Common
                 $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_recycle')->get($id);
                 $row = dr_string2array($row['content']);
                 if (!$row) {
-                    $this->_msg(0, dr_lang('回收站内容#%s不存在', $id));
+                    $this->goto_404_page(dr_lang('回收站内容#%s不存在', $id));
                 } elseif (!$row[SITE_ID.'_'.$this->module['dirname']]) {
-                    $this->_msg(0, dr_lang('回收站内容#%s格式不规范', $id));
+                    $this->goto_404_page(dr_lang('回收站内容#%s格式不规范', $id));
                 } elseif (!$this->member['is_admin']) {
-                    $this->_msg(0, dr_lang('无权限访问回收站的内容'));
+                    $this->goto_404_page(dr_lang('无权限访问回收站的内容'));
                 }
                 $data = $row[SITE_ID.'_'.$this->module['dirname']];
                 if (isset($row[SITE_ID.'_'.$this->module['dirname'].'_data_'.intval($data['tableid'])])
@@ -556,11 +556,11 @@ class Module extends \Phpcmf\Common
                 $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_verify')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
-                    $this->_msg(0, dr_lang('审核内容#%s不存在', $id));
+                    $this->goto_404_page(dr_lang('审核内容#%s不存在', $id));
                 } elseif (!$this->uid) {
-                    $this->_msg(0, dr_lang('需要登录之后才能查看'));
+                    $this->goto_404_page(dr_lang('需要登录之后才能查看'));
                 } elseif (($this->uid != $data['uid'] && !$this->member['is_admin'])) {
-                    $this->_msg(0, dr_lang('无权限访问审核中的内容'));
+                    $this->goto_404_page(dr_lang('无权限访问审核中的内容'));
                 }
                 break;
 
@@ -568,16 +568,16 @@ class Module extends \Phpcmf\Common
                 $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_draft')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
-                    $this->_msg(0, dr_lang('草稿内容#%s不存在', $id));
+                    $this->goto_404_page( dr_lang('草稿内容#%s不存在', $id));
                 } elseif (!$this->uid) {
-                    $this->_msg(0, dr_lang('需要登录之后才能查看'));
+                    $this->goto_404_page(dr_lang('需要登录之后才能查看'));
                 } elseif (($this->uid != $data['uid'] && !$this->member['is_admin'])) {
-                    $this->_msg(0, dr_lang('无权限访问别人的草稿箱内容'));
+                    $this->goto_404_page(dr_lang('无权限访问别人的草稿箱内容'));
                 }
                 break;
 
             default:
-                $this->_msg(0, dr_lang('未定义的操作'));exit;
+                $this->goto_404_page(dr_lang('未定义的操作'));exit;
         }
 
         $data['id'] = 0;

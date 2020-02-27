@@ -501,7 +501,7 @@ abstract class Common extends \CodeIgniter\Controller
                     $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
                 }
             } else {
-                $this->_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
             }
             return;
         }
@@ -698,7 +698,9 @@ abstract class Common extends \CodeIgniter\Controller
      */
     public function goto_404_page($msg) {
 
-        IS_API_HTTP && exit($this->_json(0, $msg));
+        if (IS_API_HTTP) {
+            exit($this->_json(0, $msg));
+        }
 
         // 调试模式下不进行404状态码
         if (!CI_DEBUG) {

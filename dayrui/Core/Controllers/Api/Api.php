@@ -72,7 +72,7 @@ class Api extends \Phpcmf\Common
         if (!$dir) {
             $this->_msg(0, dr_lang('模块参数不能为空'));
         } elseif (!dr_is_module($dir)) {
-            $this->_msg(0, dr_lang('模块[%s]未安装', $dir));
+            $this->goto_404_page(dr_lang('模块[%s]未安装', $dir));
         }
         $keyword = dr_safe_replace(\Phpcmf\Service::L('input')->get('keyword'));
         // 跳转url

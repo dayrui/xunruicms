@@ -100,7 +100,10 @@ class Content extends \Phpcmf\Model {
 
                 // 挂钩点 模块内容审核处理之后
                 $verify['old'] = $old;
-                \Phpcmf\Hooks::trigger('module_verify_after', array_merge($verify, $update));
+                $verify = array_merge($verify, $update);
+                \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+                // 执行审核后的回调
+                $this->_call_verify($data[1], $verify);
                 // 通知管理员
                 $data[1]['status'] > 0 && \Phpcmf\Service::M('member')->admin_notice(
                     $this->siteid,
@@ -160,6 +163,8 @@ class Content extends \Phpcmf\Model {
                     // 挂钩点 模块内容审核处理之后
                     $verify['old'] = $old;
                     \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+                    // 执行审核后的回调
+                    $this->_call_verify($data[1], $verify);
 				} else {
 					// 通知管理员
 					\Phpcmf\Service::M('member')->admin_notice(
@@ -1391,12 +1396,13 @@ class Content extends \Phpcmf\Model {
         $row['title'] = $index['title'];
         $row['index'] = $index;
 
-        // 评论通过后的通知消息
-        \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_1', $row);
-
         // 挂钩点 评论完成之后
         \Phpcmf\Hooks::trigger('comment_after', $row);
         $this->_comment_after($row);
+
+        // 评论通过后的通知消息
+        $row['url'] = $index['url'];
+        \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_1', $row);
 
         // 评论后通知内容作者
         $row['uid'] = $index['uid'];
