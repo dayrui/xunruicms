@@ -144,20 +144,26 @@ class Linkage extends \Phpcmf\Model
                     continue;
                 }
                 $cname = $py->result($t);
-                $count = $this->db->table('linkage_data_'.$key)->where('cname', $cname)->countAllResults();
+                $cf = $this->db->table('linkage_data_'.$key)->where('cname', $cname)->countAllResults();
                 $rt = $this->table('linkage_data_'.$key)->insert(array(
                     'pid' => $pid,
                     'pids' => '',
                     'name' => $t,
                     'site' => SITE_ID,
                     'child' => 0,
-                    'cname' => $count ? $cname.$count : $cname,
+                    'cname' => $cname,
                     'hidden' => 0,
                     'childids' => '',
                     'displayorder' => 0
                 ));
                 if (!$rt['code']) {
                     return $rt;
+                }
+                if ($cf) {
+                    // 重复验证
+                    $this->table('linkage_data_'.$key)->update($rt['code'], [
+                        'cname' => $cname.$rt['code']
+                    ]);
                 }
                 $c++;
             }

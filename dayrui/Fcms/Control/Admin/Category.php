@@ -288,7 +288,7 @@ class Category extends \Phpcmf\Table
                 }
                 $data['dirname'] = trim($dir);
                 !$data['dirname'] && $data['dirname'] = \Phpcmf\Service::L('pinyin')->result($data['name']);
-                \Phpcmf\Service::M('Category')->check_dirname(0, $data['dirname']) && $data['dirname'].= rand(0,99);
+                $cf = \Phpcmf\Service::M('Category')->check_dirname(0, $data['dirname']);
 
                 $data['pid'] = $pid;
                 $data['show'] = 1;
@@ -332,6 +332,12 @@ class Category extends \Phpcmf\Table
                 $rt = \Phpcmf\Service::M('Category')->insert($data);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
+                }
+                if ($cf) {
+                    // 重复验证
+                    \Phpcmf\Service::M('Category')->update($rt['code'], [
+                        'dirname' => $data['dirname'].$rt['code']
+                    ]);
                 }
                 $count ++;
             }
