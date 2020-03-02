@@ -74,11 +74,11 @@ class Search extends \Phpcmf\Model {
                 $sfield = explode(',', $module['setting']['search']['field'] ? $module['setting']['search']['field'] : 'title,keywords');
                 $search_keyword = trim(str_replace([' ', '_'], '%', dr_safe_replace($param['keyword'])), '%');
                 if ($sfield) {
-					foreach ($sfield as $t) {
-						if ($t && in_array($t, $field)) {
-							$temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
-						}
-					}
+                    foreach ($sfield as $t) {
+                        if ($t && in_array($t, $field)) {
+                            $temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
+                        }
+                    }
                 }
                 $where[] = $temp ? '('.implode(' OR ', $temp).')' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"';
             }
@@ -215,7 +215,12 @@ class Search extends \Phpcmf\Model {
         $p = dr_string2array($data['params']);
         $data['sql'] = $p['sql'];
         $data['params'] = $p['param'];
-        $catid && $data['params']['catid'] = $catid;
+        if (isset($param['catdir']) && $param['catdir'] && $catid) {
+            # 目录栏目模式
+            unset($data['params']['catid']);
+        } elseif ($catid) {
+            $data['params']['catid'] = $catid;
+        }
         $data['params']['order'] = $param['order']; // order 参数不变化
 
         return $data;
@@ -237,8 +242,13 @@ class Search extends \Phpcmf\Model {
         $_GET['page'] = $get['page'];
         $get['keyword'] = dr_get_keyword($get['keyword']);
 
-        $catid = isset($get['catdir']) && $get['catdir'] ? (int)$module['category_dir'][$get['catdir']] : (int)$get['catid'];
-        isset($get['catid']) && $get['catid'] = $catid;
+        if (isset($get['catdir']) && $get['catdir']) {
+            $catid = (int)$module['category_dir'][$get['catdir']];
+            unset($get['catid']);
+        } else {
+            $catid = (int)$get['catid'];
+            isset($get['catid']) && $get['catid'] = $catid;
+        }
 
         return [$catid, $get];
     }

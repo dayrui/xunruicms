@@ -1275,7 +1275,6 @@ function wx_post_https_json_data($url, $param = []) {
 }
 
 
-
 /**
  * 获取折扣价格值
  */
@@ -1288,6 +1287,29 @@ function dr_zhe_price($value, $zhe) {
  */
 function dr_price_value($value, $num = 2) {
     return number_format($value, $num);
+}
+
+/**
+ * sku 获取属性值名称
+ */
+function dr_sku_value_name($value, $sku, $name) {
+
+    if (!$value) {
+        return '字段值不存在';
+    } elseif (!$sku) {
+        return 'sku不能为空';
+    } elseif (!$name) {
+        return 'name不能为空';
+    }
+
+    $value = dr_string2array($value);
+    if (!$value['value']) {
+        return 'sku格式不正确';
+    } elseif (!$value['value'][$sku]) {
+        return 'sku值不存在';
+    }
+
+    return $value['value'][$sku][$name];
 }
 
 /**

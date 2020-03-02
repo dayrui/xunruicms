@@ -123,6 +123,7 @@ class Pay extends \Phpcmf\Model
             'mid' => $mid,
             'num' => $num,
             'price' => $price,
+            'price_sku' => isset($rt[$field['fieldname'].'_sku']) ? $rt[$field['fieldname'].'_sku'] : '',
             'total' => $price * $num,
             'table' => $table,
             'sn' => $sn,

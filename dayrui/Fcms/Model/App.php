@@ -14,7 +14,7 @@ class App extends \Phpcmf\Model
     // 是否是系统保留的app目录
     public function is_sys_dir($dir) {
         return in_array($dir, ['case', 'class', 'extends',
-            'new', 'var', 'member', 'category',
+            'new', 'var', 'member', 'category', 'linkage',
             'module', 'form', 'admin', 'weixin']);
     }
 

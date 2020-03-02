@@ -170,6 +170,15 @@ class Seo
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
         $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
 
+        if (!$seo['meta_keywords']) {
+            // 留空时使用模块seo
+            $seo['meta_keywords'] = $mod['site'][SITE_ID]['module_keywords'];
+        }
+
+        if (!$seo['meta_description']) {
+            // 留空时使用模块seo
+            $seo['meta_description'] = $mod['site'][SITE_ID]['module_description'];
+        }
 
         if (!$seo['meta_keywords']) {
             // 留空时使用主站seo
@@ -224,6 +233,16 @@ class Seo
 
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
         $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
+
+        if (!$seo['meta_keywords']) {
+            // 留空时使用模块seo
+            $seo['meta_keywords'] = $mod['site'][SITE_ID]['module_keywords'];
+        }
+
+        if (!$seo['meta_description']) {
+            // 留空时使用模块seo
+            $seo['meta_description'] = $mod['site'][SITE_ID]['module_description'];
+        }
 
         if (!$seo['meta_keywords']) {
             // 留空时使用主站seo
