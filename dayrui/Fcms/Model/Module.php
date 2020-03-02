@@ -180,7 +180,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 安装模块
-    public function install($dir, $config = [], $is_app = 0) {
+    public function install($dir, $config = [], $is_app = 0, $is_share = 0) {
 
         $mpath = dr_get_app_dir($dir);
         if (!$config) {
@@ -197,7 +197,11 @@ class Module extends \Phpcmf\Model
         }
 
         // 判断是否强制独立模块或共享模块
-        isset($config['mtype']) && $config['mtype'] && $config['share'] = $config['mtype'] == 2 ? 0 : 1;
+        if ($is_share) {
+            $config['share'] = $is_share == 1 ? 1 : 0; // 强制共享安装
+        } elseif (isset($config['mtype']) && $config['mtype']) {
+            $config['share'] = $config['mtype'] == 2 ? 0 : 1;
+        }
 
         // 模块内容表结构和字段结构
         if (is_file($mpath.'Config/Content.php')) {
