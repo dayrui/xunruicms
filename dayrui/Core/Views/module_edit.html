@@ -89,6 +89,7 @@
                             </thead>
                             <tbody class="field-sort-items">
                             {loop $field $n $t}
+                            {if dr_is_app('fstatus') && $t.fieldname != 'fstatus'}
                             <tr class="odd gradeX">
                                 <td class="myselect">
                                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -106,6 +107,7 @@
                                     <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{$data['setting']['list_field'][$t.fieldname]['func']}" />
                                 </div></td>
                             </tr>
+                            {/if}
                             {/loop}
                             </tbody>
                         </table>
