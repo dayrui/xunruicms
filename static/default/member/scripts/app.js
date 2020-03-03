@@ -525,6 +525,7 @@ var App = function() {
                     height = $(this).css('height');
                 }
 
+
                 $(this).slimScroll({
                     allowPageScroll: true, // allow page scroll when the element scroll is ended
                     size: '7px',
@@ -925,13 +926,7 @@ var Layout = function () {
                 the.parent().removeClass("open");
                 sub.slideUp(slideSpeed, function () {
                     if (autoScroll === true && $('body').hasClass('page-sidebar-closed') === false) {
-                        if ($('body').hasClass('page-sidebar-fixed')) {
-                            menu.slimScroll({
-                                'scrollTo': (the.position()).top
-                            });
-                        } else {
-                            App.scrollTo(the, slideOffeset);
-                        }
+
                     }
                     handleSidebarAndContentHeight();
                 });
@@ -940,13 +935,7 @@ var Layout = function () {
                 the.parent().addClass("open");
                 sub.slideDown(slideSpeed, function () {
                     if (autoScroll === true && $('body').hasClass('page-sidebar-closed') === false) {
-                        if ($('body').hasClass('page-sidebar-fixed')) {
-                            menu.slimScroll({
-                                'scrollTo': (the.position()).top
-                            });
-                        } else {
-                            App.scrollTo(the, slideOffeset);
-                        }
+
                     }
                     handleSidebarAndContentHeight();
                 });
