@@ -150,7 +150,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('前端编辑器模式').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('前台编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode2]" '.($option['mode2'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms2\').hide()"> '.dr_lang('完整').'</label>
@@ -167,7 +167,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('移动端编辑器模式').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('前台移动端编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode3]" '.($option['mode3'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('完整').'</label>
