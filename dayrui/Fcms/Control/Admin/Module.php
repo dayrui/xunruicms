@@ -1153,28 +1153,32 @@ class Module extends \Phpcmf\Table
                         $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
 
                         // 处理推荐位
-                        $myflag = $old['myflag'];
-                        $update = \Phpcmf\Service::L('input')->post('flag');
-                        if ($update !== $myflag) {
-                            // 删除旧的
-                            if ($id && $myflag) {
-                                $this->content_model->delete_flag($id, $myflag);
-                            }
+                        if (defined('IS_MODULE_VERIFY')) {
+                            // 来自审核
+                        } else {
+                            $myflag = $old['myflag'];
+                            $update = \Phpcmf\Service::L('input')->post('flag');
+                            if ($update !== $myflag) {
+                                // 删除旧的
+                                if ($id && $myflag) {
+                                    $this->content_model->delete_flag($id, $myflag);
+                                }
 
-                            // 子管理员验证推荐位
-                            if ($myflag && !in_array(1, $this->admin['roleid'])) {
-                                foreach ($myflag as $i) {
-                                    if (!isset($this->module['setting']['flag'][$i])) {
-                                        // 不存在的推荐位就作为新加推荐位
-                                        $update[] = $i;
+                                // 子管理员验证推荐位
+                                if ($myflag && !in_array(1, $this->admin['roleid'])) {
+                                    foreach ($myflag as $i) {
+                                        if (!isset($this->module['setting']['flag'][$i])) {
+                                            // 不存在的推荐位就作为新加推荐位
+                                            $update[] = $i;
+                                        }
                                     }
                                 }
-                            }
 
-                            // 增加新的
-                            if ($update) {
-                                foreach ($update as $i) {
-                                    $this->content_model->insert_flag((int)$i, $id, $data[1]['uid'], $data[1]['catid']);
+                                // 增加新的
+                                if ($update) {
+                                    foreach ($update as $i) {
+                                        $this->content_model->insert_flag((int)$i, $id, $data[1]['uid'], $data[1]['catid']);
+                                    }
                                 }
                             }
                         }
