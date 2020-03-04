@@ -1395,6 +1395,8 @@ class Content extends \Phpcmf\Model {
         $index = $this->table($this->mytable)->get($row['cid']);
         $row['title'] = $index['title'];
         $row['index'] = $index;
+        $row['comment_uid'] = $row['uid'];
+        $row['comment_author'] = $row['author'];
 
         // 挂钩点 评论完成之后
         \Phpcmf\Hooks::trigger('comment_after', $row);
@@ -1561,7 +1563,14 @@ class Content extends \Phpcmf\Model {
             $set['avgsort']+= $set[$flag];
         }
 
+        // 总表的平均分
         $set['avgsort'] = round(($set['avgsort'] / dr_count($review)), $dl);
+
+        // 本记录的
+        $avgsort = round(($_avgsort / dr_count($review)), $dl);
+
+        // 更新到索引表
+        $this->db->table($this->mytable.'_comment')->where('id', $id)->update(['avgsort' => $avgsort]);
 
         // 更新到关联主表
         $this->table($this->mytable)->update($cid, [

@@ -25,6 +25,8 @@ class Notice {
             return; // 没有配置通知
         }
         // 当前的信息变量
+        $data['sys_app'] = defined('MOD_DIR') ? MOD_DIR : APP_DIR;
+        $data['sys_uri'] = \Phpcmf\Service::L('router')->uri();
         $data['sys_time'] = SYS_TIME;
         $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
         // 加入队列并执行
