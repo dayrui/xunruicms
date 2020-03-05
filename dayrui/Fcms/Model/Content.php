@@ -62,8 +62,10 @@ class Content extends \Phpcmf\Model {
             )));
             $data[0]['id'] = $data[1]['id'] = $id;
             // 如果来自审核页面,且本次通过
-            defined('IS_MODULE_VERIFY') && $data[1]['status'] == 9
-            && !$this->db->table($this->mytable)->where('id', $id)->countAllResults() && $id = 0;
+            if ( defined('IS_MODULE_VERIFY') && $data[1]['status'] == 9
+               && !$this->db->table($this->mytable)->where('id', $id)->countAllResults()) {
+                $id = 0;
+            }
         }
 
         // 表示审核文章机制

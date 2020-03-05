@@ -318,7 +318,7 @@
                         <div class="form-body">
                             {$sysfield}
 
-                            {if !$is_verify && $module['setting']['flag']}
+                            {if !$is_verify && !$is_post_user && $module['setting']['flag']}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('推荐位设置')}</label>
                                 <div class="col-md-9">
