@@ -42,11 +42,11 @@ class Service
     }
 
     /**
-     * 模板视图对象实例
+     * 获取文件内容
      *
      * @var object
      */
-    public static function require_value($file) {
+    public static function R($file) {
 
         $_cname = md5($file);
         if (isset(static::$require[$_cname])) {
