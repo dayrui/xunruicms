@@ -15,6 +15,7 @@ class Service
     static private $init = [];
     static private $view;
     static private $model;
+    static private $require;
 
     /**
      * 控制器对象实例
@@ -38,6 +39,23 @@ class Service
     // 当前客户端是否是移动端访问
     public static function _is_mobile() {
         return static::C()->_is_mobile();
+    }
+
+    /**
+     * 模板视图对象实例
+     *
+     * @var object
+     */
+    public static function require_value($file) {
+
+        $_cname = md5($file);
+        if (isset(static::$require[$_cname])) {
+            return static::$require[$_cname];
+        }
+
+        static::$require[$_cname] = require $file;
+
+        return static::$require[$_cname];
     }
 
     /**

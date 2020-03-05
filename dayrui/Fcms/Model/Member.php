@@ -1176,7 +1176,7 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('接口配置文件不存在'));
         }
 
-        $config = require_once $file;
+        $config = \Phpcmf\Service::require_value($file);
         if ($config['third']) {
             if (is_file(ROOTPATH.'config/mysms.php')) {
                 require_once ROOTPATH.'config/mysms.php';
