@@ -235,7 +235,7 @@ class File extends \Phpcmf\Common
 
         // 搜索附件
         $name = \Phpcmf\Service::L('input')->get('name');
-        $value = \Phpcmf\Service::L('input')->get('value');
+        $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         if ($name && isset($sfield[$name]) && $value) {
             $db = \Phpcmf\Service::M()->table('attachment_data');
             $exts && $db->where_in('fileext', explode(',', $exts));
