@@ -39,17 +39,22 @@ class Router
     // 获取当前页面的URI
     public function uri($m = '')
     {
-        if ($this->_uri) {
+        if (!$m && $this->_uri) {
             return $this->_uri;
         }
 
+        $m = $m ? $m : $this->method;
         if (IS_MEMBER) {
-            $m = $m ? $m : $this->method;
-            $this->_uri = 'member/' . trim((APP_DIR && APP_DIR != 'member' ? APP_DIR . '/' : '') . $this->class . '/' . $m, '/');
+            $_uri = 'member/' . trim((APP_DIR && APP_DIR != 'member' ? APP_DIR . '/' : '') . $this->class . '/' . $m, '/');
         } else {
-            $m = $m ? $m : $this->method;
-            $this->_uri = trim((APP_DIR ? APP_DIR . '/' : '') . $this->class . '/' . $m, '/');
+            $_uri = trim((APP_DIR ? APP_DIR . '/' : '') . $this->class . '/' . $m, '/');
         }
+
+        if ($m) {
+            return $_uri;
+        }
+
+        $this->_uri = $_uri;
 
         return $this->_uri;
     }
