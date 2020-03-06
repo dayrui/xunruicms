@@ -161,12 +161,6 @@ class Content extends \Phpcmf\Model {
 						dr_lang('《%s》审核被拒绝', $data[1]['title']),
 						\Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
 					);
-
-                    // 挂钩点 模块内容审核处理之后
-                    $verify['old'] = $old;
-                    \Phpcmf\Hooks::trigger('module_verify_after', $verify);
-                    // 执行审核后的回调
-                    $this->_call_verify($data[1], $verify);
 				} else {
 					// 通知管理员
 					\Phpcmf\Service::M('member')->admin_notice(
@@ -177,6 +171,12 @@ class Content extends \Phpcmf\Model {
                         $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], \Phpcmf\Service::C()->member)
 					);
 				}
+
+                // 挂钩点 模块内容审核处理之后
+                $verify['old'] = $old;
+                \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+                // 执行审核后的回调
+                $this->_call_verify($data[1], $verify);
             }
             return dr_return_data(1, 'ok', $verify);
         }
@@ -1775,7 +1775,7 @@ class Content extends \Phpcmf\Model {
         return $data;
     }
 
-    // 格式化显示内容
+    // 格式化显示内容[功能与_format_content_data相同,不推荐]
     public function _call_show($data) {
         return $data;
     }
