@@ -17,7 +17,7 @@
 }
 .dropzone .dz-preview .dz-remove i {
     cursor:pointer;
-    color: #fff;
+    color: #000;
 }
 .dropzone .dz-preview .dz-remove{
     position: relative;
