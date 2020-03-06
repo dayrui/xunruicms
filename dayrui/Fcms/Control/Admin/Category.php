@@ -52,6 +52,8 @@ class Category extends \Phpcmf\Table
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'module' => $this->module,
+            'post_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/add'),
+            'reply_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
             'field_url' => \Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$this->module['dirname']]),
             'post_all_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/all_add'),
             'is_scategory' => $this->is_scategory,

@@ -52,6 +52,9 @@ class Member extends \Phpcmf\Model
         }
 
         $data = $this->db->table('member')->where('id', intval($uid))->get()->getRowArray();
+        if (!$data) {
+            return [];
+        }
         $data['uid'] = $data['id'];
 
         return $data;

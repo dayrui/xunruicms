@@ -276,6 +276,9 @@ class Account extends \Phpcmf\Common
 
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
         \Phpcmf\Service::M()->db->table('member_oauth')->where('uid', $this->uid)->where('oauth', $name)->delete();
+        if (dr_is_app('weixin')) {
+            \Phpcmf\Service::M()->db->table('weixin_user')->where('uid', $this->uid)->delete();
+        }
         $this->_json(1, dr_lang('操作成功'), ['url' =>\Phpcmf\Service::L('Router')->member_url('account/oauth')]);
     }
 
