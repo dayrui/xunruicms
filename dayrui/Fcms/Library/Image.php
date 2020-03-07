@@ -931,14 +931,13 @@ class Image
         $this->initialize($config);
 
         $this->source_image = $config['source_image'];
+
         // 判断水印尺寸
-        $image = getimagesize($this->source_image);
-        if (!$image) {
-            #log_message('error', '图片不存在无法水印操作（'.$this->source_image.'）');
-            return;
-        } elseif ($data['width'] < $image['width'] && $data['height'] < $image['height']) {
-            log_message('error', '图片没有在网站设置的水印尺寸范围内');
-            return;
+        list($nw, $nh) = getimagesize($this->source_image);
+        if ($data['width'] && $data['width'] > $nw) {
+            return '';
+        } elseif ($data['height'] && $data['height'] > $nh) {
+            return '';
         }
 
         return ($this->wm_type === 'overlay') ? $this->overlay_watermark() : $this->text_watermark();
@@ -1631,12 +1630,6 @@ class Image
         if ($water) {
             $data = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark');
             if ($data) {
-                list($nw, $nh) = getimagesize($cache_path.$cache_file);
-                if ($data['width'] && $data['width'] > $nw) {
-                    return $cache_url.$cache_file;
-                } elseif ($data['height'] && $data['height'] > $nh) {
-                    return $cache_url.$cache_file;
-                }
                 $data['source_image'] = $cache_path.$cache_file;
                 $data['dynamic_output'] = false;
                 $this->watermark($data);

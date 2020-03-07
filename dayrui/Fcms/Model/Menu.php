@@ -91,8 +91,9 @@ class Menu extends \Phpcmf\Model {
     // 从模块中更新菜单
     public function update_module($mdir, $config, $form, $comment_cname = '') {
 
-        // 作为应用模块时不需要菜单
-        if (isset($config['ftpye']) && $config['ftpye'] == 'module') {
+        // 作为应用模块时且不操作menu.php时,不需要菜单
+        if (isset($config['ftpye']) && $config['ftpye'] == 'module'
+            && is_file(dr_get_app_dir($mdir).'Config/Menu.php')) {
             return;
         }
 
