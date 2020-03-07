@@ -43,7 +43,6 @@
                     </label>
                 </th>
                 {/if}
-                <th width="90" class="{dr_sorting('uid')}" name="id">Id</th>
                 <th width="200" class="{dr_sorting('username')}" name="username">{dr_lang('账号')}</th>
                 <th>{dr_lang('角色组')}</th>
                 <th>{dr_lang('操作')}</th>
@@ -61,7 +60,6 @@
                     </label>
                 </td>
                 {/if}
-                <td>{$t.id}</td>
                 <td><a href="javascript:;" class="fc_member_show" member="{$t.username}">{$t.username}</a></td>
                 <td>
                     {loop $t.role $c}
