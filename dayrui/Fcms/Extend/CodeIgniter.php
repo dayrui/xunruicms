@@ -37,7 +37,7 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
         // 升级框架后的问题避免
         if (is_file(SYSTEMPATH.'ThirdParty/Kint/kint.php')
             && strpos(file_get_contents(SYSTEMPATH.'ThirdParty/Kint/kint.php'), 'eval(gzuncompress(') !== false) {
-            exit('请删除文件：'.SYSTEMPATH.'ThirdParty/Kint/kint.php');
+            exit('升级兼容调整<br>1、请删除目录：'.SYSTEMPATH.'ThirdParty/Kint/<br>2、再到官网下载升级包，将此目录重新上传覆盖一次');
         }
 
         parent::initialize();
