@@ -233,17 +233,17 @@ class Check extends \Phpcmf\Common
 
                 $table = $prefix.'member_group_verify';
                 if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) NOT NULL COMMENT \'已费用\'');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
                 }
 
                 $table = $prefix.'member_scorelog';
                 if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
                 }
 
                 $table = $prefix.'member_explog';
                 if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
                 }
 
                 $table = $prefix.'member_oauth';

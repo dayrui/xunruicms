@@ -205,7 +205,7 @@ class Apply extends \Phpcmf\Common
                     $rt = \Phpcmf\Service::M()->table('member_group_verify')->update($verify['id'], $my_verify);
                 } else {
                     // 被拒再次提交不重复扣款
-                    $my_verify['price'] = $price;
+                    $my_verify['price'] = (float)$price;
                     $rt = \Phpcmf\Service::M()->table('member_group_verify')->insert($my_verify);
                 }
                 if (!$rt['code']) {
