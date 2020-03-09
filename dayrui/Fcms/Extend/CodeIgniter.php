@@ -34,6 +34,12 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
      */
     public function initialize()
     {
+        // 升级框架后的问题避免
+        if (is_file(SYSTEMPATH.'ThirdParty/Kint/kint.php')
+            && strpos(file_get_contents(SYSTEMPATH.'ThirdParty/Kint/kint.php'), 'eval(gzuncompress(') !== false) {
+            exit('请删除文件：'.SYSTEMPATH.'ThirdParty/Kint/kint.php');
+        }
+
         parent::initialize();
         \Phpcmf\Hooks::trigger('init');
     }
