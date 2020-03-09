@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 鏈枃浠舵槸妗嗘灦绯荤粺鏂囦欢锛屼簩娆″紑鍙戞椂涓嶅彲浠ヤ慨鏀规湰鏂囦欢
+ * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
 use CodeIgniter\Config\BaseConfig;
@@ -249,6 +249,7 @@ class App extends BaseConfig
 	*/
 	public $CSRFTokenName  = 'csrf_test_name';
 	public $CSRFCookieName = 'csrf_cookie_name';
+	public $CSRFHeaderName = 'X-CSRF-TOKEN';
 	public $CSRFExpire     = 7200;
 	public $CSRFRegenerate = true;
 	public $CSRFRedirect   = true;
