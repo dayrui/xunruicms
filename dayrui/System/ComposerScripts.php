@@ -8,7 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2014-2019 British Columbia Institute of Technology
- * Copyright (c) 2019 CodeIgniter Foundation
+ * Copyright (c) 2019-2020 CodeIgniter Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
  *
  * @package    CodeIgniter
  * @author     CodeIgniter Dev Team
- * @copyright  2019 CodeIgniter Foundation
+ * @copyright  2019-2020 CodeIgniter Foundation
  * @license    https://opensource.org/licenses/MIT	MIT License
  * @link       https://codeigniter.com
  * @since      Version 4.0.0
@@ -149,17 +149,40 @@ class ComposerScripts
 		}
 	}
 
+	protected static function copyDir($source, $dest)
+	{
+		$dir = opendir($source);
+		@mkdir($dest);
+
+		while (false !== ( $file = readdir($dir)))
+		{
+			if (( $file !== '.' ) && ( $file !== '..' ))
+			{
+				if (is_dir($source . '/' . $file))
+				{
+					static::copyDir($source . '/' . $file, $dest . '/' . $file);
+				}
+				else
+				{
+					copy($source . '/' . $file, $dest . '/' . $file);
+				}
+			}
+		}
+
+		closedir($dir);
+	}
+
 	/**
-	 * Moves the Zend Escaper files into our base repo so that it's
+	 * Moves the Laminas Escaper files into our base repo so that it's
 	 * available for packaged releases where the users don't user Composer.
 	 *
 	 * @throws \ReflectionException
 	 */
 	public static function moveEscaper()
 	{
-		if (class_exists('\\Zend\\Escaper\\Escaper') && is_file(static::getClassFilePath('\\Zend\\Escaper\\Escaper')))
+		if (class_exists('\\Laminas\\Escaper\\Escaper') && is_file(static::getClassFilePath('\\Laminas\\Escaper\\Escaper')))
 		{
-			$base = basename(__DIR__) . '/' . static::$basePath . 'ZendEscaper';
+			$base = basename(__DIR__) . '/' . static::$basePath . 'Escaper';
 
 			foreach ([$base, $base . '/Exception'] as $path)
 			{
@@ -170,10 +193,10 @@ class ComposerScripts
 			}
 
 			$files = [
-				static::getClassFilePath('\\Zend\\Escaper\\Exception\\ExceptionInterface')       => $base . '/Exception/ExceptionInterface.php',
-				static::getClassFilePath('\\Zend\\Escaper\\Exception\\InvalidArgumentException') => $base . '/Exception/InvalidArgumentException.php',
-				static::getClassFilePath('\\Zend\\Escaper\\Exception\\RuntimeException')         => $base . '/Exception/RuntimeException.php',
-				static::getClassFilePath('\\Zend\\Escaper\\Escaper')                             => $base . '/Escaper.php',
+				static::getClassFilePath('\\Laminas\\Escaper\\Exception\\ExceptionInterface')       => $base . '/Exception/ExceptionInterface.php',
+				static::getClassFilePath('\\Laminas\\Escaper\\Exception\\InvalidArgumentException') => $base . '/Exception/InvalidArgumentException.php',
+				static::getClassFilePath('\\Laminas\\Escaper\\Exception\\RuntimeException')         => $base . '/Exception/RuntimeException.php',
+				static::getClassFilePath('\\Laminas\\Escaper\\Escaper')                             => $base . '/Escaper.php',
 			];
 
 			foreach ($files as $source => $dest)
@@ -194,9 +217,9 @@ class ComposerScripts
 	 */
 	public static function moveKint()
 	{
-		$filename = 'vendor/kint-php/kint/build/kint-aante-light.php';
+		$dir = 'vendor/kint-php/kint/src';
 
-		if (is_file($filename))
+		if (is_dir($dir))
 		{
 			$base = basename(__DIR__) . '/' . static::$basePath . 'Kint';
 
@@ -212,10 +235,10 @@ class ComposerScripts
 				mkdir($base, 0755);
 			}
 
-			if (! static::moveFile($filename, $base . '/kint.php'))
-			{
-				die('Error moving: ' . $filename);
-			}
+			static::copyDir($dir, $base);
+			static::copyDir($dir . '/../resources', $base . '/resources');
+			copy($dir . '/../init.php', $base . '/init.php');
+			copy($dir . '/../init_helpers.php', $base . '/init_helpers.php');
 		}
 	}
 }
