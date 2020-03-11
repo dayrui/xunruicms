@@ -89,7 +89,7 @@
                             </thead>
                             <tbody class="field-sort-items">
                             {loop $field $n $t}
-                            {if dr_is_app('fstatus') && $t.fieldname != 'fstatus'}
+                            {if (dr_is_app('fstatus') && $t.fieldname != 'fstatus') || !dr_is_app('fstatus')}
                             <tr class="odd gradeX">
                                 <td class="myselect">
                                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
