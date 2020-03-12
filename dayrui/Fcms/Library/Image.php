@@ -935,8 +935,10 @@ class Image
         // 判断水印尺寸
         list($nw, $nh) = getimagesize($this->source_image);
         if ($data['width'] && $data['width'] > $nw) {
+            log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
             return '';
         } elseif ($data['height'] && $data['height'] > $nh) {
+            log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
             return '';
         }
 
@@ -1573,21 +1575,16 @@ class Image
             $attach['attachment'] = date('Ym').'/'.$attach['id'].'.'.$attach['fileext'];
         }
 
-        if ($width == 0 && $height == 0 && $water == 0) {
-            return $attach['url']; // 原样输出
-        }
-
         // 本地存储的原始图片
         $file = $attach['file'];
         if (!is_file($file)) {
             if ($attach['remote']) {
                 // 远程图片
                 $remote = \Phpcmf\Service::C()->get_cache('attachment', $attach['remote']);
-                if ($remote['value']['wh_prefix_image']) {
+                if (($width > 0 || $height > 0) && $remote['value']['wh_prefix_image']) {
                     // 输出带尺寸的后缀图
                     return $attach['url'].str_replace(['{width}', '{height}'], [$width, $height], $remote['value']['wh_prefix_image']);
-                }
-                if ($remote['value']['image']) {
+                } elseif ($remote['value']['image']) {
                     // 输出带后缀的图片
                     return $attach['url'].$remote['value']['image'];
                 }
@@ -1607,7 +1604,7 @@ class Image
         // 开始处理图片
         if ($width > 0 || $height > 0) {
             $config['source_image'] = $file;
-            $config['new_image'] = $cache_path.$cache_file;
+            $config['new_image'] = $cache_path . $cache_file;
             $config['quality'] = '100%';
             $config['width'] = $width;
             $config['height'] = $height;
@@ -1618,6 +1615,8 @@ class Image
             $config['master_dim'] = $mode;
             $this->initialize($config);
             $this->resize();
+        } elseif ($width == 0 && $height == 0 && $water == 0) {
+            return $attach['url']; // 原样输出
         } else {
             copy($file, $cache_path.$cache_file);
         }
@@ -1687,6 +1686,8 @@ class Image
                     imagedestroy($image);
                     break;
             }
+        } else {
+            log_message('error', '系统要求宽度>'.$cw.'px才进行压缩处理，当前图片宽度='.$width.'，不满足压缩条件：'.$imgsrc);
         }
 
         return;

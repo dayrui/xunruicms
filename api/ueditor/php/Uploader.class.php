@@ -358,6 +358,11 @@ class Uploader
             'info' => '',
             'remote' => $this->attachment_info['id'],
         ], $this->rid);
+        // yuanchengfujian
+        if ($this->attachment_info['id'] && $this->attachment_info['value']) {
+            // 输出带后缀的图片
+            $this->fileUrl.=$this->attachment_info['value']['image'];
+        }
     }
 
     /**
