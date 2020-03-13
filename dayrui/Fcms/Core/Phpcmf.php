@@ -98,7 +98,8 @@ abstract class Common extends \CodeIgniter\Controller
         !defined('SITE_ID') && define('SITE_ID', 1);
 
         // 判断是否是网站的"其他域名"
-        if (!IS_API && !IS_ADMIN && in_array(DOMAIN_NAME, $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
+        if (!IS_API && !IS_ADMIN
+            && in_array(DOMAIN_NAME, $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
             // 当前域名既不是手机域名也不是电脑域名就301定向网站的域名
             dr_domain_301(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
         }
@@ -269,7 +270,11 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 判断网站是否关闭
-        if (!IS_DEV && !IS_ADMIN && !IS_API && $this->site_info[SITE_ID]['SITE_CLOSE'] && (!$this->member || !$this->member['is_admin'])) {
+        if (!IS_DEV && !IS_ADMIN && !IS_API
+            && $this->site_info[SITE_ID]['SITE_CLOSE']
+            && (!$this->member || !$this->member['is_admin'])) {
+            // 挂钩点 网站关闭时
+            \Phpcmf\Hooks::trigger('cms_close');
             $this->_msg(0, $this->get_cache('site', SITE_ID, 'config', 'SITE_CLOSE_MSG'));
         }
 

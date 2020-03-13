@@ -35,9 +35,10 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     public function initialize()
     {
         // 升级框架后的问题避免
-        if (is_file(SYSTEMPATH.'ThirdParty/Kint/kint.php')
-            && strpos(file_get_contents(SYSTEMPATH.'ThirdParty/Kint/kint.php'), 'eval(gzuncompress(') !== false) {
-            exit('升级兼容调整<br>1、请删除目录：'.SYSTEMPATH.'ThirdParty/Kint/<br>2、再到官网下载升级包，将此目录重新上传覆盖一次');
+        if ((is_file(SYSTEMPATH.'ThirdParty/Kint/kint.php')
+                && strpos(file_get_contents(SYSTEMPATH.'ThirdParty/Kint/kint.php'), 'eval(gzuncompress(') !== false)
+            || !is_file(SYSTEMPATH.'ThirdParty/Kint/Kint.php')) {
+            exit('核心框架升级兼容调整<br>1、请删除目录：'.SYSTEMPATH.'ThirdParty/Kint/<br>2、再到官网下载升级包，将此目录（'.SYSTEMPATH.'ThirdParty/Kint/）重新上传覆盖一次');
         }
 
         parent::initialize();
