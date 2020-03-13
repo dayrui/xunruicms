@@ -716,22 +716,8 @@ class Category extends \Phpcmf\Table
             exit;
         }
 
-        $field = [
-            'name' => dr_lang('栏目内容'),
-            'ismain' => 1,
-            'fieldtype' => 'Ueditor',
-            'fieldname' => 'content',
-            'setting' => array(
-                'option' => array(
-                    'mode' => 1,
-                    'height' => 300,
-                    'width' => '100%'
-                )
-            ),
-        ];
-
         \Phpcmf\Service::V()->assign([
-            'myfield' => dr_fieldform($field, $row['content']),
+            'myfield' => dr_fieldform($this->init['field']['content'], $row['content']),
         ]);
         \Phpcmf\Service::V()->display('share_category_content.html');exit;
 
