@@ -167,7 +167,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('前台移动端编辑器模式').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('移动端编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode3]" '.($option['mode3'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('完整').'</label>
@@ -408,17 +408,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
 
         // 编辑器模式
-        if (IS_ADMIN) {
+        if ($is_mobile) {
+            $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
+            $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
+        } elseif (IS_ADMIN) {
             $mode = $field['setting']['option']['mode'];
         } else {
-            if ($is_mobile) {
-                $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
-                $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
-            } else {
-                $mode = $field['setting']['option']['mode2'] ? $field['setting']['option']['mode2'] : $field['setting']['option']['mode'];
-                $field['setting']['option']['tool'] = $field['setting']['option']['tool2'] ? $field['setting']['option']['tool2'] : $field['setting']['option']['tool'];
-            }
-
+            $mode = $field['setting']['option']['mode2'] ? $field['setting']['option']['mode2'] : $field['setting']['option']['mode'];
+            $field['setting']['option']['tool'] = $field['setting']['option']['tool2'] ? $field['setting']['option']['tool2'] : $field['setting']['option']['tool'];
         }
 
         // 编辑器工具

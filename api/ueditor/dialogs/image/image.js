@@ -278,8 +278,8 @@
                     floatStyle: data['align'] || '',
                     vspace: data['vhSpace'] || '',
                     title: data['title'] || '',
-                    alt: data['title'] || '',
-                    style: "width:" + data['width'] + "px;height:" + data['height'] + "px;"
+                    alt: data['title'] || ''
+                    //,style: "width:" + data['width'] + "px;height:" + data['height'] + "px;"
                 }];
             } else {
                 return [];

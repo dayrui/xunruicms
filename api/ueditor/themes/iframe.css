@@ -2,6 +2,9 @@
 .edui-upload-video {
 
 }
+img {
+    max-width: 100%;
+}
 
 .pagebreak {
     border-top-style: solid;
