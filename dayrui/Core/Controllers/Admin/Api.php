@@ -440,11 +440,10 @@ class Api extends \Phpcmf\Common
 	public function preview() {
 
 	    $data = $_GET['data'];
-
         $data['source_image'] = WRITEPATH.'preview.png';
         $data['dynamic_output'] = true;
 
-        $rt = \Phpcmf\Service::L('Image')->watermark($data);
+        $rt = \Phpcmf\Service::L('Image')->watermark($data, 1);
         if (!$rt) {
             echo \Phpcmf\Service::L('Image')->display_errors();
         }

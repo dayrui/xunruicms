@@ -902,7 +902,7 @@ class Image
      *
      * @return	bool
      */
-    public function watermark($data = [])
+    public function watermark($data = [], $is_test = 0)
     {
 
         $config = [];
@@ -933,13 +933,15 @@ class Image
         $this->source_image = $config['source_image'];
 
         // 判断水印尺寸
-        list($nw, $nh) = getimagesize($this->source_image);
-        if ($data['width'] && $data['width'] > $nw) {
-            log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
-            return '';
-        } elseif ($data['height'] && $data['height'] > $nh) {
-            log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
-            return '';
+        if (!$is_test) {
+            list($nw, $nh) = getimagesize($this->source_image);
+            if ($data['width'] && $data['width'] > $nw) {
+                log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
+                return '';
+            } elseif ($data['height'] && $data['height'] > $nh) {
+                log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
+                return '';
+            }
         }
 
         return ($this->wm_type === 'overlay') ? $this->overlay_watermark() : $this->text_watermark();
