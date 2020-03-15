@@ -68,4 +68,32 @@ class System extends \Phpcmf\Model
         );
     }
 
+    // 读取配置信息
+    public function get_setting($name) {
+        $data = $this->table('admin_setting')->where('name', $name)->getRow();
+        return $data ? dr_string2array($data['value']) : [];
+    }
+
+    // 存储配置信息
+    public function save_setting($name, $value) {
+        $this->table('admin_setting')->replace([
+            'name' => $name,
+            'value' => dr_array2string($value),
+        ]);
+    }
+
+    // 更新缓存
+    public function cache() {
+
+        $rt = [];
+        $data = $this->table('admin_setting')->getAll();
+        if ($data) {
+            foreach ($data as $t) {
+                $rt[$t['name']] = dr_string2array($t['value']);
+            }
+        }
+
+        \Phpcmf\Service::L('cache')->set_file('admin_setting', $rt);
+    }
+
 }

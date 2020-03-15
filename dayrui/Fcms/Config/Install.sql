@@ -125,6 +125,13 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin_verify` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='审核管理表';
 
+DROP TABLE IF EXISTS `{dbprefix}admin_setting`;
+CREATE TABLE IF NOT EXISTS `{dbprefix}admin_setting` (
+  `name` varchar(50) NOT NULL,
+  `value` mediumtext NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统属性参数表';
+
 DROP TABLE IF EXISTS `{dbprefix}mail_smtp`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}mail_smtp` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -348,7 +355,6 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_login` (
   KEY `loginip` (`loginip`),
   KEY `logintime` (`logintime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录日志记录';
-
 
 DROP TABLE IF EXISTS `{dbprefix}member_group`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}member_group` (

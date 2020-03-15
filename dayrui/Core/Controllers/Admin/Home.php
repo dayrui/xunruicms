@@ -18,6 +18,20 @@ class Home extends \Phpcmf\Common
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
         }
+        
+        // 验证权限
+        if ($table_data && !in_array(1, $this->admin['roleid'])) {
+            // 不是超管用户
+            $auth = \Phpcmf\Service::M('system')->get_setting('index_main');
+            if ($auth) {
+                foreach ($table_data as $name => $t) {
+                    if (!array_intersect($this->admin['roleid'], (array)$auth[$name])) {
+                        unset($table_data[$name]); // 无权限移除
+                    }
+
+                }
+            }
+        }
 
         $license = [];
         if (is_file(MYPATH.'Config/License.php')) {
@@ -34,7 +48,6 @@ class Home extends \Phpcmf\Common
             ),
             'color' => ['blue', 'red', 'green', 'dark', 'yellow'],
             'domain' => dr_get_domain_name(ROOT_URL),
-            'tables' => $this->_main_table(),
             'license' => $license,
             'table_data' => $table_data,
             'cmf_update' => $this->cmf_version['updatetime'],
@@ -51,6 +64,7 @@ class Home extends \Phpcmf\Common
 		$this->_json(1, dr_lang('自定义面板恢复成功'));
 	}
 
+	//后台自定义面板
 	public function edit() {
 
 	    $file = WRITEPATH.'config/main.php';
@@ -81,6 +95,32 @@ class Home extends \Phpcmf\Common
         ]);
 		\Phpcmf\Service::V()->display('index_edit.html');exit;
 	}
+
+	//后台自定义面板 权限划分
+    public function auth_edit() {
+
+        $name = \Phpcmf\Service::L('input')->get('name');
+        $data = \Phpcmf\Service::M('system')->get_setting('index_main');
+
+        if (IS_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if (!$post) {
+                $post = [];
+            }
+            $post[] = 1;
+            $data[$name] = array_unique($post);
+            \Phpcmf\Service::M('system')->save_setting('index_main', $data);
+            \Phpcmf\Service::M('system')->cache();
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $data[$name],
+            'form' => dr_form_hidden(),
+            'role' => \Phpcmf\Service::C()->get_cache('auth'),
+        ]);
+        \Phpcmf\Service::V()->display('index_auth_edit.html');exit;
+    }
 
 	public function index() {
 

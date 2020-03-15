@@ -88,7 +88,8 @@ class Search extends \Phpcmf\Model {
                     continue;
                 }
                 if (isset($get[$name]) && strlen($get[$name])) {
-                    $where[] = $this->_where($table, $name, $get[$name], $field);
+                    $where[] = $this->_wh
+                    +ere($table, $name, $get[$name], $field);
                 }
             }
 

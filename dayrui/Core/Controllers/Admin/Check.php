@@ -255,6 +255,15 @@ class Check extends \Phpcmf\Common
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
                 }
+
+                $table = $prefix.'admin_setting';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                      `name` varchar(50) NOT NULL,
+                      `value` mediumtext NOT NULL,
+                      PRIMARY KEY (`name`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';');
+                }
                 /*
                                 $table = $prefix.'email';
                                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {

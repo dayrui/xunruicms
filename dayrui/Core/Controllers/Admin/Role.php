@@ -71,11 +71,13 @@ class Role extends \Phpcmf\Common
         }
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation($data);
-			\Phpcmf\Service::M('auth')->update_role($id, $data);
+			$temp = $post = \Phpcmf\Service::L('input')->post('data');
+			$this->_validation($post);
+			$post['application'] = $data['application'];
+			$post['application']['tid'] = $temp['application']['tid'];
+			\Phpcmf\Service::M('auth')->update_role($id, $post);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
-			\Phpcmf\Service::L('input')->system_log('修改角色组('.$data['name'].')');
+			\Phpcmf\Service::L('input')->system_log('修改角色组('.$post['name'].')');
 			exit($this->_json(1, dr_lang('操作成功')));
 		}
 

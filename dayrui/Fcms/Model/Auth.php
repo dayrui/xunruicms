@@ -42,6 +42,9 @@ class Auth extends \Phpcmf\Model {
                                 <a href="javascript:$(\'#table_'.$table.'\').remove();" class="btn btn-circle btn-default btn-sm">
                                     <i class="fa fa-close"></i> 移除 
                                 </a>
+                                <a href="javascript:dr_qx(\''.$table.'\');" class="btn btn-circle btn-default btn-sm">
+                                    <i class="fa fa-user"></i> 权限 
+                                </a>
                             </div>
                         </div>
                         <div class="portlet-body text-center" style="color: #ddd;padding: 40px;">

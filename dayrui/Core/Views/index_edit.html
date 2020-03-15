@@ -207,4 +207,10 @@
     </div>
 </form>
 
+<script>
+    function dr_qx(name) {
+        dr_iframe('面板权限', '{dr_url('home/auth_edit')}&name='+name, '50%', '50%', 'nogo');
+    }
+</script>
+
 {template "footer.html"}
