@@ -18,7 +18,7 @@ class Home extends \Phpcmf\Common
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
         }
-        
+
         // 验证权限
         if ($table_data && !in_array(1, $this->admin['roleid'])) {
             // 不是超管用户
