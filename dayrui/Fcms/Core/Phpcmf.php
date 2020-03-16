@@ -314,6 +314,7 @@ abstract class Common extends \CodeIgniter\Controller
                 'admin' => $this->admin,
                 'is_ajax' => \Phpcmf\Service::L('input')->get('is_ajax'),
                 'is_mobile' => $this->_is_mobile() ? 1 : 0,
+                'cmf_updatetime' => str_replace('-', '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']),
             ]);
             // 权限判断
             $uri = \Phpcmf\Service::L('Router')->uri();
