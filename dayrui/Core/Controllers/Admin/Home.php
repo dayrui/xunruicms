@@ -14,6 +14,11 @@ class Home extends \Phpcmf\Common
 
 	public function main() {
 
+	    if (is_file(WRITEPATH.'update.txt')) {
+	        unlink(WRITEPATH.'update.txt');
+	        dr_redirect(dr_url('check/index'));
+        }
+
         $table_data = [];
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
