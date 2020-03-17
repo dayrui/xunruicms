@@ -239,7 +239,7 @@ class Cloud extends \Phpcmf\Common
             $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
             $json = dr_catcher_data($surl);
             if (!$json) {
-                $this->_json(0, '没有从服务端获取到数据');
+                $this->_json(0, '本站：没有从服务端获取到数据');
             }
             exit($json);
         }
@@ -429,7 +429,7 @@ class Cloud extends \Phpcmf\Common
         $surl = $this->service_url.'&action=check_version&get_http=1&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '没有从服务端获取到数据');
+            $this->_json(0, '本站：没有从服务端获取到数据');
         }
         $rt = json_decode($json, true);
         $this->_json($rt['code'], $this->cmf_license['oem'] ? dr_clearhtml($rt['msg']) : $rt['msg']);
@@ -449,24 +449,24 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_replace($_GET['id']);
         if (!$id) {
-            $this->_json(0, '没有选择任何升级程序');
+            $this->_json(0, '本站：没有选择任何升级程序');
         }
 
         $surl = $this->service_url.'&action=update_file&get_http=1&appid='.$id.'&ls='.dr_safe_replace($_GET['ls']);
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '没有从服务端获取到数据', $surl);
+            $this->_json(0, '本站：没有从服务端获取到数据', $surl);
         }
 
         $data = dr_string2array($json);
         if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新下载', $json);
+            $this->_json(0, '本站：服务端数据异常，请重新下载', $json);
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
         } elseif (!$data['data']['size']) {
-            $this->_json(0, '服务端文件总大小异常');
+            $this->_json(0, '本站：服务端文件总大小异常');
         } elseif (!$data['data']['url']) {
-            $this->_json(0, '服务端文件下载地址异常');
+            $this->_json(0, '本站：服务端文件下载地址异常');
         }
 
         \Phpcmf\Service::L('cache')->set_data('cloud-update-'.$id, $data['data'], 3600);
@@ -478,9 +478,9 @@ class Cloud extends \Phpcmf\Common
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证缓存过期，请重试');
+            $this->_json(0, '本站：授权验证缓存过期，请重试');
         } elseif (!$cache['size']) {
-            $this->_json(0, '关键数据不存在，请重试');
+            $this->_json(0, '本站：关键数据不存在，请重试');
         } elseif (!function_exists('fsockopen')) {
             $this->_json(0, '本站：PHP环境不支持fsockopen');
         }
@@ -653,12 +653,12 @@ class Cloud extends \Phpcmf\Common
         $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '没有从服务端获取到数据');
+            $this->_json(0, '本站：没有从服务端获取到数据');
         }
 
         $data = dr_string2array($json);
         if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新再试');
+            $this->_json(0, '本站：服务端数据异常，请重新再试');
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
         }
@@ -673,7 +673,7 @@ class Cloud extends \Phpcmf\Common
         $page = max(1, intval($_GET['page']));
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-bf');
         if (!$cache) {
-            $this->_json(0, '数据缓存不存在');
+            $this->_json(0, '本站：数据缓存不存在');
         }
 
         $data = $cache[$page];
