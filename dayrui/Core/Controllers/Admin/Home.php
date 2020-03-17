@@ -38,11 +38,6 @@ class Home extends \Phpcmf\Common
             }
         }
 
-        $license = [];
-        if (is_file(MYPATH.'Config/License.php')) {
-            $license = require MYPATH.'Config/License.php';
-        }
-
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -53,7 +48,7 @@ class Home extends \Phpcmf\Common
             ),
             'color' => ['blue', 'red', 'green', 'dark', 'yellow'],
             'domain' => dr_get_domain_name(ROOT_URL),
-            'license' => $license,
+            'license' => $this->cmf_license,
             'table_data' => $table_data,
             'cmf_update' => $this->cmf_version['updatetime'],
             'cmf_version' => $this->cmf_version['version'],
@@ -129,7 +124,6 @@ class Home extends \Phpcmf\Common
 
 	public function index() {
 
-        $menu_top = $my_menu = [];
 		$menu = \Phpcmf\Service::L('cache')->get('menu-admin');
         if (!$menu) {
             $m = \Phpcmf\Service::M('menu')->cache();
@@ -141,6 +135,9 @@ class Home extends \Phpcmf\Common
             $menu = dr_my_admin_menu($menu);
         }
 
+        $first = 0;
+        $mstring = $string = '';
+        $menu_top = $my_menu = [];
 		if ($this->admin['adminid'] > 1) {
 			foreach ($menu as $t) {
 				@in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
@@ -148,10 +145,6 @@ class Home extends \Phpcmf\Common
 		} else {
 			$my_menu = $menu;
 		}
-
-		$first = 0;
-		$string = '';
-        $mstring = '';
 
         if ($my_menu) {
             foreach ($my_menu as $tid => $top) {

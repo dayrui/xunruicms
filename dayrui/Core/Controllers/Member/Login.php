@@ -14,7 +14,9 @@ class Login extends \Phpcmf\Common
 
         // 获取返回页面
         $url = \Phpcmf\Service::L('Security')->xss_clean($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
-        strpos($url, 'login') !== false && $url = MEMBER_URL;
+        if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
+            $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
+        }
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');

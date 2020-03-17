@@ -39,8 +39,9 @@ class Register extends \Phpcmf\Common
         $url && parse_str($url, $arr);
         if (isset($arr['back']) && $arr['back']) {
             $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
-        } elseif (strpos($url, 'register') !== false) {
-            $url = MEMBER_URL;
+        }
+        if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
+            $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
         } else {
             $url = \Phpcmf\Service::L('input')->xss_clean($url);
         }
