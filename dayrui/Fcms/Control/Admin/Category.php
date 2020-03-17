@@ -11,6 +11,7 @@ class Category extends \Phpcmf\Table
 {
     public $module; // 模块信息
     public $is_scategory; // 选择栏目类型
+    protected $_is_extend_var = 0; // 继承属性变量
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -28,9 +29,10 @@ class Category extends \Phpcmf\Table
         $this->is_scategory = $this->module['share'] || (isset($this->module['config']['scategory']) && $this->module['config']['scategory']);
         if ($this->is_scategory) {
             // 共享栏目时显示单页内容字段
-            if ($this->module['share'] && $dir != 'share') {
+            if ($this->module['share'] && $dir != 'share' && !$this->_is_extend_var) {
                 // 当共享模块进入了独立模块的栏目，就跳转条共享模块
                 dr_redirect(dr_url('category/index'));
+                exit;
             }
         } else {
             unset($this->module['category_field']['content']);
