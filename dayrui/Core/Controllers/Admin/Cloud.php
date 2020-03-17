@@ -278,11 +278,11 @@ class Cloud extends \Phpcmf\Common
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             cloud_msg(0, '本站：文件解压失败');
         }
-        unlink($file);
 
-		$is_app = 0;
-		$is_tpl = 0;
-        // 查询插件目录
+        unlink($file);
+        $is_app = $is_tpl = 0;
+
+		// 查询插件目录
 		if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
 			$ins = require $cmspath.'Install.php';
 			if (isset($ins['type']) && $ins['type'] == 'app') {
@@ -295,6 +295,7 @@ class Cloud extends \Phpcmf\Common
 				}
 			}
 		}
+
 		if (is_file($cmspath.'Run.php')) {
             copy($cmspath.'Run.php',WRITEPATH.'temp/run-'.$id.'.php');
         }
@@ -473,8 +474,10 @@ class Cloud extends \Phpcmf\Common
 
         $this->_json(1, 'ok', $data['data']);
     }
+
     // 开始下载脚本
     public function update_file_down() {
+
         $id = dr_safe_replace($_GET['id']);
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
@@ -484,6 +487,7 @@ class Cloud extends \Phpcmf\Common
         } elseif (!function_exists('fsockopen')) {
             $this->_json(0, '本站：PHP环境不支持fsockopen');
         }
+
         // 执行下载文件
         $file = WRITEPATH.'temp/'.$id.'.zip';
 
@@ -511,6 +515,7 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '本站：fopen打开远程文件失败', $cache['url']);
         }
     }
+
     // 检测下载进度
     public function update_file_check() {
 
@@ -551,6 +556,7 @@ class Cloud extends \Phpcmf\Common
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             cloud_msg(0, '本站：文件解压失败');
         }
+
         unlink($file);
 
         list($type) = explode('-', $id);
