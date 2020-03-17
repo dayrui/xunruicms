@@ -182,10 +182,11 @@ class Menu extends \Phpcmf\Model {
         $menu = $this->db->table('admin_menu')->where('mark', 'form-'.$data['table'])->get()->getRowArray();
         if ($menu) {
             // 更新
+            /*
             $this->db->table('admin_menu')->where('id', intval($menu['id']))->update([
                 'name' => dr_lang('%s管理', $data['name']),
                 'icon' => (string)$data['setting']['icon'],
-            ]);
+            ]);*/
         } else {
             // 新增菜单
             $menu = $this->db->table('admin_menu')->where('mark', 'content-form')->get()->getRowArray();
@@ -201,10 +202,11 @@ class Menu extends \Phpcmf\Model {
         $menu = $this->db->table('admin_menu')->where('mark', 'verify-form-'.$data['table'])->get()->getRowArray();
         if ($menu) {
             // 更新
+            /*
             $this->db->table('admin_menu')->where('id', intval($menu['id']))->update([
                 'name' => dr_lang('%s审核', $data['name']),
                 'icon' => $data['setting']['icon'],
-            ]);
+            ]);*/
         } else {
             // 新增菜单
             $menu = $this->db->table('admin_menu')->where('mark', 'content-verify')->get()->getRowArray();
@@ -220,10 +222,11 @@ class Menu extends \Phpcmf\Model {
         $menu = $this->db->table('member_menu')->where('mark', 'form-'.$data['table'])->get()->getRowArray();
         if ($menu) {
             // 更新
+            /*
             $this->db->table('member_menu')->where('id', intval($menu['id']))->update([
                 'name' => dr_lang('%s管理', $data['name']),
                 'icon' => (string)$data['setting']['icon'],
-            ]);
+            ]);*/
         } else {
             // 新增菜单
             $menu = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();
