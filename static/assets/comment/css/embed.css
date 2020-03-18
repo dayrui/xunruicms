@@ -116,7 +116,7 @@
 
 #ds-smilies-tooltip a{cursor:pointer;}
 #ds-reset #ds-smilies-tooltip ul{list-style-type:none;padding:0;margin:0;}
-#ds-reset #ds-smilies-tooltip .ds-smilies-container{padding:10px 16px;height:200px;overflow-y:auto;}
+#ds-reset #ds-smilies-tooltip .ds-smilies-container{height:200px;overflow-y:auto;}
 #ds-smilies-tooltip .ds-smilies-container li{list-style:none;float:left;width:26px;height:26px;text-align:center;cursor:pointer;margin:2px 2px;}
 #ds-smilies-tooltip .ds-smilies-container li img{visibility:visible;width:26px;height:26px; }
 #ds-reset #ds-smilies-tooltip .ds-smilies-container li:hover{position:relative;top:-1px;}
