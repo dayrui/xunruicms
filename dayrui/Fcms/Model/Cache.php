@@ -317,18 +317,58 @@ class Cache extends \Phpcmf\Model
         }
 
         // 复制百度编辑器到当前目录
-        if (!is_file($path.'api/ueditor/lock.php')) {
-            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
-            @unlink($path.'api/ueditor/lock.php');
-        }
+        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
 
         // 复制百度编辑器到移动端站点
-        if (!is_file($path.'mobile/api/ueditor/lock.php')) {
-            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
-            @unlink($path.'mobile/api/ueditor/lock.php');
-        }
+        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
 
         return '';
+    }
+
+    // 编辑器更新
+    public function update_ueditor() {
+
+        $site = $this->table('site')->getAll();
+        foreach ($site as $t) {
+            $t['setting'] = dr_string2array($t['setting']);
+            if ($t['id'] > 1 && $t['setting']['webpath']) {
+                $path = rtrim($t['setting']['webpath'], '/').'/';
+            } else {
+                $path = WEBPATH;
+            }
+            // 复制百度编辑器到当前目录
+            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+            // 复制百度编辑器到移动端站点
+            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+            if ($t['setting']['client']) {
+                foreach ($t['setting']['client'] as $c) {
+                    if ($c['name'] && $c['domain']) {
+                        $path = $path.$c['name'].'/';
+                        // 复制百度编辑器到当前目录
+                        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+                    }
+                }
+            }
+        }
+
+        $module = $this->table('module')->getAll();
+        foreach ($module as $t) {
+            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                continue;
+            } elseif ($t['share']) {
+                continue;
+            }
+            $t['site'] = dr_string2array($t['site']);
+            foreach ($site as $siteid) {
+                if ($t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                    $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
+                    // 复制百度编辑器到当前目录
+                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+                    // 复制百度编辑器到移动端站点
+                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+                }
+            }
+        }
     }
 
     private function _error_msg($msg) {

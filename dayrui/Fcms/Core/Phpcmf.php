@@ -78,11 +78,14 @@ abstract class Common extends \CodeIgniter\Controller
                 'id' => 1,
                 'name' => '迅睿框架',
                 'version' => '开发版',
+                'downtime' => SYS_TIME,
             ];
         } else {
             $this->cmf_version = require MYPATH.'Config/Version.php';
             define('CMF_VERSION', $this->cmf_version['version']);
         }
+        // 版本更新时间字符串
+        define('CMF_UPDATE_TIME', str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']));
 
         $client = []; // 电脑域名对应的手机域名
         if (is_file(WRITEPATH.'config/domain_client.php')) {
@@ -314,7 +317,6 @@ abstract class Common extends \CodeIgniter\Controller
                 'admin' => $this->admin,
                 'is_ajax' => \Phpcmf\Service::L('input')->get('is_ajax'),
                 'is_mobile' => $this->_is_mobile() ? 1 : 0,
-                'cmf_updatetime' => str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']),
             ]);
             // 权限判断
             $uri = \Phpcmf\Service::L('Router')->uri();

@@ -155,9 +155,9 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 		if (!defined('PHPCMF_FIELD_TOUCHSPIN')) {
 			$str.= '
 				
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css" rel="stylesheet" type="text/css" />
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/fuelux/js/spinner.min.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/fuelux/js/spinner.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 
 			';
 			define('PHPCMF_FIELD_TOUCHSPIN', 1);//防止重复加载JS

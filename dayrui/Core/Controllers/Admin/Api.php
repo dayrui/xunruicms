@@ -254,12 +254,19 @@ class Api extends \Phpcmf\Common
         exit($this->_json(1, dr_lang('更新完成')));
 	}
 
-	// 执行重建模块索引
-	public function cache_site_config() {
+    // 执行重建模块索引
+    public function cache_site_config() {
 
-        \Phpcmf\Service::M('cache')->update_search_index();
+        \Phpcmf\Service::M('cache')->update_site_config();
         exit($this->_json(1, dr_lang('更新完成')));
-	}
+    }
+
+    // 执行编辑器更新
+    public function cache_ueditor() {
+
+        \Phpcmf\Service::M('cache')->update_ueditor();
+        exit($this->_json(1, dr_lang('更新完成')));
+    }
 
 	/**
 	 * 生成安全码

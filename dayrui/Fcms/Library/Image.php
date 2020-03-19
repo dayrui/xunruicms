@@ -936,10 +936,10 @@ class Image
         if (!$is_test) {
             list($nw, $nh) = getimagesize($this->source_image);
             if ($data['width'] && $data['width'] > $nw) {
-                log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
+                CI_DEBUG && log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
                 return '';
             } elseif ($data['height'] && $data['height'] > $nh) {
-                log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
+                CI_DEBUG && log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
                 return '';
             }
         }
@@ -1635,7 +1635,7 @@ class Image
                 $data['dynamic_output'] = false;
                 $this->watermark($data);
             } else {
-                log_message('error', '网站没有设置水印数据，thumb函数中的水印参数将无效');
+                CI_DEBUG && log_message('error', '网站没有设置水印数据，thumb函数中的水印参数将无效');
             }
         }
 
@@ -1689,7 +1689,7 @@ class Image
                     break;
             }
         } else {
-            log_message('error', '系统要求宽度>'.$cw.'px才进行压缩处理，当前图片宽度='.$width.'，不满足压缩条件：'.$imgsrc);
+            CI_DEBUG && log_message('error', '系统要求宽度>'.$cw.'px才进行压缩处理，当前图片宽度='.$width.'，不满足压缩条件：'.$imgsrc);
         }
 
         return;

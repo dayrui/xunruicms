@@ -14,9 +14,12 @@ class Home extends \Phpcmf\Common
 
 	public function main() {
 
-	    if (is_file(WRITEPATH.'update.txt')) {
-	        unlink(WRITEPATH.'update.txt');
-	        dr_redirect(dr_url('check/index'));
+        if (is_file(WRITEPATH.'check.txt')) {
+            unlink(WRITEPATH.'check.txt');
+            dr_redirect(dr_url('check/index'));
+        } elseif (is_file(WRITEPATH.'update.txt')) {
+            unlink(WRITEPATH.'update.txt');
+            dr_redirect(dr_url('cache/index'));
         }
 
         $table_data = [];

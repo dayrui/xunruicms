@@ -109,7 +109,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
 		// 开始输出
 		$str = '';
 		if(!defined('PHPCMF_FIELD_LINKAGE')) {
-			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/jquery.ld.js"></script>';
+			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/jquery.ld.js?v='.CMF_UPDATE_TIME.'"></script>';
 			define('PHPCMF_FIELD_LINKAGE', 1);
 		}
 

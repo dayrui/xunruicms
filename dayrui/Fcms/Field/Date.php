@@ -157,13 +157,13 @@ class Date extends \Phpcmf\Library\A_Field {
         $str = '';
         if (!defined('PHPCMF_FIELD_DATE')) {
             $str.= '
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			
-        	<script src="'.ROOT_THEME_PATH.'assets/global/plugins/moment.min.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js" type="text/javascript"></script>
+        	<script src="'.ROOT_THEME_PATH.'assets/global/plugins/moment.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
             define('PHPCMF_FIELD_DATE', 1);//防止重复加载JS
         }

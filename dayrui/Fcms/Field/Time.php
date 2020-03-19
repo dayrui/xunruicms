@@ -140,8 +140,8 @@ class Time extends \Phpcmf\Library\A_Field {
         $str = '';
         if (!defined('PHPCMF_FIELD_TIME')) {
             $str.= '
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
             define('PHPCMF_FIELD_TIME', 1);//防止重复加载JS
         }

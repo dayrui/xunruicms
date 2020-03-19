@@ -99,8 +99,8 @@ class Color extends \Phpcmf\Library\A_Field {
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet" type="text/css" />
         	<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.css" rel="stylesheet" type="text/css" />
 			';
-			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>';
-			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js"></script>';
+			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js?v='.CMF_UPDATE_TIME.'"></script>';
+			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js?v='.CMF_UPDATE_TIME.'"></script>';
 			define('PHPCMF_FIELD_COLOR', 1);//防止重复加载JS
 		}
 

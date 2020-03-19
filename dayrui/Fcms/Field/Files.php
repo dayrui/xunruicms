@@ -314,12 +314,12 @@ class Files extends \Phpcmf\Library\A_Field {
         if (!defined('PHPCMF_FIELD_FILE')) {
             $str.= '
 				
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			
 			';
             define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS

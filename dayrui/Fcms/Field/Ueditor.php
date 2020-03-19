@@ -399,8 +399,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 防止重复加载JS
         if (!defined('PHPCMF_FIELD_UEDITOR')) {
             $str.= '
-            <script type="text/javascript" src="/api/ueditor/ueditor.config.js"></script>
-            <script type="text/javascript" src="/api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js"></script>
+            <script type="text/javascript" src="/api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
+            <script type="text/javascript" src="/api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
             define('PHPCMF_FIELD_UEDITOR', 1);
         }

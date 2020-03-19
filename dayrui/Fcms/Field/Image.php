@@ -213,8 +213,8 @@ class Image extends \Phpcmf\Library\A_Field {
 
         if (!defined('POSCMS_FIELD_IMAGES')) {
             $str.= '
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.js" type="text/javascript"></script>
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
             define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
         }
