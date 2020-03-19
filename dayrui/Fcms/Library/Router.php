@@ -188,11 +188,19 @@ class Router
 
         if (!IS_ADMIN) {
             // 非后台统一index.php入口
-            $self = '/index.php';
+            if (defined('IS_CLIENT')) {
+                // 终端前缀
+                $self = CLIENT_URL.'index.php';
+            } elseif (!\Phpcmf\Service::IS_PC()){
+                // 移动端域名
+                $self = SITE_MURL.'index.php';
+            } else {
+                $self = SITE_URL.'index.php';
+            }
         }
-
+        
+        $uri = [];
         $url = explode('/', $url);
-        $uri = array();
 
         switch (dr_count($url)) {
             case 1:
@@ -239,8 +247,6 @@ class Router
             return MEMBER_URL;
         }
 
-        $self = 'index.php';
-
         if (!$query && strpos($url, ':') !== false) {
             list($a, $b) = explode(':', $url);
             $url = $a;
@@ -271,7 +277,7 @@ class Router
         $query && $uri = @array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL)) . $self . '?' . @http_build_query($uri);
+        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL)) . 'index.php?' . @http_build_query($uri);
     }
 
     /**
