@@ -768,8 +768,8 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         if (!$this->member['is_verify']) {
-            // 审核
-            $this->_msg(0, dr_lang('账号还没有通审核'), dr_member_url('api/verify'));
+            // 审核提醒
+            $this->_msg(0, dr_lang('账号还没有通过审核'), dr_member_url('api/verify'));
         } elseif ($this->member_cache['config']['complete']
             && !$this->member['is_complete']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
