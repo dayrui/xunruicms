@@ -199,6 +199,13 @@
                                 <span class="help-block">{dr_lang('例如中国地区选择“GMT +08:00”表示东八区')}</span>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('当前时间')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static" id="site_time"> {dr_date(SYS_TIME)} </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
@@ -240,4 +247,20 @@
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(function() {
+        setInterval(dr_site_time, 1000);
+    });
+    function dr_site_time() {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "{dr_url('api/site_time')}",
+            success: function(json) {
+                $('#site_time').html(json.msg);
+            }
+        });
+    }
+</script>
 {template "footer.html"}

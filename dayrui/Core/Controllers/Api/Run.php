@@ -14,6 +14,11 @@ class Run extends \Phpcmf\Common
 
 	public function index() {
 
+	    // 自动任务锁定
+        if (!isset($_GET['is_ajax']) && !is_file(WRITEPATH.'config/run_lock.php')) {
+            file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
+        }
+
         // 未到时间
         if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
             exit('未到执行时间');
@@ -50,17 +55,16 @@ class Run extends \Phpcmf\Common
                         foreach ($times as $t) {
                             $rt = $this->content_model->post_time($t);
                             if (!$rt['code']) {
-                                log_message('error', '定时发布（'.$t['id'].'）失败：'.$rt['msg']);
+                                CI_DEBUG && log_message('error', '定时发布（'.$t['id'].'）失败：'.$rt['msg']);
                             }
                         }
                     }
                 }
             }
-
         }
 
         // 执行队列
-        $i = \Phpcmf\Service::M('cron')->run_cron();
+        $i = \Phpcmf\Service::M('cron')->run_cron(intval($_GET['num']));
 
         // 3天未付款的清理
         \Phpcmf\Service::M('pay')->clear_paylog();

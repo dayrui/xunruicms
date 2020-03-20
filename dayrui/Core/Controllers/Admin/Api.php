@@ -275,6 +275,11 @@ class Api extends \Phpcmf\Common
 		echo 'PHPCMF'.strtoupper(substr((md5(SYS_TIME)), rand(0, 10), 13));exit;
 	}
 
+	// 当前时间值
+	public function site_time() {
+        exit($this->_json(1, dr_date(SYS_TIME)));
+	}
+
 	/**
 	 * 生成来路随机字符
 	 */

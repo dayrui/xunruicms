@@ -152,9 +152,9 @@ class Cron extends \Phpcmf\Model
     }
 
     // 运行脚本
-    public function run_cron() {
+    public function run_cron($num = 20) {
 
-        $crons = $this->table('cron')->getAll(20);
+        $crons = $this->table('cron')->getAll($num ? $num : 20);
         if (!$crons) {
             return 0;
         }

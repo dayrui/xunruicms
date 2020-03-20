@@ -2,6 +2,17 @@
 </div>
 </div>
 </div>
-
+<script>
+    $(function () {
+        {if !is_file(WRITEPATH.'config/run_lock.php')}
+        $.ajax({type: "GET",dataType:"json", url: "/index.php?s=api&c=run&is_ajax=1&num=5",
+            success: function(json) {
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+            }
+        });
+        {/if}
+    });
+    </script>
 </body>
 </html>
