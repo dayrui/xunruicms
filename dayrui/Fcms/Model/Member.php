@@ -1499,12 +1499,16 @@ class Member extends \Phpcmf\Model
                     }
                 }
             }
-
         }
 
         // 同步删除动作
         \Phpcmf\Service::M('Sync')->delete_member($id);
 
+        // 删除头像
+        list($cache_path, $cache_url) = dr_avatar_path();
+        if (is_file($cache_path.$id.'.jpg')) {
+            @unlink($cache_url.$id.'.jpg');
+        }
     }
 
     // 随机账号
