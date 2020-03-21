@@ -15,6 +15,11 @@ class Category extends \Phpcmf\Table
 
     public function __construct(...$params) {
         parent::__construct(...$params);
+        $this->_Extend_Init();
+    }
+
+    // 继承类初始化
+    protected function _Extend_Init() {
         // 初始化模块
         $dir = APP_DIR ? APP_DIR : 'share';
         $this->_module_init($dir);

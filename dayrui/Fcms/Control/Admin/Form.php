@@ -12,9 +12,13 @@ class Form extends \Phpcmf\Table
     protected $form;
     protected $is_verify;
 
-    public function __construct(...$params)
-    {
+    public function __construct(...$params) {
         parent::__construct(...$params);
+        $this->_Extend_Init();
+    }
+
+    // 继承类初始化
+    protected function _Extend_Init() {
         // 判断是否来自审核控制器
         $this->is_verify = strpos(\Phpcmf\Service::L('Router')->class, '_verify') !== false;
         // 判断表单是否操作

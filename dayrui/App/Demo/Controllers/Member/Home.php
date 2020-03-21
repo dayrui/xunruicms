@@ -2,6 +2,9 @@
 
 class Home extends \Phpcmf\Member\Module
 {
+    public function __construct(...$params) {
+        parent::__construct(...$params);
+    }
 
 	// 内容列表
 	public function index() {

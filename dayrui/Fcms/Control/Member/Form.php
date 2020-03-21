@@ -14,9 +14,13 @@ class Form extends \Phpcmf\Table
     protected $_is_edit;
     protected $_is_delete;
 
-    public function __construct(...$params)
-    {
+    public function __construct(...$params) {
         parent::__construct(...$params);
+        $this->_Extend_Init();
+    }
+
+    // 继承类初始化
+    protected function _Extend_Init() {
         // 判断表单是否操作
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[\Phpcmf\Service::L('Router')->class];

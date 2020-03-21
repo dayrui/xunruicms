@@ -15,6 +15,11 @@ class Comment extends \Phpcmf\Table
 
     public function __construct(...$params) {
         parent::__construct(...$params);
+        $this->_Extend_Init();
+    }
+
+    // 继承类初始化
+    protected function _Extend_Init() {
         // 初始化模块
         $this->_module_init(APP_DIR);
         if (!$this->module['comment']) {
