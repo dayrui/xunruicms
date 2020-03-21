@@ -49,13 +49,15 @@ class Upload
     }
 
     // 安全验证
-    private function _safe_check($file_ext, $data) {
+    public function _safe_check($file_ext, $data, $is_ext = 1) {
 
         // 检查系统保留文件格式
-        if (in_array($file_ext, $this->notallowed)) {
-            return dr_return_data(0, $this->error['ERROR_SYSTEM_TYPE_NOT_ALLOWED']);
-        } elseif (!$file_ext) {
-            return dr_return_data(0, dr_lang('无法读取文件扩展名'));
+        if ($is_ext) {
+            if (in_array($file_ext, $this->notallowed)) {
+                return dr_return_data(0, $this->error['ERROR_SYSTEM_TYPE_NOT_ALLOWED']);
+            } elseif (!$file_ext) {
+                return dr_return_data(0, dr_lang('无法读取文件扩展名'));
+            }
         }
 
         // 验证扩展名格式
@@ -66,14 +68,16 @@ class Upload
         // 验证伪装图片
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
             $data = strtolower($data);
-            if (strpos($data, '<?php') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+            if (strlen($data) < 100) {
+                return dr_return_data(0, dr_lang('图片文件不规范'));
+            } elseif (strpos($data, '<?php') !== false) {
+                return dr_return_data(0, dr_lang('此图片不安全，禁止上传'));
             } elseif (strpos($data, 'eval(') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此图片不安全，禁止上传'));
             } elseif (strpos($data, '.php') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此图片不安全，禁止上传'));
             } elseif (strpos($data, 'base64_decode(') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此图片不安全，禁止上传'));
             }
         }
 

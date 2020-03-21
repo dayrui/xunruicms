@@ -98,7 +98,7 @@ class Uploader
         } else if (!is_uploaded_file($file['tmp_name'])) {
             $this->stateInfo = $this->getStateInfo("ERROR_TMPFILE");
             return;
-        }   elseif ($this->file['error']) {
+        } elseif ($this->file['error']) {
             $this->stateInfo = $this->getStateInfo($file['error']);
             return;
         }
@@ -117,6 +117,13 @@ class Uploader
         //检查是否不允许的文件格式
         if (!$this->checkType()) {
             $this->stateInfo = $this->getStateInfo("ERROR_TYPE_NOT_ALLOWED");
+            return;
+        }
+
+        // 安全检测
+        $rt = \Phpcmf\Service::L('upload')->_safe_check(trim($this->getFileExt(), '.'), file_get_contents($file["tmp_name"]), 0);
+        if (!$rt['code']) {
+            $this->stateInfo = $rt['msg'];
             return;
         }
 
@@ -156,6 +163,13 @@ class Uploader
         //检查文件大小是否超出限制
         if (!$this->checkSize()) {
             $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
+            return;
+        }
+
+        // 安全检测
+        $rt = \Phpcmf\Service::L('upload')->_safe_check(trim($this->getFileExt(), '.'), $img, 0);
+        if (!$rt['code']) {
+            $this->stateInfo = $rt['msg'];
             return;
         }
 
@@ -246,6 +260,13 @@ class Uploader
         //检查文件大小是否超出限制
         if (!$this->checkSize()) {
             $this->stateInfo = $this->getStateInfo("ERROR_SIZE_EXCEED");
+            return;
+        }
+
+        // 安全检测
+        $rt = \Phpcmf\Service::L('upload')->_safe_check(trim($this->getFileExt(), '.'), $img, 0);
+        if (!$rt['code']) {
+            $this->stateInfo = $rt['msg'];
             return;
         }
 
