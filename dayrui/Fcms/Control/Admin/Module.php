@@ -427,6 +427,7 @@ class Module extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('任务添加成功'));*/
         } else if ($page == 2) {
+		    /*
             if (dr_count($ids) > 9) {
                 $this->_json(0, dr_lang('微信推送不能超过9条数据'));
             } elseif (!dr_is_app('weixin')) {
@@ -438,7 +439,7 @@ class Module extends \Phpcmf\Table
                 $this->_json(0, $rt['msg']);
             }
             dr_redirect(\Phpcmf\Service::L('Router')->url('weixin/send/add', ['id' => $rt['code']]));
-            exit;
+            exit;*/
         } else if ($page == 4) {
             $this->content_model->update_time($ids);
             $this->_json(1, dr_lang('操作成功'));

@@ -91,7 +91,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         }
 
         // ajax 返回
-        if (IS_AJAX) {
+        if (IS_AJAX || IS_API) {
             dr_exit_msg(0, $message);
         }
 
