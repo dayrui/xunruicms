@@ -309,11 +309,11 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}site` (
 DROP TABLE IF EXISTS `{dbprefix}member`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `email` char(50) NOT NULL DEFAULT '' COMMENT '邮箱地址',
-  `phone` char(20) NOT NULL COMMENT '手机号码',
+  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '邮箱地址',
+  `phone` varchar(20) NOT NULL COMMENT '手机号码',
   `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
-  `password` char(32) NOT NULL DEFAULT '' COMMENT '加密密码',
-  `salt` char(10) NOT NULL COMMENT '随机加密码',
+  `password` varchar(50) NOT NULL DEFAULT '' COMMENT '加密密码',
+  `salt` varchar(50) NOT NULL COMMENT '随机加密码',
   `name` varchar(50) NOT NULL COMMENT '姓名',
   `money` decimal(10,2) unsigned NOT NULL COMMENT 'RMB',
   `freeze` decimal(10,2) unsigned NOT NULL COMMENT '冻结RMB',

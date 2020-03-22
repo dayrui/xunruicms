@@ -2292,6 +2292,9 @@ class View {
                         $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
                         break;
 
+                    case 'BW':
+                        $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
+
                     case 'GT':
                         $string.= $join." {$t['name']} > ".intval($t['value'])."";
                         break;
@@ -2307,9 +2310,6 @@ class View {
                     case 'ELT':
                         $string.= $join." {$t['name']} <= ".intval($t['value'])."";
                         break;
-
-                    case 'BW':
-                        $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
                         break;
 
                     case 'SQL':
