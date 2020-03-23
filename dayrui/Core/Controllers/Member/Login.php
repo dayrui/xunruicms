@@ -109,7 +109,18 @@ class Login extends \Phpcmf\Common
         }
 
         // 查询关联用户
-        $member = $oauth['uid'] ? \Phpcmf\Service::M('member')->get_member($oauth['uid']) : [];
+        if ($oauth['uid']) {
+            $member = \Phpcmf\Service::M('member')->get_member($oauth['uid']);
+        } elseif ($oauth['unionid']) {
+            $row = \Phpcmf\Service::M()->table('member_oauth')->where('unionid', $oauth['unionid'])->where('uid>0')->getRow();
+            if ($row) {
+                // 直接绑定unionid用户
+                \Phpcmf\Service::M()->table('member_oauth')->update($oauth['id'], [
+                    'uid' => $row['uid']
+                ]);
+                $member = \Phpcmf\Service::M('member')->get_member($row['uid']);
+            }
+        }
 
         // 跳转地址
         $back = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('back')));
