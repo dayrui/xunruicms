@@ -17,7 +17,8 @@ class Member_payapi extends \Phpcmf\Common
         $data = dr_string2array($data['value']);
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+
             \Phpcmf\Service::M()->db->table('member_setting')->replace([
                 'name' => 'payapi',
                 'value' => dr_array2string($post)
@@ -26,14 +27,21 @@ class Member_payapi extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'));
         }
 
-        $pay = [];
         $local = dr_dir_map(ROOTPATH.'api/pay/', 1);
         foreach ($local as $dir) {
-            $dir != 'finecms' && is_file(ROOTPATH.'api/pay/'.$dir.'/config.php') && $pay[$dir] = require ROOTPATH.'api/pay/'.$dir.'/config.php';
+            if ($dir != 'finecms' && is_file(ROOTPATH.'api/pay/'.$dir.'/config.php')) {
+                $config = require ROOTPATH.'api/pay/'.$dir.'/config.php';
+                if ($data[$dir]) {
+                    $data[$dir]['config'] = $config;
+                } else {
+                    $data[$dir] = [
+                        'config' => $config,
+                    ];
+                }
+            }
         }
 
         \Phpcmf\Service::V()->assign([
-            'pay' => $pay,
             'data' => $data,
             'form' => dr_form_hidden(),
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(

@@ -4,12 +4,17 @@
 </div>
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}
-    <div class="myfbody">
-    {loop $pay $dir $p}
+    <div class="myfbody field-sort-items">
+    {loop $data $dir $t}
     <div class="portlet bordered light">
         <div class="portlet-title">
             <div class="caption">
-                <span class="caption-subject font-green  ">{$p.icon}&nbsp;{dr_lang($p.name)}</span>
+                <span class="caption-subject font-green">{$t.config.icon}&nbsp;{dr_lang($t.config.name)}</span>
+            </div>
+            <div class="actions">
+                <a class="btn btn-circle btn-default btn-sm">
+                    <i class="fa fa-arrows-alt"></i> {dr_lang('拖动排序')}
+                </a>
             </div>
         </div>
         <div class="portlet-body">
@@ -17,7 +22,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label">{dr_lang('启用')}</label>
                     <div class="col-md-9">
-                        <input type="checkbox" name="data[{$dir}][use]" value="1" {if $data[$dir]['use']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                        <input type="checkbox" name="data[{$dir}][use]" value="1" {if $t['use']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                     </div>
                 </div>
                 <?php require ROOTPATH.'api/pay/'.$dir.'/setting.php';?>
@@ -32,5 +37,9 @@
         </div>
     </div>
 </form>
-
+<script type="text/javascript">
+    $(function() {
+        $(".field-sort-items").sortable();
+    });
+</script>
 {template "footer.html"}
