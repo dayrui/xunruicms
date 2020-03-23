@@ -118,7 +118,7 @@
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="{dr_icon($top.icon)}"></i>
                         <span class="title">{$top.name}</span>
-                        {if in_array($top.id, (array)$mymenu)}<span class="arrow"></span>{/if}
+                        <span class="arrow {if in_array($top.id, (array)$mymenu)}open{/if}"></span>
                     </a>
                     <ul class="sub-menu">
                         {loop $top.link $t}
