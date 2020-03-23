@@ -768,7 +768,7 @@ Page sidebar
       margin-top: -32px;
       display: inline;
       font-size: 16px;
-      font-family: FontAwesome;
+      font-family: "Font Awesome 5 Pro";
       height: auto;
       content: "\f104";
       font-weight: 300;
@@ -1055,7 +1055,7 @@ Page sidebar
     z-index: 1;
     right: 0px;
     margin-top: -36px; }
-    .page-fontawesome .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
+    .page-"Font Awesome 5 Pro" .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
       margin-top: -34px; }
     .page-glyphicons .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
       margin-top: -38px; }

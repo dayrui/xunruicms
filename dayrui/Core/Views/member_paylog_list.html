@@ -100,7 +100,7 @@
                     {if $ci->_is_admin_auth('edit')}
                     <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('详情')}</a></label>
                     {if $t.status && $t.mid=='recharge'}
-                    <label><a href="javascript:dr_iframe('{dr_lang('系统回收')}', '{dr_url($uriprefix.'/system_edit', ['id'=>$t.id])}');" class="btn btn-xs red"> <i class="fa fa-rmb"></i> {dr_lang('回收')}</a></label>
+                    <label><a href="javascript:dr_iframe('{dr_lang('系统回收')}', '{dr_url('member_playlog/system_edit', ['id'=>$t.id])}');" class="btn btn-xs red"> <i class="fa fa-rmb"></i> {dr_lang('回收')}</a></label>
                     {/if}
                     {/if}
                 </td>
