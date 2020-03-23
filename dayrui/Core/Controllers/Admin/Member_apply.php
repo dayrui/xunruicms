@@ -176,7 +176,7 @@ class Member_apply extends \Phpcmf\Table
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids(), null, function($rows) {
             foreach ($rows as $t) {
                 // 删除审核提醒
-                \Phpcmf\Service::M('member')->delete_admin_notice('member_apply/edit:id/'.$t['id'], SITE_ID);
+                \Phpcmf\Service::M('member')->delete_admin_notice('member_apply/edit:id/'.$t['id']);
                 // 退回金额
                 $this->_call_score($t);
             }

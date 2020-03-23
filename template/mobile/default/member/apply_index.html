@@ -59,6 +59,26 @@
                         </div>
                         {/if}
                         {/if}
+                        {if $group['unit']}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 付款方式 </label>
+                            <div class="col-md-9">
+                                账户可用余额：{$member.score}{SITE_SCORE}
+                            </div>
+                        </div>
+                        {else}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"> 付款方式 </label>
+                            <div class="col-md-9">
+                                <div class="btn-group" data-toggle="buttons">
+                                    {loop $pay_type $name $t}
+                                    <label onclick="dr_select_paytype('{$name}')" class="btn btn-lg btn-default {if $name == 'finecms'}active{/if}"> <input type="radio" class="toggle"> {$t['icon']} {$t['name']} {if $name == 'finecms'}（{$member.money}元）{/if}</label>
+                                    {/loop}
+                                    <input type="hidden" name="pay_type" value="finecms" id="dr_payselect">
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
 
                         {$myfield}
                         {if $verify.status && $verify.content.note}
@@ -71,8 +91,7 @@
                         {/if}
 
                         <div class=" margin-top-40">
-                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{MEMBER_URL}')" class="btn red btn-block"> 提交申请 </button>
-                            <a href="{dr_member_url('recharge/index')}" class="btn red btn-outline btn-block"> 在线充值 </a>
+                            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn red btn-block"> 提交申请 </button>
                         </div>
                     </form>
                 </div>

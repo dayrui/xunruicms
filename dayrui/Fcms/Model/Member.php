@@ -517,6 +517,47 @@ class Member extends \Phpcmf\Model
         \Phpcmf\Hooks::trigger('member_edit_level_after', $data, $old);
     }
 
+    // 申请用户组
+    public function apply_group($verify_id, $member, $gid, $lid, $price, $my_verify) {
+
+        $group = \Phpcmf\Service::C()->member_cache['group'][$gid];
+
+        if ($group['setting']['verify']) {
+            $my_verify['uid'] = $member['uid'];
+            $my_verify['username'] = $member['username'];
+            $my_verify['gid'] = $gid;
+            $my_verify['lid'] = $lid;
+            $my_verify['status'] = 0;
+            $my_verify['content'] = dr_array2string($my_verify['content']);
+            $my_verify['inputtime'] = SYS_TIME;
+            if ($verify_id) {
+                $rt = \Phpcmf\Service::M()->table('member_group_verify')->update($verify_id, $my_verify);
+            } else {
+                // 被拒再次提交不重复扣款
+                $my_verify['price'] = (float)$price;
+                $rt = \Phpcmf\Service::M()->table('member_group_verify')->insert($my_verify);
+            }
+            if (!$rt['code']) {
+                return dr_return_data(0, $rt['msg']);
+            }
+            // 提醒
+            \Phpcmf\Service::M('member')->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member_apply/edit:id/'.$rt['code']);
+            // 审核
+            return dr_return_data(1, dr_lang('等待管理员审核'));
+        } else {
+            // 直接开通
+            \Phpcmf\Service::M('member')->insert_group($member['uid'], $gid);
+            $lid && \Phpcmf\Service::M('member')->update_level($member['uid'], $gid, $lid);
+            $my_verify['content'] && \Phpcmf\Service::M()->table('member_data')->update($member['uid'], $my_verify['content']);
+            // 邀请注册用户组分成
+            if (dr_is_app('yaoqing') && !$group['unit']) {
+                \Phpcmf\Service::M('yq', 'yaoqing')->insert_group($member['uid'], $gid, $price);
+            }
+            return dr_return_data(1, dr_lang('开通成功'));
+        }
+
+    }
+
     /**
      * 添加一条通知
      *

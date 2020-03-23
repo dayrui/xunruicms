@@ -98,7 +98,9 @@ class Scorelog extends \Phpcmf\Table
             }
 
             $rt = \Phpcmf\Service::M('Pay')->add_money($this->uid, -$price);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             $rt = \Phpcmf\Service::M('member')->add_score($this->uid, $value, dr_lang('自助兑换'));
             if (!$rt['code']) {
                 \Phpcmf\Service::M('Pay')->add_money($this->uid, $price);
@@ -133,8 +135,12 @@ class Scorelog extends \Phpcmf\Table
      * 在线充值
      */
     public function pay() {
+
         define('FC_PAY', 1);
-        !$this->member_cache['pay']['convert'] && $this->_msg(0, dr_lang('系统没有设置兑换比例'));
+        if (!$this->member_cache['pay']['convert']) {
+            $this->_msg(0, dr_lang('系统没有设置兑换比例'));
+        }
+
         \Phpcmf\Service::V()->assign([
             'payfield' => dr_payform('score', '', '', '', 1),
         ]);

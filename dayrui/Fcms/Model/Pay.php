@@ -62,6 +62,25 @@ class Pay extends \Phpcmf\Model
         ];
     }
 
+    // 获取支付方式
+    public function get_pay_type($is_finecms = 0) {
+
+        $pay_type = [];
+
+        $is_finecms && $pay_type['finecms'] = \Phpcmf\Service::R(ROOTPATH.'api/pay/finecms/config.php');
+
+        if (\Phpcmf\Service::C()->member_cache['payapi']) {
+            foreach (\Phpcmf\Service::C()->member_cache['payapi'] as $name => $t) {
+                if (!is_file(ROOTPATH.'api/pay/'.$name.'/config.php')) {
+                    continue; // 排除是否存在配置文件
+                }
+                $pay_type[$name] = \Phpcmf\Service::R(ROOTPATH.'api/pay/'.$name.'/config.php');
+            }
+        }
+
+        return $pay_type;
+    }
+
     // 获取打赏模块内容
     public function get_module_row($dir, $id, $siteid) {
 
@@ -186,6 +205,7 @@ class Pay extends \Phpcmf\Model
 
         switch ($mark) {
 
+
             // 在线充值
             case 'recharge':
                 return '<span class="label label-default"> '.dr_lang('充值').' </span>';
@@ -216,6 +236,15 @@ class Pay extends \Phpcmf\Model
             default:
                 list($rname, $rid, $fid) = explode('-', $mark);
                 switch ($rname) {
+
+                    // 用户组
+                    case 'group':
+                        return '<span class="label label-default"> '.dr_lang('会员').' </span>';
+                        break;
+                    // 用户组
+                    case 'level':
+                        return '<span class="label label-default"> '.dr_lang('等级').' </span>';
+                        break;
 
                     // 订单
                     case 'order':
@@ -385,7 +414,7 @@ class Pay extends \Phpcmf\Model
                         break;
 
                     default:
-                        return dr_return_data(0, dr_lang('未定义的支付方式'));
+                        return dr_return_data(0, dr_lang('未定义的支付方式[%s]', $rname));
                         break;
                 }
                 break;
@@ -480,6 +509,9 @@ class Pay extends \Phpcmf\Model
                 }
             }
 
+            // 备份使用
+            $result = $data['result'];
+
             // 支付成功
             $this->table('member_paylog')->update($id, [
                 'status' => 1,
@@ -508,6 +540,30 @@ class Pay extends \Phpcmf\Model
                     if (dr_is_app('yaoqing')) {
                         \Phpcmf\Service::M('yq', 'yaoqing')->czfx($data);
                     }
+                    break;
+
+                case 'group':
+                    // 用户组
+                    \Phpcmf\Service::M('member')->notice(
+                        $data['uid'],
+                        2,
+                        $data['title'],
+                        \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id'=>$data['id']])
+                    );
+                    $result = dr_string2array($result);
+                    \Phpcmf\Service::M('member')->apply_group($d, $user, $b, $c, abs($data['value']), $result);
+                    break;
+
+                case 'level':
+                    // 用户组等级升级
+                    // 提醒通知
+                    \Phpcmf\Service::M('member')->notice(
+                        $data['uid'],
+                        2,
+                        $data['title'],
+                        \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id'=>$data['id']])
+                    );
+                    \Phpcmf\Service::M('member')->update_level($data['uid'], $b, $c);
                     break;
 
                 case 'score':
@@ -705,6 +761,30 @@ class Pay extends \Phpcmf\Model
                 list($rname, $rid, $fid, $num, $sku, $ff) = explode('-', $post['mark']);
                 switch ($rname) {
 
+                    case 'group':
+                        // 来自用户组
+                        $money = (float)$post['money'];
+                        if ($money <= 0) {
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
+                        }
+                        $title = $post['title'];
+                        $money = -$money;
+                        $touid = 0; // 收款方为统系
+                        $tousername = ''; // 收款方为统系
+                        break;
+
+                    case 'level':
+                        // 来自用户组等级
+                        $money = (float)$post['money'];
+                        if ($money <= 0) {
+                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
+                        }
+                        $title = $post['title'];
+                        $money = -$money;
+                        $touid = 0; // 收款方为统系
+                        $tousername = ''; // 收款方为统系
+                        break;
+
                     case 'gathering':
                         // 来自收款
                         $field = $this->myfield[$rname];
@@ -808,7 +888,7 @@ class Pay extends \Phpcmf\Model
                         break;
 
                     default:
-                        return dr_return_data(0, dr_lang('未定义的支付方式'));
+                        return dr_return_data(0, dr_lang('未定义的支付方式[%s]', $rname));
                         break;
                 }
 
@@ -833,7 +913,7 @@ class Pay extends \Phpcmf\Model
             'type' => $post['type'],
             'status' => 0,
             'url' => $post['url'],
-            'result' => '',
+            'result' => (string)$post['result'],
             'paytime' => 0,
             'inputtime' => SYS_TIME,
         ]);
