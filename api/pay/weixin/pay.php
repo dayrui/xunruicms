@@ -23,12 +23,13 @@ require "WxPay.Api.php";
 require "WxPay.JsApiPay.php";
 require "WxPay.NativePay.php";
 
+// 当前已经登录的用户
+$member = \Phpcmf\Service::C()->member;
 // 付款界面模板
 $htmlfile = is_file(WEBPATH.'config/pay/payweixin.html') ? WEBPATH.'config/pay/payweixin.html' : ROOTPATH.'config/pay/payweixin.html';
-$member = \Phpcmf\Service::C()->member;
 
-if (IS_API_HTTP) {
-    // 客户端小程序请求
+if (IS_API_HTTP && dr_is_app('weixin')) {
+    // 微信插件：客户端小程序请求
     //①、获取用户openid
     $oauth = $this->table('member_oauth')->where('uid', $data['uid'])->where('oauth', 'wxxcx')->getRow();
     if (!$oauth) {
@@ -57,7 +58,7 @@ if (IS_API_HTTP) {
             \Phpcmf\Service::C()->_json(1, 'ok', json_decode($param, true));
         }
     }
-} elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger')) {
+} elseif (dr_is_weixin_app()) {
     // 手机微信客户端调用jsapi
     //①、获取用户openid
     $tools = new JsApiPay();

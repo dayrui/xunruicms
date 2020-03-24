@@ -1555,6 +1555,14 @@ class Member extends \Phpcmf\Model
         if (is_file($cache_path.$id.'.jpg')) {
             @unlink($cache_url.$id.'.jpg');
         }
+
+        // 删除微信uid
+        if (dr_is_app('weixin')) {
+            $this->db->table('weixin_user')->where('uid', $id)->update([
+                'uid' => 0,
+                'username' => '',
+            ]);
+        }
     }
 
     // 随机账号

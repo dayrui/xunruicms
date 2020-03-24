@@ -2269,7 +2269,11 @@ class View {
                         break;
 
                     case 'LIKE':
-                        $string.= $join." {$t['name']} LIKE \"".dr_safe_replace($t['value'])."\"";
+                        $value = dr_safe_replace($t['value']);
+                        if (strpos($value, '%') === false && strpos($value, '_') === false) {
+                            $value = '%'.$value.'%'; // 当like没有任何匹配符时采用首尾%查询
+                        }
+                        $string.= $join." {$t['name']} LIKE \"".$value."\"";
                         break;
 
                     case 'IN':
