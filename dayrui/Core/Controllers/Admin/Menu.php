@@ -15,6 +15,7 @@ class Menu extends \Phpcmf\Common
 			[
 				'后台菜单' => ['menu/index', 'fa fa-list-alt'],
 				'初始化菜单' => ['ajax:menu/init', 'fa fa-refresh'],
+				'help' => [927],
 			]
 		));
 		// 表单验证配置

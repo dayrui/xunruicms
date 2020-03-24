@@ -12,7 +12,7 @@
 class Http
 {
 
-
+    // 用于用户中心财务记录时间格式化回调，开发者可以根据实际情况回调返回参数
     public function member_paylog_list($data) {
 
         $rt = [];
@@ -26,7 +26,7 @@ class Http
         return $rt;
     }
 
-
+    // 用于内容评论列表的格式化回调，开发者可以根据实际情况回调返回参数
     public function member_content_comment($data) {
 
         $rt = [];
@@ -41,7 +41,7 @@ class Http
         return $rt;
     }
 
-
+    // 用于模块评论列表时间格式化回调，开发者可以根据实际情况回调返回参数
     public function module_comment_list($data) {
 
         if ($data['list']) {
@@ -55,7 +55,7 @@ class Http
         return $data;
     }
 
-
+    // 用于模块搜索列表的格式化回调，开发者可以根据实际情况回调返回参数
     public function module_search_news_list($data) {
 
         $rt = [];
@@ -70,5 +70,20 @@ class Http
     }
 
 
+    // 用于模块内容详情的格式化回调，开发者可以根据实际情况回调返回参数
+    public function module_show_news_list($data) {
+
+        $rt = [];
+        if ($data) {
+            return [
+                'id' => $data['id'],
+                'title' => $data['title'],
+                'thumb' => dr_thumb($data['thumb'], 200, 200),
+                'content' => $data['content'],
+            ];
+        }
+
+        return $rt;
+    }
 
 }
