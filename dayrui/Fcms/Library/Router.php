@@ -651,7 +651,7 @@ class Router
     // 快捷登录地址
     function oauth_url($name, $type, $gourl = '')
     {
-        return ROOT_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
+        return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
     }
 
 

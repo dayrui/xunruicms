@@ -29,7 +29,7 @@ class Oauth extends \Phpcmf\Common
         // 请求参数
         $appid = $this->member_cache['oauth'][$name]['id'];
         $appkey = $this->member_cache['oauth'][$name]['value'];
-        $callback_url = ROOT_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.urlencode($back);
+        $callback_url = OAUTH_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.urlencode($back);
 
         switch ($name) {
 

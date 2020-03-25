@@ -128,7 +128,8 @@ class Apply extends \Phpcmf\Common
                             if (!$rt['code']) {
                                 $this->_msg(0, $rt['msg']);exit;
                             }
-                            $url = ROOT_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
+                            // 必须跳转到统一的主域名中付款
+                            $url = PAY_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
                             if (IS_AJAX || IS_API_HTTP) {
                                 // 回调页面
                                 $rt['data']['url'] = $url;
@@ -179,7 +180,8 @@ class Apply extends \Phpcmf\Common
                         if (!$rt['code']) {
                             $this->_msg(0, $rt['msg']);exit;
                         }
-                        $url = ROOT_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
+                        // 必须跳转到统一的主域名中付款
+                        $url = PAY_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
                         if (IS_AJAX || IS_API_HTTP) {
                             // 回调页面
                             $rt['data']['url'] = $url;
@@ -300,7 +302,8 @@ class Apply extends \Phpcmf\Common
                         $this->_msg(0, $rt['msg']);
                         exit;
                     }
-                    $url = ROOT_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
+                    // 必须跳转到统一的主域名中付款
+                    $url = PAY_URL . 'index.php?s=api&c=pay&id=' . $rt['code'];
                     if (IS_AJAX || IS_API_HTTP) {
                         // 回调页面
                         $rt['data']['url'] = $url;

@@ -88,7 +88,7 @@ if($verify_result) {//验证成功
     }
     list($a, $id) = explode('-', $out_trade_no);
     // 跳转
-    dr_redirect(ROOT_URL.'index.php?s=api&c=pay&m=call&id='.$id);exit;
+    dr_redirect(PAY_URL.'index.php?s=api&c=pay&m=call&id='.$id);exit;
 
 	//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 	

@@ -31,8 +31,8 @@ class Pay extends \Phpcmf\Common
                 // 回调页面
                 $this->_json($rt['code'], $rt['msg'], $rt['data']);exit;
             } else {
-                // 跳转到支付页面
-                $url = ROOT_URL.'index.php?s=api&c=pay&id='.$rt['code'];
+                // 跳转到支付页面，必须跳转到统一的主域名中付款
+                $url = PAY_URL.'index.php?s=api&c=pay&id='.$rt['code'];
                 dr_redirect($url, 'auto');
             }
             exit;

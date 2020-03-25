@@ -99,7 +99,7 @@ if (IS_API_HTTP && dr_is_app('weixin')) {
             function(res){
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     // 付款成功
-                    window.location.href = "'.ROOT_URL.'index.php?s=api&c=pay&m=call&id='.$id.'";
+                    window.location.href = "'.PAY_URL.'index.php?s=api&c=pay&m=call&id='.$id.'";
                 } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
                     dr_tips(0, "'.dr_lang('付款取消').'");
                 } else {
@@ -220,7 +220,7 @@ if (IS_API_HTTP && dr_is_app('weixin')) {
                 jsonpCallback:"success_jsonpCallback",
                 success : function(html){
                     if (html.code == 1) {
-                        window.location.href = "'.ROOT_URL.'index.php?s=api&c=pay&m=call&id='.$id.'";
+                        window.location.href = "'.PAY_URL.'index.php?s=api&c=pay&m=call&id='.$id.'";
                     }
                 },
                 error:function(){ }

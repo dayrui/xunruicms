@@ -177,7 +177,7 @@ class Pay extends \Phpcmf\Model
         switch ($data['status']) {
 
             case 0:
-                return '<a href="javascript:dr_ajaxp_url(\''.ROOT_URL.'index.php?s=api&c=pay&m=ajax&id='.$data['id'].'\');" class="label label-danger"> '.dr_lang('未付款').' </a>';
+                return '<a href="javascript:dr_ajaxp_url(\''.PAY_URL.'index.php?s=api&c=pay&m=ajax&id='.$data['id'].'\');" class="label label-danger"> '.dr_lang('未付款').' </a>';
                 break;
 
             case 1:

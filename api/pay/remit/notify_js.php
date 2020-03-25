@@ -14,8 +14,4 @@ switch ($data['status']) {
   $return = ['code' => 0, 'msg' => dr_lang('汇款中')];
    break;
 
- case 3:
-  $return = ['code' => 0, 'msg' => dr_lang('汇款失败')];
-   break;
-
 }

@@ -127,7 +127,7 @@ class Login extends \Phpcmf\Common
         $state = \Phpcmf\Service::L('input')->get('state');
         $goto_url = $back ? $back : MEMBER_URL;
         if ($state && $state != 'member') {
-            $goto_url = strpos($state, 'http') === 0 ? $state : ROOT_URL.'index.php?s=weixin&c='.$state.'&oid='.$oauth['oid'];
+            $goto_url = strpos($state, 'http') === 0 ? $state : OAUTH_URL.'index.php?s=weixin&c='.$state.'&oid='.$oauth['oid'];
         }
 
         if ($member) {
