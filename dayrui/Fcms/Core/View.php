@@ -2288,15 +2288,16 @@ class View {
                         $string.= $join.(is_numeric($t['value']) ? " {$t['name']} <> ".$t['value'] : " {$t['name']} <> \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
                         break;
 
-                    case 'BETWEEN':
-                        $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
-                        break;
-
                     case 'BEWTEEN':
-                        $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
+                        goto BETWEEN;
                         break;
 
                     case 'BW':
+                        goto BETWEEN;
+                        break;
+
+                    case 'BETWEEN':
+                        BETWEEN:
                         $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
                         break;
 
