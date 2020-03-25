@@ -2298,6 +2298,7 @@ class View {
 
                     case 'BW':
                         $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
+                        break;
 
                     case 'GT':
                         $string.= $join." {$t['name']} > ".intval($t['value'])."";
@@ -2313,7 +2314,6 @@ class View {
 
                     case 'ELT':
                         $string.= $join." {$t['name']} <= ".intval($t['value'])."";
-                        break;
                         break;
 
                     case 'SQL':
