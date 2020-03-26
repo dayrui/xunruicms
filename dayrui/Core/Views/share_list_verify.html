@@ -43,8 +43,6 @@
                     time: 100000000
                 });
 
-                var width = '50%';
-                var height = '60%';
                 if (is_mobile_cms == 1) {
                     width = height = '90%';
                 }
@@ -54,7 +52,7 @@
                     title: "{dr_lang('批量审核')}",
                     shadeClose: true,
                     shade: 0,
-                    area: [width, height],
+                    area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
                     btn: [lang['ok'], lang['esc']],
                     yes: function(index, layero){
                         layer.close(loading);
@@ -124,18 +122,14 @@
                     time: 100000000
                 });
 
-                var width = '50%';
-                var height = '60%';
-                if (is_mobile_cms == 1) {
-                    width = height = '90%';
-                }
+
                 url+= '&is_all=1&at=0&note='+note+'&'+$("#myform").serialize();
                 layer.open({
                     type: 2,
                     title: "{dr_lang('批量审核')}",
                     shadeClose: true,
                     shade: 0,
-                    area: [width, height],
+                    area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
                     btn: [lang['ok'], lang['esc']],
                     yes: function(index, layero){
                         layer.close(loading);

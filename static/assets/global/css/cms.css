@@ -433,5 +433,19 @@ code.form-control-static {
     background: rgba(0,0,0,0.4);
 }
 
- 
+/*移动端兼容*/
+@media (max-width: 768px) {
+    .myfbody {
+        margin-bottom: 0px;
+    }
+    .myfooter {
+        position: initial;
+        margin: 0px !important;
+    }
+    .myfooter .btn {
+        padding: 5px;
+        line-height:0;
+        font-size: 10px;
+    }
+}
  

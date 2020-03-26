@@ -2066,7 +2066,7 @@
                 scrollbar: false,
                 shadeClose: true,
                 shade: 0,
-                area: ['200px', '150px'],
+                area: [{php echo !IS_MOBILE_USER ? '\'200px\', \'150px\'' : '"95%", "90%"'}],
                 content: '<div style="padding:30px 0 20px 0; text-align: center">'+icon+'</div>'
             });
         });

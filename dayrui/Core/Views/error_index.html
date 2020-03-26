@@ -158,7 +158,7 @@
                     type: 1,
                     shade: 0,
                     title: lang['show'],
-                    area: ['70%', '70%'],
+                    area: [{php echo !IS_MOBILE_USER ? '\'70%\', \'70%\'' : '"95%", "90%"'}],
                     content: '<div style="padding:20px" class="source">{$t.url}<br>'+'{$t.info}<br>'+json.html+'</div>'
                 });
                 {else}

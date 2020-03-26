@@ -20,8 +20,6 @@
     }
     function dr_module_delete() {
         var url = '{dr_url(APP_DIR.'/home/del')}&is_ajax=1';
-        var width = '50%';
-        var height = '60%';
         if (is_mobile_cms == 1) {
             width = height = '90%';
         }
@@ -31,7 +29,7 @@
             title: '{dr_lang('删除确认')}',
             shadeClose: true,
             shade: 0,
-            area: [width, height],
+            area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
             btn: [lang['ok']],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);

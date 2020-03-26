@@ -9,8 +9,6 @@
     {$auto_form_data_ajax}
     {/if}
     function dr_syncat() {
-        var width = '40%';
-        var height = '60%';
         var title = '<i class="fa fa-refresh"></i> {dr_lang('同步到其他栏目')}';
         var url = '{dr_url(MOD_DIR.'/home/syncat_edit')}&catid='+$('#dr_syncatid').val();
         layer.open({
@@ -18,7 +16,7 @@
             title: title,
             shadeClose: true,
             shade: 0,
-            area: [width, height],
+            area: [{php echo !IS_MOBILE_USER ? '"40%", "70%"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);
@@ -61,7 +59,7 @@
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: ["40%", "70%"],
+            area: [{php echo !IS_MOBILE_USER ? '"40%", "70%"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             success: function (json) {
                 if (json.code == 0) {
@@ -120,7 +118,7 @@
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: ["40%", "70%"],
+            area: [{php echo !IS_MOBILE_USER ? '"40%", "70%"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             success: function (json) {
                 if (json.code == 0) {

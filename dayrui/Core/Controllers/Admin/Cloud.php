@@ -278,11 +278,10 @@ class Cloud extends \Phpcmf\Common
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             cloud_msg(0, '本站：文件解压失败');
         }
-
         unlink($file);
-        $is_app = $is_tpl = 0;
 
 		// 查询插件目录
+        $is_app = $is_tpl = 0;
 		if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
 			$ins = require $cmspath.'Install.php';
 			if (isset($ins['type']) && $ins['type'] == 'app') {
@@ -315,35 +314,49 @@ class Cloud extends \Phpcmf\Common
         }
 
         // 复制文件到程序
+        $is_ok = 0;
         if (is_dir($cmspath.'APPSPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
         }
         if (is_dir($cmspath.'WEBPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
         }
         if (is_dir($cmspath.'ROOTPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
         }
         if (is_dir($cmspath.'CSSPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
         }
         if (is_dir($cmspath.'TPLPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'TPLPATH', TPLPATH);
         }
         if (is_dir($cmspath.'WRITEPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'WRITEPATH', WRITEPATH);
         }
         if (is_dir($cmspath.'FCPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'FCPATH', FCPATH);
         }
         if (is_dir($cmspath.'MYPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'MYPATH', MYPATH);
         }
         if (is_dir($cmspath.'COREPATH')) {
+            $is_ok = 1;
             $this->_copy_dir($cmspath.'COREPATH', COREPATH);
         }
 
         dr_dir_delete($cmspath, 1);
+
+        if (!$is_ok) {
+            $this->_json(0, '应用程序压缩包存在问题');
+        }
 		
 		if ($is_app) {
 			$msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
