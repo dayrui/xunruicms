@@ -296,7 +296,11 @@ class File extends \Phpcmf\Common
         }
 
         // 读取附件信息
-        $id = urldecode(\Phpcmf\Service::L('input')->get('id'));
+        $id = \Phpcmf\Service::L('cache')->get_auth_data(\Phpcmf\Service::L('input')->get('id'));
+        if (!$id) {
+            $this->_msg(0, dr_lang('此附件下载链接已经失效'));
+        }
+
         // 下载文件钩子
         \Phpcmf\Hooks::trigger('down_file', $id);
         if (is_numeric($id)) {

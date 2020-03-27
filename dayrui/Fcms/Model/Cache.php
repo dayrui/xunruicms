@@ -199,6 +199,22 @@ class Cache extends \Phpcmf\Model
             file_put_contents($p.'/index.html', 'error');
         }
 
+        // 删除缓存认证文件
+        if ($fp = @opendir(WRITEPATH.'authcode')) {
+            while (FALSE !== ($file = readdir($fp))) {
+                if ($file === '.' OR $file === '..'
+                    OR $file === 'index.html'
+                    OR $file[0] === '.'
+                    OR !@is_file(WRITEPATH.'authcode/'.$file)
+                    OR SYS_TIME - filemtime(WRITEPATH.'authcode/'.$file) <  3600 * 24 // 保留24小时内的文件
+                ) {
+                    continue;
+                }
+                unlink(WRITEPATH.'authcode/'.$file);
+            }
+            file_put_contents(WRITEPATH.'authcode/index.html', 'error');
+        }
+
         // 删除首页静态文件
         @unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
         @unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'));

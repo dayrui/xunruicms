@@ -14,12 +14,15 @@ class Cache {
 
     // 文件缓存目录
     private $file_dir;
+    // 认证数据缓存目录
+    private $auth_dir;
 
     /**
      * 构造函数,初始化变量
      */
     public function __construct(...$params) {
         $this->file_dir = WRITEPATH.'data/'; // 设置缓存目录
+        $this->auth_dir = WRITEPATH.'authcode/'; // 认证数据缓存目录
     }
 
     /**
@@ -36,7 +39,6 @@ class Cache {
         $this->file_dir = WRITEPATH.trim($dir, '/').'/'; // 设置缓存目录
         return $this;
     }
-
 
     /**
      * 设置缓存
@@ -106,6 +108,35 @@ class Cache {
         dr_dir_delete($path);
 
         return ;
+    }
+
+    //------------------------------------------------
+
+    // 存储内容
+    public function set_auth_data($name, $value) {
+
+        // 重置Zend OPcache
+        function_exists('opcache_reset') && opcache_reset();
+
+        dr_mkdirs($this->auth_dir);
+
+        file_put_contents($this->auth_dir.md5(SITE_ID.$name), $value, LOCK_EX);
+
+        return $value;
+    }
+
+    // 获取内容
+    public function get_auth_data($name) {
+
+        $code_file = $this->auth_dir.md5(SITE_ID.$name);
+        if (is_file($code_file)) {
+            $rt = file_get_contents($code_file);
+            if ($rt) {
+                return $rt;
+            }
+        }
+
+        return '';
     }
 
     //------------------------------------------------
