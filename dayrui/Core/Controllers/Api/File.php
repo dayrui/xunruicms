@@ -297,6 +297,8 @@ class File extends \Phpcmf\Common
 
         // 读取附件信息
         $id = urldecode(\Phpcmf\Service::L('input')->get('id'));
+        // 下载文件钩子
+        \Phpcmf\Hooks::trigger('down_file', $id);
         if (is_numeric($id)) {
             // 表示附件id
             $info = $this->get_attachment($id);
