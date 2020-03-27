@@ -188,9 +188,7 @@ class Cache extends \Phpcmf\Model
         $path = [
             WRITEPATH.'html',
             WRITEPATH.'temp',
-            //WRITEPATH.'attach',
             WRITEPATH.'caching',
-            //WRITEPATH.'authcode',
             WRITEPATH.'template',
         ];
         foreach ($path as $p) {
@@ -199,20 +197,28 @@ class Cache extends \Phpcmf\Model
             file_put_contents($p.'/index.html', 'error');
         }
 
-        // 删除缓存认证文件
-        if ($fp = @opendir(WRITEPATH.'authcode')) {
-            while (FALSE !== ($file = readdir($fp))) {
-                if ($file === '.' OR $file === '..'
-                    OR $file === 'index.html'
-                    OR $file[0] === '.'
-                    OR !@is_file(WRITEPATH.'authcode/'.$file)
-                    OR SYS_TIME - filemtime(WRITEPATH.'authcode/'.$file) <  3600 * 24 // 保留24小时内的文件
-                ) {
-                    continue;
+        // 删除缓存保留24小时内的文件
+        $path = [
+            WRITEPATH.'authcode',
+            WRITEPATH.'debugbar',
+            WRITEPATH.'session',
+            WRITEPATH.'thread',
+        ];
+        foreach ($path as $p) {
+            if ($fp = @opendir($p)) {
+                while (FALSE !== ($file = readdir($fp))) {
+                    if ($file === '.' OR $file === '..'
+                        OR $file === 'index.html'
+                        OR $file[0] === '.'
+                        OR !@is_file($p.'/'.$file)
+                        OR SYS_TIME - filemtime($p.'/'.$file) <  3600 * 24 // 保留24小时内的文件
+                    ) {
+                        continue;
+                    }
+                    unlink($p.'/'.$file);
                 }
-                unlink(WRITEPATH.'authcode/'.$file);
+                file_put_contents($p.'/index.html', 'error');
             }
-            file_put_contents(WRITEPATH.'authcode/index.html', 'error');
         }
 
         // 删除首页静态文件
