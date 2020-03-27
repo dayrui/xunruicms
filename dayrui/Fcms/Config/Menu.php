@@ -38,11 +38,6 @@ return [
                             'icon' => 'fa fa-refresh',
                             'uri' => 'cache/index',
                         ],
-                        [
-                            'name' => '文件更新',
-                            'icon' => 'fa fa-code',
-                            'uri' => 'cloud/bf',
-                        ],
                     ]
                 ],
             ],
