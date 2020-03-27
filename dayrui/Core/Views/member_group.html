@@ -109,10 +109,10 @@
                     {/if}
                 </td>
                 <td>
-                    <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
-                        <input type="text" class="form-control" value="{dr_date($t.stime, 'Y-m-d')}" name="data[{$t.gid}][stime]">
+                    <div class="input-group  date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" value="{dr_date($t.stime, 'Y-m-d H:i')}" name="data[{$t.gid}][stime]">
                         <span class="input-group-addon"> {dr_lang('到')} </span>
-                        <input type="text" class="form-control" value="{dr_date($t.etime, 'Y-m-d')}" name="data[{$t.gid}][etime]">
+                        <input type="text" class="form-control" value="{dr_date($t.etime, 'Y-m-d H:i')}" name="data[{$t.gid}][etime]">
                     </div>
                 </td>
             </tr>
