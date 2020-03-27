@@ -303,6 +303,8 @@ class File extends \Phpcmf\Common
 
         // 下载文件钩子
         \Phpcmf\Hooks::trigger('down_file', $id);
+
+        // 执行下载
         if (is_numeric($id)) {
             // 表示附件id
             $info = $this->get_attachment($id);
