@@ -188,6 +188,7 @@
       * @param nodes input框集合，
       */
      function checkNum( nodes ) {
+
          for ( var i = 0, ci; ci = nodes[i++]; ) {
              var value = ci.value;
              if ( !isNumber( value ) && value) {
@@ -205,7 +206,7 @@
      * @param value
      */
     function isNumber( value ) {
-        return /(0|^[1-9]\d*$)/.test( value );
+        return /(0|^[1-9\%]\d*$)/.test( value );
     }
 
     /**

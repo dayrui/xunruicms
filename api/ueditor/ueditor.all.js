@@ -17648,8 +17648,8 @@ UE.plugins['video'] = function (){
         align = utils.unhtml(align);
         classname = utils.unhtml(classname);
 
-        width = parseInt(width, 10) || 0;
-        height = parseInt(height, 10) || 0;
+        //width = parseInt(width, 10) || 0;
+        //height = parseInt(height, 10) || 0;
 
         var str;
         switch (type){
