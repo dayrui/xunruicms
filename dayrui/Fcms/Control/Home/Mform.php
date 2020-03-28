@@ -12,6 +12,7 @@ class Mform extends \Phpcmf\Table
     public $form; // 表单信息
     public $index; // 模块内容信息
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

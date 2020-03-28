@@ -286,11 +286,12 @@ class_alias('Config\Services', 'CodeIgniter\Services');
 $loader = CodeIgniter\Services::autoloader();
 //$loader->initialize(new Config\Autoload());
 $auto = new Config\Autoload();
+
 // 应用插件的自动识别
 if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
     $app_auto = require APPPATH.'Config/Auto.php';
-    $app_auto['psr4'] && $auto->psr4 = array_merge($auto->psr4, $app_auto['psr4']);
-    $app_auto['classmap'] && $auto->classmap = array_merge($auto->classmap, $app_auto['classmap']);
+    isset($app_auto['psr4']) && $app_auto['psr4'] && $auto->psr4 = array_merge($auto->psr4, $app_auto['psr4']);
+    isset($app_auto['classmap']) && $app_auto['classmap'] && $auto->classmap = array_merge($auto->classmap, $app_auto['classmap']);
     unset($app_auto);
 }
 

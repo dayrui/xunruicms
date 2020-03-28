@@ -14,6 +14,7 @@ class Form extends \Phpcmf\Table
     protected $_is_edit;
     protected $_is_delete;
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

@@ -8,7 +8,8 @@
 // 内容模块操作类 基于 Ftable
 class Module extends \Phpcmf\Table
 {
-    
+
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

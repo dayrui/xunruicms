@@ -13,6 +13,7 @@ class Module extends \Phpcmf\Table
     protected $module_menu; // 是否显示模块菜单
     protected $is_post_user; // 投稿者权限
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

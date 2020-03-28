@@ -13,6 +13,7 @@ class Category extends \Phpcmf\Table
     public $is_scategory; // 选择栏目类型
     protected $_is_extend_var = 0; // 继承属性变量
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

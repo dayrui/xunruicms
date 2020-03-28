@@ -5,15 +5,13 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
-
-
 // 用于前端模块评论显示
 class Comment extends \Phpcmf\Common
 {
     protected $cid;
     protected $index;
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

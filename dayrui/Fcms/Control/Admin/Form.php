@@ -12,6 +12,7 @@ class Form extends \Phpcmf\Table
     protected $form;
     protected $is_verify;
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

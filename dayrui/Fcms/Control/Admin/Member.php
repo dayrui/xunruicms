@@ -14,6 +14,7 @@ class Member extends \Phpcmf\Common
     public $tree; // 模块栏目
     public $module; // 模块信息
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

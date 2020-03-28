@@ -8,8 +8,10 @@
 // 内容维护
 class Content extends \Phpcmf\Common
 {
+
     public $module; // 模块信息
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

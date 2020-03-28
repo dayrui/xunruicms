@@ -13,6 +13,7 @@ class Mform extends \Phpcmf\Table
     public $is_verify; // 判断是否来自审核控制器
     protected $is_add_menu = 1; //允许有添加菜单
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();

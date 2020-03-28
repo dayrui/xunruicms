@@ -13,6 +13,7 @@ class Comment extends \Phpcmf\Table
     public $module_menu; // 是否显示模块菜单
     public $is_verify; // 来自审核
 
+    // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->_Extend_Init();
