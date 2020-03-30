@@ -473,7 +473,7 @@ class Member extends \Phpcmf\Table
                 }
                 // 设置时间
                 \Phpcmf\Service::M()->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->update([
-                    'stime' => $t['stime'] ? (int)strtotime($t['stime'].' '.date('H:i:s')) : 0,
+                    'stime' => $t['stime'] ? (int)strtotime($t['stime'].' '.date('H:i:s')) : SYS_TIME,
                     'etime' => $t['etime'] ? (int)strtotime($t['etime'].' '.date('H:i:s')) : 0,
                 ]);
             }

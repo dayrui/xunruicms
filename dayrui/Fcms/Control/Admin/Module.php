@@ -965,7 +965,14 @@ class Module extends \Phpcmf\Table
             // 判断是否来至审核
             $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
             if ($row) {
-                $data = dr_string2array($row['content']);
+                // 调用当前表数据
+                $now = $this->content_model->get_data($id);
+                if ($now) {
+                    $data = dr_string2array($row['content']) + $now;
+                } else {
+                    $data = dr_string2array($row['content']);
+                }
+
                 $data['verify'] = [
                     'uid' => $row['backuid'],
                     'isnew' => $row['isnew'],

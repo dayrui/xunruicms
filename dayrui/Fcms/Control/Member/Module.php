@@ -444,7 +444,6 @@ class Module extends \Phpcmf\Table
             // 审核时
         } else {
             // 判断权限
-
             // 验证状态
             $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member_authid) : $this->content_model->get_verify_status(
                 $id,
