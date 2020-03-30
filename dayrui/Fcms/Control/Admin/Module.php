@@ -972,7 +972,6 @@ class Module extends \Phpcmf\Table
                 } else {
                     $data = dr_string2array($row['content']);
                 }
-
                 $data['verify'] = [
                     'uid' => $row['backuid'],
                     'isnew' => $row['isnew'],
