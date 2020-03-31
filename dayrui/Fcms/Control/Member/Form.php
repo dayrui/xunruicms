@@ -226,9 +226,6 @@ class Form extends \Phpcmf\Table
                 if (!$old) {
                     // 首次 发布
 
-                    // 挂钩点
-                    \Phpcmf\Hooks::trigger('form_post_after', $data);
-
                     // 提醒通知
                     if ($this->form['setting']['notice']['use']) {
                         if ($this->form['setting']['notice']['username']) {
@@ -250,6 +247,9 @@ class Form extends \Phpcmf\Table
                     $data['url'] = $this->form['setting']['rt_url'];
                     $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
                 }
+
+                // 挂钩点
+                \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
                 $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
             }
         );

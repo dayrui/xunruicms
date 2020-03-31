@@ -366,7 +366,10 @@ class Mform extends \Phpcmf\Table
      * */
     protected function _Call_Post($data) {
 
+        $data['url'] = $this->form['setting']['rt_url'];
         if ($data[1]['status']) {
+            // 挂钩点
+            \Phpcmf\Hooks::trigger('module_form_post_after', $data);
             return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
         } else {
             return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
@@ -376,7 +379,6 @@ class Mform extends \Phpcmf\Table
 
     // 前端回调处理类
     protected function _Call_Show($data) {
-
         return $data;
     }
 }

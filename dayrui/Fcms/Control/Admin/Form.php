@@ -221,6 +221,9 @@ class Form extends \Phpcmf\Table
 
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('form_verify', $row);
+
+        // 挂钩点
+        \Phpcmf\Hooks::trigger('form_post_after', $row);
     }
 
 }

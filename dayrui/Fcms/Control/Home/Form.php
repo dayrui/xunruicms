@@ -251,7 +251,7 @@ class Form extends \Phpcmf\Table
         \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
 
         // 挂钩点
-        \Phpcmf\Hooks::trigger('form_post_after', $data);
+        \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
 
         return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
     }

@@ -1075,8 +1075,12 @@ class Member extends \Phpcmf\Model
                 \Phpcmf\Service::M('yq', 'yaoqing')->register($puid, $data);
             }
         }
-        
-        $data['auth'] = md5($data['passowrd'].$data['salt']); // API认证字符串,
+
+        // API认证字符串,
+        $data['auth'] = md5($data['passowrd'].$data['salt']);
+
+        // 记录日志
+        $this->_login_log($data);
 
         return dr_return_data(1, 'ok', $data);
     }
@@ -1094,6 +1098,8 @@ class Member extends \Phpcmf\Model
         } else {
             $ins = 0;
         }
+
+        // 授权更新
         if (!$row || $ins) {
             // 插入授权信息
             $data['uid'] = (int)$uid;

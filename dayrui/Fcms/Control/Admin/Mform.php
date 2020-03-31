@@ -299,6 +299,8 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 1]);
 
         \Phpcmf\Service::L('Notice')->send_notice('module_form_verify_1', $row);
-        
+
+        // 挂钩点
+        \Phpcmf\Hooks::trigger('module_form_post_after', $row);
     }
 }
