@@ -1153,6 +1153,7 @@ class Module extends \Phpcmf\Table
 						// 通知
 						$_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);
 						\Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
+						$this->content_model->table($this->content_model->mytable.'_verify')->delete($id);
 					}
 					
                     return dr_return_data(1, 'ok', $data);

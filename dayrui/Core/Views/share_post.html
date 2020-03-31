@@ -150,7 +150,7 @@
                         layer.close(loading);
                         if (json.code == 1) {
                             dr_tips(1, json.msg);
-                            setTimeout("window.location.href = '{dr_url(APP_DIR.'/home/index')}'", 2000);
+                            setTimeout("window.location.href = '{$reply_url}'", 2000);
                         } else {
                             dr_tips(0, json.msg);
                             if (json.data.field) {
