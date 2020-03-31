@@ -50,7 +50,7 @@ class Cache extends \Phpcmf\Model
     public function sync_cache($name = '', $namepspace = '', $is_site = 1) {
 
         if (!$this->is_sync_cache) {
-            $this->site_cache = $this->table('site')->getAll();
+            $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
             $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
             \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
         }
@@ -84,7 +84,7 @@ class Cache extends \Phpcmf\Model
     // 更新缓存
     public function update_cache() {
 
-        $site_cache = $this->table('site')->getAll();
+        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
         $module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
 
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
@@ -156,7 +156,7 @@ class Cache extends \Phpcmf\Model
     // 重建索引
     public function update_search_index() {
 
-        $site_cache = $this->table('site')->getAll();
+        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
         $module_cache = $this->table('module')->getAll();
         if (!$module_cache) {
             return;
@@ -234,7 +234,7 @@ class Cache extends \Phpcmf\Model
     public function update_site_config() {
 
         $site = [];
-        $site_cache = $this->table('site')->getAll();
+        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
         foreach ($site_cache as $t) {
             $t['setting'] = dr_string2array($t['setting']);
             if ($t['id'] > 1 && $t['setting']['webpath']) {
@@ -350,7 +350,7 @@ class Cache extends \Phpcmf\Model
     // 编辑器更新
     public function update_ueditor() {
 
-        $site = $this->table('site')->getAll();
+        $site = $this->table('site')->where('disabled', 0)->getAll();
         foreach ($site as $t) {
             $t['setting'] = dr_string2array($t['setting']);
             if ($t['id'] > 1 && $t['setting']['webpath']) {
