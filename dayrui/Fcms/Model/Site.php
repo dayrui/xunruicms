@@ -272,7 +272,7 @@ class Site extends \Phpcmf\Model
     // 站点缓存缓存
     public function cache($siteid = null, $data = null, $module = null) {
 
-        !$data && $data = $this->table('site')->getAll();
+        !$data && $data = $this->table('site')->where('disabled', 0)->getAll();
         $sso_domain = $client_name = $client_domain = $webpath = $app_domain = $site_domain = $config = $cache = [];
         if ($data) {
             foreach ($data as $t) {
