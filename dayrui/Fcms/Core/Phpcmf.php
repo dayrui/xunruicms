@@ -210,6 +210,8 @@ abstract class Common extends \CodeIgniter\Controller
                 define('MEMBER_URL', (!$is_auto_mobile_page ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
             }
         }
+        // 姓名字段
+        define('MEMBER_CNAME', dr_lang($this->member_cache['config']['cname'] ? $this->member_cache['config']['cname'] : '姓名'));
 
         // 网站常量
         define('SITE_ICP', $this->get_cache('site', SITE_ID, 'config', 'SITE_ICP'));

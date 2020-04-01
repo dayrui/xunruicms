@@ -16,6 +16,9 @@
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-user-plus"></i> {dr_lang('注册设置')} </a>
                 </li>
+                <li class="{if $page==5}active{/if}">
+                    <a href="#tab_5" data-toggle="tab" onclick="$('#dr_page').val('5')"> <i class="fa fa-user-md"></i> {dr_lang('姓名格式')} </a>
+                </li>
                 <li class="{if $page==2}active{/if}">
                     <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-qq"></i> {dr_lang('快捷登录')} </a>
                 </li>
@@ -27,19 +30,47 @@
         <div class="portlet-body">
             <div class="tab-content">
 
-                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                <div class="tab-pane {if $page==5}active{/if}" id="tab_5">
                     <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('姓名命名')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[config][cname]" value="{$data['config']['cname']}" ></label>
+                                <span class="help-block">{dr_lang('姓名字段进行重新命名，例如命名为：昵称、别名等')}</span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('允许修改姓名')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[config][edit_name]" value="1" {if $data['config']['edit_name']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('在用户中心修改姓名字段后将不能再次进行修改')}</span>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('用户姓名长度')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[register][cutname]" value="{intval($data['register']['cutname'])}" ></label>
+                                <span class="help-block">{dr_lang('用户姓名的最大长度，设置0表示不限制，最大设置100')}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('允许修改手机')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[config][edit_mobile]" value="1" {if $data['config']['edit_mobile']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('在用户中心修改手机号码后将不能再次进行修改')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -166,13 +197,7 @@
                                 <span class="help-block">{dr_lang('至少选择一个字段或多个字段组合')}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('用户姓名长度')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[register][cutname]" value="{intval($data['register']['cutname'])}" ></label>
-                                <span class="help-block">{dr_lang('用户姓名的最大长度，设置0表示不限制，最大设置100')}</span>
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('随机用户名前缀')}</label>
                             <div class="col-md-9">
@@ -180,6 +205,7 @@
                                 <span class="help-block">{dr_lang('当注册字段没有选择"账号"时，系统会随机注册一个账号，格式为：前缀+随机用户名字符')}</span>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册短信验证')}</label>
                             <div class="col-md-9">

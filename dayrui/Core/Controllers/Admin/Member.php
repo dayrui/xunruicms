@@ -52,7 +52,7 @@ class Member extends \Phpcmf\Table
             ),
             'name' => array(
                 'ismain' => 1,
-                'name' => dr_lang('姓名'),
+                'name' => MEMBER_CNAME,
                 'fieldname' => 'name',
                 'fieldtype' => 'Text',
                 'setting' => array(

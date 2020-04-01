@@ -36,7 +36,7 @@
                         </div>
                         {/if}
                         <div class="form-group" id="dr_row_name">
-                            <label class="col-md-2 control-label"> 姓名 </label>
+                            <label class="col-md-2 control-label"><span class="required" aria-required="true"> * </span> {MEMBER_CNAME} </label>
                             <div class="col-md-9">
                                 <label><input type="text" {if !$is_update_name} readonly{/if} id="dr_name" class="form-control" value="{$member.name}" name="data[name]"></label>
                             </div>
