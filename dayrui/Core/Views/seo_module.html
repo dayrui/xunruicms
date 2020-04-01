@@ -52,13 +52,13 @@
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('绑定电脑域名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control  input-large" type="text" name="site[domain]" value="{$site['domain']}" ></label>
+                                <label><input class="form-control  input-large" type="text" name="site[domain]" value="{htmlspecialchars($site['domain'])}" ></label>
                             </div>
                         </div>
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('绑定手机域名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="site[mobile_domain]" value="{$site['mobile_domain']}" ></label>
+                                <label><input class="form-control input-large" type="text" name="site[mobile_domain]" value="{htmlspecialchars($site['mobile_domain'])}" ></label>
                             </div>
                         </div>
                         <div class="form-group">

@@ -92,13 +92,13 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('网站名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{$data['SITE_NAME']}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars($data['SITE_NAME'])}"></label>
                              </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('ICP备案信息')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{$data['SITE_ICP']}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{htmlspecialchars($data['SITE_ICP'])}"></label>
                              </div>
                         </div>
                         {if $my_site_info}
@@ -130,7 +130,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('时间格式')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{$data['SITE_TIME_FORMAT']}"></label>
+                                <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{htmlspecialchars($data['SITE_TIME_FORMAT'])}"></label>
                                 <span class="help-block">{dr_lang('网站时间显示格式与date函数一致，默认Y-m-d H:i:s')}</span>
                             </div>
                         </div>
@@ -215,7 +215,7 @@
                             <label class="col-md-2 control-label">{dr_lang('网站域名')}</label>
                             <div class="col-md-4">
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[SITE_DOMAIN]" id="dr_domain" value="{$data['SITE_DOMAIN']}" class="form-control">
+                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[SITE_DOMAIN]" id="dr_domain" value="{htmlspecialchars($data['SITE_DOMAIN'])}" class="form-control">
                                     <span class="input-group-btn">
                                         {if SITE_ID == 1}
                                         <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>

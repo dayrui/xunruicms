@@ -18,8 +18,8 @@
             {php for ($i = 1; $i <= 20; $i ++) {}
             <tr class="odd gradeX">
                 <td>{$i}</td>
-                <td><input class="form-control" name="data[{$i}][name]" type="text" value="{$data[$i]['name']}" placeholder="{dr_lang('任务名称')}"></td>
-                <td><input class="form-control" type="text" id="dr_code_{$i}" name="data[{$i}][code]" value="{$data[$i]['code']}" placeholder="{dr_lang('字母作为代码')}" /></td>
+                <td><input class="form-control" name="data[{$i}][name]" type="text" value="{htmlspecialchars($data[$i]['name'])}" placeholder="{dr_lang('任务名称')}"></td>
+                <td><input class="form-control" type="text" id="dr_code_{$i}" name="data[{$i}][code]" value="{htmlspecialchars($data[$i]['code'])}" placeholder="{dr_lang('字母作为代码')}" /></td>
                 <td>
                     <label><a href="javascript:;" onclick="dr_help('768')" class="btn btn-xs red"> <i class="fa fa-book"></i> {dr_lang('开发说明')} </a></label>
                     <label><a href="javascript:;" onclick="dr_test_cron('{$i}')" class="btn btn-xs green"> <i class="fa fa-cog"></i> {dr_lang('测试')} </a></label>

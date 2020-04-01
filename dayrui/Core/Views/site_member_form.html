@@ -144,25 +144,25 @@
                         {if $i>0}
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[exp][{$i}]" value="{$auth[form][$table]['exp'][$i]}" class="form-control" placeholder="">
+                                <input type="text" name="data[exp][{$i}]" value="{htmlspecialchars($auth[form][$table]['exp'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[score][{$i}]" value="{$auth[form][$table]['score'][$i]}" class="form-control" placeholder="">
+                                <input type="text" name="data[score][{$i}]" value="{htmlspecialchars($auth[form][$table]['score'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">+{SITE_SCORE}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[day_post][{$i}]" value="{$auth[form][$table]['day_post'][$i]}" class="form-control" placeholder="">
+                                <input type="text" name="data[day_post][{$i}]" value="{htmlspecialchars($auth[form][$table]['day_post'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">{dr_lang('日发布')}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[total_post][{$i}]" value="{$auth[form][$table]['total_post'][$i]}" class="form-control" placeholder="">
+                                <input type="text" name="data[total_post][{$i}]" value="{htmlspecialchars($auth[form][$table]['total_post'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">{dr_lang('发布总数')}</span>
                             </div>
                         </div>

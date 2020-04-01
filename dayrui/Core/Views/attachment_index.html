@@ -67,7 +67,7 @@
                                 <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                                 <div class="col-md-9">
                                     <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_attachment_dir" name="data[SYS_ATTACHMENT_PATH]" value="{$data['SYS_ATTACHMENT_PATH']}" >
+                                        <input class="form-control " type="text" id="dr_attachment_dir" name="data[SYS_ATTACHMENT_PATH]" value="{htmlspecialchars($data['SYS_ATTACHMENT_PATH'])}" >
                                         <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_attachment_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
@@ -79,7 +79,7 @@
                             <label class="col-md-2 control-label">{dr_lang('附件URL地址')}</label>
                             <div class="col-md-9">
                                 <div class="input-group input-xlarge">
-                                    <input class="form-control " type="text" name="data[SYS_ATTACHMENT_URL]" value="{$data['SYS_ATTACHMENT_URL']}" >
+                                    <input class="form-control " type="text" name="data[SYS_ATTACHMENT_URL]" value="{htmlspecialchars($data['SYS_ATTACHMENT_URL'])}" >
                                     <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
@@ -106,7 +106,7 @@
                             <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
                             <div class="col-md-9">
                                 <div class="input-group input-xlarge">
-                                    <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{$image['cache_path']}" >
+                                    <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{htmlspecialchars($image['cache_path'])}" >
                                     <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_cache_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
@@ -119,7 +119,7 @@
                             <label class="col-md-2 control-label">{dr_lang('缩略图访问URL地址')}</label>
                             <div class="col-md-9">
                                 <div class="input-group input-xlarge">
-                                    <input class="form-control " id="dr_cache_url" type="text" name="image[cache_url]" value="{$image['cache_url']}" >
+                                    <input class="form-control " id="dr_cache_url" type="text" name="image[cache_url]" value="{htmlspecialchars($image['cache_url'])}" >
                                     <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_thumb_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
@@ -151,7 +151,7 @@
                                 <div class="col-md-9">
 
                                     <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_avatar_dir" name="image[avatar_path]" value="{$image['avatar_path']}" >
+                                        <input class="form-control " type="text" id="dr_avatar_dir" name="image[avatar_path]" value="{htmlspecialchars($image['avatar_path'])}" >
                                         <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_avatar_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
@@ -163,7 +163,7 @@
                                 <label class="col-md-2 control-label">{dr_lang('头像访问URL地址')}</label>
                                 <div class="col-md-9">
                                     <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_avatar_url" name="image[avatar_url]" value="{$image['avatar_url']}" >
+                                        <input class="form-control " type="text" id="dr_avatar_url" name="image[avatar_url]" value="{htmlspecialchars($image['avatar_url'])}" >
                                         <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_avatar_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>

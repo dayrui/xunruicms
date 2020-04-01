@@ -18,8 +18,8 @@
             {php for ($i = 1; $i <= 20; $i ++) {}
             <tr class="odd gradeX">
                 <td>{$i}</td>
-                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{$flag[$i]['name']}" placeholder="{dr_lang('推荐位名称')}"></td>
-                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{$flag[$i]['icon']}" placeholder="{dr_lang('fa fa-user')}" />
+                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{htmlspecialchars($flag[$i]['name'])}" placeholder="{dr_lang('推荐位名称')}"></td>
+                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{htmlspecialchars($flag[$i]['icon'])}" placeholder="{dr_lang('fa fa-user')}" />
                 </td>
                 <td><div class="table-scrollable" style="border: 0;margin: 0 !important;">
                     {php $ii = 1;}

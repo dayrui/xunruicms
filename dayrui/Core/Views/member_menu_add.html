@@ -21,20 +21,20 @@
         <div class="form-group" id="dr_row_name">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单名称')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{$data.name}">
+                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($data.name)}">
             </div>
         </div>
         <div class="form-group" id="dr_row_mark">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('标识字符')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_mark" name="data[mark]" value="{$data.mark}">
+                <input type="text" class="form-control" id="dr_mark" name="data[mark]" value="{htmlspecialchars($data.mark)}">
             </div>
         </div>
         <div class="form-group" id="dr_row_icon">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单图标')}</label>
             <div class="col-xs-8">
                 <div class="input-group">
-                    <input class="form-control" id="dr_icon" type="text" name="data[icon]" value="{$data.icon}" />
+                    <input class="form-control" id="dr_icon" type="text" name="data[icon]" value="{htmlspecialchars($data.icon)}" />
                     <span class="input-group-btn">
                         <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
                     </span>
@@ -45,14 +45,14 @@
         <div class="form-group" id="dr_row_uri">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('系统路径')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_uri" name="data[uri]" value="{$data.uri}">
+                <input type="text" class="form-control" id="dr_uri" name="data[uri]" value="{htmlspecialchars($data.uri)}">
                 <span class="help-block">{dr_lang('格式为：模块目录名/控制器名/方法名，（不支持其他参数）')}</span>
             </div>
         </div>
         <div class="form-group" id="dr_row_url">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('实际地址')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{$data.url}">
+                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{htmlspecialchars($data.url)}">
                 <span class="help-block">{dr_lang('填写完整的URL地址，优先于系统路径')}</span>
             </div>
         </div>

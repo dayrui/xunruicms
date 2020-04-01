@@ -82,13 +82,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][login_score]" value="{$data[auth][$i]['login_score']}" class="form-control">
+                                        <input type="text" name="data[{$i}][login_score]" value="{intval($data[auth][$i]['login_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][login_exp]" value="{$data[auth][$i]['login_exp']}" class="form-control">
+                                        <input type="text" name="data[{$i}][login_exp]" value="{intval($data[auth][$i]['login_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>
@@ -99,13 +99,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][avatar_score]" value="{$data[auth][$i]['avatar_score']}" class="form-control">
+                                        <input type="text" name="data[{$i}][avatar_score]" value="{intval($data[auth][$i]['avatar_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][avatar_exp]" value="{$data[auth][$i]['avatar_exp']}" class="form-control">
+                                        <input type="text" name="data[{$i}][avatar_exp]" value="{intval($data[auth][$i]['avatar_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>

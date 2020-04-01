@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('姓名命名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[config][cname]" value="{$data['config']['cname']}" ></label>
+                                <label><input class="form-control" type="text" name="data[config][cname]" value="{htmlspecialchars($data['config']['cname'])}" ></label>
                                 <span class="help-block">{dr_lang('姓名字段进行重新命名，例如命名为：昵称、别名等')}</span>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录超时时间')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[config][logintime]" value="{$data['config']['logintime']}" ></label>
+                                <label><input class="form-control" type="text" name="data[config][logintime]" value="{intval($data['config']['logintime'])}" ></label>
                                 <span class="help-block">{dr_lang('单位秒，默认为86400秒，超时之后自动退出账号')}</span>
                             </div>
                         </div>
@@ -133,7 +133,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('电脑列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[config][pagesize]" value="{$data['config']['pagesize']}" ></label>
+                                <label><input class="form-control" type="text" name="data[config][pagesize]" value="{intval($data['config']['pagesize'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在电脑网页每页显示数量')}</span>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('手机列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[config][pagesize_mobile]" value="{$data['config']['pagesize_mobile']}" ></label>
+                                <label><input class="form-control" type="text" name="data[config][pagesize_mobile]" value="{intval($data['config']['pagesize_mobile'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在手机网页每页显示数量')}</span>
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('API接口列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[config][pagesize_api]" value="{$data['config']['pagesize_api']}" ></label>
+                                <label><input class="form-control" type="text" name="data[config][pagesize_api]" value="{intval($data['config']['pagesize_api'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在API数据请求时每页返回的数量')}</span>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('随机用户名前缀')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[register][unprefix]" value="{$data['register']['unprefix']}" ></label>
+                                <label><input class="form-control" type="text" name="data[register][unprefix]" value="{htmlspecialchars($data['register']['unprefix'])}" ></label>
                                 <span class="help-block">{dr_lang('当注册字段没有选择"账号"时，系统会随机注册一个账号，格式为：前缀+随机用户名字符')}</span>
                             </div>
                         </div>
@@ -281,20 +281,20 @@
                                     <tbody>
                                     <tr class="odd gradeX">
                                         <td>QQ</td>
-                                        <td><input class="form-control" name="data[oauth][qq][id]" type="text" value="{$data['oauth']['qq']['id']}"></td>
-                                        <td><input class="form-control" name="data[oauth][qq][value]" type="text" value="{$data['oauth']['qq']['value']}"></td>
+                                        <td><input class="form-control" name="data[oauth][qq][id]" type="text" value="{htmlspecialchars($data['oauth']['qq']['id'])}"></td>
+                                        <td><input class="form-control" name="data[oauth][qq][value]" type="text" value="{htmlspecialchars($data['oauth']['qq']['value'])}"></td>
                                         <td style="text-align: center"><a href="javascript:dr_help(586);">{dr_lang('申请接口')}</a></td>
                                     </tr>
                                     <tr class="odd gradeX">
                                         <td>微博</td>
-                                        <td><input class="form-control" name="data[oauth][weibo][id]" type="text" value="{$data['oauth']['weibo']['id']}"></td>
-                                        <td><input class="form-control" name="data[oauth][weibo][value]" type="text" value="{$data['oauth']['weibo']['value']}"></td>
+                                        <td><input class="form-control" name="data[oauth][weibo][id]" type="text" value="{htmlspecialchars($data['oauth']['weibo']['id'])}"></td>
+                                        <td><input class="form-control" name="data[oauth][weibo][value]" type="text" value="{htmlspecialchars($data['oauth']['weibo']['value'])}"></td>
                                         <td style="text-align: center"><a href="javascript:dr_help(588);">{dr_lang('申请接口')}</a></td>
                                     </tr>
                                     <tr class="odd gradeX">
                                         <td>微信扫码</td>
-                                        <td><input class="form-control" name="data[oauth][weixin][id]" type="text" value="{$data['oauth']['weixin']['id']}"></td>
-                                        <td><input class="form-control" name="data[oauth][weixin][value]" type="text" value="{$data['oauth']['weixin']['value']}"></td>
+                                        <td><input class="form-control" name="data[oauth][weixin][id]" type="text" value="{htmlspecialchars($data['oauth']['weixin']['id'])}"></td>
+                                        <td><input class="form-control" name="data[oauth][weixin][value]" type="text" value="{htmlspecialchars($data['oauth']['weixin']['value'])}"></td>
                                         <td style="text-align: center"><a href="javascript:dr_help(587);">{dr_lang('申请接口')}</a></td>
                                     </tr>
                                     <tr class="odd gradeX">

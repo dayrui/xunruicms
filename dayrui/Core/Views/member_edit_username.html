@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('新账号')}</label>
             <div class="col-xs-7">
-                <input type="text" id="dr_name"  class="form-control" value="{$member.username}" name="name">
+                <input type="text" id="dr_name"  class="form-control" value="{htmlspecialchars($member.username)}" name="name">
             </div>
         </div>
 

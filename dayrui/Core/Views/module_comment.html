@@ -35,7 +35,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label" style="padding-top:5px;">{dr_lang('命名名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[{$i}][cname]" value="{php echo $m['comment']['cname'] ? $m['comment']['cname'] : dr_lang('评论');}" ></label>
+                                <label><input class="form-control" type="text" name="data[{$i}][cname]" value="{php echo $m['comment']['cname'] ? htmlspecialchars($m['comment']['cname']) : dr_lang('评论');}" ></label>
                                 <span class="help-block">{dr_lang('系统默认是"评论"，可以定义为"回复"、"论坛"、"帖子"、"点评"等名称')}</span>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('电脑列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[{$i}][pagesize]" value="{$m['comment']['pagesize']}" ></label>
+                                <label><input class="form-control" type="text" name="data[{$i}][pagesize]" value="{intval($m['comment']['pagesize'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在电脑网页每页显示数量')}</span>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('手机列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[{$i}][pagesize_mobile]" value="{$m['comment']['pagesize_mobile']}" ></label>
+                                <label><input class="form-control" type="text" name="data[{$i}][pagesize_mobile]" value="{intval($m['comment']['pagesize_mobile'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在手机网页每页显示数量')}</span>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('API接口列表分页数量')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[{$i}][pagesize_api]" value="{$m['comment']['pagesize_api']}" ></label>
+                                <label><input class="form-control" type="text" name="data[{$i}][pagesize_api]" value="{intval($m['comment']['pagesize_api'])}" ></label>
                                 <span class="help-block">{dr_lang('用户中心数据列表在API数据请求时每页返回的数量')}</span>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                             <label class="col-md-2 control-label">{dr_lang('点评星级')}</label>
                             <div class="col-md-9">
                                 {loop $m[comment][review][value] $ii $t}
-                                <label><input class="form-control" type="text" name="data[{$i}][review][value][{$ii}][name]" value="{$t['name']}" size="15" /></label>
+                                <label><input class="form-control" type="text" name="data[{$i}][review][value][{$ii}][name]" value="{htmlspecialchars($t['name'])}" size="15" /></label>
                                 {/loop}
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                                 {loop $m[comment][review][option] $ii $t}
                                 <p>
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[{$i}][review][option][{$ii}][use]" {if $t.use}checked{/if} value="1"> <span></span></label>
-                                    <label><input class="form-control  input-large" type="text" name="data[{$i}][review][option][{$ii}][name]" value="{$t['name']}" size="15" /></label>
+                                    <label><input class="form-control  input-large" type="text" name="data[{$i}][review][option][{$ii}][name]" value="{htmlspecialchars($t['name'])}" size="15" /></label>
                                 </p>
                                 {/loop}
                             </div>

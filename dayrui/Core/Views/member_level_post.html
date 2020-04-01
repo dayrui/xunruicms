@@ -23,21 +23,21 @@
                     <div class="form-group" id="dr_row_name">
                         <label class="col-xs-2 control-label">{dr_lang('名称')}</label>
                         <div class="col-xs-8">
-                            <label><input type="text" class="form-control" name="data[name]" value="{$name}"></label>
+                            <label><input type="text" class="form-control" name="data[name]" value="{htmlspecialchars($name)}"></label>
                             <span class="help-block">{dr_lang('给它一个描述名称')}</span>
                         </div>
                     </div>
                     <div class="form-group" id="dr_row_stars">
                         <label class="col-xs-2 control-label">{dr_lang('星星数量')}</label>
                         <div class="col-xs-8">
-                            <label><input type="text" class="form-control" name="data[stars]" value="{$stars}"></label>
+                            <label><input type="text" class="form-control" name="data[stars]" value="{intval($stars)}"></label>
                             <span class="help-block">{dr_lang('星星数在达到4时，4个星星显示为1个月亮、4个月亮显示为1个太阳')}</span>
                         </div>
                     </div>
                     <div class="form-group" id="dr_row_value">
                         <label class="col-xs-2 control-label">{dr_lang('升级值要求')}</label>
                         <div class="col-xs-8">
-                            <label><input type="text" class="form-control" name="data[value]" value="{$value}"></label>
+                            <label><input type="text" class="form-control" name="data[value]" value="{intval($value)}"></label>
                             <label>{if $group.unit}{SITE_SCORE}{else}{dr_lang('元')}{/if}</label>
                             <span class="help-block">{dr_lang('该等级需要的升级值，升级值越低越排在前面，0表示初始等级')}</span>
                         </div>

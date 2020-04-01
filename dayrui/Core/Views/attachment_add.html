@@ -46,7 +46,7 @@
                         <div class="form-group r r0">
                             <label class="col-md-2 control-label">{dr_lang('本地存储路径')}</label>
                             <div class="col-md-7">
-                                <input class="form-control" type="text" name="data[value][0][path]" value="{$data['value']['path']}" />
+                                <input class="form-control" type="text" name="data[value][0][path]" value="{htmlspecialchars($data['value']['path'])}" />
                                 <span class="help-block">{dr_lang('填写磁盘绝对路径或者相当于附件目录的目录路径，一定要以“/”结尾')}</span>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('附件远程访问URL')}</label>
                             <div class="col-md-7">
-                                <input type="text" class="form-control" value="{$data.url}" name="data[url]" />
+                                <input type="text" class="form-control" value="{htmlspecialchars($data.url)}" name="data[url]" />
                                 <span class="help-block">{dr_lang('浏览器可访问的URL地址，必须以http://或https://开头，要以“/”结尾')}</span>
                             </div>
                         </div>

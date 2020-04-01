@@ -317,6 +317,8 @@ class View {
         }
 
         if (CI_DEBUG) {
+            // 当模板不存在时写入错误日志中
+            log_message('error', '页面'.FC_NOW_URL.'模板文件不存在：'.$error);
             dr_show_error('模板文件 ('.$error.') 不存在');
         } else {
             dr_show_error('模板文件不存在');

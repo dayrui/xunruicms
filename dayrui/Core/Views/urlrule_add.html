@@ -49,7 +49,7 @@
                     <label class="col-md-2 control-label">{dr_lang('自定义页面')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[0][page]" value="{$value.page}" class="form-control">
+                            <input type="text" name="value[0][page]" value="{htmlspecialchars($value.page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_page()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -60,7 +60,7 @@
                     <label class="col-md-2 control-label">{dr_lang('自定义页面分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[0][page_page]" value="{$value.page_page}" class="form-control">
+                            <input type="text" name="value[0][page_page]" value="{htmlspecialchars($value.page_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_page()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -73,7 +73,7 @@
                     <label class="col-md-2 control-label">{dr_lang('表单提交页面')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[5][mfrom_post]" value="{$value.mfrom_post}" class="form-control">
+                            <input type="text" name="value[5][mfrom_post]" value="{htmlspecialchars($value.mfrom_post)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_mform_post()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -84,7 +84,7 @@
                     <label class="col-md-2 control-label">{dr_lang('表单列表页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[5][mfrom_list]" value="{$value.mfrom_list}" class="form-control">
+                            <input type="text" name="value[5][mfrom_list]" value="{htmlspecialchars($value.mfrom_list)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_mform_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -95,7 +95,7 @@
                     <label class="col-md-2 control-label">{dr_lang('表单列表页分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[5][mfrom_list_page]" value="{$value.mfrom_list_page}" class="form-control">
+                            <input type="text" name="value[5][mfrom_list_page]" value="{htmlspecialchars($value.mfrom_list_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_mform_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -106,7 +106,7 @@
                     <label class="col-md-2 control-label">{dr_lang('表单内容页面')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[5][mfrom_show]" value="{$value.mfrom_show}" class="form-control">
+                            <input type="text" name="value[5][mfrom_show]" value="{htmlspecialchars($value.mfrom_show)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_mform_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -117,7 +117,7 @@
                     <label class="col-md-2 control-label">{dr_lang('表单内容页分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[5][mfrom_show_page]" value="{$value.mfrom_show_page}" class="form-control">
+                            <input type="text" name="value[5][mfrom_show_page]" value="{htmlspecialchars($value.mfrom_show_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_mform_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -130,7 +130,7 @@
                     <label class="col-md-2 control-label">{dr_lang('Tag')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[4][tag]" value="{$value.tag}" class="form-control">
+                            <input type="text" name="value[4][tag]" value="{htmlspecialchars($value.tag)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_tag()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -144,7 +144,7 @@
                     <label class="col-md-2 control-label">{dr_lang('搜索页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[2][search]" value="{$value.search}" class="form-control">
+                            <input type="text" name="value[2][search]" value="{htmlspecialchars($value.search)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_search()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -155,7 +155,7 @@
                     <label class="col-md-2 control-label">{dr_lang('搜索分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[2][search_page]" value="{$value.search_page}" class="form-control">
+                            <input type="text" name="value[2][search_page]" value="{htmlspecialchars($value.search_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_search_page()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -168,7 +168,7 @@
                     <label class="col-md-2 control-label">{dr_lang('模块首页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][module]" value="{$value.module}" class="form-control">
+                            <input type="text" name="value[1][module]" value="{htmlspecialchars($value.module)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_index()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -179,7 +179,7 @@
                     <label class="col-md-2 control-label">{dr_lang('栏目页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][list]" value="{$value.list}" class="form-control">
+                            <input type="text" name="value[1][list]" value="{htmlspecialchars($value.list)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -190,7 +190,7 @@
                     <label class="col-md-2 control-label">{dr_lang('栏目分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][list_page]" value="{$value.list_page}" class="form-control">
+                            <input type="text" name="value[1][list_page]" value="{htmlspecialchars($value.list_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -201,7 +201,7 @@
                     <label class="col-md-2 control-label">{dr_lang('内容页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][show]" value="{$value.show}" class="form-control">
+                            <input type="text" name="value[1][show]" value="{htmlspecialchars($value.show)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -212,7 +212,7 @@
                     <label class="col-md-2 control-label">{dr_lang('内容分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][show_page]" value="{$value.show_page}" class="form-control">
+                            <input type="text" name="value[1][show_page]" value="{htmlspecialchars($value.show_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -223,7 +223,7 @@
                     <label class="col-md-2 control-label">{dr_lang('搜索页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][search]" value="{$value.search}" class="form-control">
+                            <input type="text" name="value[1][search]" value="{htmlspecialchars($value.search)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_search()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -234,7 +234,7 @@
                     <label class="col-md-2 control-label">{dr_lang('搜索分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[1][search_page]" value="{$value.search_page}" class="form-control">
+                            <input type="text" name="value[1][search_page]" value="{htmlspecialchars($value.search_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_search_page()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -247,7 +247,7 @@
                     <label class="col-md-2 control-label">{dr_lang('栏目页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[3][list]" value="{$value.list}" class="form-control">
+                            <input type="text" name="value[3][list]" value="{htmlspecialchars($value.list)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -258,7 +258,7 @@
                     <label class="col-md-2 control-label">{dr_lang('栏目分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[3][list_page]" value="{$value.list_page}" class="form-control">
+                            <input type="text" name="value[3][list_page]" value="{htmlspecialchars($value.list_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_list()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -269,7 +269,7 @@
                     <label class="col-md-2 control-label">{dr_lang('内容页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[3][show]" value="{$value.show}" class="form-control">
+                            <input type="text" name="value[3][show]" value="{htmlspecialchars($value.show)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -280,7 +280,7 @@
                     <label class="col-md-2 control-label">{dr_lang('内容分页')}</label>
                     <div class="col-md-7">
                         <div class="input-group">
-                            <input type="text" name="value[3][show_page]" value="{$value.show_page}" class="form-control">
+                            <input type="text" name="value[3][show_page]" value="{htmlspecialchars($value.show_page)}" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn blue" onclick="dr_url_module_show()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
                             </span>
@@ -294,7 +294,7 @@
                     <label class="col-md-2 control-label">{dr_lang('连接符号')}</label>
                     <div class="col-md-7">
                         <label>
-                            <input type="text" name="catjoin" value="{$value.catjoin}" class="form-control">
+                            <input type="text" name="catjoin" value="{htmlspecialchars($value.catjoin)}" class="form-control">
                         </label>
                         <span class="help-block"> {dr_lang('针对pdirname或者tag的连接符号，默认为"/"，如：china[连接符号]beijin')} </span>
                     </div>

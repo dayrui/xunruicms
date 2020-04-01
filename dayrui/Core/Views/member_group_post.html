@@ -23,7 +23,7 @@
                         <div class="form-group" id="dr_row_name">
                             <label class="col-md-2 control-label ">{dr_lang('名称')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{$name}"></label>
+                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($name)}"></label>
                                 <span class="help-block"> {dr_lang('用户组的描述名称')} </span>
                             </div>
                         </div>
@@ -40,10 +40,10 @@
                             <label class="col-md-2 control-label ">{dr_lang('价格要求')}</label>
                             <div class="col-md-9">
                                 {if $is_level && !$setting['level']['auto']}
-                                <label><input type="hidden" class="form-control" name="data[price]" value="{$price}"></label>
+                                <label><input type="hidden" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
                                 <p class="form-control-static" style="color: #da3f3f"> {dr_lang('请在等级制度管理中设置对应的价格')} </p>
                                 {else}
-                                <label><input type="text" class="form-control" name="data[price]" value="{$price}"></label>
+                                <label><input type="text" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
                                 <span class="help-block"> {dr_lang('0或者留空表示免费组')} </span>
                                 {/if}
                             </div>
@@ -51,7 +51,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label ">{dr_lang('有效天数')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" name="data[days]" value="{$days}"></label>
+                                <label><input type="text" class="form-control" name="data[days]" value="{htmlspecialchars($days)}"></label>
                                 <span class="help-block"> {dr_lang('单位天，到期过后将转为指定组，0或留空表示永久')} </span>
                             </div>
                         </div>

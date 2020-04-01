@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('SEO连接符')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[SITE_SEOJOIN]" value="{php echo $data['SITE_SEOJOIN'] ? $data['SITE_SEOJOIN'] : '_';}"></label>
+                                <label><input class="form-control" type="text" name="data[SITE_SEOJOIN]" value="{php echo $data['SITE_SEOJOIN'] ? htmlspecialchars($data['SITE_SEOJOIN']) : '_';}"></label>
                                 <span class="help-block">{dr_lang('默认为"_"，如：文章标题[连接符]栏目名称[连接符]模块名称')}</span>
                             </div>
                         </div>

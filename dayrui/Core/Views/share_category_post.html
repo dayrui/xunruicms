@@ -100,14 +100,14 @@ function dr_tid(i) {
                         <div class="form-group " id="dr_row_dirname">
                             <label class="col-md-2 control-label">{dr_lang('目录名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="system[dirname]" id="dr_dirname" value="{$data.dirname}"></label>
+                                <label><input class="form-control" type="text" name="system[dirname]" id="dr_dirname" value="{htmlspecialchars($data.dirname)}"></label>
                                 <span class="help-block" id="dr_dirname_tips">{dr_lang('栏目目录确保唯一，用于url填充或者生成目录')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_2 " style="display: none">
                             <label class="col-md-2 control-label">{dr_lang('外链地址')}</label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="system[setting][linkurl]" value="{$data['setting']['linkurl']}">
+                                <input class="form-control" type="text" name="system[setting][linkurl]" value="{htmlspecialchars($data['setting']['linkurl'])}">
                                 <span class="help-block">{dr_lang('可跳转到指定地址（不允许发布内容）')}</span>
                             </div>
                         </div>
@@ -201,14 +201,14 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('电脑列表信息数')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" value="{$data['setting']['template']['pagesize']}" name="system[setting][template][pagesize]"></label>
+                                <label><input class="form-control" type="text" value="{intval($data['setting']['template']['pagesize'])}" name="system[setting][template][pagesize]"></label>
                                 <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('手机列表信息数')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control " type="text" value="{$data['setting']['template']['mpagesize']}" name="system[setting][template][mpagesize]"></label>
+                                <label><input class="form-control " type="text" value="{intval($data['setting']['template']['mpagesize'])}" name="system[setting][template][mpagesize]"></label>
                                 <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_0">
                             <label class="col-md-2 control-label">{dr_lang('单网页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{$data['setting']['template']['page']}" name="system[setting][template][page]"></label>
+                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['page'])}" name="system[setting][template][page]"></label>
                                 <span class="help-block">{dr_lang('单网页模板默认page.html')}</span>
                             </div>
                         </div>
@@ -224,28 +224,28 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容列表页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{$data['setting']['template']['list']}" name="system[setting][template][list]"></label>
+                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['list'])}" name="system[setting][template][list]"></label>
                                 <span class="help-block">{dr_lang('模块栏目列表默认list.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容栏目封面模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{$data['setting']['template']['category']}" name="system[setting][template][category]"></label>
+                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['category'])}" name="system[setting][template][category]"></label>
                                 <span class="help-block">{dr_lang('默认category.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容搜索页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{php echo $data['setting']['template']['search'] ? $data['setting']['template']['search'] : 'search.html'}" name="system[setting][template][search]"></label>
+                                <label><input class="form-control input-large" type="text" value="{php echo $data['setting']['template']['search'] ? htmlspecialchars($data['setting']['template']['search']) : 'search.html'}" name="system[setting][template][search]"></label>
                                 <span class="help-block">{dr_lang('默认search.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容详细页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{$data['setting']['template']['show']}" name="system[setting][template][show]"></label>
+                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['show'])}" name="system[setting][template][show]"></label>
                                 <span class="help-block">{dr_lang('默认show.html')}</span>
                             </div>
                         </div>

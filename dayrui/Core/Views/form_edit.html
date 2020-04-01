@@ -37,7 +37,7 @@
                         <div class="form-group" id="dr_row_name">
                             <label class="col-md-2 control-label ">{dr_lang('表单名称')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{$data.name}"></label>
+                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($data.name)}"></label>
                                 <span class="help-block"> {dr_lang('表单的描述名称')} </span>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                             <label class="col-md-2 control-label ">{dr_lang('菜单图标')}</label>
                             <div class="col-md-9">
                                 <div class="input-group" style="width:250px">
-                                    <input class="form-control" id="dr_icon" type="text" name="data[setting][icon]" value="{$data['setting']['icon']}" />
+                                    <input class="form-control" id="dr_icon" type="text" name="data[setting][icon]" value="{htmlspecialchars($data['setting']['icon'])}" />
                             <span class="input-group-btn">
                                 <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
                             </span>
@@ -84,7 +84,7 @@
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('提交成功跳转URL')}</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control input-xlarge" name="data[setting][rt_url]" value="{$data['setting']['rt_url']}" >
+                                <input type="text" class="form-control input-xlarge" name="data[setting][rt_url]" value="{htmlspecialchars($data['setting']['rt_url'])}" >
                                 <span class="help-block"> {dr_lang('当用户提交表单成功之后跳转的链接')} </span>
                             </div>
                         </div>
@@ -114,13 +114,13 @@
                                     </label>
                                 </td>
                                 <td>{dr_lang($t.name)} ({$t.fieldname})</td>
-                                <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? $data['setting']['list_field'][$t.fieldname]['name'] : $t.name}" /></td>
-                                <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{$data['setting']['list_field'][$t.fieldname]['width']}" /></td>
+                                <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['setting']['list_field'][$t.fieldname]['name']) : $t.name}" /></td>
+                                <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{htmlspecialchars($data['setting']['list_field'][$t.fieldname]['width'])}" /></td>
                                 <td> <div class="input-group" style="width:250px">
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
                                         </span>
-                                    <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{$data['setting']['list_field'][$t.fieldname]['func']}" />
+                                    <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{htmlspecialchars($data['setting']['list_field'][$t.fieldname]['func'])}" />
                                 </div></td>
                             </tr>
                             {/loop}
@@ -150,7 +150,7 @@
                             <label class="control-label col-md-2">{dr_lang('通知账号')}</label>
                             <div class="col-md-9">
                                 <div class="input-group" style="width:200px;">
-                                    <input class="form-control " type="text" name="data[setting][notice][username]" id="dr_username" value="{$data['setting']['notice']['username']}"  />
+                                    <input class="form-control " type="text" name="data[setting][notice][username]" id="dr_username" value="{htmlspecialchars($data['setting']['notice']['username'])}"  />
                                     <span class="input-group-btn">
                                         <a class="btn btn-success default" href="javascript:dr_show_member('username');" ><i class="fa fa-user" /></i> {dr_lang('验证')}</a>
                                     </span>

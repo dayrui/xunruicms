@@ -27,7 +27,7 @@
                     <label class="col-md-2 control-label">{dr_lang('名称')}</label>
                     <div class="col-md-7">
                         <label>
-                            <input type="text" name="data[name]" value="{$name}" class="form-control">
+                            <input type="text" name="data[name]" value="{htmlspecialchars($name)}" class="form-control">
                         </label>
                     </div>
                 </div>
