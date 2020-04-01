@@ -75,7 +75,10 @@ class Category extends \Phpcmf\Model
 
         $pid = $this->categorys[$catid]['pid'];
         $pids = $pids ? $pid.','.$pids : $pid;
-        $pid ? $pids = $this->get_pids($pid, $pids, ++$n) : $this->categorys[$catid]['pids'] = $pids;
+        if ($pid) {
+            $pids = $this->get_pids($pid, $pids, ++$n);
+        }
+        //  : $this->categorys[$catid]['pids'] = $pids;
 
         return $pids;
     }
@@ -414,7 +417,6 @@ class Category extends \Phpcmf\Model
                     $this->_tree_html($t['id']);
                     $this->_tree_html.= '</li>';
                 } else {
-                    $url = '';
                     if ($t['tid'] == 1) {
                         $url = dr_url($t['mid'].'/home/index', ['catid' => $t['id']]);
                     } elseif ($t['tid'] == 2) {
