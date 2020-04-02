@@ -35,9 +35,11 @@
                                 <span class="label label-danger">{$m.name}</span> &nbsp;&nbsp;
                                 {$m.file}
                             </div>
+                            {if !IS_OEM_CMS}
                             <div class="col-md-2 text-right" >
                                 <a class="label label-success" href="{$m.help}">{dr_lang('设置教程')}</a>
                             </div>
+                            {/if}
                         </div>
                         <div class="form-group">
                             <div class="col-md-12">

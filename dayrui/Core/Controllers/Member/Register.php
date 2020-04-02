@@ -31,7 +31,7 @@ class Register extends \Phpcmf\Common
         if (!$groupid) {
             $this->_msg(0, dr_lang('无效的用户组'));
         } elseif (!$this->member_cache['group'][$groupid]['register']) {
-            $this->_msg(0, dr_lang('该用户组不允许注册'));
+            $this->_msg(0, dr_lang('用户组[%s]不允许注册', $this->member_cache['group'][$groupid]['name']));
         }
 
         // 获取返回URL
