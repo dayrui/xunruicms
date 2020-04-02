@@ -5,19 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 class Member_setting_group extends \Phpcmf\Common
 {
-
-    public function __construct(...$params) {
-        parent::__construct(...$params);
-        \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
-            [
-                '用户组权限' => ['member_setting_group/index', 'fa fa-cog'],
-            ]
-        ));
-    }
 
     public function index() {
 
@@ -58,8 +47,25 @@ class Member_setting_group extends \Phpcmf\Common
             }
         }
 
+        // 获取插件类自定义模板
+        $app = [];
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
+            $path = dr_get_app_dir($dir);
+            if (is_file($path.'install.lock') && is_file($path.'Config/Group.php')) {
+                $app[strtolower($dir)] =  $path.'Config/Group.php';
+            }
+        }
+
         \Phpcmf\Service::V()->assign([
+            'app' => $app,
             'data' => $data,
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '用户组权限' => ['member_setting_group/index', 'fa fa-cog'],
+                    'help' => [801],
+                ]
+            ),
             'group' => $list,
         ]);
         \Phpcmf\Service::V()->display('member_setting_group.html');

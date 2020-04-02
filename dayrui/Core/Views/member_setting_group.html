@@ -28,7 +28,7 @@
             </tr>
             <tr class="dr_cat_{$i} fc-cat-user" style="display: none">
                 <td colspan="3" style="text-align: left">
-                    <div class="table-scrollable" style="padding-top:20px; border: none">
+                    <div class="{if $is_mobile}table-scrollable{/if}" style="padding-top:20px; border: none">
 
                         {if $i != 0}
                         <div class="form-group">
@@ -82,13 +82,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][login_score]" value="{intval($data[auth][$i]['login_score'])}" class="form-control">
+                                        <input type="text" name="data[{$i}][login_score]" value="{intval($data['auth'][$i]['login_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][login_exp]" value="{intval($data[auth][$i]['login_exp'])}" class="form-control">
+                                        <input type="text" name="data[{$i}][login_exp]" value="{intval($data['auth'][$i]['login_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>
@@ -99,19 +99,23 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][avatar_score]" value="{intval($data[auth][$i]['avatar_score'])}" class="form-control">
+                                        <input type="text" name="data[{$i}][avatar_score]" value="{intval($data['auth'][$i]['avatar_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group">
-                                        <input type="text" name="data[{$i}][avatar_exp]" value="{intval($data[auth][$i]['avatar_exp'])}" class="form-control">
+                                        <input type="text" name="data[{$i}][avatar_exp]" value="{intval($data['auth'][$i]['avatar_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>
                             </div>
                         </div>
                         {/if}
+
+                        {loop $app $dir $file}
+                        {load "$file"}
+                        {/loop}
 
                     </div>
                 </td>
@@ -122,7 +126,7 @@
     </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_url('member_setting_group/add')}', 'myform', '2000', '{dr_url('member_setting_group/index')}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_url('member_setting_group/add')}', 'myform')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
         </div>
     </div>
 </form>
