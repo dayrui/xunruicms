@@ -46,9 +46,8 @@ class Account extends \Phpcmf\Common
             if ($is_update_name) {
                 if (!$post['name']) {
                     $this->_json(0, dr_lang('%s没有填写', MEMBER_CNAME), ['field' => 'name']);
-                } elseif ($this->member_cache['register']['cutname'] && strlen($post['name']) > $this->member_cache['register']['cutname']) {
-                    $this->_json(0, dr_lang('%s太长了', MEMBER_CNAME), ['field' => 'name']);
                 }
+                $post['name'] = dr_strcut($post['name'], intval($this->member_cache['register']['cutname']), '');
                 \Phpcmf\Service::M()->table('member')->update($this->uid, [
                     'name' => dr_strcut(dr_safe_replace($post['name']), 20, ''),
                 ]);
