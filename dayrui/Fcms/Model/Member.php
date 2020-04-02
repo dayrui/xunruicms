@@ -549,10 +549,7 @@ class Member extends \Phpcmf\Model
             \Phpcmf\Service::M('member')->insert_group($member['uid'], $gid);
             $lid && \Phpcmf\Service::M('member')->update_level($member['uid'], $gid, $lid);
             $my_verify['content'] && \Phpcmf\Service::M()->table('member_data')->update($member['uid'], $my_verify['content']);
-            // 邀请注册用户组分成
-            if (dr_is_app('yaoqing') && !$group['unit']) {
-                \Phpcmf\Service::M('yq', 'yaoqing')->insert_group($member['uid'], $gid, $price);
-            }
+
             return dr_return_data(1, dr_lang('开通成功'));
         }
 
@@ -1063,18 +1060,10 @@ class Member extends \Phpcmf\Model
         }
 
         // 注册后的通知
-        \Phpcmf\Service::L('Notice')->send_notice('member_register', $data);
+        \Phpcmf\Service::L('notice')->send_notice('member_register', $data);
 
         // 注册后的钩子
         \Phpcmf\Hooks::trigger('member_register_after', $data);
-
-        // 邀请注册绑定
-        if (dr_is_app('yaoqing')) {
-            $puid = \Phpcmf\Service::C()->session()->get('app_yaoqing_uid');
-            if ($puid) {
-                \Phpcmf\Service::M('yq', 'yaoqing')->register($puid, $data);
-            }
-        }
 
         // API认证字符串,
         $data['auth'] = md5($data['passowrd'].$data['salt']);

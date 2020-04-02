@@ -81,10 +81,9 @@ class Run extends \Phpcmf\Common
         }
 
         // 为插件单独执行计划
-        $local = dr_dir_map(dr_get_app_list(), 1);
+        $local = \Phpcmf\Service::Apps();
         if ($local) {
-            foreach ($local as $dir) {
-                $path = dr_get_app_dir($dir);
+            foreach ($local as $dir => $path) {
                 if (is_file($path.'Config/Cron.php')
                     && is_file($path.'Config/App.php')) {
                     require $path.'Config/Cron.php';

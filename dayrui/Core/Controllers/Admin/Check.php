@@ -446,10 +446,9 @@ class Check extends \Phpcmf\Common
             case '13':
                 // 应用插件
                 $func = [];
-                $local = dr_dir_map(dr_get_app_list(), 1);
+                $local = \Phpcmf\Service::Apps();
                 $custom = file_get_contents(ROOTPATH.'config/custom.php');
-                foreach ($local as $dir) {
-                    $path = dr_get_app_dir($dir);
+                foreach ($local as $dir => $path) {
                     if (is_file($path.'Config/App.php') && is_file($path.'Config/Init.php')) {
                         $code = file_get_contents($path.'Config/Init.php');
                         if (preg_match_all("/\s+function (.+)\(/", $code, $arr)) {

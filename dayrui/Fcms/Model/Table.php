@@ -503,9 +503,8 @@ class Table extends \Phpcmf\Model
 
 
         // 执行应用插件的站点sql语句
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'install.lock') && is_file($path.'Config/Install_site.php')) {
                 $sql = file_get_contents($path.'Config/Install_site.sql');
                 $this->_query(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));

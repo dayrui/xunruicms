@@ -451,9 +451,8 @@ class Menu extends \Phpcmf\Model {
         }
 
         // 子程序菜单
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'Config/Menu.php')) {
                 if (is_file($path.'Config/App.php')) {
                     $cfg = require $path.'Config/App.php';

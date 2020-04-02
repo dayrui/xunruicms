@@ -537,9 +537,6 @@ class Pay extends \Phpcmf\Model
 
                 case 'recharge':
                     // 在线充值
-                    if (dr_is_app('yaoqing')) {
-                        \Phpcmf\Service::M('yq', 'yaoqing')->czfx($data);
-                    }
                     break;
 
                 case 'group':

@@ -23,7 +23,17 @@ class Hooks extends \CodeIgniter\Events\Events
         {
             return;
         }
+
+        // 框架主钩子
         require ROOTPATH.'config/hooks.php';
+
+        // 加载全部插件的钩子
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'install.lock') && is_file($path.'Config/Hooks.php')) {
+                require $path.'Config/Hooks.php';
+            }
+        }
 
         self::on('pre_system', function () {
             while (\ob_get_level() > 0)

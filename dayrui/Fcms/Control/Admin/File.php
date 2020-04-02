@@ -260,9 +260,8 @@ class File extends \Phpcmf\Common
                         if ($fileext == 'html') {
                             // 模板解析时 预加载全部的自定义函数
                             // 执行插件自己的缓存程序
-                            $local = dr_dir_map(dr_get_app_list(), 1);
-                            foreach ($local as $dir) {
-                                $path = dr_get_app_dir($dir);
+                            $local = \Phpcmf\Service::Apps();
+                            foreach ($local as $dir => $path) {
                                 if (is_file($path.'install.lock')
                                     && is_file($path.'Config/Init.php')) {
                                     require $path.'Config/Init.php';

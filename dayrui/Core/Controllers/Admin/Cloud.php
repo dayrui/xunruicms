@@ -75,8 +75,8 @@ class Cloud extends \Phpcmf\Common
     public function app() {
 
         $id = [];
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file(dr_get_app_dir($dir).'Config/App.php')) {
                 $cfg = require dr_get_app_dir($dir).'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
@@ -128,9 +128,8 @@ class Cloud extends \Phpcmf\Common
         }
 
         $data = [];
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'Config/App.php')) {
                 $key = strtolower($dir);
                 $cfg = require $path.'Config/App.php';

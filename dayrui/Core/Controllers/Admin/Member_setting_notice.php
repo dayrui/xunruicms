@@ -12,7 +12,6 @@ class Member_setting_notice extends \Phpcmf\Common
 
     public function index() {
 
-        $local = dr_dir_map(dr_get_app_list(), 1);
         $notice['member'] = [
             'value' => require CMSPATH.'Config/Notice.php',
         ];
@@ -23,8 +22,8 @@ class Member_setting_notice extends \Phpcmf\Common
             ];
         }
 
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'/Config/Notice.php')
                 && is_file($path.'/Config/App.php')) {
                 $app = require $path.'/Config/App.php';

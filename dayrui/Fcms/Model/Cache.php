@@ -111,10 +111,9 @@ class Cache extends \Phpcmf\Model
         }
 
         // 执行插件自己的缓存程序
-        $local = dr_dir_map(dr_get_app_list(), 1);
+        $local = \Phpcmf\Service::Apps();
         $app_cache = [];
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        foreach ($local as $dir => $path) {
             if (is_file($path.'Config/Version.php')) {
                 $vsn = require $path.'Config/Version.php';
                 if (!IS_DEV && $cmf && strlen($vsn['license']) > 20 && $vsn['license'] != $cmf['license']) {

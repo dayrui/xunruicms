@@ -115,8 +115,8 @@ class Module extends \Phpcmf\Common
     public function index() {
 
         $list = [];
-        $local = dr_dir_map(dr_get_app_list(), 1); // 搜索本地模块
-        foreach ($local as $dir) {
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file(dr_get_app_dir($dir).'Config/App.php')) {
                 $key = strtolower($dir);
                 $cfg = require dr_get_app_dir($dir).'Config/App.php';

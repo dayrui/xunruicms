@@ -807,7 +807,44 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         return $val;
+    }
 
+    /**
+     * App获取用户组权限的积分及统计参数累计
+     */
+    public function _app_member_auth_value($authid, $app, $name) {
+
+        if (!$authid || !$name || !$app) {
+            return 0;
+        }
+
+        $val = 0;
+        $app = strtolower($app);
+        foreach ($authid as $aid) {
+            isset($this->member_cache['auth'][$aid][$app][$name]) && $this->member_cache['auth'][$aid][$app][$name] && $val+= (int)$this->member_cache['auth'][$aid][$app][$name];
+        }
+
+        return $val;
+    }
+
+    /**
+     * App获取用户组权限的积分的参数最大值
+     */
+    public function _app_member_auth_maxvalue($authid, $app, $name) {
+
+        if (!$authid || !$name || !$app) {
+            return 0;
+        }
+
+        $val = [];
+        $app = strtolower($app);
+        foreach ($authid as $aid) {
+            if (isset($this->member_cache['auth'][$aid][$app][$name]) && $this->member_cache['auth'][$aid][$app][$name]) {
+                $val[] = (int)$this->member_cache['auth'][$aid][$app][$name];
+            }
+        }
+
+        return $val ? max($val) : 0;
     }
 
     /**
@@ -969,9 +1006,8 @@ abstract class Common extends \CodeIgniter\Controller
             $data = require APPPATH.'Config/Clink.php';
         }
 
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php')) {
                 $_clink = require $path.'Config/Clink.php';
                 if ($_clink) {
@@ -1036,9 +1072,8 @@ abstract class Common extends \CodeIgniter\Controller
             $data = require APPPATH.'Config/Cbottom.php';
         }
 
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom.php')) {
                 $_clink = require $path.'Config/Cbottom.php';
                 if ($_clink) {
@@ -1082,9 +1117,8 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 执行插件自己的缓存程序
-        $local = dr_dir_map(dr_get_app_list(), 1);
-        foreach ($local as $dir) {
-            $path = dr_get_app_dir($dir);
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Main.php')) {
                 $_data = require $path.'Config/Main.php';

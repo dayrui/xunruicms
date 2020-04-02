@@ -16,6 +16,7 @@ class Service
     static private $view;
     static private $model;
     static private $require;
+    static private $apps;
 
     /**
      * 控制器对象实例
@@ -24,6 +25,36 @@ class Service
      */
     public static function C() {
         return class_exists('\Phpcmf\Common') ? \Phpcmf\Common::get_instance() : null;
+    }
+
+    // 获取应用目录
+    public static function Apps() {
+
+        if (isset(static::$apps) && static::$apps) {
+            return static::$apps;
+        }
+
+        static::$apps = [];
+        $source_dir = dr_get_app_list();
+        if ($fp = @opendir($source_dir)) {
+            $filedata = [];
+            $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            while (FALSE !== ($file = readdir($fp))) {
+                if ($file === '.' OR $file === '..'
+                    OR $file[0] === '.'
+                    OR !@is_dir($source_dir.$file)) {
+                    continue;
+                }
+                if (@is_dir($source_dir.$file)) {
+                    $filedata[$file] = dr_get_app_dir($file);
+                }
+            }
+            closedir($fp);
+
+            static::$apps = $filedata;
+        }
+
+        return static::$apps;
     }
 
     // 是否是电脑端

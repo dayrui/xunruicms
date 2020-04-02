@@ -284,9 +284,8 @@ $db[\'default\']	= [
                             \Phpcmf\Service::M('System')->save_config($sys, $sys);
 
                             // 删除app的install.lock
-                            $local = dr_dir_map(dr_get_app_list(), 1);
-                            foreach ($local as $dir) {
-                                $path = dr_get_app_dir($dir);
+                            $local = \Phpcmf\Service::Apps();
+                            foreach ($local as $dir => $path) {
                                 if (is_file($path.'install.lock')) {
                                     @unlink($path.'install.lock');
                                 }

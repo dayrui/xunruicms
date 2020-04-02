@@ -148,26 +148,5 @@ class Register extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('register.html');
     }
 
-    // 邀请注册
-    public function yq() {
-
-        if (!dr_is_app('yaoqing')) {
-            $this->_msg(0, dr_lang('邀请注册应用未安装'));
-        }
-
-        // 存储邀请参数
-        $uid = (int)\Phpcmf\Service::L('input')->get('uid');
-        $rt = \Phpcmf\Service::M('yq', 'yaoqing')->yaoqing_rule($uid);
-        if (!$rt['code']) {
-            $this->_msg(0, $rt['msg']);
-        }
-
-        // 存储邀请状态
-        $this->session()->set('app_yaoqing_uid', $uid);
-
-        dr_redirect(dr_member_url('register/index'));exit;
-
-    }
-
 
 }
