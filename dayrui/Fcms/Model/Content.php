@@ -959,11 +959,6 @@ class Content extends \Phpcmf\Model {
             \Phpcmf\Service::M('member')->delete_admin_notice($this->dirname.'/verify/edit:id/'.$id, $this->siteid);
             \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$id);
 
-            // 通知用户
-            $row['note'] = dr_clearhtml($note);
-            $row['title'] = dr_strcut(dr_clearhtml($row['title']), 50);
-            \Phpcmf\Service::L('Notice')->send_notice('module_content_delete', $row);
-
             // 放入回收站
             $rt = $this->table($this->mytable.'_recycle')->insert([
                 'uid' => $this->uid,
@@ -976,6 +971,15 @@ class Content extends \Phpcmf\Model {
             if (!$rt['code']) {
                 return $rt;
             }
+
+            $row['note'] = dr_clearhtml($note);
+
+            // 回收站钩子
+            \Phpcmf\Hooks::trigger('module_content_recycle', $row);
+
+            // 通知用户
+            $row['title'] = dr_strcut(dr_clearhtml($row['title']), 50);
+            \Phpcmf\Service::L('Notice')->send_notice('module_content_delete', $row);
 
             // 删除文件
             $this->_delete_show_file($row);
@@ -1019,6 +1023,8 @@ class Content extends \Phpcmf\Model {
             \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$cid);
             // 删除执行的方法
             $this->_delete_content($cid, $row);
+            // 删除钩子
+            \Phpcmf\Hooks::trigger('module_content_delete', dr_string2array($row['content']));
             // 删除回收站表
             $this->table($this->mytable.'_recycle')->delete($id);
             // 才彻底删除内容数据
