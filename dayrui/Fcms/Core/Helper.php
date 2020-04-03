@@ -780,7 +780,7 @@ function dr_fieldform($field, $value = '', $remove_div  = 1) {
 // 打赏支付
 function dr_donation($id, $title = '', $dir = null, $remove_div  = 1) {
     !$dir && $dir = MOD_DIR;
-    return \Phpcmf\Service::M('Pay')->payform('donation-'.$dir.'-'.$id.'-'.SITE_ID, 0, $title, '/index.php?s='.$dir.'&c=show&id='.$id, $remove_div);
+    return \Phpcmf\Service::M('Pay')->payform('my-shang_buy-'.$id.'_'.$dir.'-'.SITE_ID, 0, $title, '', $remove_div);
 }
 
 // 是否存在收藏夹中 1收藏了 2没有收藏

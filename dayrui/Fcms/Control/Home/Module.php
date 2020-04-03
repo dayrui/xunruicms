@@ -96,38 +96,6 @@ class Module extends \Phpcmf\Common
 
     }
 
-    // 模块打赏
-    protected function _Donation($id = 0, $rt = 0) {
-
-        // 启用页面缓存
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
-
-        if (!dr_is_app_dir('shang')) {
-            $this->goto_404_page('当前模块没有安装打赏应用');
-        }
-
-        !$id && $id = intval(\Phpcmf\Service::L('input')->get('id'));
-
-        // 初始化模块
-        $this->_module_init();
-        define('SC_HTML_FILE', 1); // 不跳转
-        $data = $this->_Show($id, [], 1, 1);
-
-        if ($rt) {
-            return $data;
-        }
-
-        // 验证
-        if (!in_array('donation', \Phpcmf\Service::M('table')->get_cache_field(SITE_ID.'_'.MOD_DIR)) ) {
-            $this->goto_404_page('当前模块没有安装打赏应用');exit;
-        }
-
-        \Phpcmf\Service::V()->assign('meta_title', dr_lang('打赏作者').SITE_SEOJOIN.\Phpcmf\Service::V()->get_value('meta_title'));
-        \Phpcmf\Service::V()->display('donation.html');
-    }
-
     // 模块栏目页
     protected function _Category($catid = 0, $catdir = null, $page = 1) {
 
@@ -1014,6 +982,12 @@ class Module extends \Phpcmf\Common
 
         $this->_json($page + 1, $html, ['pcount' => $pcount]);
 
+    }
+
+    // 模块打赏
+    protected function _Donation($id = 0, $rt = 0) {
+        // 从框架中移除打赏插件的支持代码
+        $this->goto_404_page('请升级打赏插件，此功能不再支持');
     }
 
     // 前端模块回调处理类

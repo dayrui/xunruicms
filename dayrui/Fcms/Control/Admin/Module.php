@@ -1213,7 +1213,7 @@ class Module extends \Phpcmf\Table
     protected function _Call_Post($data) {
 
         if ($data[1]['status'] == 9) {
-            $html = '';
+            $html = $list = '';
             if ($this->module['category'][$data[1]['catid']]['setting']['html']) {
                 // 生成权限文件
                 if (!dr_html_auth(1)) {
@@ -1222,7 +1222,7 @@ class Module extends \Phpcmf\Table
                 $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $html, 'listfile' => $list]);
+            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
         } else {
             if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
                 // 草稿
@@ -1230,10 +1230,12 @@ class Module extends \Phpcmf\Table
             } elseif ($this->is_post_user) {
                 // 投稿者
                 $this->_json(1, dr_lang('操作成功，等待管理员审核'), [
-                    'url' => dr_url(MOD_DIR.'/verify/index')
+                    'url' => dr_url(MOD_DIR.'/verify/index'),
+                    'id' => $data[1]['id'],
+                    'catid' => $data[1]['catid'],
                 ]);
             }
-            $this->_json(1, dr_lang('操作成功'));
+            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
         }
     }
 

@@ -571,9 +571,7 @@ class Router
             return '没有安装【'.$dir.'】模块';
         }
 
-        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-
-        return $this->url_prefix('php', $module, array(), SITE_FID) . 'c=donation&id=' . $id;
+        return $this->url_prefix('php', [], [], SITE_FID) . 's=shang&mid='.$dir.'&id=' . $id;
     }
 
     // 模块表单内容地址

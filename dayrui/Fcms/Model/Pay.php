@@ -399,12 +399,6 @@ class Pay extends \Phpcmf\Model
                         }
                         break;
 
-                    case 'donation':
-                        // 打赏作者
-                        $field = $this->myfield[$rname];
-                        $value = ceil($value);
-                        break;
-
                     case 'buy':
                         // 快速下单
                         $field = \Phpcmf\Service::C()->get_cache('table-field', $num);
@@ -567,50 +561,6 @@ class Pay extends \Phpcmf\Model
                     // 虚拟币充值
                     $value = abs($data['value']) * \Phpcmf\Service::C()->member_cache['pay']['convert'];
                     \Phpcmf\Service::M('member')->add_score($data['uid'], $value, dr_lang('在线充值'), $data['url']);
-                    break;
-                case 'donation':
-                    // 打赏记录
-                    $cid = (int)$c;
-                    $rt = $this->table($d.'_'.$b.'_donation')->insert([
-                        'cid' => $cid,
-                        'uid' => $data['uid'],
-                        'value' => abs($data['value']),
-                        'inputtime' => SYS_TIME
-                    ]);
-                    // 打款到收款人账户
-                    $this->add_money($data['touid'], abs($data['value']));
-                    // 收款人增加一条收入记录
-                    $this->add_paylog([
-                        'uid' => $data['touid'],
-                        'username' => $data['tousername'],
-                        'touid' => $data['uid'],
-                        'tousername' => $data['username'],
-                        'mid' => $data['mid'],
-                        'title' => $data['title'],
-                        'value' => abs($data['value']),
-                        'type' => $data['type'],
-                        'status' => 1,
-                        'result' => $payid,
-                        'paytime' => SYS_TIME,
-                        'inputtime' => $data['inputtime'],
-                    ]);
-                    // 更新主表
-                    if ($rt['code']) {
-                        $sum = $this->db->table($d.'_'.$b.'_donation')->selectSum('value')->where('cid', $cid)->get()->getRowArray();
-                        $this->db->table($d.'_'.$b)->where('id', $cid)->set('donation', $sum['value'])->update();
-                        \Phpcmf\Service::L('cache')->clear('module_'.$b.'_show_id_'.$cid);
-                        $data['cid'] = $cid;
-                        $data['mid'] = $b;
-
-                        // 初始化数据表
-                        $content_model = \Phpcmf\Service::M('Content', $b);
-                        $content_model->_init($b, $d);
-                        $content_model->_content_donation_after($cid, $data);
-
-                        \Phpcmf\Hooks::trigger('donation_success', $data);
-                    } else {
-                        log_message('error', '打赏付款(#'.$id.')回调失败：'.$rt['msg']);
-                    }
                     break;
 
                 case 'buy':
@@ -825,31 +775,6 @@ class Pay extends \Phpcmf\Model
                         $money = -$money;
                         $touid = (int)$row['sell_uid']; // 收款方
                         $tousername = (string)$row['sell_username']; // 收款方
-                        break;
-
-                    case 'donation':
-                        // 打赏作者
-                        $field = $this->myfield[$rname];
-                        $money = (float)$post['money'];
-                        if ($money <= 0) {
-                            return dr_return_data(0, dr_lang('金额[%s]不规范', $money));
-                        }
-                        // 获取文章信息
-                        $rt = $this->get_module_row($rid, $fid, $num);
-                        if (!$rt['code']) {
-                            return dr_return_data(0, $rt['msg']);
-                        }
-                        $min = floatval(\Phpcmf\Service::C()->member_cache['pay']['smin']);
-                        if ($min > 0 && $money < $min) {
-                            return dr_return_data(0, dr_lang('打赏金额不能低于%s元', $min));
-                        }
-                        $touid = $rt['data']['uid'];
-                        $tousername = $rt['data']['author'];
-                        $title = $post['title'];
-                        $money = -$money;
-                        if ($this->uid == $touid) {
-                            return dr_return_data(0, dr_lang('不能对自己打赏'));
-                        }
                         break;
 
                     case 'order':
