@@ -802,6 +802,12 @@ class Pay extends \Phpcmf\Model
                     case 'my':
                         // 来自二次开发
                         $obj = $this->my_pay_obj($rid);
+						if (method_exists($obj, 'pay_after')) {
+                            $rt = $obj->pay_after($fid, $num, $sku, SITE_ID);
+                            if ($rt) {
+                                return dr_return_data(0, $rt);
+                            }
+                        }
                         if (method_exists($obj, 'get_row')) {
                             $row = $obj->get_row($fid, $num, $sku, SITE_ID);
                             if (!$row) {
