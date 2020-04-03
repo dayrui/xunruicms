@@ -197,7 +197,7 @@ class Apply extends \Phpcmf\Common
             }
 
             // 入库存储
-            $rt = \Phpcmf\Service::M('member')->apply_group($verify['id'], $gid, $lid, $price, $my_verify);
+            $rt = \Phpcmf\Service::M('member')->apply_group($verify['id'], $this->member, $gid, $lid, $price, $my_verify);
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
