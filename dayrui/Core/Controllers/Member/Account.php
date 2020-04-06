@@ -189,12 +189,12 @@ class Account extends \Phpcmf\Common
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
-                $this->_json(0, dr_lang('手机验证码不正确'));
+                $this->_json(0, dr_lang('手机验证码不正确') . (IS_DEV ? '(正确的验证码是：'.$this->member['randcode'].')' : ''));
             } elseif (!$cache) {
                 $this->_json(0, dr_lang('手机验证码储存过期'));
             } elseif ($cache != $value) {
                 // caceh存储的是手机号码，验证手机号码是否匹配
-                $this->_json(0, dr_lang('手机号码不匹配'));
+                $this->_json(0, dr_lang('手机号码不匹配') . (IS_DEV ? '(正确的手机号码是：'.$cache.')' : ''));
             }
 
             // 更新手机号
