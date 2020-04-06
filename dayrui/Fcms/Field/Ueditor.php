@@ -459,6 +459,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 initialFrameHeight: \"{$height}\",
                 initialStyle:\"body{font-size:14px}\",
                 wordCount:false,
+                maximumWords:9000000,
                 elementPathEnabled:false,
                 autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
                 autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
