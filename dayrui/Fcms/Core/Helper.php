@@ -2373,11 +2373,12 @@ function dr_ajax_template($id, $filename) {
  * @param	intval	$id
  * @return	string
  */
-function dr_show_hits($id, $dom = "") {
-    $is = $dom;
-    !$dom && $dom = "dr_show_hits_{$id}";
-    $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
-    return $html."<script type=\"text/javascript\">
+if (!function_exists('dr_show_hits')) {
+    function dr_show_hits($id, $dom = "") {
+        $is = $dom;
+        !$dom && $dom = "dr_show_hits_{$id}";
+        $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
+        return $html."<script type=\"text/javascript\">
 		$.ajax({
 			type: \"GET\",
 			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".MOD_DIR."&m=hits&id={$id}\",
@@ -2391,6 +2392,7 @@ function dr_show_hits($id, $dom = "") {
 			}
 		});
     </script>";
+    }
 }
 
 /**
