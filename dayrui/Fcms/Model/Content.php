@@ -44,6 +44,10 @@ class Content extends \Phpcmf\Model {
         // 挂钩点 模块内容发布或修改完成之后
         \Phpcmf\Hooks::trigger('module_content_before', $data);
 
+        // 防止时间字段入库为空
+        !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;
+        !$data[1]['inputtime'] && $data[1]['inputtime'] = $data[1]['updatetime'];
+
         if (!$id) {
             // 新增
             // 生成索引id
