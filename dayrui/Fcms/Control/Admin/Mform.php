@@ -42,7 +42,7 @@ class Mform extends \Phpcmf\Table
         $this->name = dr_lang('内容模块[%s]表单（%s）', APP_DIR, $this->form['name']);
         // 获取父级内容
          $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
-         $this->cid && $this->index = $this->content_model->get_data( $this->cid);
+         $this->index = $this->cid ? $this->content_model->get_data( $this->cid) : [];
         // 自定义条件
         $where = $this->is_verify ? 'status=0' : 'status=1';
         $this->cid && $where.= ' and cid='. $this->cid;

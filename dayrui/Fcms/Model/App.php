@@ -19,7 +19,7 @@ class App extends \Phpcmf\Model
     }
 
     // 开始安装app
-    public function install($dir) {
+    public function install($dir, $type = 0) {
 
         $path = dr_get_app_dir($dir);
         if (!is_file($path.'Config/App.php')) {
@@ -48,6 +48,7 @@ class App extends \Phpcmf\Model
 
         if (isset($config['ftype']) && $config['ftype'] == 'module') {
             // 如果是内容模块，就进入内容模块安装模式
+            $config['share'] = $type ? 0 : 1;
             \Phpcmf\Service::M('module')->install($dir, $config, 1);
         } else {
             // 执行sql语句，主站的才执行

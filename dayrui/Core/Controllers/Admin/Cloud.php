@@ -142,6 +142,8 @@ class Cloud extends \Phpcmf\Common
                         'id' => $vsn['id'],
                         'name' => $cfg['name'],
                         'type' => $cfg['type'],
+                        'mtype' => $cfg['mtype'],
+                        'ftype' => $cfg['ftype'],
                         'icon' => $cfg['icon'],
                         'author' => $cfg['author'],
                         'store' => $vsn['store'],
@@ -191,12 +193,13 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
+        $type = intval(\Phpcmf\Service::L('input')->get('type'));
         if (!is_file(dr_get_app_dir($dir).'Config/App.php')) {
             $this->_json(0, dr_lang('安装程序App.php不存在'));
         }
 
         // 开始安装
-        $rt = \Phpcmf\Service::M('App')->install($dir);
+        $rt = \Phpcmf\Service::M('App')->install($dir, $type);
         if (!$rt['code']) {
             $this->_json(0, $rt['msg']);
         }
@@ -280,12 +283,14 @@ class Cloud extends \Phpcmf\Common
         unlink($file);
 
 		// 查询插件目录
-        $is_app = $is_tpl = 0;
+        $is_app = $is_module_app = $is_tpl = 0;
 		if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
 			$ins = require $cmspath.'Install.php';
 			if (isset($ins['type']) && $ins['type'] == 'app') {
 				if ($ins['name'] && is_file($cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php')) {
+				    $cfg = require $cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php';
 					$is_app = $ins['name'];
+                    $is_module_app = $cfg['ftype'] == 'module' && $cfg['mtype'] == 0;
 				}
 			} elseif (isset($ins['type']) && $ins['type'] == 'tpl') {
 				if ($ins['name']) {
@@ -358,7 +363,11 @@ class Cloud extends \Phpcmf\Common
         }
 		
 		if ($is_app) {
-			$msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
+            if ($is_module_app) {
+                $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_install_module_select(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\');">立即安装应用插件</a>';
+            } else {
+                $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
+            }
 		} elseif ($is_tpl) {
 			$msg = '模板导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
 		} else {
