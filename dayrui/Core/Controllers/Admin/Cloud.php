@@ -312,6 +312,8 @@ class Cloud extends \Phpcmf\Common
                         unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
                     }
 					$is_app = strtolower($name);
+					$cfg = require $cmspath.'APPSPATH/'.$name.'/Config/App.php';
+                    $is_module_app = $cfg['ftype'] == 'module' && $cfg['mtype'] == 0;
                     break;
                 }
             }
