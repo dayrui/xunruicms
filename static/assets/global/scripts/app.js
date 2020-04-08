@@ -1547,7 +1547,7 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("window.location.reload(true)", 2000)
+                        setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -1564,7 +1564,7 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("window.location.reload(true)", 2000)
+                        setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
