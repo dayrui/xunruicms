@@ -312,7 +312,13 @@ class File extends \Phpcmf\Common
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             } elseif (is_file($info['file'])) {
-                set_time_limit(0);  //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
+                // 下载次数统计
+                \Phpcmf\Service::M()->table('attachment')->update($id, [
+                    'download' => $info['download'] + 1,
+                ]);
+                \Phpcmf\Service::L('cache')->del_file('attach-info-'.$id, 'attach');
+                //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
+                set_time_limit(0);
                 $handle = fopen($info['file'],"rb");
                 if (FALSE === $handle) {
                     $this->_msg(0, dr_lang('文件已经损坏'));
