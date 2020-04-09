@@ -141,6 +141,13 @@ class Urlrule extends \Phpcmf\Table
             'code' => $code,
             'note' => $note,
             'site' => $site,
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    'URL规则' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-link'],
+                    '伪静态' => [\Phpcmf\Service::L('Router')->class.'/rewrite_index', 'fa fa-cog'],
+                    'help' => [21],
+                ]
+            ),
             'count' => $code ? dr_count(explode(PHP_EOL, $code)) : 0,
             'domain' => $domain,
         ]);
