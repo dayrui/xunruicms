@@ -313,10 +313,12 @@ class File extends \Phpcmf\Common
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             } elseif (is_file($info['file'])) {
                 // 下载次数统计
+                $info['download'] = intval($info['download']) + 1;
                 \Phpcmf\Service::M()->table('attachment')->update($id, [
-                    'download' => $info['download'] + 1,
+                    'download' => $info['download'],
                 ]);
-                \Phpcmf\Service::L('cache')->del_file('attach-info-'.$id, 'attach');
+                // 存储新缓存
+                \Phpcmf\Service::L('cache')->set_file('attach-info-'.$id, $info, 'attach');
                 //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
                 set_time_limit(0);
                 $handle = fopen($info['file'],"rb");
