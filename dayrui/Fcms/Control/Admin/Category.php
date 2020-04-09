@@ -55,7 +55,7 @@ class Category extends \Phpcmf\Table
             'show_field' => 'name',
             'order_by' => 'displayorder ASC,id ASC',
         ]);
-        \Phpcmf\Service::M('Category')->init($this->init); // 初始化内容模型
+        \Phpcmf\Service::M('category')->init($this->init); // 初始化内容模型
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
@@ -95,13 +95,18 @@ class Category extends \Phpcmf\Table
                 $option.= '<a class="btn btn-xs blue" href='.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 0 && $this->is_scategory)) {
-                $option.= '<a class="btn btn-xs dark" href="javascript:dr_page_content('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
+                    // 当开启字段权限时不显示内容
+                } else {
+                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_page_content('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                }
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {
                 $option.= '<a class="btn btn-xs dark" href="javascript:dr_link_url('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑地址').'</a>';
             }
-            if ($this->_is_admin_auth('edit')
-                && ( (!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
+            // 只对超管有效
+            if (isset($this->admin['role'][1])
+                && ((!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
                 $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
             }
 
@@ -176,7 +181,7 @@ class Category extends \Phpcmf\Table
 
         list($tpl, $data) = $this->_List([], -1);
 
-        $category = \Phpcmf\Service::M('Category')->repair($data['list']);
+        $category = \Phpcmf\Service::M('category')->repair($data['list']);
 
         \Phpcmf\Service::V()->assign([
             'list' => $this->_get_tree_list($category),
@@ -785,6 +790,7 @@ class Category extends \Phpcmf\Table
                     }
                 }
             }
+            $save['name'] = 'test';
             $row['setting']['cat_field'] = $save;
             \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目自定义字段权限: '. $row['name'] . '['. $id.']');
@@ -845,11 +851,9 @@ class Category extends \Phpcmf\Table
         $row['setting'] = dr_string2array($row['setting']);
         if ($row['setting']['cat_field']) {
             foreach ($row['setting']['cat_field'] as $key => $v) {
-                unset($this->init['field'][$key]);
+                unset($this->field[$key]);
             }
         }
-
-        $this->_init($this->init);
 
         return $row;
     }

@@ -36,9 +36,11 @@ function dr_tid(i) {
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('基本设置')} </a>
                 </li>
+                {if $sysfield || $myfield || $diyfield}
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('内容设置')} </a>
                 </li>
+                {/if}
                 <li class="{if $page==3}active{/if}">
                     <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-internet-explorer"></i> {dr_lang('SEO优化')} </a>
                 </li>
