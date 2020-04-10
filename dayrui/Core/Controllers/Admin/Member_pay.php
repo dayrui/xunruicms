@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
-
-
 
 class Member_pay extends \Phpcmf\Common
 {
@@ -25,9 +22,9 @@ class Member_pay extends \Phpcmf\Common
                 $this->_json(0, dr_lang('备注说明未填写'), ['field' => 'note']);
             }
             if ($post['unit'] == 1) {
-                // 金币
+                // 虚拟金币
                 if ($user['score'] + $post['value'] < 0) {
-                    $this->_json(0, dr_lang('账号余额不足'), ['field' => 'value']);
+                    $this->_json(0, dr_lang('账号%s不足', SITE_SCORE), ['field' => 'value']);
                 }
                 // 付款方的钱
                 $rt = \Phpcmf\Service::M('member')->add_score($user['id'], $post['value'], $post['note']);
@@ -36,9 +33,9 @@ class Member_pay extends \Phpcmf\Common
                 }
                 $this->_json(1, dr_lang('充值%s成功', SITE_SCORE.$post['value']));
             } elseif ($post['unit'] == 3) {
-                // 升级
-                if ($post['value'] < 0) {
-                    $this->_json(0, dr_lang('%s不能是负数', SITE_EXPERIENCE), ['field' => 'value']);
+                // 升级值
+                if ($user['experience'] + $post['value'] < 0) {
+                    $this->_json(0, dr_lang('账号%s不足', SITE_EXPERIENCE), ['field' => 'value']);
                 }
                 // 付款方的钱
                 $rt = \Phpcmf\Service::M('member')->add_experience($user['id'], $post['value'], $post['note']);
@@ -108,6 +105,5 @@ class Member_pay extends \Phpcmf\Common
         ]);
         \Phpcmf\Service::V()->display('member_pay.html');
     }
-
 
 }

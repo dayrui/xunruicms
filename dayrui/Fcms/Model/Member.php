@@ -1339,7 +1339,7 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('本次不能累计增减金币'));
         }
 
-        $val = abs($val); // 经验值只能加
+        //$val = abs($val); // 经验值只能加
         $value = max(0, (int)$user['experience'] + $val); // 不允许小于0
         $this->db->table('member')->where('id', (int)$uid)->update(['experience' => $value]);
 
