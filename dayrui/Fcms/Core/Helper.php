@@ -228,9 +228,13 @@ function dr_content_link($tags, $content, $num = 0) {
 
     foreach ($tags as $name => $url) {
         if ($name && $url) {
-            $url = '<a href="'.$url.'" target="_blank">'.$name.'</a>';
-            $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                $url,
+            $t = [
+                'url' => $url,
+                'name' => $name,
+            ];
+            $content = @preg_replace(
+                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)|(<span.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>)|([^>]*?</span>))\'si',
+                '<a href="'.$t['url'].'" target="_blank">'.$t['name'].'</a>',
                 $content,
                 $num ? $num : -1
             );
@@ -251,9 +255,9 @@ function dr_neilian($content, $blank = 1, $num = 1) {
     $tags = \Phpcmf\Service::L('cache')->get('tag-'.SITE_ID);
     if ($tags) {
         foreach ($tags as $t) {
-            $url = '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$t['name'].'</a>';
-            $content = @preg_replace('\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                $url,
+            $content = @preg_replace(
+                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)|(<span.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>)|([^>]*?</span>))\'si',
+                '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$t['name'].'</a>',
                 $content,
                 $num ? $num : -1
             );
