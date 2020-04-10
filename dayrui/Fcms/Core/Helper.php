@@ -233,7 +233,7 @@ function dr_content_link($tags, $content, $num = 0) {
                 'name' => $name,
             ];
             $content = @preg_replace(
-                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)|(<span.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>)|([^>]*?</span>))\'si',
+                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
                 '<a href="'.$t['url'].'" target="_blank">'.$t['name'].'</a>',
                 $content,
                 $num ? $num : -1
@@ -256,7 +256,7 @@ function dr_neilian($content, $blank = 1, $num = 1) {
     if ($tags) {
         foreach ($tags as $t) {
             $content = @preg_replace(
-                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)|(<span.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>)|([^>]*?</span>))\'si',
+                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
                 '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$t['name'].'</a>',
                 $content,
                 $num ? $num : -1
