@@ -30,6 +30,8 @@ class Module extends \Phpcmf\Common
             $menu['添加表单'] = ['add:module/form_add{dir='.$this->dir.'}', 'fa fa-plus', '500px', '310px'];
             $menu['表单配置'] = ['hide:'.\Phpcmf\Service::L('Router')->class.'/form_edit', 'fa fa-cog'];
             $menu['help'] = [98];
+        } elseif (strpos(\Phpcmf\Service::L('Router')->method, 'flag') !== false) {
+            $menu['help'] = [440];
         }
 
         \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu($menu));
