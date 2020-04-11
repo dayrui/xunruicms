@@ -1977,6 +1977,138 @@ function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
     return $del_dir && $_level == 0 ? @rmdir($path) : TRUE;
 }
 
+
+
+// 替换互动表情内容
+function dr_replace_emotion($content) {
+
+    $content = htmlspecialchars_decode($content);
+
+    // 替换表情
+    if (preg_match_all('/\[([a-z0-9]+)\]/Ui', $content, $match)) {
+        foreach ($match[1] as $t) {
+            if (in_array($t, array (
+                0 => 'dangao',
+                1 => 'qiu',
+                2 => 'fadou',
+                3 => 'tiaopi',
+                4 => 'fadai',
+                5 => 'xinsui',
+                6 => 'ruo',
+                7 => 'jingkong',
+                8 => 'quantou',
+                9 => 'gangga',
+                10 => 'da',
+                11 => 'touxiao',
+                12 => 'ciya',
+                13 => 'liulei',
+                14 => 'fendou',
+                15 => 'kiss',
+                16 => 'aoman',
+                17 => 'kulou',
+                18 => 'yueliang',
+                19 => 'lenghan',
+                20 => 'kun',
+                21 => 'meng',
+                22 => 'shenma',
+                23 => 'peifu',
+                24 => 'qinqin',
+                25 => 'nanguo',
+                26 => 'hufen',
+                27 => 'shuai',
+                28 => 'jingya',
+                29 => 'cahan',
+                30 => 'shengli',
+                31 => 'qioudale',
+                32 => 'cheer',
+                33 => 'ketou',
+                34 => 'shandian',
+                35 => 'haqian',
+                36 => 'jidong',
+                37 => 'zaijian',
+                38 => 'kafei',
+                39 => 'love',
+                40 => 'pizui',
+                41 => 'huitou',
+                42 => 'tiao',
+                43 => 'liwu',
+                44 => 'zhutou',
+                45 => 'e',
+                46 => 'qiang',
+                47 => 'youtaiji',
+                48 => 'zuohengheng',
+                49 => 'huaixiao',
+                50 => 'gouyin',
+                51 => 'keai',
+                52 => 'tiaosheng',
+                53 => 'daku',
+                54 => 'weiqu',
+                55 => 'lanqiu',
+                56 => 'zhemo',
+                57 => 'xia',
+                58 => 'fan',
+                59 => 'yun',
+                60 => 'youhengheng',
+                61 => 'chong',
+                62 => 'pijiu',
+                63 => 'dajiao',
+                64 => 'dao',
+                65 => 'diaoxie',
+                66 => 'liuhan',
+                67 => 'haha',
+                68 => 'xu',
+                69 => 'zhuakuang',
+                70 => 'zhuanquan',
+                71 => 'no',
+                72 => 'ok',
+                73 => 'feiwen',
+                74 => 'taiyang',
+                75 => 'woshou',
+                76 => 'zuqiu',
+                77 => 'xigua',
+                78 => 'hua',
+                79 => 'tu',
+                80 => 'tiaowu',
+                81 => 'ma',
+                82 => 'baiyan',
+                83 => 'zhadan',
+                84 => 'weixiao',
+                85 => 'wen',
+                86 => 'dabing',
+                87 => 'xianwen',
+                88 => 'shuijiao',
+                89 => 'yongbao',
+                90 => 'kelian',
+                91 => 'pingpang',
+                92 => 'danu',
+                93 => 'geili',
+                94 => 'wabi',
+                95 => 'kuaikule',
+                96 => 'zuotaiji',
+                97 => 'tuzi',
+                98 => 'bishi',
+                99 => 'caidao',
+                100 => 'dabian',
+                101 => 'fanu',
+                102 => 'guzhang',
+                103 => 'se',
+                104 => 'chajin',
+                105 => 'bizui',
+                106 => 'deyi',
+                107 => 'ku',
+                108 => 'huishou',
+                109 => 'yinxian',
+                110 => 'haixiu',
+            ))) {
+                $content = str_replace('['.$t.']', '<img src="'.ROOT_THEME_PATH.'assets/comment/emotions/'.$t.'.gif" />', $content);
+            }
+
+        }
+    }
+
+    return $content;
+}
+
 // 评论表情
 function dr_comment_emotion() {
 
@@ -2989,21 +3121,6 @@ function dr_preg_html($html){
  */
 function _format_feed_content_url_length($match) {
     return '<a href="'.$match[1].'" target="_blank">'.$match[1].'</a>';
-}
-
-// 替换互动表情内容
-function dr_replace_emotion($content) {
-
-    $content = htmlspecialchars_decode($content);
-
-    // 替换表情
-    if (preg_match_all('/\[([a-z0-9]+)\]/Ui', $content, $match)) {
-        foreach ($match[1] as $t) {
-            is_file(ROOTPATH.'static/assets/comment/emotions/'.$t.'.gif') && $content = str_replace('['.$t.']', '<img src="'.SITE_URL.'static/assets/comment/emotions/'.$t.'.gif" />', $content);
-        }
-    }
-
-    return $content;
 }
 
 // 二维码
