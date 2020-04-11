@@ -90,16 +90,6 @@ class Time extends \Phpcmf\Library\A_Field {
     }
 
     /**
-     * 字段入库值
-     *
-     * @param	array	$field	字段信息
-     * @return  void
-     */
-    public function insert_value($field) {
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = (\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
-    }
-
-    /**
      * 字段表单输入
      *
      * @return  string

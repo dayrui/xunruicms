@@ -713,7 +713,7 @@
          * @return  void
          */
         public function insert_value($field) {
-            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
         }
 
         /**
