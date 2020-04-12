@@ -240,9 +240,10 @@ class Member extends \Phpcmf\Model
 
         // 会员组信息
         $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
+        $data['group_name'] = [];
         if ($data2) {
             foreach ($data2 as $t) {
-                $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
+                $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
                 $t['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['name'];
                 $data['group'][$t['gid']] = $t;
                 $data['groupid'][$t['gid']] = $t['gid'];
