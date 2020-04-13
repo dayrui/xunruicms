@@ -3285,9 +3285,11 @@ function dr_get_form_post_value($table) {
 
     $rt = [
         'form' => dr_form_hidden(),
+        'debug' => 'debug返回正常',
     ];
     $form = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID, $table);
     if (!$form) {
+        $rt['debug'] = '网站表单【'.$table.'】不存在';
         return $rt;
     }
 
@@ -3344,15 +3346,18 @@ function dr_get_mform_post_value($mid, $table, $cid) {
 
     $rt = [
         'form' => dr_form_hidden(),
+        'debug' => 'debug返回正常',
     ];
 
     $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$mid);
     if (!$module) {
+        $rt['debug'] = '模块【'.$mid.'】不存在';
         return $rt;
     }
 
     $form = $module['form'][$table];
     if (!$form) {
+        $rt['debug'] = '模块【'.$mid.'】表单【'.$table.'】不存在';
         return $rt;
     }
 
