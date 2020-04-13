@@ -3301,10 +3301,11 @@ function dr_get_form_post_value($table) {
         \Phpcmf\Service::C()->member_authid,
         \Phpcmf\Service::C()->member_cache['auth_site'][SITE_ID]['form'][$form['table']]['code']
     );
-    $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : dr_now_url();
+
+    // 返回url
+    $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());
 
     // 初始化自定义字段类
-
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
@@ -3336,7 +3337,7 @@ function dr_get_form_post_value($table) {
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
 
-    $rt['post_url'] = dr_url('form/'.$table.'/post');
+    $rt['post_url'] = defined('SC_HTML_FILE') ? '/index.php?s=form&c='.$table.'&m=post' : dr_url('form/'.$table.'/post');
 
     return $rt;
 }
@@ -3369,10 +3370,11 @@ function dr_get_mform_post_value($mid, $table, $cid) {
         \Phpcmf\Service::C()->member_authid,
         \Phpcmf\Service::C()->member_cache['auth_module'][SITE_ID][$mid]['form'][$form['table']]['code']
     );
-    $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : dr_now_url();
+
+    // 返回url
+    $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());
 
     // 初始化自定义字段类
-
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
@@ -3404,7 +3406,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
 
-    $rt['post_url'] = dr_url($mid.'/'.$table.'/post', ['cid' => $cid]);
+    $rt['post_url'] = defined('SC_HTML_FILE') ? '/index.php?s='.$mid.'&c='.$table.'&m=post&cid='.$cid : dr_url($mid.'/'.$table.'/post', ['cid' => $cid]);
 
     return $rt;
 }
