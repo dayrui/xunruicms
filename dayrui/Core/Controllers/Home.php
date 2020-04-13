@@ -110,7 +110,11 @@ class Home extends \Phpcmf\Common
             ]);
             $this->_index();
             $html = ob_get_clean();
-            $mobile = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html, LOCK_EX);
+            $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html');
+            $mobile = file_put_contents($file, $html, LOCK_EX);
+            if (!$mobile && CI_DEBUG) {
+                log_message('error', '网站首页移动端首页生成失败：'.$file);
+            }
         }
 
 		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));

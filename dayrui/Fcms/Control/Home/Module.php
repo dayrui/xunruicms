@@ -845,6 +845,9 @@ class Module extends \Phpcmf\Common
             $html = ob_get_clean();
             $file = dr_format_html_file('mobile/' . $file, $root);
             $mobile = file_put_contents($file, $html, LOCK_EX);
+            if (!$mobile && CI_DEBUG) {
+                log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：'.$file);
+            }
         }
 
         $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
