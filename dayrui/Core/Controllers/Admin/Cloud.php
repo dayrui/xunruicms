@@ -263,10 +263,12 @@ class Cloud extends \Phpcmf\Common
     function install_app() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
-        if (!$cache) {
-            $this->_json(0, '本站：授权验证缓存过期，请重试');
-        }
+		if (!IS_DEV) {
+			$cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
+			if (!$cache) {
+				$this->_json(0, '本站：授权验证缓存过期，请重试');
+			}
+		}
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (!is_file($file)) {
