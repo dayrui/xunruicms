@@ -233,14 +233,13 @@ class Member extends \Phpcmf\Model
         $data2 && $data = $data + \Phpcmf\Service::L('Field')->app('member')->format_value(\Phpcmf\Service::C()->member_cache['field'], $data2);
 
         $data['uid'] = $data['id'];
-        $data['authid'] = [];
         $data['avatar'] = dr_avatar($data['id']);
         $data['adminid'] = (int)$data['is_admin'];
         $data['tableid'] = (int)substr((string)$data['id'], -1, 1);
 
         // 会员组信息
         $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
-        $data['group_name'] = [];
+        $data['group'] = $data['groupid'] = $data['levelid'] = $data['authid'] = $data['group_name'] = [];
         if ($data2) {
             foreach ($data2 as $t) {
                 $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
@@ -250,9 +249,6 @@ class Member extends \Phpcmf\Model
                 $data['levelid'][$t['gid']] = $t['lid'];
                 $data['authid'][] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
             }
-            //
-        } else {
-            $data['groupid'] = [];
         }
 
         return $data;

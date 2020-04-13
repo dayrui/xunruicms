@@ -59,7 +59,7 @@ class View {
 
         // 模板缓存目录
         $this->_cache = WRITEPATH.'template/';
-        $this->_tname = $this->_is_mobile ? 'mobile' : $name;
+        $this->_tname = $this->_is_mobile ? 'mobile' : ($name ? $name : 'pc');
         $this->_aroot = COREPATH.'Views/';
         // 当前项目模板目录
         if (IS_ADMIN) {

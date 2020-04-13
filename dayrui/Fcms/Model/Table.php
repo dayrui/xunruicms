@@ -1,4 +1,4 @@
-<?php namespace Phpcmf\Model;
+z<?php namespace Phpcmf\Model;
 
 /**
  * http://www.xunruicms.com
