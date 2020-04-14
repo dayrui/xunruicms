@@ -828,7 +828,9 @@ class Module extends \Phpcmf\Common
             $file = 'index.html';
         } else {
             $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
-            !$file && $this->_json(0, dr_lang('生成文件名不合法: %s', MODULE_URL));
+            if (!$file) {
+                $this->_json(0, dr_lang('生成文件名不合法: %s', MODULE_URL));
+            }
         }
 
         // 生成静态文件
@@ -836,18 +838,17 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->init('pc');
         $this->_Index(1);
         $html = ob_get_clean();
-        $file = dr_format_html_file($file, $root);
-        $pc = file_put_contents($file, $html, LOCK_EX);
+        $pc = file_put_contents(dr_format_html_file($file, $root), $html, LOCK_EX);
         if (SITE_IS_MOBILE_HTML) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');
             $this->_Index(1);
             $html = ob_get_clean();
-            $file = dr_format_html_file('mobile/' . $file, $root);
-            $mobile = file_put_contents($file, $html, LOCK_EX);
-            !$mobile && log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：'.$file);
+            $mfile = dr_format_html_file('mobile/' . $file, $root);
+            $mobile = file_put_contents($mfile, $html, LOCK_EX);
+            !$mobile && log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：'.$mfile);
         } else {
-            log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：没有开启移动端静态');
+            log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：没有开启移动端静态');
         }
 
         $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
