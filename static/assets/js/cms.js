@@ -545,6 +545,17 @@ function dr_ajax_submit(url, form, time, go) {
 
     $("#"+form+' .form-group').removeClass('has-error');
 
+    $('.dr_ueditor').each(function () {
+        var uev = $(this).attr('id');
+        if(UE.getEditor(uev).queryCommandState('source')!=0){
+            UE.getEditor(uev).execCommand('source');
+        }
+    });
+
+
+
+
+
     $.ajax({
         type: "POST",
         dataType: "json",

@@ -444,7 +444,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         $str.= "
-        <script name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
+        <script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
         <script type=\"text/javascript\">
             var editorOption = {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
