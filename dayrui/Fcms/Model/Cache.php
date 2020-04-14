@@ -186,10 +186,16 @@ class Cache extends \Phpcmf\Model
         // 递归删除文件
         $path = [
             WRITEPATH.'html',
-            WRITEPATH.'temp',
             WRITEPATH.'caching',
             WRITEPATH.'template',
         ];
+        
+        // 开发者模式下不删除temp目录
+        if (!IS_DEV) {
+            $path[] = WRITEPATH.'temp';
+        }
+
+        // 开始删除目录数据
         foreach ($path as $p) {
             dr_dir_delete($p);
             @mkdir($p, 0777);

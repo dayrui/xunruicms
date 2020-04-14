@@ -58,6 +58,7 @@ class Cloud extends \Phpcmf\Common
         if ($this->cmf_license['domain']) {
             $license_domain = trim($this->cmf_license['domain'], '/').'/index.php?s=license&m=show&domain='.$domain;
         }
+
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -167,27 +168,6 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('cloud_app.html');exit;
     }
 
-    // 安装模板
-    public function install_tpl() {
-
-        $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
-        $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        if (!$dir) {
-            $this->_json(0, dr_lang('缺少模板参数'));
-        }
-		
-		\Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
-		\Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
-
-		// 运行安装脚本
-		if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
-		    require WRITEPATH.'temp/run-'.$id.'.php';
-        }
-        
-        \Phpcmf\Service::M('cache')->sync_cache('');
-        $this->_json(1, dr_lang('当前站点模板安装成功，请访问前台预览'));
-    }
-
     // 安装程序
     public function install() {
 
@@ -258,6 +238,26 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('cloud_down_file.html');exit;
     }
 
+    // 安装模板
+    public function install_tpl() {
+
+        $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
+        $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
+        if (!$dir) {
+            $this->_json(0, dr_lang('缺少模板参数'));
+        }
+
+        \Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
+        \Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
+
+        // 运行安装脚本
+        if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
+            require WRITEPATH.'temp/run-'.$id.'.php';
+        }
+
+        \Phpcmf\Service::M('cache')->sync_cache('');
+        $this->_json(1, dr_lang('当前站点模板安装成功，请访问前台预览'));
+    }
 
     // 将下载程序安装到目录中
     function install_app() {
@@ -280,8 +280,9 @@ class Cloud extends \Phpcmf\Common
         // 解压目录
         $cmspath = WRITEPATH.'temp/'.$id.'/';
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-            cloud_msg(0, '本站：文件解压失败');
+            $this->_json(0, '本站：文件解压失败');
         }
+
         unlink($file);
 
 		// 查询插件目录
@@ -360,7 +361,10 @@ class Cloud extends \Phpcmf\Common
             $this->_copy_dir($cmspath.'COREPATH', COREPATH);
         }
 
-        dr_dir_delete($cmspath, 1);
+        // 开发者模式下保留目录
+        if (!IS_DEV) {
+            dr_dir_delete($cmspath, 1);
+        }
 
         if (!$is_ok) {
             $this->_json(0, '应用程序压缩包存在问题');
