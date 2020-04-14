@@ -99,7 +99,7 @@ class Function_list
 
     // 用于列表显示ip地址
     function ip($value, $param = [], $data = [], $len = 200) {
-        return '<a href="http://www.ip138.com/ips138.asp?ip='.$value.'&action=2" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len).'</a>';
+        return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len).'</a>';
     }
 
     // url链接输出
