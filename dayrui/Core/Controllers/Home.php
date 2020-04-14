@@ -112,9 +112,9 @@ class Home extends \Phpcmf\Common
             $html = ob_get_clean();
             $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html');
             $mobile = file_put_contents($file, $html, LOCK_EX);
-            if (!$mobile && CI_DEBUG) {
-                log_message('error', '网站首页移动端首页生成失败：'.$file);
-            }
+            !$mobile && log_message('error', '网站首页移动端首页生成失败：'.$file);
+        } else {
+            log_message('error', '网站首页移动端首页生成失败：没有开启移动端静态');
         }
 
 		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));

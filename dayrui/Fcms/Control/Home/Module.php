@@ -838,16 +838,16 @@ class Module extends \Phpcmf\Common
         $html = ob_get_clean();
         $file = dr_format_html_file($file, $root);
         $pc = file_put_contents($file, $html, LOCK_EX);
-        if (SITE_IS_MOBILE) {
+        if (SITE_IS_MOBILE_HTML) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');
             $this->_Index(1);
             $html = ob_get_clean();
             $file = dr_format_html_file('mobile/' . $file, $root);
             $mobile = file_put_contents($file, $html, LOCK_EX);
-            if (!$mobile && CI_DEBUG) {
-                log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：'.$file);
-            }
+            !$mobile && log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：'.$file);
+        } else {
+            log_message('error', '模块【'.MODEL_DIR.'】移动端首页生成失败：没有开启移动端静态');
         }
 
         $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
