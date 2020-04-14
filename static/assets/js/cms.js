@@ -552,10 +552,6 @@ function dr_ajax_submit(url, form, time, go) {
         }
     });
 
-
-
-
-
     $.ajax({
         type: "POST",
         dataType: "json",
