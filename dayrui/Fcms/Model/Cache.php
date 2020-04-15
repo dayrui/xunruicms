@@ -189,7 +189,7 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'caching',
             WRITEPATH.'template',
         ];
-        
+
         // 开发者模式下不删除temp目录
         if (!IS_DEV) {
             $path[] = WRITEPATH.'temp';

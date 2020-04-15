@@ -326,9 +326,14 @@ class Check extends \Phpcmf\Common
                 break;
 
             case '10':
-
-                // 模块数据检测
+                // 数据负载
                 $rt = [];
+                // 任务队列
+                $cron = \Phpcmf\Service::M()->table('cron')->counts();
+                if ($cron > 10) {
+                    $rt[] = '<font color="red">【任务队列】含有大量未执行的任务，会影响加载速度，建议删除不需要的任务</font>';
+                }
+                // 模块数据检测
                 $module = \Phpcmf\Service::M()->table('module')->getAll();
                 if ($module) {
                     foreach ($module as $m) {

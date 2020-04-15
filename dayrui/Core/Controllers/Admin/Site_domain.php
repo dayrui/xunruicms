@@ -9,7 +9,6 @@
 class Site_domain extends \Phpcmf\Common
 {
 
-
     public function index() {
 
         if (IS_AJAX_POST) {
@@ -57,6 +56,7 @@ class Site_domain extends \Phpcmf\Common
             $license = require MYPATH . 'Config/License.php';
             $name = $license['name'];
         }
+
         !$name && $name = dr_lang('软件服务商');
 
         if (IS_POST) {
@@ -65,7 +65,7 @@ class Site_domain extends \Phpcmf\Common
                 exit($this->_json(0, dr_lang('当前网站不能修改主域名')));
             }
 
-            $domain = trim(\Phpcmf\Service::L('input')->post('domain', true));
+            $domain = trim(\Phpcmf\Service::L('input')->post('domain'));
             if (!$domain) {
                 exit($this->_json(0, dr_lang('域名不能为空')));
             }

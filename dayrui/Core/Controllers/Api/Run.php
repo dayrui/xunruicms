@@ -14,14 +14,20 @@ class Run extends \Phpcmf\Common
 
 	public function index() {
 
-	    // 自动任务锁定
-        if (!isset($_GET['is_ajax']) && !is_file(WRITEPATH.'config/run_lock.php')) {
-            file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
-        }
-
-        // 未到时间
-        if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
-            exit('未到执行时间');
+        if (isset($_GET['is_ajax'])) {
+            // 后台脚本自动任务时效验证
+            if (\Phpcmf\Service::L('input')->get_cookie('admin_cron')) {
+                exit('未到执行时间');
+            }
+        } else {
+            // 服务器自动任务时效验证
+            if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
+                exit('未到执行时间');
+            }
+            // 自动任务锁定
+            if (!is_file(WRITEPATH.'config/run_lock.php')) {
+                file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
+            }
         }
 
         // 批量执行站点动作
@@ -69,8 +75,11 @@ class Run extends \Phpcmf\Common
         // 3天未付款的清理
         \Phpcmf\Service::M('pay')->clear_paylog();
 
-        // 100秒调用本程序
+        // 最少100秒调用本程序
         \Phpcmf\Service::L('input')->set_cookie('cron', 1, 100);
+
+        // 定义后台执行任务的时效
+        \Phpcmf\Service::L('input')->set_cookie('admin_cron', 1, 600);
 
         // 任务计划
         \Phpcmf\Hooks::trigger('cron');
@@ -128,6 +137,7 @@ class Run extends \Phpcmf\Common
 				
                 foreach (['png', 'jpg', 'gif', 'jpeg'] as $ext) {
                     if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.'.$ext)) {
+                        \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
                         exit('头像已经存在');
                     }
                 }
@@ -148,8 +158,8 @@ class Run extends \Phpcmf\Common
                 $id = intval(\Phpcmf\Service::L('input')->get('id'));
                 $rt = \Phpcmf\Service::M('cron')->do_cron_id($id);
                 if (!$rt['code']) {
-                    log_message('error', '任务查询失败（'.$rt['msg'].'）：'.FC_NOW_URL);
-                    exit('任务查询失败（'.$rt['msg'].'）');
+                    log_message('error', '任务执行失败（'.$rt['msg'].'）：'.var_export($rt['data'], true));
+                    exit('任务执行失败（'.$rt['msg'].'）');
                 }
 
                 break;

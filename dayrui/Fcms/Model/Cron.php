@@ -41,7 +41,7 @@ class Cron extends \Phpcmf\Model
                 'status' => $cron['status'] + 1,
                 'updatetime' => SYS_TIME,
             ]);
-            return dr_return_data(0, $cron['id'].'#'.(is_array($data['error']) ? implode('、', $data['error']) : $data['error']));
+            return dr_return_data(0, $cron['id'].'#'.(is_array($data['error']) ? implode('、', $data['error']) : $data['error']), $cron);
         }
     }
 

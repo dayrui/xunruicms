@@ -855,12 +855,14 @@ class Member extends \Phpcmf\Model
         $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $data['id']]);
 
         // 更新微信插件粉丝表
-        dr_is_app('weixin') && $oauth['oauth'] == 'wechat' && $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
-            'uid' => $data['id'],
-            'username' => $data['username'],
-        ]);
+        if (dr_is_app('weixin') && $oauth['oauth'] == 'wechat') {
+            $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
+                'uid' => $data['id'],
+                'username' => $data['username'],
+            ]);
+        }
 
-        // 下载头像和同步登录
+        // 同步登录
         $sso = $this->sso($data);
 
         // 下载头像
@@ -1107,8 +1109,9 @@ class Member extends \Phpcmf\Model
             if (!is_file($cache_path.$uid.'.jpg')) {
                 // 没有头像下载头像
                 $img = dr_catcher_data($data['avatar']);
-                if (strlen($img) > 20) {
-                    @file_put_contents($cache_path.$uid.'.jpg', $img);
+                if (strlen($img) > 20 && @file_put_contents($cache_path.$uid.'.jpg', $img)) {
+                    // 头像状态认证
+                    $this->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 }
             }
         }

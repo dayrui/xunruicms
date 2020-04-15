@@ -161,10 +161,8 @@ class Site extends \Phpcmf\Model
                     $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
                 } else {
                     // 这是模块
-
                 }
             }
-
         }
 
         \Phpcmf\Service::M('cache')->update_webpath('Web', $data['webpath'], [
@@ -176,7 +174,6 @@ class Site extends \Phpcmf\Model
     public function edit_domain($value) {
 
         $site = $this->config(1);
-        $site['config']['SITE_DOMAIN'] = $value;
         $this->db->table('site')->where('id', 1)->update([
             'domain' => $value,
             'setting' => dr_array2string($site),
@@ -190,12 +187,11 @@ class Site extends \Phpcmf\Model
         $data = [];
         $site = $this->config(SITE_ID);
         if ($value) {
-            $site['config']['SITE_DOMAIN'] = $value['site_domain'] ? $value['site_domain'] : $site['config']['SITE_DOMAIN'];
             $site['config']['SITE_DOMAINS'] = $value['site_domains'];
             $site['mobile']['domain'] = $value['mobile_domain'];
             $site['webpath'] = $value['webpath'];
             $this->db->table('site')->where('id', SITE_ID)->update([
-                'domain' => $site['config']['SITE_DOMAIN'],
+                'domain' => $value['site_domain'] ? $value['site_domain'] : $site['domain'],
                 'setting' => dr_array2string($site),
             ]);
         }
