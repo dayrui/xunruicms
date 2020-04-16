@@ -148,7 +148,7 @@ abstract class Common extends \CodeIgniter\Controller
         } else {
             // 本地资源
             define('HOME_THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
-            if (!defined('IS_MOBILE') && ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
+            if (!defined('IS_MOBILE') && ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.'mobile/static/'.SITE_THEME.'/'); // 移动端站点风格
             } else {
