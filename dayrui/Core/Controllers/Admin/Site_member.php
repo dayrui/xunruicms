@@ -6,7 +6,7 @@
  **/
 
 
-// 站点权限
+// 站点用户权限
 class Site_member extends \Phpcmf\Common
 {
 	public $auth;
@@ -31,8 +31,6 @@ class Site_member extends \Phpcmf\Common
                     if (!$t['child'] && $t['tid'] == 1) {
                         $t['is_post'] = 1;
                     }
-                    $mid = $t['mid'] ? $t['mid'] : 'share';
-                    $this->auth[SITE_ID]['category'][$t['id']] = $this->auth_module[SITE_ID][$mid]['category'][$t['id']];
                     $this->tree[$t['id']] = $t;
                 }
             }
@@ -49,7 +47,7 @@ class Site_member extends \Phpcmf\Common
 			}
 		}
 
-		$page = [];
+        $tree = $page = [];
 		$pagecache = \Phpcmf\Service::L('cache')->get('page-'.SITE_ID, 'data');
 		if ($pagecache) {
 			foreach($pagecache as $t) {
@@ -81,26 +79,6 @@ class Site_member extends \Phpcmf\Common
 
 			$id = \Phpcmf\Service::L('input')->post('id');
 			switch ($at) {
-
-				case 'category':
-
-					break;
-
-				
-				case 'form':
-                    foreach ($id as $fid => $t) {
-                        $this->auth[SITE_ID][$at][$fid] = [
-                            'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
-                            'add' => dr_member_auth_id($this->member_cache['authid'], $t['add']),
-                            'code' => dr_member_auth_id($this->member_cache['authid'], $t['code']),
-                            'verify' => dr_member_auth_id($this->member_cache['authid'], $t['verify']),
-                            'exp' => $t['exp'],
-                            'score' => $t['score'],
-                            'day_post' => $t['day_post'],
-                            'total_post' => $t['total_post'],
-                        ];
-                    }
-					break;
 
 				case 'page':
 					$this->auth[SITE_ID][$at] = [];
@@ -177,15 +155,15 @@ class Site_member extends \Phpcmf\Common
 	public function category_edit() {
 
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
+        $r = $this->tree[$catid];
+        $mid = $r['mid'] ? $r['mid'] : 'share';
+        $at = 'category';
 
         if (IS_AJAX_POST) {
 
-            $r = $this->tree[$catid];
             $t = \Phpcmf\Service::L('input')->post('data');
-            $at = 'category';
-            $mid = $r['mid'] ? $r['mid'] : 'share';
-            if (isset($this->auth[SITE_ID][$at])) {
-                $this->auth[SITE_ID][$at] = [];
+            if (isset($this->auth_module[SITE_ID][$mid][$at])) {
+                $this->auth_module[SITE_ID][$mid][$at] = [];
             }
 
             $this->auth_module[SITE_ID][$mid][$at][$catid] = [
@@ -212,13 +190,13 @@ class Site_member extends \Phpcmf\Common
         }
 
         // 默认游客不发布
-        if (!isset($this->auth[SITE_ID]['category'][$catid])) {
-            $this->auth[SITE_ID]['category'][$catid]['add'][0] = 0;
+        if (!isset($this->auth_module[SITE_ID][$mid][$at][$catid])) {
+            $this->auth_module[SITE_ID][$mid][$at][$catid]['add'][0] = 0;
         }
 
         \Phpcmf\Service::V()->assign([
             'cat' => $this->tree[$catid],
-            'auth' => $this->auth[SITE_ID],
+            'auth' => $this->auth_module[SITE_ID][$mid],
             'form' => dr_form_hidden(),
             'list' => $this->_get_group(),
             'catid' => $catid,

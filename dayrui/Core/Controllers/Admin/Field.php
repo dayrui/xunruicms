@@ -198,8 +198,8 @@ class Field extends \Phpcmf\Common
 				$this->_json(0, dr_lang('字段名称不规范'));
 			} elseif (strlen($data['fieldname']) > 20) {
 				$this->_json(0, dr_lang('字段名称太长'));
-			} elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
-				$this->_json(0, dr_lang('字段已经存在'));
+            } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
+                $this->_json(0, dr_lang('字段已经存在'));
 			} else {
 				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
 				if (!$rt['code']) {

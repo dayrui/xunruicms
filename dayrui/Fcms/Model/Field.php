@@ -15,6 +15,9 @@ class Field extends \Phpcmf\Model
     public $relatedid;
     public $relatedname;
 
+    private $_table_field = [];
+    //private $_check_table_name = [];
+
     // 通过字段来查询表名称
     public function get_table_name($siteid, $field) {
 
@@ -210,6 +213,17 @@ class Field extends \Phpcmf\Model
      * @return	void
      */
     public function add($data, $field) {
+
+        // 验证字段上限
+        /*
+        if ($this->_check_table_name) {
+            $max = 500;
+            foreach ($this->_check_table_name as $t) {
+                if (dr_count($this->db->getFieldNames($t)) > $max) {
+                    return dr_return_data(0, dr_lang('数据表[%s]字段个数已经达到上限(%s)', dr_count($this->db->getFieldNames($t)), $max));
+                }
+            }
+        }*/
 
         // 先读取sql语句
         $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], $data['name']);
@@ -487,6 +501,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
+        $table.'_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', SITE_ID);
         if ($rt) {
             return 1;
@@ -650,6 +665,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
+        $table.'_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', SITE_ID);
         if ($rt) {
             return 1;
@@ -697,6 +713,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
+        $table.'_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', $this->data['module'] == 'space' ? 0 : SITE_ID);
         if ($rt) {
             return 1;

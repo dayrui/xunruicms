@@ -659,7 +659,7 @@ class URI
 	 *
 	 * @return $this
 	 */
-	public function setHost(string $str)
+	public function setHost( $str)
 	{
 		$this->host = trim($str);
 

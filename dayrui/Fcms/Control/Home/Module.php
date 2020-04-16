@@ -900,7 +900,7 @@ class Module extends \Phpcmf\Common
             } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
-            } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
+            } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$t['id']]['show']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
                 $class = ' p_error';
             } else {
@@ -953,8 +953,8 @@ class Module extends \Phpcmf\Common
         $html = '';
         foreach ($cache as $t) {
 
+            // 初始化模块
             if (!APP_DIR) {
-                // 初始化模块
                 $this->_module_init($t['mid'] ? $t['mid'] : 'share');
             }
 
@@ -965,7 +965,7 @@ class Module extends \Phpcmf\Common
             } elseif (!$t['html']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
-            } elseif ($this->member_cache['auth_site'][SITE_ID]['page'][$t['id']]['show']) {
+            } elseif ($this->member_cache['auth_module'][SITE_ID][($this->module['share'] ? 'share' : $this->module['dirname'])]['category'][$t['id']]['show']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
                 $class = ' p_error';
             } else {
