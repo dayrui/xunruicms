@@ -24,7 +24,7 @@ return array (
   `avgsort` decimal(10,2) unsigned DEFAULT \'0.00\' COMMENT \'平均点评分数\',
   `displayorder` int(10) DEFAULT \'0\' COMMENT \'排序值\',
   `color` varchar(30) DEFAULT NULL COMMENT \'颜色\',
-  `isflag` varchar(255) DEFAULT NULL COMMENT \'置顶\',
+  `isflag` int(10) DEFAULT \'0\' NULL COMMENT \'置顶\',
   `reply_info` text,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
