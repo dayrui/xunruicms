@@ -66,7 +66,7 @@ class Mform extends \Phpcmf\Table
             $this->member_authid,
             $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['show'])
         ) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), dr_url('login/home/index'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
 
@@ -105,7 +105,7 @@ class Mform extends \Phpcmf\Table
             $this->member_authid,
             $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['add'])
         ) {
-            $this->_msg(0, dr_lang('您的用户组无发布权限'));
+            $this->_msg(0, dr_lang('您的用户组无发布权限'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
 
@@ -157,7 +157,7 @@ class Mform extends \Phpcmf\Table
             $this->member_authid,
             $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['show'])
         ) {
-            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), dr_url('login/home/index'));
+            $this->_msg(0, dr_lang('您的用户组无权限访问表单'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
 

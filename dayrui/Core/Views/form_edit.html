@@ -149,13 +149,9 @@
                         <div class="form-group" id="dr_row_username">
                             <label class="control-label col-md-2">{dr_lang('通知账号')}</label>
                             <div class="col-md-9">
-                                <div class="input-group" style="width:200px;">
-                                    <input class="form-control " type="text" name="data[setting][notice][username]" id="dr_username" value="{htmlspecialchars($data['setting']['notice']['username'])}"  />
-                                    <span class="input-group-btn">
-                                        <a class="btn btn-success default" href="javascript:dr_show_member('username');" ><i class="fa fa-user" /></i> {dr_lang('验证')}</a>
-                                    </span>
-                                </div>
-                                <span class="help-block" id="dr_username_tips">{dr_lang('当有人提交表单时，会通知到这个账号')}</span>
+								<input class="form-control " type="text" name="data[setting][notice][username]" value="{htmlspecialchars($data['setting']['notice']['username'])}" style="width:80%;"   data-role="tagsinput" />
+                                
+                                <span class="help-block" id="dr_username_tips">{dr_lang('当有人提交表单时，会通知到这些账号')}</span>
                             </div>
                         </div>
                         <div class="form-group">
