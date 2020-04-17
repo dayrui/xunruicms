@@ -213,6 +213,15 @@
                                 <span class="help-block">{dr_lang('注册字段必须包含手机号码才能使用此功能，用于手机短信验证码')}</span>
                             </div>
                         </div>
+						 {if $data['register']['sms']}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('注册图片验证码')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" readonly name="data[register][code]" value="1" checked data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('当开启注册短信验证后将会强制验证图片验证码')}</span>
+                            </div>
+                        </div>
+						 {else}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册图片验证码')}</label>
                             <div class="col-md-9">
@@ -220,6 +229,7 @@
                                 <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
                             </div>
                         </div>
+						 {/if}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册审核方式')}</label>
                             <div class="col-md-9">
