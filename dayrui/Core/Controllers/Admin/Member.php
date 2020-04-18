@@ -370,9 +370,16 @@ class Member extends \Phpcmf\Table
     // 后台删除
     public function del() {
 
+        $ids = \Phpcmf\Service::L('input')->get_post_ids();
+        if (in_array(1, $ids)) {
+            $this->_json(0, dr_lang('创始人账号不能删除'));
+        } elseif (in_array($this->uid, $ids)) {
+            $this->_json(0, dr_lang('不能删除自己'));
+        }
+
         // 删除时同步删除很多内容
         $this->_Del(
-            \Phpcmf\Service::L('input')->get_post_ids(),
+            $ids,
             null,
             function ($rows) {
                 $ids = [];

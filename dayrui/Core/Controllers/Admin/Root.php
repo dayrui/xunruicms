@@ -127,6 +127,9 @@ class Root extends \Phpcmf\Table
                 }
                 $data = $rt['data'];
             }
+            if (\Phpcmf\Service::M()->table('admin')->where('uid', $data['id'])->counts()) {
+                $this->_json(0, dr_lang('此账号已经是管理员'));
+            }
             $rt = \Phpcmf\Service::M()->table('admin')->insert([
                 'uid' => $data['id'],
                 'setting' => '',
@@ -135,11 +138,18 @@ class Root extends \Phpcmf\Table
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
-            foreach ($post['role'] as $t) {
+            if (in_array(1, $post['role'])) {
                 \Phpcmf\Service::M()->table('admin_role_index')->insert([
                     'uid' => $data['id'],
-                    'roleid' => $t,
+                    'roleid' => 1,
                 ]);
+            } else {
+                foreach ($post['role'] as $t) {
+                    \Phpcmf\Service::M()->table('admin_role_index')->insert([
+                        'uid' => $data['id'],
+                        'roleid' => $t,
+                    ]);
+                }
             }
             \Phpcmf\Service::M()->table('member_data')->update($data['id'], ['is_admin' => 1]);
             $this->_json(1, dr_lang('操作成功'));
@@ -186,12 +196,14 @@ class Root extends \Phpcmf\Table
                 'name' => $post['name'],
             ]);
             $post['password'] && \Phpcmf\Service::M('member')->edit_password($member, $post['password']);
-            \Phpcmf\Service::M()->db->table('admin_role_index')->where('uid', $member['id'])->delete();
-            foreach ($post['role'] as $t) {
-                \Phpcmf\Service::M()->table('admin_role_index')->replace([
-                    'uid' => $member['id'],
-                    'roleid' => $t,
-                ]);
+            if ($id > 1) {
+                \Phpcmf\Service::M()->db->table('admin_role_index')->where('uid', $member['id'])->delete();
+                foreach ($post['role'] as $t) {
+                    \Phpcmf\Service::M()->table('admin_role_index')->replace([
+                        'uid' => $member['id'],
+                        'roleid' => $t,
+                    ]);
+                }
             }
             $this->_json(1, dr_lang('操作成功'));
         }
