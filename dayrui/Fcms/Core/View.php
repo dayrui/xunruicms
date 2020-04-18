@@ -726,8 +726,8 @@ class View {
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
         // 默认模块参数
         $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
-        // 开发者模式下关闭缓存
-        IS_DEV && $system['cache'] = 0;
+        // 开发者模式下和静态模式下关闭缓存
+        (IS_DEV || defined('SC_HTML_FILE')) && $system['cache'] = 0;
 
         $cache_name = 'cache_view_'.$this->_list_is_count.md5(dr_array2string($system)).'_'.md5($_params).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
