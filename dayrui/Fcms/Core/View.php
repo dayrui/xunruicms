@@ -820,13 +820,10 @@ class View {
                     return $this->_return($system['return'], "模块({$dirname})没有栏目数据");
                 }
 
-                $i = 0;
                 $show = isset($param['show']) ? 1 : 0; // 有show参数表示显示隐藏栏目
-                $return = array();
+                $return = [];
                 foreach ($module['category'] as $t) {
-                    if ($system['num'] && $i >= $system['num']) {
-                        break;
-                    } elseif (!$t['show'] && !$show) {
+                    if (!$t['show'] && !$show) {
                         continue;
                     } elseif (isset($param['pid']) && $t['pid'] != (int)$param['pid']) {
                         continue;
@@ -841,7 +838,16 @@ class View {
                     }
                     $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
                     $return[] = $t;
-                    $i ++;
+                }
+
+                // num参数
+                if ($system['num']) {
+                    if (is_numeric($system['num'])) {
+                        $return = array_slice($return, 0, $system['num']);
+                    } elseif (strpos($system['num'], ',') !== false) {
+                        list($a, $b) = explode(',', $system['num']);
+                        $return = array_slice($return, max(0, $a - 1), $b);
+                    }
                 }
 
                 if (!$return) {
