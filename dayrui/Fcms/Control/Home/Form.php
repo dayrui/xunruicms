@@ -136,12 +136,11 @@ class Form extends \Phpcmf\Table
         $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
-            !$data && $this->_msg(0, dr_lang('网站表单内容不存在'));
+            if (!$data) {
+                $this->_msg(0, dr_lang('网站表单内容不存在'));
+            }
             $data = $this->_Call_Show($data);
-            $cache = [
-                $tpl,
-                $data
-            ];
+            $cache = [$tpl, $data ];
             // 缓存结果
             if ($data['uid'] != $this->uid && SYS_CACHE) {
                 if ($this->member && $this->member['is_admin']) {

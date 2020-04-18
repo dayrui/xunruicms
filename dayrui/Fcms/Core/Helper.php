@@ -1222,22 +1222,7 @@ function wx_get_https_json_data($url) {
         return dr_return_data(0, 'url为空');
     }
 
-    $response = file_get_contents($url);
-    if (!$response) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true); // 从证书中检查SSL加密算法是否存在
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $response = curl_exec($ch);
-        if ($error=curl_error($ch)){
-            return dr_return_data(0, $error);
-        }
-        curl_close($ch);
-    }
-
+    $response = dr_catcher_data($url);
     $data = json_decode($response, true);
     if (!$data) {
         return dr_return_data(0, $response.' 不是一个有效的json数据');
