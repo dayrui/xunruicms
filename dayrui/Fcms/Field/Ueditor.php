@@ -132,7 +132,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('xss过滤').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('编辑器内xss过滤').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
                         <div class="radio-list">
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][xss]" '.(!$option['xss'] ? 'checked' : '').' > '.dr_lang('开启').'</label>
