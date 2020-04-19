@@ -999,19 +999,15 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, $rt['msg']);
         }
 
-        $update = [
-            'salt' => md5($member['salt'].$rt['code']),
-        ];
-
         // 再次判断没有账号，随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix']
             .intval($rt['code']+date('Ymd'))));
-            $update['username'] = $member['username'];
+            // 更新操作
+            $this->table('member')->update($rt['code'], [
+                'username' => $member['username']
+            ]);
         }
-
-        // 更新操作
-        $this->table('member')->update($rt['code'], $update);
 
         // 附表信息
         $data['id'] = $member['uid'] = $uid = $rt['code'];
@@ -1040,7 +1036,7 @@ class Member extends \Phpcmf\Model
         // 归属用户组
         $this->insert_group($uid, $groupid, 0);
 
-        $data = $member + $data + $update;
+        $data = $member + $data;
 
         // 审核判断
         if (!$data['is_verify']) {
