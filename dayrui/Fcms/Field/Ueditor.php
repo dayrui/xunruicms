@@ -131,17 +131,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 						<span class="help-block">文章内容的分页功能</span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('编辑器内xss过滤').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][xss]" '.(!$option['xss'] ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][xss]" '.($option['xss'] ? 'checked' : '').' > '.dr_lang('关闭').'</label>
-                        </div>
-						<span class="help-block">开启后可能会引起xss注入风险，需慎用</span>
-                    </div>
-                </div>
-            
+                
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('后台编辑器模式').'</label>
                     <div class="col-md-9" style="padding-left: 35px;">
@@ -473,9 +463,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 elementPathEnabled:false,
                 autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
                 autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
-                xssFilterRules:".(!$field['setting']['option']['xss'] ? 'true' : 'false').",
-                inputXssFilter:".(!$field['setting']['option']['xss'] ? 'true' : 'false').",
-                outputXssFilter:".(!$field['setting']['option']['xss'] ? 'true' : 'false').",
                 charset:\"utf-8\",
             };
             var editor = new baidu.editor.ui.Editor(editorOption);

@@ -1646,7 +1646,7 @@ class View {
                 if (isset($param['groupid']) && $param['groupid']) {
 
                     if (strpos($param['groupid'], ',') !== false) {
-                        $gwhere = ' `'.$table.'`.`id` in (select uid from `'.$table.'_group_index` where `gid` = in ('.dr_safe_replace($param['groupid']).'))';
+                        $gwhere = ' `'.$table.'`.`id` in (select uid from `'.$table.'_group_index` where `gid` in ('.dr_safe_replace($param['groupid']).'))';
                     } elseif (strpos($param['groupid'], '-') !== false) {
                         $arr = explode('-', $param['groupid']);
                         $gwhere = [];
