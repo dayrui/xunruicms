@@ -536,6 +536,18 @@ function dr_ajax_option_url(url, msg, tourl) {
 // ajax提交
 function dr_ajax_submit(url, form, time, go) {
 
+    var flen = $('[id='+form+']').length;
+    // 验证id是否存在
+    if (flen == 0) {
+        dr_cmf_tips(0, lang['unformid'] + ' ('+form+')');
+        return;
+    }
+    // 验证重复
+    if (flen > 1) {
+        dr_cmf_tips(0, lang['repeatformid'] + ' ('+form+')');
+        return;
+    }
+
     url = url.replace(/&page=\d+&page/g, '&page');
 
     var loading = layer.load(2, {
@@ -629,6 +641,18 @@ function dr_loginout(msg) {
 }
 // ajax提交登录或者注册
 function dr_ajax_member(url, form) {
+
+    var flen = $('[id='+form+']').length;
+    // 验证id是否存在
+    if (flen == 0) {
+        dr_cmf_tips(0, lang['unformid'] + ' ('+form+')');
+        return;
+    }
+    // 验证重复
+    if (flen > 1) {
+        dr_cmf_tips(0, lang['repeatformid'] + ' ('+form+')');
+        return;
+    }
 
     var loading = layer.load(2, {
         shade: [0.3,'#fff'], //0.1透明度的白色背景
