@@ -22,6 +22,8 @@ lang['logout'] = '你确定要退出吗？';
 lang['htmlfile'] = '生成静态页';
 lang['protocol'] = '用户注册协议';
 lang['unloadtips'] = '数据未保存，你确定要离开吗？';
+lang['unformid'] = '表单id属性不存在';
+lang['repeatformid'] = '表单id属性已重复定义';
 
 
 // 日期类型语言包
