@@ -49,11 +49,6 @@ class Comment extends \Phpcmf\Common
     // 评论列表
     protected function _Index() {
 
-        // 启用页面缓存
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
-
         // 排序模式
         $type = (int)str_replace('#', '', \Phpcmf\Service::L('input')->get('type'));
         $order = 'inputtime desc';

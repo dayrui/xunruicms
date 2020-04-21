@@ -55,12 +55,6 @@ class Mform extends \Phpcmf\Table
     // 内容列表
     protected function _Home_List() {
 
-
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
-
         // 无权限访问表单
         if (!dr_member_auth(
             $this->member_authid,
@@ -146,11 +140,6 @@ class Mform extends \Phpcmf\Table
 
     // 显示内容
     protected function _Home_Show() {
-
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
 
         // 无权限访问表单
         if (!dr_member_auth(

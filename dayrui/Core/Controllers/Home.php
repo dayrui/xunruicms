@@ -57,10 +57,6 @@ class Home extends \Phpcmf\Common
             }
             echo $html;
         } else {
-            // 启用页面缓存
-            if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                $this->cachePage(SYS_CACHE_PAGE * 3600);
-            }
             $this->_index();
         }
 	}

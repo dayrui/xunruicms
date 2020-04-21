@@ -83,12 +83,6 @@ class Module extends \Phpcmf\Common
 
                 echo $html;
             } else {
-
-                // 启用页面缓存
-                if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                    $this->cachePage(SYS_CACHE_PAGE * 3600);
-                }
-
                 \Phpcmf\Service::V()->display('index.html');
             }
         }
@@ -98,11 +92,6 @@ class Module extends \Phpcmf\Common
 
     // 模块栏目页
     protected function _Category($catid = 0, $catdir = null, $page = 1) {
-
-        // 启用页面缓存
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
 
         if ($catid) {
             $category = $this->module['category'][$catid];
@@ -228,11 +217,6 @@ class Module extends \Phpcmf\Common
     // 模块搜索
     protected function _Search($_catid = 0) {
 
-        // 启用页面缓存
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
-
         // 模型类
         $search = \Phpcmf\Service::M('Search', $this->module['dirname'])->init($this->module['dirname']);
 
@@ -337,11 +321,6 @@ class Module extends \Phpcmf\Common
     // 模块内容页
     // $param 自定义字段检索
     protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
-
-        // 启用页面缓存
-        if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            $this->cachePage(SYS_CACHE_PAGE * 3600);
-        }
 
         // 通过自定义字段查找id
         $is_id = 1;
