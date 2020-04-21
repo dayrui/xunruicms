@@ -78,11 +78,11 @@ class Members extends \Phpcmf\Library\A_Field {
         $name = $field['fieldname'];
 		// 字段提示信息
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
-		// 禁止修改
+		//
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
 
-		//
 		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
-		//
+
         $url = '/index.php?s=api&c=api&m=members&limit='.intval($field['setting']['option']['limit']);
 
         // 字段显示名称
@@ -132,7 +132,7 @@ class Members extends \Phpcmf\Library\A_Field {
                 fix:true,
                 shadeClose: true,
                 shade: 0,
-                area: ["70%", "65%"],
+                area: '.$area.',
                 btn: ["'.dr_lang('关联').'"],
                 success: function (json) {
                     if (json.code == 0) {
@@ -156,14 +156,15 @@ class Members extends \Phpcmf\Library\A_Field {
                                 for(var i in json.data.result){
                                     var tpl = temp;
                                     var v = json.data.result[i];
-                                    if($("#dr_items_'.$name.'_"+v.id).length>0)
-                                    {
-                                      dr_tips(0, "'.dr_lang('已经存在').'");
-                                      return;
+                                    if (typeof v.id != "undefined") {
+                                        if($("#dr_items_'.$name.'_"+v.id).length>0) {
+                                          dr_tips(0, "'.dr_lang('已经存在').'");
+                                          return;
+                                        }
+                                        tpl = tpl.replace(/\{id\}/g, v.id);
+                                        tpl = tpl.replace(/\{value\}/g, v.value);
+                                        html+= tpl;
                                     }
-                                    tpl = tpl.replace(/\{id\}/g, v.id);
-                                    tpl = tpl.replace(/\{value\}/g, v.value);
-                                    html+= tpl;
                                 }
                                 $(\'#rmember_'.$name.'-sort-items\').append(html);
                                 dr_slimScroll_init(".scroller_'.$name.'_files", 300);
@@ -209,7 +210,6 @@ class Members extends \Phpcmf\Library\A_Field {
         <tbody>';
 
         $value = @trim($value, ',');
-        $module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
         if ($value && is_string($value)) {
             $db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $query = $db ? $db->getResultArray() : [];
