@@ -100,12 +100,12 @@ class Login extends \Phpcmf\Common
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
         $oauth_id = \Phpcmf\Service::L('cache')->get_data('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
-            //$this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
+            $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
 
         $oauth = \Phpcmf\Service::M()->table('member_oauth')->get($oauth_id);
         if (!$oauth) {
-            //$this->_msg(0, dr_lang('授权信息(#%s)不存在', $oauth_id));
+            $this->_msg(0, dr_lang('授权信息(#%s)不存在', $oauth_id));
         }
 
         // 查询关联用户
