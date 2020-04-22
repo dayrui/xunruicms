@@ -1553,7 +1553,7 @@ class Image
         // 图片缩略图文件
         $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
         if (is_file($cache_path.$cache_file)) {
-            //return $cache_url.$cache_file;
+            return $cache_url.$cache_file;
         }
 
         // 创建缓存目录
