@@ -465,7 +465,24 @@ class Auth extends \Phpcmf\Model {
             $this_uri =  'module_member/'.$action;
         }
 
-        return in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri']);
+        // 特殊url权限验证
+        if (in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
+            return true;
+        }
+
+        // 验证应用插件的权限
+        if (substr_count($this_uri, '/') == 2) {
+            list($dir, $c, $m) = explode('/', $this_uri);
+            $path = dr_get_app_dir($dir);
+            if (is_file($path.'Models/Auth.php')) {
+                $obj = \Phpcmf\Service::M('auth', $dir);
+                if (method_exists($obj, 'is_auth') && $obj->is_auth($c, $m)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     // 后台菜单字符串
