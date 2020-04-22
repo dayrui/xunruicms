@@ -1026,9 +1026,6 @@ class Module extends \Phpcmf\Table
         // 推荐位
         $row['myflag'] = $id ? $this->content_model->get_flag($id) : [];
 
-        // 更新时间
-        $row['updatetime'] = SYS_TIME;
-
         return $row;
     }
 
@@ -1066,7 +1063,7 @@ class Module extends \Phpcmf\Table
             $data[1]['updatetime'] = SYS_TIME;
         } elseif ($id && isset($_POST['no_time'])
             && $_POST['no_time']) {
-            unset($data[1]['updatetime']);
+            $data[1]['updatetime'] = $old['updatetime'];
         }
 
         // 不验证账号
