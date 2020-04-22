@@ -99,7 +99,9 @@ class Register extends \Phpcmf\Common
                 // 验证字段
                 list($data, $return, $attach) = \Phpcmf\Service::L('Form')->validation($post, null, $field);
                 // 输出错误
-                $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+                if ($return) {
+                    $this->_json(0, $return['error'], ['field' => $return['name']]);
+                }
                 $rt = \Phpcmf\Service::M('member')->register($groupid, [
                     'username' => (string)$post['username'],
                     'phone' => (string)$post['phone'],

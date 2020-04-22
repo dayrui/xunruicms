@@ -832,45 +832,45 @@ class Member extends \Phpcmf\Model
     }
     
     // 绑定注册模式 授权注册绑定
-    public function register_oauth_bang($oauth, $groupid, $data) {
+    public function register_oauth_bang($oauth, $groupid, $member, $data = []) {
 
         if (!$oauth) {
             return dr_return_data(0, dr_lang('OAuth数据不存在，请重试'));
         }
 
-        $rt = $this->register($groupid, $data);
+        $rt = $this->register($groupid, $member, $data);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
 
-        $data = $rt['data'];
+        $member = $rt['data'];
 
         // 保存本地会话
-        $this->save_cookie($data);
+        $this->save_cookie($member);
 
         // 记录日志
-        $this->_login_log($data, $oauth['oauth']);
+        $this->_login_log($member, $oauth['oauth']);
 
         // 更改状态
-        $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $data['id']]);
+        $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $member['id']]);
 
         // 更新微信插件粉丝表
         if (dr_is_app('weixin') && $oauth['oauth'] == 'wechat') {
             $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
-                'uid' => $data['id'],
-                'username' => $data['username'],
+                'uid' => $member['id'],
+                'username' => $member['username'],
             ]);
         }
 
         // 同步登录
-        $sso = $this->sso($data);
+        $sso = $this->sso($member);
 
         // 下载头像
         \Phpcmf\Service::L('thread')->cron(['action' => 'oauth_down_avatar', 'id' => $oauth['id'] ]);
 
         return dr_return_data(1, 'ok', [
-            'auth'=> md5($data['passowrd'].$data['salt']), // API认证字符串,
-            'member' => $data,
+            'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
+            'member' => $member,
             'sso' => $sso
         ]);
     }
@@ -934,7 +934,7 @@ class Member extends \Phpcmf\Model
         $sso[] = \Phpcmf\Service::L('router')->member_url('api/avatar', ['id'=>$oauth['id']]);
 
         return dr_return_data(1, 'ok', [
-            'auth'=> md5($data['passowrd'].$data['salt']), // API认证字符串,
+            'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
             'member' => $data,
             'sso' => $sso
         ]);
@@ -1061,7 +1061,7 @@ class Member extends \Phpcmf\Model
         \Phpcmf\Hooks::trigger('member_register_after', $data);
 
         // API认证字符串,
-        $data['auth'] = md5($data['passowrd'].$data['salt']);
+        $data['auth'] = md5($data['password'].$data['salt']);
 
         // 记录日志
         $this->_login_log($data);

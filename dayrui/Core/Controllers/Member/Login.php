@@ -100,12 +100,12 @@ class Login extends \Phpcmf\Common
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
         $oauth_id = \Phpcmf\Service::L('cache')->get_data('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
-            $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
+            //$this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
 
         $oauth = \Phpcmf\Service::M()->table('member_oauth')->get($oauth_id);
         if (!$oauth) {
-            $this->_msg(0, dr_lang('授权信息(#%s)不存在', $oauth_id));
+            //$this->_msg(0, dr_lang('授权信息(#%s)不存在', $oauth_id));
         }
 
         // 查询关联用户
@@ -210,17 +210,24 @@ class Login extends \Phpcmf\Common
             } else {
                 // 绑定账号
                 $type = intval(\Phpcmf\Service::L('input')->get('type'));
+                if ($type) {
+                    // 获取该组可用注册字段
+                    $field = [];
+                    if ($this->member_cache['group'][$groupid]['register_field']) {
+                        foreach ($this->member_cache['group'][$groupid]['register_field'] as $fname) {
+                            $field[$fname] = $this->member_cache['field'][$fname];
+                            $field[$fname]['ismember'] = 1;
+                        }
+                    }
+                }
                 if (IS_POST) {
-                    $post = \Phpcmf\Service::L('input')->post('data', true);
+                    $post = \Phpcmf\Service::L('input')->post('data');
                     if (!\Phpcmf\Service::L('input')->post('is_protocol')) {
                         $this->_json(0, dr_lang('你没有同意注册协议'));
                     }
                     if ($type) {
                         // 注册绑定
-                        $groupid = (int)\Phpcmf\Service::L('input')->post('groupid');
-                        if (!$this->member_cache['group'][$groupid]['register']) {
-                            $this->_json(0, dr_lang('该用户组不允许注册'));
-                        } elseif (in_array('username', $this->member_cache['register']['field'])
+                        if (in_array('username', $this->member_cache['register']['field'])
                             && !\Phpcmf\Service::L('Form')->check_username($post['username'])) {
                             $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'username']);
                         } elseif (in_array('email', $this->member_cache['register']['field'])
@@ -234,14 +241,46 @@ class Login extends \Phpcmf\Common
                         } elseif ($post['password'] != $post['password2']) {
                             $this->_json(0, dr_lang('确认密码不正确'), ['field' => 'password2']);
                         } else {
+                            // 注册之前的钩子
+                            \Phpcmf\Hooks::trigger('member_register_before', $post);
+                            // 验证操作
+                            if ($this->member_cache['register']['sms']) {
+                                $sms = \Phpcmf\Service::L('Form')->get_mobile_code($post['phone']);
+                                if (!$sms) {
+                                    $this->_json(0, dr_lang('未发送手机验证码'), ['field' => 'sms']);
+                                } elseif (!$_POST['sms']) {
+                                    $this->_json(0, dr_lang('手机验证码未填写'), ['field' => 'sms']);
+                                } elseif ($sms != $_POST['sms']) {
+                                    $this->_json(0, dr_lang('手机验证码不正确'), ['field' => 'sms']);
+                                }
+                            }
+                            // 验证字段
+                            list($data, $return, $attach) = \Phpcmf\Service::L('Form')->validation($post, null, $field);
+                            // 输出错误
+                            if ($return) {
+                                $this->_json(0, $return['error'], ['field' => $return['name']]);
+                            }
+                            // 入库记录
                             $rt = \Phpcmf\Service::M('member')->register_oauth_bang($oauth, $groupid, [
                                 'username' => (string)$post['username'],
                                 'phone' => (string)$post['phone'],
                                 'email' => (string)$post['email'],
                                 'password' => dr_safe_password($post['password']),
-                            ]);
+                            ], $data[1]);
                             if ($rt['code']) {
                                 // 注册绑定成功
+                                $this->member = $rt['data'];
+                                \Phpcmf\Service::M('member')->save_cookie($this->member, 1);
+                                // 附件归档
+                                SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->handle(
+                                    $this->member['id'],
+                                    \Phpcmf\Service::M()->dbprefix('member').'-'.$rt['code'],
+                                    $attach
+                                );
+                                // 手机认证成功
+                                if ($this->member_cache['register']['sms']) {
+                                    \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_mobile' => 1]);
+                                }
                                 $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                                 // 删除认证缓存
                                 \Phpcmf\Service::L('cache')->del_data('member_auth_login_'.$name.'_'.$id);
@@ -275,9 +314,12 @@ class Login extends \Phpcmf\Common
                     }
                     exit;
                 }
+
                 \Phpcmf\Service::V()->assign([
                     'type' => $type,
                     'form' => dr_form_hidden(['type' => $type]),
+                    'myfield' => $type ? \Phpcmf\Service::L('field')->toform(0, $field) : '',
+                    'register' => $this->member_cache['register'],
                     'meta_name' => dr_lang('绑定账号'),
                     'meta_title' => dr_lang('绑定账号').SITE_SEOJOIN.SITE_NAME,
                 ]);

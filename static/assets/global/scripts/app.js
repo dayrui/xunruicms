@@ -2251,7 +2251,7 @@ function dr_help(id) {
 }
 
 function dr_search_help() {
-    if (is_oemcms) {
+    if (is_oemcms == 1) {
         dr_tips(1, '请联系开发商');
         return;
     }

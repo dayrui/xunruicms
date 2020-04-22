@@ -72,16 +72,13 @@
                                     </div>
                                     {else}
                                     <div class="form-group ">
-                                        <label class="col-md-2 control-label">类型</label>
+                                        <label class="col-md-2 control-label">用户组</label>
                                         <div class="col-md-9">
-                                        <div class="mt-radio-inline">
-                                            {loop $register.group $i}
-                                            <label class="mt-radio">
-                                                <input type="radio" name="groupid" value="{$i}" {if $groupid==$i}checked=""{/if}> {$group[$i][name]}
-                                                <span></span>
-                                            </label>
-                                            {/loop}
-                                        </div>
+                                            <div class="btn-group btn-group-solid">
+                                                {loop $register.group $i}
+                                                <a href="{dr_member_url('login/oauth', ['name' => $name, 'type' => 1, 'id' => $id, 'groupid' => $i])}" class="btn {if $groupid==$i}red{/if}">{$group[$i]['name']}</a>
+                                                {/loop}
+                                            </div>
                                         </div>
                                     </div>
                                     {if in_array('username', $register.field)}
@@ -120,6 +117,33 @@
                                             <label><input type="password" class="form-control input-large" name="data[password2]" id="dr_password2"></label>
                                         </div>
                                     </div>
+                                    {$myfield}
+                                    {if $register.sms}
+                                    <div class="form-group" id="dr_row_sms">
+                                        <label class="col-md-2 control-label">短信验证</label>
+                                        <div class="col-md-10">
+                                            <div class="input-group input-large">
+                                                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_sms" name="sms">
+                                                <div class="input-group-btn">
+                                                    <button class="btn blue" onclick="dr_ajax_url('/index.php?s=member&c=api&m=register_code&id='+$('#dr_phone').val()+'&code='+$('#dr_code').val())" type="button">获取手机验证码</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {if $register.sms || $register.code}
+                                    <div class="form-group" id="dr_row_code">
+                                        <label class="col-md-2 control-label">验证码</label>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-large">
+                                                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" id="dr_code" name="code">
+                                                <div class="input-group-btn fc-code">
+                                                    {dr_code(120, 35)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
                                     <div class="form-actions" style="margin-top:30px">
                                         <label class="col-md-2 control-label"></label>
                                         <div class="col-md-9" style="padding-left:5px;">
