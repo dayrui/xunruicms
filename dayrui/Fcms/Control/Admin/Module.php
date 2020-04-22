@@ -183,17 +183,15 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
         }
 
-        $select = \Phpcmf\Service::L('Tree')->select_category(
-            $this->module['category'],
-            $data['catid'],
-            'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-            '', 1, 1
-        );
-
         \Phpcmf\Service::V()->assign([
             'did' => $did,
             'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
-            'select' => $select,
+            'select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['catid'],
+                'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
+                '', 1, 1
+            ),
             'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(

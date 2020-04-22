@@ -1553,7 +1553,7 @@ class Image
         // 图片缩略图文件
         $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
         if (is_file($cache_path.$cache_file)) {
-            return $cache_url.$cache_file;
+            //return $cache_url.$cache_file;
         }
 
         // 创建缓存目录
@@ -1605,18 +1605,22 @@ class Image
 
         // 开始处理图片
         if ($width > 0 || $height > 0) {
-            $config['source_image'] = $file;
-            $config['new_image'] = $cache_path . $cache_file;
-            $config['quality'] = '100%';
-            $config['width'] = $width;
-            $config['height'] = $height;
-            $config['dynamic_output'] = FALSE;
-            $config['create_thumb'] = true;
-            $config['maintain_ratio'] = $mode == 'auto' ? false : true;
-            $config['thumb_marker'] = '';
-            $config['master_dim'] = $mode;
-            $this->initialize($config);
-            $this->resize();
+            if ($mode == 'crop') {
+                $this->imageCropper($file, $cache_path . $cache_file, $width, $height);
+            } else {
+                $config['source_image'] = $file;
+                $config['new_image'] = $cache_path . $cache_file;
+                $config['quality'] = '100%';
+                $config['width'] = $width;
+                $config['height'] = $height;
+                $config['dynamic_output'] = FALSE;
+                $config['create_thumb'] = true;
+                $config['maintain_ratio'] = $mode == 'auto' ? false : true;
+                $config['thumb_marker'] = '';
+                $config['master_dim'] = $mode;
+                $this->initialize($config);
+                $this->resize();
+            }
         } elseif ($width == 0 && $height == 0 && $water == 0) {
             return $attach['url']; // 原样输出
         } else {
@@ -1650,6 +1654,63 @@ class Image
             $base64_file = 'data:'.$mime_type.';base64,'.$base64_data;
         }
         return $base64_file;
+    }
+
+    // 图片剪切函数可继承
+    protected function imageCropper($source_path, $new_path, $target_width, $target_height){
+        $source_info  = getimagesize($source_path);
+        $source_width = $source_info[0];
+        $source_height = $source_info[1];
+        $source_mime  = $source_info['mime'];
+        $source_ratio = $source_height / $source_width;
+        $target_ratio = $target_height / $target_width;
+        if ($source_ratio > $target_ratio){
+            // image-to-height
+            $cropped_width = $source_width;
+            $cropped_height = $source_width * $target_ratio;
+            $source_x = 0;
+            $source_y = ($source_height - $cropped_height) / 2;
+        }elseif ($source_ratio < $target_ratio){
+            //image-to-widht
+            $cropped_width = $source_height / $target_ratio;
+            $cropped_height = $source_height;
+            $source_x = ($source_width - $cropped_width) / 2;
+            $source_y = 0;
+        }else{
+            //image-size-ok
+            $cropped_width = $source_width;
+            $cropped_height = $source_height;
+            $source_x = 0;
+            $source_y = 0;
+        }
+
+        switch ($source_mime){
+            case 'image/gif':
+                $source_image = imagecreatefromgif($source_path);
+                break;
+            case 'image/jpeg':
+                $source_image = imagecreatefromjpeg($source_path);
+                break;
+            case 'image/png':
+                $source_image = imagecreatefrompng($source_path);
+                break;
+            default:
+                return ;
+                break;
+        }
+
+        $target_image = imagecreatetruecolor($target_width, $target_height);
+        $cropped_image = imagecreatetruecolor($cropped_width, $cropped_height);
+        // copy
+        imagecopy($cropped_image, $source_image, 0, 0, $source_x, $source_y, $cropped_width, $cropped_height);
+        // zoom
+        imagecopyresampled($target_image, $cropped_image, 0, 0, 0, 0, $target_width, $target_height, $cropped_width, $cropped_height);
+
+        header('Content-Type:image/png');
+        imagejpeg($target_image, $new_path, 100);
+        imagedestroy($source_image);
+        imagedestroy($target_image);
+        imagedestroy($cropped_image);
     }
 
     //..////..//////.....//////////.......///////////

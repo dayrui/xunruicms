@@ -109,8 +109,8 @@ class Register extends \Phpcmf\Common
                 ], $data[1]);
                 if ($rt['code']) {
                     // 注册成功
-                    $this->member = $rt['data'];
                     $remember = 0;
+                    $this->member = $rt['data'];
                     // 保存本地会话
                     \Phpcmf\Service::M('member')->save_cookie($this->member, $remember);
                     // 附件归档
