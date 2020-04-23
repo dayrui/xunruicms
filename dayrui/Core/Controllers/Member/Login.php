@@ -18,6 +18,11 @@ class Login extends \Phpcmf\Common
             $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
         }
 
+        // 判断重复登录
+        if ($this->uid) {
+            dr_redirect($url);exit;
+        }
+
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             // 回调钩子

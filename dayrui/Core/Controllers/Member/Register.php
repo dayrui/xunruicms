@@ -12,6 +12,23 @@ class Register extends \Phpcmf\Common
     // 注册
     public function index() {
 
+        // 获取返回URL
+        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
+        $url && parse_str($url, $arr);
+        if (isset($arr['back']) && $arr['back']) {
+            $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
+        }
+        if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
+            $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
+        } else {
+            $url = \Phpcmf\Service::L('input')->xss_clean($url);
+        }
+
+        // 判断重复登录
+        if ($this->uid) {
+            dr_redirect($url);exit;
+        }
+
         // 验证系统是否支持注册
         if ($this->member_cache['register']['close']) {
             $this->_msg(0, dr_lang('系统关闭了注册功能'));
@@ -32,18 +49,6 @@ class Register extends \Phpcmf\Common
             $this->_msg(0, dr_lang('无效的用户组'));
         } elseif (!$this->member_cache['group'][$groupid]['register']) {
             $this->_msg(0, dr_lang('用户组[%s]不允许注册', $this->member_cache['group'][$groupid]['name']));
-        }
-
-        // 获取返回URL
-        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
-        $url && parse_str($url, $arr);
-        if (isset($arr['back']) && $arr['back']) {
-            $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
-        }
-        if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
-            $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
-        } else {
-            $url = \Phpcmf\Service::L('input')->xss_clean($url);
         }
         
         // 初始化自定义字段类
