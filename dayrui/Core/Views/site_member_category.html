@@ -86,25 +86,25 @@
 
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('访问')}
-                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_show" {if !in_array($i, (array)$auth[category][$cat.id]['show'])} checked {/if} name="data[show][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_show" {if !in_array($i, (array)$auth['category'][$cat.id]['show'])} checked {/if} name="data[show][]" value="{$i}" />
                             <span></span>
                         </label>
 
                         {if $cat.is_post}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('发布')}
-                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_add" {if !in_array($i, (array)$auth[category][$cat.id]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_add" {if !in_array($i, (array)$auth['category'][$cat.id]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
                             <span></span>
                         </label>
                         {if $i>0}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('修改')}
-                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_edit" {if !in_array($i, (array)$auth[category][$cat.id]['edit'])} checked {/if} name="data[edit][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_edit" {if !in_array($i, (array)$auth['category'][$cat.id]['edit'])} checked {/if} name="data[edit][]" value="{$i}" />
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('删除')}
-                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_del" {if !in_array($i, (array)$auth[category][$cat.id]['del'])} checked {/if} name="data[del][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_del" {if !in_array($i, (array)$auth['category'][$cat.id]['del'])} checked {/if} name="data[del][]" value="{$i}" />
                             <span></span>
                         </label>
                         {else}
@@ -121,7 +121,7 @@
                         {/if}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('验证码')}
-                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_code" {if !in_array($i, (array)$auth[category][$cat.id]['code'])} checked {/if} name="data[code][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_cat_{$catid}_code" {if !in_array($i, (array)$auth['category'][$cat.id]['code'])} checked {/if} name="data[code][]" value="{$i}" />
                             <span></span>
                         </label>
                         <br>
@@ -129,32 +129,32 @@
                             <select name="data[verify][{$i}]" class="form-control">
                                 <option value="0"> {dr_lang('不审核')} </option>
                                 {loop $verify $v}
-                                <option value="{$v.id}" {if $auth[category][$cat.id]['verify'][$i] == $v.id} selected{/if}> {dr_lang($v.name)} </option>
+                                <option value="{$v.id}" {if $auth['category'][$cat.id]['verify'][$i] == $v.id} selected{/if}> {dr_lang($v.name)} </option>
                                 {/loop}
                             </select>
                         </label>
                         {if $i>0}
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[exp][{$i}]" value="{htmlspecialchars($auth[category][$cat.id]['exp'][$i])}" class="form-control" placeholder="">
+                                <input type="text" name="data[exp][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['exp'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[score][{$i}]" value="{htmlspecialchars($auth[category][$cat.id]['score'][$i])}" class="form-control" placeholder="">
+                                <input type="text" name="data[score][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['score'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">±{SITE_SCORE}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[day_post][{$i}]" value="{htmlspecialchars($auth[category][$cat.id]['day_post'][$i])}" class="form-control" placeholder="">
+                                <input type="text" name="data[day_post][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['day_post'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">{dr_lang('日投稿')}</span>
                             </div>
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
-                                <input type="text" name="data[total_post][{$i}]" value="{htmlspecialchars($auth[category][$cat.id]['total_post'][$i])}" class="form-control" placeholder="">
+                                <input type="text" name="data[total_post][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['total_post'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">{dr_lang('投稿总数')}</span>
                             </div>
                         </div>

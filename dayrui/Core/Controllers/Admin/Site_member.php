@@ -162,7 +162,7 @@ class Site_member extends \Phpcmf\Common
         if (IS_AJAX_POST) {
 
             $t = \Phpcmf\Service::L('input')->post('data');
-            if (isset($this->auth_module[SITE_ID][$mid][$at])) {
+            if (!isset($this->auth_module[SITE_ID][$mid][$at])) {
                 $this->auth_module[SITE_ID][$mid][$at] = [];
             }
 

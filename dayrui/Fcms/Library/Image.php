@@ -1658,7 +1658,7 @@ class Image
 
     // 图片剪切函数可继承
     protected function imageCropper($source_path, $new_path, $target_width, $target_height){
-        
+
         $source_info  = getimagesize($source_path);
         $source_width = $source_info[0];
         $source_height = $source_info[1];
