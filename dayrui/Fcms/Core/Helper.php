@@ -2548,7 +2548,8 @@ function dr_show_module_total($name, $id, $dom) {
  * @return	string
  */
 function dr_catcher_data($url, $timeout = 0) {
-	
+
+    // 获取本地文件
 	if (strpos($url, 'file://')  === 0) {
 		return file_get_contents($url);
 	}

@@ -1658,6 +1658,7 @@ class Image
 
     // 图片剪切函数可继承
     protected function imageCropper($source_path, $new_path, $target_width, $target_height){
+        
         $source_info  = getimagesize($source_path);
         $source_width = $source_info[0];
         $source_height = $source_info[1];
@@ -1701,6 +1702,15 @@ class Image
 
         $target_image = imagecreatetruecolor($target_width, $target_height);
         $cropped_image = imagecreatetruecolor($cropped_width, $cropped_height);
+
+        $color = imagecolorallocate($target_image, 255, 255, 255); //2.上色
+        imagecolortransparent($target_image, $color); //3.设置透明色
+        imagefill($target_image, 0, 0, $color); //4.填充透明色
+
+        $color = imagecolorallocate($cropped_image, 255, 255, 255); //2.上色
+        imagecolortransparent($cropped_image, $color); //3.设置透明色
+        imagefill($cropped_image, 0, 0, $color); //4.填充透明色
+
         // copy
         imagecopy($cropped_image, $source_image, 0, 0, $source_x, $source_y, $cropped_width, $cropped_height);
         // zoom
