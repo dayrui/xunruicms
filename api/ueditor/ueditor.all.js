@@ -14073,10 +14073,9 @@ UE.plugin.register('wordimage',function(){
                     src = opt.UEDITOR_HOME_URL + 'themes/default/images/spacer.gif';
                 if (attrs['src'] && /^(?:(file:\/+))/.test(attrs['src'])) {
                     img.setAttr({
-                        width:attrs.width,
-                        height:attrs.height,
-                        alt:attrs.alt,
-                        word_img: attrs.src,
+                        width:'700',
+                        height:'400',
+                        alt:attrs.src,
                         src:src,
                         'style':'background:url(' + ( flag ? opt.themePath + opt.theme + '/images/word.gif' : opt.langPath + opt.lang + '/images/localimage.png') + ') no-repeat center center;border:1px solid #ddd'
                     })

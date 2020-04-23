@@ -222,7 +222,29 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb'])  && !$_POST['data']['thumb'] && $_POST['is_auto_thumb'];
         // 是否下载图片
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img']) && $_POST['is_auto_down_img']);
+		
+		// 处理word图片
+        if (preg_match_all("/<img width=\"700\" height=\"400\" src=\"(.+)\/images\/spacer\.gif\" alt=\"(.+)\" style=\"(.+)\"/iU", $value, $imgs)) {
+			 foreach ($imgs[2] as $i => $img) {
+				$rt = \Phpcmf\Service::L('upload')->down_file([
+					'url' => $img,
+					'timeout' => 5,
+					'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
+					'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+				]);
+				if ($rt['code']) {
+					$att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+					if ($att['code']) {
+						// 归档成功
+						$value = str_replace($imgs[0][$i], '<img src="'.$rt['data']['url'].'"', $value);
+					}
+				} else {
+					log_message('error', 'Word图片下载失败：'.$rt['msg']);
+				}
+			 }
+		}
 
+		// 下载远程图片
         if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", $value, $imgs)) {
             foreach ($imgs[3] as $img) {
                 if (strpos($img, '/api/ueditor/') !== false

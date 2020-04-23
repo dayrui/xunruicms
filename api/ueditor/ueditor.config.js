@@ -400,7 +400,7 @@
 			header: [],
 			hr:     ['class', 'style'],
 			i:      ['class', 'style'],
-			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class'],
+			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'word_img'],
 			ins:    ['datetime'],
 			li:     ['class', 'style'],
 			mark:   [],
