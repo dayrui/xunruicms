@@ -1,0 +1,33 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('名称')}</label>
+            <div class="col-xs-7">
+                <input type="text" class="form-control" name="data[name]" value="{$config.name}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('图标')}</label>
+            <div class="col-xs-7">
+                <div class="input-group" style="width:250px">
+                    <input class="form-control" value="{$config.icon}" placeholder="fa fa-code" type="text" name="data[icon]" />
+                    <span class="input-group-btn">
+                                <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
+                            </span>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</form>
+
+
+{template "footer.html"}

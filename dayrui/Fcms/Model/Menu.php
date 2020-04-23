@@ -88,6 +88,18 @@ class Menu extends \Phpcmf\Model {
         return $id;
     }
 
+    // 变更模块名称
+    public function update_module_name($mid, $old, $new) {
+
+        $replace = '`name`=REPLACE(`name`, \''.addslashes($old).'\', \''.addslashes($new).'\')';
+
+        $this->db->query('UPDATE `'.$this->dbprefix('member_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
+
+        $this->db->query('UPDATE `'.$this->dbprefix('admin_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
+        $this->db->query('UPDATE `'.$this->dbprefix('admin_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/verify/index"');
+        $this->db->query('UPDATE `'.$this->dbprefix('admin_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/comment_verify/index"');
+    }
+
     // 从模块中更新菜单
     public function update_module($mdir, $config, $form, $comment_cname = '') {
 
@@ -171,9 +183,7 @@ class Menu extends \Phpcmf\Model {
                 $menu ? $this->_edit('member', $menu['id'], $save) : $this->_add('member', $left['id'], $save);
             }
         }
-
     }
-
 
     // 从网站表单中更新菜单
     public function form($data) {

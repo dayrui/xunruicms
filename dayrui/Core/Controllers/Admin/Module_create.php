@@ -45,7 +45,7 @@ class Module_create extends \Phpcmf\Common
 
             // 替换模块配置文件
             $app = file_get_contents($path.'Config/App.php');
-            $app = str_replace(['{name}', '{icon}'], [dr_safe_filename($data['name']), $data['icon']], $app);
+            $app = str_replace(['{name}', '{icon}'], [dr_safe_filename($data['name']), dr_safe_replace($data['icon'])], $app);
             file_put_contents($path.'Config/App.php', $app);
 
             $this->_json(1, dr_lang('模块创建成功'));

@@ -158,6 +158,56 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('module_list.html');
     }
 
+    // 重命名
+    public function name_edit() {
+
+        $mid = dr_safe_filename($_GET['dir']);
+        $file = dr_get_app_dir($mid).'Config/App.php';
+        if (!is_file($file)) {
+            $this->_json(0, dr_lang('当前模块配置文件不存在'));
+        }
+
+        $config = require $file;
+
+        if (IS_POST) {
+
+            $data = \Phpcmf\Service::L('input')->post('data');
+
+            // 参数判断
+            if (!$data['name']) {
+                $this->_json(0, dr_lang('名称不能为空'), ['field' => 'name']);
+            } elseif (!$data['icon']) {
+                $this->_json(0, dr_lang('模块图标不能为空'), ['field' => 'icon']);
+            } elseif (strpos($data['icon'], 'fa') === false) {
+                $this->_json(0, dr_lang('模块图标格式不正确，格式为：fa fa-code'), ['field' => 'icon']);
+            } elseif (!dr_check_put_path(dirname($file))) {
+                $this->_json(0, dr_lang('目录[%s]没有创建文件权限', dirname($file)), ['field' => 'dirname']);
+            }
+
+            $old = $config['name'];
+            $config['name'] = dr_safe_filename($data['name']);
+            $config['icon'] = dr_safe_replace($data['icon']);
+            file_put_contents($file, '<?php return '.var_export($config, true).';');
+
+            // 变更菜单
+            \Phpcmf\Service::M('menu')->update_module_name($mid, $old, $config['name']);
+
+            // 重置Zend OPcache
+            function_exists('opcache_reset') && opcache_reset();
+
+            \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+
+            \Phpcmf\Service::L('input')->system_log('模块['.$mid.']名称变更');
+            exit($this->_json(1, dr_lang('操作成功')));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'config' => $config,
+        ]);
+        \Phpcmf\Service::V()->display('module_name_edit.html');exit;
+    }
+
     // 排序
     public function displayorder_edit() {
 
