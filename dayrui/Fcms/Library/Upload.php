@@ -253,7 +253,20 @@ class Upload
 
         // 如果是图片先获取图片尺寸
         $info = [];
-        list($info['width'], $info['height']) = @getimagesize($config['attachment']['value']['path'].$file_path);
+        if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+            $img = getimagesize($config['attachment']['value']['path'].$file_path);
+            if (!$img) {
+                // 删除文件
+                // 按照附件存储类型来保存文件
+                $storage = new \Phpcmf\Library\Storage();
+                $storage->delete($config['attachment'], $file_path);
+                return dr_return_data(0, dr_lang('远程获取的图片不是一张可用的图片'));
+            }
+            $info = [
+                'width' => $img[0],
+                'height' => $img[1],
+            ];
+        }
 
         // 文件预览
         $preview = dr_file_preview_html($url);

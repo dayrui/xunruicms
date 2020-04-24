@@ -25,7 +25,9 @@ class Form extends \Phpcmf\Table
         // 判断表单是否操作
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[\Phpcmf\Service::L('Router')->class];
-        !$this->form && $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', \Phpcmf\Service::L('Router')->class));
+        if (!$this->form) {
+            $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', \Phpcmf\Service::L('Router')->class));
+        }
         // 支持附表存储
         $this->is_data = 1;
         // 模板前缀(避免混淆)
