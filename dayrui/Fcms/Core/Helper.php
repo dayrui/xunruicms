@@ -1839,7 +1839,9 @@ function dr_return_data($code, $msg = '', $data = []) {
  */
 function dr_form_hidden($data = []) {
 
-    $form = '<input name="isform" type="hidden" value="1">'.PHP_EOL;
+    $form = '<input name="is_form" type="hidden" value="1">'.PHP_EOL;
+    $form.= '<input name="is_admin" type="hidden" value="'.(IS_ADMIN && in_array(1, \Phpcmf\Service::C()->admin['roleid']) ? 1 : 0).'">'.PHP_EOL;
+    $form.= '<input name="is_tips" type="hidden" value="">'.PHP_EOL;
     $form.= '<input name="'.csrf_token().'" type="hidden" value="'.csrf_hash().'">'.PHP_EOL;
     if ($data) {
         foreach ($data as $name => $value) {

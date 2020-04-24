@@ -548,6 +548,35 @@ function dr_ajax_submit(url, form, time, go) {
         return;
     }
 
+    // 验证必填项管理员
+    if ($('#'+form).find('[name=is_admin]').val()) {
+        $('#'+form).find('.dr_required').each(function () {
+            if (!$(this).val()) {
+                $('#'+form).find('[name=is_tips]').val('有必填字段未填写，确认提交吗？');
+            }
+        });
+    }
+
+    var tips = $('#'+form).find('[name=is_tips]').val();
+    if (tips) {
+        layer.confirm(
+        tips,
+        {
+            icon: 3,
+            shade: 0,
+            title: lang['ts'],
+            btn: [lang['ok'], lang['esc']]
+        }, function(index){
+            dr_post_submit(url, form, time, go);
+        });
+    } else {
+        dr_post_submit(url, form, time, go);
+    }
+}
+
+// 处理post提交
+function dr_post_submit(url, form, time, go) {
+
     url = url.replace(/&page=\d+&page/g, '&page');
 
     var loading = layer.load(2, {
