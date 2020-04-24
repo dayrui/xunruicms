@@ -89,9 +89,9 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 变更模块名称
-    public function update_module_name($mid, $old, $new) {
+    public function update_module_name($mid, $old, $new, $icon) {
 
-        $replace = '`name`=REPLACE(`name`, \''.addslashes($old).'\', \''.addslashes($new).'\')';
+        $replace = '`icon`="'.$icon.'", `name`=REPLACE(`name`, \''.addslashes($old).'\', \''.addslashes($new).'\')';
 
         $this->db->query('UPDATE `'.$this->dbprefix('member_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
 
