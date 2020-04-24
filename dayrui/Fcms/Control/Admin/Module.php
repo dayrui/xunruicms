@@ -609,13 +609,6 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('当前角色无权限审核此内容'));
         }
 
-        $select = \Phpcmf\Service::L('Tree')->select_category(
-            $this->module['category'],
-            $data['catid'],
-            'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-            '', 1, 1
-        );
-
         $step = $this->_get_verify($data['uid'], $data['catid']);
         $step[9] = [
             'name' => dr_lang('完成'),
@@ -637,7 +630,12 @@ class Module extends \Phpcmf\Table
                 ]
             ),
             'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
-            'select' => $select,
+            'select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['catid'],
+                'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
+                '', 1, 1
+            ),
             'is_verify' => 1,
             'back_note' => \Phpcmf\Service::L('input')->get('note'),
             'verify_msg' => $verify_msg,
@@ -752,13 +750,6 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('内容不存在'));
         }
 
-        $select = \Phpcmf\Service::L('Tree')->select_category(
-            $this->module['category'],
-            $data['catid'],
-            'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-            '', 1, 1
-        );
-
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -767,7 +758,12 @@ class Module extends \Phpcmf\Table
                 ]
             ),
             'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
-            'select' => $select,
+            'select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['catid'],
+                'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
+                '', 1, 1
+            ),
             'is_post_time' => 1,
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
@@ -1122,6 +1118,11 @@ class Module extends \Phpcmf\Table
                                 $step = $this->_get_verify($data[1]['uid'], $data[1]['catid']);
                                 $status = intval($old['status']);
                                 $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
+                                // 再次验证审核级别
+                                $my_status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
+                                if ($my_status && !in_array($status, $my_status)) {
+                                    $this->_json(0, dr_lang('当前角色无权限审核此内容'));
+                                }
                                 // 任务执行成功
                                 \Phpcmf\Service::M('member')->todo_admin_notice( MOD_DIR.'/verify/edit:id/'.$id, SITE_ID);
                                 if ($data[1]['status'] == 9 && $old) {
