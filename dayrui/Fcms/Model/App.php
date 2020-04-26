@@ -63,7 +63,7 @@ class App extends \Phpcmf\Model
             if (is_file($path.'Config/Install_site.sql')) {
                 $sql = file_get_contents($path.'Config/Install_site.sql');
                 foreach ($this->site as $siteid) {
-                    $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
+                    $rt = $this->query_all(str_replace(['{dbprefix}', '{siteid}'],  [$this->dbprefix($siteid.'_'), $siteid], $sql));
                     if ($rt) {
                         return dr_return_data(0, $rt);
                     }
@@ -111,7 +111,7 @@ class App extends \Phpcmf\Model
             if (is_file($path.'Config/Uninstall_site.sql')) {
                 $sql = file_get_contents($path.'Config/Uninstall_site.sql');
                 foreach ($this->site as $siteid) {
-                    $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
+                    $rt = $this->query_all(str_replace(['{dbprefix}', '{siteid}'],  [$this->dbprefix($siteid.'_'), $siteid], $sql));
                     if ($rt) {
                         return dr_return_data(0, $rt);
                     }

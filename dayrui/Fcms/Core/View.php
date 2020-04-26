@@ -22,10 +22,6 @@ class View {
     private $_root; // 默认前端项目模板目录
     private $_mroot; // 默认会员项目模板目录
 
-    private $_root_array; // 默认前端项目模板目录,pc+移动
-    private $_mroot_array; // 默认会员项目模板目录,pc+移动
-    private $_module_root_array; // 默认模块前端模板目录,pc+移动
-
     private $_aroot; // 默认后台项目模板目录
 
     private $_options; // 模板变量
@@ -735,7 +731,7 @@ class View {
             if ($cache_data) {
                 $this->_page_used = $cache_data['page_used'];
                 $this->_page_urlrule = $cache_data['page_urlrule'];
-                return $this->_return($system['return'], $cache_data['data'], '【缓存数据】'.$cache_data['sql'], $cache_data['total'], $cache_data['pages'], $cache_data['pagesize']);
+                return $this->_return($system['return'], $cache_data['data'], $cache_data['sql'], $cache_data['total'], $cache_data['pages'], $cache_data['pagesize'], $system['cache']);
             }
         }
 
@@ -2585,7 +2581,7 @@ class View {
     }
 
     // list 返回
-    public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0) {
+    public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0, $is_cache = 0) {
 
         $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto;">';
         $sql && $debug.= '<p>SQL: '.$sql.'</p>';
@@ -2600,27 +2596,29 @@ class View {
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
 
+        $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
+        $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';
+
         if ($this->_list_is_count) {
-            $debug.= '<p>统计数：'.intval($data[0]['ct']).'</p>';
+            $debug.= '<p>统计数量：'.intval($data[0]['ct']).'</p>';
             $debug.= '</pre>';
             return [
                 'debug_count' => $debug,
                 'return_count' => $data,
             ];
         } else {
-            $total && $debug.= '<p>总记录：'.$total.'</p>';
+            $total && $debug.= '<p>总记录数：'.$total.'</p>';
             if ($this->_page_used) {
-                $debug.= '<p>分页：已开启</p>';
-                $debug.= '<p>当前页：'.$page.'</p>';
-                $debug.= '<p>总页数：'.$nums.'</p>';
+                $debug.= '<p>分页功能：已开启</p>';
+                $debug.= '<p>当前页码：'.$page.'</p>';
+                $debug.= '<p>总页数码：'.$nums.'</p>';
                 $debug.= '<p>每页数量：'.$pagesize.'</p>';
                 $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
             } else {
-                $debug.= '<p>分页：未开启</p>';
+                $debug.= '<p>分页功能：未开启</p>';
             }
 
             isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
-
             $debug.= '</pre>';
 
             // 返回数据格式
