@@ -39,6 +39,13 @@ class Linkages extends \Phpcmf\Library\A_Field {
                   	<label class="col-md-2 control-label">'.dr_lang('选择菜单').'</label>
                     <div class="col-md-9"><label>'.$str.'</label></div>
                 </div>
+                <div class="form-group">
+                  	<label class="col-md-2 control-label">'.dr_lang('最大选择数').'</label>
+                    <div class="col-md-9">
+                    <label><input type="text" class="form-control" size="10" name="data[setting][option][limit]" value="'.$option['limit'].'"></label>
+				<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
+				</div>
+                </div>
 				', '<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
@@ -73,6 +80,10 @@ class Linkages extends \Phpcmf\Library\A_Field {
             }
             $save = array_unique($save);
         }
+        // 判断超限
+        if ($field['setting']['option']['limit'] && dr_count($save) > $field['setting']['option']['limit']) {
+            $save = array_slice($save, 0, $field['setting']['option']['limit']);
+        }
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($save);
 	}
 
@@ -98,7 +109,6 @@ class Linkages extends \Phpcmf\Library\A_Field {
 
 		// 字段提示信息
 		$tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
-
 
 		// 联动菜单缓存
 		$linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage']);
@@ -165,7 +175,12 @@ class Linkages extends \Phpcmf\Library\A_Field {
         $str.= '<script type="text/javascript">
         $("#linkages-'.$name.'-sort-items").sortable();
 		function dr_add_linkages_'.$name.'() {
-			var id=($("#linkages-'.$name.'-sort-items .linkages_'.$name.'_row").size() + 1) * 10;
+		    var num = $("#linkages-'.$name.'-sort-items .linkages_'.$name.'_row").size();
+		    if ('.(int)$field['setting']['option']['limit'].' > 0 && num >= '.(int)$field['setting']['option']['limit'].') {
+		        dr_tips(0, "'.dr_lang('最多可以选择%s项', $field['setting']['option']['limit']).'");
+		        return;
+		    }
+			var id=(num + 1) * 10;
 			var html = "'.addslashes($tpl).'";
 			html = html.replace(/\{id\}/g, id);
 			html = html.replace(/\{display\}/g, "blank");
