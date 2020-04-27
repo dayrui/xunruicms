@@ -530,54 +530,5 @@ class Table extends \Phpcmf\Model
 
     //--------------------------------------------------------------------
 
-
-
-    // 或导出数据表的字段名称及自定义配置信息
-    public function get_export_field_name($table, $update = 0) {
-
-        // 获取表配置
-        $row = $this->db->table('export')->where('name', $table)->get()->getRowArray();
-        !$row && $this->table('export')->replace([
-            'name' => $table,
-            'value' => ''
-        ]);
-        $value = $row['value'] ? dr_string2array($row['value']) : [];
-
-        // 获取最新的字段信息
-        if ($update) {
-            $tables = explode(',', $table);
-            foreach ($tables as $tt) {
-                $field = $this->db->query('SHOW FULL COLUMNS FROM `'.$tt.'`')->getResultArray();
-                if (!$field) {
-                    return $value;
-                }
-                foreach ($field as $t) {
-                    if (!isset($value[$t['Field']])) {
-                        $value[$t['Field']] = [
-                            'use' => 1,
-                            'name' => $t['Comment'] ? $t['Comment'] : $t['Field'],
-                            'func' => '',
-                        ];
-                    }
-                }
-            }
-            $this->table('export')->replace([
-                'name' => $table,
-                'value' => dr_array2string($value)
-            ]);
-        }
-
-        return $value;
-    }
-
-    /// 存储导出数据表的字段名称及自定义配置信息
-    public function save_export_field_name($table, $data) {
-
-        $this->table('export')->replace([
-            'name' => $table,
-            'value' => dr_array2string($data)
-        ]);
-
-    }
     
 }

@@ -526,21 +526,6 @@ class Api extends \Phpcmf\Common
         } else {
             $this->_json(0, dr_lang('你没有定义第三方短信接口: '. $method));
         }
-
-    }
-
-	/**
-	 * 导出 字段设置
-	 */
-	public function export_field() {
-        exit('此功能不可用');
-    }
-
-	/**
-	 * 导出
-	 */
-	public function export_list() {
-        $this->_admin_msg(0, '此功能不可用');
     }
 
 	/**
