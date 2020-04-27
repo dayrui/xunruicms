@@ -145,14 +145,14 @@ class Model {
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
 
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
         
@@ -172,14 +172,14 @@ class Model {
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
 
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
         
@@ -242,7 +242,7 @@ class Model {
         $db = $this->db->table($this->table);
         $db->where($this->key, (int)$id);
 
-        $where && $db->where($where);
+        $where && $db->where($where, null, false);
         $db->update($data);
 
         $rt = $this->db->error();
@@ -264,20 +264,20 @@ class Model {
 
         $db = $this->db->table($this->table);
 
-        $where && $db->where($where);
+        $where && $db->where($where, null, false);
         $id && $db->where($this->key, (int)$id);
 
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $db->where($v[0], $v[1]) : $db->where($v);
+                dr_count($v) == 2 ? $db->where($v[0], $v[1]) : $db->where($v, null, false);
             }
         }
 
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
+                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v, null, false);
             }
         }
 
@@ -303,19 +303,19 @@ class Model {
     public function deleteAll($ids, $where = '') {
 
         $db = $this->db->table($this->table);
-        $where && $db->where($where);
+        $where && $db->where($where, null, false);
 
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $db->where($v[0], $v[1]) : $db->where($v);
+                dr_count($v) == 2 ? $db->where($v[0], $v[1]) : $db->where($v, null, false);
             }
         }
 
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
+                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v, null, false);
             }
         }
         
@@ -342,7 +342,7 @@ class Model {
     public function save($id, $name, $value, $where = '') {
 
         $db = $this->db->table($this->table);
-        $where && $db->where($where);
+        $where && $db->where($where, null, false);
         $db->where($this->key, (int)$id)->update([$name => $value]);
 
         $rt = $this->db->error();
@@ -385,14 +385,14 @@ class Model {
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
         
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
         
@@ -436,14 +436,14 @@ class Model {
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
         
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
 
@@ -626,7 +626,7 @@ class Model {
         // 定义的条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $select->where($v[0], $v[1]) : $select->where($v);
+                dr_count($v) == 2 ? $select->where($v[0], $v[1]) : $select->where($v, null, false);
             }
         }
 
@@ -694,7 +694,7 @@ class Model {
                         $where[] = str_replace('`{finecms_table}`.', '', $this->_where('{finecms_table}', $i, $v, $field));
                     }
                 }
-                $where && $select->where(implode(' AND ', $where));
+                $where && $select->where(implode(' AND ', $where), null, false);
             }
         }
 
