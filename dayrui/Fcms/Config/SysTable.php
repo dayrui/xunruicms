@@ -32,6 +32,7 @@ return [
       `author` varchar(50) NOT NULL COMMENT '作者',
       `catid` mediumint(8) unsigned NOT NULL COMMENT '栏目id',
       `status` tinyint(2) NOT NULL COMMENT '审核状态',
+      `verify` tinyint(2) NOT NULL COMMENT '审核id号',
       `content` mediumtext NOT NULL COMMENT '具体内容',
       `backuid` mediumint(8) unsigned NOT NULL COMMENT '操作人uid',
       `backinfo` text NOT NULL COMMENT '操作退回信息',
@@ -40,6 +41,7 @@ return [
       KEY `uid` (`uid`),
       KEY `catid` (`catid`),
       KEY `status` (`status`),
+      KEY `verify` (`verify`),
       KEY `inputtime` (`inputtime`),
       KEY `backuid` (`backuid`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容审核表';",

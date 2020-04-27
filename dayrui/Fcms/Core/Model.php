@@ -239,6 +239,10 @@ class Model {
     // 更新数据
     public function update($id, $data, $where = '') {
 
+        if (!$data) {
+            return $this->_return_error($this->table.': update() data值为空');
+        }
+
         $db = $this->db->table($this->table);
         $db->where($this->key, (int)$id);
 

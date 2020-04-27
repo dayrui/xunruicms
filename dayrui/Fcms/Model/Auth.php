@@ -345,30 +345,69 @@ class Auth extends \Phpcmf\Model {
     }
 
 
-    // 后台内容审核列表的权限
-    public function get_admin_verify_status() {
+    // 后台内容审核权限编辑时的验证
+    public function get_admin_verify_status_edit($vid, $status) {
 
         if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
-            return []; // 超管用户
+            return 1; // 超管用户
+        } elseif ($status == 0) {
+            return 1; // 退稿的可以看到
         }
 
         $verify = \Phpcmf\Service::C()->get_cache('verify');
         if (!$verify) {
-            return []; // 没有审核流程时
+            return 0; // 没有审核流程时
         }
 
-        $my = [0];
+        $my = [];
+        foreach ($verify as $t) {
+            if ($t['value']['role'] && array_intersect($t['value']['role'], \Phpcmf\Service::C()->admin['roleid'] )) {
+                $my[] = $t['id'];
+            }
+        }
+
+        if (!$my) {
+            // 此管理员没有管理权限
+            return 0;
+        }
+
+        // 有权限了
+        if (in_array($vid, $my)) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    // 后台内容审核列表的权限的sql语句
+    public function get_admin_verify_status_list() {
+
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            return 'status>=0'; // 超管用户
+        }
+
+        $verify = \Phpcmf\Service::C()->get_cache('verify');
+        if (!$verify) {
+            return 'status=0'; // 没有审核流程时
+        }
+
+        $sids = $vids = [];
         foreach ($verify as $t) {
             if ($t['value']['role']) {
                 foreach ($t['value']['role'] as $status => $rid) {
                     if (in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
-                        $my[] = $status;
+                        $sids[] = $status;
+                        $vids[] = $t['id'];
                     }
                 }
             }
         }
+        if (!$vids || !$sids) {
+            // 此管理员没有管理权限
+            return 'status=0';
+        }
 
-        return $my;
+        return '`status` = 0 or (`vid` in ('.implode(',', $vids).') and `status` in ('.implode(',', $sids).') )';
     }
 
     /**

@@ -217,6 +217,10 @@ class Check extends \Phpcmf\Common
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `agent` VARCHAR(200) DEFAULT NULL');
                                 }
                             }
+                            $table = $prefix.$siteid.'_'.$m['dirname'].'_verify';
+                            if (!\Phpcmf\Service::M()->db->fieldExists('vid', $table)) {
+                                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `vid` INT(10) DEFAULT NULL');
+                            }
                         }
                     }
                 }

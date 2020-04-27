@@ -504,7 +504,6 @@ class Module extends \Phpcmf\Table
         // 说明来自审核页面
         define('IS_MODULE_VERIFY', 1);
 
-        $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
         $is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
 
         if (isset($_GET['is_all']) && intval($_GET['is_all']) == 1) {
@@ -556,7 +555,7 @@ class Module extends \Phpcmf\Table
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : '').($status ? 'status IN('.implode(',', $status).')' : 'status>=0') .')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : ''). \Phpcmf\Service::M('auth')->get_admin_verify_status_list().')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         list($tpl, $data) = $this->_List();
@@ -602,10 +601,7 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('审核内容不存在'));
         } elseif ($this->where_list_sql && $this->content_model->admin_is_edit($data)) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
-        }
-
-        $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
-        if ($status && !in_array($data['status'], $status)) {
+        } elseif (!\Phpcmf\Service::M('auth')->get_admin_verify_status_edit($data['verify']['vid'], $data['status'])) {
             $this->_admin_msg(0, dr_lang('当前角色无权限审核此内容'));
         }
 
@@ -967,6 +963,7 @@ class Module extends \Phpcmf\Table
                     $data = dr_string2array($row['content']);
                 }
                 $data['verify'] = [
+                    'vid' => $row['vid'],
                     'uid' => $row['backuid'],
                     'isnew' => $row['isnew'],
                     'backinfo' => dr_string2array($row['backinfo']),
@@ -1119,8 +1116,7 @@ class Module extends \Phpcmf\Table
                                 $status = intval($old['status']);
                                 $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
                                 // 再次验证审核级别
-                                $my_status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
-                                if ($my_status && !in_array($status, $my_status)) {
+                                if (!\Phpcmf\Service::M('auth')->get_admin_verify_status_edit($old['verify']['vid'], $data[1]['status'])) {
                                     $this->_json(0, dr_lang('当前角色无权限审核此内容'));
                                 }
                                 // 任务执行成功

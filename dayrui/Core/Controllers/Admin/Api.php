@@ -329,11 +329,10 @@ class Api extends \Phpcmf\Common
 
 		$t1 = $t2 = $t3 = $t4 = $t5 = 0;
 		$dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
-        $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
 		if (is_dir(APPSPATH.ucfirst($dir))) {
 			$t1 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_index')->where('status=9')->where('DATEDIFF(from_unixtime(inputtime),now())=0')->countAllResults();
 			$t2 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_index')->where('status=9')->countAllResults();
-			$t3 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_verify')->where(($status ? 'status IN('.implode(',', $status).')' : 'status>=0'))->countAllResults();
+			$t3 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_verify')->where((\Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid.' OR ' : '').\Phpcmf\Service::M('auth')->get_admin_verify_status_list())->countAllResults();
 			$t4 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_recycle')->countAllResults();
 			$t5 = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_time')->countAllResults();
 		}

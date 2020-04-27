@@ -111,25 +111,32 @@ class Content extends \Phpcmf\Model {
                 // 执行审核后的回调
                 $this->_call_verify($data[1], $verify);
                 // 通知管理员
-                $data[1]['status'] > 0 && \Phpcmf\Service::M('member')->admin_notice(
-                    $this->siteid,
-                    'content',
-                    IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member,
-                    dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
-                    $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'],  IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member)
-                );
+                if ($data[1]['status'] > 0) {
+                    \Phpcmf\Service::M('member')->admin_notice(
+                        $this->siteid,
+                        'content',
+                        IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member,
+                        dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
+                        $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'],  IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member)
+                    );
+                }
                 // 通知用户
-                IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() && $data[1]['status'] == 0 && \Phpcmf\Service::M('member')->notice(
-                    $data[1]['uid'],
-                    3,
-                    dr_lang('《%s》审核被拒绝', $data[1]['title']),
-                    \Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
-                );
+                if (IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() && $data[1]['status'] == 0) {
+                    \Phpcmf\Service::M('member')->notice(
+                        $data[1]['uid'],
+                        3,
+                        dr_lang('《%s》审核被拒绝', $data[1]['title']),
+                        \Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
+                    );
+                }
+
             } else {
 				// 新增审核
+                $role = $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], \Phpcmf\Service::C()->member);
                 $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
+                    'vid' => (int)$role['verify_id'],
                     'isnew' => $id ? 0 : 1,
                     'catid' => (int)$data[1]['catid'],
                     'author' => $data[1]['author'],
@@ -172,7 +179,7 @@ class Content extends \Phpcmf\Model {
 						'content',
 						\Phpcmf\Service::C()->member,
 						dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
-                        $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], \Phpcmf\Service::C()->member)
+                        $role
 					);
 				}
 
@@ -1648,6 +1655,38 @@ class Content extends \Phpcmf\Model {
         return 1; // 1 表示进入审核流程
     }
 
+    // 审核时候的权限组,返回可用权限组的id
+    // array(
+    //     *      to_uid 指定人
+    //     *      to_rid 指定角色组
+    //     * )
+    protected function _get_verify_roleid($catid, $status, $member) {
+
+        $verify = \Phpcmf\Service::C()->get_cache('verify');
+        if (!$verify) {
+            return ['to_uid' => 0, 'to_rid' => 0, 'verify_id' => 0];
+        }
+
+        if (isset(\Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'])
+            && \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify']) {
+            $v = [];
+            $auth = \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'];
+            foreach ($member['authid'] as $aid) {
+                if (isset($auth[$aid]) && $auth[$aid] && isset($verify[$auth[$aid]])) {
+                    $v = $verify[$auth[$aid]];
+                    break; // 找到最近的审核机制就ok了
+                }
+            }
+
+            if ($v && isset($v['value']['role'][$status]) && $v['value']['role'][$status]) {
+                return ['to_uid' => 0, 'to_rid' => $v['value']['role'][$status], 'verify_id' => $v['id']];
+            }
+
+        }
+
+        return ['to_uid' => 0, 'to_rid' => 0, 'verify_id' => 0];
+    }
+
     // 更新时间
     public function update_time($ids) {
         $this->db->table($this->mytable)->whereIn('id', $ids)->update([
@@ -1686,40 +1725,6 @@ class Content extends \Phpcmf\Model {
     // 按5w分表
     public function _table_id($id) {
         return floor($id / 50000);
-    }
-
-    // 审核时候的权限组,返回可用权限组的id
-    // array(
-    //     *      to_uid 指定人
-    //     *      to_rid 指定角色组
-    //     * )
-    protected function _get_verify_roleid($catid, $status, $member) {
-
-        $verify = \Phpcmf\Service::C()->get_cache('verify');
-        if (!$verify) {
-            return ['to_uid' => 0, 'to_rid' => 0];
-        }
-
-        if (isset(\Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'])
-            && \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify']) {
-
-            $v = [];
-            $auth = \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'];
-            foreach ($member['authid'] as $aid) {
-                if (isset($auth[$aid]) && $auth[$aid] && isset($verify[$auth[$aid]])) {
-                    $v = $verify[$auth[$aid]];
-                    break; // 找到最近的审核机制就ok了
-                }
-            }
-
-            if ($v && isset($v['value']['role'][$status]) && $v['value']['role'][$status]) {
-               return ['to_uid' => 0, 'to_rid' => $v['value']['role'][$status]];
-            }
-
-        }
-
-
-        return ['to_uid' => 0, 'to_rid' => 0];
     }
 
 
