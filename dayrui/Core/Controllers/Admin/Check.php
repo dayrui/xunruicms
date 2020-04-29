@@ -221,6 +221,9 @@ class Check extends \Phpcmf\Common
                             if (!\Phpcmf\Service::M()->db->fieldExists('vid', $table)) {
                                 \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `vid` INT(10) DEFAULT NULL');
                             }
+							// 无符号修正
+							\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `updatetime` `updatetime` INT(10) NOT NULL COMMENT \'更新时间\'');
+							\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `inputtime` `inputtime` INT(10) NOT NULL COMMENT \'更新时间\'');
                         }
                     }
                 }
