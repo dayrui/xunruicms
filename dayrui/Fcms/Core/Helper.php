@@ -1793,7 +1793,7 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 }
 
 /**
- * 目录扫描
+ * 文件扫描
  *
  * @param	string	$source_dir		Path to source
  * @param	int	$directory_depth	Depth of directories to traverse

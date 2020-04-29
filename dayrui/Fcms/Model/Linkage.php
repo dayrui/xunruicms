@@ -369,6 +369,17 @@ class Linkage extends \Phpcmf\Model
     // 缓存
     public function cache($siteid = SITE_ID) {
 
+        // 删除全部缓存
+        $files = dr_file_map(WRITEPATH.'data/');
+        if ($files) {
+            foreach ($files as $file) {
+                if (strpos($file, 'linkage-'.$siteid) !== false) {
+                    unlink(WRITEPATH.'data/'.$file);
+                }
+            }
+        }
+
+        // 生成新缓存
         $linkage = $this->table('linkage')->getAll();
         if ($linkage) {
             foreach ($linkage as $link) {
