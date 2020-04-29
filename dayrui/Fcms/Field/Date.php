@@ -172,7 +172,7 @@ class Date extends \Phpcmf\Library\A_Field {
         !$value && $value = $this->get_default_value($field['setting']['option']['value']);
         if ($value == 'SYS_TIME' || (APP_DIR && $name == 'updatetime')) {
             $value = SYS_TIME;
-        } elseif (strpos($value, '-') !== false) {
+        } elseif (strpos($value, '-') !== 0) {
             $value = strtotime($value);
         }
 
