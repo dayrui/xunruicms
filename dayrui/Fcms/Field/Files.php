@@ -363,9 +363,9 @@ $(function() {
 							if(numItems + json.data.count > numCount){
 								dr_tips(0, \''.dr_lang('上传文件不能超过%s个', $count).'\');
 								return false;
-							};
-							var temp = \''.$tpl.'\';
+							}
 							var html = "";
+							var temp = \''.$tpl.'\';
 							for(var i in json.data.result){
 								var tpl = temp;
 								var v = json.data.result[i];

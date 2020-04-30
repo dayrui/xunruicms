@@ -129,7 +129,7 @@ class Group extends \Phpcmf\Library\A_Field {
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<div class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</div>' : '';
 
         // 字段默认值
-		$value = $field['setting']['option']['value'];
+		$value = str_replace(['{', '}'], ['{|', '|}'], $field['setting']['option']['value']);
 
 		return $this->input_format($field['fieldname'], $text, $value.$tips);
 	}

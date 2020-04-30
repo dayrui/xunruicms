@@ -223,7 +223,7 @@
 
             if ($mygroup) {
                 foreach ($mygroup as $name => $t) {
-                    $myfield = str_replace('{'.$name.'}', $t, $myfield);
+                    $myfield = str_replace('{|'.$name.'|}', $t, $myfield);
                 }
             }
 
