@@ -214,7 +214,7 @@ class Apply extends \Phpcmf\Common
             'pay_type' => \Phpcmf\Service::M('pay')->get_pay_type(1),
             'meta_title' => dr_lang('申请用户组').SITE_SEOJOIN.dr_lang('用户中心')
         ]);
-        \Phpcmf\Service::V()->display('apply_index.html');
+        \Phpcmf\Service::V()->display(is_file(dr_tpl_path(1).'apply_'.$gid.'.html') ? 'apply_'.$gid.'.html' : 'apply_index.html');
     }
 
     /**
