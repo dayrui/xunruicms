@@ -25,6 +25,9 @@ class Apply extends \Phpcmf\Common
             $this->_msg(0, dr_lang('用户组[%s]没有开启申请权限', $group['name']));
         }
 
+        // 申请用户组之前的钩子
+        \Phpcmf\Hooks::trigger('member_apply_group_before', ['uid' => $this->uid, 'gid' => $gid]);
+
         // 判断是否已经申请
         $verify = \Phpcmf\Service::M()->db->table('member_group_verify')->where('uid', $this->uid)->where('gid', $gid)->get()->getRowArray();
         if ($verify) {
