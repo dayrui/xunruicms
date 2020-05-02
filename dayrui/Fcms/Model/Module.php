@@ -263,7 +263,6 @@ class Module extends \Phpcmf\Model
             // 多站点时的复制站点表$siteid
         }
 
-
         // 创建内容表字段
         foreach ([1, 0] as $is_main) {
             $t = $content_table['field'][$is_main];
@@ -421,7 +420,7 @@ class Module extends \Phpcmf\Model
         // 执行站点sql语句
         if (is_file($mpath.'Config/Install_site.sql')) {
             $sql = file_get_contents($mpath.'Config/Install_site.sql');
-            $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
+            $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix(SITE_ID.'_'), $sql));
             if ($rt) {
                 return dr_return_data(0, $rt);
             }

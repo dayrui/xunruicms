@@ -469,6 +469,7 @@ abstract class Common extends \CodeIgniter\Controller
      * 缓存页面
      */
     protected function cachePage(int $time) {
+        return;// 暂时不使用页面缓存
         if (isset($this->site_info[SITE_ID]['SITE_CLOSE']) && $this->site_info[SITE_ID]['SITE_CLOSE']) {
             // 网站关闭状态时不进行缓存页面
             return;

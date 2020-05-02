@@ -5,10 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
 class Site extends \Phpcmf\Model
 {
-	
 	// 设置风格
 	public function set_theme($name, $siteid) {
 		
@@ -56,8 +54,12 @@ class Site extends \Phpcmf\Model
 
         if ($name && $data) {
             // 更新数据
-            $data['SITE_NAME'] && $site['name'] = $data['SITE_NAME'];
-            $data['SITE_DOMAIN'] && $site['domain'] = $data['SITE_DOMAIN'];
+            if ($data['SITE_NAME']) {
+                $site['name'] = $data['SITE_NAME'];
+            }
+            if ($data['SITE_DOMAIN']) {
+                $site['domain'] = $data['SITE_DOMAIN'];
+            }
             $site['setting'][$name] = $data;
             $this->table('site')->update($siteid, [
                 'name' => $site['name'],
@@ -83,8 +85,12 @@ class Site extends \Phpcmf\Model
         $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
 
         // 更新数据
-        $data['SITE_NAME'] && $site['name'] = $data['SITE_NAME'];
-        $data['SITE_DOMAIN'] && $site['domain'] = $data['SITE_DOMAIN'];
+        if ($data['SITE_NAME']) {
+            $site['name'] = $data['SITE_NAME'];
+        }
+        if ($data['SITE_DOMAIN']) {
+            $site['domain'] = $data['SITE_DOMAIN'];
+        }
         $site['setting'][$name] = $data;
         $this->table('site')->update($siteid, [
             'name' => $site['name'],

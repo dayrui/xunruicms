@@ -13,7 +13,7 @@ class Site_mobile extends \Phpcmf\Common
 			$rt = \Phpcmf\Service::M('Site')->config(
 			    SITE_ID,
                 'mobile',
-                \Phpcmf\Service::L('input')->post('data', true)
+                \Phpcmf\Service::L('input')->post('data')
             );
             if (!is_array($rt)) {
                 $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
