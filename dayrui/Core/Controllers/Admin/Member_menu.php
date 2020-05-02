@@ -81,13 +81,19 @@ class Member_menu extends \Phpcmf\Common
 	public function group_add() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && $this->_json(0, dr_lang('你还没有选择呢'));
+		if (!$ids) {
+		    $this->_json(0, dr_lang('你还没有选择呢'));
+        }
 
 		$gid = (int)\Phpcmf\Service::L('input')->post('groupid');
-		!$gid && $this->_json(0, dr_lang('你还没有选择用户组'));
+		if (!$gid) {
+		    $this->_json(0, dr_lang('你还没有选择用户组'));
+        }
 
 		$data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
-		!$data && $this->_json(0, dr_lang('无可用菜单'));
+		if (!$data) {
+		    $this->_json(0, dr_lang('无可用菜单'));
+        }
 
 		foreach ($data as $t) {
 			$value = dr_string2array($t['group']);
@@ -105,10 +111,14 @@ class Member_menu extends \Phpcmf\Common
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M('Menu')->getRowData('member', $id);
-		!$data && $this->_json(0, dr_lang('菜单不存在'));
+		if (!$data) {
+		    $this->_json(0, dr_lang('菜单不存在'));
+        }
 
 		$gid = (int)\Phpcmf\Service::L('input')->get('gid');
-		!$gid && $this->_json(0, dr_lang('用户组id不存在'));
+		if (!$gid) {
+		    $this->_json(0, dr_lang('用户组id不存在'));
+        }
 
 		$value = dr_string2array($data['group']);
 		unset($value[$gid]);
@@ -124,13 +134,19 @@ class Member_menu extends \Phpcmf\Common
 	public function site_add() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && $this->_json(0, dr_lang('你还没有选择呢'));
+		if (!$ids) {
+		    $this->_json(0, dr_lang('你还没有选择呢'));
+        }
 
 		$sid = (int)\Phpcmf\Service::L('input')->post('siteid');
-		!$sid && $this->_json(0, dr_lang('你还没有选择站点'));
+		if (!$sid) {
+		    $this->_json(0, dr_lang('你还没有选择站点'));
+        }
 
 		$data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
-		!$data && $this->_json(0, dr_lang('无可用菜单'));
+		if (!$data) {
+		    $this->_json(0, dr_lang('无可用菜单'));
+        }
 
 		foreach ($data as $t) {
 			$value = dr_string2array($t['site']);
@@ -148,10 +164,14 @@ class Member_menu extends \Phpcmf\Common
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M('Menu')->getRowData('member', $id);
-		!$data && $this->_json(0, dr_lang('菜单不存在'));
+		if (!$data) {
+		    $this->_json(0, dr_lang('菜单不存在'));
+        }
 
         $sid = (int)\Phpcmf\Service::L('input')->get('sid');
-		!$sid && $this->_json(0, dr_lang('站点id不存在'));
+		if (!$sid) {
+		    $this->_json(0, dr_lang('站点id不存在'));
+        }
 
 		$value = dr_string2array($data['site']);
 		unset($value[$sid]);

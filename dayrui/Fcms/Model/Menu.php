@@ -35,6 +35,7 @@ class Menu extends \Phpcmf\Model {
                 'uri' => $data['uri'] ? $data['uri'] : '',
                 'url' => $data['url'] ? $data['url'] : '',
                 'mark' => $mark,
+                'site' => '',
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
@@ -545,17 +546,24 @@ class Menu extends \Phpcmf\Model {
             $top = $left = [];
             // 第一级
             foreach ($data as $i => $t) {
-                $t['pid'] == 0 && $top[] = $t['id'];
+                if ($t['pid'] == 0) {
+                    $top[] = $t['id'];
+                    $data[$i]['level'] = 1;
+                }
             }
             // 第二级
             foreach ($data as $i => $t) {
-                in_array($t['pid'], $top) && $left[$t['id']] = $t['pid'];
+                if (in_array($t['pid'], $top)) {
+                    $left[$t['id']] = $t['pid'];
+                    $data[$i]['level'] = 2;
+                }
             }
             // 第三级
             foreach ($data as $i => $t) {
                 if (isset($left[$t['pid']])) {
                     $data[$i]['mark'] = $t['uri'] ? $t['uri'] : $t['url'];
                     $data[$i]['tid'] = $left[$t['pid']];
+                    $data[$i]['level'] = 3;
                 }
 				/*
                 if (strpos($t['uri'], 'cloud/') === 0 && substr_count($t['uri'], '/') == 1) {
@@ -687,14 +695,17 @@ class Menu extends \Phpcmf\Model {
             $list = [];
             foreach ($data as $t) {
                 if ($t['pid'] == 0) {
+                    $t['site'] = dr_string2array($t['site']);
                     $list[$t['id']] = $t;
                     foreach ($data as $m) {
                         if ($m['pid'] == $t['id']) {
+                            $m['site'] = dr_string2array($m['site']);
                             $list[$t['id']]['left'][$m['id']] = $m;
                             foreach ($data as $n) {
                                 if ($n['pid'] == $m['id']) {
                                     $n['tid'] = $t['id'];
                                     $n['uri'] = str_replace('admin/', '', $n['uri']);
+                                    $n['site'] = dr_string2array($n['site']);
                                     $n['pid'] == $m['id'] && $list[$t['id']]['left'][$m['id']]['link'][$n['id']] = $n;
                                     $menu['admin-uri'][$n['uri']] = $n;
                                 }

@@ -36,7 +36,6 @@ class Home extends \Phpcmf\Common
                     if (!array_intersect($this->admin['roleid'], (array)$auth[$name])) {
                         unset($table_data[$name]); // 无权限移除
                     }
-
                 }
             }
         }
@@ -150,9 +149,12 @@ class Home extends \Phpcmf\Common
 		}
 
         if ($my_menu) {
+		    // 权限判断并筛选
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
                     continue; // 没有分组菜单就不要
+                } elseif (SITE_ID > 1 && !in_array(SITE_ID, $top['site'])) {
+                    continue; // 没有划分本站点就不显示
                 } elseif ($top['mark'] && strpos($top['mark'], 'app-') === 0) {
                     // 判断应用模块权限
                     list($a, $mm) = explode('-', $top['mark']);
@@ -179,6 +181,9 @@ class Home extends \Phpcmf\Common
                     if (!$left['link']) {
                         unset($top['left'][$if]);
                         continue; // 没有链接菜单就不要
+                    } elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
+                        unset($top['left'][$if]);
+                        continue; // 没有划分本站点就不显示
                     }
                     // 链接菜单开始
                     $link_string = '';
@@ -195,6 +200,10 @@ class Home extends \Phpcmf\Common
                                 unset($left['link'][$i]);
                                 continue;
                             }
+                        } elseif (SITE_ID > 1 && !in_array(SITE_ID, $link['site'])) {
+                            // 没有划分本站点就不显示
+                            unset($left['link'][$i]);
+                            continue;
                         } elseif (SITE_ID > 1 && $link['uri'] && $link['uri'] == 'cloud/local') {
                             // 多站点不显示应用
                             unset($left['link'][$i]);

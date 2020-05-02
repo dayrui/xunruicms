@@ -60,7 +60,8 @@ class Menu extends \Phpcmf\Common
 	public function index() {
 
 		\Phpcmf\Service::V()->assign([
-			'data' => \Phpcmf\Service::M('Menu')->gets('admin'),
+			'data' => \Phpcmf\Service::M('menu')->gets('admin'),
+            'color' => ['blue', 'red', 'green', 'dark', 'yellow'],
 		]);
 		\Phpcmf\Service::V()->display('menu_index.html');
 	}
@@ -69,7 +70,7 @@ class Menu extends \Phpcmf\Common
 	public function add() {
 
 		$pid = intval(\Phpcmf\Service::L('input')->get('pid'));
-		$top = \Phpcmf\Service::M('Menu')->get_top('admin');
+		$top = \Phpcmf\Service::M('menu')->get_top('admin');
 		$type = $pid ? (isset($top[$pid]) ? 2 : 3) : 1;
 
 		if (IS_AJAX_POST) {
@@ -98,16 +99,69 @@ class Menu extends \Phpcmf\Common
 		exit;
 	}
 
+    public function site_add() {
+
+        $ids = \Phpcmf\Service::L('input')->get_post_ids();
+        if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        $sid = (int)\Phpcmf\Service::L('input')->post('siteid');
+        if (!$sid) {
+            $this->_json(0, dr_lang('你还没有选择站点'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table('admin_menu')->whereIN('id', $ids)->get()->getResultArray();
+        if (!$data) {
+            $this->_json(0, dr_lang('无可用菜单'));
+        }
+
+        foreach ($data as $t) {
+            $value = dr_string2array($t['site']);
+            $value[$sid] = $sid;
+            \Phpcmf\Service::M()->db->table('admin_menu')->where('id', $t['id'])->update([
+                'site' => dr_array2string($value)
+            ]);
+        }
+
+        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+        $this->_json(1, dr_lang('划分成功'));
+    }
+
+    public function site_del() {
+
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        $data = \Phpcmf\Service::M('menu')->getRowData('admin', $id);
+        if (!$data) {
+            $this->_json(0, dr_lang('菜单不存在'));
+        }
+
+        $sid = (int)\Phpcmf\Service::L('input')->get('sid');
+        if (!$sid) {
+            $this->_json(0, dr_lang('站点id不存在'));
+        }
+
+        $value = dr_string2array($data['site']);
+        unset($value[$sid]);
+
+        \Phpcmf\Service::M()->db->table('admin_menu')->where('id', $id)->update([
+            'site' => dr_array2string($value)
+        ]);
+
+        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+        $this->_json(1, dr_lang('删除成功'));
+    }
+
 	public function edit() {
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
-		$data = \Phpcmf\Service::M('Menu')->getRowData('admin', $id);
+		$data = \Phpcmf\Service::M('menu')->getRowData('admin', $id);
 		if (!$data) {
 		    $this->_json(0, dr_lang('数据#%s不存在', $id));
         }
 
 		$pid = intval($data['pid']);
-		$top = \Phpcmf\Service::M('Menu')->get_top('admin');
+		$top = \Phpcmf\Service::M('menu')->get_top('admin');
 		$type = $pid ? (isset($top[$pid]) ? 2 : 3) : 1;
 
 		if (IS_AJAX_POST) {
@@ -137,9 +191,11 @@ class Menu extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+		if (!$ids) {
+		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
-		\Phpcmf\Service::M('Menu')->_delete('admin', $ids);
+		\Phpcmf\Service::M('menu')->_delete('admin', $ids);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('批量删除后台菜单: '. @implode(',', $ids));
 		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
@@ -149,7 +205,7 @@ class Menu extends \Phpcmf\Common
 	// 初始化
 	public function init() {
 
-		\Phpcmf\Service::M('Menu')->init('admin');
+		\Phpcmf\Service::M('menu')->init('admin');
 
 		\Phpcmf\Service::L('input')->system_log('初始化后台菜单');
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -160,8 +216,10 @@ class Menu extends \Phpcmf\Common
 	public function use_edit() {
 
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
-		$v = \Phpcmf\Service::M('Menu')->_uesd('admin', $i);
-		$v == -1 && exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+		$v = \Phpcmf\Service::M('menu')->_uesd('admin', $i);
+		if ($v == -1) {
+		    exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+        }
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改后台菜单状态: '. $i);
 		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
@@ -172,7 +230,7 @@ class Menu extends \Phpcmf\Common
 	public function save_edit() {
 
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
-		\Phpcmf\Service::M('Menu')->_save(
+		\Phpcmf\Service::M('menu')->_save(
 			'admin',
 			$i,
 			dr_safe_replace(\Phpcmf\Service::L('input')->get('name')),
@@ -198,13 +256,15 @@ class Menu extends \Phpcmf\Common
 		}
 
 		//$type是菜单级别 1 2 3
-        if (in_array($type, [2, 1])) {
-            !$data['mark'] && $this->_json(0, dr_lang('标识字符不能为空'), ['field' => 'mark']);
+        if (in_array($type, [2, 1]) && !$data['mark']) {
+             $this->_json(0, dr_lang('标识字符不能为空'), ['field' => 'mark']);
         }
 
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 
-        $return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+        if ($return) {
+            exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+        }
 	}
 
 }

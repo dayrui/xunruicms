@@ -180,11 +180,64 @@ class Check extends \Phpcmf\Common
 
             case '07':
 
+                $prefix = \Phpcmf\Service::M()->prefix;
+
+                // 增加长度
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member` CHANGE `salt` `salt` VARCHAR(50) NOT NULL COMMENT \'随机加密码\';');
+
+                $table = $prefix.'cron';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
+                }
+
+                $table = $prefix.'member_paylog';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
+                }
+
+                $table = $prefix.'member_group_verify';
+                if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
+                }
+
+                $table = $prefix.'member_scorelog';
+                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_explog';
+                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_oauth';
+                if (!\Phpcmf\Service::M()->db->fieldExists('unionid', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `unionid` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_menu';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                }
+
+                $table = $prefix.'admin_menu';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                }
+
+                $table = $prefix.'admin_setting';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                      `name` varchar(50) NOT NULL,
+                      `value` mediumtext NOT NULL,
+                      PRIMARY KEY (`name`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';');
+                }
+
                 // 模块
                 $module = \Phpcmf\Service::M()->table('module')->order_by('displayorder ASC,id ASC')->getAll();
 
                 // 站点
-                $prefix = \Phpcmf\Service::M()->prefix;
                 foreach ($this->site as $siteid) {
                     // 升级资料库
                     $table = $prefix.$siteid.'_block';
@@ -228,52 +281,6 @@ class Check extends \Phpcmf\Common
                     }
                 }
 
-                // 增加长度
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member` CHANGE `salt` `salt` VARCHAR(50) NOT NULL COMMENT \'随机加密码\';');
-
-                $table = $prefix.'cron';
-                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
-                }
-
-                $table = $prefix.'member_paylog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
-                }
-
-                $table = $prefix.'member_group_verify';
-                if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
-                }
-
-                $table = $prefix.'member_scorelog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
-                }
-
-                $table = $prefix.'member_explog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
-                }
-
-                $table = $prefix.'member_oauth';
-                if (!\Phpcmf\Service::M()->db->fieldExists('unionid', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `unionid` VARCHAR(100) DEFAULT NULL');
-                }
-
-                $table = $prefix.'member_menu';
-                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
-                }
-
-                $table = $prefix.'admin_setting';
-                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
-                      `name` varchar(50) NOT NULL,
-                      `value` mediumtext NOT NULL,
-                      PRIMARY KEY (`name`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';');
-                }
                 /*
                                 $table = $prefix.'email';
                                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {

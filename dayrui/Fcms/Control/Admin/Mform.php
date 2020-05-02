@@ -41,8 +41,8 @@ class Mform extends \Phpcmf\Table
         // 模块显示名称
         $this->name = dr_lang('内容模块[%s]表单（%s）', APP_DIR, $this->form['name']);
         // 获取父级内容
-         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
-         $this->index = $this->cid ? $this->content_model->get_data( $this->cid) : [];
+        $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
+        $this->index = $this->cid ? $this->content_model->get_data( $this->cid) : [];
         // 自定义条件
         $where = $this->is_verify ? 'status=0' : 'status=1';
         $this->cid && $where.= ' and cid='. $this->cid;
@@ -61,7 +61,6 @@ class Mform extends \Phpcmf\Table
             'order_by' => 'displayorder DESC,inputtime DESC',
             'where_list' => $where,
         ]);
-
 
         $menu = $this->is_verify ? \Phpcmf\Service::M('auth')->_admin_menu([
             '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],

@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin_menu` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `pid` smallint(5) unsigned NOT NULL COMMENT '上级菜单id',
   `name` text NOT NULL COMMENT '菜单语言名称',
+  `site` text NOT NULL COMMENT '站点归属',
   `uri` varchar(255) DEFAULT NULL COMMENT 'uri字符串',
   `url` varchar(255) DEFAULT NULL COMMENT '外链地址',
   `mark` varchar(255) DEFAULT NULL COMMENT '菜单标识',
