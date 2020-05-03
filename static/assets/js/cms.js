@@ -549,16 +549,23 @@ function dr_ajax_submit(url, form, time, go) {
     }
 
     // 验证必填项管理员
+    var tips_obj = $('#'+form).find('[name=is_tips]');
+    if (tips_obj.val() == 'required') {
+        tips_obj.val('');
+    }
     if ($('#'+form).find('[name=is_admin]').val()) {
         $('#'+form).find('.dr_required').each(function () {
             if (!$(this).val()) {
-                $('#'+form).find('[name=is_tips]').val('有必填字段未填写，确认提交吗？');
+                tips_obj.val('required');
             }
         });
     }
 
-    var tips = $('#'+form).find('[name=is_tips]').val();
+    var tips = tips_obj.val();
     if (tips) {
+        if (tips == 'required') {
+            tips = '有必填字段未填写，确认提交吗？';
+        }
         layer.confirm(
         tips,
         {
