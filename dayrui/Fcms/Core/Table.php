@@ -392,7 +392,7 @@ class Table extends \Phpcmf\Common
         $data['post_url'] = IS_MEMBER ? \Phpcmf\Service::L('Router')->member_url(\Phpcmf\Service::L('Router')->uri('add'), $this->url_params) :  \Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->uri('add'), $this->url_params);
 
         // 获取返回URL
-        $data['reply_url'] = \Phpcmf\Service::L('Router')->get_back(\Phpcmf\Service::L('Router')->uri('index'), $this->url_params);
+        $data['reply_url'] = \Phpcmf\Service::L('Router')->get_back(\Phpcmf\Service::L('Router')->uri('index'), $this->url_params, true);
         $data['uriprefix'] = trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'); // uri前缀部分
         
         // 判断是否是编辑,返回id号
