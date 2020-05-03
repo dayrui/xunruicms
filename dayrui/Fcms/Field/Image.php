@@ -140,6 +140,27 @@ class Image extends \Phpcmf\Library\A_Field {
         );
     }
 
+    private function _format_file_size($fileSize, $round = 2) {
+
+        if (!$fileSize) {
+            return 0;
+        }
+
+        $i = 0;
+        $inv = 1 / 1024;
+        $unit = array(' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
+
+        while ($fileSize >= 1024 && $i < 8) {
+            $fileSize *= $inv;
+            ++$i;
+        }
+
+        $temp = sprintf("%.2f", $fileSize);
+        $value = $temp - (int) $temp ? $temp : $fileSize;
+
+        return '<strong>'.round($value, $round).'</strong>' . $unit[$i];
+    }
+
 
     /**
      * 字段表单输入
@@ -189,9 +210,9 @@ class Image extends \Phpcmf\Library\A_Field {
                         $tpl.=     '<div class="dz-image">';
                         $tpl.=        ' <img data-dz-thumbnail="" src="'.dr_thumb($id, 110, 110).'">';
                         $tpl.=     '</div>';
-                        $tpl.=    ' <div class="dz-details">';
-                        $tpl.=    '     <div class="dz-size"><span data-dz-size=""><strong>'.dr_format_file_size($file['filesize']).'</strong></span></div>';
-                        $tpl.=     '</div>';
+
+                        $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div></div>';
+
                         $tpl.=     '<a class="dz-remove" href="javascript:dr_delete_image_'.$name.'('.$id.');" title="'.dr_lang('删除图片').'">';
                         $tpl.=      '   <i class="fa fa-times-circle"></i>';
                         $tpl.=    ' </a>';
