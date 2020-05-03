@@ -318,12 +318,12 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Send() {
 
         $page = \Phpcmf\Service::L('input')->get('page');
-		if ($page != 5) {
-			$ids = \Phpcmf\Service::L('input')->get('ids');
-			if (!$ids) {
-			    $this->_json(0, dr_lang('所选数据不存在'));
+        if ($page != 5) {
+            $ids = \Phpcmf\Service::L('input')->get('ids');
+            if (!$ids) {
+                $this->_json(0, dr_lang('所选数据不存在'));
             }
-		}
+        }
 
         if (IS_AJAX_POST) {
 
@@ -410,7 +410,7 @@ class Module extends \Phpcmf\Table
 
             exit;
         } else if ($page == 3) {
-		    /*
+            /*
             if (!$this->get_cache('site', SITE_ID, 'weibo', 'module', MOD_DIR, 'use')) {
                 $this->_json(0, dr_lang('当前模块没有启用微博分享'));
             }
@@ -426,7 +426,7 @@ class Module extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('任务添加成功'));*/
         } else if ($page == 2) {
-		    /*
+            /*
             if (dr_count($ids) > 9) {
                 $this->_json(0, dr_lang('微信推送不能超过9条数据'));
             } elseif (!dr_is_app('weixin')) {
@@ -605,13 +605,9 @@ class Module extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('当前角色无权限审核此内容'));
         }
 
-        $step = $this->_get_verify($data['uid'], $data['catid']);
-        $step[9] = [
-            'name' => dr_lang('完成'),
-        ];
-
+        $step = $this->_get_verify($data['verify']['vid']);
         $verify_msg = [
-          dr_lang('词文不对'),
+            dr_lang('词文不对'),
         ];
         if ($this->module['setting']['verify_msg']) {
             $msg = @explode(PHP_EOL, $this->module['setting']['verify_msg']);
@@ -699,10 +695,10 @@ class Module extends \Phpcmf\Table
     public function tuigao_edit() {
         // 说明来退稿页面
         define('IS_MODULE_TG', 1);
-		$id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $this->_Post($id);
-		$this->_json(1, dr_lang('操作异常'));
-		exit;
+        $this->_json(1, dr_lang('操作异常'));
+        exit;
     }
 
     // 后台定时发布
@@ -1139,15 +1135,15 @@ class Module extends \Phpcmf\Table
                             }
                         }
                     }
-					// 是否退稿
-					if (defined('IS_MODULE_TG')) {
-						$data[1]['status'] = 0;
-						// 通知
-						$_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);
-						\Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
-						$this->content_model->table($this->content_model->mytable.'_verify')->delete($id);
-					}
-					
+                    // 是否退稿
+                    if (defined('IS_MODULE_TG')) {
+                        $data[1]['status'] = 0;
+                        // 通知
+                        $_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);
+                        \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
+                        $this->content_model->table($this->content_model->mytable.'_verify')->delete($id);
+                    }
+
                     return dr_return_data(1, 'ok', $data);
                 },
                 function ($id, $data, $old) {
@@ -1232,20 +1228,12 @@ class Module extends \Phpcmf\Table
     }
 
     // 获取当前栏目的时候流程
-    private function _get_verify($uid, $catid) {
+    private function _get_verify($vid) {
 
-        $auth = $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['category'][$catid]['verify'];
+        $rt = [];
         $cache = $this->get_cache('verify');
-        if ($cache && $auth) {
-            $verify = [];
-            $authid = \Phpcmf\Service::M('member')->authid($uid);
-            foreach ($authid as $aid) {
-                if (isset($auth[$aid]) && $auth[$aid] && isset($cache[$auth[$aid]])) {
-                    $verify = $cache[$auth[$aid]];
-                    break; // 找到最近的审核机制就ok了
-                }
-            }
-            $rt = [];
+        if ($cache && $vid && $cache[$vid]) {
+            $verify = $cache[$vid];
             if ($verify['value']['role']) {
                 $role = $this->get_cache('auth');
                 foreach ($verify['value']['role'] as $id => $rid) {
@@ -1255,11 +1243,13 @@ class Module extends \Phpcmf\Table
                     ];
                 }
             }
-
-            return $rt;
         }
 
-        return [];
+        $rt[9] = [
+            'name' => dr_lang('完成'),
+        ];
+
+        return $rt;
     }
 
 }
