@@ -523,6 +523,7 @@ class Member extends \Phpcmf\Model
             $my_verify['uid'] = $member['uid'];
             $my_verify['username'] = $member['username'];
             $my_verify['gid'] = $gid;
+            $my_verify['price'] = $group['price'];
             $my_verify['lid'] = $lid;
             $my_verify['status'] = 0;
             $my_verify['content'] = dr_array2string($my_verify['content']);

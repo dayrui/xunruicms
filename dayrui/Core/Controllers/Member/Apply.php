@@ -28,6 +28,7 @@ class Apply extends \Phpcmf\Common
         // 申请用户组之前的钩子
         \Phpcmf\Hooks::trigger('member_apply_group_before', ['uid' => $this->uid, 'gid' => $gid]);
 
+        $is_pay = 1;
         // 判断是否已经申请
         $verify = \Phpcmf\Service::M()->db->table('member_group_verify')->where('uid', $this->uid)->where('gid', $gid)->get()->getRowArray();
         if ($verify) {
@@ -35,6 +36,12 @@ class Apply extends \Phpcmf\Common
                 $this->_msg(0, dr_lang('正在审核之中'));
             }
             $verify['content'] = dr_string2array($verify['content']);
+            if ($verify['price'] < $group['price']) {
+                // 当审核被拒绝时，之前付款的价格小于现在价格，需要补差价
+                $group['price'] = $group['price'] - $verify['price'];
+            } else {
+                $is_pay = 0;
+            }
         }
 
         $level = $group['level'] && !$group['setting']['level']['auto'] ? $group['level'] : [];
@@ -80,7 +87,7 @@ class Apply extends \Phpcmf\Common
             );
 
             // 不重复扣款
-            if (!$verify && !$group['setting']['level']['auto']) {
+            if ($is_pay && !$group['setting']['level']['auto']) {
                 // 不开启自动升级的时候进入
                 // 价格判断
                 if ($level) {

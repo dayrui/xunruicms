@@ -67,13 +67,17 @@ class Router
 
 
     // 获取返回时的URL
-    public function get_back($uri, $param = [])
+    public function get_back($uri, $param = [], $remove_total = false)
     {
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $value = \Phpcmf\Service::L('cache')->get_data($name);
         if ($value) {
             $uri = $value[0];
             $param = dr_array22array($param, $value[1]);
+        }
+        // 移除统计参数
+        if ($remove_total && isset($param['total'])) {
+            unset($param['total']);
         }
         return IS_ADMIN ? $this->url($uri, $param) : $this->member_url($uri, $param);
     }
