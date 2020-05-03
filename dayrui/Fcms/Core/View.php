@@ -486,6 +486,7 @@ class View {
             '#{list\s+(.+?)\s?}#i',
             '#{\s?\/list\s?}#i',
             // count标签
+            '#{count\s+(.+?)return=(.+?)\s?}#i',
             '#{count\s+(.+?)\s?}#i',
             // if判断语句
             '#{\s?if\s+(.+?)\s?}#i',
@@ -530,7 +531,8 @@ class View {
             "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { foreach (\$return_\\2 as \$key_\\2=>\$\\2) {  \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
             "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return); \$count=dr_count(\$return);} if (is_array(\$return)) { foreach (\$return as \$key=>\$t) { \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
-            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count); } echo intval(\$return_count[0]['ct']);  ?>",
+            "<?php \$return_count_\\2 = [];\$list_return_count_\\2 = \$this->list_tag(\"count \\1 return=\\2\"); if (\$list_return_count_\\2) { extract(\$list_return_count_\\2); }  \$\\2_count=intval(\$return_count[0]['ct']);  ?>",
+            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count); }  echo intval(\$return_count[0]['ct']);   ?>",
             "<?php if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
@@ -2601,6 +2603,7 @@ class View {
 
         if ($this->_list_is_count) {
             $debug.= '<p>统计数量：'.intval($data[0]['ct']).'</p>';
+            $debug.= '<p>统计变量：'.($return ? '{$'.$return.'_count} 不输出，需要手动调用变量':'自动输出').'</p>';
             $debug.= '</pre>';
             return [
                 'debug_count' => $debug,
