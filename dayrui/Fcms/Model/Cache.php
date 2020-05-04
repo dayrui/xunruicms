@@ -347,7 +347,9 @@ class Cache extends \Phpcmf\Model
         \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
 
         // 复制百度编辑器到移动端站点
-        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+        if (is_dir($path.'mobile')) {
+            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+        }
 
         return '';
     }
