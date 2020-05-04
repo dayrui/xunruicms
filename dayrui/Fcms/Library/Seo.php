@@ -84,9 +84,10 @@ class Seo
 
         $param_value = [];
         if ($catid) {
-            $t = dr_get_cat_pname($mod, $catid, PHP_EOL);
-            $t && $t = explode(PHP_EOL, $t);
-            $t && $param_value = $t;
+            $t = dr_get_cat_pname($mod, $catid, $data['join']);
+            if ($t) {
+                $param_value['catid'] = $t;
+            }
             unset($param['catid']);
             unset($param['catdir']);
         }
@@ -111,7 +112,9 @@ class Seo
 						$arr = explode('|', $value);
 						if ($arr) {
 							foreach ($arr as $a) {
-								isset($opt[$a]) && $opt[$a] && $param_value[] = $opt[$a];
+								if (isset($opt[$a]) && $opt[$a]) {
+								    $param_value[$name] = $opt[$a];
+                                }
 							}
 						}
                         break;
@@ -121,20 +124,23 @@ class Seo
 						$arr = explode('|', $value);
 						if ($arr) {
 							foreach ($arr as $a) {
-								$param_value[] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
+								$param_value[$name] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
 							}
 						}
                         break;
 
                     default:
-                        $value && $param_value[] = $value;
+                        $value && $param_value[$name] = $value;
                         break;
-
                 }
             }
         }
 
         if ($param_value) {
+            $db = \Phpcmf\Service::C()->content_model;
+            if ($db) {
+                $param_value = $db->_format_search_param_value($param_value);
+            }
             $data['param'] = implode($data['join'], $param_value);
             $seo['meta_keywords'].= implode(',', $param_value).',';
         }

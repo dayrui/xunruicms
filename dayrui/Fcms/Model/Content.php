@@ -1815,6 +1815,11 @@ class Content extends \Phpcmf\Model {
         return \Phpcmf\Service::L('Seo')->search($module, $catid, $params, $page);
     }
 
+    // 格式化内容搜索的param参数名称值
+    public function _format_search_param_value($param) {
+        return $param;
+    }
+
 
     ////////////////////禁用栏目时，二次开发调用////////////////////
 
