@@ -249,6 +249,9 @@ class Check extends \Phpcmf\Common
                     }
                     if ($module) {
                         foreach ($module as $m) {
+                            if (!\Phpcmf\Service::M()->db->tableExists( $prefix.$siteid.'_'.$m['dirname'])) {
+                                continue;
+                            }
                             $table = $prefix.$siteid.'_'.$m['dirname'].'_recycle';
                             if (\Phpcmf\Service::M()->db->tableExists($table)) {
                                 // 创建字段 删除理由
