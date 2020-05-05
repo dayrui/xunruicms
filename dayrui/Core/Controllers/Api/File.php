@@ -187,6 +187,10 @@ class File extends \Phpcmf\Common
      */
     public function input_file_list() {
 
+        if (!$this->uid) {
+            $this->_json(0, dr_lang('游客无法浏览文件'));
+        }
+
         $p = $this->_get_upload_params();
 
         $c = (int)\Phpcmf\Service::L('input')->get('ct'); // 当已有数量

@@ -207,7 +207,9 @@ class File extends \Phpcmf\Library\A_Field {
 		}
 
 		$area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "70%"]';
-        $use = '<button type="button" class="btn red btn-sm fileinput-unused">
+
+		$use = '';
+        \Phpcmf\Service::C()->uid && $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
 					</button>';

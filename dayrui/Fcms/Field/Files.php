@@ -273,7 +273,8 @@ class Files extends \Phpcmf\Library\A_Field {
             }
         }
 
-        $use = '<button type="button" class="btn red btn-sm fileinput-unused">
+        $use = '';
+        \Phpcmf\Service::C()->uid && $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
 					</button>';
