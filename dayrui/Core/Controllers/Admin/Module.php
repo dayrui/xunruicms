@@ -265,9 +265,17 @@ class Module extends \Phpcmf\Common
     public function edit() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $data = \Phpcmf\Service::M()->table('module')->get($id);
-        if (!$data) {
-            $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        if ($this->dir) {
+            $data = \Phpcmf\Service::M()->table('module')->where('dirname', $this->dir)->getRow();
+            if (!$data) {
+                $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+            }
+            $id = $data['id'];
+        } else {
+            $data = \Phpcmf\Service::M()->table('module')->get($id);
+            if (!$data) {
+                $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+            }
         }
 
         // 格式转换
@@ -352,9 +360,16 @@ class Module extends \Phpcmf\Common
     public function flag_edit() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $data = \Phpcmf\Service::M('Module')->table('module')->get($id);
-        if (!$data) {
-            $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+        if ($this->dir) {
+            $data = \Phpcmf\Service::M()->table('module')->where('dirname', $this->dir)->getRow();
+            if (!$data) {
+                $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+            }
+        } else {
+            $data = \Phpcmf\Service::M()->table('module')->get($id);
+            if (!$data) {
+                $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
+            }
         }
 
         // 格式转换

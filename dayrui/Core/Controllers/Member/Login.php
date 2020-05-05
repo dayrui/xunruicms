@@ -365,7 +365,7 @@ class Login extends \Phpcmf\Common
                 \Phpcmf\Service::M('safe', 'xrsafe')->find_check($value);
             } else {
                 // 普通验证
-                $sn = 'fc_passwrod_find_'.date('Ymd', SYS_TIME).$value;
+                $sn = 'fc_pass_find_'.date('Ymd', SYS_TIME).$value;
                 $count = (int)\Phpcmf\Service::L('cache')->get_data($sn);
                 if ($count > 20) {
                     $this->_json(0, dr_lang('今日找回密码次数达到上限'));

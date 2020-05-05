@@ -21,10 +21,29 @@
                 <li class=" {if $page==3}active{/if}">
                     <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-volume-up"></i> {dr_lang('通知提醒')} </a>
                 </li>
+                <li class="{if $page==4}active{/if}">
+                    <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-user"></i> {dr_lang('用户中心')} </a>
+                </li>
             </ul>
         </div>
         <div class="portlet-body">
             <div class="tab-content">
+
+                <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
+                    <div class="form-body">
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('用户管理内容')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][is_member]" value="1" {if $data['setting']['is_member']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('用户中心的内容管理菜单下可以管理自己提交的内容')}</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">

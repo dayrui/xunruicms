@@ -233,11 +233,9 @@ class Menu extends \Phpcmf\Model {
         $menu = $this->db->table('member_menu')->where('mark', 'form-'.$data['table'])->get()->getRowArray();
         if ($menu) {
             // 更新
-            /*
             $this->db->table('member_menu')->where('id', intval($menu['id']))->update([
-                'name' => dr_lang('%s管理', $data['name']),
-                'icon' => (string)$data['setting']['icon'],
-            ]);*/
+                'hidden' => $data['setting']['is_member'] ? 0 : 1,
+            ]);
         } else {
             // 新增菜单
             $menu = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();

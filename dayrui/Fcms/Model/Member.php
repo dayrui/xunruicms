@@ -791,7 +791,7 @@ class Member extends \Phpcmf\Model
         $this->_login_log($data);
 
         return dr_return_data(1, 'ok', [
-            'auth'=> md5($data['passowrd'].$data['salt']), // API认证字符串,
+            'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
             'member' => $this->get_member($data['id']),
             'sso' => $this->sso($data, $remember)]
         );
@@ -814,7 +814,7 @@ class Member extends \Phpcmf\Model
         $this->_login_log($data);
 
         return dr_return_data(1, 'ok', [
-                'auth'=> md5($data['passowrd'].$data['salt']), // API认证字符串,
+                'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
                 'member' => $this->get_member($data['id']),
                 'sso' => $this->sso($data, $remember)]
         );
@@ -891,7 +891,7 @@ class Member extends \Phpcmf\Model
         $this->_login_log($member, $oauth['oauth']);
 
         return dr_return_data(1, 'ok', [
-            'auth'=> md5($member['passowrd'].$member['salt']), // API认证字符串,
+            'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
             'member' => $member,
         ]);
     }

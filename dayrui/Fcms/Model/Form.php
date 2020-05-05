@@ -176,7 +176,7 @@ class Form extends \Phpcmf\Model
                 }
                 $cache[$t['table']] = $t;
                 if (!$t['setting']['dev']) {
-                    \Phpcmf\Service::M('Menu')->form($t); // 更新菜单
+                    \Phpcmf\Service::M('menu')->form($t); // 更新菜单
                 }
 
             }
