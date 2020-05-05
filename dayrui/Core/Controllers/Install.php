@@ -25,8 +25,6 @@ class Install extends \Phpcmf\Common
             exit('安装程序已经被锁定，重新安装请删除：WRITEPATH/install.lock');
         } elseif (version_compare(PHP_VERSION, '7.1.0') < 0) {
             echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
-        } elseif ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
-            echo "<font color=red>请先关闭HTTPS，安装后再开启HTTPS</font>";exit;
         }
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
@@ -269,7 +267,7 @@ $db[\'default\']	= [
                                 'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
                                 'SYS_CSRF'                      => '1', //跨站验证提交
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
-                                'SYS_HTTPS'                     => '0', //https模式
+                                'SYS_HTTPS'                     => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? '1' : '0', //https模式
                                 'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
                                 'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
                                 'SYS_ATTACHMENT_URL'            => '', //附件访问地址
