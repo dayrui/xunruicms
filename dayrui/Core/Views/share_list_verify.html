@@ -294,7 +294,9 @@
                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
                     <span></span>
                 </label>
+                {if in_array(1, \Phpcmf\Service::C()->admin['roleid'])}
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                {/if}
                 {if !$is_post_user}
                 <label><button type="button" onclick="dr_ajax_option_verify('{dr_url($uriprefix.'/index')}&at=1', '{dr_lang('你确定要批量通过它们吗？')}')" class="btn green btn-sm"> <i class="fa fa-check-circle"></i> {dr_lang('通过')}</button></label>
                 <label><button type="button" onclick="dr_ajax_option_verify_back('{dr_url($uriprefix.'/index')}&at=0')" class="btn blue btn-sm"> <i class="fa fa-times-circle"></i> {dr_lang('拒绝')}</button></label>
