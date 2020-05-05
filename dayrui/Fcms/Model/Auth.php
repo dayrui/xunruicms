@@ -463,10 +463,13 @@ class Auth extends \Phpcmf\Model {
             return false;
         }
 
-        // 补全控制器
-        $uri = strpos($uri, '/') !== false ? $uri : (\Phpcmf\Service::L('router')->class.'/'.$uri);
-        // 补全项目目录
-        APP_DIR && strpos($uri, APP_DIR.'/') === false && $uri = APP_DIR.'/'.$uri;
+        // 当uri不全时
+        if (substr_count(trim($uri, '/'), '/') < 2) {
+            // 补全控制器
+            $uri = strpos($uri, '/') !== false ? $uri : (\Phpcmf\Service::L('router')->class.'/'.$uri);
+            // 补全项目目录
+            APP_DIR && strpos($uri, APP_DIR.'/') === false && $uri = APP_DIR.'/'.$uri;
+        }
 
         // 分隔URI判断权限
         $uri_arr = explode('/', $uri);
