@@ -1816,8 +1816,8 @@ class Content extends \Phpcmf\Model {
     }
 
     // 格式化内容搜索的param参数名称值
-    public function _format_search_param_value($param) {
-        return $param;
+    public function _format_search_param_value($myfield, $param) {
+        return [$myfield, $param];
     }
 
 

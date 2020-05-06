@@ -109,24 +109,24 @@ class Seo
                     case 'Select':
                     case 'Checkbox':
                         $opt = dr_format_option_array($myfield[$name]['setting']['option']['options']);
-						$arr = explode('|', $value);
-						if ($arr) {
-							foreach ($arr as $a) {
-								if (isset($opt[$a]) && $opt[$a]) {
-								    $param_value[$name] = $opt[$a];
+                        $arr = explode('|', $value);
+                        if ($arr) {
+                            foreach ($arr as $a) {
+                                if (isset($opt[$a]) && $opt[$a]) {
+                                    $param_value[$name][] = $opt[$a];
                                 }
-							}
-						}
+                            }
+                        }
                         break;
 
                     case 'Linkages':
                     case 'Linkage':
-						$arr = explode('|', $value);
-						if ($arr) {
-							foreach ($arr as $a) {
-								$param_value[$name] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
-							}
-						}
+                        $arr = explode('|', $value);
+                        if ($arr) {
+                            foreach ($arr as $a) {
+                                $param_value[$name][] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
+                            }
+                        }
                         break;
 
                     default:
@@ -136,12 +136,24 @@ class Seo
             }
         }
 
+        $seo['param_value'] = [];
         if ($param_value) {
             $db = \Phpcmf\Service::C()->content_model;
             if ($db) {
                 $param_value = $db->_format_search_param_value($param_value);
             }
-            $data['param'] = implode($data['join'], $param_value);
+            $str = [];
+            $myfield['catid'] = $myfield['catdir'] = [ 'name' => dr_lang('栏目') ];
+            $myfield['keyword'] = ['name' => dr_lang('关键词')];
+            foreach ($param_value as $f => $t) {
+                $seo['param_value'][$f] = [
+                    'name' => $myfield[$f]['name'],
+                    'value' => is_array($t) ? implode('|', $t) : $t,
+                    'value_array' => is_array($t) ? $t : [],
+                ];
+                $str[] = is_array($t) ? implode('|', $t) : $t;
+            }
+            $data['param'] = implode($data['join'], $str);
             $seo['meta_keywords'].= implode(',', $param_value).',';
         }
 
