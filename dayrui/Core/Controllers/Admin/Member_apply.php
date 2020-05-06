@@ -124,6 +124,7 @@ class Member_apply extends \Phpcmf\Table
 
         $post = \Phpcmf\Service::L('input')->post('data');
         $member = \Phpcmf\Service::M('member')->member_info($old['uid']);
+        $member['verify'] = dr_array22array($old, $post);
         $member['verify_group'] = $this->member_cache['group'][$old['gid']]['name'];
         $member['verify_status'] = $post['status'] ? dr_lang('成功') : dr_lang('被拒绝');
         $member['verify_content'] = $post['note'];
@@ -227,9 +228,7 @@ class Member_apply extends \Phpcmf\Table
                     $notice,
                     \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id'=>$rt['code']])
                 );
-
             }
-
         }
     }
 }
