@@ -120,6 +120,7 @@ class Seo
                     $seofield[$name] = $now_field;
                 }
 
+                // 按字段属性组合
                 if ($now_field) {
                     switch ($now_field['fieldtype']) {
 
