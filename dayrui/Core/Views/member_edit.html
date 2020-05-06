@@ -128,19 +128,19 @@
                         <div class="form-group" id="dr_row_name">
                             <label class="col-md-2 control-label ">{MEMBER_CNAME}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control input-large" id="dr_name" name="member[name]" value="{$name}"></label>
+                                <label><input type="text" class="form-control input-large" id="dr_name" name="member[name]" value="{htmlspecialchars($name)}"></label>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_phone">
                             <label class="col-md-2 control-label ">{dr_lang('手机')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control input-large" id="dr_phone" name="member[phone]" value="{$phone}"></label>
+                                <label><input type="text" class="form-control input-large" id="dr_phone" name="member[phone]" value="{htmlspecialchars($phone)}"></label>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_email">
                             <label class="col-md-2 control-label ">{dr_lang('邮箱')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control input-large" id="dr_email" name="member[email]" value="{$email}"></label>
+                                <label><input type="text" class="form-control input-large" id="dr_email" name="member[email]" value="{htmlspecialchars($email)}"></label>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_password">

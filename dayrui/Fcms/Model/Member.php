@@ -976,7 +976,7 @@ class Member extends \Phpcmf\Model
             }
         }
 
-        $member['name'] = !$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), '');
+        $member['name'] = htmlspecialchars(!$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), ''));
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
         $member['password'] = $member['password'] ? md5(md5($member['password']).$member['salt'].md5($member['password'])) : '';
         $member['money'] = 0;

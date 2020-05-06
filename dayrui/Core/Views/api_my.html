@@ -68,7 +68,7 @@
                                     {if !empty($admin['usermenu'])}
                                     {loop $admin['usermenu'] $k $t}
                                     <div class="menu-sort">
-                                        <label><i class="fa fa-arrows"></i></label><label><input class="form-control" type="text" name="data[usermenu][name][{$k}]" value="{$t['name']}" /></label><label><select class="form-control" name="data[usermenu][color][{$k}]">
+                                        <label><i class="fa fa-arrows"></i></label><label><input class="form-control" type="text" name="data[usermenu][name][{$k}]" value="{htmlspecialchars($t['name'])}" /></label><label><select class="form-control" name="data[usermenu][color][{$k}]">
                                                 {loop $color $tt}
                                                 <option value="{$tt}" {if $tt == $t['color']} selected{/if}> {$tt} </option>
                                                 {/loop}
@@ -76,7 +76,7 @@
                                         {loop $target $ii $tt}
                                         <option value="{$ii}" {if $ii == $t['target']} selected{/if}> {$tt} </option>
                                         {/loop}
-                                    </select></label><label><input class="form-control input-large" type="text" name="data[usermenu][url][{$k}]" value="{$t['url']}" /></label><label><a class="btn red btn-xs" title="{dr_lang('删除')}" href="javascript:;" onClick="remove_menu(this)"> <i class="fa fa-trash"></i> </a></label>
+                                    </select></label><label><input class="form-control input-large" type="text" name="data[usermenu][url][{$k}]" value="{htmlspecialchars($t['url'])}" /></label><label><a class="btn red btn-xs" title="{dr_lang('删除')}" href="javascript:;" onClick="remove_menu(this)"> <i class="fa fa-trash"></i> </a></label>
                                     </div>
                                     {/loop}
                                     {/if}

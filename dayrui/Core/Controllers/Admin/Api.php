@@ -128,8 +128,8 @@ class Api extends \Phpcmf\Common
 			if ($data['usermenu']) {
 				foreach ($data['usermenu']['name'] as $id => $v) {
 					$v && $data['usermenu']['url'][$id] && $menu[$id] = [
-						'name' => $v,
-						'url' => $data['usermenu']['url'][$id],
+						'name' => htmlspecialchars($v),
+						'url' => htmlspecialchars($data['usermenu']['url'][$id]),
 						'color' => $data['usermenu']['color'][$id],
                         'target' => $data['usermenu']['target'][$id],
 					];
