@@ -113,22 +113,22 @@ class Cache {
     //------------------------------------------------
 
     // 存储内容
-    public function set_auth_data($name, $value) {
+    public function set_auth_data($name, $value, $siteid = SITE_ID) {
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
 
         dr_mkdirs($this->auth_dir);
 
-        file_put_contents($this->auth_dir.md5(SITE_ID.$name), $value, LOCK_EX);
+        file_put_contents($this->auth_dir.md5($siteid.$name), $value, LOCK_EX);
 
         return $value;
     }
 
     // 获取内容
-    public function get_auth_data($name) {
+    public function get_auth_data($name, $siteid = SITE_ID) {
 
-        $code_file = $this->auth_dir.md5(SITE_ID.$name);
+        $code_file = $this->auth_dir.md5($siteid.$name);
         if (is_file($code_file)) {
             $rt = file_get_contents($code_file);
             if ($rt) {

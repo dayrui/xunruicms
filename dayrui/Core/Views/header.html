@@ -8,9 +8,9 @@
 </style>
 <div class="page-container" style="margin-bottom: 0px !important;">
     <div class="page-content-wrapper">
-        <div class="page-content page-content3 mybody-nheader main-content  {if isset($_GET['is_ajax']) && $_GET['is_ajax']} main-content2{/if}">
-            {if !isset($_GET['hide_menu']) || !$_GET['hide_menu']}
-                {if isset($menu) && $menu && !$is_ajax}
+        <div class="page-content page-content3 mybody-nheader main-content  {if isset($_GET['is_ajax']) && $_GET['is_ajax'] && !isset($_GET['is_menu'])} main-content2{/if}">
+            {if (!isset($_GET['hide_menu']) || !$_GET['hide_menu']) || isset($_GET['is_menu'])}
+                {if (isset($menu) && $menu && !$is_ajax) || isset($_GET['is_menu'])}
                 <div class="page-bar">
                     <ul class="page-breadcrumb">
                         {$menu}

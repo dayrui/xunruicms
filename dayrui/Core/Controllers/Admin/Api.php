@@ -387,24 +387,6 @@ class Api extends \Phpcmf\Common
 		}
 	}
 
-	/**
-	 * 预览移动端网站
-	 */
-	public function site() {
-
-        $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        if (!$this->site_info[$id]) {
-            $this->_admin_msg(0, dr_lang('站点不存在'));
-        } elseif (!$this->admin) {
-            $this->_admin_msg(0, dr_lang('你还没有登录'));
-        }
-
-        // 判断站点权限
-        \Phpcmf\Service::L('cache')->init('', 'site')->save('admin_login_site', $this->admin, 300);
-        $this->_msg(1, dr_lang('正在切换到【%s】...', $this->site_info[$id]['SITE_NAME']).'<script src="'.$this->site_info[$id]['SITE_URL'].'index.php?s=api&c=sso&action=slogin&code='.dr_authcode($this->admin['uid'].'-'.md5($this->admin['uid'].$this->admin['password']), 'ENCODE').'"></script>', $this->site_info[$id]['SITE_URL'].SELF, 0);
-        exit;
-    }
-
     /**
      * 后台授权登录
      */

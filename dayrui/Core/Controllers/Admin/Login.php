@@ -109,7 +109,7 @@ class Login extends \Phpcmf\Common
     // 子站客户端自动登录
     public function fclient() {
 
-	    if (!is_file(ROOTPATH.'api/fclient/sync.php')) {
+        if (!is_file(ROOTPATH.'api/fclient/sync.php')) {
             $this->_admin_msg(0, '子站客户端程序未安装');
         }
 

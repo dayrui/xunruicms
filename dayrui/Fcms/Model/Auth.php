@@ -425,7 +425,7 @@ class Auth extends \Phpcmf\Model {
         if (!$member || $uid != $member['uid']) {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
-                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help'])) {
+                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help', 'login'])) {
                     return FALSE; // 跳过的控制器
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
