@@ -163,6 +163,16 @@
                                         <label>这是自定义价格范围搜索的写法</label>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 control-label">用户组</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.groupid}label-success{else}label-default{/if}" href="{Router::search_url($params, 'groupid', NULL)}">不限</a></label>
+                                        <!--调用栏目分类，这种用法只能用于模块列表与搜索页面-->
+                                        {loop $ci->member_cache['group'] $t}
+                                        <label><a class="label {if $t.id==$params.groupid}label-success{else}label-default{/if}" href="{Router::search_url($params, 'groupid', $t.id)}">{$t.name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
 
                                 <!--按关键字搜索-->
                                 <div class="form-group row">

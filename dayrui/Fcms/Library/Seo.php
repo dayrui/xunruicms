@@ -81,6 +81,9 @@ class Seo
             $seo['meta_keywords'].= $data['keyword'].',';
             unset($param['keyword']);
         }
+        if ($param['groupid']) {
+            $data['groupid'] = $param['groupid'];
+        }
 
         $param_value = [];
         if ($catid) {
@@ -98,41 +101,58 @@ class Seo
                 $cat_field = $mod['category'][$catid]['field'];
                 $cat_field && $myfield = dr_array22array($myfield, $cat_field);
             }
+            $seofield = $myfield;
             foreach ($param as $name => $value) {
-                if (!isset($myfield[$name])) {
-                    unset($param[$name]);
-                    continue;
-                }
-                switch ($myfield[$name]['fieldtype']) {
+                $now_field = [];
+                if (isset($myfield[$name])) {
+                    // 模块字段
+                    $now_field = $myfield[$name];
 
-                    case 'Radio':
-                    case 'Select':
-                    case 'Checkbox':
-                        $opt = dr_format_option_array($myfield[$name]['setting']['option']['options']);
-                        $arr = explode('|', $value);
-                        if ($arr) {
-                            foreach ($arr as $a) {
-                                if (isset($opt[$a]) && $opt[$a]) {
-                                    $param_value[$name][] = $opt[$a];
+                } elseif ($name == 'groupid') {
+                    // 会员组名称
+                    if ($value) {
+                        $param_value[$name] = \Phpcmf\Service::C()->member_cache['group'][$value]['name'];
+                    }
+                    continue;
+                } elseif (isset(\Phpcmf\Service::C()->member_cache['field'][$name])) {
+                    // 会员字段
+                    $now_field = \Phpcmf\Service::C()->member_cache['field'][$name];
+                    $seofield[$name] = $now_field;
+                }
+
+                if ($now_field) {
+                    switch ($now_field['fieldtype']) {
+
+                        case 'Radio':
+                        case 'Select':
+                        case 'Checkbox':
+                            $opt = dr_format_option_array($now_field['setting']['option']['options']);
+                            $arr = explode('|', $value);
+                            if ($arr) {
+                                foreach ($arr as $a) {
+                                    if (isset($opt[$a]) && $opt[$a]) {
+                                        $param_value[$name][] = $opt[$a];
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
 
-                    case 'Linkages':
-                    case 'Linkage':
-                        $arr = explode('|', $value);
-                        if ($arr) {
-                            foreach ($arr as $a) {
-                                $param_value[$name][] = dr_linkagepos($myfield[$name]['setting']['option']['linkage'], $a, $data['join']);
+                        case 'Linkages':
+                        case 'Linkage':
+                            $arr = explode('|', $value);
+                            if ($arr) {
+                                foreach ($arr as $a) {
+                                    $param_value[$name][] = dr_linkagepos($now_field['setting']['option']['linkage'], $a, $data['join']);
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    default:
-                        $value && $param_value[$name] = $value;
-                        break;
+                        default:
+                            $value && $param_value[$name] = $value;
+                            break;
+                    }
                 }
+
             }
         }
 
@@ -143,11 +163,12 @@ class Seo
                 $param_value = $db->_format_search_param_value($param_value);
             }
             $str = [];
-            $myfield['catid'] = $myfield['catdir'] = [ 'name' => dr_lang('栏目') ];
-            $myfield['keyword'] = ['name' => dr_lang('关键词')];
+            $seofield['catid'] = $seofield['catdir'] = [ 'name' => dr_lang('栏目') ];
+            $seofield['groupid'] = ['name' => dr_lang('用户组')];
+            $seofield['keyword'] = ['name' => dr_lang('关键词')];
             foreach ($param_value as $f => $t) {
                 $seo['param_value'][$f] = [
-                    'name' => $myfield[$f]['name'],
+                    'name' => $seofield[$f]['name'],
                     'value' => is_array($t) ? implode('|', $t) : $t,
                     'value_array' => is_array($t) ? $t : [],
                 ];

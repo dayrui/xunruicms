@@ -209,7 +209,7 @@ class Tree {
         
         $tree = [];
         $first = 0; // 第一个可用栏目
-
+        $is_cks = 0;
         if (is_array($data)) {
             foreach($data as $t) {
                 // 外部链接不显示
@@ -218,10 +218,12 @@ class Tree {
                 }
                 // 单页且为最终单页不显示
                 if ($is_push && $t['tid'] == 0 && !$t['child']) {
+                    $is_cks = 1;
                     continue;
                 }
                 // 验证权限
                 if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+                    $is_cks = 1;
                     continue;
                 }
 
@@ -238,6 +240,7 @@ class Tree {
                     }
                     if (!$ispost) {
                         // ispost = 0 表示此栏目没有发布权限
+                        $is_cks = 1;
                         continue;
                     }
                 }
@@ -288,8 +291,8 @@ class Tree {
             return $this->ret; // 防止死循环
         }
 
-        $mychild = $this->get_child($myid);
         $number = 1;
+        $mychild = $this->get_child($myid);
 
         if (is_array($mychild)) {
 
@@ -306,18 +309,25 @@ class Tree {
 
                 $spacer = $adds ? $adds.$j : '';
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
+                $html_disabled = '';
                 @extract($a);
 
                 //$now = $this->get_child($id);
                 // 如果没有子栏目且当前禁用就不再显示
                 //if (!$now && $html_disabled) continue;
 
-                $html_disabled ? @eval("\$this->ret.= \"$str2\";") : @eval("\$this->ret.= \"$str\";");
+                if ($html_disabled) {
+                    @eval("\$this->ret.= \"$str2\";");
+                } else {
+                    @eval("\$this->ret.= \"$str\";");
+                }
 
                 $number++;
 
                 // 如果有下级菜单就递归
-                $a['child'] && $this->_category_tree_result($id, $str, $str2, $sid, $adds.$k.'&nbsp;');
+                if ($a['child']) {
+                    $this->_category_tree_result($id, $str, $str2, $sid, $adds.$k.'&nbsp;');
+                }
             }
         }
 
