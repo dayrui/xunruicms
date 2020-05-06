@@ -1560,12 +1560,12 @@ class Member extends \Phpcmf\Model
     // 随机账号
     private function _rand_username($prefix, $member, $rand = 0) {
 
-        if ($member['phone']) {
-            $name = $member['phone'];
+        if ($member['email']) {
+            list($name) = explode('@', $member['email']);
+        } elseif ($member['phone']) {
+            $name = substr($member['phone'], 3);
         } elseif ($member['name']) {
             $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
-        } elseif ($member['email']) {
-            list($name) = explode('@', $member['email']);
         } else {
             $name = rand(10000, 99999999);
         }
@@ -1576,7 +1576,6 @@ class Member extends \Phpcmf\Model
         }
 
         $name = trim(strtolower($prefix.str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
-
         if ($this->table('member')->where('username', $name)->counts()) {
             return $this->_rand_username($prefix, $member, 1);
         }
