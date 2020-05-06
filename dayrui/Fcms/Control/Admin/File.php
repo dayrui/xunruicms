@@ -39,7 +39,6 @@ class File extends \Phpcmf\Common
             exit(dr_lang('文件%s不存在', $file));
         }
 
-
         $vals = getimagesize($filename);
         $types = array(1 => 'gif', 2 => 'jpeg', 3 => 'png');
         $mime = (isset($types[$vals[2]])) ? 'image/'.$types[$vals[2]] : 'image/jpg';
@@ -85,8 +84,8 @@ class File extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'list' => $list,
             'path' => rtrim($path, DIRECTORY_SEPARATOR),
+            'delete' => \Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/del', '/'), ['dir' => $this->dir]),
             'is_root' => !$this->dir ? 1 : 0,
-            'delete' =>\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/del', '/'), ['dir' => $this->dir]),
         ]);
         \Phpcmf\Service::V()->display('tpl_index.html');
     }
@@ -470,18 +469,20 @@ class File extends \Phpcmf\Common
 
         $source_dir	= dr_rp($this->root_path.($dir ? $dir : trim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR), ['//', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR], ['/', DIRECTORY_SEPARATOR]);
 
-
         if ($fp = @opendir($source_dir)) {
-
+            $list = [];
             while (FALSE !== ($file = readdir($fp))) {
                 if (in_array($file, ['.', '..', '.DS_Store', 'config.ini', 'thumb.jpg'])) {
                     continue;
                 } elseif (strtolower(strrchr($file, '.')) == '.php') {
                     continue;
-                } elseif ($this->not_root_path && in_array($source_dir.$file, $this->not_root_path)) {
+                } elseif ($this->not_root_path && in_array($source_dir . $file, $this->not_root_path)) {
                     continue;
                 }
-
+                $list[] = $file;
+            }
+            sort($list);
+            foreach ($list as $file ) {
                 $edit =\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', '/'), ['file' => $this->dir.'/'.$file]);
                 if (is_dir($source_dir.'/'.$file)) {
                     if (!$dir && $this->exclude_dir && is_array($this->exclude_dir) && in_array($file, $this->exclude_dir)) {
