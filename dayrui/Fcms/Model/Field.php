@@ -655,7 +655,7 @@ class Field extends \Phpcmf\Model
     // 字段是否存在
     private function _field_module($name) {
         // 保留字段
-        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old'])) {
+        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old', 'groupid'])) {
             return 1;
         }
         // 主表
@@ -665,7 +665,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
-        $table.'_data_0';
+        $table.='_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', SITE_ID);
         if ($rt) {
             return 1;
