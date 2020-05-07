@@ -665,7 +665,6 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
-        $table.='_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', SITE_ID);
         if ($rt) {
             return 1;
@@ -713,7 +712,6 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 附表
-        $table.'_data_0';
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', $this->data['module'] == 'space' ? 0 : SITE_ID);
         if ($rt) {
             return 1;
