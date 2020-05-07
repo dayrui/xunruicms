@@ -44,7 +44,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>评论</span>
+                        <span>{$ci->module['comment']['cname']}</span>
                     </li>
                 </ul>
 
@@ -52,7 +52,7 @@
                     <div class="portlet light">
                         <div class="portlet-title">
                             <div class="caption">
-                                <span class="caption-subject  "> 评论: {$index.title} </span>
+                                <span class="caption-subject  "> {$ci->module['comment']['cname']}: {$index.title} </span>
                             </div>
                         </div>
                         <div class="portlet-body" id="dr_module_comment_{$index.id}">

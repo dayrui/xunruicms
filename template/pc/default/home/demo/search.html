@@ -141,6 +141,19 @@
                                     </div>
                                 </div>
 
+                                <!--下拉框字段搜索2222-->
+                                <div class="form-group row">
+                                    <label class="col-md-2 control-label">用户表下拉选择字段</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.quyu}label-success{else}label-default{/if}" href="{Router::search_url($params, 'quyu', NULL)}">不限</a></label>
+                                        <!--调用单选字段数据方法-->
+                                        {php $field = dr_field_options($ci->member_cache['field']['quyu']['id']);}
+                                        {loop $field $value $name}
+                                        <label><a class="label {if $value==$params.quyu}label-success{else}label-default{/if}" href="{Router::search_url($params, 'quyu', $value)}">{$name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-md-2 control-label">单一购买价格</label>
                                     <div class="col-md-9">

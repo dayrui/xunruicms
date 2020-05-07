@@ -50,23 +50,47 @@ function drawPoints(mapObj, name, level){
     var ZoomLevel = mapObj.getZoom();
     marker.addEventListener("dragend", function(e){
         $('#dr_'+name).val(e.point.lng+','+e.point.lat);
+        $('#baidu_address_'+name).val(e.point.lng+','+e.point.lat);
     })
 }
 
 // 搜索地址
-function baiduSearchAddress(mapObj, name){
+function baiduSearchAddress(mapObj, name, level){
     var address = $('#baidu_address_'+name).val();
-    var myGeo = new BMap.Geocoder();
-    // 将地址解析结果显示在地图上,并调整地图视野
-    myGeo.getPoint(address, function(point){
-        if (point) {
-            mapObj.centerAndZoom(point, 13);
-            mapObj.addOverlay(new BMap.Marker(point));
-        }else{
-            dr_tips(0, "没有找到这个地址");
-        }
-    });
-    //mapObj.setCenter(address);
+    if ( address.indexOf(",") != -1 && address.indexOf(".") != -1) {
+        // 表示坐标
+
+        var data = address.split(',');
+        var lngX = data[0];
+        var latY = data[1];
+        var zoom = 17;
+        mapObj.centerAndZoom(new BMap.Point(lngX,latY),zoom);
+        // 创建图标对象
+        var myIcon = new BMap.Icon(assets_path+'images/mak.png', new BMap.Size(27, 45));
+
+        // 创建标注对象并添加到地图
+        var center = mapObj.getCenter();
+        var point = new BMap.Point(lngX,latY);
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        marker.enableDragging();
+        mapObj.addOverlay(marker);
+        var ZoomLevel = mapObj.getZoom();
+        marker.addEventListener("dragend", function(e){
+            $('#dr_'+name).val(e.point.lng+','+e.point.lat);
+        });
+    } else {
+        var myGeo = new BMap.Geocoder();
+        // 将地址解析结果显示在地图上,并调整地图视野
+        myGeo.getPoint(address, function(point){
+            if (point) {
+                mapObj.centerAndZoom(point, 13);
+                mapObj.addOverlay(new BMap.Marker(point));
+            }else{
+                dr_tips(0, "没有找到这个地址");
+            }
+        });
+        //mapObj.setCenter(address);
+    }
 }
 
 // 添加标注
@@ -84,6 +108,7 @@ function addMarker(mapObj, name){
     $('#dr_'+name).val(center.lng+','+center.lat);
     marker.addEventListener("dragend", function(e){
         $('#dr_'+name).val(e.point.lng+','+e.point.lat);
+        $('#baidu_address_'+name).val(e.point.lng+','+e.point.lat);
     })
 }
 
