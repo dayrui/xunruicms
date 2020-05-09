@@ -15,7 +15,7 @@ class Role extends \Phpcmf\Common
 			[
 				'角色权限' => ['role/index', 'fa fa-users'],
 				'添加' => ['add:role/add', 'fa fa-plus', '500px', '400px'],
-				'权限划分' => ['hide:role/edit_auth', 'fa fa-user-md'],
+				'权限划分' => ['hide:role/auth_edit', 'fa fa-user-md'],
 				'help' => ['824'],
 			]
 		));
@@ -91,7 +91,7 @@ class Role extends \Phpcmf\Common
 	}
 
 	// 角色组权限，超级管理员有权限
-	public function edit_auth() {
+	public function auth_edit() {
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
@@ -156,7 +156,7 @@ class Role extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('role_auth.html');
 	}
 	
-	public function edit_site() {
+	public function site_edit() {
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
