@@ -176,7 +176,7 @@ class Seo
                 $str[] = is_array($t) ? implode('|', $t) : $t;
             }
             $data['param'] = implode($data['join'], $str);
-            $seo['meta_keywords'].= implode(',', $param_value).',';
+            $seo['meta_keywords'].= implode(',', $str).',';
         }
 
         $meta_title = $mod['site'][SITE_ID]['search_title'] ? $mod['site'][SITE_ID]['search_title'] : '['.dr_lang('第%s页', '{page}').'{join}][{keyword}{join}][{param}{join}]{modulename}{join}{SITE_NAME}';
