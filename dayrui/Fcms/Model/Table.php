@@ -392,10 +392,9 @@ class Table extends \Phpcmf\Model
     public function delete_module_form($data) {
 
         $id = intval($data['id']);
-        $pre = $this->dbprefix(SITE_ID.'_'.$data['module'].'_form');
-
-        // 判断模块是否安装过
-        if (!$this->is_table_exists($pre)) {
+        $table = $this->dbprefix(SITE_ID.'_'.$data['module'].'_form_'.$data['table']);
+        // 判断模块是否存在表
+        if (!$this->is_table_exists($table)) {
             return;
         }
 
@@ -403,7 +402,6 @@ class Table extends \Phpcmf\Model
         $this->db->table('field')->where('relatedid', $id)->where('relatedname', 'mform-'.$data['module'])->delete();
 
         // 删除表
-        $table = $pre.'_'.$data['table'];
         $this->db->simpleQuery('DROP TABLE IF EXISTS `'.$table.'`');
 
         // 删除附表
@@ -414,16 +412,16 @@ class Table extends \Phpcmf\Model
             $this->db->simpleQuery('DROP TABLE IF EXISTS '.$table.'_data_'.$i);
         }
 
-
         // 模块表统计字段删除
         $par = $this->dbprefix(SITE_ID.'_'.$data['module']);
-
-        if ($this->is_field_exists($par, $data['table']."_total")) {
-            $this->db->simpleQuery("ALTER TABLE `{$par}` DROP `".$data['table']."_total` , DROP INDEX (`".$data['table']."_total`) ;");
+        // 判断模块是否存在表
+        if (!$this->is_table_exists($par)) {
+            return;
         }
 
-        // 删除记录
-        $this->db->table('module_form')->delete($id);
+        if ($this->is_field_exists($par, $data['table']."_total")) {
+            $this->db->simpleQuery("ALTER TABLE `{$par}` DROP `".$data['table']."_total`;");
+        }
     }
     
 

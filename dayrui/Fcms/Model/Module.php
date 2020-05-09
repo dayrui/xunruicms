@@ -145,6 +145,7 @@ class Module extends \Phpcmf\Model
             $name = ucfirst($row['table']);
             @unlink(APPPATH.'Controllers/'.$name.'.php');
             @unlink(APPPATH.'Controllers/Admin/'.$name.'.php');
+            @unlink(APPPATH.'Controllers/Member/'.$name.'.php');
             @unlink(APPPATH.'Controllers/Admin/'.$name.'_verify.php');
             // 删除表数据
             \Phpcmf\Service::M('Table')->delete_module_form($row);
