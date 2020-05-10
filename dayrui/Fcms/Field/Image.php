@@ -29,8 +29,6 @@ class Image extends \Phpcmf\Library\A_Field {
      */
     public function option($option) {
 
-
-
         return ['
       
 			<div class="form-group">
@@ -186,8 +184,8 @@ class Image extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
-        $count = intval($field['setting']['option']['count']);
         $size = intval($field['setting']['option']['size']);
+        $count = intval($field['setting']['option']['count']);
 
         $p = dr_authcode([
             'size' => intval($field['setting']['option']['size']),
@@ -223,13 +221,13 @@ class Image extends \Phpcmf\Library\A_Field {
                 }
             }
         }
-        $ts = dr_lang('单击上传图片，每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
+        $ts = dr_lang('每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
         $str = '
 			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
-                <div style="text-align: center;color:#d9dbdd; cursor: pointer;"> '.$ts.' </div>
             </div>
+			<div class="finecms-file-ts">'.$ts.'</div>
 		';
 
         if (!defined('POSCMS_FIELD_IMAGES')) {
