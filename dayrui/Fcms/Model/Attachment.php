@@ -156,7 +156,7 @@ class Attachment extends \Phpcmf\Model {
         $index = $this->table('attachment')->get($id);
         if (!$index) {
             return dr_return_data(0, dr_lang('文件记录不存在'));
-        } elseif ($index['uid'] && $member != $index['uid']) {
+        } elseif (!IS_ADMIN && $index['uid'] && $member['id'] != $index['uid']) {
             return dr_return_data(0, dr_lang('不能删除他人的文件'));
         }
 

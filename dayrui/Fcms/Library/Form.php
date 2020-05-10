@@ -293,7 +293,6 @@ class Form
             // 获取uid
         }
 
-        #print_r($data);exit;
         return [$data, [], $attach];
     }
 	
