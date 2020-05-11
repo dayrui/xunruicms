@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 // Emoji 表情
 class Emoji extends \Phpcmf\Common
 {
@@ -1160,8 +1158,8 @@ class Emoji extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
             'i' => 0,
-            'name' => $_GET['name'],
-            'value' => $_GET['value'],
+            'name' => dr_safe_replace($_GET['name']),
+            'value' => dr_safe_replace($_GET['value']),
             'emoji' => $emoji,
         ]);
         \Phpcmf\Service::V()->display('api_emoji.html');
