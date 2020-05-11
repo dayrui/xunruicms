@@ -69,7 +69,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids,
-            'count_url' =>\Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids]),
+            'count_url' => \Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
     }

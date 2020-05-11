@@ -17,7 +17,6 @@ class Check_bom extends \Phpcmf\Common
                 'help' => [856],
 			]
 		));
-		
 	}
 
 	public function index() {
