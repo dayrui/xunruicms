@@ -314,7 +314,6 @@ class Member extends \Phpcmf\Table
                     log_message('error', dr_lang('后台批量注册会员失败（%s）：%s', trim($t), $rt['msg']));
                 }
             }
-
             $this->_json(1, dr_lang('批量注册%s个用户，失败%s个（查看系统错误日志）', $ok, $error));
         }
 
@@ -472,16 +471,17 @@ class Member extends \Phpcmf\Table
             } elseif (!$this->member_cache['config']['groups'] && dr_count($groups) > 1) {
                 $this->_json(0, dr_lang('不能同时拥有多个用户组'));
             }
-
             foreach ($post as $gid => $t) {
                 // 手动更新等级
                 if ($t['lid'] && $t['lid'] != $groups[$gid]['lid']) {
                     \Phpcmf\Service::M('member')->update_level($uid, $gid, $t['lid']);
                 }
+                $stime = (int)strtotime($t['stime']);
+                $etime = (int)strtotime($t['etime']);
                 // 设置时间
                 \Phpcmf\Service::M()->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->update([
-                    'stime' => $t['stime'] ? (int)strtotime($t['stime'].' '.date('H:i:s')) : SYS_TIME,
-                    'etime' => $t['etime'] ? (int)strtotime($t['etime'].' '.date('H:i:s')) : 0,
+                    'stime' => $t['stime'] ? $stime : SYS_TIME,
+                    'etime' => $t['etime'] ? ($stime > $etime ? 0 : $etime) : 0,
                 ]);
             }
             $this->_json(1, dr_lang('操作成功'));
