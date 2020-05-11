@@ -74,7 +74,7 @@ class Files extends \Phpcmf\Library\A_Field {
      */
     public function output($value) {
 
-        $data = array();
+        $data = [];
         $value = dr_string2array($value);
         if (!$value) {
             return $data;
@@ -83,11 +83,11 @@ class Files extends \Phpcmf\Library\A_Field {
         }
 
         foreach ($value['file'] as $i => $file) {
-            $data[] = array(
+            $data[] = [
                 'file' => $file, // 对应文件或附件id
                 'title' => $value['title'][$i], // 对应标题
                 'description' => $value['description'][$i], // 对应描述
-            );
+            ];
         }
 
         return $data;

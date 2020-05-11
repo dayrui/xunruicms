@@ -379,7 +379,9 @@ class View {
         $fname = md5($file);
         isset($this->_include_file[$fname]) ? $this->_include_file[$fname] ++ : $this->_include_file[$fname] = 0;
 
-        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+        if ($this->_include_file[$fname] > 500) {
+            dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+        }
 
         return $this->load_view_file($file);
     }
@@ -395,7 +397,9 @@ class View {
         $fname = md5($file);
         $this->_include_file[$fname] ++;
 
-        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+        if ($this->_include_file[$fname] > 500) {
+            dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+        }
 
         return $this->load_view_file($file);
     }
@@ -414,7 +418,13 @@ class View {
         // 开发者模式下关闭缓存
         if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
             $content = $this->handle_view_file(file_get_contents($name));
-            @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && dr_show_error('请将模板缓存目录（/cache/template/）权限设为777');
+            if (@file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
+                if (CI_DEBUG) {
+                    dr_show_error('请将模板缓存目录 ('.dirname($cache_file).') 权限设为777');
+                } else {
+                    dr_show_error('请将模板缓存目录（/cache/template/）权限设为777');
+                }
+            }
         }
 
         return $cache_file;

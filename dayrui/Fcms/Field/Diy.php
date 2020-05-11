@@ -63,12 +63,22 @@ class Diy extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
         $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
         $func = 'dr_diy_field_'.substr($field['setting']['option']['file'], 0, -4).'_insert_value';
+        // 回调格式化函数
         if (function_exists($func)) {
-            // 回调格式化函数
             $data = call_user_func($func, $data);
         }
         is_array($data) && $data = dr_array2string($data);
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $data;
+    }
+
+    /**
+     * 字段输出
+     *
+     * @param   array   $value  数据库值
+     * @return  string
+     */
+    public function output($value) {
+        return strpos($value, '["') === 0 ? dr_sting2array($value) : $value;
     }
 
     /**

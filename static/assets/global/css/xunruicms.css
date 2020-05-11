@@ -353,7 +353,10 @@ code.form-control-static {
     padding-top: 1px;
 }
 .fc-list-select {
-    padding-left: 28px;
+    padding-left: 32px;
+}
+.right-card-box .fc-list-select, .right-card-box .fc-list-select {
+    padding-left: 33px;
 }
 .fc-list-page{
     text-align: right;
@@ -361,7 +364,6 @@ code.form-control-static {
 .fc-list-page .pagination {
     margin: 0;
 }
-@charset "UTF-8";
 /* Cubic Bezier Transition */
 @media print {
     body {
