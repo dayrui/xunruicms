@@ -3,10 +3,20 @@
 {if $admin.usermenu}
 <div class="row">
     <div class="col-md-12">
-        <div class="admin-usermenu">
-            {loop $admin.usermenu $t}
-            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
-            {/loop}
+        <div class="portlet light bordered myportlet ">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <i class="fa fa-send"></i>
+                    <span class="caption-subject"> <a style="color:#666" href="{dr_url('api/my')}">{dr_lang('快速导航')}</a> </span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="admin-usermenu">
+                    {loop $admin.usermenu $t}
+                    <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
+                    {/loop}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -178,26 +188,26 @@
 
 
 
+        </div>
+
+
+
+
     </div>
 
+    <script>
+        $(function () {
 
-
-
-</div>
-
-<script>
-    $(function () {
-
-        $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
-            success: function(json) {
-                if (json.code) {
-                    $('#dr_cmf_update').show();
-                    $('#dr_cmf_update').html('{dr_lang('升级')} v'+json.msg);
+            $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
+                success: function(json) {
+                    if (json.code) {
+                        $('#dr_cmf_update').show();
+                        $('#dr_cmf_update').html('{dr_lang('升级')} v'+json.msg);
+                    }
                 }
-            }
+            });
+
         });
+    </script>
 
-    });
-</script>
-
-{template "footer.html"}
+    {template "footer.html"}
