@@ -20,7 +20,7 @@ class Login extends \Phpcmf\Common
 
         // 判断重复登录
         if ($this->uid) {
-            dr_redirect($url);exit;
+            dr_redirect($url ? $url : MEMBER_URL);exit;
         }
 
         if (IS_AJAX_POST) {

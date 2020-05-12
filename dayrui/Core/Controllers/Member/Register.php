@@ -26,7 +26,7 @@ class Register extends \Phpcmf\Common
 
         // 判断重复登录
         if ($this->uid) {
-            dr_redirect($url);exit;
+            dr_redirect($url ? $url : MEMBER_URL);exit;
         }
 
         // 验证系统是否支持注册
