@@ -91,32 +91,37 @@ var step = {
 		var arrayInfor = new Array();　//盛放每组选中的CheckBox值的对象 
 		var arrayColumn = new Array(); //指定列，用来合并哪些列
 		var bCheck = true;//是否全选
-		var columnIndex = 0;
-		$.each(SKUObj, function (i, item) {
-			arrayColumn.push(columnIndex);
-			columnIndex++;
-			arrayTile.push(SKUObj.find(".fc-sku-group-name-input").eq(i).html());
-			var itemName = "dr_sku_value_" + i;
-			//选中的CHeckBox取值
-			var order = new Array();
-			var order_name = new Array();
-			var rowIndex = 0;
-			$("#" + itemName + " .fc-sku-value-name-input").each(function () {
-				order.push($(this).val());
-				order_name.push($(this).attr("fname"));
-				rowIndex++;
+		$.each(SKUObj, function () {
+            var columnIndex = $(this).attr('did');
+            var itemName = "dr_sku_value_" + columnIndex;
+            console.log(itemName);
+            if ($("#"+itemName).length>0) {
+                arrayColumn.push(columnIndex);
+                arrayTile.push($(this).find(".fc-sku-group-name-input").html());
+                //选中的CHeckBox取值
+                var order = new Array();
+                var order_name = new Array();
+                var rowIndex = 0;
+                $("#" + itemName + " .fc-sku-value-name-input").each(function () {
+                    order.push($(this).val());
+                    order_name.push($(this).attr("fname"));
+                    rowIndex++;
 
-			});
+                });
 
-			arrayInfor.push(order);
-			arrayName.push(order_name);
+                arrayInfor.push(order);
+                arrayName.push(order_name);
 
-			if (order.join() == "") {
-				bCheck = false;
-			}
-			//var skuValue = SKUObj.find("li").eq(index).html();
+                if (order.join() == "") {
+                    bCheck = false;
+                }
+                //var skuValue = SKUObj.find("li").eq(index).html();
+            }
+
+
 		});
 
+        console.log(arrayTile);
 		//开始创建Table表            
 		if (bCheck == true) {
 			var RowsCount = 0;
@@ -128,6 +133,7 @@ var step = {
 			var trHead = $("<tr></tr>");
 			trHead.appendTo(thead);
 			//创建表头
+
 			$.each(arrayTile, function (index, item) {
 				var td = $("<th>" + item + "</th>");
 				td.appendTo(trHead);
