@@ -31,9 +31,9 @@ class Pays extends \Phpcmf\Library\A_Field  {
 	 */
 	public function option($option, $field = null) {
 
-        !$option['payfile'] && $option['payfile'] = 'buy.html';
-        !$option['field'] && $option['field'] = [];
         $myfield = $this->showfield;
+        !$option['field'] && $option['field'] = [];
+        !$option['payfile'] && $option['payfile'] = 'buy.html';
         foreach ($field as $t) {
             $t['fieldtype'] == 'Paystext' && $myfield[$t['fieldname']] = $t['name'];
         }

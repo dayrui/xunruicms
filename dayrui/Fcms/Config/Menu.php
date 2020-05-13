@@ -290,6 +290,11 @@ return [
                             'uri' => 'menu/index',
                         ],
                         [
+                            'name' => '简化菜单',
+                            'icon' => 'fa fa-list',
+                            'uri' => 'min_menu/index',
+                        ],
+                        [
                             'name' => '角色权限',
                             'icon' => 'fa fa-users',
                             'uri' => 'role/index',
@@ -546,8 +551,6 @@ return [
             ],
         ],
 
-
-
         'cloud' => [
 			'name' => '服务',
             'icon' => 'fa fa-cloud',
@@ -594,6 +597,143 @@ return [
 
     ],
 
+
+    'admin_min' => [
+
+        'home' => [
+            'name' => '我的面板',
+            'icon' => 'fa fa-home',
+            'link' => [
+                [
+                    'name' => '后台首页',
+                    'icon' => 'fa fa-home',
+                    'uri' => 'home/main',
+                ],
+                [
+                    'name' => '资料修改',
+                    'icon' => 'fa fa-user',
+                    'uri' => 'api/my',
+                ],
+                [
+                    'name' => '网站设置',
+                    'icon' => 'fa fa-cog',
+                    'uri' => 'site_config/index',
+                ],
+            ]
+        ],
+
+
+        'config-seo' => [
+            'name' => 'SEO设置',
+            'icon' => 'fa fa-internet-explorer',
+            'link' => [
+                [
+                    'name' => '站点SEO',
+                    'icon' => 'fa fa-cog',
+                    'uri' => 'seo_site/index',
+                ],
+                [
+                    'name' => '模块SEO',
+                    'icon' => 'fa fa-gears',
+                    'uri' => 'seo_module/index',
+                ],
+                [
+                    'name' => '内容SEO',
+                    'icon' => 'fa fa-th-large',
+                    'uri' => 'seo_content/index',
+                ],
+                [
+                    'name' => '栏目SEO',
+                    'icon' => 'fa fa-reorder',
+                    'uri' => 'seo_category/index',
+                ],
+                [
+                    'name' => '搜索SEO',
+                    'icon' => 'fa fa-search',
+                    'uri' => 'seo_search/index',
+                ],
+                [
+                    'name' => 'URL规则',
+                    'icon' => 'fa fa-link',
+                    'uri' => 'urlrule/index',
+                ],
+            ]
+        ],
+
+        'content-module' => [
+            'name' => '内容管理',
+            'icon' => 'fa fa-th-large',
+            'link' => [
+                [
+                    'name' => '栏目管理',
+                    'icon' => 'fa fa-reorder',
+                    'uri' => 'module_category/index',
+                ],
+                [
+                    'name' => '静态生成',
+                    'icon' => 'fa fa-file-code-o',
+                    'uri' => 'html/index',
+                ],
+            ]
+        ],
+
+
+        'member-list' => [
+            'name' => '用户管理',
+            'icon' => 'fa fa-user',
+            'link' => [
+                [
+                    'name' => '用户管理',
+                    'icon' => 'fa fa-user',
+                    'uri' => 'member/index',
+                ],
+                [
+                    'name' => '用户组管理',
+                    'icon' => 'fa fa-users',
+                    'uri' => 'member_group/index',
+                ],
+            ]
+        ],
+        'content-form' => [
+            'name' => '网站表单',
+            'icon' => 'fa fa-table',
+            'link' => []
+        ],
+        'content-verify' => [
+            'name' => '内容审核',
+            'icon' => 'fa fa-edit',
+            'link' => [
+                [
+                    'name' => '注册审核',
+                    'icon' => 'fa fa-edit',
+                    'uri' => 'member_verify/index',
+                ],
+                [
+                    'name' => '申请审核',
+                    'icon' => 'fa fa-users',
+                    'uri' => 'member_apply/index',
+                ],
+            ]
+        ],
+
+        'app-plugin' => [
+            'name' => '应用插件',
+            'icon' => 'fa fa-puzzle-piece',
+            'link' => [
+                [
+                    'name' => '联动菜单',
+                    'icon' => 'fa fa-columns',
+                    'uri' => 'linkage/index',
+                ],
+                [
+                    'name' => '附件管理',
+                    'icon' => 'fa fa-folder',
+                    'uri' => 'attachments/index',
+                ],
+            ]
+        ],
+
+    ],
 
     'member' => [
 

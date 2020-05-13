@@ -11,6 +11,7 @@
 class Auth extends \Phpcmf\Model {
 
     private $_is_post_user = -1;
+    private $_is_admin_min_mode = -1;
 
     // 验证操作其他用户身份权限
     public function cleck_edit_member($uid) {
@@ -252,6 +253,15 @@ class Auth extends \Phpcmf\Model {
         return dr_return_data(1, '', $data);
     }
 
+    // 更新当前的角色账号设置
+    public function update_admin_setting($name, $value) {
+        $setting = \Phpcmf\Service::C()->admin['setting'];
+        $setting[$name] = $value;
+        $this->table('admin')->update(\Phpcmf\Service::C()->admin['id'], [
+            'setting' => dr_array2string($setting)
+        ]);
+    }
+
     // 判断当前账号站点权限
     public function check_site() {
 
@@ -320,6 +330,28 @@ class Auth extends \Phpcmf\Model {
         $ids && $this->db->table('admin_role')->whereIn('id', $ids)->delete();
     }
 
+    // 账号是否强制了简化模式
+    public function is_admin_min_mode() {
+
+        if ($this->_is_admin_min_mode >= 0) {
+            return $this->_is_admin_min_mode;
+        }
+
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            $this->_is_admin_min_mode = 0;
+        } else {
+            $auth = \Phpcmf\Service::C()->get_cache('auth');
+            $this->_is_admin_min_mode = 0;
+            foreach (\Phpcmf\Service::C()->admin['roleid'] as $aid) {
+                if (isset($auth[$aid]['application']['mode']) && $auth[$aid]['application']['mode']) {
+                    $this->_is_admin_min_mode = 1;
+                }
+            }
+        }
+
+        return $this->_is_admin_min_mode;
+    }
+
     // 账号是否是投稿员
     public function is_post_user() {
 
@@ -343,7 +375,6 @@ class Auth extends \Phpcmf\Model {
         $this->_is_post_user = 0;
         return $this->_is_post_user;
     }
-
 
     // 后台内容审核权限编辑时的验证
     public function get_admin_verify_status_edit($vid, $status) {
@@ -457,6 +488,7 @@ class Auth extends \Phpcmf\Model {
             'home/index',
             'home/main',
             'home/home',
+            'home/min',
             ])) {
             return true;
         } elseif (!$uri) {
