@@ -328,7 +328,11 @@ if (!function_exists('dr_domain_301')) {
 
 // 格式化sql创建
 function dr_format_create_sql($sql) {
-    return trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
+    $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
+    if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.6.0') > 0) {
+        $sql = trim(str_replace('CHARSET=utf8', 'CHARSET=utf8mb4', $sql));
+    }
+    return $sql;
 }
 
 /**
