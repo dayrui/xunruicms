@@ -26,7 +26,7 @@ class Html
         }
 
         $list = [];
-        foreach ($cat as $t) {
+        foreach ($cat as $i => $t) {
             if ($t['tid'] == 0) {
                 // 单网页
                 $list[$t['mid']][] = [
@@ -39,6 +39,11 @@ class Html
                 ];
             } elseif ($t['tid'] == 1) {
                 // 模块
+                // 判断模块表是否存在被安装
+                if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$t['mid']))) {
+                    unset($list[$t['mid']]);
+                    continue;
+                }
                 if ($t['child'] && $t['setting']['template']['list'] != $t['setting']['template']['category']) {
                     // 判断是封面页面
                     $list[$t['mid']][] = [
