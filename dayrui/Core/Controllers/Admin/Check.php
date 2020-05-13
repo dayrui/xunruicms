@@ -234,6 +234,28 @@ class Check extends \Phpcmf\Common
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';');
                 }
 
+                $table = $prefix.'admin_min_menu';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                      `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+                      `pid` smallint(5) unsigned NOT NULL COMMENT \'上级菜单id\',
+                      `name` text NOT NULL COMMENT \'菜单语言名称\',
+                      `site` text NOT NULL COMMENT \'站点归属\',
+                      `uri` varchar(255) DEFAULT NULL COMMENT \'uri字符串\',
+                      `url` varchar(255) DEFAULT NULL COMMENT \'外链地址\',
+                      `mark` varchar(255) DEFAULT NULL COMMENT \'菜单标识\',
+                      `hidden` tinyint(1) unsigned DEFAULT NULL COMMENT \'是否隐藏\',
+                      `icon` varchar(255) DEFAULT NULL COMMENT \'图标标示\',
+                      `displayorder` int(5) DEFAULT NULL COMMENT \'排序值\',
+                      PRIMARY KEY (`id`),
+                      KEY `list` (`pid`),
+                      KEY `displayorder` (`displayorder`),
+                      KEY `mark` (`mark`),
+                      KEY `hidden` (`hidden`),
+                      KEY `uri` (`uri`)
+                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'后台简化菜单表\';');
+                }
+
                 // 模块
                 $module = \Phpcmf\Service::M()->table('module')->order_by('displayorder ASC,id ASC')->getAll();
 

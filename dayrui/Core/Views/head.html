@@ -10,7 +10,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link href="{THEME_PATH}assets/global/css/xunruicms.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    {if $is_min}
+    <link href="{THEME_PATH}assets/global/css/min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    {else}
     <link href="{THEME_PATH}assets/global/css/my.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    {/if}
     <link href="{THEME_PATH}assets/font-awesome/css/font-awesome.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <!--[if lt IE 9]>
     <script src="{THEME_PATH}assets/global/plugins/respond.min.js"></script>
@@ -18,6 +22,7 @@
     <![endif]-->
     <script type="text/javascript">
         var admin_file = '{SELF}';
+        var is_min = '{$is_min}';
         var is_oemcms = '{IS_OEM_CMS}';
         var is_mobile_cms = '{$is_mobile}';
         var is_admin = 1;
@@ -66,5 +71,117 @@
             window.location.href = '{$category_field_url}&catid='+catid;
             {/if}
         }
+
+        {if $is_index}
+
+            // 退出
+            function dr_logout(url) {
+                var r=confirm(lang['logout']);
+                if (r==true) {
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: url,
+                        success: function(json) {
+                            if (json.code == 1) {
+                                setTimeout("window.location.href='{dr_url("login/index")}'", 1000);
+                            }
+                            dr_tips(json.code, json.msg);
+                        },
+                        error: function(HttpRequest, ajaxOptions, thrownError) {
+                            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                        }
+                    });
+                }
+            }
+            function dr_select_site(id) {
+                var r=confirm('{dr_lang("你确定要切换到选中站点吗？")}')
+                if (r==true) {
+                    window.location.href='{dr_url("sites/home/login_index")}&id='+id
+                }
+            }
+
+            function Mlink(top, left, link, url) {
+
+                // 延迟提示
+                /*
+                var admin_loading = layer.load(2, {
+                    time: 1000
+                });*/
+
+                {if $is_min}
+                {if $is_mobile}$('.page-header .responsive-toggler').click();{/if}
+                {else}
+                $('.dr_menu_item').hide();
+                $('.dr_menu_'+top).show();
+                $('.dr_menu_'+top+' .sub-menu').hide();
+
+                $('#dr_m_top_'+top+' li').removeClass('active open');
+                $('.dr_menu_'+top+' li').removeClass('active open');
+                {/if}
+
+                $('#dr_menu_link_'+link).addClass('active open');
+                $('#dr_menu_m_link_'+link).addClass('active open');
+
+                // 顶级菜单选择
+                $('.top-menu .navbar-nav li').removeClass('open');
+                $('.dr_mini_menu_top').removeClass('open');
+                $('#dr_menu_top_'+top).addClass('open');
+                $('#dr_mini_menu_top_'+top).addClass('open');
+
+                // 移动端选择
+                $('.fc-mb-sum-menu').hide();
+                $('#dr_m_top_'+top).show();
+
+                // 分组菜单选择
+                $('.dr_menu_'+top+'').removeClass('active open');
+                $('.dr_menu_'+top+' .selected').hide();
+                $('.dr_menu_'+top+' .arrow').removeClass('open');
+
+
+                $('#dr_menu_left_'+left).addClass('active open');
+                $('#dr_menu_left_'+left+' .selected').show();
+                $('#dr_menu_left_'+left+' .arrow').addClass('open');
+                $('#dr_menu_left_'+left+' .sub-menu').show();
+
+                $("#right_page").attr('src', url);
+                $("#right_page").attr("url", url);
+
+            }
+            function wSize(){
+                var str=getWindowSize();
+                var strs= new Array(); //定义一数组
+                strs=str.toString().split(","); //字符分割
+                var heights = strs[0]-70,Body = $('body');
+                $('#right_page').height(heights);
+            }
+            if(!Array.prototype.map)
+                Array.prototype.map = function(fn,scope) {
+                    var result = [],ri = 0;
+                    for (var i = 0,n = this.length; i < n; i++){
+                        if(i in this){
+                            result[ri++]  = fn.call(scope ,this[i],i,this);
+                        }
+                    }
+                    return result;
+                };
+
+            var getWindowSize = function(){
+                return ["Height","Width"].map(function(name){
+                    return window["inner"+name] ||
+                        document.compatMode === "CSS1Compat" && document.documentElement[ "client" + name ] || document.body[ "client" + name ]
+                });
+            }
+
+            $(function(){
+                window.onresize=wSize;
+                wSize();
+                // 宽度小时
+                if ($(document).width() < 900) {
+                    $('.page-sidebar .sidebar-toggler').click();
+                }
+            });
+
+        {/if}
     </script>
 </head>

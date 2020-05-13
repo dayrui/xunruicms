@@ -20,12 +20,16 @@
                     {/if}
                     <th class="hidden-mobile" width="70" style="text-align:center"> {dr_lang('排序')} </th>
                     <th class="hidden-mobile" width="60" style="text-align:center"> {dr_lang('可用')} </th>
-                    <th> {dr_lang('名称')} </th>
-                    <th width="130">
+                    <th width="300"> {dr_lang('名称')} </th>
+                    {if dr_count($ci->site_info) > 1}
+                    <th width="100">
                         {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>0])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
                     </th>
-                    {if dr_count($ci->site_info) > 1}
                     <th> {dr_lang('站点划分')} </th>
+                    {else}
+                    <th>
+                        {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>0])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
+                    </th>
                     {/if}
                 </tr>
                 </thead>

@@ -126,7 +126,15 @@ class Home extends \Phpcmf\Common
 
 	public function index() {
 
-		$menu = \Phpcmf\Service::L('cache')->get('menu-admin');
+        // 账号是否强制了简化模式
+        if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
+            $this->min();exit;
+        } elseif ($this->admin['setting']['admin_min']) {
+            // 自己切换的
+            $this->min();exit;
+        }
+
+        $menu = \Phpcmf\Service::L('cache')->get('menu-admin');
         if (!$menu) {
             $m = \Phpcmf\Service::M('menu')->cache();
             $menu = $m['admin'];
@@ -295,6 +303,7 @@ class Home extends \Phpcmf\Common
 			'first' => $first,
 			'string' => $string,
 			'mstring' => $mstring,
+            'is_index' => 1,
             'is_mobile' => $this->_is_mobile(),
 			'sys_color' => [
 				'default' => '#333438',
@@ -308,4 +317,130 @@ class Home extends \Phpcmf\Common
         ]);
 		\Phpcmf\Service::V()->display('index.html');exit;
 	}
+
+    public function min() {
+
+        $menu = \Phpcmf\Service::L('cache')->get('menu-admin-min');
+        if (!$menu) {
+            $m = \Phpcmf\Service::M('menu')->cache();
+            $menu = $m['admin-min'];
+        }
+
+        // 自定义后台菜单显示
+        if (function_exists('dr_my_admin_min_menu')) {
+            $menu = dr_my_admin_min_menu($menu);
+        }
+
+        $string = '';
+        $my_menu = [];
+        if ($this->admin['adminid'] > 1) {
+            foreach ($menu as $t) {
+                @in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
+            }
+        } else {
+            $my_menu = $menu;
+        }
+
+        if ($my_menu) {
+            // 权限判断并筛选
+            $tid = 0;
+            $first = 0;
+            foreach ($my_menu as $left) {
+                if (!$left['link']) {
+                    continue; // 没有分组菜单就不要
+                } elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
+                    continue; // 没有划分本站点就不显示
+                }
+                $_link = 0; // 是否第一个链接菜单，0表示第一个
+                $left_string = '';
+
+                // 链接菜单开始
+                $link_string = '';
+                foreach ($left['link'] as $i => $link) {
+                    if ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
+                        // 判断权限
+                        unset($left['link'][$i]);
+                        continue;
+                    } elseif ($link['mark'] && $left['mark'] == 'content-module') {
+                        // 内容模块权限判断
+                        list($ac, $name) = explode('-', $link['mark']);
+                        if ($ac == 'module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        }
+                    } elseif (SITE_ID > 1 && !in_array(SITE_ID, $link['site'])) {
+                        // 没有划分本站点就不显示
+                        unset($left['link'][$i]);
+                        continue;
+                    } elseif (SITE_ID > 1 && $link['uri'] && $link['uri'] == 'cloud/local') {
+                        // 多站点不显示应用
+                        unset($left['link'][$i]);
+                        continue;
+                    } elseif ($link['mark'] && $left['mark'] == 'content-form') {
+                        // 网站表单权限判断
+                        list($ac, $name) = explode('-', $link['mark']);
+                        if ($ac == 'form' && !$this->get_cache('form-'.SITE_ID, $name)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        }
+                    } elseif ($link['mark'] && $left['mark'] == 'content-verify') {
+                        // 内容模块审核部分权限判断
+                        list($ac, $ab, $name, $cc) = explode('-', $link['mark']);
+                        if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('module-'.SITE_ID.'-content', $name, 'comment')) {
+                            unset($left['link'][$i]);
+                            continue;
+                        } elseif ($ac.'-'.$ab == 'verify-mform' && !$this->get_cache('module-'.SITE_ID.'-'.$name, 'form', $cc)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        } elseif ($ac.'-'.$ab == 'verify-form' && !$this->get_cache('form-'.SITE_ID, $name)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        }
+                    }
+                    $url = $link['url'] ? $link['url'] :\Phpcmf\Service::L('Router')->url($link['uri']);
+                    if (!$_link) {
+                        // 第一个链接菜单时 指定class
+                        $class = 'nav-item active open';
+                        $top['url'] = $url;
+                        $top['link_id'] = $link['id'];
+                        $top['left_id'] = $left['id'];
+                    } else {
+                        $class = 'nav-item';
+                    }
+                    $_link = 1; // 标识以后的菜单就不是第一个了
+                    $link['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
+                    $link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title">'.dr_lang($link['name']).'</span></a></li>';
+                }
+                if (!$link_string) {
+                    continue; // 没有链接菜单就不要
+                }
+                $left_string.= '
+				<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($first ? '' : 'active open').' " >
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="'.$left['icon'].'"></i>
+                        <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
+                        <span class="selected" style="'.($first ? 'display:none' : '').'"></span>
+                        <span class="arrow '.($first ? '' : ' open').'"></span>
+                    </a>
+					<ul class="sub-menu">'.$link_string.'</ul>
+				</li>';
+                !$first && $first = 1;
+                $string.= $left_string;
+
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'string' => $string,
+            'is_min' => 1,
+            'is_mode' => \Phpcmf\Service::M('auth')->is_admin_min_mode(),
+            'is_index' => 1,
+            'is_mobile' => $this->_is_mobile(),
+            'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
+        ]);
+        \Phpcmf\Service::V()->display('index_min.html');exit;
+    }
 }

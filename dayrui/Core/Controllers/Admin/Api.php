@@ -712,7 +712,22 @@ class Api extends \Phpcmf\Common
         } else {
             $this->_json(0, dr_lang('缓存方式[%s]未生效', $config->handler));
         }
+    }
 
+    // 简化模式切换
+    public function admin_min() {
+
+        \Phpcmf\Service::M('auth')->update_admin_setting('admin_min', 1);
+        $this->_admin_msg(1, dr_lang('正在切换简化模式'), dr_url('home/min'), 0);
+    }
+
+    // 完整模式切换
+    public function admin_all() {
+        if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
+            $this->_admin_msg(0, dr_lang('此账号无法切换到完整模式'));
+        }
+        \Phpcmf\Service::M('auth')->update_admin_setting('admin_min', 0);
+        $this->_admin_msg(1, dr_lang('正在切换完整模式'), dr_url('home/index'), 0);
     }
 
     // 短信接口查询
