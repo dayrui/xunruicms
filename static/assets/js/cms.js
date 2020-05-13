@@ -553,7 +553,7 @@ function dr_ajax_submit(url, form, time, go) {
     if (tips_obj.val() == 'required') {
         tips_obj.val('');
     }
-    if ($('#'+form).find('[name=is_admin]').val()) {
+    if ($('#'+form).find('[name=is_admin]').val() == 1) {
         $('#'+form).find('.dr_required').each(function () {
             if (!$(this).val()) {
                 tips_obj.val('required');
