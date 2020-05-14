@@ -2,6 +2,12 @@
 <div class="note note-danger">
     <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
 </div>
+
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/fuelux/js/spinner.min.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}
     <div class="portlet bordered light myfbody">
@@ -17,7 +23,7 @@
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-user-plus"></i> {dr_lang('注册设置')} </a>
                 </li>
                 <li class="{if $page==5}active{/if}">
-                    <a href="#tab_5" data-toggle="tab" onclick="$('#dr_page').val('5')"> <i class="fa fa-user-md"></i> {dr_lang('姓名格式')} </a>
+                    <a href="#tab_5" data-toggle="tab" onclick="$('#dr_page').val('5')"> <i class="fa fa-user-md"></i> {dr_lang('格式规范')} </a>
                 </li>
                 <li class="{if $page==2}active{/if}">
                     <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-qq"></i> {dr_lang('快捷登录')} </a>
@@ -53,8 +59,98 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('用户姓名长度')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[register][cutname]" value="{intval($data['register']['cutname'])}" ></label>
-                                <span class="help-block">{dr_lang('用户姓名的最大长度，设置0表示不限制，最大设置100')}</span>
+                                <div class="input-small"><input class="form-control" id="dr_cutname" type="text" name="data[register][cutname]" value="{intval($data['register']['cutname'])}" >
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $("#dr_cutname").TouchSpin({
+                                            buttondown_class: "btn default",
+                                            buttonup_class: "btn default",
+                                            verticalbuttons: false,
+                                            step: 1,
+                                            min: 0,
+                                            max: 100
+                                        });
+                                    });
+                                </script></div>
+                                <span class="help-block">{dr_lang('用户姓名的最大长度，设置0表示不限制，最大设置100，超出会被切取')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('账号最小长度')}</label>
+                            <div class="col-md-9">
+                                <div class="input-small"><input class="form-control" id="dr_username" type="text" name="data[config][userlen]" value="{intval($data['config']['userlen'])}" >
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            $("#dr_username").TouchSpin({
+                                                buttondown_class: "btn default",
+                                                buttonup_class: "btn default",
+                                                verticalbuttons: false,
+                                                step: 1,
+                                                min: 1,
+                                                max: 50
+                                            });
+                                        });
+                                    </script></div>
+                                <span class="help-block">{dr_lang('账号名的最小长度控制，最大设置50位数')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('允许账号与密码相同')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[config][user2pwd]" value="1" {if $data['config']['user2pwd']}checked{/if} data-on-text="{dr_lang('允许')}" data-off-text="{dr_lang('禁止')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的验证')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('密码最小长度')}</label>
+                            <div class="col-md-9">
+                                <div class="input-small"><input class="form-control" id="dr_password" type="text" name="data[config][pwdlen]" value="{intval($data['config']['pwdlen'])}" >
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            $("#dr_password").TouchSpin({
+                                                buttondown_class: "btn default",
+                                                buttonup_class: "btn default",
+                                                verticalbuttons: false,
+                                                step: 1,
+                                                min: 1,
+                                                max: 50
+                                            });
+                                        });
+                                    </script></div>
+                                <span class="help-block">{dr_lang('密码的最小长度控制，最大设置50位数')}</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('密码强度（正则）')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-xlarge" type="text" name="data[config][pwdpreg]" id="dr_pwdrule" value="{$data.config.pwdpreg}"/></label>
+                                <label><select class="form-control" onchange="javascript:$('#dr_pwdrule').val(this.value)" name="pattern_select">
+                                    <option value="">{dr_lang('正则验证')}</option>
+                                    <option value="/[a-zA-Z]+/">{dr_lang('必须包含字母')}</option>
+                                </select></label>
+                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的强度验证，可以设置自定义正则表达式')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('用户名规则（正则）')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-xlarge" type="text" name="data[register][preg]" id="dr_regnamerule" value="{$data.register.preg}"/></label>
+                                <label><select class="form-control" onchange="javascript:$('#dr_regnamerule').val(this.value)" name="pattern_select">
+                                    <option value="">{dr_lang('正则验证')}</option>
+                                    <option value="/^[0-9.-]+$/">{dr_lang('数字')}</option>
+                                    <option value="/^[0-9-]+$/">{dr_lang('整数')}</option>
+                                    <option value="/^[a-z]+$/i">{dr_lang('字母')}</option>
+                                    <option value="/^[0-9a-z]+$/i">{dr_lang('数字+字母')}</option>
+                                    <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">Email</option>
+                                </select></label>
+                                <span class="help-block">{dr_lang('针对前端注册时的用户名格式验证，可以设置自定义正则表达式')}</span>
                             </div>
                         </div>
 
@@ -242,26 +338,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('用户名规则（正则）')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[register][preg]" id="dr_regnamerule" value="{$data.register.preg}"/></label>
-                                <label><select class="form-control" onchange="javascript:$('#dr_regnamerule').val(this.value)" name="pattern_select">
-                                    <option value="">{dr_lang('正则验证')}</option>
-                                    <option value="/^[0-9.-]+$/">{dr_lang('数字')}</option>
-                                    <option value="/^[0-9-]+$/">{dr_lang('整数')}</option>
-                                    <option value="/^[a-z]+$/i">{dr_lang('字母')}</option>
-                                    <option value="/^[0-9a-z]+$/i">{dr_lang('数字+字母')}</option>
-                                    <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">Email</option>
-                                </select></label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('不允许注册的用户名')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('不允许注册的账号')}</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" style="height:150px; width:100%;" name="data[register][notallow]">{$data['register']['notallow']}</textarea>
-                                <span class="help-block">{dr_lang('多个用户名以分号“,”分隔')}</span>
+                                <span class="help-block">{dr_lang('多个账号以分号“,”分隔')}</span>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
