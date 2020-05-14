@@ -139,7 +139,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('用户名规则（正则）')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('账号规则（正则）')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-xlarge" type="text" name="data[register][preg]" id="dr_regnamerule" value="{$data.register.preg}"/></label>
                                 <label><select class="form-control" onchange="javascript:$('#dr_regnamerule').val(this.value)" name="pattern_select">
@@ -150,7 +150,7 @@
                                     <option value="/^[0-9a-z]+$/i">{dr_lang('数字+字母')}</option>
                                     <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">Email</option>
                                 </select></label>
-                                <span class="help-block">{dr_lang('针对前端注册时的用户名格式验证，可以设置自定义正则表达式')}</span>
+                                <span class="help-block">{dr_lang('针对前端注册时的账号格式验证，可以设置自定义正则表达式')}</span>
                             </div>
                         </div>
 

@@ -157,6 +157,10 @@ class Account extends \Phpcmf\Common
             } elseif ($this->member['password'] && md5(md5($post['password2']).$this->member['salt'].md5($post['password2'])) == $this->member['password']) {
                 $this->_json(0, dr_lang('原密码不能与新密码相同'), ['field' => 'password2']);
             }
+            $rt = \Phpcmf\Service::L('Form')->check_password($post['password2'], $this->member['username']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg'], ['field' => 'password2']);
+            }
             // 修改密码
             \Phpcmf\Service::M('member')->edit_password($this->member, $post['password2']);
             $this->_json(1, dr_lang('操作成功'));

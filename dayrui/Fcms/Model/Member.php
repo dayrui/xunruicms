@@ -954,6 +954,28 @@ class Member extends \Phpcmf\Model
         $member['email'] && $member['email'] = strtolower($member['email']);
         $member['username'] && $member['username'] = strtolower($member['username']);
 
+        // 验证格式
+        if (in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
+            $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
+            if (!$rt['code']) {
+                return $rt;
+            }
+        }
+        // 前端验证密码格式
+        if (!IS_ADMIN) {
+            $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
+            if (!$rt['code']) {
+                return $rt;
+            }
+        }
+        if (in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
+            && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
+            return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
+        } elseif (in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
+            && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
+            return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+        }
+
         // 默认注册组
         !$groupid && $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
 
@@ -968,13 +990,15 @@ class Member extends \Phpcmf\Model
 
         if ($member['username'] == 'guest') {
             return dr_return_data(0, dr_lang('此名称guest系统不允许注册'), ['field' => 'username']);
-        } elseif (!IS_ADMIN && \Phpcmf\Service::C()->member_cache['register']['notallow']) {
+        }
+        /*
+        elseif (!IS_ADMIN && \Phpcmf\Service::C()->member_cache['register']['notallow']) {
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $mt) {
                 if ($mt && stripos($member['username'], $mt) !== false) {
                     return dr_return_data(0, dr_lang('账号[%s]禁止包含关键字[%s]', $member['username'], $mt), ['field' => 'username']);
                 }
             }
-        }
+        }*/
 
         $member['name'] = htmlspecialchars(!$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), ''));
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码

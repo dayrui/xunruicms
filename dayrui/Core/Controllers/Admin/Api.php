@@ -137,7 +137,13 @@ class Api extends \Phpcmf\Common
 			}
 			// 修改密码
 			$password = dr_safe_password(\Phpcmf\Service::L('input')->post('password'));
-			$password && \Phpcmf\Service::M('member')->edit_password($this->member, $password);
+			if ($password) {
+                $rt = \Phpcmf\Service::L('Form')->check_password($password, $this->member['username']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['field' => 'password2']);
+                }
+                \Phpcmf\Service::M('member')->edit_password($this->member, $password);
+            }
 
 			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->admin['id'])->update([
 				'usermenu' => dr_array2string($menu)

@@ -134,10 +134,12 @@ class Member extends \Phpcmf\Table
                 $this->_json(0, dr_lang('新账号不能为空'));
             } elseif ($member['username'] == $name) {
                 $this->_json(0, dr_lang('新账号不能和原始账号相同'));
-            } elseif (!\Phpcmf\Service::L('form')->check_username($name)) {
-                $this->_json(0, dr_lang('新账号格式不正确'), ['field' => 'name']);
             } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $name)->countAllResults()) {
                 $this->_json(0, dr_lang('新账号%s已经注册', $name), ['field' => 'name']);
+            }
+            $rt = \Phpcmf\Service::L('form')->check_username($name);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['code'], ['field' => 'name']);
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
@@ -160,16 +162,7 @@ class Member extends \Phpcmf\Table
         
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            if (in_array('username', $this->member_cache['register']['field'])
-                && !\Phpcmf\Service::L('form')->check_username($post['username'])) {
-                $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'username']);
-            } elseif (in_array('email', $this->member_cache['register']['field'])
-                && !\Phpcmf\Service::L('form')->check_email($post['email'])) {
-                $this->_json(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-            } elseif (in_array('phone', $this->member_cache['register']['field'])
-                && !\Phpcmf\Service::L('form')->check_phone($post['phone'])) {
-                $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-            } elseif (empty($post['password'])) {
+            if (empty($post['password'])) {
                 $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
             } else {
                 $rt = \Phpcmf\Service::M('member')->register((int)$post['groupid'], [
@@ -290,16 +283,6 @@ class Member extends \Phpcmf\Table
                 $email = trim($email == 'null' ? '' : $email);
                 $username = trim($username == 'null' ? '' : $username);
                 $password = trim($password == 'null' ? '' : $password);
-                if (in_array('username', $this->member_cache['register']['field'])
-                    && !\Phpcmf\Service::L('form')->check_username($username)) {
-                    $this->_json(0, dr_lang('账号[%s]格式不正确', $username), ['field' => 'all']);
-                } elseif (in_array('email', $this->member_cache['register']['field'])
-                    && !\Phpcmf\Service::L('form')->check_email($email)) {
-                    $this->_json(0, dr_lang('邮箱[%s]格式不正确', $email), ['field' => 'all']);
-                } elseif (in_array('phone', $this->member_cache['register']['field'])
-                    && !\Phpcmf\Service::L('form')->check_phone($phone)) {
-                    $this->_json(0, dr_lang('手机号码[%s]格式不正确', $phone), ['field' => 'all']);
-                }
                 $rt = \Phpcmf\Service::M('member')->register((int)$post['groupid'], [
                     'username' => (string)$username,
                     'phone' => (string)$phone,

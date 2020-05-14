@@ -378,18 +378,39 @@ class Form
     public function check_username($value) {
 
         if (!$value) {
-            return false;
+            return dr_return_data(0, dr_lang('账号不能为空'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['preg']
             && !preg_match(\Phpcmf\Service::C()->member_cache['register']['preg'], $value)) {
-            return false;
+            return dr_return_data(0, dr_lang('账号格式不正确'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']
             && in_array($value, \Phpcmf\Service::C()->member_cache['register']['notallow'])) {
-            return false;
+            return dr_return_data(0, dr_lang('账号名不允许注册'), ['field' => 'username']);
         } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
-            return false;
+            return dr_return_data(0, dr_lang('账号名存在非法字符'), ['field' => 'username']);
+        } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
+            && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
+            return dr_return_data(0, dr_lang('账号长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['userlen']), ['field' => 'username']);
         }
 
-        return true;
+        return dr_return_data(1, 'ok');
+    }
+
+    // 验证账号的密码
+    public function check_password($value, $username) {
+
+        if (!$value) {
+            return dr_return_data(0, dr_lang('密码不能为空'), ['field' => 'password']);
+        } elseif (!\Phpcmf\Service::C()->member_cache['config']['user2pwd'] && $value == $username) {
+            return dr_return_data(0, dr_lang('密码不能与账号相同'), ['field' => 'password']);
+        } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdpreg']
+            && !preg_match(trim(\Phpcmf\Service::C()->member_cache['config']['pwdpreg']), $value)) {
+            return dr_return_data(0, dr_lang('密码格式不正确').\Phpcmf\Service::C()->member_cache['config']['pwdpreg'], ['field' => 'password']);
+        } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdlen']
+            && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['pwdlen']) {
+            return dr_return_data(0, dr_lang('密码长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['pwdlen']), ['field' => 'password']);
+        }
+
+        return dr_return_data(1, 'ok');
     }
 
     // 验证姓名

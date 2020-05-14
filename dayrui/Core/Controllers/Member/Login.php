@@ -232,16 +232,7 @@ class Login extends \Phpcmf\Common
                     }
                     if ($type) {
                         // 注册绑定
-                        if (in_array('username', $this->member_cache['register']['field'])
-                            && !\Phpcmf\Service::L('Form')->check_username($post['username'])) {
-                            $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'username']);
-                        } elseif (in_array('email', $this->member_cache['register']['field'])
-                            && !\Phpcmf\Service::L('Form')->check_email($post['email'])) {
-                            $this->_json(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-                        } elseif (in_array('phone', $this->member_cache['register']['field'])
-                            && !\Phpcmf\Service::L('Form')->check_phone($post['phone'])) {
-                            $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-                        } elseif (empty($post['password'])) {
+                        if (empty($post['password'])) {
                             $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
                         } elseif ($post['password'] != $post['password2']) {
                             $this->_json(0, dr_lang('确认密码不正确'), ['field' => 'password2']);
