@@ -271,7 +271,6 @@ $db[\'default\']	= [
                                 'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
                                 'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
                                 'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-                                'SYS_EMAIL'                     => $data['email'],
                             ];
                             if (is_file(MYPATH.'Config/License.php')) {
                                 $ls = require MYPATH.'Config/License.php';

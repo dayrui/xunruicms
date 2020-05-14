@@ -12,7 +12,6 @@ class System extends \Phpcmf\Model
     public $config = [
 
         'SYS_DEBUG'	=> '调试器开关',
-        'SYS_EMAIL' => '系统收件邮箱，用于接收系统信息',
         'SYS_ADMIN_CODE' => '后台登录验证码开关',
         'SYS_ADMIN_LOG' => '后台操作日志开关',
         'SYS_AUTO_FORM' => '自动存储表单数据',

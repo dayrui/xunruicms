@@ -362,8 +362,8 @@ class Api extends \Phpcmf\Common
 	// 邮件发送测试
 	public function email_test() {
 
-		if (!SYS_EMAIL) {
-		    $this->_json(0, dr_lang('系统邮箱没有设置'));
+		if (!$this->member['email']) {
+		    $this->_json(0, dr_lang('当前登录的账号没有设置邮箱'));
         }
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
@@ -380,7 +380,7 @@ class Api extends \Phpcmf\Common
 			'from' => $data['user']
 		]);
 
-		if ($dmail->send(SYS_EMAIL, 'test', 'test for '.SITE_NAME)) {
+		if ($dmail->send($this->member['email'], 'test', 'test for '.SITE_NAME)) {
 			$this->_json(1, dr_lang('测试成功'));
 		} else {
 			$this->_json(0, $dmail->error());
