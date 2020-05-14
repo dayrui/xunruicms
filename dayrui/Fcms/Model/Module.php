@@ -732,7 +732,7 @@ class Module extends \Phpcmf\Model
                 // 权限
                 $c['permission'] = $c['child'] && !$cache['setting']['pcatpost'] ? '' : dr_string2array($c['permission']);
                 // 获取栏目url
-                $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? $c['setting']['linkurl'] : \Phpcmf\Service::L('router')->category_url($cache, $c);
+                $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
                 //$c['furl'] = $c['setting']['linkurl'] ? $c['setting']['linkurl'] : \Phpcmf\Service::L('router')->category_url($cache, $c, 0, '{fid}');
                 // 按分站生成url
                 // 统计栏目文章数量
