@@ -364,7 +364,7 @@
                     'setting' => array(
                         'option' => array(
                             'width' => 200,
-                            'max' => '255',
+                            'max' => '',
                             'min' => '0',
                             'step' => '1',
                             'show' => '1',
