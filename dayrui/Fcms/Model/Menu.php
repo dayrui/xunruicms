@@ -45,7 +45,7 @@ class Menu extends \Phpcmf\Model {
             if ($data['uri'] && \Phpcmf\Service::M()->table('admin_min_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
-            } elseif ($data['uri'] && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+            } elseif ($data['uri'] && !\Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
                 // 判断完整菜单表
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径没有存在于完整菜单表中'), ['field' => 'uri']);
             } elseif ($mark && \Phpcmf\Service::M()->table('admin_min_menu')->where('mark', $mark)->counts()) {
