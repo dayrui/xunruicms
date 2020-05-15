@@ -952,7 +952,14 @@ class Member extends \Phpcmf\Model
     public function register($groupid, $member, $data = [], $sync = 1) {
         
         $member['email'] && $member['email'] = strtolower($member['email']);
-        $member['username'] && $member['username'] = strtolower($member['username']);
+
+        // 没有账号，随机一个默认登录账号
+        if (!$member['username']) {
+            $member['username'] = $this->_rand_username(\Phpcmf\Service::C()->member_cache['register']['unprefix'], $member);
+        } else {
+            $member['username'] =  dr_safe_filename($member['username']);
+        }
+        $member['username'] = strtolower($member['username']);
 
         // 验证格式
         if (in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
@@ -1011,13 +1018,6 @@ class Member extends \Phpcmf\Model
         $member['regip'] = (string)\Phpcmf\Service::L('input')->ip_address();
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = rand(100000, 999999);
-
-        // 没有账号，随机一个默认登录账号
-        if (!$member['username']) {
-            $member['username'] = $this->_rand_username(\Phpcmf\Service::C()->member_cache['register']['unprefix'], $member);
-        } else {
-            $member['username'] =  dr_safe_filename($member['username']);
-        }
 
         $rt = $this->table('member')->insert($member);
         if (!$rt['code']) {
