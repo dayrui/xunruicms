@@ -70,7 +70,7 @@
                         <div class="mt-checkbox-list">
                             {loop $ci->role $rid $t}
                             <label class="mt-checkbox mt-checkbox-outline">
-                                <input type="checkbox" name="data[role][]" {if $data[role][$rid]} checked{/if} value="{$rid}"> {$t.name}
+                                <input type="checkbox" name="data[role][]" {if $data['role'][$rid]} checked{/if} value="{$rid}"> {$t.name}
                                 <span></span>
                             </label>
                             {/loop}

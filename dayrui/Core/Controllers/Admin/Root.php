@@ -26,6 +26,10 @@ class Root extends \Phpcmf\Table
         ]);
         $this->name = dr_lang('管理员');
         $this->role = \Phpcmf\Service::M('auth')->get_role_all();
+        // 不是超级管理员,排除超管角色
+        if (!in_array(1, $this->admin['roleid'])) {
+            unset($this->role[1]);
+        }
     }
 
     public function index() {
