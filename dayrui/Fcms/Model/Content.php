@@ -294,15 +294,8 @@ class Content extends \Phpcmf\Model {
         $data[1]['url'] = $this->update_url($data[1], \Phpcmf\Service::L('router')->show_url(\Phpcmf\Service::C()->module, $data[1]));
 
         // 修改内容是更新同步栏目相关数据
-        $id && $old['link_id'] && $this->sync_update_cat($old['link_id'], $data);
-
-        // 站长工具
-        if (dr_is_app('bdts')) {
-            \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
-        }
-
-        if (dr_is_app('bdxz')) {
-            \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
+        if ($id && $old['link_id']) {
+            $this->sync_update_cat($old['link_id'], $data);
         }
 
         // 自动关键词存储
@@ -353,7 +346,7 @@ class Content extends \Phpcmf\Model {
         }
 
         // 挂钩点 模块内容发布或修改完成之后
-        \Phpcmf\Hooks::trigger('module_content_after', $data);
+        \Phpcmf\Hooks::trigger('module_content_after', $data, $old);
 
         // 二次开发函数
         $this->_content_post_after($id, $data, $old);
