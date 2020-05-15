@@ -6,6 +6,18 @@
  **/
 
 
+// 后台搜索字段过滤函数
+function dr_is_admin_search_field($t) {
+
+    if (!$t['ismain']) {
+        return 0;
+    } elseif (in_array($t['fieldtype'], ['Text', 'Textarea', 'Textbtn', 'Ueditor'])) {
+        return 1;
+    }
+
+    return 0;
+}
+
 // 通过数组值查找数组key
 function dr_get_array_key($array, $value) {
 	if (!in_array($value, $array)) {

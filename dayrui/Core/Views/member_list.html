@@ -20,7 +20,7 @@
                 <select name="field" class="form-control">
                     <option value="id"> Id </option>
                     {loop $field $t}
-                    {if $t.ismain}
+                    {if dr_is_admin_search_field($t)}
                     <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
                     {/if}
                     {/loop}
