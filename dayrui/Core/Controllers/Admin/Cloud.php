@@ -302,6 +302,11 @@ class Cloud extends \Phpcmf\Common
 			}
 		}
 
+		// 安装之前的验证
+        if (is_file($cmspath.'Check.php')) {
+            require $cmspath.'Check.php';
+        }
+
 		if (is_file($cmspath.'Run.php')) {
             copy($cmspath.'Run.php',WRITEPATH.'temp/run-'.$id.'.php');
         }
