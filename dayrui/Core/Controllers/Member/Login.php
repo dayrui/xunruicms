@@ -262,6 +262,7 @@ class Login extends \Phpcmf\Common
                                 'phone' => (string)$post['phone'],
                                 'email' => (string)$post['email'],
                                 'password' => dr_safe_password($post['password']),
+                                'name' => dr_safe_replace($post['name']),
                             ], $data[1]);
                             if ($rt['code']) {
                                 // 注册绑定成功
