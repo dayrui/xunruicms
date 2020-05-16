@@ -624,6 +624,9 @@ class Module extends \Phpcmf\Common
 
         // 开启ob函数
         ob_start();
+        // 生成静态路由纠正
+        \Phpcmf\Service::L('router')->class = 'category';
+        \Phpcmf\Service::L('router')->method = 'index';
         $_GET['page'] = $page;
         \Phpcmf\Service::V()->init('pc');
         $this->_Category($catid, '', $page);
@@ -642,15 +645,14 @@ class Module extends \Phpcmf\Common
             $_GET['page'] = $page;
             $this->_Category($catid, '', $page);
             $html = ob_get_clean();
-
             $hfile = dr_to_html_file($file, $root . 'mobile/');
-
             $size = file_put_contents($hfile, $html, LOCK_EX);
             if (!$size) {
                 @unlink($hfile);
                 return dr_return_data(0, '无权限写入文件【' . $hfile . '】');
             }
         }
+
         return dr_return_data(1, 'ok');
     }
 
@@ -666,6 +668,9 @@ class Module extends \Phpcmf\Common
 
         // 开启ob函数
         ob_start();
+        // 生成静态路由纠正
+        \Phpcmf\Service::L('router')->class = 'show';
+        \Phpcmf\Service::L('router')->method = 'index';
         \Phpcmf\Service::V()->init('pc');
         \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
         $data = $this->_Show($id, '', $page);
@@ -814,10 +819,14 @@ class Module extends \Phpcmf\Common
 
         // 生成静态文件
         ob_start();
+        // 生成静态路由纠正
+        \Phpcmf\Service::L('router')->class = 'home';
+        \Phpcmf\Service::L('router')->method = 'index';
         \Phpcmf\Service::V()->init('pc');
         $this->_Index(1);
         $html = ob_get_clean();
         $pc = file_put_contents(dr_format_html_file($file, $root), $html, LOCK_EX);
+
         if (SITE_IS_MOBILE_HTML) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');

@@ -23,12 +23,17 @@ class Home extends \Phpcmf\Common
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
         // 系统开启静态首页
         if (!IS_CLIENT && $this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
-            ob_start();
-            $this->_index();
-            $html = ob_get_clean();
+
             if (!\Phpcmf\Service::V()->_is_mobile) {
                 // 表示 电脑端访问
                 // 生成电脑端界面
+                ob_start();
+                \Phpcmf\Service::V()->init("pc");
+                \Phpcmf\Service::V()->assign([
+                    'fix_html_now_url' => defined('SC_HTML_FILE') ? SITE_URL : '', // 修复静态下的当前url变量
+                ]);
+                $this->_index();
+                $html = ob_get_clean();
                 file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html);
                 // 生成移动端
                 if (SITE_IS_MOBILE_HTML) {
@@ -44,6 +49,13 @@ class Home extends \Phpcmf\Common
                 // 表示 移动端访问
                 // 生成移动端界面
                 if (SITE_IS_MOBILE_HTML) {
+                    ob_start();
+                    \Phpcmf\Service::V()->init("mobile");
+                    \Phpcmf\Service::V()->assign([
+                        'fix_html_now_url' => defined('SC_HTML_FILE') ? SITE_URL : '', // 修复静态下的当前url变量
+                    ]);
+                    $this->_index();
+                    $html = ob_get_clean();
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html);
                 }
                 // 生成电脑端
