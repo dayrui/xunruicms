@@ -45,8 +45,8 @@ class Home extends \Phpcmf\Common
                 $mb_html = ob_get_clean();
                 file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $mb_html);
             }
-            
-            if (\Phpcmf\Service::V()->_is_mobile) {
+
+            if (\Phpcmf\Service::V()->_is_mobile && $mb_html) {
                 // 表示 移动端访问
                 echo $mb_html;
             } else {
