@@ -839,7 +839,7 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('OAuth数据不存在，请重试'));
         }
 
-        $rt = $this->register($groupid, $member, $data);
+        $rt = $this->register($groupid, $member, $data, $oauth);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
@@ -910,7 +910,7 @@ class Member extends \Phpcmf\Model
         //$count = $this->db->table('member')->where('username', $member['username'])->countAllResults();
         //$count && $member['username'].= '_'.$oauth['oauth'].'_'.rand(0, 9999);
 
-        $rt = $this->register($groupid, $member);
+        $rt = $this->register($groupid, $member, null, $oauth);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
@@ -947,9 +947,9 @@ class Member extends \Phpcmf\Model
      * @param   用户组
      * @param   注册账户信息
      * @param   自定义字段信息
-     * @param   是否注册到服务器
+     * @param   快捷登录注册
      */
-    public function register($groupid, $member, $data = [], $sync = 1) {
+    public function register($groupid, $member, $data = [], $oauth = []) {
         
         $member['email'] && $member['email'] = strtolower($member['email']);
 
@@ -969,7 +969,7 @@ class Member extends \Phpcmf\Model
             }
         }
         // 前端验证密码格式
-        if (!IS_ADMIN) {
+        if (!IS_ADMIN && !$oauth) {
             $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
             if (!$rt['code']) {
                 return $rt;
