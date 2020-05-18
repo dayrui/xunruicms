@@ -1065,7 +1065,7 @@ var Layout = function () {
 
     // Hanles sidebar toggler
     var handleSidebarToggler = function () {
-        if (is_min) {
+        if ( typeof is_min != "undefined" && is_min == 1) {
             var body = $('body');
             if ($.cookie && $.cookie('sidebar_closed') === '1' && App.getViewPort().width >= resBreakpointMd) {
                 $('body').addClass('page-sidebar-closed');
