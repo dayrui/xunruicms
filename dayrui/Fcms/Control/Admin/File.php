@@ -307,7 +307,7 @@ class File extends \Phpcmf\Common
                             break;
 
                         default:
-                            $file_ext = 'html';
+                            $file_ext = 'text/html';
                             $file_js  = 'htmlmixed/htmlmixed.js';
                             break;
                     }

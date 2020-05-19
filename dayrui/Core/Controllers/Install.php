@@ -149,7 +149,7 @@ class Install extends \Phpcmf\Common
                             exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库'));
                         }
                     }
-                    
+
                     $data['db_prefix'] = strtolower($data['db_prefix']);
 
                     // 存储缓存文件中
