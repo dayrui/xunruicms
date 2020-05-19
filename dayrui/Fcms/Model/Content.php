@@ -132,7 +132,7 @@ class Content extends \Phpcmf\Model {
 
             } else {
 				// 新增审核
-                $role = $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], \Phpcmf\Service::C()->member);
+                $role = $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member);
                 $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
