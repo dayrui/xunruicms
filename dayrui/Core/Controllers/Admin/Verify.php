@@ -97,9 +97,13 @@ class Verify extends \Phpcmf\Table
     public function show_index() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        if (!$id) {
+            $this->_json(0, dr_lang('审核流程id不存在'));
+        }
+
         $data = \Phpcmf\Service::M()->db->table('admin_verify')->where('id', $id)->get()->getRowArray();
         if (!$data) {
-            $this->_josn(0, dr_lang('数据#%s不存在', $id));
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
         }
 
         \Phpcmf\Service::V()->assign([
