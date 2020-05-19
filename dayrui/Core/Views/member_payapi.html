@@ -6,6 +6,7 @@
     {$form}
     <div class="myfbody field-sort-items">
     {loop $data $dir $t}
+    {if is_file(ROOTPATH.'api/pay/'.$dir.'/setting.php')}
     <div class="portlet bordered light">
         <div class="portlet-title">
             <div class="caption">
@@ -29,6 +30,7 @@
             </div>
         </div>
     </div>
+    {/if}
     {/loop}
         </div>
     <div class="portlet-body form myfooter">

@@ -28,7 +28,7 @@ class Home extends \Phpcmf\Common
             ob_start();
             \Phpcmf\Service::V()->init("pc");
             \Phpcmf\Service::V()->assign([
-                'fix_html_now_url' => defined('SC_HTML_FILE') ? SITE_URL : '', // 修复静态下的当前url变量
+                'fix_html_now_url' => SITE_URL, // 修复静态下的当前url变量
             ]);
             $this->_index();
             $pc_html = ob_get_clean();
@@ -39,14 +39,14 @@ class Home extends \Phpcmf\Common
                 ob_start();
                 \Phpcmf\Service::V()->init("mobile");
                 \Phpcmf\Service::V()->assign([
-                    'fix_html_now_url' => defined('SC_HTML_FILE') ? SITE_MURL : '', // 修复静态下的当前url变量
+                    'fix_html_now_url' => SITE_MURL, // 修复静态下的当前url变量
                 ]);
                 $this->_index();
                 $mb_html = ob_get_clean();
                 file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $mb_html);
             }
 
-            if (\Phpcmf\Service::V()->_is_mobile && $mb_html) {
+            if (defined('IS_MOBILE') && IS_MOBILE && $mb_html) {
                 // 表示 移动端访问
                 echo $mb_html;
             } else {
