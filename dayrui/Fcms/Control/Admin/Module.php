@@ -1108,9 +1108,9 @@ class Module extends \Phpcmf\Table
                         } else {
                             if ($_POST['verify']['status']) {
                                 // 通过
-                                $step = $this->_get_verify($data[1]['uid'], $data[1]['catid']);
+                                $step = $this->_get_verify($old['verify']['vid']);
                                 $status = intval($old['status']);
-                                $data[1]['status'] = dr_count($step) <= $status ? 9 : $status + 1;
+                                $data[1]['status'] = dr_count($step) - 1 <= $status ? 9 : $status + 1;
                                 // 再次验证审核级别
                                 if (!\Phpcmf\Service::M('auth')->get_admin_verify_status_edit($old['verify']['vid'], $data[1]['status'])) {
                                     $this->_json(0, dr_lang('当前角色无权限审核此内容'));
