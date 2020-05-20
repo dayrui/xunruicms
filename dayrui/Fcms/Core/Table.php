@@ -400,7 +400,7 @@ class Table extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign($data);
 
-        return [$this->_tpl_filename('post'), $data];
+        return [$this->_tpl_filename('post', $id ? 'edit' : ''), $data];
     }
 
     /**
@@ -600,13 +600,27 @@ class Table extends \Phpcmf\Common
         return [$this->_tpl_filename('list'), $data];
     }
 
-    // 获取模板文件名
-    public function _tpl_filename($name) {
+    // 获取模板文件名 name模板文件；fname为优先的模板
+    public function _tpl_filename($name, $fname = '') {
 
         if (IS_ADMIN) {
-            $my_file = is_file(APPPATH.'Views/'.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+            // 存在优先模板
+            if ($fname) {
+                $my_file = is_file(APPPATH.'Views/'.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
+            }
+            // 优先模板不存在的情况下
+            if (!is_file($my_file)) {
+                $my_file = is_file(APPPATH.'Views/'.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+            }
         } else {
-            $my_file = is_file(dr_tpl_path().$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+            // 存在优先模板
+            if ($fname) {
+                $my_file = is_file(dr_tpl_path().$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
+            }
+            // 优先模板不存在的情况下
+            if (!is_file($my_file)) {
+                $my_file = is_file(dr_tpl_path().$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+            }
         }
 
         return $my_file;
