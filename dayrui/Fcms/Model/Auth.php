@@ -302,7 +302,7 @@ class Auth extends \Phpcmf\Model {
             'name' => $data['name'],
             'system' => '',
             'module' => '',
-            'application' => dr_string2array($data['application']),
+            'application' => dr_array2string($data['application']),
         ]);
     }
 
