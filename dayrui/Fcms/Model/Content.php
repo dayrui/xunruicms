@@ -133,6 +133,9 @@ class Content extends \Phpcmf\Model {
             } else {
 				// 新增审核
                 $role = $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member);
+                var_dump($data[1]);
+                var_dump($role);
+                exit;
                 $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
@@ -1670,7 +1673,7 @@ class Content extends \Phpcmf\Model {
                     break; // 找到最近的审核机制就ok了
                 }
             }
-
+            $status = max(1, $status);
             if ($v && isset($v['value']['role'][$status]) && $v['value']['role'][$status]) {
                 return ['to_uid' => 0, 'to_rid' => $v['value']['role'][$status], 'verify_id' => $v['id']];
             }
