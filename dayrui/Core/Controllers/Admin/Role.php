@@ -120,10 +120,11 @@ class Role extends \Phpcmf\Common
         if ($module) {
             foreach ($module as $t) {
                 $mdir = $t['dirname'];
-                if (!is_file(APPSPATH.ucfirst($mdir).'/Config/App.php')) {
+                $path = dr_get_app_dir($mdir);
+                if (!is_file($path.'Config/App.php')) {
                     continue;
                 }
-                $config = require APPSPATH.ucfirst($mdir).'/Config/App.php';
+                $config = require $path.'Config/App.php';
                 $module_auth[$mdir] = [
                     'name' => dr_lang($config['name']),
                     'auth' => [
