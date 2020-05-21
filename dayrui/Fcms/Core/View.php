@@ -1871,28 +1871,21 @@ class View {
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
-                $index = \Phpcmf\Service::L('cache')->get_data('search-'.$dirname.'-'.$param['id']);
+                $index = \Phpcmf\Service::L('cache')->get_data('module-search-'.$dirname.'-'.$param['id']);
                 if (!$index) {
-                    $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
+                    $index = $this->_query('SELECT `params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
                     if ($index) {
-                        $index['params'] = dr_string2array($index['params']);
-                        $index['sql'] = $index['sql'];
+                        $p = dr_string2array($index['params']);
+                        $index['sql'] = $p['sql'];
                     };
                 }
 
 				// 存在限制总数时
-				if ($module['setting']['search']['total']) {
-					$where[] = [
-						'adj' => 'SQL',
-						'value' => '(`'.$table.'`.`id` IN('.($index ? $index['contentid'] : 0).'))'
-					];	
-                } else {
-					$where[] = [
-						'adj' => 'SQL',
-						'value' => '(`'.$table.'`.`id` IN('.($index['sql'] ? $index['sql'] : 0).'))'
-					];		
-                }
-               
+                $where[] = [
+                    'adj' => 'SQL',
+                    'value' => '(`'.$table.'`.`id` IN('.($index['sql'] ? $index['sql'] : 0).'))'
+                ];
+
                 unset($param['id']);
 
                 $system['sbpage'] = 1;
@@ -2293,11 +2286,21 @@ class View {
                         break;
 
                     case 'IN':
-                        $string.= $join." {$t['name']} IN (".trim(dr_safe_replace($t['value']), ',').")";
+                        $arr = explode(',', dr_safe_replace($t['value']));
+                        $str = '';
+                        foreach ($arr as $a) {
+                            $str.= ',"'.$a.'"';
+                        }
+                        $string.= $join." {$t['name']} IN (".trim($str, ',').")";
                         break;
 
                     case 'NOTIN':
-                        $string.= $join." {$t['name']} NOT IN (".trim(dr_safe_replace($t['value']), ',').")";
+                        $arr = explode(',', dr_safe_replace($t['value']));
+                        $str = '';
+                        foreach ($arr as $a) {
+                            $str.= ',"'.$a.'"';
+                        }
+                        $string.= $join." {$t['name']} NOT IN (".trim($str, ',').")";
                         break;
 
                     case 'NOT':

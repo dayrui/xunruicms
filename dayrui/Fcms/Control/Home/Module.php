@@ -252,23 +252,17 @@ class Module extends \Phpcmf\Common
         );
 
         // 获取搜索总量
-        if (!$this->module['setting']['search']['total']) {
-            $sototal = intval($data['contentid']);
-        } else {
-            $sototal = $data['contentid'] ? substr_count($data['contentid'], ',') + 1 : 0;
-        }
+        $sototal = intval($data['contentid']);
 
         // 存储缓存以便标签中使用
         if ($data['id'] && $sototal) {
-            \Phpcmf\Service::L('cache')->set_data('search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
+            \Phpcmf\Service::L('cache')->set_data('module-search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
         }
 
         $list = [];
         if (IS_API_HTTP && $data['id']) {
             // 移动端请求时
-            $pagesize = intval(\Phpcmf\Service::L('input')->request('pagesize'));
-            $tag = 'search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.$pagesize.' urlrule=test';
-            $rt = \Phpcmf\Service::V()->list_tag($tag);
+            $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize')).' urlrule=test');
             $list = $rt['return'];
         }
 
@@ -300,7 +294,6 @@ class Module extends \Phpcmf\Common
             'sototal' => $sototal,
             'searchid' => $data['id'],
             'search_id' => $data['id'],
-            'content_id' => $data['contentid'],
             'search_sql' => $data['sql'],
             'is_search_page' => 1,
         ]);
