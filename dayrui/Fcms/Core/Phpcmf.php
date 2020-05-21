@@ -224,10 +224,8 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_EXPERIENCE', dr_lang($this->member_cache['pay']['experience'] ? $this->member_cache['pay']['experience'] : '经验'));
 
         // 验证api提交认证
-        if (\Phpcmf\Service::L('input')->request('appid')
-            && \Phpcmf\Service::L('input')->request('appsecret')) {
+        if (dr_is_app('httpapi') && \Phpcmf\Service::L('input')->request('appid')) {
             define('IS_API_HTTP', 1);
-            $this->_api_auth();
             \Phpcmf\Service::M('http', 'httpapi')->check_auth();
         } else {
             define('IS_API_HTTP', 0);
@@ -974,27 +972,6 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
         return false;
-    }
-
-    /**
-     * Api认证匹配
-     */
-    protected function _api_auth() {
-
-        $appid = (int)\Phpcmf\Service::L('input')->request('appid');
-        $appsecret = (string)\Phpcmf\Service::L('input')->request('appsecret');
-
-        define('IS_API_HTTP_CODE', md5($appid.$appsecret));
-
-        // 格式验证
-        if (!dr_is_app('httpapi')) {
-            $this->_json(0, '没有安装[API接口]应用');
-        } elseif (!$appid || !$appsecret) {
-            $this->_json(0, 'AppID和AppSecret值为空');
-        } elseif (strtoupper($this->get_cache('api_auth', $appid)) != strtoupper($appsecret)) {
-            $this->_json(0, 'AppID和AppSecret值不匹配');
-        }
-
     }
 
     /**
