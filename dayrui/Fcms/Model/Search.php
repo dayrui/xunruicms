@@ -171,63 +171,22 @@ class Search extends \Phpcmf\Model {
             $where = $this->mysearch($module, $where, $get);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
 
-            // 最大数据量
-            $limit = (int)$module['setting']['search']['total'] ? ' LIMIT '.(int)$module['setting']['search']['total'] : '';
             // 组合sql查询结果
-            $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY id ".$limit;
+            $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY NULL ";
 
-            if ($limit) {
-                // 重新生成缓存文件
-                $result = $this->db->query($sql)->getResultArray();
-                if ($result) {
-                    $cid = [];
-                    // 删除旧数据
-                    $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
-                    // 入库索引表
-                    foreach ($result as $t) {
-                        $cid[] = $t['id'];
-                    }
-                    // 缓存入库
-                    $data = [
-                        'id' => $id,
-                        'catid' => intval($catid),
-                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                        'contentid' => @implode(',', $cid),
-                        'inputtime' => SYS_TIME
-                    ];
-                    $this->db->table($this->mytable.'_search')->replace($data);
-                } else {
-                    $data = [
-                        'id' => $id,
-                        'catid' => intval($catid),
-                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                        'contentid' => '',
-                    ];
-                }
-            } else {
-                // 不限搜索数量
-                $ct = $this->db->query("SELECT count(*) as t FROM `".$table."` {$where} ORDER BY id ")->getRowArray();
-                if ($ct['t']) {
-                    $data = [
-                        'id' => $id,
-                        'catid' => intval($catid),
-                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                        'contentid' => intval($ct['t']),
-                        'inputtime' => SYS_TIME
-                    ];
-                    $this->db->table($this->mytable.'_search')->replace($data);
-                } else {
-                    $data = [
-                        'id' => $id,
-                        'catid' => intval($catid),
-                        'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
-                        'keyword' => $param['keyword'] ? $param['keyword'] : '',
-                        'contentid' => '',
-                    ];
-                }
+            // 统计搜索数量
+            $ct = $this->db->query("SELECT count(*) as t FROM `".$table."` {$where} ORDER BY NULL ")->getRowArray();
+            $data = [
+                'id' => $id,
+                'catid' => intval($catid),
+                'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                'keyword' => $param['keyword'] ? $param['keyword'] : '',
+                'contentid' => intval($ct['t']),
+                'inputtime' => SYS_TIME
+            ];
+            if ($ct['t']) {
+                // 存储数据
+                $this->db->table($this->mytable.'_search')->replace($data);
             }
         }
 
