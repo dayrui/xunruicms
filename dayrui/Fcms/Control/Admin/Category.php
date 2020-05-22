@@ -278,7 +278,7 @@ class Category extends \Phpcmf\Table
 
         if (IS_AJAX_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             $list = explode(PHP_EOL, $post['list']);
             if (!$list) {
                 $this->_json(0, dr_lang('内容填写不完整'));
@@ -897,7 +897,7 @@ class Category extends \Phpcmf\Table
                             return dr_return_data(0, dr_lang('外部地址类型必须填写地址'));
                         }
                         // 单页模板识别
-                        !$save['tid'] && $save['setting']['template']['list'] == 'list.html' && $save['setting']['template']['list'] = 'page.html';
+                        //!$save['tid'] && $save['setting']['template']['list'] == 'list.html' && $save['setting']['template']['list'] = 'page.html';
                     }
                     // 判断存在mid
                     /*
