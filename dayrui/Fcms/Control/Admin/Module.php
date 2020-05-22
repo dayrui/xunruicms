@@ -65,7 +65,6 @@ class Module extends \Phpcmf\Table
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'field' => $this->init['field'],
-            'weibo' => $this->get_cache('site', SITE_ID, 'weibo', 'module', MOD_DIR),
             'module' => $this->module,
             'post_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])]),
             'is_post_user' => $this->is_post_user,

@@ -537,6 +537,11 @@ class Table extends \Phpcmf\Common
         $p && $param = $p + $param;
         $sql = \Phpcmf\Service::M()->get_sql_query();
 
+        // 默认以显示字段为搜索字段
+        if (!isset($param['field']) && $this->init['show_field']) {
+            $param['field'] = $this->init['show_field'];
+        }
+
         // 分页URL格式
         $this->url_params && $param = dr_array22array($param, $this->url_params);
         $uri = \Phpcmf\Service::L('Router')->uri();
