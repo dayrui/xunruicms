@@ -6,26 +6,23 @@
         {if $list.unused}
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
-                <li class=" {if $page==0}active{/if}">
-                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> {dr_lang('未使用的附件')} </a>
+                <li class=" {if $pp==0}active{/if}">
+                    <a href="{$tab_url}&pp=0"> {dr_lang('未使用的附件')} </a>
                 </li>
-                <li class="dev {if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> {dr_lang('已使用的附件')} </a>
+                <li class="dev {if $pp==1}active{/if}">
+                    <a href="{$tab_url}&pp=1"> {dr_lang('已使用的附件')} </a>
                 </li>
             </ul>
         </div>
         {else}
-        <?php $page=1;?>
+        <?php $pp=1;?>
         {/if}
         <div class="portlet-body">
-            <div class="tab-content">
 
-                {if $list.unused}
-                <div class="tab-pane  {if $page==0}active{/if}" id="tab_0">
-
+                {if $pp==0}
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
-                            {loop $list.unused $i $t}
+                            {table table=attachment_data where=$list.unused IN_fileext=$fileext page=1 pagesize=$psize urlrule=$urlrule}
                             {php $url = dr_get_file_url($t, 50, 50);}
                             <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -37,13 +34,10 @@
                                 <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                                 <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
                             </div>
-                            {/loop}
+                            {/table}
                         </div>
                     </div>
-                </div>
-                {/if}
-                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
-
+                {elseif $pp==1}
                     <div class="row  margin-bottom-20 template-download">
                             <div class="col-md-12 text-center margin-bottom-20">
                                 <label><select  id="dr_field_name"class="form-control">
@@ -60,7 +54,7 @@
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
 
                         <div class="files">
-                            {loop $list.used $i $t}
+                            {table table=attachment_unused where=$list.used IN_fileext=$fileext page=1 pagesize=$psize urlrule=$urlrule}
                             {php $url = dr_get_file_url($t, 50, 50);}
                             <div class="template-download yl_files_row files_row">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -71,23 +65,29 @@
                                 <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
                                 <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                             </div>
-                            {/loop}
+                            {/table}
                         </div>
-						
                     </div>
+                {/if}
+
+            <div class="row  margin-top-20 ">
+                <div class="col-md-12 text-center margin-bottom-20">
+
+                    {$pages}
                 </div>
             </div>
+
         </div>
     </div>
 
 
     <input type="hidden" name="is_ajax" value="1">
-    <input type="hidden" name="is_page" id="dr_page" value="{$page}">
+    <input type="hidden" name="is_page" id="dr_page" value="{$pp}">
 </form>
 
 <script>
     function dr_fsearch() {
-        var url = '{$search_url}&page=1&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
+        var url = '{$search_url}&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
         window.location.href = url;
     }
 </script>

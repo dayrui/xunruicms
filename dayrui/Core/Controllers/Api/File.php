@@ -224,12 +224,9 @@ class File extends \Phpcmf\Common
             $this->_json(1, dr_lang('已选择%s个文件', $data['count']), $data);
         }
 
-        $num = 30;
-        $exts = dr_safe_replace($p['exts']);
-
         $list = [
-            'used' => [],
-            'unused' => $exts ? \Phpcmf\Service::M()->table('attachment_unused')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll($num) : \Phpcmf\Service::M()->table('attachment_unused')->order_by('id desc')->getAll($num),
+            'used' => '',
+            'unused' => urlencode('uid='.$this->uid),
         ];
 
         $sfield = [
@@ -241,21 +238,17 @@ class File extends \Phpcmf\Common
         $name = \Phpcmf\Service::L('input')->get('name');
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         if ($name && isset($sfield[$name]) && $value) {
-            $db = \Phpcmf\Service::M()->table('attachment_data');
-            $exts && $db->where_in('fileext', explode(',', $exts));
-            $where = !$this->member['is_admin'] ? 'uid = '.$this->uid : '1';
+            $where = [];
+            !$this->member['is_admin'] && $where[] = 'uid = '.$this->uid;
             if ($name == 'id') {
-                $where.= ' AND id='.intval($value);
+                $where[] = 'id='.intval($value);
             } else {
-                $where.= ' AND '.$name.' LIKE "%'.$value.'%"';
+                $where[] = $name.' LIKE "%'.$value.'%"';
             }
-            $list['used'] = $db->where($where)->order_by('id desc')->getAll($num);
+            $list['used'] = urlencode(implode(' AND ', $where));
         } else {
-            $list['used'] = $exts ? \Phpcmf\Service::M()->table('attachment_data')->where('uid', $this->uid)->where_in('fileext', explode(',', $exts))->order_by('id desc')->getAll($num) : \Phpcmf\Service::M()->table('attachment_data')->order_by('id desc')->getAll($num);
+            $list['used'] = urlencode('uid='.$this->uid);
         }
-
-        $search_url = '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&p='.\Phpcmf\Service::L('input')->get('p')
-            .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct');
 
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
@@ -266,8 +259,16 @@ class File extends \Phpcmf\Common
                 'name' => $name,
                 'value' => $value,
             ],
+            'pp' => intval($_GET['pp']),
             'page' => intval($_GET['page']),
-            'search_url' => $search_url,
+            'psize' => 20,
+            'fileext' => dr_safe_replace($p['exts']),
+            'search_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&pp='.\Phpcmf\Service::L('input')->get('pp').'&p='.\Phpcmf\Service::L('input')->get('p')
+                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
+            'urlrule' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&pp='.\Phpcmf\Service::L('input')->get('pp').'&page=[page]&p='.\Phpcmf\Service::L('input')->get('p')
+                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
+            'tab_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&p='.\Phpcmf\Service::L('input')->get('p')
+                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
         ]);
         \Phpcmf\Service::V()->display('api_upload_list.html');exit;
     }
