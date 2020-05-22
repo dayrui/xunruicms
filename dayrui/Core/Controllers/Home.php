@@ -21,8 +21,8 @@ class Home extends \Phpcmf\Common
 	// 首页显示
 	public function index() {
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
-        // 系统开启静态首页
-        if (!IS_CLIENT && $this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
+        // 系统开启静态首页 (pc生成)
+        if (!IS_CLIENT && !$this->_is_mobile() && $this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
 
             // 生成电脑端界面
             ob_start();
