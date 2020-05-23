@@ -40,6 +40,7 @@
 namespace CodeIgniter\Commands\Database;
 
 use CodeIgniter\CLI\BaseCommand;
+use CodeIgniter\CLI\CLI;
 
 /**
  * Does a rollback followed by a latest to refresh the current state
