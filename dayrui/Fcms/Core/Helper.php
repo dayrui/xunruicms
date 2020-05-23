@@ -1416,15 +1416,15 @@ function dr_level_next_value($array, $id) {
  */
 function dr_html_auth($is = 0) {
 
-    $file = WRITEPATH.'authcode/'.md5($_SERVER['HTTP_USER_AGENT']).'.auth';
+    $name = md5(\Phpcmf\Service::L('input')->ip_address());
     if ($is) {
         // 存储值
-        return file_put_contents($file, SYS_TIME);
+        Phpcmf\Service::L('cache')->set_auth_data($name, 1);
     } else {
         // 读取判断
-        $time = (int)file_get_contents($file);
-        if (SYS_TIME - $time <= 10000) {
-            return 1; // 3小时有效
+        $rt = \Phpcmf\Service::L('cache')->get_auth_data($name);
+        if ($rt) {
+            return 1; // 有效
         } else {
             return 0;
         }
