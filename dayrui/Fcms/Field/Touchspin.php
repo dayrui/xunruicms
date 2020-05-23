@@ -167,8 +167,8 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 		!$field['setting']['option']['min'] && $field['setting']['option']['min'] = 0;
 
 		$str.= '<div '.$style.'><input class="form-control '.$field['setting']['option']['css'].'" type="text" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$required.' '.$attr.' /></div>';
-		$str.= '
-<script type="text/javascript">
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('<script type="text/javascript">
     $(function(){
         $("#dr_'.$field['fieldname'].'").TouchSpin({
             buttondown_class: "btn '.$down.'",
@@ -179,8 +179,7 @@ class Touchspin extends \Phpcmf\Library\A_Field {
             max: '.$field['setting']['option']['max'].'
         });
     });
-</script>
-		';
+</script>', 0);
 
 
 		return $this->input_format($field['fieldname'], $text, $str.$tips);

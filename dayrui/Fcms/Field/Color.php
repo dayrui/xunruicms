@@ -106,7 +106,8 @@ class Color extends \Phpcmf\Library\A_Field {
 
 		$str.= '
 		<input type="text" class="form-control color '.$field['setting']['option']['css'].'" data-control="brightness" name="data['.$name.']" id="dr_'.$name.'" '.$style.' value="'.$value.'" >';
-		$str.= '
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('
 		<script type="text/javascript">
 		$(function(){
 			$("#dr_'.$name.'").minicolors({
@@ -123,7 +124,7 @@ class Color extends \Phpcmf\Library\A_Field {
                 theme: "bootstrap"
             });
 		});
-		</script>';
+		</script>', 0);
 
 		return $this->input_format($name, $text, $str.$tips);
 	}

@@ -27,8 +27,6 @@ class Files extends \Phpcmf\Library\A_Field {
      */
     public function option($option) {
 
-
-
         return ['
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
@@ -328,10 +326,9 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
-        $str.= '
-		
-<script type="text/javascript">
 
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('<script type="text/javascript">
 $(function() {
     $("#fileupload_'.$name.'_files").sortable();
     dr_slimScroll_init(".scroller_'.$name.'_files", 300);
@@ -390,7 +387,6 @@ $(function() {
 						return false;
 					}
 				});
-				
 				return false;
 			},
             success: function(layero, index){
@@ -648,10 +644,7 @@ function dr_file_edit_'.$name.'(e) {
 			content: url+\'&is_ajax=1\'
 		});
 }
-
-</script>
-		
-		';
+</script>', 0);
 
 
         // 输出最终表单显示

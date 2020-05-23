@@ -263,10 +263,8 @@ class File extends \Phpcmf\Library\A_Field {
 
 		$ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
-		$str.= '
-		
-<script type="text/javascript">
-
+        $js = \Phpcmf\Service::L('js_packer');
+		$str.= $js->pack('<script type="text/javascript">
 $(function() {
 	// 未使用的附件
 	$(\'#fileupload_'.$name.' .fileinput-unused\' ).click(function(){
@@ -334,7 +332,6 @@ $(function() {
 			content: url+\'&is_ajax=1\'
 		});
 	});
-	
      // 输入地址
 	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
 		var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1";
@@ -441,10 +438,8 @@ $(function() {
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},
 	});
-    
 	fileupload_'.$name.'_edit();
 });
-
 // 修改组件
 function fileupload_'.$name.'_edit() {
 	$(\'#fileupload_'.$name.'_files .file_edit\').fileupload({
@@ -483,15 +478,11 @@ function fileupload_'.$name.'_edit() {
 		},
 	});
 }
-
 function dr_file_remove_'.$name.'() {
   $(\'#fileupload_'.$name.'_files\').html("");
   $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').hide();
 }
-
-</script>
-		
-		';
+</script>', 0);
 
 		return $this->input_format($name, $text, $str.$tips);
 	}

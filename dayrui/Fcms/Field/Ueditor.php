@@ -444,8 +444,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 break;
         }
 
-        $str.= "
-        <script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>
+        $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack("
         <script type=\"text/javascript\">
             var editorOption = {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
@@ -469,7 +470,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             var editor = new baidu.editor.ui.Editor(editorOption);
             editor.render(\"dr_$name\");
         </script>
-        ";
+        ", 0);
 
 
         if ($field['setting']['option']['show_bottom_boot']) {

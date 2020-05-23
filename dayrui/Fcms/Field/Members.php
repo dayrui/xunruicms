@@ -120,12 +120,12 @@ class Members extends \Phpcmf\Library\A_Field {
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_rmember_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联用户').'</button>';
         $str.= '</p>';
         $str.= $tips;
-        $str.= '
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('
 		<script type="text/javascript">
         $("#rmember_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_rmember_'.$name.'() {
-		
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',
@@ -184,7 +184,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		
 			
 		}
-		</script>';
+		</script>', 0);
 		
 		return $this->input_format($name, $text, $str);
 	}

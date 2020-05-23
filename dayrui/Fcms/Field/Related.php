@@ -141,7 +141,8 @@ class Related extends \Phpcmf\Library\A_Field {
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_related_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联内容').'</button>';
         $str.= '</p>';
         $str.= $tips;
-        $str.= '
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('
 		<script type="text/javascript">
 		
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
@@ -206,7 +207,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		
 			
 		}
-		</script>';
+		</script>', 0);
 		
 		return $this->input_format($name, $text, $str);
 	}

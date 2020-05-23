@@ -213,7 +213,8 @@ class Property extends \Phpcmf\Library\A_Field {
 		$str.= '<p>';
 		$str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
 		$str.= '</p>';
-		$str.= '<script type="text/javascript">
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('<script type="text/javascript">
 		$("#property_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_property_'.$name.'() {
@@ -225,7 +226,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			$("#property_'.$name.'-sort-items").append(html);
             dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		}
-		</script><span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
+		</script>', 0).'<span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
 		return $this->input_format($field['fieldname'], $text, $str);
 	}
 

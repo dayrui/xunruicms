@@ -151,10 +151,8 @@ class Time extends \Phpcmf\Library\A_Field {
 		$str.= $field['setting']['option']['is_left'] ? $tubiao.$shuru : $shuru.$tubiao;
 		 
 		$str.= '</div>';
-
-
- 
-            $str.= '
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('
 			<script>
 			$(function(){
 				$(".field_time_'.$name.'").timepicker({
@@ -173,7 +171,7 @@ class Time extends \Phpcmf\Library\A_Field {
 				});
 			});
 			</script>
-			';
+			', 0);
         $str.= $tips;
 
         return $this->input_format($name, $text, '<div class="form-date input-group">'.$str.'</div>');

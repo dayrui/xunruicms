@@ -96,7 +96,7 @@
             function dr_select_site(id) {
                 var r=confirm('{dr_lang("你确定要切换到选中站点吗？")}')
                 if (r==true) {
-                    window.location.href='{dr_url("sites/api/login")}&id='+id
+                    window.location.href='{dr_url("sites/api/login_select")}&id='+id
                 }
             }
 

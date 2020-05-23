@@ -238,7 +238,8 @@ class Image extends \Phpcmf\Library\A_Field {
             define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
         }
 
-        $str.= '
+        $js = \Phpcmf\Service::L('js_packer');
+        $str.= $js->pack('
 		
 <script type="text/javascript">
 
@@ -257,13 +258,11 @@ $(function() {
         dictFileTooBig:"文件过大上传文件最大支持",
         url: "'.$url.'",
         init: function() {
-           
            this.on("addedfile", function(file) { 
             //上传文件时触发的事件
                 var nums = $(".dr_dropzone_'.$name.'").length;
                 this.options.maxFiles = '.$count.' - nums;
             });
-            
             //res为服务器响应回来的数据
             this.on("success", function(file, res) {
  
@@ -290,16 +289,12 @@ $(function() {
                                 if (_i7.done) break;
                                 _ref6 = _i7.value;
                             }
-
                             var node = _ref6;
                             node.textContent = rt.msg;
                         }
                 }
                  
             });
-            
-            
- 
         }
      });
     $("#my-dropzone-'.$name.'").append("'.addslashes($tpl).'");
@@ -309,7 +304,7 @@ function dr_delete_image_'.$name.'(e) {
 }
 </script>
 		
-		';
+		', 0);
 
 
         // 输出最终表单显示

@@ -147,7 +147,6 @@ class Catids extends \Phpcmf\Library\A_Field {
 			html = html.replace(/\{id\}/g, id);
 			$("#catids-'.$name.'-sort-items").append(html);
 		}
-		
 		</script><span class="help-block">'.$tips.'</span>';
 		return $this->input_format($name, $text, $str);
 	}
