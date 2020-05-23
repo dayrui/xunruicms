@@ -290,7 +290,6 @@ class Module extends \Phpcmf\Common
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['setting']['list_field']) {
-                $order = [];
                 foreach ($post['setting']['list_field'] as $t) {
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {

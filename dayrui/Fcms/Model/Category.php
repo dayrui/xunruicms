@@ -184,10 +184,11 @@ class Category extends \Phpcmf\Model
             && $mid[] = $category[$id]['mid'];
         }
 
+        /* 当栏目下面存在多个模块时
         $mid && dr_count(array_unique($mid)) > 1 && $this->table($this->tablename)->update((int)$catid, array(
             'mid' => '',
             'tid' => 0
-        ));
+        ));*/
     }
 
     /**

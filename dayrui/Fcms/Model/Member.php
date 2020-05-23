@@ -968,23 +968,28 @@ class Member extends \Phpcmf\Model
                 return $rt;
             }
         }
-        // 前端验证密码格式
-        if (!IS_ADMIN && !$oauth) {
-            $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
-            if (!$rt['code']) {
-                return $rt;
-            }
-        }
-        if (in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
-            && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
-            return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-        } elseif (in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
-            && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
-            return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-        }
 
         // 默认注册组
         !$groupid && $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
+
+        if (\Phpcmf\Service::C()->member_cache['oauth']['login'] && $oauth) {
+            // 授权登录直接模式
+        } else {
+            if (in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
+                && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
+                return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
+            } elseif (in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
+                && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
+                return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+            }
+            // 前端验证密码格式
+            if (!IS_ADMIN) {
+                $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
+                if (!$rt['code']) {
+                    return $rt;
+                }
+            }
+        }
 
         // 验证唯一性
         if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {

@@ -1562,10 +1562,10 @@ class Image
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
+                CI_DEBUG && log_message('error', '图片id['.$img.']不存在，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
-            } elseif ($attach['fileext'] == 'gif') {
-                return $attach['url'];
-            } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg'])) {
+            } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg'])) {
+                CI_DEBUG && log_message('error', '图片id['.$img.']扩展名不符合条件，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         } else {
@@ -1595,10 +1595,12 @@ class Image
             }
             $data = dr_catcher_data($attach['url']);
             if (!$data) {
+                CI_DEBUG && log_message('error', '图片id['.$img.']无法获取远程附件数据，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
             $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
             if (!file_put_contents($file, $data)) {
+                CI_DEBUG && log_message('error', '图片id['.$img.']无法写入附件缓存目录，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         }
