@@ -21,41 +21,7 @@ class Home extends \Phpcmf\Common
 	// 首页显示
 	public function index() {
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
-        // 系统开启静态首页 (pc生成)
-        if (!IS_CLIENT && !$this->_is_mobile() && $this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !$this->member_cache['auth_site'][SITE_ID]['home']) {
-
-            // 生成电脑端界面
-            ob_start();
-            \Phpcmf\Service::V()->init("pc");
-            \Phpcmf\Service::V()->assign([
-                'fix_html_now_url' => SITE_URL, // 修复静态下的当前url变量
-            ]);
-            $this->_index();
-            $pc_html = ob_get_clean();
-            file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $pc_html);
-
-            // 生成移动端
-            if (SITE_IS_MOBILE_HTML) {
-                ob_start();
-                \Phpcmf\Service::V()->init("mobile");
-                \Phpcmf\Service::V()->assign([
-                    'fix_html_now_url' => SITE_MURL, // 修复静态下的当前url变量
-                ]);
-                $this->_index();
-                $mb_html = ob_get_clean();
-                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $mb_html);
-            }
-
-            if (defined('IS_MOBILE') && IS_MOBILE && $mb_html) {
-                // 表示 移动端访问
-                echo $mb_html;
-            } else {
-                // 表示 电脑访问
-                echo $pc_html;
-            }
-        } else {
-            $this->_index();
-        }
+        $this->_index();
 	}
 
 	/**
