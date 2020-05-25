@@ -220,9 +220,9 @@ class Router
                     $mod = \Phpcmf\Service::C()->get_cache('module-' . SITE_ID . '-' . $uri['s']);
                     if ($mod['domain']) {
                         unset($uri['s']);
-                        $self = (\Phpcmf\Service::IS_PC() ? $mod['url'] : dr_mobile_url($mod['url'])) . 'index.php';
+                        $self = (!\Phpcmf\Service::V()->_is_mobile ? $mod['url'] : dr_mobile_url($mod['url'])) . 'index.php';
                     } else {
-                        $self = (\Phpcmf\Service::IS_PC() ? SITE_URL : SITE_MURL) . 'index.php';
+                        $self = (!\Phpcmf\Service::V()->_is_mobile ? SITE_URL : SITE_MURL) . 'index.php';
                     }
                 }
                 $uri['c'] = $url[1];

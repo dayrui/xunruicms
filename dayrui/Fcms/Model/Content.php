@@ -415,12 +415,6 @@ class Content extends \Phpcmf\Model {
         !$time && $time = SYS_TIME;
         $save[1]['updatetime'] = $save[1]['inputtime'] = $time;
 
-        $nid = $this->index(0, $save);
-        if (!$nid) {
-            return dr_return_data(0, dr_lang('内容索引id生成失败'));
-        }
-        $data[0]['id'] = $data[1]['id'] = $nid;
-
         $rt = $this->save(0, $save);
         if ($rt['code']) {
             // 发布成功
@@ -605,7 +599,6 @@ class Content extends \Phpcmf\Model {
 
         $post = $data[0] ? array_merge($data[0], $data[1]) : $data[1];
         $post['flag'] = \Phpcmf\Service::L('input')->post('flag');
-        $post['sync_weibo'] = \Phpcmf\Service::L('input')->post('sync_weibo');
 
         $save = [
             'uid' => $this->uid,

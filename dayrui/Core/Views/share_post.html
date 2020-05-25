@@ -87,7 +87,7 @@
                     data: $("#myform").serialize(),
                     success: function(json) {
                         layer.close(loading);
-                        if (json.code == 1) {
+                        if (json.code > 0) {
                             dr_tips(1, json.msg);
                             setTimeout("window.location.href = '{dr_url(APP_DIR.'/time/index')}'", 2000);
                         } else {

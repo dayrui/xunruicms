@@ -1079,7 +1079,8 @@ class Module extends \Phpcmf\Table
             }
             // 保存定时发布数据
             $this->init['table'] = SITE_ID.'_'.APP_DIR.'_time';
-            return $this->content_model->save_post_time($id, $data, $this->post_time);
+            $rt = $this->content_model->save_post_time($id, $data, $this->post_time);
+            $this->_json($rt['code'], $rt['msg']);
         } elseif ($is_draft) {
             // 草稿箱存储
             $data[1]['id'] = $id;

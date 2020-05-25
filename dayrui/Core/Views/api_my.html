@@ -144,14 +144,6 @@
     function remove_menu(_this) {
         $(_this).parent().parent().remove();
     }
-    function set_color(o, file) {
-        $('.btn-outline').removeClass('red');
-        $(o).addClass('red');
-        $(o).removeClass('default');
-        parent.$('#style_color').attr("href", "{THEME_PATH}assets/layouts/layout/css/themes/" + file + ".min.css");
-        $('#style_color').attr("href", "{THEME_PATH}assets/layouts/layout/css/themes/" + file + ".min.css");
-        $("#dr_color").val(file);
-    }
     $("#menu_body").sortable({
         items: "div"
     });
