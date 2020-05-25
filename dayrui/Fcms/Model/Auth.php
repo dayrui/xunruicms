@@ -422,23 +422,23 @@ class Auth extends \Phpcmf\Model {
             return 'status=0'; // 没有审核流程时
         }
 
-        $sids = $vids = [];
+        $where = [];
         foreach ($verify as $t) {
             if ($t['value']['role']) {
                 foreach ($t['value']['role'] as $status => $rid) {
                     if (in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
-                        $sids[] = $status;
-                        $vids[] = $t['id'];
+                        $where[] = '(status='.$status.' and vid='.$t['id'].')';
                     }
                 }
             }
         }
-        if (!$vids || !$sids) {
-            // 此管理员没有管理权限
+
+        // 此管理员没有管理权限
+        if (!$where) {
             return 'status=0';
         }
 
-        return '`status` = 0 or (`vid` in ('.implode(',', $vids).') and `status` in ('.implode(',', $sids).') )';
+        return '`status` = 0 or ('.implode(' OR ', $where).')';
     }
 
     /**
