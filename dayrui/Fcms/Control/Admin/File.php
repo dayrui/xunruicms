@@ -26,6 +26,7 @@ class File extends \Phpcmf\Common
                     '文件管理' => [trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', '/'), 'fa fa-folder'],
                     '修改' => ['hide:'.trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', '/'), 'fa fa-edit'],
                     '创建目录/文件' => ['add:'.trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/add', '/').'{dir='.$this->dir.'}', 'fa fa-plus', '500px', '240px'],
+                    '模板市场' => ['cloud/template', 'fa fa-cloud'],
                 ]
             ),
         ]);

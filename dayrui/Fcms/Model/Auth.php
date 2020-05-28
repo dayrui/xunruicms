@@ -414,12 +414,12 @@ class Auth extends \Phpcmf\Model {
     public function get_admin_verify_status_list() {
 
         if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
-            return 'status>=0'; // 超管用户
+            return '`status`>=0'; // 超管用户
         }
 
         $verify = \Phpcmf\Service::C()->get_cache('verify');
         if (!$verify) {
-            return 'status=0'; // 没有审核流程时
+            return '`status`=0'; // 没有审核流程时
         }
 
         $where = [];
@@ -427,7 +427,7 @@ class Auth extends \Phpcmf\Model {
             if ($t['value']['role']) {
                 foreach ($t['value']['role'] as $status => $rid) {
                     if (in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
-                        $where[] = '(status='.$status.' and vid='.$t['id'].')';
+                        $where[] = '(`status`='.$status.' and `vid`='.$t['id'].')';
                     }
                 }
             }
@@ -438,7 +438,7 @@ class Auth extends \Phpcmf\Model {
             return 'status=0';
         }
 
-        return '`status` = 0 or ('.implode(' OR ', $where).')';
+        return '`status` = 0 OR '.implode(' OR ', $where);
     }
 
     /**
