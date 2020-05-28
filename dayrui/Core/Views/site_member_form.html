@@ -94,23 +94,23 @@
                     <td class="dr_option_xx">
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('访问')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_show" {if !in_array($i, (array)$auth[form][$table]['show'])} checked {/if} name="data[show][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_show" {if !in_array($i, (array)$auth['form'][$table]['show'])} checked {/if} name="data[show][]" value="{$i}" />
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('发布')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_add" {if !in_array($i, (array)$auth[form][$table]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_add" {if !in_array($i, (array)$auth['form'][$table]['add'])} checked {/if} name="data[add][]" value="{$i}"/>
                             <span></span>
                         </label>
                         {if $i>0}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('修改')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_edit" {if !in_array($i, (array)$auth[form][$table]['edit'])} checked {/if} name="data[edit][]" value="{$i}"/>
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_edit" {if !in_array($i, (array)$auth['form'][$table]['edit'])} checked {/if} name="data[edit][]" value="{$i}"/>
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('删除')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_del" {if !in_array($i, (array)$auth[form][$table]['del'])} checked {/if} name="data[del][]" value="{$i}"/>
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_del" {if !in_array($i, (array)$auth['form'][$table]['del'])} checked {/if} name="data[del][]" value="{$i}"/>
                             <span></span>
                         </label>
                         {else}
@@ -127,17 +127,17 @@
                         {/if}
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('验证码')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_code" {if !in_array($i, (array)$auth[form][$table]['code'])} checked {/if} name="data[code][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_code" {if !in_array($i, (array)$auth['form'][$table]['code'])} checked {/if} name="data[code][]" value="{$i}" />
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('发布审核')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_verify" {if !in_array($i, (array)$auth[form][$table]['verify'])} checked {/if} name="data[verify][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_verify" {if !in_array($i, (array)$auth['form'][$table]['verify'])} checked {/if} name="data[verify][]" value="{$i}" />
                             <span></span>
                         </label>
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             {dr_lang('修改审核')}
-                            <input type="checkbox" class="checkboxes dr_form_{$table}_verify2" {if !in_array($i, (array)$auth[form][$table]['verify2'])} checked {/if} name="data[verify2][]" value="{$i}" />
+                            <input type="checkbox" class="checkboxes dr_form_{$table}_verify2" {if !in_array($i, (array)$auth['form'][$table]['verify2'])} checked {/if} name="data[verify2][]" value="{$i}" />
                             <span></span>
                         </label>
                         <br>
