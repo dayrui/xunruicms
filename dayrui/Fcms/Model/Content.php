@@ -1771,12 +1771,12 @@ class Content extends \Phpcmf\Model {
     // 评论成功操作之后
     public function _comment_after($data) { }
 
-    // 格式化处理内容
+    // 格式化处理内容，用于获取内容数据后的格式化
     public function _format_content_data($data) {
         return $data;
     }
 
-    // 格式化显示内容[功能与_format_content_data相同,不推荐]
+    // 格式化显示内容,用于前端内容详情页面的格式化
     public function _call_show($data) {
         return $data;
     }
