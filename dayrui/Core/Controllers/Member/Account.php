@@ -239,13 +239,21 @@ class Account extends \Phpcmf\Common
      */
     public function mobile_code() {
 
+        $value = '';
         // 是否允许更新手机号码
-        ($this->member_cache['config']['edit_mobile'] || !$this->member['phone'])
-        && $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
+        if ($this->member_cache['config']['edit_mobile'] || !$this->member['phone'] || !$this->member['is_mobile']) {
+            $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
+        }
 
         // 是否需要认证手机号码
-        !$value && $this->member['phone'] && $this->member_cache['config']['mobile'] && !$this->member['is_mobile']
-        && $value = $this->member['phone'];
+        if (!$value && $this->member['phone'] && $this->member_cache['config']['mobile'] && !$this->member['is_mobile']) {
+            $value = $this->member['phone'];
+        }
+
+        // 已经认证通过的
+        if (!$value && $this->member['is_mobile']) {
+            $this->_json(0, dr_lang('您已经通过认证了'));
+        }
 
         // 验证操作间隔
         $name = 'member-mobile-code-'.$this->uid;
