@@ -1419,7 +1419,7 @@ function dr_html_auth($is = 0) {
     $name = md5(\Phpcmf\Service::L('input')->ip_address());
     if ($is) {
         // 存储值
-        Phpcmf\Service::L('cache')->set_auth_data($name, 1);
+        return Phpcmf\Service::L('cache')->set_auth_data($name, 1);
     } else {
         // 读取判断
         $rt = \Phpcmf\Service::L('cache')->get_auth_data($name);
