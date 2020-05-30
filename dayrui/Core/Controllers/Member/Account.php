@@ -188,28 +188,33 @@ class Account extends \Phpcmf\Common
 
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            $value = dr_safe_replace($post['phone']);
 			$cache = \Phpcmf\Service::L('cache')->get_data('member-mobile-code-'.$this->uid);
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
-                $this->_json(0, dr_lang('手机验证码不正确') . (IS_DEV ? '(你输入是：'.$value.'，正确是：'.$this->member['randcode'].')' : ''));
+                $this->_json(0, dr_lang('手机验证码不正确') . (IS_DEV ? '(你输入是：'.$post['code'].'，正确是：'.$this->member['randcode'].')' : ''));
             } elseif (!$cache) {
                 $this->_json(0, dr_lang('手机验证码储存过期'));
-            } elseif ($cache != $value) {
-                // caceh存储的是手机号码，验证手机号码是否匹配
-                $this->_json(0, dr_lang('手机号码不匹配') . (IS_DEV ? '(你输入是：'.$value.'，正确是：'.$cache.')' : ''));
             }
 
-            // 更新手机号
+            $value = dr_safe_replace($post['phone']);
             if ($is_update && $value) {
-                $value = dr_safe_replace($post['phone']);
+                // 更新手机号
                 if (!is_numeric($value) || strlen($value) != 11) {
                     $this->_json(0, dr_lang('手机号码格式不正确'));
                 } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'.$this->member['id'])->where('phone', $value)->countAllResults()) {
                     $this->_json(0, dr_lang('手机号码已经注册'));
+                } elseif ($cache != $value) {
+                    // caceh存储的是手机号码，验证手机号码是否匹配
+                    $this->_json(0, dr_lang('手机号码不匹配（%s）', substr($cache, 0, 3).'****'.substr($cache, -4)) . (IS_DEV ? '(你输入是：'.$value.'，正确是：'.$cache.')' : ''));
                 }
                 \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['phone' => $value]);
+            } else {
+                // 不变更手机时
+                if ($cache != $this->member['phone']) {
+                    // caceh存储的是手机号码，验证手机号码是否匹配
+                    $this->_json(0, dr_lang('手机号码不匹配（%s）', substr($this->member['phone'], 0, 3).'****'.substr($this->member['phone'], -4)) . (IS_DEV ? '(正确是：'.$this->member['phone'].')' : ''));
+                }
             }
 
             // 认证号码
