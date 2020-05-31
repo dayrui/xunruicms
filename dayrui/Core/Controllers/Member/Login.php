@@ -188,7 +188,7 @@ class Login extends \Phpcmf\Common
 
             // 没有绑定账号
             if ($this->member_cache['oauth']['login']) {
-                // 直接登录
+                // 直接登录 就直接创建账号
                 if (IS_POST) {
                     $groupid = (int)\Phpcmf\Service::L('input')->post('groupid');
                     if (!$this->member_cache['group'][$groupid]['register']) {
@@ -213,7 +213,7 @@ class Login extends \Phpcmf\Common
                 ]);
                 \Phpcmf\Service::V()->display('login_select.html');
             } else {
-                // 绑定账号
+                // 绑定账号 绑定已有的账号或者注册新账号
                 $type = intval(\Phpcmf\Service::L('input')->get('type'));
                 if ($type) {
                     // 获取该组可用注册字段
@@ -251,11 +251,17 @@ class Login extends \Phpcmf\Common
                                 }
                             }
                             // 验证字段
-                            list($data, $return, $attach) = \Phpcmf\Service::L('Form')->validation($post, null, $field);
-                            // 输出错误
-                            if ($return) {
-                                $this->_json(0, $return['error'], ['field' => $return['name']]);
+                            if ($this->member_cache['oauth']['field']) {
+                                list($data, $return, $attach) = \Phpcmf\Service::L('Form')->validation($post, null, $field);
+                                // 输出错误
+                                if ($return) {
+                                    $this->_json(0, $return['error'], ['field' => $return['name']]);
+                                }
+                            } else {
+                                $data = [1 => []];
+                                $attach = [];
                             }
+
                             // 入库记录
                             $rt = \Phpcmf\Service::M('member')->register_oauth_bang($oauth, $groupid, [
                                 'username' => (string)$post['username'],
@@ -315,7 +321,7 @@ class Login extends \Phpcmf\Common
                 \Phpcmf\Service::V()->assign([
                     'type' => $type,
                     'form' => dr_form_hidden(['type' => $type]),
-                    'myfield' => $type ? \Phpcmf\Service::L('field')->toform(0, $field) : '',
+                    'myfield' => $type && $this->member_cache['oauth']['field'] ? \Phpcmf\Service::L('field')->toform(0, $field) : '',
                     'register' => $this->member_cache['register'],
                     'meta_name' => dr_lang('绑定账号'),
                     'meta_title' => dr_lang('绑定账号').SITE_SEOJOIN.SITE_NAME,

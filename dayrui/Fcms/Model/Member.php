@@ -972,7 +972,7 @@ class Member extends \Phpcmf\Model
         // 默认注册组
         !$groupid && $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
 
-        if (\Phpcmf\Service::C()->member_cache['oauth']['login'] && $oauth) {
+        if ((\Phpcmf\Service::C()->member_cache['oauth']['login'] || !\Phpcmf\Service::C()->member_cache['oauth']['field']) && $oauth) {
             // 授权登录直接模式
         } else {
             if (in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
