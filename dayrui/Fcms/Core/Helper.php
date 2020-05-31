@@ -1668,6 +1668,17 @@ function dr_file_preview_html($value, $target = 0) {
     }
 }
 
+// 用于附件列表查看时
+function dr_file_list_preview_html($t) {
+    if (in_array($t['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+        return '<a href="javascript:dr_preview_image(\''.dr_get_file($t['id']).'\');"><img src="'.dr_thumb($t['id'], 50, 50).'"></a>';
+    } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png')) {
+        return '<a href="javascript:dr_preview_url(\''.dr_get_file($t['id']).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
+    } else {
+        return '<a href="javascript:dr_preview_url(\''.dr_get_file($t['id']).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/error.png"></a>';
+    }
+}
+
 // 文件是否是图片
 function dr_is_image($value) {
 	return in_array(trim(strtolower(strrchr($value, '.')), '.'), ['jpg', 'gif', 'png', 'jpeg']);

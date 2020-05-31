@@ -2182,15 +2182,20 @@ class View {
     public function _get_pagination($url, $pagesize, $total, $name = 'page', $first_url = '') {
 
 		$this->_page_used = 1;
-        // 这里要支持移动端分页条件
-        !$name && $name = 'page';
-        $file = 'config/page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
-        if (is_file(WEBPATH.$file)) {
-            $config = require WEBPATH.$file;
-        } elseif (is_file(ROOTPATH.$file)) {
-            $config = require ROOTPATH.$file;
+		if ($name == 'admin') {
+		    // 使用后台分页规则
+            $config = require CMSPATH.'Config/Apage.php';
         } else {
-            exit('无法找到分页配置文件【'.$file.'】');
+            // 这里要支持移动端分页条件
+            !$name && $name = 'page';
+            $file = 'config/page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
+            if (is_file(WEBPATH.$file)) {
+                $config = require WEBPATH.$file;
+            } elseif (is_file(ROOTPATH.$file)) {
+                $config = require ROOTPATH.$file;
+            } else {
+                exit('无法找到分页配置文件【'.$file.'】');
+            }
         }
 
         if ($this->_page_config) {

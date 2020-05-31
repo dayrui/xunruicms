@@ -270,7 +270,7 @@ class File extends \Phpcmf\Common
             'tab_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&p='.\Phpcmf\Service::L('input')->get('p')
                 .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
         ]);
-        \Phpcmf\Service::V()->display('api_upload_list.html');exit;
+        \Phpcmf\Service::V()->display('api_upload_list.html');
     }
 
     /**
@@ -279,7 +279,7 @@ class File extends \Phpcmf\Common
     public function file_delete() {
 
         $rt = \Phpcmf\Service::M('Attachment')->file_delete(
-            (int)$this->member['id'],
+            $this->member,
             (int)\Phpcmf\Service::L('input')->get('id')
         );
 

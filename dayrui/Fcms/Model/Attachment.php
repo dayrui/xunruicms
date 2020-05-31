@@ -90,8 +90,6 @@ class Attachment extends \Phpcmf\Model {
                 }
             }
         }
-
-        
     }
 
     // 删除内容关联的文件
@@ -156,7 +154,7 @@ class Attachment extends \Phpcmf\Model {
         $index = $this->table('attachment')->get($id);
         if (!$index) {
             return dr_return_data(0, dr_lang('文件记录不存在'));
-        } elseif (!IS_ADMIN && $index['uid'] && $member['id'] != $index['uid']) {
+        } elseif (!$member['adminid'] && $index['uid'] && $member['id'] != $index['uid']) {
             return dr_return_data(0, dr_lang('不能删除他人的文件'));
         }
 
@@ -187,6 +185,9 @@ class Attachment extends \Phpcmf\Model {
             dr_dir_delete($cache_path.md5($id).'/', true);
         }
 
+
+        // 删除缓存
+        \Phpcmf\Service::L('cache')->del_file('attach-info-'.$id, 'attach');
 
         return dr_return_data(1, dr_lang('删除成功'));
     }

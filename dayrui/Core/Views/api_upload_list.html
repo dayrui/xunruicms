@@ -22,14 +22,13 @@
                 {if $pp==0}
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
-                            {table table=attachment_data where=$list.unused IN_fileext=$fileext page=1 pagesize=$psize urlrule=$urlrule}
-                            {php $url = dr_get_file_url($t, 50, 50);}
+                            {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
                             <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
                                     <span></span>
                                 </label>
-                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                                <label class="files_row_preview preview">{dr_file_list_preview_html($t)}</label>
                                 <label class="label label-sm label-success hidden-xs" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
                                 <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                                 <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
@@ -54,14 +53,14 @@
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
 
                         <div class="files">
-                            {table table=attachment_unused where=$list.used IN_fileext=$fileext page=1 pagesize=$psize urlrule=$urlrule}
+                            {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
                             {php $url = dr_get_file_url($t, 50, 50);}
                             <div class="template-download yl_files_row files_row">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
                                     <span></span>
                                 </label>
-                                <label class="files_row_preview preview">{dr_file_preview_html($url, 1)}</label>
+                                <label class="files_row_preview preview">{dr_file_list_preview_html($t)}</label>
                                 <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
                                 <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
                             </div>
