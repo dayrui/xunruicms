@@ -132,7 +132,7 @@ class Mform extends \Phpcmf\Table
             'index' => $this->index,
             'catid' => intval($this->index['catid']),
             'markid' => 'module-'.MOD_DIR.'-'.intval($this->index['catid']),
-            'rt_url' => $this->form['setting']['rt_url'] ? $this->form['setting']['rt_url'] : dr_now_url(),
+            'rt_url' => $this->form['setting']['rt_url'] ? '' : dr_now_url(),
             'is_post_code' => $this->is_post_code,
         ]);
         \Phpcmf\Service::V()->display($tpl);
@@ -355,7 +355,7 @@ class Mform extends \Phpcmf\Table
      * */
     protected function _Call_Post($data) {
 
-        $data['url'] = $this->form['setting']['rt_url'];
+        $data['url'] = $this->form['setting']['rt_url'] ? str_replace('{id}', $data[1]['id'], $this->form['setting']['rt_url']) : '';
         if ($data[1]['status']) {
             // 挂钩点
             \Phpcmf\Hooks::trigger('module_form_post_after', $data);

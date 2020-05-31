@@ -233,7 +233,7 @@ class Form extends \Phpcmf\Table
             }
         }
 
-        $data['url'] = $this->form['setting']['rt_url'];
+        $data['url'] = $this->form['setting']['rt_url'] ? str_replace('{id}', $data[1]['id'], $this->form['setting']['rt_url']) : '';
         if ($data[1]['status']) {
             return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
         }

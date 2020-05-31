@@ -355,8 +355,9 @@
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[oauth][login]" value="0" {if empty($data['oauth']['login'])}checked{/if} /> {dr_lang('绑定账号')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[oauth][login]" value="1" {if $data['oauth']['login']}checked{/if} /> {dr_lang('直接登录')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[oauth][login]" value="1" {if $data['oauth']['login']}checked{/if} /> {dr_lang('自动创建')} <span></span></label>
                                 </div>
+                                <span class="help-block">{dr_lang('绑定账号是指将登录已有账号或者注册新账号并绑定到第三方登录中；自动创建是指当第三方登录未绑定账号时就自动创建一个账号')}</span>
                             </div>
                         </div>
                         <div class="form-group">
