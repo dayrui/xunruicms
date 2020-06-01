@@ -239,6 +239,10 @@ class Home extends \Phpcmf\Common
                                 unset($left['link'][$i]);
                                 continue;
                             }
+                        } elseif (IS_OEM_CMS && $link['uri'] == 'cloud/bf') {
+                            // oem版排除对比菜单
+                            unset($left['link'][$i]);
+                            continue;
                         }
                         $url = $link['url'] ? $link['url'] :\Phpcmf\Service::L('Router')->url($link['uri']);
                         if (!$_link) {
