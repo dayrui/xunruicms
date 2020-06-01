@@ -248,8 +248,8 @@ $(function() {
     Dropzone.autoDiscover = false;
     $("#my-dropzone-'.$name.'").dropzone({ 
         addRemoveLinks:true,
-        maxFiles:'.$count.',//一次性上传的文件数量上限
-        maxFilesize: '.$size.', //MB
+        maxFiles:'.$count.',
+        maxFilesize: '.$size.',
         acceptedFiles: "image/*",
         dictMaxFilesExceeded: "'.dr_lang("最多只能上传%s张图片", $count).'",
         dictResponseError: \'文件上传失败\',
@@ -259,19 +259,11 @@ $(function() {
         url: "'.$url.'",
         init: function() {
            this.on("addedfile", function(file) { 
-            //上传文件时触发的事件
                 var nums = $(".dr_dropzone_'.$name.'").length;
                 this.options.maxFiles = '.$count.' - nums;
             });
-            //res为服务器响应回来的数据
             this.on("success", function(file, res) {
- 
                 var rt = JSON.parse(res);
-                //将json字符串转换成json对象
-     
-                //res为dropzone.js返回的图片路经
-                //file.path = res;
-                 
                 if(rt.code){
                     var input = \'<input class="dr_dropzone_'.$name.'" type="hidden" name="data['.$name.'][]" value="\'+rt.id+\'" />\';
                     $(file.previewElement).append(input);
@@ -279,19 +271,6 @@ $(function() {
                     dr_tips(0, rt.msg);
                     file.previewElement.classList.remove("dz-success");
                     file.previewElement.classList.add("dz-error");
-                    for (var _iterator7 = file.previewElement.querySelectorAll("[data-dz-errormessage]"), _isArray7 = true, _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : _iterator7[Symbol.iterator]();;) {
-                            var _ref6;
-                            if (_isArray7) {
-                                if (_i7 >= _iterator7.length) break;
-                                _ref6 = _iterator7[_i7++];
-                            } else {
-                                _i7 = _iterator7.next();
-                                if (_i7.done) break;
-                                _ref6 = _i7.value;
-                            }
-                            var node = _ref6;
-                            node.textContent = rt.msg;
-                        }
                 }
                  
             });
