@@ -226,7 +226,7 @@ class Field extends \Phpcmf\Model
         }*/
 
         // 先读取sql语句
-        $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], $data['name']);
+        $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], dr_safe_filename($data['name']));
 
         // 当为编辑器类型时，关闭xss过滤
         $data['fieldtype'] == 'Ueditor' && $data['setting']['validate']['xss'] = 1;
