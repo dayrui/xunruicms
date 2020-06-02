@@ -224,7 +224,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img']) && $_POST['is_auto_down_img']);
 
 		// 下载远程图片
-        if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", $value, $imgs)) {
+        if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png|webp))\\2/i", $value, $imgs)) {
             foreach ($imgs[3] as $img) {
                 if (strpos($img, '/api/ueditor/') !== false
                     || strpos($img, '/api/umeditor/') !== false) {

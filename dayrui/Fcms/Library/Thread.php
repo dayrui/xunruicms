@@ -66,12 +66,13 @@ class Thread
         } elseif (function_exists('pfsockopen')) {
             $fp = @pfsockopen($host, $port, $errno, $errstr, $timeout);
         } else {
-            $fp = false;
+            dr_catcher_data($url, 10);
+            return 1;
         }
 		
         if (!$fp) {
             dr_catcher_data($url, 10);
-            log_message('error', 'fsockopen函数调用失败（'.$url.'）：'.FC_NOW_URL);
+            CI_DEBUG && log_message('error', 'fsockopen函数调用失败（'.$url.'）：'.FC_NOW_URL);
             return 0; //note $errstr : $errno \r\n
         } else {
             $limit = 500000;

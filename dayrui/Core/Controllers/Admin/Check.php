@@ -413,32 +413,36 @@ class Check extends \Phpcmf\Common
                 }
 
                 $error = $tips = [];
-                list($module, $data) = \Phpcmf\Service::M('Site')->domain();
+                list($a, $data) = \Phpcmf\Service::M('Site')->domain();
                 if ($data) {
                     foreach ($data as $name => $domain) {
                         $url = '';
+                        $cname = '';
                         if ($name == 'mobile_domain') {
                             if ($domain) {
                                 $url = dr_http_prefix($domain) . '/api.php';
                             } else {
                                 $tips[] = '当前站点没有绑定手机域名，可能无法使用移动端界面';
                             }
+                            $cname = '移动端';
                         } elseif (strpos($name, 'module_') === 0) {
                             // 模块
                             if ($domain) {
                                 $url = dr_http_prefix($domain) . '/api.php';
                             }
+                            $cname = '模块';
                         } elseif (strpos($name, 'client_') === 0) {
                             // 终端
                             if ($domain) {
                                 $url = dr_http_prefix($domain) . '/api.php';
                             }
+                            $cname = '终端';
                         }
 
-                        if ($url) {
+                        if ($url && $cname) {
                             $code = dr_catcher_data($url, 5);
                             if ($code != 'phpcmf ok') {
-                                $error[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
+                                $error[] = '['.$cname.']域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
                         }
                     }
