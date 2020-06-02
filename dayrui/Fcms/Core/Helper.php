@@ -2603,7 +2603,6 @@ function dr_catcher_data($url, $timeout = 0) {
         if ($code == 200) {
             return $data;
         }
-        return '';
     }
 
     //设置超时参数
