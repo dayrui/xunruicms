@@ -27,7 +27,7 @@ class Category extends \Phpcmf\Model
         
         if (!$value) {
             return 1;
-        } elseif (!preg_match('/^[a-z0-9]*$/i', $value)) {
+        } elseif (!preg_match('/^[a-z0-9 \_\-]*$/i', $value)) {
             return 1;
         } elseif (defined('SYS_CAT_RNAME') && SYS_CAT_RNAME) {
             return 0;
