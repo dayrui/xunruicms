@@ -1374,7 +1374,7 @@ class Member extends \Phpcmf\Model
             'uid' => $uid,
             'username' => $user['username'],
             'url' => $url ? $url : '',
-            'mark' => $mark ? $url : '',
+            'mark' => $mark ? $mark : '',
             'note' => $note,
             'value' => $val,
             'inputtime' => SYS_TIME,
