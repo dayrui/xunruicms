@@ -2596,6 +2596,9 @@ function dr_catcher_data($url, $timeout = 0) {
         $timeout && curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($ch);
         $code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+        if (CI_DEBUG && curl_errno($ch)) {
+            log_message('error', '获取远程数据失败['.$url.']：'.curl_error($ch));
+        }
         curl_close($ch);
         if ($code == 200) {
             return $data;

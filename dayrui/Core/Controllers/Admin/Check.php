@@ -152,14 +152,14 @@ class Check extends \Phpcmf\Common
                 }
 
                 // 语言文件
-                $lang = file_get_contents(LANG_PATH.'lang.js');
+                $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
                 if (strlen($lang) < 10) {
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
                 } elseif (strpos($lang, 'finecms_datepicker_lang') === false) {
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
                 }
 
-                $lang = file_get_contents(LANG_PATH.'ueditor.js');
+                $lang = dr_catcher_data(LANG_PATH.'ueditor.js', 5);
                 if (strlen($lang) < 10) {
                     $this->halt('百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js', 0);
                 } elseif (strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
