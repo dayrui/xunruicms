@@ -1814,9 +1814,14 @@ class Content extends \Phpcmf\Model {
         return $data;
     }
 
-    // 禁用栏目时，用户保存内容时的内容文章状态
-    public function _hcategory_member_post_status($member_authid) {
+    // 禁用栏目时，用户保存内容时的内容文章状态 $id 内容id
+    public function _hcategory_member_post_status($id) {
         return 9;
+    }
+
+    // 禁用栏目时，用户评论时的状态
+    public function _hcategory_member_comment_status() {
+        return 1;
     }
 
     // 禁用栏目时，用户保存内容时是否启用验证码
@@ -1825,21 +1830,31 @@ class Content extends \Phpcmf\Model {
     }
 
     // 禁用栏目时，用户发布内容时的权限验证
+    // 直接_json中断提示
     public function _hcategory_member_add_auth() {
 
     }
 
+    // 禁用栏目时，用户评论时的权限验证
+    // 直接_json中断提示
+    public function _hcategory_member_comment_auth() {
+
+    }
+
     // 禁用栏目时，用户修改内容时的权限验证
+    // 直接_json中断提示
     public function _hcategory_member_edit_auth() {
 
     }
 
     // 禁用栏目时，用户删除内容时的权限验证
+    // 直接_json中断提示
     public function _hcategory_member_del_auth() {
 
     }
 
     // 禁用栏目时，用户阅读内容时的权限验证
+    // 直接_msg中断提示
     public function _hcategory_member_show_auth() {
 
     }

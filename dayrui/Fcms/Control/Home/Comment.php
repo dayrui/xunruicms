@@ -145,9 +145,6 @@ class Comment extends \Phpcmf\Common
         if ($this->module['comment']['my'] && $this->index['uid'] == $this->uid) {
             // 判断不能对自己评论
             $this->_json(0, dr_lang('系统禁止对自己提交'));
-        } elseif (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['comment']['add'])) {
-            // 判断用户评论权限
-            $this->_json(0, dr_lang('您的用户组无权限提交'));
         } elseif ($this->index['is_comment'] == 1) {
             // 判断内容设置的评论权限
             $this->_json(0, dr_lang('该主题禁止提交'));
@@ -157,6 +154,25 @@ class Comment extends \Phpcmf\Common
         } elseif ($this->module['comment']['num'] && \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_comment')->where('cid',  $this->cid)->where('uid', $this->uid)->countAllResults()) {
             // 只允许评论一次
             $this->_json(0, dr_lang('请勿重复提交'));
+        }
+
+
+        if (!$this->is_hcategory) {
+            // 走栏目权限
+            if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['comment']['add'])) {
+                // 判断用户评论权限
+                $this->_json(0, dr_lang('您的用户组无权限提交'));
+            }
+
+            // 评论状态
+            $status = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['comment']['verify']) ? 0 : 1;
+
+        } else {
+            // 不走栏目权限，走自定义权限
+            $this->content_model->_hcategory_member_comment_auth();
+            // 评论状态
+            $status = $this->content_model->_hcategory_member_comment_status();
+
         }
 
         $rid = (int)\Phpcmf\Service::L('input')->get('rid');
@@ -194,7 +210,7 @@ class Comment extends \Phpcmf\Common
         }
 
         // 判断评论内容
-        $content = $this->_safe_replace(\Phpcmf\Service::L('input')->post('content', true));
+        $content = $this->_safe_replace(\Phpcmf\Service::L('input')->post('content'));
         if (!$content) {
             $this->_json(0, dr_lang('%s内容不能为空', dr_comment_cname($this->module['comment']['cname'])));
         }
@@ -224,9 +240,6 @@ class Comment extends \Phpcmf\Common
             }
             $my = $post[1];
         }
-
-        // 评论状态
-        $status = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['comment']['verify']) ? 0 : 1;
 
         // 提交评论
         $rt = $this->content_model->insert_comment(
