@@ -145,10 +145,10 @@ class Search extends \Phpcmf\Model {
                     // 栏目模型表
                     $more_where = [];
                     $table_more = $this->dbprefix($this->mytable.'_category_data');
-                    foreach ($cat_field as $name => $field) {
+                    foreach ($cat_field as $name) {
                         if (isset($get[$name]) && strlen($get[$name])) {
                             $more = 1;
-                            $more_where[] = $this->_where($table_more, $name, $get[$name], $field);
+                            $more_where[] = $this->_where($table_more, $name, $get[$name], $module['category_data_field'][$name]);
                         }
                         /*
                         if (isset($_order_by[$name])) {

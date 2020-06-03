@@ -195,7 +195,7 @@ class Content extends \Phpcmf\Model {
         $cdata = [];
 
         // 筛选出来栏目模型字段
-        if (!$this->is_hcategory && $catfield = \Phpcmf\Service::C()->module['category'][$data[1]['catid']]['field']) {
+        if (!$this->is_hcategory && $catfield = \Phpcmf\Service::C()->module['category_data_field']) {
             foreach ($data as $main => $value) {
                 foreach ($value as $i => $t) {
                     if (strpos($i, '_lng') || strpos($i, '_lat')) {

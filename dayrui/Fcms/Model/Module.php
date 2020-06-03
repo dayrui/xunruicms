@@ -738,6 +738,7 @@ class Module extends \Phpcmf\Model
                 // 统计栏目文章数量
                 $c['total'] = ($c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) ? 0 : $this->db->table($siteid.'_'.$c['mid'].'_index')->where('status', 9)->where('catid', intval($c['id']))->countAllResults();
                 // 格式化栏目
+                $c['field'] = [];
                 $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
                 $CAT_DIR[$c['dirname']] = $c['id'];
             }
@@ -757,6 +758,9 @@ class Module extends \Phpcmf\Model
             if ($cache['share']) {
                 $like[] = 'share-'.$siteid;
             }
+
+            // 模型字段查询
+            $cat_data_field = [];
             $field = $this->db->table('field')->where('disabled', 0)->whereIn('relatedname', $like)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
@@ -772,23 +776,23 @@ class Module extends \Phpcmf\Model
                                 // 将该字段同时归类至其子栏目
                                 $child = explode(',', $CAT[$fcid]['childids']);
                                 foreach ($child as $catid) {
-                                    $CAT[$catid] && $CAT[$catid]['field'][$f['fieldname']] = $f;
+                                    $CAT[$catid] && $CAT[$catid]['field'][] = $f['fieldname'];
                                 }
                             }
                         }
                     }
-
+                    $cat_data_field[$f['fieldname']] = $f;
                 }
             }
 
             // 栏目结束
             if (!$cache['share']) {
                 // 此变量说明本模块存在栏目模型字段
-                $cache['category_data_field'] = $field ? 1 : 0;
                 $cache['category'] = $CAT;
+                $cache['category_data_field'] = $cat_data_field;
             } else {
                 // 共享模块需要筛选出自己的模块的栏目
-                $cache['category_data_field'] = 0;
+                $cache['category_data_field'] = [];
                 $cache['category'] = $this->_get_my_category($cache['dirname'], $CAT);
                 foreach ($cache['category'] as $t) {
                     if ($t['field']) {

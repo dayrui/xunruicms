@@ -65,9 +65,13 @@ class Table extends \Phpcmf\Common
         $field = $this->sys_field ? dr_array22array($this->sys_field, $this->field) : $this->field;
 
         // 栏目模型字段
-        $this->is_category_data_field && $catid
-        && $this->module['category'][$catid]['field']
-        && $field = dr_array22array($field, $this->module['category'][$catid]['field']);
+        if ($this->is_category_data_field && $catid && $this->module['category'][$catid]['field']) {
+            foreach ($this->module['category'][$catid]['field'] as $f) {
+                if ($this->module['category_data_field'][$f]) {
+                    $field[$f] = $this->module['category_data_field'][$f];
+                }
+            }
+        }
 
         if (!IS_ADMIN && $field) {
             // 非管理平台验证字段显示权限
@@ -90,9 +94,13 @@ class Table extends \Phpcmf\Common
         $my_field = $sys_field = $diy_field = $cat_field = [];
 
         // 栏目模型字段
-        $this->is_category_data_field && $data['catid']
-        && $this->module['category'][$data['catid']]['field']
-        && $field = dr_array22array($field, $this->module['category'][$data['catid']]['field']);
+        if ($this->is_category_data_field && $data['catid'] && $this->module['category'][$data['catid']]['field']) {
+            foreach ($this->module['category'][$data['catid']]['field'] as $f) {
+                if ($this->module['category_data_field'][$f]) {
+                    $field[$f] = $this->module['category_data_field'][$f];
+                }
+            }
+        }
 
         uasort($field, function($a, $b){
             if($a['displayorder'] == $b['displayorder']){

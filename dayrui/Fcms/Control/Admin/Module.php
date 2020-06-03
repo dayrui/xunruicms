@@ -28,7 +28,7 @@ class Module extends \Phpcmf\Table
         // 是否支持模块索引表
         $this->is_module_index = 1;
         // 是否支持
-        $this->is_category_data_field = (int)$this->module['category_data_field'];
+        $this->is_category_data_field = $this->module['category_data_field'] ? 1 : 0;
         // 模板前缀(避免混淆)
         $this->tpl_prefix = 'share_';
         // 单独模板命名

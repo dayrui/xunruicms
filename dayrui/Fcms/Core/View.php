@@ -2007,15 +2007,14 @@ class View {
 
                 // 关联栏目模型表
                 if ($system['more']) {
-                    $_catid = (int)$system['catid'];
-                    if (isset($module['category'][$_catid]['field']) && $module['category'][$_catid]['field']) {
-                        $fields = array_merge($fields, $module['category'][$_catid]['field']);
-                        $table_more = $table.'_category_data'; // 栏目模型表
+                    $table_more = $table.'_category_data'; // 栏目模型表
+                    if (isset($module['category_data_field']) && $module['category_data_field']) {
+                        $fields = array_merge($fields, $module['category_data_field']);
                         $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more, $fields); // 给条件字段加上表前缀
                         $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
                         $_order[$table_more] = $tableinfo[$table_more];
-                        $sql_from.= " LEFT JOIN $table_more ON `$table_more`.`id`=`$table`.`id`"; // sql的from子句
                     }
+                    $sql_from.= " LEFT JOIN $table_more ON `$table_more`.`id`=`$table`.`id`"; // sql的from子句
                 }
 
                 // 关联表
