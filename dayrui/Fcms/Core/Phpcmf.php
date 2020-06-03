@@ -100,6 +100,21 @@ abstract class Common extends \CodeIgniter\Controller
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
 
+        // 站点共享变量
+        define('SITE_URL', $this->site_info[SITE_ID]['SITE_URL']);
+        define('SITE_MURL', $this->site_info[SITE_ID]['SITE_MURL']);
+        define('SITE_NAME', $this->site_info[SITE_ID]['SITE_NAME']);
+        define('SITE_LOGO', $this->site_info[SITE_ID]['SITE_LOGO']);
+        define('SITE_IS_MOBILE', $this->site_info[SITE_ID]['SITE_IS_MOBILE']); // 是否存在移动端
+        define('SITE_IS_MOBILE_HTML', (int)$this->site_info[SITE_ID]['SITE_IS_MOBILE_HTML']);
+        define('SITE_MOBILE_NOT_PAD', (int)$this->site_info[SITE_ID]['SITE_MOBILE_NOT_PAD']); // pad不归类为移动端
+        define('SITE_THEME', strlen($this->site_info[SITE_ID]['SITE_THEME']) ? $this->site_info[SITE_ID]['SITE_THEME'] : 'default');
+        define('SITE_SEOJOIN', strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
+        define('SITE_REWRITE', (int)$this->site_info[SITE_ID]['SITE_REWRITE']);
+        define('SITE_TEMPLATE', strlen($this->site_info[SITE_ID]['SITE_TEMPLATE']) ? $this->site_info[SITE_ID]['SITE_TEMPLATE'] : 'default');
+        define('SITE_LANGUAGE', strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
+        define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
+
         // 判断是否是网站的"其他域名"
         if (!IS_API && !IS_ADMIN
             && in_array(DOMAIN_NAME, $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
@@ -112,20 +127,6 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 后台域名
         !defined('ADMIN_URL') && define('ADMIN_URL', dr_http_prefix(DOMAIN_NAME.'/'));
-
-        // 站点共享变量
-        define('SITE_URL', $this->site_info[SITE_ID]['SITE_URL']);
-        define('SITE_MURL', $this->site_info[SITE_ID]['SITE_MURL']);
-        define('SITE_NAME', $this->site_info[SITE_ID]['SITE_NAME']);
-        define('SITE_LOGO', $this->site_info[SITE_ID]['SITE_LOGO']);
-        define('SITE_IS_MOBILE', $this->site_info[SITE_ID]['SITE_IS_MOBILE']); // 是否存在移动端
-        define('SITE_IS_MOBILE_HTML', (int)$this->site_info[SITE_ID]['SITE_IS_MOBILE_HTML']);
-        define('SITE_THEME', strlen($this->site_info[SITE_ID]['SITE_THEME']) ? $this->site_info[SITE_ID]['SITE_THEME'] : 'default');
-        define('SITE_SEOJOIN', strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
-        define('SITE_REWRITE', (int)$this->site_info[SITE_ID]['SITE_REWRITE']);
-        define('SITE_TEMPLATE', strlen($this->site_info[SITE_ID]['SITE_TEMPLATE']) ? $this->site_info[SITE_ID]['SITE_TEMPLATE'] : 'default');
-        define('SITE_LANGUAGE', strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
-        define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
         // 设置时区
         if (strlen($this->site_info[SITE_ID]['SITE_TIMEZONE']) > 0) {
@@ -917,61 +918,7 @@ abstract class Common extends \CodeIgniter\Controller
      * 是否移动端访问访问
      */
     public function _is_mobile() {
-
-        if (isset ($_SERVER['HTTP_X_WAP_PROFILE'])) {
-            // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
-            return true;
-        } elseif (isset ($_SERVER['HTTP_USER_AGENT'])) {
-            // 判断手机发送的客户端标志,兼容性有待提高
-            $clientkeywords = [
-                'nokia',
-                'sony',
-                'ericsson',
-                'mot',
-                'samsung',
-                'htc',
-                'sgh',
-                'lg',
-                'sharp',
-                'sie-',
-                'philips',
-                'panasonic',
-                'alcatel',
-                'lenovo',
-                'iphone',
-                'ipod',
-                'blackberry',
-                'meizu',
-                'android',
-                'netfront',
-                'symbian',
-                'ucweb',
-                'windowsce',
-                'palm',
-                'operamini',
-                'operamobi',
-                'openwave',
-                'nexusone',
-                'cldc',
-                'midp',
-                'wap',
-                'mobile'
-            ];
-            // 从HTTP_USER_AGENT中查找手机浏览器的关键字
-            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))){
-                return true;
-            }
-        }
-        // 协议法，因为有可能不准确，放到最后判断
-        if (isset ($_SERVER['HTTP_ACCEPT'])) {
-            // 如果只支持wml并且不支持html那一定是移动设备
-            // 如果支持wml和html但是wml在html之前则是移动设备
-            if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html'))))
-            {
-                return true;
-            }
-        }
-        return false;
+        return dr_is_mobile();
     }
 
     /**

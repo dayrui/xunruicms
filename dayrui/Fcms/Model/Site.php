@@ -304,6 +304,7 @@ class Site extends \Phpcmf\Model
                     'SITE_MOBILE' => (string)$t['setting']['mobile']['domain'],
                     'SITE_AUTO' => (string)$t['setting']['mobile']['auto'],
                     'SITE_IS_MOBILE_HTML' => (string)$t['setting']['mobile']['tohtml'],
+                    'SITE_MOBILE_NOT_PAD' => (string)$t['setting']['mobile']['not_pad'],
                     'SITE_CLOSE' => $t['setting']['config']['SITE_CLOSE'],
                     'SITE_THEME' => $t['setting']['config']['SITE_THEME'],
                     'SITE_TEMPLATE' => $t['setting']['config']['SITE_TEMPLATE'],
