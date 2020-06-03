@@ -140,11 +140,6 @@ class Home extends \Phpcmf\Common
             $menu = $m['admin'];
         }
 
-        // 自定义后台菜单显示
-        if (function_exists('dr_my_admin_menu')) {
-            $menu = dr_my_admin_menu($menu);
-        }
-
         $first = 0;
         $mstring = $string = '';
         $menu_top = $my_menu = [];
@@ -302,6 +297,11 @@ class Home extends \Phpcmf\Common
             }
         }
 
+        // 自定义后台菜单显示
+        if (function_exists('dr_my_admin_menu')) {
+            list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($menu, $string, $mstring, $menu_top, $first);
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'top' => $menu_top,
 			'first' => $first,
@@ -322,17 +322,13 @@ class Home extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('index.html');exit;
 	}
 
+	// 简化模式界面
     public function min() {
 
         $menu = \Phpcmf\Service::L('cache')->get('menu-admin-min');
         if (!$menu) {
             $m = \Phpcmf\Service::M('menu')->cache();
             $menu = $m['admin-min'];
-        }
-
-        // 自定义后台菜单显示
-        if (function_exists('dr_my_admin_min_menu')) {
-            $menu = dr_my_admin_min_menu($menu);
         }
 
         $string = '';
@@ -435,6 +431,11 @@ class Home extends \Phpcmf\Common
                 $string.= $left_string;
 
             }
+        }
+
+        // 自定义后台菜单显示字符串
+        if (function_exists('dr_my_admin_min_menu')) {
+            $string = dr_my_admin_min_menu($menu, $string);
         }
 
         \Phpcmf\Service::V()->assign([
