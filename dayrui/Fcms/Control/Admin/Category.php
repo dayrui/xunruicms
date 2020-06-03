@@ -74,6 +74,7 @@ class Category extends \Phpcmf\Table
     protected function _get_tree_list($data) {
 
         $tree = [];
+        $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
         foreach($data as $t) {
             !$t['mid'] && $t['mid'] = APP_DIR;
             $t['name'] = dr_strcut($t['name'], 30);
@@ -127,6 +128,11 @@ class Category extends \Phpcmf\Table
                     // 栏目类型
                     if ($t['tid'] == 1) {
                         $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('模块').' </span>';
+                        if ($module[$t['mid']]['name']) {
+                            $t['mid'] = $module[$t['mid']]['name'];
+                        } else {
+                            $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
+                        }
                     } elseif ($t['tid'] == 2) {
                         $t['type_html'] = '<span class="badge badge-warning"> '.dr_lang('外链').' </span>';
                         $t['is_page_html'] = '';
@@ -135,7 +141,7 @@ class Category extends \Phpcmf\Table
                         $t['mid'] = '';
                         $t['type_html'] = '<span class="badge badge-info"> '.dr_lang('单页').' </span>';
                     }
-                    !$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
+                    //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
                 }
             } else {
                 $t['name'].= '&nbsp;<span class="label label-sm label-danger circle">'.dr_lang('请更新缓存').'</span>';
