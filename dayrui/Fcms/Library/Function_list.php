@@ -51,7 +51,15 @@ class Function_list
     // 用于列表显示状态
     function status($value, $param = [], $data = []) {
 
-        return '<label>'.($value ? '<span class="label label-sm label-success">'.dr_lang('已通过') : '<span class="label label-sm label-danger">'.dr_lang('待审核')).'</span></label>';
+        if (!$value) {
+            $html = '<span class="label label-sm label-danger">'.dr_lang('待审核');
+        } elseif ($value == 1) {
+            $html = '<span class="label label-sm label-success">'.dr_lang('已通过');
+        } else {
+            $html = '<span class="label label-sm label-warning">'.dr_lang('未通过') ;
+        }
+
+        return '<label>'.$html.'</span></label>';
     }
 
     // 用于列表显示标题

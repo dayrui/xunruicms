@@ -397,7 +397,7 @@
                     'fieldname' => 'status',
                     'setting' => array(
                         'option' => array(
-                            'options' => '待审核|0'.PHP_EOL.'已通过|1',
+                            'options' => '待审核|0'.PHP_EOL.'已通过|1'.PHP_EOL.'未通过|2',
                             'value' => 1
                         )
                     )

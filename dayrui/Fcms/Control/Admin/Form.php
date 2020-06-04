@@ -47,7 +47,7 @@ class Form extends \Phpcmf\Table
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
             'order_by' => 'displayorder DESC,inputtime DESC',
-            'where_list' => $this->is_verify ? 'status=0' : 'status=1',
+            'where_list' => $this->is_verify ? 'status<>1' : 'status=1',
         ]);
         $menu = $this->is_verify ? \Phpcmf\Service::M('auth')->_admin_menu([
             '审核管理' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
@@ -83,7 +83,7 @@ class Form extends \Phpcmf\Table
 
         if (!$data) {
             $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
-        } elseif ($this->is_verify && $data['status']) {
+        } elseif ($this->is_verify && $data['status'] == 1) {
             $this->_admin_msg(0, dr_lang('已经通过了审核'));
         }
 
@@ -126,6 +126,7 @@ class Form extends \Phpcmf\Table
     // 后台批量审核
     protected function _Admin_Status() {
 
+        $tid = intval(\Phpcmf\Service::L('input')->get('tid'));
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
             $this->_json(0, dr_lang('所选数据不存在'));
@@ -146,7 +147,22 @@ class Form extends \Phpcmf\Table
         }
 
         foreach ($rows as $row) {
-            !$row['status'] && $this->_verify($row);
+            if ($row['status'] != 1) {
+                if ($tid) {
+                    // 拒绝
+                    \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 2]);
+
+                    // 任务执行成功
+                    \Phpcmf\Service::M('member')->todo_admin_notice('form/'.$this->form['table'].'_verify/edit:id/'.$row['id'], SITE_ID);
+                    // 提醒
+                    \Phpcmf\Service::M('member')->notice($row['uid'], 3, dr_lang('%s审核被拒绝', $this->form['name']));
+                    // 挂钩点 被拒绝
+                    \Phpcmf\Hooks::trigger('form_verify_0', $row);
+                } else {
+                    // 通过
+                    $this->_verify($row);
+                }
+            }
         }
 
         $this->_json(1, dr_lang('操作成功'));
@@ -185,11 +201,14 @@ class Form extends \Phpcmf\Table
         
         return parent::_Save($id, $data, $old, null,
             function ($id, $data, $old) {
-                $data[1]['status'] && $this->is_verify && $this->_verify([
-                    'id' => (int)$data[1]['id'],
-                    'uid' => (int)$data[1]['uid'],
-                    'status' => 0,
-                ]);
+                if ($data[1]['status'] == 1 && $this->is_verify) {
+                    // 审核通过时
+                    $this->_verify([
+                        'id' => (int)$data[1]['id'],
+                        'uid' => (int)$data[1]['uid'],
+                        'status' => 0,
+                    ]);
+                }
                 //\Phpcmf\Service::M('member')->todo_admin_notice('form/'.$this->form['table'].'_verify/edit:id/'.$id, SITE_ID);// clear
                 \Phpcmf\Service::L('cache')->clear('from_'.$this->form['table'].'_show_id_'.$id);
             }
@@ -199,7 +218,7 @@ class Form extends \Phpcmf\Table
     // 审核表单
     protected function _verify($row) {
 
-        if ($row['status']) {
+        if ($row['status'] == 1) {
             return;
         }
 

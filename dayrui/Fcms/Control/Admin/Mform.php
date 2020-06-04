@@ -44,7 +44,7 @@ class Mform extends \Phpcmf\Table
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->cid ? $this->content_model->get_data( $this->cid) : [];
         // 自定义条件
-        $where = $this->is_verify ? 'status=0' : 'status=1';
+        $where = $this->is_verify ? 'status<>1' : 'status=1';
         $this->cid && $where.= ' and cid='. $this->cid;
         $cwhere = $this->content_model->get_admin_list_where();
         $cwhere && $where.= ' AND '. $cwhere;
@@ -129,7 +129,7 @@ class Mform extends \Phpcmf\Table
         }
 
         \Phpcmf\Service::V()->assign([
-            'form' =>  dr_form_hidden(),
+            'form' => dr_form_hidden(),
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }
@@ -187,6 +187,7 @@ class Mform extends \Phpcmf\Table
     // 后台批量审核
     protected function _Admin_Status() {
 
+        $tid = intval(\Phpcmf\Service::L('input')->get('tid'));
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
             $this->_json(0, dr_lang('所选数据不存在'));
@@ -207,8 +208,16 @@ class Mform extends \Phpcmf\Table
         }
 
         foreach ($rows as $row) {
-            if (!$row['status']){
-                $this->_verify($row);
+            if ($row['status'] != 1) {
+                if ($tid) {
+                    // 拒绝
+                    \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 2]);
+                    \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], SITE_ID);
+                    \Phpcmf\Service::L('Notice')->send_notice('module_form_verify_0', $row);
+                } else {
+                    // 通过
+                    $this->_verify($row);
+                }
                 $this->content_model->update_form_total($row['cid'], $this->form['table']);
             }
 
@@ -266,11 +275,13 @@ class Mform extends \Phpcmf\Table
 
         return parent::_Save($id, $data, $old, null,
             function ($id, $data, $old) {
-                $data[1]['status'] && $this->is_verify && $this->_verify([
-                    'id' => (int)$data[1]['id'],
-                    'uid' => (int)$data[1]['uid'],
-                    'status' => 0,
-                ]);
+                if ($data[1]['status'] == 1 && $this->is_verify) {
+                    $this->_verify([
+                        'id' => (int)$data[1]['id'],
+                        'uid' => (int)$data[1]['uid'],
+                        'status' => 0,
+                    ]);
+                }
                 // 保存之后的更新total字段
                 $this->content_model->update_form_total( $this->cid, $this->form['table']);
                 \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$old['cid'].'/id/'.$old['id'], SITE_ID);
@@ -283,7 +294,7 @@ class Mform extends \Phpcmf\Table
     // 审核表单
     protected function _verify($row) {
 
-        if ($row['status']) {
+        if ($row['status'] == 1) {
             return;
         }
 
@@ -294,6 +305,8 @@ class Mform extends \Phpcmf\Table
         // 增减经验
         $exp = $this->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['exp']);
         $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $row['curl']);
+
+        \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], SITE_ID);
 
         \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 1]);
 

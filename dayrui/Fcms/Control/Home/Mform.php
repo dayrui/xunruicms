@@ -185,7 +185,7 @@ class Mform extends \Phpcmf\Table
             list($tpl, $data, $this->cid, $this->index) = $cache;
         }
 
-        if (!$data['status']) {
+        if ($data['status'] != 1) {
             $this->_msg(0, dr_lang('内容正在审核中'));
         }
 
@@ -337,7 +337,7 @@ class Mform extends \Phpcmf\Table
 
         $data = $this->content_model->get_data($id);
         if (!$data) {
-            return;
+            return [];
         }
 
         // 格式化输出自定义字段

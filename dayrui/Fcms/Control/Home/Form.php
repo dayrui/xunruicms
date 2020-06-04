@@ -143,7 +143,7 @@ class Form extends \Phpcmf\Table
             list($tpl, $data) = $cache;
         }
 
-        if (!$data['status']) {
+        if ($data['status'] != 1) {
             $this->_msg(0, dr_lang('内容正在审核中'));
         }
 
