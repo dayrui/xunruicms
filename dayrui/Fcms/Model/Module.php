@@ -784,23 +784,14 @@ class Module extends \Phpcmf\Model
                     $cat_data_field[$f['fieldname']] = $f;
                 }
             }
-
+            $cache['category_data_field'] = $cat_data_field;
             // 栏目结束
             if (!$cache['share']) {
                 // 此变量说明本模块存在栏目模型字段
                 $cache['category'] = $CAT;
-                $cache['category_data_field'] = $cat_data_field;
             } else {
                 // 共享模块需要筛选出自己的模块的栏目
-                $cache['category_data_field'] = [];
                 $cache['category'] = $this->_get_my_category($cache['dirname'], $CAT);
-                foreach ($cache['category'] as $t) {
-                    if ($t['field']) {
-                        $cache['category_data_field'] = 1;
-                        break;
-                    }
-                }
-
             }
             $cache['category_dir'] = $CAT_DIR;
             $cache['category_level'] = $level ? max($level) : 0;
