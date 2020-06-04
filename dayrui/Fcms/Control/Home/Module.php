@@ -135,7 +135,7 @@ class Module extends \Phpcmf\Common
         }
 
         // 单页验证是否存在子栏目，是否将下级第一个单页作为当前页
-        if ($category['child'] && $category['setting']['getchild']) {
+        if ($category['tid'] == 0 && $category['child'] && $category['setting']['getchild']) {
             $temp = explode(',', $category['childids']);
             if ($temp) {
                 foreach ($temp as $i) {
