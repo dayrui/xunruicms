@@ -715,6 +715,50 @@ class Category extends \Phpcmf\Table
     // 编辑单页内容
     public function content_edit() {
 
+        if (APP_DIR && !$this->init['field']['content']) {
+            // 没有content字段时
+            if (!\Phpcmf\Service::M()->db->fieldExists('content', $this->init['table'])) {
+                $this->_admin_msg(0, dr_lang('在本模块的栏目字段中，请创建content字段'));
+            }
+            // 入库content表
+            $this->init['field']['content'] = [
+                'name' => dr_lang('内容'),
+                'ismain' => 1,
+                'ismember' => 1,
+                'issystem' => 1,
+                'disabled' => 0,
+                'displayorder' => 0,
+                'relatedid' => 0,
+                'relatedname' => 'category-'.APP_DIR,
+                'fieldtype' => 'Ueditor',
+                'fieldname' => 'content',
+                'setting' => dr_array2string([
+                    'option' => array (
+                        'watermark' => '0',
+                        'autofloat' => '0',
+                        'autoheight' => '0',
+                        'page' => '1',
+                        'mode' => '1',
+                        'tool' => '\'bold\', \'italic\', \'underline\'',
+                        'mode2' => '1',
+                        'tool2' => '\'bold\', \'italic\', \'underline\'',
+                        'mode3' => '1',
+                        'tool3' => '\'bold\', \'italic\', \'underline\'',
+                        'attachment' => '0',
+                        'value' => '',
+                        'width' => '100%',
+                        'height' => '400',
+                        'css' => '',
+                    ),
+                    'validate' => [
+                        'xss' => 1,
+                    ],
+                ])
+            ];
+            \Phpcmf\Service::M()->table('field')->insert($this->init['field']['content']);
+            $this->init['field']['content']['setting'] = dr_string2array($this->init['field']['content']['setting']);
+        }
+
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
         if (!$row) {
