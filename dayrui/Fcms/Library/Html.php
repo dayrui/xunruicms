@@ -57,7 +57,11 @@ class Html
                 } else {
                     // 内容列表页面
                     $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
-                    $t['child'] ? $db->whereIn('catid', @implode(',', $t['childids'])) : $db->where('catid', (int)$t['id']);
+                    if ($t['child'] && $t['childids']) {
+                        $db->whereIn('catid', @explode(',', $t['childids']));
+                    } else {
+                        $db->where('catid', (int)$t['id']);
+                    }
                     $total = $db->countAllResults(); // 统计栏目的数据量
                     $list[$t['mid']][] = [
                         'id' => $t['id'],
