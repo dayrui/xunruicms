@@ -58,7 +58,7 @@ class Module extends \Phpcmf\Common
 
         $name = 'module-'.md5($this->tablename).'-'.$id;
         if (\Phpcmf\Service::L('input')->get_cookie($name)) {
-            $this->_jsonp(1, $data['hits']);
+            //$this->_jsonp(1, $data['hits'], '不重复统计');
         }
 
         $hits = (int)$data['hits'] + $plus;
@@ -69,18 +69,43 @@ class Module extends \Phpcmf\Common
         // 获取统计数据
         $total = \Phpcmf\Service::M()->db->table($this->tablename.'_hits')->where('id', $id)->get()->getRowArray();
         if (!$total) {
-            $total['day_hits'] = $total['week_hits'] = $total['month_hits'] = $total['year_hits'] = $plus;
+            $total['day_hits'] = $total['week_hits'] = $total['month_hits'] = $total['year_hits'] = 0;
+            $total['day_time'] = $total['week_time'] = $total['month_time'] = $total['year_time'] = SYS_TIME;
+        } else {
+            // 按类别归零
+            if (date('Ymd', $total['day_time']) != date('Ymd', SYS_TIME)) {
+                $total['day_time'] = SYS_TIME;
+                $total['day_hits'] = 0;
+            }
+            if (date('YW', $total['week_time']) != date('YW', SYS_TIME)) {
+                $total['week_time'] = SYS_TIME;
+                $total['week_hits'] = 0;
+            }
+            if (date('Ym', $total['month_time']) != date('Ym', SYS_TIME)) {
+                $total['month_time'] = SYS_TIME;
+                $total['month_hits'] = 0;
+            }
+            if (date('Y', $total['year_time']) != date('Y', SYS_TIME)) {
+                $total['year_time'] = SYS_TIME;
+                $total['year_hits'] = 0;
+            }
         }
 
         // 更新到统计表
-        \Phpcmf\Service::M()->table($this->tablename.'_hits')->replace([
+        $save = [
             'id' => $id,
             'hits' => $hits,
-            'day_hits' => (date('Ymd', $data['updatetime']) == date('Ymd', SYS_TIME)) ? $hits : $plus,
-            'week_hits' => (date('YW', $data['updatetime']) == date('YW', SYS_TIME)) ? ($total['week_hits'] + $plus) : $plus,
-            'month_hits' => (date('Ym', $data['updatetime']) == date('Ym', SYS_TIME)) ? ($total['month_hits'] + $plus) : $plus,
-            'year_hits' => (date('Ymd', $data['updatetime']) == date('Ymd', strtotime('-1 day'))) ? $hits : $total['year_hits'],
-        ]);
+            'day_hits' => $total['day_hits'] + $plus,
+            'day_time' => $total['day_time'],
+            'week_hits' => $total['week_hits'] + $plus,
+            'week_time' => $total['week_time'],
+            'month_hits' => $total['month_hits'] + $plus,
+            'month_time' => $total['month_time'],
+            'year_hits' => $total['year_hits'] + $plus,
+            'year_time' => $total['year_time'],
+        ];
+        var_dump($save);
+        \Phpcmf\Service::M()->table($this->tablename.'_hits')->replace($save);
 
         //session()->save($name, $id, 300); 考虑并发性能还是不用session了
         \Phpcmf\Service::L('input')->set_cookie($name, $id, 300);

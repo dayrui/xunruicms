@@ -299,6 +299,12 @@ class Check extends \Phpcmf\Common
                             if (!\Phpcmf\Service::M()->db->fieldExists('vid', $table)) {
                                 \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `vid` INT(10) DEFAULT NULL');
                             }
+                            $table = $prefix.$siteid.'_'.$m['dirname'].'_hits';
+                            foreach(['day_time', 'week_time', 'month_time', 'year_time'] as $a) {
+                                if (!\Phpcmf\Service::M()->db->fieldExists($a, $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `'.$a.'` INT(10) DEFAULT NULL');
+                                }
+                            }
 							// 无符号修正
 							\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `updatetime` `updatetime` INT(10) NOT NULL COMMENT \'更新时间\'');
 							\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `inputtime` `inputtime` INT(10) NOT NULL COMMENT \'更新时间\'');
@@ -349,7 +355,7 @@ class Check extends \Phpcmf\Common
                 break;
 
             case '09':
-                //
+                // 搜索根目录
                 $local = dr_file_map(WEBPATH, 1); // 搜索根目录
                 foreach ($local as $file) {
                     $ext = strtolower(substr(strrchr($file, '.'), 1));
@@ -497,27 +503,31 @@ class Check extends \Phpcmf\Common
                 $local = \Phpcmf\Service::Apps();
                 $custom = file_get_contents(ROOTPATH.'config/custom.php');
                 foreach ($local as $dir => $path) {
-                    if (is_file($path.'Config/App.php') && is_file($path.'Config/Init.php')) {
-                        $code = file_get_contents($path.'Config/Init.php');
-                        if (preg_match_all("/\s+function (.+)\(/", $code, $arr)) {
-                            foreach ($arr[1] as $a) {
-                                $name = trim($a);
-                                if (strpos($name, "'") !== false) {
-                                    continue;
-                                }
-                                if (isset($func[$name]) && $func[$name]) {
-                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']存在于'.$func[$name].'之中，不能被重复定义');
-                                }
-                                $func[$name] = $dir;
-                                if (function_exists($name)) {
-                                    if (preg_match("/\s+function ".$name."\(/", $custom)) {
-                                        // 存在于自定义函数库中
-                                    } else {
-                                        $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                    if (is_file($path.'Config/App.php')) {
+                        // 变量重定义
+                        if (is_file($path.'Config/Init.php')) {
+                            $code = file_get_contents($path.'Config/Init.php');
+                            if (preg_match_all("/\s+function (.+)\(/", $code, $arr)) {
+                                foreach ($arr[1] as $a) {
+                                    $name = trim($a);
+                                    if (strpos($name, "'") !== false) {
+                                        continue;
+                                    }
+                                    if (isset($func[$name]) && $func[$name]) {
+                                        $this->_json(0,'应用['.$dir.']中的函数['.$name.']存在于'.$func[$name].'之中，不能被重复定义');
+                                    }
+                                    $func[$name] = $dir;
+                                    if (function_exists($name)) {
+                                        if (preg_match("/\s+function ".$name."\(/", $custom)) {
+                                            // 存在于自定义函数库中
+                                        } else {
+                                            $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                                        }
                                     }
                                 }
                             }
                         }
+                        //
                     }
                 }
                 $this->_json(1, '通过');
