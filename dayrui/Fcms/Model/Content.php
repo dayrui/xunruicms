@@ -228,7 +228,7 @@ class Content extends \Phpcmf\Model {
         } else {
             // 新增数据
             $main['hits'] = (int)$main['hits'];
-            $main['tableid'] =  $main['comments'] = $main['avgsort'] = 0;
+            $main['tableid'] = 0;
             $main['displayorder'] = (int)$main['displayorder'];
             $rt = $this->table($this->mytable)->replace($main);
             if (!$rt['code']) {
@@ -405,8 +405,6 @@ class Content extends \Phpcmf\Model {
         $save[1]['url'] = '';
         $save[1]['status'] = 9;
         $save[1]['link_id'] = 0;
-        $save[1]['comments'] = 0;
-        $save[1]['avgsort'] = 0;
 
         $time = min(SYS_TIME, $row['posttime']);
         !$time && $time = SYS_TIME;
@@ -1044,9 +1042,6 @@ class Content extends \Phpcmf\Model {
         // 删除统计
         $this->table($this->mytable.'_hits')->delete($cid);
         $this->table($this->mytable.'_verify')->delete($cid);
-        // 删除评论
-        $this->db->table($this->mytable.'_comment')->where('cid', $cid)->delete();
-        $this->db->table($this->mytable.'_comment_index')->where('cid', $cid)->delete();
 
         // 共享模块删除
         if ($this->is_share) {
@@ -1194,8 +1189,6 @@ class Content extends \Phpcmf\Model {
     private function _edit_category_id($t, $catid) {
 
         $id = intval($t['id']);
-        $this->db->table($this->mytable.'_comment')->where('cid', $id)->update(['catid' => $catid]);
-        $this->db->table($this->mytable.'_comment_index')->where('cid', $id)->update(['catid' => $catid]);
         $this->db->table($this->mytable.'_time')->where('id', $id)->update(['catid' => $catid]);
         $this->db->table($this->mytable.'_verify')->where('id', $id)->update(['catid' => $catid]);
         // 同步移动相关表单表
@@ -1262,328 +1255,80 @@ class Content extends \Phpcmf\Model {
         return $data;
     }
 
-    // 获取评论索引数据
-    public function get_comment_index($cid, $catid) {
+    // 获取评论对象
+    public function comment() {
+        return \Phpcmf\Service::M('comment', 'comment')->_init($this, \Phpcmf\Service::C()->module['comment']);
+    }
 
-        if (!$cid) {
+    // 获取评论索引数据
+    public function get_comment_index($cid, $catid = 0) {
+
+        if (!dr_is_app('comment')) {
             return [];
         }
 
-        $rt = $this->table($this->mytable.'_comment_index')->where('cid', $cid)->getRow();
-        if (!$rt) {
-            // 不存在就创建它
-            $rt = [
-                'cid' => $cid,
-                'catid' => $catid,
-                'sort1' => 0,
-                'sort2' => 0,
-                'sort3' => 0,
-                'sort4' => 0,
-                'sort5' => 0,
-                'sort6' => 0,
-                'sort7' => 0,
-                'sort8' => 0,
-                'sort9' => 0,
-                'oppose' => 0,
-                'support' => 0,
-                'avgsort' => 0,
-                'comments' => 0,
-            ];
-            $rt['id'] = $this->table($this->mytable.'_comment_index')->insert($rt);
-        }
-
-        return $rt;
+        return $this->comment()->get_comment_index($cid);
     }
 
     // 提交评论
     // $value 主题信息和回复人；$data评论内容和点评内容；$my自定义字段
     public function insert_comment($value, $data, $my = []) {
 
-        $insert = [];
-        $insert['cid'] = (int)$value['index']['id'];
-        $insert['cuid'] = (int)$value['index']['uid'];
-        $insert['catid'] = (int)$value['index']['catid'];
-        $insert['uid'] = (int)$value['member']['uid'];
-        $insert['reply'] = (int)$value['reply_id'];
-        $insert['in_reply'] = 0;
-        $insert['status'] = $value['status'];
-        $insert['author'] = $value['member']['uid'] ? $value['member']['username'] : '游客';
-        $insert['content'] = $data['content'];
-        $insert['support'] = $insert['oppose'] = $insert['avgsort'] = 0;
-        $insert['inputip'] = \Phpcmf\Service::L('input')->ip_address();
-        $insert['inputtime'] = $data['inputtime'] ? $data['inputtime'] : SYS_TIME;
-        $insert['orderid'] = (int)$value['orderid'];
-
-        // 点评选项值
-        $_value = [];
-        $_avgsort = 0;
-        for ($i = 1; $i <= 9; $i++) {
-            $insert['sort'.$i] = isset($data['review'][$i]) ? (int)$data['review'][$i] : 0;
-            $_avgsort+= $insert['sort'.$i];
-            $insert['sort'.$i] && $_value[$i] = $insert['sort'.$i];
+        if (!dr_is_app('comment')) {
+            return dr_return_data(0, dr_lang('没有安装评论插件'));
         }
 
-        if ($_avgsort) {
-            // 算法类别
-            $dl = empty(\Phpcmf\Service::C()->module['comment']['review']['point']) || \Phpcmf\Service::C()->module['comment']['review']['point'] < 0 ? 0 : \Phpcmf\Service::C()->module['comment']['review']['point']; //小数点位数
-            // 分别计算各个选项分数
-            $insert['avgsort'] = round(($_avgsort / dr_count($_value)), $dl);
-        }
-
-        // 自定义字段入库
-        $my && $insert = array_merge($insert, $my);
-
-        $rt = $this->table($this->mytable.'_comment')->insert($insert);
-        if (!$rt['code']) {
-            return $rt;
-        }
-
-        // 评论成功返回id
-        $id = $rt['code'];
-
-        if (!$insert['status']) {
-            // 需要审核时直接返回
-            \Phpcmf\Service::M('member')->admin_notice($this->siteid, 'content', \Phpcmf\Service::C()->member, dr_lang('%s: 新%s审核', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $this->dirname.'/comment_verify/edit:cid/'.$insert['cid'].'/id/'.$id);
-            return dr_return_data($id, 'verify');
-        } else {
-            // 直接通过的评论
-            $insert['id'] = $id;
-            $this->verify_comment($insert);
-            return dr_return_data($id, 'ok');
-        }
-
+        return $this->comment()->insert_comment($value, $data, $my);
     }
 
     // 审核评论
     public function verify_comment($row) {
 
-        if (!$row) {
-            return;
+        if (!dr_is_app('comment')) {
+            return dr_return_data(0, dr_lang('没有安装评论插件'));
         }
 
-        $id = (int)$row['id'];
-
-        // 当前是未审核状态时才更新状态
-        if (!$row['status']) {
-            // 变更审核状态
-            $this->db->table($this->mytable.'_comment')->where('id', $id)->update(['status' => 1]);
-        }
-
-        // 提醒
-        /* 暂时不要回复站内信通知
-        $row['reply']
-            ? \Phpcmf\Service::M('member')->notice($row['uid'], 2, dr_lang('评论被人回复'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid'])
-            : \Phpcmf\Service::M('member')->notice($row['cuid'], 2, dr_lang('收到了新的评论'), '/index.php?s='.MOD_DIR.'&c=show&id='.$row['cid']);
-        */
-
-        // 统计评论总数
-        $this->comment_update_total($row);
-
-        // 回复评论时，将主题设置为存在回复状态
-        $row['reply'] && $this->table($this->mytable.'_comment')->update($row['reply'], ['in_reply' => 1]);
-
-        // 增减金币
-        $score = \Phpcmf\Service::C()->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['comment']['score']);
-        $score && \Phpcmf\Service::M('member')->add_score($row['uid'], $score, dr_lang('%s发布%s', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $row['curl']);
-
-        // 增减经验
-        $exp = \Phpcmf\Service::C()->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['comment']['exp']);
-        $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s发布%s', MODULE_NAME, dr_comment_cname(\Phpcmf\Service::C()->module['comment']['cname'])), $row['curl']);
-
-        // 更新评分
-        $this->comment_update_review($row);
-
-        // 执行通知
-        \Phpcmf\Service::M('member')->todo_admin_notice($this->dirname.'/comment_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], $this->siteid);
-
-        // 获取文章标题
-        $index = $this->table($this->mytable)->get($row['cid']);
-        $row['title'] = $index['title'];
-        $row['index'] = $index;
-        $row['comment_uid'] = $row['uid'];
-        $row['comment_author'] = $row['author'];
-
-        // 挂钩点 评论完成之后
-        \Phpcmf\Hooks::trigger('comment_after', $row);
-        $this->_comment_after($row);
-
-        // 评论通过后的通知消息
-        $row['url'] = $index['url'];
-        \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_1', $row);
-
-        // 评论后通知内容作者
-        $row['uid'] = $index['uid'];
-        $row['author'] = $index['author'];
-        \Phpcmf\Service::L('Notice')->send_notice('module_comment_verify_2', $row);
-
-        \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
+        return $this->comment()->verify_comment($row);
     }
 
     // 获取评论列表
     public function get_comment_result($cid, $order, $page, $pagesize, $total, $field) {
 
-        if (!$cid) {
+        if (!dr_is_app('comment')) {
             return [];
         }
 
-        $list = $this->db->table($this->mytable.'_comment')
-            ->where('cid', $cid)->where('reply', 0)->where('status', 1)
-            ->limit($pagesize, $pagesize * ($page - 1))
-            ->orderBy($order)
-            ->get()->getResultArray();
-
-        if ($list) {
-            $dfield = \Phpcmf\Service::L('Field')->app($this->dirname);
-            foreach ($list as $i => $t) {
-                $reply = !$t['in_reply'] ? [] : $this->db->table($this->mytable.'_comment')
-                    ->where('cid', $cid)->where('reply', $t['id'])->where('status', 1)
-                    ->orderBy('id asc')
-                    ->get()->getResultArray();
-                if ($field) {
-                    // 格式化显示自定义字段内容
-                    $list[$i] = $dfield->format_value($field, $t, 1);
-                    if ($reply) {
-                        foreach ($reply as $b => $v) {
-                            $reply[$b] = $dfield->format_value($field, $v, 1);
-                        }
-                    }
-                }
-                $list[$i]['rlist'] = $reply;
-            }
-        }
-
-
-        !$total && $total = $this->db->table($this->mytable.'_comment')->where('cid', $cid)->where('reply', 0)->where('status', 1)->countAllResults();
-
-        return [$list, $total];
+        return $this->comment()->get_comment_result($cid, $order, $page, $pagesize, $total, $field);
     }
 
     // 删除评论
     public function delete_comment($id, $cid = 0) {
 
-        if (!$id) {
+        if (!dr_is_app('comment')) {
             return 0;
         }
 
-        $data = $this->table($this->mytable.'_comment')->get($id);
-        if (!$data) {
-            return -1;
-        }
-
-        // 删除评论数据
-        $this->db->table($this->mytable.'_comment')->where('id', $id)->delete();
-        $this->db->table($this->mytable.'_comment')->where('reply', $id)->delete();
-
-
-        // 统计评论总数
-        $this->comment_update_total($data);
-
-        // 删除附件
-        SYS_ATTACHMENT_DB  && \Phpcmf\Service::M('Attachment')->id_delete(
-            $data['uid'],
-            [$id],
-            $this->dbprefix($this->mytable.'_comment-'.($data['reply'] ? $data['reply'] : $id))
-        );
-
-        // 更新评分
-        $this->comment_update_review($data);
-
-        return 1;
+        return $this->comment()->delete_comment($id, $cid = 0);
     }
 
     // 更新统计
     public function comment_update_total($row) {
 
-        if (!\Phpcmf\Service::C()->module['comment'] || !$row) {
+        if (!dr_is_app('comment')) {
             return;
         }
 
-        $cid = (int)$row['cid'];
-        // 统计评论总数
-        if (!\Phpcmf\Service::C()->module['comment']['ct_reply']) {
-            $total = $this->db->table($this->mytable.'_comment')->where('cid', $cid)->where('reply', 0)->where('status', 1)->countAllResults();
-        } else {
-            $total = $this->db->table($this->mytable.'_comment')->where('cid', $cid)->where('status', 1)->countAllResults();
-        }
-
-        $this->table($this->mytable)->update($cid, ['comments' => $total]);
-        $this->table($this->mytable.'_comment_index')->update($cid, ['comments' => $total]);
-
+        return $this->comment()->comment_update_total($row);
     }
 
     // 更新评分
     public function comment_update_review($row) {
 
-        // 只在开启时更新
-        if (!\Phpcmf\Service::C()->module['comment']['review']) {
+        if (!dr_is_app('comment')) {
             return;
         }
 
-        $id = (int)$row['id'];
-        $cid = (int)$row['cid'];
-
-        // 更新点评数据
-        $review = $set = [];
-        $_avgsort = 0;
-        for ($i = 1; $i <= 9; $i++) {
-            if ($row['sort'.$i]) {
-                $review[$i] = $row['sort'.$i];
-                $set['sort'.$i] = 0;
-                $_avgsort += $review[$i];
-            }
-        }
-
-        // 分值不存在时不更新
-        if (!$review) {
-            return ;
-        }
-
-        // 统计总的点评数
-        $builder = $this->db->table($this->mytable.'_comment');
-        $builder->where('cid', $cid);
-        $builder->selectSum('status', 'num');
-        foreach($review as $i => $val) {
-            $builder->selectSum('sort'.$i);
-        }
-
-        // 不统计回复
-        if (!\Phpcmf\Service::C()->module['comment']['ct_reply']) {
-            $builder->where('reply', 0);
-        }
-
-        $grade = $builder->where('status', 1)->get()->getRowArray();
-
-        if (!$grade) {
-            return;
-        }
-
-        // 算法类别
-        $st = round((int)\Phpcmf\Service::C()->module['comment']['review']['score'] / 5); //显示分数制 5分，10分，百分
-        $dl = empty(\Phpcmf\Service::C()->module['comment']['review']['point']) || \Phpcmf\Service::C()->module['comment']['review']['point'] < 0 ? 0 : \Phpcmf\Service::C()->module['comment']['review']['point']; //小数点位数
-
-        // 分别计算各个选项分数
-        foreach($review as $i => $aaaaa) {
-            $flag = 'sort'.$i;
-            $set[$flag] = $grade[$flag] ? round( ($grade[$flag] / $grade['num'] * $st), $dl) : 0;
-            $set['avgsort']+= $set[$flag];
-        }
-
-        // 总表的平均分
-        $set['avgsort'] = round(($set['avgsort'] / dr_count($review)), $dl);
-
-        // 本记录的
-        $avgsort = round(($_avgsort / dr_count($review)), $dl);
-
-        // 更新到索引表
-        $this->db->table($this->mytable.'_comment')->where('id', $id)->update(['avgsort' => $avgsort]);
-
-        // 更新到关联主表
-        $this->table($this->mytable)->update($cid, [
-            'avgsort' => $set['avgsort'],
-        ]);
-
-        // 更新到索引表
-        $this->db->table($this->mytable.'_comment_index')->where('cid', $cid)->update($set);
+        return $this->comment()->comment_update_review($row);
 
     }
 

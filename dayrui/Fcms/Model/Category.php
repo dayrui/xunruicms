@@ -319,8 +319,6 @@ class Category extends \Phpcmf\Model
                    $this->table(SITE_ID.'_'.$t['mid'].'_index')->where('catid', $t['id'])->delete();
                    $this->table(SITE_ID.'_'.$t['mid'].'_time')->where('catid', $t['id'])->delete();
                    $this->table(SITE_ID.'_'.$t['mid'].'_verify')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_comment')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_comment_index')->where('catid', $t['id'])->delete();
                    $this->table(SITE_ID.'_'.$t['mid'].'_category_data')->where('catid', $t['id'])->delete();
                    // 附表分表删除
                    for ($i = 0; $i <= 255 ;$i++) {
@@ -370,8 +368,6 @@ class Category extends \Phpcmf\Model
             $this->table(SITE_ID.'_'.APP_DIR.'_index')->where_in('catid', $catids)->delete();
             $this->table(SITE_ID.'_'.APP_DIR.'_time')->where_in('catid', $catids)->delete();
             $this->table(SITE_ID.'_'.APP_DIR.'_verify')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_comment')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_comment_index')->where_in('catid', $catids)->delete();
             $this->table(SITE_ID.'_'.APP_DIR.'_category_data')->where_in('catid', $catids)->delete();
             // 附表分表删除
             for ($i = 0; $i <= 255 ;$i++) {

@@ -675,7 +675,8 @@ class Auth extends \Phpcmf\Model {
         $module_menu = '<a class="dropdown-toggle {ON}" '.(\Phpcmf\Service::C()->_is_mobile() ? ' data-toggle="dropdown"' : '').' data-hover="dropdown" data-close-others="true" aria-expanded="true"><i class="fa fa-angle-double-down"></i></a>';
         $module_menu.= '<ul class="dropdown-menu">';
         $this->_is_admin_auth($module['dirname'].'/home/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/home/index').'"> <i class="'.dr_icon($module['icon']).'"></i> '.dr_lang('%s管理', $module['cname']).' </a></li>';
-        $this->_is_admin_auth($module['dirname'].'/comment/index') && $module['comment'] && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/comment/index').'"> <i class="fa fa-comment"></i> '.dr_lang('%s管理', dr_comment_cname($module['comment']['cname'])).' </a></li>';
+
+        //$this->_is_admin_auth($module['dirname'].'/comment/index') && $module['comment'] && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/comment/index').'"> <i class="fa fa-comment"></i> '.dr_lang('%s管理', dr_comment_cname($module['comment']['cname'])).' </a></li>';
 
         if ($module['setting']['flag']) {
             $module_menu.= '<li class="divider"> </li>';

@@ -160,9 +160,6 @@
                     {/if}
                     {/loop}
 
-                    {if $module.comment && $ci->_is_admin_auth(APP_DIR.'/comment/index')}
-                    <label><a href="{dr_url(APP_DIR.'/comment/index', ['cid'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-comments"></i> {dr_lang('%s(%s)', dr_comment_cname($ci->module['comment']['cname']), intval($t['comments']))} </a></label>
-                    {/if}
                 </td>
             </tr>
             {/loop}

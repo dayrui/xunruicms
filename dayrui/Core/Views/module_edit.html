@@ -13,9 +13,6 @@
                 <li class="{if $page==3}active{/if}">
                     <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-table"></i> {dr_lang('后台列表显示字段')} </a>
                 </li>
-                <li class="{if $page==4}active{/if}">
-                    <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-comments"></i> {dr_lang('后台评论显示字段')} </a>
-                </li>
             </ul>
         </div>
         <div class="portlet-body">
@@ -117,45 +114,6 @@
                 </div>
 
 
-                <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
-                    <div class="form-body">
-
-                        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
-                            <thead>
-                            <tr class="heading">
-                                <th class="myselect">
-                                    {dr_lang('显示')}
-                                </th>
-                                <th width="180"> {dr_lang('字段')} </th>
-                                <th width="150"> {dr_lang('名称')} </th>
-                                <th width="100"> {dr_lang('宽度')} </th>
-                                <th> {dr_lang('回调方法')} </th>
-                            </tr>
-                            </thead>
-                            <tbody class="field-sort-items">
-                            {loop $comment_field $n $t}
-                            <tr class="odd gradeX">
-                                <td class="myselect">
-                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        <input type="checkbox" class="checkboxes" name="data[setting][comment_list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['comment_list_field'][$t.fieldname]['use']} checked{/if} />
-                                        <span></span>
-                                    </label>
-                                </td>
-                                <td>{dr_lang($t.name)} ({$t.fieldname})</td>
-                                <td><input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['comment_list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['setting']['comment_list_field'][$t.fieldname]['name']) : $t.name}" /></td>
-                                <td> <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][width]" value="{htmlspecialchars($data['setting']['comment_list_field'][$t.fieldname]['width'])}" /></td>
-                                <td> <div class="input-group" style="width:250px">
-                                        <span class="input-group-btn">
-                                            <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
-                                        </span>
-                                    <input class="form-control" type="text" name="data[setting][comment_list_field][{$t.fieldname}][func]" value="{htmlspecialchars($data['setting']['comment_list_field'][$t.fieldname]['func'])}" />
-                                </div></td>
-                            </tr>
-                            {/loop}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
 
             </div>

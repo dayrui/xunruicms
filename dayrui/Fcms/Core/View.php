@@ -159,8 +159,8 @@ class View {
     /**
      * 强制设置为后台模板目录
      */
-    public function admin() {
-        $this->_dir = APPPATH.'Views/';
+    public function admin($_dir = '') {
+        $this->_dir = $_dir ? $_dir : APPPATH.'Views/';
         $this->_aroot = COREPATH.'Views/';
         $this->_is_admin = 1;
     }
@@ -256,19 +256,18 @@ class View {
 
         if ($dir == 'admin' || $this->_is_admin) {
             // 后台操作时，不需要加载风格目录，如果文件不存在可以尝试调用主项目模板
-            $adir = APPPATH.'Views/';
             if (APP_DIR && is_file(MYPATH.'View/'.APP_DIR.'/'.$file)) {
                 return MYPATH.'View/'.APP_DIR.'/'.$file;
             } elseif (!APP_DIR && is_file(MYPATH.'View/'.$file)) {
                 return MYPATH.'View/'.$file;
-            } elseif (is_file($adir.$file)) {
-                return $adir.$file; // 调用当前后台的模板
+            } elseif (is_file($this->_dir.$file)) {
+                return $this->_dir.$file; // 调用当前后台的模板
             } elseif (is_file($this->_aroot.$file)) {
                 return $this->_aroot.$file; // 当前项目目录模板不存在时调用主项目的
             } elseif ($dir != 'admin' && is_file(APPSPATH.ucfirst($dir).'/Views/'.$file)) {
                 return APPSPATH.ucfirst($dir).'/Views/'.$file; // 指定模块时调用模块下的文件
             }
-            $error = $adir.$file;
+            $error = $this->_dir.$file;
         } elseif (IS_MEMBER || $dir == 'member') {
             // 会员操作时，需要加载风格目录，如果文件不存在可以尝试调用主项目模板
             if ($dir === '/' && is_file($this->_root.$file)) {
@@ -1517,7 +1516,7 @@ class View {
 
             case 'comment': // 模块评论调用
 
-                $comment = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname, 'comment');
+                $comment = \Phpcmf\Service::L('cache')->get('app-comment', 'comment', $dirname);
                 // 判断是否存在
                 if (!$comment || !$comment['use']) {
                     return $this->_return($system['return'], "模块{$dirname}没有开启评论功能"); // 参数判断

@@ -110,8 +110,8 @@ class Autoload extends \CodeIgniter\Config\AutoloadConfig
 		    'Phpcmf\Hooks'                => CMSPATH.'Core/Hooks.php',
 		    'Phpcmf\Service'              => CMSPATH.'Core/Service.php',
             'Phpcmf\App\Common'           => CMSPATH.'Core/Common.php',
-            //'CodeIgniter\Events\Events'	  => CMSPATH.'Extend/Events.php',
-            //'CodeIgniter\Debug\Toolbar\Collectors\Views'	  => CMSPATH.'Extend/View.php',
+            'Phpcmf\Admin\Comment'        => dr_get_app_dir('comment').'Control/Admin/Comment.php',
+            'Phpcmf\Home\Comment'         => dr_get_app_dir('comment').'Control/Comment.php',
 
 
 

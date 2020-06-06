@@ -297,14 +297,7 @@ class Module extends \Phpcmf\Common
                     }
                 }
             }
-            if ($post['setting']['comment_list_field']) {
-                foreach ($post['setting']['comment_list_field'] as $t) {
-                    if ($t['func']
-                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
-                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
-                    }
-                }
-            }
+
             $rt = \Phpcmf\Service::M('Module')->config($data, $post);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -325,17 +318,6 @@ class Module extends \Phpcmf\Common
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'author', 'inputtime', 'updatetime', 'hits']);
         $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
-        // 评论字段
-        $comment_field = \Phpcmf\Service::M()->db->table('field')
-            ->where('disabled', 0)
-            ->where('ismain', 1)
-            ->where('relatedname', 'comment-module-'.$data['dirname'])
-            ->orderBy('displayorder ASC,id ASC')
-            ->get()->getResultArray();
-        $sys_field = \Phpcmf\Service::L('Field')->sys_field(['content', 'author', 'inputtime']);
-		$comment_field = dr_list_field_value($data['setting']['comment_list_field'], $sys_field, $comment_field);
-
-
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         $config = require dr_get_app_dir($data['dirname']).'Config/App.php';
 
@@ -350,7 +332,6 @@ class Module extends \Phpcmf\Common
             'form' => dr_form_hidden(['page' => $page]),
             'field' => $field,
             'is_hcategory' => isset($config['hcategory']) && $config['hcategory'],
-            'comment_field' => $comment_field,
         ]);
         \Phpcmf\Service::V()->display('module_edit.html');
     }

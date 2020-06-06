@@ -130,7 +130,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 从模块中更新菜单
-    public function update_module($mdir, $config, $form, $comment_cname = '') {
+    public function update_module($mdir, $config, $form) {
 
         // 作为应用模块时且不操作menu.php时,不需要菜单
         if (isset($config['ftpye']) && $config['ftpye'] == 'module'
@@ -169,16 +169,6 @@ class Menu extends \Phpcmf\Model {
                         ];
                         $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
                     }
-                    // 评论入库
-                    $menu = $this->db->table($table.'_menu')->where('mark', 'verify-comment-'.$mdir)->get()->getRowArray();
-                    $save = [
-                        'uri' => $mdir.'/comment_verify/index',
-                        'mark' => 'verify-comment-'.$mdir,
-                        'name' => $menu && $menu['name'] ? $menu['name'] : dr_lang('%s%s', $config['name'], dr_comment_cname($comment_cname)),
-                        'icon' => 'fa fa-comments',
-                        'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
-                    ];
-                    $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
                     // 表单入库
                     if ($form) {
                         foreach ($form as $t) {

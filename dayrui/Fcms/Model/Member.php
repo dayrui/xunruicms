@@ -1647,11 +1647,6 @@ class Member extends \Phpcmf\Model
                             ]);
                         }
                     }
-                    // 评论
-                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname'].'_comment'))
-                    && $this->db->table($siteid.'_'.$m['dirname'].'_comment')->where('uid', $uid)->update([
-                        'author' => $username,
-                    ]);
                 }
             }
         }

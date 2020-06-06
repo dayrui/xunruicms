@@ -35,6 +35,7 @@ class Table extends \Phpcmf\Common
     protected $replace_id; // 替换主id(link_id)
 
     protected $url_params; // url参数固定
+    protected $admin_tpl_path; // 后台模板指定目录
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -46,6 +47,7 @@ class Table extends \Phpcmf\Common
         $this->is_module_index = 0;
         $this->is_category_data_field = 0;
         $this->is_diy_where_list = 0;
+        $this->admin_tpl_path = APPPATH.'Views/';
     }
     
     // 数据表初始化
@@ -619,12 +621,13 @@ class Table extends \Phpcmf\Common
         if (IS_ADMIN) {
             // 存在优先模板
             if ($fname) {
-                $my_file = is_file(APPPATH.'Views/'.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
+                $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
             }
             // 优先模板不存在的情况下
             if (!is_file($my_file)) {
-                $my_file = is_file(APPPATH.'Views/'.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+                $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
             }
+            \Phpcmf\Service::V()->admin($this->admin_tpl_path);
         } else {
             // 存在优先模板
             if ($fname) {

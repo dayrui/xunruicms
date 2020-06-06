@@ -1122,8 +1122,6 @@ class Module extends \Phpcmf\Table
                                     $new = \Phpcmf\Service::M()->table_site(MOD_DIR)->get($old['id']);
                                     if ($new) {
                                         $data[1]['hits'] = $new['hits'];
-                                        $data[1]['comments'] = $new['comments'];
-                                        $data[1]['avgsort'] = $new['avgsort'];
                                     }
                                 }
                             } else {

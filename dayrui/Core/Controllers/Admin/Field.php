@@ -504,6 +504,9 @@ class Field extends \Phpcmf\Common
             default:
                 if (strpos($this->relatedname, 'comment-module') !== false) {
                     // 模块评论字段
+                    if (!dr_is_app('comment')) {
+                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                    }
                     $ismain = 1;
                     list($a, $b, $module) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
@@ -512,7 +515,7 @@ class Field extends \Phpcmf\Common
 					}
                     $this->name = '模块【'.$cache['dirname'].'】评论字段';
                     $this->data = $cache['dirname'];
-                    $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/module/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $cache['dirname'];
                     $this->namespace = $cache['dirname'];

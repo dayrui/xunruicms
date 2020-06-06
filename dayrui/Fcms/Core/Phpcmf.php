@@ -533,7 +533,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 兼容老版本
         define('MOD_DIR', $dirname);
         define('IS_SHARE', $this->module['share']);
-        define('IS_COMMENT', $this->module['comment']);
+        define('IS_COMMENT', dr_is_app('comment') && $this->get_cache('app-comment', 'module', $dirname) ? 1 : 0);
         define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
         define('MODULE_NAME', $this->module['name']);
 
@@ -951,7 +951,7 @@ abstract class Common extends \CodeIgniter\Controller
         if ($data) {
             foreach ($data as $i => $t) {
                 if (IS_ADMIN) {
-                    if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                    if (!$t['url'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
                         unset($data[$i]); // 无权限的不要
                     }
                 } else {

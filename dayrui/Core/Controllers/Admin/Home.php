@@ -224,7 +224,7 @@ class Home extends \Phpcmf\Common
                             if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
                                 unset($left['link'][$i]);
                                 continue;
-                            } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('module-'.SITE_ID.'-content', $name, 'comment')) {
+                            } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('app-comment', 'module', $name)) {
                                 unset($left['link'][$i]);
                                 continue;
                             } elseif ($ac.'-'.$ab == 'verify-mform' && !$this->get_cache('module-'.SITE_ID.'-'.$name, 'form', $cc)) {
@@ -389,7 +389,7 @@ class Home extends \Phpcmf\Common
                         if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
                             unset($left['link'][$i]);
                             continue;
-                        } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('module-'.SITE_ID.'-content', $name, 'comment')) {
+                        } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('app-comment', 'module', $name)) {
                             unset($left['link'][$i]);
                             continue;
                         } elseif ($ac.'-'.$ab == 'verify-mform' && !$this->get_cache('module-'.SITE_ID.'-'.$name, 'form', $cc)) {

@@ -229,7 +229,7 @@ class Module extends \Phpcmf\Model
                 'share' => intval($config['share']),
                 'dirname' => $dir,
                 'setting' => '{"order":"displayorder DESC,updatetime DESC","verify_msg":"","delete_msg":"","list_field":{"title":{"use":"1","order":"1","name":"主题","width":"","func":"title"},"catid":{"use":"1","order":"2","name":"栏目","width":"130","func":"catid"},"author":{"use":"1","order":"3","name":"作者","width":"120","func":"author"},"updatetime":{"use":"1","order":"4","name":"更新时间","width":"160","func":"datetime"}},"comment_list_field":{"content":{"use":"1","order":"1","name":"评论","width":"","func":"comment"},"author":{"use":"1","order":"3","name":"作者","width":"100","func":"author"},"inputtime":{"use":"1","order":"4","name":"评论时间","width":"160","func":"datetime"}},"flag":null,"param":null,"search":{"use":"1","field":"title,keywords","total":"500","length":"4","param_join":"-","param_rule":"0","param_field":"","param_join_field":["","","","","","",""],"param_join_default_value":"0"}}',
-                'comment' => '{"use":"1","num":"0","my":"0","reply":"0","ct_reply":"0","pagesize":"","pagesize_mobile":"","pagesize_api":"","review":{"score":"10","point":"0","value":{"1":{"name":"1星评价"},"2":{"name":"2星评价"},"3":{"name":"3星评价"},"4":{"name":"4星评价"},"5":{"name":"5星评价"}},"option":{"1":{"name":"选项1"},"2":{"name":"选项2"},"3":{"name":"选项3"},"4":{"name":"选项4"},"5":{"name":"选项5"},"6":{"name":"选项6"},"7":{"name":"选项7"},"8":{"name":"选项8"},"9":{"name":"选项9"}}}}',
+                'comment' => '',
                 'disabled' => 0,
                 'displayorder' => 0,
             ];
@@ -308,24 +308,6 @@ class Module extends \Phpcmf\Model
         }
 
         // =========== 这里是公共部分 ===========
-
-        // 创建评论
-        $comment = require CMSPATH.'Config/Comment.php';
-        foreach ($comment as $name => $sql) {
-            if (dr_count($module['site']) == 1) {
-                // 表示第一个站就创建
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
-            } else {
-                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, 1).$name)."`")->getRowArray();
-                $sql = str_replace(
-                    array($sql['Table'], 'CREATE TABLE'),
-                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                    $sql['Create Table']
-                );
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
-            }
-        }
 
         // 创建表单
         if (dr_count($module['site']) == 1) {
@@ -473,13 +455,6 @@ class Module extends \Phpcmf\Model
                 $this->db->query('DROP TABLE IF EXISTS '.$table.'_category_data_'.$i);
             }
 
-
-            // 删除评论
-            $comment = require CMSPATH.'Config/Comment.php';
-            foreach ($comment as $name => $sql) {
-                $this->db->simpleQuery('DROP TABLE IF EXISTS `'.$table.$name.'`');
-            }
-
             // 删除表单
             $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
             if ($form) {
@@ -606,7 +581,6 @@ class Module extends \Phpcmf\Model
                 $config = require dr_get_app_dir($mdir).'Config/App.php';
                 $setting = dr_string2array($data['setting']);#print_r($setting);
                 $setting['list_field'] = dr_list_field_order($setting['list_field']);
-                $setting['comment_list_field'] = dr_list_field_order($setting['comment_list_field']);
                 $rt[$mdir] = [
                     'id' => $data['id'],
                     'name' => $config['name'],
@@ -902,43 +876,33 @@ class Module extends \Phpcmf\Model
                 // 搜索验证
                 !$cache['setting']['search']['use'] && $cache['setting']['search'] = [];
 
-                // 评论验证
-                if ($cache['comment']['use']) {
-                    $cache['comment']['field'] = [];
-                    // 模块表单的自定义字段
-                    $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', 'comment-module-'.$mdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
-                    if ($field) {
-                        foreach ($field as $f) {
-                            $f['setting'] = dr_string2array($f['setting']);
-                            $cache['comment']['field'][$f['fieldname']] = $f;
+                // 评论缓存 转移评论
+                if ($cache['comment'] && dr_is_app('comment')) {
+                    $ct = $this->table('app_comment')->where('name', 'module')->getRow();
+                    // 转移评论
+                    if ($ct) {
+                        $ct_cfg = dr_string2array($ct['value']);
+                        if (!$ct_cfg[$mdir]) {
+                            $this->db->table('app_comment')->where('name', 'module')->update([
+                                'value' => dr_array2string([
+                                    $mdir => $cache['comment'],
+                                ]),
+                            ]);
                         }
-                    }
-                    if ($cache['comment']['review']['use']) {
-                        // 格式化点评
-                        if ($cache['comment']['review']['value']) {
-                            $tmp = [];
-                            foreach ($cache['comment']['review']['value'] as $i => $op) {
-                                $op['name'] && $tmp[$i] = $op['name'];
-                            }
-                            $cache['comment']['review']['value'] = $tmp;
-                        }
-                        if ($cache['comment']['review']['option']) {
-                            $tmp = [];
-                            foreach ($cache['comment']['review']['option'] as $i => $op) {
-                                $op['use'] && $tmp[$i] = $op['name'];
-                            }
-                            $cache['comment']['review']['option'] = $tmp;
-                        }
-                        unset($cache['comment']['review']['use']);
                     } else {
-                        $cache['comment']['review'] = [];
+                        $this->db->table('app_comment')->insert([
+                            'name' => 'module',
+                            'value' => dr_array2string([
+                                $mdir => $cache['comment'],
+                            ]),
+                        ]);
                     }
-                } else {
-                    $cache['comment'] = []; // 关闭状态时清除评论缓存
+                    $this->db->table('module')->where('dirname', $mdir)->update(['comment' => '']);
                 }
+                unset($cache['comment']);
 
                 // 更新内容模块菜单
-                $menu_model->update_module($mdir, $config, $cache['form'], $cache['comment']['cname']);
+                $menu_model->update_module($mdir, $config, $cache['form']);
                 !$cache['title'] && $cache['title'] = $cache['name'];
 
                 // 执行模块自己的缓存程序
@@ -960,7 +924,6 @@ class Module extends \Phpcmf\Model
                     'scategory' => (int)$config['scategory'],
                     'search' => $cache['setting']['search']['use'] ? 1 : 0,
                     'dirname' => $mdir,
-                    'comment' => $cache['comment'] ? 1 : 0,
                     'is_index_html' => $cache['setting']['module_index_html'] ? 1 : 0,
                 ];
 

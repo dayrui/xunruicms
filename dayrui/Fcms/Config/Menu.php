@@ -188,11 +188,6 @@ return [
                             'uri' => 'module_search/index',
                         ],
                         [
-                            'name' => '模块评论',
-                            'icon' => 'fa fa-comments',
-                            'uri' => 'module_comment/index',
-                        ],
-                        [
                             'name' => '网站表单',
                             'icon' => 'fa fa-table',
                             'uri' => 'form/index',
@@ -810,11 +805,7 @@ return [
             'name' => '内容管理',
             'icon' => 'fa fa-th-large',
             'link' => [
-                [
-                    'name' => '我的评论',
-                    'icon' => 'fa fa-comments',
-                    'uri' => 'content/comment',
-                ],
+
             ],
         ],
 

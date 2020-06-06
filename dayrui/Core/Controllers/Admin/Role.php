@@ -125,12 +125,14 @@ class Role extends \Phpcmf\Common
                     continue;
                 }
                 $config = require $path.'Config/App.php';
-                $module_auth[$mdir] = [
-                    'name' => dr_lang($config['name']),
-                    'auth' => [
-                        $mdir.'/comment/' => dr_lang('评论'),
-                    ],
-                ];
+                if (dr_is_app('comment')) {
+                    $module_auth[$mdir] = [
+                        'name' => dr_lang($config['name']),
+                        'auth' => [
+                            $mdir.'/comment/' => dr_lang('评论'),
+                        ],
+                    ];
+                }
                 if ($config['system']) {
                     // 内容模块
                     $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
