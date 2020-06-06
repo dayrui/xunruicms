@@ -104,7 +104,6 @@ class Module extends \Phpcmf\Common
             'year_hits' => $total['year_hits'] + $plus,
             'year_time' => $total['year_time'],
         ];
-        var_dump($save);
         \Phpcmf\Service::M()->table($this->tablename.'_hits')->replace($save);
 
         //session()->save($name, $id, 300); 考虑并发性能还是不用session了
