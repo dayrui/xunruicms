@@ -264,12 +264,12 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_replace($_GET['id']);
         $cmspath = WRITEPATH.'temp/'.$id.'/';
+        $file = WRITEPATH.'temp/'.$id.'.zip';
 		if (!IS_DEV) {
 			$cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
 			if (!$cache) {
 				$this->_json(0, '本站：授权验证缓存过期，请重试');
 			}
-            $file = WRITEPATH.'temp/'.$id.'.zip';
             if (!is_file($file)) {
                 $this->_json(0, '本站：文件还没有被下载');
             } elseif (!class_exists('ZipArchive')) {
@@ -281,7 +281,17 @@ class Cloud extends \Phpcmf\Common
                 $this->_json(0, '本站：文件解压失败');
             }
             unlink($file);
-		}
+		} else {
+            if (is_file($file)) {
+                if (!class_exists('ZipArchive')) {
+                    $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能');
+                }
+                // 解压目录
+                if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
+                    $this->_json(0, '本站：文件解压失败');
+                }
+            }
+        }
 
 		// 查询插件目录
         $is_app = $is_module_app = $is_tpl = 0;
