@@ -938,7 +938,15 @@ abstract class Common extends \CodeIgniter\Controller
                 $_clink = require $path.'Config/Clink.php';
                 if ($_clink) {
                     if (is_file($path.'Models/Auth.php')) {
-                        if (\Phpcmf\Service::M('auth', $dir)->is_link_auth(APP_DIR)) {
+                        $obj = \Phpcmf\Service::M('auth', $dir);
+                        foreach ($_clink as $k => $v) {
+                            // 动态名称
+                            if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
+                                $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
+                            }
+                        }
+                        // 权限验证
+                        if ($obj->is_link_auth(APP_DIR)) {
                             $data = array_merge($data , $_clink) ;
                         }
                     } else {
