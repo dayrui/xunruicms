@@ -1516,7 +1516,7 @@ class View {
 
             case 'comment': // 模块评论调用
 
-                $comment = \Phpcmf\Service::L('cache')->get('app-comment', 'comment', $dirname);
+                $comment = \Phpcmf\Service::L('cache')->get('app-comment', 'module', $dirname);
                 // 判断是否存在
                 if (!$comment || !$comment['use']) {
                     return $this->_return($system['return'], "模块{$dirname}没有开启评论功能"); // 参数判断
