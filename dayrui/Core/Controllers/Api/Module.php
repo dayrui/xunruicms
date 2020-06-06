@@ -58,7 +58,7 @@ class Module extends \Phpcmf\Common
 
         $name = 'module-'.md5($this->tablename).'-'.$id;
         if (\Phpcmf\Service::L('input')->get_cookie($name)) {
-            //$this->_jsonp(1, $data['hits'], '不重复统计');
+            $this->_jsonp(1, $data['hits'], '不重复统计');
         }
 
         $hits = (int)$data['hits'] + $plus;
