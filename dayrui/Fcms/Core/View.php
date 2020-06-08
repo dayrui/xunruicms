@@ -1998,7 +1998,15 @@ class View {
                     $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
                     $_order[$table_more] = $tableinfo[$table_more];
                     if (!$system['field']) {
-                        $system['field'] = '`'.$table.'`.*,`'.$table.'_hits`.`hits`,`'.$table.'_hits`.`day_hits`,`'.$table.'_hits`.`week_hits`,`'.$table.'_hits`.`month_hits`,`'.$table.'_hits`.`year_hits`';
+                        $system['field'] = '`'.$table.'`.*';
+                        $fields_more = \Phpcmf\Service::M()->db->getFieldNames($table_more);
+                        if ($fields_more) {
+                            foreach ($fields_more as $f) {
+                                if (!in_array($f, ['id', 'catid', 'uid'])) {
+                                    $system['field'].= ',`'.$table_more.'`.`'.$f.'`';
+                                }
+                            }
+                        }
                     }
                 } else {
                     $sql_from = '`'.$table.'`';
@@ -2014,6 +2022,17 @@ class View {
                         $_order[$table_more] = $tableinfo[$table_more];
                     }
                     $sql_from.= " LEFT JOIN $table_more ON `$table_more`.`id`=`$table`.`id`"; // sql的from子句
+                    if (!$system['field']) {
+                        $system['field'] = '`'.$table.'`.*';
+                        $fields_more = \Phpcmf\Service::M()->db->getFieldNames($table_more);
+                        if ($fields_more) {
+                            foreach ($fields_more as $f) {
+                                if (!in_array($f, ['id', 'catid', 'uid'])) {
+                                    $system['field'].= ',`'.$table_more.'`.`'.$f.'`';
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // 关联表
@@ -2066,8 +2085,8 @@ class View {
                                 } else {
                                     $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['pagesize'];
                                 }
+                                //  防止栏目生成第一页问题
                                 if ($system['action'] == 'module') {
-                                    //  防止栏目生成第一页问题
                                     $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
                                 }
                             }
@@ -2091,7 +2110,7 @@ class View {
                     }
 
                     $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
-                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : '*') . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
+                    $sql = "SELECT " .$this->_get_select_field($system['field'] ? $system['field'] : '*') . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
                 $data = $this->_query($sql, $system['db'], $system['cache']);
@@ -2099,8 +2118,8 @@ class View {
                 // 缓存查询结果
                 if (is_array($data) && $data) {
                     // 模块表的系统字段
-                    $fields['inputtime'] = array('fieldtype' => 'Date');
-                    $fields['updatetime'] = array('fieldtype' => 'Date');
+                    $fields['inputtime'] = ['fieldtype' => 'Date'];
+                    $fields['updatetime'] = ['fieldtype' => 'Date'];
                     // 格式化显示自定义字段内容
                     $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
                     foreach ($data as $i => $t) {
