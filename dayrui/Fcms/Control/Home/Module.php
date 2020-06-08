@@ -26,7 +26,9 @@ class Module extends \Phpcmf\Common
             return $this->_Search(0);
         } else {
             // 判断URL重复问题
-            !$html && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix(MODULE_URL, $this->module['dirname']));
+            if (!$html) {
+                \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix(MODULE_URL, $this->module['dirname']));
+            }
 
             // 模板变量
             \Phpcmf\Service::V()->assign([
@@ -260,8 +262,8 @@ class Module extends \Phpcmf\Common
         }
 
         $list = [];
+        // 移动端请求时
         if (IS_API_HTTP && $data['id']) {
-            // 移动端请求时
             $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize')).' urlrule=test');
             $list = $rt['return'];
         }
@@ -373,7 +375,7 @@ class Module extends \Phpcmf\Common
             $data['next_page'] = $builder->limit(1)->get()->getRowArray();
 
             // 格式化输出自定义字段
-            $fields = $this->module['category'][$data['catid']]['field'] ? array_merge($this->module['field'], $this->module['category'][$data['catid']]['field']) : $this->module['field'];
+            $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
             $fields['inputtime'] = ['fieldtype' => 'Date'];
             $fields['updatetime'] = ['fieldtype' => 'Date'];
 
