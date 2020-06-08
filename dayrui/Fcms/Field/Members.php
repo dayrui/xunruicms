@@ -26,10 +26,10 @@ class Members extends \Phpcmf\Library\A_Field {
 
 		return ['
 				<div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('最大显示数量').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('最大选择数').'</label>
                     <div class="col-md-9">
                     <label><input type="text" class="form-control" size="10" name="data[setting][option][limit]" value="'.$option['limit'].'"></label>
-					<span class="help-block">'.dr_lang('关联列表搜索结果最大显示数量，默认50条').'</span>
+					<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -78,13 +78,14 @@ class Members extends \Phpcmf\Library\A_Field {
         $name = $field['fieldname'];
 		// 字段提示信息
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
-		//
+		// 区域大小
         $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
 
 		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
 
-        $url = '/index.php?s=api&c=api&m=members&limit='.intval($field['setting']['option']['limit']);
-
+        // 选择数量限制
+        $limit = intval($field['setting']['option']['limit']);
+        !$limit && $limit = 99999;
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
 
@@ -126,6 +127,12 @@ class Members extends \Phpcmf\Library\A_Field {
         $("#rmember_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_rmember_'.$name.'() {
+		    var len = $(\'#rmember_'.$name.'-sort-items tr\').length;
+		    if (len >= '.$limit.') {
+		        dr_tips(0, "'.dr_lang('关联数量超限').'");
+		        return;
+		    }
+		    var url = "/index.php?s=api&c=api&m=members";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',
@@ -146,27 +153,29 @@ class Members extends \Phpcmf\Library\A_Field {
                     var loading = layer.load(2, {
                         time: 10000
                     });
-                    $.ajax({type: "POST",dataType:"json", url: "'.$url.'&is_ajax=1", data: $(body).find(\'#myform\').serialize(),
+                    $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
                         success: function(json) {
                             layer.close(loading);
                             if (json.code == 1) {
                                 layer.close(index);
                                 var temp = \''.$tpl.'\';
-                                var html = "";
                                 for(var i in json.data.result){
-                                    var tpl = temp;
                                     var v = json.data.result[i];
                                     if (typeof v.id != "undefined") {
                                         if($("#dr_items_'.$name.'_"+v.id).length>0) {
                                           dr_tips(0, "'.dr_lang('已经存在').'");
                                           return;
                                         }
+                                        if ($(\'#rmember_'.$name.'-sort-items tr\').length >= '.$limit.') {
+                                            dr_tips(0, "'.dr_lang('关联数量超限').'");
+                                            return;
+                                        }
+                                        var tpl = temp;
                                         tpl = tpl.replace(/\{id\}/g, v.id);
                                         tpl = tpl.replace(/\{value\}/g, v.value);
-                                        html+= tpl;
+                                        $(\'#rmember_'.$name.'-sort-items\').append(tpl);
                                     }
                                 }
-                                $(\'#rmember_'.$name.'-sort-items\').append(html);
                                 dr_slimScroll_init(".scroller_'.$name.'_files", 300);
                                 dr_tips(1, json.msg);
                             } else {
@@ -179,7 +188,7 @@ class Members extends \Phpcmf\Library\A_Field {
                     
                     return false;
                 },
-                content: "'.$url.'&is_ajax=1"
+                content: url
             });
 		
 			

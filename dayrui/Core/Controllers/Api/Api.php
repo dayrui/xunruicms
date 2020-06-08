@@ -296,10 +296,6 @@ class Api extends \Phpcmf\Common
             );
         }
 
-        // 搜索结果显示条数
-        $limit = (int)$_GET['limit'];
-        $limit = $limit ? $limit : 50;
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -310,7 +306,7 @@ class Api extends \Phpcmf\Common
                 $id[] = (int)$i;
             }
             $builder->whereIn('id', $id);
-            $list = $builder->limit($limit)->orderBy('updatetime DESC')->get()->getResultArray();
+            $list = $builder->orderBy('updatetime DESC')->get()->getResultArray();
             if (!$list) {
                 $this->_json(0, dr_lang('没有相关数据'));
             }
@@ -349,7 +345,7 @@ class Api extends \Phpcmf\Common
         }
 
         sort($module['field']);
-        $db = $builder->limit($limit)->orderBy('updatetime DESC')->get();
+        $db = $builder->limit(50)->orderBy('updatetime DESC')->get();
         $list = $db ? $db->getResultArray() : [];
 
         \Phpcmf\Service::V()->assign(array(
@@ -363,7 +359,7 @@ class Api extends \Phpcmf\Common
                 '--'
             ),
             'category' => $module['category'],
-            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site, 'limit' => $limit]),
+            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site]),
         ));
         \Phpcmf\Service::V()->display('api_related.html');exit;
     }
@@ -416,10 +412,6 @@ class Api extends \Phpcmf\Common
 
         $builder = \Phpcmf\Service::M()->db->table('member');
 
-        // 搜索结果显示条数
-        $limit = (int)$_GET['limit'];
-        $limit = $limit ? $limit : 50;
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -430,7 +422,7 @@ class Api extends \Phpcmf\Common
                 $id[] = (int)$i;
             }
             $builder->whereIn('id', $id);
-            $list = $builder->limit($limit)->orderBy('id DESC')->get()->getResultArray();
+            $list = $builder->orderBy('id DESC')->get()->getResultArray();
             if (!$list) {
                 $this->_json(0, dr_lang('没有相关数据'));
             }
@@ -470,7 +462,7 @@ class Api extends \Phpcmf\Common
             }
         }
 
-        $db = $builder->limit($limit)->orderBy('id DESC')->get();
+        $db = $builder->limit(50)->orderBy('id DESC')->get();
         $list = $db ? $db->getResultArray() : [];
 
         \Phpcmf\Service::V()->assign(array(
@@ -478,9 +470,9 @@ class Api extends \Phpcmf\Common
             'param' => $data,
             'field' => $field,
             'group' => $this->member_cache['group'],
-            'search' => dr_form_search_hidden(['search' => 1, 'limit' => $limit]),
+            'search' => dr_form_search_hidden(['search' => 1]),
         ));
-        \Phpcmf\Service::V()->display('api_members.html');exit;
+        \Phpcmf\Service::V()->display('api_members.html');
     }
 
     /**

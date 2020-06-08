@@ -608,6 +608,7 @@ abstract class Common extends \CodeIgniter\Controller
             'time' => $time,
             'mark' => $code,
             'backurl' => \Phpcmf\Service::L('input')->xss_clean($backurl),
+            'meta_title' => dr_clearhtml($msg),
             'is_msg_page' => 1,
         ]);
 
