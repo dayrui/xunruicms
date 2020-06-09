@@ -31,6 +31,13 @@ class Image extends \Phpcmf\Library\A_Field {
 
         return ['
       
+            <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的首张图片来填充（仅对模块字段有效）').'</span>
+                </div>
+            </div>
 			<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('文件大小').'</label>
                     <div class="col-md-9">
@@ -81,6 +88,12 @@ class Image extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
 
         $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
+        if ($data && $field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
+            $one = array_key_first($data);
+            if ($data[$one]) {
+                \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data[$one];
+            }
+        }
 
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
     }
@@ -225,7 +238,7 @@ class Image extends \Phpcmf\Library\A_Field {
 
         // 表单输出
         $str = '
-			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
+			 <div class="dropzone dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
             </div>
 			<div class="finecms-file-ts">'.$ts.'</div>
 		';

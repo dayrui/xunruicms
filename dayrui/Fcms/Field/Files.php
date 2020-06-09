@@ -29,6 +29,13 @@ class Files extends \Phpcmf\Library\A_Field {
 
         return ['
             <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的首张图片来填充（仅对模块字段有效）').'</span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
                     <input type="checkbox" name="data[setting][option][input]" '.($option['input'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
@@ -128,13 +135,15 @@ class Files extends \Phpcmf\Library\A_Field {
             }
         }
 
-        /*
-        // 第一张作为缩略图
-        if (isset($_POST['data']['thumb']) && !$_POST['data']['thumb'] && isset($data['file'][0]) && $data['file'][0]) {
-            $info = \Phpcmf\Service::C()->get_attachment($data['file'][0]);
-            in_array($info['fileext'], array('jpg', 'jpeg', 'png', 'gif')) && \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data['file'][0];
-            unset($info);
-        }*/
+        if ($field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
+            $one = array_key_first($data['file']);
+            if ($data['file'][$one]) {
+                $info = \Phpcmf\Service::C()->get_attachment($data['file'][$one]);
+                if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data['file'][$one];
+                }
+            }
+        }
 
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
     }

@@ -31,6 +31,13 @@ class File extends \Phpcmf\Library\A_Field {
 		return [
 			'
             <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的图片来填充（仅对模块字段有效）').'</span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
                     <input type="checkbox" name="data[setting][option][input]" '.($option['input'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
@@ -132,6 +139,13 @@ class File extends \Phpcmf\Library\A_Field {
 		if (!$value && $field['fieldname'] == 'thumb' && isset(\Phpcmf\Service::L('Field')->data[1]['thumb']) && \Phpcmf\Service::L('Field')->data[1]['thumb']) {
 			return;
 		}
+
+        if ($value && $field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
+            $info = \Phpcmf\Service::C()->get_attachment($value);
+            if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                \Phpcmf\Service::L('Field')->data[1]['thumb'] = $value;
+            }
+        }
 
 		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value;
 	}
