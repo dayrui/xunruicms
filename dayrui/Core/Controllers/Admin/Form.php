@@ -145,6 +145,15 @@ class Form extends \Phpcmf\Common
                     }
                 }
             }
+            if ($data['setting']['notice']['username']) {
+                $arr = explode(',', $data['setting']['notice']['username']);
+                foreach ($arr as $username) {
+                    $user = dr_member_username_info($username);
+                    if (!$user) {
+                        $this->_json(0, dr_lang('通知账号[%s]不存在', $username));
+                    }
+                }
+            }
 			\Phpcmf\Service::M('Form')->update($id,
 				[
 					'name' => $data['name'],
