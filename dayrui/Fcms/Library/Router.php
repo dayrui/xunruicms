@@ -536,7 +536,7 @@ class Router
             $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
             return str_replace('//', '/', $this->url_prefix('rewrite', $mod) . $url);
         } else {
-            return $this->url_prefix('php', $mod, array(), $fid) . trim('c=search&' . @http_build_query($params), '&');
+            return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . @http_build_query($params), '&');
         }
     }
 
@@ -554,7 +554,7 @@ class Router
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
 
-        return $this->url_prefix('php', $module, array(), SITE_FID) . 'c=comment&id=' . $id;
+        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=comment&id=' . $id;
     }
 
     // 打赏
@@ -1165,7 +1165,7 @@ class Router
 
         if (preg_match_all('/\{(.*)\}/U', $rule, $match)) {
 
-            $value = array();
+            $value = [];
             foreach ($match[0] as $k => $v) {
                 $value[$v] = ($k + 1);
             }
@@ -1201,7 +1201,7 @@ class Router
                     '([0-9]+)',
 
                     '([\w\/]+)',
-                    '([a-z0-9]+)',
+                    '([a-z0-9 \-\_]+)',
                     '([a-z]+)',
                     '([a-z]+)',
 
@@ -1220,15 +1220,15 @@ class Router
 
             // 替换特殊的结果
             $preg = str_replace(
-                array('(.+))}-'),
-                array('(.+)-'),
+                ['(.+))}-'],
+                ['(.+)-'],
                 $preg
             );
 
-            return array($preg, $value);
+            return [$preg, $value];
         }
 
-        return array($rule, array());
+        return [$rule, []];
     }
 
     /**
