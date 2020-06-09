@@ -1546,7 +1546,7 @@ function dr_load_ajax(msg, url, go) {
                 success: function(json) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
-                    if (go == 1) {
+                    if (go == 1 && json.code > 0) {
                         setTimeout("window.location.reload(true)", 2000)
                     }
                 },
