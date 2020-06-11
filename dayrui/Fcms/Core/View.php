@@ -735,6 +735,9 @@ class View {
         $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
         // 开发者模式下和静态模式下关闭缓存
         (IS_DEV || defined('SC_HTML_FILE')) && $system['cache'] = 0;
+        // 格式化field
+        $system['field'] && $system['field'] = urldecode($system['field']);
+
 
         $cache_name = 'cache_view_'.$this->_list_is_count.md5(dr_array2string($system)).'_'.md5($_params).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
@@ -2491,7 +2494,15 @@ class View {
         if ($select) {
             $array = explode(',', $select);
             foreach ($array as $i => $t) {
-                in_array($t, $field) && $array[$i] = "`$prefix`.`$t`";
+                if (in_array($t, $field)) {
+                    $array[$i] = "`$prefix`.`$t`";
+                } elseif (strpos($t, '.') !== false && strpos($t, '`') === false) {
+                    list($a, $b) = explode('.', $t);
+                    if (($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a) && in_array($b, $field)) {
+                        var_dump(($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a));
+                        $array[$i] = "`$prefix`.`$b`";
+                    }
+                }
             }
             return implode(',', $array);
         }

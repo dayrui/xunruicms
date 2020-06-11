@@ -25,12 +25,12 @@ class Model {
     public function __construct(...$params) {
         // 数据库
         $this->db = \Config\Database::connect('default');
-        $this->prefix = $this->db->DBPrefix;
         $this->key = $this->id = 'id';
         $this->uid = \Phpcmf\Service::C()->uid;
         $this->site = \Phpcmf\Service::C()->site;
         $this->admin = \Phpcmf\Service::C()->admin;
         $this->member = \Phpcmf\Service::C()->member;
+        $this->prefix = $this->db->DBPrefix;
     }
 
     // 设置初始化查询条件
