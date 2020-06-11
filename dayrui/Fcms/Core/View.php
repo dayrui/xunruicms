@@ -2498,9 +2498,18 @@ class View {
                     $array[$i] = "`$prefix`.`$t`";
                 } elseif (strpos($t, '.') !== false && strpos($t, '`') === false) {
                     list($a, $b) = explode('.', $t);
-                    if (($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a) && in_array($b, $field)) {
-                        var_dump(($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a));
-                        $array[$i] = "`$prefix`.`$b`";
+                    if (($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a)) {
+                        if (strpos($b, ':') !== false) {
+                            // 存在别名
+                            list($b, $cname) = explode(':', $b);
+                            if (in_array($b, $field)) {
+                                $array[$i] = "`$prefix`.`$b` as `$cname`";
+                            }
+                        } else {
+                            if (in_array($b, $field)) {
+                                $array[$i] = "`$prefix`.`$b`";
+                            }
+                        }
                     }
                 }
             }
