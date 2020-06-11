@@ -738,7 +738,6 @@ class View {
         // 格式化field
         $system['field'] && $system['field'] = urldecode($system['field']);
 
-
         $cache_name = 'cache_view_'.$this->_list_is_count.md5(dr_array2string($system)).'_'.md5($_params).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
@@ -1284,7 +1283,6 @@ class View {
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
-
             case 'form': // 表单调用
 
                 $mid = $system['form'];
@@ -1768,7 +1766,6 @@ class View {
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
 
-
             case 'content': // 模块内容详细页面
 
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
@@ -1929,9 +1926,9 @@ class View {
                 $fields = $module['field']; // 主表的字段
 
                 // 排序操作
-                if (!$system['order'] && $where[0]['adj'] == 'IN' && $where[0]['name'] == 'id') {
+                if (!$system['order'] && isset($where['id']) && $where['id']['adj'] == 'IN' && $where['id']['value']) {
                     // 按id序列来排序
-                    $system['order'] = strlen($where[0]['value']) < 10000 && $where[0]['value'] ? 'instr("'.$where[0]['value'].'", `'.$table.'`.`id`)' : 'NULL';
+                    $system['order'] = strlen($where['id']['value']) < 10000 && $where['id']['value'] ? 'instr("'.$where['id']['value'].'", `'.$table.'`.`id`)' : 'NULL';
                 } else {
                     // 默认排序参数
                     !$system['order'] && ($system['order'] = $system['flag'] ? 'updatetime_desc' : ($action == 'hits' ? 'hits' : 'updatetime'));
@@ -2314,7 +2311,12 @@ class View {
                         $arr = explode(',', dr_safe_replace($t['value']));
                         $str = '';
                         foreach ($arr as $a) {
-                            $str.= ',"'.$a.'"';
+                            if (!is_numeric($a)) {
+                                $str.= ',"'.$a.'"';
+                            } else {
+                                $str.= ','.$a;
+                            }
+
                         }
                         $string.= $join." {$t['name']} IN (".trim($str, ',').")";
                         break;
@@ -2323,7 +2325,11 @@ class View {
                         $arr = explode(',', dr_safe_replace($t['value']));
                         $str = '';
                         foreach ($arr as $a) {
-                            $str.= ',"'.$a.'"';
+                            if (!is_numeric($a)) {
+                                $str.= ',"'.$a.'"';
+                            } else {
+                                $str.= ','.$a;
+                            }
                         }
                         $string.= $join." {$t['name']} NOT IN (".trim($str, ',').")";
                         break;
@@ -2553,10 +2559,15 @@ class View {
         } elseif (in_array(strtoupper($order), ['RAND()', 'RAND'])) {
             // 随机排序
             return 'RAND()';
+        } elseif (strpos($order, 'instr(') === 0) {
+            // id序列排序
+            return $order;
         }
+
         // 字段排序
         $my = [];
         $array = explode(',', $order);
+
         foreach ($array as $i => $t) {
             if (strpos($t, '`') !== false) {
                 $my[$i] = $t;
@@ -2594,47 +2605,7 @@ class View {
 
     // 给排序字段加上表前缀
     public function _set_order_field_prefix($order, $field, $prefix) {
-
-        if ($order) {
-            if (in_array(strtoupper($order), ['RAND()', 'RAND'])) {
-                // 随机排序
-                return 'RAND()';
-            } else {
-                // 字段排序
-                $my = [];
-                $array = explode(',', $order);
-                foreach ($array as $i => $t) {
-                    if (strpos($t, '`') !== false) {
-                        $my[$i] = $t;
-                        continue;
-                    }
-                    $a = explode('_', $t);
-                    $b = end($a);
-                    if (in_array(strtolower($b), ['desc', 'asc'])) {
-                        $a = str_replace('_'.$b, '', $t);
-                    } else {
-                        $a = $t;
-                        $b = '';
-                    }
-                    $b = strtoupper($b);
-                    if (in_array($a, $field)) {
-                        $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
-                    } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                        if ($this->pos_baidu) {
-                            $my[$i] = $a.' ASC';
-                            $this->pos_order = $a;
-                        } else {
-                            $my[$i] = '没有定位到您的坐标';
-                        }
-                    }
-                }
-                if ($my) {
-                    return implode(',', $my);
-                }
-            }
-        }
-
-        return NULL;
+        return $this->_set_orders_field_prefix($order, [$prefix => $field]);
     }
 
     // list 返回
