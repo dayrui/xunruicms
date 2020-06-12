@@ -44,6 +44,13 @@ class Related extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>
 				<div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('主题显示名称').'</label>
+                    <div class="col-md-9">
+                    <label><input type="text" class="form-control" size="10" name="data[setting][option][title]" value="'.($option['title'] ? $option['title'] : dr_lang('主题')).'"></label>
+					<span class="help-block">'.dr_lang('用于显示管理的主题字段名称，默认是：主题').'</span>
+                    </div>
+                </div>
+				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('最大选择数').'</label>
                     <div class="col-md-9">
                     <label><input type="text" class="form-control" size="10" name="data[setting][option][limit]" value="'.$option['limit'].'"></label>
@@ -116,7 +123,7 @@ class Related extends \Phpcmf\Library\A_Field {
         <thead>
         <tr>
             <th width="90" style="border-left-width: 1px!important;">Id </th>
-            <th>'.dr_lang('主题').' </th>
+            <th>'.($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题')).' </th>
             <th width="50"> </th>
         </tr>
         </thead>
@@ -233,7 +240,7 @@ class Related extends \Phpcmf\Library\A_Field {
         <thead>
         <tr>
             <th width="90" style="border-left-width: 2px!important;"> Id </th>
-            <th>'.dr_lang('主题').' </th>
+            <th>'.($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题')).' </th>
         </tr>
         </thead>
         <tbody>';
