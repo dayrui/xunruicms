@@ -29,9 +29,11 @@ class Security extends \CodeIgniter\Security\Security
             return $this;
         } elseif (defined('IS_API') && IS_API) {
             return $this;
-        } elseif (isset($_GET['appid']) && isset($_GET['appsecret'])) {
+        } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
             return $this;
         } elseif (APP_DIR == 'weixin') {
+            return $this;
+        } elseif (defined('IS_INSTALL')) {
             return $this;
         }
 
