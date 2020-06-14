@@ -285,7 +285,7 @@ class Home extends \Phpcmf\Common
                     </ul>
                 </div>';<li class="dropdown dropdown-user">*/
                 $mstring.= '<li class="dropdown dropdown-extended dropdown-tasks fc-mb-sum-menu" id="dr_m_top_'.$tid.'" style=" '.($first == $tid ? '' : 'display:none').'">
-                    <a  class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">

@@ -315,29 +315,54 @@ class Member extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
-        $this->_Post($uid);
-
-        // 获取该组可用字段
         $field = [];
-        if (CI_DEBUG && $this->member_cache['field']) {
-            $member = \Phpcmf\Service::M('member')->get_member($uid);
-            $fieldid = [];
-            if ($member['groupid']) {
-                foreach ($member['groupid'] as $gid) {
-                    if ($this->member_cache['group'][$gid]['field']) {
-                        $fieldid = dr_array2array($fieldid, $this->member_cache['group'][$gid]['field']);
+        if (in_array(1, $this->admin['roleid'])) {
+            // 超级管理员，显示全部字段并提示
+            if ($this->member_cache['field']) {
+                $member = \Phpcmf\Service::M('member')->get_member($uid);
+                $fieldid = [];
+                if ($member['groupid']) {
+                    foreach ($member['groupid'] as $gid) {
+                        if ($this->member_cache['group'][$gid]['field']) {
+                            $fieldid = dr_array2array($fieldid, $this->member_cache['group'][$gid]['field']);
+                        }
                     }
-                }
-                if ($fieldid) {
-                    foreach ($this->member_cache['field'] as $fname => $t) {
-                        if (!in_array($fname, $fieldid)) {
-                            $field[$fname] = $t;
+                    if ($fieldid) {
+                        foreach ($this->member_cache['field'] as $fname => $t) {
+                            if (!in_array($fname, $fieldid)) {
+                                $field[$fname] = $t;
+                            }
                         }
                     }
                 }
             }
+        } else {
+            // 子管理员排查不可用的字段
+            $myfield = [];
+            $groupid = \Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll();
+            if ($groupid && $this->member_cache['field']) {
+                $fieldid = [];
+                foreach ($groupid as $t) {
+                    if ($this->member_cache['group'][$t['gid']]['field']) {
+                        $fieldid = dr_array2array($fieldid, $this->member_cache['group'][$t['gid']]['field']);
+                    }
+                }
+                if ($fieldid) {
+                    foreach ($this->member_cache['field'] as $fname => $t) {
+                        if (in_array($fname, $fieldid)) {
+                            $myfield[$fname] = $t;
+                        }
+                    }
+                }
+            }
+            $this->_init([
+                'table' => 'member',
+                'field' => $myfield,
+            ]);
         }
-        
+
+        $this->_Post($uid);
+
         \Phpcmf\Service::V()->assign([
             'uid' => $uid,
             'page' => $page,
