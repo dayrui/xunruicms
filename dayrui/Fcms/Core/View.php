@@ -87,6 +87,7 @@ class View {
             'category', 'module', 'content', 'related', 'share', 'table', 'form', 'mform', 'member', 'page',
             'tag', 'hits', 'search', 'category_search_field', 'linkage', 'sql', 'function', 'comment',
             'cache', 'navigator'
+            ,'modules'
         ];
 
         // 自定义action
@@ -947,23 +948,26 @@ class View {
                 }
 
                 $return = [];
-                foreach ($module['category'][$catid]['field'] as $t) {
-					$t = $module['category_data_field'][$t];
-                    $data = dr_format_option_array($t['setting']['option']['options']);
-                    if ($t['issearch'] && $t['ismain'] 
-						&& in_array($t['fieldtype'], ['Select', 'Radio', 'Checkbox']) && $data) {
-                        $list = [];
-                        foreach ($data as $value => $name) {
-                            $name && !is_null($value) && $list[] = array(
-                                'name' => trim($name),
-                                'value' => trim($value)
+
+                foreach ($module['category'][$catid]['field'] as $field) {
+                    $t = $module['category_data_field'][$field];
+                    if ($t) {
+                        $data = dr_format_option_array($t['setting']['option']['options']);
+                        if ($t['issearch'] && $t['ismain']
+                            && in_array($t['fieldtype'], ['Select', 'Radio', 'Checkbox']) && $data) {
+                            $list = [];
+                            foreach ($data as $value => $name) {
+                                $name && !is_null($value) && $list[] = array(
+                                    'name' => trim($name),
+                                    'value' => trim($value)
+                                );
+                            }
+                            $list && $return[] = array(
+                                'name' => $t['name'],
+                                'field' => $t['fieldname'],
+                                'data' => $list,
                             );
                         }
-                        $list && $return[] = array(
-                            'name' => $t['name'],
-                            'field' => $t['fieldname'],
-                            'data' => $list,
-                        );
                     }
                 }
 
@@ -2051,7 +2055,7 @@ class View {
                 }
 
                 $sql_limit = $pages = '';
-                $sql_where = $this->_get_where($where, $fields); // sql的where子句
+                $sql_where = $this->_get_where($where); // sql的where子句
 
                 // 商品有效期
                 // isset($fields['order_etime']) && ($system['oot'] ? $sql_where.= ' AND `order_etime` BETWEEN 1 AND '.SYS_TIME : $sql_where.= ' AND NOT (`order_etime` BETWEEN 1 AND '.SYS_TIME.')');
@@ -2141,6 +2145,117 @@ class View {
                 ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
+                break;
+
+            case 'modules': // 多模块合并查询
+
+                $modules = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-content');
+                if (!$modules) {
+                    return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块');
+                }
+
+                $module = explode(',', $system['module']);
+                if (dr_count($module) < 2) {
+                    return $this->_return($system['return'], 'module参数有误('.$system['module'].')：至少两个模块以上');
+                }
+
+                if (!$system['field']) {
+                    return $this->_return($system['return'], '必须传入field参数来指定显示字段');
+                }
+
+                $field = explode(',', $system['field']);
+
+                // 是否操作自定义where
+                if ($param['where']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => urldecode($param['where'])
+                    ];
+                    unset($param['where']);
+                }
+
+                $form = [];
+
+                // 验证模块的有效性
+                foreach ($module as $m) {
+                    if (!isset($modules[$m])) {
+                        return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块('.$m.')');
+                    }
+                    $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$m);
+                    $mfield = \Phpcmf\Service::M()->db->getFieldNames($table);
+                    $infield = array_diff($field, $mfield);
+                    if ($infield) {
+                        return $this->_return($system['return'], '站点('.$system['site'].')的内容模块('.$m.')不存在的字段：'.implode(',', $infield));
+                    }
+                    $form[] = 'SELECT '.$system['field'].',\''.$table.'\' AS table_name FROM `'.$table.'` WHERE `status`=9';
+                    $fields = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m, 'field');
+                }
+
+                $sql_limit = $pages = '';
+                $where = $this->_set_where_field_prefix($where, $field, 'my', $fields); // 给条件字段加上表前缀
+                $sql_where = $this->_get_where($where); // sql的where子句
+
+
+                $sql_from = '('. implode(' UNION ALL ', $form).') as my';
+
+                // 统计标签
+                if ($this->_list_is_count) {
+                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                } else {
+                    $first_url = '';
+                    if ($system['page']) {
+                        // 统计数量
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
+                        if (!$total) {
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
+                        }
+                        // 计算分页标签
+                        $page = max(1, (int)$_GET['page']);
+                        $pagesize = (int)$system['pagesize'];
+                        !$pagesize && $pagesize = 10;
+                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
+                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                    } elseif ($system['num']) {
+                        $pages = '';
+                        $sql_limit = "LIMIT {$system['num']}";
+                    }
+
+                    $system['order'] = $this->_set_order_field_prefix($system['order'], $field, 'my'); // 给排序字段加上表前缀
+                    $sql = "SELECT " .$system['field'] . ", table_name FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
+                }
+
+                $data = $this->_query($sql, $system['db'], $system['cache']);
+
+                // 缓存查询结果
+                if (is_array($data) && $data) {
+                    // 模块表的系统字段
+                    $fields['inputtime'] = ['fieldtype' => 'Date'];
+                    $fields['updatetime'] = ['fieldtype' => 'Date'];
+                    // 格式化显示自定义字段内容
+                    $dfield = \Phpcmf\Service::L('Field')->app($m);
+                    foreach ($data as $i => $t) {
+                        $t['mid'] = str_replace( \Phpcmf\Service::M()->dbprefix($system['site'].'_'), '', $t['table_name']);
+                        $t['url'] = dr_url_prefix($t['url'], $t['mid'], $system['site'], $this->_is_mobile);
+                        $data[$i] = $dfield->format_value($fields, $t, 1);
+                    }
+                }
+
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
+
                 break;
 
 
