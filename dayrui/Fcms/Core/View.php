@@ -2187,7 +2187,7 @@ class View {
                     if ($infield) {
                         return $this->_return($system['return'], '站点('.$system['site'].')的内容模块('.$m.')不存在的字段：'.implode(',', $infield));
                     }
-                    $form[] = 'SELECT '.$system['field'].',\''.$table.'\' AS table_name FROM `'.$table.'` WHERE `status`=9';
+                    $form[] = 'SELECT '.$system['field'].',\''.$m.'\' AS mid FROM `'.$table.'` WHERE `status`=9';
                     $fields = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m, 'field');
                 }
 
@@ -2224,7 +2224,7 @@ class View {
                     }
 
                     $system['order'] = $this->_set_order_field_prefix($system['order'], $field, 'my'); // 给排序字段加上表前缀
-                    $sql = "SELECT " .$system['field'] . ", table_name FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
+                    $sql = "SELECT " .$system['field'] . ",mid FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
                 $data = $this->_query($sql, $system['db'], $system['cache']);
@@ -2237,7 +2237,6 @@ class View {
                     // 格式化显示自定义字段内容
                     $dfield = \Phpcmf\Service::L('Field')->app($m);
                     foreach ($data as $i => $t) {
-                        $t['mid'] = str_replace( \Phpcmf\Service::M()->dbprefix($system['site'].'_'), '', $t['table_name']);
                         $t['url'] = dr_url_prefix($t['url'], $t['mid'], $system['site'], $this->_is_mobile);
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
