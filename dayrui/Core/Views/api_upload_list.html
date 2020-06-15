@@ -2,7 +2,7 @@
 
 <form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
     {$form}
-    <div class="portlet  light " style="padding: 0">
+    <div class="portlet light " style="padding: 0">
         {if $list.unused}
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
@@ -31,11 +31,16 @@
                                 <label class="files_row_preview preview">{dr_file_list_preview_html($t)}</label>
                                 <label class="label label-sm label-success hidden-xs" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
                                 <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
-                                <label><button onclick="dr_file_delete(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
+                                <label><button onclick="dr_file_delete_tips(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
                             </div>
                             {/table}
                         </div>
                     </div>
+                    {if !$return}
+                    <script>
+                        window.location.href = "{$tab_url}&pp=1";
+                    </script>
+                    {/if}
                 {elseif $pp==1}
                     <div class="row  margin-bottom-20 template-download">
                             <div class="col-md-12 text-center margin-bottom-20">
@@ -88,6 +93,19 @@
     function dr_fsearch() {
         var url = '{$search_url}&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
         window.location.href = url;
+    }
+    function dr_file_delete_tips(obj, id) {
+        layer.confirm(
+            "{dr_lang('确定要删除本文件吗？')}",
+            {
+                icon: 3,
+                shade: 0,
+                title: lang['ts'],
+                btn: [lang['ok'], lang['esc']]
+            }, function(index){
+                layer.close(index);
+                dr_file_delete(obj, id)
+            });
     }
 </script>
 
