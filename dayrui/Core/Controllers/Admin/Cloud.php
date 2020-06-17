@@ -380,7 +380,7 @@ class Cloud extends \Phpcmf\Common
         }
 
         if (!$is_ok) {
-            $this->_json(0, '应用程序压缩包存在问题');
+            $this->_json(0, '本站：应用程序压缩包存在问题');
         }
 		
 		if ($is_app) {

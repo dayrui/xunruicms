@@ -1140,14 +1140,18 @@ class View {
 
                 if (preg_match('/sql=\'(.+)\'/sU', $_params, $sql)) {
 
+                    // urldecode解析
+                    if (stripos($sql[1], 'SELECT+') === 0) {
+                        $sql[1] = urldecode($sql[1]);
+                    }
+
                     // 替换前缀
                     $sql = str_replace(
-                        array('@#S', '@#'),
-                        array(\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()),
+                        ['@#S', '@#'],
+                        [\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()],
                         trim($sql[1])
                     );
 
-                    stripos($sql, 'SELECT+') === 0 && $sql = urldecode($sql);
                     if (stripos($sql, 'SELECT') !== 0) {
                         return $this->_return($system['return'], 'SQL语句只能是SELECT查询语句');
                     } elseif (preg_match('/select(.*)into outfile(.*)/i', $sql)) {
