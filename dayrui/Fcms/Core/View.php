@@ -29,6 +29,9 @@ class View {
     private $_include_file; // 引用计数
     private $_list_is_count; // 是否是统计标签
 
+    private $_view_time; // 模板的运行时间
+    private $_view_files; // 模板的引用文件
+
     private $pos_order; // 是否包含有地图定位的排序
     private $pos_baidu; // 百度地图定位坐标
 
@@ -214,23 +217,19 @@ class View {
         // 加载编译后的缓存文件
         $this->_disp_dir = $_dir;
         $_view_file = $this->get_file_name($this->_filename, $_dir);
-        $_view_name = str_replace([TPLPATH, FCPATH, APPSPATH], ['TPLPATH/', 'FCPATH/', 'APPSPATH/'], $_view_file);
 
-        if (IS_DEV || (IS_ADMIN && SYS_DEBUG)) {
-            echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
-        } else {
-            $this->_options = null;
-        }
-
-        \Config\Services::timer()->start($_view_name);
         include $this->load_view_file($_view_file);
-        \Config\Services::timer()->stop($_view_name);
-        // 记录性能日志
-        $this->logPerformance($start, microtime(true), $_view_name);
+
+        $this->_view_time = round(microtime(true) - $start, 2);
 
         // 消毁变量
         $this->_include_file = null;
         $this->loadjs = null;
+
+        // 非开发者模式下清除变量
+        if (!IS_DEV && !CI_DEBUG) {
+            $this->_options = null;
+        }
     }
 
     // 动态加载js
@@ -320,7 +319,6 @@ class View {
             dr_show_error('模板文件不存在');
         }
     }
-
 
     /**
      * 设置模板变量
@@ -412,7 +410,12 @@ class View {
      */
     public function load_view_file($name) {
 
-        $cache_file = $this->_cache.str_replace(array(WEBPATH, '/', '\\', DIRECTORY_SEPARATOR), array('', '_', '_', '_'), $name).($this->_is_mobile ? '.mobile.' : '').'.cache.php';
+        $cache_file = $this->_cache.str_replace([WEBPATH, '/', '\\', DIRECTORY_SEPARATOR], ['', '_', '_', '_'], $name).($this->_is_mobile ? '.mobile.' : '').'.cache.php';
+
+        $this->_view_files[$name] = [
+            'name' => pathinfo($name, PATHINFO_BASENAME),
+            'path' => str_replace(TPLPATH, 'TPLPATH/', $name),
+        ];
 
         // 当缓存文件不存在时或者缓存文件创建时间少于了模板文件时,再重新生成缓存文件
         // 开发者模式下关闭缓存
@@ -2857,7 +2860,17 @@ class View {
 
     // 模板中的全部变量
     public function getData() {
-        return $this->_options;
+        return [];
+    }
+
+    // 模板中的文件数
+    public function get_view_files() {
+        return $this->_view_files;
+    }
+
+    // 模板中的运行时间
+    public function get_view_time() {
+        return $this->_view_time;
     }
 
     /**

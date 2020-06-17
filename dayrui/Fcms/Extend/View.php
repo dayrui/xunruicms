@@ -20,6 +20,42 @@ class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
     public function __construct()
     {
         $this->viewer = \Phpcmf\Service::V();
+        $this->hasTabContent = true;
     }
 
+    /**
+     * Returns the data of this collector to be formatted in the toolbar
+     *
+     * @return array
+     */
+    public function display(): array
+    {
+
+        $vars = [];
+        $tpl_var = $this->viewer->get_data();
+        if ($tpl_var) {
+            foreach ($tpl_var as $key => $value) {
+                $vars[] = [
+                    'name' => $key,
+                    'value' => var_export($value, true),
+                ];
+            }
+        }
+
+        return [
+            'vars' => $vars,
+            'files' => $this->viewer->get_view_files(),
+            'time' => $this->viewer->get_view_time(),
+        ];
+    }
+
+    /**
+     * Returns any information that should be shown next to the title.
+     *
+     * @return string
+     */
+    public function getBadgeValue(): int
+    {
+        return count($this->viewer->get_view_files());
+    }
 }

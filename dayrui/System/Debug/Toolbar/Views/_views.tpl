@@ -1,0 +1,35 @@
+
+<h3>运行时间：{time}ms</h3>
+
+<br>
+<h2>模板文件</h2>
+<table>
+    <thead>
+    <tr>
+        <th>模板</th>
+        <th>路径</th>
+    </tr>
+    </thead>
+    <tbody>
+    {files}
+        <tr>
+            <td>{name}</td>
+            <td>{path}</td>
+        </tr>
+    {/files}
+    </tbody>
+</table>
+
+<br>
+
+<h2>模板变量</h2>
+<table>
+    <tbody>
+    {vars}
+        <tr>
+            <td>{name}</td>
+            <td><pre>{value}</pre></td>
+        </tr>
+    {/vars}
+    </tbody>
+</table>
