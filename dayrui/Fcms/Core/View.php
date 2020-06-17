@@ -1140,16 +1140,11 @@ class View {
 
                 if (preg_match('/sql=\'(.+)\'/sU', $_params, $sql)) {
 
-                    // urldecode解析
-                    if (stripos($sql[1], 'SELECT+') === 0) {
-                        $sql[1] = urldecode($sql[1]);
-                    }
-
                     // 替换前缀
                     $sql = str_replace(
                         ['@#S', '@#'],
                         [\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()],
-                        trim($sql[1])
+                        trim(urldecode($sql[1]))
                     );
 
                     if (stripos($sql, 'SELECT') !== 0) {

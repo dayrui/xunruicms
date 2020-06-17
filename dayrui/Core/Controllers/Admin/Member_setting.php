@@ -51,6 +51,7 @@ class Member_setting extends \Phpcmf\Common
                     '用户设置' => ['member_setting/index', 'fa fa-cog'],
                 ]
             ),
+            'oauth' => dr_oauth_list(),
             'group' => \Phpcmf\Service::M()->table('member_group')->getAll(),
             'synurl' => \Phpcmf\Service::M('member')->get_sso_url(),
         ]);

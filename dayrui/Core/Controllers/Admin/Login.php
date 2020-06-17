@@ -68,33 +68,36 @@ class Login extends \Phpcmf\Common
         }
 
         $url = ADMIN_URL.SELF.'?c=api&m=oauth&is_admin_call=1&name=';
-        $name = ['qq', 'weixin', 'weibo', 'wechat'];
+        $name = dr_oauth_list();
+        if (dr_is_app('weixin')) {
+            $name['wechat'] = [];
+        }
+
         $oauth = [];
-        foreach ($name as $key => $value) {
-            if (!isset($this->member_cache['oauth'][$value]['id'])
-                || !$this->member_cache['oauth'][$value]['id']) {
-                continue;
-            }
-            if ($value == 'wechat' && !dr_is_app('weixin')) {
-                continue;
-            }
-            if (in_array($value, ['weixin', 'wechat'])) {
-                if (dr_is_weixin_app()) {
-                    dr_is_app('weixin') && $oauth['wechat'] = [
-                        'name' => 'wechat',
-                        'url' => OAUTH_URL . 'index.php?s=weixin&c=member&m=login_url&back='.urlencode($url.'wechat'),
-                    ];
+        if ($name) {
+            foreach ($name as $value => $t) {
+                if (!isset($this->member_cache['oauth'][$value]['id'])
+                    || !$this->member_cache['oauth'][$value]['id']) {
+                    continue;
+                }
+                if (in_array($value, ['weixin', 'wechat'])) {
+                    if (dr_is_weixin_app()) {
+                        dr_is_app('weixin') && $oauth['wechat'] = [
+                            'name' => 'wechat',
+                            'url' => OAUTH_URL . 'index.php?s=weixin&c=member&m=login_url&back='.urlencode($url.'wechat'),
+                        ];
+                    } else {
+                        $oauth[$value] = [
+                            'name' => $value,
+                            'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
+                        ];
+                    }
                 } else {
                     $oauth[$value] = [
                         'name' => $value,
                         'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
                     ];
                 }
-            } else {
-                $oauth[$value] = [
-                    'name' => $value,
-                    'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
-                ];
             }
         }
 

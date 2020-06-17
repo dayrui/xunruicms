@@ -5,6 +5,21 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+// 快捷登录接入商信息列表
+function dr_oauth_list() {
+    $data = [];
+    $path = FCPATH.'ThirdParty/OAuth/';
+    $local = dr_dir_map($path, 1);
+    if ($local) {
+        foreach ($local as $dir) {
+            if (is_file($path.$dir.'/App.php')) {
+                $data[strtolower($dir)] = require $path.$dir.'/App.php';
+            }
+        }
+    }
+    return $data;
+}
+
 // 判断是否是移动端终端
 if (!function_exists('dr_is_mobile')) {
     function dr_is_mobile() {
