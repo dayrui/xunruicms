@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin` (
   `uid` int(10) unsigned NOT NULL COMMENT '管理员uid',
   `setting` Text DEFAULT NULL COMMENT '相关配置',
   `usermenu` text COMMENT '自定义面板菜单，序列化数组格式',
-  `usermenu` text COMMENT '自定义面板菜单，序列化数组格式',
+  `history` text COMMENT '历史菜单，序列化数组格式',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='管理员表';
