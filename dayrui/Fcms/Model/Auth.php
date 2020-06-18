@@ -247,8 +247,9 @@ class Auth extends \Phpcmf\Model {
         $data['phone'] = $member['phone'];
         $data['username'] = $member['username'];
         $data['password'] = $member['password'];
-        $data['usermenu'] = dr_string2array($data['usermenu']);
+        $data['history'] = dr_string2array($data['history']);
         $data['setting'] = dr_string2array($data['setting']);
+        $data['usermenu'] = dr_string2array($data['usermenu']);
 
         return dr_return_data(1, '', $data);
     }

@@ -1750,26 +1750,6 @@ function dr_module_send_ajax(url) {
 }
 
 
-// 添加快捷菜单
-function dr_add_menu() {
-    var index = layer.load(2, {
-        shade: [0.3,'#fff'], //0.1透明度的白色背景
-        time: 5000
-    });
-    $.ajax({
-        type: "GET",
-        url: admin_file+"?c=api&m=menu&v="+encodeURIComponent($("#right_page").attr("url")),
-        dataType: "json",
-        success: function (json) {
-            layer.close(index);
-            dr_tips(json.code, json.msg);
-        },
-        error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
-        }
-    });
-}
-
 // ajax关闭或启用
 function dr_ajax_open_close(e, url, fan) {
     var index = layer.load(2, {

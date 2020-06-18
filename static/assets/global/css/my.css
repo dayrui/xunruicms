@@ -60,7 +60,9 @@ body{background-color:#D9DEE4}
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-inbox .dropdown-menu .dropdown-menu-list .subject .from {
     color:#5b9bd1
 }
-.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-language>.dropdown-toggle>.langname,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>.username,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>i {
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-language>.dropdown-toggle>.langname,
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>.username,
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>i {
     color:#fff
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-tasks .dropdown-menu .dropdown-menu-list .progress {
@@ -329,7 +331,7 @@ body{background-color:#D9DEE4}
 }
 
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active>a {
-    background:#100f0f;
+    background:#21282e;
     border-left:4px solid #22282e;
     color:#f1f1f1
 }

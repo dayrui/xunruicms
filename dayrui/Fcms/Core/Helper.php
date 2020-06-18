@@ -2608,14 +2608,14 @@ function dr_ajax_template($id, $filename) {
  * @return	string
  */
 if (!function_exists('dr_show_hits')) {
-    function dr_show_hits($id, $dom = "") {
+    function dr_show_hits($id, $dom = "", $dir = MOD_DIR) {
         $is = $dom;
         !$dom && $dom = "dr_show_hits_{$id}";
         $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
         return $html."<script type=\"text/javascript\">
 		$.ajax({
 			type: \"GET\",
-			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".MOD_DIR."&m=hits&id={$id}\",
+			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\",
 			dataType: \"jsonp\",
 			success: function(data){
 				if (data.code) {
@@ -2635,11 +2635,11 @@ if (!function_exists('dr_show_hits')) {
  * @param	intval	$id
  * @return	string
  */
-function dr_show_module_total($name, $id, $dom) {
+function dr_show_module_total($name, $id, $dom, $dir = MOD_DIR) {
     return "<script type=\"text/javascript\">
 		$.ajax({
 			type: \"GET\",
-			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".MOD_DIR."&m=mcount&name={$name}&id={$id}\",
+			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=mcount&name={$name}&id={$id}\",
 			dataType: \"jsonp\",
 			success: function(data){
 				if (data.code) {

@@ -208,21 +208,76 @@ class Api extends \Phpcmf\Common
 		$menu = \Phpcmf\Service::M()->db->table('admin_menu')->select('name')->where('uri', $uri)->get()->getRowArray();
 		$name = $menu ? $menu['name'] : '未知名称';
 		// 替换URL
-		$admin = \Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->get()->getRowArray();
-		if ($admin) {
-			$menu = dr_string2array($admin['usermenu']);
+		if ($this->admin) {
+			$menu = dr_string2array($this->admin['usermenu']);
 			foreach ($menu as $t) {
-				$t['url'] == $url && $this->_json(1, dr_lang('已经存在'));
+				if ($t['url'] == $url) {
+				    $this->_json(0, dr_lang('%s已经存在', $name));
+                }
 			}
-			$menu[] = array(
-				'name' => $name,
-				'url' => $url,
-			);
-			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update(array(
-					'usermenu' => dr_array2string($menu)
-				)
-			);
-			$this->_json(1, dr_lang('操作成功'));
+			$menu[] = [
+                'name' => $name,
+                'url' => $url,
+            ];
+			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update([
+                'usermenu' => dr_array2string($menu)
+            ]);
+
+			$html = '';
+			foreach ($menu as $t) {
+			    $html.= '<a class="btn '.($t['color'] && $t['color']!='default' ? $t['color'] : 'btn-default').'" '.($t['target'] ? 'target="_blank"' : ' target="right"').' href="'.$t['url'].'"> '.$t['name'].' </a>';
+            }
+
+			$this->_json(1, dr_lang('操作成功'), $html);
+		}
+
+		$this->_json(0, dr_lang('加入失败'));
+	}
+
+	// 删除历史菜单
+	public function clear_history() {
+
+        \Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update([
+            'history' => ''
+        ]);
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
+    // 加入历史菜单
+	public function history() {
+
+		$url = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('v')));
+		$name = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('n')));
+		// 替换URL
+		if ($this->admin) {
+			$menu = dr_string2array($this->admin['history']);
+			if (is_array($menu) && $menu) {
+                foreach ($menu as $t) {
+                    if ($t['url'] == $url) {
+                        $this->_json(0, dr_lang('%s已经存在', $name));
+                    }
+                }
+            } else {
+			    $menu = [];
+            }
+			array_unshift($menu, [
+                'name' => $name,
+                'url' => $url,
+            ]);
+			$max = 20;
+			if (count($menu) > $max) {
+                $menu = array_slice($menu, 0, $max);
+            }
+			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update([
+                'history' => dr_array2string($menu)
+            ]);
+
+			$html = '';
+			foreach ($menu as $t) {
+			    $html.= '<a class="btn btn-default href="'.$t['url'].'" target="right"> '.$t['name'].' </a>';
+            }
+
+			$this->_json(1, dr_lang('操作成功'), $html);
 		}
 
 		$this->_json(0, dr_lang('加入失败'));

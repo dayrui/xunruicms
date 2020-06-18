@@ -225,6 +225,11 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
                 }
 
+                $table = $prefix.'admin';
+                if (!\Phpcmf\Service::M()->db->fieldExists('history', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT NOT NULL');
+                }
+
                 $table = $prefix.'admin_setting';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {
                     \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (

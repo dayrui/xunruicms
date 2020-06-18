@@ -56,10 +56,12 @@
                                         <i class="fa fa-eye font-blue"></i>
                                         <a href="javascript:;">{dr_show_hits($id)}次</a>
                                     </div>
+                                    {if dr_is_app('comment')}
                                     <div class="search-post-meta">
                                         <i class="fa fa-comments font-blue"></i>
                                         <a href="{Router::comment_url($id)}">{$comments}</a>
                                     </div>
+                                    {/if}
                                 </div>
                                 <div class="portlet-body" style="height: auto;overflow: hidden;">
                                     <div class="row">

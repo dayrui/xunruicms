@@ -109,6 +109,11 @@
                         {/if}
                     </ul>
                 </li>
+                <li class="dropdown dropdown-quick-sidebar-toggler">
+                    <a href="javascript:;" class="dropdown-toggle">
+                        <i class="fa fa-angle-double-right" style="margin-top: 10px;"></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -153,20 +158,6 @@
     <div class="page-content-wrapper">
         <div class="page-content index-content">
 
-            <div class="theme-panel hidden-xs hidden-sm">
-                <div class="toggler"> </div>
-                <div class="toggler-close"> </div>
-                <div class="theme-options" style="">
-                    <div class="theme-option" style="text-align: center;    margin-top: 30px;">
-                        <button type="button" onclick="dr_add_menu()" class="btn blue-madison"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
-                    </div>
-                    <div style="text-align: center; margin-bottom: 20px">
-                        <button type="button" onclick="$('.theme-panel').remove()" class="btn red"> <i class="fa fa-times"></i> {dr_lang('隐藏')} </button>
-                    </div>
-
-                </div>
-            </div>
-
             <div class="page-toolbar fc-mb-left-menu">
 
             </div>
@@ -176,7 +167,124 @@
         </div>
     </div>
 
-</div>
+    <!-- BEGIN QUICK SIDEBAR -->
+    <a href="javascript:;" class="page-quick-sidebar-toggler">
+        <i class="fa fa-angle-double-left"></i>
+    </a>
+    <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
+        <div class="page-quick-sidebar">
+            <?php $notice = \Phpcmf\Service::M('auth')->admin_notice();?>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> {dr_lang('快速导航')}</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}{if $notice}&nbsp;<span class="badge badge-success">{dr_count($notice)}</span>{/if}</a>
+                </li>
+                <li>
+                    <a href="{SITE_URL}" target="_blank" class="dropdown-toggle"> {dr_lang('访问前台')}</a>
+                </li>
+            </ul>
+            <div class="tab-content">
 
+                <div class="tab-pane active page-quick-sidebar-nav" id="quick_sidebar_tab_1">
+                    <h3 class="list-heading">{dr_lang('快捷链接')}</h3>
+                    <div class="admin-usermenu" id="dr_admin_usermenu">
+                        {loop $admin.usermenu $t}
+                        <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} target="right" {/if} href="{$t.url}"> {$t.name} </a>
+                        {/loop}
+                    </div>
+                    <div class="theme-option">
+                        <button type="button" onclick="dr_add_menu()" class="btn blue-madison"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
+                    </div>
+                    <h3 class="list-heading margin-top-30">{dr_lang('历史访问')}</h3>
+                    <div class="admin-usermenu" id="dr_history_usermenu">
+                    {loop $admin.history $t}
+                    <a class="btn btn-default" target="right" href="{$t.url}"> {$t.name} </a>
+                    {/loop}
+                    </div>
+                    <div class="theme-option">
+                        <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
+                    </div>
+                </div>
+                <div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
+                        {if $notice}
+                         <ul class="feeds list-items">
+                            {loop $notice $t}
+                            <li>
+                                <div class="col1" style="padding-top: 2px;padding-left: 3px;">
+                                    <div class="cont">
+                                        <div class="cont-col1 user-avatar">
+                                            <a href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
+                                        </div>
+                                        <div class="cont-col2">
+                                            <div class="desc"><a style="color: #c1cbd0" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col2">
+                                    <div class="date"> {dr_fdate($t.inputtime)} </div>
+                                </div>
+                            </li>
+                            {/loop}
+                        </ul>
+                        {/if}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END QUICK SIDEBAR -->
+
+</div>
+<script>
+    // 添加快捷菜单
+    function dr_add_menu() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $.ajax({
+            type: "GET",
+            url: admin_file+"?c=api&m=menu&v="+encodeURIComponent($("#right_page").attr("url")),
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                dr_tips(json.code, json.msg);
+                if (json.code == 1) {
+                    parent.$('#dr_admin_usermenu').html(json.data);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+
+    // 删除历史菜单
+    function dr_clear_menu() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $.ajax({
+            type: "GET",
+            url: admin_file+"?c=api&m=clear_history",
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                dr_tips(json.code, json.msg);
+                if (json.code == 1) {
+                    $('#dr_history_usermenu').html('');
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

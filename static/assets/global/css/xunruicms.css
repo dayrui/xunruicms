@@ -553,7 +553,7 @@ Page Header
     float: right; }
 .page-header.navbar .top-menu .navbar-nav {
     padding: 0;
-    margin-right: 20px;
+    margin-right: 0px;
     display: block;
     /* Extended Dropdowns */
     /* Notification */
@@ -2033,14 +2033,14 @@ Theme Panel
 Page Quick Sidebar
 ******************/
 /* Quick sidebar toggler */
+.dropdown-quick-sidebar-toggler .dropdown-toggle {
+    padding: 0 10px;
+}
 .page-header .top-menu .dropdown-quick-sidebar-toggler > .dropdown-toggle {
     padding: 19px 10px 10px 10px !important; }
 .page-header .top-menu .dropdown-quick-sidebar-toggler > .dropdown-toggle i {
     top: 0px; }
-.page-header .top-menu .dropdown-quick-sidebar-toggler > .dropdown-toggle i:before {
-    content: ""/*rtl:""*/; }
-.page-quick-sidebar-open .page-header .top-menu .dropdown-quick-sidebar-toggler > .dropdown-toggle i:before {
-    content: ""/*rtl:""*/; }
+
 
 /* Page Portlet Fullscreen */
 .page-portlet-fullscreen .page-quick-sidebar-wrapper,
@@ -2070,10 +2070,24 @@ Page Quick Sidebar
     font-size: 17px; }
 .page-quick-sidebar-toggler > i:hover {
     color: #fff !important; }
-.page-quick-sidebar-open .page-quick-sidebar-toggler > i:before {
-    content: ""/*rtl:""*/; }
+
 
 /* Quick sidebar wrapper */
+.page-quick-sidebar-nav .admin-usermenu a {
+    margin-right:10px;
+    margin-bottom:10px;
+}
+.page-quick-sidebar-nav .list-heading{
+    padding-bottom: 10px;
+}
+.page-quick-sidebar-nav .theme-option{
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.page-quick-sidebar-nav {
+    padding:10px;
+}
 .page-quick-sidebar-wrapper {
     transition: right 0.3s;
     z-index: 10500;
@@ -2117,13 +2131,13 @@ Page Quick Sidebar
     border: 0;
     height: auto;
     font-size: 14px;
-    padding: 45px 15px 8px;
+    padding: 42px 15px 8px;
     text-transform: uppercase;
     background: none;
     margin-right: 0;
     color: #90a1af;
     border: 0;
-    border-bottom: 3px solid rgba(243, 86, 93, 0.3);
+    border-bottom: 3px solid #90a1af;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     -ms-border-radius: 0;
@@ -2136,7 +2150,7 @@ Page Quick Sidebar
     right: 3px; }
 .page-quick-sidebar-wrapper .page-quick-sidebar .nav-tabs > li.active > a, .page-quick-sidebar-wrapper .page-quick-sidebar .nav-tabs > li:hover > a {
     border: 0;
-    border-bottom: 3px solid #f3565d;
+    border-bottom: 3px solid #fff;
     background: none;
     color: #fff;
     text-decoration: none; }
@@ -2180,7 +2194,7 @@ Page Quick Sidebar
 .page-quick-sidebar-wrapper .page-quick-sidebar .nav-tabs > li .dropdown-menu > li.divider {
     background-color: #3d4a55; }
 .page-quick-sidebar-wrapper .page-quick-sidebar .nav-tabs > li.open > a.dropdown-toggle {
-    border-bottom: 3px solid #f3565d;
+    border-bottom: 3px solid #40aae3;
     background: none;
     text-decoration: none;
     color: #90a1af; }
@@ -2550,10 +2564,6 @@ Page Loading
 }
 .myportlet .use-info li span {
     padding-right:10px;
-}
-.admin-usermenu a {
-    margin-right:10px;
-    margin-bottom:15px;
 }
 .menu-sort label {
     margin-right:10px;

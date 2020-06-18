@@ -40,6 +40,9 @@ class Home extends \Phpcmf\Common
             }
         }
 
+        // 不在首页显示快捷菜单
+        $this->admin['usermenu'] = [];
+
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -48,7 +51,7 @@ class Home extends \Phpcmf\Common
                     '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
                 ]
             ),
-            'color' => ['blue', 'red', 'green', 'dark', 'yellow'],
+            'admin' => $this->admin,
             'domain' => dr_get_domain_name(ROOT_URL),
             'license' => $this->cmf_license,
             'table_data' => $table_data,
