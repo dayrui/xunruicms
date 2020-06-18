@@ -104,11 +104,6 @@ return [
                     'icon' => 'fa fa-calendar',
                     'link' => [
                         [
-                            'name' => 'PHP错误',
-                            'icon' => 'fa fa-bug',
-                            'uri' => 'error_php/index',
-                        ],
-                        [
                             'name' => '系统错误',
                             'icon' => 'fa fa-shield',
                             'uri' => 'error/index',

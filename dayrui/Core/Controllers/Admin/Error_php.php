@@ -20,6 +20,8 @@ class Error_php extends \Phpcmf\Common
 
 	public function index() {
 
+	    dr_redirect(dr_url('error/index'));exit;
+
 		$time = (int)strtotime(\Phpcmf\Service::L('input')->get('time'));
 		!$time && $time = SYS_TIME;
 

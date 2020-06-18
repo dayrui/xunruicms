@@ -79,7 +79,9 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         $message = $exception->getMessage();
 
         // 前端访问屏蔽敏感信息
-        !IS_ADMIN && $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+        if (!IS_ADMIN) {
+            $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+        }
 
         if (empty($message)) {
             $message = '(null)';
@@ -106,45 +108,15 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             return;
         }
 
-        // 写入错误日志
-        $filepath = WRITEPATH.'error_php/'.date('Y-m-d').'.php';
-        $newfile = 0;
+        $msg = '[Phpcmf: '.$title.'] '.str_replace(PHP_EOL, ' ', $message)."{br}";
+        $msg .= json_encode(['html' => self::highlightFile($file, $line)], JSON_UNESCAPED_UNICODE)."{br}";
+        $msg .= '#0文件: '.$file."{br}";
+        $msg .= '#1行号: '.$line."{br}";
+        $msg .= '#2查询: '.\Phpcmf\Service::M()->get_sql_query()."{br}";
+        $msg .= '#3地址: '.FC_NOW_URL."{br}";
+        $msg .= '#4来源: '.$_SERVER['HTTP_REFERER']."{br}";
 
-        $msg = '';
-        if (!is_file($filepath) ) {
-            $newfile = true;
-            $msg .= "<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>\n\n\n";
-        }
-
-        if ( $fp = @fopen($filepath, 'ab')) {
-            $msg .= date('Y-m-d H:i:s').' --> '.$title."\n";
-            $msg .= '文件: '.$file."\n";
-            $msg .= '行号: '.$line."\n";
-            $msg .= '错误: '.str_replace(PHP_EOL, '<br>', $message)."\n";
-            $msg .= json_encode(['html' => $is_kz ? var_export($_POST, true) : self::highlightFile($file, $line)], JSON_UNESCAPED_UNICODE)."\n";
-            $msg .= '查询: '.\Phpcmf\Service::M()->get_sql_query()."\n";
-            $msg .= '地址: '.FC_NOW_URL."\n";
-            $msg .= '来源: '.$_SERVER['HTTP_REFERER']."\n";
-            $msg .= "\n\n";
-        } else {
-            return;
-        }
-
-        flock($fp, LOCK_EX);
-
-        for ($written = 0, $length = strlen($msg); $written < $length; $written += $result) {
-            if (($result = fwrite($fp, substr($msg, $written))) === false) {
-                break;
-            }
-        }
-
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        if ($newfile) {
-            chmod($filepath, 0777);
-        }
-
+        log_message('error', $msg);
         return $msg;
     }
 }

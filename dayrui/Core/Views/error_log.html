@@ -4,7 +4,98 @@
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
+<style type="text/css">
 
+    .source {
+        background:#333;
+        color:#c7c7c7;
+        padding:0.5em 1em;
+        border-radius:0px;
+        margin:0;
+    }
+    .source span.line {
+        line-height:1.4;
+    }
+    .source span.line .number {
+        color:#666;
+    }
+    .source .line .highlight {
+        display:block;
+        background:#555;
+        color:#fff;
+    }
+    .source span.highlight .number {
+        color:#fff;
+    }
+    .source .tabs {
+        list-style:none;
+        list-style-position:inside;
+        margin:0;
+        padding:0;
+        margin-bottom:-1px;
+    }
+    .source .tabs li {
+        display:inline;
+    }
+    .source .tabs a:link,.source .tabs a:visited {
+        padding:0rem 1rem;
+        line-height:2.7;
+        text-decoration:none;
+        color:#a7a7a7;
+        background:#f1f1f1;
+        border:1px solid #e7e7e7;
+        border-bottom:0;
+        border-top-left-radius:5px;
+        border-top-right-radius:5px;
+        display:inline-block;
+    }
+    .source .tabs a:hover {
+        background:#e7e7e7;
+        border-color:#e1e1e1;
+    }
+    .source .tabs a.active {
+        background:#fff;
+    }
+    .source .tab-content {
+        background:#fff;
+        border:1px solid #efefef;
+    }
+    .source .content {
+        padding:1rem;
+    }
+    .source .alert {
+        margin-top:2rem;
+        display:block;
+        text-align:center;
+        line-height:3.0;
+        background:#d9edf7;
+        border:1px solid #bcdff1;
+        border-radius:5px;
+        color:#31708f;
+    }
+    .source .trace a {
+        color:inherit;
+    }
+    .source .trace table {
+        width:auto;
+    }
+    .source .trace tr td:first-child {
+        min-width:5em;
+        font-weight:bold;
+    }
+    .source .trace td {
+        background:#e7e7e7;
+        padding:0 1rem;
+    }
+    .source .trace td pre {
+        margin:0;
+    }
+    .source .args {
+        display:none;
+    }
+
+
+</style>
 <script type="text/javascript">
     if (App.isAngularJsApp() === false) {
         jQuery(document).ready(function() {
@@ -56,7 +147,22 @@
         {loop $list $id $t}
         <tr class="odd gradeX" id="dr_row_{$id}">
             <td>{$t.time}</td>
-            <td><a onclick="dr_show_info('{$t.error}')">{dr_strcut($t.message, 80)}</a>
+            <td>
+                <a onclick="dr_show_info_{$id}()">{dr_strcut($t.message, 80)}</a>
+                <script>function dr_show_info_{$id}() {
+                    {if $t.json}
+                    var json = {$t.json};
+                    layer.open({
+                        type: 1,
+                        shade: 0,
+                        title: lang['show'],
+                        area: [{php echo !IS_MOBILE_USER ? '\'70%\', \'70%\'' : '"95%", "90%"'}],
+                        content: '<div style="padding:20px" class="source">'+'{$t.info}<br>'+json.html+'</div>'
+                    });
+                    {else}
+                    dr_show_info('{$t.message}')
+                    {/if}
+                    }</script>
             </td>
         </tr>
         {/loop}

@@ -7,17 +7,6 @@
 
 class Error extends \Phpcmf\Common
 {
-	public function __construct(...$params) {
-		parent::__construct(...$params);
-		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
-			[
-				'系统错误' => ['error/index', 'fa fa-shield'],
-                'PHP错误' => ['error_php/index', 'fa fa-bug'],
-			]
-		));
-		
-	}
-
 	public function index() {
 
 		$time = (int)strtotime(\Phpcmf\Service::L('input')->get('time'));
@@ -44,11 +33,24 @@ class Error extends \Phpcmf\Common
                     $v = @explode(' --> ', $t);
                     $time2 = $v ? @explode(' - ', $v[0]) : [1=>''];
                     if ($time2[1]) {
-                        $list[] = [
+                        $value = [
                             'time' => $time2[1] ? $time2[1] : '',
-                            'error' => str_replace(["'", '"'], '', str_replace([PHP_EOL, chr(13), chr(10)], ' ', $v[1])),
                             'message' => str_replace([PHP_EOL, chr(13), chr(10)], ' ', htmlentities($v[1])),
                         ];
+                        if (strpos($v[1], '{br}')) {
+                            $vv = explode('{br}', $v[1]);
+                            $value['message'] = $vv[0];
+                            unset($vv[0]);
+                            $value['json'] = str_replace("'", '\\\'', $vv[1]);
+                            unset($vv[1]);
+                            $value['info'] = '错误：'.$value['message'].'<br>';
+                            foreach ($vv as $p) {
+                                $value['info'].= $p.'<br>';
+                            }
+                            $value['info'] = str_replace("'", '\\\'', $value['info']);
+                        }
+                        $value['message'] = str_replace("'", '\\\'', $value['message']);
+                        $list[] = $value;
                         $j ++;
                     }
                 }
@@ -59,12 +61,17 @@ class Error extends \Phpcmf\Common
 
 		$time = date('Y-m-d', $time);
 
-		\Phpcmf\Service::V()->assign(array(
+		\Phpcmf\Service::V()->assign([
+		    'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '系统错误' => ['error/index', 'fa fa-shield'],
+                ]
+            ),
 			'list' => $list,
 			'time' => $time,
 			'total' => $total,
 			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/index', ['time' => $time]), $total, 'admin')
-		));
+        ]);
 		\Phpcmf\Service::V()->display('error_log.html');
 	}
 
