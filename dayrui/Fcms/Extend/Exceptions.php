@@ -72,7 +72,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
     protected function render(\Throwable $exception, int $statusCode)
     {
 
-
         $file = $exception->getFile();
         $line = $exception->getLine();
         $title = get_class($exception);

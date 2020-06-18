@@ -6,7 +6,7 @@
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js" type="text/javascript"></script>
 <style type="text/css">
 
-    .source {
+    .layui-layer-content {
         background:#333;
         color:#c7c7c7;
         padding:0.5em 1em;
@@ -160,7 +160,13 @@
                         content: '<div style="padding:20px" class="source">'+'{$t.info}<br>'+json.html+'</div>'
                     });
                     {else}
-                    dr_show_info('{$t.message}')
+                    layer.open({
+                        type: 1,
+                        shade: 0,
+                        title: lang['show'],
+                        area: [{php echo !IS_MOBILE_USER ? '\'70%\', \'70%\'' : '"95%", "90%"'}],
+                        content: '<div style="padding:20px" class="source">'+'{$t.info}</div>'
+                    });
                     {/if}
                     }</script>
             </td>

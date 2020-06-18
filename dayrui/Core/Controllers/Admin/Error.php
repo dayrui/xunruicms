@@ -35,9 +35,9 @@ class Error extends \Phpcmf\Common
                     if ($time2[1]) {
                         $value = [
                             'time' => $time2[1] ? $time2[1] : '',
-                            'message' => str_replace([PHP_EOL, chr(13), chr(10)], ' ', htmlentities($v[1])),
                         ];
                         if (strpos($v[1], '{br}')) {
+                            // phpcmf模式
                             $vv = explode('{br}', $v[1]);
                             $value['message'] = $vv[0];
                             unset($vv[0]);
@@ -48,6 +48,12 @@ class Error extends \Phpcmf\Common
                                 $value['info'].= $p.'<br>';
                             }
                             $value['info'] = str_replace("'", '\\\'', $value['info']);
+                        } else {
+                            // ci4模式
+                            $value['message'] = str_replace([PHP_EOL, chr(13), chr(10)], ' ', htmlentities($v[1]));
+                            if (preg_match('/'.$value['time'].' \-\->(.*)\{main\}/sU', $c, $mt)) {
+                                $value['info'] = str_replace("'", '\\\'', str_replace([PHP_EOL, chr(13), chr(10)], '<br>', $mt[1]));
+                            }
                         }
                         $value['message'] = str_replace("'", '\\\'', $value['message']);
                         $list[] = $value;
