@@ -8,15 +8,15 @@
     <div class="row myfbody ">
         <div class="col-md-12">
 
+            {loop $notice_config $t}
             <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption">
-                        <span class="caption-subject font-green sbold ">{dr_lang('用户通知')}</span>
+                        <span class="caption-subject font-green sbold ">{$t.name}</span>
                     </div>
                 </div>
                 <div class="portlet-body form">
                     <div class="form-body">
-                    {loop $notice_config $t}
                         {loop $t.value $name $v}
                         <div class="form-group">
                             <label class="col-md-3 control-label">
@@ -60,11 +60,11 @@
                             </div>
                         </div>
                         {/loop}
-                    {/loop}
 
                     </div>
                 </div>
             </div>
+            {/loop}
 
 
         </div>

@@ -13,11 +13,13 @@ class Member_setting_notice extends \Phpcmf\Common
     public function index() {
 
         $notice['member'] = [
+            'name' => dr_lang('系统'),
             'value' => require CMSPATH.'Config/Notice.php',
         ];
 
         if (is_file(MYPATH.'Config/Notice.php')) {
             $notice['my'] = [
+                'name' => dr_lang('自定义'),
                 'value' => require MYPATH.'Config/Notice.php',
             ];
         }
