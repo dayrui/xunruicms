@@ -111,7 +111,7 @@ class Api extends \Phpcmf\Common
 
         if (IS_POST && $this->member && $this->member['is_admin']) {
             $rt = \Phpcmf\Service::L('cache')->init('file')->save(
-                dr_safe_filename(\Phpcmf\Service::L('input')->get('name')),
+                md5(\Phpcmf\Service::L('input')->get('name')),
                 \Phpcmf\Service::L('input')->post('data'),
                 7200
             );
@@ -125,7 +125,7 @@ class Api extends \Phpcmf\Common
      * 删除临时表单内容
      */
     public function delete_form_data() {
-        \Phpcmf\Service::L('cache')->init('file')->delete(dr_safe_filename(\Phpcmf\Service::L('input')->get('name', true)));
+        \Phpcmf\Service::L('cache')->init('file')->delete(md5(\Phpcmf\Service::L('input')->get('name', true)));
         $this->_json(1, dr_lang('清除成功'));
         exit;
     }

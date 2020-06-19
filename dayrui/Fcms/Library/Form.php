@@ -28,7 +28,7 @@ class Form
     // 获取表单临时存储数据
     public function auto_form_data($name, $data) {
         // 默认数据
-        $dt = \Phpcmf\Service::L('cache')->init('file')->get($name);
+        $dt = \Phpcmf\Service::L('cache')->init('file')->get(md5($name));
         if (!$dt) {
             return $data;
         }
@@ -38,7 +38,7 @@ class Form
 
     // 删除表单临时存储数据
     public function auto_form_data_delete($name) {
-        \Phpcmf\Service::L('cache')->init('file')->delete($name);
+        \Phpcmf\Service::L('cache')->init('file')->delete(md5($name));
     }
 
     /**
