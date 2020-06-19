@@ -849,7 +849,11 @@ class View {
                     } elseif (isset($system['more']) && !$system['more']) {
                         unset($t['field'], $t['setting']);
                     }
-                    $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
+                    if ($t['tid'] == 2) {
+                        // 外链栏目
+                    } else {
+                        $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
+                    }
                     $return[] = $t;
                 }
 

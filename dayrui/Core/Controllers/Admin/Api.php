@@ -262,7 +262,7 @@ class Api extends \Phpcmf\Common
             }
 			array_unshift($menu, [
                 'name' => $name,
-                'url' => $url,
+                'url' => trim($url),
             ]);
 			$max = 20;
 			if (count($menu) > $max) {
@@ -271,12 +271,10 @@ class Api extends \Phpcmf\Common
 			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update([
                 'history' => dr_array2string($menu)
             ]);
-
 			$html = '';
 			foreach ($menu as $t) {
-			    $html.= '<a class="btn btn-default href="'.$t['url'].'" target="right"> '.$t['name'].' </a>';
+			    $html.= '<a class="btn btn-default href="'.trim($t['url']).'" target="right"> '.$t['name'].' </a>';
             }
-
 			$this->_json(1, dr_lang('操作成功'), $html);
 		}
 

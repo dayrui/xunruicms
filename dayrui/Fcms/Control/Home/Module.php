@@ -133,7 +133,7 @@ class Module extends \Phpcmf\Common
 
         // 判断是否外链
         if ($category['tid'] == 2) {
-            dr_redirect(dr_url_prefix($category['url'], $this->module['dirname']), 'refresh');exit;
+            dr_redirect(dr_url_prefix($category['url'], $this->module['dirname'], SITE_ID), 'refresh');exit;
         }
 
         // 单页验证是否存在子栏目，是否将下级第一个单页作为当前页

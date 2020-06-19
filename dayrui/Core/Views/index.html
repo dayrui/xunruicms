@@ -199,7 +199,7 @@
                     <h3 class="list-heading margin-top-30">{dr_lang('历史访问')}</h3>
                     <div class="admin-usermenu" id="dr_history_usermenu">
                     {loop $admin.history $t}
-                    <a class="btn btn-default" target="right" href="{$t.url}"> {$t.name} </a>
+                    <a class="btn btn-default" target="right" href="{trim($t.url)}"> {$t.name} </a>
                     {/loop}
                     </div>
                     <div class="theme-option">
