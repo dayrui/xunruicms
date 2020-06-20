@@ -437,14 +437,18 @@ class View {
     public function code2php($code, $time = 0, $include = 1) {
 
         $file = md5($code).$time.'.code.php';
-        !$include && $code = preg_replace([
-            '#{template.*}#Uis',
-            '#{load.*}#Uis'
-        ], [
-            '--',
-            '--',
-        ], $code);
-        !is_file($this->_cache.$file) && @file_put_contents($this->_cache.$file, str_replace('$this->', '\Phpcmf\Service::V()->', $this->handle_view_file($code)));
+        if (!$include) {
+            $code = preg_replace([
+                '#{template.*}#Uis',
+                '#{load.*}#Uis'
+            ], [
+                '--',
+                '--',
+            ], $code);
+        }
+        if (!is_file($this->_cache.$file)) {
+            @file_put_contents($this->_cache.$file, str_replace('$this->', '\Phpcmf\Service::V()->', $this->handle_view_file($code)));
+        }
 
         return $this->_cache.$file;
     }

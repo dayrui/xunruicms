@@ -256,22 +256,6 @@ class File extends \Phpcmf\Common
                             $this->_json(0, dr_lang('内容不能为空'));
                         }
 
-                        // 解析模板
-                        if ($fileext == 'html') {
-                            // 模板解析时 预加载全部的自定义函数
-                            // 执行插件自己的缓存程序
-                            $local = \Phpcmf\Service::Apps();
-                            foreach ($local as $dir => $path) {
-                                if (is_file($path.'install.lock')
-                                    && is_file($path.'Config/Init.php')) {
-                                    require $path.'Config/Init.php';
-                                }
-                            }
-                            ob_start();
-                            require \Phpcmf\Service::V()->code2php($code, SYS_TIME, 0);
-                            $html = ob_get_clean();
-                        }
-
                         // 备份数据
                         if ($content != $code && $is_diff == 0) {
                             !is_dir($this->backups_path.$dir.'/') && mkdir($this->backups_path.$dir.'/', 0777);
@@ -297,19 +281,14 @@ class File extends \Phpcmf\Common
 
                     switch ($fileext) {
 
-                        case 'js':
-                            $file_ext = 'javascript';
-                            $file_js  = 'javascript/javascript.js';
-                            break;
-
                         case 'css':
                             $file_ext = 'css';
                             $file_js  = 'css/css.js';
                             break;
 
                         default:
-                            $file_ext = 'text/html';
-                            $file_js  = 'htmlmixed/htmlmixed.js';
+                            $file_ext = 'javascript';
+                            $file_js  = 'javascript/javascript.js';
                             break;
                     }
 
