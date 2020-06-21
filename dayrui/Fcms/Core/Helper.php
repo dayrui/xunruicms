@@ -5,6 +5,20 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+// html实体字符转换
+function dr_html_code($value, $fk = false, $flags = null) {
+
+    !$flags && $flags = ENT_QUOTES | ENT_HTML401 | ENT_HTML5;
+
+    if ($fk) {
+        // 将所有HTML实体转换为它们的适用字符
+        return html_entity_decode($value, $flags, 'UTF-8');
+    }
+
+    // 将特殊的HTML实体转换回字符
+    return htmlspecialchars_decode($value, $flags);
+}
+
 // 快捷登录接入商信息列表
 function dr_oauth_list() {
     $data = [];
