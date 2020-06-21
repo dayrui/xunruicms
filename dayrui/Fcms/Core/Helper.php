@@ -1848,7 +1848,7 @@ function dr_format_option_array($value) {
             } else {
                 $v = $n = trim($t);
             }
-            $data[$v] = $n;
+            $data[htmlspecialchars($v)] = htmlspecialchars($n);
         }
     }
 
