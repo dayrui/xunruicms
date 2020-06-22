@@ -253,7 +253,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 
         if ($field['setting']['option']['is_add']) {
             // 支持添加列
-            $tpl = ' <tr>';
+            $tpl = ' <tr id="dr_ftable_'.$name.'_row_{hang}">';
             if ($field['setting']['option']['field']) {
                 foreach ($field['setting']['option']['field'] as $n => $t) {
                     if ($t['type']) {
@@ -264,9 +264,10 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $tpl.= ' <td style="text-align: center"><button type="button" class="btn red btn-xs" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
             $tpl.= ' </tr>';
             $ksid = 0; // 开始ID
+            $ksids = [];
             if ($value) {
                 foreach ($value as $hang => $t) {
-                    $str.= ' <tr>';
+                    $str.= ' <tr id="dr_ftable_'.$name.'_row_'.$hang.'">';
                     if ($field['setting']['option']['field']) {
                         foreach ($field['setting']['option']['field'] as $n => $t) {
                             if ($t['type']) {
@@ -276,14 +277,15 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     }
                     $str.= ' <td style="text-align: center"><button type="button" class="btn red btn-xs" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
                     $str.= ' </tr>';
-                    $ksid++;
+                    $ksids[] = $hang;
                 }
+                $ksid = max($ksids);
             }
         } else {
             // 固定列
             for ($i = 1; $i <= (int)$field['setting']['option']['count']; $i++) {
 
-                $str.= ' <tr>';
+                $str.= ' <tr id="dr_ftable_'.$name.'_row_'.$i.'">';
                 if ($field['setting']['option']['is_first_hang']) {
                     $str.= ' <td> '.($field['setting']['option']['hang'][$i]['name'] ? $field['setting']['option']['hang'][$i]['name'] : '未命名').' </td>';
                 }
@@ -297,7 +299,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 $str.= ' </tr>';
             }
         }
-
 
         $str.= ' </tbody>';
         $str.= '</table>';
@@ -317,12 +318,12 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     });
                 }
                 function dr_add_table_'.$name.'() {
-                  var tpl = ks_'.$name.'.tpl;
-                  ks_'.$name.'.id ++;
-            tpl = tpl.replace(/\{hang\}/g, ks_'.$name.'.id);
-            $(\'#dr_'.$name.'_body\').append(tpl);
+                    var tpl = ks_'.$name.'.tpl;
+                     ks_'.$name.'.id ++;
+                    tpl = tpl.replace(/\{hang\}/g, ks_'.$name.'.id);
+                    $(\'#dr_'.$name.'_body\').append(tpl);
                 }
-</script>';
+                </script>';
             $str.= '</div>';
         }
         $str.= '<script> $("#dr_'.$name.'_body").sortable();</script>';
