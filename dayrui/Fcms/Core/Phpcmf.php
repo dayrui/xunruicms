@@ -929,29 +929,58 @@ abstract class Common extends \CodeIgniter\Controller
     {
 
         $data = [];
+
+        // 加载模块自身的
         if (is_file(APPPATH.'Config/Clink.php')) {
-            $data = require APPPATH.'Config/Clink.php';
+            $_clink = require APPPATH.'Config/Clink.php';
+            if ($_clink) {
+                if (is_file(APPPATH.'Models/Auth.php')) {
+                    $obj = \Phpcmf\Service::M('auth', APP_DIR);
+                    foreach ($_clink as $k => $v) {
+                        // 动态名称
+                        if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
+                            $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
+                        }
+                    }
+                    // 权限验证
+                    if ($obj->is_link_auth(APP_DIR)) {
+                        $data = $_clink;
+                    }
+                } else {
+                    $data = $_clink;
+                }
+            }
         }
 
+        // 加载全部插件的
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php')) {
-                $_clink = require $path.'Config/Clink.php';
-                if ($_clink) {
-                    if (is_file($path.'Models/Auth.php')) {
-                        $obj = \Phpcmf\Service::M('auth', $dir);
-                        foreach ($_clink as $k => $v) {
-                            // 动态名称
-                            if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
-                                $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
+            // 排除模块自身
+            if (strtolower($dir) == APP_DIR) {
+                continue;
+            }
+            // 判断插件目录
+            if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php') && is_file($path.'Config/App.php')) {
+                $cfg = require $path.'Config/App.php';
+                if ($cfg['type'] == 'app' && !$cfg['ftype']) {
+                    // 表示插件非模块
+                    $_clink = require $path.'Config/Clink.php';
+                    if ($_clink) {
+                        if (is_file($path.'Models/Auth.php')) {
+                            $obj = \Phpcmf\Service::M('auth', $dir);
+                            foreach ($_clink as $k => $v) {
+                                // 动态名称
+                                if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
+                                    $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
+                                }
                             }
-                        }
-                        // 权限验证
-                        if ($obj->is_link_auth(APP_DIR)) {
+                            // 权限验证
+                            if ($obj->is_link_auth(APP_DIR)) {
+                                $data = array_merge($data , $_clink) ;
+                            }
+                        } else {
                             $data = array_merge($data , $_clink) ;
                         }
-                    } else {
-                        $data = array_merge($data , $_clink) ;
                     }
                 }
             }
@@ -1003,21 +1032,41 @@ abstract class Common extends \CodeIgniter\Controller
             'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("批量更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
         ];
 
-        if (is_file(APPPATH.'Config/Cbottom.php')) {
-            $data = require APPPATH.'Config/Cbottom.php';
+        // 加载模块自身的
+        if (APP_DIR && is_file(APPPATH.'Config/Cbottom.php')) {
+            $_clink = require APPPATH.'Config/Cbottom.php';
+            if ($_clink) {
+                if (is_file(APPPATH.'Models/Auth.php')) {
+                    if (\Phpcmf\Service::M('auth', APP_DIR)->is_bottom_auth(APP_DIR)) {
+                        $data = array_merge($data , $_clink);
+                    }
+                } else {
+                    $data = array_merge($data , $_clink);
+                }
+            }
         }
 
+        // 加载全部插件的
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom.php')) {
-                $_clink = require $path.'Config/Cbottom.php';
-                if ($_clink) {
-                    if (is_file($path.'Models/Auth.php')) {
-                        if (\Phpcmf\Service::M('auth', $dir)->is_bottom_auth(APP_DIR)) {
+            // 排除模块自身
+            if (strtolower($dir) == APP_DIR) {
+                continue;
+            }
+            // 判断插件目录
+            if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom.php') && is_file($path.'Config/App.php')) {
+                $cfg = require $path.'Config/App.php';
+                if ($cfg['type'] == 'app' && !$cfg['ftype']) {
+                    // 表示插件非模块
+                    $_clink = require $path.'Config/Cbottom.php';
+                    if ($_clink) {
+                        if (is_file($path.'Models/Auth.php')) {
+                            if (\Phpcmf\Service::M('auth', $dir)->is_bottom_auth(APP_DIR)) {
+                                $data = array_merge($data , $_clink);
+                            }
+                        } else {
                             $data = array_merge($data , $_clink);
                         }
-                    } else {
-                        $data = array_merge($data , $_clink);
                     }
                 }
             }
