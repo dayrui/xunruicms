@@ -232,16 +232,16 @@ class Check extends \Phpcmf\Common
 
                 $table = $prefix.'admin_setting';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
                       `name` varchar(50) NOT NULL,
                       `value` mediumtext NOT NULL,
                       PRIMARY KEY (`name`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';');
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';'));
                 }
 
                 $table = $prefix.'admin_min_menu';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                    \Phpcmf\Service::M()->query('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
                       `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
                       `pid` smallint(5) unsigned NOT NULL COMMENT \'上级菜单id\',
                       `name` text NOT NULL COMMENT \'菜单语言名称\',
@@ -258,7 +258,7 @@ class Check extends \Phpcmf\Common
                       KEY `mark` (`mark`),
                       KEY `hidden` (`hidden`),
                       KEY `uri` (`uri`)
-                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'后台简化菜单表\';');
+                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'后台简化菜单表\';'));
                 }
 
                 // 模块
@@ -327,7 +327,7 @@ class Check extends \Phpcmf\Common
                   `displayorder` smallint(5) DEFAULT NULL,
                   PRIMARY KEY (`id`),
                   KEY (`displayorder`)
-                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'邮件账户表\';');
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT=\'邮件账户表\';');
                                 }*/
 
                 /*
@@ -343,7 +343,6 @@ class Check extends \Phpcmf\Common
                 $local = dr_dir_map(APPSPATH, 1); // 搜索本地模块
                 foreach ($local as $dir) {
                     if (is_file(APPSPATH.$dir.'/Config/App.php')) {
-                        $key = strtolower($dir);
                         $file =  APPSPATH.$dir.'/Controllers/Search.php';
                         if (is_file($file)) {
                             // 替换搜索控制器

@@ -440,7 +440,7 @@ if (!function_exists('dr_domain_301')) {
 function dr_format_create_sql($sql) {
     $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.6.0') > 0) {
-        $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 ', $sql));
+        $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_general_ci ', $sql));
     }
     return $sql;
 }

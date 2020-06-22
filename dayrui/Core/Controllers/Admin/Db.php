@@ -137,7 +137,7 @@ class Db extends \Phpcmf\Common
                         break;
 
                     case 'ut':
-                        \Phpcmf\Service::M()->db->query('alter table `'.$table.'` convert to character set utf8mb4;');
+                        \Phpcmf\Service::M()->db->query('ALTER TABLE `'.$table.'` DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;');
                         break;
 
                     case 'jc':
