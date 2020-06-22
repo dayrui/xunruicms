@@ -60,6 +60,11 @@ class Member_group extends \Phpcmf\Table
     }
 
     private function _init_level($gid) {
+
+        if (!$gid) {
+            $this->_admin_msg(0, dr_lang('用户组id参数不能为空'));
+        }
+
         $this->type = 0;
         // 表单显示名称
         $this->name = dr_lang('用户组等级');
@@ -72,7 +77,29 @@ class Member_group extends \Phpcmf\Table
             'list_field' => [],
             'where_list' => 'gid='.$gid,
         ]);
-        \Phpcmf\Service::V()->assign('group', \Phpcmf\Service::M()->table('member_group')->get($gid));
+        $group = \Phpcmf\Service::M()->table('member_group')->get($gid);
+        $group['setting'] = dr_string2array($group['setting']);
+
+        if ($group['setting']['level']['auto']) {
+            // 自动模式，只有消费额和经验值
+            if ($group['setting']['level']['unit']) {
+               $dwz = dr_lang('消费额');
+            } else {
+                $dwz = SITE_EXPERIENCE;
+            }
+        } else {
+            // 手动模式，只有人民币和虚拟币
+            if ($group['unit']) {
+                $dwz = SITE_SCORE;
+            } else {
+                $dwz = dr_lang('元');
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'dwz' => $dwz,
+            'group' => $group
+        ]);
     }
 
     // 管理
