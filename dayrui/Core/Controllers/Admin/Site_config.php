@@ -31,6 +31,16 @@ class Site_config extends \Phpcmf\Common
                 // 本地资源
             }
 
+            // 验证域名可用性
+            if ($post['SITE_DOMAINS']) {
+                $arr = explode(PHP_EOL, $post['SITE_DOMAINS']);
+                foreach ($arr as $t) {
+                    if (!\Phpcmf\Service::L('Form')->check_domain($t)) {
+                        $this->_json(0, dr_lang('域名（%s）格式不正确', $t));
+                    }
+                }
+            }
+
             $rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $post);
 			if (!is_array($rt)) {
 			    $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));

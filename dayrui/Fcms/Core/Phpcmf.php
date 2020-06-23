@@ -530,6 +530,11 @@ abstract class Common extends \CodeIgniter\Controller
         $this->content_model = \Phpcmf\Service::M('Content', $dirname);
         $this->content_model->_init($dirname, $siteid, $this->module['share']);
 
+        // 共享模块时，单页界面时，排除
+        if ($dirname == 'share') {
+           return;
+        }
+
         // 兼容老版本
         define('MOD_DIR', $dirname);
         define('IS_SHARE', $this->module['share']);

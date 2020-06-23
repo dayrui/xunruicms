@@ -10,11 +10,11 @@ class Site_mobile extends \Phpcmf\Common
 	public function index() {
 
 		if (IS_AJAX_POST) {
-			$rt = \Phpcmf\Service::M('Site')->config(
-			    SITE_ID,
-                'mobile',
-                \Phpcmf\Service::L('input')->post('data')
-            );
+		    $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post['domain'] && !\Phpcmf\Service::L('Form')->check_domain($post['domain'])) {
+                $this->_json(0, dr_lang('域名（%s）格式不正确', $post['domain']));
+            }
+			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
             if (!is_array($rt)) {
                 $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
             }

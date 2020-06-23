@@ -60,7 +60,6 @@ class Category extends \Phpcmf\Home\Module
         } else {
             $this->_module_init('share');
         }
-
 		
 		// 调用栏目方法
 		$this->_Category($id, $dir, $page);

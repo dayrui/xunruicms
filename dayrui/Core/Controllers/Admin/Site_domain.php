@@ -15,8 +15,28 @@ class Site_domain extends \Phpcmf\Common
             $data = $post = \Phpcmf\Service::L('input')->post('data', true);
             foreach ($post as $name => $value) {
                 unset($data[$name]);
-                if ($value && in_array($value, $data)) {
-                    exit($this->_json(0, dr_lang('域名[%s]绑定重复', $value)));
+                if ($value) {
+                    if (strpos($name, 'webpath') == 0) {
+                        // 目录不验证
+                    } else {
+                        // 验证域名可用性
+                        if ($name == 'site_domains') {
+                            $arr = explode(PHP_EOL, $value);
+                            foreach ($arr as $t) {
+                                if (in_array($t, $data)) {
+                                    $this->_json(0, dr_lang('域名[%s]绑定重复', $t));
+                                } elseif (!\Phpcmf\Service::L('Form')->check_domain($t)) {
+                                    $this->_json(0, dr_lang('域名（%s）格式不正确', $t));
+                                }
+                            }
+                        } else {
+                            if (in_array($value, $data)) {
+                                $this->_json(0, dr_lang('域名[%s]绑定重复', $value));
+                            } elseif (!\Phpcmf\Service::L('Form')->check_domain($value)) {
+                                $this->_json(0, dr_lang('域名（%s）格式不正确', $value));
+                            }
+                        }
+                    }
                 }
                 $data[$name] = $value;
             }
@@ -66,8 +86,8 @@ class Site_domain extends \Phpcmf\Common
             }
 
             $domain = trim(\Phpcmf\Service::L('input')->post('domain'));
-            if (!$domain) {
-                exit($this->_json(0, dr_lang('域名不能为空')));
+            if (!\Phpcmf\Service::L('Form')->check_domain($domain)) {
+                $this->_json(0, dr_lang('域名（%s）格式不正确', $domain));
             }
 
             \Phpcmf\Service::M('Site')->edit_domain($domain);

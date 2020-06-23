@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Library;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
-
-
 
 // 表单验证类
 class Form
@@ -420,6 +417,22 @@ class Form
             return false;
         } elseif (\Phpcmf\Service::C()->member_cache['register']['cutname'] && mb_strlen($value) > \Phpcmf\Service::C()->member_cache['register']['cutname']) {
             return false;
+        }
+
+        return true;
+    }
+
+    // 验证域名
+    public function check_domain($value) {
+
+        if (!$value) {
+            return false;
+        }
+
+        foreach (['/', ':', '?', '&', '\\', '*', ' ', '..'] as $p) {
+            if (strpos($p, '/') !== false) {
+                return false;
+            }
         }
 
         return true;
