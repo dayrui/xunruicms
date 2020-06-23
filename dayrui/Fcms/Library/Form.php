@@ -430,7 +430,7 @@ class Form
         }
 
         foreach (['/', ':', '?', '&', '\\', '*', ' ', '..'] as $p) {
-            if (strpos($p, '/') !== false) {
+            if (strpos($value, $p) !== false) {
                 return false;
             }
         }

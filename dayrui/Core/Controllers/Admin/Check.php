@@ -23,7 +23,8 @@ class Check extends \Phpcmf\Common
         '11' => '域名绑定检测',
         '12' => 'HTTPS检测',
         '13' => '应用插件兼容性检测',
-        '14' => '服务器环境检测',
+        '14' => '移动端检测',
+        '15' => '服务器环境检测',
 
     ];
 
@@ -372,7 +373,7 @@ class Check extends \Phpcmf\Common
                         $this->halt('存在大文件文件【/'.$file.'】请及时清理', 0);
                     }
                 }
-                $this->_json(1,'通过');
+                $this->_json(1,'完成');
                 break;
 
             case '10':
@@ -483,7 +484,7 @@ class Check extends \Phpcmf\Common
                 } elseif ($tips) {
                     $this->_json(1, implode('<br>', $tips));
                 } else {
-                    $this->_json(1, '通过');
+                    $this->_json(1, '完成');
                 }
 
                 break;
@@ -535,14 +536,44 @@ class Check extends \Phpcmf\Common
                         //
                     }
                 }
-                $this->_json(1, '通过');
+                $this->_json(1, '完成');
 
                 break;
 
             case '14':
+                // 移动端检测
+
+                $error = [];
+
+                // 开起自动识别，
+                if ($this->site_info[SITE_ID]['SITE_AUTO']) {
+                    // 又开启了首页静态
+                    if ($this->site_info[SITE_ID]['SITE_INDEX_HTML']) {
+                        $error[] = '当前站点已经开启[首页静态]模式，将无法实现移动端自动跳转功能，<a href="javascript:dr_help(664);">查看解决方案</a>';
+                    }
+                }
+
+                $config = $this->get_cache('site', SITE_ID, 'mobile');
+                if (!$this->site_info[SITE_ID]['SITE_IS_MOBILE'] && $config['tohtml']) {
+                    $error[] = '当前站点没有绑定移动端域名，将无法实现移动端静态页面功能，<a href="javascript:dr_help(506);">查看解决方案</a>';
+                }
+
+                if ($error) {
+                    $this->_json(0, implode('<br>', $error));
+                }
+
+                // 单独域名判断
+                if (!$this->site_info[SITE_ID]['SITE_IS_MOBILE']) {
+                    $this->_json(1,'当前网站没有绑定移动端域名');
+                }
+
+                $this->_json(1, '完成');
+                break;
+
+            case '15':
                 // 服务器环境
 
-                $this->_json(1, '通过');
+                $this->_json(1, '完成');
                 break;
 
             case '99':
