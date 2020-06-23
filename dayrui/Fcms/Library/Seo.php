@@ -248,8 +248,7 @@ class Seo
         $cat['join'] = SITE_SEOJOIN;
         $cat['name'] = $cat['catname'] = $cat['name'];
         $cat['catpname'] = dr_get_cat_pname($mod, $catid, $cat['join']);
-        $cat['modulename'] = $cat['modname'] = dr_lang($mod['name']);
-
+        $cat['modulename'] = $cat['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
         $rep = new \php5replace($cat);
 
         $meta_title = $cat['setting']['seo']['list_title'] ? $cat['setting']['seo']['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
