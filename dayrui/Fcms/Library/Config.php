@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Library;
 
-
 /**
  * http://www.xunruicms.com
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
-
 
 
 // 配置文件生成
@@ -54,7 +52,7 @@ class Config
                 if (is_array($data[$name])) {
                     continue;
                 }
-                $name = dr_safe_replace($name);
+                $name = $this->_safe_replace($name);
                 $body.= '	\''.$name.'\''.$this->_space($name).'=> '.$this->_format_value($data[$name]).', //'.$note.PHP_EOL;
             }
         } elseif ($var) {
@@ -62,7 +60,7 @@ class Config
                 if (is_array($val)) {
                     continue;
                 }
-                $name = dr_safe_replace($name);
+                $name = $this->_safe_replace($name);
                 $body.= '	\''.$name.'\''.$this->_space($name).'=> '.$this->_format_value($val).','.PHP_EOL;
             }
         }
@@ -116,7 +114,7 @@ class Config
                 if (is_array($data[$name])) {
                     continue;
                 }
-                $name = dr_safe_replace($name);
+                $name = $this->_safe_replace($name);
                 $body.= '       	   \''.$name.'\''.$this->_space($name).'=> '.$this->_format_value($data[$name]).','.PHP_EOL;
             }
             $body.= PHP_EOL.'       ],'.PHP_EOL.PHP_EOL;
@@ -146,6 +144,15 @@ class Config
      * 格式化值
      */
     private function _format_value($value) {
-        return is_numeric($value) && strlen($value) <= 10 ? $value : '\''.str_replace(array('\'', '\\'), '', $value).'\'';
+        return is_numeric($value) && strlen($value) <= 10 ? $value : '\''.str_replace(['\'', '\\'], '', $value).'\'';
+    }
+
+    // 安全替换
+    private function _safe_replace($name) {
+        return str_replace(
+            ['..', "/", '\\', '<', '>', "{", '}', ';', '[', ']', '\'', '"', '*', '?'],
+            '',
+            $name
+        );
     }
 }
