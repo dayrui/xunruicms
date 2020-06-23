@@ -23,6 +23,7 @@ class View {
     private $_mroot; // 默认会员项目模板目录
 
     private $_aroot; // 默认后台项目模板目录
+    private $_load_file_tips; // 模板引用提示
 
     private $_options; // 模板变量
     private $_filename; // 主模板名称
@@ -263,6 +264,7 @@ class View {
             } elseif (is_file($this->_dir.$file)) {
                 return $this->_dir.$file; // 调用当前后台的模板
             } elseif (is_file($this->_aroot.$file)) {
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_aroot.$file.']';
                 return $this->_aroot.$file; // 当前项目目录模板不存在时调用主项目的
             } elseif ($dir != 'admin' && is_file(APPSPATH.ucfirst($dir).'/Views/'.$file)) {
                 return APPSPATH.ucfirst($dir).'/Views/'.$file; // 指定模块时调用模块下的文件
@@ -277,9 +279,11 @@ class View {
                 return $this->_dir.$file;
             } elseif (is_file($this->_mroot.$file)) {
                 // 调用默认的会员模块目录
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用会员模块目录的模板['.$this->_mroot.$file.']';
                 return $this->_mroot.$file;
             } elseif (is_file($this->_root.$file)) {
                 // 调用网站主站模块目录
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_root.$file.']';
                 return $this->_root.$file;
             }
             $error = $dir === '/' ? $this->_root.$file : $this->_dir.$file;
@@ -295,6 +299,7 @@ class View {
                 return $this->_dir.$file;
             } else if (@is_file($this->_root.$file)) {
                 // 再次调用主程序下的文件
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_root.$file.']';
                 return $this->_root.$file;
             }
             $error = $dir === '/' ? $this->_root.$file : $this->_dir.$file;
@@ -2874,6 +2879,24 @@ class View {
     // 模板中的文件数
     public function get_view_files() {
         return $this->_view_files;
+    }
+
+    // 模板中的文件引用提示
+    public function get_load_tips() {
+
+        if (!$this->_load_file_tips) {
+            return;
+        }
+
+        $rt = [];
+        foreach ($this->_load_file_tips as $i => $t) {
+            $rt[] = [
+                'name' => $i,
+                'tips' => str_replace(TPLPATH, 'TPLPATH/', $t),
+            ];
+        }
+
+        return $rt;
     }
 
     // 模板中的运行时间

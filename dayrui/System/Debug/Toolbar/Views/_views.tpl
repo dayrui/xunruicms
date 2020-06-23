@@ -21,6 +21,25 @@
 </table>
 
 <br>
+<h2>引用提示</h2>
+<table>
+    <thead>
+    <tr>
+        <th>模板</th>
+        <th>提示</th>
+    </tr>
+    </thead>
+    <tbody>
+    {tips}
+        <tr>
+            <td>{name}</td>
+            <td>{tips}</td>
+        </tr>
+    {/tips}
+    </tbody>
+</table>
+
+<br>
 
 <h2>模板变量</h2>
 <table>

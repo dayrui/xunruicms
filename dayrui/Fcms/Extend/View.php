@@ -44,8 +44,9 @@ class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
 
         return [
             'vars' => $vars,
-            'files' => $this->viewer->get_view_files(),
+            'tips' => $this->viewer->get_load_tips(),
             'time' => $this->viewer->get_view_time(),
+            'files' => $this->viewer->get_view_files(),
         ];
     }
 
