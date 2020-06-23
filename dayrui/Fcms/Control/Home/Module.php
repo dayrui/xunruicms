@@ -582,8 +582,8 @@ class Module extends \Phpcmf\Common
 
         if (!$catid) {
             return dr_return_data(0, '栏目id不存在');
-        } elseif (!defined('MODULE_NAME')) {
-            return dr_return_data(0, 'MODULE_NAME未定义');
+        } elseif (!$this->module) {
+            return dr_return_data(0, '模块未被初始化');
         }
 
         $cat = $this->module['category'][$catid];
