@@ -108,11 +108,13 @@
                         {/if}
                     </ul>
                 </li>
+                {if !$is_mobile}
                 <li class="dropdown dropdown-quick-sidebar-toggler">
                     <a href="javascript:;" class="dropdown-toggle">
                         <i class="fa fa-angle-double-right" style="margin-top: 10px;"></i>
                     </a>
                 </li>
+                {/if}
             </ul>
         </div>
     </div>
@@ -167,6 +169,7 @@
     </div>
 
     <!-- BEGIN QUICK SIDEBAR -->
+    {if !$is_mobile}
     <a href="javascript:;" class="page-quick-sidebar-toggler">
         <i class="fa fa-angle-double-left"></i>
     </a>
@@ -230,10 +233,10 @@
                         {/if}
 
                 </div>
-
             </div>
         </div>
     </div>
+    {/if}
     <!-- END QUICK SIDEBAR -->
 
 </div>
