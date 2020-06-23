@@ -76,6 +76,7 @@ class Notice {
 
         $error = [];
         if (!$value['data']['uid']) {
+            CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）执行失败：用户uid参数为空，任务不能执行');
             return [['用户uid参数为空，任务不能执行'], $value];
         }
 
@@ -84,15 +85,18 @@ class Notice {
             $rt = $this->_get_tpl_content($siteid, $value['name'], 'weixin', $value['data']);
             if (!$rt['code']) {
                 $error[] = $rt['msg'];
+                CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）执行失败：'.$rt['msg']);
             } else {
                 $xml = $this->_xml_array($rt['msg']);
                 if (!$xml || !isset($xml['xml']) || !$xml['xml']) {
-                    $error[] = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
+                    $error[] = $debug = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
+                    CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
                 } else {
                     $content = $xml['xml'];
                     $rt = \Phpcmf\Service::M('member')->wexin_template($value['data']['uid'], $content['id'], $content['param'], $content['url']);
                     if (!$rt['code']) {
-                        $error[] = '微信消息执行错误：'.$rt['msg'];
+                        $error[] = $debug = '微信消息执行错误：'.$rt['msg'];
+                        CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
                     } else {
                         // 成功
                         unset($value['config']['weixin']);
@@ -107,33 +111,36 @@ class Notice {
             $phone = $value['data']['phone'];
             if (!$phone) {
                 $member = dr_member_info($value['data']['uid']);
-                $phone = $member['phone'];
+                $value['data']['phone'] = $phone = $member['phone'];
             }
             if (!$phone) {
-                $error[] = 'phone参数为空，不能发送短信';
+                $error[] = $debug = 'phone参数为空，不能发送短信';
+                CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
                 if (!$rt['code']) {
-                    $error[] = $rt['msg'];
+                    $error[] = $debug = $rt['msg'];
+                    CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
                 } else {
                     $content = $rt['msg'];
                     $rt = \Phpcmf\Service::M('member')->sendsms_text($phone, $content);
                     if (!$rt['code']) {
-                        $error[] = '短信通知执行错误：'.$rt['msg'];
+                        $error[] = $debug = '短信通知执行错误：'.$rt['msg'];
+                        CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
                     } else {
                         // 成功
                         unset($value['config']['mobile']);
                     }
                 }
             }
-
         }
 
         // 站内消息通知
         if ($value['config']['notice']) {
             $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
             if (!$rt['code']) {
-                $error[] = $rt['msg'];
+                $error[] = $debug = $rt['msg'];
+                CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）消息执行失败：'.$debug);
             } else {
                 $content = $rt['msg'];
                 \Phpcmf\Service::M('member')->notice($value['data']['uid'], max((int)$value['data']['type'], 1), $content, $value['data']['url']);
@@ -147,14 +154,16 @@ class Notice {
             $email = $value['data']['email'];
             if (!$email) {
                 $member = dr_member_info($value['data']['uid']);
-                $email = $member['email'];
+                $value['data']['email'] = $email = $member['email'];
             }
             if (!$email) {
-                $error[] = 'email参数为空，不能发送邮件';
+                $error[] = $debug = 'email参数为空，不能发送邮件';
+                CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
                 if (!$rt['code']) {
-                    $error[] = $rt['msg'];
+                    $error[] = $debug = $rt['msg'];
+                    CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
                 } else {
                     $title = '';
                     $content = $rt['msg'];
@@ -164,7 +173,8 @@ class Notice {
                     }
                     $rt = \Phpcmf\Service::M('member')->sendmail($email, $title ? $title : '通知', $content);
                     if (!$rt['code']) {
-                        $error[] = '邮件发送失败：'.$rt['msg'];
+                        $error[] = $debug = '邮件发送失败：'.$rt['msg'];
+                        CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
                     } else {
                         // 成功
                         unset($value['config']['email']);
