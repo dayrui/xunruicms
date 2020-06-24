@@ -193,7 +193,7 @@
                     <h3 class="list-heading">{dr_lang('快捷链接')}</h3>
                     <div class="admin-usermenu" id="dr_admin_usermenu">
                         {loop $admin.usermenu $t}
-                        <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} target="right" {/if} href="{$t.url}"> {$t.name} </a>
+                        <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} onclick="dr_hide_left_tab()" target="right" {/if} href="{$t.url}"> {$t.name} </a>
                         {/loop}
                     </div>
                     <div class="theme-option">
@@ -202,7 +202,7 @@
                     <h3 class="list-heading margin-top-30">{dr_lang('历史访问')}</h3>
                     <div class="admin-usermenu" id="dr_history_usermenu">
                     {loop $admin.history $t}
-                    <a class="btn btn-default" target="right" href="{trim($t.url)}"> {$t.name} </a>
+                    <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
                     {/loop}
                     </div>
                     <div class="theme-option">
@@ -217,10 +217,10 @@
                                 <div class="col1" style="padding-top: 2px;padding-left: 3px;">
                                     <div class="cont">
                                         <div class="cont-col1 user-avatar">
-                                            <a href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
+                                            <a target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
                                         </div>
                                         <div class="cont-col2">
-                                            <div class="desc"><a style="color: #c1cbd0" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
+                                            <div class="desc"><a style="color: #c1cbd0" target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -241,6 +241,10 @@
 
 </div>
 <script>
+    // 关闭栏
+    function dr_hide_left_tab() {
+        $(".page-quick-sidebar-toggler").click();
+    }
     // 添加快捷菜单
     function dr_add_menu() {
         var index = layer.load(2, {

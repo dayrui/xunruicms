@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
-
 /**
  * 用户通知处理
  */
@@ -19,7 +17,7 @@ class Notice {
      * $name    动作名称
      * $data    传入参数
      */
-    public function send_notice($name, $data) {
+    public function send_notice($name, $data, $param = []) {
 
         if (!\Phpcmf\Service::C()->member_cache['notice'][$name]) {
             return; // 没有配置通知
@@ -29,6 +27,10 @@ class Notice {
         $data['sys_uri'] = \Phpcmf\Service::L('router')->uri();
         $data['sys_time'] = SYS_TIME;
         $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
+        // 自定义参数累加进去
+        if ($param) {
+            $data = array_merge($data, $param);
+        }
         // 加入队列并执行
         $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'notice', [
             'name' => $name,
@@ -189,7 +191,6 @@ class Notice {
 
     // 获取通知模板内容
     private function _get_tpl_content($siteid, $name, $type, $data) {
-
 
         if ($siteid > 1) {
             $my = \Phpcmf\Service::L('html')->get_webpath($siteid, 'site', 'config/notice/'.$type.'/'.$name.'.html');

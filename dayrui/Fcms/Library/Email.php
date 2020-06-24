@@ -43,15 +43,20 @@ class Email
             return FALSE;
         }
 
-        $cfg['server']  = $cfg['port'] = $cfg['auth'] = $cfg['from'] = $cfg['auth_username'] = $cfg['auth_password'] = '';
+        $cfg = [];
         $cfg['charset'] = $charset = 'utf-8';
-        $cfg['server']  = $mail['server'];
+        $cfg['server'] = $mail['server'];
         $cfg['port'] = $mail['port'];
-        $cfg['auth'] = $mail['auth'] ? 1 : 0;
         $cfg['from'] = $mail['from'];
         $cfg['auth_username'] = $mail['auth_username'];
         $cfg['auth_password'] = $mail['auth_password'];
         unset($mail);
+
+        $is_starttls = 0;
+        if (strpos($cfg['server'], 'starttls://') === 0) {
+            $is_starttls = 1;
+            $cfg['server'] = str_replace('starttls://', '', $cfg['server']);
+        }
 
         $mailusername = 1;
         $maildelimiter = "\r\n"; //换行符
@@ -66,22 +71,32 @@ class Email
         $headers = "From: $email_from{$maildelimiter}X-Priority: 3{$maildelimiter}X-Mailer: $host {$maildelimiter}MIME-Version: 1.0{$maildelimiter}Content-type: text/html; charset=".$cfg['charset']."{$maildelimiter}Content-Transfer-Encoding: base64{$maildelimiter}";
 
         if(!$fp = @fsockopen($cfg['server'], $cfg['port'], $errno, $errstr, 30)) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "CONNECT - Unable to connect to the SMTP server [".$errno."-".$errstr."]");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "fsockopen 无法连接到邮件服务器 [".$errno."-".$errstr."]");
             return FALSE;
         }
 
         stream_set_blocking($fp, true);
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != '220') {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "CONNECT - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "连接失败 - $lastmessage");
             return FALSE;
         }
 
-        fputs($fp, ($cfg['auth'] ? 'EHLO' : 'HELO')." uchome\r\n");
+        fputs($fp, "EHLO uchome\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "HELO/EHLO - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "EHLO - $lastmessage");
             return FALSE;
+        }
+
+        // 是否starttls
+        if ($is_starttls) {
+            fputs($fp, "STARTTLS uchome\r\n");
+            $lastmessage = fgets($fp, 512);
+            if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
+                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "STARTTLS - $lastmessage");
+                return FALSE;
+            }
         }
 
         while(1) {
@@ -91,27 +106,30 @@ class Email
             $lastmessage = fgets($fp, 512);
         }
 
-        if($cfg['auth']) {
-            fputs($fp, "AUTH LOGIN\r\n");
-            $lastmessage = fgets($fp, 512);
-            if(substr($lastmessage, 0, 3) != 334) {
-                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "AUTH LOGIN - $lastmessage");
-                return FALSE;
-            }
-            fputs($fp, base64_encode($cfg['auth_username']) . "\r\n");
-            $lastmessage = fgets($fp, 512);
-            if(substr($lastmessage, 0, 3) != 334) {
-                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "USERNAME - $lastmessage");
-                return FALSE;
-            }
-            fputs($fp, base64_encode($cfg['auth_password']) . "\r\n");
-            $lastmessage = fgets($fp, 512);
-            if(substr($lastmessage, 0, 3) != 235) {
-                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "PASSWORD - $lastmessage");
-                return FALSE;
-            }
-            $email_from = $cfg['from'];
+        //$crypto = stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+
+
+        // 登录账号认证
+        fputs($fp, "AUTH LOGIN\r\n");
+        $lastmessage = fgets($fp, 512);
+        if(substr($lastmessage, 0, 3) != 334) {
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "认证登录失败 - $lastmessage");
+            return FALSE;
         }
+        fputs($fp, base64_encode($cfg['auth_username']) . "\r\n");
+        $lastmessage = fgets($fp, 512);
+        if(substr($lastmessage, 0, 3) != 334) {
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "账号验证失败 - $lastmessage");
+            return FALSE;
+        }
+        fputs($fp, base64_encode($cfg['auth_password']) . "\r\n");
+        $lastmessage = fgets($fp, 512);
+        if(substr($lastmessage, 0, 3) != 235) {
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "密码验证失败 - $lastmessage");
+            return FALSE;
+        }
+
+        $email_from = $cfg['from'];
 
         fputs($fp, "MAIL FROM: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $email_from).">\r\n");
         $lastmessage = fgets($fp, 512);

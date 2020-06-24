@@ -225,7 +225,7 @@ class Api extends \Phpcmf\Common
 
 			$html = '';
 			foreach ($menu as $t) {
-			    $html.= '<a class="btn '.($t['color'] && $t['color']!='default' ? $t['color'] : 'btn-default').'" '.($t['target'] ? 'target="_blank"' : ' target="right"').' href="'.$t['url'].'"> '.$t['name'].' </a>';
+			    $html.= '<a class="btn '.($t['color'] && $t['color']!='default' ? $t['color'] : 'btn-default').'" '.($t['target'] ? 'target="_blank"' : ' target="right"').' onclick="dr_hide_left_tab()" href="'.$t['url'].'"> '.$t['name'].' </a>';
             }
 
 			$this->_json(1, dr_lang('操作成功'), $html);
@@ -273,7 +273,7 @@ class Api extends \Phpcmf\Common
             ]);
 			$html = '';
 			foreach ($menu as $t) {
-			    $html.= '<a class="btn btn-default href="'.trim($t['url']).'" target="right"> '.$t['name'].' </a>';
+			    $html.= '<a class="btn btn-default href="'.trim($t['url']).'" onclick="dr_hide_left_tab()" target="right"> '.$t['name'].' </a>';
             }
 			$this->_json(1, dr_lang('操作成功'), $html);
 		}
