@@ -124,7 +124,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$str.= '<span id="dr_linkage_'.$name.'_select" style="'.($value ? 'display:none' : '').'">';
 		for ($i = 1; $i <= $linklevel; $i++) {
 			$style = $i > $level ? 'style="display:none"' : '';
-			$str.= '<label style="padding-right:10px;"><select class="form-control finecms-select-'.$name.'" '.$disabled.' name="'.$name.'-'.$i.'" id="'.$name.'-'.$i.'" width="100" '.$style.'><option value=""> -- </option></select></label>';
+			$str.= '<label style="padding-right:10px;"><select class="form-control finecms-select-'.$name.'" name="'.$name.'-'.$i.'" id="'.$name.'-'.$i.'" width="100" '.$style.'><option value=""> -- </option></select></label>';
 		}
 		$str.= '</span>';
 		// 重新选择

@@ -65,6 +65,13 @@ class Database extends \CodeIgniter\Database\Config
             }
         }
 
+        // 判断数据库名称的规范性
+        if (is_numeric($this->default['database'])) {
+            exit('数据库名称不能是数字');
+        } elseif (strpos($this->default['database'], '.') !== false) {
+            exit('数据库名称不能存在.号');
+        }
+
         // Thinkphp数据库配置
         if (is_file(dirname(COMPOSER_PATH).'/topthink/think-orm/src/DbManager.php')) {
             \think\facade\Db::setConfig([
