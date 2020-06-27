@@ -96,7 +96,7 @@ class Error extends \Phpcmf\Common
             'menu' => [],
         ]);
 
-        \Phpcmf\Service::V()->display('error_file.html');
+        \Phpcmf\Service::V()->display('error_file.html');exit;
     }
 
 }

@@ -1,5 +1,7 @@
 
-<h3>运行时间：{time}ms</h3>
+{times}
+<h3>运行时间：{tpl}ms</h3>
+{/times}
 
 <br>
 <h2>模板文件</h2>
@@ -31,10 +33,10 @@
     </thead>
     <tbody>
     {tips}
-        <tr>
-            <td>{name}</td>
-            <td>{tips}</td>
-        </tr>
+    <tr>
+        <td>{name}</td>
+        <td>{tips}</td>
+    </tr>
     {/tips}
     </tbody>
 </table>
