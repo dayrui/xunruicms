@@ -79,6 +79,7 @@ class Mform extends \Phpcmf\Table
             'field' => $this->init['field'],
             'form_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/'.$this->form['table'].'/index', ['cid' =>  $this->cid]),
             'is_verify' => $this->is_verify,
+            'form_table' => $this->form['table'],
         ]);
     }
 
@@ -91,6 +92,8 @@ class Mform extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' =>  $this->cid],
+            'clink' => $this->_app_clink('mform'),
+            'cbottom' => $this->_app_cbottom('mform'),
         ]);
         return \Phpcmf\Service::V()->display($tpl);
     }

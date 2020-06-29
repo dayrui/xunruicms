@@ -930,17 +930,23 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 插件的clink值
      */
-    protected function _app_clink()
+    protected function _app_clink($type = '')
     {
 
         $data = [];
+        if (!$type) {
+            // 表示模块部分
+            $endfix = '';
+        } else {
+            $endfix = '_'.$type;
+        }
 
         // 加载模块自身的
-        if (is_file(APPPATH.'Config/Clink.php')) {
-            $_clink = require APPPATH.'Config/Clink.php';
+        if (is_file(APPPATH.'Config/Clink'.$endfix.'.php')) {
+            $_clink = require APPPATH.'Config/Clink'.$endfix.'.php';
             if ($_clink) {
-                if (is_file(APPPATH.'Models/Auth.php')) {
-                    $obj = \Phpcmf\Service::M('auth', APP_DIR);
+                if (is_file(APPPATH.'Models/Auth'.$endfix.'.php')) {
+                    $obj = \Phpcmf\Service::M('auth'.$endfix.'', APP_DIR);
                     foreach ($_clink as $k => $v) {
                         // 动态名称
                         if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
@@ -965,14 +971,14 @@ abstract class Common extends \CodeIgniter\Controller
                 continue;
             }
             // 判断插件目录
-            if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php') && is_file($path.'Config/App.php')) {
+            if (is_file($path.'install.lock') && is_file($path.'Config/Clink'.$endfix.'.php') && is_file($path.'Config/App.php')) {
                 $cfg = require $path.'Config/App.php';
                 if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                     // 表示插件非模块
-                    $_clink = require $path.'Config/Clink.php';
+                    $_clink = require $path.'Config/Clink'.$endfix.'.php';
                     if ($_clink) {
-                        if (is_file($path.'Models/Auth.php')) {
-                            $obj = \Phpcmf\Service::M('auth', $dir);
+                        if (is_file($path.'Models/Auth'.$endfix.'.php')) {
+                            $obj = \Phpcmf\Service::M('auth'.$endfix.'', $dir);
                             foreach ($_clink as $k => $v) {
                                 // 动态名称
                                 if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
@@ -1012,37 +1018,44 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 插件的cbottom值
      */
-    protected function _app_cbottom()
+    protected function _app_cbottom($type = '')
     {
 
         $data = [];
-        $data[] = [
-            'icon' => 'fa fa-flag',
-            'name' => dr_lang('推送到推荐位'),
-            'uri' => APP_DIR.'/home/edit',
-            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("推荐位").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=0\')',
-        ];
-        if ($this->module['setting']['sync_category']) {
+        if (!$type) {
+            // 表示模块部分
             $data[] = [
-                'icon' => 'fa fa-refresh',
-                'name' => dr_lang('发布到其他栏目'),
+                'icon' => 'fa fa-flag',
+                'name' => dr_lang('推送到推荐位'),
                 'uri' => APP_DIR.'/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
+                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("推荐位").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=0\')',
             ];
+            if ($this->module['setting']['sync_category']) {
+                $data[] = [
+                    'icon' => 'fa fa-refresh',
+                    'name' => dr_lang('发布到其他栏目'),
+                    'uri' => APP_DIR.'/home/edit',
+                    'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
+                ];
+            }
+            $data[] = [
+                'icon' => 'fa fa-clock-o',
+                'name' => dr_lang('更新时间'),
+                'uri' => APP_DIR.'/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("批量更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
+            ];
+            $endfix = '';
+        } else {
+            $endfix = '_'.$type;
         }
-        $data[] = [
-            'icon' => 'fa fa-clock-o',
-            'name' => dr_lang('更新时间'),
-            'uri' => APP_DIR.'/home/edit',
-            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("批量更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
-        ];
+
 
         // 加载模块自身的
-        if (APP_DIR && is_file(APPPATH.'Config/Cbottom.php')) {
-            $_clink = require APPPATH.'Config/Cbottom.php';
+        if (APP_DIR && is_file(APPPATH.'Config/Cbottom'.$endfix.'.php')) {
+            $_clink = require APPPATH.'Config/Cbottom'.$endfix.'.php';
             if ($_clink) {
-                if (is_file(APPPATH.'Models/Auth.php')) {
-                    if (\Phpcmf\Service::M('auth', APP_DIR)->is_bottom_auth(APP_DIR)) {
+                if (is_file(APPPATH.'Models/Auth'.$endfix.'.php')) {
+                    if (\Phpcmf\Service::M('auth'.$endfix.'', APP_DIR)->is_bottom_auth(APP_DIR)) {
                         $data = array_merge($data , $_clink);
                     }
                 } else {
@@ -1059,14 +1072,14 @@ abstract class Common extends \CodeIgniter\Controller
                 continue;
             }
             // 判断插件目录
-            if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom.php') && is_file($path.'Config/App.php')) {
+            if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom'.$endfix.'.php') && is_file($path.'Config/App.php')) {
                 $cfg = require $path.'Config/App.php';
                 if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                     // 表示插件非模块
-                    $_clink = require $path.'Config/Cbottom.php';
+                    $_clink = require $path.'Config/Cbottom'.$endfix.'.php';
                     if ($_clink) {
-                        if (is_file($path.'Models/Auth.php')) {
-                            if (\Phpcmf\Service::M('auth', $dir)->is_bottom_auth(APP_DIR)) {
+                        if (is_file($path.'Models/Auth'.$endfix.'.php')) {
+                            if (\Phpcmf\Service::M('auth'.$endfix.'', $dir)->is_bottom_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink);
                             }
                         } else {

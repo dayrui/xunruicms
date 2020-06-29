@@ -111,6 +111,9 @@
                     {if $ci->_is_admin_auth('edit') && dr_is_app('copy')}
                     <label><a href="JavaScript:;" onclick="dr_ajax_confirm_url('{dr_url('copy/home/mfrom_edit', ['mid'=>MOD_DIR,'dir'=>$mform.table, 'id'=>$t.id])}', '{dr_lang('复制将把此内容生成一条新内容')}', '{dr_now_url()}')" class="btn btn-xs green"> <i class="fa fa-copy"></i> {dr_lang('复制')}</a></label>
                     {/if}
+                    {loop $clink $a}
+                    <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{fid}', '{cid}', '{id}'), array(APP_DIR, $form_table, $t.cid, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
+                    {/loop}
                     <label><a href="{dr_url($uriprefix.'/show_index', ['id'=>$t.id, 'cid'=>$t.cid])}" class="btn btn-xs dark"> <i class="fa fa-search"></i> {dr_lang('查看')}</a></label>
                 </td>
             </tr>
@@ -134,6 +137,22 @@
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/status_index')}', '{dr_lang('你确定要审核通过它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-check-square-o"></i> {dr_lang('通过')}</button></label>
                  <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/status_index', ['tid' => 1])}', '{dr_lang('你确定要拒绝它们吗？')}', 1)" class="btn yellow btn-sm"> <i class="fa fa-times-circle-o"></i> {dr_lang('拒绝')}</button></label>
                 {/if}
+                 {if $cbottom}
+                 <label>
+                     <div class="btn-group dropup">
+                         <a class="btn  blue btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false" href="javascript:;"> {dr_lang('批量')}
+                             <i class="fa fa-angle-up"></i>
+                         </a>
+                         <ul class="dropdown-menu">
+                             {loop $cbottom $a}
+                             <li>
+                                 <a href="{str_replace(['{mid}', '{fid}', '{cid}'], [APP_DIR, $form_table, $index.id], urldecode($a.url))}"> <i class="{$a.icon}"></i> {dr_lang($a.name)} </a>
+                             </li>
+                             {/loop}
+                         </ul>
+                     </div>
+                 </label>
+                 {/if}
          </div>
              <div class="col-md-7 fc-list-page">
                  {$mypages}

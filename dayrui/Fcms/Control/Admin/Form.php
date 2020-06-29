@@ -69,6 +69,16 @@ class Form extends \Phpcmf\Table
         ]);
     }
 
+    // 后台查看表单列表
+    protected function _Admin_List() {
+        list($tpl) = $this->_List();
+        \Phpcmf\Service::V()->assign([
+            'clink' => $this->_app_clink('form'),
+            'cbottom' => $this->_app_cbottom('form'),
+        ]);
+        return \Phpcmf\Service::V()->display($tpl);
+    }
+
     // 后台添加表单内容
     protected function _Admin_Add() {
         list($tpl) = $this->_Post(0);
@@ -97,12 +107,6 @@ class Form extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('数据#%s不存在', $_GET['id']));
         }
         \Phpcmf\Service::V()->display($tpl);
-    }
-
-    // 后台查看表单列表
-    protected function _Admin_List() {
-        list($tpl) = $this->_List();
-        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台删除表单内容
