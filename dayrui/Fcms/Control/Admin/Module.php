@@ -1046,7 +1046,7 @@ class Module extends \Phpcmf\Table
 
         // 不更新时间
         if (!$old['updatetime']) {
-            $data[1]['updatetime'] = SYS_TIME;
+            !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;
         } elseif ($id && isset($_POST['no_time'])
             && $_POST['no_time']) {
             $data[1]['updatetime'] = $old['updatetime'];
