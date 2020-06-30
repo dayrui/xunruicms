@@ -507,7 +507,11 @@ class Content extends \Phpcmf\Model {
 
     // 删除推荐位
     public function delete_flag($id, $flag) {
-        $this->db->table($this->mytable.'_flag')->where('id', $id)->whereIn('flag', $flag)->delete();
+        if (in_array($flag)) {
+            $this->db->table($this->mytable.'_flag')->where('id', $id)->whereIn('flag', $flag)->delete();
+        } else {
+            $this->db->table($this->mytable.'_flag')->where('id', $id)->where('flag', (int)$flag)->delete();
+        }
     }
 
     // 查询id
