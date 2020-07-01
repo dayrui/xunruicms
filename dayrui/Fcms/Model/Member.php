@@ -1163,6 +1163,7 @@ class Member extends \Phpcmf\Model
         $this->db->table('member')->where('id', $id)->update($update);
 
         $member['uid'] = $id;
+        $member['password_value'] = $password;
 
         // 通知
         \Phpcmf\Service::L('Notice')->send_notice('member_edit_password', $member);
