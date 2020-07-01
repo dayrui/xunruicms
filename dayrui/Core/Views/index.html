@@ -191,22 +191,26 @@
 
                 <div class="tab-pane active page-quick-sidebar-nav" id="quick_sidebar_tab_1">
                     <h3 class="list-heading">{dr_lang('快捷链接')}</h3>
-                    <div class="admin-usermenu" id="dr_admin_usermenu">
-                        {loop $admin.usermenu $t}
-                        <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} onclick="dr_hide_left_tab()" target="right" {/if} href="{$t.url}"> {$t.name} </a>
-                        {/loop}
-                    </div>
-                    <div class="theme-option">
-                        <button type="button" onclick="dr_add_menu()" class="btn blue-madison"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
+                    <div class="scroller" style="max-height:300px;" data-handle-color="#637283">
+                        <div class="admin-usermenu" id="dr_admin_usermenu">
+                            {loop $admin.usermenu $t}
+                            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} onclick="dr_hide_left_tab()" target="right" {/if} href="{$t.url}"> {$t.name} </a>
+                            {/loop}
+                        </div>
+                        <div class="theme-option">
+                            <button type="button" onclick="dr_add_menu()" class="btn blue-madison"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
+                        </div>
                     </div>
                     <h3 class="list-heading margin-top-30">{dr_lang('历史访问')}</h3>
-                    <div class="admin-usermenu" id="dr_history_usermenu">
-                    {loop $admin.history $t}
-                    <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
-                    {/loop}
-                    </div>
-                    <div class="theme-option">
-                        <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
+                    <div class="scroller" style="max-height:350px;" data-handle-color="#637283">
+                        <div class="admin-usermenu" id="dr_history_usermenu">
+                        {loop $admin.history $t}
+                        <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
+                        {/loop}
+                        </div>
+                        <div class="theme-option">
+                            <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
