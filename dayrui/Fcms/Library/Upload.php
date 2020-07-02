@@ -340,7 +340,18 @@ class Upload
 
         // 按照附件存储类型来保存文件
         $storage = new \Phpcmf\Library\Storage();
-        return $storage->upload($type == 'upload' ? 1 : 0, $data, $file_path, $attachment, $watermark);
+        $rt = $storage->upload($type == 'upload' ? 1 : 0, $data, $file_path, $attachment, $watermark);
+        if ($rt['code']) {
+            \Phpcmf\Hooks::trigger('upload_file', [
+                'type' => $type,
+                'data' => $data,
+                'file_name' => $file_path,
+                'file_path' => $attachment['value']['path'].$file_path,
+                'attachment' => $attachment
+            ]);
+        }
+
+        return $rt;
     }
 
     /**
