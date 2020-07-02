@@ -952,6 +952,7 @@ class Member extends \Phpcmf\Model
     public function register($groupid, $member, $data = [], $oauth = []) {
         
         $member['email'] && $member['email'] = strtolower($member['email']);
+        $member['name'] = htmlspecialchars(!$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), ''));
 
         // 没有账号，随机一个默认登录账号
         if (!$member['username']) {
@@ -1012,7 +1013,6 @@ class Member extends \Phpcmf\Model
             }
         }*/
 
-        $member['name'] = htmlspecialchars(!$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), ''));
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
         $member['password'] = $member['password'] ? md5(md5($member['password']).$member['salt'].md5($member['password'])) : '';
         $member['money'] = 0;
