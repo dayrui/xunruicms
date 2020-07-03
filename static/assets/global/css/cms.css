@@ -394,6 +394,11 @@ code.form-control-static {
 }
 .files_row_preview {
     margin-right: 10px;
+    border: 1px dashed #e2e2e2;
+    padding: 10px;
+    overflow: hidden;
+    width: 80px;
+    height: 70px;
 }
 .files_show_description_html {
     margin-top: 10px;

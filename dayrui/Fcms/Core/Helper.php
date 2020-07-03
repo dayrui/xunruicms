@@ -165,7 +165,8 @@ function dr_get_ftable($id, $value, $class = '') {
     $str.= ' </tr></thead>';
     $str.= ' <tbody>';
 
-    for ($i = 1; $i <= count($value); $i++) {
+    $i = 1;
+    foreach ($value as $ii => $val) {
 
         $str.= ' <tr>';
         if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
@@ -176,11 +177,11 @@ function dr_get_ftable($id, $value, $class = '') {
         if ($field['setting']['option']['field']) {
             foreach ($field['setting']['option']['field'] as $n => $t) {
                 if ($t['type']) {
-                    $str.= ' <td>'.$value[$i][$n].'</td>';
+                    $str.= ' <td>'.$val[$n].'</td>';
                 }
             }
         }
-
+        $i++;
         $str.= ' </tr>';
     }
 

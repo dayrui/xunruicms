@@ -188,7 +188,7 @@ class File extends \Phpcmf\Library\A_Field {
 		// 显示模板
 		$tpl = '<div  id="dr_'.$name.'_files_row" class="file_row_html files_row">';
 		$tpl.= '<div>';
-		$tpl.= '<span class="files_row_preview preview">{preview}</span>';
+		$tpl.= '<div class="files_row_preview preview">{preview}</div>';
 		$tpl.= '</div>';
 		$tpl.= '<input type="hidden" '.$attr.' id="dr_'.$name.'" class="files_row_id" name="data['.$name.']" value="{id}" />';
 		$tpl.= '</div>';

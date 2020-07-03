@@ -228,8 +228,8 @@ class Files extends \Phpcmf\Library\A_Field {
 
         // 显示模板
         $tpl = '<tr class="template-download files_row">';
-        $tpl .= '<td style="text-align:center;">';
-        $tpl .= '<span class="files_row_preview preview">{preview}</span>';
+        $tpl .= '<td style="text-align:center;width: 80px;">';
+        $tpl .= '<div class="files_row_preview preview">{preview}</div>';
         $tpl .= '</td>';
         $tpl .= '<td class="files_show_info">';
         $tpl .= '<div class="row">';
@@ -246,7 +246,7 @@ class Files extends \Phpcmf\Library\A_Field {
         $tpl.= '</div>';
         $tpl.= '</td>';
 
-        $tpl.= '<td style="text-align:center;">';
+        $tpl.= '<td style="text-align:center;width: 80px;">';
         $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
         $tpl.= '<label><button onclick="dr_file_edit_'.$name.'(this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
         $tpl.= '</td>';
