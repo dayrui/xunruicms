@@ -186,9 +186,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('默认存储值').'</label>
                     <div class="col-md-9">
-                        <label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
-                        <label>'.$this->member_field_select().'</label>
-                        <span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
+					<textarea id="field_default_value" style="width: 90%;height: 100px;" class="form-control" name="data[setting][option][value]">'.$option['value'].'</textarea>
+					<p><label>'.$this->member_field_select().'</label>
+					<span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span></p>
                     </div>
                 </div>
                 '.$this->field_type($option['fieldtype'], $option['fieldlength']),
