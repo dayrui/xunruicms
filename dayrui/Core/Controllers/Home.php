@@ -20,6 +20,8 @@ class Home extends \Phpcmf\Common
 
 	// 首页显示
 	public function index() {
+        // 挂钩点 网站首页时
+        \Phpcmf\Hooks::trigger('cms_index');
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
         $this->_index();
 	}
