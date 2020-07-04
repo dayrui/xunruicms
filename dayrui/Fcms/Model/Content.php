@@ -1041,8 +1041,12 @@ class Content extends \Phpcmf\Model {
         // 删除索引表
         $this->table($this->mytable.'_index')->delete($cid);
 
+        // 删除主表
+        $this->table($this->mytable)->delete($cid);
+
         // 删除标记表
         $this->table($this->mytable.'_flag')->delete($cid);
+
         // 删除统计
         $this->table($this->mytable.'_hits')->delete($cid);
         $this->table($this->mytable.'_verify')->delete($cid);

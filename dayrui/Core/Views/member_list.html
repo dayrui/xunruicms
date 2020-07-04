@@ -116,7 +116,7 @@
                 </label>
                 {/if}
                 {if $ci->_is_admin_auth('member/del')}
-                <label><button type="button" onclick="dr_ajax_option('{dr_url('member/del')}', '{dr_lang('你确定要删除吗？本操作会联动删除该用户所发布全部内容、附件等数据')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                <label><button type="button" onclick="dr_ajax_option_user('{dr_url('member/del')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
                 {/if}
                 {if $is_verify && $ci->_is_admin_auth('member_verify/edit')}
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('member_verify/edit')}', '{dr_lang('你确定要通过审核吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-check-square-o"></i> {dr_lang('通过')}</button></label>
@@ -151,6 +151,113 @@
             $('.dr_username_phone').remove();
         }
     });
+    // ajax 批量操作确认
+    function dr_ajax_option_user(url, remove) {
+
+        layer.confirm(
+            '{dr_lang('全部删除: 删除账号会联动删除所发布的内容和附件。')}<br>'+
+            '{dr_lang('删除账号: 删除账号相关信息时不会影响该账号的相关数据和附件。')}<br>',
+            {
+                icon: 3,
+                shade: 0,
+                area: ['500px', '180px'],
+                title: '{dr_lang('确认删除')}',
+                btn: ['{dr_lang('全部删除')}','{dr_lang('只删除账号')}', lang['esc']]
+            }, function(index){
+                layer.close(index);
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 5000
+                });
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url+'&sync=1',
+                    data: $("#myform").serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code) {
+                            if (remove) {
+                                // 批量移出去
+                                var ids = json.data.ids;
+                                if (typeof ids != "undefined" ) {
+                                    console.log(ids);
+                                    for ( var i = 0; i < ids.length; i++){
+                                        $("#dr_row_"+ids[i]).remove();
+                                    }
+                                }
+                            }
+                            if (json.data.htmlfile) {
+                                // 执行生成htmljs
+                                $.ajax({
+                                    type: "GET",
+                                    url: json.data.htmlfile,
+                                    dataType: "jsonp",
+                                    success: function(json){ },
+                                    error: function(){ }
+                                });
+                            }
+                            if (json.data.url) {
+                                setTimeout("window.location.href = '"+json.data.url+"'", 2000);
+                            } else {
+                                setTimeout("window.location.reload(true)", 3000)
+                            }
+                        }
+                        dr_cmf_tips(json.code, json.msg);
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    }
+                });
+            }, function(index){
+                layer.close(index);
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 5000
+                });
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url+'&sync=0',
+                    data: $("#myform").serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code) {
+                            if (remove) {
+                                // 批量移出去
+                                var ids = json.data.ids;
+                                if (typeof ids != "undefined" ) {
+                                    console.log(ids);
+                                    for ( var i = 0; i < ids.length; i++){
+                                        $("#dr_row_"+ids[i]).remove();
+                                    }
+                                }
+                            }
+                            if (json.data.htmlfile) {
+                                // 执行生成htmljs
+                                $.ajax({
+                                    type: "GET",
+                                    url: json.data.htmlfile,
+                                    dataType: "jsonp",
+                                    success: function(json){ },
+                                    error: function(){ }
+                                });
+                            }
+                            if (json.data.url) {
+                                setTimeout("window.location.href = '"+json.data.url+"'", 2000);
+                            } else {
+                                setTimeout("window.location.reload(true)", 3000)
+                            }
+                        }
+                        dr_cmf_tips(json.code, json.msg);
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    }
+                });
+
+            });
+    }
 </script>
 </div>
 

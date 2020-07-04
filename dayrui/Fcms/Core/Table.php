@@ -475,7 +475,7 @@ class Table extends \Phpcmf\Common
 
         $rows = \Phpcmf\Service::M()->init($this->init)->where_in('id', $ids)->getAll();
         if (!$rows) {
-            $this->_json(0, dr_lang('所选数据不存在2'));
+            $this->_json(0, dr_lang('所选数据不存在'));
         }
 
         // 删除之前执行

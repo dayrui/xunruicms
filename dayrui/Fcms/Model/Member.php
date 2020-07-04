@@ -1493,8 +1493,8 @@ class Member extends \Phpcmf\Model
         return $rt;
     }
 
-    // 删除会员后执行
-    public function member_delete($id) {
+    // 删除会员后执行 sync是否删除相关数据表
+    public function member_delete($id, $sync = 0) {
 
         // 删除会员的相关表
         $this->db->table('member_data')->where('id', $id)->delete();
@@ -1511,10 +1511,31 @@ class Member extends \Phpcmf\Model
         //$this->db->table('member_oauth')->where('uid', $id)->delete();
         $this->db->table('member_paylog')->where('uid', $id)->delete();
         $this->db->table('member_scorelog')->where('uid', $id)->delete();
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->uid_delete($id);
         $this->delete_admin_notice('member_verify/index:field/id/keyword/'.$id, 0);
 
+        // 删除头像
+        list($cache_path, $cache_url) = dr_avatar_path();
+        if (is_file($cache_path.$id.'.jpg')) {
+            @unlink($cache_url.$id.'.jpg');
+        }
+
+        // 删除微信uid
+        if (dr_is_app('weixin')) {
+            $this->db->table('weixin_user')->where('uid', $id)->update([
+                'uid' => 0,
+                'username' => '',
+            ]);
+        }
+
+        if (!$sync) {
+            return ;
+        }
+
+        // 同步删除动作
+        \Phpcmf\Service::M('Sync')->delete_member($id);
+
         // 按站点数据删除
+        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->uid_delete($id);
         foreach ($this->site as $siteid) {
             // 表单
             $form = $this->init(['table' => $siteid.'_form'])->getAll();
@@ -1549,6 +1570,8 @@ class Member extends \Phpcmf\Model
                             $mdb->delete_content($t['id']);
                         }
                     }
+                    var_dump($index);
+                    exit;
                     $form = $this->db->table('module_form')->where('module', $mdir)->get()->getResultArray();
                     if ($form) {
                         foreach ($form as $t) {
@@ -1569,22 +1592,6 @@ class Member extends \Phpcmf\Model
             }
         }
 
-        // 同步删除动作
-        \Phpcmf\Service::M('Sync')->delete_member($id);
-
-        // 删除头像
-        list($cache_path, $cache_url) = dr_avatar_path();
-        if (is_file($cache_path.$id.'.jpg')) {
-            @unlink($cache_url.$id.'.jpg');
-        }
-
-        // 删除微信uid
-        if (dr_is_app('weixin')) {
-            $this->db->table('weixin_user')->where('uid', $id)->update([
-                'uid' => 0,
-                'username' => '',
-            ]);
-        }
     }
 
     // 随机账号

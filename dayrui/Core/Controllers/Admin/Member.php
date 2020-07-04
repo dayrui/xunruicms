@@ -396,12 +396,12 @@ class Member extends \Phpcmf\Table
                         continue;
                     }
                     $ids[] = $id;
-                    \Phpcmf\Service::M('member')->member_delete($id);
+                    \Phpcmf\Service::M('member')->member_delete($id, (int)\Phpcmf\Service::L('input')->get('sync'));
 
                 }
                 return dr_return_data(1, 'ok');
             },
-            \Phpcmf\Service::M()->dbprefix('member')
+            (int)\Phpcmf\Service::L('input')->get('sync') ? \Phpcmf\Service::M()->dbprefix('member') : 0
         );
     }
 
