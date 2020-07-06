@@ -41,6 +41,11 @@ class Content extends \Phpcmf\Model {
         // 二次开发函数
         $data = $this->_content_post_before($id, $data, $old);
 
+        // 特殊返回值
+        if (isset($data['code']) && isset($data['msg']) && $data['code'] == 0 && $data['msg']) {
+            return dr_return_data(0, $data['msg']);
+        }
+
         // 挂钩点 模块内容发布或修改完成之后
         \Phpcmf\Hooks::trigger('module_content_before', $data);
 
@@ -1496,6 +1501,7 @@ class Content extends \Phpcmf\Model {
     ////////////////////二次开发调用////////////////////
 
     // 内容发布之前
+    // 错误信息返回格式：return dr_return_data(0, '错误信息')
     public function _content_post_before($id, $data, $old) {
         return $data;
     }
