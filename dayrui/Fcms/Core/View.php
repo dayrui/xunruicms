@@ -959,8 +959,12 @@ class View {
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
                     return $this->_return($system['return'], "模块({$dirname})未安装");
+                } elseif (!$catid) {
+                    return $this->_return($system['return'], '没有catid值无法显示结果');
+                } elseif (!isset($module['category'][$catid])) {
+                    return $this->_return($system['return'], '模块({$dirname})的栏目（'.$catid.'）不存在');
                 } elseif (dr_count($module['category'][$catid]['field']) == 0) {
-                    return $this->_return($system['return'], '模块未安装或者此栏目无模型字段');
+                    return $this->_return($system['return'], '模块({$dirname})的栏目（'.$catid.'）没有分配模型字段');
                 }
 
                 $return = [];

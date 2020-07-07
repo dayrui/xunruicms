@@ -761,6 +761,11 @@ return [
                     'icon' => 'fa fa-calendar',
                     'uri' => 'account/login',
                 ],
+                [
+                    'name' => '提醒消息',
+                    'icon' => 'fa fa-envelope',
+                    'uri' => 'notice/index',
+                ],
             ],
         ],
 
@@ -787,11 +792,6 @@ return [
                     'name' => '升级经验',
                     'icon' => 'fa fa-compass',
                     'uri' => 'explog/index',
-                ],
-                [
-                    'name' => '提醒消息',
-                    'icon' => 'fa fa-envelope',
-                    'uri' => 'notice/index',
                 ],
             ],
         ],
