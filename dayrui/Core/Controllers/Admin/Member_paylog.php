@@ -140,7 +140,9 @@ class Member_paylog extends \Phpcmf\Table
 			$this->_json(0, dr_lang('付款金额不满足回收条件'));
 		} elseif ($data['mid'] != 'recharge') {
 			$this->_json(0, dr_lang('只能回收充值金额'));
-		}
+		} elseif (\Phpcmf\Service::M()->table('member_paylog')->where('mid', 'system-recovery-'.$id)->counts()) {
+            $this->_json(0, dr_lang('此交易已经被回收过'));
+        }
 
         $user = \Phpcmf\Service::M('member')->table('member')->get($data['uid']);
         if (!$user) {
@@ -156,14 +158,16 @@ class Member_paylog extends \Phpcmf\Table
 			} 
             // 扣除付款方的钱
             $rt = \Phpcmf\Service::M('Pay')->add_money($data['uid'], -$data['value']);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             // 增加到交易流水
             $rt =  \Phpcmf\Service::M('Pay')->add_paylog([
                 'uid' => $data['uid'],
                 'username' => $data['username'],
                 'touid' => 0,
                 'tousername' => '',
-                'mid' => 'system',
+                'mid' => 'system-recovery-'.$id,
                 'title' => dr_lang('系统回收'),
                 'value' => -$data['value'],
                 'type' => 'finecms',
@@ -172,7 +176,9 @@ class Member_paylog extends \Phpcmf\Table
                 'paytime' => SYS_TIME,
                 'inputtime' => SYS_TIME,
             ]);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -217,8 +223,6 @@ class Member_paylog extends \Phpcmf\Table
             null,
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
         );
-
     }
-
 
 }

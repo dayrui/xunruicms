@@ -205,7 +205,6 @@ class Pay extends \Phpcmf\Model
 
         switch ($mark) {
 
-
             // 在线充值
             case 'recharge':
                 return '<span class="label label-default"> '.dr_lang('充值').' </span>';
@@ -236,6 +235,11 @@ class Pay extends \Phpcmf\Model
             default:
                 list($rname, $rid, $fid) = explode('-', $mark);
                 switch ($rname) {
+
+                    // 系统
+                    case 'system':
+                        return '<span class="label label-danger"> '.dr_lang('系统').' </span>';
+                        break;
 
                     // 用户组
                     case 'group':
