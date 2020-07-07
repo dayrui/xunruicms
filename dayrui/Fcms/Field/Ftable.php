@@ -235,13 +235,13 @@ class Ftable extends \Phpcmf\Library\A_Field {
         $str.= '<table class="table table-nomargin table-bordered table-striped table-bordered table-advance" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
         $str.= ' <thead><tr>';
         if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
-            $str.= ' <th> '.$field['setting']['option']['first_cname'].' </th>';
+            $str.= ' <th> '.dr_lang($field['setting']['option']['first_cname']).' </th>';
         }
         if ($field['setting']['option']['field']) {
             foreach ($field['setting']['option']['field'] as $t) {
                 if ($t['type']) {
                     $style = $t['width'] ? 'style="width:'.$t['width'].(is_numeric($t['width']) ? 'px' : '').';"' : '';
-                    $str.= ' <th '.$style.'>'.$t['name'].'</th>';
+                    $str.= ' <th '.$style.'>'.dr_lang($t['name']).'</th>';
                 }
             }
         }

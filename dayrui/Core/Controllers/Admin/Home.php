@@ -334,6 +334,8 @@ class Home extends \Phpcmf\Common
             $menu = $m['admin-min'];
         }
 
+        $admin_menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri');
+
         $string = '';
         $my_menu = [];
         if ($this->admin['adminid'] > 1) {
@@ -351,9 +353,10 @@ class Home extends \Phpcmf\Common
             foreach ($my_menu as $left) {
                 if (!$left['link']) {
                     continue; // 没有分组菜单就不要
-                } elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
-                    continue; // 没有划分本站点就不显示
                 }
+                /*elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
+                    //continue; // 没有划分本站点就不显示 , 这里不做判断，因为只判断下方的link
+                }*/
                 $_link = 0; // 是否第一个链接菜单，0表示第一个
                 $left_string = '';
 
@@ -371,7 +374,7 @@ class Home extends \Phpcmf\Common
                             unset($left['link'][$i]);
                             continue;
                         }
-                    } elseif (SITE_ID > 1 && !in_array(SITE_ID, $link['site'])) {
+                    } elseif (SITE_ID > 1 && $link['uri'] && $admin_menu[$link['uri']] && !in_array(SITE_ID, $admin_menu[$link['uri']]['site'])) {
                         // 没有划分本站点就不显示
                         unset($left['link'][$i]);
                         continue;
