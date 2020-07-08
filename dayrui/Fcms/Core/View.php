@@ -177,13 +177,13 @@ class View {
      * @param	string	$_dir		模块名称
      * @return  void
      */
-    public function display($_name, $_dir = '') {
+    public function display($xunruicms_name, $xunruicms_dir = '') {
 
         if ($this->_is_return) {
-            return $_name;
+            return $xunruicms_name;
         }
 
-        $start = microtime(true);
+        $xunruicms_start = microtime(true);
 
 		// 定义当前模板的url地址
         if (!$this->_options['my_web_url']) {
@@ -208,20 +208,20 @@ class View {
             \Phpcmf\Service::C()->_json(1, 'view', $this->_options);
         }
 
-        extract($this->_options, EXTR_PREFIX_SAME, 'data');
+        extract($this->_options);
 
-        $this->_filename = str_replace('..', '[removed]', $_name);
+        $this->_filename = str_replace('..', '[removed]', $xunruicms_name);
 
         // 挂钩点 模板加载之后
         \Phpcmf\Hooks::trigger('cms_view', $this->_options);
 
         // 加载编译后的缓存文件
-        $this->_disp_dir = $_dir;
-        $_view_file = $this->get_file_name($this->_filename, $_dir);
+        $this->_disp_dir = $xunruicms_dir;
+        $_view_file = $this->get_file_name($this->_filename, $xunruicms_dir);
 
         include $this->load_view_file($_view_file);
 
-        $this->_view_time = round(microtime(true) - $start, 2);
+        $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
 
         // 消毁变量
         $this->_include_file = null;
@@ -550,8 +550,8 @@ class View {
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php \\1 ?>",
-            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { foreach (\$return_\\2 as \$key_\\2=>\$\\2) {  \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
-            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return); \$count=dr_count(\$return);} if (is_array(\$return)) { foreach (\$return as \$key=>\$t) { \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
+            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
+            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return); \$count=dr_count(\$return);} if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
             "<?php \$return_count_\\2 = [];\$list_return_count_\\2 = \$this->list_tag(\"count \\1 return=\\2\"); if (\$list_return_count_\\2) { extract(\$list_return_count_\\2); }  \$\\2_count=intval(\$return_count[0]['ct']);  ?>",
             "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count); }  echo intval(\$return_count[0]['ct']);   ?>",
@@ -578,8 +578,8 @@ class View {
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             $regex_array[] = '#{\s?\/'.$name.'\s?}#i';
             // 替换直接变量输出
-            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2)) { foreach (\$return_\\2 as \$key_\\2=>\$\\2) {  \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
-            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return)) { foreach (\$return as \$key=>\$t) { \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2)) { \$key_\\2=-1;  foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
             $replace_array[] = "<?php } } ?>";
         }
 

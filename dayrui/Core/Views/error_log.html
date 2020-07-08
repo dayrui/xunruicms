@@ -107,7 +107,7 @@
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {dr_form_search_hidden()}
-        <div class="{if $is_mobile}col-md-12{else}col-md-3{/if}">
+        <div class="{if $is_mobile}col-md-12{else}col-md-2{/if}" style="padding-right: 0">
             <label>
                 <div class="input-group fc-input-time date date-picker" data-date-format="yyyy-mm-dd">
                     <input type="text" class="form-control" name="time" value="{$time}">
@@ -120,7 +120,7 @@
             </label>
         </div>
 
-        <div class="{if $is_mobile}col-md-12{else}col-md-3{/if}">
+        <div {if $is_mobile}class="col-md-12"{else}class="col-md-3" style="padding-left: 0" {/if}>
             <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
             {if $list}<label><a href="javascript:;" onclick="dr_show_file_code('{dr_lang('查看文件')}', '{dr_url('error/log_show', ['time'=>$time])}')" class="btn blue btn-sm onloading" > <i class="fa fa-code"></i> {dr_lang('查看文件')}</a></label>{/if}
         </div>

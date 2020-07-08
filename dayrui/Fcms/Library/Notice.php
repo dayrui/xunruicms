@@ -82,6 +82,12 @@ class Notice {
             return [['用户uid参数为空，任务不能执行'], $value];
         }
 
+        $member = dr_member_info($value['data']['uid']);
+        if (!$member) {
+            CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）执行失败：用户uid('.$value['data']['uid'].')账号不存在，任务不能执行');
+            return [['用户uid('.$value['data']['uid'].')账号不存在，任务不能执行'], $value];
+        }
+
         // 微信通知
         if ($value['config']['weixin']) {
             $rt = $this->_get_tpl_content($siteid, $value['name'], 'weixin', $value['data']);
@@ -110,13 +116,9 @@ class Notice {
 
         // 短信通知
         if ($value['config']['mobile']) {
-            $phone = $value['data']['phone'];
+            $phone = $member['phone'];
             if (!$phone) {
-                $member = dr_member_info($value['data']['uid']);
-                $value['data']['phone'] = $phone = $member['phone'];
-            }
-            if (!$phone) {
-                $error[] = $debug = 'phone参数为空，不能发送短信';
+                $error[] = $debug = '用户【'.$member['username'].'】phone参数为空，不能发送短信';
                 CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
@@ -153,13 +155,9 @@ class Notice {
 
         // 邮件通知
         if ($value['config']['email']) {
-            $email = $value['data']['email'];
+            $email = $member['email'];
             if (!$email) {
-                $member = dr_member_info($value['data']['uid']);
-                $value['data']['email'] = $email = $member['email'];
-            }
-            if (!$email) {
-                $error[] = $debug = 'email参数为空，不能发送邮件';
+                $error[] = $debug = '用户【'.$member['username'].'】的email参数为空，不能发送邮件';
                 CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
@@ -205,7 +203,7 @@ class Notice {
         }
 
         ob_start();
-        extract($data, EXTR_PREFIX_SAME, 'data');
+        extract($data);
         $file = \Phpcmf\Service::V()->code2php($content);
         require $file;
         $code = ob_get_clean();
