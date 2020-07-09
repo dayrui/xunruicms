@@ -12,7 +12,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->close_xss = 1; // 关闭xss验证
+        $this->use_xss = 1; // 强制xss验证
         $this->fieldtype = ['MEDIUMTEXT' => ''];
         $this->defaulttype = 'MEDIUMTEXT';
     }

@@ -53,16 +53,7 @@ class Field extends \Phpcmf\Common
 			'namespace' => $this->namespace,
 			'iscategory' => $iscategory,
 		]);
-		
 	}
-
-	public function test() {
-
-        \Phpcmf\Service::V()->assign(array(
-            'list' => [],
-        ));
-        \Phpcmf\Service::V()->display('field_list.html');
-    }
 
 	public function index() {
 
@@ -94,8 +85,20 @@ class Field extends \Phpcmf\Common
             // 主字段
             foreach ($field as $t) {
 
+                // 验证字段对象的有效性
+                $obj = \Phpcmf\Service::L('Field')->get($t['fieldtype']);
+                if ($obj) {
+                    if ($obj->use_xss) {
+                        // 强制开启xss
+                        $t['setting']['validate']['xss'] = 0;
+                    } elseif ($obj->close_xss) {
+                        // 强制关闭xss
+                        $t['setting']['validate']['xss'] = 1;
+                    }
+                }
+
+                // 重复了 删除记录
                 if (isset($data[$t['fieldname']]) && $data[$t['fieldname']]) {
-                    // 重复了 删除记录
                     \Phpcmf\Service::M()->table('field')->delete($t['id']);
                 }
                 if (isset($group['Merge'][$t['fieldname']])) {
@@ -229,7 +232,20 @@ class Field extends \Phpcmf\Common
 		if (!$data) {
             $this->_json(0, dr_lang('数据#%s不存在', $id));
         }
+
 		$data['setting'] = dr_string2array($data['setting']);
+
+        // 验证字段对象的有效性
+        $obj = \Phpcmf\Service::L('Field')->get($data['fieldtype']);
+        if ($obj) {
+            if ($obj->use_xss) {
+                // 强制开启xss
+                $data['setting']['validate']['xss'] = 0;
+            } elseif ($obj->close_xss) {
+                // 强制关闭xss
+                $data['setting']['validate']['xss'] = 1;
+            }
+        }
 
 		if (IS_AJAX_POST) {
 			$post = \Phpcmf\Service::L('input')->post('data');
@@ -278,6 +294,17 @@ class Field extends \Phpcmf\Common
 				exit($this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]));
 				break;
 			case 'xss':
+                // 验证字段对象的有效性
+                $obj = \Phpcmf\Service::L('Field')->get($data['fieldtype']);
+                if ($obj) {
+                    if ($obj->use_xss) {
+                        // 强制开启xss
+                        $this->_json(0, dr_lang('该字段已经强制启用了XSS过滤'));
+                    } elseif ($obj->close_xss) {
+                        // 强制关闭xss
+                        $this->_json(0, dr_lang('该字段已经强制关闭了XSS过滤'));
+                    }
+                }
 				$data['setting'] = dr_string2array($data['setting']);
 				$data['setting']['validate']['xss'] = $value = $data['setting']['validate']['xss'] ? 0 : 1;
 				\Phpcmf\Service::M()->table('field')->save($id, 'setting', dr_array2string($data['setting']));

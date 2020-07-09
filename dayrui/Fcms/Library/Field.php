@@ -604,7 +604,8 @@
 
         public $id; // 当前数据id 存在id表示修改数据
         public $app; // 当前app目录，option可用
-        public $close_xss; // 是否关闭xss
+        public $close_xss; // 强制关闭xss
+        public $use_xss; // 强制开启xss
         public $remove_div; // 去掉div盒模块
 
         protected $fieldtype; // 可用字段类型

@@ -624,9 +624,10 @@ class Security {
 	{
 		static $naughty_tags    = array(
 			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
-			'blink', 'body', 'embed', 'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
-			'iframe', 'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
-			'plaintext', 'style', 'script', 'textarea', 'title', 'math', 'video', 'svg', 'xml', 'xss'
+			'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
+			 'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
+			'plaintext', 'style', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
+            //'iframe', 'video', 'embed'  //排除过滤
 		);
 
 		static $evil_attributes = array(

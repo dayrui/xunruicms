@@ -161,8 +161,8 @@ class Form
                 // 验证字段
                 $name = $field['fieldname']; // 字段名称
                 $validate = $field['setting']['validate']; // 字段验证规则
-                // 编辑器默认关闭xss
-                $validate['xss'] = !isset($validate['xss']) || $obj->close_xss ? 1 : $validate['xss'];
+                // 默认xss开关
+                $validate['xss'] = $obj->use_xss ? 0 : (!isset($validate['xss']) || $obj->close_xss ? 1 : $validate['xss']);
                 // 从表单获取值
                 $post[$name] = $value = $validate['xss'] ? $data[$name] : \Phpcmf\Service::L('Security')->xss_clean($data[$name]);
                 // 验证字段值
