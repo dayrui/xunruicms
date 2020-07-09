@@ -1570,8 +1570,6 @@ class Member extends \Phpcmf\Model
                             $mdb->delete_content($t['id']);
                         }
                     }
-                    var_dump($index);
-                    exit;
                     $form = $this->db->table('module_form')->where('module', $mdir)->get()->getResultArray();
                     if ($form) {
                         foreach ($form as $t) {
