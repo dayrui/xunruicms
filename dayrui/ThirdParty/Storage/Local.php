@@ -73,25 +73,40 @@ class Local {
                 return dr_return_data(0, dr_lang('文件创建失败'));
             }
         }
-		
-		// 图片压缩处理
-		if (dr_is_image($this->fullname) && $this->attachment['image_reduce']) {
-            \Phpcmf\Service::L('image')->reduce($this->fullname, $this->attachment['image_reduce']);
-		}
 
-        // 强制水印
-        if ($this->watermark && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark'))) {
-            $config['source_image'] = $this->fullname;
-            $config['dynamic_output'] = false;
-            \Phpcmf\Service::L('image')->watermark($config);
+        $info = [];
+
+		// 图片处理
+        if (dr_is_image($this->fullname)) {
+            // 图片压缩处理
+            if ($this->attachment['image_reduce']) {
+                \Phpcmf\Service::L('image')->reduce($this->fullname, $this->attachment['image_reduce']);
+            }
+            // 强制水印
+            if ($this->watermark && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark'))) {
+                $config['source_image'] = $this->fullname;
+                $config['dynamic_output'] = false;
+                \Phpcmf\Service::L('image')->watermark($config);
+            }
+            // 获取图片尺寸
+            $img = getimagesize($this->fullname);
+            if (!$img) {
+                // 删除文件
+                $this->delete();
+                return dr_return_data(0, dr_lang('此图片不是一张可用的图片'));
+            }
+            $info = [
+                'width' => $img[0],
+                'height' => $img[1],
+            ];
         }
-
 
         // 上传成功
         return dr_return_data(1, 'ok', [
             'url' => $this->attachment['url'].$this->filename,
             'md5' => md5_file($this->fullname),
             'size' => $filesize,
+            'info' => $info
         ]);
     }
 
