@@ -3917,7 +3917,8 @@ if (! function_exists('dr_get_keywords')) {
             }
         }
 
-        if (!$rt && function_exists('mb_convert_encoding')) {
+        if (!$rt && function_exists('mb_convert_encoding')
+            && defined('SYS_BDNLP_AK') && SYS_BDNLP_AK && SYS_BDNLP_SK) {
 
             $kw = dr_strcut($kw, 30);
             $data = [
