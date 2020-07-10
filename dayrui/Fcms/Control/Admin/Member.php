@@ -80,43 +80,6 @@ class Member extends \Phpcmf\Common
             $id = \Phpcmf\Service::L('input')->post('id');
             switch ($at) {
 
-                case 'category':
-                    $this->auth[SITE_ID][MOD_DIR][$at] = [];
-                    foreach ($this->tree as $catid => $r) {
-                        $t = $id[$catid];
-                        $this->auth[SITE_ID][MOD_DIR][$at][$catid] = [
-                            'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
-                            'add' => dr_member_auth_id($this->member_cache['authid'], $t['add']),
-                            'edit' => dr_member_auth_id($this->member_cache['authid'], $t['edit']),
-                            'del' => dr_member_auth_id($this->member_cache['authid'], $t['del']),
-                            'code' => dr_member_auth_id($this->member_cache['authid'], $t['code']),
-                            'verify' => $t['verify'],
-                            'exp' => $t['exp'],
-                            'score' => $t['score'],
-                            'day_post' => $t['day_post'],
-                            'total_post' => $t['total_post'],
-                            'test' => 1,
-                        ];
-                    }
-                    break;
-
-                case 'form':
-                    $this->auth[SITE_ID][MOD_DIR][$at] = [];
-                    foreach ($id as $fid => $t) {
-                        $this->auth[SITE_ID][MOD_DIR][$at][$fid] = [
-                            'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
-                            'add' => dr_member_auth_id($this->member_cache['authid'], $t['add']),
-                            'code' => dr_member_auth_id($this->member_cache['authid'], $t['code']),
-                            'verify' => dr_member_auth_id($this->member_cache['authid'], $t['verify']),
-                            'exp' => $t['exp'],
-                            'score' => $t['score'],
-                            'day_post' => $t['day_post'],
-                            'total_post' => $t['total_post'],
-                            'test' => 1,
-                        ];
-                    }
-                    break;
-
                 case 'comment':
 
                     $this->auth[SITE_ID][MOD_DIR][$at] = [
@@ -144,7 +107,7 @@ class Member extends \Phpcmf\Common
         $this->_json(0, dr_lang('请求错误'));
     }
 
-    // 模块表单权限设置
+    // 网站表单权限设置
     public function form_edit() {
 
         $table = \Phpcmf\Service::L('input')->get('table');
@@ -194,6 +157,9 @@ class Member extends \Phpcmf\Common
     public function category_edit() {
 
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
+        if (!$this->tree[$catid]) {
+            $this->_json(0, dr_lang('共享栏目[%s]不存在', $catid));
+        }
 
         if (IS_AJAX_POST) {
 
@@ -247,6 +213,10 @@ class Member extends \Phpcmf\Common
     public function edit() {
 
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
+        if (!$this->tree[$catid]) {
+            $this->_json(0, dr_lang('共享栏目[%s]不存在', $catid));
+        }
+
         if (IS_AJAX_POST) {
 
             $auth = $this->auth[SITE_ID][MOD_DIR]['category'][$catid];

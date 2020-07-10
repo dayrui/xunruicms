@@ -30,7 +30,10 @@
     });
 </script>
 <div class="note note-danger  my-content-top-tool">
-    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a>
+
+        <a href="javascript:dr_ajax_confirm_url('{dr_url('site_member/all_del')}', '{dr_lang('本操作将整站的权限删除，你确定吗？')}', '');" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('一键初始化整站权限')}</a>
+    </p>
 </div>
 
 <div class="row finecms-tool-row">

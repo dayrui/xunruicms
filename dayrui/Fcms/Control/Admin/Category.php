@@ -110,6 +110,10 @@ class Category extends \Phpcmf\Table
                 && ((!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
                 $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
             }
+            if ($this->_is_admin_auth('module_member/index')) {
+                $url = (!APP_DIR ? dr_url('site_member/category_edit', ['catid'=>$t['id']]) : dr_url(APP_DIR.'/member/category_edit', ['catid'=>$t['id']]));
+                $option.= '<a class="btn btn-xs green" onclick="dr_iframe(\''.$t['name'].'\', \''.$url.'\', \'95%\', \'\', \'nogo\')" href="javascript:;"> <i class="fa fa-user"></i> '.dr_lang('用户权限').'</a>';
+            }
 
             $t['option'] = $option;
             // 判断显示和隐藏开关

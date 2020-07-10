@@ -9,8 +9,8 @@
 // 站点用户权限
 class Site_member extends \Phpcmf\Common
 {
-	public $auth;
-	public $auth_module;
+	public $auth; // 针对站点的权限
+	public $auth_module; // 针对模块的权限
     public $tree; // 模块栏目
 	public $module;
 
@@ -156,6 +156,10 @@ class Site_member extends \Phpcmf\Common
 	public function category_edit() {
 
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
+        if (!$this->tree[$catid]) {
+            $this->_json(0, dr_lang('共享栏目[%s]不存在', $catid));
+        }
+
         $r = $this->tree[$catid];
         $mid = $r['mid'] ? $r['mid'] : 'share';
         $at = 'category';
@@ -210,6 +214,10 @@ class Site_member extends \Phpcmf\Common
 	public function edit() {
 
 		$catid = (int)\Phpcmf\Service::L('input')->get('catid');
+		if (!$this->tree[$catid]) {
+            $this->_json(0, dr_lang('共享栏目[%s]不存在', $catid));
+        }
+
 		if (IS_AJAX_POST) {
 
             $mid = $this->tree[$catid]['mid'] ? $this->tree[$catid]['mid'] :'share';
@@ -280,6 +288,22 @@ class Site_member extends \Phpcmf\Common
 		}
 
 		$this->_json(0, dr_lang('请求错误'));
+	}
+
+	// 清空全部权限
+	public function all_del() {
+
+        \Phpcmf\Service::M()->db->table('member_setting')->replace([
+            'name' => 'auth_site',
+            'value' => ''
+        ]);
+        \Phpcmf\Service::M()->db->table('member_setting')->replace([
+            'name' => 'auth_module',
+            'value' => ''
+        ]);
+
+        \Phpcmf\Service::M('cache')->sync_cache('member');
+        $this->_json(1, dr_lang('权限配置清除成功'));
 	}
 
 	private function _get_group() {

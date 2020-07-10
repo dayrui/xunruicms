@@ -892,6 +892,9 @@ abstract class Common extends \CodeIgniter\Controller
 
         if (!$category) {
             return [];
+        }elseif (!isset($this->member_cache['auth_module'][SITE_ID][$dir]['category'])) {
+            // 如果整个栏目都没有设置过权限 排查掉
+            return [];
         }
 
         foreach ($category as $id => $t) {
