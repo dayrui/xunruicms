@@ -15,24 +15,34 @@
             </tr>
             </thead>
             <tbody>
-            {php for ($i = 1; $i <= 20; $i ++) {}
+            {loop $flag $i $t}
             <tr class="odd gradeX">
                 <td>{$i}</td>
-                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{htmlspecialchars($flag[$i]['name'])}" placeholder="{dr_lang('推荐位名称')}"></td>
-                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{htmlspecialchars($flag[$i]['icon'])}" placeholder="{dr_lang('fa fa-user')}" />
+                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{htmlspecialchars($t['name'])}" placeholder="{dr_lang('推荐位名称')}"></td>
+                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{htmlspecialchars($t['icon'])}" placeholder="{dr_lang('fa fa-user')}" />
                 </td>
                 <td><div class="table-scrollable" style="border: 0;margin: 0 !important;">
                     {php $ii = 1;}
                     {loop $role $a}
                     {if $a['id'] > 1}
-                    <label class="mt-checkbox mt-checkbox-outline"><input <?php echo ($flag[$i]['role'][$a['id']] ? 'checked' : '');?> type="checkbox" name="flag[{$i}][role][{$a['id']}]" value="1"/> {$a['name']} <span></span> </label>&nbsp;&nbsp;
+                    <label class="mt-checkbox mt-checkbox-outline"><input <?php echo ($t['role'][$a['id']] ? 'checked' : '');?> type="checkbox" name="flag[{$i}][role][{$a['id']}]" value="1"/> {$a['name']} <span></span> </label>&nbsp;&nbsp;
                     {if $ii%5 == 0}<br>{/if}
                     {php $ii ++;}
                     {/if}
                     {/loop}</div>
                 </td>
             </tr>
-            {php }}
+            {/loop}
+            {php $i++;}
+            <tr class="odd gradeX">
+                <td>{$i}</td>
+                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="" placeholder="{dr_lang('推荐位名称')}"></td>
+                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="" placeholder="{dr_lang('fa fa-user')}" />
+                </td>
+                <td>
+                   
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
