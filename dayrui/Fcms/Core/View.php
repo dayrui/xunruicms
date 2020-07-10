@@ -2889,7 +2889,12 @@ class View {
     public function get_load_tips() {
 
         if (!$this->_load_file_tips) {
-            return;
+            return [
+                [
+                    'name' => $this->_filename,
+                    'tips' => ''
+                ]
+            ];
         }
 
         $rt = [];
