@@ -25,7 +25,7 @@ class Group extends \Phpcmf\Library\A_Field {
 	 * @return  string
 	 */
 	public function option($option, $field = NULL) {
-		$group = array();
+		$group = [];
 		$option['value'] = isset($option['value']) ? $option['value'] : '';
 		if ($field) {
 			foreach ($field as $t) {
@@ -38,7 +38,7 @@ class Group extends \Phpcmf\Library\A_Field {
 					}
 				}
 			}
-			$_field = array();
+			$_field = [];
 			$_field[] = '<option value=""> -- </option>';
 			foreach ($field as $t) {
                 $t['fieldtype'] != 'Group'

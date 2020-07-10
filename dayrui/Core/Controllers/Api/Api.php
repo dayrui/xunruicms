@@ -177,7 +177,7 @@ class Api extends \Phpcmf\Common
         $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
         $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code);
 
-        $json = array();
+        $json = [];
         foreach ($linkage as $v) {
             $v['pid'] == $pid && $json[] = array('region_id' => $v['ii'], 'region_name' => $v['name']);
         }
