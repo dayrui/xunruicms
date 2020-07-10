@@ -142,7 +142,6 @@ class Security {
 
 		// Remove Invisible Characters
 		$str = remove_invisible_characters($str);
-
 		/*
 		 * URL Decode
 		 *
@@ -171,8 +170,9 @@ class Security {
 		 * We only convert entities that are within tags since
 		 * these are the ones that will pose security problems.
 		 */
+
 		$str = preg_replace_callback("/[^a-z0-9>]+[a-z0-9]+=([\'\"]).*?\\1/si", array($this, '_convert_attribute'), $str);
-		$str = preg_replace_callback('/<\w+.*/si', array($this, '_decode_entity'), $str);
+		//$str = preg_replace_callback('/<\w+.*/si', array($this, '_decode_entity'), $str);
 
 		// Remove Invisible Characters Again!
 		$str = remove_invisible_characters($str);
@@ -622,6 +622,7 @@ class Security {
 	 */
 	protected function _sanitize_naughty_html($matches)
 	{
+
 		static $naughty_tags    = array(
 			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
 			'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
