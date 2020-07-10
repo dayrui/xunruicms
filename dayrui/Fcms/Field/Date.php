@@ -102,7 +102,7 @@ class Date extends \Phpcmf\Library\A_Field {
      * 字段输出
      */
     public function output($value) {
-        return dr_date($value, null, 'red');
+        return dr_date($value, null, '');
     }
 
     /**
