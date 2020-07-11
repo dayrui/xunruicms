@@ -121,7 +121,7 @@ class Content extends \Phpcmf\Model {
                         $this->siteid,
                         'content',
                         IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member,
-                        dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
+                        dr_lang('%s【%s】审核', \Phpcmf\Service::C()->module['name'], $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
                         $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'],  IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member)
                     );
                 }
@@ -183,7 +183,7 @@ class Content extends \Phpcmf\Model {
 						$this->siteid,
 						'content',
 						\Phpcmf\Service::C()->member,
-						dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
+						dr_lang('%s【%s】审核', \Phpcmf\Service::C()->module['name'], $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
                         $role
 					);
 				}
@@ -194,7 +194,7 @@ class Content extends \Phpcmf\Model {
                 // 执行审核后的回调
                 $this->_call_verify($data[1], $verify);
             }
-            return dr_return_data(1, 'ok', $verify);
+            return dr_return_data($verify['id'], 'ok', $verify);
         }
 
         $cdata = [];
@@ -334,10 +334,10 @@ class Content extends \Phpcmf\Model {
         if (!$id) {
             // 增减金币
             $score = \Phpcmf\Service::C()->_module_member_value($data[1]['catid'], $this->dirname, 'score', \Phpcmf\Service::M('member')->authid($data[1]['uid']));
-            $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', MODULE_NAME), $data[1]['url']);
+            $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
             // 增减经验
             $exp = \Phpcmf\Service::C()->_module_member_value($data[1]['catid'], $this->dirname, 'exp', \Phpcmf\Service::M('member')->authid($data[1]['uid']));
-            $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', MODULE_NAME), $data[1]['url']);
+            $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
         } else {
             // 修改内容
             if ($data[1]['catid'] != $old['catid']) {
@@ -832,7 +832,7 @@ class Content extends \Phpcmf\Model {
         }
 
         $save = [
-            'url' => dr_url_prefix($data['url'], MOD_DIR, SITE_ID, 0),
+            'url' => dr_url_prefix($data['url'], $this->dirname, $this->siteid, 0),
             'image' => [],
             'content' => '',
         ];
@@ -905,7 +905,7 @@ class Content extends \Phpcmf\Model {
 
             $id = intval($id);
 
-            \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
+            \Phpcmf\Service::L('cache')->clear('module_'.$this->dirname.'_show_id_'.$id);
 
             // 主表
             $tables[$this->mytable] = $row = $this->table($this->mytable)->get($id);
@@ -915,14 +915,14 @@ class Content extends \Phpcmf\Model {
                 return dr_return_data(0, dr_lang('当前角色无权限管理此栏目'));
             }
 
-            $row['url'] = dr_url_prefix($row['url'], MOD_DIR, SITE_ID, 0);
+            $row['url'] = dr_url_prefix($row['url'], $this->dirname, $this->siteid, 0);
 
             // 站长工具
             if (dr_is_app('bdts')) {
-                \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, $row['url'], 'del');
+                \Phpcmf\Service::M('bdts', 'bdts')->module_bdts($this->dirname, $row['url'], 'del');
             }
             if (dr_is_app('bdxz')) {
-                \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, $row['url'], 'del');
+                \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz($this->dirname, $row['url'], 'del');
             }
 
             // 附表id
@@ -1003,7 +1003,7 @@ class Content extends \Phpcmf\Model {
 		}
 		
 		$file = \Phpcmf\Service::L('Router')->remove_domain($row['url']); // 从地址中获取要生成的文件名
-		$root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->dirname);
+		$root = \Phpcmf\Service::L('html')->get_webpath($this->siteid, $this->dirname);
 
 		// 删除文件
 		if (is_file($root.$file)) {
@@ -1262,7 +1262,7 @@ class Content extends \Phpcmf\Model {
             return [];
         }
 
-        $data['url'] = dr_url_prefix($data['url'], MOD_DIR, SITE_ID, 0);
+        $data['url'] = dr_url_prefix($data['url'], $this->dirname, $this->siteid, 0);
         $data['is_comment'] = isset($data['is_comment']) ? $data['is_comment'] : 0;
 
         return $data;

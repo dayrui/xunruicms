@@ -578,6 +578,8 @@ class Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
+            $where[] = '`'.$table.'`.`'.$name.'` LIKE "%,'.intval($value).',%"';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
