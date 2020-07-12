@@ -47,12 +47,13 @@
                             <div class="col-md-9">
 
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars($data['domain'])}" class="form-control">
+                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars($data['domain'])}" class="form-control input-large">
                                     <span class="input-group-btn">
-                                        <a class="btn red" href="javascript:dr_help(506);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
+                                        <a class="btn green" href="javascript:dr_test_domain_dir('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试')}</a>
                                     </span>
                                 </div>
                                 <span class="help-block">{dr_lang('格式：m.test.com，不能包含/符号')}</span>
+                                <div class="form-control-static" id="dr_domian_error" style="color: red;display: none"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -85,5 +86,23 @@
         </div>
     </div>
 </form>
-
+<script>
+    function dr_test_domain_dir(id) {
+        $('#dr_domian_error').html('{dr_lang('正在测试中...')}');
+        $('#dr_domian_error').show();
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_mobile_domain&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                if (json.code) {
+                    dr_tips(json.code, json.msg);
+                    $('#dr_domian_error').hide();
+                } else {
+                    $('#dr_domian_error').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
 {template "footer.html"}

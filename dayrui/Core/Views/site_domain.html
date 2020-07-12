@@ -31,7 +31,7 @@
                             <label class="col-md-2 control-label">{dr_lang('本站电脑域名')}</label>
                             <div class="col-md-4">
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars($data['site_domain'])}" class="form-control">
+                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars($data['site_domain'])}" class="form-control input-large">
                                     <span class="input-group-btn">
                                         {if SITE_ID == 1}
                                         <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>

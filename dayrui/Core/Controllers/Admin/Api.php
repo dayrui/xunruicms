@@ -619,6 +619,30 @@ class Api extends \Phpcmf\Common
     }
 
     /**
+     * 测试手机域名是否可用
+     */
+    public function test_mobile_domain() {
+
+        $v = \Phpcmf\Service::L('input')->get('v');
+        if (!$v) {
+            $this->_json(0, dr_lang('域名不能为空'));
+        } elseif (!\Phpcmf\Service::L('Form')->check_domain($v)) {
+            $this->_json(0, dr_lang('域名（%s）格式不正确', $v));
+        } elseif (!function_exists('stream_context_create')) {
+            $this->_json(0, '函数没有被启用：stream_context_create');
+        }
+
+        $url = dr_http_prefix($v) . '/api.php';
+
+        $code = dr_catcher_data($url, 5);
+        if ($code != 'phpcmf ok') {
+            $this->_json(0, '['.$v.']域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功');
+        }
+
+        $this->_json(1, dr_lang('绑定正常'));
+    }
+
+    /**
      * 测试附件目录是否可用
      */
     public function test_attach_dir() {
