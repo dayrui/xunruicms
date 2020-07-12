@@ -2928,13 +2928,13 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 }
 .yl_files_row {
     width: 50%;
-    height:70px;
+    height:90px;
     float: left;
 }
 @media (max-width: 768px) {
     .yl_files_row {
         width: 100%;
-        height:70px;
+        height:90px;
         float: none;
     }
 }
@@ -2946,9 +2946,12 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     margin-right: 10px;
     border: 1px dashed #e2e2e2;
     padding: 10px;
-    overflow: hidden;
     width: 80px;
     height: 70px;
+    overflow: hidden;
+}
+.table-finecms-upload .files_row_preview {
+    overflow: inherit;
 }
 .files_show_description_html {
     margin-top: 10px;

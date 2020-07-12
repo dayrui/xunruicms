@@ -60,7 +60,20 @@ class File extends \Phpcmf\Library\A_Field {
 			</div>'.$this->attachment($option).'
 			'
 			,
-			''
+			'<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('显示浏览附件').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][unused]" '.($option['unused'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('允许用户选取自己已经上传的附件').'</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][tips]" '.($option['tips'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
+                </div>
+            </div>'
 		];
 	}
 	
@@ -175,7 +188,6 @@ class File extends \Phpcmf\Library\A_Field {
         $attr = $field['setting']['validate']['formattr'];
 
 		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']).'MB');
-		$size = intval($field['setting']['option']['size']) * 1024 * 1024;
 
         $p = dr_authcode([
             'size' => intval($field['setting']['option']['size']),
@@ -183,7 +195,6 @@ class File extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-		$url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'];
 
 		// 显示模板
 		$tpl = '<div  id="dr_'.$name.'_files_row" class="file_row_html files_row">';
@@ -220,18 +231,31 @@ class File extends \Phpcmf\Library\A_Field {
 			$val.= '<input type="hidden" '.$attr.' id="dr_'.$name.'" name="data['.$name.']" value="" />';
 		}
 
-		$area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "70%"]';
+        $json = json_encode([
+            'name' => $name,
+            'ext' => !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? 'null' : ' /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i',
+            'size' => intval($field['setting']['option']['size']) * 1024 * 1024,
+            'url' =>  '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'],
+            'unused_url' => '/index.php?s=api&c=file&m=input_file_list&p=' . $p . '&fid=' . $field['id'],
+            'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1',
+            'tpl' => $tpl,
+            'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
+        ]);
 
 		$use = '';
-        \Phpcmf\Service::C()->uid && $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
+		if (!$field['setting']['option']['unused'] && \Phpcmf\Service::C()->uid) {
+            $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
 					</button>';
-        $use.= $field['setting']['option']['input'] ? '<button style="margin-left: 5px;" type="button" class="btn green btn-sm fileinput-url">
+        }
+        if ($field['setting']['option']['input']) {
+            $use.= '<button style="margin-left: 5px;" type="button" class="btn green btn-sm fileinput-url">
 						<i class="fa fa-edit"></i>
 						<span> '.dr_lang('地址').' </span>
-					</button>' : '';
-        $use.= '<button onclick="dr_file_remove_'.$name.'()" style="margin-left: 5px;'.(!$show_delete ? 'display:none' : '').'" type="button" class="btn red btn-sm fileinput-delete">
+					</button>';
+        }
+        $use.= '<button onclick="fileupload_file_remove(\''.$name.'\')" style="margin-left: 5px;'.(!$show_delete ? 'display:none' : '').'" type="button" class="btn red btn-sm fileinput-delete">
 						<i class="fa fa-trash"></i>
 						<span> '.dr_lang('删除').' </span>
 					</button>';
@@ -256,247 +280,25 @@ class File extends \Phpcmf\Library\A_Field {
 						<div class="progress-bar progress-bar-success" style="width:0%;"> </div>
 					</div>
 				</div>
-			</div>
-			<p class="finecms-file-ts">'.$ts.'</p>
-			<div id="fileupload_'.$name.'_files" class="files">'.$val.'</div>
-		';
+			</div>';
+		if (!$field['setting']['option']['tips']) {
+            $str.= '<p class="finecms-file-ts">'.$ts.'</p>';
+        }
+        $str.= '<div id="fileupload_'.$name.'_files" class="files">'.$val.'</div>';
 
 		if (!defined('PHPCMF_FIELD_FILE')) {
 			$str.= '
-				
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
-			
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
 			define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS
 		}
 
-		$ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
-
-        $js = \Phpcmf\Service::L('js_packer');
-		$str.= $js->pack('<script type="text/javascript">
-$(function() {
-	// 未使用的附件
-	$(\'#fileupload_'.$name.' .fileinput-unused\' ).click(function(){
-		var c = $(\'#fileupload_'.$name.' .files_row\').length;
-		var url = "/index.php?s=api&c=file&m=input_file_list&p='.$p.'&fid='.$field['id'].'&ct="+c+"&rand=" + Math.random();
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-folder-open"></i> '.dr_lang('浏览').'\',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-						
-							var tpl = \''.$tpl.'\';
-							var html = "";
-							var v = json.data.result[0];
-							tpl = tpl.replace(/\{preview\}/g, v.preview);
-							tpl = tpl.replace(/\{id\}/g, v.id);
-							tpl = tpl.replace(/\{filepath\}/g, v.file);
-							tpl = tpl.replace(/\{title\}/g, v.name);
-							tpl = tpl.replace(/\{upload\}/g, v.upload);
-							html+= tpl;
-							$(\'#fileupload_'.$name.'_files\').html(html);
-                            $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').show();
-         					fileupload_'.$name.'_edit();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				
-				return false;
-			},
-            success: function(layero, index){
-                // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-            },
-			content: url+\'&is_ajax=1\'
-		});
-	});
-     // 输入地址
-	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
-		var url = "/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1";
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-edit"></i> '.dr_lang('输入文件地址').'\',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-							var tpl = \''.$tpl.'\';
-							tpl = tpl.replace(/\{preview\}/g, json.data.preview);
-							tpl = tpl.replace(/\{id\}/g, json.data.id);
-							tpl = tpl.replace(/\{filepath\}/g, json.data.file);
-							tpl = tpl.replace(/\{title\}/g, json.data.name);
-							tpl = tpl.replace(/\{upload\}/g, json.data.upload);
-							$(\'#fileupload_'.$name.'_files\').html(tpl);
-         					fileupload_'.$name.'_edit();
-                            $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').show();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				return false;
-			},
-			success: function(layero, index){
-			    // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-			},
-			content: url+\'&is_ajax=1\'
-		});
-	});
-    // 初始化上传组件
-	$(\'#fileupload_'.$name.'\').fileupload({
-		disableImageResize: false,
-		autoUpload: true,
-		maxFileSize: '.$size.',
-		url: \''.$url.'\',
-		dataType: \'json\',
-		'.$ext.'
-		progressall: function (e, data) {
-			// 上传进度条 all
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$("#fileupload_'.$name.' .fileupload-progress").show();
-			$("#fileupload_'.$name.' .fileupload-progress").removeClass("fade");
-			$("#fileupload_'.$name.' .progress-bar-success").attr("style", "width: "+progress+"%");
-		},
-		add: function (e, data) {
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-            data.submit();
-		},
-		done: function (e, data) {
-         
-            dr_tips(data.result.code, data.result.msg);
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-            if (data.result.code == 0) {
-            	return false;
-            }
-         
-			var tpl = \''.$tpl.'\';
-			tpl = tpl.replace(/\{preview\}/g, data.result.info.preview);
-			tpl = tpl.replace(/\{id\}/g, data.result.id);
-			tpl = tpl.replace(/\{filepath\}/g, data.result.info.file);
-			tpl = tpl.replace(/\{title\}/g, data.result.info.name);
-			tpl = tpl.replace(/\{upload\}/g, "<input type=\"file\" name=\"file_data\"></button>");
-			$(\'#fileupload_'.$name.'_files\').html(tpl);
-            $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').show();
-         
-         	fileupload_'.$name.'_edit();
-        },
-		fail: function (e, data) {
-			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-		},
-	});
-	fileupload_'.$name.'_edit();
-});
-// 修改组件
-function fileupload_'.$name.'_edit() {
-	$(\'#fileupload_'.$name.'_files .file_edit\').fileupload({
-		disableImageResize: false,
-		autoUpload: true,
-		maxFileSize: '.$size.',
-		'.$ext.'
-		url: \''.$url.'\',
-		dataType: \'json\',
-		progressall: function (e, data) {
-			// 上传进度条 all
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$("#fileupload_'.$name.' .fileupload-progress").show();
-			$("#fileupload_'.$name.' .fileupload-progress").removeClass("fade");
-			$("#fileupload_'.$name.' .progress-bar-success").attr("style", "width: "+progress+"%");
-		},
-		done: function (e, data) {
-         
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-            dr_tips(data.result.code, data.result.msg);
-            if (data.result.code == 0) {
-            	return false;
-            }
-         
-        	$(this).parents(".files_row").find(".files_row_id").val(data.result.id);
-        	$(this).parents(".files_row").find(".files_row_name").val(data.result.info.file);
-        	$(this).parents(".files_row").find(".files_row_preview").html(data.result.info.preview);
-         
-        },
-		fail: function (e, data) {
-			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-		},
-	});
-}
-function dr_file_remove_'.$name.'() {
-  $(\'#fileupload_'.$name.'_files\').html("");
-  $(\'#fileupload_'.$name.'\').find(\'.fileinput-delete\').hide();
-}
-</script>', 0);
+		$str.= '<script type="text/javascript">
+        $(function() {
+            fileupload_file_init('.$json.');
+        });
+        </script>';
 
 		return $this->input_format($name, $text, $str.$tips);
 	}

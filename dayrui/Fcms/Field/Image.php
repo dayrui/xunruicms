@@ -65,7 +65,13 @@ class Image extends \Phpcmf\Library\A_Field {
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
 				<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 			</div>
-		</div>'];
+		</div><div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][tips]" '.($option['tips'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
+                </div>
+            </div>'];
     }
 
     /**
@@ -126,18 +132,18 @@ class Image extends \Phpcmf\Library\A_Field {
 
         // 当无新数据且有旧数据表示删除旧附件
         if (!$data && $_data) {
-            return array(
+            return [
                 [],
                 $_data
-            );
+            ];
         }
 
         // 当无旧数据且有新数据表示增加新附件
         if ($data && !$_data) {
-            return array(
+            return [
                 $data,
                 []
-            );
+            ];
         }
 
         // 剩下的情况就是删除旧文件增加新文件
@@ -145,10 +151,10 @@ class Image extends \Phpcmf\Library\A_Field {
         // 新旧附件的交集，表示固定的
         $intersect = @array_intersect($data, $_data);
 
-        return array(
+        return [
             @array_diff($data, $intersect), // 固有的与新文件中的差集表示新增的附件
             @array_diff($_data, $intersect), // 固有的与旧文件中的差集表示待删除的附件
-        );
+        ];
     }
 
     private function _format_file_size($fileSize, $round = 2) {
@@ -159,7 +165,7 @@ class Image extends \Phpcmf\Library\A_Field {
 
         $i = 0;
         $inv = 1 / 1024;
-        $unit = array(' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
+        $unit = [' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
 
         while ($fileSize >= 1024 && $i < 8) {
             $fileSize *= $inv;
@@ -237,11 +243,12 @@ class Image extends \Phpcmf\Library\A_Field {
         $ts = dr_lang('每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
-        $str = '
-			 <div class="dropzone dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
+        $str = '<div class="dropzone dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
             </div>
-			<div class="finecms-file-ts">'.$ts.'</div>
 		';
+        if (!$field['setting']['option']['tips']) {
+            $str.= '<div class="finecms-file-ts">'.$ts.'</div>';
+        }
 
         if (!defined('POSCMS_FIELD_IMAGES')) {
             $str.= '

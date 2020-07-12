@@ -378,13 +378,13 @@ code.form-control-static {
 }
 .yl_files_row {
     width: 50%;
-    height:70px;
+    height:90px;
     float: left;
 }
 @media (max-width: 768px) {
     .yl_files_row {
         width: 100%;
-        height:70px;
+        height:90px;
         float: none;
     }
 }
@@ -399,6 +399,9 @@ code.form-control-static {
     overflow: hidden;
     width: 80px;
     height: 70px;
+}
+.table-finecms-upload .files_row_preview {
+    overflow: inherit;
 }
 .files_show_description_html {
     margin-top: 10px;

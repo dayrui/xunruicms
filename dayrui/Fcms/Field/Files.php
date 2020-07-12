@@ -35,6 +35,7 @@ class Files extends \Phpcmf\Library\A_Field {
                 <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的首张图片来填充（仅对模块字段有效）').'</span>
                 </div>
             </div>
+       
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
@@ -71,7 +72,20 @@ class Files extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>'.$this->attachment($option).'',
 
-            ''];
+            '<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('显示浏览附件').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][unused]" '.($option['unused'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('允许用户选取自己已经上传的附件').'</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][tips]" '.($option['tips'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
+                </div>
+            </div>'];
     }
 
     /**
@@ -102,7 +116,6 @@ class Files extends \Phpcmf\Library\A_Field {
      * 获取附件id
      */
     public function get_attach_id($value) {
-
 
         $data = [];
         $value = dr_string2array($value);
@@ -156,8 +169,8 @@ class Files extends \Phpcmf\Library\A_Field {
         $data = dr_string2array($data);
         $_data = dr_string2array($_data);
 
-        !isset($_data['file']) && $_data = array('file' => NULL);
-        !isset($data['file']) && $data = array('file' => NULL);
+        !isset($_data['file']) && $_data =['file' => NULL];
+        !isset($data['file']) && $data = ['file' => NULL];
 
         // 新旧数据都无附件就跳出
         if (!$data['file'] && !$_data['file']) {
@@ -213,10 +226,9 @@ class Files extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "70%"]';
         $count = intval($field['setting']['option']['count']);
         $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
-        $size = intval($field['setting']['option']['size']) * 1024 * 1024;
+
 
         $p = dr_authcode([
             'size' => intval($field['setting']['option']['size']),
@@ -224,7 +236,6 @@ class Files extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-        $url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板
         $tpl = '<tr class="template-download files_row">';
@@ -248,7 +259,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $tpl.= '<td style="text-align:center;width: 80px;">';
         $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
-        $tpl.= '<label><button onclick="dr_file_edit_'.$name.'(this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
+        $tpl.= '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
         $tpl.= '</td>';
         $tpl.= '</tr>';
 
@@ -280,15 +291,33 @@ class Files extends \Phpcmf\Library\A_Field {
             }
         }
 
+        $json = json_encode([
+            'name' => $name,
+            'ext' => !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? 'null' : ' /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i',
+            'size' => intval($field['setting']['option']['size']) * 1024 * 1024,
+            'url' =>  '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'],
+            'unused_url' => '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'].'&ct='.$count,
+            'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'],
+            'tpl' => $tpl,
+            'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
+            'count' => $count,
+            'error' => dr_lang('上传文件不能超过%s个', $count),
+        ]);
+
         $use = '';
-        \Phpcmf\Service::C()->uid && $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
+        if (!$field['setting']['option']['unused'] && \Phpcmf\Service::C()->uid) {
+            $use.= '<button type="button" class="btn red btn-sm fileinput-unused">
 						<i class="fa fa-folder-open"></i>
 						<span> '.dr_lang('浏览').' </span>
 					</button>';
-        $use.= $field['setting']['option']['input'] ? '<button style="margin-left: 5px;" type="button" class="btn green btn-sm fileinput-url">
+        }
+        if ($field['setting']['option']['input']) {
+            $use.= '<button style="margin-left: 5px;" type="button" class="btn green btn-sm fileinput-url">
 						<i class="fa fa-edit"></i>
 						<span> '.dr_lang('地址').' </span>
-					</button>' : '';
+					</button>';
+        }
+
         // 表单输出
         $str = '
 			<div class="row fileupload-buttonbar" id="fileupload_'.$name.'">
@@ -309,7 +338,11 @@ class Files extends \Phpcmf\Library\A_Field {
 					</div>
 				</div>
 			</div>
-			<p class="finecms-file-ts">'.$ts.'</p>
+			';
+        if (!$field['setting']['option']['unused']) {
+            $str.= '<p class="finecms-file-ts">'.$ts.'</p>';
+        }
+        $str.= '
 			<div class="scroller_'.$name.'_files">
                 <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
                     <table role="presentation" class="table table-striped table-fc-upload clearfix">
@@ -322,338 +355,21 @@ class Files extends \Phpcmf\Library\A_Field {
         if (!defined('PHPCMF_FIELD_FILE')) {
             $str.= '
 				
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
-			
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			
 			';
             define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS
         }
 
-        $ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
 
-        $js = \Phpcmf\Service::L('js_packer');
-        $str.= $js->pack('<script type="text/javascript">
-$(function() {
-    $("#fileupload_'.$name.'_files").sortable();
-    dr_slimScroll_init(".scroller_'.$name.'_files", 300);
-	// 未使用的附件
-	$(\'#fileupload_'.$name.' .fileinput-unused\' ).click(function(){
-		var c = $(\'#fileupload_'.$name.' .files_row\').length;
-		var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&m=input_file_list&p='.$p.'&fid='.$field['id'].'&ct="+c+"&rand=" + Math.random();
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-folder-open"></i> '.dr_lang('浏览').'\',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-							var numCount = '.$count.';
-							var numItems = $(\'#fileupload_'.$name.'_files .files_row\').length;
-							if(numItems + json.data.count > numCount){
-								dr_tips(0, \''.dr_lang('上传文件不能超过%s个', $count).'\');
-								return false;
-							}
-							var html = "";
-							var temp = \''.$tpl.'\';
-							for(var i in json.data.result){
-								var tpl = temp;
-								var v = json.data.result[i];
-								tpl = tpl.replace(/\{preview\}/g, v.preview);
-								tpl = tpl.replace(/\{id\}/g, v.id);
-								tpl = tpl.replace(/\{disabled\}/g, v.disabled);
-								tpl = tpl.replace(/\{filepath\}/g, v.file);
-								tpl = tpl.replace(/\{title\}/g, v.name);
-								tpl = tpl.replace(/\{description\}/g, "");
-								tpl = tpl.replace(/\{upload\}/g, v.upload);
-								html+= tpl;
-							}
-							$(\'#fileupload_'.$name.'_files\').append(html);
-                            dr_slimScroll_init(".scroller_'.$name.'_files", 300);
-         					fileupload_'.$name.'_edit();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				return false;
-			},
-            success: function(layero, index){
-                // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-            },
-			content: url+\'&is_ajax=1\'
-		});
-	});
-	
-     // 输入地址
-	$(\'#fileupload_'.$name.' .fileinput-url\' ).click(function(){
-		var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&m=input_file_url";
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-edit"></i> '.dr_lang('输入文件地址').'\',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-							var tpl = \''.$tpl.'\';
-							tpl = tpl.replace(/\{preview\}/g, json.data.preview);
-							tpl = tpl.replace(/\{id\}/g, json.data.id);
-							tpl = tpl.replace(/\{disabled\}/g, json.data.disabled);
-							tpl = tpl.replace(/\{filepath\}/g, json.data.file);
-							tpl = tpl.replace(/\{title\}/g, json.data.name);
-							tpl = tpl.replace(/\{description\}/g, "");
-							tpl = tpl.replace(/\{upload\}/g, json.data.upload);
-							$(\'#fileupload_'.$name.'_files\').append(tpl);
-         					fileupload_'.$name.'_edit();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				return false;
-			},
-			success: function(layero, index){
-			    // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-				var numItems = $(\'#fileupload_'.$name.'_files .files_row\').length;
-				if(numItems >= '.($count).'){
-					dr_tips(0, \''.dr_lang('上传文件不能超过%s个', $count).'\');
-					layer.close(index);
-					return false;
-				}
-			},
-			content: url+\'&is_ajax=1\'
-		});
-	});
-    // 初始化上传组件
-	$(\'#fileupload_'.$name.'\').fileupload({
-		disableImageResize: false,
-		autoUpload: true,
-		maxFileSize: '.$size.',
-		'.$ext.'
-		url: \''.$url.'\',
-		dataType: \'json\',
-		progressall: function (e, data) {
-			// 上传进度条 all
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$("#fileupload_'.$name.' .fileupload-progress").show();
-			$("#fileupload_'.$name.' .fileupload-progress").removeClass("fade");
-			$("#fileupload_'.$name.' .progress-bar-success").attr("style", "width: "+progress+"%");
-		},
-		add: function (e, data) {
-			var myItems = data.originalFiles.length;
-			var numItems = $(\'#fileupload_'.$name.'_files .files_row\').length;
-            if(numItems + myItems > '.$count.'){
-                dr_tips(0, \''.dr_lang('上传文件不能超过%s个', $count).'\');
-                return false;
-            }
-            data.submit();
-		},
-		done: function (e, data) {
-         
-            dr_tips(data.result.code, data.result.msg);
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-            if (data.result.code == 0) {
-            	return false;
-            }
-         
-			var tpl = \''.$tpl.'\';
-			tpl = tpl.replace(/\{preview\}/g, data.result.info.preview);
-			tpl = tpl.replace(/\{id\}/g, data.result.id);
-			tpl = tpl.replace(/\{disabled\}/g, "disabled");
-			tpl = tpl.replace(/\{filepath\}/g, data.result.info.file);
-			tpl = tpl.replace(/\{title\}/g, data.result.info.name);
-			tpl = tpl.replace(/\{description\}/g, "");
-			tpl = tpl.replace(/\{upload\}/g, "<input type=\"file\" name=\"file_data\"></button>");
-			$(\'#fileupload_'.$name.'_files\').append(tpl);
-         
-            dr_slimScroll_init(".scroller_'.$name.'_files", 300);
-         	fileupload_'.$name.'_edit();
-        },
-		fail: function (e, data) {
-			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-		},
-	});
-    
-	fileupload_'.$name.'_edit();
-});
-
-// 修改组件
-function fileupload_'.$name.'_edit() {
-	$(\'#fileupload_'.$name.'_files .file_edit\').fileupload({
-		disableImageResize: false,
-		autoUpload: true,
-		maxFileSize: '.$size.',
-		'.$ext.'
-		url: \''.$url.'\',
-		dataType: \'json\',
-		progressall: function (e, data) {
-			// 上传进度条 all
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$("#fileupload_'.$name.' .fileupload-progress").show();
-			$("#fileupload_'.$name.' .fileupload-progress").removeClass("fade");
-			$("#fileupload_'.$name.' .progress-bar-success").attr("style", "width: "+progress+"%");
-		},
-		done: function (e, data) {
-         
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-            dr_tips(data.result.code, data.result.msg);
-            if (data.result.code == 0) {
-            	return false;
-            }
-         
-        	$(this).parents(".files_row").find(".files_row_id").val(data.result.id);
-        	$(this).parents(".files_row").find(".files_row_name").val(data.result.info.file);
-        	$(this).parents(".files_row").find(".files_row_preview").html(data.result.info.preview);
-         
-        },
-		fail: function (e, data) {
-			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
-			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
-			$("#fileupload_'.$name.' .fileupload-progress").hide();
-		},
-	});
-}
-// 修改URL
-function dr_file_edit_'.$name.'(e) {
-    
-    var html = $(e).html();
-    if (html.indexOf("file_data") != -1) {
-        return;
-    }
-	var obj = $(e).parents(".files_row");
-    var file = obj.find(".files_row_name").val();
-    var name = obj.find(".files_row_title").val();
-	var only = obj.find(".files_row_name").attr("readonly");
-	if (only == "readonly" || only == true) {
-		return;
-	}
-	var url = "/index.php?s=api&c=file&token='.dr_get_csrf_token().'&m=input_file_url&siteid='.SITE_ID.'&fid='.$field['id'].'&p='.$p.'&file="+file+"&name="+name;
-		layer.open({
-			type: 2,
-			title: \'<i class="fa fa-edit"></i> '.dr_lang('修改文件地址').'\',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-			shade: 0,
-			area: '.$area.',
-			btn: ["'.dr_lang('确定').'"],
-			yes: function(index, layero){
-	
-				var body = layer.getChildFrame(\'body\', index);
-				 // 延迟加载
-				var loading = layer.load(2, {
-					time: 10000000
-				});
-				$.ajax({type: "POST",dataType:"json", url: url, data: $(body).find(\'#myform\').serialize(),
-					success: function(json) {
-						layer.close(loading);
-						if (json.code == 1) {
-							layer.close(index);
-							var tpl = \''.$tpl.'\';
-							tpl = tpl.replace(/\{preview\}/g, json.data.preview);
-							tpl = tpl.replace(/\{id\}/g, json.data.id);
-							tpl = tpl.replace(/\{disabled\}/g, json.data.disabled);
-							tpl = tpl.replace(/\{filepath\}/g, json.data.file);
-							tpl = tpl.replace(/\{title\}/g, json.data.name);
-							tpl = tpl.replace(/\{upload\}/g, json.data.upload);
-							obj.remove();
-							$(\'#fileupload_'.$name.'_files\').append(tpl);
-         					fileupload_'.$name.'_edit();
-							dr_tips(1, json.msg);
-						} else {
-							dr_tips(0, json.msg);
-	
-						}
-						return false;
-					}
-				});
-				return false;
-			},
-            success: function(layero, index){
-                // 主要用于权限验证
-                var body = layer.getChildFrame(\'body\', index);
-                var json = $(body).html();
-                if (json.indexOf(\'"code":0\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json.indexOf(\'"code":1\') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-            },
-			content: url+\'&is_ajax=1\'
-		});
-}
-</script>', 0);
+        $str.= '<script type="text/javascript">
+            var files_json_'.$name.' = '.$json.';
+        $(function() {
+            fileupload_files_init(files_json_'.$name.');
+        });
+        </script>';
 
 
         // 输出最终表单显示
