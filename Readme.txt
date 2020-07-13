@@ -1,4 +1,4 @@
-迅睿CMS官方下载地址：http://www.xunruicms.com/down/
+迅睿CMS官方下载地址：https://www.xunruicms.com/down/
 
 程序安装地址：/install.php
 首次使用方法：https://www.xunruicms.com/doc/631.html
@@ -8,7 +8,7 @@
 
 对于已经安装后的迅睿CMS升级到最新发布的版本方法：
 1、下载升级包，一定要是升级包，千万不要下载安装包
-http://www.xunruicms.com/down/
+https://www.xunruicms.com/down/
 本页面有一个“更新时间”，如果你下载程序的时间晚于这个“更新时间”，说明你需要升级程序。
 2、将升级包解压
 3、如果修改模板可以不必覆盖 template目录
