@@ -24,12 +24,25 @@ class Members extends \Phpcmf\Library\A_Field {
 	 */
 	public function option($option) {
 
+	    $group = '<div class="mt-checkbox-inline">';
+	    foreach (\Phpcmf\Service::C()->member_cache['group'] as $t) {
+            $group.= '<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" value="'.$t['id'].'" name="data[setting][option][group][]" '.(in_array($t['id'], $option['group']) ? 'checked' : '').' /> '.dr_lang($t['name']).' <span></span></label>';
+        }
+	    $group.= '</div>';
+
 		return ['
 				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('最大选择数').'</label>
                     <div class="col-md-9">
                     <label><input type="text" class="form-control" size="10" name="data[setting][option][limit]" value="'.$option['limit'].'"></label>
 					<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('指定用户组').'</label>
+                    <div class="col-md-9">
+                    '.$group.'
+					<span class="help-block">'.dr_lang('列出指定用户组的用户列表，如果不选择时将显示全部用户').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -78,6 +91,7 @@ class Members extends \Phpcmf\Library\A_Field {
         $name = $field['fieldname'];
 		// 字段提示信息
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
+
 		// 区域大小
         $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
 
@@ -132,7 +146,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?s=api&c=api&m=members";
+		    var url = "/index.php?s=api&c=api&m=members&group='.(implode(',', $field['setting']['option']['group'])).'";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',

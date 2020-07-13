@@ -5,6 +5,7 @@
     <form action="{SELF}" method="get">
         {$search}
         <div class="col-xs-12">
+            {if $group}
             <label>
                 <select name="groupid" class="form-control">
                     <option value=""> {dr_lang('全部')} </option>
@@ -13,6 +14,7 @@
                     {/loop}
                 </select>
             </label>
+            {/if}
             <label>
                 <select name="field" class="form-control">
                     {loop $field $t}

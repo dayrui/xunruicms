@@ -437,6 +437,12 @@ class Api extends \Phpcmf\Common
         }
 
         $data = $_GET;
+        if ($data['group']) {
+            $builder->where('`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in('.$data['group'].'))');
+            $group = [];
+        } else {
+            $group = $this->member_cache['group'];
+        }
 
         if ($data['search']) {
             $gid = (int)$data['groupid'];
@@ -449,7 +455,7 @@ class Api extends \Phpcmf\Common
                 $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
                 if ($data['field'] == 'id') {
                     // id搜索
-                    $id = array();
+                    $id = [];
                     $ids = explode(',', $data['keyword']);
                     foreach ($ids as $i) {
                         $id[] = (int)$i;
@@ -469,7 +475,7 @@ class Api extends \Phpcmf\Common
             'list' => $list,
             'param' => $data,
             'field' => $field,
-            'group' => $this->member_cache['group'],
+            'group' => $group,
             'search' => dr_form_search_hidden(['search' => 1]),
         ));
         \Phpcmf\Service::V()->display('api_members.html');
