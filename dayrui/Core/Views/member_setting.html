@@ -129,28 +129,16 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('密码强度（正则）')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-xlarge" type="text" name="data[config][pwdpreg]" id="dr_pwdrule" value="{$data.config.pwdpreg}"/></label>
-                                <label><select class="form-control" onchange="javascript:$('#dr_pwdrule').val(this.value)" name="pattern_select">
-                                    <option value="">{dr_lang('正则验证')}</option>
-                                    <option value="/[a-zA-Z]+/">{dr_lang('必须包含字母')}</option>
-                                </select></label>
-                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的强度验证，可以设置自定义正则表达式')}</span>
+                                <input class="form-control " type="text" name="data[config][pwdpreg]" value="{$data.config.pwdpreg}"/>
+                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的强度验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('账号规则（正则）')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-xlarge" type="text" name="data[register][preg]" id="dr_regnamerule" value="{$data.register.preg}"/></label>
-                                <label><select class="form-control" onchange="javascript:$('#dr_regnamerule').val(this.value)" name="pattern_select">
-                                    <option value="">{dr_lang('正则验证')}</option>
-                                    <option value="/^[0-9.-]+$/">{dr_lang('数字')}</option>
-                                    <option value="/^[0-9-]+$/">{dr_lang('整数')}</option>
-                                    <option value="/^[a-z]+$/i">{dr_lang('字母')}</option>
-                                    <option value="/^[0-9a-z]+$/i">{dr_lang('数字+字母')}</option>
-                                    <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">Email</option>
-                                </select></label>
-                                <span class="help-block">{dr_lang('针对前端注册时的账号格式验证，可以设置自定义正则表达式')}</span>
+                                <input class="form-control " type="text" name="data[register][preg]" value="{$data.register.preg}"/>
+                                <span class="help-block">{dr_lang('针对前端注册时的账号格式验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
                             </div>
                         </div>
 

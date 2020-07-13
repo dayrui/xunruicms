@@ -101,16 +101,9 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('正则验证')}</label>
                                 <div class="col-md-9">
-                                    <label><input class="form-control" type="text" name="data[setting][validate][pattern]" value="{$data['setting']['validate']['pattern']}" id="dr_pattern" size="30" /></label>
-                                    <label><select class="form-control" onchange="javascript:$('#dr_pattern').val(this.value)" name="pattern_select">
-                                        <option value="">{dr_lang('正则验证')}</option>
-                                        <option value="/^[0-9.-]+$/">{dr_lang('数字')}</option>
-                                        <option value="/^[0-9-]+$/">{dr_lang('整数')}</option>
-                                        <option value="/^[a-z]+$/i">{dr_lang('字母')}</option>
-                                        <option value="/^[0-9a-z]+$/i">{dr_lang('数字+字母')}</option>
-                                        <option value="/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/">Email</option>
-                                    </select></label>
-                                    <span class="help-block">{dr_lang('此选项部分字段不可用')}</span>
+                                    <input class="form-control" type="text" name="data[setting][validate][pattern]" value="{$data['setting']['validate']['pattern']}"  />
+
+                                    <span class="help-block">{dr_lang('此选项部分字段不可用，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
                                 </div>
                             </div>
                             <div class="form-group">
