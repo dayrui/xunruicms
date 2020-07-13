@@ -128,7 +128,7 @@ return [
       `catid` mediumint(8) unsigned NOT NULL COMMENT '栏目id',
       `params` text NOT NULL COMMENT '参数数组',
       `keyword` varchar(255) NOT NULL COMMENT '关键字',
-      `contentid` mediumtext NOT NULL COMMENT 'id集合',
+      `contentid` int(10) unsigned NOT NULL COMMENT '字段改成了结果数量值',
       `inputtime` int(10) unsigned NOT NULL COMMENT '搜索时间',
       PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`),
