@@ -323,7 +323,7 @@ class Member extends \Phpcmf\Model
                                 $this->delete_group($uid, $group['gid'], 0);
                                 continue;
                             }
-                            $group['etime'] = dr_member_group_etime($group_info['days']);
+                            $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
                             // 自动续费
                             $rt = $this->add_money($uid, -$price);
                             if (!$rt['code']) {
@@ -375,7 +375,7 @@ class Member extends \Phpcmf\Model
                                 continue;
                             }
                             // 自动续费
-                            $group['etime'] = dr_member_group_etime($group_info['days']);
+                            $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
                             // 自动续费
                             $rt = $this->add_score($uid, -$price, dr_lang('您的用户组（%s）自动续费', $group_info['name']));
                             if (!$rt['code']) {
@@ -466,7 +466,7 @@ class Member extends \Phpcmf\Model
             'gid' => $gid,
             'lid' => 0,
             'stime' => SYS_TIME,
-            'etime' => dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days']),
+            'etime' => dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days'], \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['dtype']),
         ];
         $rt = $this->table('member_group_index')->insert($data);
         if (!$rt['code']) {

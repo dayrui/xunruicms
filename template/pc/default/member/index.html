@@ -108,7 +108,7 @@
                             <a href="javascript:;"> {$t.name} </a>
                         </td>
                         <td> 无 </td>
-                        <td> {if $t.days}{$t.days}天{else}永久{/if} </td>
+                        <td> {if $t.days}{$t.days}{dr_member_group_dtype($t.setting.dtype)}{else}永久{/if} </td>
                         <td>
                             {php $sq=\Phpcmf\Service::M()->table('member_group_verify')->where('uid', $member.uid)->where('gid', $t.id)->getRow();}
                             {if $sq}

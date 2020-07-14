@@ -3593,13 +3593,31 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 }
 
 // 计算用户组到期时间
-function dr_member_group_etime($days) {
+function dr_member_group_etime($days, $dtype) {
 
     if (!$days) {
         return 0;
     }
 
-    return SYS_TIME + $days * 3600 * 24;
+    if ($dtype == 1) {
+        return strtotime('+'.$days.' month');
+    } elseif ($dtype == 2) {
+        return strtotime('+'.$days.' year');
+    } else {
+        return strtotime('+'.$days.' day');
+    }
+}
+
+// 用户组到期时间单位
+function dr_member_group_dtype($dtype) {
+
+    if ($dtype == 1) {
+        return dr_lang('月');
+    } elseif ($dtype == 2) {
+        return dr_lang('年');
+    } else {
+        return dr_lang('天');
+    }
 }
 
 // 处理带Emoji的数据，HTML转为emoji码

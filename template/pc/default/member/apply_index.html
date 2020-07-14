@@ -22,7 +22,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label"> 有效期 </label>
                             <div class="col-md-9">
-                                <p class="form-control-static"> {if $group.days}{$group.days}天{else}永久{/if} </p>
+                                <p class="form-control-static"> {if $group.days}{$group.days}{dr_member_group_dtype($group.setting.dtype)}{else}永久{/if} </p>
                             </div>
                         </div>
                         {if $level}

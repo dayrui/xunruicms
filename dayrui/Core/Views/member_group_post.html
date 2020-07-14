@@ -49,10 +49,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label ">{dr_lang('有效天数')}</label>
+                            <label class="col-md-2 control-label ">{dr_lang('有效时长')}</label>
                             <div class="col-md-9">
-                                <label><input type="text" class="form-control" name="data[days]" value="{htmlspecialchars($days)}"></label>
-                                <span class="help-block"> {dr_lang('单位天，到期过后将转为指定组，0或留空表示永久')} </span>
+
+                                <label><input type="text" class="form-control" name="data[days]" value="{intval($days)}"></label>
+                                <label><select name="setting[dtype]"  class="form-control">
+                                    <option value="0" {if !$setting.dtype} selected {/if}> {dr_lang('天')} </option>
+                                    <option value="1" {if 1 == $setting.dtype} selected {/if}> {dr_lang('月')} </option>
+                                    <option value="2" {if 2 == $setting.dtype} selected {/if}> {dr_lang('年')} </option>
+                                </select></label>
+                                <span class="help-block"> {dr_lang('0或留空表示永久')} </span>
                             </div>
                         </div>
                         <div class="form-group">

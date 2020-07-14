@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_group` (
   `name` text NOT NULL COMMENT '用户组名称',
   `price` decimal(10,2) NOT NULL COMMENT '售价',
   `unit` tinyint(1) unsigned NOT NULL COMMENT '价格单位:1虚拟币，0金钱',
-  `days` int(10) unsigned NOT NULL COMMENT '生效天数',
+  `days` int(10) unsigned NOT NULL COMMENT '生效时长',
   `apply` tinyint(1) unsigned NOT NULL COMMENT '是否申请',
   `register` tinyint(1) unsigned NOT NULL COMMENT '是否允许注册',
   `setting` text NOT NULL COMMENT '用户组配置',
