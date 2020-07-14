@@ -261,7 +261,7 @@ class File extends \Phpcmf\Common
             ],
             'pp' => intval($_GET['pp']),
             'page' => intval($_GET['page']),
-            'psize' => 20,
+            'psize' => SYS_ADMIN_PAGESIZE,
             'fileext' => dr_safe_replace($p['exts']),
             'search_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&pp='.\Phpcmf\Service::L('input')->get('pp').'&p='.\Phpcmf\Service::L('input')->get('p')
                 .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
