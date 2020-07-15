@@ -352,14 +352,12 @@ class Files extends \Phpcmf\Library\A_Field {
 			</div>
 		';
 
-        if (!defined('PHPCMF_FIELD_FILE')) {
+        if (!$this->is_load_js($field['filetype'])) {
             $str.= '
-				
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
-			
 			';
-            define('PHPCMF_FIELD_FILE', 1);//防止重复加载JS
+            $this->set_load_js($field['filetype'], 1);
         }
 
 

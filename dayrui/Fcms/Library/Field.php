@@ -626,6 +626,9 @@
 
         ];
 
+        // 验证加载变量
+        protected $loadjs = [];
+
         /**
          * 构造函数
          */
@@ -737,6 +740,23 @@
          */
         public function check_value($field, $value) {
             return '';
+        }
+
+        /**
+         * 验证加载js
+         */
+        public function is_load_js($name) {
+            if (isset($this->loadjs[$name]) && $this->loadjs[$name]) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * 验证加载变量设置
+         */
+        public function set_load_js($name, $value) {
+            $this->loadjs[$name] = $value;
         }
 
         /**

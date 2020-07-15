@@ -118,9 +118,9 @@ class Linkages extends \Phpcmf\Library\A_Field {
 		$linklevel = $linkagelevel + 1;
 		// 开始输出
 		$str = '';
-		if(!defined('PHPCMF_FIELD_LINKAGE')) {
+        if (!$this->is_load_js($field['filetype'])) {
 			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/jquery.ld.js?v='.CMF_UPDATE_TIME.'"></script>';
-			define('PHPCMF_FIELD_LINKAGE', 1);
+            $this->set_load_js($field['filetype'], 1);
 		}
 
         // 表单宽度设置

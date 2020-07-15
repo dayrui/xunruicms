@@ -250,12 +250,12 @@ class Image extends \Phpcmf\Library\A_Field {
             $str.= '<div class="finecms-file-ts">'.$ts.'</div>';
         }
 
-        if (!defined('POSCMS_FIELD_IMAGES')) {
+        if (!$this->is_load_js($field['filetype'])) {
             $str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
+            $this->set_load_js($field['filetype'], 1);
         }
 
         $js = \Phpcmf\Service::L('js_packer');

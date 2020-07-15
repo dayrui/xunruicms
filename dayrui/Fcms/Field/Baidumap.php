@@ -178,11 +178,11 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         $level = $field['setting']['option']['level'] ? $field['setting']['option']['level'] : 15;
 
         $str = '';
-        if (!defined('PHPCMF_FIELD_BAIDUMAP')) {
+        if (!$this->is_load_js($field['filetype'])) {
             $str = '
 		<script type="text/javascript" src="'.(strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.SYS_BDMAP_API.'"></script>
 		<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/baidumap.js?v='.CMF_UPDATE_TIME.'"></script>';
-            define('PHPCMF_FIELD_BAIDUMAP', 1);
+            $this->set_load_js($field['filetype'], 1);
         }
 
         $str.= '

@@ -155,7 +155,7 @@ class Date extends \Phpcmf\Library\A_Field {
         $required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
         $str = '';
-        if (!defined('PHPCMF_FIELD_DATE')) {
+        if (!$this->is_load_js($field['filetype'])) {
             $str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
@@ -165,7 +165,7 @@ class Date extends \Phpcmf\Library\A_Field {
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            define('PHPCMF_FIELD_DATE', 1);//防止重复加载JS
+            $this->set_load_js($field['filetype'], 1);
         }
 
         // 字段默认值
