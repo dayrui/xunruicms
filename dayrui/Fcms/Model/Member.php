@@ -696,6 +696,8 @@ class Member extends \Phpcmf\Model
      */
     public function logout() {
 
+        \Phpcmf\Hooks::trigger('member_logout', $this->member);
+
         \Phpcmf\Service::L('input')->set_cookie('member_uid', 0, -100000000);
         \Phpcmf\Service::L('input')->set_cookie('member_cookie', '', -100000000);
         \Phpcmf\Service::L('input')->set_cookie('admin_login_member', '', -100000000);
@@ -705,8 +707,6 @@ class Member extends \Phpcmf\Model
         foreach ($url as $u) {
             $sso[]= $u.'index.php?s=api&c=sso&action=logout';
         }
-
-        \Phpcmf\Hooks::trigger('member_logout', $this->member);
 
         return $sso;
     }
