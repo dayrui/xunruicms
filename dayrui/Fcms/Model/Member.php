@@ -78,13 +78,13 @@ class Member extends \Phpcmf\Model
             return;
         }
 
-        $log = array(
+        $log = [
             'uid' => $data['id'],
             'type' => $type,
             'loginip' => $ip,
             'logintime' => SYS_TIME,
             'useragent' => substr($agent, 0, 255),
-        );
+        ];
 
         // 会员部分只保留20条登录记录
         $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime desc')->get()->getResultArray();

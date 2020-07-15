@@ -218,7 +218,7 @@ function dr_show_error($msg) {
 }
 
 // 判断s参数,“应用程序”文件夹目录
-if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
+if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
     $dir = ucfirst($_GET['s']);
     if (!IS_ADMIN && $dir == 'Member') {
