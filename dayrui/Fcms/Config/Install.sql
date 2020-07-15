@@ -519,6 +519,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_notice` (
   `isnew` tinyint(1) unsigned NOT NULL COMMENT '新提醒',
   `content` text NOT NULL COMMENT '通知内容',
   `url` varchar(255) NOT NULL COMMENT '相关地址',
+  `mark` varchar(255) NOT NULL COMMENT '标记字符',
   `inputtime` int(10) unsigned NOT NULL COMMENT '提交时间',
   PRIMARY KEY (`id`),
   KEY (`isnew`),

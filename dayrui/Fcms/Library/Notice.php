@@ -147,7 +147,7 @@ class Notice {
                 CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）消息执行失败：'.$debug);
             } else {
                 $content = $rt['msg'];
-                \Phpcmf\Service::M('member')->notice($value['data']['uid'], max((int)$value['data']['type'], 1), $content, $value['data']['url']);
+                \Phpcmf\Service::M('member')->notice($value['data']['uid'], max((int)$value['data']['type'], 1), $content, $value['data']['url'], $value['data']['mark']);
                 // 成功
                 unset($value['config']['notice']);
             }

@@ -560,7 +560,7 @@ class Member extends \Phpcmf\Model
      * @param   string  $note
      * @return  null
      */
-    public function notice($uid, $type, $note, $url = '') {
+    public function notice($uid, $type, $note, $url = '', $mark = '') {
 
         if (!$uid || !$note) {
             return '';
@@ -574,6 +574,7 @@ class Member extends \Phpcmf\Model
                 'isnew' => 1,
                 'content' => $note,
                 'url' => (string)$url,
+                'mark' => (string)$mark,
                 'inputtime' => SYS_TIME,
             ]);
         }
@@ -704,6 +705,8 @@ class Member extends \Phpcmf\Model
         foreach ($url as $u) {
             $sso[]= $u.'index.php?s=api&c=sso&action=logout';
         }
+
+        \Phpcmf\Hooks::trigger('member_logout', $this->member);
 
         return $sso;
     }

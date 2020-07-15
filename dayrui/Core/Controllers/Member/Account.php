@@ -69,6 +69,7 @@ class Account extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
+            'field' => $field,
             'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, $this->member),
             'is_update_name' => $is_update_name,
         ]);

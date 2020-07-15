@@ -206,6 +206,11 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
                 }
 
+                $table = $prefix.'member_notice';
+                if (!\Phpcmf\Service::M()->db->fieldExists('mark', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `mark` VARCHAR(100) DEFAULT NULL');
+                }
+
                 $table = $prefix.'member_explog';
                 if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
