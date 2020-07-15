@@ -6,6 +6,7 @@
  **/
 
 define('IS_INSTALL', 1);
+set_time_limit(0);
 
 // 安装程序
 class Install extends \Phpcmf\Common
