@@ -387,7 +387,15 @@ class Member extends \Phpcmf\Table
         // 删除时同步删除很多内容
         $this->_Del(
             $ids,
-            null,
+            function ($rows) {
+                foreach ($rows as $t) {
+                    if (!isset($this->admin['role'][1])
+                        && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', intval($t['id']))->where('roleid', 1)->counts()) {
+                        return dr_return_data(0, dr_lang('账号[%s]不能删除', $t['username']));
+                    }
+                }
+                return dr_return_data(1, 'ok');
+            },
             function ($rows) {
                 $ids = [];
                 foreach ($rows as $t) {

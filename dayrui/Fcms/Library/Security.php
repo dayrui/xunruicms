@@ -632,7 +632,8 @@ class Security {
 		);
 
 		static $evil_attributes = array(
-			'on\w+', 'style', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
+			'on\w+', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
+            //  ,'style' 排除过滤
 		);
 
 		// First, escape unclosed tags
