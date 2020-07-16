@@ -185,9 +185,6 @@ class Html
                 $db->where('catid IN ('. implode(',', $cids).')');
             }
             $data = $db->get()->getResultArray(); // 获取需要生成的内容索引
-            var_dump(\Phpcmf\Service::M()->get_sql_query());
-            var_dump($data);
-            exit;
         }
 
         if (!dr_count($data)) {
