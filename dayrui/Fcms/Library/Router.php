@@ -348,6 +348,7 @@ class Router
             $data['dirname'] = $cat['dirname'];
             $inputtime = isset($data['_inputtime']) ? $data['_inputtime'] : $data['inputtime'];
             $data['y'] = date('Y', $inputtime);
+            $data['yy'] = date('y', $inputtime);
             $data['m'] = date('m', $inputtime);
             $data['d'] = date('d', $inputtime);
             //$data['fid'] = defined('IS_PLUS_FENZHAN') ? dr_get_show_fid($data) : 0;

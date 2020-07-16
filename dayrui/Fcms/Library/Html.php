@@ -142,6 +142,7 @@ class Html
         }
 
         if (!$app) {
+            // 共享
             if ($cids) {
                 if (!$mids) {
                     \Phpcmf\Service::C()->_json(0, '没有可用生成的内容模块');
@@ -153,6 +154,9 @@ class Html
                         $db->where('`updatetime` BETWEEN ' . strtotime($param['date_form'].' 00:00:00') . ' AND ' . ($param['date_to'] ? strtotime($param['date_to'].' 23:59:59') : SYS_TIME));
                     } elseif (isset($param['date_to']) && $param['date_to']) {
                         $db->where('`updatetime` BETWEEN 0 AND ' . strtotime($param['date_to'].' 23:59:59'));
+                    }
+                    if (isset($param['id_to']) && $param['id_form']) {
+                        $db->where('`id` BETWEEN '.(int)$param['id_form'].' AND ' . (int)$param['id_to']);
                     }
                     $db->where('catid IN ('. implode(',', $cids).')');
                     $rows = $db->get()->getResultArray(); // 获取需要生成的内容索引
@@ -167,16 +171,23 @@ class Html
                 \Phpcmf\Service::C()->_json(0, '模块参数app不存在');
             }
         } else {
+            // 独立
             $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$app)->select('id,catid,title,url');
             if (isset($param['date_form']) && $param['date_form']) {
                 $db->where('`updatetime` BETWEEN ' . strtotime($param['date_form'].' 00:00:00') . ' AND ' . ($param['date_to'] ? strtotime($param['date_to'].' 23:59:59') : SYS_TIME));
             } elseif (isset($param['date_to']) && $param['date_to']) {
                 $db->where('`updatetime` BETWEEN 0 AND ' . strtotime($param['date_to'].' 23:59:59'));
             }
+            if (isset($param['id_to']) && $param['id_form']) {
+                $db->where('`id` BETWEEN '.(int)$param['id_form'].' AND ' . (int)$param['id_to']);
+            }
             if ($cids) {
                 $db->where('catid IN ('. implode(',', $cids).')');
             }
             $data = $db->get()->getResultArray(); // 获取需要生成的内容索引
+            var_dump(\Phpcmf\Service::M()->get_sql_query());
+            var_dump($data);
+            exit;
         }
 
         if (!dr_count($data)) {

@@ -115,11 +115,11 @@ class Html extends \Phpcmf\Common
         }
 
         $app = \Phpcmf\Service::L('input')->get('app');
-        $ids = \Phpcmf\Service::L('input')->get('catids');
+        $ids = implode(',', \Phpcmf\Service::L('input')->get('catids'));
 
         \Phpcmf\Service::V()->assign([
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
-            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
+            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
     }
@@ -129,7 +129,9 @@ class Html extends \Phpcmf\Common
         \Phpcmf\Service::L('html')->get_show_data(\Phpcmf\Service::L('input')->get('app'), [
             'catids' => \Phpcmf\Service::L('input')->get('catids'),
             'date_to' => \Phpcmf\Service::L('input')->get('date_to'),
-            'date_form' => \Phpcmf\Service::L('input')->get('date_form')
+            'date_form' => \Phpcmf\Service::L('input')->get('date_form'),
+            'id_to' => \Phpcmf\Service::L('input')->get('id_to'),
+            'id_form' => \Phpcmf\Service::L('input')->get('id_form')
         ]);
     }
 
