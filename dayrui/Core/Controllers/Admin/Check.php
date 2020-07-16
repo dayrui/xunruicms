@@ -586,6 +586,9 @@ class Check extends \Phpcmf\Common
 
             case '15':
                 // 服务器环境
+                if (is_file(ROOTPATH.'test.php')) {
+                    $this->_json(0,'当网站正式上线后，根目录的test.php建议删除');
+                }
 
                 $this->_json(1, '完成');
                 break;
