@@ -5,7 +5,8 @@
  */
 
 header('Content-Type: text/html; charset=utf-8');
-
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
+ini_set('display_errors', 1);
 
 // 判断环境
 if (version_compare(PHP_VERSION, '7.1.0') < 0) {
