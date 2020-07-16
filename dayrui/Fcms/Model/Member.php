@@ -100,7 +100,7 @@ class Member extends \Phpcmf\Model
         }
 
         $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
-        if (date('Ymd') != date('Ymd', $time)) {
+        if (!$time || date('Ymd') != date('Ymd', $time)) {
             // 登录后的通知
             \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
             // 登录后的钩子
