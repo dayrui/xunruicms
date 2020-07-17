@@ -62,7 +62,8 @@
 				_opts.texts.length > 0 && this.selected(_opts.texts);
 				//给每个选择框绑定change事件
 				this.$applyTo.each(function(i){
-					i < _that.size()-1 && $(this).bind(_opts.drevent+".ld",{target:_that,index:i},_that.onchange);
+					// i < _that.size()-1 &&
+					 $(this).bind(_opts.drevent+".ld",{target:_that,index:i},_that.onchange);
 				})
 			}
 			return this;
@@ -119,14 +120,22 @@
 				//传递给后台的参数
 				_ajaxOptions.data = _d;
 				//ajax获取数据成功后的回调函数
-				_ajaxOptions.success = function(data){
+				_ajaxOptions.success = function(res){
+                    	//console.log(res);
+                    	var ops = res.data;
 						//遍历数据，获取html字符串
-						if (data.length > 0) { //本菜单有内容才显示，否者隐藏(dayrui添加)
+						if (ops.length > 0) { //本菜单有内容才显示，否者隐藏(dayrui添加)
 							_that.$applyTo.eq(selectIndex).show();
 						} else {
 							_that.$applyTo.eq(selectIndex).hide();
+							// 说明已经选择到尾部了
+							var html = res.html;
+                            if (html.length > 0) {
+                            	$('#'+_that.options.inputId).html(html);
+								//console.log('#'+_that.options.inputId+'_select');
+							}
 						}
-						var _h = _that._getOptionsHtml(data);
+						var _h = _that._getOptionsHtml(ops);
 						_that._create(_h,selectIndex);
 						_that.cache[parent_id] =  _h;
 						_that.$applyTo.eq(selectIndex).trigger("afterLoad.ld");
@@ -274,6 +283,7 @@
 		texts : [],
 		/**选择框的样式*/
 		style : null,
+        inputId : null,
 		/**选择框值改变时的回调函数*/
 		change : function(){},
 		field : {

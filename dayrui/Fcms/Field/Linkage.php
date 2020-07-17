@@ -35,9 +35,27 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		}
 		$str.= '</select>';
 
+        $str2 = '<select class="form-control" name="data[setting][option][file]"><option value=""> -- </option>';
+        $files = dr_file_map(ROOTPATH.'config/mylinkage/', 1);
+        $files2 = dr_file_map(dr_get_app_dir($this->app).'Config/mylinkage/', 1);
+        $files2 && $files = dr_array2array($files2, $files);
+        if ($files) {
+            foreach ($files as $t) {
+                $t && strpos($t, '.php') !== 0 && $str2.= '<option value="'.$t.'" '.($option['file'] == $t ? 'selected' : '').'> '.$t.' </option>';
+            }
+        }
+        $str2.= '</select>';
+
 		return ['<div class="form-group">
                   	<label class="col-md-2 control-label">'.dr_lang('选择菜单').'</label>
                     <div class="col-md-9"><label>'.$str.'</label></div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-md-2 control-label">'.dr_lang('自定义程序').'</label>
+                    <div class="col-md-9">
+                    <label>'.$str2.'</label>
+                    <span class="help-block">'.dr_lang('将设计好的程序文件上传到./config/mylinkage/目录之下').'</span>
+                    </div>
                 </div>
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('默认选择值').'</label>
@@ -105,8 +123,10 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage']);
 		$linkageid = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id');
 		$linkagelevel = (int)\Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-level');
-		//
+
+		// 最大几层
 		$linklevel = $linkagelevel + 1;
+
 		// 开始输出
 		$str = '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'">';
         if (!$this->is_load_js($field['filetype'])) {
@@ -126,9 +146,30 @@ class Linkage extends \Phpcmf\Library\A_Field {
 			$style = $i > $level ? 'style="display:none"' : '';
 			$str.= '<label style="padding-right:10px;"><select class="form-control finecms-select-'.$name.'" name="'.$name.'-'.$i.'" id="'.$name.'-'.$i.'" width="100" '.$style.'><option value=""> -- </option></select></label>';
 		}
+        $str.= '<label id="dr_linkage_'.$name.'_html"></label>';
 		$str.= '</span>';
 		// 重新选择
-		$value && $str.= '<div class="form-control-static" id="dr_linkage_'.$name.'_cxselect">'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkage_select_'.$name.'()" style="color:blue">'.dr_lang('[重新选择]').'</a></div>';
+		if ($value) {
+		    $str.= '<div id="dr_linkage_'.$name.'_cxselect">';
+            $edit_html = '<div class="form-control-static" >'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkage_select_'.$name.'()" style="color:blue">'.dr_lang('[重新选择]').'</a></div>';
+            if ($field['setting']['option']['file']) {
+                $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                $file = ROOTPATH.'config/mylinkage/'.$field['setting']['option']['file'];
+                $file2 = dr_get_app_dir(APP_DIR).'Config/mylinkage/'.$field['setting']['option']['file'];
+                if (is_file($file)) {
+                    require $file;
+                } elseif (is_file($file2)) {
+                    require $file2;
+                } else {
+                    log_message('error', '联动菜单自定义程序文件【'.$field['setting']['option']['file'].'】不存在');
+                    if (CI_DEBUG) {
+                        $edit_html.= '联动菜单自定义程序文件【'.$field['setting']['option']['file'].'】不存在';
+                    }
+                }
+            }
+		    $str.= $edit_html;
+            $str.= '</div>';
+		}
 		// 输出js支持
 		$str.= '
 		<script type="text/javascript">
@@ -138,18 +179,19 @@ class Linkage extends \Phpcmf\Library\A_Field {
 			}
 			$(function(){
 				var $ld5 = $(".finecms-select-'.$name.'");					  
-				$ld5.ld({ajaxOptions:{"url": "/index.php?s=api&c=api&m=linkage&code='.$field['setting']['option']['linkage'].'"},defaultParentId:0})
+				$ld5.ld({ajaxOptions:{"url": "/index.php?s=api&c=api&m=linkage&mid='.APP_DIR.'&file='.$field['setting']['option']['file'].'&code='.$field['setting']['option']['linkage'].'"},inputId:"dr_linkage_'.$name.'_html",defaultParentId:0});
 				var ld5_api = $ld5.ld("api");
 				ld5_api.selected('.$default.');
-				$ld5.bind("change",onchange);
-				function onchange(e){
+				$ld5.bind("change", function(e){
 					var $target = $(e.target);
 					var index = $ld5.index($target);
 					//$("#'.$name.'-'.$i.'").remove();
-					$("#dr_'.$name.'").val($ld5.eq(index).show().val());
+					var vv = $ld5.eq(index).show().val();
+					$("#dr_'.$name.'").val(vv);
 					index ++;
 					$ld5.eq(index).show();
-				}
+					//console.log("value="+vv);
+				});
 			})
 		</script>'.$tips;
 		return $this->input_format($name, $text, $str);

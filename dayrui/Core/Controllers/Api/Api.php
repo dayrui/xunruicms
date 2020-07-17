@@ -178,11 +178,42 @@ class Api extends \Phpcmf\Common
         $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code);
 
         $json = [];
+        $html = '';
         foreach ($linkage as $v) {
-            $v['pid'] == $pid && $json[] = array('region_id' => $v['ii'], 'region_name' => $v['name']);
+            if ($v['pid'] == $pid) {
+                $json[] = [
+                    'region_id' => $v['ii'],
+                    'region_name' => $v['name']
+                ];
+            }
         }
 
-        echo json_encode($json);exit;
+        // 最终linkage
+        if (!$json) {
+            $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
+            $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('file'));
+            if ($name) {
+                $id = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code.'-id', $pid);
+                $data = $linkage[$id];
+                $file = ROOTPATH.'config/mylinkage/'.$name;
+                $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
+                if (is_file($file)) {
+                    require $file;
+                } elseif (is_file($file2)) {
+                    require $file2;
+                } else {
+                    log_message('error', '联动菜单自定义程序文件【'.$name.'】不存在');
+                    if (CI_DEBUG) {
+                        $html = '联动菜单自定义程序文件【'.$name.'】不存在';
+                    }
+                }
+            }
+        }
+
+        echo json_encode([
+            'data' => $json,
+            'html' => $html,
+        ], JSON_UNESCAPED_UNICODE);exit;
     }
 
     /**
@@ -207,7 +238,7 @@ class Api extends \Phpcmf\Common
 
         list($option, $style) = \Phpcmf\Service::L('field')->app($app)->option($type, $value, $all);
 
-        exit(json_encode(['option' => $option, 'style' => $style]));
+        exit(json_encode(['option' => $option, 'style' => $style], JSON_UNESCAPED_UNICODE));
     }
 
 
