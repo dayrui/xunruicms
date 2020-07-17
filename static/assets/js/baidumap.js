@@ -59,7 +59,6 @@ function baiduSearchAddress(mapObj, name, level){
     var address = $('#baidu_address_'+name).val();
     if ( address.indexOf(",") != -1 && address.indexOf(".") != -1) {
         // 表示坐标
-
         var data = address.split(',');
         var lngX = data[0];
         var latY = data[1];
@@ -75,8 +74,9 @@ function baiduSearchAddress(mapObj, name, level){
         marker.enableDragging();
         mapObj.addOverlay(marker);
         var ZoomLevel = mapObj.getZoom();
+        $('#dr_'+name).val(address);
         marker.addEventListener("dragend", function(e){
-            $('#dr_'+name).val(e.point.lng+','+e.point.lat);
+
         });
     } else {
         var myGeo = new BMap.Geocoder();
