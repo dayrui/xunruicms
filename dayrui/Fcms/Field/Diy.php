@@ -110,10 +110,10 @@ class Diy extends \Phpcmf\Library\A_Field {
         $file2 = dr_get_app_dir(APP_DIR).'Config/myfield/'.$field['setting']['option']['file'];
         if (is_file($file)) {
             $name = $field['fieldname'];
-            require_once $file;
+            require $file;
         } elseif (is_file($file2)) {
             $name = $field['fieldname'];
-            require_once $file2;
+            require $file2;
         } elseif (!$field['setting']['option']['file']) {
             $code = '<font color=red>没有选择文件，在字段属性中选择</font>';
         } else {
