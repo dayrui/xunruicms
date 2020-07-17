@@ -96,7 +96,7 @@ if (!class_exists('ZipArchive')) {
 function dr_echo_msg($code, $msg) {
     echo '<div style="border-bottom: 1px dashed #9699a2; padding: 10px;">';
     if (!$code) {
-        echo '<font color=red>'.$msg.'</font>';
+        echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd='.urlencode($msg).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
     } else {
         echo '<font color=green>'.$msg.'</font>';
     }
