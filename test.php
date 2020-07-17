@@ -21,22 +21,28 @@ if (!function_exists('intl_is_failure')) {
 
 define('WEBPATH', dirname(__FILE__).'/');
 
+
 require WEBPATH.'config/database.php';
 $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
 if (!$mysqli) {
     dr_echo_msg(0, 'PHP环境必须启用Mysqli扩展');
-} elseif (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
-    dr_echo_msg(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
-} elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
-    dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在');
-} else {
-    if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
-        dr_echo_msg(1, 'MySQL数据连接正常');
-    } else {
-        dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
-    }
-    mysqli_close($mysqli);
 }
+
+if ($db['default']['database']) {
+    if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
+        dr_echo_msg(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
+    } elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
+        dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在');
+    } else {
+        if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
+            dr_echo_msg(1, 'MySQL数据连接正常');
+        } else {
+            dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
+        }
+        mysqli_close($mysqli);
+    }
+}
+
 
 $post = intval(@ini_get("post_max_size"));
 $file = intval(@ini_get("upload_max_filesize"));
