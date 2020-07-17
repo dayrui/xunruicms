@@ -51,10 +51,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>' : '<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片水印').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][watermark]" '.($option['watermark'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][watermark]" '.($option['watermark'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][watermark]" '.($option['watermark'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][watermark]" '.($option['watermark'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">上传的图片会加上水印图</span>
                     </div>
@@ -62,60 +63,74 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
         return ['<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').' <span></span></label>
+                            &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').' <span></span></label>
                         </div>
 						<span class="help-block">自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
                     </div>
                 </div>
-				<div class="form-group hide">
-                    <label class="col-md-2 control-label">'.dr_lang('下载图片模式').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 1 ? 'checked' : '').' > '.dr_lang('异步').'（Beta）</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 0 ? 'checked' : '').' > '.dr_lang('同步').'</label>
-                        </div>
-						<span class="help-block">同步模式是在编辑内容时一次性下载完图片，图片多的时候容易卡死；<br>异步模式是在编辑内容时不会马上下载图片，他会进入任务队列中进行延迟下载</span>
-                    </div>
-                </div>'.$wm.
+				'.$wm.
             '
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('底部工具栏').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$(\'#sdmrx\').show()" value="1" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$(\'#sdmrx\').hide()" value="0" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">编辑器底部工具栏，有截取字符选择、提取缩略图、下载远程图等控制按钮</span>
                     </div>
                 </div>
-                <div class="form-group hidden">
-                    <label class="col-md-2 control-label">'.dr_lang('编辑器类型').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mini]" '.($option['mini'] == 1 ? 'checked' : '').' > '.dr_lang('Umeditor').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][mini]" '.($option['mini'] == 0 ? 'checked' : '').' > '.dr_lang('Ueditor').'</label>
+                <div class="form-group" id="sdmrx" '.(!$option['show_bottom_boot'] ? 'style="display:none"' : '').'>
+                    <label class="col-md-1 control-label"> &nbsp; &nbsp;</label>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">'.dr_lang("提取缩略图").'</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][option][down_img_1]" value="1" '.($option['down_img_1'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                              
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">'.dr_lang("提取描述").'</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][option][down_img_2]" value="1" '.($option['down_img_2'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                              
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">'.dr_lang("下载远程图").'</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][option][down_img_3]" value="1" '.($option['down_img_3'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                              
+                            </div>
                         </div>
                     </div>
                 </div>
+            
                 <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('固定工具栏').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
+                    <label class="col-md-2 control-label">'.dr_lang('固定编辑器图标栏').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">编辑器图标栏会固定在页面，不会随浏览器滚动</span>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('自动伸长高度').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][autoheight]" '.($option['autoheight'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][autoheight]" '.($option['autoheight'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][autoheight]" '.($option['autoheight'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][autoheight]" '.($option['autoheight'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						
 						<span class="help-block">编辑器会自动增加高度</span>
@@ -123,10 +138,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('分页标签').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][page]" '.($option['page'] ? 'checked' : '').' > '.dr_lang('开启').'</label>
-                            <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][page]" '.(!$option['page'] ? 'checked' : '').' > '.dr_lang('关闭').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][page]" '.($option['page'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][page]" '.(!$option['page'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">文章内容的分页功能</span>
                     </div>
@@ -134,11 +150,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('后台编辑器模式').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode]" '.($option['mode'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('完整').'</label>
-                            <label class="radio-inline"><input type="radio" value="2" name="data[setting][option][mode]" '.($option['mode'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('精简').'</label>
-                            <label class="radio-inline"><input type="radio" value="3" name="data[setting][option][mode]" '.($option['mode'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms1\').show()"> '.dr_lang('自定义').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][mode]" '.($option['mode'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('完整').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="2" name="data[setting][option][mode]" '.($option['mode'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('精简').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="3" name="data[setting][option][mode]" '.($option['mode'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms1\').show()"> '.dr_lang('自定义').' <span></span></label>
                         </div>
                     </div>
                 </div>
@@ -151,11 +169,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('前台编辑器模式').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode2]" '.($option['mode2'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms2\').hide()"> '.dr_lang('完整').'</label>
-                            <label class="radio-inline"><input type="radio" value="2" name="data[setting][option][mode2]" '.($option['mode2'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms2\').hide()"> '.dr_lang('精简').'</label>
-                            <label class="radio-inline"><input type="radio" value="3" name="data[setting][option][mode2]" '.($option['mode2'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms2\').show()"> '.dr_lang('自定义').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][mode2]" '.($option['mode2'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms2\').hide()"> '.dr_lang('完整').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="2" name="data[setting][option][mode2]" '.($option['mode2'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms2\').hide()"> '.dr_lang('精简').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="3" name="data[setting][option][mode2]" '.($option['mode2'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms2\').show()"> '.dr_lang('自定义').' <span></span></label>
                         </div>
                     </div>
                 </div>
@@ -168,11 +188,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('移动端编辑器模式').'</label>
-                    <div class="col-md-9" style="padding-left: 35px;">
-                        <div class="radio-list">
-                            <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][mode3]" '.($option['mode3'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('完整').'</label>
-                            <label class="radio-inline"><input type="radio" value="2" name="data[setting][option][mode3]" '.($option['mode3'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('精简').'</label>
-                            <label class="radio-inline"><input type="radio" value="3" name="data[setting][option][mode3]" '.($option['mode3'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms3\').show()"> '.dr_lang('自定义').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][mode3]" '.($option['mode3'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('完整').' <span></span></label>
+                             &nbsp; &nbsp;
+                             <label class="mt-radio mt-radio-outline"><input type="radio" value="2" name="data[setting][option][mode3]" '.($option['mode3'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms3\').hide()"> '.dr_lang('精简').' <span></span></label>
+                             &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="3" name="data[setting][option][mode3]" '.($option['mode3'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms3\').show()"> '.dr_lang('自定义').' <span></span></label>
                         </div>
                     </div>
                 </div>
@@ -477,16 +499,16 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
             $str.= '<div class="mt-checkbox-inline" style="margin-top: 10px;">';
             $str.= '     <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_thumb" type="checkbox" checked value="1"> 提取第一个图片为缩略图 <span></span>
+                  <input name="is_auto_thumb" type="checkbox" '.($field['setting']['option']['down_img_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description" type="checkbox" checked value="1"> 提取前200字为描述信息 <span></span>
+                  <input name="is_auto_description" type="checkbox" '.($field['setting']['option']['down_img_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
                  </label>';
             if (!$field['setting']['option']['down_img']) {
                 $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_down_img" type="checkbox" checked value="1"> 下载远程图片 <span></span>
+                  <input name="is_auto_down_img" type="checkbox" '.($field['setting']['option']['down_img_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
                  </label>';
             }
             $str.= '</div>';
