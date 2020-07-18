@@ -13,6 +13,9 @@ class Site_domain extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $data = $post = \Phpcmf\Service::L('input')->post('data', true);
+            if ($data['site_domain'] == $data['mobile_domain']) {
+                $this->_json(0, dr_lang('手机域名不能与电脑相同'));
+            }
             foreach ($post as $name => $value) {
                 unset($data[$name]);
                 if ($value) {

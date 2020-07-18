@@ -13,6 +13,8 @@ class Site_mobile extends \Phpcmf\Common
 		    $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['domain'] && !\Phpcmf\Service::L('Form')->check_domain($post['domain'])) {
                 $this->_json(0, dr_lang('域名（%s）格式不正确', $post['domain']));
+            } elseif ($post['domain'] && $this->site_info[SITE_ID]['SITE_DOMAIN'] == $post['domain']) {
+                $this->_json(0, dr_lang('手机域名不能与电脑相同'));
             }
 			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
             if (!is_array($rt)) {

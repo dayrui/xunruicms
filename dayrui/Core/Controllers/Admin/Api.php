@@ -654,6 +654,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('域名（%s）格式不正确', $v));
         } elseif (!function_exists('stream_context_create')) {
             $this->_json(0, '函数没有被启用：stream_context_create');
+        } elseif ($this->site_info[SITE_ID]['SITE_DOMAIN'] == $v) {
+            $this->_json(0, dr_lang('手机域名不能与电脑相同'));
         }
 
         $url = dr_http_prefix($v) . '/api.php';
