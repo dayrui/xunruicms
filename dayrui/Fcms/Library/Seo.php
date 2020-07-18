@@ -187,7 +187,7 @@ class Seo
             foreach ($m[1] as $i => $field) {
                 $replace.= $m[0][$i];
                 if (isset($data[$field]) && strlen($data[$field])) {
-                    $new.= str_replace(array('[', ']'), '', $m[0][$i]);
+                    $new.= str_replace(['[', ']'], '', $m[0][$i]);
                 }
             }
             $meta_title = str_replace($replace, $new, $meta_title);
@@ -198,15 +198,23 @@ class Seo
         $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_title']);
         $seo['meta_title'] = trim(str_replace($data['join'].$data['join'], $data['join'], $seo['meta_title']), $data['join']);
         $seo['meta_title'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']));
-        unset($rep);
+
 
         $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));
         $seo['meta_keywords'].= $mod['site'][SITE_ID]['search_keywords'];
-
         $seo['meta_keywords'] = str_replace('%', ',', trim($seo['meta_keywords'], ','));
+
+        $seo['meta_keywords'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_keywords']);
+        $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_keywords']);
+        $seo['meta_keywords'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_keywords']));
+
         $seo['meta_description'] = $mod['site'][SITE_ID]['search_description'];
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
         $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
+
+        $seo['meta_description'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_description']);
+        $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_description']);
+        $seo['meta_description'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_description']));
 
         if (!$seo['meta_keywords']) {
             // 留空时使用模块seo
@@ -228,6 +236,7 @@ class Seo
             $seo['meta_description'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION');
         }
 
+        unset($rep);
         return $seo;
     }
 
