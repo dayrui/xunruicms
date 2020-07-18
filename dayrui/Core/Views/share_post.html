@@ -379,30 +379,63 @@
                     <div class="portlet-body">
                         <div class="form-body">
 
+                            {if $status}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('当前状态')}</label>
                                 <div class="col-md-9">
                                     <p class="form-control-static">
-                                        {if $status}
                                         <span class="label label-warning"> {dr_lang('%s审中', $status)} </span>
-                                        {else}
-                                        <span class="label label-danger"> {dr_lang('被拒绝')} </span>
-                                        {/if}
                                     </p>
                                 </div>
                             </div>
-                            {if $verify_step[$status][name]}
+                            {else}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('当前状态')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        <span class="label label-danger"> {dr_lang('被拒绝')} </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('处理账号')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        {Function_list::author($verify.backinfo.author, [], $verify.backinfo)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('处理时间')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        {dr_date($verify.backinfo.optiontime)}
+                                    </p>
+                                </div>
+                            </div>
+                            {if $verify.backinfo.backcontent}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('拒绝理由')}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        {$verify.backinfo.backcontent}
+                                    </p>
+                                </div>
+                            </div>
+                            {/if}
+                            {/if}
+                            {if $verify_step[$status]['name']}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('当前审核')}</label>
                                 <div class="col-md-9">
-                                    <p class="form-control-static"> {$verify_step[$status][name]} </p>
+                                    <p class="form-control-static"> {$verify_step[$status]['name']} </p>
                                 </div>
                             </div>
                             {/if}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('下级审核')}</label>
                                 <div class="col-md-9">
-                                    <p class="form-control-static"> {$verify_step[$verify_next][name]} </p>
+                                    <p class="form-control-static"> {$verify_step[$verify_next]['name']} </p>
                                 </div>
                             </div>
                             {if $is_post_user}
@@ -410,7 +443,7 @@
                                 <label class="col-md-2 control-label">审核人</label>
                                 <div class="col-md-9">
                                     <p class="form-control-static">
-                                        {$verify.backinfo.author}
+                                        {Function_list::author($verify.backinfo.author, [], $verify.backinfo)}
                                     </p>
                                 </div>
                             </div>
@@ -442,14 +475,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group dr_close_msg" style="display:none">
+                            <div class="form-group dr_close_msg" style="{if !$back_note} display:none{/if}">
                                 <label class="col-md-2 control-label">{dr_lang('拒绝理由')}</label>
                                 <div class="col-md-9">
                                     <textarea id="dr_verify_msg" class="form-control" style="height:100px" name="verify[msg]">{$back_note}</textarea>
-
                                 </div>
                             </div>
-                            <div class="form-group dr_close_msg" style="display:none">
+                            <div class="form-group dr_close_msg" style="{if !$back_note} display:none{/if}">
                                 <label class="col-md-2 control-label">{dr_lang('常用理由')}</label>
                                 <div class="col-md-9">
                                     <label>

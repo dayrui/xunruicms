@@ -153,6 +153,16 @@ class Install extends \Phpcmf\Common
 
                     $data['db_prefix'] = strtolower($data['db_prefix']);
 
+                    // 判断是否安装过
+                    if ($result = mysqli_query($mysqli, 'SHOW FULL COLUMNS FROM `'.$data['db_prefix'].'cron`')) {
+                        exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）已经被安装过，你可以尝试修改数据库名或者数据表前缀'));
+                    } else {
+                        if (strpos(mysqli_error($mysqli), 'doesn\'t exist') === false) {
+                            exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）执行SQL失败，检测MySQL账号是否支持SHOW FULL COLUMNS权限'));
+                        }
+                    }
+                    mysqli_close($mysqli);
+
                     // 存储缓存文件中
                     $size = @file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
                     if (!$size || $size < 10) {
