@@ -40,8 +40,6 @@ class Home extends \Phpcmf\Common
             }
         }
 
-        // 不在首页显示快捷菜单
-        $this->admin['usermenu'] = [];
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(

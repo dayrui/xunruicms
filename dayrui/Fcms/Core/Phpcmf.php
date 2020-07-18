@@ -1113,6 +1113,7 @@ abstract class Common extends \CodeIgniter\Controller
         $data = [
             'couts' => '数据统计',
             'notice' => '通知提醒',
+            'mylink' => '快捷链接',
             'share_category' => '共享栏目',
         ];
 
