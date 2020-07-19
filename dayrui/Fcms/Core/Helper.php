@@ -2388,7 +2388,7 @@ function dr_code($width, $height, $url = '') {
 function dr_sorting($name) {
 
     $value = $_GET['order'] ? $_GET['order'] : '';
-    if (!$value) {
+    if (!$value || !$name) {
         return 'order_sorting';
     }
 

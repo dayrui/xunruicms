@@ -35,12 +35,12 @@ class Model {
 
     // 设置初始化查询条件
     public function init($data) {
-        
+
         isset($data['id']) && $this->id = $this->key = $data['id'];
         isset($data['table']) && $this->table = $data['table'];
         isset($data['field']) && $this->field = $data['field'];
         isset($data['date_field']) && $this->date_field = $data['date_field'];
-        
+
         isset($data['order_by']) && $this->param['order_list'] = $data['order_by'];
         isset($data['order_list']) && $this->param['order_list'] = $data['order_list'];
         isset($data['where_list']) && $this->param['where_list'] = $data['where_list'];
@@ -52,7 +52,7 @@ class Model {
 
         return $this;
     }
-    
+
     // 设置列表搜索条件
     public function set_where_list($where) {
         $this->param['where_list'] = $where;
@@ -62,7 +62,7 @@ class Model {
     public function add_where_list($where) {
         $this->param['where'][] = $where;
     }
-    
+
     // 设置操作主键
     public function id($id = '') {
         if ($id) {
@@ -101,7 +101,7 @@ class Model {
 
         return dr_return_data(1);
     }
-    
+
     // 附表不存在时创建附表
     public function is_data_table($table, $tid) {
         if ($tid > 0 && !$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table.$tid)."'")->getRowArray()) {
@@ -155,15 +155,15 @@ class Model {
                 dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
-        
+
         $rt = $builder->where($name, $value)->where($this->key.'<>', $id)->countAllResults();
 
         $this->_clear();
-        
+
         return $rt;
     }
-    
-    
+
+
     // 统计数量
     public function counts($table = '', $where = '') {
 
@@ -182,14 +182,14 @@ class Model {
                 dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
-        
+
         $where && $builder->where($where);
-        
+
         $this->_clear();
-        
+
         return $builder->countAllResults();
     }
-    
+
     // 插入数据
     public function insert($data) {
 
@@ -212,7 +212,7 @@ class Model {
 
         return dr_return_data($id);
     }
-    
+
     // 插入数据
     public function replace($data) {
 
@@ -235,7 +235,7 @@ class Model {
 
         return dr_return_data($id);
     }
-    
+
     // 更新数据
     public function update($id, $data, $where = '') {
 
@@ -259,7 +259,7 @@ class Model {
 
         return dr_return_data($id);
     }
-    
+
     // 删除数据
     /*
     * 主键
@@ -299,7 +299,7 @@ class Model {
 
         return dr_return_data($id);
     }
-    
+
     // 批量删除数据
     /*
     * 主键数组
@@ -322,7 +322,7 @@ class Model {
                 dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v, null, false);
             }
         }
-        
+
         $db->whereIn($this->key, (array)$ids)->delete();
 
         $rt = $this->db->error();
@@ -373,7 +373,7 @@ class Model {
 
         $rt = $query->getRowArray();
         $this->_clear();
-        
+
         return $rt;
     }
 
@@ -385,21 +385,21 @@ class Model {
     public function getAll($num = 0, $key = '') {
 
         $builder = $this->db->table($this->table);
-        
+
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
                 dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
-        
+
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
                 dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
         }
-        
+
         // 排序
         $this->param['order'] && $builder->orderBy($this->param['order']);
 
@@ -436,14 +436,14 @@ class Model {
     public function getRow() {
 
         $builder = $this->db->table($this->table);
-        
+
         // 条件
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
                 dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v, null, false);
             }
         }
-        
+
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
@@ -454,7 +454,7 @@ class Model {
         if (!$builder) {
             return [];
         }
-        
+
         // 排序
         $this->param['order'] && $builder->orderBy($this->param['order']);
 
@@ -471,7 +471,7 @@ class Model {
     /*
      * 操作数据
      * 数据不存在-1, 变更值0, 变更至1
-     * */ 
+     * */
     public function used($id, $name) {
 
         $data = $this->db->table($this->table)->select($name)->where('id', (int)$id)->get()->getRowArray();
@@ -621,7 +621,7 @@ class Model {
 
         // 默认搜索条件
         $this->param['where_list'] && $select->where($this->param['where_list']);
-        
+
         // 默认搜索条件 关联查询
         $this->param['join_list'] && $select->join(
             $this->param['join_list'][0],
@@ -740,22 +740,42 @@ class Model {
 
         $select	= $this->db->table($this->table);
         $this->param['select_list'] && $select->select($this->param['select_list']);
-        $order = dr_get_order_string(dr_safe_replace($param['order']), $this->param['order_list']);
+
+        //分析参数合法性
+        $order = dr_safe_replace($param['order']); // 获取的排序参数
+        $arr = explode(',', urldecode($order));
+        $order_str = $this->param['order_list'];
+        if ($arr) {
+            $order_arr = [];
+            foreach ($arr as $t) {
+                list($order_field, $b) = explode(' ', $t);
+                if ($this->is_field_exists($this->table, $order_field)) {
+                    $order_arr[] = $order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
+                }
+            }
+            if ($order_arr) {
+                $order_str = implode(',', $order_arr);
+            }
+        }
+
         $param = $this->_limit_page_where($select, $param);
-        $size > 0 && $select->limit($size, $size * ($page - 1));
-        $query = $select->orderBy($order)->get();
+        if ($size > 0) {
+            $select->limit($size, $size * ($page - 1));
+        }
+        $query = $select->orderBy($order_str)->get();
         if (!$query) {
             log_message('error', '数据查询失败：'.$this->table);
             $this->_clear();
             return [[], $total, $param];
         }
         $data = $query->getResultArray();
+
         $param['order'] = $order;
         $param['total'] = $total;
 
         // 收尾工作
         $this->_clear();
-        
+
         return [$data, $total, $param];
 
     }
@@ -781,7 +801,7 @@ class Model {
         $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
         return $this;
     }
-    
+
     // in条件
     public function where_in($name, $value) {
 
@@ -792,7 +812,7 @@ class Model {
         if (is_array($value) && $value) {
             $this->param['where_in'][] = [$name, $value];
         }
-        
+
         return $this;
     }
 
@@ -828,7 +848,7 @@ class Model {
 
         return $more ? $query->getResultArray() : $query->getRowArray();
     }
-    
+
     // 批量执行
     public function query_all($sql) {
 
@@ -856,7 +876,7 @@ class Model {
                 return $ret.': '.$rt['message'];
             }
         }
-        
+
         return '';
     }
 
@@ -876,7 +896,7 @@ class Model {
 
         return str_replace(PHP_EOL, ' ', $my->getQuery());
     }
-    
+
     private function _clear() {
         $this->key = $this->id;
         $this->date_field = 'inputtime';
