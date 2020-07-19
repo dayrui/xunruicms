@@ -304,6 +304,9 @@ class Model {
     /*
     * 主键数组
     * */
+    public function delete_all($ids, $where = '') {
+        $this->deleteAll($ids, $where);
+    }
     public function deleteAll($ids, $where = '') {
 
         $db = $this->db->table($this->table);
@@ -382,6 +385,9 @@ class Model {
      * 指定数量
      * 数组主键id
      * */
+    public function get_all($num = 0, $key = '') {
+        return $this->getAll($num, $key);
+    }
     public function getAll($num = 0, $key = '') {
 
         $builder = $this->db->table($this->table);
@@ -433,6 +439,9 @@ class Model {
     /*
      * 获取单个数据
      * */
+    public function get_row() {
+        return $this->getRow();
+    }
     public function getRow() {
 
         $builder = $this->db->table($this->table);
@@ -742,10 +751,10 @@ class Model {
         $this->param['select_list'] && $select->select($this->param['select_list']);
 
         //分析参数合法性
-        $order = dr_safe_replace($param['order']); // 获取的排序参数
-        $arr = explode(',', urldecode($order));
-        $order_str = $this->param['order_list'];
-        if ($arr) {
+        $order = urldecode($param['order']); // 获取的排序参数
+        $order_str = dr_safe_replace($this->param['order_list']);
+        if ($order) {
+            $arr = explode(',', $order);
             $order_arr = [];
             foreach ($arr as $t) {
                 list($order_field, $b) = explode(' ', $t);

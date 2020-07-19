@@ -57,7 +57,7 @@ class Field extends \Phpcmf\Common
 
 	public function index() {
 
-        $field = \Phpcmf\Service::M('Field')->get_all();
+        $field = \Phpcmf\Service::M('Field')->get_all_field();
         if ($field) {
             uasort($field, function($a, $b){
                 if($a['displayorder'] == $b['displayorder']){

@@ -126,7 +126,7 @@ class Field extends \Phpcmf\Model
     }
 
     // 全部字段
-    public function get_all() {
+    public function get_all_field() {
         
         if (!$this->relatedname) {
             return null;

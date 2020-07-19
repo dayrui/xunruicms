@@ -232,7 +232,7 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::M('field')->relatedname = dr_safe_replace(\Phpcmf\Service::L('input')->get('relatedname'));
 
         // 获取全部字段
-        $all = \Phpcmf\Service::M('field')->get_all();
+        $all = \Phpcmf\Service::M('field')->get_all_field();
         $data = $id ? $all[$id] : null;
         $value = $data ? $data['setting']['option'] : []; // 当前字段属性信息
 
