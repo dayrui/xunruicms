@@ -26,7 +26,7 @@ $(function(){
         } else {
             _order = 'desc';
         }
-        var url = window.location.href;
+        var url = decodeURI(window.location.href);
         url = url.replace("&order=", "&");
         url+= "&order="+_name+" "+_order;
         window.location.href=url;

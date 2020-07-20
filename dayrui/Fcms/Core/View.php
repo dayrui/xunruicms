@@ -2629,13 +2629,18 @@ class View {
     // 给显示字段加上表前缀
     public function _set_select_field_prefix($select, $field, $prefix) {
 
-        $select = str_replace('DISTINCT_', 'DISTINCT ', $select);
-
         if ($select) {
             $array = explode(',', $select);
             foreach ($array as $i => $t) {
+
+                $field_prefix = '';
+                if (strpos($t, 'DISTINCT_') === 0) {
+                    $t = str_replace('DISTINCT_', '', $t);
+                    $field_prefix = 'DISTINCT ';
+                }
+
                 if (in_array($t, $field)) {
-                    $array[$i] = "`$prefix`.`$t`";
+                    $array[$i] = $field_prefix."`$prefix`.`$t`";
                 } elseif (strpos($t, '.') !== false && strpos($t, '`') === false) {
                     list($a, $b) = explode('.', $t);
                     if (($prefix == $a || substr($prefix, strlen(\Phpcmf\Service::M()->dbprefix())) == $a)) {
@@ -2643,11 +2648,11 @@ class View {
                             // 存在别名
                             list($b, $cname) = explode(':', $b);
                             if (in_array($b, $field)) {
-                                $array[$i] = "`$prefix`.`$b` as `$cname`";
+                                $array[$i] = $field_prefix."`$prefix`.`$b` as `$cname`";
                             }
                         } else {
                             if (in_array($b, $field)) {
-                                $array[$i] = "`$prefix`.`$b`";
+                                $array[$i] = $field_prefix."`$prefix`.`$b`";
                             }
                         }
                     }

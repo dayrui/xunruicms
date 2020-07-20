@@ -57,6 +57,14 @@ class Files extends \Phpcmf\Library\A_Field {
 						<span class="help-block">'.dr_lang('单位MB').'</span>
                     </div>
                 </div>
+                
+			<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('分段上传').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][chunk]" '.($option['chunk'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提示上传效率').'</span>
+                </div>
+            </div>
             <div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('上传数量').'</label>
 				<div class="col-md-9">
@@ -70,7 +78,9 @@ class Files extends \Phpcmf\Library\A_Field {
 					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="'.$option['ext'].'"></label>
 					<span class="help-block">'.dr_lang('格式：jpg,gif,png,exe,html,php,rar,zip').'</span>
 				</div>
-			</div>'.$this->attachment($option).'',
+			</div>
+			
+			'.$this->attachment($option).'',
 
             '<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('显示浏览附件').'</label>
@@ -302,6 +312,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
             'count' => $count,
             'error' => dr_lang('上传文件不能超过%s个', $count),
+            'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ]);
 
         $use = '';

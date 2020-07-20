@@ -719,6 +719,12 @@
         // should be uploaded in chunks, but does not invoke any
         // upload requests:
         _chunkedUpload: function (options, testOnly) {
+            var file = options.files[0];
+            var fs = file.size;
+            if (fs < options.maxChunkSize || options.maxChunkSize == 0) {
+                console.log('普通上传');
+                return false; // 上传文件小于分段大小时就不采用分段上传
+            }
             options.uploadedBytes = options.uploadedBytes || 0;
             var that = this,
                 file = options.files[0],
@@ -1485,6 +1491,7 @@ function fileupload_file_init(json){
         url: json.url,
         dataType: "json",
         acceptFileTypes: json.ext,
+        maxChunkSize: json.chunk,
         progressall: function (e, data) {
             // 上传进度条 all
             var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -1664,6 +1671,7 @@ function fileupload_files_init(json) {
         autoUpload: true,
         maxFileSize: json.size,
         acceptFileTypes: json.ext,
+        maxChunkSize: json.chunk,
         url: json.url,
         dataType: 'json',
         progressall: function (e, data) {
@@ -1721,6 +1729,7 @@ function fileupload_files_init(json) {
         maxFileSize: json.size,
         acceptFileTypes: json.ext,
         url: json.url,
+        maxChunkSize: json.chunk,
         dataType: 'json',
         progressall: function (e, data) {
             // 上传进度条 all

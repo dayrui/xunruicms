@@ -63,7 +63,7 @@ class Local {
 
         if ($type) {
             // 移动失败
-            if (!(move_uploaded_file($this->data, $this->fullname) || !is_file($this->fullname))) {
+            if (!(dr_move_uploaded_file($this->data, $this->fullname) || !is_file($this->fullname))) {
                 return dr_return_data(0, dr_lang('文件移动失败'));
             }
         } else {
@@ -76,7 +76,7 @@ class Local {
 
         $info = [];
 
-		// 图片处理
+        // 图片处理
         if (dr_is_image($this->fullname)) {
             // 图片压缩处理
             if ($this->attachment['image_reduce']) {

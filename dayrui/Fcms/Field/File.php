@@ -57,7 +57,15 @@ class File extends \Phpcmf\Library\A_Field {
 					<label><input type="text" class="form-control" value="'.$option['size'].'" name="data[setting][option][size]"></label>
 					<span class="help-block">'.dr_lang('单位MB').'</span>
 				</div>
-			</div>'.$this->attachment($option).'
+			</div>
+			<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('分段上传').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][chunk]" '.($option['chunk'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提示上传效率').'</span>
+                </div>
+            </div>
+			'.$this->attachment($option).'
 			'
 			,
 			'<div class="form-group">
@@ -240,6 +248,7 @@ class File extends \Phpcmf\Library\A_Field {
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1',
             'tpl' => $tpl,
             'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
+            'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ]);
 
 		$use = '';

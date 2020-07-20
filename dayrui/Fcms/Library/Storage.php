@@ -66,7 +66,6 @@ class Storage {
             // 本地存储
             $this->object = new \Phpcmf\ThirdParty\Storage\Local();
         }
-
     }
 
     // 文件上传

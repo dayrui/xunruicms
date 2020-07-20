@@ -13,7 +13,8 @@
 function dr_move_uploaded_file($tempfile, $fullname) {
 
     $contentType = $_SERVER['CONTENT_TYPE'] ?? getenv('CONTENT_TYPE');
-    if (strpos($contentType, 'multipart') !== false) {
+    if (strpos($contentType, 'multipart') !== false && strpos($_SERVER['HTTP_CONTENT_RANGE'], 'bytes') === 0) {
+
         // 命名一个新名称
         $value = str_replace('bytes ', '', $_SERVER['HTTP_CONTENT_RANGE']);
         list($str, $total) = explode('/', $value);
@@ -29,9 +30,17 @@ function dr_move_uploaded_file($tempfile, $fullname) {
                 unlink($temp_file);
                 return false;
             }*/
-            $rt = file_put_contents($fullname, file_get_contents($temp_file).file_get_contents($tempfile));
+            if (!file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND)) {
+                unlink($temp_file);
+                return false;
+            }
+            // 移动最终的文件
+            if (!rename($temp_file, $fullname)) {
+                unlink($temp_file);
+                return false;
+            }
             unlink($temp_file);
-            return $rt;
+            return true;
         } else {
             // 正在分段上传
             /*

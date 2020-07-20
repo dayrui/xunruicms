@@ -133,7 +133,6 @@ class Upload
             $file_path = $path.$name.'.'.$file_ext;
         }
 
-
         // 开始上传存储文件
         $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment'], (int)$config['watermark']);
         if (!$rt['code']) {
@@ -327,6 +326,7 @@ class Upload
 
         return $rt;
     }
+
 
     /**
      * 上传错误
