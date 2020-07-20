@@ -5,6 +5,48 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+
+
+/**
+ * 上传移动文件
+ */
+function dr_move_uploaded_file($tempfile, $fullname) {
+
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? getenv('CONTENT_TYPE');
+    if (strpos($contentType, 'multipart') !== false) {
+        // 命名一个新名称
+        $value = str_replace('bytes ', '', $_SERVER['HTTP_CONTENT_RANGE']);
+        list($str, $total) = explode('/', $value);
+        list($str, $max) = explode('-', $str);
+
+        // 分段名称
+        $temp_file = dirname($fullname).'/'.md5($_SERVER['HTTP_CONTENT_DISPOSITION']);
+        if ($total - $max < 1024) {
+            // 减去误差表示分段上传完毕
+            /*
+            if (!move_uploaded_file($tempfile, $temp_file)) {
+                // 移动失败
+                unlink($temp_file);
+                return false;
+            }*/
+            $rt = file_put_contents($fullname, file_get_contents($temp_file).file_get_contents($tempfile));
+            unlink($temp_file);
+            return $rt;
+        } else {
+            // 正在分段上传
+            /*
+            if (!move_uploaded_file($data, $temp_file)) {
+                // 移动失败
+                unlink($temp_file);
+                return false;
+            }*/
+            return file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND);
+        }
+    } else {
+        return move_uploaded_file($tempfile, $fullname);
+    }
+}
+
 // html实体字符转换
 function dr_html_code($value, $fk = false, $flags = null) {
 
