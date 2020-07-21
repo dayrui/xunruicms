@@ -102,9 +102,10 @@ class Module extends \Phpcmf\Model
     public function create_form($dir, $data) {
 
         // 插入表单数据
+        $data['table'] = strtolower($data['table']);
         $rt = $this->table('module_form')->insert(array(
             'name' => $data['name'],
-            'table' => strtolower($data['table']),
+            'table' => $data['table'],
             'module' => $dir,
             'setting' => '',
             'disabled' => 0,
@@ -118,7 +119,7 @@ class Module extends \Phpcmf\Model
         $data['module'] = $dir;
 
         // 创建文件
-        $rt = $this->create_form_file($dir, strtolower($data['table']));
+        $rt = $this->create_form_file($dir, $data['table']);
         if (!$rt['code']) {
             $this->table('module_form')->delete($id);
             return $rt;

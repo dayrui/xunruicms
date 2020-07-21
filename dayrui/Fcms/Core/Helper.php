@@ -1040,7 +1040,7 @@ function dr_thumb_path() {
 // 缩略图
 function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto', $webimg = 0) {
 
-    if (is_numeric($img)) {
+    if (is_numeric($img) || $webimg) {
 
         list($cache_path, $cache_url) = dr_thumb_path();
 
