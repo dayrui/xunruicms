@@ -1544,9 +1544,10 @@ class Image
      * @param	intval	$height	输出高度
      * @param	intval	$water	是否水印
      * @param	intval	$model	图片模式
+     * @param	intval	$webimg	剪切网络图片
      * @return  url
      */
-    public function thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto') {
+    public function thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
         list($cache_path, $cache_url) = dr_thumb_path();
 
@@ -1580,7 +1581,7 @@ class Image
         // 本地存储的原始图片
         $file = $attach['file'];
         if (!is_file($file)) {
-            if ($attach['remote']) {
+            if ($attach['remote'] && !$webimg) {
                 // 远程图片
                 $remote = \Phpcmf\Service::C()->get_cache('attachment', $attach['remote']);
                 if (($width > 0 || $height > 0) && $remote['value']['wh_prefix_image']) {

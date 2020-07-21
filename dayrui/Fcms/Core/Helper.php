@@ -1038,7 +1038,7 @@ function dr_thumb_path() {
 }
 
 // 缩略图
-function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto') {
+function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto', $webimg = 0) {
 
     if (is_numeric($img)) {
 
@@ -1050,7 +1050,7 @@ function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto')
             return $cache_url.$cache_file;
         }
 
-        return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode);
+        return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode, $webimg);
     }
 
     $file = dr_file($img);
