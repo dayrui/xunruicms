@@ -55,6 +55,7 @@ class Form extends \Phpcmf\Model
     // 创建表单
     public function create($data) {
 
+        $data['table'] = strtolower($data['table']);
         $rt = $this->insert([
             'name' => $data['name'],
             'table' => $data['table'],
