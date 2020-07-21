@@ -34,14 +34,6 @@ class App extends \Phpcmf\Model
             return dr_return_data(0, 'App/'.ucfirst($dir).'/程序目录无法写入');
         }
 
-        // 安装前的判断
-        if (is_file($path.'Config/Before.php')) {
-            $rt = require $path.'Config/Before.php';
-            if (!$rt['code']) {
-                return dr_return_data(0, $rt['msg']);
-            }
-        }
-
         if (is_file($path.'install.lock')) {
             return dr_return_data(0, dr_lang('此程序已经安装'));
         }
@@ -51,6 +43,14 @@ class App extends \Phpcmf\Model
             $config['share'] = $type ? 0 : 1;
             \Phpcmf\Service::M('module')->install($dir, $config, 1);
         } else {
+
+            // 安装前的判断
+            if (is_file($path.'Config/Before.php')) {
+                $rt = require $path.'Config/Before.php';
+                if (!$rt['code']) {
+                    return dr_return_data(0, $rt['msg']);
+                }
+            }
             // 执行sql语句，主站的才执行
             if (SITE_ID == 1 && is_file($path.'Config/Install.sql')) {
                 $rt = $this->query_all(file_get_contents($path.'/Config/Install.sql'));

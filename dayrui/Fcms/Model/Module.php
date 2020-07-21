@@ -192,6 +192,14 @@ class Module extends \Phpcmf\Model
             $config = require $mpath.'Config/App.php';
         }
 
+        // 安装前的判断
+        if (is_file($mpath.'Config/Before.php')) {
+            $rt = require $mpath.'Config/Before.php';
+            if (!$rt['code']) {
+                return dr_return_data(0, $rt['msg']);
+            }
+        }
+
         $table = $this->dbprefix(dr_module_table_prefix($dir)); // 当前表前缀
         $system_table = require CMSPATH.'Config/SysTable.php';
         if (!$system_table ) {
