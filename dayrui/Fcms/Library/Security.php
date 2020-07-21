@@ -628,8 +628,8 @@ class Security {
 			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
 			'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
 			 'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
-			'plaintext', 'style', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
-            //'iframe', 'video', 'embed'  //排除过滤
+			'plaintext', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
+            //'iframe', 'video', 'embed', 'style'  //排除过滤
 		);
 
 		static $evil_attributes = array(
