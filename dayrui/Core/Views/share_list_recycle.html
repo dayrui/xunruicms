@@ -84,7 +84,7 @@
                 <td>{Function_list::uid($t.uid, null)}</td>
                 <td>{dr_date($t.inputtime)}</td>
                 <td>
-                    <label><a href="{dr_url($uriprefix.'/show', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-search"></i> {dr_lang('查看')}</a></label>
+                    <label><a href="{$t.url}" class="btn btn-xs green"> <i class="fa fa-search"></i> {dr_lang('查看')}</a></label>
                 </td>
             </tr>
             {/loop}
