@@ -2596,6 +2596,9 @@ class View {
                             $where[$i]['value'] = $t['value'];
                             //$where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
+                    } elseif (isset($myfield[$t['name']]['fieldtype']) && in_array($myfield[$t['name']]['fieldtype'], ['Members', 'Related'])) {
+                        $where[$i]['adj'] = 'FIND';
+                        $where[$i]['value'] = intval($t['value']);
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
                         $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);

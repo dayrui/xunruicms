@@ -66,7 +66,7 @@ class Members extends \Phpcmf\Library\A_Field {
 	public function insert_value($field) {
 		
 		$data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-		$value = !$data ? '' : ','.implode(',', $data).',';
+		$value = !$data ? '' : implode(',', $data);
 		
 		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value;
 	}
