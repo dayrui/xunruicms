@@ -270,6 +270,16 @@ function config ($name, $getShared = true) {
     return \CodeIgniter\Config\Config::get($name, $getShared);
 }
 
+/*
+ * 函数是否被启用
+ */
+if (!function_exists('locale_set_default')) {
+	function locale_set_default($a) {
+		
+	}
+}
+
+
 /******* CodeIgniter Bootstrap *******/
 
 // 定义常量
