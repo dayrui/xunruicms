@@ -40,15 +40,17 @@ class Home extends \Phpcmf\Common
             }
         }
 
+        $menu = [
+            '控制台' => ['home/main', 'fa fa-home'],
+            '自定义控制台' => ['home/edit', 'fa fa-edit'],
+            '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
+        ];
+        if (!in_array(1, $this->admin['roleid'])) {
+            unset($menu['自定义控制台']);
+        }
 
         \Phpcmf\Service::V()->assign([
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '控制台' => ['home/main', 'fa fa-home'],
-                    '自定义控制台' => ['home/edit', 'fa fa-edit'],
-                    '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
-                ]
-            ),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
             'admin' => $this->admin,
             'domain' => dr_get_domain_name(ROOT_URL),
             'license' => $this->cmf_license,
@@ -69,6 +71,10 @@ class Home extends \Phpcmf\Common
 
 	//后台自定义面板
 	public function edit() {
+
+        if (!in_array(1, $this->admin['roleid'])) {
+            $this->_admin_msg(0, dr_lang('无权限操作'));
+        }
 
 	    $file = WRITEPATH.'config/main.php';
 
