@@ -1,18 +1,19 @@
-Ѹ�CMS�ٷ����ص�ַ��https://www.xunruicms.com/down/
+迅睿CMS官方下载地址：https://www.xunruicms.com/down/
 
-����װ��ַ��/install.php
-�״�ʹ�÷�����https://www.xunruicms.com/doc/631.html
+安装环境监测：/test.php
+程序安装地址：/install.php
+首次使用方法：https://www.xunruicms.com/doc/631.html
 
-�ٷ�����QQȺ��758974716
+官方技术QQ群：758974716
 
 
-�����Ѿ���װ���Ѹ�CMS���������·����İ汾������
-1��������������һ��Ҫ����������ǧ��Ҫ���ذ�װ��
+对于已经安装后的迅睿CMS升级到最新发布的版本方法：
+1、下载升级包，一定要是升级包，千万不要下载安装包
 https://www.xunruicms.com/down/
-��ҳ����һ��������ʱ�䡱����������س����ʱ���������������ʱ�䡱��˵������Ҫ��������
-2������������ѹ
-3������޸�ģ����Բ��ظ��� templateĿ¼
-4��������֮�����������ǵ���վĿ¼����
-5����¼Ѹ�CMS��̨�����С�ϵͳ���˵�->��ϵͳ��족�����������
+本页面有一个“更新时间”，如果你下载程序的时间晚于这个“更新时间”，说明你需要升级程序。
+2、将升级包解压
+3、如果修改模板可以不必覆盖 template目录
+4、处理完之后将升级包覆盖到网站目录即可
+5、登录迅睿CMS后台，进行“系统”菜单->“系统体检”即可升级完成
 
-����֮ǰһ��Ҫ���ݳ��򣬱���ȫ������+���ݿ⣡
+升级之前一定要备份程序，备份全部程序+数据库！
