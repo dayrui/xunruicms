@@ -1572,7 +1572,9 @@ class Image
         } else {
             $attach = [
                 'id' => md5($img),
-                'file' => dr_get_file($img),
+                'url' => dr_get_file($img),
+                'file' => '',
+                'remote' => '',
                 'fileext' => trim(strtolower(strrchr($img, '.')), '.'),
             ];
             $attach['attachment'] = date('Ym').'/'.$attach['id'].'.'.$attach['fileext'];
@@ -1580,7 +1582,7 @@ class Image
 
         // 本地存储的原始图片
         $file = $attach['file'];
-        if (!is_file($file)) {
+        if (!is_file($file) && $attach['url']) {
             if ($attach['remote'] && !$webimg) {
                 // 远程图片
                 $remote = \Phpcmf\Service::C()->get_cache('attachment', $attach['remote']);

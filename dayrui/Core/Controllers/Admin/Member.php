@@ -119,6 +119,7 @@ class Member extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
+    // 修改账号
     public function username_edit() {
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
