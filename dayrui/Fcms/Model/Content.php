@@ -436,7 +436,7 @@ class Content extends \Phpcmf\Model {
             // 推荐位
             if ($flag) {
                 foreach ($flag as $i) {
-                    $this->content_model->insert_flag((int)$i, $row['id'], $data['uid'], $data['catid']);
+                    $this->insert_flag((int)$i, $row['id'], $data['uid'], $data['catid']);
                 }
             }
             // 同步到微博
@@ -512,7 +512,7 @@ class Content extends \Phpcmf\Model {
 
     // 删除推荐位
     public function delete_flag($id, $flag) {
-        if (in_array($flag)) {
+        if (is_array($flag)) {
             $this->db->table($this->mytable.'_flag')->where('id', $id)->whereIn('flag', $flag)->delete();
         } else {
             $this->db->table($this->mytable.'_flag')->where('id', $id)->where('flag', (int)$flag)->delete();

@@ -1159,6 +1159,8 @@ class Module extends \Phpcmf\Table
                             $myflag = $old['myflag'];
                             $update = \Phpcmf\Service::L('input')->post('flag');
                             if ($update !== $myflag) {
+
+                                $myflag = array_unique($myflag);
                                 // 删除旧的
                                 if ($id && $myflag) {
                                     $this->content_model->delete_flag($id, $myflag);
