@@ -439,8 +439,17 @@ class Module extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去卸载'));
         }
 
+        $row = $this->db->table('member_setting')->where('name', 'auth_module')->get()->getRowArray();
+        $auth_module = dr_string2array($row['value']);
         if (isset($site[SITE_ID]) && $site[SITE_ID]) {
             // 删除当前站点中的全部模块表
+            if (isset($auth_module[SITE_ID][$dir])) {
+                unset($auth_module[SITE_ID][$dir]);
+                $this->db->table('member_setting')->replace([
+                    'name' => 'auth_module',
+                    'value' => dr_array2string($auth_module)
+                ]);
+            }
 
             // 系统模块
             // 删除系统表
