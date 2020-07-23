@@ -1142,6 +1142,42 @@ abstract class Common extends \CodeIgniter\Controller
     }
 
     /**
+     * 获取可用auth权限区域
+     */
+    protected function _app_auth($type)
+    {
+        // 默认的
+        $data = [
+            'site' => [],
+            'module' => [],
+        ];
+
+        // 执行插件自己的缓存程序
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'install.lock')
+                && is_file($path.'Config/Auth.php')) {
+                $_data = require $path.'Config/Auth.php';
+                if ($_data) {
+                    foreach ($_data as $key => $value) {
+                        if ($value) {
+                            foreach ($value as $file) {
+                                if (is_file($path.'Views/auth/'.$file)) {
+                                    $data[$key][] = $path.'Views/auth/'.$file;
+                                } else {
+                                    log_message('error', '插件权限文件不存在：'.$path.'Views/auth/'.$file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data[$type];
+    }
+
+    /**
      * 官方短信接口查询
      */
     protected function _api_sms_info() {

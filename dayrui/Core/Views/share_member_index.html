@@ -230,86 +230,10 @@
 </div>
 {/if}
 
-{if $is_comment}
-<div class="portlet light bordered ">
-    <div class="portlet-title">
-        <div class="caption">
-            <i class="fa fa-comments font-dark"></i>
-            <span class="caption-subject font-dark"> {dr_lang('评论权限')}</span>
-        </div>
-    </div>
-    <div class="portlet-body form">
-        <form id="form4">
-            {dr_form_hidden()}
-            <div class="form-body">
-                <div class="form-group" style="padding-top: 0;">
-
-                    <div class="table-scrollable">
-                        <table class="fc-cat-table table table-striped table-bordered  table-checkable dataTable">
-                            <thead>
-                            <tr class="heading">
-                                <th width="200"></th>
-                                <th class="dr_option_xx">
-                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        {dr_lang('评论')}
-                                        <input type="checkbox" class="checkboxes group-checkable comment_add" data-set="comment_add" />
-                                        <span></span>
-                                    </label>
-                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        {dr_lang('审核')}
-                                        <input type="checkbox" class="checkboxes group-checkable comment_verify" data-set="comment_verify" />
-                                        <span></span>
-                                    </label>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {loop $list $i $t}
-                            <tr class="odd gradeX">
-                                {if $t.level}
-                                <td colspan="99"> {$t.name} </td>
-                                {else}
-                                <td {$t.space}>{$t.name}</td>
-                                <td class="dr_option_xx  ">
-                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        {dr_lang('评论')}
-                                        <input type="checkbox" class="checkboxes comment_add" {if !in_array($i, (array)$auth[comment]['add'])} checked {/if} name="id[add][]" value="{$i}" />
-                                        <span></span>
-                                    </label>
-                                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                        {dr_lang('审核')}
-                                        <input type="checkbox" class="checkboxes comment_verify" {if !in_array($i, (array)$auth[comment]['verify'])} checked {/if} name="id[verify][]" value="{$i}" />
-                                        <span></span>
-                                    </label>
-                                    {if $i>0}
-                                    <div class="input-inline input-small">
-                                        <div class="input-group">
-                                            <input type="text" name="id[exp][{$i}]" value="{$auth[comment]['exp'][$i]}" class="form-control" placeholder="">
-                                            <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
-                                        </div>
-                                    </div>
-                                    <div class="input-inline input-small">
-                                        <div class="input-group">
-                                            <input type="text" name="id[score][{$i}]" value="{$auth[comment]['score'][$i]}" class="form-control" placeholder="">
-                                            <span class="input-group-addon">+{SITE_SCORE}</span>
-                                        </div>
-                                    </div>
-                                    {/if}
-                                </td>
-                                {/if}
-                            </tr>
-                            {/loop}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="form-actions text-center">
-                    <button type="button" onclick="dr_submit_post_todo('form4', '{dr_url(APP_DIR.'/member/add')}&at=comment')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存配置')}</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+{if $app_auth}
+{loop $app_auth $file}
+{load $file}
+{/loop}
 {/if}
 
 <style>

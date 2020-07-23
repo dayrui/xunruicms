@@ -47,21 +47,12 @@ class Site_member extends \Phpcmf\Common
 			}
 		}
 
-        $tree = $page = [];
-		$pagecache = \Phpcmf\Service::L('cache')->get('page-'.SITE_ID, 'data');
-		if ($pagecache) {
-			foreach($pagecache as $t) {
-				$tree[$t['id']] = $t;
-			}
-			$page = \Phpcmf\Service::L('tree')->init($tree)->html_icon()->get_tree_array(0);
-		}
-
 		\Phpcmf\Service::V()->assign([
             'list' => $this->_get_group(),
 			'form' => $form,
-			'page' => $page,
 			'auth' => $this->auth[SITE_ID],
 			'verify' => \Phpcmf\Service::M()->table('admin_verify')->getAll(),
+            'app_auth' => $this->_app_auth('site'),
 			'categroy' => \Phpcmf\Service::L('tree')->init($this->tree)->html_icon()->get_tree_array(0),
 		]);
 		\Phpcmf\Service::V()->display('site_member.html');
@@ -77,23 +68,7 @@ class Site_member extends \Phpcmf\Common
 			    $this->_json(0, dr_lang('参数错误'));
             }
 
-			$id = \Phpcmf\Service::L('input')->post('id');
-			switch ($at) {
-
-				case 'page':
-					$this->auth[SITE_ID][$at] = [];
-					foreach ($id as $fid => $t) {
-						$this->auth[SITE_ID][$at][$fid] = [
-							'show' => dr_member_auth_id($this->member_cache['authid'], $t['show']),
-						];
-					}
-					break;
-
-				default:
-					$this->auth[SITE_ID][$at] = dr_member_auth_id($this->member_cache['authid'], $id);
-					break;
-
-			}
+            $this->auth[SITE_ID][$at] = dr_member_auth_id($this->member_cache['authid'], \Phpcmf\Service::L('input')->post('id'));
 
 			\Phpcmf\Service::M()->db->table('member_setting')->replace([
 				'name' => 'auth_site',

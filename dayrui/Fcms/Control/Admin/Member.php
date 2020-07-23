@@ -55,13 +55,15 @@ class Member extends \Phpcmf\Common
      *
      * */
     protected function _Index() {
+
         \Phpcmf\Service::V()->assign([
+            'mid' => APP_DIR,
             'list' => $this->_get_group(),
             'form' => $this->module['form'],
             'auth' => $this->auth[SITE_ID][MOD_DIR],
             'verify' => \Phpcmf\Service::M()->table('admin_verify')->getAll(),
             'categroy' => $this->tree ? \Phpcmf\Service::L('Tree')->init($this->tree)->html_icon()->get_tree_array(0) : [],
-            'is_comment' => $this->module['comment'] ? 1 : 0,
+            'app_auth' => $this->_app_auth('module'),
             'is_hcategory' => $this->is_hcategory,
         ]);
         \Phpcmf\Service::V()->display('share_member_index.html');
@@ -77,24 +79,7 @@ class Member extends \Phpcmf\Common
                 $this->_json(0, dr_lang('参数错误'));
             }
 
-            $id = \Phpcmf\Service::L('input')->post('id');
-            switch ($at) {
-
-                case 'comment':
-
-                    $this->auth[SITE_ID][MOD_DIR][$at] = [
-                        'add' => dr_member_auth_id($this->member_cache['authid'], $id['add']),
-                        'verify' => dr_member_auth_id($this->member_cache['authid'], $id['verify']),
-                        'exp' => $id['exp'],
-                        'score' => $id['score'],
-                    ];
-                    break;
-
-                default:
-                    $this->auth[SITE_ID][MOD_DIR][$at] = dr_member_auth_id($this->member_cache['authid'], $id);
-                    break;
-
-            }
+            $this->auth[SITE_ID][MOD_DIR][$at] = dr_member_auth_id($this->member_cache['authid'], \Phpcmf\Service::L('input')->post('id'));
 
             \Phpcmf\Service::M()->db->table('member_setting')->replace([
                 'name' => 'auth_module',
