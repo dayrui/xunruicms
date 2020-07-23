@@ -121,7 +121,6 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
     // 自定义URL解析规则
     $routes = [];
     $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
-    $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
     if (is_file(ROOTPATH.'config/rewrite.php')) {
         $my = require ROOTPATH.'config/rewrite.php';
         $my && $routes = array_merge($routes, $my);
