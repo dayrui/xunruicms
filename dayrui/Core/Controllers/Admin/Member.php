@@ -589,6 +589,7 @@ class Member extends \Phpcmf\Table
                 $member_data['is_lock'] = (int)$status['is_lock'];
                 $member_data['is_auth'] = (int)$status['is_auth'];
                 $member_data['is_mobile'] = (int)$status['is_mobile'];
+                $member_data['is_email'] = (int)$status['is_email'];
                 $member_data['is_verify'] = (int)$status['is_verify'];
                 $member_data['is_complete'] = (int)$status['is_complete'];
                 $member_data['is_avatar'] = (int)$status['is_avatar'];

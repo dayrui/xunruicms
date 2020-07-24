@@ -773,6 +773,10 @@ abstract class Common extends \CodeIgniter\Controller
                 if (!$this->member_cache['config']['mobile']) {
                     $this->member_cache['config']['mobile'] = (int)$this->member_cache['auth'][$aid]['mobile'];
                 }
+                // 强制email认证
+                if (!$this->member_cache['config']['email']) {
+                    $this->member_cache['config']['email'] = (int)$this->member_cache['auth'][$aid]['email'];
+                }
                 // 强制头像上传
                 if (!$this->member_cache['config']['avatar']) {
                     $this->member_cache['config']['avatar'] = (int)$this->member_cache['auth'][$aid]['avatar'];
@@ -793,6 +797,11 @@ abstract class Common extends \CodeIgniter\Controller
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制手机认证
             $this->_msg(0, dr_lang('账号必须手机认证'), dr_member_url('account/mobile'));
+        } elseif ($this->member_cache['config']['email']
+            && !$this->member['is_email']
+            &&\Phpcmf\Service::L('Router')->class != 'account') {
+            // 强制邮箱认证
+            $this->_msg(0, dr_lang('账号必须邮箱认证'), dr_member_url('account/email'));
         } elseif ($this->member_cache['config']['avatar']
             && !$this->member['is_avatar']
             &&\Phpcmf\Service::L('Router')->class != 'account') {

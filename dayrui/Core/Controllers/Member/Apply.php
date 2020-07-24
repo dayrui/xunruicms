@@ -270,12 +270,16 @@ class Apply extends \Phpcmf\Common
 
             $lid = intval($_POST['lid']);
             if (!$level[$lid]) {
-                $this->_msg(0, dr_lang('用户组级别不存在'));
+                $this->_json(0, dr_lang('用户组级别不存在'));
             } elseif (!$level[$lid]['apply']) {
-                $this->_msg(0, dr_lang('用户组级别不允许升级'));
+                $this->_json(0, dr_lang('用户组级别不允许升级'));
             } elseif ($level[$lid]['value'] < 0) {
-                $this->_msg(0, dr_lang('用户组级别升级值不规范'));
+                $this->_json(0, dr_lang('用户组级别升级值不规范'));
             }
+
+            // 申请用户组的级别之前的钩子
+            \Phpcmf\Hooks::trigger('member_apply_level_before', ['uid' => $this->uid, 'gid' => $gid, 'lid' => $lid]);
+
             $price = (int)$level[$lid]['value'];
             $title = dr_lang('用户组（%s）升级: %s', $group['name'], $group['level'][$lid]['name']);
             if ($price > 0) {

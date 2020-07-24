@@ -158,6 +158,14 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('允许修改邮箱')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[config][edit_email]" value="1" {if $data['config']['edit_email']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('在用户中心修改邮箱地址后将不能再次进行修改')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('允许多个用户组')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[config][groups]" value="1" {if $data['config']['groups']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">

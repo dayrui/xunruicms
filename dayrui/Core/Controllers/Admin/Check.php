@@ -191,6 +191,11 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
                 }
 
+                $table = $prefix.'member_data';
+                if (!\Phpcmf\Service::M()->db->fieldExists('is_email', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `is_email` tinyint(1) DEFAULT NULL COMMENT \'邮箱认证\'');
+                }
+
                 $table = $prefix.'member_paylog';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');

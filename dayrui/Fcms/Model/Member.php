@@ -1053,10 +1053,12 @@ class Member extends \Phpcmf\Model
             $data['is_lock'] = intval($status['is_lock']);
             $data['is_verify'] = intval($status['is_verify']);
             $data['is_mobile'] = intval($status['is_mobile']);
+            $data['is_email'] = intval($status['is_email']);
         } else {
             $data['is_lock'] = 0;
             $data['is_verify'] = \Phpcmf\Service::C()->member_cache['register']['verify'] ? 0 : 1;
             $data['is_mobile'] = 0;
+            $data['is_email'] = 0;
         }
         $data['is_complete'] = 0;
         $rt = $this->table('member_data')->insert($data);

@@ -201,7 +201,7 @@ class Account extends \Phpcmf\Common
             $value = dr_safe_replace($post['phone']);
             if ($is_update && $value) {
                 // 更新手机号
-                if (!is_numeric($value) || strlen($value) != 11) {
+                if (!\Phpcmf\Service::L('Form')->check_phone($value)) {
                     $this->_json(0, dr_lang('手机号码格式不正确'));
                 } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'.$this->member['id'])->where('phone', $value)->countAllResults()) {
                     $this->_json(0, dr_lang('手机号码已经注册'));
@@ -219,7 +219,7 @@ class Account extends \Phpcmf\Common
             }
 
             // 认证号码
-            $is_mobile && \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_mobile' => 1]);
+            !$this->member['is_mobile'] && \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_mobile' => 1]);
 
             \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => 0]);
 
@@ -233,6 +233,68 @@ class Account extends \Phpcmf\Common
             'is_mobile' => $is_mobile,
         ]);
         \Phpcmf\Service::V()->display('account_mobile.html');
+    }
+
+    /**
+     * 邮箱修改
+     */
+    public function email() {
+
+        // 是否允许更新
+        $is_update = $this->member_cache['config']['edit_email'] || !$this->member['email'];
+
+        // 是否需要认证
+        $is_email = $this->member_cache['config']['email'] && !$this->member['email'] ;
+
+        // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
+        //$is_email && $this->member['phone'] && $is_update = 0;
+
+        if (IS_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+            $cache = \Phpcmf\Service::L('cache')->get_data('member-email-code-'.$this->uid);
+            if (!$this->member['randcode']) {
+                $this->_json(0, dr_lang('邮箱验证码已过期'));
+            } elseif ($post['code'] != $this->member['randcode']) {
+                $this->_json(0, dr_lang('邮箱验证码不正确') . (IS_DEV ? '(你输入是：'.$post['code'].'，正确是：'.$this->member['randcode'].')' : ''));
+            } elseif (!$cache) {
+                $this->_json(0, dr_lang('邮箱验证码储存过期'));
+            }
+
+            $value = dr_safe_replace($post['email']);
+            if ($is_update && $value) {
+                // 更新
+                if (!\Phpcmf\Service::L('Form')->check_email($value)) {
+                    $this->_json(0, dr_lang('邮箱格式不正确'));
+                } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'.$this->member['id'])->where('email', $value)->countAllResults()) {
+                    $this->_json(0, dr_lang('邮箱地址已经注册'));
+                } elseif ($cache != $value) {
+                    // caceh存储的是，验证号码是否匹配
+                    $this->_json(0, dr_lang('邮件地址不匹配（%s）', substr($cache, 0, 3).'****'.substr($cache, -4)) . (IS_DEV ? '(你输入是：'.$value.'，正确是：'.$cache.')' : ''));
+                }
+                \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['email' => $value]);
+            } else {
+                // 不变更时
+                if ($cache != $this->member['email']) {
+                    // caceh存储的是手机号码，验证手机号码是否匹配
+                    $this->_json(0, dr_lang('邮箱地址不匹配（%s）', substr($this->member['email'], 0, 3).'****'.substr($this->member['email'], -4)) . (IS_DEV ? '(正确是：'.$this->member['phone'].')' : ''));
+                }
+            }
+
+            // 认证
+            !$this->member['is_email'] && \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_email' => 1]);
+
+            \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => 0]);
+
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'api_url' =>\Phpcmf\Service::L('Router')->member_url('account/email_code'),
+            'is_update' => $is_update,
+            'is_email' => $is_email,
+        ]);
+        \Phpcmf\Service::V()->display('account_email.html');
     }
 
     /**
@@ -260,7 +322,7 @@ class Account extends \Phpcmf\Common
         $name = 'member-mobile-code-'.$this->uid;
 		if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
-		} elseif ((!is_numeric($value) || strlen($value) != 11)) {
+		} elseif (!\Phpcmf\Service::L('Form')->check_phone($value)) {
 			$this->_json(0, dr_lang('手机号码格式不正确'));
 		}
 
@@ -274,6 +336,48 @@ class Account extends \Phpcmf\Common
 
 		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
+        $this->_json(1, dr_lang('验证码发送成功'));
+    }
+
+    /**
+     * 邮件验证码
+     */
+    public function email_code() {
+
+        $value = '';
+        // 是否允许更新手机号码
+        if ($this->member_cache['config']['edit_email'] || !$this->member['email'] || !$this->member['is_email']) {
+            $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
+        }
+
+        // 是否需要认证手机号码
+        if (!$value && $this->member['email'] && $this->member_cache['config']['email'] && !$this->member['is_email']) {
+            $value = $this->member['email'];
+        }
+
+        // 已经认证通过的
+        if (!$value && $this->member['is_email']) {
+            $this->_json(0, dr_lang('您已经通过认证了'));
+        }
+
+        // 验证操作间隔
+        $name = 'member-email-code-'.$this->uid;
+		if (\Phpcmf\Service::L('cache')->get_data($name)) {
+			$this->_json(0, dr_lang('已经发送稍后再试'));
+		} elseif (!\Phpcmf\Service::L('Form')->check_email($value)) {
+			$this->_json(0, dr_lang('邮箱地址格式不正确'));
+		}
+
+        $this->member['randcode'] = rand(100000, 999999);
+        \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['uid'])->update(['randcode' => $this->member['randcode']]);
+
+        $rt = \Phpcmf\Service::M('member')->sendmail($value, dr_lang('邮件验证'), 'member_email_code.html', $this->member);
+        if (!$rt['code']) {
+			$this->_json(0, dr_lang('发送失败'));
+		}
+
+		\Phpcmf\Service::L('cache')->set_data($name, $value, 300);
+
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 

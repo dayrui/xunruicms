@@ -222,6 +222,8 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::M('member')->verify_member($this->member['id']);
         if ($this->member_cache['register']['verify'] == 'phone') {
             \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['uid'])->update(['is_mobile' => 1]);
+        } elseif ($this->member_cache['register']['verify'] == 'email') {
+            \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['uid'])->update(['is_email' => 1]);
         }
 
         $this->_json(1, dr_lang('验证成功'), ['url' => $url ? $url : MEMBER_URL]);

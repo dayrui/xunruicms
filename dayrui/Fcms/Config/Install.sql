@@ -359,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_data` (
   `is_auth` tinyint(1) unsigned DEFAULT 0 COMMENT '实名认证标识',
   `is_verify` tinyint(1) unsigned DEFAULT 0 COMMENT '审核标识',
   `is_mobile` tinyint(1) unsigned DEFAULT 0 COMMENT '手机认证标识',
+  `is_email` tinyint(1) unsigned DEFAULT 0 COMMENT '邮箱认证标识',
   `is_avatar` tinyint(1) unsigned DEFAULT 0 COMMENT '头像上传标识',
   `is_complete` tinyint(1) unsigned DEFAULT 0 COMMENT '完善资料标识',
   PRIMARY KEY (`id`)

@@ -747,6 +747,11 @@ return [
                     'uri' => 'account/mobile',
                 ],
                 [
+                    'name' => '邮箱认证',
+                    'icon' => 'fa fa-envelope',
+                    'uri' => 'account/email',
+                ],
+                [
                     'name' => '修改密码',
                     'icon' => 'fa fa-expeditedssl',
                     'uri' => 'account/password',
