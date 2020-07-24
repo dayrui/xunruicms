@@ -1,14 +1,8 @@
 {template "mheader.html"}
-{if $ci->member_cache['config']['email']}
-{if $member.is_email}
-<div class="alert alert-success">
-    邮箱认证成功
-</div>
-{else}
+{if $ci->member_cache['config']['email'] && !$member.is_email}
 <div class="alert alert-danger">
     系统强制用户进行邮箱认证
 </div>
-{/if}
 {/if}
 <div class="row">
 
@@ -27,7 +21,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label"> 邮箱地址 </label>
                         <div class="col-md-9">
-                            <p class="form-control-static"> {$member.email} </p>
+                            <p class="form-control-static"> {$member.email} &nbsp;&nbsp;{if !$member.is_email}<span class="label label-sm label-danger">未认证</span>{else}<span class="label label-sm label-success">已认证</span>{/if}</p>
                         </div>
                     </div>
                     {/if}

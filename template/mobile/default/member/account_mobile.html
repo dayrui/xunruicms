@@ -1,14 +1,8 @@
 {template "mheader.html"}
-{if $ci->member_cache['config']['mobile']}
-{if $member.is_mobile}
-<div class="alert alert-success">
-    手机认证成功
-</div>
-{else}
+{if $ci->member_cache['config']['mobile'] && !$member.is_mobile}
 <div class="alert alert-danger">
     系统强制用户进行手机认证
 </div>
-{/if}
 {/if}
 <div class="row">
 
@@ -22,7 +16,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label"> 手机号码 </label>
                         <div class="col-md-9">
-                            <p class="form-control-static"> {$member.phone} </p>
+                            <p class="form-control-static"> {$member.phone} &nbsp;&nbsp;{if !$member.is_mobile}<span class="label label-sm label-danger">未认证</span>{else}<span class="label label-sm label-success">已认证</span>{/if}</p>
                         </div>
                     </div>
                     {/if}
