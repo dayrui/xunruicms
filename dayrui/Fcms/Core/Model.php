@@ -771,7 +771,7 @@ class Model {
         if ($size > 0) {
             $select->limit($size, $size * ($page - 1));
         }
-        $query = $select->orderBy($order_str)->get();
+        $query = $select->orderBy($order_str ? $order_str : 'id desc')->get();
         if (!$query) {
             log_message('error', '数据查询失败：'.$this->table);
             $this->_clear();
