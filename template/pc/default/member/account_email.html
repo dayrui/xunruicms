@@ -2,11 +2,11 @@
 {if $ci->member_cache['config']['email']}
 {if $member.is_email}
 <div class="alert alert-success">
-    邮箱认证认证成功
+    邮箱认证成功
 </div>
 {else}
 <div class="alert alert-danger">
-    系统强制用户进行邮箱认证认证
+    系统强制用户进行邮箱认证
 </div>
 {/if}
 {/if}
@@ -33,7 +33,7 @@
                     {/if}
                     {if $is_update}
                     <div class="form-group" id="dr_row_phone">
-                        <label class="col-md-2 control-label"> {if $member.phone}变更邮箱{else}绑定邮箱{/if} </label>
+                        <label class="col-md-2 control-label"> {if $member.email}变更邮箱{else}绑定邮箱{/if} </label>
                         <div class="col-md-9">
                             <label><input type="text" id="dr_email" style="width: 300px" class="form-control"  name="data[email]"></label>
                             <span class="help-block">留空表示不修改邮箱</span>
