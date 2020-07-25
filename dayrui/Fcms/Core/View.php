@@ -316,13 +316,7 @@ class View {
             return TPLPATH.'pc/default/home/msg.html';
         }
 
-        if (CI_DEBUG) {
-            // 当模板不存在时写入错误日志中
-            log_message('error', '页面'.FC_NOW_URL.'模板文件不存在：'.$error);
-            dr_show_error('模板文件 ('.$error.') 不存在');
-        } else {
-            dr_show_error('模板文件不存在');
-        }
+        $this->show_error('模板文件不存在', $error);
     }
 
     /**
@@ -383,7 +377,7 @@ class View {
         isset($this->_include_file[$fname]) ? $this->_include_file[$fname] ++ : $this->_include_file[$fname] = 0;
 
         if ($this->_include_file[$fname] > 500) {
-            dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+            $this->show_error('模板文件标签template引用文件目录结构错误', $file);
         }
 
         return $this->load_view_file($file);
@@ -401,7 +395,7 @@ class View {
         $this->_include_file[$fname] ++;
 
         if ($this->_include_file[$fname] > 500) {
-            dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+            $this->show_error('模板文件标签load引用文件目录结构错误', $file);
         }
 
         return $this->load_view_file($file);
@@ -427,11 +421,7 @@ class View {
         if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
             $content = $this->handle_view_file(file_get_contents($name));
             if (@file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
-                if (CI_DEBUG) {
-                    dr_show_error('请将模板缓存目录 ('.dirname($cache_file).') 权限设为777');
-                } else {
-                    dr_show_error('请将模板缓存目录（/cache/template/）权限设为777');
-                }
+                $this->show_error('请将模板缓存目录 ('.dirname($cache_file).') 权限设为777');
             }
         }
 
@@ -2948,6 +2938,24 @@ class View {
             'end'	 => $end,
             'view'	 => $view
         ];
+    }
+
+    // 错误提示
+    public function show_error($msg, $file = '') {
+
+        if (CI_DEBUG || defined('SC_HTML_FILE')) {
+            // 开发者模式下，静态生成模式下，显示详细错误
+            if ($file) {
+                $msg.= '（'.$file.'）';
+            }
+            log_message('error', $this->_options['my_web_url'].'：'.$msg);
+            if (defined('SC_HTML_FILE')) {
+                \Phpcmf\Service::C()->_json(0, $this->_options['my_web_url'].'：'.$msg);
+            }
+        }
+
+        dr_show_error($msg);
+
     }
 
 }
