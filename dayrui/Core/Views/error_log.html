@@ -158,7 +158,7 @@
                         shade: 0,
                         title: lang['show'],
                         area: [{php echo !IS_MOBILE_USER ? '\'70%\', \'70%\'' : '"95%", "90%"'}],
-                        content: '<div style="padding:20px" class="source">'+'{$t.info}</div>'
+                        content: '<div style="padding:20px" class="source">'+'{php echo $t.info ? $t.info : $t.message;}</div>'
                     });
                     {/if}
                     }</script>
