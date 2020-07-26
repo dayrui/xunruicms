@@ -9,7 +9,7 @@
 // 网站表单操作类 基于 Ftable
 class Form extends \Phpcmf\Table
 {
-    protected $form;
+    public $form;
     protected $is_verify;
 
     // 上级公共类

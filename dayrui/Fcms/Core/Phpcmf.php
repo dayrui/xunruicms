@@ -1002,9 +1002,12 @@ abstract class Common extends \CodeIgniter\Controller
                             // 权限验证
                             if ($obj->is_link_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink) ;
+                            } else {
+                                CI_DEBUG && log_message('error', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）权限验证：不显示');
                             }
                         } else {
                             $data = array_merge($data , $_clink) ;
+                            CI_DEBUG && log_message('error', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
                         }
                     }
                 }
@@ -1014,15 +1017,20 @@ abstract class Common extends \CodeIgniter\Controller
         if ($data) {
             foreach ($data as $i => $t) {
                 if (IS_ADMIN) {
-                    if (!$t['url'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                    if (!$t['url']) {
+                        unset($data[$i]); // 没有url
+                        CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置url参数');
+                    } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
                         unset($data[$i]); // 无权限的不要
                     }
+                    $data[$i]['url'] = urldecode($data[$i]['url']);
                 } else {
                     if (!$t['murl']) {
                         unset($data[$i]); // 非后台必须验证murl
+                        CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置murl参数');
                     }
+                    $data[$i]['url'] = urldecode($data[$i]['murl']);
                 }
-
             }
         }
 
@@ -1109,6 +1117,7 @@ abstract class Common extends \CodeIgniter\Controller
                 if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
                     unset($data[$i]); // 无权限的不要
                 }
+                $data[$i]['url'] = urldecode($data[$i]['murl']);
             }
         }
 
