@@ -90,7 +90,7 @@ class Account extends \Phpcmf\Common
                 }
             }
 
-            list($cache_path, $cache_url) = dr_avatar_path();
+            list($cache_path) = dr_avatar_path();
             if (preg_match('/^(data:\s*image\/(\w+);base64,)/i', $content, $result)) {
                 $ext = strtolower($result[2]);
                 if (!in_array($ext, ['png', 'jpg', 'jpeg'])) {
