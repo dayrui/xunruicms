@@ -701,6 +701,9 @@ class Pay extends \Phpcmf\Model
                     return dr_return_data(0, dr_lang('付款账号不存在'));
                 }
                 $money = (int)$post['money'];
+                if (\Phpcmf\Service::C()->member_cache['pay']['score_min'] && $money < \Phpcmf\Service::C()->member_cache['pay']['score_min']) {
+                    return dr_return_data(0, dr_lang('系统最小充值%s为%s', SITE_SCORE, \Phpcmf\Service::C()->member_cache['pay']['score_min']));
+                }
                 $title = dr_lang('用户（%s）充值%s：%s', $post['username'], SITE_SCORE, $money);
                 $touid = 0; // 属于消费，收款方为系统
                 $tousername = '';

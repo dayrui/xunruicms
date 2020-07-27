@@ -88,6 +88,8 @@ class Scorelog extends \Phpcmf\Table
                     $this->_json(0, dr_lang('兑换数量必须是整数'), ['field' => 'value']);
                 }
                 $this->_json(0, dr_lang('兑换数量必须填写'), ['field' => 'value']);
+            } elseif (\Phpcmf\Service::C()->member_cache['pay']['score_min'] && $value < \Phpcmf\Service::C()->member_cache['pay']['score_min']) {
+                $this->_json(0, dr_lang('系统最小兑换%s为%s', SITE_SCORE, \Phpcmf\Service::C()->member_cache['pay']['score_min']));
             }
 
             $price = floatval($value / $this->member_cache['pay']['convert']);
@@ -141,8 +143,9 @@ class Scorelog extends \Phpcmf\Table
             $this->_msg(0, dr_lang('系统没有设置兑换比例'));
         }
 
+        $value = max(floatval(\Phpcmf\Service::L('input')->get('value')), floatval($this->member_cache['pay']['score_min']));
         \Phpcmf\Service::V()->assign([
-            'payfield' => dr_payform('score', '', '', '', 1),
+            'payfield' => dr_payform('score', $value ? $value : '', '', '', 1),
         ]);
         \Phpcmf\Service::V()->display('scorelog_pay.html');
     }
