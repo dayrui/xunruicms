@@ -528,8 +528,13 @@ class Module extends \Phpcmf\Table
                             }
                             // 金币验证
                             $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
-                            if ($this->uid && $score + $this->member['score'] < 0) {
+                            if ($score + $this->member['score'] < 0) {
                                 return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
+                            }
+                            // 金额验证
+                            $money = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'money', $this->member['authid']);
+                            if ($money + $this->member['money'] < 0) {
+                                return dr_return_data(0, dr_lang('余额不足，当前栏目[%s]需要%s元', $this->module['category'][$data[1]['catid']]['name'], abs($money)));
                             }
                         }
                     }

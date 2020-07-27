@@ -148,6 +148,12 @@
                         </div>
                         <div class="input-inline input-small">
                             <div class="input-group">
+                                <input type="text" name="data[money][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['money'][$i])}" class="form-control" placeholder="">
+                                <span class="input-group-addon">±{dr_lang('金额')}</span>
+                            </div>
+                        </div>
+                        <div class="input-inline input-small">
+                            <div class="input-group">
                                 <input type="text" name="data[day_post][{$i}]" value="{htmlspecialchars($auth['category'][$cat.id]['day_post'][$i])}" class="form-control" placeholder="">
                                 <span class="input-group-addon">{dr_lang('日投稿')}</span>
                             </div>
