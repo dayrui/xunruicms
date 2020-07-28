@@ -129,6 +129,10 @@ class Member_auth extends \Phpcmf\Model
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
             }
+            // 默认没勾选是启用访问权限
+            if ($name == 'show' && !$auth[$name]) {
+                $values[] = 1;
+            }
         }
 
         // 取最大值
@@ -153,6 +157,10 @@ class Member_auth extends \Phpcmf\Model
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
             }
+            // 默认没勾选是启用访问权限
+            if ($name == 'show' && !$auth[$name]) {
+                $values[] = 1;
+            }
         }
 
         // 取最大值
@@ -176,6 +184,10 @@ class Member_auth extends \Phpcmf\Model
 
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
+            }
+            // 默认没勾选是启用访问权限
+            if ($name == 'show' && !$auth[$name]) {
+                $values[] = 1;
             }
         }
 

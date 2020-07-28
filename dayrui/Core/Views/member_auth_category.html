@@ -20,7 +20,7 @@
 {/if}
 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
     {dr_lang('访问')}
-    <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['show']} checked {/if} name="category[{$mid}][show]" value="1" />
+    <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['show'] || !$auth['share_category']} checked {/if} name="category[{$mid}][show]" value="1" />
     <span></span>
 </label>
 
@@ -84,7 +84,7 @@
         <span class="input-group-addon">{dr_lang('投稿总数')}</span>
     </div>
 </div>
-
+    <input type="hidden" name="category[{$mid}][test]" value="1">
 {if $is_ajax_edit}
 
 </form>

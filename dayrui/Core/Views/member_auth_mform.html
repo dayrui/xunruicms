@@ -20,7 +20,7 @@
     {/if}
 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
     {dr_lang('访问')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['show']} checked {/if} name="mform[{$mid}][show]" value="1" />
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['show'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][show]" value="1" />
     <span></span>
 </label>
 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -81,6 +81,7 @@
         <span class="input-group-addon">{dr_lang('发布总数')}</span>
     </div>
 </div>
+    <input type="hidden" name="mform[{$mid}][test]" value="1">
 
     {if $is_ajax_edit}
 
