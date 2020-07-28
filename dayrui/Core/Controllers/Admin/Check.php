@@ -249,6 +249,11 @@ class Check extends \Phpcmf\Common
                       PRIMARY KEY (`name`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';'));
                 }
+				
+				// 权限数据
+				if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
+					\Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
+				}
 
                 $table = $prefix.'admin_min_menu';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {

@@ -565,3 +565,4 @@ REPLACE INTO `{dbprefix}linkage` VALUES(1, '中国地区', 0, 'address');
 REPLACE INTO `{dbprefix}linkage_data_1` VALUES(1, 1, 0, '0', '北京', 'bj', 0, 0, '1', 0);
 REPLACE INTO `{dbprefix}linkage_data_1` VALUES(2, 1, 0, '0', '成都', 'cd', 0, 0, '2', 0);
 REPLACE INTO `{dbprefix}admin_verify` VALUES(1, '默认审核', '{"edit":"1","role":{"1":"2"}}');
+REPLACE INTO `{dbprefix}member_setting` VALUES('auth2', '{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}');
