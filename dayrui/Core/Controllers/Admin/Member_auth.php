@@ -48,6 +48,23 @@ class Member_auth extends \Phpcmf\Common
         $this->_json(1, $value ? dr_lang('已切换至按用户组配置模式') : dr_lang('已切换至按全局配置模式'));
     }
 
+    // 初始化组权限
+    public function init_edit() {
+
+        $v = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray();
+        $aid = dr_safe_filename(\Phpcmf\Service::L('input')->get('aid'));
+        $value = dr_string2array($v['value']);
+        $value[SITE_ID][$aid] = [];
+
+        \Phpcmf\Service::M()->db->table('member_setting')->replace([
+            'name' => 'auth2',
+            'value' => dr_array2string($value)
+        ]);
+        \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
+
+        $this->_json(1, dr_lang('本组权限初始化完成'));
+    }
+
     // 权限设置列表
     public function add() {
 

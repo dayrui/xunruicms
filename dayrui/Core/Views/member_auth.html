@@ -45,7 +45,8 @@
                                 <td>{$t}</td>
                                 <td>
                                     <a href="{dr_url('member_auth/add', ['aid' => $i])}" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
-                                    <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'group', 'aid'=>$i, 'id'=>$i])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他组')}</>
+                                    <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'group', 'aid'=>$i, 'id'=>$i])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他组')}</>
+                                    <a onclick="dr_ajax_confirm_url('{dr_url('member_auth/init_edit', ['aid'=>$i])}','{dr_lang('确定要将本组权限初始化吗？')}', '')" class="btn green btn-xs"> <i class="fa fa-refresh"></i> {dr_lang('初始化权限')}</>
                                 </td>
                             </tr>
                             {/loop}
