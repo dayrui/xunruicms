@@ -57,7 +57,7 @@ class Catids extends \Phpcmf\Library\A_Field {
 	public function insert_value($field) {
         $save = [];
         $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        $category = \Phpcmf\Service::C()->_module_member_category(\Phpcmf\Service::C()->module['category'], \Phpcmf\Service::C()->module['dirname'], 'add');
+        $category = \Phpcmf\Service::C()->_get_module_member_category(\Phpcmf\Service::C()->module, 'add');
         if (!IS_ADMIN && !$category) {
             \Phpcmf\Service::C()->_json(1, dr_lang('模块[%s]没有可用栏目权限', \Phpcmf\Service::C()->module['dirname']));
         }

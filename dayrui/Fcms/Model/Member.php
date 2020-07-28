@@ -155,14 +155,14 @@ class Member extends \Phpcmf\Model
         $time = strtotime(date('Y-m-d', strtotime('+1 day')));
 
         // 每日登录积分处理
-        $value = \Phpcmf\Service::C()->_member_auth_value($member['authid'], 'login_exp');
+        $value = \Phpcmf\Service::M('member_auth')->member_auth('login_exp', $member);
         if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_experience_'.$member['id'])) {
-            $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
+            $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_exp_'.date('Ymd', SYS_TIME), 1);
             \Phpcmf\Service::L('input')->set_cookie('login_experience_'.$member['id'], 1, $time - SYS_TIME);
         }
 
         // 每日登录金币处理
-        $value = \Phpcmf\Service::C()->_member_auth_value($member['authid'], 'login_score');
+        $value = \Phpcmf\Service::M('member_auth')->member_auth('login_score', $member);
         if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_score_'.$member['id'])) {
             $this->add_score($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
             \Phpcmf\Service::L('input')->set_cookie('login_score_'.$member['id'], 1, $time - SYS_TIME);
@@ -1712,7 +1712,6 @@ class Member extends \Phpcmf\Model
                 }
             }
         }
-
 
         // 支付接口
         if ($cache['payapi']) {

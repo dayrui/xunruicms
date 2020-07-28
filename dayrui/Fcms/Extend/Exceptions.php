@@ -39,12 +39,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         // Log it
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))
         {
-            log_message('critical',$exception->getMessage()
-			."\n# " . FC_NOW_URL
-			."\n# " .\Phpcmf\Service::M()->get_sql_query()
-			. "\n{trace}", [
-                'trace' => $exception->getTraceAsString(),
-            ]);
+            // 传入对象到日志中
+            log_message('critical', $exception);
         }
 
         if (! is_cli())
@@ -85,10 +81,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         if (empty($message)) {
             $message = '(null)';
         } elseif (strpos($message, 'The action you requested is not allowed') !== false) {
-            $this->_save_error_file($statusCode, $title, $file, $line, $message);
             dr_exit_msg(0, '提交验证超时，请重试', 'CSRFVerify');
-        } else {
-            $this->_save_error_file($statusCode, $title, $file, $line, $message);
         }
 
         // ajax 返回
@@ -99,23 +92,5 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         $this->viewPath = COREPATH.'Views/errors/';
 
         return parent::render($exception, $statusCode);
-    }
-
-    private function _save_error_file($statusCode, $title, $file, $line, $message, $is_kz = 0) {
-
-        if ($statusCode == 404) {
-            return;
-        }
-
-        $msg = '[Phpcmf: '.$title.'] '.str_replace(PHP_EOL, ' ', $message)."{br}";
-        $msg .= json_encode(['html' => self::highlightFile($file, $line)], JSON_UNESCAPED_UNICODE)."{br}";
-        $msg .= '#0文件: '.$file."{br}";
-        $msg .= '#1行号: '.$line."{br}";
-        $msg .= '#2查询: '.\Phpcmf\Service::M()->get_sql_query()."{br}";
-        $msg .= '#3地址: '.FC_NOW_URL."{br}";
-        $msg .= '#4来源: '.$_SERVER['HTTP_REFERER']."{br}";
-
-        log_message('error', $msg);
-        return $msg;
     }
 }

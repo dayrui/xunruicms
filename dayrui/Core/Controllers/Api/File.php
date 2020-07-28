@@ -56,7 +56,7 @@ class File extends \Phpcmf\Common
             $error = '跨站验证禁止此操作';
         } elseif ($this->member && $this->member['is_admin']) {
             return;
-        } elseif (!$this->_member_auth_value($this->member_authid, 'uploadfile')) {
+        } elseif (!\Phpcmf\Service::M('member_auth')->member_auth('uploadfile', $this->member)) {
             $error = '您的用户组不允许上传文件';
         } elseif (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload($this->uid)) {
             $error = '用户存储空间已满';
@@ -292,7 +292,7 @@ class File extends \Phpcmf\Common
     public function down() {
 
         // 判断下载权限
-        if (!$this->_member_auth_value($this->member_authid, 'downfile')) {
+        if (!\Phpcmf\Service::M('member_auth')->member_auth('downfile', $this->member)) {
             if ($this->member && $this->member['is_admin']) {
                 // 管理员
             } else {

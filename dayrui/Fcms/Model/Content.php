@@ -333,10 +333,10 @@ class Content extends \Phpcmf\Model {
         // 表示新发布
         if (!$id) {
             // 增减金币
-            $score = \Phpcmf\Service::C()->_module_member_value($data[1]['catid'], $this->dirname, 'score', \Phpcmf\Service::M('member')->authid($data[1]['uid']));
+            $score = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', dr_member_info($data[1]['uid']));
             $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
             // 增减经验
-            $exp = \Phpcmf\Service::C()->_module_member_value($data[1]['catid'], $this->dirname, 'exp', \Phpcmf\Service::M('member')->authid($data[1]['uid']));
+            $exp = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', dr_member_info($data[1]['uid']));
             $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
         } else {
             // 修改内容
@@ -1375,21 +1375,16 @@ class Content extends \Phpcmf\Model {
     }
 
     // 用户中心计算审核id
-    public function get_verify_status($id, $authid, $auth) {
+    public function get_verify_status($id, $member, $auth) {
 
         $verify = \Phpcmf\Service::C()->get_cache('verify');
         if (!$verify) {
             return 9;
+        } elseif (!$auth) {
+            return 9; // 默认不走审核
         }
 
-        $v = [];
-        foreach ($authid as $aid) {
-            if (isset($auth[$aid]) && $auth[$aid] && isset($verify[$auth[$aid]])) {
-                $v = $verify[$auth[$aid]];
-                break; // 找到最近的审核机制就ok了
-            }
-        }
-
+        $v = $verify[$auth];
         if (!$v) {
             return 9;
         } elseif ($id && !$v['value']['edit']) {
@@ -1411,21 +1406,13 @@ class Content extends \Phpcmf\Model {
             return ['to_uid' => 0, 'to_rid' => 0, 'verify_id' => 0];
         }
 
-        if (isset(\Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'])
-            && \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify']) {
-            $v = [];
-            $auth = \Phpcmf\Service::C()->member_cache['auth_module'][$this->siteid][$this->dirname]['category'][$catid]['verify'];
-            foreach ($member['authid'] as $aid) {
-                if (isset($auth[$aid]) && $auth[$aid] && isset($verify[$auth[$aid]])) {
-                    $v = $verify[$auth[$aid]];
-                    break; // 找到最近的审核机制就ok了
-                }
-            }
+        $auth = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $catid, 'verify', $member);
+        if ($auth) {
+            $v = $verify[$auth];
             $status = max(1, $status);
             if ($v && isset($v['value']['role'][$status]) && $v['value']['role'][$status]) {
                 return ['to_uid' => 0, 'to_rid' => $v['value']['role'][$status], 'verify_id' => $v['id']];
             }
-
         }
 
         return ['to_uid' => 0, 'to_rid' => 0, 'verify_id' => 0];

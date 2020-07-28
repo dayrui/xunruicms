@@ -41,10 +41,6 @@ class Home extends \Phpcmf\Common
 		// 判断权限
 		if (!dr_html_auth()) {
             $this->_json(0, '权限验证超时，请重新执行生成');
-        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        } elseif (!$this->site_info[SITE_ID]['SITE_INDEX_HTML']) {
-            $this->_json(0, '当前网站未开启首页静态功能');
         }
 
         // 标识变量

@@ -65,10 +65,7 @@ class Mform extends \Phpcmf\Table
         ]);
         $this->edit_where = $this->delete_where = 'cid='. $this->cid;
         // 是否有验证码
-        $this->is_post_code = dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['code']
-        );
+        $this->is_post_code = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'code', $this->member);
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
@@ -90,7 +87,7 @@ class Mform extends \Phpcmf\Table
 
         $del = 1;
         if (!$this->is_hcategory) {
-            $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'del');
+            $cat = $this->_get_module_member_category($this->module, 'del');
             if (!isset($cat[$this->index['catid']])) {
                 $del = 0;
             }
@@ -110,7 +107,7 @@ class Mform extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             // 走栏目权限
-            $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'add');
+            $category = $this->_get_module_member_category($this->module, 'add');
             if (!$category[$this->index['catid']]) {
                 $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$this->index['catid']));
             }
@@ -132,7 +129,7 @@ class Mform extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             // 走栏目权限
-            $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
+            $category = $this->_get_module_member_category($this->module, 'edit');
             if (!$category[$this->index['catid']]) {
                 $this->_msg(0, dr_lang('当前栏目(%s)没有修改权限', (int)$this->index['catid']));
             }
@@ -168,7 +165,7 @@ class Mform extends \Phpcmf\Table
     protected function _Member_Del() {
 
         if (!$this->is_hcategory) {
-            $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'del');
+            $cat = $this->_get_module_member_category($this->module, 'del');
             if (!isset($cat[$this->index['catid']])) {
                 $this->_json(0, dr_lang('当前栏目没有删除权限'));
             }
@@ -221,10 +218,7 @@ class Mform extends \Phpcmf\Table
 
             if ($this->uid) {
                 // 判断日发布量
-                $day_post = $this->_member_value(
-                    $this->member_authid,
-                    $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['day_post']
-                );
+                $day_post = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'day_post', $this->member);
                 if ($day_post && \Phpcmf\Service::M()->db
                         ->table($this->init['table'])
                         ->where('uid', $this->uid)
@@ -234,10 +228,7 @@ class Mform extends \Phpcmf\Table
                 }
 
                 // 判断发布总量
-                $total_post = $this->_member_value(
-                    $this->member_authid,
-                    $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['total_post']
-                );
+                $total_post = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'total_post', $this->member);
                 if ($total_post && \Phpcmf\Service::M()->db
                         ->table($this->init['table'])
                         ->where('uid', $this->uid)
@@ -247,11 +238,7 @@ class Mform extends \Phpcmf\Table
             }
 
             // 审核状态
-            $is_verify = dr_member_auth(
-                $this->member_authid,
-                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['verify']
-            );
-            $data[1]['status'] = $is_verify ? 0 : 1;
+            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify', $this->member) ? 0 : 1;
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
@@ -265,11 +252,7 @@ class Mform extends \Phpcmf\Table
         } else {
 			// 修改时
 			 // 审核状态
-            $is_verify = dr_member_auth(
-                $this->member_authid,
-                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['verify2']
-            );
-            $data[1]['status'] = $is_verify ? 0 : 1;
+            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify2', $this->member) ? 0 : 1;
 		}
 
         return $data;
@@ -289,10 +272,10 @@ class Mform extends \Phpcmf\Table
                 //审核通知
                 if ($data[1]['status']) {
                     // 增减金币
-                    $score = $this->_member_value($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['score']);
+                    $score = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'score', $this->member);
                     $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
                     // 增减经验
-                    $exp = $this->_member_value($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['exp']);
+                    $exp = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'exp', $this->member);
                     $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
                     // 挂钩点
                     \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));

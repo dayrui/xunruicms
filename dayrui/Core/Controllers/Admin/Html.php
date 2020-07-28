@@ -33,36 +33,8 @@ class Html extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('html_index.html');
     }
 
-    // 生成单页
-    public function page_index() {
-
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        }
-
-        \Phpcmf\Service::V()->assign([
-            'todo_url' => '/index.php?s=page&m=htmlfile',
-            'count_url' =>\Phpcmf\Service::L('Router')->url('html/page_count_index'),
-        ]);
-        \Phpcmf\Service::V()->display('html_bfb.html');exit;
-    }
-
-    // 单页生成的数量统计
-    public function page_count_index() {
-        $data = dr_save_bfb_data($this->get_cache('page-'.SITE_ID, 'data'));
-        if (!dr_count($data)) {
-            $this->_json(0, '没有可用生成的自定义页面数据');
-        }
-        \Phpcmf\Service::L('cache')->set_data('page-html-file', $data, 3600);
-        $this->_json(1, 'ok');
-    }
-
     // 栏目
     public function category_index() {
-
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        }
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = \Phpcmf\Service::L('input')->get('ids');
@@ -109,10 +81,6 @@ class Html extends \Phpcmf\Common
 
     // 内容
     public function show_index() {
-
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        }
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = implode(',', \Phpcmf\Service::L('input')->get('catids'));

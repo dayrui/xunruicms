@@ -1,7 +1,16 @@
 {template "header.html"}
-
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
 <form class="form-horizontal" role="form" id="myform">
-    {$form}
+    {dr_form_hidden()}
     <div class="form-body">
         <div class="form-group">
             <div class="col-xs-12">

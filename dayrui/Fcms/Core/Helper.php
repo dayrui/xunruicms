@@ -1192,58 +1192,20 @@ function dr_notice_info() {
 }
 
 /**
- * 验证用户权限
+ * 验证用户权限(废弃)
  * my	我的authid
  * auth 目标权限组
  * return 1有权限 0无权限
  */
 function dr_member_auth($my, $auth) {
-
-    if (!$auth) {
-        // 如果目标没有配置权限,那么返回1
-        return 1;
-    }
-
-    // 返回权限
-    $rt = 0;
-
-    // 默认权限视为游客
-    !$my && $my = [0];
-    foreach ($my as $id) {
-        if (!in_array($id, $auth)) {
-            // 表示有权限
-            $rt = 1;
-        }
-    }
-
-    return $rt;
+   return 1;
 }
 
 /**
- * 用于用户权限取取反值
+ * 用于用户权限取取反值(废弃)
  */
 function dr_member_auth_id($authid, $postid) {
-
-    if (!$authid) {
-        // 主角都为空了,表示没有数据
-        return [];
-    } elseif (!$postid) {
-        // 如果提交过来的id都为空,表示应该全部选择
-        return $authid;
-    } elseif (dr_count($authid) == dr_count($postid)) {
-        // 如果两个等,表示全部选中提交过来的,我们返回空
-        return [];
-    }
-
-    $rt = [];
-    // 剩下的情况就是逐一比较
-    foreach ($authid as $id) {
-        if (!in_array($id, $postid)) {
-            $rt[] = $id;
-        }
-    }
-
-    return $rt;
+    return [];
 }
 
 // 微信端的错误码转中文解释
@@ -3468,10 +3430,7 @@ function dr_get_form_post_value($table) {
     $rt['form_table'] = $form['table'];
 
     // 是否有验证码
-    $rt['is_post_code'] = dr_member_auth(
-        \Phpcmf\Service::C()->member_authid,
-        \Phpcmf\Service::C()->member_cache['auth_site'][SITE_ID]['form'][$form['table']]['code']
-    );
+    $rt['is_post_code'] = \Phpcmf\Service::M('member_auth')->form_auth($form['id'], 'code', \Phpcmf\Service::C()->member);
 
     // 返回url
     $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());
@@ -3537,10 +3496,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $rt['form_table'] = $form['table'];
 
     // 是否有验证码
-    $rt['is_post_code'] = dr_member_auth(
-        \Phpcmf\Service::C()->member_authid,
-        \Phpcmf\Service::C()->member_cache['auth_module'][SITE_ID][$mid]['form'][$form['table']]['code']
-    );
+    $rt['is_post_code'] = \Phpcmf\Service::M('member_auth')->mform_auth($mid, $form['id'], 'code', \Phpcmf\Service::C()->member);
 
     // 返回url
     $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());

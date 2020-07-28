@@ -12,7 +12,7 @@ class Service
 
     static private $instances = [];
     static private $help = [];
-    static private $init = [];
+    static private $logs = [];
     static private $view;
     static private $model;
     static private $require;
@@ -70,6 +70,28 @@ class Service
     // 当前客户端是否是移动端访问
     public static function _is_mobile() {
         return static::C()->_is_mobile();
+    }
+
+    // 错误日志记录
+    public static function Log($level, $message, array $context = []) {
+
+        if (is_object($message)) {
+            $msg = $message->getMessage();
+            $code = md5($msg);
+            if (in_array($code, static::$logs)) {
+                return;
+            }
+            static::$logs[] = $code;
+
+            $context['trace'] = $message->getTraceAsString();
+            $context['sql'] = \Phpcmf\Service::M()->get_sql_query();
+            $context['url'] = FC_NOW_URL;
+            $context['referer'] = $_SERVER['HTTP_REFERER'];
+
+            return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
+        }
+
+        return \Config\Services::logger(true)->log($level, $message, $context);
     }
 
     /**

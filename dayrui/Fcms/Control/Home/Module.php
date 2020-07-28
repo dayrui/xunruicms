@@ -164,19 +164,20 @@ class Module extends \Phpcmf\Common
         }
 
         // 无权限访问栏目
-        if (($this->module['share']) && $category['tid'] == 0) {
-            // 识别栏目单网页
-            if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID]['share']['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
-                return;
-            }
-        } else {
-            if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
-                return;
+        if (!defined('SC_HTML_FILE')) {
+            if (($this->module['share']) && $category['tid'] == 0) {
+                // 识别栏目单网页
+                if (!\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+                    $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
+                    return;
+                }
+            } else {
+                if (!\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+                    $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
+                    return;
+                }
             }
         }
-
         // 判断内容唯一性
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($category['url'], $this->module['dirname']));
 
@@ -231,7 +232,7 @@ class Module extends \Phpcmf\Common
         if (!IS_API_HTTP) {
             if (!isset($this->module['setting']['search']['use']) || !$this->module['setting']['search']['use']) {
                 exit($this->_msg(0, dr_lang('此模块已经关闭了搜索功能')));
-            } elseif (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home'])) {
+            } elseif (\Phpcmf\Service::M('member_auth')->module_auth($this->module['dirname'], 'search', $this->member)) {
                 exit($this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index')));
             } elseif ($get['keyword'] && strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
                 exit($this->_msg(0, dr_lang('关键字不得少于系统规定的长度')));
@@ -416,8 +417,8 @@ class Module extends \Phpcmf\Common
             $this->content_model->_hcategory_member_show_auth();
         } else {
             // 无权限访问栏目内容
-            if (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
+            if (!defined('SC_HTML_FILE') && !\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+                $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid  ? '' : dr_member_url('login/index'));
                 return;
             }
             // 判断是否同步栏目
@@ -596,13 +597,14 @@ class Module extends \Phpcmf\Common
         }
 
         // 无权限访问栏目内容
-        if ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['show']) {
+        /*
+        if ($this->member_cache['auth2'][SITE_ID][$this->module['dirname']]['category'][$catid]['show']) {
             return dr_return_data(0, '请关闭栏目访问权限');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
             return dr_return_data(0, '请关闭模块访问权限');
         } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
             return dr_return_data(0, '请关闭站点访问权限');
-        }
+        }*/
 
         $url = $page > 0 ?\Phpcmf\Service::L('Router')->category_url($this->module, $cat, $page) : $cat['url'];
         $file = \Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
@@ -672,6 +674,7 @@ class Module extends \Phpcmf\Common
         $html = ob_get_clean();
 
         // 无权限访问栏目内容
+        /*
         if ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$data['catid']]['show']) {
             return dr_return_data(0, '请关闭栏目访问权限');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
@@ -680,7 +683,7 @@ class Module extends \Phpcmf\Common
             return dr_return_data(0, '请关闭站点访问权限');
         } elseif ($this->module['setting']['html']) {
             return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
-        }
+        }*/
 
         // 同步数据不执行生成
         if ($data['link_id'] > 0) {
@@ -743,11 +746,12 @@ class Module extends \Phpcmf\Common
         // 初始化模块
         $this->_module_init();
 
+        /*
         if ($this->member_cache['auth_site'][SITE_ID]['home']) {
             $this->_json(0, '当前网站设置了访问权限，无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
             $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }
+        }*/
 
         $this->_Create_Category_Html(intval(\Phpcmf\Service::L('input')->get('id')));
         exit;
@@ -765,11 +769,12 @@ class Module extends \Phpcmf\Common
         // 初始化模块
         $this->_module_init();
 
+        /*
         if ($this->member_cache['auth_site'][SITE_ID]['home']) {
             $this->_json(0, '当前网站设置了访问权限，无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
             $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }
+        }*/
 
         $this->_Create_Show_Html(intval(\Phpcmf\Service::L('input')->get('id')));
         exit;
@@ -785,11 +790,13 @@ class Module extends \Phpcmf\Common
         // 判断权限
         if (!dr_html_auth()) {
             $this->_json(0, '权限验证超时，请重新执行生成');
-        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
+        }
+        /*
+        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
             $this->_json(0, '当前网站设置了访问权限，无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][APP_DIR]['home']) {
             $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }
+        }*/
 
         // 标识变量
         !defined('SC_HTML_FILE') && define('SC_HTML_FILE', 1);
@@ -883,9 +890,10 @@ class Module extends \Phpcmf\Common
             } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
+                /*
             } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$t['id']]['show']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                $class = ' p_error';
+                $class = ' p_error';*/
             } else {
                 $rt = $this->_Create_Show_Html($t['id']);
                 if ($rt['code']) {
@@ -948,9 +956,10 @@ class Module extends \Phpcmf\Common
             } elseif (!$t['html']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
+                /*
             } elseif ($this->member_cache['auth_module'][SITE_ID][($this->module['share'] ? 'share' : $this->module['dirname'])]['category'][$t['id']]['show']) {
                 $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                $class = ' p_error';
+                $class = ' p_error';*/
             } else {
                 $rt = $this->_Create_Category_Html($t['id'], $t['page']);
                 if ($rt['code']) {

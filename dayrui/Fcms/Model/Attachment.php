@@ -27,7 +27,7 @@ class Attachment extends \Phpcmf\Model {
 
         if ($member['is_admin']) {
             return dr_return_data(1); // 管理员不验证
-        } elseif (!\Phpcmf\Service::C()->_member_auth_value($this->member ? $this->member['authid'] : [0], 'uploadfile')) {
+        } elseif (!\Phpcmf\Service::M('member_auth')->member_auth('uploadfile', $this->member)) {
             return dr_return_data(0, dr_lang('您的用户组不允许上传文件'));
         }
         

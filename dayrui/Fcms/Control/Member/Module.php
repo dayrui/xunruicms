@@ -85,7 +85,7 @@ class Module extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             // 走栏目权限
-            $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'add');
+            $category = $this->_get_module_member_category($this->module, 'add');
             // 栏目id不存在时就去第一个可用栏目为catid
             if (!$catid) {
                 list($select, $catid) = \Phpcmf\Service::L('Tree')->select_category(
@@ -107,7 +107,7 @@ class Module extends \Phpcmf\Table
             } elseif (!$category[$catid]) {
                 $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', $this->module['category'][$catid]['name']));
             }
-            $this->is_post_code = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['code']);
+            $this->is_post_code = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'code', $this->member);
         } else {
             // 不走栏目权限，走自定义权限
             $this->content_model->_hcategory_member_add_auth();
@@ -164,7 +164,7 @@ class Module extends \Phpcmf\Table
 
         if (!$this->is_hcategory) {
             // 可编辑的栏目
-            $category = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
+            $category = $this->_get_module_member_category($this->module, 'edit');
             if (!$category[$data['catid']]) {
                 exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name'])));
             }
@@ -207,7 +207,7 @@ class Module extends \Phpcmf\Table
         }
 
         if (!$this->is_hcategory) {
-            $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'del');
+            $cat = $this->_get_module_member_category($this->module, 'del');
             if (!isset($cat[$row['catid']])) {
                 $this->_json(0, dr_lang('当前栏目[%s]没有删除权限', $this->module['category'][$row['catid']]['name']));
             }
@@ -385,7 +385,7 @@ class Module extends \Phpcmf\Table
             $data['backinfo'] = dr_string2array($row['backinfo']);
             !$this->is_get_catid && $this->is_get_catid = (int)$row['catid'];
             // 栏目验证码
-            $this->is_post_code = $this->is_hcategory ? $this->content_model->_hcategory_member_post_code() : dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$this->is_get_catid]['code']);
+            $this->is_post_code = $this->is_hcategory ? $this->content_model->_hcategory_member_post_code() : \Phpcmf\Service::M('member_auth')->category_auth($this->module, $this->is_get_catid, 'code', $this->member);
             return $data;
         }
 
@@ -408,7 +408,7 @@ class Module extends \Phpcmf\Table
         !$this->is_get_catid && $this->is_get_catid = (int)$row['catid'];
 
         // 栏目验证码
-        $this->is_post_code = $this->is_hcategory ? $this->content_model->_hcategory_member_post_code() : dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$this->is_get_catid]['code']);
+        $this->is_post_code = $this->is_hcategory ? $this->content_model->_hcategory_member_post_code() : \Phpcmf\Service::M('member_auth')->category_auth($this->module, $this->is_get_catid, 'code', $this->member);
 
         // 更新时间
         $row['updatetime'] = SYS_TIME;
@@ -445,10 +445,9 @@ class Module extends \Phpcmf\Table
         } else {
             // 判断权限
             // 验证状态
-            $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($id) : $this->content_model->get_verify_status(
-                $id,
-                $this->member_authid,
-                $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['verify']
+            $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($id) : $this->content_model->get_verify_status($id,
+                $this->member,
+                \Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'verify', $this->member)
             );
         }
 
@@ -492,7 +491,7 @@ class Module extends \Phpcmf\Table
                     }
                     if ($old) {
                         // 表示修改
-                        $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'edit');
+                        $cat = $this->_get_module_member_category($this->module, 'edit');
                         if (!$cat[$old['catid']]) {
                             return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$old['catid']]['name']));
                         }
@@ -502,13 +501,13 @@ class Module extends \Phpcmf\Table
                         }
                     } else {
                         // 表示新增
-                        $cat = $this->_module_member_category($this->module['category'], $this->module['dirname'], 'add');
+                        $cat = $this->_get_module_member_category($this->module, 'add');
                         if (!$cat[$data[1]['catid']]) {
                             return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][(int)$data[1]['catid']]['name']));
                         }
                         if ($this->uid) {
                             // 判断日发布量
-                            $day_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'day_post', $this->member['authid']);
+                            $day_post = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'day_post', $this->member);
                             if ($day_post && \Phpcmf\Service::M()->db
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
@@ -518,7 +517,7 @@ class Module extends \Phpcmf\Table
                                 return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
                             }
                             // 判断发布总量
-                            $total_post = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'total_post', $this->member['authid']);
+                            $total_post = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'total_post', $this->member);
                             if ($total_post && \Phpcmf\Service::M()->db
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
@@ -527,12 +526,12 @@ class Module extends \Phpcmf\Table
                                 return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
                             }
                             // 金币验证
-                            $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
+                            $score = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'score', $this->member);
                             if ($score + $this->member['score'] < 0) {
                                 return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
                             }
                             // 金额验证
-                            $money = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'money', $this->member['authid']);
+                            $money = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'money', $this->member);
                             if ($money + $this->member['money'] < 0) {
                                 return dr_return_data(0, dr_lang('余额不足，当前栏目[%s]需要%s元', $this->module['category'][$data[1]['catid']]['name'], abs($money)));
                             }

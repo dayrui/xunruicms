@@ -50,37 +50,25 @@ class Form extends \Phpcmf\Table
         ]);
         $this->edit_where = $this->delete_where = 'uid='.$this->uid;
         // 无权限发布表单
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['add'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'add', $this->member)) {
             $this->_is_post = 0;
         } else {
             $this->_is_post = 1;
         }
         // 修改权限
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['edit'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'edit', $this->member)) {
             $this->_is_edit = 0;
         } else {
             $this->_is_edit = 1;
         }
         // 删除权限
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['del'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'del', $this->member)) {
             $this->_is_delete = 0;
         } else {
             $this->_is_delete = 1;
         }
         // 是否有验证码
-        $this->is_post_code = dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['code']
-        );
+        $this->is_post_code = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'code', $this->member);
 
         \Phpcmf\Service::V()->assign([
             'field' => $this->init['field'],
@@ -165,10 +153,8 @@ class Form extends \Phpcmf\Table
         if (!$old) {
             if ($this->uid) {
                 // 判断日发布量
-                $day_post = $this->_member_value(
-                    $this->member_authid,
-                    $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['day_post']
-                );
+
+                $day_post = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'day_post', $this->member);
                 if ($day_post && \Phpcmf\Service::M()->db
                         ->table($this->init['table'])
                         ->where('uid', $this->uid)
@@ -178,10 +164,7 @@ class Form extends \Phpcmf\Table
                 }
 
                 // 判断发布总量
-                $total_post = $this->_member_value(
-                    $this->member_authid,
-                    $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['total_post']
-                );
+                $total_post = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'total_post', $this->member);
                 if ($total_post && \Phpcmf\Service::M()->db
                         ->table($this->init['table'])
                         ->where('uid', $this->uid)
@@ -190,11 +173,7 @@ class Form extends \Phpcmf\Table
                 }
             }
 			// 审核状态
-			$is_verify = dr_member_auth(
-				$this->member_authid,
-				$this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['verify']
-			);
-			$data[1]['status'] = $is_verify ? 0 : 1;
+			$data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 0 : 1;
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
@@ -206,11 +185,7 @@ class Form extends \Phpcmf\Table
         } else {
 			// 修改时
 			// 审核状态
-			$is_verify = dr_member_auth(
-				$this->member_authid,
-				$this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['verify2']
-			);
-			$data[1]['status'] = $is_verify ? 0 : 1;
+			$data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify2', $this->member) ? 0 : 1;
 		}
 
 

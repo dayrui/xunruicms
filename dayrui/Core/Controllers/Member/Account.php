@@ -128,7 +128,19 @@ class Account extends \Phpcmf\Common
                 if (!is_file($file)) {
                     $this->_json(0, dr_lang('头像复制失败'));
                 }
-                \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
+                // 头像认证成功
+                if (!$this->member['is_avatar']) {
+                    \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
+                    // avatar_score
+                    $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_score', $this->member);
+                    if ($value) {
+                        \Phpcmf\Service::M('member')->add_experience($this->member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
+                    }
+                    $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_exp', $this->member);
+                    if ($value) {
+                        \Phpcmf\Service::M('member')->add_score($this->member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
+                    }
+                }
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             } else {
                 $this->_json(0, dr_lang('头像内容不规范'));

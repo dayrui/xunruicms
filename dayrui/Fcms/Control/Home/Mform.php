@@ -56,10 +56,7 @@ class Mform extends \Phpcmf\Table
     protected function _Home_List() {
 
         // 无权限访问表单
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['show'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'show', $this->member)) {
             $this->_msg(0, dr_lang('您的用户组无权限访问表单'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
@@ -95,10 +92,7 @@ class Mform extends \Phpcmf\Table
         }
 
         // 无权限访问表单
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['add'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'add', $this->member)) {
             $this->_msg(0, dr_lang('您的用户组无发布权限'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
@@ -107,10 +101,7 @@ class Mform extends \Phpcmf\Table
         $this->member && $this->_member_option(0);
 
         // 是否有验证码
-        $this->is_post_code = dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['code']
-        );
+        $this->is_post_code = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'code', $this->member);
 
         // 获取父级内容
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
@@ -142,10 +133,7 @@ class Mform extends \Phpcmf\Table
     protected function _Home_Show() {
 
         // 无权限访问表单
-        if (!dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['show'])
-        ) {
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'show', $this->member)) {
             $this->_msg(0, dr_lang('您的用户组无权限访问表单'), $this->uid ? '' : dr_member_url('login/index'));
             return;
         }
@@ -253,10 +241,7 @@ class Mform extends \Phpcmf\Table
         if ($this->uid) {
 
             // 判断日发布量
-            $day_post = $this->_member_value(
-                $this->member_authid,
-                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['day_post']
-            );
+            $day_post = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'day_post', $this->member);
             if ($day_post && \Phpcmf\Service::M()->db
                     ->table($this->init['table'])
                     ->where('uid', $this->uid)
@@ -266,10 +251,7 @@ class Mform extends \Phpcmf\Table
             }
 
             // 判断发布总量
-            $total_post = $this->_member_value(
-                $this->member_authid,
-                $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['total_post']
-            );
+            $total_post = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'total_post', $this->member);
             if ($total_post && \Phpcmf\Service::M()->db
                     ->table($this->init['table'])
                     ->where('uid', $this->uid)
@@ -279,11 +261,7 @@ class Mform extends \Phpcmf\Table
         }
 
         // 审核状态
-        $is_verify = dr_member_auth(
-            $this->member_authid,
-            $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['verify']
-        );
-        $data[1]['status'] = $is_verify ? 0 : 1;
+        $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify', $this->member) ? 0 : 1;
 
         // 默认数据
         $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
@@ -312,10 +290,10 @@ class Mform extends \Phpcmf\Table
                 //审核通知
                 if ($data[1]['status']) {
                     // 增减金币
-                    $score = $this->_member_value($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['score']);
+                    $score = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'score', $this->member);
                     $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
                     // 增减经验
-                    $exp = $this->_member_value($this->member_authid, $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['exp']);
+                    $exp = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'exp', $this->member);
                     $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
                 } else {
                     \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s: %s提交内容审核', MODULE_NAME, $this->form['name']), MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'. $this->cid.'/id/'.$id, SITE_ID);
@@ -363,7 +341,6 @@ class Mform extends \Phpcmf\Table
         } else {
             return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
         }
-
     }
 
     // 前端回调处理类

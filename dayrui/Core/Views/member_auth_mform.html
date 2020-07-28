@@ -1,0 +1,88 @@
+{if $is_ajax_edit}
+{template "header.html"}
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
+<style>
+    .mt-checkbox-single {
+        margin-right: 10px;
+    }
+</style>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    {/if}
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('访问')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['show']} checked {/if} name="mform[{$mid}][show]" value="1" />
+    <span></span>
+</label>
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('发布')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['add']} checked {/if} name="mform[{$mid}][add]" value="1" />
+    <span></span>
+</label>
+
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('修改')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['edit']} checked {/if} name="mform[{$mid}][edit]" value="1" />
+    <span></span>
+</label>
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('删除')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['del']} checked {/if} name="mform[{$mid}][del]" value="1" />
+    <span></span>
+</label>
+
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('验证码')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['code']} checked {/if} name="mform[{$mid}][code]" value="1" />
+    <span></span>
+</label>
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('发布审核')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['add_verify']} checked {/if} name="mform[{$mid}][add_verify]" value="1" />
+    <span></span>
+</label>
+<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+    {dr_lang('修改审核')}
+    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['edit_verify']} checked {/if} name="mform[{$mid}][edit_verify]" value="1" />
+    <span></span>
+</label>
+<br>
+
+<div class="input-inline input-small">
+    <div class="input-group">
+        <input type="text" name="mform[{$mid}][exp]" value="{htmlspecialchars($auth['mform'][$mid]['exp'])}" class="form-control" placeholder="">
+        <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
+    </div>
+</div>
+<div class="input-inline input-small">
+    <div class="input-group">
+        <input type="text" name="mform[{$mid}][score]" value="{htmlspecialchars($auth['mform'][$mid]['score'])}" class="form-control" placeholder="">
+        <span class="input-group-addon">+{SITE_SCORE}</span>
+    </div>
+</div>
+<div class="input-inline input-small">
+    <div class="input-group">
+        <input type="text" name="mform[{$mid}][day_post]" value="{htmlspecialchars($auth['mform'][$mid]['day_post'])}" class="form-control" placeholder="">
+        <span class="input-group-addon">{dr_lang('日发布')}</span>
+    </div>
+</div>
+<div class="input-inline input-small">
+    <div class="input-group">
+        <input type="text" name="mform[{$mid}][total_post]" value="{htmlspecialchars($auth['mform'][$mid]['total_post'])}" class="form-control" placeholder="">
+        <span class="input-group-addon">{dr_lang('发布总数')}</span>
+    </div>
+</div>
+
+    {if $is_ajax_edit}
+
+</form>
+{/if}

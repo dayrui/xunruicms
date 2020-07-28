@@ -18,7 +18,6 @@ abstract class Common extends \CodeIgniter\Controller
     public $member;
     public $module;
     public $member_cache;
-    public $member_authid;
 
     public $site; // 网站id信息
     public $site_info; // 网站配置信息
@@ -386,19 +385,16 @@ abstract class Common extends \CodeIgniter\Controller
             //\Phpcmf\Service::V()->assign([ ]);
         }
 
-        // 用户权限id
-        $this->member_authid = $this->member ? $this->member['authid'] : [0];
-
         // 初始化处理
         \Phpcmf\Service::M('member')->init_member($this->member);
 
-        if (!IS_ADMIN && !IS_API) {
+        if (!IS_ADMIN && !IS_API  && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
             // 判断网站访问权限
-            if (!IS_MEMBER && !dr_member_auth($this->member_authid, $this->member_cache['auth_site'][SITE_ID]['home'])) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问站点'), dr_member_url('login/index'));
+            if (!defined('SC_HTML_FILE') && !IS_MEMBER && \Phpcmf\Service::M('member_auth')->home_auth('show', $this->member)) {
+                $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
             }
             // 账户被锁定
-            if ($this->member && $this->member['is_lock'] && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
+            if ($this->member && $this->member['is_lock']) {
                 if (dr_is_app('login') && $this->member['is_lock'] == 2) {
                     // 被插件锁定
                     if (APP_DIR != 'login') {
@@ -520,8 +516,8 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 无权限访问模块
-        if (!IS_ADMIN && !IS_MEMBER
-            && !dr_member_auth($this->member_authid, $this->member_cache['auth_module'][$siteid][$dirname]['home'])) {
+        if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER
+            && \Phpcmf\Service::M('member_auth')->module_auth($dirname, 'show', $this->member)) {
             $this->_msg(0, dr_lang('您的用户组无权限访问模块'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
             return;
         }
@@ -763,25 +759,21 @@ abstract class Common extends \CodeIgniter\Controller
     {
         // 有用户组来获取最终的强制权限
         $this->member_cache['config']['complete'] = $this->member_cache['config']['mobile'] = $this->member_cache['config']['avatar'] = 0;
-        if ($this->member['authid']) {
-            foreach ($this->member['authid'] as $aid) {
-                // 强制完善资料
-                if (!$this->member_cache['config']['complete']) {
-                    $this->member_cache['config']['complete'] = (int)$this->member_cache['auth'][$aid]['complete'];
-                }
-                // 强制手机认证
-                if (!$this->member_cache['config']['mobile']) {
-                    $this->member_cache['config']['mobile'] = (int)$this->member_cache['auth'][$aid]['mobile'];
-                }
-                // 强制email认证
-                if (!$this->member_cache['config']['email']) {
-                    $this->member_cache['config']['email'] = (int)$this->member_cache['auth'][$aid]['email'];
-                }
-                // 强制头像上传
-                if (!$this->member_cache['config']['avatar']) {
-                    $this->member_cache['config']['avatar'] = (int)$this->member_cache['auth'][$aid]['avatar'];
-                }
-            }
+        // 强制完善资料
+        if (!$this->member_cache['config']['complete']) {
+            $this->member_cache['config']['complete'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('complete', $this->member);
+        }
+        // 强制手机认证
+        if (!$this->member_cache['config']['mobile']) {
+            $this->member_cache['config']['mobile'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('mobile', $this->member);
+        }
+        // 强制email认证
+        if (!$this->member_cache['config']['email']) {
+            $this->member_cache['config']['email'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('email', $this->member);
+        }
+        // 强制头像上传
+        if (!$this->member_cache['config']['avatar']) {
+            $this->member_cache['config']['avatar'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('avatar', $this->member);
         }
 
         if (!$this->member['is_verify']) {
@@ -811,113 +803,22 @@ abstract class Common extends \CodeIgniter\Controller
     }
 
     /**
-     * 获取用户组权限的积分及统计参数累计
-     */
-    public function _member_auth_value($authid, $name) {
-
-        if (!$authid || !$name) {
-            return 0;
-        }
-
-        $val = 0;
-        foreach ($authid as $aid) {
-            isset($this->member_cache['auth'][$aid][$name]) && $this->member_cache['auth'][$aid][$name] && $val+= (int)$this->member_cache['auth'][$aid][$name];
-        }
-
-        return $val;
-    }
-
-    /**
-     * App获取用户组权限的积分及统计参数累计
-     */
-    public function _app_member_auth_value($authid, $app, $name) {
-
-        if (!$authid || !$name || !$app) {
-            return 0;
-        }
-
-        $val = 0;
-        $app = strtolower($app);
-        foreach ($authid as $aid) {
-            isset($this->member_cache['auth'][$aid][$app][$name]) && $this->member_cache['auth'][$aid][$app][$name] && $val+= (int)$this->member_cache['auth'][$aid][$app][$name];
-        }
-
-        return $val;
-    }
-
-    /**
-     * App获取用户组权限的积分的参数最大值
-     */
-    public function _app_member_auth_maxvalue($authid, $app, $name) {
-
-        if (!$authid || !$name || !$app) {
-            return 0;
-        }
-
-        $val = [];
-        $app = strtolower($app);
-        foreach ($authid as $aid) {
-            if (isset($this->member_cache['auth'][$aid][$app][$name]) && $this->member_cache['auth'][$aid][$app][$name]) {
-                $val[] = (int)$this->member_cache['auth'][$aid][$app][$name];
-            }
-        }
-
-        return $val ? max($val) : 0;
-    }
-
-    /**
-     * 获取网站用户的积分及统计参数累计
-     */
-    public function _member_value($authid, $value) {
-
-        if (!$authid || !$value) {
-            return 0;
-        }
-
-        $val = 0;
-        foreach ($authid as $aid) {
-            isset($value[$aid]) && $value[$aid] && $val+= (int)$value[$aid];
-        }
-
-        return $val;
-
-    }
-
-    /**
-     * 获取模块栏目的积分及统计参数累计
-     */
-    public function _module_member_value($catid, $dir, $auth, $authid = [0]) {
-
-        $value = $this->member_cache['auth_module'][SITE_ID][$dir]['category'][$catid][$auth];
-        if (!$value) {
-            return 0;
-        }
-
-        return $this->_member_value($authid, $value);
-    }
-
-    /**
      * 判断模块栏目是否具有用户操作权限
      */
-    public function _module_member_category($category, $dir, $auth) {
+    public function _get_module_member_category($module, $name) {
 
-        if (!$category) {
-            return [];
-        }elseif (!isset($this->member_cache['auth_module'][SITE_ID][$dir]['category'])) {
-            // 如果整个栏目都没有设置过权限 排查掉
+        if (!$module || !$module['category']) {
             return [];
         }
 
+        $category = $module['category'];
         foreach ($category as $id => $t) {
             // 筛选可发布的栏目权限
             if (!$t['child']) {
-                if ($t['mid'] != $dir) {
+                if ($t['mid'] != $module['dirname']) {
                     // 模块不符合 排除
                     unset($category[$id]);
-                } elseif (!isset($this->member_cache['auth_module'][SITE_ID][$dir]['category'][$t['id']]) && !$this->member) {
-                    // 默认游客不发布 排除
-                    unset($category[$id]);
-                } elseif (!dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$dir]['category'][$t['id']][$auth])) {
+                } elseif (!\Phpcmf\Service::M('member_auth')->category_auth($module, $id, $name, $this->member)) {
                     // 用户的的权限判断
                     unset($category[$id]);
                 }
@@ -1160,42 +1061,6 @@ abstract class Common extends \CodeIgniter\Controller
     }
 
     /**
-     * 获取可用auth权限区域
-     */
-    protected function _app_auth($type)
-    {
-        // 默认的
-        $data = [
-            'site' => [],
-            'module' => [],
-        ];
-
-        // 执行插件自己的缓存程序
-        $local = \Phpcmf\Service::Apps();
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock')
-                && is_file($path.'Config/Auth.php')) {
-                $_data = require $path.'Config/Auth.php';
-                if ($_data) {
-                    foreach ($_data as $key => $value) {
-                        if ($value) {
-                            foreach ($value as $file) {
-                                if (is_file($path.'Views/auth/'.$file)) {
-                                    $data[$key][] = $path.'Views/auth/'.$file;
-                                } else {
-                                    log_message('error', '插件权限文件不存在：'.$path.'Views/auth/'.$file);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data[$type];
-    }
-
-    /**
      * 官方短信接口查询
      */
     protected function _api_sms_info() {
@@ -1232,6 +1097,47 @@ abstract class Common extends \CodeIgniter\Controller
             'url' => $url,
         ]);
         \Phpcmf\Service::V()->display('cloud_online.html');
+    }
+
+    /**
+     * (废弃)
+     */
+    public function _member_auth_value($authid, $name) {
+        return 0;
+    }
+    /**
+     * (废弃)
+     */
+    public function _member_value($authid, $value)
+    {
+        return 0;
+    }
+    /**
+     * (废弃)
+     */
+    public function _module_member_value($catid, $dir, $auth, $authid = 0) {
+        return 0;
+    }
+    /**
+     * (废弃)
+     */
+    public function _module_member_category($category, $dir, $auth) {
+
+        if (!$category) {
+            return [];
+        }
+
+        foreach ($category as $id => $t) {
+            // 筛选可发布的栏目权限
+            if (!$t['child']) {
+                if ($t['mid'] != $dir) {
+                    // 模块不符合 排除
+                    unset($category[$id]);
+                }
+            }
+        }
+
+        return $category;
     }
 
     /**

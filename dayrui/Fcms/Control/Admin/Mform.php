@@ -302,11 +302,11 @@ class Mform extends \Phpcmf\Table
         }
 
         // 增减金币
-        $score = $this->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['score']);
+        $score = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'score', $this->member);
         $score && \Phpcmf\Service::M('member')->add_score($row['uid'], $score, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $row['curl']);
 
         // 增减经验
-        $exp = $this->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), $this->member_cache['auth_module'][SITE_ID][MOD_DIR]['form'][$this->form['table']]['exp']);
+        $exp = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'exp', $this->member);
         $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $row['curl']);
 
         \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], SITE_ID);

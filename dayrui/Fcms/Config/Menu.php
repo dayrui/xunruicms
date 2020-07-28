@@ -311,14 +311,9 @@ return [
                             'uri' => 'member_menu/index',
                         ],
                         [
-                            'name' => '内容权限',
-                            'icon' => 'fa fa-th-large',
-                            'uri' => 'module_member/index',
-                        ],
-                        [
-                            'name' => '用户组权限',
-                            'icon' => 'fa fa-group',
-                            'uri' => 'member_setting_group/index',
+                            'name' => '用户权限',
+                            'icon' => 'fa fa-user',
+                            'uri' => 'member_auth/index',
                         ],
                     ]
                 ],

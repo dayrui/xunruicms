@@ -278,6 +278,13 @@ if (!function_exists('locale_set_default')) {
 	}
 }
 
+/*
+ * 重新日志记录函数
+ */
+function log_message($level, $message, array $context = []) {
+    return Phpcmf\Service::Log($level, $message, $context);
+}
+
 
 /******* CodeIgniter Bootstrap *******/
 

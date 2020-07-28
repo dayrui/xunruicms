@@ -227,11 +227,11 @@ class Form extends \Phpcmf\Table
         }
 
         // 增减金币
-        $score = $this->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['score']);
+        $score = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'score', $this->member);
         $score && \Phpcmf\Service::M('member')->add_score($row['uid'], $score, dr_lang('%s发布', $this->form['name']));
 
         // 增减经验
-        $exp = $this->_member_value(\Phpcmf\Service::M('member')->authid($row['uid']), $this->member_cache['auth_site'][SITE_ID]['form'][$this->form['table']]['exp']);
+        $exp = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'exp', $this->member);
         $exp && \Phpcmf\Service::M('member')->add_experience($row['uid'], $exp, dr_lang('%s发布', $this->form['name']));
 
         \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 1]);
