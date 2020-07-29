@@ -1688,7 +1688,7 @@ function dr_list_field_value($value, $sys_field, $field) {
  * 格式化搜索关键词参数
  */
 function dr_get_keyword($s) {
-    return dr_safe_replace(str_replace(['+', ' '], '%', urldecode($s)));
+    return dr_safe_replace(str_replace(['+', ' '], '%', ($s)));
 }
 
 /**

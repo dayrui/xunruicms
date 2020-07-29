@@ -208,9 +208,16 @@ class Search extends \Phpcmf\Model {
     // 获取搜索参数
     public function get_param($module) {
 
+        $kw = '';
         $get = $_GET;
         $get = isset($get['rewrite']) ? dr_search_rewrite_decode($get['rewrite'], $module['setting']['search']) : $get;
-        $get && $get = \Phpcmf\Service::L('input')->xss_clean($get);
+        if ($get) {
+            if (isset($get['keyword'])) {
+                $kw = dr_get_keyword($get['keyword']);
+                unset($get['keyword']);
+            }
+            $get = \Phpcmf\Service::L('input')->xss_clean($get);
+        }
 
         $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
         unset($get['s'], $get['c'], $get['m'], $get['id']);
@@ -219,7 +226,10 @@ class Search extends \Phpcmf\Model {
         }
 
         $_GET['page'] = $get['page'];
-        $get['keyword'] = dr_get_keyword($get['keyword']);
+
+        if ($kw) {
+            $get['keyword'] = $kw;
+        }
 
         if (isset($get['catdir']) && $get['catdir']) {
             $catid = (int)$module['category_dir'][$get['catdir']];

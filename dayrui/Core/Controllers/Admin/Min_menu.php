@@ -151,7 +151,9 @@ class Min_menu extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('Menu')->getRowData('admin_min', $id);
-		!$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
 		$top = \Phpcmf\Service::M('Menu')->get_top('admin_min');
 
@@ -183,7 +185,9 @@ class Min_menu extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+		if (!$ids) {
+		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
 		\Phpcmf\Service::M('Menu')->_delete('admin_min', $ids);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -205,7 +209,9 @@ class Min_menu extends \Phpcmf\Common
 
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
 		$v = \Phpcmf\Service::M('Menu')->_uesd('admin_min', $i);
-		$v == -1 && exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+		if ($v == -1) {
+		    exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+        }
 		\Phpcmf\Service::L('input')->system_log('修改简化菜单状态: '. $i);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
@@ -237,9 +243,22 @@ class Min_menu extends \Phpcmf\Common
 			unset($this->form['url'], $this->form['uri']);
 		} else {
 			// url和uri 只验证一个
-			if ($data['url']) unset($this->form['uri']);
-			if ($data['uri']) unset($this->form['url']);
+			if ($data['url']) {
+			    unset($this->form['uri']);
+            }
+			if ($data['uri']) {
+			    unset($this->form['url']);
+            }
 		}
+
+        // 顶级验证mark
+		if (!$data['pid']) {
+		    if (!$data['mark']) {
+                $this->_json(0, dr_lang('标识字符不能为空'), ['field' => 'mark']);
+            } elseif (!\Phpcmf\Service::M()->table('admin_menu')->where('mark', $data['mark'])->counts()) {
+                $this->_json(0, dr_lang('标识字符没有存在于完整菜单中'), ['field' => 'mark']);
+            }
+        }
 
 		if ($data['mark']) {
             list($a, $b) = explode('-', $data['mark']);
@@ -248,9 +267,10 @@ class Min_menu extends \Phpcmf\Common
             }
         }
 
-
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
-		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+		if ($return) {
+            $this->_json(0, $return['error'], ['field' => $return['name']]);
+        }
 
 	}
 
