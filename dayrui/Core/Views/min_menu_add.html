@@ -11,7 +11,7 @@
                     <select name="data[pid]" class="form-control">
                         <option value=""> {dr_lang('顶级菜单')} </option>
                         {loop $top $t}
-                        <option value="{$t.id}" {if $data.pid==$t.id}selected{/if}>{$t.name}</option>
+                        <option value="{$t.id}" {if $type==$t.id}selected{/if}>{$t.name}</option>
                         {/loop}
                     </select>
                 </label>
