@@ -72,17 +72,16 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 版本
         if (!is_file(MYPATH.'Config/Version.php')) {
-            define('CMF_VERSION', '开发版');
             $this->cmf_version = [
-                'id' => 1,
+                'id' => 10,
                 'name' => '迅睿CMS框架',
                 'version' => '开发版',
                 'downtime' => SYS_TIME,
             ];
         } else {
             $this->cmf_version = require MYPATH.'Config/Version.php';
-            define('CMF_VERSION', $this->cmf_version['version']);
         }
+        define('CMF_VERSION', $this->cmf_version['version']);
         // 版本更新时间字符串
         define('CMF_UPDATE_TIME', str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']));
 
