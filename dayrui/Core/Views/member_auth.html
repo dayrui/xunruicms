@@ -42,7 +42,7 @@
                             <tbody>
                             {loop $group $i $t}
                             <tr class="odd gradeX">
-                                <td>{$t}</td>
+                                <td>{if $i}{$t}{else}<font color="red">{$t}</font>{/if}</td>
                                 <td>
                                     <a href="{dr_url('member_auth/add', ['aid' => $i])}" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
                                     <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'group', 'aid'=>$i, 'id'=>$i])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他组')}</>
