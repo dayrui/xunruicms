@@ -16,7 +16,7 @@ class Cloud extends \Phpcmf\Common
         parent::__construct(...$params);
 
         if (!$this->cmf_license) {
-            exit('当前程序版本：'.$this->cmf_version['version'].'，需要更新到正式版，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
+            exit('当前程序版本：'.$this->cmf_version['version'].'，无法安装应用插件<br>需要更新到正式版，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
         } elseif (!$this->cmf_license['license']) {
             exit('程序不是最新，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
         }
