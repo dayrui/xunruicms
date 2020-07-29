@@ -847,7 +847,6 @@ abstract class Common extends \CodeIgniter\Controller
      */
     protected function _app_clink($type = '')
     {
-
         $data = [];
         if (!$type) {
             // 表示模块部分
@@ -893,7 +892,7 @@ abstract class Common extends \CodeIgniter\Controller
                     $_clink = require $path.'Config/Clink'.$endfix.'.php';
                     if ($_clink) {
                         if (is_file($path.'Models/Auth'.$endfix.'.php')) {
-                            $obj = \Phpcmf\Service::M('auth'.$endfix.'', $dir);
+                            $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
                             foreach ($_clink as $k => $v) {
                                 // 动态名称
                                 if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
@@ -903,8 +902,6 @@ abstract class Common extends \CodeIgniter\Controller
                             // 权限验证
                             if ($obj->is_link_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink) ;
-                            } else {
-                                CI_DEBUG && log_message('error', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）权限验证：不显示');
                             }
                         } else {
                             $data = array_merge($data , $_clink) ;
@@ -921,14 +918,17 @@ abstract class Common extends \CodeIgniter\Controller
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
                         CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置url参数');
+                        continue;
                     } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
                         unset($data[$i]); // 无权限的不要
+                        continue;
                     }
                     $data[$i]['url'] = urldecode($data[$i]['url']);
                 } else {
                     if (!$t['murl']) {
                         unset($data[$i]); // 非后台必须验证murl
                         CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置murl参数');
+                        continue;
                     }
                     $data[$i]['url'] = urldecode($data[$i]['murl']);
                 }
@@ -1017,6 +1017,7 @@ abstract class Common extends \CodeIgniter\Controller
             foreach ($data as $i => $t) {
                 if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
                     unset($data[$i]); // 无权限的不要
+                    continue;
                 }
                 $data[$i]['url'] = urldecode($data[$i]['murl']);
             }
