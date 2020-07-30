@@ -134,10 +134,10 @@ class Member_auth extends \Phpcmf\Model
             }
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
-            }
-            // 默认没勾选是启用访问权限
-            if ($name == 'show' && !$auth[$name]) {
-                $values[] = 1;
+            } elseif (!$auth) {
+                if (in_array($name, ['show'])) {
+                    $values[] = 1; // 默认没勾选是启用的权限
+                }
             }
         }
 
@@ -162,10 +162,10 @@ class Member_auth extends \Phpcmf\Model
 
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
-            }
-            // 默认没勾选是启用访问权限
-            if ($name == 'show' && !$auth[$name]) {
-                $values[] = 1;
+            } elseif (!$auth) {
+                if (in_array($name, ['show', 'add', 'code', 'verify'])) {
+                    $values[] = 1; // 默认没勾选是启用的权限
+                }
             }
         }
 
@@ -190,11 +190,12 @@ class Member_auth extends \Phpcmf\Model
 
             if (isset($auth[$name])) {
                 $values[] = $auth[$name];
+            } elseif (!$auth) {
+                if (in_array($name, ['show', 'add', 'code', 'verify'])) {
+                    $values[] = 1; // 默认没勾选是启用的权限
+                }
             }
-            // 默认没勾选是启用访问权限
-            if ($name == 'show' && !$auth[$name]) {
-                $values[] = 1;
-            }
+
         }
 
         // 取最大值

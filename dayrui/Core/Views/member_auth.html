@@ -22,6 +22,7 @@
                 <div class="col-md-9">{dr_lang('本页是全局设置，全部用户组成员生效')}
                     <br><br>
                     <a href="{dr_url('member_auth/add', ['aid' => 'public'])}" class="btn blue btn-sm"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
+                    <a onclick="dr_ajax_confirm_url('{dr_url('member_auth/init_edit', ['aid'=>'public'])}','{dr_lang('确定要将本组权限初始化吗？')}', '')" class="btn green btn-sm"> <i class="fa fa-refresh"></i> {dr_lang('初始化权限')}</a>
                 </div>
             </div>
         </div>

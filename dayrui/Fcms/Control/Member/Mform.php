@@ -238,7 +238,7 @@ class Mform extends \Phpcmf\Table
             }
 
             // 审核状态
-            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify', $this->member) ? 1 : 0;
+            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify', $this->member) ? 0 : 1;
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
@@ -252,7 +252,7 @@ class Mform extends \Phpcmf\Table
         } else {
 			// 修改时
 			 // 审核状态
-            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify2', $this->member) ? 1 : 0;
+            $data[1]['status'] = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'verify2', $this->member) ? 0 : 1;
 		}
 
         return $data;
