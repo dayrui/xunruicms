@@ -128,7 +128,23 @@ class Upload
             if (isset($config['save_path']) && $config['save_path']) {
                 $path = $config['save_path'];
             } else {
-                $path = isset($config['path']) && $config['path'] ? $config['path'].'/' : date('Ym', SYS_TIME).'/';
+                if (isset($config['path']) && $config['path']) {
+                    $path = $config['path'].'/'; // 按开发自定义参数
+                } elseif (defined('SYS_ATTACHMENT_SAVE_TYPE') && SYS_ATTACHMENT_SAVE_TYPE) {
+                    // 按后台设置目录
+                    if (SYS_ATTACHMENT_SAVE_DIR) {
+                        $path = str_replace(
+                            ['{y}', '{m}', '{d}', '{yy}', '.'],
+                            [date('Y', SYS_TIME), date('m', SYS_TIME), date('d', SYS_TIME), date('y', SYS_TIME), ''],
+                            trim(SYS_ATTACHMENT_SAVE_DIR, '/')).'/';
+                    } else {
+                        $path = '';
+                    }
+                } else {
+                    // 默认目录格式
+                    $path = date('Ym', SYS_TIME).'/';
+                }
+
             }
             $file_path = $path.$name.'.'.$file_ext;
         }

@@ -46,6 +46,8 @@ class Attachment extends \Phpcmf\Common
                     'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
                     'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
                     'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),
+                    'SYS_ATTACHMENT_SAVE_TYPE' => intval($post['SYS_ATTACHMENT_SAVE_TYPE']),
+                    'SYS_ATTACHMENT_SAVE_DIR' => addslashes($post['SYS_ATTACHMENT_SAVE_DIR']),
                     'SYS_AVATAR_URL' => $image['avatar_url'],
                     'SYS_AVATAR_PATH' => addslashes($image['avatar_path']),
                 ]

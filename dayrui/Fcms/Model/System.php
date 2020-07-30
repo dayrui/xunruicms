@@ -30,6 +30,8 @@ class System extends \Phpcmf\Model
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
+        'SYS_ATTACHMENT_SAVE_TYPE'	=> '附件存储方式',
+        'SYS_ATTACHMENT_SAVE_DIR'	=> '附件存储目录',
         'SYS_ATTACHMENT_URL'	=> '附件访问地址',
         'SYS_AVATAR_PATH'	=> '头像上传路径',
         'SYS_AVATAR_URL'	=> '头像访问地址',

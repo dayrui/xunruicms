@@ -62,19 +62,37 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('存储目录方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').hide()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="0" {if empty($data['SYS_ATTACHMENT_SAVE_TYPE'])}checked{/if} /> {dr_lang('默认')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').show()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="1" {if $data['SYS_ATTACHMENT_SAVE_TYPE']}checked{/if} /> {dr_lang('自定义')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('默认存储目录为：/年月/文件名')}</span>
+                            </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
-                                <div class="col-md-9">
-                                    <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_attachment_dir" name="data[SYS_ATTACHMENT_PATH]" value="{htmlspecialchars($data['SYS_ATTACHMENT_PATH'])}" >
-                                        <span class="input-group-btn">
+                        <div class="form-group dr_attachment_type" {if empty($data['SYS_ATTACHMENT_SAVE_TYPE'])}style="display: none"{/if}>
+                            <label class="col-md-2 control-label">{dr_lang('存储目录格式')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-xlarge" type="text" name="data[SYS_ATTACHMENT_SAVE_DIR]" value="{htmlspecialchars($data['SYS_ATTACHMENT_SAVE_DIR'])}" ></label>
+                                <span class="help-block">{dr_lang('留空表示不要目录存储，可填参数格式：{y}表示年，{m}表示月，{d}表示日，/表示目录，不要填写其他特殊符号')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" id="dr_attachment_dir" name="data[SYS_ATTACHMENT_PATH]" value="{htmlspecialchars($data['SYS_ATTACHMENT_PATH'])}" >
+                                    <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_attachment_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
-                                    </div>
-                                    <span class="help-block">{dr_lang('此目录必须有读写权限，绝对路径请以“/”开头')}</span>
                                 </div>
+                                <span class="help-block">{dr_lang('此目录必须有读写权限，绝对路径请以“/”开头')}</span>
                             </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('附件URL地址')}</label>
                             <div class="col-md-9">
@@ -146,31 +164,31 @@
                     <div class="form-body">
 
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('头像存储目录')}</label>
-                                <div class="col-md-9">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('头像存储目录')}</label>
+                            <div class="col-md-9">
 
-                                    <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_avatar_dir" name="image[avatar_path]" value="{htmlspecialchars($image['avatar_path'])}" >
-                                        <span class="input-group-btn">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" id="dr_avatar_dir" name="image[avatar_path]" value="{htmlspecialchars($image['avatar_path'])}" >
+                                    <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_domain_dir('dr_avatar_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                         </span>
-                                    </div>
-                                    <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认api/member/')}</span>
                                 </div>
+                                <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认api/member/')}</span>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('头像访问URL地址')}</label>
-                                <div class="col-md-9">
-                                    <div class="input-group input-xlarge">
-                                        <input class="form-control " type="text" id="dr_avatar_url" name="image[avatar_url]" value="{htmlspecialchars($image['avatar_url'])}" >
-                                        <span class="input-group-btn">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('头像访问URL地址')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" id="dr_avatar_url" name="image[avatar_url]" value="{htmlspecialchars($image['avatar_url'])}" >
+                                    <span class="input-group-btn">
                                             <button class="btn blue" onclick="dr_test_avatar_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
                                         </span>
-                                    </div>
-                                    <span class="help-block">{dr_lang('头像文件访问地址，可单独指定域名，默认/api/member/')}</span>
                                 </div>
+                                <span class="help-block">{dr_lang('头像文件访问地址，可单独指定域名，默认/api/member/')}</span>
                             </div>
+                        </div>
 
                         <div class="form-group" style="display: none" id="dr_test_avatar_domain">
                             <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
