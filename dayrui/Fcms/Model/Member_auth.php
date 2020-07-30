@@ -10,20 +10,26 @@
 class Member_auth extends \Phpcmf\Model
 {
     public $auth;
-    public $is_group;
+    public $auth_type;
 
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->auth = \Phpcmf\Service::C()->member_cache['auth2'][SITE_ID]; // 当前站点下面的权限值
-        $this->is_group = \Phpcmf\Service::C()->member_cache['is_group']; // 是否按用户组来取权限模式
+        $this->auth_type = \Phpcmf\Service::C()->member_cache['auth_type']; // 是否按用户组来取权限模式
     }
 
     // 当前登录会员的groupid值
     protected function _get_groupid($member) {
 
-        if ($this->is_group) {
+        if ($this->auth_type == 1) {
             // 按用户组
             $groupid = $member ? $member['groupid'] : [0]; // 当前登录会员的groupid值
+            if (!$groupid) {
+                return [0];
+            }
+        } elseif ($this->auth_type == 2) {
+            // 按用户组等级
+            $groupid = $member ? $member['authid'] : [0]; // 当前登录会员的authid值
             if (!$groupid) {
                 return [0];
             }

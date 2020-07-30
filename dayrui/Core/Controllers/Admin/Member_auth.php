@@ -15,11 +15,35 @@ class Member_auth extends \Phpcmf\Common
             0 => dr_lang('游客')
         ];
 
+        // 用户组等级
+        $level = [
+            0 => [
+                'use' => 1,
+                'name' => dr_lang('游客'),
+                'space' => ' style="text-align: left;padding-left:10px;"',
+            ]
+        ];
+
         foreach ($this->member_cache['group'] as $t) {
             $group[$t['id']] = dr_lang($t['name']);
+            $level[$t['id']] = [
+                'use' => 1,
+                'name' => dr_lang($t['name']),
+                'space' => ' style="text-align: left;padding-left:10px;"',
+            ];
+            if ($t['level']) {
+                foreach ($t['level'] as $lv) {
+                    $level[$t['id'].'-'.$lv['id']] = [
+                        'use' => 1,
+                        'name' => dr_lang($lv['name']),
+                        'space' => ' style="text-align: left;padding-left:30px;"'
+                    ];
+                    $level[$t['id']]['use'] = 0;
+                }
+            }
         }
 
-        $v = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'is_group')->get()->getRowArray();
+        $v = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth_type')->get()->getRowArray();
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
@@ -29,7 +53,8 @@ class Member_auth extends \Phpcmf\Common
                 ]
             ),
             'group' => $group,
-            'is_group' => $v['value'],
+            'level' => $level,
+            'auth_type' => $v['value'],
         ]);
         \Phpcmf\Service::V()->display('member_auth.html');
     }
@@ -38,14 +63,23 @@ class Member_auth extends \Phpcmf\Common
     public function save_edit() {
 
         $value = intval(\Phpcmf\Service::L('input')->get('value'));
+        if (!$value) {
+            $msg = dr_lang('已切换至按全局配置模式');
+        } elseif ($value == 1) {
+            $msg = dr_lang('已切换至按用户组配置模式');
+        } elseif ($value == 2) {
+            $msg = dr_lang('已切换至按用户组等级配置模式');
+        } else {
+            $this->_json(0, dr_lang('未知模式'));
+        }
 
         \Phpcmf\Service::M()->db->table('member_setting')->replace([
-            'name' => 'is_group',
+            'name' => 'auth_type',
             'value' => $value
         ]);
         \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
 
-        $this->_json(1, $value ? dr_lang('已切换至按用户组配置模式') : dr_lang('已切换至按全局配置模式'));
+        $this->_json(1, $msg);
     }
 
     // 初始化组权限
@@ -74,6 +108,14 @@ class Member_auth extends \Phpcmf\Common
         } elseif (!$aid) {
             $aid = 0;
             $name = dr_lang('游客');
+        } elseif (strpos($aid, '-') !== false) {
+            list($gid, $lid) = explode('-', $aid);
+            if (!$this->member_cache['group'][$gid]) {
+                $this->_admin_msg(0, dr_lang('此用户组不存在'));
+            } elseif (!$this->member_cache['group'][$gid]['level'][$lid]) {
+                $this->_admin_msg(0, dr_lang('此用户组等级不存在'));
+            }
+            $name = $this->member_cache['group'][$gid]['name'].'-'.$this->member_cache['group'][$gid]['level'][$lid]['name'];
         } else {
             if (!$this->member_cache['group'][$aid]) {
                 $this->_admin_msg(0, dr_lang('此用户组不存在'));
@@ -83,7 +125,6 @@ class Member_auth extends \Phpcmf\Common
 
         // 默认的
         $diy = [
-            'home' => [],
             'member' => [],
             'module' => [],
             'app' => [],
@@ -268,6 +309,77 @@ class Member_auth extends \Phpcmf\Common
         $value = dr_string2array($v['value']);
 
         switch ($at) {
+
+            case 'level':
+                // 复制用户组等级
+                // 用户组
+                $group = [
+                    0 => [
+                        'id' => 0,
+                        'name' => dr_lang('游客'),
+                    ],
+                ];
+                foreach ($this->member_cache['group'] as $t) {
+                    $group[$t['id']] = [
+                        'id' => $t['id'],
+                        'name' => dr_lang($t['name']),
+                    ];
+                    if ($t['level']) {
+                        foreach ($t['level'] as $lv) {
+                            $group[$t['id'].'-'.$lv['id']] = [
+                                'id' => $t['id'].'-'.$lv['id'],
+                                'name' => '  └  '.dr_lang($lv['name']),
+                            ];
+                        }
+                    }
+                }
+
+                if (IS_AJAX_POST) {
+
+                    $auth = $value[SITE_ID][$aid];
+                    if (!$auth) {
+                        $this->_json(0, dr_lang('当前用户组没有配置权限规则'));
+                    }
+
+                    $catids = \Phpcmf\Service::L('input')->post('catid');
+                    if (!$catids) {
+                        $this->_json(0, dr_lang('你还没有选择用户组呢'));
+                    }
+
+                    $c = 0;
+                    if (isset($catids[0]) && $catids[0] == 0) {
+                        foreach ($group as $id => $t) {
+                            $c ++;
+                            $value[SITE_ID][$id] = $auth;
+                        }
+                    } else {
+                        foreach ($catids as $id) {
+                            $c ++;
+                            $value[SITE_ID][$id] = $auth;
+                        }
+                    }
+
+                    \Phpcmf\Service::M()->db->table('member_setting')->replace([
+                        'name' => 'auth2',
+                        'value' => dr_array2string($value)
+                    ]);
+                    \Phpcmf\Service::M('cache')->sync_cache('member');
+                    $this->_json(1, dr_lang('共复制%s个用户组', $c));
+                    exit;
+                }
+
+                \Phpcmf\Service::V()->assign([
+                    'form' =>  dr_form_hidden(),
+                    'select' => \Phpcmf\Service::L('tree')->select_category(
+                        $group,
+                        0,
+                        'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
+                        '',
+                        0,
+                        0
+                    ),
+                ]);
+                \Phpcmf\Service::V()->display('member_auth_copy_group.html');exit;
 
             case 'group':
                 // 复制用户组
