@@ -174,7 +174,7 @@ class Form extends \Phpcmf\Table
         }
 
         // 审核状态
-        $data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 0 : 1;
+        $data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 1 : 0;
         
         // 默认数据
         $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
