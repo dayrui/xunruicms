@@ -50,7 +50,7 @@ class Mform extends \Phpcmf\Table
                 $this->_msg(0, dr_lang('模块表单【%s】父内容[%s]不存在', $this->form['name'], $this->cid));
             }
         } else {
-            $this->_msg(0, dr_lang('模块表单【%s】没有cid参数', $this->form['name']));
+            //$this->_msg(0, dr_lang('模块表单【%s】没有cid参数', $this->form['name']));
         }
 
         // 初始化数据表
@@ -61,9 +61,9 @@ class Mform extends \Phpcmf\Table
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
             'order_by' => 'displayorder DESC,inputtime DESC',
-            'where_list' => 'cid='. $this->cid, // 自定义条件，显示本内容的表单
+            'where_list' => $this->cid ? 'cid='. $this->cid : 'uid='.$this->uid, // 自定义条件，显示本内容的表单
         ]);
-        $this->edit_where = $this->delete_where = 'cid='. $this->cid;
+        $this->edit_where = $this->delete_where = $this->cid ? 'cid='. $this->cid : 'uid='.$this->uid;
         // 是否有验证码
         $this->is_post_code = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'code', $this->member);
 
@@ -85,19 +85,9 @@ class Mform extends \Phpcmf\Table
 
         list($tpl) = $this->_List(['cid' => $this->cid]);
 
-        $del = 1;
-        if (!$this->is_hcategory) {
-            $cat = $this->_get_module_member_category($this->module, 'del');
-            if (!isset($cat[$this->index['catid']])) {
-                $del = 0;
-            }
-        } else {
-            $this->content_model->_hcategory_member_del_auth();
-        }
-
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' => $this->cid],
-            'is_delete' => $del,
+            'is_delete' => \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'delete', $this->member),
         ]);
         return \Phpcmf\Service::V()->display($tpl);
     }
@@ -105,15 +95,8 @@ class Mform extends \Phpcmf\Table
     // 添加内容
     protected function _Member_Add() {
 
-        if (!$this->is_hcategory) {
-            // 走栏目权限
-            $category = $this->_get_module_member_category($this->module, 'add');
-            if (!$category[$this->index['catid']]) {
-                $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$this->index['catid']));
-            }
-        } else {
-            // 不走栏目权限，走自定义权限
-            $this->content_model->_hcategory_member_add_auth();
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'add', $this->member)) {
+            $this->_msg(0, dr_lang('您的用户组无发布权限'));
         }
 
         list($tpl) = $this->_Post(0);
@@ -127,15 +110,8 @@ class Mform extends \Phpcmf\Table
     // 修改内容
     protected function _Member_Edit() {
 
-        if (!$this->is_hcategory) {
-            // 走栏目权限
-            $category = $this->_get_module_member_category($this->module, 'edit');
-            if (!$category[$this->index['catid']]) {
-                $this->_msg(0, dr_lang('当前栏目(%s)没有修改权限', (int)$this->index['catid']));
-            }
-        } else {
-            // 不走栏目权限，走自定义权限
-            $this->content_model->_hcategory_member_edit_auth();
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'edit', $this->member)) {
+            $this->_msg(0, dr_lang('您的用户组无修改权限'));
         }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
@@ -143,7 +119,7 @@ class Mform extends \Phpcmf\Table
 
         if (!$data) {
             $this->_msg(0, dr_lang('数据不存在: '.$id));
-        } elseif ($this->cid != $data['cid']) {
+        } elseif ($this->cid != $data['cid'] || $this->uid != $data['uid']) {
             $this->_msg(0, dr_lang('cid不匹配'));
         }
 
@@ -164,13 +140,8 @@ class Mform extends \Phpcmf\Table
     // 删除内容
     protected function _Member_Del() {
 
-        if (!$this->is_hcategory) {
-            $cat = $this->_get_module_member_category($this->module, 'del');
-            if (!isset($cat[$this->index['catid']])) {
-                $this->_json(0, dr_lang('当前栏目没有删除权限'));
-            }
-        } else {
-            $this->content_model->_hcategory_member_del_auth();
+        if (!\Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'del', $this->member)) {
+            $this->_msg(0, dr_lang('您的用户组无删除权限'));
         }
 
         $this->_Del(
