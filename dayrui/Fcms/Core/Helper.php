@@ -492,7 +492,7 @@ if (!function_exists('dr_domain_301')) {
 function dr_format_create_sql($sql) {
     $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.6.0') > 0) {
-        $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_general_ci ', $sql));
+        $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ', $sql));
     }
     return $sql;
 }
@@ -1685,13 +1685,6 @@ function dr_list_field_value($value, $sys_field, $field) {
 }
 
 /**
- * 格式化搜索关键词参数
- */
-function dr_get_keyword($s) {
-    return dr_safe_replace(str_replace(['+', ' '], '%', ($s)));
-}
-
-/**
  * 两数组追加合并
  */
 function dr_array2array($a1, $a2) {
@@ -2861,6 +2854,17 @@ function dr_rewrite_decode($params, $join = '-', $field = []) {
     }
 
     return $return;
+}
+
+
+/**
+ * 安全过滤格式化搜索关键词参数
+ */
+function dr_get_keyword($s) {
+    return dr_safe_keyword($s);
+}
+function dr_safe_keyword($s) {
+    return trim(dr_safe_replace(str_replace(['+', ' ', '_'], '%', urldecode($s))), '%');
 }
 
 /**

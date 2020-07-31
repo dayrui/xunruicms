@@ -1080,7 +1080,9 @@ class Content extends \Phpcmf\Model {
         $this->table($this->mytable.'_data_'.$tid)->delete($cid);
         if (!$this->is_hcategory) {
             $this->table($this->mytable.'_category_data')->delete($cid);
-            $this->table($this->mytable.'_category_data_'.$tid)->delete($cid);
+            if ($this->db->query("SHOW TABLES LIKE '".$this->dbprefix($this->mytable.'_category_data_'.$tid)."'")->getRowArray()) {
+                $this->table($this->mytable.'_category_data_'.$tid)->delete($cid);
+            }
         }
 
         // 模块表单

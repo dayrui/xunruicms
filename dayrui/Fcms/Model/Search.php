@@ -72,11 +72,11 @@ class Search extends \Phpcmf\Model {
             if ($param['keyword'] != '') {
                 $temp = [];
                 $sfield = explode(',', $module['setting']['search']['field'] ? $module['setting']['search']['field'] : 'title,keywords');
-                $search_keyword = trim(str_replace([' ', '_'], '%', dr_safe_replace($param['keyword'])), '%');
+                $search_keyword = dr_safe_keyword($param['keyword']);
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && in_array($t, $field)) {
-                            $temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
+                            $temp[] = '`'.$table.'`.`'.$t.'` = "%'.$search_keyword.'%"';
                         }
                     }
                 }
@@ -208,15 +208,10 @@ class Search extends \Phpcmf\Model {
     // 获取搜索参数
     public function get_param($module) {
 
-        $kw = '';
         $get = $_GET;
         $get = isset($get['rewrite']) ? dr_search_rewrite_decode($get['rewrite'], $module['setting']['search']) : $get;
         if ($get) {
-            if (isset($get['keyword'])) {
-                $kw = dr_get_keyword($get['keyword']);
-                unset($get['keyword']);
-            }
-            $get && $get = \Phpcmf\Service::L('input')->xss_clean($get);
+            $get = \Phpcmf\Service::L('input')->xss_clean($get);
         }
 
         $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
@@ -226,11 +221,6 @@ class Search extends \Phpcmf\Model {
         }
 
         $_GET['page'] = $get['page'];
-
-        if ($kw) {
-            $get['keyword'] = $kw;
-        }
-
         if (isset($get['catdir']) && $get['catdir']) {
             $catid = (int)$module['category_dir'][$get['catdir']];
             unset($get['catid']);

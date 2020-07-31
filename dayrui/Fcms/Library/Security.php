@@ -140,6 +140,10 @@ class Security {
 			return $str;
 		}
 
+        if (json_encode( $str) === false) {
+            return '[removed]'; // 判断含有乱码直接过滤为空
+        }
+
 		// Remove Invisible Characters
 		$str = remove_invisible_characters($str);
 		/*
