@@ -216,7 +216,7 @@ class Search extends \Phpcmf\Model {
                 $kw = dr_get_keyword($get['keyword']);
                 unset($get['keyword']);
             }
-            $get = \Phpcmf\Service::L('input')->xss_clean($get);
+            $get && $get = \Phpcmf\Service::L('input')->xss_clean($get);
         }
 
         $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
