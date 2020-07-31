@@ -76,7 +76,7 @@ class Search extends \Phpcmf\Model {
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && in_array($t, $field)) {
-                            $temp[] = '`'.$table.'`.`'.$t.'` = "%'.$search_keyword.'%"';
+                            $temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
                         }
                     }
                 }
