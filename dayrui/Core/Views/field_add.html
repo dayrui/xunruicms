@@ -124,8 +124,8 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('XSS过滤')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][validate][xss]" value="1" {if $data['setting']['validate']['xss']}checked{/if} data-on-text="{dr_lang('关闭')}" data-off-text="{dr_lang('开启')}" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('开启之后相关字符会被替换掉')}</span>
+                                <input type="checkbox" name="data[setting][validate][xss]" value="1" {if $data['setting']['validate']['xss']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-off-color="danger" data-on-color="success" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启之后相关非法字符会被安全替换掉')}</span>
                             </div>
                         </div>
                         <div class="form-group">

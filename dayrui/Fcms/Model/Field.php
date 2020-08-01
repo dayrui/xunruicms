@@ -229,7 +229,7 @@ class Field extends \Phpcmf\Model
         $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], dr_safe_filename($data['name']));
 
         // 当为编辑器类型时，关闭xss过滤
-        $data['fieldtype'] == 'Ueditor' && $data['setting']['validate']['xss'] = 1;
+        //$data['fieldtype'] == 'Ueditor' && $data['setting']['validate']['xss'] = 1;
 
         $data['ismain'] = (int)$data['ismain'];
         $data['setting'] = dr_array2string($data['setting']);

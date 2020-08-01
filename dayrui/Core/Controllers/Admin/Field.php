@@ -181,7 +181,9 @@ class Field extends \Phpcmf\Common
 		// 初始化部分值
         $data = [
             'setting' => [
-                'validate' => [],
+                'validate' => [
+                    'xss' => 1,
+                ],
             ],
         ];
 		$page = max((int)\Phpcmf\Service::L('input')->post('page'), 0);
