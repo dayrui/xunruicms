@@ -123,38 +123,6 @@ class Member_auth extends \Phpcmf\Common
             $name = $this->member_cache['group'][$aid]['name'];
         }
 
-        // 默认的
-        $diy = [
-            'member' => [],
-            'module' => [],
-            'app' => [],
-        ];
-
-        // 执行插件自己的缓存程序
-        $local = \Phpcmf\Service::Apps();
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock')
-                && is_file($path.'Config/Auth.php')) {
-                $_data = require $path.'Config/Auth.php';
-                if ($_data) {
-                    foreach ($_data as $key => $value) {
-                        if ($value && isset($diy[$key])) {
-                            foreach ($value as $file) {
-                                if (is_file($path.'Views/auth/'.$file)) {
-                                    $diy[$key][] = [
-                                        'app' => $dir,
-                                        'file' => $path.'Views/auth/'.$file,
-                                    ];
-                                } else {
-                                    log_message('error', '应用插件['.$dir.']权限模板文件不存在：'.$path.'Views/auth/'.$file);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         // 共享栏目
         $share_module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share');
         $share_categroy = [];
@@ -224,7 +192,7 @@ class Member_auth extends \Phpcmf\Common
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         \Phpcmf\Service::V()->assign([
             'aid' => $aid,
-            'diy' => $diy,
+            'diy' => $this->_get_diy(),
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '返回模式选择' => ['member_auth/index', 'fa fa-cog'],
@@ -288,6 +256,7 @@ class Member_auth extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'mid' => $mid,
+            'diy' => $this->_get_diy(),
             'auth' => $auth,
             'verify' => \Phpcmf\Service::M()->table('admin_verify')->getAll(),
             'is_ajax_edit' => 1,
@@ -648,6 +617,47 @@ class Member_auth extends \Phpcmf\Common
         }
 
         $this->_json(0, dr_lang('未知类型'));
+    }
+
+    // 获取自定义权限组
+    private function _get_diy() {
+
+        // 默认的
+        $diy = [
+            'member' => [],
+            'module' => [],
+            'app' => [],
+            'form' => [],
+            'mform' => [],
+            'category' => [],
+        ];
+
+        // 执行插件自己的缓存程序
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'install.lock')
+                && is_file($path.'Config/Auth.php')) {
+                $_data = require $path.'Config/Auth.php';
+                if ($_data) {
+                    foreach ($_data as $key => $value) {
+                        if ($value && isset($diy[$key])) {
+                            foreach ($value as $file) {
+                                if (is_file($path.'Views/auth/'.$file)) {
+                                    $diy[$key][] = [
+                                        'app' => $dir,
+                                        'file' => $path.'Views/auth/'.$file,
+                                    ];
+                                } else {
+                                    log_message('error', '应用插件['.$dir.']权限模板文件不存在：'.$path.'Views/auth/'.$file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $diy;
     }
 
 }

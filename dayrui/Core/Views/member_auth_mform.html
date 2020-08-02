@@ -18,69 +18,77 @@
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
     {/if}
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('访问')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['show'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][show]" value="1" />
-    <span></span>
-</label>
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('发布')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['add'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][add]" value="1" />
-    <span></span>
-</label>
+    <div class="margin-bottom-5">
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('访问')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['show'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][show]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('发布')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['add'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][add]" value="1" />
+            <span></span>
+        </label>
 
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('修改')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['edit']} checked {/if} name="mform[{$mid}][edit]" value="1" />
-    <span></span>
-</label>
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('删除')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['del']} checked {/if} name="mform[{$mid}][del]" value="1" />
-    <span></span>
-</label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('修改')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['edit']} checked {/if} name="mform[{$mid}][edit]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('删除')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['del']} checked {/if} name="mform[{$mid}][del]" value="1" />
+            <span></span>
+        </label>
 
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('验证码')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['code'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][code]" value="1" />
-    <span></span>
-</label>
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('发布审核')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['verify'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][verify]" value="1" />
-    <span></span>
-</label>
-<label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-    {dr_lang('修改审核')}
-    <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['verify2']} checked {/if} name="mform[{$mid}][verify2]" value="1" />
-    <span></span>
-</label>
-<br>
-
-<div class="input-inline input-small">
-    <div class="input-group">
-        <input type="text" name="mform[{$mid}][exp]" value="{htmlspecialchars($auth['mform'][$mid]['exp'])}" class="form-control" placeholder="">
-        <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('验证码')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['code'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][code]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('发布审核')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['verify'] || !$auth['mform'][$mid]} checked {/if} name="mform[{$mid}][verify]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('修改审核')}
+            <input type="checkbox" class="checkboxes" {if $auth['mform'][$mid]['verify2']} checked {/if} name="mform[{$mid}][verify2]" value="1" />
+            <span></span>
+        </label>
     </div>
-</div>
-<div class="input-inline input-small">
-    <div class="input-group">
-        <input type="text" name="mform[{$mid}][score]" value="{htmlspecialchars($auth['mform'][$mid]['score'])}" class="form-control" placeholder="">
-        <span class="input-group-addon">+{SITE_SCORE}</span>
+    <div class="margin-bottom-15">
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="mform[{$mid}][exp]" value="{htmlspecialchars($auth['mform'][$mid]['exp'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
+            </div>
+        </div>
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="mform[{$mid}][score]" value="{htmlspecialchars($auth['mform'][$mid]['score'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">+{SITE_SCORE}</span>
+            </div>
+        </div>
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="mform[{$mid}][day_post]" value="{htmlspecialchars($auth['mform'][$mid]['day_post'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">{dr_lang('日发布')}</span>
+            </div>
+        </div>
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="mform[{$mid}][total_post]" value="{htmlspecialchars($auth['mform'][$mid]['total_post'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">{dr_lang('发布总数')}</span>
+            </div>
+        </div>
     </div>
-</div>
-<div class="input-inline input-small">
-    <div class="input-group">
-        <input type="text" name="mform[{$mid}][day_post]" value="{htmlspecialchars($auth['mform'][$mid]['day_post'])}" class="form-control" placeholder="">
-        <span class="input-group-addon">{dr_lang('日发布')}</span>
+    {loop $diy.mform $d}
+    <div app="{$d.app}" class="margin-bottom-15">
+        {php $dfile=$d.file;}
+        {load "$dfile"}
     </div>
-</div>
-<div class="input-inline input-small">
-    <div class="input-group">
-        <input type="text" name="mform[{$mid}][total_post]" value="{htmlspecialchars($auth['mform'][$mid]['total_post'])}" class="form-control" placeholder="">
-        <span class="input-group-addon">{dr_lang('发布总数')}</span>
-    </div>
-</div>
+    {/loop}
     <input type="hidden" name="mform[{$mid}][test]" value="1">
 
     {if $is_ajax_edit}

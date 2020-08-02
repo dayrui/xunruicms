@@ -138,7 +138,7 @@
                                 <label class="mt-radio mt-radio-outline"><input onclick="rr('share_cat', this.value)" type="radio" name="data[home][is_category]" value="1" {if $data.home.is_category}checked=""{/if}> {dr_lang('按栏目设置')} <span></span></label>
                             </div>
 
-                            <div  id="rr_share_cat_0" style="display: none">
+                            <div  id="rr_share_cat_0" style="display: none" class="margin-bottom-15">
                                 <div class="table-scrollable" style="padding: 10px">
                                     {template "member_auth_share_category.html"}
                                 </div>
@@ -184,7 +184,7 @@
                                 <label class="mt-radio mt-radio-outline"><input onclick="rr('form', this.value)" type="radio" name="data[home][is_form]" value="1" {if $data.home.is_form}checked=""{/if}> {dr_lang('按表单设置')} <span></span></label>
                             </div>
 
-                            <div  id="rr_form_0" style="display: none">
+                            <div  id="rr_form_0" style="display: none" class="margin-bottom-15">
                                 <div class="table-scrollable" style="padding: 10px">
                                     {template "member_auth_form.html"}
                                 </div>
@@ -253,7 +253,7 @@
                                     <label class="mt-radio mt-radio-outline"><input onclick="rr('module_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_category]" value="1" {if $data['module'][$mid]['is_category']}checked=""{/if}> {dr_lang('按栏目设置')} <span></span></label>
                                 </div>
 
-                                <div  id="rr_module_{$mid}_cat_0" style="display: none">
+                                <div  id="rr_module_{$mid}_cat_0" style="display: none" class="margin-bottom-15">
                                     <div class="table-scrollable" style="padding: 10px">
                                         {template "member_auth_category.html"}
                                     </div>
@@ -305,7 +305,7 @@
                                     <label class="mt-radio mt-radio-outline"><input onclick="rr('mform_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_mform]" value="1" {if $data['module'][$mid]['is_mform']}checked=""{/if}> {dr_lang('按表单设置')} <span></span></label>
                                 </div>
 
-                                <div  id="rr_mform_{$mid}_cat_0" style="display: none">
+                                <div  id="rr_mform_{$mid}_cat_0" style="display: none" class="margin-bottom-15">
                                     <div class="table-scrollable" style="padding: 10px">
                                         {template "member_auth_mform.html"}
                                     </div>

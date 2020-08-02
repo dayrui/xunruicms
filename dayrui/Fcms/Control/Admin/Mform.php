@@ -88,10 +88,10 @@ class Mform extends \Phpcmf\Table
     // 后台查看列表
     protected function _Admin_List() {
 
-        list($tpl) = $this->_List(['cid' =>  $this->cid]);
+        list($tpl) = $this->_List(['cid' => $this->cid]);
 
         \Phpcmf\Service::V()->assign([
-            'p' => ['cid' =>  $this->cid],
+            'p' => ['cid' => $this->cid],
             'clink' => $this->_app_clink('mform'),
             'cbottom' => $this->_app_cbottom('mform'),
         ]);
