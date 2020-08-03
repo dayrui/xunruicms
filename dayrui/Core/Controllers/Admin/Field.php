@@ -90,10 +90,10 @@ class Field extends \Phpcmf\Common
                 if ($obj) {
                     if ($obj->use_xss) {
                         // 强制开启xss
-                        $t['setting']['validate']['xss'] = 0;
+                        $t['setting']['validate']['xss'] = 1;
                     } elseif ($obj->close_xss) {
                         // 强制关闭xss
-                        $t['setting']['validate']['xss'] = 1;
+                        $t['setting']['validate']['xss'] = 0;
                     }
                 }
 
@@ -242,10 +242,10 @@ class Field extends \Phpcmf\Common
         if ($obj) {
             if ($obj->use_xss) {
                 // 强制开启xss
-                $data['setting']['validate']['xss'] = 0;
+                $data['setting']['validate']['xss'] = 1;
             } elseif ($obj->close_xss) {
                 // 强制关闭xss
-                $data['setting']['validate']['xss'] = 1;
+                $data['setting']['validate']['xss'] = 0;
             }
         }
 
