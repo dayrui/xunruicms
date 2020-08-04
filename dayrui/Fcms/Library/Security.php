@@ -17,7 +17,7 @@ class Security {
 	 *
 	 * @var	array
 	 */
-	public $filename_bad_chars =	array(
+	public $filename_bad_chars = [
 		'../', '<!--', '-->', '<', '>',
 		"'", '"', '&', '$', '#',
 		'{', '}', '[', ']', '=',
@@ -34,7 +34,7 @@ class Security {
 		'%3f',		// ?
 		'%3b',		// ;
 		'%3d'		// =
-	);
+    ];
 
 	/**
 	 * Character set
@@ -59,7 +59,7 @@ class Security {
 	 *
 	 * @var	array
 	 */
-	protected $_never_allowed_str =	array(
+	protected $_never_allowed_str =	[
 		'document.cookie' => '[removed]',
 		'(document).cookie' => '[removed]',
 		'document.write'  => '[removed]',
@@ -72,7 +72,12 @@ class Security {
 		'<![CDATA['       => '&lt;![CDATA[',
 		'<comment>'	  => '&lt;comment&gt;',
 		'<%'              => '&lt;&#37;'
-	);
+    ];
+
+	// 替换前的处理
+	protected $_never_call_str = [
+        'javascript:;'    => 'javascript_xunruicms:;',
+    ];
 
 	/**
 	 * List of never allowed regex replacements
@@ -144,8 +149,6 @@ class Security {
             return '[removed]'; // 判断含有乱码直接过滤为空
         }
 
-		// Remove Invisible Characters
-		$str = remove_invisible_characters($str);
 		/*
 		 * URL Decode
 		 *
@@ -838,12 +841,16 @@ class Security {
 	 */
 	protected function _do_never_allowed($str)
 	{
+
+        $str = str_replace(array_keys($this->_never_call_str), $this->_never_call_str, $str);
 		$str = str_replace(array_keys($this->_never_allowed_str), $this->_never_allowed_str, $str);
 
 		foreach ($this->_never_allowed_regex as $regex)
 		{
 			$str = preg_replace('#'.$regex.'#is', '[removed]', $str);
 		}
+
+		$str = str_replace($this->_never_call_str, array_keys($this->_never_call_str), $str);
 
 		return $str;
 	}
