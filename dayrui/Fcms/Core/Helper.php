@@ -467,27 +467,6 @@ function dr_star_level($num, $shifen = 0) {
     return @implode('', $shi);
 }
 
-/**
- * 301域名定位
- */
-if (!function_exists('dr_domain_301')) {
-    function dr_domain_301($domain, $uri = '') {
-
-        !$uri && $uri = (isset($_SERVER['HTTP_X_REWRITE_URL']) && trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : ''));
-        $url = rtrim($domain, '/').'/'.$uri;
-
-        if ($url == dr_now_url()) {
-            return;
-        }
-
-        if (IS_DEV) {
-            \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
-        }
-
-        dr_redirect($url, 'auto', 301);exit;
-    }
-}
-
 // 格式化sql创建
 function dr_format_create_sql($sql) {
     $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));

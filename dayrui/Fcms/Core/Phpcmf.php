@@ -117,7 +117,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (!IS_API && !IS_ADMIN
             && in_array(DOMAIN_NAME, $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
             // 当前域名既不是手机域名也不是电脑域名就301定向网站的域名
-            dr_domain_301(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
+            \Phpcmf\Service::L('Router')->is_redirect_url(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
         }
 
         // 客户端识别
@@ -261,19 +261,18 @@ abstract class Common extends \CodeIgniter\Controller
                     // 这是移动端
                     if (isset($client[DOMAIN_NAME])) {
                         // 表示这个域名属于电脑端,需要跳转到移动端
-                        dr_domain_301(dr_http_prefix($client[DOMAIN_NAME].'/'));
+                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($client[DOMAIN_NAME].'/'));
                     }
                 } else {
                     // 这是电脑端
                     if (in_array(DOMAIN_NAME, $client)) {
                         // 表示这个域名属于移动端,需要跳转到pc
                         $arr = array_flip($client);
-                        dr_domain_301(dr_http_prefix($arr[DOMAIN_NAME].'/'));
+                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($arr[DOMAIN_NAME].'/'));
                     }
                 }
             }
         }
-
         // 判断网站是否关闭
         if (!IS_DEV && !IS_ADMIN && !IS_API
             && $this->site_info[SITE_ID]['SITE_CLOSE']

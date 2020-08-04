@@ -97,38 +97,14 @@ class Router
     // 判断满足定向跳转的条件 page单页, indexc首页, indexm模块首页, category栏目页, show内容
     function is_redirect($type, $url)
     {
-
-        // 不调整的条件
-        if (defined('IS_NOT_301')) {
-            return;
-        } elseif (!$url || strpos($url, 'http') === FALSE) {
-            return; // 为空时排除
-        } elseif (IS_API) {
-            return; // 排除接口
-        } elseif (IS_ADMIN) {
-            return; // 排除后台
-        } elseif (\Phpcmf\Service::IS_MOBILE()) {
-            return; // 排除移动端
-        } elseif (\Phpcmf\Service::_is_mobile()) {
-            return; // 排除移动端
-        } elseif (defined('SC_HTML_FILE')) {
-            return; // 排除生成
-        } elseif (intval($_GET['page']) > 1) {
-            return; // 排除分页
-        } elseif (IS_CLIENT) {
-            return; // 排除终端
-        }
-
-        // 跳转
-        $url != dr_now_url() && dr_redirect($url, 'location', '301');
+        return $this->is_redirect_url($url);
     }
 
     // 判断满足定向跳转的条件
     function is_redirect_url($url)
     {
-
         // 不调整的条件
-        if (defined('IS_NOT_301')) {
+        if (defined('IS_NOT_301') && IS_NOT_301) {
             return;
         } elseif (!$url || strpos($url, 'http') === FALSE) {
             return; // 为空时排除
