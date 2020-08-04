@@ -3536,8 +3536,72 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $rt['myfield'] = \Phpcmf\Service::L('Field')->toform(0, $my_field, []);
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
-
     $rt['post_url'] = defined('SC_HTML_FILE') ? '/index.php?s='.$mid.'&c='.$table.'&m=post&cid='.$cid : dr_url($mid.'/'.$table.'/post', ['cid' => $cid]);
+
+    return $rt;
+}
+
+
+// 获取用户注册页面需要的变量值
+function dr_get_register_value($groupid = 0, $url = '') {
+
+    $rt = [
+        'form' => dr_form_hidden(['back' => $url]),
+        'debug' => 'debug返回正常',
+    ];
+
+    !$groupid && $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
+    if (!$groupid) {
+        $rt['debug'] = dr_lang('无效的用户组');
+        return $rt;
+    } elseif (!\Phpcmf\Service::C()->member_cache['group'][$groupid]['register']) {
+        $rt['debug'] = dr_lang('用户组[%s]不允许注册', \Phpcmf\Service::C()->member_cache['group'][$groupid]['name']);
+        return $rt;
+    }
+
+    // 初始化自定义字段类
+    \Phpcmf\Service::L('Field')->app('member');
+
+    // 获取该组可用注册字段
+    $field = [];
+    if (\Phpcmf\Service::C()->member_cache['group'][$groupid]['register_field']) {
+        foreach (\Phpcmf\Service::C()->member_cache['group'][$groupid]['register_field'] as $fname) {
+            $field[$fname] = \Phpcmf\Service::C()->member_cache['field'][$fname];
+            $field[$fname]['ismember'] = 1;
+        }
+    }
+
+    // 初始化自定义字段类
+    $my_field = $sys_field = $diy_field = [];
+
+    uasort($field, function($a, $b){
+        if($a['displayorder'] == $b['displayorder']){
+            return 0;
+        }
+        return($a['displayorder']<$b['displayorder']) ? -1 : 1;
+    });
+
+    foreach ($field as $i => $t) {
+        if ($t['setting']['is_right'] == 1) {
+            // 右边字段归类为系统字段
+            if (IS_ADMIN) {
+                $sys_field[$i] = $t;
+            } else {
+                $my_field[$i] = $t;
+            }
+
+        } elseif ($t['setting']['is_right'] == 2) {
+            // diy字段
+            $diy_field[$i] = $t;
+        } else {
+            $my_field[$i] = $t;
+        }
+    }
+
+    $rt['myfield'] = \Phpcmf\Service::L('Field')->toform(0, $my_field, []);
+    $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
+    $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
+    $rt['register'] = \Phpcmf\Service::C()->member_cache['register'];
 
     return $rt;
 }
