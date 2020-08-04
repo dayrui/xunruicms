@@ -95,13 +95,13 @@ class Router
     }
 
     // 判断满足定向跳转的条件 page单页, indexc首页, indexm模块首页, category栏目页, show内容
-    function is_redirect($type, $url)
+    public function is_redirect($type, $url)
     {
         return $this->is_redirect_url($url);
     }
 
     // 判断满足定向跳转的条件
-    function is_redirect_url($url)
+    public function is_redirect_url($url)
     {
         // 不调整的条件
         if (defined('IS_NOT_301') && IS_NOT_301) {
@@ -140,7 +140,7 @@ class Router
      * @param    array $query 相关参数
      * @return    string    项目入口文件.php?参数
      */
-    function url($url, $query = [], $self = SELF)
+    public function url($url, $query = [], $self = SELF)
     {
 
         if (!$url) {
@@ -218,7 +218,7 @@ class Router
      * @param    array $query 相关参数
      * @return    string    地址
      */
-    function member_url($url = '', $query = [], $null = '')
+    public function member_url($url = '', $query = [], $null = '')
     {
 
         if (!$url || $url == 'home/index' || $url == '/') {
@@ -266,7 +266,7 @@ class Router
      * @param    intval $page
      * @return    string
      */
-    function category_url($mod, $data, $page = 0, $fid = 0)
+    public function category_url($mod, $data, $page = 0, $fid = 0)
     {
 
         if (!$mod || !$data) {
@@ -304,7 +304,7 @@ class Router
      * @param    mod $page
      * @return    string
      */
-    function show_url($mod, $data, $page = 0)
+    public function show_url($mod, $data, $page = 0)
     {
 
         if (!$mod || !$data) {
@@ -346,7 +346,7 @@ class Router
      * @param	intval	$page
      * @return	string
      */
-    function page_url($data, $page = 0)
+    public function page_url($data, $page = 0)
     {
 
         if (!$data) {
@@ -379,7 +379,7 @@ class Router
     /**
      * tag的url
      */
-    function tag_url($name)
+    public function tag_url($name)
     {
 
         if (!$name) {
@@ -407,7 +407,7 @@ class Router
     }
 
     // 缓存读取url
-    function get_tag_url($name, $mid = '') {
+    public function get_tag_url($name, $mid = '') {
 
         if (!$name) {
             return '/#无name参数';
@@ -433,7 +433,7 @@ class Router
     }
 
     // 模块URL
-    function module_url($mod, $sid)
+    public function module_url($mod, $sid)
     {
 
         // 绑定域名的情况下
@@ -460,7 +460,7 @@ class Router
      * @param    string $fid 指定fid
      * @return    string
      */
-    function search_url($params = [], $name = '', $value = '', $mid = '', $fid = SITE_FID)
+    public function search_url($params = [], $name = '', $value = '', $mid = '', $fid = SITE_FID)
     {
 
         // 模块目录识别
@@ -518,7 +518,7 @@ class Router
     }
 
     // 评论地址
-    function comment_url($id, $moddir = '')
+    public function comment_url($id, $moddir = '')
     {
 
         // 模块目录识别
@@ -535,7 +535,7 @@ class Router
     }
 
     // 打赏
-    function donation_url($id, $moddir = '')
+    public function donation_url($id, $moddir = '')
     {
 
         if (!dr_is_app('shang')) {
@@ -554,7 +554,7 @@ class Router
     }
 
     // 模块表单内容地址
-    function mform_show_url($form, $id, $moddir = '', $page = 0)
+    public function mform_show_url($form, $id, $moddir = '', $page = 0)
     {
 
         // 模块目录识别
@@ -571,7 +571,7 @@ class Router
     }
 
     // 模块表单提交地址
-    function mform_post_url($form, $cid, $moddir = '')
+    public function mform_post_url($form, $cid, $moddir = '')
     {
 
         // 模块目录识别
@@ -588,7 +588,7 @@ class Router
     }
 
     // 模块表单列表地址
-    function mform_list_url($form, $cid, $moddir = '', $page = 0)
+    public function mform_list_url($form, $cid, $moddir = '', $page = 0)
     {
 
         // 模块目录识别
@@ -605,35 +605,35 @@ class Router
     }
 
     // 网站表单内容地址
-    function form_show_url($form, $id, $page = 0)
+    public function form_show_url($form, $id, $page = 0)
     {
 
         return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=show&id=' . $id . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
     }
 
     // 网站表单提交地址
-    function form_post_url($form)
+    public function form_post_url($form)
     {
 
         return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=post';
     }
 
     // 网站表单列表地址
-    function form_list_url($form, $page = 0)
+    public function form_list_url($form, $page = 0)
     {
 
         return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
     }
 
     // 快捷登录地址
-    function oauth_url($name, $type, $gourl = '')
+    public function oauth_url($name, $type, $gourl = '')
     {
         return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
     }
 
 
     // 地址前缀部分
-    function url_prefix($type, $mod = [], $cat = [], $fid = 0)
+    public function url_prefix($type, $mod = [], $cat = [], $fid = 0)
     {
 
         $dir = isset($mod['dirname']) ? $mod['dirname'] : '';
