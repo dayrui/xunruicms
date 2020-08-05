@@ -9,18 +9,18 @@
 <style>
 
     #clipArea {
-        margin: 20px;
+        margin-top: 20px;
         height: 300px;
+        width: 300px;
     }
     #file,
     #clipBtn {
         margin: 5px;
     }
     #view {
-        margin: 0 auto;
-        width: 200px;
-        height: 200px;
+        width: 300px; text-align: center; padding: 50px
     }
+
 </style>
 {if $ci->member_cache['config']['avatar']}
 {if $member.is_avatar}
@@ -33,52 +33,36 @@
 </div>
 {/if}
 {/if}
-    <div class="row">
 
-        <div class="col-md-12">
 
-            <div class="portlet light ">
-                <div class="portlet-title">
-                    <div class="caption">
-                        <span class="caption-subject"> 头像设置</span>
-                    </div>
-                </div>
-                <div class="portlet-body form fc-form">
-                    <div class="row">
-                        <div class="col-md-6">
+<div class="portlet light ">
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject"> 头像设置</span>
+        </div>
+    </div>
+    <div class="portlet-body form fc-form">
+        <div id="view"><img width="100" height="100" class="img-circle" src="{dr_avatar($member.uid)}?cache={SYS_TIME}"></div>
+        <div id="clipArea"></div>
 
-                            <div id="clipArea"></div>
+        <div class="form-body" style="width: 300px; text-align: center">
 
-                            <div class="form-body">
-
-                                <div class="form-group">
-                                    <div class="col-md-12 text-center">
-                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <span class="btn green btn-file">
                                                 <span class="fileinput-new"> 选择图片 </span>
                                                 <input type="file" id="file">
                                             </span>
-                                        </div>
-                                        <button type="button" class="btn btn-info" id="clipBtn"> 保存头像</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-md-6" {if IS_PC} style="padding-top:55px;"{/if}>
-                            <div id="view"><img width="200" height="200" src="{dr_avatar($member.uid)}?cache={SYS_TIME}"></div>
-                        </div>
-                    </div>
-
-                    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
-                        {$form}
-                    </form>
-                </div>
             </div>
-
+            <button type="button" class="btn btn-info" id="clipBtn"> 保存头像</button>
         </div>
 
+
     </div>
+
+    <form action="" class="form-horizontal" method="post" name="myform" id="myform">
+        {$form}
+    </form>
+</div>
 
 <script>
     var clipArea = new bjj.PhotoClip("#clipArea", {
