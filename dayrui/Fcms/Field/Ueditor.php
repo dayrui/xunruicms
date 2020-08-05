@@ -352,8 +352,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 }
             }
         }
-        var_dump($value);
-        exit;
 
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description']) && !$_POST['data']['description']) {
