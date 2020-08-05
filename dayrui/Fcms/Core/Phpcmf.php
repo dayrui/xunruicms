@@ -866,7 +866,7 @@ abstract class Common extends \CodeIgniter\Controller
                         }
                     }
                     // 权限验证
-                    if ($obj->is_link_auth(APP_DIR)) {
+                    if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
                         $data = $_clink;
                     }
                 } else {
@@ -898,7 +898,7 @@ abstract class Common extends \CodeIgniter\Controller
                                 }
                             }
                             // 权限验证
-                            if ($obj->is_link_auth(APP_DIR)) {
+                            if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink) ;
                             }
                         } else {
@@ -976,7 +976,8 @@ abstract class Common extends \CodeIgniter\Controller
             $_clink = require APPPATH.'Config/Cbottom'.$endfix.'.php';
             if ($_clink) {
                 if (is_file(APPPATH.'Models/Auth'.$endfix.'.php')) {
-                    if (\Phpcmf\Service::M('auth'.$endfix.'', APP_DIR)->is_bottom_auth(APP_DIR)) {
+                    $obj = \Phpcmf\Service::M('auth'.$endfix, APP_DIR);
+                    if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
                         $data = array_merge($data , $_clink);
                     }
                 } else {
@@ -1000,7 +1001,8 @@ abstract class Common extends \CodeIgniter\Controller
                     $_clink = require $path.'Config/Cbottom'.$endfix.'.php';
                     if ($_clink) {
                         if (is_file($path.'Models/Auth'.$endfix.'.php')) {
-                            if (\Phpcmf\Service::M('auth'.$endfix.'', $dir)->is_bottom_auth(APP_DIR)) {
+                            $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
+                            if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink);
                             }
                         } else {
