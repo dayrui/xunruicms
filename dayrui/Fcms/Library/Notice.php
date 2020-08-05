@@ -98,7 +98,7 @@ class Notice {
                 $xml = $this->_xml_array($rt['msg']);
                 if (!$xml || !isset($xml['xml']) || !$xml['xml']) {
                     $error[] = $debug = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
-                    CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
+                    CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）微信执行失败：'.$debug.'<br>'.$rt['msg']);
                 } else {
                     $content = $xml['xml'];
                     $rt = \Phpcmf\Service::M('member')->wexin_template($value['data']['uid'], $content['id'], $content['param'], $content['url']);
@@ -197,14 +197,14 @@ class Notice {
             $my = '';
         }
 
-        $content = $my ? $my : file_get_contents(ROOTPATH.'config/notice/'.$type.'/'.$name.'.html');
-        if (!$content) {
+        $content_code = $my ? $my : file_get_contents(ROOTPATH.'config/notice/'.$type.'/'.$name.'.html');
+        if (!$content_code) {
             return dr_return_data(0, '模板不存在【config/notice/'.$type.'/'.$name.'.html】');
         }
 
         ob_start();
-        extract($data);
-        $file = \Phpcmf\Service::V()->code2php($content);
+        extract($data, EXTR_OVERWRITE);
+        $file = \Phpcmf\Service::V()->code2php($content_code);
         require $file;
         $code = ob_get_clean();
 

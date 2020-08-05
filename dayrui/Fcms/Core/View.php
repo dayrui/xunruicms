@@ -208,7 +208,7 @@ class View {
             \Phpcmf\Service::C()->_json(1, 'view', $this->_options);
         }
 
-        extract($this->_options);
+        extract($this->_options, EXTR_OVERWRITE);
 
         $this->_filename = str_replace('..', '[removed]', $xunruicms_name);
 
@@ -540,11 +540,11 @@ class View {
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php \\1 ?>",
-            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
-            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return); \$count=dr_count(\$return);} if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
+            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
+            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return);} if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
-            "<?php \$return_count_\\2 = [];\$list_return_count_\\2 = \$this->list_tag(\"count \\1 return=\\2\"); if (\$list_return_count_\\2) { extract(\$list_return_count_\\2); }  \$\\2_count=intval(\$return_count[0]['ct']);  ?>",
-            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count); }  echo intval(\$return_count[0]['ct']);   ?>",
+            "<?php \$return_count_\\2 = [];\$list_return_count_\\2 = \$this->list_tag(\"count \\1 return=\\2\"); if (\$list_return_count_\\2) { extract(\$list_return_count_\\2, EXTR_OVERWRITE); }  \$\\2_count=intval(\$return_count[0]['ct']);  ?>",
+            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count, EXTR_OVERWRITE); }  echo intval(\$return_count[0]['ct']);   ?>",
             "<?php if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
