@@ -113,6 +113,11 @@ class Install extends \Phpcmf\Common
                     $is_oem = isset($ls['oem']) && $ls['oem'] ? 1 : 0;
                 }
 
+                // 判断是否是win7电脑,不进行测试数据安装
+                if (isset($_SERVER['HTTP_USER_AGENT']) && strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows nt 6.1') !== false) {
+                    $is_oem = 1;
+                }
+
                 if (IS_AJAX_POST) {
 
                     $data = $_POST['data'];
