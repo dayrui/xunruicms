@@ -2521,7 +2521,11 @@ class View {
                         break;
 
                     case 'YEAR':
-                        if (substr($t['value'], 0, 1) == 'E') {
+                        if (strlen($t['value']) == 4) {
+                            // 按年份值
+                            $stime = strtotime($t['value'].'-01-01 00:00:00');
+                            $etime = strtotime($t['value'].'-12-31 23:59:59');
+                        } elseif (substr($t['value'], 0, 1) == 'E') {
                             // 今年
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = strtotime(date('Y', $stime).'-12-31 23:59:59');
