@@ -89,24 +89,27 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-1 control-label"> &nbsp; &nbsp;</label>
                     <div class="col-md-9">
                         <div class="form-group">
-                            <label class="col-md-2 control-label">'.dr_lang("提取缩略图").'</label>
+                            <label class="col-md-2 control-label">'.dr_lang("提取描述").'</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][option][down_img_1]" value="1" '.($option['down_img_1'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                              
+                                <input type="checkbox" name="data[setting][option][tool_select_2]" value="1" '.($option['tool_select_2'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">'.dr_lang("提取描述").'</label>
+                            <label class="col-md-2 control-label">'.dr_lang("提取缩略图").'</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][option][down_img_2]" value="1" '.($option['down_img_2'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                              
+                                <input type="checkbox" name="data[setting][option][tool_select_1]" value="1" '.($option['tool_select_1'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">'.dr_lang("下载远程图").'</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][option][down_img_3]" value="1" '.($option['down_img_3'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                              
+                                <input type="checkbox" name="data[setting][option][tool_select_3]" value="1" '.($option['tool_select_3'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">                             
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">'.dr_lang("去除站外链接").'</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][option][tool_select_4]" value="1" '.($option['tool_select_4'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">                             
                             </div>
                         </div>
                     </div>
@@ -262,7 +265,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         $arr = parse_url($img);
                         $domain = $arr['host'];
                         if ($domain) {
-                            $sites = WRITEPATH.'config/domain_site.php';
+                            $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
                             if (isset($sites[$domain])) {
                                 // 过滤站点域名
                             } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
@@ -332,6 +335,25 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 }
             }
         }
+
+        // 去除站外链接
+        if (isset($_POST['is_remove_a']) && $_POST['is_remove_a'] && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
+            $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
+            foreach ($arrs[2] as $i => $a) {
+                if (strpos($a, ' ') !== false) {
+                    list($a) = explode(' ', $a);
+                }
+                $a = trim($a, '"');
+                $a = trim($a, '\'');
+                $arr = parse_url($a);
+                if ($arr && $arr['host'] && !isset($sites[$arr['host']])) {
+                    // 去除a标签
+                    $value = str_replace($arrs[0][$i], $arrs[3][$i], $value);
+                }
+            }
+        }
+        var_dump($value);
+        exit;
 
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description']) && !$_POST['data']['description']) {
@@ -499,18 +521,22 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
             $str.= '<div class="mt-checkbox-inline" style="margin-top: 10px;">';
             $str.= '     <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_thumb" type="checkbox" '.($field['setting']['option']['down_img_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
+                  <input name="is_auto_thumb" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description" type="checkbox" '.($field['setting']['option']['down_img_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
+                  <input name="is_auto_description" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
                  </label>';
             if (!$field['setting']['option']['down_img']) {
                 $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_down_img" type="checkbox" '.($field['setting']['option']['down_img_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
+                  <input name="is_auto_down_img" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
                  </label>';
             }
+            $str.= '
+                 <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
+                  <input name="is_remove_a" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> 去除站外链接 <span></span>
+                 </label>';
             $str.= '</div>';
         }
 
