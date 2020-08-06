@@ -28,7 +28,7 @@ class Mform extends \Phpcmf\Table
         if (!$this->form) {
             $this->_msg(0, dr_lang('模块表单【%s】不存在', \Phpcmf\Service::L('Router')->class));
         } elseif (!$this->form['setting']['is_member']) {
-            $this->_msg(0, dr_lang('模块表单【%s】没有管理内容的权限', \Phpcmf\Service::L('Router')->class));
+            $this->_msg(0, dr_lang('模块表单【%s】没有开启管理内容功能', \Phpcmf\Service::L('Router')->class));
         }
         // 支持附表存储
         $this->is_data = 1;
