@@ -8,6 +8,25 @@
 class Api extends \Phpcmf\Common
 {
 
+    // 查看流程
+    public function verify() {
+
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        if (!$id) {
+            $this->_json(0, dr_lang('审核流程id不存在'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table('admin_verify')->where('id', $id)->get()->getRowArray();
+        if (!$data) {
+            $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'value' => dr_string2array($data['verify']),
+        ]);
+        \Phpcmf\Service::V()->display('verify_show.html');exit;
+    }
+
     // 来自快捷登录
     public function oauth() {
 

@@ -93,25 +93,6 @@ class Verify extends \Phpcmf\Table
         $this->_json(1, dr_lang('复制成功'));
     }
 
-    // 查看流程
-    public function show_index() {
-
-        $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        if (!$id) {
-            $this->_json(0, dr_lang('审核流程id不存在'));
-        }
-
-        $data = \Phpcmf\Service::M()->db->table('admin_verify')->where('id', $id)->get()->getRowArray();
-        if (!$data) {
-            $this->_json(0, dr_lang('数据#%s不存在', $id));
-        }
-
-        \Phpcmf\Service::V()->assign([
-            'value' => dr_string2array($data['verify']),
-        ]);
-        \Phpcmf\Service::V()->display('verify_show.html');exit;
-    }
-
 
     // 保存
     protected function _Save($id = 0, $data = [], $old = [], $func = null, $func2 = null) {
