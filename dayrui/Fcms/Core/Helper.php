@@ -2585,6 +2585,66 @@ function dr_module_comment($dir, $id) {
 }
 
 /**
+ * 模块表单评论js调用
+ *
+ * @param	intval	$id
+ * @return	string
+ */
+function dr_mform_comment($dir, $fid,  $id) {
+    $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}";
+    return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\">
+	function dr_ajax_mform_{$fid}_comment_{$id}(type, page) {
+		var index = layer.load(2, { time: 10000 });
+	    $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\",
+            success: function (data) {
+            	layer.close(index);
+            	if (data.code) {
+					$(\"#dr_mform_{$fid}comment_{$id}\").html(data.msg);
+				} else {
+					dr_tips(0, data.msg);
+				}
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll();
+                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
+            }
+        });
+	}
+	dr_ajax_mform_{$fid}_comment_{$id}(0, 1);
+	</script>";
+}
+
+/**
+ * 网站表单评论js调用
+ *
+ * @param	intval	$id
+ * @return	string
+ */
+function dr_form_comment($fid, $id) {
+    $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}";
+    return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\">
+	function dr_ajax_form_{$fid}_comment_{$id}(type, page) {
+		var index = layer.load(2, { time: 10000 });
+	    $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\",
+            success: function (data) {
+            	layer.close(index);
+            	if (data.code) {
+					$(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg);
+				} else {
+					dr_tips(0, data.msg);
+				}
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll();
+                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
+            }
+        });
+	}
+	dr_ajax_form_{$fid}_comment_{$id}(0, 1);
+	</script>";
+}
+
+/**
  * 动态调用模板
  */
 function dr_ajax_template($id, $filename) {

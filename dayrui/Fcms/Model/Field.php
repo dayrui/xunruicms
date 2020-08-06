@@ -96,9 +96,23 @@ class Field extends \Phpcmf\Model
                 if (strpos($field['relatedname'], 'comment-module') !== false) {
                     // 模块评论字段
                     list($a, $b, $module) = explode('-', $field['relatedname']);
+                    $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
+                    if (!$cache) {
+                        $table = $siteid . '_' . $cache['dirname'] . '_comment';
+                    }
+                } elseif (strpos($field['relatedname'], 'comment-mform') !== false) {
+                    // 模块表单评论字段
+                    list($a, $b, $module, $fid) = explode('-', $field['relatedname']);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
                     if (!$cache) {
-                        $table = $siteid.'_'.$cache['dirname'].'_comment';
+                        $table = $siteid.'_'.$cache['dirname'].'_form_'.$fid.'_comment';
+                    }
+                } elseif (strpos($field['relatedname'], 'comment-form') !== false) {
+                    // 网站评论字段
+                    list($a, $b, $fid) = explode('-', $field['relatedname']);
+                    $cache = \Phpcmf\Service::L('cache')->get('form-'.$field['relatedid'], $fid);
+                    if (!$cache) {
+                        $table = $siteid.'_form_'.$cache['table'].'_comment';
                     }
                 } else {
                     // 识别栏目模型字段

@@ -439,7 +439,7 @@ class Model {
     /*
      * 获取单个数据
      * */
-    public function get_row() {
+    public function get_row($id = 0, $id2 = 0) {
         return $this->getRow();
     }
     public function getRow() {

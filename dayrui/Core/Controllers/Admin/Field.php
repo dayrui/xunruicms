@@ -534,17 +534,54 @@ class Field extends \Phpcmf\Common
                 if (strpos($this->relatedname, 'comment-module') !== false) {
                     // 模块评论字段
                     if (!dr_is_app('comment')) {
-                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));
+                        exit;
                     }
                     $ismain = 1;
                     list($a, $b, $module) = explode('-', $this->relatedname);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
+                    $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
                     if (!$cache) {
-						$this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-					}
-                    $this->name = '模块【'.$cache['dirname'].'】评论字段';
+                        $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                    }
+                    $this->name = '模块【' . $cache['name'] . '】评论字段';
                     $this->data = $cache['dirname'];
                     $this->backurl = \Phpcmf\Service::L('Router')->url('comment/module/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $cache['dirname'];
+                    $this->namespace = $cache['dirname'];
+                } elseif (strpos($this->relatedname, 'comment-mform') !== false) {
+                    // 模块评论字段
+                    if (!dr_is_app('comment')) {
+                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                    }
+                    $ismain = 1;
+                    list($a, $b, $module, $fid) = explode('-', $this->relatedname);
+                    $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
+                    if (!$cache) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                    } elseif (!$cache['form'][$fid]) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】表单【%s】缓存不存在', $module, $fid));
+                    }
+                    $this->name = '模块【'.$cache['name'].'】表单【'.$cache['form'][$fid]['name'].'】评论字段';
+                    $this->data = $cache['dirname'];
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/mform/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $cache['dirname'];
+                    $this->namespace = $cache['dirname'];
+                } elseif (strpos($this->relatedname, 'comment-form') !== false) {
+                    // 表单评论字段
+                    if (!dr_is_app('comment')) {
+                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                    }
+                    $ismain = 1;
+                    list($a, $b, $fid) = explode('-', $this->relatedname);
+                    $cache = \Phpcmf\Service::L('cache')->get('form-'.$this->relatedid, $fid);
+                    if (!$cache) {
+                        $this->_admin_msg(0, dr_lang('表单【%s】缓存不存在', $fid));
+                    }
+                    $this->name = '表单【'.$cache[$fid]['name'].'】评论字段';
+                    $this->data = $cache['dirname'];
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/form/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $cache['dirname'];
                     $this->namespace = $cache['dirname'];

@@ -27,7 +27,7 @@
         /**
          * 设置应用
          */
-        public function app($name) {
+        public function app($name = '') {
             $this->app = $name;
             return $this;
         }
