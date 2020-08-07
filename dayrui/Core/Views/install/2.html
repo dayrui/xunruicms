@@ -111,8 +111,8 @@
                 } else {
                     layer.close(loading);
                     layer.alert(json.msg);
+					$('#dr_loading').hide();
                 }
-                $('#dr_loading').hide();
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 layer.closeAll('loading');
