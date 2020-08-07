@@ -123,7 +123,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                              &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">编辑器图标栏会固定在页面，不会随浏览器滚动</span>
+						<span class="help-block">当开启时，在完整模式下，编辑器图标栏会固定在页面，不会随浏览器滚动</span>
                     </div>
                 </div>
                 
