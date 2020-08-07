@@ -178,15 +178,15 @@ class Form
                         // 开始验证必填字段
                         if ($value == '') {
                             // 验证值为空
-                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? dr_lang($validate['errortips']) : dr_lang('%s不能为空', $field['name'])]];
                         } elseif ($field['fieldtype'] == 'Linkage' && !$value) {
                             // 当类别为联动时判定0值
-                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? dr_lang($validate['errortips']) : dr_lang('%s不能为空', $field['name'])]];
                         }
                     }
                     // 正则验证
                     if (!is_array($value) && $validate['pattern'] && !preg_match($validate['pattern'], $value)) {
-                        return [[], ['name' => $name, 'error' => $field['name'].'：'.($validate['errortips'] ? $validate['errortips'] : dr_lang('格式不正确'))]];
+                        return [[], ['name' => $name, 'error' => $field['name'].'：'.($validate['errortips'] ? dr_lang($validate['errortips']) : dr_lang('格式不正确'))]];
                     }
                 }
                 // 编辑器长度判断
@@ -202,7 +202,7 @@ class Form
                             if ('check_member' == $method && $value == 'guest') {
                                 // 游客不验证
                             } else {
-                                $rt = call_user_func_array(array($this, $method), [$value, $data, $old]);
+                                $rt = call_user_func_array([$this, $method], [$value, $data, $old]);
                                 if (!$rt['code']) {
                                     return [[], ['name' => $name, 'error' => $rt['msg']]];
                                 }
@@ -230,7 +230,7 @@ class Form
                         $method = substr($validate['filter'], 1);
                         if (method_exists($this, $method)) {
                             // 开始过滤
-                            $post[$name] = call_user_func_array(array($this, $method), [$value, $data, $old]);
+                            $post[$name] = call_user_func_array([$this, $method], [$value, $data, $old]);
                         } else {
                             log_message('error', "过滤方法 $method 不存在！".FC_NOW_URL);
                         }
