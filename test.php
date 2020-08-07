@@ -8,6 +8,18 @@ header('Content-Type: text/html; charset=utf-8');
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
 ini_set('display_errors', 1);
 
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+define('WEBPATH', dirname(__FILE__).'/');
+define('SYSTEMPATH', true);
+
+if (isset($_GET['log']) && $_GET['log']) {
+    if (!is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
+        exit('今天没有错误日志记录');
+    }
+    echo nl2br(file_get_contents(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php'));
+    exit;
+}
+
 // 判断环境
 if (version_compare(PHP_VERSION, '7.1.0') < 0) {
     exit("<font color=red>PHP版本必须在7.2以上</font>");
@@ -18,9 +30,6 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
 if (!function_exists('intl_is_failure')) {
     dr_echo_msg(0, "<font color=red>PHP版本需要安装intl扩展</font>");
 }
-
-define('WEBPATH', dirname(__FILE__).'/');
-
 
 require WEBPATH.'config/database.php';
 $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
@@ -90,6 +99,12 @@ if (!ini_get('allow_url_fopen')) {
 }
 if (!class_exists('ZipArchive')) {
     dr_echo_msg(0,'php_zip扩展未开启，无法使用应用市场功能');
+}
+
+// 存在错误日志
+if (is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
+    $log = file_get_contents(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php');
+    dr_echo_msg(1, '系统故障的错误日志记录：<a style="color:blue;text-decoration:none;" href="'.SELF.'?log=true">查看日志</a>');
 }
 
 // 输出
