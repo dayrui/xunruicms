@@ -442,8 +442,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 防止重复加载JS
         if (!$this->is_load_js($field['filetype'])) {
             $str.= '
-            <script type="text/javascript" src="/api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
-            <script type="text/javascript" src="/api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
+            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
+            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_DEV ? 'all.min' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
             $this->set_load_js($field['filetype'], 1);
         }
@@ -471,18 +471,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 $tool.= "'undo', 'redo', '|',
                         'bold', 'italic', 'underline', 'strikethrough','|', 'pasteplain', 'forecolor', 'fontfamily', 'fontsize','|', 'link', 'simpleupload'$pagebreak";
                 break;
-            case 1: // 默认
-                $tool.= "'undo', 'redo', '|',
-            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-            'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-            'directionalityltr', 'directionalityrtl', 'indent', '|',
-            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-            'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'attachment', 'map', 'insertframe', 'insertcode', 'template', 'background', '|',
-            'horizontal', 'date', 'time', 'spechars', '|',
-            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-            'print', 'preview', 'searchreplace', 'drafts'$pagebreak";
+            case 1: // 完整模式
+                $tool.= str_replace([PHP_EOL, chr(13), chr(10)], ' ', \Phpcmf\Service::R(ROOTPATH.'api/ueditor/php/tool.php'));
+                $tool.= "$pagebreak";
                 break;
         }
 
@@ -492,6 +483,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         <script type=\"text/javascript\">
             var editorOption = {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
+                UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
                 serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
                 lang: \"".SITE_LANGUAGE."\",
                 langPath: \"".ROOT_URL."api/language/\",

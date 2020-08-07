@@ -344,11 +344,11 @@ class Cache extends \Phpcmf\Model
         }
 
         // 复制百度编辑器到当前目录
-        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+        $this->_cp_ueditor_file($path);
 
         // 复制百度编辑器到移动端站点
         if (is_dir($path.'mobile')) {
-            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+            $this->_cp_ueditor_file($path.'mobile/');
         }
 
         return '';
@@ -366,15 +366,14 @@ class Cache extends \Phpcmf\Model
                 $path = WEBPATH;
             }
             // 复制百度编辑器到当前目录
-            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+            $this->_cp_ueditor_file($path);
             // 复制百度编辑器到移动端站点
-            \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+            $this->_cp_ueditor_file($path.'mobile/');
             if ($t['setting']['client']) {
                 foreach ($t['setting']['client'] as $c) {
                     if ($c['name'] && $c['domain']) {
-                        $path = $path.$c['name'].'/';
                         // 复制百度编辑器到当前目录
-                        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+                        $this->_cp_ueditor_file($path.$c['name'].'/');
                     }
                 }
             }
@@ -392,14 +391,25 @@ class Cache extends \Phpcmf\Model
                 if ($t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
                     $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
                     // 复制百度编辑器到当前目录
-                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'api/ueditor/');
+                    $this->_cp_ueditor_file($path);
                     // 复制百度编辑器到移动端站点
-                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/', ROOTPATH.'api/ueditor/', $path.'mobile/api/ueditor/');
+                    $this->_cp_ueditor_file($path.'mobile/');
                 }
             }
         }
     }
 
+    // 复制编辑器
+    private function _cp_ueditor_file($path) {
+
+        $npath = $path.'api/ueditor/';
+        dr_mkdirs($npath);
+
+        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/dialogs/', ROOTPATH.'api/ueditor/dialogs/', $npath.'dialogs/');
+        \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/third-party/', ROOTPATH.'api/ueditor/third-party/', $npath.'third-party/');
+    }
+
+    // 错误输出
     private function _error_msg($msg) {
         echo dr_array2string(dr_return_data(0, $msg));exit;
     }
