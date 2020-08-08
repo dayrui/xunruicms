@@ -188,6 +188,7 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'html',
             WRITEPATH.'caching',
             WRITEPATH.'template',
+            WRITEPATH.'debugbar',
         ];
 
         // 开发者模式下不删除temp目录

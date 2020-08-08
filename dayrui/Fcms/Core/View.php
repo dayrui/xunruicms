@@ -219,6 +219,14 @@ class View {
         $this->_disp_dir = $xunruicms_dir;
         $_view_file = $this->get_file_name($this->_filename, $xunruicms_dir);
 
+        if ((IS_DEV || (IS_ADMIN && SYS_DEBUG))
+            && !isset($_GET['callback']) && !isset($_GET['is_ajax'])
+            && !IS_API_HTTP && !IS_AJAX) {
+            echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
+        } else {
+            $this->_options = null;
+        }
+
         include $this->load_view_file($_view_file);
 
         $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
@@ -226,11 +234,6 @@ class View {
         // 消毁变量
         $this->_include_file = null;
         $this->loadjs = null;
-
-        // 非开发者模式下清除变量
-        if (!IS_DEV && !CI_DEBUG) {
-            $this->_options = null;
-        }
     }
 
     // 动态加载js
