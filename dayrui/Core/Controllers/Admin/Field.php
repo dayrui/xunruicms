@@ -178,18 +178,22 @@ class Field extends \Phpcmf\Common
 
 	public function add() {
 
-		// 初始化部分值
+        $id = 0;
+		$page = max((int)\Phpcmf\Service::L('input')->post('page'), 0);
+
+        // 初始化部分值
         $data = [
+            'ismember' => 1,
+            'ismain' => 1,
+            'fieldtype' => '',
             'setting' => [
+                'option' => [],
                 'validate' => [
                     'xss' => 1,
+                    'required' => 0,
                 ],
             ],
         ];
-		$page = max((int)\Phpcmf\Service::L('input')->post('page'), 0);
-		$data['fieldtype'] = $data['setting']['option'] = '';
-		$data['setting']['validate']['required'] = $id = 0;
-		$data['ismain'] = 1;
 
 		// 提交表单
 		if (IS_AJAX_POST) {
