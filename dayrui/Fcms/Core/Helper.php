@@ -2599,7 +2599,7 @@ function dr_mform_comment($dir, $fid,  $id) {
             success: function (data) {
             	layer.close(index);
             	if (data.code) {
-					$(\"#dr_mform_{$fid}comment_{$id}\").html(data.msg);
+					$(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg);
 				} else {
 					dr_tips(0, data.msg);
 				}
