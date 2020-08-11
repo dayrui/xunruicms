@@ -18,8 +18,12 @@ class Cache extends \Phpcmf\Model
 
         $page = intval($_GET['page']);
         if (!$page) {
-            dr_mkdirs(WRITEPATH.'attach');
             dr_dir_delete(WRITEPATH.'attach');
+            dr_mkdirs(WRITEPATH.'attach');
+            /*不清理缩略图文件是因为静态页面会导致缩略图404的悲剧
+            list($cache_path) = dr_thumb_path();
+            dr_dir_delete($cache_path);
+            dr_mkdirs($cache_path);*/
             exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1));
         }
 

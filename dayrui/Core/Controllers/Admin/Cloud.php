@@ -383,7 +383,7 @@ class Cloud extends \Phpcmf\Common
         }
 
         if (!$is_ok) {
-            $this->_json(0, '本站：应用程序'.($is_app ? '（'.$is_app.'）' : '').'压缩包存在问题，请尝试离线安装');
+            $this->_json(0, '本站：当前下载的应用程序'.($is_app ? '（'.$is_app.'）' : '').'压缩包已损坏，请尝试离线下载安装');
         }
 		
 		if ($is_app) {
