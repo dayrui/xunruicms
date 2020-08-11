@@ -730,6 +730,35 @@ class Module extends \Phpcmf\Table
         exit;
     }
 
+    // 后台修改定时时间
+    public function time_edit() {
+
+        // 说明来自定时页面
+        define('IS_MODULE_TIME', 1);
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $data = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id);
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('内容不存在'));
+        }
+
+        if (IS_POST) {
+            $time = strtotime(\Phpcmf\Service::L('input')->post('posttime'));
+            if ($time < SYS_TIME) {
+                $this->_json(0, dr_lang('定时时间不能晚于当前时间'));
+            }
+
+            \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->update($id, [
+                'posttime' => $time
+            ]);
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign('form', dr_form_hidden());
+        \Phpcmf\Service::V()->assign('posttime', dr_date($data['posttime'], 'Y-m-d H:i:s'));
+        \Phpcmf\Service::V()->display('share_time.html');exit;
+    }
+
+
     // 后台修改定时内容
     protected function _Admin_Time_Edit() {
 

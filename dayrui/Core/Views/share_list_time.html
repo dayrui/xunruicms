@@ -59,7 +59,7 @@
                 <th class="{dr_sorting('id')}" name="id">{dr_lang('主题')}</th>
                 <th class="{dr_sorting('catid')}" name="cait" width="150">{dr_lang('栏目')}</th>
                 <th class="{dr_sorting('uid')}" name="uid" width="150">{dr_lang('发布者')}</th>
-                <th class="{dr_sorting('posttime')}" name="posttime" width="160">{dr_lang('发布时间')}</th>
+                <th class="{dr_sorting('posttime')}" name="posttime" width="170">{dr_lang('定时发布时间')}</th>
                 <th>{dr_lang('操作')}</th>
             </tr>
             </thead>
@@ -84,7 +84,8 @@
                 <td>{dr_date($t.posttime, null, 'red')}</td>
                 <td>
                     {if $ci->_is_admin_auth('edit')}
-                    <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                    <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改内容')}</a></label>
+                    <label><a href="javascript:dr_iframe('{dr_lang('修改发布时间')}', '{dr_url($uriprefix.'/time_edit', ['id'=>$t.id])}', 0, '450px');" class="btn btn-xs blue"> <i class="fa fa-clock-o"></i> {dr_lang('修改发布时间')}</a></label>
                     {/if}
                     <label style="color:red">{$t.result}</label>
                 </td>
