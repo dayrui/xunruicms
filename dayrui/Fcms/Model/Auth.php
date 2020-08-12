@@ -227,13 +227,14 @@ class Auth extends \Phpcmf\Model {
         $data['role'] = $data['roleid'] = $data['site'] = $data['module'] = [];
         $data['system'] = [ 'uri' => [], 'mark' => []];
 
+        // 把多个管理员权限合并到一起
         foreach ($role_id as $i) {
             $data['role'][$i] = $role[$i]['name'] ? $role[$i]['name'] : [];
             $data['roleid'][$i] = $i;
-            $data['site'] = dr_array22array($data['site'], $role[$i]['site']);
-            $data['system']['uri'] = dr_array22array($data['system']['uri'], $role[$i]['system']['uri']);
-            $data['system']['mark'] = dr_array22array($data['system']['mark'], $role[$i]['system']['mark']);
-            $data['module'] = dr_array22array($data['module'], $role[$i]['module']);
+            $data['site'] = dr_array2array($data['site'], $role[$i]['site']);
+            $data['module'] = dr_array2array($data['module'], $role[$i]['module']);
+            $data['system']['uri'] = dr_array2array($data['system']['uri'], $role[$i]['system']['uri']);
+            $data['system']['mark'] = dr_array2array($data['system']['mark'], $role[$i]['system']['mark']);
         }
 
         // 非创始人验证登录权限
