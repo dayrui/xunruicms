@@ -3125,7 +3125,7 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
  */
 function dr_date($time = NULL, $format = SITE_TIME_FORMAT, $color = NULL) {
 
-    $time = (int) $time;
+    $time = (int)$time;
     if (!$time) {
         return '';
     }
@@ -3134,9 +3134,6 @@ function dr_date($time = NULL, $format = SITE_TIME_FORMAT, $color = NULL) {
     !$format && $format = 'Y-m-d H:i:s';
 
     $string = date($format, $time);
-    if (strpos($string, '1970') !== FALSE) {
-        return '';
-    }
 
     return $color && $time >= strtotime(date('Y-m-d 00:00:00')) && $time <= strtotime(date('Y-m-d 23:59:59')) ? '<font color="' . $color . '">' . $string . '</font>' : $string;
 }
