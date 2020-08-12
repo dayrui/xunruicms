@@ -1211,8 +1211,13 @@ class View {
 
             case 'table': // 表名查询
 
-                if (!$system['table']) {
+                if (!$system['table'] || !$system['table_site']) {
                     return $this->_return($system['return'], 'table参数不存在');
+                }
+
+                // 填充当前站点id的写法
+                if ($system['table_site']) {
+                    $system['table'] = SITE_ID.'_'.$system['table_site'];
                 }
 
                 $tableinfo = \Phpcmf\Service::L('cache')->get_data('table-'.$system['table']);
