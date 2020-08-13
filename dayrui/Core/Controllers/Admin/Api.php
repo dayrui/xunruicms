@@ -8,6 +8,46 @@
 class Api extends \Phpcmf\Common
 {
 
+    // 设置风格
+    public function set_theme() {
+
+        $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+        if (!$name) {
+            $this->_json(0, dr_lang('目录参数不能为空'));
+        }
+
+        if (!is_dir(WEBPATH.'static/'.$name)) {
+            $this->_json(0, dr_lang('当前目录不存在'));
+        }
+
+        $data = \Phpcmf\Service::M('Site')->config(SITE_ID);
+        $data['config']['SITE_THEME'] = $name;
+        \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $data['config']);
+        \Phpcmf\Service::M('cache')->sync_cache('');
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
+    // 设置模板
+    public function set_tpl() {
+
+        $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+        if (!$name) {
+            $this->_json(0, dr_lang('目录参数不能为空'));
+        }
+
+        if (!is_dir(TPLPATH.'pc/'.$name) && !is_dir(TPLPATH.'mobile/'.$name)) {
+            $this->_json(0, dr_lang('当前目录不存在'));
+        }
+
+        $data = \Phpcmf\Service::M('Site')->config(SITE_ID);
+        $data['config']['SITE_TEMPLATE'] = $name;
+        \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $data['config']);
+        \Phpcmf\Service::M('cache')->sync_cache('');
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
     // 查看流程
     public function verify() {
 

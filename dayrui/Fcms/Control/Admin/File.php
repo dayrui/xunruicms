@@ -29,6 +29,8 @@ class File extends \Phpcmf\Common
                     '模板市场' => ['cloud/template', 'fa fa-cloud'],
                 ]
             ),
+            'is_tpl' => strpos(\Phpcmf\Service::L('Router')->class, 'tpl_') === 0 ? 1 : 0,
+            'is_theme' => \Phpcmf\Service::L('Router')->class == 'theme' ? 1 : 0,
         ]);
     }
 

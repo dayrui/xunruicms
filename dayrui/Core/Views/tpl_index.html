@@ -50,6 +50,12 @@
                     <img src="{$t.thumb}" style="width:30px;">
                 </a>
                 {/if}
+                {if $is_root && $is_tpl && $t.name == SITE_TEMPLATE}
+                <span class="label label-sm label-success" style="margin-left: 10px;"> {dr_lang('当前模板')} </span>
+                {/if}
+                {if $is_root && $is_theme && $t.name == SITE_THEME}
+                <span class="label label-sm label-success" style="margin-left: 10px;"> {dr_lang('当前风格')} </span>
+                {/if}
             </td>
             <td><a href="{$t.cname_edit}">{$t.cname}</a></td>
             <td style="text-align:center">{$t.size}</td>
@@ -58,6 +64,12 @@
                 {if $ci->_is_admin_auth('edit')}
                 {if $t.edit}
                 <label><a href="{$t.edit}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                {/if}
+                {if $is_root && $is_tpl}
+                <label><a href="javascript:dr_ajax_confirm_url('{dr_url('api/set_tpl', ['name'=>$t.name])}', '{dr_lang('确定将它设为当前站的模板吗？')}', '{dr_now_url()}');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('设为当前模板')}</a></label>
+                {/if}
+                {if $is_root && $is_theme}
+                <label><a href="javascript:dr_ajax_confirm_url('{dr_url('api/set_theme', ['name'=>$t.name])}', '{dr_lang('确定将它设为当前站的风格吗？')}', '{dr_now_url()}');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('设为当前风格')}</a></label>
                 {/if}
                 {if $t.zip}
                 <label><a href="{$t.zip}" class="btn btn-xs red"> <i class="fa fa-file-zip-o"></i> {dr_lang('解压')}</a></label>
