@@ -86,7 +86,7 @@ class Member_paylog extends \Phpcmf\Table
             'not_pay' => 1,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '资金流水' => [ \Phpcmf\Service::L('Router')->class.'/index', 'fa fa-calendar'],
+                    '已付流水' => [ \Phpcmf\Service::L('Router')->class.'/index', 'fa fa-calendar'],
                     'help' => [ 594 ],
                 ]
             ),
@@ -102,7 +102,7 @@ class Member_paylog extends \Phpcmf\Table
             'not_pay' => 1,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '资金流水' => [\Phpcmf\Service::L('Router')->class.'/not_index', 'fa fa-calendar'],
+                    '未付流水' => [\Phpcmf\Service::L('Router')->class.'/not_index', 'fa fa-calendar'],
                     'help' => [ 595 ],
                 ]
             ),
@@ -115,15 +115,19 @@ class Member_paylog extends \Phpcmf\Table
         list($tpl, $data) = $this->_Post((int)\Phpcmf\Service::L('input')->get('id'), [], 1);
         if (!$data) {
 			$this->_admin_msg(0, dr_lang('支付记录不存在'));
-		} 
-        \Phpcmf\Service::V()->assign([
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '资金流水' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/'.($data['status'] ? 'index' : 'not_index'), 'fa fa-calendar'],
-                    '付款详情' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
-                ]
-            ),
-        ]);
+		}
+        if (!$data['status']) {
+            \Phpcmf\Service::V()->assign([
+                'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                    [
+                        '未付流水' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/not_index', 'fa fa-calendar'],
+                        '付款详情' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
+                    ]
+                ),
+                'reply_url' => str_replace('m=index', 'm=not_index', \Phpcmf\Service::V()->get_value('reply_url'))
+            ]);
+        }
+
         \Phpcmf\Service::V()->display('member_paylog_edit.html');
     }
 
