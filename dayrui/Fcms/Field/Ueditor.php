@@ -120,10 +120,19 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
-                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">当开启时，在完整模式下，编辑器图标栏会固定在页面，不会随浏览器滚动</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('过滤style属性').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][remove_style]" '.(!$option['remove_style'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][remove_style]" '.($option['remove_style'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                        </div>
+						<span class="help-block">当开启时，会过滤编辑器里面的style属性参数</span>
                     </div>
                 </div>
                 
@@ -132,7 +141,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][autoheight]" '.($option['autoheight'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
-                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][autoheight]" '.($option['autoheight'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						
@@ -144,7 +152,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][page]" '.($option['page'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
-                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][page]" '.(!$option['page'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						<span class="help-block">文章内容的分页功能</span>
@@ -156,9 +163,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][mode]" '.($option['mode'] == 1 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('完整').' <span></span></label>
-                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="2" name="data[setting][option][mode]" '.($option['mode'] == 2 ? 'checked' : '').' onclick="$(\'#bjqms1\').hide()"> '.dr_lang('精简').' <span></span></label>
-                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="3" name="data[setting][option][mode]" '.($option['mode'] == 3 ? 'checked' : '').' onclick="$(\'#bjqms1\').show()"> '.dr_lang('自定义').' <span></span></label>
                         </div>
                     </div>
@@ -351,6 +356,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     $value = str_replace($arrs[0][$i], $arrs[3][$i], $value);
                 }
             }
+        }
+
+        // 默认过滤style标签
+        if (!isset($field['setting']['option']['remove_style']) || !$field['setting']['option']['remove_style']) {
+            $value = preg_replace('/style=".*?"/iU', '', $value);
         }
 
         // 提取描述信息
