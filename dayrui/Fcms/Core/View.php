@@ -1211,7 +1211,7 @@ class View {
 
             case 'table': // 表名查询
 
-                if (!$system['table'] || !$system['table_site']) {
+                if (!$system['table'] && !$system['table_site']) {
                     return $this->_return($system['return'], 'table参数不存在');
                 }
 
