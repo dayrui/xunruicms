@@ -129,8 +129,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('过滤style属性').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][remove_style]" '.(!$option['remove_style'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
-                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][remove_style]" '.($option['remove_style'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][remove_style]" '.(!$option['remove_style'] ? 'checked' : '').' > '.dr_lang('全部过滤').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][remove_style]" '.($option['remove_style'] ==1 ? 'checked' : '').' > '.dr_lang('后台过滤').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="2" name="data[setting][option][remove_style]" '.($option['remove_style'] ==2 ? 'checked' : '').' > '.dr_lang('前端过滤').' <span></span></label>
                         </div>
 						<span class="help-block">当开启时，会过滤编辑器里面的style属性参数</span>
                     </div>
@@ -359,7 +360,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         // 默认过滤style标签
-        if (!isset($field['setting']['option']['remove_style']) || !$field['setting']['option']['remove_style']) {
+        if (!isset($field['setting']['option']['remove_style']) || !$field['setting']['option']['remove_style']
+            || (IS_ADMIN && $field['setting']['option']['remove_style'] == 1)
+            || (IS_MEMBER && $field['setting']['option']['remove_style'] == 2)
+        ) {
             $value = preg_replace('/style=".*?"/iU', '', $value);
         }
 
