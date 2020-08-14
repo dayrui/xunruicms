@@ -42,21 +42,25 @@
         </div>
     </div>
     <div class="portlet-body form fc-form">
-        <div id="view"><img width="100" height="100" class="img-circle" src="{dr_avatar($member.uid)}?cache={SYS_TIME}"></div>
-        <div id="clipArea"></div>
+        <div class="col-md-3 text-right" style="padding-top: 60px">
+            <div id="view"><img width="100" height="100" class="img-circle" src="{dr_avatar($member.uid)}?cache={SYS_TIME}"></div>
+        </div>
+        <div class="col-md-6">
 
-        <div class="form-body" style="width: 300px; text-align: center">
+            <div id="clipArea"></div>
 
-            <div class="fileinput fileinput-new" data-provides="fileinput">
+            <div class="form-body" style="width: 300px; text-align: center">
+
+                <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <span class="btn green btn-file">
                                                 <span class="fileinput-new"> 选择图片 </span>
                                                 <input type="file" id="file">
                                             </span>
+                </div>
+                <button type="button" class="btn btn-info" id="clipBtn"> 保存头像</button>
             </div>
-            <button type="button" class="btn btn-info" id="clipBtn"> 保存头像</button>
+
         </div>
-
-
     </div>
 
     <form action="" class="form-horizontal" method="post" name="myform" id="myform">
