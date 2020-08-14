@@ -286,9 +286,10 @@ class Table extends \Phpcmf\Model
         }
 
         // 删除菜单
-        $this->db->table('admin_menu')->where('mark', 'form-'.$data['table'])->delete();
-        $this->db->table('member_menu')->where('mark', 'form-'.$data['table'])->delete();
-        
+        $this->table('admin_menu')->like('mark', 'form-'.$data['table'])->delete();
+        $this->table('admin_menu')->like('mark', 'verify-form-'.$data['table'])->delete();
+        $this->table('member_menu')->like('mark', 'form-'.$data['table'])->delete();
+
         // 删除记录
         $this->db->table(SITE_ID.'_form')->delete($id);
         
