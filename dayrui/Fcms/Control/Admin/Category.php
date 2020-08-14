@@ -41,7 +41,7 @@ class Category extends \Phpcmf\Table
                 exit;
             }
         } else {
-            unset($this->module['category_field']['content']);
+            //unset($this->module['category_field']['content']);
             // 独立模块
             if (isset($this->module['config']['hcategory']) && $this->module['config']['hcategory']) {
                 $this->_admin_msg(0, dr_lang('模块【%s】禁止使用栏目', $dir));
