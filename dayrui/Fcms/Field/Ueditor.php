@@ -125,7 +125,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 						<span class="help-block">当开启时，在完整模式下，编辑器图标栏会固定在页面，不会随浏览器滚动</span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group hide">
                     <label class="col-md-2 control-label">'.dr_lang('过滤style属性').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
@@ -359,13 +359,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
         }
 
+        /*
         // 默认过滤style标签
         if (!isset($field['setting']['option']['remove_style']) || !$field['setting']['option']['remove_style']
             || (IS_ADMIN && $field['setting']['option']['remove_style'] == 1)
             || (IS_MEMBER && $field['setting']['option']['remove_style'] == 2)
         ) {
-            $value = preg_replace('/style=".*?"/iU', '', $value);
-        }
+            $value = preg_replace('/<div style=".*?"/iU', '', $value);
+        }*/
 
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description']) && !$_POST['data']['description']) {
