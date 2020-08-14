@@ -472,7 +472,7 @@ class Cloud extends \Phpcmf\Common
         }
 
         $vid = dr_safe_replace($_GET['version']);
-        $surl = $this->service_url.'&action=check_version&get_http=1&id='.$cid.'&version='.$vid;
+        $surl = $this->service_url.'&action=check_version&get_http=1&time='.strtotime($this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据');
