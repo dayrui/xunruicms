@@ -181,8 +181,7 @@ class Form extends \Phpcmf\Table
         $data[1]['author'] = $this->member['username'] ? $this->member['username'] : 'guest';
         $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_address();
         $data[1]['inputtime'] = SYS_TIME;
-        $data[1]['tableid'] = 0;
-        $data[1]['displayorder'] = 0;
+        $data[1]['tableid'] = $data[1]['displayorder'] = 0;
 
         return $data;
     }

@@ -173,15 +173,14 @@ class Form extends \Phpcmf\Table
                 }
             }
 			// 审核状态
-			$data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 0 : ``;
+			$data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 0 : 1;
 
             // 默认数据
             $data[0]['uid'] = $data[1]['uid'] = (int)$this->member['uid'];
             $data[1]['author'] = $this->member['username'] ? $this->member['username'] : 'guest';
             $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_address();
             $data[1]['inputtime'] = SYS_TIME;
-            $data[1]['tableid'] = 0;
-            $data[1]['displayorder'] = 0;
+            $data[1]['tableid'] = $data[1]['displayorder'] = 0;
         } else {
 			// 修改时
 			// 审核状态

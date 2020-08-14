@@ -218,8 +218,7 @@ class Mform extends \Phpcmf\Table
             $data[1]['catid'] = $data[0]['catid'] = (int)$this->index['catid'];
             $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_address();
             $data[1]['inputtime'] = SYS_TIME;
-            $data[1]['tableid'] = 0;
-            $data[1]['displayorder'] = 0;
+            $data[1]['tableid'] = $data[1]['displayorder'] = 0;
         } else {
 			// 修改时
 			 // 审核状态
