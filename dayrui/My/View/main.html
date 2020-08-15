@@ -180,7 +180,7 @@
                 success: function(json) {
                     if (json.code) {
                         $('#dr_cmf_update').show();
-                        $('#dr_cmf_update').html('{dr_lang('升级')} v'+json.msg);
+                        $('#dr_cmf_update').html(json.msg);
                     }
                 }
             });
