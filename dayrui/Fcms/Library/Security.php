@@ -93,7 +93,7 @@ class Security {
 		'jscript\s*:', // IE
 		'vbs\s*:', // IE
 		'Redirect\s+30\d',
-		"([\"'])?data\s*:[^\\1]*?base64[^\\1]*?,[^\\1]*?\\1?"
+		"([\"'])+data\s*:[^\\1]*?base64[^\\1]*?,[^\\1]*?\\1?"
 	);
 
 
