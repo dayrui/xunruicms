@@ -209,7 +209,7 @@ class Form extends \Phpcmf\Table
                         if ($this->form['setting']['notice']['username']) {
                             $user = dr_member_username_info($this->form['setting']['notice']['username']);
                             if (!$user) {
-                                log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人账号['.$this->form['setting']['notice']['username'].']有误');
+                                log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人账号['.trim($this->form['setting']['notice']['username']).']有误');
                             } else {
                                 \Phpcmf\Service::L('Notice')->send_notice_user('form_'.$this->form['table'].'_post', $user['id'], dr_array2array($data[1], $data[0]), $this->form['setting']['notice']);
                             }
