@@ -963,7 +963,7 @@ abstract class Common extends \CodeIgniter\Controller
                 'icon' => 'fa fa-clock-o',
                 'name' => dr_lang('更新时间'),
                 'uri' => APP_DIR.'/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("批量更新时间").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
+                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
             ];
             $endfix = '';
         } else {
@@ -1015,11 +1015,24 @@ abstract class Common extends \CodeIgniter\Controller
 
         if ($data) {
             foreach ($data as $i => $t) {
-                if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
-                    unset($data[$i]); // 无权限的不要
-                    continue;
+                if (IS_ADMIN) {
+                    if (!$t['url']) {
+                        unset($data[$i]); // 没有url
+                        CI_DEBUG && log_message('error', 'Cbottom（'.$t['name'].'）没有设置url参数');
+                        continue;
+                    } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
+                        unset($data[$i]); // 无权限的不要
+                        continue;
+                    }
+                    $data[$i]['url'] = urldecode($data[$i]['url']);
+                } else {
+                    if (!$t['murl']) {
+                        unset($data[$i]); // 非后台必须验证murl
+                        CI_DEBUG && log_message('error', 'Cbottom（'.$t['name'].'）没有设置murl参数');
+                        continue;
+                    }
+                    $data[$i]['url'] = urldecode($data[$i]['murl']);
                 }
-                $data[$i]['url'] = urldecode($data[$i]['murl']);
             }
         }
 

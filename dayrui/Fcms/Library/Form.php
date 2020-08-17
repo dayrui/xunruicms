@@ -379,14 +379,19 @@ class Form
         } elseif (\Phpcmf\Service::C()->member_cache['register']['preg']
             && !preg_match(\Phpcmf\Service::C()->member_cache['register']['preg'], $value)) {
             return dr_return_data(0, dr_lang('账号格式不正确'), ['field' => 'username']);
-        } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']
-            && in_array($value, \Phpcmf\Service::C()->member_cache['register']['notallow'])) {
-            return dr_return_data(0, dr_lang('账号名不允许注册'), ['field' => 'username']);
         } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
             return dr_return_data(0, dr_lang('账号名存在非法字符'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
             return dr_return_data(0, dr_lang('账号长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['userlen']), ['field' => 'username']);
+        }
+        if (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
+            $arr = explode(',', \Phpcmf\Service::C()->member_cache['register']['notallow']);
+            foreach ($arr as $a) {
+                if (strpos($value, $a) !== false) {
+                    return dr_return_data(0, dr_lang('账号名不允许注册'), ['field' => 'username']);
+                }
+            }
         }
 
         return dr_return_data(1, 'ok');
