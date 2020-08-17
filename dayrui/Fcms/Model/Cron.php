@@ -21,8 +21,8 @@ class Cron extends \Phpcmf\Model
             'inputtime' => SYS_TIME,
         ]);
 
-        // 运行任务
-        $rt['code'] && \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
+        // 只入库不运行任务
+        //$rt['code'] && \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
 
         return $rt;
     }
