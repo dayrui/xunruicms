@@ -200,7 +200,7 @@ class Form extends \Phpcmf\Table
 				foreach ($arr as $username) {
 					$user = dr_member_username_info($username);
 					if (!$user) {
-						log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人账号['.$username.']有误');
+						log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人用户名['.$username.']有误');
 					} else {
 						\Phpcmf\Service::L('Notice')->send_notice_user('form_'.$this->form['table'].'_post', $user['id'], dr_array2array($data[1], $data[0]), $this->form['setting']['notice']);
 					}
