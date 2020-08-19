@@ -347,11 +347,11 @@ class Cache extends \Phpcmf\Model
         }
 
         // 复制百度编辑器到当前目录
-        $this->_cp_ueditor_file($path);
+        $this->cp_ueditor_file($path);
 
         // 复制百度编辑器到移动端站点
         if (is_dir($path.'mobile')) {
-            $this->_cp_ueditor_file($path.'mobile/');
+            $this->cp_ueditor_file($path.'mobile/');
         }
 
         return '';
@@ -369,14 +369,14 @@ class Cache extends \Phpcmf\Model
                 $path = WEBPATH;
             }
             // 复制百度编辑器到当前目录
-            $this->_cp_ueditor_file($path);
+            $this->cp_ueditor_file($path);
             // 复制百度编辑器到移动端站点
-            $this->_cp_ueditor_file($path.'mobile/');
+            $this->cp_ueditor_file($path.'mobile/');
             if ($t['setting']['client']) {
                 foreach ($t['setting']['client'] as $c) {
                     if ($c['name'] && $c['domain']) {
                         // 复制百度编辑器到当前目录
-                        $this->_cp_ueditor_file($path.$c['name'].'/');
+                        $this->cp_ueditor_file($path.$c['name'].'/');
                     }
                 }
             }
@@ -394,16 +394,27 @@ class Cache extends \Phpcmf\Model
                 if ($t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
                     $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
                     // 复制百度编辑器到当前目录
-                    $this->_cp_ueditor_file($path);
+                    $this->cp_ueditor_file($path);
                     // 复制百度编辑器到移动端站点
-                    $this->_cp_ueditor_file($path.'mobile/');
+                    $this->cp_ueditor_file($path.'mobile/');
+                }
+            }
+        }
+
+        if (dr_is_app('safe')) {
+            $safe = \Phpcmf\Service::M('app')->get_config('safe');
+            if ($safe) {
+                foreach ($safe as $path) {
+                    if ($path && is_dir($path)) {
+                        $this->cp_ueditor_file($path.'/');
+                    }
                 }
             }
         }
     }
 
     // 复制编辑器
-    private function _cp_ueditor_file($path) {
+    public function cp_ueditor_file($path) {
 
         $npath = $path.'api/ueditor/';
         dr_mkdirs($npath);
