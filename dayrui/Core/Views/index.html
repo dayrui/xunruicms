@@ -52,14 +52,13 @@
                     </a>
                     <ul class="dropdown-menu extended tasks">
                         <li>
-                            <ul class="dropdown-menu-list scroller" style="height:300px;" data-handle-color="#637283">
+                            <ul class="dropdown-menu-list scroller" style="height:400px;" data-handle-color="#637283">
                                 {loop $ci->site_info $i $t}
                                 {if \Phpcmf\Service::M('auth')->_check_site($i)}
                                 <li>
                                     <a href="javascript:;" onclick="dr_select_site('{$i}')" title="{$t.SITE_NAME}" {if SITE_ID == $i}style="color:red"{/if}>
-                                    <span class="task">
-                                            <span class="desc"> {dr_strcut($t.SITE_NAME, 30)} </span>
-                                        </span>
+                                        <p style="margin: 0">{dr_strcut($t.SITE_NAME, 30)}</p>
+                                        <p style="margin: 0;font-size: 10px;margin-top: -4px;">{dr_cms_domain_name($t.SITE_URL)}</p>
                                     </a>
                                 </li>
                                 {/if}
@@ -69,7 +68,7 @@
                     </ul>
                 </li>
                 {/if}
-                    {if $is_mobile}
+                {if $is_mobile}
                 <li class="dropdown">
                     <a href="javascript:;"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="fa fa-wrench"></i>
@@ -103,7 +102,7 @@
                         <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('系统错误')}</a></li>
                         <li><a href="{dr_url('content/index', ['p'=>1, 'page'=>1])}" target="right"><i class="fa fa-code"></i> {dr_lang('执行SQL')}</a></li>
                         {/if}
-						{if $is_search_help}
+                        {if $is_search_help}
                         <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>
                         {/if}
                     </ul>
@@ -139,14 +138,14 @@
                             <i class="fa fa-close"></i>
                         </a>
                         <div class="input-group">
-							{if $is_search_help}
+                            {if $is_search_help}
                             <input type="text" id="mysearchform_kw" class="form-control" placeholder="{dr_lang('搜索帮助...')}">
                             <span class="input-group-btn">
                                 <a href="javascript:;" class="btn submit">
                                     <i class="fa fa-search"></i>
                                 </a>
                             </span>
-							{/if}
+                            {/if}
                         </div>
                     </form>
                 </li>
@@ -204,9 +203,9 @@
                     <h3 class="list-heading margin-top-30">{dr_lang('历史访问')}</h3>
                     <div class="scroller" style="max-height:350px;" data-handle-color="#637283">
                         <div class="admin-usermenu" id="dr_history_usermenu">
-                        {loop $admin.history $t}
-                        <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
-                        {/loop}
+                            {loop $admin.history $t}
+                            <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
+                            {/loop}
                         </div>
                         <div class="theme-option">
                             <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
@@ -214,27 +213,27 @@
                     </div>
                 </div>
                 <div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
-                        {if $notice}
-                         <ul class="feeds list-items">
-                            {loop $notice $t}
-                            <li>
-                                <div class="col1" style="padding-top: 2px;padding-left: 3px;">
-                                    <div class="cont">
-                                        <div class="cont-col1 user-avatar">
-                                            <a target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
-                                        </div>
-                                        <div class="cont-col2">
-                                            <div class="desc"><a style="color: #c1cbd0" target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
-                                        </div>
+                    {if $notice}
+                    <ul class="feeds list-items">
+                        {loop $notice $t}
+                        <li>
+                            <div class="col1" style="padding-top: 2px;padding-left: 3px;">
+                                <div class="cont">
+                                    <div class="cont-col1 user-avatar">
+                                        <a target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
+                                    </div>
+                                    <div class="cont-col2">
+                                        <div class="desc"><a style="color: #c1cbd0" target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
                                     </div>
                                 </div>
-                                <div class="col2">
-                                    <div class="date"> {dr_fdate($t.inputtime)} </div>
-                                </div>
-                            </li>
-                            {/loop}
-                        </ul>
-                        {/if}
+                            </div>
+                            <div class="col2">
+                                <div class="date"> {dr_fdate($t.inputtime)} </div>
+                            </div>
+                        </li>
+                        {/loop}
+                    </ul>
+                    {/if}
 
                 </div>
             </div>
