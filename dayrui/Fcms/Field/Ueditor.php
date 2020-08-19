@@ -532,6 +532,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     [ $tool ]
                 ],
                 initialContent:\"\",
+                pageBreakTag:\"_ueditor_page_break_tag_\",
                 initialFrameWidth: \"".$width."\",
                 initialFrameHeight: \"{$height}\",
                 initialStyle:\"body{font-size:14px}\",
