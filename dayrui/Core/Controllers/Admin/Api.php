@@ -361,6 +361,7 @@ class Api extends \Phpcmf\Common
 	// 执行更新缓存
 	public function cache_update() {
 
+
         \Phpcmf\Service::M('cache')->update_cache();
         exit($this->_json(1, dr_lang('更新完成')));
 	}

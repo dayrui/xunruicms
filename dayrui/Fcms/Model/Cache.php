@@ -34,8 +34,7 @@ class Cache extends \Phpcmf\Model
 
         $psize = 300;
         $tpage = ceil($total/$psize);
-        $result = $this->db->table('attachment')->orderBy('id ASC')
-            ->limit($psize, $psize * ($page - 1))->get()->getResultArray();
+        $result = $this->db->table('attachment')->orderBy('id ASC')->limit($psize, $psize * ($page - 1))->get()->getResultArray();
         if ($result) {
             foreach ($result as $t) {
                 \Phpcmf\Service::C()->get_attachment($t['id']);
@@ -50,8 +49,8 @@ class Cache extends \Phpcmf\Model
     }
 
     // 同步更新缓存
-    // \Phpcmf\Service::M('cache')->sync_cache();
-    public function sync_cache($name = '', $namepspace = '', $is_site = 1) {
+    // \Phpcmf\Service::M('cache')->sync_cache(); $is_site 表示是否作为站点来更新缓存
+    public function sync_cache($name = '', $namepspace = '', $is_site_param = 0) {
 
         if (!$this->is_sync_cache) {
             $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
@@ -59,20 +58,19 @@ class Cache extends \Phpcmf\Model
             \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
         }
 
-        if (!$is_site && $name) {
-            \Phpcmf\Service::M($name, $namepspace)->cache();
+        if ($name) {
+            if (!$is_site_param) {
+                // 普通缓存执行
+                \Phpcmf\Service::M($name, $namepspace)->cache();
+            } else {
+                // 传入站点参数
+                \Phpcmf\Service::M($name, $namepspace)->cache(SITE_ID);
+            }
         }
 
-        foreach ($this->site_cache as $t) {
-
-            if ($this->module_cache) {
-                \Phpcmf\Service::M('table')->cache($t['id'], $this->module_cache);
-                \Phpcmf\Service::M('module')->cache($t['id'], $this->module_cache);
-            }
-
-            if ($is_site && $name) {
-                \Phpcmf\Service::M($name, $namepspace)->cache($t['id']);
-            }
+        if ($this->module_cache) {
+            \Phpcmf\Service::M('table')->cache(SITE_ID, $this->module_cache);
+            \Phpcmf\Service::M('module')->cache(SITE_ID, $this->module_cache);
         }
 
         \Phpcmf\Service::M('menu')->cache();

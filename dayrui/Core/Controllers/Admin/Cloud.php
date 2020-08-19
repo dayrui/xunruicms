@@ -200,7 +200,7 @@ class Cloud extends \Phpcmf\Common
     public function uninstall() {
 
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        if (!preg_match('/^[a-z]+$/U', $dir)) {
+        if (!preg_match('/^[a-z_]+$/U', $dir)) {
             $this->_json(0, dr_lang('目录[%s]格式不正确', $dir));
         }
 
