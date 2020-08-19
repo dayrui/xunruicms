@@ -349,7 +349,7 @@ function dr_ajax_confirm_url(url, msg, tourl) {
                     if (json.code) {
                         if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
-                        } else {
+                        } else if (tourl) {
                             setTimeout("window.location.href = '"+tourl+"'", 2000);
                         }
                     }

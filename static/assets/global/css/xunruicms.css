@@ -660,11 +660,11 @@ Page Header
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu .dropdown-menu-list > li > a {
     display: block;
     clear: both;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 20px;
     white-space: normal;
-    font-size: 13px;
-    padding: 16px 15px 18px;
+    font-size: 12px;
+    padding: 13px 15px 13px;
     text-shadow: none; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu .dropdown-menu-list > li > a:hover {
     opacity: 1 ;
