@@ -133,7 +133,17 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][remove_style]" '.($option['remove_style'] ==1 ? 'checked' : '').' > '.dr_lang('后台过滤').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="2" name="data[setting][option][remove_style]" '.($option['remove_style'] ==2 ? 'checked' : '').' > '.dr_lang('前端过滤').' <span></span></label>
                         </div>
-						<span class="help-block">当开启时，会过滤编辑器里面的style属性参数</span>
+						<span class="help-block">过滤编辑器里面的多余的style属性参数</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('将div标签转换为p标签').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][div2p]" '.(!$option['div2p'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][div2p]" '.($option['div2p'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                        </div>
+						<span class="help-block">将编辑器的div标签强制转换为p标签</span>
                     </div>
                 </div>
                 
@@ -458,7 +468,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         if (!$this->is_load_js($field['filetype'])) {
             $str.= '
             <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
-            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_DEV ? 'all.min' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
+            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
             $this->set_load_js($field['filetype'], 1);
         }
@@ -525,10 +535,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 initialFrameWidth: \"".$width."\",
                 initialFrameHeight: \"{$height}\",
                 initialStyle:\"body{font-size:14px}\",
-                wordCount:false,
-                maximumWords:99999999999,
-                elementPathEnabled:false,
                 autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
+                allowDivTransToP:".(!$field['setting']['option']['div2p'] ? 'true' : 'false').",
                 autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
                 charset:\"utf-8\",
             };
