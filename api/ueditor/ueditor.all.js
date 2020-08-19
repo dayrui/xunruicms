@@ -9966,7 +9966,7 @@
     UE.plugins['defaultfilter'] = function () {
         var me = this;
         me.setOpt({
-            'allowDivTransToP':true,
+            //'allowDivTransToP':true,
             'disabledTableInTable':true
         });
         //默认的过滤处理

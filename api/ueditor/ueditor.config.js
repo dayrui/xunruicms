@@ -237,10 +237,10 @@
 
         //elementPathEnabled
         //是否启用元素路径，默认是显示
-        //,elementPathEnabled : true
+       ,elementPathEnabled : false
 
         //wordCount
-        //,wordCount:true          //是否开启字数统计
+        ,wordCount:false          //是否开启字数统计
         //,maximumWords:10000       //允许的最大字符数
         //字数统计提示，{#count}代表当前字数，{#leave}代表还可以输入多少字符数,留空支持多语言自动切换，否则按此配置显示
         //,wordCountMsg:''   //当前已输入 {#count} 个字符，您还可以输入{#leave} 个字符
@@ -265,9 +265,6 @@
         //当输入的字符数超过该值时，保存一次现场
         //,maxInputCount:1
 
-        //autoHeightEnabled
-        // 是否自动长高,默认true
-        //,autoHeightEnabled:true
 
         //scaleEnabled
         //是否可以拉伸长高,默认true(当开启时，自动长高失效)
@@ -275,10 +272,7 @@
         //,minFrameWidth:800    //编辑器拖动时最小宽度,默认800
         //,minFrameHeight:220  //编辑器拖动时最小高度,默认220
 
-        //autoFloatEnabled
-        //是否保持toolbar的位置不动,默认true
-        //,autoFloatEnabled:true
-        //浮动时工具栏距离浏览器顶部的高度，用于某些具有固定头部的页面
+
         //,topOffset:30
         //编辑器底部距离工具栏高度(如果参数大于等于编辑器高度，则设置无效)
         //,toolbarTopOffset:400
@@ -342,7 +336,6 @@
 
         //默认过滤规则相关配置项目
         //,disabledTableInTable:true  //禁止表格嵌套
-        ,allowDivTransToP:false      //允许进入编辑器的div标签自动变成p标签
         //,rgb2Hex:true               //默认产出的数据中的color自动从rgb格式变成16进制格式
 
 		// xss 过滤是否开启,inserthtml等操作
@@ -375,7 +368,6 @@
 			dd:     ['class', 'style'],
 			del:    ['datetime'],
 			details: ['open'],
-			div:    ['class', 'style'],
 			dl:     ['class', 'style'],
 			dt:     ['class', 'style'],
 			em:     ['class', 'style'],
@@ -395,7 +387,8 @@
 			mark:   [],
 			nav:    [],
 			ol:     ['class', 'style'],
-			p:      ['class', 'style'],
+            div:    ['class'], // 最好过滤, 'style'标签
+			p:      ['class'], // 最好过滤, 'style'标签
 			pre:    ['class', 'style'],
 			s:      [],
 			section:['class', 'style'],
