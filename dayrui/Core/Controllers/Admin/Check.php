@@ -376,18 +376,33 @@ class Check extends \Phpcmf\Common
                 break;
 
             case '09':
+				$rt = [];
                 // 搜索根目录
                 $local = dr_file_map(WEBPATH, 1); // 搜索根目录
                 foreach ($local as $file) {
                     $ext = strtolower(substr(strrchr($file, '.'), 1));
                     if (in_array($ext, ['zip', 'rar', 'sql'])) {
-                        $this->halt('文件不安全【/'.$file.'】请及时清理', 0);
+                        $rt[] = '文件不安全【/'.$file.'】请及时清理';
                     }
                     $size = file_get_contents(WEBPATH.$file, 0, null, 0, 9286630);
                     if (strlen($size) >= 9286630) {
-                        $this->halt('存在大文件文件【/'.$file.'】请及时清理', 0);
+                        $rt[] = '存在大文件文件【/'.$file.'】请及时清理';
                     }
                 }
+				
+				$dir = ['cache', 'config', 'dayrui', 'template'];
+				foreach ($dir as $p) {
+					$code = dr_catcher_data(ROOT_URL.$p.'/api.php', 5);
+					if (strpos($code, 'phpcmf') !== false) {
+						$rt[] = '网站目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
+					}
+				}
+				
+				
+				if ($rt) {
+                    $this->halt(implode('<br>', $rt), 0);
+                }
+				
                 $this->_json(1,'完成');
                 break;
 
