@@ -558,7 +558,11 @@ class Member extends \Phpcmf\Table
     protected function _Data($id = 0) {
         $data = parent::_Data($id);
         $data2 = \Phpcmf\Service::M()->db->table('member_data')->where('id', $id)->get()->getRowArray();
-        $data2 && $data = $data + $data2;
+        if ($data2) {
+            $data = $data + $data2;
+            $data['is_mobile2'] = $data['is_mobile'];
+            unset($data['is_mobile']);
+        }
         return $data;
     }
 

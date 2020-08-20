@@ -315,7 +315,6 @@ class Home extends \Phpcmf\Common
 			'string' => $string,
 			'mstring' => $mstring,
             'is_index' => 1,
-            'is_mobile' => $this->_is_mobile(),
 			'sys_color' => [
 				'default' => '#333438',
 				'blue' => '#368ee0',
@@ -453,7 +452,6 @@ class Home extends \Phpcmf\Common
             'is_min' => 1,
             'is_mode' => \Phpcmf\Service::M('auth')->is_admin_min_mode(),
             'is_index' => 1,
-            'is_mobile' => $this->_is_mobile(),
             'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
         \Phpcmf\Service::V()->display('index_min.html');exit;
