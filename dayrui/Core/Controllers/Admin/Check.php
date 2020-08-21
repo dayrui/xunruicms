@@ -380,12 +380,9 @@ class Check extends \Phpcmf\Common
                 // 搜索根目录
                 $local = dr_file_map(WEBPATH, 1); // 搜索根目录
                 foreach ($local as $file) {
-                    $ext = strtolower(substr(strrchr($file, '.'), 1));
-                    if (in_array($ext, ['zip', 'rar', 'sql'])) {
+                    if (in_array(strtolower(substr(strrchr($file, '.'), 1)), ['zip', 'rar', 'sql'])) {
                         $rt[] = '文件不安全【/'.$file.'】请及时清理';
-                    }
-                    $size = file_get_contents(WEBPATH.$file, 0, null, 0, 9286630);
-                    if (strlen($size) >= 9286630) {
+                    } elseif (strlen(file_get_contents(WEBPATH.$file, 0, null, 0, 9286630)) >= 9286630) {
                         $rt[] = '存在大文件文件【/'.$file.'】请及时清理';
                     }
                 }
@@ -397,7 +394,6 @@ class Check extends \Phpcmf\Common
 						$rt[] = '网站目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
 				}
-				
 				
 				if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);
@@ -505,6 +501,22 @@ class Check extends \Phpcmf\Common
                     $code = dr_catcher_data($t['url'].'api.html', 5);
                     if ($code != 'phpcmf ok') {
                         $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
+                    }
+                }
+
+                // 重复验证
+                if (is_file(WRITEPATH.'config/domain_sso.php')) {
+                    $domains = require WRITEPATH.'config/domain_sso.php';
+                    if ($domains) {
+                        // 获取去掉重复数据的数组
+                        $unique_arr = array_unique ( $domains );
+                        // 获取重复数据的数组
+                        $repeat_arr = array_diff_assoc ( $domains, $unique_arr );
+                        if ($repeat_arr) {
+                            foreach ($repeat_arr as $t) {
+                                $error[] = '域名【'.$t.'】被多处重复配置，可能会影响到此域名的作用域或访问异常';
+                            }
+                        }
                     }
                 }
 

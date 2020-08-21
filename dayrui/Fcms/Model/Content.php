@@ -39,11 +39,17 @@ class Content extends \Phpcmf\Model {
     public function save($id, $data, $old = []) {
 
         // 二次开发函数
-        $data = $this->_content_post_before($id, $data, $old);
+        $rt = $this->_content_post_before($id, $data, $old);
 
         // 特殊返回值
-        if (isset($data['code']) && isset($data['msg']) && $data['code'] == 0 && $data['msg']) {
-            return dr_return_data(0, $data['msg']);
+        if (isset($rt['code']) && isset($rt['msg'])) {
+            if ($rt['code'] == 0) {
+                return dr_return_data(0, $rt['msg']);
+            }
+            $data = $rt['data'];
+        } else {
+            // 兼容之前的写法
+            $data = $rt;
         }
 
         // 挂钩点 模块内容发布或修改完成之后
