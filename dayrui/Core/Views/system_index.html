@@ -23,15 +23,19 @@
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
-                        {if !IS_DEV}
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('调试器')}</label>
                             <div class="col-md-9">
+                                {if IS_DEV}
+                                <input type="checkbox" name="data[SYS_DEBUG]" value="1" checked disabled data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('你已经在index.php中开启了开发者模式，调试器已被强制开启')}</span>
+                                {else}
                                 <input type="checkbox" name="data[SYS_DEBUG]" value="1" {if $data['SYS_DEBUG']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('用于后台启用DebugBar工具查看程序和SQL执行详情')}</span>
+                                {/if}
                             </div>
                         </div>
-                        {/if}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('操作日志')}</label>
                             <div class="col-md-9">
