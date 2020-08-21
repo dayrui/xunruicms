@@ -11,7 +11,7 @@ class Test extends \Phpcmf\Common
 
     public function index() {
 
-        echo 'This is '.$this->cmf_version['name'].' v'.$this->cmf_version['version'];
+        echo 'This is v'.$this->cmf_version['version'];
         exit;
     }
 

@@ -853,7 +853,7 @@ class Api extends \Phpcmf\Common
     public function test_https() {
         $url = str_replace('http://', 'https://', ROOT_URL);
         $code = dr_catcher_data($url.'index.php?s=api&c=test', 5);
-        if ($code && strpos($code, 'Xunruicms') !== false) {
+        if ($code && strpos($code, 'This') !== false) {
             $this->_json(1, dr_lang('支持HTTPS访问'));
         } else {
             $this->_json(0, dr_lang('无法访问：%s', $url));
