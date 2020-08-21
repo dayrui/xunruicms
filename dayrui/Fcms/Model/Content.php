@@ -1107,19 +1107,20 @@ class Content extends \Phpcmf\Model {
         }
         // 删除内容
         $tid = $this->_table_id($cid);
-        $this->table($this->mytable.'_data_'.$tid)->delete($cid);
+        if ($this->is_table_exists($this->mytable.'_data_'.$tid)) {
+            $this->table($this->mytable.'_data_'.$tid)->delete($cid);
+        }
         if (!$this->is_hcategory) {
             $this->table($this->mytable.'_category_data')->delete($cid);
-            if ($this->db->query("SHOW TABLES LIKE '".$this->dbprefix($this->mytable.'_category_data_'.$tid)."'")->getRowArray()) {
+            if ($this->is_table_exists($this->mytable.'_category_data_'.$tid)) {
                 $this->table($this->mytable.'_category_data_'.$tid)->delete($cid);
             }
         }
-
         // 模块表单
         if ($module['form']) {
             foreach ($module['form'] as $t) {
                 $table = $this->siteid.'_'.$this->dirname.'_form_'.$t['table'];
-                if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table)."'")->getRowArray()) {
+                if (!$this->is_table_exists($table)) {
                     break;
                 }
                 $this->db->table($table)->where('cid', $cid)->delete();
