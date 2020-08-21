@@ -21,8 +21,10 @@ class Cron extends \Phpcmf\Model
             'inputtime' => SYS_TIME,
         ]);
 
-        // 只入库不运行任务
-        //$rt['code'] && \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
+        // 当服务器开启了自动任务，那么只入库不运行任务；未开启时直接执行
+        if ($rt['code'] && !is_file(WRITEPATH.'config/run_lock.php')) {
+            \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
+        }
 
         return $rt;
     }
