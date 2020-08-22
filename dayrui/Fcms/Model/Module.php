@@ -287,20 +287,25 @@ class Module extends \Phpcmf\Model
         $system_table['_data_0'] = $content_table['table'][0];
         // 创建系统表
         foreach ($system_table as $name => $sql) {
-            if (dr_count($module['site']) == 1) {
-                // 表示第一个站就创建
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
-            } else {
-                // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix(dr_module_table_prefix($dir, $siteid).$name)."`")->getRowArray();
-                $sql = str_replace(
-                    array($sql['Table'], 'CREATE TABLE'),
-                    array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                    $sql['Create Table']
-                );
-                $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
+            if (dr_count($module['site']) > 1) {
+                // 表示存在多个站
+                foreach ($module['site'] as $sid => $t) {
+                    $root = dr_module_table_prefix($dir, $sid).$name;
+                    if ($this->is_table_exists($root)) {
+                        // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
+                        $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($root)."`")->getRowArray();
+                        $sql = str_replace(
+                            array($sql['Table'], 'CREATE TABLE'),
+                            array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
+                            $sql['Create Table']
+                        );
+                        break;
+                    }
+                }
             }
+            $this->db->simpleQuery(str_replace('{tablename}', $table.$name, dr_format_create_sql($sql)));
         }
+
         // 创建相关栏目表字段
         if (isset($config['scategory']) && $config['scategory']) {
             if (!\Phpcmf\Service::M()->db->fieldExists('tid', $table.'_category')) {
@@ -355,9 +360,17 @@ class Module extends \Phpcmf\Model
             $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
             if ($form) {
                 foreach ($form as $t) {
+                    // 表示存在多个站
+                    foreach ($module['site'] as $sid => $t) {
+                        if ($this->is_table_exists($this->dbprefix($sid.'_'.$dir).'_form_'.$t['table'])) {
+                            // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
+                            break;
+                        }
+                    }
+                    // 开始创建表单
                     $mytable = $table.'_form_'.$t['table'];
                     // 主表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_'.$dir).'_form_'.$t['table']."`")->getRowArray();
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($sid.'_'.$dir).'_form_'.$t['table']."`")->getRowArray();
                     $sql = str_replace(
                         array($sql['Table'], 'CREATE TABLE'),
                         array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
@@ -366,7 +379,7 @@ class Module extends \Phpcmf\Model
                     $sql = dr_format_create_sql(str_replace('{tablename}', $mytable, $sql));
                     $this->db->query($sql);
                     // 附表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_'.$dir).'_form_'.$t['table']."_data_0`")->getRowArray();
+                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($sid.'_'.$dir).'_form_'.$t['table']."_data_0`")->getRowArray();
                     $sql = str_replace(
                         array($sql['Table'], 'CREATE TABLE'),
                         array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
