@@ -20,9 +20,29 @@
         });
     });
 
+    var getWindowSize = function(){
+        return ["Height","Width"].map(function(name){
+            return window["inner"+name] ||
+                document.compatMode === "CSS1Compat" && document.documentElement[ "client" + name ] || document.body[ "client" + name ]
+        });
+    }
+
+    function wSize(){
+        var str=getWindowSize();
+        var strs= new Array(); //定义一数组
+        strs=str.toString().split(","); //字符分割
+        var heights = strs[0]-140,Body = $('body');
+        $('#file_code').height(heights);
+        $('.CodeMirror').height(heights);
+    }
+
+    $(function(){
+        wSize();
+    });
+
 </script>
 
-<div class="note note-danger">
+<div class="note note-danger" style="margin-top: -20px;">
     <p>{dr_safe_replace_path($file)}</p>
 </div>
 <div class="form-group">
