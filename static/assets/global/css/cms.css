@@ -389,8 +389,8 @@ code.form-control-static {
     }
 }
 .files_row_preview img{
-    width: 60px !important;
-    height: 50px !important;
+    max-width: 60px;
+    max-height: 50px;
 }
 .files_row_preview {
     margin-right: 10px;
@@ -399,6 +399,7 @@ code.form-control-static {
     overflow: hidden;
     width: 80px;
     height: 70px;
+    text-align: center;
 }
 .table-finecms-upload .files_row_preview {
     overflow: inherit;

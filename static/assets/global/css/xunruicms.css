@@ -2939,8 +2939,8 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     }
 }
 .files_row_preview img{
-    width: 60px !important;
-    height: 50px !important;
+    max-width: 60px;
+    max-height: 50px;
 }
 .files_row_preview {
     margin-right: 10px;
@@ -2949,6 +2949,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     width: 80px;
     height: 70px;
     overflow: hidden;
+    text-align: center;
 }
 .table-finecms-upload .files_row_preview {
     overflow: inherit;
