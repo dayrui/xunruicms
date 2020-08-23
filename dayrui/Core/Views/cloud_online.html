@@ -9,10 +9,21 @@
 </body>
 </html>
 {else}
+{if IS_DEV}
+<html>
+<head>
+</head>
+<body style="text-align: center;padding: 160px 0px;background-color: #fff;">
+<p>{dr_lang('由于你的服务器开发者模式，需要单击下发链接进行访问该页面')}</p>
+<p><a href="{$url}">{dr_strcut($url, 100)}</a></p>
+</body>
+</html>
+{else}
 <html>
 <head>
     <meta http-equiv="refresh" content="0;url={$url}">
 </head>
 <body style="background: url({THEME_PATH}assets/images/loading-0.gif);background-position: center;background-color: #fff;background-repeat: no-repeat;"> </body>
 </html>
+{/if}
 {/if}
