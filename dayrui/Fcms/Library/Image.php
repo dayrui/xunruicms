@@ -1582,9 +1582,21 @@ class Image
 
         // 本地存储的原始图片
         $file = $attach['file'];
-        if (!is_file($file) && $attach['url']) {
-            if ($attach['remote'] && !$webimg) {
-                // 远程图片
+        if ($attach['remote'] && $attach['url']) {
+            if ($webimg) {
+                // 远程图片下载到本地进行缩略图处理
+                $data = dr_catcher_data($attach['url'], 10);
+                if (!$data) {
+                    CI_DEBUG && log_message('error', '图片['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
+                    return $attach['url'];
+                }
+                $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
+                if (!file_put_contents($file, $data)) {
+                    CI_DEBUG && log_message('error', '图片['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
+                    return $attach['url'];
+                }
+            } else {
+                // 远程图片进行带规则的缩略图处理
                 $remote = \Phpcmf\Service::C()->get_cache('attachment', $attach['remote']);
                 if (($width > 0 || $height > 0) && $remote['value']['wh_prefix_image']) {
                     // 输出带尺寸的后缀图
@@ -1596,16 +1608,9 @@ class Image
                 //输出直接地址
                 return $attach['url'];
             }
-            $data = dr_catcher_data($attach['url']);
-            if (!$data) {
-                CI_DEBUG && log_message('error', '图片id['.$img.']无法获取远程附件数据，thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif';
-            }
-            $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
-            if (!file_put_contents($file, $data)) {
-                CI_DEBUG && log_message('error', '图片id['.$img.']无法写入附件缓存目录，thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif';
-            }
+        } elseif (!is_file($file)) {
+            // 本地图片不存在
+            return ROOT_THEME_PATH.'assets/images/nopic.gif';
         }
 
         if ($width == 0 && $height == 0 && $water == 0) {

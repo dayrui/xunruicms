@@ -250,25 +250,33 @@ class File extends \Phpcmf\Common
             $list['used'] = urlencode('uid='.$this->uid);
         }
 
+        $exts = dr_safe_replace($p['exts']);
+        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))->where_in('fileext', explode(',', $exts))->counts();
+
+        $url = '/index.php?is_ajax=1&s=api&c=file&m=input_file_list'
+            .'&fid='.\Phpcmf\Service::L('input')->get('fid')
+            .'&ct='.$ct
+            .'&p='.\Phpcmf\Service::L('input')->get('p');
+        $pp = $unused ? intval($_GET['pp']) : 1;
+
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
             'list' => $list,
             'sfield' => $sfield,
             'param' => [
+                'used' => $unused,
                 'name' => $name,
                 'value' => $value,
             ],
-            'pp' => intval($_GET['pp']),
+            'pp' => $pp,
+            'unused' => $unused,
             'page' => intval($_GET['page']),
             'psize' => SYS_ADMIN_PAGESIZE,
-            'fileext' => dr_safe_replace($p['exts']),
-            'search_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&pp='.\Phpcmf\Service::L('input')->get('pp').'&p='.\Phpcmf\Service::L('input')->get('p')
-                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
-            'urlrule' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&pp='.\Phpcmf\Service::L('input')->get('pp').'&page=[page]&p='.\Phpcmf\Service::L('input')->get('p')
-                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
-            'tab_url' => '/index.php?is_ajax=1&s=api&c=file&m=input_file_list&p='.\Phpcmf\Service::L('input')->get('p')
-                .'&fid='.\Phpcmf\Service::L('input')->get('fid').'&ct='.\Phpcmf\Service::L('input')->get('ct'),
+            'urlrule' => $url.'&page=[page]'.'&pp='.$pp,
+            'tab_url' => $url,
+            'fileext' => $exts,
+            'search_url' => $url.'&pp='.$pp,
         ]);
         \Phpcmf\Service::V()->display('api_upload_list.html');
     }

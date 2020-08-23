@@ -3,23 +3,23 @@
 <form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
     {$form}
     <div class="portlet light " style="padding: 0">
-        {if $list.unused}
+
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
-                <li class=" {if $pp==0}active{/if}">
+                {if $unused}
+                <li id="tab_nav_0" class="{if $pp==0}active{/if}">
                     <a href="{$tab_url}&pp=0"> {dr_lang('未使用的附件')} </a>
                 </li>
+                {/if}
                 <li class="dev {if $pp==1}active{/if}">
                     <a href="{$tab_url}&pp=1"> {dr_lang('已使用的附件')} </a>
                 </li>
             </ul>
         </div>
-        {else}
-        <?php $pp=1;?>
-        {/if}
+
         <div class="portlet-body table-finecms-upload">
 
-                {if $pp==0}
+                {if $unused && $pp==0}
                     <div role="presentation" class="table table-fc-upload table-striped clearfix">
                         <div class="files">
                             {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
@@ -36,12 +36,7 @@
                             {/table}
                         </div>
                     </div>
-                    {if !$return}
-                    <script>
-                        window.location.href = "{$tab_url}&pp=1";
-                    </script>
-                    {/if}
-                {elseif $pp==1}
+                {else}
                     <div class="row  margin-bottom-20 template-download">
                             <div class="col-md-12 text-center margin-bottom-20">
                                 <label><select  id="dr_field_name"class="form-control">
@@ -59,7 +54,6 @@
 
                         <div class="files">
                             {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
-                            {php $url = dr_get_file_url($t, 50, 50);}
                             <div class="template-download yl_files_row files_row">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />

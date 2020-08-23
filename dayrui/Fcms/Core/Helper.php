@@ -1755,11 +1755,11 @@ function dr_file_preview_html($value, $target = 0) {
 // 用于附件列表查看时
 function dr_file_list_preview_html($t) {
     if (in_array($t['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
-        return '<a href="javascript:dr_preview_image(\''.dr_get_file($t['id']).'\');"><img src="'.dr_thumb($t['id'], 50, 50).'"></a>';
+        return '<a href="javascript:dr_preview_image(\''.dr_get_file_url($t).'\');"><img src="'.dr_get_file_url($t, 50, 50).'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png')) {
-        return '<a href="javascript:dr_preview_url(\''.dr_get_file($t['id']).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
+        return '<a href="javascript:dr_preview_url(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
     } else {
-        return '<a href="javascript:dr_preview_url(\''.dr_get_file($t['id']).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/error.png"></a>';
+        return '<a href="javascript:dr_preview_url(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/error.png"></a>';
     }
 }
 
