@@ -193,8 +193,8 @@ class Account extends \Phpcmf\Common
         // 是否允许更新手机号码
         $is_update = $this->member_cache['config']['edit_mobile'] || !$this->member['phone'];
 
-        // 是否需要认证手机号码
-        $is_mobile = $this->member_cache['config']['mobile'] && !$this->member['is_mobile'] ;
+        // 是否需要认证手机号码 // $this->member_cache['config']['mobile'] &&
+        $is_mobile = !$this->member['is_mobile'] ;
 
         // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
         //$is_mobile && $this->member['phone'] && $is_update = 0;
@@ -255,8 +255,8 @@ class Account extends \Phpcmf\Common
         // 是否允许更新
         $is_update = $this->member_cache['config']['edit_email'] || !$this->member['email'];
 
-        // 是否需要认证
-        $is_email = $this->member_cache['config']['email'] && !$this->member['is_mobile'] ;
+        // 是否需要认证 $this->member_cache['config']['email'] && 
+        $is_email = !$this->member['is_email'] ;
 
         // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
         //$is_email && $this->member['phone'] && $is_update = 0;
