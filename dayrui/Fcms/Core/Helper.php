@@ -2746,6 +2746,8 @@ function dr_catcher_data($url, $timeout = 0) {
         curl_close($ch);
         if ($code == 200) {
             return $data;
+        } else {
+            return '';
         }
     }
 
