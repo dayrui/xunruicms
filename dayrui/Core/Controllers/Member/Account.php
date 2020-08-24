@@ -345,6 +345,7 @@ class Account extends \Phpcmf\Common
         if (!$rt['code']) {
 			$this->_json(0, IS_DEV ? $rt['msg'] : dr_lang('发送失败'));
 		}
+		
 
 		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		

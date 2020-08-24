@@ -534,7 +534,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 兼容老版本
         define('MOD_DIR', $dirname);
         define('IS_SHARE', $this->module['share']);
-        define('IS_COMMENT', $this->module['comment']);
+        define('IS_COMMENT', (int)\Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname, 'use'));
         define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
         define('MODULE_NAME', $this->module['name']);
 
