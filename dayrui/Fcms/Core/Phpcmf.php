@@ -529,12 +529,12 @@ abstract class Common extends \CodeIgniter\Controller
            return;
         }
 
-        $this->module['comment'] = dr_is_app('comment') && $this->get_cache('app-comment', 'module', $dirname) ? 1 : 0;
+        $this->module['comment'] = dr_is_app('comment') && \Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname, 'use') ? 1 : 0;
 
         // 兼容老版本
         define('MOD_DIR', $dirname);
         define('IS_SHARE', $this->module['share']);
-        define('IS_COMMENT', (int)\Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname, 'use'));
+        define('IS_COMMENT', $this->module['comment']);
         define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
         define('MODULE_NAME', $this->module['name']);
 

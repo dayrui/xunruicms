@@ -159,6 +159,20 @@ class Home extends \Phpcmf\Common
 		}
 
         if ($my_menu) {
+            // 加载全部插件的
+            $local = \Phpcmf\Service::Apps();
+            foreach ($local as $dir => $path) {
+                // 判断插件目录
+                if (is_file($path.'install.lock') && is_file($path.'Models/Auth.php') && is_file($path.'Config/App.php')) {
+                    $cfg = require $path.'Config/App.php';
+                    if ($cfg['type'] == 'app' && !$cfg['ftype']) {
+                        $obj = \Phpcmf\Service::M('auth', $dir);
+                        if (method_exists($obj, 'is_menu_auth')) {
+                            $my_menu = $obj->is_menu_auth($my_menu);
+                        }
+                    }
+                }
+            }
 		    // 权限判断并筛选
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
@@ -227,17 +241,8 @@ class Home extends \Phpcmf\Common
                             }
                         } elseif ($link['mark'] && $left['mark'] == 'content-verify') {
                             // 内容模块审核部分权限判断
-                            list($ac, $ab, $name, $cc) = explode('-', $link['mark']);
+                            list($ac, $ab, $name, $cc, $dd) = explode('-', $link['mark']);
                             if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
-                                unset($left['link'][$i]);
-                                continue;
-                            } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('app-comment', 'module', $name)) {
-                                unset($left['link'][$i]);
-                                continue;
-                            } elseif ($ac.'-'.$ab == 'verify-mform' && !$this->get_cache('module-'.SITE_ID.'-'.$name, 'form', $cc)) {
-                                unset($left['link'][$i]);
-                                continue;
-                            } elseif ($ac.'-'.$ab == 'verify-form' && !$this->get_cache('form-'.SITE_ID, $name)) {
                                 unset($left['link'][$i]);
                                 continue;
                             }
@@ -350,6 +355,20 @@ class Home extends \Phpcmf\Common
         }
 
         if ($my_menu) {
+            // 加载全部插件的
+            $local = \Phpcmf\Service::Apps();
+            foreach ($local as $dir => $path) {
+                // 判断插件目录
+                if (is_file($path.'install.lock') && is_file($path.'Models/Auth.php') && is_file($path.'Config/App.php')) {
+                    $cfg = require $path.'Config/App.php';
+                    if ($cfg['type'] == 'app' && !$cfg['ftype']) {
+                        $obj = \Phpcmf\Service::M('auth', $dir);
+                        if (method_exists($obj, 'is_menu_auth')) {
+                            $my_menu = $obj->is_menu_auth($my_menu);
+                        }
+                    }
+                }
+            }
             // 权限判断并筛选
             $tid = 0;
             $first = 0;
@@ -396,15 +415,6 @@ class Home extends \Phpcmf\Common
                         // 内容模块审核部分权限判断
                         list($ac, $ab, $name, $cc) = explode('-', $link['mark']);
                         if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
-                            unset($left['link'][$i]);
-                            continue;
-                        } elseif ($ac.'-'.$ab == 'verify-comment' && !$this->get_cache('app-comment', 'module', $name)) {
-                            unset($left['link'][$i]);
-                            continue;
-                        } elseif ($ac.'-'.$ab == 'verify-mform' && !$this->get_cache('module-'.SITE_ID.'-'.$name, 'form', $cc)) {
-                            unset($left['link'][$i]);
-                            continue;
-                        } elseif ($ac.'-'.$ab == 'verify-form' && !$this->get_cache('form-'.SITE_ID, $name)) {
                             unset($left['link'][$i]);
                             continue;
                         }

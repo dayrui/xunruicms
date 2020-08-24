@@ -557,9 +557,9 @@ class Module extends \Phpcmf\Model
             $this->db->table('field')->where('relatedid', $module['id'])->where('relatedname', 'module')->delete();
             $this->db->table('field')->where('relatedid', $module['id'])->where('relatedname', 'mform-'.$dir)->delete();
             // 删除菜单
-            $this->db->table('admin_menu')->where('mark', 'module-'.$dir)->delete();
+            $this->db->table('admin_menu')->like('mark', 'module-'.$dir)->delete();
             $this->db->table('admin_menu')->like('mark', 'verify-mform-'.$dir)->delete();
-            $this->db->table('member_menu')->where('mark', 'module-'.$dir)->delete();
+            $this->db->table('member_menu')->like('mark', 'module-'.$dir)->delete();
             // 删除自定义菜单
             \Phpcmf\Service::M('Menu')->delete_app($dir);
             // 删除自定义表单
