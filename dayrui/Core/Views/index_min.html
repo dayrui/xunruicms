@@ -92,6 +92,9 @@
                 <li><a href="javascript:dr_update_cache_all();" target="right"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
                 <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                 <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
+                {if !$is_mode}
+                <li><a href="{dr_url('api/admin_all')}"><i class="fa fa-retweet"></i> {dr_lang('完整模式')}</a></li>
+                {/if}
                 <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>
                 {/if}
             </ul>

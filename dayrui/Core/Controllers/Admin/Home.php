@@ -167,8 +167,8 @@ class Home extends \Phpcmf\Common
                     $cfg = require $path.'Config/App.php';
                     if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                         $obj = \Phpcmf\Service::M('auth', $dir);
-                        if (method_exists($obj, 'is_menu_auth')) {
-                            $my_menu = $obj->is_menu_auth($my_menu);
+                        if (method_exists($obj, 'get_admin_menu_data')) {
+                            $my_menu = $obj->get_admin_menu_data($my_menu);
                         }
                     }
                 }
@@ -363,8 +363,8 @@ class Home extends \Phpcmf\Common
                     $cfg = require $path.'Config/App.php';
                     if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                         $obj = \Phpcmf\Service::M('auth', $dir);
-                        if (method_exists($obj, 'is_menu_auth')) {
-                            $my_menu = $obj->is_menu_auth($my_menu);
+                        if (method_exists($obj, 'get_admin_menu_data')) {
+                            $my_menu = $obj->get_admin_menu_data($my_menu);
                         }
                     }
                 }
