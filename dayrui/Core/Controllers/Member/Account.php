@@ -255,7 +255,7 @@ class Account extends \Phpcmf\Common
         // 是否允许更新
         $is_update = $this->member_cache['config']['edit_email'] || !$this->member['email'];
 
-        // 是否需要认证 $this->member_cache['config']['email'] && 
+        // 是否需要认证 $this->member_cache['config']['email'] &&
         $is_email = !$this->member['is_email'] ;
 
         // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
@@ -320,8 +320,8 @@ class Account extends \Phpcmf\Common
             $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         }
 
-        // 是否需要认证手机号码
-        if (!$value && $this->member['phone'] && $this->member_cache['config']['mobile'] && !$this->member['is_mobile']) {
+        // 是否需要认证手机号码 && $this->member_cache['config']['mobile']
+        if (!$value && $this->member['phone'] && !$this->member['is_mobile']) {
             $value = $this->member['phone'];
         }
 
@@ -343,7 +343,7 @@ class Account extends \Phpcmf\Common
 
         $rt = \Phpcmf\Service::M('member')->sendsms_code($value, $this->member['randcode']);
         if (!$rt['code']) {
-			$this->_json(0, dr_lang('发送失败'));	
+			$this->_json(0, IS_DEV ? $rt['msg'] : dr_lang('发送失败'));
 		}
 
 		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
@@ -362,8 +362,8 @@ class Account extends \Phpcmf\Common
             $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         }
 
-        // 是否需要认证手机号码
-        if (!$value && $this->member['email'] && $this->member_cache['config']['email'] && !$this->member['is_email']) {
+        // 是否需要认证手机号码$this->member_cache['config']['email'] &&
+        if (!$value && $this->member['email'] && !$this->member['is_email']) {
             $value = $this->member['email'];
         }
 
@@ -385,7 +385,7 @@ class Account extends \Phpcmf\Common
 
         $rt = \Phpcmf\Service::M('member')->sendmail($value, dr_lang('邮件验证'), 'member_email_code.html', $this->member);
         if (!$rt['code']) {
-			$this->_json(0, dr_lang('发送失败'));
+			$this->_json(0, IS_DEV ? $rt['msg'] : dr_lang('发送失败'));
 		}
 
 		\Phpcmf\Service::L('cache')->set_data($name, $value, 300);
