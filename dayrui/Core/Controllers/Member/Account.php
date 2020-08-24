@@ -256,7 +256,7 @@ class Account extends \Phpcmf\Common
         $is_update = $this->member_cache['config']['edit_email'] || !$this->member['email'];
 
         // 是否需要认证
-        $is_email = $this->member_cache['config']['email'] && !$this->member['email'] ;
+        $is_email = $this->member_cache['config']['email'] && !$this->member['is_mobile'] ;
 
         // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
         //$is_email && $this->member['phone'] && $is_update = 0;
