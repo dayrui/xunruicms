@@ -295,7 +295,7 @@ class Category extends \Phpcmf\Table
             } elseif ($this->module['category'][$pid]['tid'] == 2) {
                 $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
             } elseif (\Phpcmf\Service::M('Category')->check_counts(0, dr_count($list))) {
-                return dr_return_data(0, dr_lang('网站栏目数量已达到上限'));
+                $this->_json(0, dr_lang('网站栏目数量已达到上限'));
             }
 
             $count = 0;
