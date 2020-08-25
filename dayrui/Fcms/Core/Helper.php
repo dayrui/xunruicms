@@ -57,6 +57,9 @@ function dr_move_uploaded_file($tempfile, $fullname) {
 }
 
 // html实体字符转换
+function dr_code2html($value, $fk = false, $flags = null) {
+    return dr_html_code($value, $fk, $flags);
+}
 function dr_html_code($value, $fk = false, $flags = null) {
 
     !$flags && $flags = ENT_QUOTES | ENT_HTML401 | ENT_HTML5;

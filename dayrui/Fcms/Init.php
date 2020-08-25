@@ -64,7 +64,6 @@ if (is_file(WRITEPATH.'config/system.php')) {
 foreach ($system as $var => $value) {
     !defined($var) && define($var, $value);
 }
-unset($system);
 
 // 显示错误提示
 if (CI_DEBUG) {
