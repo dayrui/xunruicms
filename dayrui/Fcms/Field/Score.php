@@ -13,7 +13,14 @@ class Score extends \Phpcmf\Library\A_Field  {
 	 * 字段相关属性参数
 	 */
 	public function option($option, $field = null) {
-        return ['', ''];
+        return ['', '<div class="form-group">
+			<label class="col-md-2 control-label">'.dr_lang('显示游客组').'</label>
+			<div class="col-md-9">
+				<input type="checkbox" name="data[setting][option][guest]" '.($option['guest'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+				<span class="help-block">'.dr_lang('把游客组作为一个用户组来显示').'</span>
+			</div>
+		</div>'];
 	}
 
     /**
@@ -109,14 +116,24 @@ class Score extends \Phpcmf\Library\A_Field  {
 
         // 模式
         $sku = dr_string2array(\Phpcmf\Service::L('Field')->value[$field['fieldname'].'_sku']);
-        $is_field = $sku? 1 : 0;
         $html = '';
-        foreach (\Phpcmf\Service::C()->member_cache['group'] as $g) {
+        if ($field['setting']['option']['guest']) {
+            $group = dr_array22array([
+                0 => [
+                    'id' => 0,
+                    'name' => dr_lang('游客'),
+                ],
+            ], \Phpcmf\Service::C()->member_cache['group']);
+        } else {
+            $group = \Phpcmf\Service::C()->member_cache['group'];
+        }
+        foreach ($group as $g) {
             $html.= '<label><div class="input-group">
 <span class="input-group-addon">'.$g['name'].'</span>
 <input type="text" class="form-control" name="data['.$field['fieldname'].'_sku]['.$g['id'].']" value="'.(string)$sku[$g['id']].'" /> 
 </div></label>';
         }
+        $is_field = $sku? 1 : 0;
 
         $str = '
             <div class="mt-radio-inline">
@@ -155,14 +172,25 @@ class Score extends \Phpcmf\Library\A_Field  {
 
         // 模式
         $sku = dr_string2array(\Phpcmf\Service::L('Field')->value['score_sku']);
-        $is_field = $sku? 1 : 0;
         $html = '';
-        foreach (\Phpcmf\Service::C()->member_cache['group'] as $g) {
+        if ($field['setting']['option']['guest']) {
+            $group = dr_array22array([
+                0 => [
+                    'id' => 0,
+                    'name' => dr_lang('游客'),
+                ],
+            ], \Phpcmf\Service::C()->member_cache['group']);
+        } else {
+            $group = \Phpcmf\Service::C()->member_cache['group'];
+        }
+        foreach ($group as $g) {
             $html.= '<label><div class="input-group">
 <span class="input-group-addon">'.$g['name'].'</span>
 <input type="text" class="form-control"  readonly name="data['.$field['fieldname'].'_sku]['.$g['id'].']" value="'.(string)$sku[$g['id']].'" /> 
 </div></label>';
         }
+
+        $is_field = $sku? 1 : 0;
 
         $str = '
             <div id="dr_field_'.$field['fieldname'].'" style="display:'.(!$is_field ? 'block' : 'none').';">

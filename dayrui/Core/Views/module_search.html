@@ -103,14 +103,14 @@
                                 </select></label>
                                 {php $c++;}
                                 {/loop}
-                                <span class="help-block">{dr_lang('由一组固定的字符串参数作为搜索变量，例如：栏目id-城市-分类-关键词-排序-分页.html')}</span>
+                                <span class="help-block">{dr_lang('由一组固定的字符串参数作为搜索变量，例如：栏目id-城市-分类-搜索词-排序-分页.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search param_rule_{$i}_1" style="display: none;">
                             <label class="col-md-2 control-label">{dr_lang('匹配字段默认填充值')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[{$i}][param_join_default_value]" value="{if $m['setting']['search']['param_join_default_value']}{$m['setting']['search']['param_join_default_value']}{else}0{/if}" ></label>
-                                <span class="help-block">{dr_lang('搜索变量为空时的填充值，例如：0-0-0-关键词-排序-分页.html')}</span>
+                                <span class="help-block">{dr_lang('搜索变量为空时的填充值，例如：0-0-0-搜索词-排序-分页.html')}</span>
                             </div>
                         </div>
                         <script>
