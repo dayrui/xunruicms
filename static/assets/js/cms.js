@@ -148,29 +148,53 @@ function dr_show_info(msg, width) {
 }
 function dr_tips(code, msg, time) {
 
-    if (!time) {
+    if (!time || time == "undefined") {
         time = 3000;
     } else {
         time = time * 1000;
     }
-    var tip = '<i class="fa fa-info-circle"></i>';
-    //var theme = 'teal';
-    if (code >= 1) {
-        tip = '<i class="fa fa-check-circle"></i>';
-        //theme = 'lime';
-    } else if (code == 0) {
-        tip = '<i class="fa fa-times-circle"></i>';
-        //theme = 'ruby';
+
+    var is_tip = 0;
+    if (time < 0) {
+        is_tip = 1;
+    } else if (code == 0 && msg.length > 15) {
+        is_tip = 1;
     }
 
-    layer.msg(tip+'&nbsp;&nbsp;'+msg, {time: time});
+    if (is_tip) {
+        if (code == 0) {
+            layer.alert(msg, {
+                shade: 0,
+                title: "",
+                icon: 2
+            })
+        } else {
+            layer.alert(msg, {
+                shade: 0,
+                title: "",
+                icon: 1
+            })
+        }
+    } else {
+        var tip = '<i class="fa fa-info-circle"></i>';
+        //var theme = 'teal';
+        if (code >= 1) {
+            tip = '<i class="fa fa-check-circle"></i>';
+            //theme = 'lime';
+        } else if (code == 0) {
+            tip = '<i class="fa fa-times-circle"></i>';
+            //theme = 'ruby';
+        }
+        layer.msg(tip+'&nbsp;&nbsp;'+msg, {time: time});
+    }
+
 }
 function dr_cmf_tips(code, msg, time) {
     dr_tips(code, msg, time);
 }
 
-//
-function dr_iframe(type, url, width, height, nogo) {
+// 窗口提交
+function dr_iframe(type, url, width, height, rt) {
 
     var title = '';
     if (type == 'add') {
@@ -221,7 +245,7 @@ function dr_iframe(type, url, width, height, nogo) {
                         if (json.data.tourl) {
                             setTimeout("window.location.href = '"+json.data.tourl+"'", 2000);
                         } else {
-                            if (nogo == 'nogo') {
+                            if (rt == 'nogo') {
 
                             } else {
                                 setTimeout("window.location.reload(true)", 2000);
@@ -428,7 +452,7 @@ function dr_ajax_save(value, url, name) {
         dataType: "json",
         success: function (json) {
             layer.close(index);
-            dr_tips(json.code, json.msg);
+            dr_tips(json.code, json.msg, json.data.time);
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
             dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
@@ -486,7 +510,7 @@ function dr_ajax_option(url, msg, remove) {
                             setTimeout("window.location.reload(true)", 3000)
                         }
                     }
-                    dr_cmf_tips(json.code, json.msg);
+                    dr_cmf_tips(json.code, json.msg, json.data.time);
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
                     dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
@@ -524,7 +548,7 @@ function dr_ajax_option_url(url, msg, tourl) {
                             setTimeout("window.location.href = '" + tourl + "'", 2000);
                         }
                     }
-                    dr_cmf_tips(json.code, json.msg);
+                    dr_cmf_tips(json.code, json.msg, json.data.time);
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
                     dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
@@ -608,7 +632,7 @@ function dr_post_submit(url, form, time, go) {
         success: function(json) {
             layer.close(loading);
             if (json.code) {
-                dr_cmf_tips(1, json.msg);
+                dr_cmf_tips(1, json.msg, json.data.time);
                 if (json.data.htmlfile) {
                     // 执行生成htmljs
                     $.ajax({
@@ -639,7 +663,7 @@ function dr_post_submit(url, form, time, go) {
                     setTimeout("window.location.href = '"+gourl+"'", time);
                 }
             } else {
-                dr_cmf_tips(0, json.msg);
+                dr_cmf_tips(0, json.msg, json.data.time);
                 $('.fc-code img').click();
                 if (json.data.field) {
                     $('#dr_row_'+json.data.field).addClass('has-error');
@@ -667,7 +691,7 @@ function dr_loginout(msg) {
                     error: function(){ }
                 });
             }
-            dr_cmf_tips(1, json.msg);
+            dr_cmf_tips(1, json.msg, json.data.time);
             setTimeout('window.location.href="'+json.data.url+'"', 2000);
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -723,7 +747,7 @@ function dr_ajax_member(url, form) {
                     window.location.href = json.data.url;
                 }
             } else {
-                dr_cmf_tips(0, json.msg);
+                dr_cmf_tips(0, json.msg, json.data.time);
                 $('.fc-code img').click();
                 if (json.data.field) {
                     $('#dr_row_'+json.data.field).addClass('has-error');
@@ -767,7 +791,7 @@ function dr_pc_or_mobile(url) {
                     window.location.href = json.data.url;
                 }
             } else {
-                dr_cmf_tips(0, json.msg);
+                dr_cmf_tips(0, json.msg, json.data.time);
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {

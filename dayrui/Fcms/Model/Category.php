@@ -36,6 +36,20 @@ class Category extends \Phpcmf\Model
         return $this->table($this->tablename)->is_exists($id, 'dirname', $value);
     }
 
+    // 检查栏目上限
+    public function check_counts($id, $fix = 0) {
+
+        if ($id) {
+            return 0;
+        }
+
+        $max = $this->table($this->tablename)->counts() + $fix;
+        if ($max > MAX_CATEGORY) {
+            return 1;
+        }
+
+        return 0;
+    }
 
     /**
      * 找出子目录列表
@@ -197,7 +211,7 @@ class Category extends \Phpcmf\Model
     public function repair($_data = [], $dirname = MOD_DIR) {
 
         $this->categorys = $categorys = [];
-        !$_data && $_data = $this->table($this->tablename)->order_by('displayorder ASC,id ASC')->getAll();
+        !$_data && $_data = $this->table($this->tablename)->order_by('displayorder ASC,id ASC')->getAll(MAX_CATEGORY);
         if (!$_data) {
             return;
         }
@@ -220,12 +234,12 @@ class Category extends \Phpcmf\Model
                 || $cat['child'] != $this->categorys[$catid]['child']) {
                 // 当库中与实际不符合才更新数据表
                 // 更新数据库
-                $this->table($this->tablename)->update($cat['id'], array(
+                $this->table($this->tablename)->update($cat['id'], [
                     'pids' => $this->categorys[$catid]['pids'],
                     'child' => $this->categorys[$catid]['child'],
                     'childids' => $this->categorys[$catid]['childids'],
                     'pdirname' => $this->categorys[$catid]['pdirname']
-                ));
+                ]);
             }
 
             $dirname == 'share' && $this->categorys[$catid]['child'] && $this->update_parent_mid($this->categorys, $catid);

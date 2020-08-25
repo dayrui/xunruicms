@@ -24,6 +24,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('TPLPATH') && define('TPLPATH', ROOTPATH.'template/');
 // 是否可编辑后模板
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
+// 最大栏目数量限制category
+!defined('MAX_CATEGORY') && define('MAX_CATEGORY', 100);
 // tests
 define('TESTPATH', WRITEPATH.'tests/');
 

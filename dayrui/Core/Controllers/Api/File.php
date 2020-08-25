@@ -44,6 +44,7 @@ class File extends \Phpcmf\Common
             'count' => max(1, (int)$field['setting']['option']['count']),
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
+            'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ];
     }
 
@@ -192,7 +193,6 @@ class File extends \Phpcmf\Common
         }
 
         $p = $this->_get_upload_params();
-
         $c = (int)\Phpcmf\Service::L('input')->get('ct'); // 当已有数量
         $ct = max(1, (int)$p['count']); // 可上传数量
 
@@ -259,10 +259,19 @@ class File extends \Phpcmf\Common
             .'&p='.\Phpcmf\Service::L('input')->get('p');
         $pp = $unused ? intval($_GET['pp']) : 1;
 
+        // 快捷上传字段参数
+        $field = [
+            'url' => '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
+            'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), intval($p['size']).'MB'),
+            'param' => $p,
+            'back' => $url.'&pp=0',
+        ];
+
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
             'list' => $list,
+            'field' => $field,
             'sfield' => $sfield,
             'param' => [
                 'used' => $unused,

@@ -294,6 +294,8 @@ class Category extends \Phpcmf\Table
                 $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
             } elseif ($this->module['category'][$pid]['tid'] == 2) {
                 $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
+            } elseif (\Phpcmf\Service::M('Category')->check_counts(0, dr_count($list))) {
+                return dr_return_data(0, dr_lang('网站栏目数量已达到上限'));
             }
 
             $count = 0;
@@ -378,7 +380,6 @@ class Category extends \Phpcmf\Table
 
     // 后台批量设置URL
     protected function _Admin_Url_Edit() {
-
 
         if (!$this->module['share']) {
             $this->_admin_msg(2, dr_lang('独立模块在模块配置中设置URL规则'),\Phpcmf\Service::L('Router')->url('seo_module/show', ['dir' => $this->module['dirname'], 'page' => 2, 'hide_menu' => 1]));
@@ -925,6 +926,8 @@ class Category extends \Phpcmf\Table
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
                 } elseif (\Phpcmf\Service::M('Category')->check_dirname($id, $save['dirname'])) {
                     return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
+                } elseif (\Phpcmf\Service::M('Category')->check_counts($id)) {
+                    return dr_return_data(0, dr_lang('网站栏目数量已达到上限'));
                 }
 
                 // 默认数据
