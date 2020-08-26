@@ -42,7 +42,6 @@ class Category extends \Phpcmf\Model
         if ($id) {
             return 0;
         }
-
         $max = $this->table($this->tablename)->counts() + $fix;
         if ($max > MAX_CATEGORY) {
             return 1;

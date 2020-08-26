@@ -137,7 +137,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
         ];
     }
 
-    private function _field_type_select($id, $type) {
+    protected function _field_type_select($id, $type) {
 
         $arr = [
             0 => dr_lang('不使用'),
@@ -154,7 +154,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
         return $html;
     }
 
-    private function _field_type_html($config, $cname, $value, $hang, $lie) {
+    protected function _field_type_html($config, $cname, $value, $hang, $lie) {
 
         $html = '';
         if ($config['type'] == 1) {
