@@ -349,7 +349,7 @@ abstract class Common extends \CodeIgniter\Controller
             list($uid, $adminid) = explode('-', $code);
             $uid = (int)$uid;
             if ($this->uid != $uid) {
-                $admin = \Phpcmf\Service::M('member')->table('member')->get((int)$adminid);
+                $admin = \Phpcmf\Service::M()->table('member')->get((int)$adminid);
                 if ($this->session()->get('admin_login_member_code') == md5($uid.$admin['id'].$admin['password'])) {
                     $this->uid = $uid;
                     $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);

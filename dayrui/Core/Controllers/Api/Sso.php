@@ -68,6 +68,7 @@ class Sso extends \Phpcmf\Common
                 header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
                 \Phpcmf\Service::L('input')->set_cookie('admin_login_member', $uid.'-'.$admin['id'], 3600);
                 $this->session()->setTempdata('admin_login_member_code', md5($uid.$admin['id'].$admin['password']), 3600);
+
                 break;
 
             case 'slogin': // 后台登录其他站点

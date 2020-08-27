@@ -516,15 +516,16 @@ class Api extends \Phpcmf\Common
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
-        $code = md5($this->admin['id'].$this->admin['password']);
-
-        \Phpcmf\Service::L('cache')->set_data('admin_login_member', $this->admin, 300);
+        $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['id']);
+        \Phpcmf\Service::L('cache')->set_data('admin_login_member', $admin, 300);
 
         $sso = '';
         $url = \Phpcmf\Service::M('member')->get_sso_url();
+        $code = md5($admin['id'].$admin['password']);
         foreach ($url as $u) {
             $sso.= '<script src="'.$u.'index.php?s=api&c=sso&action=alogin&code='.dr_authcode($uid.'-'.$code, 'ENCODE').'"></script>';
         }
+
         \Phpcmf\Service::V()->assign([
             'menu' => '',
         ]);
