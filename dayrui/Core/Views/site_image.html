@@ -81,7 +81,7 @@
                         <div class="form-group dr_sy dr_sy_1">
                             <label class="col-md-2 control-label">{dr_lang('水印文字大小')}</label>
                             <div class="col-md-9">
-                                <label><input name="data[wm_font_size]" value="{htmlspecialchars($data['wm_font_size'])}" type="text" class="form-control"></label>
+                                <label><input name="data[wm_font_size]" value="{intval($data['wm_font_size'])}" type="text" class="form-control"></label>
                                 <span class="help-block">{dr_lang('字体大小，单位px像素')}</span>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                         <div class="form-group hide">
                             <label class="col-md-2 control-label">{dr_lang('水印透明度')}</label>
                             <div class="col-md-5">
-                                <input type="hidden" name="data[wm_opacity]" id="wm_opacity" value="{htmlspecialchars($data.wm_opacity)}">
+                                <input type="hidden" name="data[wm_opacity]" id="wm_opacity" value="{intval($data.wm_opacity)}">
                                 <div id="demo6_slider1" class="noUi-danger"></div>
                                 <span id="demo6_slider1-span"></span>
 
@@ -117,7 +117,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('水印图片质量')}</label>
                             <div class="col-md-5">
-                                <input type="hidden" name="data[quality]" id="quality" value="{htmlspecialchars($data.quality)}">
+                                <input type="hidden" name="data[quality]" id="quality" value="{intval($data.quality)}">
                                 <div id="demo6_slider2" class="noUi-success"></div>
                                 <span id="demo6_slider2-span"></span>
                                 <span class="help-block">{dr_lang('设置添加水印后的图片质量，数值越大，图片越清晰')}</span>
@@ -126,7 +126,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('水印图片内边距')}</label>
                             <div class="col-md-9">
-                                <label><input name="data[wm_padding]" value="{htmlspecialchars($data.wm_padding)}" type="text" class="form-control" placeholder="{dr_lang('px')}"></label>
+                                <label><input name="data[wm_padding]" value="{intval($data.wm_padding)}" type="text" class="form-control" placeholder="{dr_lang('px')}"></label>
                                 <span class="help-block">{dr_lang('内边距，以像素为单位，是水印与图片边缘之间的距离')}</span>
                             </div>
                         </div>
@@ -136,13 +136,13 @@
                                 <div class="input-inline input-small">
                                     <div class="input-group">
                                         <span class="input-group-addon">{dr_lang('水平')}</span>
-                                        <input type="text"  name="data[wm_hor_offset]" value="{htmlspecialchars($data.wm_hor_offset)}" class="form-control" placeholder="px">
+                                        <input type="text"  name="data[wm_hor_offset]" value="{intval($data.wm_hor_offset)}" class="form-control" placeholder="px">
                                     </div>
                                 </div>
                                 <div class="input-inline input-small">
                                     <div class="input-group">
                                         <span class="input-group-addon">{dr_lang('垂直')}</span>
-                                        <input type="text"  name="data[wm_vrt_offset]" value="{htmlspecialchars($data.wm_vrt_offset)}" class="form-control" placeholder="px">
+                                        <input type="text"  name="data[wm_vrt_offset]" value="{intval($data.wm_vrt_offset)}" class="form-control" placeholder="px">
                                     </div>
                                 </div>
                             </div>
@@ -154,13 +154,13 @@
                                 <div class="input-inline input-small">
                                     <div class="input-group">
                                         <span class="input-group-addon">{dr_lang('宽大于')}</span>
-                                        <input type="text"  name="data[width]" value="{htmlspecialchars($data.width)}" class="form-control" placeholder="px">
+                                        <input type="text"  name="data[width]" value="{intval($data.width)}" class="form-control" placeholder="px">
                                     </div>
                                 </div>
                                 <div class="input-inline input-small">
                                     <div class="input-group">
                                         <span class="input-group-addon">{dr_lang('高大于')}</span>
-                                        <input type="text"  name="data[height]" value="{htmlspecialchars($data.height)}" class="form-control" placeholder="px">
+                                        <input type="text"  name="data[height]" value="{intval($data.height)}" class="form-control" placeholder="px">
                                     </div>
                                 </div>
                                <span class="help-block">{dr_lang('对超过设定值的图片附件加水印，例如小尺寸的图片不水印')}</span>
