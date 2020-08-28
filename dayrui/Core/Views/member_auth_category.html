@@ -21,7 +21,7 @@
     <div class="margin-bottom-5">
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('访问')}
-            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['show'] || !$auth['share_category']} checked {/if} name="category[{$mid}][show]" value="1" />
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['show'] || !$auth['category'][$mid]} checked {/if} name="category[{$mid}][show]" value="1" />
             <span></span>
         </label>
 
