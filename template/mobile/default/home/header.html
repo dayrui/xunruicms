@@ -34,17 +34,7 @@
     <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="{HOME_THEME_PATH}web/scripts/app.min.js" type="text/javascript"></script>
     <script src="{MOBILE_THEME_PATH}js/mobile.js" type="text/javascript"></script>
-    {if in_array('store', [MOD_DIR, APP_DIR])}
-    <!-- 加载商城模块css -->
-    <link href="{HOME_THEME_PATH}web/store/style.css" rel="stylesheet" type="text/css" />
-    <script src="{HOME_THEME_PATH}web/store/js/mall.js"></script>
-    <script src="{HOME_THEME_PATH}web/store/js/jquery.counterup.min.js"></script>
-    <script>
-        $(function () {
-            dr_cart_nums();
-        });
-    </script>
-    {/if}
+
 </head>
 <body class="page-container-bg-solid">
 <div class="top-category-menu" style="display: none">
