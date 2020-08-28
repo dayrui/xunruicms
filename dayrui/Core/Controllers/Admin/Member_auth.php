@@ -222,6 +222,7 @@ class Member_auth extends \Phpcmf\Common
 
         $v = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray();
         $aid = dr_safe_filename(\Phpcmf\Service::L('input')->get('aid'));
+        !$aid && $aid = 0;
         $value = dr_string2array($v['value']);
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
@@ -275,6 +276,7 @@ class Member_auth extends \Phpcmf\Common
 
         $v = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray();
         $aid = dr_safe_filename(\Phpcmf\Service::L('input')->get('aid'));
+        !$aid && $aid = 0;
         $value = dr_string2array($v['value']);
 
         switch ($at) {
