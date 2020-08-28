@@ -771,13 +771,15 @@ class Member extends \Phpcmf\Model
         // 密码验证
         $password2 = dr_safe_password($password);
         if (md5(md5($password2).$data['salt'].md5($password2)) != $data['password']) {
-            \Phpcmf\Hooks::trigger('member_login_password_error', [
-                'member' => $data,
-                'password' => $password,
-                'ip' => (string)\Phpcmf\Service::L('input')->ip_address(),
-                'time' => SYS_TIME,
-            ]);
-            return dr_return_data(0, dr_lang('密码不正确'));
+            if (strlen($password2) == 32 && md5($password2.$data['salt'].$password2) != $data['password']) {
+                \Phpcmf\Hooks::trigger('member_login_password_error', [
+                    'member' => $data,
+                    'password' => $password,
+                    'ip' => (string)\Phpcmf\Service::L('input')->ip_address(),
+                    'time' => SYS_TIME,
+                ]);
+                return dr_return_data(0, dr_lang('密码不正确'));
+            }
         }
 
         // 验证管理员登录
