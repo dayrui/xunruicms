@@ -268,7 +268,7 @@ abstract class Common extends \CodeIgniter\Controller
                     if (in_array(DOMAIN_NAME, $client)) {
                         // 表示这个域名属于移动端,需要跳转到pc
                         $arr = array_flip($client);
-                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($arr[DOMAIN_NAME].'/'));
+                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($arr[DOMAIN_NAME].'/'), 1);
                     }
                 }
             }

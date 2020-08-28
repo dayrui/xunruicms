@@ -101,7 +101,7 @@ class Router
     }
 
     // 判断满足定向跳转的条件
-    public function is_redirect_url($url)
+    public function is_redirect_url($url, $is_mobile = 0)
     {
         // 不调整的条件
         if (defined('IS_NOT_301') && IS_NOT_301) {
@@ -112,8 +112,8 @@ class Router
             return; // 排除接口
         } elseif (IS_ADMIN) {
             return; // 排除后台
-        } elseif (\Phpcmf\Service::IS_MOBILE()) {
-            return; // 排除移动端
+        } elseif (!$is_mobile && \Phpcmf\Service::IS_MOBILE()) {
+            return; // 排除移动端,移动端不跳转开关
         } elseif (defined('SC_HTML_FILE')) {
             return; // 排除生成
         } elseif (intval($_GET['page']) > 1) {
