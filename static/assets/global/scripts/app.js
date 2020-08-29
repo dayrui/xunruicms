@@ -1975,9 +1975,8 @@ function dr_submit_sql_todo(myform, url) {
 }
 
 
-
 function dr_call_alert() {
-    layer.alert('回调是用于在列表显示时对其值进行格式化<br>'+
+    layer.alert('回调是用于在列表显示时对其值进行格式化，'+
         '函数需要开发者自己定义<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
@@ -1991,10 +1990,13 @@ function dr_call_alert() {
         '复选框字段名称: checkbox_name<br>'+
         '栏目: catid<br>'+
         'URL地址: url<br>'+
+        '实时存储字段值: save_text_value<br>'+
         '时间: datetime<br>会员信息: author', {
-        title: '',
+        title: '回调参数',
         shade: 0,
-        btn: []
+        btn: ['访问手册']
+    }, function(index, layero){
+        dr_help(463);
     });
 
 }

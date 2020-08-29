@@ -162,19 +162,39 @@ class Table extends \Phpcmf\Common
      * $id      内容id
      * */
     protected function _Display_Order($id, $value, $after = null) {
+        $this->_Save_Value($id, 'displayorder', $value, $after);
+    }
+
+    /**
+     * 单个字段存储值
+     * $id      内容id
+     * $name    字段名称
+     * $value   字段值
+     * */
+    protected function _Save_Value($id, $name, $value, $after = null) {
+
+        if (!\Phpcmf\Service::M()->is_table_exists($this->init['table'])) {
+            $this->_json(0, dr_lang('数据表（%s）不存在', $this->init['table']));
+        } elseif (!\Phpcmf\Service::M()->is_field_exists($this->init['table'], $name)) {
+            $this->_json(0, dr_lang('数据表（%s）字段（%s）不存在', $this->init['table'], $name));
+        }
 
         // 查询数据
         $row = \Phpcmf\Service::M()->init($this->init)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('数据%s不存在', $id));
+        } elseif ($row[$name] == $value) {
+            $this->_json(1, dr_lang('操作成功'));
         }
 
-        $rt = \Phpcmf\Service::M()->init($this->init)->save($id, 'displayorder', $value, $this->edit_where);
+        $rt = \Phpcmf\Service::M()->init($this->init)->save($id, $name, $value, $this->edit_where);
         if (!$rt['code']) {
             $this->_json(0, $rt['msg']);
         }
 
-        \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$row[$this->init['show_field']].')排序值为'.$value);
+        //log_message('error', $this->name.'：修改('.$row[$this->init['show_field']].')表字段('.$name.')的值为'.$value);
+
+        \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$row[$this->init['show_field']].')表字段('.$name.')的值为'.$value);
 
         // 自动更新缓存
         IS_ADMIN && \Phpcmf\Service::M('cache')->sync_cache();
@@ -185,12 +205,34 @@ class Table extends \Phpcmf\Common
         }
 
         $this->_json(1, dr_lang('操作成功'));
+    }
 
+    // 用于控制器的存储
+    public function save_value_edit() {
+
+        $cache_uid = $this->session()->get('function_list_save_text_value');
+        if (!$cache_uid) {
+            $this->_json(0, dr_lang('权限认证过期，请重试'));
+        } elseif ($this->uid != $cache_uid) {
+            $this->_json(0, dr_lang('权限认证失败，请重试'));
+        }
+
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
+        $value = \Phpcmf\Service::L('input')->get('value', true);
+        $after = dr_safe_filename(\Phpcmf\Service::L('input')->get('after'));
+
+        if (!$id) {
+            $this->_json(0, dr_lang('缺少id参数'));
+        } elseif (!$name) {
+            $this->_json(0, dr_lang('缺少name参数'));
+        }
+
+        $this->_Save_Value($id, $name, $value, $after);
     }
     
     // 格式化保存数据
     protected function _Format_Data($id, $data, $old) {
-
         return $data;
     }
 
