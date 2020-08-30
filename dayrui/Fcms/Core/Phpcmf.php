@@ -261,7 +261,7 @@ abstract class Common extends \CodeIgniter\Controller
                     // 这是移动端
                     if (isset($client[DOMAIN_NAME])) {
                         // 表示这个域名属于电脑端,需要跳转到移动端
-                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($client[DOMAIN_NAME].'/'));
+                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($client[DOMAIN_NAME].'/'), 1);
                     }
                 } else {
                     // 这是电脑端
@@ -273,6 +273,7 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
+        
         // 判断网站是否关闭
         if (!IS_DEV && !IS_ADMIN && !IS_API
             && $this->site_info[SITE_ID]['SITE_CLOSE']
