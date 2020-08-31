@@ -11,11 +11,30 @@ class Home extends \Phpcmf\Common
 
 	// 首页动作
 	public function _index() {
+
+        ob_start();
 		\Phpcmf\Service::V()->assign([
 			'indexc' => 1,
+            'fix_html_now_url' => IS_MOBILE ? SITE_MURL : SITE_URL,
 		]);
         \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('Seo')->index());
 		\Phpcmf\Service::V()->display('index.html');
+        $html = ob_get_clean();
+
+        // 开启过首页静态时
+        if (SITE_INDEX_HTML) {
+            if (IS_MOBILE) {
+                // 移动端，当移动端独立域名情况下才生成静态
+                if (SITE_MURL != SITE_URL) {
+                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html);
+                }
+            } else {
+                // pc
+                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html);
+            }
+        }
+
+        echo $html;
 	}
 
 	// 首页显示
