@@ -214,7 +214,7 @@ class Tree {
             foreach($data as $t) {
                 // 外部链接不显示
                 if ($t['tid'] == 2) {
-                    continue;
+                    //continue;
                 }
                 // 单页且为最终单页不显示
                 if ($is_push && $t['tid'] == 0 && !$t['child']) {

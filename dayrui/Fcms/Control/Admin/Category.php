@@ -82,8 +82,8 @@ class Category extends \Phpcmf\Table
             $t['setting'] = dr_string2array($t['setting']);
             $option = '';
             $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
-            if ($t['tid'] != 2 && $this->_is_admin_auth('add')) {
-                // 非外链添加子类
+            if ($this->_is_admin_auth('add')) {
+                // 非外链添加子类 $t['tid'] != 2 &&
                 $option.= '<a class="btn btn-xs blue" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/add', array('pid' => $t['id'])).'> <i class="fa fa-plus"></i> '.dr_lang('子类').'</a>';
             }
             if ($this->_is_admin_auth('edit')) {
