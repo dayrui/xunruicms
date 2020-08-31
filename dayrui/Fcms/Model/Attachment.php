@@ -179,12 +179,11 @@ class Attachment extends \Phpcmf\Model {
         $storage = new \Phpcmf\Library\Storage(\Phpcmf\Service::C());
         $storage->delete($this->get_attach_info($info['remote']), $info['attachment']);
 
-        // 删除缓存
+        // 删除缩略图的缓存
         if (in_array($info['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
             list($cache_path) = dr_thumb_path();
             dr_dir_delete($cache_path.md5($id).'/', true);
         }
-
 
         // 删除缓存
         \Phpcmf\Service::L('cache')->del_file('attach-info-'.$id, 'attach');

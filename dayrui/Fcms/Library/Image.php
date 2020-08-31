@@ -1574,7 +1574,7 @@ class Image
                 'id' => md5($img),
                 'url' => dr_get_file($img),
                 'file' => '',
-                'remote' => '',
+                'remote' => 'webimg',
                 'fileext' => trim(strtolower(strrchr($img, '.')), '.'),
             ];
             $attach['attachment'] = date('Ym').'/'.$attach['id'].'.'.$attach['fileext'];
@@ -1598,12 +1598,14 @@ class Image
             } else {
                 // 远程图片进行带规则的缩略图处理
                 $remote = \Phpcmf\Service::C()->get_cache('attachment', $attach['remote']);
-                if (($width > 0 || $height > 0) && $remote['value']['wh_prefix_image']) {
-                    // 输出带尺寸的后缀图
-                    return $attach['url'].str_replace(['{width}', '{height}'], [$width, $height], $remote['value']['wh_prefix_image']);
-                } elseif ($remote['value']['image']) {
-                    // 输出带后缀的图片
-                    return $attach['url'].$remote['value']['image'];
+                if ($remote) {
+                    if (($width > 0 || $height > 0) && $remote['value']['wh_prefix_image']) {
+                        // 输出带尺寸的后缀图
+                        return $attach['url'].str_replace(['{width}', '{height}'], [$width, $height], $remote['value']['wh_prefix_image']);
+                    } elseif ($remote['value']['image']) {
+                        // 输出带后缀的图片
+                        return $attach['url'].$remote['value']['image'];
+                    }
                 }
                 //输出直接地址
                 return $attach['url'];

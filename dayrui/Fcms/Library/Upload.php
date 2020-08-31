@@ -227,11 +227,17 @@ class Upload
             return dr_return_data(0, dr_lang('文件下载失败'));
         }*/
 
-        $data = dr_catcher_data($config['url'], (int)$config['timeout']);
-        if (!$data) {
-            log_message('error', '服务器无法下载文件：'.$config['url']);
-            return dr_return_data(0, dr_lang('文件下载失败'));
+        if (isset($config['file_content']) && $config['file_content']) {
+            // 表示已经下载好了的文件
+            $data = $config['file_content'];
+        } else {
+            $data = dr_catcher_data($config['url'], (int)$config['timeout']);
+            if (!$data) {
+                log_message('error', '服务器无法下载文件：'.$config['url']);
+                return dr_return_data(0, dr_lang('文件下载失败'));
+            }
         }
+
 
         $name = substr(md5(SYS_TIME.uniqid().$config['url']), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($config['url']); // 扩展名
