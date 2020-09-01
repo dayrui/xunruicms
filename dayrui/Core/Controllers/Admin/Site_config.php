@@ -37,6 +37,10 @@ class Site_config extends \Phpcmf\Common
                 foreach ($arr as $t) {
                     if (!\Phpcmf\Service::L('Form')->check_domain($t)) {
                         $this->_json(0, dr_lang('域名（%s）格式不正确', $t));
+                    } elseif ($t == $data['mobile']['domain']) {
+                        $this->_json(0, dr_lang('域名（%s）不能与移动端域名重复', $t));
+                    } elseif ($t == $data['config']['SITE_DOMAIN'] || $t == $post['SITE_DOMAIN']) {
+                        $this->_json(0, dr_lang('域名（%s）不能与网站域名重复', $t));
                     }
                 }
             }

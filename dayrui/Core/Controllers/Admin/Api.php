@@ -436,7 +436,14 @@ class Api extends \Phpcmf\Common
                     $this->site_domain[$t] && $html.= $t.' 已经存在于其他站点';
                 }
             }
-            $my && count($my) != count(array_unique($my)) && $html.= '<p>当前配置项存在重复域名</p>';
+            $unique = array_unique ( $my );
+            if ($my && count($my) != count($unique)) {
+                $arr = array_diff_assoc ( $my, $unique );
+                $html.= '<p>当前配置项存在重复域名</p>';
+                foreach ($arr as $t) {
+                    $html.= '<p>此域名【'.$t.'】被重复配置过，请检查</p>';
+                }
+            }
             $html && exit($html);
         }
 
