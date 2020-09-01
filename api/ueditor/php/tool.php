@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /* 在后台设置的【完整】模式下，工具栏上的所有的功能按钮和下拉框 */
 

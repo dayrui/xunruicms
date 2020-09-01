@@ -7,7 +7,16 @@ header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
 
 chdir(__DIR__);
 
-$CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
+if (is_file(WEBPATH."api/ueditor/php/config.php")) {
+	$CONFIG = require WEBPATH."api/ueditor/php/config.php";
+} elseif (is_file(WEBPATH."api/ueditor/php/config.php")) {
+	$CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents(WEBPATH."api/ueditor/php/config.json")), true);
+} else {
+	echo json_encode(array(
+		'state'=> '无权限访问api/ueditor/php/config.php文件'
+	), JSON_UNESCAPED_UNICODE);exit;
+}
+
 $action = $_GET['action'];
 
 $error = $this->_check_upload_auth(1);
@@ -15,7 +24,7 @@ if (!$error) {
     // 验证了才能上传
     switch ($action) {
         case 'config':
-            $result =  json_encode($CONFIG);
+            $result =  json_encode($CONFIG, JSON_UNESCAPED_UNICODE);
             break;
 
         /* 上传图片 */
@@ -46,7 +55,7 @@ if (!$error) {
         default:
             $result = json_encode(array(
                 'state'=> '请求地址出错'
-            ));
+            ), JSON_UNESCAPED_UNICODE);
             break;
     }
 } elseif ($action == 'config') {
@@ -54,7 +63,7 @@ if (!$error) {
 } else {
     $result = json_encode(array(
         'state'=> $error ? $error : '请登录在操作'
-    ));
+    ), JSON_UNESCAPED_UNICODE);
 }
 
 
@@ -65,7 +74,7 @@ if (isset($_GET["callback"])) {
     } else {
         echo json_encode(array(
             'state'=> 'callback参数不合法'
-        ));
+        ), JSON_UNESCAPED_UNICODE);
     }
 } else {
     echo $result;
