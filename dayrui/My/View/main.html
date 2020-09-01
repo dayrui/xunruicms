@@ -44,13 +44,11 @@
 
                     <li>
                         <span>技术支持：</span>
-
                         <a target="_blank" href="http://help.xunruicms.com/" style="margin-right: 10px;">使用文档</a>
                         <a target="_blank" href="http://www.xunruicms.com/wenda/" style="margin-right: 10px;">产品论坛</a>
                         <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=f0fbe4240aec09f99a7949701235c8cde6809f96ad9ee44775da41418632a105" style="margin-right: 10px;">用户QQ群</a>
                     </li>
                     {/if}
-
                 </ul>
             </div>
         </div>
@@ -175,7 +173,6 @@
 
     <script>
         $(function () {
-
             $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
                 success: function(json) {
                     if (json.code) {
@@ -184,7 +181,6 @@
                     }
                 }
             });
-
         });
     </script>
 
