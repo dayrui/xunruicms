@@ -149,7 +149,7 @@ class Install extends \Phpcmf\Common
                     if (!$mysqli) {
                         exit($this->_json(0, '您的PHP环境必须启用Mysqli扩展'));
                     } elseif (!@mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
-                        exit($this->_json(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
+                        exit($this->_json(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
                     } elseif (!@mysqli_select_db($mysqli, $data['db_name'])) {
                         if (!@mysqli_query($mysqli, 'CREATE DATABASE '.$data['db_name'])) {
                             exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库'));

@@ -39,7 +39,7 @@ if (!$mysqli) {
 
 if ($db['default']['database']) {
     if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
-        dr_echo_msg(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
+        dr_echo_msg(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
     } elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
         dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在');
     } else {
