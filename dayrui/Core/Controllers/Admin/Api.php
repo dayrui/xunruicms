@@ -447,7 +447,7 @@ class Api extends \Phpcmf\Common
             $html && exit($html);
         }
 
-		exit('ok');
+		exit('<p>ok</p>');
 	}
 
 	// 统计
