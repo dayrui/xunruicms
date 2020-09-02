@@ -104,7 +104,7 @@
                     {$t.id}
                 </td>
                 <td style="text-align:center">
-                    <label>{if !$t.remote}<span class="label label-sm label-danger">{dr_lang('本地存储')}</span>{else}<span class="label label-sm label-warning">{dr_lang('远程附件')}</span>{/if}</label>
+                    <label>{if !$t.remote}<span class="label label-sm label-danger">{dr_lang('默认')}</span>{else}<span class="label label-sm label-warning">{dr_lang('自定义')}</span>{/if}</label>
                 </td>
                 <td>{Function_list::author($t.author)}</td>
                 <td><a href="{$t.url}">{Function_list::title($t.filename, $param)}</a></td>

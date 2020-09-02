@@ -10,8 +10,6 @@
 
 class Category extends \Phpcmf\Model
 {
-    private $tree;
-    private $tree_html;
     protected $tablename;
     protected $categorys;
 
@@ -241,6 +239,22 @@ class Category extends \Phpcmf\Model
                 ]);
             }
 
+            if ($this->categorys[$catid]['child'] == 1 && $this->categorys[$catid]['catids']) {
+                $ispost = 0;
+                foreach ($t['catids'] as $i) {
+                    // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
+                    if (isset($data[$i]) && $data[$i]['child'] == 0) {
+                        $ispost = 1; // 可以发布 表示此栏目可用
+                        break;
+                    }
+                }
+                if (!$ispost) {
+                    // ispost = 0 表示此栏目没有发布权限
+                    $is_cks = 1;
+                    continue;
+                }
+            }
+
             $dirname == 'share' && $this->categorys[$catid]['child'] && $this->update_parent_mid($this->categorys, $catid);
         }
 
@@ -415,7 +429,6 @@ class Category extends \Phpcmf\Model
         
     }
 
-
     // 递归栏目树形结构
     public function _tree_html($pid = 0) {
         $this->_tree_html.= '<ul>';
@@ -449,6 +462,5 @@ class Category extends \Phpcmf\Model
         $this->_tree_html = '';
         $this->_tree_html(0);
         return $this->_tree_html;
-
     }
 }

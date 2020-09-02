@@ -692,7 +692,7 @@ abstract class Common extends \CodeIgniter\Controller
             $remote = $this->get_cache('attachment', $info['remote']);
             if (!$remote) {
                 // 远程地址无效
-                $info['url'] = $info['file'] = '远程附件的配置已经不存在';
+                $info['url'] = $info['file'] = '自定义附件（'.$info['remote'].'）的配置已经不存在';
                 return $info;
             } else {
                 $info['file'] = $remote['value']['path'].$info['attachment'];

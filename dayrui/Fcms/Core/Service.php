@@ -147,11 +147,13 @@ class Service
      *
      * @var object
      */
-    public static function L( $name,  $namespace = '') {
+    public static function L($name,  $namespace = '') {
 
         list($classFile, $extendFile) = self::_get_class_file($name, $namespace, 'Library');
+
         $_cname = md5($classFile.$extendFile);
         $className = ucfirst($name);
+
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
             require_once $classFile;
             // 自定义继承类
@@ -169,6 +171,7 @@ class Service
                     }
                 }
             }
+
             static::$instances[$_cname] = new $newClassName();
         }
 
@@ -191,6 +194,7 @@ class Service
 
         $_cname = md5($classFile.$extendFile);
         $className = ucfirst($name);
+
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
             require_once $classFile;
             // 自定义继承类

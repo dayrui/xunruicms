@@ -1102,8 +1102,13 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
 
     if (!$data) {
         return '文件信息不存在';
-    } elseif ($data['remote'] && ($info = \Phpcmf\Service::C()->get_cache('attachment', $data['remote']))) {
-        return $info['url'].$data['attachment'];
+    } elseif ($data['remote']) {
+        $remote = \Phpcmf\Service::C()->get_cache('attachment', $data['remote']);
+        if ($remote) {
+            return $remote['value']['path'].$data['attachment'];
+        } else {
+            return '自定义附件（'.$data['remote'].'）的配置已经不存在';
+        }
     } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
 		return dr_thumb($data['id'], $w, $h, 0, 'crop');
 	}
