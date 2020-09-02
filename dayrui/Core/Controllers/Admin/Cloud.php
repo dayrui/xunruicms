@@ -498,7 +498,7 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '本站：没有选择任何升级程序');
         }
 
-        $surl = $this->service_url.'&action=update_file&get_http=1&appid='.$id.'&ls='.dr_safe_replace($_GET['ls']);
+        $surl = $this->service_url.'&action=update_file&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']);
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据', $surl);
