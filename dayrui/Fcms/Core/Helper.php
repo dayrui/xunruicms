@@ -1105,7 +1105,7 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
     } elseif ($data['remote']) {
         $remote = \Phpcmf\Service::C()->get_cache('attachment', $data['remote']);
         if ($remote) {
-            return $remote['value']['path'].$data['attachment'];
+            return $remote['url'].$data['attachment'];
         } else {
             return '自定义附件（'.$data['remote'].'）的配置已经不存在';
         }
