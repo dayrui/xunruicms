@@ -2036,12 +2036,11 @@ function dr_get_theme() {
     return array_diff(dr_dir_map(ROOTPATH.'static/', 1), ['assets', 'space']);
 }
 
-
 /**
  * 获取6位数字随机验证码
  */
 function dr_randcode() {
-    return rand(100000, 999999);
+    return \Phpcmf\Service::L('Form')->get_rand_value();
 }
 
 /**

@@ -338,7 +338,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('手机号码格式不正确'));
 		}
 
-        $this->member['randcode'] = rand(100000, 999999);
+        $this->member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['uid'])->update(['randcode' => $this->member['randcode']]);
 
         $rt = \Phpcmf\Service::M('member')->sendsms_code($value, $this->member['randcode']);
@@ -381,7 +381,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('邮箱地址格式不正确'));
 		}
 
-        $this->member['randcode'] = rand(100000, 999999);
+        $this->member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['uid'])->update(['randcode' => $this->member['randcode']]);
 
         $rt = \Phpcmf\Service::M('member')->sendmail($value, dr_lang('邮件验证'), 'member_email_code.html', $this->member);

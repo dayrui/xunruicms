@@ -443,6 +443,11 @@ class Form
         return true;
     }
 
+    // 生成随机验证码
+    public function get_rand_value() {
+        return rand(100000, 999999);
+    }
+
 
 
     //=====校验方法=========

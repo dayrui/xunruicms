@@ -1029,7 +1029,7 @@ class Member extends \Phpcmf\Model
         $member['experience'] = 0;
         $member['regip'] = (string)\Phpcmf\Service::L('input')->ip_address();
         $member['regtime'] = SYS_TIME;
-        $member['randcode'] = rand(100000, 999999);
+        $member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
 
         $rt = $this->table('member')->insert($member);
         if (!$rt['code']) {

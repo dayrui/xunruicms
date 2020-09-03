@@ -103,7 +103,7 @@ class Api extends \Phpcmf\Common
                 $this->_json(0, dr_lang('手机号码%s已经注册', $value), ['field' => 'value']);
             }
 
-            $this->member['randcode'] = rand(100000, 999999);
+            $this->member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
             \Phpcmf\Service::M()->db->table('member')->where('id', $this->uid)->update([
                 'randcode' => $this->member['randcode'],
                 $this->member_cache['register']['verify'] => $value
@@ -151,7 +151,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('已经发送稍后再试'));
         }
 
-        $this->member['randcode'] = rand(100000, 999999);
+        $this->member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
         $rt = \Phpcmf\Service::M('member')->sendmail($this->member['email'], dr_lang('注册邮件验证'), 'member_verify.html', $this->member);
         if (!$rt['code']) {
@@ -182,7 +182,7 @@ class Api extends \Phpcmf\Common
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} 
 
-        $this->member['randcode'] = rand(100000, 999999);
+        $this->member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
         \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => $this->member['randcode']]);
         $rt = \Phpcmf\Service::M('member')->sendsms_code($this->member['phone'], $this->member['randcode']);
         if (!$rt['code']) {
@@ -256,7 +256,7 @@ class Api extends \Phpcmf\Common
             if (!$data) {
                 $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
             }
-            $data['randcode'] = $rand = rand(100000, 999999);
+            $data['randcode'] = $rand = \Phpcmf\Service::L('Form')->get_rand_value();
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
             $rt = \Phpcmf\Service::M('member')->sendmail($value, dr_lang('找回密码'), 'member_find.html', $data);
             if (!$rt['code']) {
@@ -268,7 +268,7 @@ class Api extends \Phpcmf\Common
             if (!$data) {
                 $this->_json(0, dr_lang('账号凭证不存在'), ['field' => 'value']);
             }
-            $rand = rand(100000, 999999);
+            $rand = \Phpcmf\Service::L('Form')->get_rand_value();
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => $rand]);
             $rt = \Phpcmf\Service::M('member')->sendsms_code($value, $rand);
             if (!$rt['code']) {
@@ -304,7 +304,7 @@ class Api extends \Phpcmf\Common
 			$this->_json(0, dr_lang('已经发送稍后再试')); // 验证操作间隔
 		} 
 
-        $code = rand(100000, 999999);
+        $code = \Phpcmf\Service::L('Form')->get_rand_value();
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
         if (!$rt['code']) {
             $this->_json(0, dr_lang('发送失败'));
@@ -336,7 +336,7 @@ class Api extends \Phpcmf\Common
 			$this->_json(0, dr_lang('已经发送稍后再试'));// 验证操作间隔
 		} 
 
-        $code = rand(100000, 999999);
+        $code = \Phpcmf\Service::L('Form')->get_rand_value();
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
         if (!$rt['code']) {
             $this->_json(0, dr_lang('发送失败'));
@@ -372,7 +372,7 @@ class Api extends \Phpcmf\Common
             $this->_json(1, dr_lang('已经发送稍后再试'));
         }
 
-        $code = rand(100000, 999999);
+        $code = \Phpcmf\Service::L('Form')->get_rand_value();
         $rt = \Phpcmf\Service::M('member')->sendsms_code($phone, $code);
         if (!$rt['code']) {
             $this->_json(0, dr_lang('发送失败'));
