@@ -771,7 +771,9 @@ class Member extends \Phpcmf\Model
         // 密码验证
         $password2 = dr_safe_password($password);
         if (md5(md5($password2).$data['salt'].md5($password2)) != $data['password']) {
-            if (strlen($password2) == 32 && md5($password2.$data['salt'].$password2) != $data['password']) {
+            if (strlen($password2) == 32 && md5($password2.$data['salt'].$password2) == $data['password']) {
+                // 加密验证成功
+            } else {
                 \Phpcmf\Hooks::trigger('member_login_password_error', [
                     'member' => $data,
                     'password' => $password,
