@@ -96,12 +96,12 @@ class Member extends \Phpcmf\Table
         $p = $where = [];
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->request('field'));
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->request('keyword'));
-        
+
         if ($name && $value && isset($this->my_field[$name])) {
             $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
             $p[$name] = $value;
         }
-        
+
         $groupid = (int)\Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
             $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$groupid.')';
@@ -112,7 +112,7 @@ class Member extends \Phpcmf\Table
         if (!in_array(1, $this->admin['roleid'])) {
             $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
         }
-        
+
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
 
         list($tpl) = $this->_List($p);
@@ -144,10 +144,10 @@ class Member extends \Phpcmf\Table
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
-			
-			\Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
-			\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$name);
-			
+
+            \Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
+            \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$name);
+
             exit($this->_json(1, dr_lang('操作成功')));
         }
 
@@ -160,7 +160,7 @@ class Member extends \Phpcmf\Table
 
     // 后台添加
     public function add() {
-        
+
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             if (empty($post['password'])) {
@@ -179,7 +179,7 @@ class Member extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('操作成功'));
         }
-        
+
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
         ]);
@@ -249,8 +249,8 @@ class Member extends \Phpcmf\Table
                 // 上传图片到服务器
                 copy($temp, $file);
                 if (!is_file($file)) {
-					$this->_json(0, dr_lang('头像存储失败'));
-				}
+                    $this->_json(0, dr_lang('头像存储失败'));
+                }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'));
             } else {
@@ -371,6 +371,36 @@ class Member extends \Phpcmf\Table
             'field' => $field,
             'oauth' => \Phpcmf\Service::M()->table('member_oauth')->where('uid', $uid)->getAll(),
             'mygroup' => \Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll(),
+            'regfield' => [
+                'regip' => array(
+                    'ismain' => 1,
+                    'name' => dr_lang('注册地区'),
+                    'fieldtype' => 'Textbtn',
+                    'fieldname' => 'regip',
+                    'setting' => array(
+                        'option' => array(
+                            'width' => 320,
+                            'name' => '查看',
+                            'icon' => 'fa fa-arrow-right',
+                            'func' => 'dr_show_ip',
+                            'value' => \Phpcmf\Service::L('input')->ip_address()
+                        )
+                    )
+                ),
+                'regtime' => array(
+                    'ismain' => 1,
+                    'name' => dr_lang('注册时间'),
+                    'fieldtype' => 'Date',
+                    'fieldname' => 'regtime',
+                    'setting' => array(
+                        'option' => array(
+                            'width' => 280,
+                            'value' => 'SYS_TIME',
+                            'is_left' => 0,
+                        )
+                    )
+                ),
+            ],
         ]);
         \Phpcmf\Service::V()->display('member_edit.html');
     }
@@ -436,10 +466,10 @@ class Member extends \Phpcmf\Table
             'url' => dr_url('member/edit', ['id'=> $uid, 'page'=>4])
         ]);
     }
-    
+
     // 登录记录
     public function login_index() {
-        
+
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
         if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
@@ -451,7 +481,7 @@ class Member extends \Phpcmf\Table
             'list' => $list,
         ]);
         \Phpcmf\Service::V()->display('member_login.html');exit;
-        
+
     }
 
     // 删除用户组
@@ -517,13 +547,13 @@ class Member extends \Phpcmf\Table
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
-			$this->_json(0, dr_lang('所选用户不存在'));
-		} 
+            $this->_json(0, dr_lang('所选用户不存在'));
+        }
 
         $gid = \Phpcmf\Service::L('input')->post('groupid');
-		if (!$gid) {
-			$this->_json(0, dr_lang('所选用户组不存在'));
-		}
+        if (!$gid) {
+            $this->_json(0, dr_lang('所选用户组不存在'));
+        }
 
         $c = 0;
         foreach ($ids as $i) {
@@ -589,6 +619,11 @@ class Member extends \Phpcmf\Table
                 }
                 // 保存附表内容
                 $status = \Phpcmf\Service::L('input')->post('status');
+                $post = \Phpcmf\Service::L('input')->post('data');
+
+                $member['regip'] = $post['regip'];
+                $member['regtime'] = strtotime($post['regtime']);
+
                 $member_data = $data[1] ? $data[1] : [];
                 $member_data['is_lock'] = (int)$status['is_lock'];
                 $member_data['is_auth'] = (int)$status['is_auth'];
@@ -608,10 +643,10 @@ class Member extends \Phpcmf\Table
                     $member = \Phpcmf\Service::M()->table('member')->get($id);
                     \Phpcmf\Service::M('member')->edit_password($member, $password);
                 }
-				
-				\Phpcmf\Service::L('cache')->del_data('member-info-'.$id);
-				\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$old['username']);
-				
+
+                \Phpcmf\Service::L('cache')->del_data('member-info-'.$id);
+                \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$old['username']);
+
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');
                 $old['is_verify'] == 0 && $status['is_verify'] == 1 && \Phpcmf\Service::M('member')->verify_member($id);
