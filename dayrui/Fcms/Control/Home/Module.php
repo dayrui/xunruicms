@@ -34,6 +34,7 @@ class Module extends \Phpcmf\Common
             \Phpcmf\Service::V()->assign([
                 'indexm' => 1,
                 'markid' => 'module-'.$this->module['dirname'],
+                'fix_html_now_url' => defined('IS_MOBILE') && IS_MOBILE ? $this->module['murl'] : $this->module['url'],
             ]);
             \Phpcmf\Service::V()->assign($this->content_model->_format_home_seo($this->module));
             \Phpcmf\Hooks::trigger('module_index');
