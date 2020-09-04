@@ -64,9 +64,7 @@
             <button type="button" onclick="dr_bfb_submit('{dr_lang('修复表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'x'])}')" class="btn blue btn-sm"> <i class="fa fa-wrench"></i> {dr_lang('修复表')}</button>
             <button type="button" onclick="dr_bfb_submit('{dr_lang('刷新表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'s'])}')" class="btn red btn-sm"> <i class="fa fa-retweet"></i> {dr_lang('刷新表')}</button>
              <button type="button" onclick="dr_bfb_submit('{dr_lang('检查表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'jc'])}')" class="btn yellow btn-sm"> <i class="fa fa-cogs"></i> {dr_lang('检查表')}</button>
-            {if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.6.0') > 0) }
-             <button type="button" onclick="dr_bfb_submit('{dr_lang('转换为utf8mb4编码')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'ut'])}')" class="btn dark btn-sm"> <i class="fa fa-database"></i> {dr_lang('转换为utf8mb4编码')}</button>
-             {/if}
+            
         </div>
         <div class="myright">
 

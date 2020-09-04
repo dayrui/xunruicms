@@ -22,7 +22,7 @@ class Home extends \Phpcmf\Common
         $html = ob_get_clean();
 
         // 开启过首页静态时
-        if (SITE_INDEX_HTML) {
+        if (SITE_INDEX_HTML && !defined('SC_HTML_FILE')) {
             if (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
@@ -68,7 +68,7 @@ class Home extends \Phpcmf\Common
         // 开启ob函数
         ob_start();
 		$this->is_html = 1;
-        \Phpcmf\Service::V()->init("pc");
+        \Phpcmf\Service::V()->init('pc');
         \Phpcmf\Service::V()->assign([
             'fix_html_now_url' => SITE_URL, // 修复静态下的当前url变量
         ]);
@@ -80,7 +80,7 @@ class Home extends \Phpcmf\Common
             // 开启ob函数
             ob_start();
             $this->is_html = 1;
-            \Phpcmf\Service::V()->init("mobile");
+            \Phpcmf\Service::V()->init('mobile');
             \Phpcmf\Service::V()->assign([
                 'fix_html_now_url' => SITE_MURL, // 修复静态下的当前url变量
             ]);
