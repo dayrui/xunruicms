@@ -36,6 +36,7 @@ class Module extends \Phpcmf\Common
                 'markid' => 'module-'.$this->module['dirname'],
             ]);
             \Phpcmf\Service::V()->assign($this->content_model->_format_home_seo($this->module));
+            \Phpcmf\Hooks::trigger('module_index');
 
             // 系统开启静态首页
             if (!defined('SC_HTML_FILE') && $this->module['setting']['module_index_html']) {
@@ -52,37 +53,19 @@ class Module extends \Phpcmf\Common
                 }
 
                 if (!$file) {
+                    // 静态文件失败就输出当前页面
                     echo $html;exit;
                 }
 
-                if (\Phpcmf\Service::IS_PC()) {
-                    // 电脑端访问
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
-                    // 生成移动端
-                    if (SITE_IS_MOBILE_HTML) {
-                        ob_start();
-                        \Phpcmf\Service::V()->init('mobile');
-                        \Phpcmf\Service::V()->assign([
-                            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 1) : '', // 修复静态下的当前url变量
-                        ]);
-                        \Phpcmf\Service::V()->display('index.html');
-                        file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), ob_get_clean());
-                    }
-                } else {
+                if (defined('IS_MOBILE') && IS_MOBILE) {
                     // 移动端访问
                     if (SITE_IS_MOBILE_HTML) {
                         file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
                     }
-                    // 生成电脑端
-                    ob_start();
-                    \Phpcmf\Service::V()->init('pc');
-                    \Phpcmf\Service::V()->assign([
-                        'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(MODULE_URL, $this->module['dirname'], SITE_ID, 0) : '', // 修复静态下的当前url变量
-                    ]);
-                    \Phpcmf\Service::V()->display('index.html');
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), ob_get_clean());
+                } else {
+                    // 电脑端访问
+                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
                 }
-
                 echo $html;
             } else {
                 \Phpcmf\Service::V()->display('index.html');
