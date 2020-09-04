@@ -775,17 +775,6 @@ function dr_pc_or_mobile(url) {
         success: function(json) {
             layer.close(loading);
             if (json.code) {
-                var oss_url = json.data.sso;
-                // 发送同步cookie
-                for ( var i = 0; i < oss_url.length; i++){
-                    $.ajax({
-                        type: "GET",
-                        url:oss_url[i],
-                        dataType: "jsonp",
-                        success: function(json){ },
-                        error: function(){ }
-                    });
-                }
                 dr_cmf_tips(1, json.msg);
                 if (json.data.url) {
                     window.location.href = json.data.url;

@@ -253,23 +253,18 @@ abstract class Common extends \CodeIgniter\Controller
             //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
             && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
         ) {
-            if (isset($_COOKIE['is_mobile'])) {
-                // 表示来自切换,不跳转
-                //$is_mobile = false;
+            if ($this->_is_mobile()) {
+                // 这是移动端
+                if (isset($client[DOMAIN_NAME])) {
+                    // 表示这个域名属于电脑端,需要跳转到移动端
+                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix(DOMAIN_NAME), dr_http_prefix($client[DOMAIN_NAME]), dr_now_url()), 1);
+                }
             } else {
-                if ($this->_is_mobile()) {
-                    // 这是移动端
-                    if (isset($client[DOMAIN_NAME])) {
-                        // 表示这个域名属于电脑端,需要跳转到移动端
-                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($client[DOMAIN_NAME].'/'), 1);
-                    }
-                } else {
-                    // 这是电脑端
-                    if (in_array(DOMAIN_NAME, $client)) {
-                        // 表示这个域名属于移动端,需要跳转到pc
-                        $arr = array_flip($client);
-                        \Phpcmf\Service::L('Router')->is_redirect_url(dr_http_prefix($arr[DOMAIN_NAME].'/'), 1);
-                    }
+                // 这是电脑端
+                if (in_array(DOMAIN_NAME, $client)) {
+                    // 表示这个域名属于移动端,需要跳转到pc
+                    $arr = array_flip($client);
+                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix(DOMAIN_NAME), dr_http_prefix($arr[DOMAIN_NAME]), dr_now_url()) , 1);
                 }
             }
         }
@@ -502,6 +497,9 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 判断模块是否存在
         if (!$this->module) {
+            // 重新生成一次缓存
+            \Phpcmf\Service::M('cache')->sync_cache('');
+            $this->module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dirname);
             if (IS_ADMIN) {
                 if ($dirname == 'share') {
                     $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));

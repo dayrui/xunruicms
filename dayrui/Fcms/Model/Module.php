@@ -842,12 +842,12 @@ class Module extends \Phpcmf\Model
         $menu_model = \Phpcmf\Service::M('Menu');
         if ($module) {
             foreach ($module as $mdir => $data) {
-                $cache = $data;
-                $config = $data['config'];
-                $cache['cname'] = isset($config['cname']) && $config['cname'] ? $config['cname'] : $cache['name'];
                 //unset($cache['config']);
                 // 当前站点安装过就缓存它
                 if (isset($data['site'][$siteid]) && $data['site'][$siteid]) {
+                    $cache = $data;
+                    $config = $data['config'];
+                    $cache['cname'] = isset($config['cname']) && $config['cname'] ? $config['cname'] : $cache['name'];
                     $cache['html'] = $data['site'][$siteid]['html'];
                     $cache['title'] = $data['site'][$siteid]['module_title'] ? $data['site'][$siteid]['module_title'] : $data['name'];
                     $cache['urlrule'] = $data['site'][$siteid]['urlrule'];
@@ -866,110 +866,110 @@ class Module extends \Phpcmf\Model
                             $cache['field'][$f['fieldname']] = $f;
                         }
                     }
-                } else {
-                    continue; // 当前站点没有安装模块
-                }
 
-                // 系统模块
-                $cache['system'] = $config['system'];
+                    // 系统模块
+                    $cache['system'] = $config['system'];
 
-                // 模块的栏目分类
-                $cache['category'] = [];
-                $cache['category_dir'] = [];
-                $cache['category_field'] = [];
-                $cache['category_level'] = 0;
-                $cache['category_data_field'] = 0;
+                    // 模块的栏目分类
+                    $cache['category'] = [];
+                    $cache['category_dir'] = [];
+                    $cache['category_field'] = [];
+                    $cache['category_level'] = 0;
+                    $cache['category_data_field'] = 0;
 
-                if (isset($config['hcategory']) && $config['hcategory']) {
-                    // 不使用栏目功能
-                } else {
-                    // 如果是共享共享栏目就查询share表
-                    $cache = $this->_get_category_cache($siteid, $cache);
-                }
-
-                // 模块表单
-                $cache['form'] = [];
-                $form = $this->table('module_form')->where('module', $mdir)->where('disabled', 0)->order_by('id ASC')->getAll();
-                if ($form) {
-                    foreach ($form as $t) {
-                        $t['field'] = [];
-                        // 模块表单的自定义字段
-                        $field = $this->db->table('field')->where('disabled', 0)->where('relatedid', intval($t['id']))->where('relatedname', 'mform-'.$mdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
-                        if ($field) {
-                            foreach ($field as $f) {
-                                $f['setting'] = dr_string2array($f['setting']);
-                                $t['field'][$f['fieldname']] = $f;
-                            }
-                        }
-                        $t['setting'] = dr_string2array($t['setting']);
-                        // 排列table字段顺序
-                        $t['setting']['list_field'] = dr_list_field_order($t['setting']['list_field']);
-                        $cache['form'][$t['table']] = $t;
+                    if (isset($config['hcategory']) && $config['hcategory']) {
+                        // 不使用栏目功能
+                    } else {
+                        // 如果是共享共享栏目就查询share表
+                        $cache = $this->_get_category_cache($siteid, $cache);
                     }
-                }
 
-                // 搜索验证
-                !$cache['setting']['search']['use'] && $cache['setting']['search'] = [];
+                    // 模块表单
+                    $cache['form'] = [];
+                    $form = $this->table('module_form')->where('module', $mdir)->where('disabled', 0)->order_by('id ASC')->getAll();
+                    if ($form) {
+                        foreach ($form as $t) {
+                            $t['field'] = [];
+                            // 模块表单的自定义字段
+                            $field = $this->db->table('field')->where('disabled', 0)->where('relatedid', intval($t['id']))->where('relatedname', 'mform-'.$mdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+                            if ($field) {
+                                foreach ($field as $f) {
+                                    $f['setting'] = dr_string2array($f['setting']);
+                                    $t['field'][$f['fieldname']] = $f;
+                                }
+                            }
+                            $t['setting'] = dr_string2array($t['setting']);
+                            // 排列table字段顺序
+                            $t['setting']['list_field'] = dr_list_field_order($t['setting']['list_field']);
+                            $cache['form'][$t['table']] = $t;
+                        }
+                    }
 
-                // 评论缓存 转移评论
-                if ($cache['comment'] && dr_is_app('comment')) {
-                    $ct = $this->table('app_comment')->where('name', 'module')->getRow();
-                    // 转移评论
-                    if ($ct) {
-                        $ct_cfg = dr_string2array($ct['value']);
-                        if (!$ct_cfg[$mdir]) {
-                            $this->db->table('app_comment')->where('name', 'module')->update([
+                    // 搜索验证
+                    !$cache['setting']['search']['use'] && $cache['setting']['search'] = [];
+
+                    // 评论缓存 转移评论
+                    if ($cache['comment'] && dr_is_app('comment')) {
+                        $ct = $this->table('app_comment')->where('name', 'module')->getRow();
+                        // 转移评论
+                        if ($ct) {
+                            $ct_cfg = dr_string2array($ct['value']);
+                            if (!$ct_cfg[$mdir]) {
+                                $this->db->table('app_comment')->where('name', 'module')->update([
+                                    'value' => dr_array2string([
+                                        $mdir => $cache['comment'],
+                                    ]),
+                                ]);
+                            }
+                        } else {
+                            $this->db->table('app_comment')->insert([
+                                'name' => 'module',
                                 'value' => dr_array2string([
                                     $mdir => $cache['comment'],
                                 ]),
                             ]);
                         }
-                    } else {
-                        $this->db->table('app_comment')->insert([
-                            'name' => 'module',
-                            'value' => dr_array2string([
-                                $mdir => $cache['comment'],
-                            ]),
-                        ]);
+                        $this->db->table('module')->where('dirname', $mdir)->update(['comment' => '']);
                     }
-                    $this->db->table('module')->where('dirname', $mdir)->update(['comment' => '']);
+                    unset($cache['comment']);
+
+                    // 更新内容模块菜单
+                    $menu_model->update_module($mdir, $config, $cache['form']);
+                    !$cache['title'] && $cache['title'] = $cache['name'];
+
+                    // 执行模块自己的缓存程序
+                    if (is_file(dr_get_app_dir($mdir).'Config/Cache.php')) {
+                        require dr_get_app_dir($mdir).'Config/Cache.php';
+                    }
+
+                    // 全部模块
+                    $all[$mdir] = [
+                        'url' => $cache['url'],
+                        'murl' => $cache['murl'],
+                        'name' => $cache['name'],
+                        'icon' => $cache['icon'],
+                        'title' => $cache['title'],
+                        'share' => $cache['share'],
+                        'system' => $config['system'],
+                        'hlist' => (int)$config['hlist'],
+                        'hcategory' => (int)$config['hcategory'],
+                        'scategory' => (int)$config['scategory'],
+                        'search' => $cache['setting']['search']['use'] ? 1 : 0,
+                        'dirname' => $mdir,
+                        'is_index_html' => $cache['setting']['module_index_html'] ? 1 : 0,
+                    ];
+
+                    // 内容模块
+                    if (in_array($config['system'], [1, 2])) {
+                        $content[$mdir] = $all[$mdir];
+                    }
+
+                    // 删除缓存
+                    \Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$mdir);
+
+                    // 写入缓存
+                    \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-'.$mdir, $cache);
                 }
-                unset($cache['comment']);
-
-                // 更新内容模块菜单
-                $menu_model->update_module($mdir, $config, $cache['form']);
-                !$cache['title'] && $cache['title'] = $cache['name'];
-
-                // 执行模块自己的缓存程序
-                if (is_file(dr_get_app_dir($mdir).'Config/Cache.php')) {
-                    require dr_get_app_dir($mdir).'Config/Cache.php';
-                }
-
-                // 全部模块
-                $all[$mdir] = [
-                    'url' => $cache['url'],
-                    'murl' => $cache['murl'],
-                    'name' => $cache['name'],
-                    'icon' => $cache['icon'],
-                    'title' => $cache['title'],
-                    'share' => $cache['share'],
-                    'system' => $config['system'],
-                    'hlist' => (int)$config['hlist'],
-                    'hcategory' => (int)$config['hcategory'],
-                    'scategory' => (int)$config['scategory'],
-                    'search' => $cache['setting']['search']['use'] ? 1 : 0,
-                    'dirname' => $mdir,
-                    'is_index_html' => $cache['setting']['module_index_html'] ? 1 : 0,
-                ];
-
-                // 内容模块
-                in_array($config['system'], [1, 2]) && $content[$mdir] = $all[$mdir];
-
-                // 删除缓存
-                \Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$mdir);
-
-                // 写入缓存
-                \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-'.$mdir, $cache);
             }
         }
 
