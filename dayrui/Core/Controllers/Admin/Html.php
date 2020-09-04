@@ -11,7 +11,6 @@ class Html extends \Phpcmf\Common
 
     public function __construct(...$params) {
         parent::__construct(...$params);
-
         // 生成权限文件
         if (!dr_html_auth(1)) {
             $this->_admin_msg(0, dr_lang('/cache/html/ 无法写入文件'));
@@ -101,10 +100,6 @@ class Html extends \Phpcmf\Common
             'id_to' => \Phpcmf\Service::L('input')->get('id_to'),
             'id_form' => \Phpcmf\Service::L('input')->get('id_form')
         ]);
-    }
-
-    private function _get_cat_data($app, $ids) {
-
     }
 
 }
