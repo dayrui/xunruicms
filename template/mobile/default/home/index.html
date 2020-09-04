@@ -22,17 +22,19 @@
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- 幻灯图片 -->
     <div class="carousel-inner">
-        <div class="item active">
-            <a href="http://www.xunruicms.com" target="_blank"><img src="{HOME_THEME_PATH}web/ad/1.jpg" style="width:100%;height:180px" /></a>
-        </div>
-        <div class="item ">
-            <a href="http://www.xunruicms.com" target="_blank"><img src="{HOME_THEME_PATH}web/ad/2.jpg" style="width:100%;height:180px" /></a>
-        </div>
-    </div>
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
-    </ol>
+		<!-- 调用news模块的前5张图片 -->
+		{module module=news thumb=1 num=5}
+		<div class="item {if $key==0}active{/if}">
+			<a href="{$t.url}" target="_blank"><img src="{dr_get_file($t.thumb)}" style="width:360px;height:245px" /></a>
+		</div>
+		{/module}
+	</div>
+	<ol class="carousel-indicators">
+		<!-- 重复读取上面循环的变量，避免重复查询第二次 -->
+		{loop $return $key $t}
+		<li data-target="#myCarousel" data-slide-to="{$key}" class="active"></li>
+		{/loop}
+	</ol>
 </div>
 
 <div class="page-content">
