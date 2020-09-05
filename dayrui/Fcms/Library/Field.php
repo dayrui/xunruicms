@@ -58,7 +58,7 @@
                 $this->format = '
 <div class="form-group" id="dr_row_{name}">
     <label class="control-label col-md-2">{text}</label>
-    <div class="col-md-9">{value}</div>
+    <div class="col-md-10">{value}</div>
 </div>';
             }
 
