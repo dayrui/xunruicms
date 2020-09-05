@@ -206,7 +206,7 @@ class Tree {
         $string = '<select class="form-control" '.$str.'>';
         $default && $string.= "<option value='0'>$default</option>";
 
-        $cname = md5(dr_array2string($data).$onlysub.$is_push);
+        $cname = md5(dr_array2string($data).$id.$onlysub.$is_push);
         if (isset($this->cache[$cname]) && $this->cache[$cname]) {
             list($first, $tree) = $this->cache[$cname];
         } else {
