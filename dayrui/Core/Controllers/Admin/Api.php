@@ -62,7 +62,7 @@ class Api extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
-            'auth' => \Phpcmf\Service::M('Auth')->get_role_all(),
+            'role' => \Phpcmf\Service::M('Auth')->get_role_all(),
             'value' => dr_string2array($data['verify']),
         ]);
         \Phpcmf\Service::V()->display('verify_show.html');exit;
