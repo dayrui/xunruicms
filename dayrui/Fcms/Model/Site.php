@@ -434,7 +434,6 @@ class Site extends \Phpcmf\Model
                 }
                 closedir($fp);
             }
-            log_message('error', var_export($module_cache_file, true));
         }
 
         \Phpcmf\Service::L('Cache')->set_file('site', $cache);
