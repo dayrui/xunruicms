@@ -7,10 +7,10 @@ header('Access-Control-Allow-Headers: X-Requested-With,X_Requested_With');
 
 chdir(__DIR__);
 
-if (is_file(WEBPATH."api/ueditor/php/config.php")) {
-	$CONFIG = require WEBPATH."api/ueditor/php/config.php";
-} elseif (is_file(WEBPATH."api/ueditor/php/config.php")) {
-	$CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents(WEBPATH."api/ueditor/php/config.json")), true);
+if (is_file(ROOTPATH."api/ueditor/php/config.php")) {
+	$CONFIG = require ROOTPATH."api/ueditor/php/config.php";
+} elseif (is_file(ROOTPATH."api/ueditor/php/config.php")) {
+	$CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents(ROOTPATH."api/ueditor/php/config.json")), true);
 } else {
 	echo json_encode(array(
 		'state'=> '无权限访问api/ueditor/php/config.php文件'
