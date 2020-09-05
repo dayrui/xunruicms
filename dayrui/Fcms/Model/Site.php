@@ -7,37 +7,37 @@
 
 class Site extends \Phpcmf\Model
 {
-	// 设置风格
-	public function set_theme($name, $siteid) {
-		
-		$site = $this->table('site')->get($siteid);
+    // 设置风格
+    public function set_theme($name, $siteid) {
+
+        $site = $this->table('site')->get($siteid);
         if (!$site) {
             return [];
         }
 
         $site['setting'] = dr_string2array($site['setting']);
         $site['setting']['config']['SITE_THEME'] = $name;
-		
-		$this->table('site')->update($siteid, [
-			'setting' => dr_array2string($site['setting']),
-		]);
-	}
-	
-	// 设置模板
-	public function set_template($name, $siteid) {
-		
-		$site = $this->table('site')->get($siteid);
+
+        $this->table('site')->update($siteid, [
+            'setting' => dr_array2string($site['setting']),
+        ]);
+    }
+
+    // 设置模板
+    public function set_template($name, $siteid) {
+
+        $site = $this->table('site')->get($siteid);
         if (!$site) {
             return [];
         }
 
         $site['setting'] = dr_string2array($site['setting']);
         $site['setting']['config']['SITE_TEMPLATE'] = $name;
-		
-		$this->table('site')->update($siteid, [
-			'setting' => dr_array2string($site['setting']),
-		]);
-	}
+
+        $this->table('site')->update($siteid, [
+            'setting' => dr_array2string($site['setting']),
+        ]);
+    }
 
     // 获取网站配置
     public function config($siteid, $name = '', $data = []) {
@@ -277,6 +277,7 @@ class Site extends \Phpcmf\Model
         !$data && $data = $this->table('site')->where('disabled', 0)->getAll();
         $sso_domain = $client_name = $client_domain = $webpath = $app_domain = $site_domain = $config = $cache = [];
         if ($data) {
+            $module_cache_file = []; // 删除多余的模块缓存文件
             foreach ($data as $t) {
                 if ($t['id'] > 1 && !dr_is_app('sites')) {
                     break;
@@ -359,9 +360,13 @@ class Site extends \Phpcmf\Model
                         continue;
                     }
                 }
-				// 删除首页静态文件
-				@unlink($webpath[$t['id']]['site'].'index.html');
-				@unlink($webpath[$t['id']]['site'].'mobile/index.html');
+                // 删除首页静态文件
+                @unlink($webpath[$t['id']]['site'].'index.html');
+                @unlink($webpath[$t['id']]['site'].'mobile/index.html');
+
+                $module_cache_file[] = 'module-'.$t['id'].'-content.cache'; // 删除多余的模块缓存文件
+                $module_cache_file[] = 'module-'.$t['id'].'-share.cache'; // 删除多余的模块缓存文件
+                $module_cache_file[] = 'module-'.$t['id'].'.cache'; // 删除多余的模块缓存文件
             }
 
             /*
@@ -382,43 +387,54 @@ class Site extends \Phpcmf\Model
                 }
             }*/
 
-            // 模块域名
+            // 循环模块域名
             !$module && $module = $this->table('module')->getAll();
             if ($module) {
                 foreach ($module as $t) {
-                    // 删除模块缓存文件
-                    foreach ($cache as $_sid => $v) {
-                        \Phpcmf\Service::L('cache')->set_file('module-'.$_sid.'-'.$t['dirname'], []);
-                        \Phpcmf\Service::L('cache')->del_file('module-'.$_sid.'-'.$t['dirname']);
-                    }
-
                     if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
                         continue;
                     }
                     $t['site'] = dr_string2array($t['site']);
-                    if (!$t['site'] || $t['share']) {
+                    if (!$t['site']) {
+                        // 表示没有进行站点安装
                         continue;
                     }
+                    // 循环站点信息
                     foreach ($t['site'] as $sid => $v) {
-                        $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
-                        if ($v['domain']) {
-                            $site_domain[$v['domain']] = $sid;
-                            $app_domain[$v['domain']] = $t['dirname'];
-                            $sso_domain[] = $v['domain'];
-                            // 网站路径
-                            if ($v['webpath']) {
-                                $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
+                        if (!$t['share']) {
+                            // 独立模块才有域名
+                            $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
+                            if ($v['domain']) {
+                                $site_domain[$v['domain']] = $sid;
+                                $app_domain[$v['domain']] = $t['dirname'];
+                                $sso_domain[] = $v['domain'];
+                                // 网站路径
+                                if ($v['webpath']) {
+                                    $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
+                                }
+                            }
+                            if ($v['mobile_domain']) {
+                                $site_domain[$v['mobile_domain']] = $sid;
+                                $app_domain[$v['mobile_domain']] = $t['dirname'];
+                                $client_domain[$v['domain']] = $v['mobile_domain'];
+                                $sso_domain[] = $v['mobile_domain'];
                             }
                         }
-                        if ($v['mobile_domain']) {
-                            $site_domain[$v['mobile_domain']] = $sid;
-                            $app_domain[$v['mobile_domain']] = $t['dirname'];
-                            $client_domain[$v['domain']] = $v['mobile_domain'];
-                            $sso_domain[] = $v['mobile_domain'];
-                        }
+                        $module_cache_file[] = 'module-'.$sid.'-'.$t['dirname'].'.cache'; // 删除多余的模块缓存文件
                     }
                 }
             }
+            // 删除多余的模块缓存文件
+            if ($fp = @opendir(WRITEPATH.'data')) {
+                while (FALSE !== ($file = readdir($fp))) {
+                    $pos = strpos($file, 'module-');
+                    if ($pos !== false && $pos === 0 && !in_array($file, $module_cache_file)) {
+                        unlink(WRITEPATH.'data/'.$file);
+                    }
+                }
+                closedir($fp);
+            }
+            log_message('error', var_export($module_cache_file, true));
         }
 
         \Phpcmf\Service::L('Cache')->set_file('site', $cache);

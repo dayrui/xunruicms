@@ -463,7 +463,6 @@ class Module extends \Phpcmf\Model
                     'value' => dr_array2string($auth_module)
                 ]);
             }
-
             // 系统模块
             // 删除系统表
             foreach ($system_table as $name => $sql) {
@@ -545,6 +544,8 @@ class Module extends \Phpcmf\Model
 
             // 删除栏目模型字段
             $this->db->table('field')->where('relatedname', $dir.'-'.SITE_ID)->delete();
+            // 删除缓存
+            \Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$dir);
             unset($site[SITE_ID]);
         }
 
@@ -965,7 +966,7 @@ class Module extends \Phpcmf\Model
                     }
 
                     // 删除缓存
-                    \Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$mdir);
+                    //\Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$mdir);
 
                     // 写入缓存
                     \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-'.$mdir, $cache);

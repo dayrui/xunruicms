@@ -500,16 +500,18 @@ abstract class Common extends \CodeIgniter\Controller
             // 重新生成一次缓存
             \Phpcmf\Service::M('cache')->sync_cache('');
             $this->module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dirname);
-            if (IS_ADMIN) {
-                if ($dirname == 'share') {
-                    $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+            if (!$this->module) {
+                if (IS_ADMIN) {
+                    if ($dirname == 'share') {
+                        $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+                    } else {
+                        $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                    }
                 } else {
-                    $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                    $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
                 }
-            } else {
-                $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
+                return;
             }
-            return;
         }
 
         // 无权限访问模块

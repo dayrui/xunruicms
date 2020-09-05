@@ -428,6 +428,4 @@ class Cache extends \Phpcmf\Model
         echo dr_array2string(dr_return_data(0, $msg));exit;
     }
 
-
-
 }
