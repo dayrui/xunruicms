@@ -125,14 +125,10 @@ class Role extends \Phpcmf\Common
                     continue;
                 }
                 $config = require $path.'Config/App.php';
-                if (dr_is_app('comment')) {
-                    $module_auth[$mdir] = [
-                        'name' => dr_lang($config['name']),
-                        'auth' => [
-                            $mdir.'/comment/' => dr_lang('评论'),
-                        ],
-                    ];
-                }
+                $module_auth[$mdir] = [
+                    'name' => dr_lang($config['name']),
+                    'auth' => [],
+                ];
                 if ($config['system']) {
                     // 内容模块
                     $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
@@ -140,6 +136,9 @@ class Role extends \Phpcmf\Common
                     $module_auth[$mdir]['auth'][$mdir.'/time/'] = dr_lang('定时发布');
                 } else {
                     // 自定义模块
+                }
+                if (dr_is_app('comment')) {
+                    $module_auth[$mdir]['auth'][$mdir.'/comment/'] = dr_lang('内容评论');
                 }
                 $mform = \Phpcmf\Service::M()->db->table('module_form')->where('module', $mdir)->get()->getResultArray();
                 if ($mform) {

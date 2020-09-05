@@ -17,7 +17,7 @@ function dr_tid(i) {
 <div class="row my-content-top-tool">
     <div class="col-md-12 col-sm-12">
         <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
-        <label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')}</a></label>
+        {if $ci->_is_admin_auth('field/index')}<label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义栏目字段')}</a></label>{/if}
         <label style="margin-right:10px"><a href="{dr_url(APP_DIR.'/category/add')}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
         <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
     </div>

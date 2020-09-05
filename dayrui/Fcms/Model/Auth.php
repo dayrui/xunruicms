@@ -87,7 +87,7 @@ class Auth extends \Phpcmf\Model {
         } elseif (in_array($siteid, \Phpcmf\Service::C()->admin['site'])) {
             return 1;
         }
-        
+
         return 0;
     }
 
@@ -116,12 +116,12 @@ class Auth extends \Phpcmf\Model {
     public function login($username, $password) {
 
         $data = $this->db
-                    ->table('member')
-                    ->select('password, salt, id')
-                    ->where('username', $username)
-                    ->limit(1)
-                    ->get()
-                    ->getRowArray();
+            ->table('member')
+            ->select('password, salt, id')
+            ->where('username', $username)
+            ->limit(1)
+            ->get()
+            ->getRowArray();
         $password = dr_safe_password($password);
         // 判断用户状态
         if (!$data) {
@@ -314,12 +314,12 @@ class Auth extends \Phpcmf\Model {
         if (!$t) {
             return null;
         }
-        
+
         $t['site'] = dr_string2array($t['site']);
         $t['system'] = dr_string2array($t['system']);
         $t['module'] = dr_string2array($t['module']);
         $t['application'] = dr_string2array($t['application']);
-        
+
         return $t;
     }
 
@@ -487,10 +487,10 @@ class Auth extends \Phpcmf\Model {
         if ((!\Phpcmf\Service::C()->admin || isset(\Phpcmf\Service::C()->admin['role'][1]))
             || \Phpcmf\Service::L('router')->class == 'api'
             || in_array($uri, [
-            'home/index',
-            'home/main',
-            'home/home',
-            'home/min',
+                'home/index',
+                'home/main',
+                'home/home',
+                'home/min',
             ])) {
             return true;
         } elseif (!$uri) {
@@ -523,20 +523,38 @@ class Auth extends \Phpcmf\Model {
             return true;
         }
 
+
+        // 取当前uri中的名称
+        $arr = explode('/', $this_uri);
+        switch (dr_count($arr)) {
+            case 1:
+                $this_c = \Phpcmf\Service::L('router')->class;
+                break;
+            case 2:
+                $this_c = $arr[0];
+                break;
+            case 3:
+                $this_c = $arr[1];
+                break;
+            default:
+                $this_c = \Phpcmf\Service::L('router')->class;
+                break;
+        }
+
         // 特殊url权限验证
-        if (\Phpcmf\Service::L('router')->class == 'content') {
+        if ($this_c == 'content') {
             // 内容维护
             $this_uri = APP_DIR ? str_replace(APP_DIR.'/', 'module_', $this_uri) : 'module_content/'.$action;
-        } elseif (APP_DIR && \Phpcmf\Service::L('router')->class == 'flag') {
+        } elseif (APP_DIR && $this_c == 'flag') {
             // 特殊推荐位权限
             $this_uri = str_replace('/flag/', '/home/', $this_uri);
-        } elseif (\Phpcmf\Service::L('router')->class == 'category') {
+        } elseif ($this_c == 'category') {
             // 栏目权限
             $this_uri = APP_DIR ? str_replace(APP_DIR.'/', 'module_', $this_uri) : 'module_category/'.$action;
-        } elseif (\Phpcmf\Service::L('router')->class == 'member' && APP_DIR) {
+        } elseif ($this_c == 'member' && APP_DIR) {
             // 用户内容权限
             $this_uri =  str_replace(APP_DIR.'/', 'module_', $this_uri);
-        } elseif (\Phpcmf\Service::L('router')->class == 'site_member' && !APP_DIR) {
+        } elseif ($this_c == 'site_member' && !APP_DIR) {
             // 用户内容权限
             $this_uri =  'module_member/'.$action;
         }
@@ -650,25 +668,25 @@ class Auth extends \Phpcmf\Model {
 
         return str_replace('{HIDE}', 'hidden', $_link);
     }
-	
-	// 多级框架菜单
-	public function _iframe_menu($list, $now, $help = 0) {
-		
-		$menu = '';
-		foreach ($list as $dir => $t) {
-			$class = '';
+
+    // 多级框架菜单
+    public function _iframe_menu($list, $now, $help = 0) {
+
+        $menu = '';
+        foreach ($list as $dir => $t) {
+            $class = '';
             // 选中当前菜单
             if ($now == $dir) {
                 $class = ' on';
             }
-			$menu .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> <i class="fa fa-circle"></i> </li>';
-		}
-		if (CI_DEBUG && $help) {
-			$menu .= '<li> <a href="javascript:dr_help(\''.$help.'\');"><i class="fa fa-question-circle"></i> '.dr_lang('在线帮助').'</a> <i class="fa fa-circle"></i> </li>';
-		}
-		
-		return $menu;
-	}
+            $menu .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> <i class="fa fa-circle"></i> </li>';
+        }
+        if (CI_DEBUG && $help) {
+            $menu .= '<li> <a href="javascript:dr_help(\''.$help.'\');"><i class="fa fa-question-circle"></i> '.dr_lang('在线帮助').'</a> <i class="fa fa-circle"></i> </li>';
+        }
+
+        return $menu;
+    }
 
     // 模块后台菜单
     public function _module_menu($module, $list_name, $list_url, $post_url) {
