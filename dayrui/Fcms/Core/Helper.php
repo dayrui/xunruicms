@@ -4052,6 +4052,20 @@ if (! function_exists('dr_get_keywords')) {
             }
         }
 
+        if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
+            require_once FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php';
+            \PhpAnalysis::$loadInit = false;
+            $pa = new \PhpAnalysis ( 'utf-8', 'utf-8', false );
+            $pa->LoadDict ();
+            $pa->SetSource ($kw);
+            $pa->StartAnalysis ( true );
+
+            $tags = $pa->GetFinallyKeywords (10);
+            if ($tags) {
+                exit($tags);
+            }
+        }
+
         if (!$rt && function_exists('mb_convert_encoding')
             && defined('SYS_BDNLP_AK') && SYS_BDNLP_AK && SYS_BDNLP_SK) {
 
