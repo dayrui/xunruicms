@@ -195,6 +195,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 	} else {
 		$pageURL.= $_SERVER['HTTP_HOST'];
 	}
+	
 	define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
 	define('FC_NOW_HOST', $pageURL.'/');
 
@@ -203,6 +204,9 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 	
 	// 伪静态字符串
 	$uu = isset($_SERVER['HTTP_X_REWRITE_URL']) || trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : NULL);
+	if (defined('FIX_WEB_DIR') && FIX_WEB_DIR && strpos($uu, FIX_WEB_DIR) !== false &&  strpos($uu, FIX_WEB_DIR) === 0) {
+		$uu = trim(substr($uu, strlen(FIX_WEB_DIR)), '/');
+	}
 
 	// 以index.php或者?开头的uri不做处理
 	$uri = strpos($uu, SELF) === 0 || strpos($uu, '?') === 0 ? '' : $uu;
