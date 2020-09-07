@@ -695,7 +695,7 @@ abstract class Common extends \CodeIgniter\Controller
                 $info['url'] = $info['file'] = '自定义附件（'.$info['remote'].'）的配置已经不存在';
                 return $info;
             } else {
-                $info['file'] = $info['attachment'];
+                $info['file'] = $remote['value']['path'].$info['attachment'];
             }
         }
 

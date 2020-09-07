@@ -22,7 +22,9 @@ class Module extends \Phpcmf\Common
         $this->siteid = (int)\Phpcmf\Service::L('input')->get('siteid');
         !$this->siteid && $this->siteid = SITE_ID;
         $this->dirname = dr_safe_replace(\Phpcmf\Service::L('input')->get('app'));
-        if (!$this->dirname || !dr_is_app_dir(($this->dirname))) {
+        if ($this->dirname == 'MOD_DIR') {
+            $this->_msg(0, dr_lang('app参数存在问题'));
+        } elseif (!$this->dirname || !dr_is_app_dir(($this->dirname))) {
             $this->_msg(0, dr_lang('模块目录[%s]不存在', $this->dirname));
             exit;
         }
