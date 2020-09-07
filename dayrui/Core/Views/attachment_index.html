@@ -273,7 +273,7 @@
     function dr_test_domain_dir(id) {
         $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_attach_dir&v="+encodeURIComponent($("#"+id).val()),
             success: function(json) {
-                dr_tips(json.code, json.msg);
+                dr_tips(json.code, json.msg, -1);
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)

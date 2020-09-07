@@ -93,7 +93,7 @@
             data: $("#myform").serialize(),
             success: function(json) {
                 layer.close(loading);
-                dr_tips(json.code, json.msg);
+                dr_tips(json.code, json.msg, -1);
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
