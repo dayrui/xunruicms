@@ -182,7 +182,7 @@ class Email
             $msg = iconv('GB2312', 'UTF-8', $msg);
         }
         $this->error = $msg;
-        @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace(array(chr(13), chr(10)), '', $msg).PHP_EOL, FILE_APPEND);
+        @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
     }
 
     private function is_gb2312($str) {

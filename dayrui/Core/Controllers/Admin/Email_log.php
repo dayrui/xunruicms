@@ -29,7 +29,7 @@ class Email_log extends \Phpcmf\Common
 			$limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
 			$i = $j = 0;
 			foreach ($data as $v) {
-				if ($i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
+				if ($v && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
 					$list[] = $v;
 					$j ++;
 				}
