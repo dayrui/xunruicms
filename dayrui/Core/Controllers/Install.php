@@ -221,12 +221,12 @@ $db[\'default\']	= [
                             $error = $errorlog;
                         } else {
                             // 创建账号
+                            $pwd = md5(dr_safe_password($data['password']));
                             $salt = substr(md5(rand(0, 999)), 0, 10);
-                            $password = md5(md5($data['password']).$salt.md5($data['password']));
                             $this->db->table('member')->insert([
                                 'email' => $data['email'],
                                 'username' => $data['username'],
-                                'password' => $password,
+                                'password' => md5($pwd.$salt.$pwd),
                                 'salt' => $salt,
                                 'name' => '创始人',
                                 'phone' => '',
