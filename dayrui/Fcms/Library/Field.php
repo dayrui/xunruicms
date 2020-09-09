@@ -489,11 +489,29 @@
                 $my && $type = dr_array2array($type, $my);
             }
             // 组合组装
+            $my = [];
             foreach ($type as $i => $t) {
+                $my[] = $t['id'];
                 if (isset($t['used']) && is_array($t['used']) && !in_array($name, $t['used'])) {
                     unset($type[$i]);
                 } elseif (isset($t['namespace']) && $t['namespace'] && $t['namespace'] != $this->app) {
                     unset($type[$i]);
+                }
+            }
+            // 扫描没有定义的字段类别
+            $path = dr_file_map(MYPATH.'Field');
+            if ($path) {
+                foreach ($path as $file) {
+                    $name = substr($file, 0, -4);
+                    if (!in_array($name, $my)
+                        && strpos(file_get_contents(MYPATH.'Field/'.$file), '<?php namespace My\Field;') !== false) {
+                        $type[] = [
+                            'id' => $name,
+                            'name' => $name,
+                            'used' => '',
+                            'namespace' => '',
+                        ];
+                    }
                 }
             }
 
