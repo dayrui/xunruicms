@@ -421,11 +421,11 @@ class File extends \Phpcmf\Common
      * 安全目录
      */
     protected function _safe_path($string) {
-        return trim(str_replace(
-            ['..', "//", ".//.", '\\', ' ', '<', '>', "{", '}'],
+        return trim(str_replace('..', '', str_replace(
+            [".//.", '\\', ' ', '<', '>', "{", '}', '..', "//"],
             '',
             $string
-        ), '/');
+        )), '/');
     }
 
     /**
