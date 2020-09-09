@@ -266,49 +266,49 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 }
 
 // API接口项目标识 放到后面是为了识别api 的伪静态
-	!defined('IS_API') && define('IS_API', isset($_GET['s']) && $_GET['s'] == 'api');
+!defined('IS_API') && define('IS_API', isset($_GET['s']) && $_GET['s'] == 'api');
 
-	// 解析自定义域名
-	if (!IS_API && $_GET['s'] != 'api' && is_file(WRITEPATH.'config/domain_app.php')){
-		$domain = require WRITEPATH.'config/domain_app.php';
-		// 强制定义为模块
-		if (isset($domain[DOMAIN_NAME]) && $domain[DOMAIN_NAME] && is_dir(APPSPATH.ucfirst($domain[DOMAIN_NAME]))) {
-			$_GET['s'] = $domain[DOMAIN_NAME];
-		}
-		unset($domain);
-	}
-		
-	// 判断s参数,“应用程序”文件夹目录
-	if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
-		// 判断会员模块,排除后台调用
-		$dir = ucfirst($_GET['s']);
-		if (!IS_ADMIN && $dir == 'Member') {
-			// 会员
-			if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
-				// 模块应用
-				define('APPPATH', dr_get_app_dir($_GET['app']));
-				define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
-			} else {
-				// 表示会员模块
-				define('APPPATH', COREPATH);
-				define('APP_DIR', ''); // 模块目录名称
-			}
-			define('IS_MEMBER', TRUE);
-		} elseif (dr_is_app_dir($dir)) {
-			// 模块应用
-			define('APPPATH', dr_get_app_dir($dir));
-			define('APP_DIR', strtolower($dir)); // 应用目录名称
-			define('IS_MEMBER', FALSE);
-		} else {
-			// 不存在的应用
-			dr_show_error(CI_DEBUG ? '应用程序('.dr_get_app_dir($dir).')不存在' : '应用程序('.strtolower($dir).')不存在');
-		}
-	} else {
-		// 系统主目录
-		!defined('APPPATH') && define('APPPATH', COREPATH);
-		!defined('APP_DIR') && define('APP_DIR', '');
-		define('IS_MEMBER', FALSE);
-	}
+// 解析自定义域名
+if (!IS_API && $_GET['s'] != 'api' && is_file(WRITEPATH.'config/domain_app.php')){
+    $domain = require WRITEPATH.'config/domain_app.php';
+    // 强制定义为模块
+    if (isset($domain[DOMAIN_NAME]) && $domain[DOMAIN_NAME] && is_dir(APPSPATH.ucfirst($domain[DOMAIN_NAME]))) {
+        $_GET['s'] = $domain[DOMAIN_NAME];
+    }
+    unset($domain);
+}
+
+// 判断s参数,“应用程序”文件夹目录
+if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
+    // 判断会员模块,排除后台调用
+    $dir = ucfirst($_GET['s']);
+    if (!IS_ADMIN && $dir == 'Member') {
+        // 会员
+        if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
+            // 模块应用
+            define('APPPATH', dr_get_app_dir($_GET['app']));
+            define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
+        } else {
+            // 表示会员模块
+            define('APPPATH', COREPATH);
+            define('APP_DIR', ''); // 模块目录名称
+        }
+        define('IS_MEMBER', TRUE);
+    } elseif (dr_is_app_dir($dir)) {
+        // 模块应用
+        define('APPPATH', dr_get_app_dir($dir));
+        define('APP_DIR', strtolower($dir)); // 应用目录名称
+        define('IS_MEMBER', FALSE);
+    } else {
+        // 不存在的应用
+        dr_show_error(CI_DEBUG ? '应用程序('.dr_get_app_dir($dir).')不存在' : '应用程序('.strtolower($dir).')不存在');
+    }
+} else {
+    // 系统主目录
+    !defined('APPPATH') && define('APPPATH', COREPATH);
+    !defined('APP_DIR') && define('APP_DIR', '');
+    define('IS_MEMBER', FALSE);
+}
 
 
 /******* CodeIgniter Bootstrap *******/

@@ -83,17 +83,20 @@ class Login extends \Phpcmf\Common
                 if (in_array($value, ['weixin', 'wechat'])) {
                     if (dr_is_weixin_app()) {
                         dr_is_app('weixin') && $oauth['wechat'] = [
+                            'title' => '微信公众号登录',
                             'name' => 'wechat',
                             'url' => OAUTH_URL . 'index.php?s=weixin&c=member&m=login_url&back='.urlencode($url.'wechat'),
                         ];
                     } else {
                         $oauth[$value] = [
+                            'title' => ($value == 'weixin' ? '微信扫码' : '微信公众号').'登录',
                             'name' => $value,
                             'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
                         ];
                     }
                 } else {
                     $oauth[$value] = [
+                        'title' => $t['name'].'登录',
                         'name' => $value,
                         'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
                     ];

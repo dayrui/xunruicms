@@ -20,6 +20,26 @@ class Pay extends \Phpcmf\Common
 			$this->_msg(0, dr_lang('该账单已被支付'));exit;
 		}
 
+		// 付钱之前再次验证
+		if ($data['mark'] && strpos($data['mark'], 'my-') !== false) {
+            list($rname, $rid, $fid, $num, $sku) = explode('-', $data['mark']);
+            if ($rname == 'my') {
+                list($app, $class) = explode('_', $rid);
+                $classFile = dr_get_app_dir($app).'Models/'.ucfirst($class).'.php';
+                if (is_file($classFile)) {
+                    $obj = \Phpcmf\Service::M($class, $app);
+                    if (method_exists($obj, 'pay_before')) {
+                        $error = $obj->pay_before($fid, $num, $sku, $data['site']);
+                        if ($error) {
+                            $this->_msg(0, $error);exit;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        // 支付接口文件
 		$apifile = ROOTPATH.'api/pay/'.$data['type'].'/pay.php';
 		if (!is_file($apifile)) {
 			$this->_msg(0, dr_lang('支付接口文件（%s）不存在', $data['type']));exit;

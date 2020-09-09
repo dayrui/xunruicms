@@ -68,7 +68,7 @@
         {if SYS_ADMIN_OAUTH && $oauth}
         <div class="login-oauth">
             {loop $oauth $t}
-            <a href="{$t.url}"><i class="fa fa-{$t.name}"></i></a>
+            <a href="{$t.url}" class="tooltips" data-container="body" data-placement="top" data-original-title="{$t.title}"><i class="fa fa-{$t.name}"></i></a>
             {/loop}
         </div>
         {/if}

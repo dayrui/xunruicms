@@ -17654,15 +17654,12 @@
             var str;
             switch (type){
                 case 'image':
-                    str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\bvideo-js\b/, '') + '"'  +
-                        ' src="' + me.options.UEDITOR_HOME_URL+'themes/default/images/spacer.gif" style="background:url('+me.options.UEDITOR_HOME_URL+'themes/default/images/videologo.gif) no-repeat center center; border:1px solid gray;'+(align ? 'float:' + align + ';': '')+'" />'
-                    break;
                 case 'embed':
 
                 case 'video':
                     var ext = url.substr(url.lastIndexOf('.') + 1);
                     if(ext == 'ogv') ext = 'ogg';
-                    str = '<video' + (id ? ' id="' + id + '"' : '') + ' class="' + classname + ' video-js" ' + (align ? ' style="float:' + align + '"': '') +
+                    str = '<video style="'+type+'"' + (id ? ' id="' + id + '"' : '') + ' class="' + classname + ' video-js" ' + (align ? ' style="float:' + align + '"': '') +
                         ' controls preload="none" width="' + width + '" height="' + height + '" src="' + url + '" data-setup="{}">' +
                         '<source src="' + url + '" type="video/' + ext + '" /></video>';
                     break;
