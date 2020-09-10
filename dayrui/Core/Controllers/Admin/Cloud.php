@@ -478,7 +478,7 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '本站：没有从服务端获取到数据');
         }
         $rt = json_decode($json, true);
-        $this->_json($rt['code'], $this->cmf_license['oem'] ? dr_clearhtml($rt['msg']) : $rt['msg']);
+        $this->_json($rt['code'], $rt['msg']);
     }
 
     // 执行更新程序的界面
