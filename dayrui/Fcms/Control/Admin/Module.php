@@ -568,10 +568,11 @@ class Module extends \Phpcmf\Table
         }
 
         \Phpcmf\Service::V()->assign([
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
-                ]
+            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
+                $this->module,
+                ' <i class="'.dr_icon('fa fa-edit').'"></i>  '.dr_lang('待审核管理'),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/verify/index'),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
             ),
             'clink' => $this->_app_clink(),
             'verify_msg' => $verify_msg,

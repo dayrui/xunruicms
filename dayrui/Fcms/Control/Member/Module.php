@@ -127,7 +127,7 @@ class Module extends \Phpcmf\Table
             'draft_url' =>\Phpcmf\Service::L('Router')->member_url($this->module['dirname'].'/home/add'),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'is_post_code' =>  $this->is_post_code,
-            'category_field_url' =>  $this->is_post_code || $this->module['category_data_field'] ? \Phpcmf\Service::L('Router')->member_url($this->module['dirname'].'/home/add') : ''
+            'category_field_url' =>  $this->is_post_code || $this->module['category_data_field'] ? dr_member_url($this->module['dirname'].'/home/add') : ''
         ]);
         if (!$this->uid && is_file(dr_tpl_path().'guest_post.html')) {
             \Phpcmf\Service::V()->display('guest_post.html');
@@ -186,7 +186,7 @@ class Module extends \Phpcmf\Table
             'draft_url' =>\Phpcmf\Service::L('Router')->member_url($this->module['dirname'].'/home/edit', ['id' => $id]),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'is_post_code' => $this->is_hcategory ? $this->content_model->_hcategory_member_post_code() : $this->is_post_code,
-            'category_field_url' => $this->is_post_code || $this->module['category_data_field'] ? \Phpcmf\Service::L('Router')->member_url($this->module['dirname'].'/home/edit', ['id' => $id]) : ''
+            'category_field_url' => $this->is_post_code || $this->module['category_data_field'] ? dr_member_url($this->module['dirname'].'/'.(defined('IS_MODULE_VERIFY') ? 'verify' : 'home').'/edit', ['id' => $id]) : ''
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }
