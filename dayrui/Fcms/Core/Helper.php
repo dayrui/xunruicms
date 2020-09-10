@@ -4060,9 +4060,9 @@ if (! function_exists('dr_get_keywords')) {
             $pa->SetSource ($kw);
             $pa->StartAnalysis ( true );
 
-            $tags = $pa->GetFinallyKeywords (10);
+            $tags = $pa->GetFinallyKeywords (20);
             if ($tags) {
-                exit($tags);
+                return $tags;
             }
         }
 

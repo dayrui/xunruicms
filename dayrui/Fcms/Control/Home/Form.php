@@ -197,10 +197,10 @@ class Form extends \Phpcmf\Table
         if ($this->form['setting']['notice']['use']) {
             if ($this->form['setting']['notice']['username']) {
 				$arr = explode(',', $this->form['setting']['notice']['username']);
-				foreach ($arr as $username) {
-					$user = dr_member_username_info($username);
+				foreach ($arr as $autor) {
+					$user = dr_member_username_info($autor);
 					if (!$user) {
-						log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人['.$username.']有误');
+						log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人['.$autor.']有误');
 					} else {
 						\Phpcmf\Service::L('Notice')->send_notice_user('form_'.$this->form['table'].'_post', $user['id'], dr_array2array($data[1], $data[0]), $this->form['setting']['notice']);
 					}
