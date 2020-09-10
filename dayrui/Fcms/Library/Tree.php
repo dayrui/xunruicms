@@ -6,36 +6,44 @@
  **/
 
 
-
 class Tree {
-    
-    private $data;
-    private $result_array;
-    private $menu_icon = [
-        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-        '&nbsp;&nbsp;├&nbsp;&nbsp;',
-        '&nbsp;&nbsp;└&nbsp;'
-    ];
-    private $icon = [
-        '&nbsp;&nbsp;│&nbsp;',
-        '&nbsp;&nbsp;├&nbsp;',
-        '&nbsp;&nbsp;└&nbsp;'
-    ]; // 生成树型结构所需修饰符号，可以换成图片
-    private $nbsp = "&nbsp;&nbsp;";
-    private $deep = 1;
-    private $ret;
-    private $cache;
 
+    protected $data;
+    protected $result_array;
+    protected $icon;
+    protected $nbsp = "{spacer}";
+    protected $nbsp_str;
+    protected $deep = 1;
+    protected $ret;
+    protected $cache;
+
+    // 初始化函数
+    public function __construct() {
+        $this->icon();
+    }
 
     /**
      * 设置html标签
      */
     public function html_icon() {
-        $this->nbsp = '<span class="tree-icon"></span>';
+        $this->nbsp_str = '<span class="tree-icon"></span>';
         $this->icon = [
-            '<span class="tree-icon">│</span>',
+            $this->nbsp_str,
             '<span class="tree-icon">├</span>',
             '<span class="tree-icon">└</span>'
+        ];
+        return $this;
+    }
+
+    /**
+     * 设置普通标签
+     */
+    public function icon() {
+        $this->nbsp_str = '&nbsp;';
+        $this->icon = [
+            $this->nbsp_str,
+            '├',
+            '└'
         ];
         return $this;
     }
@@ -50,14 +58,16 @@ class Tree {
         return $this;
     }
 
+    // 创建数据
     public function get($data) {
         $this->data = $data;
         $this->result = [];
         $this->create(0);
         return $this->result_array;
     }
-    
-    private function _data($data) {
+
+    // 设置数据
+    protected function _data($data) {
         $this->ret = '';
         $this->data = $data;
         $this->deep = 1;
@@ -69,7 +79,7 @@ class Tree {
      * @param int
      * @return array
      */
-    private function get_child($k_id) {
+    protected function get_child($k_id) {
         
         $arrays = [];
 
@@ -92,23 +102,18 @@ class Tree {
         if ($this->deep > 5000) {
             return; // 防止死循环
         }
-        
-        $number = 1;
+
         $child = $this->get_child($k_id); // 获取子数据
+        $number = 1;
         
         if (is_array($child)) {
             $total = dr_count($child);
             foreach($child as $id => $a) {
-                $j = $k = '';
-                if ($number == $total){
-                    $j.= $this->menu_icon[2];
-                } else {
-                    $j.= $this->menu_icon[1];
-                    $k = $adds ? $this->menu_icon[0] : '';
-                }
-                $a['spacer'] = $adds ? $adds.$j : '';
+                $k = $adds ? $this->nbsp : '';
+                $j = $number == $total ? $this->icon[2] : $this->icon[1];
+                $a['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
                 $this->result_array[] = $a;
-                $this->create($a['id'], $adds.$k.'&nbsp;');
+                $this->create($a['id'], $adds.$k.$this->nbsp);
                 $number++;
             }
         }
@@ -116,7 +121,21 @@ class Tree {
         $this->deep = 1;
     }
 
-    private function _have($list, $item){
+    // 替换空格填充符号
+    protected function _get_spacer($str) {
+        $num = substr_count($str, $this->nbsp) * 2;
+        if ($num) {
+            $str = str_replace($this->nbsp, '', $str);
+            for ($i = 0; $i < $num; $i ++) {
+                $str = $this->nbsp_str.$str;
+            }
+
+        }
+        return $str;
+    }
+
+    // 替换逗号
+    protected function _have($list, $item){
         return(strpos(',,'.$list.',', ','.$item.','));
     }
 
@@ -128,7 +147,7 @@ class Tree {
      * @param integer	$sid	默认选中
      * @param integer	$adds	前缀
      */
-    private function _linkage_tree_result($myid, $str, $sid = 0, $adds = '') {
+    protected function _linkage_tree_result($myid, $str, $sid = 0, $adds = '') {
 
         if ($this->deep > 5000) {
             return $this->ret; // 防止死循环
@@ -150,7 +169,7 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
 
-                $spacer = $adds ? $adds.$j : '';
+                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
                 @extract($a);
 
@@ -159,7 +178,7 @@ class Tree {
                 $number++;
 
                 // 如果有下级菜单就递归
-                $a['child'] && $this->_linkage_tree_result($id, $str, $sid, $adds.$k.'&nbsp;');
+                $a['child'] && $this->_linkage_tree_result($id, $str, $sid, $adds.$k.$this->nbsp);
             }
         }
 
@@ -183,7 +202,7 @@ class Tree {
         }
 
         $str = "<option value='\$id' \$selected>\$spacer \$name</option>";
-        $string.= $this->_data($tree)->_linkage_tree_result(0, $str);
+        $string.= $this->icon()->_data($tree)->_linkage_tree_result(0, $str);
         $string.= '</select>';
 
         return $string;
@@ -203,8 +222,8 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str, $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
-        $string = '<select class="form-control" '.$str.'>';
-        $default && $string.= "<option value='0'>$default</option>";
+        $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
+        $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
         $cname = md5(dr_array2string($data).$id.$onlysub.$is_push);
         if (isset($this->cache[$cname]) && $this->cache[$cname]) {
@@ -265,10 +284,10 @@ class Tree {
             $this->cache[$cname] = [$first, $tree];
         }
 
-        $str = "<option value='\$id' \$selected>\$spacer \$name</option>";
-        $str2 = "<optgroup label='\$spacer \$name'></optgroup>";
-        $string.= $this->_data($tree)->_category_tree_result(0, $str, $str2);
-        $string.= '</select>';
+        $str = "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL;
+        $str2 = "<optgroup label='\$spacer\$name'></optgroup>".PHP_EOL;
+        $string.= $this->icon()->_data($tree)->_category_tree_result(0, $str, $str2);
+        $string.= '</select>'.PHP_EOL;
 
         if ($is_first) {
             $mark = "value='";
@@ -289,7 +308,7 @@ class Tree {
      * @param integer	$sid	默认选中
      * @param integer	$adds	前缀
      */
-    private function _category_tree_result($myid, $str, $str2, $sid = 0, $adds = '') {
+    protected function _category_tree_result($myid, $str, $str2, $sid = 0, $adds = '') {
 
         if ($this->deep > 5000) {
             return $this->ret; // 防止死循环
@@ -311,7 +330,7 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
 
-                $spacer = $adds ? $adds.$j : '';
+                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
                 $html_disabled = '';
                 @extract($a);
@@ -330,7 +349,7 @@ class Tree {
 
                 // 如果有下级菜单就递归
                 if ($a['child']) {
-                    $this->_category_tree_result($id, $str, $str2, $sid, $adds.$k.'&nbsp;');
+                    $this->_category_tree_result($id, $str, $str2, $sid, $adds.$k.$this->nbsp);
                 }
             }
         }
@@ -354,9 +373,9 @@ class Tree {
 
         $pid = 0;
         $nstr = '';
+        $number = 1;
         $mychild = $this->get_child($myid);
         $mytotal = dr_count($mychild);
-        $number = 1;
 
         if (is_array($mychild)) {
             foreach ($mychild as $id => $value) {
@@ -365,10 +384,10 @@ class Tree {
                     $j.= $this->icon[2];
                 } else {
                     $j.= $this->icon[1];
-                    $k = $adds ? $this->icon[0] : '';
+                    $k = $adds ? $this->nbsp : '';
                 }
 
-                $spacer = $adds ? $adds.$j : '';
+                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $id == $sid ? 'selected' : '';
                 $class = 'dr_catid_'.$value['id'];
                 $parent = SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
@@ -377,8 +396,7 @@ class Tree {
 
                 $pid == 0 && $str_group ? @eval("\$nstr = \"$str_group\";") : @eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
-                $nbsp = $this->nbsp;
-                $this->get_tree($id, $str, $sid, $adds.$k.$nbsp, $str_group);
+                $this->get_tree($id, $str, $sid, $adds.$k.$this->nbsp, $str_group);
                 $number++;
             }
         }
@@ -412,11 +430,10 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
                 
-                $value['spacer'] = $adds ? $adds.$j : '';
+                $value['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
 
                 $this->result[$id] = $value;
-                $nbsp = $this->nbsp;
-                $this->get_tree_array($id, $str, $sid, $adds.$k.$nbsp, $str_group);
+                $this->get_tree_array($id, $str, $sid, $adds.$k.$this->nbsp, $str_group);
                 $number++;
             }
         }
@@ -448,14 +465,15 @@ class Tree {
                     $j.= $this->icon[1];
                     $k = $adds ? $this->icon[0] : '';
                 }
-                $spacer = $adds ? $adds.$j : '';
+
+                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
 
                 @extract($a);
 
                 @eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
-                $this->get_tree_multi($id, $str, $sid, $adds.$k.'&nbsp;');
+                $this->get_tree_multi($id, $str, $sid, $adds.$k.$this->nbsp);
                 $number++;
 
             }

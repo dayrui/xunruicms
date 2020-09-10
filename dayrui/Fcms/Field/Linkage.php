@@ -121,6 +121,12 @@ class Linkage extends \Phpcmf\Library\A_Field {
 
 		// 联动菜单缓存
 		$linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage']);
+		if (!$linkage) {
+		    if (CI_DEBUG) {
+		        return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据数据</div>');
+            }
+            return $this->input_format($name, $text, '');
+        }
 		$linkageid = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id');
 		$linkagelevel = (int)\Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-level');
 
