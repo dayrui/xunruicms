@@ -992,7 +992,7 @@ class Module extends \Phpcmf\Table
                     'isnew' => $row['isnew'],
                     'backinfo' => dr_string2array($row['backinfo']),
                 ];
-                $data['myflag'] = $data['flag'];
+                //$data['myflag'] = $data['flag'];
                 $this->is_get_catid = $catid ? $catid : $data['catid'];
             } else {
                 $data = [
@@ -1004,7 +1004,7 @@ class Module extends \Phpcmf\Table
             // 判断是否来至定时发布
             $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id);
             $data = dr_string2array($row['content']);
-            $data['myflag'] = $data['flag'];
+            //$data['myflag'] = $data['flag'];
             $data['posttime'] = $row['posttime'];
             $this->is_get_catid = $catid ? $catid : $data['catid'];
             return $data;
@@ -1039,7 +1039,7 @@ class Module extends \Phpcmf\Table
         $this->is_get_catid = $catid ? $catid : $row['catid'];
 
         // 推荐位
-        $row['myflag'] = $id ? $this->content_model->get_flag($id) : [];
+        //$row['myflag'] = $id ? $this->content_model->get_flag($id) : [];
 
         return $row;
     }
@@ -1180,7 +1180,7 @@ class Module extends \Phpcmf\Table
 
                         // 同步发送到其他栏目
                         $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
-
+                        /*
                         // 处理推荐位
                         if (defined('IS_MODULE_VERIFY')) {
                             // 来自审核
@@ -1212,7 +1212,7 @@ class Module extends \Phpcmf\Table
                                     }
                                 }
                             }
-                        }
+                        }*/
                     }
 
                     $data[1]['id'] = $id;

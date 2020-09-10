@@ -316,21 +316,6 @@
                         <div class="form-body">
                             {$sysfield}
 
-                            {if !$is_verify && !$is_post_user && $module['setting']['flag']}
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">{dr_lang('推荐位设置')}</label>
-                                <div class="col-md-9">
-                                    <div class="mt-checkbox-list">
-                                        {loop $module['setting']['flag'] $i $t}
-                                        <label class="mt-checkbox mt-checkbox-outline">
-                                            <input name="flag[]" type="checkbox" {if @in_array($i, (array)$myflag)} checked="checked" {/if} value="{$i}"> <i class="{dr_icon($t.icon)}"></i> {$t.name}
-                                            <span></span>
-                                        </label>
-                                        {/loop}
-                                    </div>
-                                </div>
-                            </div>
-                            {/if}
                             {if !$is_verify && $is_post_time}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('定时发布时间')}</label>
