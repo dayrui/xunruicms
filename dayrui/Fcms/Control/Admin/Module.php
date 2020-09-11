@@ -909,7 +909,7 @@ class Module extends \Phpcmf\Table
 
         $flag = intval(\Phpcmf\Service::L('input')->get('flag'));
         if (!$this->module['setting']['flag'][$flag]) {
-            $this->_admin_msg(0, dr_lang('推荐位不存在: '.$flag));
+            $this->_admin_msg(0, dr_lang('推荐位（%s）不存在', $flag));
         }
 
         if (IS_POST) {
@@ -957,7 +957,6 @@ class Module extends \Phpcmf\Table
             'is_flag' => 1,
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list'));
-
     }
 
 
