@@ -60,7 +60,7 @@ class Module extends \Phpcmf\Common
 
                 if (defined('IS_MOBILE') && IS_MOBILE) {
                     // 移动端访问
-                    if (SITE_IS_MOBILE_HTML) {
+                    if ($this->module['url'] != $this->module['murl']) {
                         file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
                     }
                 } else {
@@ -813,7 +813,7 @@ class Module extends \Phpcmf\Common
         $html = ob_get_clean();
         $pc = file_put_contents(dr_format_html_file($file, $root), $html, LOCK_EX);
 
-        if (SITE_IS_MOBILE_HTML) {
+        if ($this->module['url'] != $this->module['murl']) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');
             $this->_Index(1);
@@ -822,7 +822,7 @@ class Module extends \Phpcmf\Common
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
             !$mobile && log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：'.$mfile);
         } else {
-            log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：没有开启移动端静态');
+            log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：移动端未绑定域名');
         }
 
         $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));

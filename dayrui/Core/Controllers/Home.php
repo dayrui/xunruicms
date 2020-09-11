@@ -81,7 +81,7 @@ class Home extends \Phpcmf\Common
 		$html = ob_get_clean();
 		$pc = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html, LOCK_EX);
 
-        if (SITE_IS_MOBILE_HTML) {
+        if (SITE_MURL != SITE_URL) {
             // 开启ob函数
             ob_start();
             $this->is_html = 1;
@@ -93,9 +93,11 @@ class Home extends \Phpcmf\Common
             $html = ob_get_clean();
             $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html');
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
-            !$mobile && log_message('error', '网站首页移动端首页生成失败：'.$mfile);
+            if (!$mobile) {
+                log_message('error', '网站首页移动端首页生成失败：'.$mfile);
+            }
         } else {
-            log_message('error', '网站首页移动端首页生成失败：没有开启移动端静态');
+            log_message('error', '网站首页移动端首页生成失败：移动端未绑定域名');
         }
 
 		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));

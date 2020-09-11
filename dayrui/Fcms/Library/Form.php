@@ -176,7 +176,7 @@ class Form
                         // 后台超管不验证必填
                     } else {
                         // 开始验证必填字段
-                        if (trim($value) == '') {
+                        if (!is_array($value) && trim($value) == '') {
                             // 验证值为空
                             return [[], ['name' => $name, 'error' => $validate['errortips'] ? dr_lang($validate['errortips']) : dr_lang('%s不能为空', $field['name'])]];
                         } elseif ($field['fieldtype'] == 'Linkage' && empty(trim($value))) {
