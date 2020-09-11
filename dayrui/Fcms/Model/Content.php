@@ -339,35 +339,37 @@ class Content extends \Phpcmf\Model {
         // 表示新发布
         if (!$id) {
             $member = dr_member_info($data[1]['uid']);
-            // 增减金币
-            $score = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', $member);
-            $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
-            // 增减人民币
-            $money = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'money', $member);
-            if ($money) {
-                $rr = \Phpcmf\Service::M('member')->add_money($data[1]['uid'], $money);
-                if ($rr['code']) {
-                    \Phpcmf\Service::M('Pay')->add_paylog([
-                        'uid' => $member['id'],
-                        'username' => $member['username'],
-                        'touid' => 0,
-                        'tousername' => '',
-                        'mid' => 'system',
-                        'title' => dr_lang('%s内容《%s》发布', \Phpcmf\Service::C()->module['name'], $data[1]['title']),
-                        'value' => $money,
-                        'type' => 'finecms',
-                        'status' => 1,
-                        'result' => dr_url_prefix($data[1]['url'], $this->dirname, $this->siteid, ''),
-                        'paytime' => SYS_TIME,
-                        'inputtime' => SYS_TIME,
-                    ]);
-                } else {
-                    log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：'.$rr['msg']);
+            if ($member) {
+                // 增减金币
+                $score = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', $member);
+                $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
+                // 增减人民币
+                $money = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'money', $member);
+                if ($money) {
+                    $rr = \Phpcmf\Service::M('member')->add_money($data[1]['uid'], $money);
+                    if ($rr['code']) {
+                        \Phpcmf\Service::M('Pay')->add_paylog([
+                            'uid' => $member['id'],
+                            'username' => $member['username'],
+                            'touid' => 0,
+                            'tousername' => '',
+                            'mid' => 'system',
+                            'title' => dr_lang('%s内容《%s》发布', \Phpcmf\Service::C()->module['name'], $data[1]['title']),
+                            'value' => $money,
+                            'type' => 'finecms',
+                            'status' => 1,
+                            'result' => dr_url_prefix($data[1]['url'], $this->dirname, $this->siteid, ''),
+                            'paytime' => SYS_TIME,
+                            'inputtime' => SYS_TIME,
+                        ]);
+                    } else {
+                        log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：'.$rr['msg']);
+                    }
                 }
+                // 增减经验
+                $exp = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', $member);
+                $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
             }
-            // 增减经验
-            $exp = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', $member);
-            $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
         } else {
             // 修改内容
             if ($data[1]['catid'] != $old['catid']) {
