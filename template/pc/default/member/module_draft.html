@@ -35,9 +35,9 @@
                 <?php
                 $c=dr_string2array($t.content);
                 if ($t.cid) {
-                $url=dr_member_url(APP_DIR.'/home/edit',array('id'=>$t.cid, 'did'=>$t.id));
+                    $url=dr_member_url(APP_DIR.'/home/edit',array('id'=>$t.cid, 'did'=>$t.id));
                 } else {
-                $url=dr_member_url(APP_DIR.'/home/add',array('did'=>$t.id));
+                    $url=dr_member_url(APP_DIR.'/home/add',array('did'=>$t.id));
                 }
                 $t['url'] = SITE_URL.'index.php?s='.MOD_DIR.'&c=show&m=draft&id='.$t['id'];
                 ?>
@@ -52,6 +52,7 @@
                     <td> {Function_list::title($c['title'], $param, $t)} </td>
                     <td> {Function_list::datetime($t['inputtime'], $param, $t)} </td>
                     <td>
+                        <label><a href="{$t.url}" target="_blank" class="btn btn-xs green"> <i class="fa fa-search"></i> 查看</a></label>
                         <label><a href="{$url}" class="btn btn-xs green"> <i class="fa fa-plus"></i> 发布</a></label>
                     </td>
                 </tr>
