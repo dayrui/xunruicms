@@ -384,10 +384,9 @@ class Form
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
             return dr_return_data(0, dr_lang('账号长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['userlen']), ['field' => 'username']);
-        }
-        if (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
-            $arr = explode(',', \Phpcmf\Service::C()->member_cache['register']['notallow']);
-            foreach ($arr as $a) {
+        } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
+            // 放在最后一次比较
+            foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $a) {
                 if (strpos($value, $a) !== false) {
                     return dr_return_data(0, dr_lang('账号名不允许注册'), ['field' => 'username']);
                 }

@@ -147,6 +147,7 @@ class Member_auth extends \Phpcmf\Common
             foreach ($module as $dir => $t) {
                 if ($t['hlist'] == 1) {
                     unset($module[$dir]);
+                    continue;
                 }
                 $module[$dir]['category'] = \Phpcmf\Service::L('tree')->init(\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$dir, 'category'))->html_icon()->get_tree_array(0);
                 $module[$dir]['mform'] = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$dir, 'form');
