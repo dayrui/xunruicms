@@ -331,44 +331,8 @@ class Module extends \Phpcmf\Common
                 }
             }
 
-            // 处理关键字标签
-            $data['tag'] = $data['keywords'];
-            $data['tags'] = [];
-            if ($data['keywords']) {
-                $tag = explode(',', $data['keywords']);
-                foreach ($tag as $t) {
-                    $t = trim($t);
-                    $t && $data['tags'][$t] = $this->content_model->get_tag_url($t);
-                }
-            }
-
-            // 关闭插件嵌入
-            $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
-
-            // 上一篇文章
-            $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-            $builder->where('catid', (int)$data['catid'])->where('status', 9);
-            $is_fstatus && $builder->where('fstatus', 1);
-            $builder->where('id<', $id)->orderBy('id desc');
-            $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
-
-            // 下一篇文章
-            $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-            $builder->where('catid', (int)$data['catid'])->where('status', 9);
-            $is_fstatus && $builder->where('fstatus', 1);
-            $builder->where('id>', $id)->orderBy('id asc');
-            $data['next_page'] = $builder->limit(1)->get()->getRowArray();
-
-            // 格式化输出自定义字段
-            $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
-            $fields['inputtime'] = ['fieldtype' => 'Date'];
-            $fields['updatetime'] = ['fieldtype' => 'Date'];
-
             // 格式化字段
-            $data = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($fields, $data, $page);
-
-            // 模块的回调处理
-            $data = $this->content_model->_call_show($data);
+            $data = $this->_Show_Data($data, $page);
 
             // 缓存结果 
             if ($data['uid'] != $this->uid && SYS_CACHE) {
@@ -417,7 +381,6 @@ class Module extends \Phpcmf\Common
                 $data['catid']
             );
         }
-
 
         // 判断分页
         if ($page && $data['content_page'] && !$data['content_page'][$page]) {
@@ -509,24 +472,8 @@ class Module extends \Phpcmf\Common
 
         $data['id'] = 0;
 
-        // 处理关键字标签
-        $data['tag'] = $data['keywords'];
-        $data['keyword_list'] = [];
-        if ($data['keywords']) {
-            $data['keywords'] = explode(',', $data['keywords']);
-            foreach ($data['keywords'] as $t) {
-                $t = trim($t);
-                $t && $data['keyword_list'][$t] = $this->content_model->get_tag_url($t);
-            }
-        }
-
-        // 格式化输出自定义字段
-        $fields = $this->module['category'][$data['catid']]['field'] ? array_merge($this->module['field'], $this->module['category'][$data['catid']]['field']) : $this->module['field'];
-        $fields['inputtime'] = ['fieldtype' => 'Date'];
-        $fields['updatetime'] = ['fieldtype' => 'Date'];
-
         // 格式化字段
-        $data = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($fields, $data, $page);
+        $data = $this->_Show_Data($data, $page);
 
         // 判断分页
         if ($page && $data['content_page'] && !$data['content_page'][$page]) {
@@ -556,6 +503,50 @@ class Module extends \Phpcmf\Common
         return $data;
     }
 
+    // 内容页面的字段格式化处理
+    protected function _Show_Data($data, $page) {
+
+        // 处理关键字标签
+        $data['tag'] = $data['keywords'];
+        $data['tags'] = [];
+        if ($data['keywords']) {
+            $tag = explode(',', $data['keywords']);
+            foreach ($tag as $t) {
+                $t = trim($t);
+                $t && $data['tags'][$t] = $this->content_model->get_tag_url($t);
+            }
+        }
+
+        // 关闭插件嵌入
+        $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
+
+        // 上一篇文章
+        $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
+        $builder->where('catid', (int)$data['catid'])->where('status', 9);
+        $is_fstatus && $builder->where('fstatus', 1);
+        $builder->where('id<', (int)$data['id'])->orderBy('id desc');
+        $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
+
+        // 下一篇文章
+        $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
+        $builder->where('catid', (int)$data['catid'])->where('status', 9);
+        $is_fstatus && $builder->where('fstatus', 1);
+        $builder->where('id>', (int)$data['id'])->orderBy('id asc');
+        $data['next_page'] = $builder->limit(1)->get()->getRowArray();
+
+        // 格式化输出自定义字段
+        $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
+        $fields['inputtime'] = ['fieldtype' => 'Date'];
+        $fields['updatetime'] = ['fieldtype' => 'Date'];
+
+        // 格式化字段
+        $data = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($fields, $data, $page);
+
+        // 模块的回调处理
+        $data = $this->content_model->_call_show($data);
+
+        return $data;
+    }
 
 
 
