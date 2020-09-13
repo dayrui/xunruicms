@@ -42,7 +42,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_file')}&id={$app_id}",
+            url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
             success: function (json) {
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
@@ -67,7 +67,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_file_down')}&id={$app_id}",
+            url: "{dr_url('cloud/update_file_down')}&id={$app_id}&ls={$ls}",
             success: function (json) {
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
@@ -91,7 +91,7 @@
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "{dr_url('cloud/update_file_check')}&id={$app_id}",
+                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&ls={$ls}",
                 success: function (json) {
 
                     document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
@@ -140,7 +140,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_file_install')}&id={$app_id}",
+            url: "{dr_url('cloud/update_file_install')}&id={$app_id}&ls={$ls}",
             success: function (json) {
 
                 if (json.code == 1) {

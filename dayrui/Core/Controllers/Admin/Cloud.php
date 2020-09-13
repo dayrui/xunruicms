@@ -26,7 +26,7 @@ class Cloud extends \Phpcmf\Common
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
         $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->cmf_license['license'];
-        if ($this->cmf_license['cloud']) {
+        if ($this->cmf_license['cloud'] && IS_OEM_CMS) {
             $this->service_url = $this->cmf_license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->cmf_license['license'];
         }
 
@@ -485,6 +485,7 @@ class Cloud extends \Phpcmf\Common
     public function todo_update() {
 
         \Phpcmf\Service::V()->assign([
+            'ls' => dr_safe_replace($_GET['ls']),
             'app_id' => dr_safe_replace($_GET['id']),
         ]);
         \Phpcmf\Service::V()->display('cloud_todo_update.html');exit;
