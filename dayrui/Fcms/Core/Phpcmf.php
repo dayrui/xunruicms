@@ -865,6 +865,8 @@ abstract class Common extends \CodeIgniter\Controller
                         if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
                             $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
                         }
+                        // 对象存储
+                        $_clink[$k]['model'] = $obj;
                     }
                     // 权限验证
                     if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
@@ -897,6 +899,8 @@ abstract class Common extends \CodeIgniter\Controller
                                 if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
                                     $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
                                 }
+                                // 对象存储
+                                $_clink[$k]['model'] = $obj;
                             }
                             // 权限验证
                             if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
@@ -916,7 +920,7 @@ abstract class Common extends \CodeIgniter\Controller
                 if (IS_ADMIN) {
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
-                        CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置url参数');
+                        CI_DEBUG && !$t['murl'] && log_message('error', 'Clink（'.$t['name'].'）没有设置url参数');
                         continue;
                     } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
                         unset($data[$i]); // 无权限的不要
@@ -926,7 +930,7 @@ abstract class Common extends \CodeIgniter\Controller
                 } else {
                     if (!$t['murl']) {
                         unset($data[$i]); // 非后台必须验证murl
-                        CI_DEBUG && log_message('error', 'Clink（'.$t['name'].'）没有设置murl参数');
+                        CI_DEBUG && !$t['url'] && log_message('error', 'Clink（'.$t['name'].'）没有设置murl参数');
                         continue;
                     }
                     $data[$i]['url'] = urldecode($data[$i]['murl']);

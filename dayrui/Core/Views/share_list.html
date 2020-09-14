@@ -148,6 +148,9 @@
                     {/if}
 
                     {loop $clink $a}
+                    {if $a.model && $a.check && method_exists($a.model, $a.check) && call_user_func(array($a.model, $a.check), APP_DIR, $t) == 0}
+                    {php continue;}
+                    {/if}
                     <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
                     {/loop}
 

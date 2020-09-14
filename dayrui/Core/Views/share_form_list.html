@@ -109,6 +109,9 @@
                     <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs red"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
                     {/if}
                     {loop $clink $a}
+                    {if $a.model && $a.check && method_exists($a.model, $a.check) && call_user_func(array($a.model, $a.check), $form_table, $t) == 0}
+                    {php continue;}
+                    {/if}
                     <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{fid}', '{id}', '{cid}'), array($form_table, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
                     {/loop}
                     <label><a href="{dr_url($uriprefix.'/show_index', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-search"></i> {dr_lang('查看')}</a></label>
