@@ -76,7 +76,7 @@ class Security {
 
 	// 替换前的处理
 	protected $_never_call_str = [
-        'javascript:;'    => 'javascript_xunruicms:;',
+        '&quot;javascript:'    => '&quot;javascript_xunruicms:',
     ];
 
 	/**
@@ -336,10 +336,12 @@ class Security {
 			$str
 		);
 
-		// Final clean up
-		// This adds a bit of extra precaution in case
-		// something got through the above filters
-		$str = $this->_do_never_allowed($str);
+		//最终清理
+        //
+        ////这增加了一点额外的预防措施
+        //
+        ////有东西通过了上面的过滤器
+		//$str = $this->_do_never_allowed($str);
 
 		/*
 		 * Images are Handled in a Special Way
@@ -847,7 +849,7 @@ class Security {
 
 		foreach ($this->_never_allowed_regex as $regex)
 		{
-			$str = preg_replace('#'.$regex.'#is', '[removed]', $str);
+			$str = preg_replace('#'.$regex.'#is', '_\\0', $str);
 		}
 
 		$str = str_replace($this->_never_call_str, array_keys($this->_never_call_str), $str);

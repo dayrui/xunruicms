@@ -983,7 +983,7 @@ function dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError) {
     layer.closeAll('loading');
     if (typeof is_admin != "undefined" && is_admin == 1) {
         var msg = HttpRequest.responseText;
-        console.log(HttpRequest, ajaxOptions, thrownError);
+        //console.log(HttpRequest, ajaxOptions, thrownError);
         if (!msg) {
             dr_cmf_tips(0, lang['error_admin']);
         } else {

@@ -13401,6 +13401,8 @@
             print:1,
             searchreplace:1,
             fullscreen:1,
+            drafts:1,
+            pagebreak:1,
             preview:1,
             insertparagraph:1,
             elementpath:1,
@@ -16356,7 +16358,7 @@
                             html = root.toHtml();
                             sourceEditor.setContent(html);
                         };
-
+                        /*
                         setTimeout(function (){
                             sourceEditor.select();
                             me.addListener('fullscreenchanged', function(){
@@ -16364,7 +16366,7 @@
                                     sourceEditor.getCodeMirror().refresh()
                                 }catch(e){}
                             });
-                        });
+                        });*/
 
                         //重置getContent，源码模式下取值也能是最新的数据
                         oldGetContent = me.getContent;
@@ -17654,6 +17656,10 @@
             var str;
             switch (type){
                 case 'image':
+
+                    str = '<img ' + (id ? 'id="' + id+'"' : '') + ' width="'+ width +'" height="' + height + '" _url="'+url+'" class="' + classname.replace(/\bvideo-js\b/, '') + '"'  +
+                        ' src="' + me.options.UEDITOR_HOME_URL+'themes/default/images/spacer.gif" style="background:url('+me.options.UEDITOR_HOME_URL+'themes/default/images/videologo.gif) no-repeat center center; border:1px solid gray;'+(align ? 'float:' + align + ';': '')+'" />'
+                    break;
                 case 'embed':
 
                 case 'video':
@@ -17671,7 +17677,7 @@
             utils.each(root.getNodesByTagName(img2video ? 'img' : 'embed video'),function(node){
                 var className = node.getAttr('class');
                 if(className && className.indexOf('edui-faked-video') != -1){
-                    var html = creatInsertStr( img2video ? node.getAttr('_url') : node.getAttr('src'),node.getAttr('width'),node.getAttr('height'),null,node.getStyle('float') || '',className,img2video ? 'embed':'image');
+                    var html = creatInsertStr( img2video ? node.getAttr('_url') : node.getAttr('src'),node.getAttr('width'),node.getAttr('height'),null,node.getStyle('float') || '',className,img2video ? 'video':'image');
                     node.parentNode.replaceChild(UE.uNode.createElement(html),node);
                 }
                 if(className && className.indexOf('edui-upload-video') != -1){
@@ -17761,9 +17767,11 @@
                 for(var i=0,vi,len = videoObjs.length;i<len;i++){
                     vi = videoObjs[i];
                     cl = (type == 'upload' ? 'edui-upload-video video-js vjs-default-skin':'edui-faked-video');
-                    html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'embed'));
+                    html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'video'));
                 }
                 me.execCommand("inserthtml",html.join(""),true);
+                me.execCommand('source');
+                me.execCommand('source');
                 var rng = this.selection.getRange();
                 /*
             for(var i= 0,len=videoObjs.length;i<len;i++){
@@ -23953,7 +23961,7 @@
         return {
             defaultOptions: {
                 //默认间隔时间
-                saveInterval: 500
+                saveInterval: 0
             },
             bindEvents:{
                 'ready':function(){
@@ -24020,10 +24028,9 @@
 
                 'drafts':{
                     execCommand:function (cmd, name) {
-                        if ( saveKey ) {
-                            me.body.innerHTML = me.getPreferences( saveKey ) || '<p>'+domUtils.fillHtml+'</p>';
-                            me.focus(true);
-                        }
+                        //在尾部插入换行标签
+                        me.body.innerHTML = me.body.innerHTML+'<p><br></p>';
+                        me.focus(true);
                     },
                     queryCommandState: function () {
                         return saveKey ? ( me.getPreferences( saveKey ) === null ? -1 : 0 ) : -1;

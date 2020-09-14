@@ -48,8 +48,9 @@
         //编辑视频时初始化相关信息
         (function(){
             var img = editor.selection.getRange().getClosedNode(),url;
+            //console.log(editor.selection.getRange().getClosedNode());
             if(img && img.className){
-                var hasFakedClass = (img.className == "edui-faked-video"),
+                var hasFakedClass = (img.className.indexOf("edui-faked-video")!=-1),
                     hasUploadClass = img.className.indexOf("edui-upload-video")!=-1;
                 if(hasFakedClass || hasUploadClass) {
                     $G("videoUrl").value = url = img.getAttribute("_url");
@@ -74,6 +75,7 @@
         dialog.onok = function(){
             $G("preview").innerHTML = "";
             var currentTab =  findFocus("tabHeads","tabSrc");
+
             switch(currentTab){
                 case "video":
                     return insertSingle();
@@ -273,13 +275,22 @@
 
         conUrl = utils.unhtmlForUrl(conUrl);
 
+        /*
         $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
         '<embed class="previewVideo" ' +
             ' src="' + conUrl + '"' +
             ' width="' + 420  + '"' +
             ' height="' + 280  + '"' +
             ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >' +
-        '</embed>';
+        '</embed>';*/
+        $G("preview").innerHTML = ''+
+            '<video controls="true"' +
+            ' src="' + conUrl + '"' +
+            ' width="' + 420  + '"' +
+            ' height="' + 280  + '"' +
+            ' controls="true" >' +
+            '</video>';
+
     }
 
 
