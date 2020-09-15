@@ -260,9 +260,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
         // 第一张作为缩略图
-        $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb'])  && !$_POST['data']['thumb'] && $_POST['is_auto_thumb'];
+        $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']])  && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
         // 是否下载图片
-        $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img']) && $_POST['is_auto_down_img']);
+        $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
 		// 下载远程图片
         if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png|webp))\\2/i", $value, $imgs)) {
@@ -389,7 +389,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         // 去除站外链接
-        if (isset($_POST['is_remove_a']) && $_POST['is_remove_a'] && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
+        if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']] && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
             $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
             foreach ($arrs[2] as $i => $a) {
                 if (strpos($a, ' ') !== false) {
@@ -415,7 +415,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }*/
 
         // 提取描述信息
-        if (isset($_POST['data']['description']) && isset($_POST['is_auto_description']) && !$_POST['data']['description']) {
+        if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']]) && !$_POST['data']['description_'.$field['fieldname']]) {
             \Phpcmf\Service::L('Field')->data[1]['description'] = trim(dr_strcut(dr_clearhtml($value), 200));
         }
 
@@ -587,21 +587,21 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
             $str.= '<div class="mt-checkbox-inline" style="margin-top: 10px;">';
             $str.= '     <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_thumb" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
+                  <input name="is_auto_thumb_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
+                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
                  </label>';
             if (!$field['setting']['option']['down_img']) {
                 $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_down_img" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
+                  <input name="is_auto_down_img_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
                  </label>';
             }
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_remove_a" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> 去除站外链接 <span></span>
+                  <input name="is_remove_a_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> 去除站外链接 <span></span>
                  </label>';
             $str.= '</div>';
         }

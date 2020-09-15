@@ -1622,7 +1622,7 @@ class Image
         // 处理图片大小是否溢出内存（图片分辨率，图片对象的width和height ）X（图片的通道数，一般是3）X 1.7
         $this->image_info = getimagesize($file);
         $max = ($this->image_info[0] * $this->image_info[1] * 3 * 1.7)/1024/1024;
-        $limit = intval(ini_get("memory_limit")) / 2;
+        $limit = intval(ini_get("memory_limit")) / 1.5; // 多预留一些内存
         if ($limit && $limit - $max < 0) {
             CI_DEBUG && log_message('error', '图片['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
             return $attach['url']; // 原样输出
