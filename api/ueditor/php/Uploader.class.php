@@ -392,12 +392,11 @@ class Uploader
      */
     public function getFileInfo()
     {
-        $title = str_replace($this->getFileExt(), '', $this->oriName);
         return array(
             "state" => $this->stateInfo,
             "url" => $this->fileUrl,
-            "title" => $title,
-            "original" => $title,
+            "title" => '{xunruicms_img_title}',
+            "original" => '{xunruicms_img_title}',
             "type" => $this->fileType,
             "size" => $this->fileSize
         );

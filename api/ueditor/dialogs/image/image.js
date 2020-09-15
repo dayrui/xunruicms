@@ -957,7 +957,8 @@
                     list.push({
                         src: src,
                         _src: src,
-                        alt: src.substr(src.lastIndexOf('/') + 1),
+                        alt: '{xunruicms_img_title}',
+                        title: '{xunruicms_img_title}',
                         floatStyle: align
                     });
                 }

@@ -439,7 +439,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      * @return  string
      */
     public function output($value) {
-        return htmlspecialchars_decode($value);
+        $title = isset(\Phpcmf\Service::L('Field')->data['title']) ? \Phpcmf\Service::L('Field')->data['title'] : '';
+        return str_replace('{xunruicms_img_title}', $title, htmlspecialchars_decode($value));
     }
 
     /**

@@ -549,6 +549,7 @@
                 return $data;
             }
 
+            $this->data = $data;
             foreach ($data as $n => $value) {
                 if (isset($fields[$n]) && $fields[$n]) {
                     if ($n == 'content' && $fields[$n]['fieldtype'] == 'Ueditor') {
