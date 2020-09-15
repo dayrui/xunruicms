@@ -261,6 +261,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
         // 第一张作为缩略图
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']])  && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
+
         // 是否下载图片
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
@@ -333,8 +334,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 											$att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
 											if ($att['code']) {
 												// 归档成功
-												$value = str_replace($img, $rt['data']['url'], $value);
 												$img = $att['code'];
+                                                $value = str_replace($img, $rt['data']['url'], $value);
 											}
 										}
 									//}
@@ -374,22 +375,22 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
                                         if ($att['code']) {
                                             // 归档成功
-                                            $value = str_replace($img, $rt['data']['url'], $value);
                                             $img = $att['code'];
+                                            $value = str_replace($img, $rt['data']['url'], $value);
                                         }
                                     }
                                 }
                             }
-
                         }
                     }
-                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $img;
+                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $_POST['data']['thumb'] = $img;
                 }
             }
         }
 
         // 去除站外链接
-        if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']] && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
+        if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']]
+            && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
             $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
             foreach ($arrs[2] as $i => $a) {
                 if (strpos($a, ' ') !== false) {
@@ -415,8 +416,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }*/
 
         // 提取描述信息
-        if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']]) && !$_POST['data']['description_'.$field['fieldname']]) {
-            \Phpcmf\Service::L('Field')->data[1]['description'] = trim(dr_strcut(dr_clearhtml($value), 200));
+        if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']]) && $_POST['is_auto_description_'.$field['fieldname']]) {
+            \Phpcmf\Service::L('Field')->data[1]['description'] = $_POST['data']['description'] = trim(dr_strcut(dr_clearhtml($value), 200));
         }
 
         // 替换分页
