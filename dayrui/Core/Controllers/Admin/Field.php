@@ -40,8 +40,9 @@ class Field extends \Phpcmf\Common
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
 				[
 					'返回' => ['url:'.$this->backurl, 'fa fa-reply'],
-					$this->name => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-code', 'field/index'],
-					'添加' => ['url:'.\Phpcmf\Service::L('Router')->url('field/add', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-plus', 'field/add'],
+					$this->name => ['url:'.dr_url('field/index', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-code', 'field/index'],
+					'添加' => ['url:'.dr_url('field/add', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-plus', 'field/add'],
+                    '导入' => ['add:field/import_add{rname='.$this->relatedname.'&rid='.$this->relatedid.'}', 'fa fa-sign-in', '60%', '70%'],
 					'修改' => ['hide:field/edit', 'fa fa-edit'],
 				]
 			),
@@ -208,7 +209,7 @@ class Field extends \Phpcmf\Common
 			} elseif (strlen($data['fieldname']) > 20) {
 				$this->_json(0, dr_lang('字段名称太长'));
             } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
-                $this->_json(0, dr_lang('字段已经存在'));
+                $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
 			} else {
 				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
 				if (!$rt['code']) {
@@ -354,6 +355,45 @@ class Field extends \Phpcmf\Common
 
 		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
 	}
+
+    // 导入
+    public function import_add() {
+
+        if (IS_AJAX_POST) {
+            $data = \Phpcmf\Service::L('input')->post('code');
+            $data = dr_string2array($data);
+            if (!$data) {
+                exit($this->_json(0, dr_lang('代码解析失败')));
+            }
+            $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
+            if (!$field) {
+                $this->_json(0, dr_lang('字段类别不存在'));
+            } elseif (empty($data['name'])) {
+                $this->_json(0, dr_lang('字段显示名称不能为空'));
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
+                $this->_json(0, dr_lang('字段名称不规范'));
+            } elseif (strlen($data['fieldname']) > 20) {
+                $this->_json(0, dr_lang('字段名称太长'));
+            } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
+                $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
+            } else {
+                $rt = \Phpcmf\Service::M('Field')->add($data, $field);
+                if (!$rt['code']) {
+                    $this->_json(0, dr_lang($rt['msg']));
+                }
+                $this->_cache(); // 自动更新缓存
+                \Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
+                $this->_json(1, dr_lang('操作成功'));
+            }
+
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden()
+        ]);
+        \Phpcmf\Service::V()->display('form_import.html');
+        exit;
+    }
 
 	// 联动更新缓存
 	private function _cache() {
