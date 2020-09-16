@@ -43,8 +43,10 @@ class Property extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>
 		<div class="form-group dr_option" id="dr_option_0">
-			<label class="col-md-2 control-label"><a href="javascript:;" class="" onclick="dr_add_option()" style="color:blue">[+]</a>&nbsp;'.dr_lang('字段说明').'</label>
-			<div class="col-md-9"><div class="form-control-static">'.dr_lang('选择框与复选框类型的选项值以,分隔').'</div></div>
+			<label class="col-md-2 control-label">'.dr_lang('字段说明').'</label>
+			<div class="col-md-9"><div class="form-control-static">'.dr_lang('选择框与复选框类型的选项值以,分隔').'</div><br>
+			<a href="javascript:;" class="btn btn-sm red" onclick="dr_add_option()"><i class="fa fa-plus"></i>&nbsp;'.dr_lang('增加属性选项').'</a>
+			</div>
 		</div>';
         unset($option['name_value']);
         unset($option['value_value']);
