@@ -199,7 +199,7 @@ class Security {
 		$converted_string = $str;
 
 		// Remove Strings that are never allowed
-		$str = $this->_do_never_allowed($str);
+		//$str = $this->_do_never_allowed($str);
 
 		/*
 		 * Makes PHP tags safe
@@ -327,7 +327,7 @@ class Security {
 			'\\1\\2&#40;\\3&#41;',
 			$str
 		);
-		
+
 		// Same thing, but for "tag functions" (e.g. eval`some code`)
 		// See https://github.com/bcit-ci/CodeIgniter/issues/5420
 		$str = preg_replace(
@@ -341,7 +341,7 @@ class Security {
         ////这增加了一点额外的预防措施
         //
         ////有东西通过了上面的过滤器
-		//$str = $this->_do_never_allowed($str);
+		$str = $this->_do_never_allowed($str);
 
 		/*
 		 * Images are Handled in a Special Way
@@ -693,7 +693,11 @@ class Security {
 					OR (trim($attribute['value'][0]) === '')
 				)
 				{
-					$attributes[] = 'xss=removed';
+                    if (CI_DEBUG) {
+                        $attributes[] = 'xss_removed_'.$attribute[0][0];
+                    } else {
+                        $attributes[] = 'xss=removed';
+                    }
 				}
 				else
 				{

@@ -9,7 +9,7 @@
 // 网站表单操作类 基于 Ftable
 class Form extends \Phpcmf\Table
 {
-    protected $form;
+    public $form;
     protected $_is_post;
     protected $_is_edit;
     protected $_is_delete;

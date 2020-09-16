@@ -10,7 +10,8 @@ class Mform extends \Phpcmf\Table
 {
     public $cid; // 内容id
     public $form; // 表单信息
-    public $is_verify; // 判断是否来自审核控制器
+    public $index; // 模块内容信息
+    protected $is_verify; // 判断是否来自审核控制器
     protected $is_add_menu = 1; //允许有添加菜单
 
     // 上级公共类
