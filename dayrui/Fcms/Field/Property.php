@@ -43,7 +43,7 @@ class Property extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>
 		<div class="form-group dr_option" id="dr_option_0">
-			<label class="col-md-2 control-label"><a href="javascript:;" onclick="dr_add_option()" style="color:blue">[+]</a>&nbsp;'.dr_lang('字段说明').'</label>
+			<label class="col-md-2 control-label"><a href="javascript:;" class="" onclick="dr_add_option()" style="color:blue">[+]</a>&nbsp;'.dr_lang('字段说明').'</label>
 			<div class="col-md-9"><div class="form-control-static">'.dr_lang('选择框与复选框类型的选项值以,分隔').'</div></div>
 		</div>';
         unset($option['name_value']);
@@ -51,7 +51,7 @@ class Property extends \Phpcmf\Library\A_Field {
 		if ($option['default_value']) {
 			foreach ($option['default_value'] as $i => $t) {
 				$str.= '<div class="form-group dr_option" id="dr_option_'.$i.'" >';
-				$str.= '<label class="col-md-2 control-label"><a href="javascript:;" onclick="dr_add_option()" style="color:blue">[+]</a>&nbsp;'.dr_lang('属性名称').'</label>';
+				$str.= '<label class="col-md-2 control-label">'.dr_lang('属性名称').'</label>';
 				$str.= '<div class="col-md-9"><label><input type="text" name="data[setting][option][default_value]['.$i.'][name]" value="'.$t['name'].'" class="form-control" /></label>';
 				$str.= '<label>&nbsp;&nbsp;'.dr_lang('类型').'：</label><label><select class="form-control" name="data[setting][option][default_value]['.$i.'][type]">';
 				$str.= '<option value="1" '.($t['type'] == 1 ? "selected" : "").'> - '.dr_lang('文本框').' - </option>';
@@ -62,6 +62,7 @@ class Property extends \Phpcmf\Library\A_Field {
 				$str.= '</div></div>';
 			}
 		}
+
 		$str.= '
 		<script type="text/javascript">
 		var id=$(".dr_option").size();
@@ -69,7 +70,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			id ++;
 			var html = "";
 			html+= "<div class=\"form-group dr_option\" id=\"dr_option_"+id+"\" >";
-			html+= "<label class=\"col-md-2 control-label\"><a href=\"javascript:;\" onclick=\"dr_add_option()\" style=\"color:blue\">[+]</a>&nbsp;'.dr_lang('属性名称').'</label>";
+			html+= "<label class=\"col-md-2 control-label\">'.dr_lang('属性名称').'</label>";
 			html+= "<div class=\"col-md-9\">";
 			html+= "<label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][name]\" value=\"\" class=\"form-control\" /></label>";
 			html+= "<label>&nbsp;&nbsp;'.dr_lang('类型').'：</label><label><select class=\"form-control\" name=\"data[setting][option][default_value]["+id+"][type]\">";
@@ -80,9 +81,20 @@ class Property extends \Phpcmf\Library\A_Field {
 			html+= "<label>&nbsp;&nbsp;'.dr_lang('默认值/选项值').'：</label><label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][value]\" class=\"form-control input-xlarge\"></label>&nbsp;<label><a onclick=\"$(\'#dr_option_"+id+"\').remove()\" href=\"javascript:;\">'.dr_lang('删除').'</a></label>";
 			html+= "</div>";
 			html+= "</div>";
-			$("#dr_option").append(html);
+			$("#dr_option_rows").append(html);
 		}
 		</script>
+		<div id="dr_option_rows"></div>
+		<div class="form-group">
+            <label class="col-md-2 control-label">'.dr_lang('行数模式').'</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][option][is_hang]" value="1" '.($option['is_hang'] ? 'checked' : '').'> '.dr_lang('固定').'  <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][option][is_hang]" value="0" '.(!$option['is_hang'] ? 'checked' : '').'> '.dr_lang('无限').'  <span></span></label>
+                </div>
+                <span class="help-block">'.dr_lang('无限行数可以在录入数据时自由添加行数，固定行数就只能是录入上述的固定属性行数').'</span>
+            </div>
+        </div>
 		';
 		return [$str];
 	}
@@ -140,8 +152,12 @@ class Property extends \Phpcmf\Library\A_Field {
         <thead>
         <tr>
             <th width="200" style="border-left-width: 1px!important;">'.dr_lang($field['setting']['option']['name_value'] ? $field['setting']['option']['name_value'] : '名称').' </th>
-            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>
-            <th width="45"> </th>
+            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>';
+        if (!$field['setting']['option']['is_hang']) {
+            $str.='
+            <th width="45"> </th>';
+        }
+        $str.= '
         </tr>
         </thead>
         <tbody id="property_'.$name.'-sort-items" class="scroller_body">';
@@ -185,15 +201,17 @@ class Property extends \Phpcmf\Library\A_Field {
 						}
 				}
 				$str.= '</td>';
-				$str.= '<td>';
-                $str.= '</td>';
+				if (!$field['setting']['option']['is_hang']) {
+                    $str.= '<td>';
+                    $str.= '</td>';
+                }
 				$str.= '</tr>';
                 unset($value[$i]);
                 $i++;
 			}
 		}
 		// 剩下自定义属性
-		if ($value) {
+		if ($value && !$field['setting']['option']['is_hang']) {
 			foreach ($value as $t) {
                 $str.= '<tr id="dr_items_'.$name.'_'.$i.'">';
                 $str.= '<td><input type="text" class="form-control input-sm" value="'.$t['name'].'" name="data['.$name.']['.$i.'][name]"></td>';
@@ -210,11 +228,12 @@ class Property extends \Phpcmf\Library\A_Field {
 		$str.= '
             </tbody>
         </table></div></div>';
-		$str.= '<p>';
-		$str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
-		$str.= '</p>';
-        $js = \Phpcmf\Service::L('js_packer');
-        $str.= $js->pack('<script type="text/javascript">
+		if (!$field['setting']['option']['is_hang']) {
+            $str.= '<p>';
+            $str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
+            $str.= '</p>';
+            $js = \Phpcmf\Service::L('js_packer');
+            $str.= $js->pack('<script type="text/javascript">
 		$("#property_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_property_'.$name.'() {
@@ -226,7 +245,10 @@ class Property extends \Phpcmf\Library\A_Field {
 			$("#property_'.$name.'-sort-items").append(html);
             dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		}
-		</script>', 0).'<span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
+		</script>', 0);
+        }
+
+        $str.= '<span class="help-block">'.$field['setting']['validate']['tips'].'</span>';
 		return $this->input_format($field['fieldname'], $text, $str);
 	}
 

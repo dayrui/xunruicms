@@ -369,6 +369,8 @@ class Field extends \Phpcmf\Common
         unset($data['relatedid']);
         unset($data['relatedname']);
 
+        $data['setting'] = dr_string2array($data['setting']);
+
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
         ]);
@@ -416,6 +418,7 @@ class Field extends \Phpcmf\Common
                 if (isset($data['id'])) {
                     unset($data['id']);
                 }
+                $data['setting'] = dr_string2array($data['setting']);
                 $rt = \Phpcmf\Service::M('Field')->add($data, $field);
                 if (!$rt['code']) {
                     $this->_json(0, dr_lang($rt['msg']));
