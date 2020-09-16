@@ -365,10 +365,14 @@ class Field extends \Phpcmf\Common
             $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
         }
 
+        unset($data['id']);
+        unset($data['relatedid']);
+        unset($data['relatedname']);
+
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
         ]);
-        \Phpcmf\Service::V()->display('form_export.html');exit;
+        \Phpcmf\Service::V()->display('api_export_code.html');exit;
     }
 
     // 导入
@@ -424,9 +428,10 @@ class Field extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
-            'form' => dr_form_hidden()
+            'data' => '',
+            'form' => dr_form_hidden(),
         ]);
-        \Phpcmf\Service::V()->display('form_import.html');
+        \Phpcmf\Service::V()->display('api_export_code.html');
         exit;
     }
 

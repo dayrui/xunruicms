@@ -222,7 +222,7 @@ class Urlrule extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
         ]);
-        \Phpcmf\Service::V()->display('form_export.html');exit;
+        \Phpcmf\Service::V()->display('api_export_code.html');exit;
     }
 
     // 导入
@@ -246,9 +246,10 @@ class Urlrule extends \Phpcmf\Table
         }
 
         \Phpcmf\Service::V()->assign([
-            'form' => dr_form_hidden()
+            'data' => '',
+            'form' => dr_form_hidden(),
         ]);
-        \Phpcmf\Service::V()->display('form_import.html');
+        \Phpcmf\Service::V()->display('api_export_code.html');
         exit;
     }
 

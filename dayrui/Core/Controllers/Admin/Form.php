@@ -242,7 +242,7 @@ class Form extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
         ]);
-        \Phpcmf\Service::V()->display('form_export.html');exit;
+        \Phpcmf\Service::V()->display('api_export_code.html');exit;
     }
 
     // 导入
@@ -270,9 +270,10 @@ class Form extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
+            'data' => '',
             'form' => dr_form_hidden()
         ]);
-        \Phpcmf\Service::V()->display('form_import.html');
+        \Phpcmf\Service::V()->display('api_export_code.html');
         exit;
     }
 
