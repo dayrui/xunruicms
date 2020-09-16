@@ -356,36 +356,71 @@ class Field extends \Phpcmf\Common
 		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
 	}
 
+    // 导出
+    public function export() {
+
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $data = \Phpcmf\Service::M()->table('field')->get($id);
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => dr_array2string($data),
+        ]);
+        \Phpcmf\Service::V()->display('form_export.html');exit;
+    }
+
     // 导入
     public function import_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('code');
-            $data = dr_string2array($data);
-            if (!$data) {
-                exit($this->_json(0, dr_lang('代码解析失败')));
+            $code = \Phpcmf\Service::L('input')->post('code');
+            $arr = explode(PHP_EOL, $code);
+            if (!$arr) {
+                exit($this->_json(0, dr_lang('代码不能为空')));
             }
-            $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
-            if (!$field) {
-                $this->_json(0, dr_lang('字段类别不存在'));
-            } elseif (empty($data['name'])) {
-                $this->_json(0, dr_lang('字段显示名称不能为空'));
-            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
-                $this->_json(0, dr_lang('字段名称不规范'));
-            } elseif (strlen($data['fieldname']) > 20) {
-                $this->_json(0, dr_lang('字段名称太长'));
-            } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
-                $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
-            } else {
+            $save = [];
+            foreach ($arr as $t) {
+                if ($t) {
+                    $data = dr_string2array($t);
+                    if (!$data) {
+                        exit($this->_json(0, dr_lang('代码解析失败')));
+                    }
+                    $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
+                    if (!$field) {
+                        $this->_json(0, dr_lang('字段类别不存在'));
+                    } elseif (empty($data['name'])) {
+                        $this->_json(0, dr_lang('字段显示名称不能为空'));
+                    } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
+                        $this->_json(0, dr_lang('字段名称不规范'));
+                    } elseif (strlen($data['fieldname']) > 20) {
+                        $this->_json(0, dr_lang('字段名称太长'));
+                    } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
+                        $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
+                    } else {
+                        $save[] = $data;
+                    }
+                }
+            }
+            if (!$save) {
+                exit($this->_json(0, dr_lang('没有可用的导出字段')));
+            }
+            // 入库操作
+            foreach ($save as $data) {
+                $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
+                if (isset($data['id'])) {
+                    unset($data['id']);
+                }
                 $rt = \Phpcmf\Service::M('Field')->add($data, $field);
                 if (!$rt['code']) {
                     $this->_json(0, dr_lang($rt['msg']));
                 }
-                $this->_cache(); // 自动更新缓存
-                \Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
-                $this->_json(1, dr_lang('操作成功'));
             }
 
+            $this->_cache(); // 自动更新缓存
+            \Phpcmf\Service::L('input')->system_log('导入字段：'.$this->name); // 记录日志
+            $this->_json(1, dr_lang('操作成功'));
         }
 
         \Phpcmf\Service::V()->assign([

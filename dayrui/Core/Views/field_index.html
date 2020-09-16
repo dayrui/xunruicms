@@ -27,7 +27,7 @@
             <th width="80"  style="text-align: center">{dr_lang('XSS过滤')}</th>
             <th width="70" style="text-align: center">{dr_lang('前端')}</th>
             <th width="70" style="text-align: center">{dr_lang('可用')}</th>
-            <th width="100"></th>
+            <th width="200"></th>
         </tr>
         </thead>
         <tbody>
@@ -62,6 +62,8 @@
             </td>
             <td>
                 {if $ci->_is_admin_auth('edit') }<a href="{dr_url('field/edit', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
+
+                {if $ci->_is_admin_auth()}<label><a href="javascript:dr_iframe_show('{dr_lang('导出')}', '{dr_url('field/export', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}');" class="btn btn-xs red"> <i class="fa fa-sign-out"></i> {dr_lang('导出')} </a></label>{/if}
             </td>
         </tr>
         {/loop}
