@@ -326,7 +326,7 @@ class Module extends \Phpcmf\Common
                         \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$this->module['dirname'])->where('id', $id)->set('hits', 'hits+1', FALSE)->update();
                         \Phpcmf\Service::V()->assign('goto_url', $data[$t['fieldname']]);
                         \Phpcmf\Service::V()->display('goto_url');
-                        return;
+                        return $data;
                     }
                 }
             }
@@ -355,7 +355,7 @@ class Module extends \Phpcmf\Common
         // 状态判断
         if ($data['status'] == 10 && !($this->uid == $data['uid'] || $this->member['is_admin'])) {
             $this->goto_404_page(dr_lang('内容被删除，暂时无法访问'));
-            return;
+            return $data;
         }
 
         $catid = $data['catid'];
@@ -367,13 +367,13 @@ class Module extends \Phpcmf\Common
             // 无权限访问栏目内容
             if (!defined('SC_HTML_FILE') && !\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
                 $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid  ? '' : dr_member_url('login/index'));
-                return;
+                return $data;
             }
             // 判断是否同步栏目
             if ($data['link_id'] && $data['link_id'] > 0) {
                 \Phpcmf\Service::V()->assign('gotu_url', dr_url_prefix($data['url'], $this->module['dirname']));
                 \Phpcmf\Service::V()->display('go.html', 'admin');
-                return;
+                return $data;
             }
             // 获取同级栏目及父级栏目
             list($parent, $related) = dr_related_cat(
@@ -385,7 +385,7 @@ class Module extends \Phpcmf\Common
         // 判断分页
         if ($page && $data['content_page'] && !$data['content_page'][$page]) {
             $this->goto_404_page(dr_lang('该分页不存在'));
-            return;
+            return $data;
         }
 
         // 判断内容唯一性
@@ -666,6 +666,9 @@ class Module extends \Phpcmf\Common
         }
 
         $url = $page > 0 ?\Phpcmf\Service::L('Router')->show_url($this->module, $data, $page) : $data['url'];
+        if (!$data) {
+            return dr_return_data(0, 'URL为空白不执行生成');
+        }
         $file =\Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
 
         $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
