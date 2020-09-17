@@ -22,7 +22,7 @@ class Home extends \Phpcmf\Common
         $html = ob_get_clean();
 
         // 开启过首页静态时
-        if (SITE_INDEX_HTML && !defined('SC_HTML_FILE')) {
+        if ($this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !defined('SC_HTML_FILE')) {
             if (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
