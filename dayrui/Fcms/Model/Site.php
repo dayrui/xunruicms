@@ -193,7 +193,6 @@ class Site extends \Phpcmf\Model
         $data = [];
         $site = $this->config(SITE_ID);
         if ($value) {
-            $site['config']['SITE_DOMAINS'] = $value['site_domains'];
             $site['mobile']['domain'] = $value['mobile_domain'];
             $site['webpath'] = $value['webpath'];
             $this->db->table('site')->where('id', SITE_ID)->update([
@@ -204,7 +203,6 @@ class Site extends \Phpcmf\Model
 
         $data['webpath'] = $site['webpath'];
         $data['site_domain'] = $site['config']['SITE_DOMAIN'];
-        $data['site_domains'] = $site['config']['SITE_DOMAINS'];
         $data['mobile_domain'] = $site['mobile']['domain'];
 
         if ($site['client']) {
@@ -284,23 +282,10 @@ class Site extends \Phpcmf\Model
                 }
 
                 $t['setting'] = dr_string2array($t['setting']);
-                if ($t['setting']['config']) {
-                    foreach ($t['setting']['config'] as $i => $v) {
-                        if ($i == 'SITE_DOMAINS' && $v) {
-                            $v = explode(',', str_replace(',,', ',', str_replace([chr(13), PHP_EOL], ',', $v)));
-                            if ($v) {
-                                foreach ($v as $tt) {
-                                    $tt && $site_domain[$tt] = $t['id'];
-                                }
-                            }
-                            $t['setting']['config']['SITE_DOMAINS'] = $v;
-                        }
-                    }
-                }
+
                 $config[$t['id']] = [
                     'SITE_NAME' => $t['name'],
                     'SITE_DOMAIN' => $t['domain'],
-                    'SITE_DOMAINS' => $t['setting']['config']['SITE_DOMAINS'],
                     'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
                     'SITE_MOBILE' => (string)$t['setting']['mobile']['domain'],
                     'SITE_AUTO' => (string)$t['setting']['mobile']['auto'],

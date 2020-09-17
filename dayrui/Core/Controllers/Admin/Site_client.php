@@ -29,8 +29,6 @@ class Site_client extends \Phpcmf\Common
                             $this->_json(0, dr_lang('域名只能填写纯域名，不能加http://'));
                         } elseif (!\Phpcmf\Service::L('Form')->check_domain($t['domain'])) {
                             $this->_json(0, dr_lang('域名（%s）格式不正确', $t['domain']));
-                        } elseif ($this->site_info[SITE_ID]['SITE_DOMAINS'] && in_array($t['domain'], $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
-                            $this->_json(0, dr_lang('域名（%s）已经在其他地方绑定过', $t['domain']));
                         } elseif ($this->site_info[SITE_ID]['SITE_DOMAIN'] == $t['domain']) {
                             $this->_json(0, dr_lang('域名（%s）已经其他地方绑定过', $t['domain']));
                         }

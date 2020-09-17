@@ -52,13 +52,7 @@
                                 <span class="help-block">{dr_lang('手机访问时的域名，通常m.xxx.com')}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('本站其他域名')}</label>
-                            <div class="col-md-9">
-                                <label><textarea class="form-control input-large" style="height:150px" name="data[site_domains]">{str_replace(',',PHP_EOL, $data['site_domains'])}</textarea></label>
-                                <span class="help-block">{dr_lang('当前站点支持绑定多个域名，它们将会301到主域名，域名一行一个')}</span>
-                            </div>
-                        </div>
+
                         {if SITE_ID > 1}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('本站Web目录')}</label>
@@ -194,15 +188,7 @@
                     </div>
                 </div>
                 {/if}
-                {if $data['site_domains']}
-                <div class="form-group">
-                    <label class="col-md-2 control-label">{dr_lang('其他域名')}</label>
-                    <div class="col-md-9">
-                        <span class="form-control-static">{str_replace(',', '&nbsp;&nbsp; ', $data['site_domains'])}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
-                    </div>
-                </div>
-                {/if}
+
 
                 {loop $module $dir $t}
                 {if !$t.error}

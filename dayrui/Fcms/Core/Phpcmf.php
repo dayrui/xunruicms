@@ -113,13 +113,6 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_LANGUAGE', strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
         define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
-        // 判断是否是网站的"其他域名"
-        if (!IS_API && !IS_ADMIN
-            && in_array(DOMAIN_NAME, $this->site_info[SITE_ID]['SITE_DOMAINS'])) {
-            // 当前域名既不是手机域名也不是电脑域名就301定向网站的域名
-            \Phpcmf\Service::L('Router')->is_redirect_url(!$this->_is_mobile() ? $this->site_info[SITE_ID]['SITE_URL'] : $this->site_info[SITE_ID]['SITE_MURL']);
-        }
-
         // 客户端识别
         $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : $this->_is_mobile());
 

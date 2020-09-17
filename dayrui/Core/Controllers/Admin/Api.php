@@ -424,18 +424,8 @@ class Api extends \Phpcmf\Common
 		        if (!$t) {
 		            continue;
                 }
-		        if ($name == 'site_domains') {
-		            $v = explode(',', str_replace([chr(13), PHP_EOL], ',', $t));
-                    if ($v) {
-                        foreach ($v as $t) {
-                            $t && $my[] = $t;
-                            $this->site_domain[$t] && $html.= '<p>'.$t.' 已经存在于其他站点</p>';
-                        }
-                    }
-                } else {
-                    $my[] = $t;
-                    $this->site_domain[$t] && $html.= $t.' 已经存在于其他站点';
-                }
+                $my[] = $t;
+                $this->site_domain[$t] && $html.= $t.' 已经存在于其他站点';
             }
             $unique = array_unique ( $my );
             if ($my && count($my) != count($unique)) {

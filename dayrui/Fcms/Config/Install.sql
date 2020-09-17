@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}field` (
   `ismember` tinyint(1) unsigned NOT NULL COMMENT '是否会员可见',
   `issearch` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否可搜索',
   `disabled` tinyint(1) unsigned NOT NULL COMMENT '禁用？',
-  `setting` text NOT NULL COMMENT '配置信息',
+  `setting` mediumtext NOT NULL COMMENT '配置信息',
   `displayorder` int(5) NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`),
   KEY `list` (`relatedid`,`disabled`,`issystem`)

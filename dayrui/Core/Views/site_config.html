@@ -49,9 +49,6 @@
                 <li class="{if $page==3}active{/if}">
                     <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-cog"></i> {dr_lang('参数设置')} </a>
                 </li>
-                <li class="{if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-share-alt-square"></i> {dr_lang('域名设置')} </a>
-                </li>
             </ul>
         </div>
         <div class="portlet-body">
@@ -59,6 +56,7 @@
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
                             <div class="col-md-9">
@@ -87,6 +85,22 @@
                             <label class="col-md-2 control-label">{dr_lang('网站LOGO')}</label>
                             <div class="col-md-9">
                                 {$logofield}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('网站域名')}</label>
+                            <div class="col-md-4">
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[SITE_DOMAIN]" id="dr_domain" value="{htmlspecialchars($data['SITE_DOMAIN'])}" class="form-control">
+                                    <span class="input-group-btn">
+                                        {if SITE_ID == 1}
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        {else}
+                                        <a class="btn blue" href="{SITE_URL}" target="_blank"><i class="fa fa-send"></i> {dr_lang('访问')}</a>
+                                        {/if}
+                                    </span>
+                                </div>
+                                <span class="help-block" id="dr_domain_tips">{dr_lang('例如：www.test.com，不能包含/符号')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -204,34 +218,6 @@
                             <label class="col-md-2 control-label">{dr_lang('当前时间')}</label>
                             <div class="col-md-9">
                                 <p class="form-control-static" id="site_time"> {dr_date(SYS_TIME)} </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
-                    <div class="form-body">
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('网站域名')}</label>
-                            <div class="col-md-4">
-                                <div class="input-group" style="width: 300px;">
-                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[SITE_DOMAIN]" id="dr_domain" value="{htmlspecialchars($data['SITE_DOMAIN'])}" class="form-control">
-                                    <span class="input-group-btn">
-                                        {if SITE_ID == 1}
-                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
-                                        {else}
-                                        <a class="btn blue" href="{SITE_URL}" target="_blank"><i class="fa fa-send"></i> {dr_lang('访问')}</a>
-                                        {/if}
-                                    </span>
-                                </div>
-                                <span class="help-block" id="dr_domain_tips">{dr_lang('例如：www.test.com，不能包含/符号')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('其他域名')}</label>
-                            <div class="col-md-9">
-                                <label><textarea class="form-control input-large" style="height:150px" name="data[SITE_DOMAINS]">{str_replace(',',PHP_EOL, $data['SITE_DOMAINS'])}</textarea></label>
-                                <span class="help-block">{dr_lang('当前站点支持绑定多个域名，它们将会301到主域名，域名一行一个')}</span>
                             </div>
                         </div>
                     </div>
