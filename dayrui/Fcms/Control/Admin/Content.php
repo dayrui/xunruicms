@@ -110,12 +110,17 @@ class Content extends \Phpcmf\Common
 
         // 获取生成栏目
         if ($catid) {
-            $cat = '';
+            $cat = [];
             foreach ($catid as $i) {
-                $i && $cat.= intval($i).',';
-                $i && $url.= '&catid[]='.intval($i);
+                if ($i) {
+                    $cat[] = intval($i);
+                    if ($this->module['category'][$i]['child']) {
+                        $cat = dr_array2array($cat, explode(',', $this->module['category'][$i]['childids']));
+                    }
+                    $url.= '&catid[]='.intval($i);
+                }
             }
-            $cat && $where.= ' AND catid IN ('.trim($cat, ',').')';
+            $cat && $where.= ' AND catid IN ('.implode(',', $cat).')';
         }
 
         $keyword = \Phpcmf\Service::L('input')->get('keyword');
@@ -171,12 +176,17 @@ class Content extends \Phpcmf\Common
 
         // 获取生成栏目
         if ($catid) {
-            $cat = '';
+            $cat = [];
             foreach ($catid as $i) {
-                $i && $cat.= intval($i).',';
-                $i && $url.= '&catid[]='.intval($i);
+                if ($i) {
+                    $cat[] = intval($i);
+                    if ($this->module['category'][$i]['child']) {
+                        $cat = dr_array2array($cat, explode(',', $this->module['category'][$i]['childids']));
+                    }
+                    $url.= '&catid[]='.intval($i);
+                }
             }
-            $cat && $where.= ' AND catid IN ('.trim($cat, ',').')';
+            $cat && $where.= ' AND catid IN ('.implode(',', $cat).')';
         }
 
         $thumb = \Phpcmf\Service::L('input')->get('thumb');
@@ -208,7 +218,6 @@ class Content extends \Phpcmf\Common
                     'thumb' => str_replace(['"', '\''], '', $m[3])
                 ));
             }
-
         }
 
         $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
