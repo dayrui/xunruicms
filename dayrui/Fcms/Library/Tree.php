@@ -225,63 +225,58 @@ class Tree {
         $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
-        $cname = md5(dr_array2string($data).$id.$onlysub.$is_push);
-        if (isset($this->cache[$cname]) && $this->cache[$cname]) {
-            list($first, $tree) = $this->cache[$cname];
-        } else {
-            $tree = [];
-            $first = 0; // 第一个可用栏目
-            $is_cks = 0;
-            if (is_array($data)) {
-                foreach($data as $t) {
-                    // 外部链接不显示
-                    /*
-                    if ($is_push && $t['tid'] == 2) {
-                        continue;
-                    }*/
-                    // 用于发布内容时【单页和外链】且为最终栏目时，不显示
-                    if ($is_push && in_array($t['tid'], [2, 0]) && !$t['child']) {
-                        $is_cks = 1;
-                        continue;
-                    }
-                    // 验证权限
-                    if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
-                        $is_cks = 1;
-                        continue;
-                    }
 
-                    // 栏目发布权限判断,主要筛选栏目下是否有空白选项
-                    //unset($t['catids'][$t['id']]);
-                    if ($is_push && $t['child'] == 1 && $t['catids']) {
-                        $ispost = 0;
-                        foreach ($t['catids'] as $i) {
-                            // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
-                            if (isset($data[$i]) && $data[$i]['child'] == 0) {
-                                $ispost = 1; // 可以发布 表示此栏目可用
-                                break;
-                            }
-                        }
-                        if (!$ispost) {
-                            // ispost = 0 表示此栏目没有发布权限
-                            $is_cks = 1;
-                            continue;
-                        }
-                    }
-                    // 第一个可用子栏目
-                    if ($first == 0 && $t['child'] == 0) {
-                        $first = $t['id'];
-                    }
-                    // 选中操作
-                    $t['selected'] = (is_array($id) ? in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
-                    // 是否可选子栏目
-                    $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
-                    if (isset($t['setting'])) {
-                        unset($t['setting']);
-                    }
-                    $tree[$t['id']] = $t;
+        $tree = [];
+        $first = 0; // 第一个可用栏目
+        $is_cks = 0;
+        if (is_array($data)) {
+            foreach($data as $t) {
+                // 外部链接不显示
+                /*
+                if ($is_push && $t['tid'] == 2) {
+                    continue;
+                }*/
+                // 用于发布内容时【单页和外链】且为最终栏目时，不显示
+                if ($is_push && in_array($t['tid'], [2, 0]) && !$t['child']) {
+                    $is_cks = 1;
+                    continue;
                 }
+                // 验证权限
+                if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+                    $is_cks = 1;
+                    continue;
+                }
+
+                // 栏目发布权限判断,主要筛选栏目下是否有空白选项
+                //unset($t['catids'][$t['id']]);
+                if ($is_push && $t['child'] == 1 && $t['catids']) {
+                    $ispost = 0;
+                    foreach ($t['catids'] as $i) {
+                        // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
+                        if (isset($data[$i]) && $data[$i]['child'] == 0) {
+                            $ispost = 1; // 可以发布 表示此栏目可用
+                            break;
+                        }
+                    }
+                    if (!$ispost) {
+                        // ispost = 0 表示此栏目没有发布权限
+                        $is_cks = 1;
+                        continue;
+                    }
+                }
+                // 第一个可用子栏目
+                if ($first == 0 && $t['child'] == 0) {
+                    $first = $t['id'];
+                }
+                // 选中操作
+                $t['selected'] = (is_array($id) ? in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
+                // 是否可选子栏目
+                $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
+                if (isset($t['setting'])) {
+                    unset($t['setting']);
+                }
+                $tree[$t['id']] = $t;
             }
-            $this->cache[$cname] = [$first, $tree];
         }
 
         $str = "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL;
