@@ -46,6 +46,10 @@ if (!$error) {
         case 'listfile':
             $$result = include("action_list.php");
             break;
+        /* 列出文件 */
+        case 'listvideo':
+            $$result = include("action_list.php");
+            break;
 
         /* 抓取远程文件 */
         case 'catchimage':

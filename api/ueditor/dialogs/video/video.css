@@ -676,3 +676,99 @@ i.file-preview.file-type-psd{
         margin-bottom: 20px;
     }
 }
+
+
+/* 图片管理样式 */
+#online {
+    width: 100%;
+    height: 336px;
+    padding: 10px 0 0 0;
+}
+#online #fileList{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+}
+#online ul {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#online li {
+    float: left;
+    display: block;
+    list-style: none;
+    padding: 0;
+    width: 113px;
+    height: 113px;
+    margin: 0 15px 15px 13px;
+    background-color: #eee;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+#online li.clearFloat {
+    float: none;
+    clear: both;
+    display: block;
+    width:0;
+    height:0;
+    margin: 0;
+    padding: 0;
+}
+#online li img {
+    cursor: pointer;
+}
+#online li div.file-wrapper {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    width: 111px;
+    height: 111px;
+    border: 1px solid #eee;
+    background: url("../attachment/images/bg.png") repeat;
+}
+#online li div span.file-title{
+    display: block;
+    padding: 0 3px;
+    margin: 3px 0 0 0;
+    font-size: 12px;
+    height: 13px;
+    color: #555555;
+    text-align: center;
+    width: 107px;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#online li .icon {
+    cursor: pointer;
+    width: 113px;
+    height: 113px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    border: 0;
+    background-repeat: no-repeat;
+}
+#online li .icon:hover {
+    width: 107px;
+    height: 107px;
+    border: 3px solid #1094fa;
+}
+#online li.selected .icon {
+    background-image: url(../attachment/images/success.png);
+    background-image: url(../attachment/images/success.gif) \9;
+    background-position: 75px 75px;
+}
+#online li.selected .icon:hover {
+    width: 107px;
+    height: 107px;
+    border: 3px solid #1094fa;
+    background-position: 72px 72px;
+}

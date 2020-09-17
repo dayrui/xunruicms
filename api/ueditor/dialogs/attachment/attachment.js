@@ -686,7 +686,7 @@
                     } else {
                         var ic = document.createElement('i'),
                             textSpan = document.createElement('span');
-                        textSpan.innerHTML = list[i].url.substr(list[i].url.lastIndexOf('/') + 1);
+                        textSpan.innerHTML = list[i].name;
                         preview = document.createElement('div');
                         preview.appendChild(ic);
                         preview.appendChild(textSpan);

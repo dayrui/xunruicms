@@ -8,6 +8,12 @@ include "Uploader.class.php";
 /* 判断类型 */
 switch ($_GET['action']) {
     /* 列出文件 */
+    case 'listvideo':
+        $allowFiles = $CONFIG['videoAllowFiles'];
+        $listSize = $CONFIG['fileManagerListSize'];
+        $path = $CONFIG['fileManagerListPath'];
+        break;
+    /* 列出文件 */
     case 'listfile':
         $allowFiles = $CONFIG['fileManagerAllowFiles'];
         $listSize = $CONFIG['fileManagerListSize'];
@@ -41,6 +47,8 @@ if ($data) {
     foreach ($data as $t) {
         $files[] = array(
             'url'=> dr_get_file_url($t),
+            'name'=> $t['filename'],
+            'original'=> $t['filename'],
             'mtime'=> $t['inputtime']
         );
     }

@@ -7,6 +7,6 @@
 return [
     
     'name' => '支付宝',
-    'icon' => '<i class="icon iconfont icon-rectangle390"></i>',
+    'icon' => '<i class="fab fa-alipay"></i>',
     
 ];
