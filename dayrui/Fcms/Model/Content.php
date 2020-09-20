@@ -405,10 +405,6 @@ class Content extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('内容不存在'));
         }
 
-        $flag = $data['flag'];
-        //$sync_weibo = $data['sync_weibo'];
-        unset($data['sync_weibo'], $data['flag']);
-
         // 主表字段
         $fields[1] = \Phpcmf\Service::C()->get_cache('table-'.$this->siteid, $this->dbprefix($this->siteid.'_'.$this->dirname));
         $cache = \Phpcmf\Service::C()->get_cache('table-'.$this->siteid, $this->dbprefix($this->siteid.'_'.$this->dirname.'_category_data'));
@@ -465,14 +461,6 @@ class Content extends \Phpcmf\Model {
                 $rt['data'] = '/index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
 
             }
-            // 推荐位
-            if ($flag) {
-                foreach ($flag as $i) {
-                    $this->insert_flag((int)$i, $row['id'], $data['uid'], $data['catid']);
-                }
-            }
-            // 同步到微博
-            //$sync_weibo && $this->sync_weibo($save);
         } else {
             $this->db->table($this->mytable.'_time')->where('id', $row['id'])->update(['result' => $rt['msg']]);
         }
@@ -482,7 +470,6 @@ class Content extends \Phpcmf\Model {
 
     // 存储到tag
     public function auto_save_tag($tag) {
-
 
         if (!$tag) {
             return;
@@ -515,7 +502,6 @@ class Content extends \Phpcmf\Model {
                 ));
             }
         }
-
     }
 
     // 获取pcode
@@ -529,8 +515,6 @@ class Content extends \Phpcmf\Model {
 
         return trim($row['code'].'/'.$data['code'], '/');
     }
-
-
 
     // 验证栏目操作权限 后台
     public function admin_category_auth($cat, $act) {

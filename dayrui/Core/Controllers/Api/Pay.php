@@ -28,8 +28,8 @@ class Pay extends \Phpcmf\Common
                 $classFile = dr_get_app_dir($app).'Models/'.ucfirst($class).'.php';
                 if (is_file($classFile)) {
                     $obj = \Phpcmf\Service::M($class, $app);
-                    if (method_exists($obj, 'pay_before')) {
-                        $error = $obj->pay_before($fid, $num, $sku, $data['site']);
+                    if (method_exists($obj, 'paylog_before')) {
+                        $error = $obj->paylog_before($fid, $num, $sku, $data);
                         if ($error) {
                             $this->_msg(0, $error);exit;
                         }
