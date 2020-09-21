@@ -11,6 +11,7 @@ class Model {
     public $db;
     public $id;
     public $key;
+    public $field;
     public $table;
     public $prefix;
 
@@ -684,6 +685,9 @@ class Model {
                 } elseif ($field[$param['field']]['isint']) {
                     // 整数绝对匹配
                     $select->where($param['field'], intval($param['keyword']));
+                } elseif ($field[$param['field']]['iswhere']) {
+                    // 正确匹配模式
+                    $select->where($param['field'], urldecode($param['keyword']));
                 } else {
                     $select->like($param['field'], urldecode($param['keyword']));
                 }

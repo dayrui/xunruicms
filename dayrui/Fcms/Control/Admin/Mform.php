@@ -214,9 +214,7 @@ class Mform extends \Phpcmf\Table
             if ($row['status'] != 1) {
                 if ($tid) {
                     // 拒绝
-                    \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 2]);
-                    \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], SITE_ID);
-                    \Phpcmf\Service::L('Notice')->send_notice('module_form_verify_0', $row);
+                    $this->_verify_refuse($row);
                 } else {
                     // 通过
                     $this->_verify($row);
@@ -278,12 +276,15 @@ class Mform extends \Phpcmf\Table
 
         return parent::_Save($id, $data, $old, null,
             function ($id, $data, $old) {
-                if ($data[1]['status'] == 1 && $this->is_verify) {
-                    $this->_verify([
-                        'id' => (int)$data[1]['id'],
-                        'uid' => (int)$data[1]['uid'],
-                        'status' => 0,
-                    ]);
+                if ($this->is_verify) {
+                    if ($data[1]['status'] == 1) {
+                        // 审核通过时
+                        $data[1]['status'] = 0;
+                        $this->_verify($data[1]);
+                    } elseif ($data[1]['status'] == 2) {
+                        $data[1]['status'] = 0;
+                        $this->_verify_refuse($data[1]);
+                    }
                 }
                 // 保存之后的更新total字段
                 $this->content_model->update_form_total( $this->cid, $this->form['table']);
@@ -294,7 +295,19 @@ class Mform extends \Phpcmf\Table
         );
     }
 
-    // 审核表单
+    // 审核拒绝
+    protected function _verify_refuse($row) {
+
+        if ($row['status'] == 2) {
+            return;
+        }
+
+        \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 2]);
+        \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$row['cid'].'/id/'.$row['id'], SITE_ID);
+        \Phpcmf\Service::L('Notice')->send_notice('module_form_verify_0', $row);
+    }
+
+    // 审核通过
     protected function _verify($row) {
 
         if ($row['status'] == 1) {

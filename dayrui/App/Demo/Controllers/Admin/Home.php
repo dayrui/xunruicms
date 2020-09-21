@@ -4,6 +4,7 @@ class Home extends \Phpcmf\Admin\Module
 {
 
 	public function index() {
+        $this->init['field']['title']['iswhere'] = 1;
 		$this->_Admin_List();
 	}
 
