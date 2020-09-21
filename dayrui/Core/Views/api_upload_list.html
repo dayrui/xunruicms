@@ -8,11 +8,11 @@
             <ul class="nav nav-tabs" style="float:left;">
                 {if $unused}
                 <li id="tab_nav_0" class="{if $pp==0}active{/if}">
-                    <a href="{$tab_url}&pp=0"> {dr_lang('未使用的附件')} </a>
+                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未使用的附件')} </a>
                 </li>
                 {/if}
                 <li class="dev {if $pp==1}active{/if}">
-                    <a href="{$tab_url}&pp=1"> {dr_lang('已使用的附件')} </a>
+                    <a href="{$tab_url}&pp=1"><i class="fa fa-folder-open"></i> {dr_lang('已使用的附件')} </a>
                 </li>
                 {if $field}
                 <link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
@@ -60,56 +60,69 @@
 
         <div class="portlet-body table-finecms-upload">
 
-                {if $unused && $pp==0}
-                    <div role="presentation" class="table table-fc-upload table-striped clearfix">
-                        <div class="files">
-                            {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
-                            <div class="template-download yl_files_row files_row {if $i==0}border_none{/if}">
+            {if $unused && $pp==0}
+
+
+            <div role="presentation" class="table table-fc-upload table-striped clearfix">
+                <div class="files row">
+                    {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
+                    <div class="col-md-2 col-sm-2 col-xs-6">
+                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
+                            <div class="color-view bg-default bg-font-default bold uppercase">
+                                {dr_file_list_preview_html($t)}
+                            </div>
+                            <div class="color-info bg-white c-font-14 sbold">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
+                                    <span style="top:4px;"></span>
+                                </label>
+                                <label><button onclick="dr_file_delete_tips(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/table}
+                </div>
+            </div>
+
+            {else}
+            <div class="row  margin-bottom-20 template-download">
+                <div class="col-md-12 text-center margin-bottom-20">
+                    <label><select  id="dr_field_name"class="form-control">
+                        {loop $sfield $i $t}
+                        <option value="{$i}" {if $param.name == $i} selected{/if}>{$t}</option>
+                        {/loop}
+                    </select></label>
+                    <label>
+                        <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
+                    </label>
+                    <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
+                </div>
+            </div>
+            <div role="presentation" class="table table-fc-upload table-striped clearfix">
+
+                <div class="files row">
+                    {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
+                    <div class="col-md-2 col-sm-2 col-xs-6">
+                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
+                            <div class="color-view bg-default bg-font-default bold uppercase">
+                                {dr_file_list_preview_html($t)}
+                            </div>
+                            <div class="color-info bg-white c-font-14 sbold">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline" style="padding-left:15px">
                                     <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
                                     <span></span>
                                 </label>
-                                <label class="files_row_preview preview">{dr_file_list_preview_html($t)}</label>
-                                <label class="label label-sm label-success hidden-xs" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                                <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
-                                <label><button onclick="dr_file_delete_tips(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
                             </div>
-                            {/table}
                         </div>
                     </div>
-                {else}
-                    <div class="row  margin-bottom-20 template-download">
-                            <div class="col-md-12 text-center margin-bottom-20">
-                                <label><select  id="dr_field_name"class="form-control">
-                                    {loop $sfield $i $t}
-                                    <option value="{$i}" {if $param.name == $i} selected{/if}>{$t}</option>
-                                    {/loop}
-                                </select></label>
-                                <label>
-                                    <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
-                                </label>
-                                <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
-                            </div>
-                    </div>
-                    <div role="presentation" class="table table-fc-upload table-striped clearfix">
+                    {/table}
+                </div>
+            </div>
 
-                        <div class="files">
-                            {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
-                            <div class="template-download yl_files_row files_row">
-                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
-                                    <span></span>
-                                </label>
-                                <label class="files_row_preview preview">{dr_file_list_preview_html($t)}</label>
-                                <label class="label label-sm label-success" style="margin-right: 10px;"> {dr_format_file_size($t.filesize)} </label>
-                                <label class="label label-sm label-default" title="{$t.filename}">{dr_strcut($t.filename, 10)}</label>
-                            </div>
-                            {/table}
-                        </div>
-                    </div>
-                {/if}
 
-            <div class="row  margin-top-20 ">
+            {/if}
+            <div class="row">
                 <div class="col-md-12 text-center margin-bottom-20">
                     {$pages}
                 </div>

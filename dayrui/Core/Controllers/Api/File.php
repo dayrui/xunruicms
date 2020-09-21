@@ -269,19 +269,19 @@ class File extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
+            'pp' => $pp,
             'form' => dr_form_hidden(),
             'list' => $list,
+            'page' => intval($_GET['page']),
             'field' => $field,
-            'sfield' => $sfield,
+            'psize' => 18,
             'param' => [
                 'used' => $unused,
                 'name' => $name,
                 'value' => $value,
             ],
-            'pp' => $pp,
+            'sfield' => $sfield,
             'unused' => $unused,
-            'page' => intval($_GET['page']),
-            'psize' => SYS_ADMIN_PAGESIZE,
             'urlrule' => $url.'&page=[page]'.'&pp='.$pp,
             'tab_url' => $url,
             'fileext' => $exts,

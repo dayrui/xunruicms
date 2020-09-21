@@ -383,6 +383,7 @@ class Api extends \Phpcmf\Common
             'list' => $list,
             'param' => $data,
             'field' => $module['field'],
+            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site]),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $module['category'],
                 $data['catid'],
@@ -390,7 +391,6 @@ class Api extends \Phpcmf\Common
                 '--'
             ),
             'category' => $module['category'],
-            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site]),
         ));
         \Phpcmf\Service::V()->display('api_related.html');exit;
     }
