@@ -181,7 +181,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
         $str.= '<script type="text/javascript">
         $("#linkages-'.$name.'-sort-items").sortable();
 		function dr_add_linkages_'.$name.'() {
-		    var num = $("#linkages-'.$name.'-sort-items .linkages_'.$name.'_row").size();
+		    var num = $("#linkages-'.$name.'-sort-items .linkages_'.$name.'_row").length;
 		    if ('.(int)$field['setting']['option']['limit'].' > 0 && num >= '.(int)$field['setting']['option']['limit'].') {
 		        dr_tips(0, "'.dr_lang('最多可以选择%s项', $field['setting']['option']['limit']).'");
 		        return;

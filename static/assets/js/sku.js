@@ -121,7 +121,7 @@ var step = {
 
 		});
 
-        console.log(arrayTile);
+        //console.log(arrayTile);
 		//开始创建Table表            
 		if (bCheck == true) {
 			var RowsCount = 0;

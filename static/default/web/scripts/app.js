@@ -492,7 +492,7 @@ var App = function() {
 
         // wrApper function to scroll(focus) to an element
         scrollTo: function(el, offeset) {
-            var pos = (el && el.size() > 0) ? el.offset().top : 0;
+            var pos = (el && el.length > 0) ? el.offset().top : 0;
 
             if (el) {
                 if ($('body').hasClass('page-header-fixed')) {
@@ -888,7 +888,7 @@ var Layout = function () {
             });
         }
 
-        if (!el || el.size() == 0) {
+        if (!el || el.length == 0) {
             return;
         }
 
@@ -904,7 +904,7 @@ var Layout = function () {
         el.parents('li').each(function () {
             $(this).addClass('active');
 
-            if ($(this).parent('ul.navbar-nav').size() === 1) {
+            if ($(this).parent('ul.navbar-nav').length === 1) {
                 $(this).find('> a').append('<span class="selected"></span>');
             }
         });
@@ -1033,13 +1033,13 @@ var Demo = function () {
 
         var panel = $('.theme-panel');
 
-        if ($('.page-head > .container-fluid').size() === 1) {
+        if ($('.page-head > .container-fluid').length === 1) {
             $('.theme-setting-layout', panel).val("fluid");
         } else {
             $('.theme-setting-layout', panel).val("boxed");
         }
 
-        if ($('.top-menu li.dropdown.dropdown-dark').size() > 0) {
+        if ($('.top-menu li.dropdown.dropdown-dark').length > 0) {
             $('.theme-setting-top-menu-style', panel).val("dark");
         } else {
             $('.theme-setting-top-menu-style', panel).val("light");
@@ -1051,7 +1051,7 @@ var Demo = function () {
             $('.theme-setting-top-menu-mode', panel).val("not-fixed");
         }
 
-        if ($('.hor-menu.hor-menu-light').size() > 0) {
+        if ($('.hor-menu.hor-menu-light').length > 0) {
             $('.theme-setting-mega-menu-style', panel).val("light");
         } else {
             $('.theme-setting-mega-menu-style', panel).val("dark");

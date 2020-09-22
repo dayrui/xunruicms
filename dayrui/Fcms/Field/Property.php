@@ -67,7 +67,7 @@ class Property extends \Phpcmf\Library\A_Field {
 
 		$str.= '
 		<script type="text/javascript">
-		var id=$(".dr_option").size();
+		var id=$(".dr_option").length;
 		function dr_add_option() {
 			id ++;
 			var html = "";
@@ -239,7 +239,7 @@ class Property extends \Phpcmf\Library\A_Field {
 		$("#property_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		function dr_add_property_'.$name.'() {
-			var id=($("#property_'.$name.'-sort-items tr").size() + 1) * 10;
+			var id=($("#property_'.$name.'-sort-items tr").length + 1) * 10;
 			var html = "<tr id=\"dr_items_'.$name.'_"+id+"\">";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][name]\"></td>";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][value]\"></td>";

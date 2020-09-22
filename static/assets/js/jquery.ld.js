@@ -26,7 +26,7 @@
 			//覆盖参数
 			opts = $.extend(true, {}, $.fn.ld.defaults, options);
 		}
-		if($(this).size() > 0){
+		if($(this).length > 0){
 			var ld = new yijs.Ld(opts);
 			ld.$applyTo = $(this);
 			ld.render();
@@ -85,7 +85,7 @@
 		 * @return {Number} 选择框的数量
 		 */
 		size : function(){
-			return this.$applyTo.size();
+			return this.$applyTo.length;
 		},
 		/**
 		 * 设置选择框的样式

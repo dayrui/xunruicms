@@ -142,7 +142,7 @@ class Catids extends \Phpcmf\Library\A_Field {
         $str.= '<script type="text/javascript">
         $("#catids-'.$name.'-sort-items").sortable();
 		function dr_add_catids_'.$name.'() {
-			var id=($("#catids-'.$name.'-sort-items .catids_'.$name.'_row").size() + 1) * 10;
+			var id=($("#catids-'.$name.'-sort-items .catids_'.$name.'_row").length + 1) * 10;
 			var html = "'.addslashes(str_replace(PHP_EOL, '', $tpl)).'";
 			html = html.replace(/\{id\}/g, id);
 			$("#catids-'.$name.'-sort-items").append(html);
