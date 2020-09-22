@@ -1,7 +1,7 @@
-body{background-color:#D9DEE4}
-.main-content {background: #f5f6f8!important}
-.index-content { background: #f5f6f8!important }
-.well { background-color: #ffffff!important; }
+body{background-color:#f5f6f8}
+.main-content {background: #f5f6f8}
+.index-content { background: #f5f6f8 }
+.well { background-color: #ffffff}
 .page-header.navbar {
     background-color:#40aae3
 }

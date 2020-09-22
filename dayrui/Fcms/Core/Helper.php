@@ -572,6 +572,35 @@ function dr_cat_value(...$get) {
     return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
 }
 
+// 获取模块数据及自定义字段
+function dr_mod_value(...$get) {
+
+    if (empty($get)) {
+        return '';
+    }
+
+    if (is_numeric($get[0]) && MOD_DIR) {
+        // 值是栏目id时，表示当前模块
+        $name = 'module-'.SITE_ID.'-'.MOD_DIR;
+    } else {
+        // 指定模块
+        $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
+        unset($get[0]);
+    }
+
+    $i = 0;
+    $param = [];
+    foreach ($get as $t) {
+        if ($i == 0) {
+            $param[] = $name;
+        }
+        $param[] = $t;
+        $i = 1;
+    }
+
+    return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
+}
+
 
 // 获取栏目数据及自定义字段
 function dr_page_value($id, $field, $site = SITE_ID) {
