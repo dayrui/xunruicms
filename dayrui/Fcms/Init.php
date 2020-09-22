@@ -26,6 +26,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
 // 最大栏目数量限制category
 !defined('MAX_CATEGORY') && define('MAX_CATEGORY', 50);
+// 编辑器的图片的title和alt默认占位字符
+!defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{xunruicms_img_title}');
 // tests
 define('TESTPATH', WRITEPATH.'tests/');
 

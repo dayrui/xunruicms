@@ -17,6 +17,8 @@ if (is_file(ROOTPATH."api/ueditor/php/config.php")) {
 	), JSON_UNESCAPED_UNICODE);exit;
 }
 
+$CONFIG["imgTitleTag"] = UEDITOR_IMG_TITLE;
+
 $action = $_GET['action'];
 
 $error = $this->_check_upload_auth(1);

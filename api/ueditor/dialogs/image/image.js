@@ -957,8 +957,8 @@
                     list.push({
                         src: src,
                         _src: src,
-                        alt: '{xunruicms_img_title}',
-                        title: '{xunruicms_img_title}',
+                        alt: editor.getOpt('imgTitleTag'),
+                        title: editor.getOpt('imgTitleTag'),
                         floatStyle: align
                     });
                 }

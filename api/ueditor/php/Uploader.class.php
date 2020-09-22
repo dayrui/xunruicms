@@ -395,8 +395,8 @@ class Uploader
         return array(
             "state" => $this->stateInfo,
             "url" => $this->fileUrl,
-            "title" => '{xunruicms_img_title}',
-            "original" => '{xunruicms_img_title}',
+            "title" => UEDITOR_IMG_TITLE,
+            "original" => UEDITOR_IMG_TITLE,
             "type" => $this->fileType,
             "size" => $this->fileSize
         );
