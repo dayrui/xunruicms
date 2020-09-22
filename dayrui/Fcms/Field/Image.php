@@ -243,7 +243,7 @@ class Image extends \Phpcmf\Library\A_Field {
         $ts = dr_lang('每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
-        $str = '<div class="dropzone dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
+        $str = '<div class="dropzone2 dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
             </div>
 		';
         if (!$field['setting']['option']['tips']) {
