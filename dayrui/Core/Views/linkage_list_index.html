@@ -23,7 +23,7 @@
                 <th width="70"> Id </th>
                 <th> {dr_lang('名称 / 别名')} </th>
                 <th>
-                    {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key,'pid'=>$pid])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
+                    {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('linkage/listk_add', ['key'=>$key,'pid'=>$pid])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('快速添加')} </a>{/if}
                     <a href="{dr_url('linkage/list_index', ['key'=>$key,'pid'=>0])}" class="btn btn-xs dark"> <i class="fa fa-reply"></i> {dr_lang('全部数据')} </a>
                 </th>
             </tr>
@@ -46,7 +46,7 @@
                 <td>{$t.id}</td>
                 <td>{$t.name} / {$t.cname}</td>
                 <td>
-                    {if $ci->_is_admin_auth('add')}<label><a href="javascript:dr_iframe('add', '{dr_url('linkage/list_add', ['key'=>$key, 'pid'=>$t.id])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a></label>{/if}
+                    {if $ci->_is_admin_auth('add')}<label><a href="javascript:dr_iframe('add', '{dr_url('linkage/listk_add', ['key'=>$key, 'pid'=>$t.id])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('快速添加')} </a></label>{/if}
                     {if $ci->_is_admin_auth('edit')}<label><a href="{dr_url('linkage/list_edit', ['key'=>$key, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>{/if}
                     {if $t.child}<label><a href="{dr_url('linkage/list_index', ['key'=>$key, 'pid'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-table"></i> {dr_lang('下级数据管理')} </a></label>{/if}
                 </td>

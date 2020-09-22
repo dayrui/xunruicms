@@ -88,9 +88,9 @@ class Linkage extends \Phpcmf\Common
         }
 
 		// 清空数据
+        $count = 0;
 		$table = 'linkage_data_'.$id;
 		\Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
-		$count = 0;
 
 		// 开始导入
 		$data = require APPPATH.'Config/Linkage/'.$code.'.php';
@@ -104,8 +104,7 @@ class Linkage extends \Phpcmf\Common
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 		$this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
 	}
-	
-	
+
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
@@ -211,6 +210,7 @@ class Linkage extends \Phpcmf\Common
 		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
 	}
 
+    // 变更分类
 	public function pid_edit() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
@@ -231,6 +231,7 @@ class Linkage extends \Phpcmf\Common
 		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
 	}
 
+    // 数据列表
 	public function list_index() {
 
 		$key = (int)\Phpcmf\Service::L('input')->get('key');
@@ -262,7 +263,7 @@ class Linkage extends \Phpcmf\Common
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
                     '数据管理' => ['hide:linkage/list_index', 'fa fa-table'],
                     '修改' => ['hide:linkage/list_edit', 'fa fa-edit'],
-                    '添加' => ['add:linkage/list_add{key='.$key.'&pid=0}', 'fa fa-plus'],
+                    '添加' => ['linkage/list_add{key='.$key.'&pid='.$pid.'}', 'fa fa-plus'],
                     'help' => [354],
                 ]
             ),
@@ -270,6 +271,52 @@ class Linkage extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('linkage_list_index.html');
 	}
 
+    // 快速添加数据
+    public function listk_add() {
+
+        $pid = (int)\Phpcmf\Service::L('input')->get('pid');
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
+        $link = \Phpcmf\Service::M('Linkage')->table('linkage')->get($key);
+        if (!$link) {
+            $this->_admin_msg(0, dr_lang('联动菜单不存在'));
+        }
+
+        if (IS_AJAX_POST) {
+            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $rt = \Phpcmf\Service::M('Linkage')->add_list($key, $data);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+            \Phpcmf\Service::L('input')->system_log('创建联动菜单('.$data['name'].')');
+            exit($this->_json(1, $rt['msg']));
+        }
+
+        $select = '';
+        if ($pid) {
+            $top = \Phpcmf\Service::M('Linkage')->table('linkage_data_'.$key)->get($pid);
+            if ($top) {
+                $select = '<input type="hidden" name="data[pid]" value="'.$pid.'">';
+                $select.= '<p class="form-control-static"> '.$top['name'].' </p>';
+            }
+        }
+
+        !$select && $select = \Phpcmf\Service::L('Tree')->select_linkage(
+            \Phpcmf\Service::M('Linkage')->getList($link),
+            $pid,
+            'name="data[pid]"',
+            dr_lang('顶级菜单')
+        );
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'select' => $select
+        ]);
+        \Phpcmf\Service::V()->display('linkage_list_add.html');
+        exit;
+    }
+
+    // 添加数据
 	public function list_add() {
 
 		$pid = (int)\Phpcmf\Service::L('input')->get('pid');
@@ -278,16 +325,43 @@ class Linkage extends \Phpcmf\Common
 		if (!$link) {
 		    $this->_admin_msg(0, dr_lang('联动菜单不存在'));
         }
+
+        $field = \Phpcmf\Service::M('Linkage')->get_fields($key);
 		
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
-			$rt = \Phpcmf\Service::M('Linkage')->add_list($key, $data);
-			if (!$rt['code']) {
-			    $this->_json(0, $rt['msg']);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            $post['name'] = trim($post['name']);
+            if (!$post['name']) {
+                $this->_json(0, dr_lang('名称不能为空'));
+            } elseif (!$post['cname']) {
+                $this->_json(0, dr_lang('别名不能为空'));
+            } else if (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('cname', $post['cname'])->countAllResults()) {
+                $this->_json(0, dr_lang('别名已经存在'));
             }
+            $update = [
+                'pid' => $post['pid'],
+                'name' => $post['name'],
+                'cname' => $post['cname'],
+            ];
+            if ($field) {
+                list($save, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, null, $field, []);
+                // 输出错误
+                $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+                $update = dr_array22array($update, $save[1]);
+            }
+            $rt = \Phpcmf\Service::M('Linkage')->table('linkage_data_'.$key)->insert($update);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            // 附件归档
+            SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->handle(
+                $this->member['id'],
+                \Phpcmf\Service::M()->dbprefix('linkage_data_'.$key),
+                $attach
+            );
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-			\Phpcmf\Service::L('input')->system_log('创建联动菜单('.$data['name'].')');
-			exit($this->_json(1, $rt['msg']));
+            \Phpcmf\Service::L('input')->system_log('创建联动菜单('.$post['name'].')');
+            exit($this->_json(1, dr_lang('操作成功')));
 		}
 
 		$select = '';
@@ -306,14 +380,25 @@ class Linkage extends \Phpcmf\Common
 			dr_lang('顶级菜单')
 		);
 
-		\Phpcmf\Service::V()->assign([
-			'form' => dr_form_hidden(),
-			'select' => $select
-		]);
-		\Phpcmf\Service::V()->display('linkage_list_add.html');
-		exit;
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, []),
+            'select' => $select,
+            'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '联动菜单' => ['linkage/index', 'fa fa-columns'],
+                    '数据管理' => ['linkage/list_index{key='.$key.'}', 'fa fa-table'],
+                    '修改' => ['hide:linkage/list_edit', 'fa fa-edit'],
+                    '添加' => ['linkage/list_add{key='.$key.'&pid='.$pid.'}', 'fa fa-plus'],
+                    'help' => [354],
+                ]
+            ),
+            'reply_url' => dr_url('linkage/list_index', ['key'=> $key, 'pid' => $pid]),
+        ]);
+        \Phpcmf\Service::V()->display('linkage_list_edit.html');
 	}
 
+    // 修改数据
 	public function list_edit() {
 
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
@@ -375,13 +460,13 @@ class Linkage extends \Phpcmf\Common
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
-                    '数据管理' => ['hide:linkage/list_index', 'fa fa-table'],
+                    '数据管理' => ['linkage/list_index{key='.$key.'}', 'fa fa-table'],
                     '修改' => ['hide:linkage/list_edit', 'fa fa-edit'],
-                    '添加' => ['add:linkage/list_add{key='.$key.'&pid=0}', 'fa fa-plus'],
+                    '添加' => ['linkage/list_add{key='.$key.'&pid='.$data['pid'].'}', 'fa fa-plus'],
                     'help' => [354],
                 ]
             ),
-            'reply_url' => dr_url('linkage/list_index', ['key'=> $key]),
+            'reply_url' => dr_url('linkage/list_index', ['key'=> $key, 'pid' => $data['pid']]),
 		]);
 		\Phpcmf\Service::V()->display('linkage_list_edit.html');
 		exit;
