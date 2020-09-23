@@ -766,7 +766,7 @@ var Layout = function () {
     // Set proper height for sidebar and content. The content and sidebar height must be synced always.
     var handleSidebarAndContentHeight = function () {
         var content = $('.page-content');
-        var sidebar = $('.page-sidebar');
+        var sidebar = $('.page-content');
         var body = $('body');
         var height;
 
@@ -780,6 +780,7 @@ var Layout = function () {
                 content.attr('style', 'min-height:' + available_height + 'px');
             }
         } else {
+            // 后台模式下
             if (body.hasClass('page-sidebar-fixed')) {
                 height = _calculateFixedSidebarViewportHeight();
                 if (body.hasClass('page-footer-fixed') === false) {
@@ -790,7 +791,13 @@ var Layout = function () {
                 var footerHeight = $('.page-footer').outerHeight();
 
                 if (App.getViewPort().width < resBreakpointMd) {
-                    height = App.getViewPort().height - headerHeight - footerHeight;
+                    height = App.getViewPort().height;
+                    if (typeof headerHeight != "undefined"){
+                        height = height - headerHeight;
+                    }
+                    if (typeof footerHeight != "undefined"){
+                        height = height - footerHeight;
+                    }
                 } else {
                     height = sidebar.height() + 20;
                 }

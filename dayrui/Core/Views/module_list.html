@@ -41,7 +41,7 @@
                 <td>
                     {if $t.install}
                     {if $ci->_is_admin_auth('edit')}
-                    <label><a class="btn btn-xs red" href="javascript:dr_iframe('{dr_lang("变更名称")}', '{dr_url("module/name_edit", ['dir'=>$t.dirname])}');"><i class="fa fa-edit"></i> {dr_lang('更名')}</a></label>
+                    <label><a class="btn btn-xs red" href="javascript:dr_iframe('{dr_lang("变更名称")}', '{dr_url("module/name_edit", ['dir'=>$t.dirname])}', '450px', '300px');"><i class="fa fa-edit"></i> {dr_lang('更名')}</a></label>
                     <label><a href="{dr_url('module/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-cog"></i> {dr_lang('配置')} </a></label>
                     <label><a href="{dr_url('module/flag_edit', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-flag"></i> {dr_lang('推荐位')} </a></label>
                     <label><a href="{dr_url('module/form_index', ['dir'=>$t.dirname])}" class="btn btn-xs blue"> <i class="fa fa-list"></i> {dr_lang('模块表单')} </a></label>
