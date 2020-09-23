@@ -188,7 +188,6 @@ class Member_menu extends \Phpcmf\Common
 	public function add() {
 
 		$pid = intval(\Phpcmf\Service::L('input')->get('pid'));
-		$top = \Phpcmf\Service::M('Menu')->get_top('member');
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
@@ -204,7 +203,7 @@ class Member_menu extends \Phpcmf\Common
 		}
 
 		\Phpcmf\Service::V()->assign([
-			'top' => $top,
+			'top' => \Phpcmf\Service::M('Menu')->get_top('member'),
 			'type' => $pid,
 			'form' => dr_form_hidden()
 		]);
@@ -216,9 +215,9 @@ class Member_menu extends \Phpcmf\Common
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('Menu')->getRowData('member', $id);
-		!$data && $this->_json(0, dr_lang('数据#%s不存在', $id));
-
-		$top = \Phpcmf\Service::M('Menu')->get_top('member');
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
@@ -236,7 +235,7 @@ class Member_menu extends \Phpcmf\Common
 		}
 
 		\Phpcmf\Service::V()->assign([
-			'top' => $top,
+			'top' => \Phpcmf\Service::M('Menu')->get_top('member'),
 			'type' => $data['pid'],
 			'data' => $data,
 			'form' => dr_form_hidden(),
@@ -248,7 +247,9 @@ class Member_menu extends \Phpcmf\Common
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		!$ids && exit($this->_json(0, dr_lang('你还没有选择呢')));
+		if (!$ids) {
+		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+        }
 
 		\Phpcmf\Service::M('Menu')->_delete('member', $ids);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -270,7 +271,9 @@ class Member_menu extends \Phpcmf\Common
 
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
 		$v = \Phpcmf\Service::M('Menu')->_uesd('member', $i);
-		$v == -1 && exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+		if ($v == -1) {
+		    exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+        }
 		\Phpcmf\Service::L('input')->system_log('修改用户中心菜单状态: '. $i);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
@@ -302,8 +305,12 @@ class Member_menu extends \Phpcmf\Common
 			unset($this->form['url'], $this->form['uri']);
 		} else {
 			// url和uri 只验证一个
-			if ($data['url']) unset($this->form['uri']);
-			if ($data['uri']) unset($this->form['url']);
+            if ($data['url']) {
+                unset($this->form['uri']);
+            }
+			if ($data['uri']) {
+                unset($this->form['url']);
+            }
 		}
 
 		if ($data['mark']) {
@@ -315,7 +322,9 @@ class Member_menu extends \Phpcmf\Common
 
 
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
-		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+		if ($return) {
+		    exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+        }
 
 	}
 

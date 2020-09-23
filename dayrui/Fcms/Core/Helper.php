@@ -601,6 +601,10 @@ function dr_mod_value(...$get) {
     return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
 }
 
+// 格式化编辑器内容数据
+function dr_ueditor_html($value, $title = '') {
+    return str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value));
+}
 
 // 获取栏目数据及自定义字段
 function dr_page_value($id, $field, $site = SITE_ID) {

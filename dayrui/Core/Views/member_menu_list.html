@@ -19,7 +19,7 @@
                     </th>
                     {/if}
                     <th class="hidden-mobile" width="70" style="text-align:center"> {dr_lang('排序')} </th>
-                    <th class="hidden-mobile" width="60" style="text-align:center"> {dr_lang('可用')} </th>
+                    <th class="hidden-mobile" width="60" style="text-align:center"> {dr_lang('可见')} </th>
                     <th width="250"> {dr_lang('名称')} </th>
                     <th style="text-align:center" width="80">
                         {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('member_menu/add', ['pid'=>0])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
@@ -31,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {php $top=array();}
+                {php $top=[];}
                 {loop $data $t}
                 {php $t.pid == 0 && $top[] = $t.id; $t.group = dr_string2array($t.group);$t.site = dr_string2array($t.site);}
                 <tr class="odd gradeX" id="dr_row_{$t.id}">
@@ -80,7 +80,7 @@
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
                 {/if}
                 {if $ci->_is_admin_auth('edit')}
-                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/group_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分用户组权限')}</button></label>
+                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/group_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分用户组可见权限')}</button></label>
                 <label>
                     <select name="groupid" class="form-control">
                         <option value=""> {dr_lang('--')} </option>
@@ -91,7 +91,7 @@
                 </label>
 
                 {if dr_count($ci->site_info) > 1}
-                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分站点权限')}</button></label>
+                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分站点可见权限')}</button></label>
                 <label>
                     <select name="siteid" class="form-control">
                         <option value=""> {dr_lang('--')} </option>

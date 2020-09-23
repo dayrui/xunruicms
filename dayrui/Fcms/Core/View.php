@@ -1291,16 +1291,29 @@ class View {
 
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                // 存储缓存
-                $system['cache'] && $data && $this->_save_cache_data($cache_name, [
-                    'data' => $data,
-                    'sql' => $sql,
-                    'total' => $total,
-                    'pages' => $pages,
-                    'pagesize' => $pagesize,
-                    'page_used' => $this->_page_used,
-                    'page_urlrule' => $this->_page_urlrule,
-                ], $system['cache']);
+                if (is_array($data) && $data) {
+                    // 表的系统字段
+                    $myfield = \Phpcmf\Service::M('field')->get_mytable_field($system['table'], 0);
+                    if (!$myfield) {
+                        $myfield = \Phpcmf\Service::M('field')->get_mytable_field($system['table'], SITE_ID);
+                    }
+                    if ($myfield) {
+                        $dfield = \Phpcmf\Service::L('Field')->app();
+                        foreach ($data as $i => $t) {
+                            $data[$i] = $dfield->format_value($myfield, $t, 1);
+                        }
+                    }
+                    // 存储缓存
+                    $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1404,7 +1417,7 @@ class View {
 
                 if (is_array($data) && $data) {
                     // 表的系统字段
-                    $fields['inputtime'] = array('fieldtype' => 'Date');
+                    $fields['inputtime'] = ['fieldtype' => 'Date'];
                     $dfield = \Phpcmf\Service::L('Field')->app('form');
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
