@@ -3,7 +3,6 @@
 /**
  * 用户中心的自定义分页标签样式
  *
- * 参数说明：http://codeigniter.org.cn/user_guide/libraries/pagination.html
  */
 
 return array(
