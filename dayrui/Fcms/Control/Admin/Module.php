@@ -629,7 +629,7 @@ class Module extends \Phpcmf\Table
                 '', 1, 1
             ),
             'is_verify' => 1,
-            'back_note' => \Phpcmf\Service::L('input')->get('note') ? \Phpcmf\Service::L('input')->get('note') : $data['verify']['backinfo']['backcontent'],
+            'back_note' => \Phpcmf\Service::L('input')->get('note'),
             'verify_msg' => $verify_msg,
             'verify_step' => $step,
             'is_sync_cat' => $data['sync_cat'],
