@@ -1651,6 +1651,7 @@ class Image
         }
 
         if (!is_file($cache_path.$cache_file)) {
+            CI_DEBUG && log_message('error', '图片['.$attach['url'].']生成失败['.$cache_file.']原样输出');
             return $attach['url']; // 原样输出
         }
 

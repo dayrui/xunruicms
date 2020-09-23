@@ -439,8 +439,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      * @return  string
      */
     public function output($value) {
-        $title = isset(\Phpcmf\Service::L('Field')->data['title']) ? \Phpcmf\Service::L('Field')->data['title'] : '';
-        return dr_uedtior_html($value, $title);
+        return dr_ueditor_html($value, isset(\Phpcmf\Service::L('Field')->data['title']) ? \Phpcmf\Service::L('Field')->data['title'] : '');
     }
 
     /**

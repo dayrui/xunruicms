@@ -22,14 +22,6 @@ function dr_baidumap(mapObj, name, city, level) {
 
 }
 
-//设置切换城市
-function keywordSearch(city) {
-    if(city==null || city=='') {
-        var city=$("#citywd").val();
-    }
-    mapObj.setCenter(city);
-    $("#curCity").html(city);
-}
 
 function drawPoints(mapObj, name, level){
     var data = $('#dr_'+name).val();
