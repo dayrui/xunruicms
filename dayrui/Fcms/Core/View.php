@@ -94,17 +94,6 @@ class View {
             ,'modules'
         ];
 
-        // 自定义action
-        if (is_dir(MYPATH.'Action/')) {
-            $ac = dr_file_map(MYPATH.'Action/');
-            if ($ac) {
-                foreach ($ac as $t) {
-                    if (strpos($t, '.php')) {
-                        $this->action[] = substr($t, 0, -4);
-                    }
-                }
-            }
-        }
     }
 
     // 终端路径
@@ -640,6 +629,7 @@ class View {
 
         $system = [
             'db' => '', // 数据源
+            'app' => '', // 指定插件时
             'num' => '', // 显示数量
             'form' => '', // 表单
             'page' => '', // 是否分页
@@ -985,168 +975,6 @@ class View {
                 }
 
                 return $this->_return($system['return'], $return, '');
-                break;
-
-            case 'navigator': // 网站导航
-
-                $navigator = \Phpcmf\Service::C()->get_cache('navigator-'.$system['site']); // 导航缓存
-                if (!$navigator) {
-                    return $this->_return($system['return'], '没有查询到内容');
-                }
-
-                $i = 0;
-                $show = isset($param['show']) ? 1 : 0; // 有show参数表示显示隐藏栏目
-                $data = $navigator[(int)$param['type']];
-                if (!$data) {
-                    // 没有查询到内容
-                    return $this->_return($system['return'], '没有查询到内容');
-                }
-
-                $return = [];
-                foreach ($data as $t) {
-                    if ($system['num'] && $i >= $system['num']) {
-                        break;
-                    } elseif (isset($param['pid']) && $t['pid'] != (int)$param['pid']) {
-                        continue;
-                    } elseif (isset($param['id']) && $t['id'] != (int)$param['id']) {
-                        continue;
-                    } elseif (!$t['show'] && !$show) {
-                        continue;
-                    }
-                    $return[] = $t;
-                    $i ++;
-                }
-
-                if (!$return) {
-                    return $this->_return($system['return'], '没有匹配到内容');
-                }
-
-                return $this->_return($system['return'], $return, '');
-                break;
-
-            case 'page': // 自定义页调用
-
-                $data = \Phpcmf\Service::C()->get_cache('page-'.$system['site'], 'data'); // 单页缓存
-                if (!$data) {
-                    return $this->_return($system['return'], '没有查询到内容');
-                }
-
-                $i = 0;
-                $show = isset($param['show']) ? 1 : 0; // 有show参数表示显示隐藏栏目
-                $return = [];
-                foreach ($data as $id => $t) {
-                    if (!is_numeric($id)) {
-                        continue;
-                    } elseif ($system['num'] && $i >= $system['num']) {
-                        break;
-                    } elseif (!$t['show'] && !$show) {
-                        continue;
-                    } elseif (isset($param['pid']) && $t['pid'] != (int) $param['pid']) {
-                        continue;
-                    } elseif (isset($param['id']) && !in_array($t['id'], explode(',', $param['id']))) {
-                        continue;
-                    }
-                    $t['setting'] = dr_string2array($t['setting']);
-                    $return[] = $t;
-                    $i ++;
-                }
-
-                if (!$return) {
-                    return $this->_return($system['return'], '没有匹配到内容');
-                }
-
-                return $this->_return($system['return'], $return, '');
-                break;
-
-            case 'tag': // 调用tag
-
-                // aninstall
-                if (!dr_is_app('tag')) {
-                    return $this->_return($system['return'], '没有安装Tag关键词库应用');
-                }
-
-                $system['table'] = $system['site'].'_tag';
-                $tableinfo = \Phpcmf\Service::L('cache')->get_data('table-'.$system['table']);
-                if (!$tableinfo) {
-                    $tableinfo = \Phpcmf\Service::M('Table')->get_field($system['table']);
-                    \Phpcmf\Service::L('cache')->set_data('table-'.$system['table'], $tableinfo, 36000);
-                }
-                if (!$tableinfo) {
-                    return $this->_return($system['return'], '表('.$system['table'].')结构不存在');
-                }
-
-                // 是否操作自定义where
-                if ($param['where']) {
-                    $where[] = [
-                        'adj' => 'SQL',
-                        'value' => urldecode($param['where'])
-                    ];
-                    unset($param['where']);
-                }
-
-                $table = \Phpcmf\Service::M()->dbprefix($system['table']);
-
-                if ($param['tag']) {
-                    $in = $tag = $sql = [];
-                    $array = explode(',', $param['tag']);
-                    foreach ($array as $name) {
-                        $name && $sql[] = '`name`="'.dr_safe_replace($name).'"';
-                    }
-                    $sql && $tag = $this->_query("SELECT code,id FROM {$table} WHERE ".implode(' OR ', $sql), $system['db'], $system['cache']);
-                    if ($tag) {
-                        $cache = \Phpcmf\Service::C()->get_cache('tag-'.$system['site']); // tag缓存
-                        foreach ($tag as $t) {
-                            $in[] = $t['id'];
-                            if ($cache[$t['code']]['childids']) {
-                                foreach ($cache[$t['code']]['childids'] as $i) {
-                                    $in[] = $i;
-                                }
-                            }
-                        }
-                    }
-                    $in && $where[] = [
-                        'adj' => 'SQL',
-                        'value' => 'id IN ('.implode(',', $in).')',
-                    ];
-                }
-
-                $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
-                $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo, $table); // 给显示字段加上表前缀
-                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo, $table); // 给排序字段加上表前缀
-                !$system['order'] && $system['order'] = 'displayorder asc';
-
-                $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
-                $sql_where = $this->_get_where($where); // sql的where子句
-
-                $sql = "SELECT ".($this->_list_is_count ? 'count(*) as ct' : '*')." FROM {$table} ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY ".$system['order']." LIMIT ".($system['num'] ? $system['num'] : 10);
-                $data = $this->_query($sql, $system['db'], $system['cache']);
-
-                // 没有查询到内容
-                if (!$data) {
-                    return $this->_return($system['return'], '没有查询到内容', $sql);
-                }
-
-                foreach ($data as $i => $t) {
-                    // 读缓存
-                    $data[$i]['url'] = '/';
-                    $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t['name']);
-                    if ($file) {
-                        $data[$i]['url'] = file_get_contents($file);
-                    }
-                }
-
-                // 存储缓存
-                $system['cache'] && $this->_save_cache_data($cache_name, [
-                    'data' => $data,
-                    'sql' => $sql,
-                    'total' => 0,
-                    'pages' => 0,
-                    'pagesize' => 0,
-                    'page_used' => $this->_page_used,
-                    'page_urlrule' => $this->_page_urlrule,
-                ], $system['cache']);
-
-                return $this->_return($system['return'], $data, $sql);
                 break;
 
             case 'sql': // 直接sql查询
@@ -1527,117 +1355,6 @@ class View {
 
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                if (is_array($data) && $data) {
-                    // 表的系统字段
-                    $fields['inputtime'] = array('fieldtype' => 'Date');
-                    $dfield = \Phpcmf\Service::L('Field')->app($dirname);
-                    foreach ($data as $i => $t) {
-                        $data[$i] = $dfield->format_value($fields, $t, 1);
-                    }
-
-                    // 存储缓存
-                    $system['cache'] && $this->_save_cache_data($cache_name, [
-                        'data' => $data,
-                        'sql' => $sql,
-                        'total' => $total,
-                        'pages' => $pages,
-                        'pagesize' => $pagesize,
-                        'page_used' => $this->_page_used,
-                        'page_urlrule' => $this->_page_urlrule,
-                    ], $system['cache']);
-                }
-
-                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
-                break;
-
-            case 'comment': // 模块评论调用
-
-                $comment = \Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname);
-                // 判断是否存在
-                if (!$comment || !$comment['use']) {
-                    return $this->_return($system['return'], "模块{$dirname}没有开启评论功能"); // 参数判断
-                }
-
-                $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
-                if (!$tableinfo) {
-                    // 没有表结构缓存时返回空
-                    return $this->_return($system['return'], '表结构缓存不存在');
-                }
-
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname.'_comment'); // 模块主表
-                if (!isset($tableinfo[$table])) {
-                    return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
-                }
-
-                // 默认条件
-                $where[] = array(
-                    'adj' => '',
-                    'name' => 'status',
-                    'value' => 1
-                );
-
-                // 是否操作自定义where
-                if ($param['where']) {
-                    $where[] = [
-                        'adj' => 'SQL',
-                        'value' => urldecode($param['where'])
-                    ];
-                    unset($param['where']);
-                }
-
-                $fields = $comment['fields'];
-                $system['order'] = !$system['order'] ? 'inputtime_desc' : $system['order']; // 默认排序参数
-
-                $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
-                $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
-                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
-
-                $sql_from = $table; // sql的from子句
-                // 关联表
-                if ($system['join'] && $system['on']) {
-                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    if (!$tableinfo[$table_more]) {
-                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
-                    }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
-                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
-                    $_order[$table_more] = $tableinfo[$table_more];
-                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
-                }
-
-                $total = 0;
-                $fields = $comment['field']; // 主表的字段
-                $sql_where = $this->_get_where($where); // sql的where子句
-                $sql_limit = $pages = '';
-
-                // 统计标签
-                if ($this->_list_is_count) {
-                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                } else {
-                    if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
-                        $pagesize = (int)$system['pagesize'];
-                        $pagesize = $pagesize ? $pagesize : 10;
-                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
-                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
-                        $total = (int)$row['c'];
-                        // 没有数据时返回空
-                        if (!$total) {
-                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
-                        }
-                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
-                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
-                    } elseif ($system['num']) {
-                        $sql_limit = "LIMIT {$system['num']}";
-                    }
-
-                    $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
-                }
-                $data = $this->_query($sql, $system['db'], $system['cache']);
-
-                // 缓存查询结果
                 if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
@@ -2290,12 +2007,30 @@ class View {
 
             default :
 
-                // 识别自定义标签
-                $myfile = MYPATH.'Action/'.dr_safe_filename($system['action']).'.php';
-                if (is_file($myfile)) {
-                    return require $myfile;
+                // 插件自定义标签
+                if (!$system['app'] && in_array($system['action'], ['page', 'navigator', 'tag', 'comment'])) {
+                    $system['app'] = $system['action'];
+                }
+
+                // 当来自插件目录
+                if ($system['app']) {
+                    if (!dr_is_app($system['app'])) {
+                        return $this->_return($system['return'], '本插件('.$system['app'].')没有安装');
+                    }
+                    $myfile = dr_get_app_dir($system['app']).'Action/'.dr_safe_filename(ucfirst($system['action'])).'.php';
+                    if (is_file($myfile)) {
+                        return require $myfile;
+                    } else {
+                        return $this->_return($system['return'], '本插件('.$system['app'].')没有('.$system['action'].')标签');
+                    }
                 } else {
-                    return $this->_return($system['return'], '无此标签('.$system['action'].')');
+                    // 识别自定义标签
+                    $myfile = MYPATH.'Action/'.dr_safe_filename(ucfirst($system['action'])).'.php';
+                    if (is_file($myfile)) {
+                        return require $myfile;
+                    } else {
+                        return $this->_return($system['return'], '无此标签('.$system['action'].')');
+                    }
                 }
 
                 break;
