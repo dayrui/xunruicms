@@ -1,5 +1,5 @@
 /**
- Core script to handle the entire theme and core functions
+ 处理整个主题和核心功能的核心脚本
  **/
 var App = function() {
 
@@ -11,26 +11,7 @@ var App = function() {
 
     var resizeHandlers = [];
 
-    var assetsPath = '../assets/';
-
-    var globalImgPath = 'global/img/';
-
-    var globalPluginsPath = 'global/plugins/';
-
-    var globalCssPath = 'global/css/';
-
-    // theme layout color set
-
-    var brandColors = {
-        'blue': '#89C4F4',
-        'red': '#F3565D',
-        'green': '#1bbc9b',
-        'purple': '#9b59b6',
-        'grey': '#95a5a6',
-        'yellow': '#F8CB00'
-    };
-
-    // initializes main settings
+    // 初始化主设置
     var handleInit = function() {
 
         if ($('body').css('direction') === 'rtl') {
@@ -50,45 +31,29 @@ var App = function() {
         }
     };
 
-    // runs callback functions set by App.addResponsiveHandler().
+    // 运行由设置的回调函数 App.addResponsiveHandler().
     var _runResizeHandlers = function() {
-        // reinitialize other subscribed elements
+        // 初始化其他订阅元素
         for (var i = 0; i < resizeHandlers.length; i++) {
             var each = resizeHandlers[i];
             each.call();
         }
     };
 
-    // handle the layout reinitialization on window resize
+    //在调整窗口大小时处理布局重新初始化
     var handleOnResize = function() {
         var resize;
-        if (isIE8) {
-            var currheight;
-            $(window).resize(function() {
-                if (currheight == document.documentElement.clientHeight) {
-                    return; //quite event since only body resized not window.
-                }
-                if (resize) {
-                    clearTimeout(resize);
-                }
-                resize = setTimeout(function() {
-                    _runResizeHandlers();
-                }, 50); // wait 50ms until window resize finishes.
-                currheight = document.documentElement.clientHeight; // store last body client height
-            });
-        } else {
-            $(window).resize(function() {
-                if (resize) {
-                    clearTimeout(resize);
-                }
-                resize = setTimeout(function() {
-                    _runResizeHandlers();
-                }, 50); // wait 50ms until window resize finishes.
-            });
-        }
+        $(window).resize(function() {
+            if (resize) {
+                clearTimeout(resize);
+            }
+            resize = setTimeout(function() {
+                _runResizeHandlers();
+            }, 50); // wait 50ms until window resize finishes.
+        });
     };
 
-    // Handles portlet tools & actions
+    //处理portlet工具和操作
     var handlePortletTools = function() {
 // handle portlet fullscreen
         $('body').on('click', '.portlet > .portlet-title .fullscreen', function(e) {
@@ -188,10 +153,6 @@ var App = function() {
         });
     }
 
-    // Handles custom checkboxes & radios using jQuery iCheck plugin
-    var handleiCheck = function() {
-
-    };
 
     // 滑动选择组件
     var handleBootstrapSwitch = function() {
@@ -200,10 +161,6 @@ var App = function() {
         }
         $('.make-switch').bootstrapSwitch();
     };
-
-    // Handles Bootstrap confirmations
-    var handleBootstrapConfirmation = function() {
-    }
 
     // Handles Bootstrap Accordions.
     var handleAccordions = function() {
@@ -228,11 +185,6 @@ var App = function() {
                 text: '<i class="fa fa-ellipsis-v"></i>&nbsp;<i class="fa fa-angle-down"></i>'
             });
         }
-    };
-
-    // Handles Bootstrap Modals.
-    var handleModals = function() {
-
     };
 
     // 提示信息显示
@@ -278,10 +230,6 @@ var App = function() {
         });
     };
 
-    var handleAlerts = function() {
-
-    };
-
     // Handle Hower Dropdowns
     var handleDropdownHover = function() {
         $('[data-hover="dropdown"]').not('.hover-initialized').each(function() {
@@ -314,14 +262,9 @@ var App = function() {
         });
     };
 
-    // Handles scrollable contents using jQuery SlimScroll plugin.
+    // 區域滾動
     var handleScrollers = function() {
         App.initSlimScroll('.scroller');
-    };
-
-    // 图片预览
-    var handleFancybox = function() {
-
     };
 
     // Handles counterup plugin wrapper
@@ -336,44 +279,6 @@ var App = function() {
         });
     };
 
-    // Fix input placeholder issue for IE8 and IE9
-    var handleFixInputPlaceholderForIE = function() {
-        //fix html5 placeholder attribute for ie7 & ie8
-        if (isIE8 || isIE9) { // ie8 & ie9
-            // this is html5 placeholder fix for inputs, inputs with placeholder-no-fix class will be skipped(e.g: we need this for password fields)
-            $('input[placeholder]:not(.placeholder-no-fix), textarea[placeholder]:not(.placeholder-no-fix)').each(function() {
-                var input = $(this);
-
-                if (input.val() === '' && input.attr("placeholder") !== '') {
-                    input.addClass("placeholder").val(input.attr('placeholder'));
-                }
-
-                input.focus(function() {
-                    if (input.val() == input.attr('placeholder')) {
-                        input.val('');
-                    }
-                });
-
-                input.blur(function() {
-                    if (input.val() === '' || input.val() == input.attr('placeholder')) {
-                        input.val(input.attr('placeholder'));
-                    }
-                });
-            });
-        }
-    };
-
-    // Handle Select2 Dropdowns
-    var handleSelect2 = function() {
-        if ($().select2) {
-            $.fn.select2.defaults.set("theme", "bootstrap");
-            $('.select2me').select2({
-                placeholder: "Select",
-                width: 'auto',
-                allowClear: true
-            });
-        }
-    };
 
     // handle group element heights
     var handleHeight = function() {
@@ -421,50 +326,39 @@ var App = function() {
         init: function() {
             //IMPORTANT!!!: Do not modify the core handlers call order.
 
-            //Core handlers
+            //Core handlersww
             handleInit(); // initialize core variables
             handleOnResize(); // set and handle responsive
 
-            //UI Component handlers
-            handleMaterialDesign(); // handle material design
-            handleiCheck(); // handles custom icheck radio and checkboxes
+            //UI Component handlerss
+            handleMaterialDesign(); //复选框选择控制w
             handleBootstrapSwitch(); // handle bootstrap switch plugin
             handleScrollers(); // handles slim scrolling contents
-            handleFancybox(); // handle fancy box
-            handleSelect2(); // handle custom Select2 dropdowns
             handlePortletTools(); // handles portlet action bar functionality(refresh, configure, toggle, remove)
-            handleAlerts(); //handle closabled alerts
+
             handleDropdowns(); // handle dropdowns
             handleTabs(); // handle tabs
             handleTooltips(); // handle bootstrap tooltips
             handlePopovers(); // handles bootstrap popovers
             handleAccordions(); //handles accordions
-            handleModals(); // handle modals
-            handleBootstrapConfirmation(); // handle bootstrap confirmations
             handleTextareaAutosize(); // handle autosize textareas
             handleCounterup(); // handle counterup instances
 
             //Handle group element heights
             this.addResizeHandler(handleHeight); // handle auto calculating height on window resize
 
-            // Hacks
-            handleFixInputPlaceholderForIE(); //IE8 & IE9 input placeholder issue fix
         },
 
         //main function to initiate core javascript after ajax complete
         initAjax: function() {
             //handleUniform(); // handles custom radio & checkboxes
-            handleiCheck(); // handles custom icheck radio and checkboxes
             handleBootstrapSwitch(); // handle bootstrap switch plugin
             handleDropdownHover(); // handles dropdown hover
             handleScrollers(); // handles slim scrolling contents
-            handleSelect2(); // handle custom Select2 dropdowns
-            handleFancybox(); // handle fancy box
             handleDropdowns(); // handle dropdowns
             handleTooltips(); // handle bootstrap tooltips
             handlePopovers(); // handles bootstrap popovers
             handleAccordions(); //handles accordions
-            handleBootstrapConfirmation(); // handle bootstrap confirmations
         },
 
         //init main components
@@ -592,33 +486,6 @@ var App = function() {
             App.scrollTo();
         },
 
-        // wrApper function to  block element(indicate loading)
-        blockUI: function(options) {
-
-        },
-
-        // wrApper function to  un-block element(finish loading)
-        unblockUI: function(target) {
-
-        },
-
-        startPageLoading: function(options) {
-
-        },
-
-        stopPageLoading: function() {
-
-        },
-
-        alert: function(options) {
-
-
-        },
-
-        //public function to initialize the fancybox plugin
-        initFancybox: function() {
-            handleFancybox();
-        },
 
         //public helper function to get actual input value(used in IE9 and IE8 due to placeholder attribute not supported)
         getActualVal: function(el) {
@@ -692,42 +559,6 @@ var App = function() {
             return (typeof angular == 'undefined') ? false : true;
         },
 
-        getAssetsPath: function() {
-            return assetsPath;
-        },
-
-        setAssetsPath: function(path) {
-            assetsPath = path;
-        },
-
-        setGlobalImgPath: function(path) {
-            globalImgPath = path;
-        },
-
-        getGlobalImgPath: function() {
-            return assetsPath + globalImgPath;
-        },
-
-        setGlobalPluginsPath: function(path) {
-            globalPluginsPath = path;
-        },
-
-        getGlobalPluginsPath: function() {
-            return assetsPath + globalPluginsPath;
-        },
-
-        getGlobalCssPath: function() {
-            return assetsPath + globalCssPath;
-        },
-
-        // get layout color code by color name
-        getBrandColor: function(name) {
-            if (brandColors[name]) {
-                return brandColors[name];
-            } else {
-                return '';
-            }
-        },
 
         getResponsiveBreakpoint: function(size) {
             // bootstrap responsive breakpoints
@@ -744,14 +575,12 @@ var App = function() {
 
 }();
 
-<!-- END THEME LAYOUT SCRIPTS -->
-
 jQuery(document).ready(function() {
-    App.init(); // init metronic core componets
+    App.init(); //初始化核心组件
 });
 
 /**
- Core script to handle the entire theme and core functions
+ 处理整个主题和核心功能的核心脚本
  **/
 var Layout = function () {
 
@@ -760,10 +589,10 @@ var Layout = function () {
     var ajaxContentSuccessCallbacks = [];
     var ajaxContentErrorCallbacks = [];
 
-    //* BEGIN:CORE HANDLERS *//
-    // this function handles responsive layout on screen size resize or mobile device rotate.
+    //* 开始：核心处理程序*//
 
-    // Set proper height for sidebar and content. The content and sidebar height must be synced always.
+    //此函数处理屏幕大小调整或移动设备旋转时的响应布局。
+    //为边栏和内容设置适当的高度。内容和侧边栏高度必须始终同步。
     var handleSidebarAndContentHeight = function () {
         var content = $('.page-content');
         var sidebar = $('.page-content');
@@ -810,84 +639,8 @@ var Layout = function () {
         }
     };
 
-    // Handle sidebar menu links
-    var handleSidebarMenuActiveLink = function(mode, el) {
-        var url = location.hash.toLowerCase();
 
-        var menu = $('.page-sidebar-menu');
-
-        if (mode === 'click' || mode === 'set') {
-            el = $(el);
-        } else if (mode === 'match') {
-            menu.find("li > a").each(function() {
-                var path = $(this).attr("href").toLowerCase();
-                // url match condition
-                if (path.length > 1 && url.substr(1, path.length - 1) == path.substr(1)) {
-                    el = $(this);
-                    return;
-                }
-            });
-        }
-
-        if (!el || el.length == 0) {
-            return;
-        }
-
-        if (el.attr('href').toLowerCase() === 'javascript:;' || el.attr('href').toLowerCase() === '#') {
-            return;
-        }
-
-        var slideSpeed = parseInt(menu.data("slide-speed"));
-        var keepExpand = menu.data("keep-expanded");
-
-        // begin: handle active state
-        if (menu.hasClass('page-sidebar-menu-hover-submenu') === false) {
-            menu.find('li.nav-item.open').each(function() {
-                var match = false;
-                $(this).find('li').each(function(){
-                    if ($(this).find(' > a').attr('href') === el.attr('href')) {
-                        match = true;
-                        return;
-                    }
-                });
-
-                if (match === true) {
-                    return;
-                }
-
-                $(this).removeClass('open');
-                $(this).find('> a > .arrow.open').removeClass('open');
-                $(this).find('> .sub-menu').slideUp();
-            });
-        } else {
-            menu.find('li.open').removeClass('open');
-        }
-
-        menu.find('li.active').removeClass('active');
-        menu.find('li > a > .selected').remove();
-        // end: handle active state
-
-        el.parents('li').each(function () {
-            $(this).addClass('active');
-            $(this).find('> a > span.arrow').addClass('open');
-
-            if ($(this).parent('ul.page-sidebar-menu').length === 1) {
-                $(this).find('> a').append('<span class="selected"></span>');
-            }
-
-            if ($(this).children('ul.sub-menu').length === 1) {
-                $(this).addClass('open');
-            }
-        });
-
-        if (mode === 'click') {
-            if (App.getViewPort().width < resBreakpointMd && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page
-                $('.page-header .responsive-toggler').click();
-            }
-        }
-    };
-
-    // Handle sidebar menu
+    // 手柄式提要栏菜单
     var handleSidebarMenu = function () {
         // offcanvas mobile menu
         $('.page-sidebar-mobile-offcanvas .responsive-toggler').click(function() {
@@ -1040,7 +793,7 @@ var Layout = function () {
         }
     };
 
-    // Helper function to calculate sidebar height for fixed sidebar layout.
+    //帮助函数，用于计算固定提要栏布局的边栏高度。
     var _calculateFixedSidebarViewportHeight = function () {
         var sidebarHeight = App.getViewPort().height - $('.page-header').outerHeight(true);
         if ($('body').hasClass("page-footer-fixed")) {
@@ -1067,7 +820,6 @@ var Layout = function () {
             handleSidebarAndContentHeight();
         }
     };
-
 
 
     // Hanles sidebar toggler
@@ -1107,146 +859,12 @@ var Layout = function () {
         }
     };
 
-    // Handles the horizontal menu
-    var handleHorizontalMenu = function () {
-        //handle tab click
-        $('.page-header').on('click', '.hor-menu a[data-toggle="tab"]', function (e) {
-            e.preventDefault();
-            var nav = $(".hor-menu .nav");
-            var active_link = nav.find('li.current');
-            $('li.active', active_link).removeClass("active");
-            $('.selected', active_link).remove();
-            var new_link = $(this).parents('li').last();
-            new_link.addClass("current");
-            new_link.find("a:first").append('<span class="selected"></span>');
-        });
-
-        // handle search box expand/collapse
-        $('.page-header').on('click', '.search-form', function (e) {
-            $(this).addClass("open");
-            $(this).find('.form-control').focus();
-
-            $('.page-header .search-form .form-control').on('blur', function (e) {
-                $(this).closest('.search-form').removeClass("open");
-                $(this).unbind("blur");
-            });
-        });
-
-        // handle hor menu search form on enter press
-        $('.page-header').on('keypress', '.hor-menu .search-form .form-control', function (e) {
-            if (e.which == 13) {
-                $(this).closest('.search-form').submit();
-                return false;
-            }
-        });
-
-        // handle header search button click
-        $('.page-header').on('mousedown', '.search-form.open .submit', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(this).closest('.search-form').submit();
-        });
-
-
-        $(document).on('click', '.mega-menu-dropdown .dropdown-menu', function (e) {
-            e.stopPropagation();
-        });
-    };
-
-    // Handles Bootstrap Tabs.
-    var handleTabs = function () {
-        // fix content height on tab click
-        $('body').on('shown.bs.tab', 'a[data-toggle="tab"]', function () {
-            handleSidebarAndContentHeight();
-        });
-    };
-
-    // Handles the go to top button at the footer
-    var handleGoTop = function () {
-        var offset = 300;
-        var duration = 500;
-
-        if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {  // ios supported
-            $(window).bind("touchend touchcancel touchleave", function(e){
-                if ($(this).scrollTop() > offset) {
-                    $('.scroll-to-top').fadeIn(duration);
-                } else {
-                    $('.scroll-to-top').fadeOut(duration);
-                }
-            });
-        } else {  // general
-            $(window).scroll(function() {
-                if ($(this).scrollTop() > offset) {
-                    $('.scroll-to-top').fadeIn(duration);
-                } else {
-                    $('.scroll-to-top').fadeOut(duration);
-                }
-            });
-        }
-
-        $('.scroll-to-top').click(function(e) {
-            e.preventDefault();
-            $('html, body').animate({scrollTop: 0}, duration);
-            return false;
-        });
-    };
-
-    // Hanlde 100% height elements(block, portlet, etc)
-    var handle100HeightContent = function () {
-
-        $('.full-height-content').each(function(){
-            var target = $(this);
-            var height;
-
-            height = App.getViewPort().height -
-                $('.page-header').outerHeight(true) -
-                $('.page-footer').outerHeight(true) -
-                $('.page-title').outerHeight(true) -
-                $('.page-bar').outerHeight(true);
-
-            if (target.hasClass('portlet')) {
-                var portletBody = target.find('.portlet-body');
-
-                App.destroySlimScroll(portletBody.find('.full-height-content-body')); // destroy slimscroll
-
-                height = height -
-                    target.find('.portlet-title').outerHeight(true) -
-                    parseInt(target.find('.portlet-body').css('padding-top')) -
-                    parseInt(target.find('.portlet-body').css('padding-bottom')) - 5;
-
-                if (App.getViewPort().width >= resBreakpointMd && target.hasClass("full-height-content-scrollable")) {
-                    height = height - 35;
-                    portletBody.find('.full-height-content-body').css('height', height);
-                    App.initSlimScroll(portletBody.find('.full-height-content-body'));
-                } else {
-                    portletBody.css('min-height', height);
-                }
-            } else {
-                App.destroySlimScroll(target.find('.full-height-content-body')); // destroy slimscroll
-
-                if (App.getViewPort().width >= resBreakpointMd && target.hasClass("full-height-content-scrollable")) {
-                    height = height - 35;
-                    target.find('.full-height-content-body').css('height', height);
-                    App.initSlimScroll(target.find('.full-height-content-body'));
-                } else {
-                    target.css('min-height', height);
-                }
-            }
-        });
-    };
-    //* END:CORE HANDLERS *//
-
     return {
         // Main init methods to initialize the layout
         //IMPORTANT!!!: Do not modify the core handlers call order.
 
-        initHeader: function() {
-            handleHorizontalMenu(); // handles horizontal menu
-        },
 
-        setSidebarMenuActiveLink: function(mode, el) {
-            handleSidebarMenuActiveLink(mode, el);
-        },
+
 
         initSidebar: function() {
             //layout handlers
@@ -1254,51 +872,22 @@ var Layout = function () {
             handleSidebarMenu(); // handles main menu
             handleSidebarToggler(); // handles sidebar hide/show
 
-            if (App.isAngularJsApp()) {
-                handleSidebarMenuActiveLink('match'); // init sidebar active links
-            }
 
             App.addResizeHandler(handleFixedSidebar); // reinitialize fixed sidebar on window resize
         },
 
         initContent: function() {
-            handle100HeightContent(); // handles 100% height elements(block, portlet, etc)
-            handleTabs(); // handle bootstrah tabs
-
             App.addResizeHandler(handleSidebarAndContentHeight); // recalculate sidebar & content height on window resize
-            App.addResizeHandler(handle100HeightContent); // reinitialize content height on window resize
-        },
-
-        initFooter: function() {
-            handleGoTop(); //handles scroll to top functionality in the footer
         },
 
         init: function () {
-            this.initHeader();
             this.initSidebar();
             this.initContent();
-            this.initFooter();
-        },
-
-        loadAjaxContent: function(url, sidebarMenuLink) {
-
-        },
-
-        addAjaxContentSuccessCallback: function(callback) {
-            ajaxContentSuccessCallbacks.push(callback);
-        },
-
-        addAjaxContentErrorCallback: function(callback) {
-            ajaxContentErrorCallbacks.push(callback);
         },
 
         //public function to fix the sidebar and content height accordingly
         fixContentHeight: function () {
             handleSidebarAndContentHeight();
-        },
-
-        initFixedSidebarHoverEffect: function() {
-
         },
 
         initFixedSidebar: function() {
@@ -1311,33 +900,9 @@ var Layout = function () {
 
 if (App.isAngularJsApp() === false) {
     jQuery(document).ready(function() {
-        Layout.init(); // init metronic core componets
+        Layout.init();
     });
 }
-
-var Demo = function() {
-    // Handle Theme Settings
-    var handleTheme = function() {
-        var panel = $('.theme-panel');
-        $('.toggler', panel).click(function() {
-            $('.toggler').hide();
-            $('.toggler-close').show();
-            $('.theme-panel > .theme-options').show();
-        });
-        $('.toggler-close', panel).click(function() {
-            $('.toggler').show();
-            $('.toggler-close').hide();
-            $('.theme-panel > .theme-options').hide();
-        });
-    };
-    return {
-        init: function() {
-            if (App.isAngularJsApp() === false) {
-                handleTheme();
-            }
-        }
-    };
-}();
 
 // 显示用户资料信息
 function dr_show_member(name) {
@@ -1370,7 +935,6 @@ function dr_show_member(name) {
 }
 
 jQuery(document).ready(function() {
-    Demo.init(); // init metronic core componets
     $('.onloading').click(function(){
         var index = layer.load(2, { time: 5000 });
     });
@@ -1756,7 +1320,6 @@ function dr_module_send_ajax(url) {
     });
 }
 
-
 // ajax关闭或启用
 function dr_ajax_open_close(e, url, fan) {
     var index = layer.load(2, {
@@ -1980,7 +1543,6 @@ function dr_submit_sql_todo(myform, url) {
         }
     });
 }
-
 
 function dr_call_alert() {
     layer.alert('回调是用于在列表显示时对其值进行格式化，'+
