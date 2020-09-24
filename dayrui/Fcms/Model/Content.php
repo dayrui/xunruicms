@@ -309,11 +309,6 @@ class Content extends \Phpcmf\Model {
             $this->sync_update_cat($old['link_id'], $data);
         }
 
-        // 自动关键词存储
-        if (\Phpcmf\Service::C()->module['setting']['auto_save_tag']) {
-            $this->auto_save_tag($data[1]['keywords']);
-        }
-
         // 如果来自审核页面,表示完成审核
         if (defined('IS_MODULE_VERIFY')) {
 
@@ -466,54 +461,6 @@ class Content extends \Phpcmf\Model {
         }
 
         return $rt;
-    }
-
-    // 存储到tag
-    public function auto_save_tag($tag) {
-
-        if (!$tag) {
-            return;
-        }
-
-        if (!dr_is_app('tag')) {
-            return;
-        }
-
-        $arr = explode(',', $tag);
-        foreach ($arr as $t) {
-            if ($t) {
-                if ($this->table($this->siteid .'_tag')->is_exists(0, 'name', $t)) {
-                    // 已经存在
-                    continue;
-                }
-                $cname = \Phpcmf\Service::L('pinyin')->result($t); // 拼音转换类
-                $count = $this->db->table($this->siteid .'_tag')->where('code', $cname)->countAllResults();
-                $code = $count ? $cname.$count : $cname;
-                $pcode = $this->_get_tag_pcode(['pid' => 0, 'code' => $code]);
-                $this->table($this->siteid .'_tag')->insert(array(
-                    'pid' => 0,
-                    'name' => $t,
-                    'code' => $code,
-                    'pcode' => $pcode,
-                    'hits' => 0,
-                    'displayorder' => 0,
-                    'childids' => '',
-                    'content' => '',
-                ));
-            }
-        }
-    }
-
-    // 获取pcode
-    private function _get_tag_pcode($data) {
-
-        if (!$data['pid']) {
-            return $data['code'];
-        }
-
-        $row = $this->table($this->siteid .'_tag')->get($data['pid']);
-
-        return trim($row['code'].'/'.$data['code'], '/');
     }
 
     // 验证栏目操作权限 后台
