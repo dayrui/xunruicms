@@ -2,7 +2,6 @@
 
 /**
  * 自定义分页标签样式
- *
  */
 
 return array(
@@ -51,5 +50,6 @@ return array(
 
 	// 区域标签
     'full_tag_close' => '</ul>',
+
 
 );

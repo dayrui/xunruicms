@@ -128,6 +128,15 @@ class Page {
 	 */
 	protected $first_tag_open = '';
 
+	protected $next_anchor_class = '';
+	protected $prev_anchor_class = '';
+	protected $num_anchor_class = '';
+	protected $last_anchor_class = '';
+	protected $first_anchor_class = '';
+    protected $anchor_class = '';
+    protected $total_anchor_class = '';
+    protected $total_remove_anchor = false;
+
 	/**
 	 * First tag close
 	 *
@@ -298,20 +307,6 @@ class Page {
 	 */
 	public function initialize(array $params = array())
 	{
-		isset($params['attributes']) OR $params['attributes'] = array();
-		if (is_array($params['attributes']))
-		{
-			$this->_parse_attributes($params['attributes']);
-			unset($params['attributes']);
-		}
-
-		// Deprecated legacy support for the anchor_class option
-		// Should be removed in CI 3.1+
-		if (isset($params['anchor_class']))
-		{
-			empty($params['anchor_class']) OR $attributes['class'] = $params['anchor_class'];
-			unset($params['anchor_class']);
-		}
 
 		foreach ($params as $key => $val)
 		{
@@ -324,26 +319,6 @@ class Page {
 		return $this;
 	}
 
-	/**
-	 * Parse attributes
-	 *
-	 * @param	array	$attributes
-	 * @return	void
-	 */
-	protected function _parse_attributes($attributes)
-	{
-		isset($attributes['rel']) OR $attributes['rel'] = TRUE;
-		$this->_link_types = ($attributes['rel'])
-			? array('start' => 'start', 'prev' => 'prev', 'next' => 'next')
-			: array();
-		unset($attributes['rel']);
-
-		$this->_attributes = '';
-		foreach ($attributes as $key => $value)
-		{
-			$this->_attributes .= ' '.$key.'="'.$value.'"';
-		}
-	}
 
 	// --------------------------------------------------------------------
 
@@ -393,8 +368,6 @@ class Page {
 
         // Check the user defined number of links.
         $this->num_links = (int) $this->num_links;
-
-		$get = [];
 
         // Put together our base and first URLs.
         $this->base_url = trim($this->base_url);
@@ -447,14 +420,24 @@ class Page {
         $output = '';
 
 		if ($this->total_link) {
-			$output .= $this->total_tag_open.'<a>'.dr_lang($this->total_link, $this->total_rows).'</a>'.$this->total_tag_close;
+		    if (!$this->total_remove_anchor) {
+                $this->total_tag_open.='<a'.($this->total_anchor_class ? ' class="'.$this->total_anchor_class.'"' : '').'>';
+                $this->total_tag_close.='</a>';
+            }
+
+			$output .= $this->total_tag_open.dr_lang($this->total_link, $this->total_rows).$this->total_tag_close;
 		}
 
         // Render the "First" link.
         if ($this->first_link !== FALSE && $this->cur_page > ($this->num_links + 1))
         {
             // Take the general parameters, and squeeze this pagination-page attr in for JS frameworks.
-            $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, 1);
+            $attributes = sprintf(' %s="%d"', $this->data_page_attr, 1);
+            if ($this->first_anchor_class) {
+                $attributes.= ' class="'.$this->first_anchor_class.'"';
+            } elseif ($this->anchor_class) {
+                $attributes.= ' class="'.$this->anchor_class.'"';
+            }
 
             $output .= $this->first_tag_open.'<a href="'.$this->_get_link_url(1).'"'.$attributes.$this->_attr_rel('start').'>'
                 .$this->first_link.'</a>'.$this->first_tag_close;
@@ -465,7 +448,12 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
 
-            $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            if ($this->prev_anchor_class) {
+                $attributes.= ' class="'.$this->prev_anchor_class.'"';
+            } elseif ($this->anchor_class) {
+                $attributes.= ' class="'.$this->anchor_class.'"';
+            }
 
             if ($i === $base_page)
             {
@@ -489,7 +477,12 @@ class Page {
             {
                 $i = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
 
-                $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+                $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+                if ($this->num_anchor_class) {
+                    $attributes.= ' class="'.$this->num_anchor_class.'"';
+                } elseif ($this->anchor_class) {
+                    $attributes.= ' class="'.$this->anchor_class.'"';
+                }
 
                 if ($i >= $base_page)
                 {
@@ -518,7 +511,12 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
 
-            $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            if ($this->next_anchor_class) {
+                $attributes.= ' class="'.$this->next_anchor_class.'"';
+            } elseif ($this->anchor_class) {
+                $attributes.= ' class="'.$this->anchor_class.'"';
+            }
 
             $output .= $this->next_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes
                 .$this->_attr_rel('next').'>'.$this->next_link.'</a>'.$this->next_tag_close;
@@ -529,7 +527,12 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
 
-            $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
+            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            if ($this->last_anchor_class) {
+                $attributes.= ' class="'.$this->last_anchor_class.'"';
+            } elseif ($this->anchor_class) {
+                $attributes.= ' class="'.$this->anchor_class.'"';
+            }
 
             $output .= $this->last_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes.'>'
                 .$this->last_link.'</a>'.$this->last_tag_close;

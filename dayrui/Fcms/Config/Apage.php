@@ -7,8 +7,6 @@
 
 /**
  * 后台的自定义分页标签样式
- *
- * 参数说明：http://codeigniter.org.cn/user_guide/libraries/pagination.html
  */
 
 return array(
@@ -17,7 +15,7 @@ return array(
 	'total_link' => '共%s条', // 你希望在分页中显示“统计”链接的名字。如果你不希望显示，可以把它的值设为 FALSE 
 	'total_tag_open' => '<li>', // “统计”链接的打开标签
 	'total_tag_close' => '</li>', // “统计”链接的关闭标签
-	
+
 	// 自定义“下一页”链接
 	'next_link' => '', // 你希望在分页中显示“下一页”链接的名字。如果你不希望显示，可以把它的值设为 FALSE
 	'next_tag_open' => '', // “下一页”链接的打开标签
@@ -48,9 +46,6 @@ return array(
 	
 	// 是否显示数字链接
 	'display_pages' => TRUE,
-	
-	// 给每一个链接添加 CSS 类
-	'anchor_class' => '',
 
     // 显示的分页数字个数
     'num_links' => 2,
