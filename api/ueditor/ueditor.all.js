@@ -24768,6 +24768,7 @@
                     "pptx":"icon_ppt.gif",
                     "avi":"icon_mv.gif",
                     "rmvb":"icon_mv.gif",
+                    "mp4":"icon_mv.gif",
                     "wmv":"icon_mv.gif",
                     "flv":"icon_mv.gif",
                     "swf":"icon_mv.gif",

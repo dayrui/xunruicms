@@ -77,7 +77,6 @@ return [
     "fileManagerUrlPrefix" => "", /* 文件访问路径前缀 */
     "fileManagerListSize" => 20, /* 每次列出文件数量 */
     "fileManagerAllowFiles" => [
-        ".png", ".jpg", ".jpeg", ".gif", ".bmp",
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
