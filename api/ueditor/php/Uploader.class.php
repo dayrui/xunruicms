@@ -392,11 +392,12 @@ class Uploader
      */
     public function getFileInfo()
     {
+        $title = in_array($this->fileType, ['.jpg', '.jpeg', '.gif', '.png']) ? UEDITOR_IMG_TITLE : $this->oriName;
         return array(
             "state" => $this->stateInfo,
             "url" => $this->fileUrl,
-            "title" => UEDITOR_IMG_TITLE,
-            "original" => UEDITOR_IMG_TITLE,
+            "title" => $title,
+            "original" => $title,
             "type" => $this->fileType,
             "size" => $this->fileSize
         );

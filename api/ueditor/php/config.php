@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* 前后端通信相关的配置,注释只允许使用多行方式 */
 
 return [
+
     /* 上传图片配置项 */
     "imageActionName" => "uploadimage", /* 执行上传图片的action名称 */
     "imageFieldName" => "upfile", /* 提交的图片表单名称 */
@@ -58,7 +59,6 @@ return [
     "fileUrlPrefix" => "", /* 文件访问路径前缀 */
     "fileMaxSize" => 51200000, /* 上传大小限制，单位B，默认50MB */
     "fileAllowFiles" => [
-        ".png", ".jpg", ".jpeg", ".gif", ".bmp",
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
