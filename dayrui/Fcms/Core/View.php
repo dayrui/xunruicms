@@ -1934,7 +1934,16 @@ class View {
                     if ($infield) {
                         return $this->_return($system['return'], '站点('.$system['site'].')的内容模块('.$m.')不存在的字段：'.implode(',', $infield));
                     }
-                    $form[] = 'SELECT '.$system['field'].',\''.$m.'\' AS mid FROM `'.$table.'` WHERE `status`=9';
+                    $mywhere = '`status`=9';
+                    // 推荐位调用
+                    if ($system['flag']) {
+                        $mywhere.= " and `$table`.`id` IN (".("select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag'])).")";
+                    }
+                    // 排除推荐位
+                    if ($system['not_flag']) {
+                        $mywhere.= " and `$table`.`id` NOT IN (".("select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$system['not_flag'].')' : '`flag`='.(int)$system['not_flag'])).")";
+                    }
+                    $form[] = 'SELECT '.$system['field'].',\''.$m.'\' AS mid FROM `'.$table.'` WHERE '.$mywhere;
                     $fields = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m, 'field');
                 }
 
