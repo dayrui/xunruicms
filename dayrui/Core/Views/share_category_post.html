@@ -88,7 +88,9 @@ function dr_tid(i) {
                                     {/loop}
                                     </select>
                                 </label>
-                                <span class="help-block">{dr_lang('当同一父级栏目下存在多个不同的模块栏目时，其父级栏目将自动转换为单页栏目')}</span>
+                                {if $ci->_is_admin_auth('module/index')}
+                                <span class="help-block"><a href="{dr_url('module/index')}">{dr_lang('在这里可以创建更多的共享模块')}</a></span>
+                                {/if}
                             </div>
                         </div>
                         {/if}

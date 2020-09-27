@@ -935,7 +935,7 @@ class Category extends \Phpcmf\Table
                 foreach ($data[1] as $n => $t) {
                     $save[$n] = $t ? $t : '';
                 }
-
+                
                 // 判断共享栏目
                 if ($this->module['share']) {
                     // 判断模块tid是否正确
