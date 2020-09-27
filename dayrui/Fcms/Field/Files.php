@@ -158,7 +158,8 @@ class Files extends \Phpcmf\Library\A_Field {
             }
         }
 
-        if ($field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
+        if ($data['file'] && is_array($data['file'])
+            && $field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
             $one = array_key_first($data['file']);
             if ($data['file'][$one]) {
                 $info = \Phpcmf\Service::C()->get_attachment($data['file'][$one]);

@@ -980,7 +980,7 @@
             $id = isset($option['attachment']) ? $option['attachment'] : 0;
 
             $html = '<label><select class="form-control" name="data[setting][option][attachment]">';
-            $html.= '<option value="0"> '.dr_lang('本地存储').' </option>';
+            $html.= '<option value="0"> '.dr_lang('默认存储').' </option>';
 
             $remote = \Phpcmf\Service::C()->get_cache('attachment');
             if ($remote) {
