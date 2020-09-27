@@ -17,6 +17,7 @@ class Service
     static private $model;
     static private $require;
     static private $apps;
+    static private $mwhere_apps = [];
 
     /**
      * 控制器对象实例
@@ -55,6 +56,16 @@ class Service
         }
 
         return static::$apps;
+    }
+
+    // 设置mwhere的插件名称
+    public static function Set_Mwhere_App($dir) {
+        static::$mwhere_apps[] = $dir;
+    }
+
+    // 读取mwhere插件名称列表
+    public static function Mwhere_Apps() {
+        return static::$mwhere_apps;
     }
 
     // 是否是电脑端

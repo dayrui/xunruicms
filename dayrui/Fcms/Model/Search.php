@@ -67,6 +67,17 @@ class Search extends \Phpcmf\Model {
             if (dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain']) {
                 $where[] = [ '`'.$table.'`.`fstatus` = 1' ];
             }*/
+            // 查找mwhere目录
+            $mwhere = \Phpcmf\Service::Mwhere_Apps();
+            if ($mwhere) {
+                list($siteid, $mid) = explode('_', $this->mytable);
+                foreach ($mwhere as $mapp) {
+                    $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
+                    if ($w) {
+                        $where[] = $w;
+                    }
+                }
+            }
 
             // 关键字匹配条件
             if ($param['keyword'] != '') {

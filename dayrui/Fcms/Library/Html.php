@@ -56,11 +56,36 @@ class Html
                     ];
                 } else {
                     // 内容列表页面
-                    $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
-                    if ($t['child'] && $t['childids']) {
-                        $db->whereIn('catid', @explode(',', $t['childids']));
-                    } else {
-                        $db->where('catid', (int)$t['id']);
+                    $find = 1;
+                    // 查找mwhere目录
+                    if (is_dir(dr_get_app_dir($t['mid']).'Mwhere/')) {
+                        $files = dr_file_map(dr_get_app_dir($t['mid']).'Mwhere/');
+                        if ($files) {
+                            $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid']);
+                            if ($t['child'] && $t['childids']) {
+                                $db->whereIn('catid', @explode(',', $t['childids']));
+                            } else {
+                                $db->where('catid', (int)$t['id']);
+                            }
+                            $mid = $t['mid'];
+                            $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$t['mid']));
+                            $siteid = SITE_ID;
+                            foreach ($files as $f) {
+                                $w = require dr_get_app_dir($t['mid']).'Mwhere/'.$f;
+                                if ($w) {
+                                    $db->where($w);
+                                }
+                            }
+                            $find = 0;
+                        }
+                    }
+                    if ($find) {
+                        $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
+                        if ($t['child'] && $t['childids']) {
+                            $db->whereIn('catid', @explode(',', $t['childids']));
+                        } else {
+                            $db->where('catid', (int)$t['id']);
+                        }
                     }
                     $total = $db->countAllResults(); // 统计栏目的数据量
                     $list[$t['mid']][] = [
@@ -159,6 +184,18 @@ class Html
                         $db->where('`id` BETWEEN '.(int)$param['id_form'].' AND ' . (int)$param['id_to']);
                     }
                     $db->where('catid IN ('. implode(',', $cids).')');
+                    // 查找mwhere目录
+                    $mwhere = \Phpcmf\Service::Mwhere_Apps();
+                    if ($mwhere) {
+                        $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$mid));
+                        $siteid = SITE_ID;
+                        foreach ($mwhere as $mapp) {
+                            $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
+                            if ($w) {
+                                $db->where($w);
+                            }
+                        }
+                    }
                     $rows = $db->get()->getResultArray(); // 获取需要生成的内容索引
                     if ($rows) {
                         foreach ($rows as $r) {
@@ -183,6 +220,18 @@ class Html
             }
             if ($cids) {
                 $db->where('catid IN ('. implode(',', $cids).')');
+            }
+            // 查找mwhere目录
+            $mwhere = \Phpcmf\Service::Mwhere_Apps();
+            if ($mwhere) {
+                $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$app));
+                $siteid = SITE_ID;
+                foreach ($mwhere as $mapp) {
+                    $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
+                    if ($w) {
+                        $db->where($w);
+                    }
+                }
             }
             $data = $db->get()->getResultArray(); // 获取需要生成的内容索引
         }

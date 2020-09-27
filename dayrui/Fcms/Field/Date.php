@@ -199,6 +199,7 @@ class Date extends \Phpcmf\Library\A_Field {
 					showMeridian: true,
 					autoclose: true,
 					pickerPosition: "bottom-right",
+					todayBtn: "linked"
 				});
 			});
 			</script>
@@ -214,7 +215,7 @@ class Date extends \Phpcmf\Library\A_Field {
 					showMeridian: true,
 					autoclose: true,
 					pickerPosition: "bottom-right",
-					todayBtn: true
+					todayBtn: "linked"
 				});
 			});
 			</script>

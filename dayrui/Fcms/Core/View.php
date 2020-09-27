@@ -1692,7 +1692,7 @@ class View {
                     if (strpos($system['catid'], ',') !== FALSE) {
                         $temp = @explode(',', $system['catid']);
                         if ($temp) {
-                            $catids = array();
+                            $catids = [];
                             foreach ($temp as $i) {
                                 $catids = $module['category'][$i]['child'] ? array_merge($catids, $module['category'][$i]['catids']) : array_merge($catids, array($i));
                             }
@@ -1734,6 +1734,19 @@ class View {
                     if (dr_is_app('fstatus') && isset($module['field']['fstatus']) && $module['field']['fstatus']['ismain']) {
                         $where[] = ['adj' => '', 'name' => 'fstatus', 'value' => 1];
                     }*/
+                    // 查找mwhere目录
+                    $mwhere = \Phpcmf\Service::Mwhere_Apps();
+                    if ($mwhere) {
+                        $mid = $dirname;
+                        $field = $tableinfo[$table];
+                        $siteid = $system['site'];
+                        foreach ($mwhere as $mapp) {
+                            $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
+                            if ($w) {
+                                $where[] = ['adj' => 'sql', 'value' => $w];
+                            }
+                        }
+                    }
 				}
 				
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
