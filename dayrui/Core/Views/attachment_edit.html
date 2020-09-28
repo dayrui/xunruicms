@@ -1,0 +1,15 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        <div class="form-group">
+            <div class="col-xs-12">
+                <input type="text" placeholder="{dr_lang('附件名称')}" type="text" name="name" value="{$name}" class="form-control ">
+            </div>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}
