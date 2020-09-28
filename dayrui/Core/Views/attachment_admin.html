@@ -92,7 +92,17 @@
                 </thead>
                 <tbody>
                 {loop $list $t}
-                {php $t.url = 'javascript:'.(in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg']) ? 'dr_preview_image' : 'dr_preview_url').'(\''.dr_get_file_url($t).'\');';}
+                <?php
+
+                if (in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg'])) {
+                    $hs = 'dr_preview_image';
+                } elseif ($t.fileext == 'mp4') {
+                    $hs = 'dr_preview_video';
+                } else {
+                    $hs = 'dr_preview_url';
+                }
+                $t.url = 'javascript:'.$hs.'(\''.dr_get_file_url($t).'\');';
+                ?>
                 <tr class="odd gradeX" id="dr_row_{$t.id}">
                     <td class="myselect">
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">

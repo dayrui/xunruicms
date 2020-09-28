@@ -1777,6 +1777,10 @@ function dr_file_preview_html($value, $target = 0) {
         $value = dr_file($value);
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_image(\''.$value.'\');';
         return '<a href="'.$url.'"><img src="'.$value.'"></a>';
+    } elseif ($ext == 'mp4') {
+        $value = dr_file($value);
+        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_video(\''.$value.'\');';
+        return '<a href="'.$url.'"><img src="'.$value.'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
         $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.dr_file($value).'\');';
@@ -1794,6 +1798,8 @@ function dr_file_preview_html($value, $target = 0) {
 function dr_file_list_preview_html($t) {
     if (in_array($t['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
         return '<a href="javascript:dr_preview_image(\''.dr_get_file_url($t).'\');"><img src="'.dr_get_file_url($t, 50, 50).'"></a>';
+    } elseif ($t['fileext'] == 'mp4') {
+        return '<a href="javascript:dr_preview_video(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png')) {
         return '<a href="javascript:dr_preview_url(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
     } else {

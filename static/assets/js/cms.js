@@ -86,12 +86,35 @@ function dr_is_mobile() {
 	 }
 }
 
-// 显示图片
-function dr_preview_image(file) {
+// 显示视频
+function dr_preview_video(file) {
+
+    var width = '450px';
+    var height = '330px';
+    var att = 'width="350" height="280"';
+
     if (is_mobile_cms == 1) {
         width = height = '90%';
-    } else {
-        width = height = '70%';
+        var att = 'width="90%" height="200"';
+    }
+    layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"> <video class="video-js vjs-default-skin" controls="" preload="auto" '+att+'><source src="'+file+'" type="video/mp4"/></video>\n</p>', {
+        shade: 0,
+        //scrollbar: false,
+        shadeClose: true,
+        title: '',
+        area: [width, width],
+        btn: []
+    });
+}
+
+// 显示图片
+function dr_preview_image(file) {
+
+    var width = '400px';
+    var height = '300px';
+
+    if (is_mobile_cms == 1) {
+        width = height = '90%';
     }
     layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'"></a></p>', {
         shade: 0,
@@ -104,11 +127,11 @@ function dr_preview_image(file) {
 }
 // 显示url
 function dr_preview_url(url) {
+
+    var width = '400px';
+    var height = '200px';
     if (is_mobile_cms == 1) {
         width = height = '90%';
-    } else {
-        width = '40%';
-        height = '10%';
     }
     layer.alert('<a href="'+url+'" target="_blank">'+url+'</a>', {
         shade: 0,
