@@ -49,6 +49,7 @@ class Member_setting extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '用户设置' => ['member_setting/index', 'fa fa-cog'],
+                    'help' => [1042],
                 ]
             ),
             'oauth' => dr_oauth_list(),

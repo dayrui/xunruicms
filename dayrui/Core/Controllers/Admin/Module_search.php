@@ -36,7 +36,7 @@ class Module_search extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname),
+            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname, 1041),
             'module' => $module,
             'dirname' => $dirname,
         ]);

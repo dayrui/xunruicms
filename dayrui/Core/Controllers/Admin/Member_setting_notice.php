@@ -60,6 +60,7 @@ class Member_setting_notice extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '通知设置' => ['member_setting_notice/index', 'fa fa-volume-up'],
+                    'help' => [194],
                 ]
             ),
             'value' => dr_string2array($data['value']),

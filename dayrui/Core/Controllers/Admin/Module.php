@@ -32,6 +32,8 @@ class Module extends \Phpcmf\Common
             $menu['help'] = [98];
         } elseif (strpos(\Phpcmf\Service::L('Router')->method, 'flag') !== false) {
             $menu['help'] = [440];
+        } elseif (strpos(\Phpcmf\Service::L('Router')->method, 'edit') !== false) {
+            $menu['help'] = [1040];
         }
 
         \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu($menu));

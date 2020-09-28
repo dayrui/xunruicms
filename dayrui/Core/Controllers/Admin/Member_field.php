@@ -18,6 +18,7 @@ class Member_field extends \Phpcmf\Common
                 [
                     '字段划分' => ['member_field/index', 'fa fa-cog'],
                     '自定义字段' => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname' => 'member']), 'fa fa-code'],
+                    'help' => [531],
                 ]
             ),
             'uriprefix' => 'member_field'
@@ -67,10 +68,14 @@ class Member_field extends \Phpcmf\Common
     public function add() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        !$ids && $this->_json(0, dr_lang('你还没有选择呢'));
+        if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
 
         $gid = (int)\Phpcmf\Service::L('input')->post('groupid');
-        !$gid && $this->_json(0, dr_lang('你还没有选择用户组'));
+        if (!$gid) {
+            $this->_json(0, dr_lang('你还没有选择用户组'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
         $value = $data ? dr_string2array($data['value']) : [];
@@ -91,7 +96,9 @@ class Member_field extends \Phpcmf\Common
     public function reg_edit() {
 
         $fid = (int)\Phpcmf\Service::L('input')->get('id');
-        !$fid && $this->_json(0, dr_lang('字段id不存在'));
+        if (!$fid) {
+            $this->_json(0, dr_lang('字段id不存在'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'register_field')->get()->getRowArray();
         $register = $data ? dr_string2array($data['value']) : [];
@@ -116,14 +123,20 @@ class Member_field extends \Phpcmf\Common
     public function del() {
 
         $fid = (int)\Phpcmf\Service::L('input')->get('fid');
-        !$fid && $this->_json(0, dr_lang('字段id不存在'));
+        if (!$fid) {
+            $this->_json(0, dr_lang('字段id不存在'));
+        }
 
         $gid = (int)\Phpcmf\Service::L('input')->get('gid');
-        !$gid && $this->_json(0, dr_lang('用户组id不存在'));
+        if (!$gid) {
+            $this->_json(0, dr_lang('用户组id不存在'));
+        }
 
         $data = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
         $value = $data ? dr_string2array($data['value']) : [];
-        !$value[$fid][$gid] && $this->_json(0, dr_lang('配置不存在'));
+        if (!$value[$fid][$gid]) {
+            $this->_json(0, dr_lang('配置不存在'));
+        }
 
         unset($value[$fid][$gid]);
         
