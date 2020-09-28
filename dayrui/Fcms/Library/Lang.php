@@ -31,7 +31,25 @@ class Lang {
      * 输出最终语言
      */
     public function text($text) {
-        return isset($this->lang[$text]) ? $this->lang[$text] : $text;
+
+        if (isset($this->lang[$text])) {
+            return $this->lang[$text];
+        } else {
+            // 没有找到语言时，
+            if (SITE_LANGUAGE != 'zh-cn' && IS_DEV) {
+                $file = WRITEPATH.'lang_'.SITE_LANGUAGE.'.php';
+                if (!is_file($file)) {
+                    file_put_contents($file, '<?php return [];');
+                }
+                $lang_cache = require $file;
+                if (!isset($lang_cache[$text])) {
+                    $lang_cache[$text] = $text;
+                    file_put_contents($file, '<?php'.PHP_EOL.'// 以下文字需要手动翻译'.PHP_EOL.PHP_EOL.' return '.var_export($lang_cache, true).';');
+                }
+            }
+        }
+
+        return $text;
     }
 
 }
