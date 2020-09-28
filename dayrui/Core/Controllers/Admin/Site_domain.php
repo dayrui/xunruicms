@@ -19,14 +19,18 @@ class Site_domain extends \Phpcmf\Common
             foreach ($post as $name => $value) {
                 unset($data[$name]);
                 if ($value) {
-                    if (strpos($name, 'webpath') == 0) {
+                    if (strpos($name, 'webpath') === 0) {
                         // 目录不验证
                     } else {
                         // 验证域名可用性
                         if (in_array($value, $data)) {
-                            $this->_json(0, dr_lang('域名[%s]绑定重复', $value));
+                            $this->_json(0, dr_lang('域名（%s）绑定重复', $value));
                         } elseif (!\Phpcmf\Service::L('Form')->check_domain($value)) {
                             $this->_json(0, dr_lang('域名（%s）格式不正确', $value));
+                        }
+                        list($cname, $mid) = explode('_', $name);
+                        if ($cname == 'module' && $mid != 'mobile' && $post['module_'.$mid] && !$post['webpath_'.$mid]) {
+                            $this->_json(0, dr_lang('模块（%s）的Web目录必须填写', $mid));
                         }
                     }
                 }
