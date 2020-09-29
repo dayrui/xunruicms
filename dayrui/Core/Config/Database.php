@@ -41,8 +41,8 @@ class Database extends \CodeIgniter\Database\Config
         'DBDebug'     => true,
         'cacheOn'     => true,
         'cacheDir'     => WRITEPATH.'database/',
-        'charset'      => 'utf8',
-        'DBCollat'     => 'utf8_general_ci',
+        'charset'      => 'utf8mb4',
+        'DBCollat'     => 'utf8mb4_general_ci',
         'swapPre'      => '',
         'encrypt'      => false,
         'compress'     => false,
@@ -89,8 +89,8 @@ class Database extends \CodeIgniter\Database\Config
                         'password' => $db['default']['password'],
                         // 数据库名
                         'database' => $db['default']['database'],
-                        // 数据库编码默认采用utf8
-                        'charset'  => 'utf8',
+                        // 数据库编码默认采用utf8mb4
+                        'charset'  => 'utf8mb4',
                         // 数据库表前缀
                         'prefix'   => $db['default']['DBPrefix'],
                         // 数据库调试模式

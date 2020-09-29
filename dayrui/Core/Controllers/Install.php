@@ -169,6 +169,7 @@ class Install extends \Phpcmf\Common
                         $this->_json(0, '临时数据存储失败，cahce目录无法写入');
                     }
 
+
                     // 存储mysql
                     $database = '<?php
 

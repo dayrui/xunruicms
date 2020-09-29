@@ -473,6 +473,7 @@ function dr_star_level($num, $shifen = 0) {
 // 格式化sql创建
 function dr_format_create_sql($sql) {
     $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
+    $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ', $sql));
     return $sql;
 }
 
@@ -3789,7 +3790,8 @@ function dr_html2emoji($msg){
 
 // 处理带Emoji的数据，写入数据库前的emoji转为HTML
 function dr_emoji2html($msg) {
-    return str_replace('\\', '|', json_encode($msg));;
+    return $msg; // utf8mb4模式下原样输出
+    //return str_replace('\\', '|', json_encode($msg));;
 }
 
 /**

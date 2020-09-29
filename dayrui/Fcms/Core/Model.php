@@ -679,9 +679,9 @@ class Model {
                 } elseif ($field[$param['field']]['isemoji']) {
                     // 表情符号查询
                     $key = $param['keyword'];
-                    $key2 = str_replace ( '\u', '\\\\\\\\u', trim ( dr_emoji2html ($key, 0 ), '"' ) );
+                    $key2 = str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) );
                     // 搜索用户表
-                    $select->where("(nickname LIKE '%$key%' OR nickname LIKE '%$key2%')");
+                    $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
                 } elseif ($field[$param['field']]['isint']) {
                     // 整数绝对匹配
                     $select->where($param['field'], intval($param['keyword']));

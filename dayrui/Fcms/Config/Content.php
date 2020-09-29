@@ -40,7 +40,7 @@ return [
           KEY `hits` (`hits`),
           KEY `category` (`catid`, `status`),
           KEY `displayorder` (`displayorder`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='内容主表';
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='内容主表';
         ",
 
         0 => "CREATE TABLE IF NOT EXISTS `{tablename}` (
@@ -51,7 +51,7 @@ return [
           UNIQUE KEY `id` (`id`),
           KEY `uid` (`uid`),
           KEY `catid` (`catid`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='内容附表';
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='内容附表';
         ",
 
     ],
