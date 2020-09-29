@@ -28968,6 +28968,12 @@
                         var toolbarItemUi = null;
                         if (typeof toolbarItem == 'string') {
                             toolbarItem = toolbarItem.toLowerCase();
+
+                            // 移动端移除表情工具栏
+                            if (toolbarItem == 'emotion' && this.ismobile == 1) {
+                                continue;
+                            }
+
                             if (toolbarItem == '|') {
                                 toolbarItem = 'Separator';
                             }

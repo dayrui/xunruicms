@@ -9,6 +9,7 @@
     window.UEDITOR_CONFIG = {
 
         UEDITOR_HOME_URL: URL
+        ,is_mobile: 0 // 是否来自移动端
         ,UEDITOR_ROOT_URL: '/api/ueditor/'
         , serverUrl: URL + "php/controller.php"
 
