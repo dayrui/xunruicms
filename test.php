@@ -22,10 +22,13 @@ if (isset($_GET['log']) && $_GET['log']) {
 
 // 判断环境
 if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-    exit("<font color=red>PHP版本必须在7.2以上</font>");
+    exit("<font color=red>PHP版本必须在7.2及以上</font>");
 } else {
-    dr_echo_msg(1, 'PHP版本：v'.PHP_VERSION);
+    dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
 }
+
+dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
+
 // 扩展
 if (!function_exists('intl_is_failure')) {
     dr_echo_msg(0, "<font color=red>PHP版本需要安装intl扩展</font>");
