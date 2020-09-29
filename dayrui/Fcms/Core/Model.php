@@ -358,7 +358,6 @@ class Model {
             return $this->_return_error($this->table.': '.$rt['message']);
         }
 
-
         $this->_clear();
 
         return dr_return_data($id);
@@ -405,6 +404,11 @@ class Model {
             foreach ($this->param['where_in'] as $v) {
                 dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
+        }
+
+        // select字段
+        if ($this->param['select']) {
+            $builder->select(implode(',', $this->param['select']));
         }
 
         // 排序
@@ -459,6 +463,11 @@ class Model {
             foreach ($this->param['where_in'] as $v) {
                 dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v, null, false);
             }
+        }
+
+        // select字段
+        if ($this->param['select']) {
+            $builder->select(implode(',', $this->param['select']));
         }
 
         if (!$builder) {
@@ -791,6 +800,17 @@ class Model {
 
         return [$data, $total, $param];
 
+    }
+
+    // 条件
+    public function select($field) {
+
+        if (!$field) {
+            return $this;
+        }
+
+        $this->param['select'][] = $field;
+        return $this;
     }
 
     // 条件
