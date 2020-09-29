@@ -24,6 +24,7 @@ class Member_oauth extends \Phpcmf\Table
                 'name' => dr_lang('昵称'),
                 'isemoji' => 1,
                 'fieldname' => 'nickname',
+                'fieldtype' => 'Text',
             ),
             'uid' => array(
                 'ismain' => 1,
