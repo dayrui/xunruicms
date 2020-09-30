@@ -1914,8 +1914,8 @@ class View {
                     return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块');
                 }
 
-                $module = explode(',', $system['module']);
-                if (dr_count($module) < 2) {
+                $module_all = explode(',', $system['module']);
+                if (dr_count($module_all) < 2) {
                     return $this->_return($system['return'], 'module参数有误('.$system['module'].')：至少两个模块以上');
                 }
 
@@ -1937,7 +1937,7 @@ class View {
                 $form = [];
 
                 // 验证模块的有效性
-                foreach ($module as $m) {
+                foreach ($module_all as $m) {
                     if (!isset($modules[$m])) {
                         return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块('.$m.')');
                     }
@@ -1956,8 +1956,48 @@ class View {
                     if ($system['not_flag']) {
                         $mywhere.= " and `$table`.`id` NOT IN (".("select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$system['not_flag'].')' : '`flag`='.(int)$system['not_flag'])).")";
                     }
+                    $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m);
+                    $fields = $module['field'];
+                    // 栏目筛选
+                    if ($system['catid']) {
+                        $fwhere = [];
+                        if (strpos($system['catid'], ',') !== FALSE) {
+                            $temp = @explode(',', $system['catid']);
+                            if ($temp) {
+                                $catids = [];
+                                foreach ($temp as $i) {
+                                    $catids = $module['category'][$i]['child'] ? array_merge($catids, $module['category'][$i]['catids']) : array_merge($catids, array($i));
+                                }
+                                $catids && $fwhere[] = '`'.$table.'`.`catid` IN ('.implode(',', $catids).')';
+                            }
+                            unset($temp);
+                        } elseif ($module['category'][$system['catid']]['child']) {
+                            $catids = @explode(',', $module['category'][$system['catid']]['childids']);
+                            $fwhere[] = '`'.$table.'`.`catid` IN ('.$module['category'][$system['catid']]['childids'].')';
+                        } else {
+                            $fwhere[] = '`'.$table.'`.`catid` = '.(int)$system['catid'];
+                            $catids = [$system['catid']];
+                        }
+
+                        // 副栏目判断
+                        if (isset($fields['catids']) && $fields['catids']['fieldtype'] = 'Catids') {
+                            foreach ($catids as $c) {
+                                if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                                    // 兼容写法
+                                    $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
+                                } else {
+                                    // 高版本写法
+                                    $fwhere[] = "(`{$table}`.`catids` <>'' AND JSON_CONTAINS (`{$table}`.`catids`->'$[*]', '\"".intval($c)."\"', '$'))";
+                                }
+                            }
+                        }
+                        if ($fwhere) {
+                            $mywhere.= ' and '.(count($fwhere) == 1 ? $fwhere[0] : '('.implode(' OR ', $fwhere).')');
+                        }
+                        unset($fwhere);
+                        unset($catids);
+                    }
                     $form[] = 'SELECT '.$system['field'].',\''.$m.'\' AS mid FROM `'.$table.'` WHERE '.$mywhere;
-                    $fields = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m, 'field');
                 }
 
                 $sql_limit = $pages = '';
