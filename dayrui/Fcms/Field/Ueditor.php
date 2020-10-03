@@ -559,28 +559,30 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $js = \Phpcmf\Service::L('js_packer');
         $str.= $js->pack("
         <script type=\"text/javascript\">
-            var editorOption = {
-                ismobile: ".(dr_is_mobile() ? 1 : 0).", 
-                UEDITOR_HOME_URL: \"/api/ueditor/\",
-                UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
-                serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
-                lang: \"".SITE_LANGUAGE."\",
-                langPath: \"".ROOT_URL."api/language/\",
-                toolbars: [
-                    [ $tool ]
-                ],
-                initialContent:\"\",
-                pageBreakTag:\"_ueditor_page_break_tag_\",
-                initialFrameWidth: \"".$width."\",
-                initialFrameHeight: \"{$height}\",
-                initialStyle:\"body{font-size:14px}\",
-                autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
-                allowDivTransToP:".(!$field['setting']['option']['div2p'] ? 'true' : 'false').",
-                autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
-                charset:\"utf-8\",
-            };
-            var editor = new baidu.editor.ui.Editor(editorOption);
-            editor.render(\"dr_$name\");
+            $(function(){
+                var editorOption = {
+                    ismobile: ".(dr_is_mobile() ? 1 : 0).", 
+                    UEDITOR_HOME_URL: \"/api/ueditor/\",
+                    UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
+                    serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
+                    lang: \"".SITE_LANGUAGE."\",
+                    langPath: \"".ROOT_URL."api/language/\",
+                    toolbars: [
+                        [ $tool ]
+                    ],
+                    initialContent:\"\",
+                    pageBreakTag:\"_ueditor_page_break_tag_\",
+                    initialFrameWidth: \"".$width."\",
+                    initialFrameHeight: \"{$height}\",
+                    initialStyle:\"body{font-size:14px}\",
+                    autoFloatEnabled:".($field['setting']['option']['autofloat'] ? 'true' : 'false').",
+                    allowDivTransToP:".(!$field['setting']['option']['div2p'] ? 'true' : 'false').",
+                    autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
+                    charset:\"utf-8\",
+                };
+                var editor = new baidu.editor.ui.Editor(editorOption);
+                editor.render(\"dr_$name\");
+            });
         </script>
         ", 0);
 
