@@ -66,8 +66,8 @@ class Sms extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data');
-			if (strlen($data['content']) > 150) {
-			    exit($this->_json(0, dr_lang('短信内容过长，不得超过70个汉字')));
+			if (strlen($data['content']) < 10) {
+			    exit($this->_json(0, dr_lang('短信内容太短了')));
             }
 
 			$mobile = trim(str_replace(',,', ',', str_replace(array(PHP_EOL, chr(13), chr(10)), ',', $data['mobiles'])), ',');
