@@ -192,6 +192,19 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'template',
             WRITEPATH.'debugbar',
         ];
+        // 默认文件内容
+        $cache_index = '<!DOCTYPE html>
+<html>
+<head>
+    <title>403 Forbidden</title>
+</head>
+<body>
+
+<p>Directory access is forbidden.</p>
+
+</body>
+</html>
+';
 
         // 开发者模式下不删除temp目录
         if (!IS_DEV) {
@@ -202,7 +215,7 @@ class Cache extends \Phpcmf\Model
         foreach ($path as $p) {
             dr_dir_delete($p);
             @mkdir($p, 0777);
-            file_put_contents($p.'/index.html', 'error');
+            file_put_contents($p.'/index.html', $cache_index);
         }
 
         // 删除缓存保留24小时内的文件
@@ -225,7 +238,7 @@ class Cache extends \Phpcmf\Model
                     }
                     unlink($p.'/'.$file);
                 }
-                file_put_contents($p.'/index.html', 'error');
+                file_put_contents($p.'/index.html', $cache_index);
             }
         }
 
