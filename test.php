@@ -27,8 +27,6 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
     dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
 }
 
-dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
-
 // 扩展
 if (!function_exists('intl_is_failure')) {
     dr_echo_msg(0, "<font color=red>PHP版本需要安装intl扩展</font>");
@@ -51,10 +49,33 @@ if ($db['default']['database']) {
         } else {
             dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
         }
-        mysqli_close($mysqli);
     }
+    $version = mysqli_get_server_version($mysqli);
+    if ($version) {
+        if ($version > 50600) {
+            dr_echo_msg(1, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+        } else {
+            dr_echo_msg(0, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+        }
+    }
+    $rs = mysqli_query($mysqli, 'show engines');
+    $status = false;
+    if ($rs) {
+        foreach($rs as $row){
+            if($row['Engine'] == 'InnoDB' && ($row['Support'] == 'YES' || $row['Support'] == 'DEFAULT') ){
+                $status = true;
+            }
+        }
+    }
+    if (!$status) {
+        dr_echo_msg(0, 'MySQL不支持InnoDB存储引擎，无法安装');
+    }
+    $mysqli && mysqli_close($mysqli);
 }
 
+if (!$version) {
+    dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
+}
 
 $post = intval(@ini_get("post_max_size"));
 $file = intval(@ini_get("upload_max_filesize"));

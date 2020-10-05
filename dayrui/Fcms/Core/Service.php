@@ -97,9 +97,10 @@ class Service
             $context['trace'] = $message->getTraceAsString();
             $context['sql'] = \Phpcmf\Service::M()->get_sql_query();
             $context['url'] = FC_NOW_URL;
+            $context['user'] = dr_safe_replace($_SERVER['HTTP_USER_AGENT']);
             $context['referer'] = $_SERVER['HTTP_REFERER'];
 
-            return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
+            return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
         }
 
         return \Config\Services::logger(true)->log($level, $message, $context);
