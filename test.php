@@ -42,7 +42,7 @@ if ($db['default']['database']) {
     if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
         dr_echo_msg(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
     } elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
-        dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在');
+        dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在，请手动创建');
     } else {
         if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
             dr_echo_msg(1, 'MySQL数据连接正常');
@@ -59,16 +59,18 @@ if ($db['default']['database']) {
         }
     }
     $rs = mysqli_query($mysqli, 'show engines');
-    $status = false;
     if ($rs) {
+		$status = false;
         foreach($rs as $row){
             if($row['Engine'] == 'InnoDB' && ($row['Support'] == 'YES' || $row['Support'] == 'DEFAULT') ){
                 $status = true;
             }
         }
-    }
-    if (!$status) {
-        dr_echo_msg(0, 'MySQL不支持InnoDB存储引擎，无法安装');
+		if (!$status) {
+			dr_echo_msg(0, 'MySQL不支持InnoDB存储引擎，无法安装');
+		} else {
+			dr_echo_msg(1, 'MySQL支持InnoDB存储引擎');
+		}
     }
     $mysqli && mysqli_close($mysqli);
 }
