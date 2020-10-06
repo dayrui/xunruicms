@@ -605,18 +605,7 @@ class Table extends \Phpcmf\Common
         $url = $url.'&page={page}';
 
         // 分页输出样式
-        if (IS_ADMIN) {
-            $config = require CMSPATH.'Config/Apage.php';
-        } else {
-            $file = 'config/page/'.(\Phpcmf\Service::IS_PC() ? 'pc' : 'mobile').'/member.php';
-            if (is_file(WEBPATH.$file)) {
-                $config = require WEBPATH.$file;
-            } elseif (is_file(ROOTPATH.$file)) {
-                $config = require ROOTPATH.$file;
-            } else {
-                exit('无法找到分页配置文件【'.$file.'】');
-            }
-        }
+        $config = $this->_Page_Config();
 
         // 存储当前页URL
        \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
@@ -643,6 +632,7 @@ class Table extends \Phpcmf\Common
         if (isset($this->init['join_list'][0]) && $this->init['join_list'][0]) {
             $list_table.= ','.\Phpcmf\Service::M()->dbprefix($this->init['join_list'][0]);
         }
+
         // 返回数据
         $data = [
             'list' => $list,
@@ -659,6 +649,27 @@ class Table extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign($data);
 
         return [$this->_tpl_filename('list'), $data];
+    }
+
+    // 分页配置文件加载
+    protected function _Page_Config() {
+
+        if (IS_ADMIN) {
+            // 后台的分页配置
+            $config = require CMSPATH.'Config/Apage.php';
+        } else {
+            // 用户中心的分页配置
+            $file = 'config/page/'.(\Phpcmf\Service::IS_PC() ? 'pc' : 'mobile').'/member.php';
+            if (is_file(WEBPATH.$file)) {
+                $config = require WEBPATH.$file;
+            } elseif (is_file(ROOTPATH.$file)) {
+                $config = require ROOTPATH.$file;
+            } else {
+                exit('无法找到分页配置文件【'.$file.'】');
+            }
+        }
+
+        return $config;
     }
 
     // 获取模板文件名 name模板文件；fname为优先的模板
