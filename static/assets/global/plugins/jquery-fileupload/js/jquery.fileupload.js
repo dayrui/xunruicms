@@ -1762,7 +1762,7 @@ function fileupload_files_init(json) {
 
     // 浏览
     $('#fileupload_' +json.name+ ' .fileinput-unused' ).click(function(){
-        var c = $('#fileupload_' + json.name +' .files_row').length;
+        var c = $('#fileupload_' + json.name +'_files .files_row').length;
         var url = json.unused_url+"&ct="+c+"&rand=" + Math.random();
         layer.open({
             type: 2,

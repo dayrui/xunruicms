@@ -61,8 +61,6 @@
         <div class="portlet-body table-finecms-upload">
 
             {if $unused && $pp==0}
-
-
             <div role="presentation" class="table table-fc-upload table-striped clearfix">
                 <div class="files row">
                     {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
@@ -80,11 +78,9 @@
                             </div>
                         </div>
                     </div>
-
                     {/table}
                 </div>
             </div>
-
             {else}
             <div class="row">
                 <div class="col-md-12 text-center margin-bottom-20">
@@ -110,7 +106,7 @@
                             </div>
                             <div class="color-info bg-white c-font-14 sbold">
                                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline" style="padding-left:15px">
-                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
+                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
                                     <span></span>
                                 </label>
                             </div>
@@ -119,7 +115,6 @@
                     {/table}
                 </div>
             </div>
-
 
             {/if}
             <div class="row">

@@ -200,9 +200,9 @@ class File extends \Phpcmf\Common
             $p = (int)\Phpcmf\Service::L('input')->post('is_page');
             $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids1' : 'ids0');
             if (!$ids) {
-                $this->_json(0, dr_lang('至少要选择一个文件'));
+                $this->_json(0, dr_lang('没有选择文件'));
             } elseif (dr_count($ids) > $ct - $c) {
-                $this->_json(0, dr_lang('只能选择%s个文件，你已经选择%s个', $ct - $c, dr_count($ids)));
+                $this->_json(0, dr_lang('只能选择%s个文件，当前已选择%s个', $ct - $c, dr_count($ids)));
             }
             $list = [];
             $temp = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused')->where('uid', $this->uid)->where_in('id', $ids)->getAll();

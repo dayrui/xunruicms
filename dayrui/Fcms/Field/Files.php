@@ -307,7 +307,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'ext' => !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? 'null' : ' /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i',
             'size' => intval($field['setting']['option']['size']) * 1024 * 1024,
             'url' =>  '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'],
-            'unused_url' => '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'].'&ct='.$count,
+            'unused_url' => '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'],
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'],
             'tpl' => $tpl,
             'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
