@@ -50,6 +50,9 @@ if ($db['default']['database']) {
             dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
         }
     }
+    if (strpos($db['default']['database'], '.') !== false) {
+        dr_echo_msg(0,  '数据库名称（'.$db['default']['database'].'）不规范，不能存在.号');
+    }
     $version = mysqli_get_server_version($mysqli);
     if ($version) {
         if ($version > 50600) {
