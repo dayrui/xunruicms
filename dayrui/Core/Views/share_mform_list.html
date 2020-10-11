@@ -80,7 +80,7 @@
                 <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('排序')}</th>
                 {/if}
                 {loop $list_field $i $t}
-                <th {if $t.width} width="{$t.width}"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
+                <th {if $t.center} style="text-align:center"{/if} {if $t.width} width="{$t.width}"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
                 {/loop}
                 {if $is_verify}
                 <th style="text-align:center" width="70" class="{dr_sorting('status')}" name="status">{dr_lang('状态')}</th>
@@ -103,7 +103,7 @@
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url($uriprefix.'/order_edit', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
                 {/if}
                 {loop $list_field $i $tt}
-                <td>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
+                <td {if $tt.center} style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
                 {/list}
                 {if $is_verify}
                 <td style="text-align:center">{Function_list::status($t.status)}</td>

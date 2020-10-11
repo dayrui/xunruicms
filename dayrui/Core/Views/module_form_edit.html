@@ -78,6 +78,7 @@
                                 <th width="180"> {dr_lang('字段')} </th>
                                 <th width="150"> {dr_lang('名称')} </th>
                                 <th width="100"> {dr_lang('宽度')} </th>
+                                <th width="120"> {dr_lang('对其方式')} </th>
                                 <th> {dr_lang('回调方法')} </th>
                             </tr>
                             </thead>
@@ -93,6 +94,8 @@
                                 <td>{dr_lang($t.name)} ({$t.fieldname})</td>
                                 <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['setting']['list_field'][$t.fieldname]['name']) : $t.name}" /></td>
                                 <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{htmlspecialchars($data['setting']['list_field'][$t.fieldname]['width'])}" /></td>
+                                <td><input type="checkbox" name="data[setting][list_field][{$t.fieldname}][center]" {if $data['setting']['list_field'][$t.fieldname]['center']} checked{/if} value="1"  data-on-text="{dr_lang('居中')}" data-off-text="{dr_lang('默认')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                </td>
                                 <td> <div class="input-group" style="width:250px">
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>

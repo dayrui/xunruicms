@@ -121,7 +121,7 @@
                 <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('排序')}</th>
                 {/if}
                 {loop $list_field $i $t}
-                <th {if $t.width} width="{$t.width}"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
+                <th {if $t.width} width="{$t.width}"{/if} {if $t.center} style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
                 {/loop}
                 <th>{dr_lang('操作')}</th>
             </tr>
@@ -139,7 +139,7 @@
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url(APP_DIR.'/home/order_edit', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
                 {/if}
                 {loop $list_field $i $tt}
-                <td>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
+                <td {if $tt.center} style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
                 {/list}
 
                 <td style="overflow:visible">
