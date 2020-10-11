@@ -34788,8 +34788,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 }
 
 .badge-no,.badge-yes {
-    height: 20px;
-    padding: 3px 5px
+    height: 22px;padding: 4px;width: 22px;
 }
 
 .badge-no {

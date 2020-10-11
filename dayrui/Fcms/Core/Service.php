@@ -161,17 +161,22 @@ class Service
      */
     public static function L($name,  $namespace = '') {
 
-        list($classFile, $extendFile) = self::_get_class_file($name, $namespace, 'Library');
+        list($classFile, $extendFile, $appFile) = self::_get_class_file($name, $namespace, 'Library');
 
-        $_cname = md5($classFile.$extendFile);
+        $_cname = md5($classFile.$extendFile.$appFile);
         $className = ucfirst($name);
 
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
             require_once $classFile;
             // 自定义继承类
             if ($extendFile && is_file($extendFile)) {
-                require $extendFile;
-                $newClassName = $namespace ? '\\Phpcmf\\Library\\'.ucfirst($namespace).'\\'.$className : '\\My\\Library\\'.$className;
+                if ($namespace && is_file($appFile)) {
+                    require $appFile;
+                    $newClassName = '\\Phpcmf\\Library\\'.ucfirst($namespace).'\\'.$className;
+                } else {
+                    require $extendFile;
+                    $newClassName = '\\My\\Library\\'.$className;
+                }
             } else {
                 $newClassName = '\\Phpcmf\\Library\\'.$className;
                 // 多个应用引用同一个类名称时的区别
@@ -202,17 +207,22 @@ class Service
             return static::model();
         }
 
-        list($classFile, $extendFile) = self::_get_class_file($name, $namespace, 'Model');
+        list($classFile, $extendFile, $appFile) = self::_get_class_file($name, $namespace, 'Model');
 
-        $_cname = md5($classFile.$extendFile);
+        $_cname = md5($classFile.$extendFile.$appFile);
         $className = ucfirst($name);
 
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
             require_once $classFile;
             // 自定义继承类
             if ($extendFile && is_file($extendFile)) {
-                require $extendFile;
-                $newClassName = $namespace ? '\\Phpcmf\\Model\\'.ucfirst($namespace).'\\'.$className : '\\My\\Model\\'.$className;
+                if ($namespace && is_file($appFile)) {
+                    require $appFile;
+                    $newClassName = '\\Phpcmf\\Model\\'.ucfirst($namespace).'\\'.$className;
+                } else {
+                    require $extendFile;
+                    $newClassName = '\\My\\Model\\'.$className;
+                }
             } else {
                 $newClassName = '\\Phpcmf\\Model\\'.$className;
                 // 多个应用引用同一个类名称时的区别
@@ -260,15 +270,23 @@ class Service
 
         // 自定义继承类文件
         $extendFile = MYPATH.$class.'/'.$className.'.php';
+
+        // 当前是app时优先考虑本级继承目录文件
+        if ($namespace) {
+            $appFile = dr_get_app_dir($namespace).($class == 'Library' ? 'Librarie' : $class ).'s/'.$className.'.php';
+        } else {
+            $appFile = '';
+        }
+
         if (!is_file($extendFile) && $namespace) {
             // 当前是app时优先考虑本级继承目录文件
-            $extendFile = dr_get_app_dir($namespace).($class == 'Library' ? 'Librarie' : $class ).'s/'.$className.'.php';
+            $extendFile = $appFile;
         }
 
         if (!is_file($classFile)) {
             // 相对于APP目录
             if ($namespace) {
-                $classFile = dr_get_app_dir($namespace).($class == 'Library' ? 'Librarie' : $class ).'s/'.$className.'.php';
+                $classFile = $appFile;
                 $extendFile = '';
             } else if (is_file($extendFile)) {
                 $classFile = $extendFile;
@@ -280,7 +298,7 @@ class Service
             }
         }
 
-        return [$classFile, $extendFile];
+        return [$classFile, $extendFile, $appFile];
     }
 
     // 错误输出

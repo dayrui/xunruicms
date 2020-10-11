@@ -224,7 +224,7 @@ class Function_list
     function save_text_value($value, $param = [], $data = [], $field = []) {
 
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
-        $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'after='; //after是回调函数
+        $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
         $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars($value).'" onblur="dr_ajax_save(this.value, \''.$url.'\', \''.$field['fieldname'].'\')">';
 
         \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
@@ -235,9 +235,46 @@ class Function_list
     // 实时存储选择值
     function save_select_value($value, $param = [], $data = [], $field = []) {
 
-        $oid = 'checkbox_'.$field['fieldname'].'_'.$data['id'];
+        //$oid = 'checkbox_'.$field['fieldname'].'_'.$data['id'];
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
-        $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'after='; //after是回调函数
+        $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&name='.$field['fieldname'].'&id='.$data['id'].'&after='; //after是回调函数
+
+        $html = '<a href="javascript:;" onclick="dr_ajax_list_open_close(this, \''.$url.'\');" value="'.$value.'" class="badge badge-'.($value ? "yes" : "no").'"><i class="fa fa-'.($value ? "check" : "times").'"></i></a>';
+        if (!$this->select_js) {
+            $html.= '<script>function dr_ajax_list_open_close(e, url) {
+            var obj = $(e);
+            var val = 0;
+            if (obj.attr("value") == 1) {
+                val = 0;
+            } else {
+                val = 1;
+            }
+            url+="&value="+val;
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function (json) {
+                    if (json.code == 1) {
+                        if (val == 0) {
+                            obj.attr(\'class\', \'badge badge-no\');
+                            obj.html(\'<i class="fa fa-times"></i>\');
+                        } else {
+                            obj.attr(\'class\', \'badge badge-yes\');
+                            obj.html(\'<i class="fa fa-check"></i>\');
+                        }
+                        obj.attr("value", val);
+                    }
+                    dr_tips(json.code, json.msg);
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+                }
+            });
+}</script> ';
+            $this->select_js = 1;
+        }
+        /*
         $html = '<input type="checkbox" id="'.$oid.'" class="make-switch" data-size="small" data-on-color="success" '.($value ? 'checked' : '').' data-on-text="<i class=\'fa fa-check\'></i>" data-off-text="<i class=\'fa fa-times\'></i>">
         <script>
         $("#'.$oid.'").bootstrapSwitch({
@@ -251,7 +288,7 @@ class Function_list
         }
     })
         </script>
-        ';
+        ';*/
 
         \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
 
