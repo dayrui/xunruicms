@@ -243,7 +243,7 @@ class Category extends \Phpcmf\Model
                 $ispost = 0;
                 foreach ($t['catids'] as $i) {
                     // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
-                    if (isset($data[$i]) && $data[$i]['child'] == 0) {
+                    if (isset($cat[$i]) && $cat[$i]['child'] == 0) {
                         $ispost = 1; // 可以发布 表示此栏目可用
                         break;
                     }
