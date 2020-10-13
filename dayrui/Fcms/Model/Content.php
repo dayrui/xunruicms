@@ -568,7 +568,7 @@ class Content extends \Phpcmf\Model {
         $post['flag'] = \Phpcmf\Service::L('input')->post('flag');
 
         $save = [
-            'uid' => $this->uid,
+            'uid' => intval($data[1]['uid']),
             'catid' => intval($data[1]['catid']),
             'content' => dr_array2string($post),
             'result' => '',
