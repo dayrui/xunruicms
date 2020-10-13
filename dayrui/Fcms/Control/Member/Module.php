@@ -522,7 +522,7 @@ class Module extends \Phpcmf\Table
                                     ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
                                     ->where('uid', $this->uid)
                                     ->where('catid', $data[1]['catid'])
-                                    ->countAllResults() >= $day_post) {
+                                    ->countAllResults() >= $total_post) {
                                 return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
                             }
                             // 金币验证
