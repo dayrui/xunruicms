@@ -28,6 +28,7 @@ class Html extends \Phpcmf\Common
                 ]
             ),
             'module' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
+            'pagesize' => 10,
         ]);
         \Phpcmf\Service::V()->display('html_index.html');
     }
@@ -86,7 +87,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
-            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
+            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'), 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
     }
@@ -98,6 +99,7 @@ class Html extends \Phpcmf\Common
             'date_to' => \Phpcmf\Service::L('input')->get('date_to'),
             'date_form' => \Phpcmf\Service::L('input')->get('date_form'),
             'id_to' => \Phpcmf\Service::L('input')->get('id_to'),
+            'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'),
             'id_form' => \Phpcmf\Service::L('input')->get('id_form')
         ]);
     }

@@ -52,7 +52,6 @@
             <div class="portlet-body">
                 <form id="myform{$i}">
                     <div class="form-body">
-
                         {if !$mod.share}
                         <div class="form-group " style="border-bottom: 1px dashed #eef1f5; padding-bottom: 10px;">
                             <label><button type="button" onclick="dr_admin_menu_ajax('/index.php?s={$mod.dirname}&c=html&m=index', 1)" class="btn blue"> <i class="fa fa-home"></i> {dr_lang('生成模块首页')} </button></label>
@@ -61,22 +60,28 @@
                         </div>
                         {/if}
                         <div class="form-group">
+                            <label>{dr_lang('每页生成数量')}</label>
+                            <div>
+                                <label><input type="text" placeholder="{dr_lang('建议不要太多')}" class="form-control" value="{$pagesize}" name="pagesize"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>{dr_lang('按内容ID范围')}</label>
+                            <div class="input-group">
+                                <div class="input-group  input-daterange " >
+                                    <input type="text" placeholder="{dr_lang('按ID开始')}" class="form-control" value="{$param.id_form}" name="id_form">
+                                    <span class="input-group-addon"> {dr_lang('到')} </span>
+                                    <input type="text" placeholder="{dr_lang('按ID结束')}" class="form-control" value="{$param.id_to}" name="id_to">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>{dr_lang('按发布时间范围')}</label>
                             <div class="input-group">
                                 <div class="input-group date-picker input-daterange " data-date="" data-date-format="yyyy-mm-dd">
                                     <input type="text" placeholder="{dr_lang('按发布时间范围')}" class="form-control" value="{$param.date_form}" name="date_form">
                                     <span class="input-group-addon"> {dr_lang('到')} </span>
                                     <input type="text" placeholder="{dr_lang('按发布时间范围')}" class="form-control" value="{$param.date_to}" name="date_to">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>{dr_lang('按ID范围')}</label>
-                            <div class="input-group">
-                                <div class="input-group  input-daterange " >
-                                    <input type="text" placeholder="{dr_lang('按ID范围')}" class="form-control" value="{$param.id_form}" name="id_form">
-                                    <span class="input-group-addon"> {dr_lang('到')} </span>
-                                    <input type="text" placeholder="{dr_lang('按ID范围')}" class="form-control" value="{$param.id_to}" name="id_to">
                                 </div>
                             </div>
                         </div>

@@ -15,7 +15,7 @@
 class Html
 {
     private $webpath;
-    private $psize = 50; // 每页生成多少条
+    private $psize = 20; // 每页生成多少条
 
     // 栏目的数量统计
     public function get_category_data($app, $cat) {
@@ -242,7 +242,7 @@ class Html
 
         $name = 'show-'.$app.'-html-file';
 
-        $arr = array_chunk($data, $this->psize);
+        $arr = array_chunk($data, $param['pagesize'] ? $param['pagesize'] : $this->psize);
         $count = dr_count($arr);
         foreach ($arr as $i => $t) {
             \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
