@@ -383,7 +383,7 @@ function dr_upload_temp_path() {
 /**
  * 内容文章显示内链
  */
-function dr_content_link($tags, $content, $num = 0) {
+function dr_content_link($tags, $content, $num = 0, $blank = 1) {
 
     if (!$tags || !$content) {
         return $content;
@@ -399,7 +399,7 @@ function dr_content_link($tags, $content, $num = 0) {
             ];
             $content = @preg_replace(
                 '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                '<a href="'.$t['url'].'" target="_blank">'.$t['name'].'</a>',
+                '<a href="'.$t['url'].'"'.($blank ? ' target="_blank"' : '').'>'.$t['name'].'</a>',
                 $content,
                 $num ? $num : -1
             );
@@ -417,16 +417,8 @@ function dr_neilian($content, $blank = 1, $num = 1) {
         return '';
     }
 
-    $tags = \Phpcmf\Service::L('cache')->get('tag-'.SITE_ID);
-    if ($tags) {
-        foreach ($tags as $t) {
-            $content = @preg_replace(
-                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                '<a href="'.$t['url'].'" '.($blank ? 'target="_blank"' : '').'>'.$t['name'].'</a>',
-                $content,
-                $num ? $num : -1
-            );
-        }
+    if (dr_is_app('tag')) {
+        return \Phpcmf\Service::M('tag', 'tag')->dr_neilian($content, $blank, $num);
     }
 
     return $content;
@@ -4084,13 +4076,8 @@ if (! function_exists('dr_get_keywords')) {
         $rt = [];
 
         //tag数据
-        $tags = \Phpcmf\Service::L('cache')->get('tag-' . $siteid);
-        if ($tags) {
-            foreach ($tags as $t) {
-                if (strpos($kw, $t['name']) !== false) {
-                    $rt[] = $t['tags']; // 找到了
-                }
-            }
+        if (dr_is_app('tag')) {
+            $rt = \Phpcmf\Service::M('tag', 'tag')->get_keywords($kw);
         }
 
         if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
