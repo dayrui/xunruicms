@@ -393,13 +393,9 @@ function dr_content_link($tags, $content, $num = 0, $blank = 1) {
 
     foreach ($tags as $name => $url) {
         if ($name && $url) {
-            $t = [
-                'url' => $url,
-                'name' => $name,
-            ];
             $content = @preg_replace(
-                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($t['name'])).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                '<a href="'.$t['url'].'"'.($blank ? ' target="_blank"' : '').'>'.$t['name'].'</a>',
+                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
+                '<a href="'.$url.'"'.($blank ? ' target="_blank"' : '').'>'.$name.'</a>',
                 $content,
                 $num ? $num : -1
             );
@@ -418,7 +414,7 @@ function dr_neilian($content, $blank = 1, $num = 1) {
     }
 
     if (dr_is_app('tag')) {
-        return \Phpcmf\Service::M('tag', 'tag')->dr_neilian($content, $blank, $num);
+        return \Phpcmf\Service::M('tag', 'tag')->neilian($content, $blank, $num);
     }
 
     return $content;
