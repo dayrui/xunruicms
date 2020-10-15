@@ -152,9 +152,7 @@ function config ($name, $getShared = true) {
  * 函数是否被启用
  */
 if (!function_exists('locale_set_default')) {
-	function locale_set_default($a) {
-		
-	}
+	function locale_set_default($a) { }
 }
 
 /*
