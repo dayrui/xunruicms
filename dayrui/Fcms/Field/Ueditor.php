@@ -334,8 +334,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 											$att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
 											if ($att['code']) {
 												// 归档成功
-												$img = $att['code'];
                                                 $value = str_replace($img, $rt['data']['url'], $value);
+                                                $img = $att['code'];
 											}
 										}
 									//}
@@ -375,8 +375,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
                                         if ($att['code']) {
                                             // 归档成功
-                                            $img = $att['code'];
                                             $value = str_replace($img, $rt['data']['url'], $value);
+                                            $img = $att['code'];
                                         }
                                     }
                                 }
