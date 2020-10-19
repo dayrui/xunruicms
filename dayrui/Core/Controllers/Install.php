@@ -312,13 +312,6 @@ $db[\'default\']	= [
                                 require MYPATH.'Config/Install.php';
                             }
 
-                            // 创建后台默认菜单
-                            \Phpcmf\Service::M('Menu')->init('admin');
-                            \Phpcmf\Service::M('Menu')->init('admin_min');
-                            \Phpcmf\Service::M('Menu')->init('member');
-
-                            // 完成之后更新缓存
-                            \Phpcmf\Service::M('cache')->update_cache();
                             $errorlog = file_get_contents(WRITEPATH.'install.error');
                             if ($errorlog && count($errorlog) > 10) {
                                 // 出现错误了
@@ -326,6 +319,7 @@ $db[\'default\']	= [
                             } else {
                                 // 安装完成
                                 file_put_contents($this->lock, time());
+                                file_put_contents(WRITEPATH.'install.test', time());
                                 @unlink(WRITEPATH.'install.info');
                                 @unlink(WRITEPATH.'install.error');
                             }

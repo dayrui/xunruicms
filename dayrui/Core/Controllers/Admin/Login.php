@@ -14,6 +14,17 @@ class Login extends \Phpcmf\Common
 		$url = pathinfo(\Phpcmf\Service::L('input')->get('go') ? urldecode(\Phpcmf\Service::L('input')->get('go')) : \Phpcmf\Service::L('Router')->url('home'));
 		$url = $url['basename'] ? $url['basename'] :\Phpcmf\Service::L('Router')->url('home/index');
 
+		// 避免安装时的卡顿超时
+		if (is_file(WRITEPATH.'install.test')) {
+            // 创建后台默认菜单
+            \Phpcmf\Service::M('Menu')->init('admin');
+            \Phpcmf\Service::M('Menu')->init('admin_min');
+            \Phpcmf\Service::M('Menu')->init('member');
+            // 完成之后更新缓存
+            \Phpcmf\Service::M('cache')->update_cache();
+            unlink(WRITEPATH.'install.test');
+        }
+
 		if (IS_AJAX_POST) {
             $sn = 0;
             // 回调钩子
