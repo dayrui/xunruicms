@@ -383,7 +383,7 @@ class Form
             return dr_return_data(0, dr_lang('账号名存在非法字符'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
-            return dr_return_data(0, dr_lang('账号长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['userlen']), ['field' => 'username']);
+            return dr_return_data(0, dr_lang('账号长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlen'], mb_strlen($value)), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
             // 放在最后一次比较
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $a) {
@@ -408,7 +408,7 @@ class Form
             return dr_return_data(0, dr_lang('密码格式不正确').\Phpcmf\Service::C()->member_cache['config']['pwdpreg'], ['field' => 'password']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['pwdlen']) {
-            return dr_return_data(0, dr_lang('密码长度不能小于%s位', \Phpcmf\Service::C()->member_cache['config']['pwdlen']), ['field' => 'password']);
+            return dr_return_data(0, dr_lang('密码长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['pwdlen'], mb_strlen($value)), ['field' => 'password']);
         }
 
         return dr_return_data(1, 'ok');
