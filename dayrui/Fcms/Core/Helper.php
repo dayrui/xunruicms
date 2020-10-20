@@ -414,7 +414,10 @@ function dr_neilian($content, $blank = 1, $num = 1) {
     }
 
     if (dr_is_app('tag')) {
-        return \Phpcmf\Service::M('tag', 'tag')->neilian($content, $blank, $num);
+        $obj = \Phpcmf\Service::M('tag', 'tag');
+        if (method_exists($obj, 'neilian')) {
+            $obj->neilian($content, $blank, $num);
+        }
     }
 
     return $content;
@@ -4073,7 +4076,10 @@ if (! function_exists('dr_get_keywords')) {
 
         //tag数据
         if (dr_is_app('tag')) {
-            $rt = \Phpcmf\Service::M('tag', 'tag')->get_keywords($kw);
+            $obj = \Phpcmf\Service::M('tag', 'tag');
+            if (method_exists($obj, 'get_keywords')) {
+                $rt = $obj->get_keywords($kw);
+            }
         }
 
         if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
