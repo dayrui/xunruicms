@@ -73,6 +73,9 @@
         clipFinish: function(dataURL) {
             $('#dr_file').val(dataURL);
             dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{FC_NOW_URL}&r={rand(0, 9999)}');
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                window.applicationCache.update();
+            }
         }
     });
     function clear_avatar() {
@@ -83,6 +86,9 @@
             success: function (json) {
                 dr_cmf_tips(json.code, json.msg);
                 setTimeout("window.location.href = '{FC_NOW_URL}&r={rand(0, 9999)}'", 2000);
+                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                    window.applicationCache.update();
+                }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)

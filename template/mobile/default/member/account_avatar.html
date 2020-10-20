@@ -91,6 +91,9 @@
         clipFinish: function(dataURL) {
             $('#dr_file').val(dataURL);
             dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_member_url('account/avatar', ['r'=>rand(0, 9999)])}');
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                window.applicationCache.update();
+            }
         }
     });
 </script>
