@@ -1772,7 +1772,7 @@ function dr_file_preview_html($value, $target = 0) {
     } elseif ($ext == 'mp4') {
         $value = dr_file($value);
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_video(\''.$value.'\');';
-        return '<a href="'.$url.'"><img src="'.$value.'"></a>';
+        return '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/mp4.png'.'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
         $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.dr_file($value).'\');';
