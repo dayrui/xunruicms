@@ -546,6 +546,18 @@ abstract class Common extends \CodeIgniter\Controller
      */
     public function _json($code, $msg, $data = []){
 
+        // 如果是来自api判断回调
+        if (IS_API_HTTP) {
+            $call = \Phpcmf\Service::L('input')->request('api_call_function');
+            if ($call) {
+                $call = dr_safe_replace($call);
+                if (!method_exists(\Phpcmf\Service::L('http'), $call)) {
+                    echo dr_array2string(dr_return_data(0, '回调方法(' . $call . ')未定义'));exit;
+                }
+                $data = \Phpcmf\Service::L('http')->$call($data);
+            }
+        }
+
         echo dr_array2string(dr_return_data($code, $msg, $data));exit;
     }
 

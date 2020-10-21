@@ -595,7 +595,7 @@ function dr_mod_value(...$get) {
 
 // 格式化编辑器内容数据
 function dr_ueditor_html($value, $title = '') {
-    return str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value));
+    return UEDITOR_IMG_TITLE ? str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value)) : htmlspecialchars_decode($value);
 }
 
 // 获取栏目数据及自定义字段
@@ -3028,7 +3028,7 @@ function dr_strcut($string, $length = 100, $dot = '...') {
         $strcut = mb_substr($string, 0, $length);
     } else {
         $n = $tn = $noc = 0;
-        $string = str_replace(array('&amp;', '&quot;', '&lt;', '&gt;'), array('&', '"', '<', '>'), $string);
+        $string = str_replace(['&amp;', '&quot;', '&lt;', '&gt;'], ['&', '"', '<', '>'], $string);
         while ($n < strlen($string)) {
             $t = ord($string[$n]);
             if ($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {
@@ -3067,7 +3067,7 @@ function dr_strcut($string, $length = 100, $dot = '...') {
         }
 
         $strcut = substr($string, 0, $n);
-        $strcut = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
+        $strcut = str_replace(['&', '"', '<', '>'], ['&amp;', '&quot;', '&lt;', '&gt;'], $strcut);
     }
 
     $strcut == $string && $dot = '';

@@ -251,7 +251,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 			}
 		}
 		// 自定义路由模式
-		if ($is_404 && is_file(ROOTPATH.'config/router.php')) {
+		if (is_file(ROOTPATH.'config/router.php')) {
 			require ROOTPATH.'config/router.php';
 		}
 		// 说明是404
@@ -262,7 +262,6 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 			$_GET['uri'] = $uri;
 		}
 	}
-
 }
 
 // API接口项目标识 放到后面是为了识别api 的伪静态

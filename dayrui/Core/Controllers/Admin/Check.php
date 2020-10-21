@@ -12,6 +12,7 @@ class Check extends \Phpcmf\Common
 
         '01' => '文件上传检测',
         '02' => 'PHP环境检测',
+        '15' => '服务器环境检测',
         '03' => '目录权限检测',
         '04' => '后台入口名称检测',
         '05' => '数据库权限检测',
@@ -24,7 +25,6 @@ class Check extends \Phpcmf\Common
         '12' => 'HTTPS检测',
         '13' => '应用插件兼容性检测',
         '14' => '移动端检测',
-        '15' => '服务器环境检测',
 
     ];
 
@@ -172,11 +172,26 @@ class Check extends \Phpcmf\Common
                     $this->halt('网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
                 } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
                     $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html', 0);
-                } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/home/index.html')) {
+                }
+
+                // 必备模板检测
+                $rt = [];
+                foreach (['msg.html', '404.html'] as $tt) {
+                    if (!is_file(TPLPATH.'pc/2'.SITE_TEMPLATE.'/home/'.$tt)) {
+                        $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/'.$tt;
+                    }
+                }
+                if ($rt) {
+                    $this->halt(implode('<br>', $rt), 0);
+                }
+
+                // 移动端模板检测
+                if (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/home/index.html')) {
                     $this->halt('网站前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
                 } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/index.html')) {
                     $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
                 }
+
                 break;
 
             case '07':

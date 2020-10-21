@@ -186,14 +186,6 @@ class View {
 
         // 如果是来自api就不解析模板，直接输出变量
         if (IS_API_HTTP) {
-            $call = \Phpcmf\Service::L('input')->request('api_call_function');
-            if ($call) {
-                $call = dr_safe_replace($call);
-                if (method_exists(\Phpcmf\Service::L('http'), $call)) {
-                    \Phpcmf\Service::C()->_json(1, 'view', \Phpcmf\Service::L('http')->$call($this->_options));
-                }
-                \Phpcmf\Service::C()->_json(0, '回调方法('.$call.')未定义');
-            }
             \Phpcmf\Service::C()->_json(1, 'view', $this->_options);
         }
 
