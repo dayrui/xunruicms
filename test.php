@@ -29,7 +29,7 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
 
 // 扩展
 if (!function_exists('intl_is_failure')) {
-    dr_echo_msg(0, "<font color=red>PHP版本需要安装intl扩展</font>");
+    dr_echo_msg(0, "PHP版本需要安装intl扩展");
 }
 
 require WEBPATH.'config/database.php';
