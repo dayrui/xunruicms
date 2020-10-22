@@ -1974,11 +1974,11 @@ function dr_file_map($source_dir) {
  * 数据返回统一格式
  */
 function dr_return_data($code, $msg = '', $data = []) {
-    return array(
-        'code' => $code,
-        'msg' => $msg,
-        'data' => $data,
-    );
+    return [
+        'code'  => $code,
+        'msg'   => $msg,
+        'data'  => $data,
+    ];
 }
 
 /**

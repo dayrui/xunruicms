@@ -73,7 +73,7 @@ class Register extends \Phpcmf\Common
             } elseif (empty($post['password'])) {
                 $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
             } elseif ($post['password'] != $post['password2']) {
-                $this->_json(0, dr_lang('确认密码不正确'), ['field' => 'password2']);
+                $this->_json(0, dr_lang('确认密码不一致'), ['field' => 'password2']);
             } else {
                 // 注册之前的钩子
                 \Phpcmf\Hooks::trigger('member_register_before', $post);

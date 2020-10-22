@@ -570,7 +570,7 @@ abstract class Common extends \CodeIgniter\Controller
         !$callback && $callback = 'callback';
 
         if (IS_API_HTTP) {
-            echo dr_array2string(dr_return_data($code, $msg, $data));exit;
+            $this->_json($code, $msg, $data);
         } else {
             echo $callback.'('.dr_array2string(dr_return_data($code, $msg, $data)).')';exit;
         }
