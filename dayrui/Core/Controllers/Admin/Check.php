@@ -177,7 +177,7 @@ class Check extends \Phpcmf\Common
                 // 必备模板检测
                 $rt = [];
                 foreach (['msg.html', '404.html'] as $tt) {
-                    if (!is_file(TPLPATH.'pc/2'.SITE_TEMPLATE.'/home/'.$tt)) {
+                    if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/'.$tt)) {
                         $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/'.$tt;
                     }
                 }
