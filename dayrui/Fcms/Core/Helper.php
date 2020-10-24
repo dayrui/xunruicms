@@ -416,7 +416,7 @@ function dr_neilian($content, $blank = 1, $num = 1) {
     if (dr_is_app('tag')) {
         $obj = \Phpcmf\Service::M('tag', 'tag');
         if (method_exists($obj, 'neilian')) {
-            $obj->neilian($content, $blank, $num);
+            return $obj->neilian($content, $blank, $num);
         }
     }
 

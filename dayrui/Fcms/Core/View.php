@@ -874,7 +874,10 @@ class View {
                         $pid = 0;
                     } else {
                         $pid = isset($ids[$param['pid']]) ? $ids[$param['pid']] : 0;
-                        !$pid && is_numeric($param['pid']) && \Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id', $param['pid']) && $pid = intval($param['pid']);
+                        if (!$pid && is_numeric($param['pid'])
+                            && \Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id', $param['pid'])) {
+                            $pid = intval($param['pid']);
+                        }
                     }
                 }
 
