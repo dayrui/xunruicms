@@ -550,11 +550,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (IS_API_HTTP) {
             $call = \Phpcmf\Service::L('input')->request('api_call_function');
             if ($call) {
-                $call = dr_safe_replace($call);
-                if (!method_exists(\Phpcmf\Service::L('http'), $call)) {
-                    echo dr_array2string(dr_return_data(0, '回调方法(' . $call . ')未定义'));exit;
-                }
-                $data = \Phpcmf\Service::L('http')->$call($data);
+                $data = \Phpcmf\Service::M('http', 'httpapi')->json(dr_safe_replace($call), $code, $msg, $data);
             }
         }
 
