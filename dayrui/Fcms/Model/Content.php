@@ -863,6 +863,10 @@ class Content extends \Phpcmf\Model {
     // 删除数据,放入回收站
     public function delete_to_recycle($ids, $note = '无') {
 
+        if (!$ids) {
+            return dr_return_data(1);
+        }
+
         // 格式化
         foreach ($ids as $id) {
 
@@ -876,6 +880,19 @@ class Content extends \Phpcmf\Model {
                 return dr_return_data(0, dr_lang('内容不存在: '.$id));
             } elseif (dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($row['catid'], $row['uid'])) {
                 return dr_return_data(0, dr_lang('当前角色无权限管理此栏目'));
+            }
+
+            if ($row['link_id'] == '-1') {
+                // 表示作为母内容
+                // 查询其他栏目的内容
+                $ort = $this->table($this->mytable)->where('link_id', $id)->getAll();
+                if ($ort) {
+                    $_ids = [];
+                    foreach ($ort as $n) {
+                        $_ids[] = $n['id'];
+                    }
+                    $this->delete_to_recycle($_ids, $note);
+                }
             }
 
             $row['url'] = dr_url_prefix($row['url'], $this->dirname, $this->siteid, 0);
