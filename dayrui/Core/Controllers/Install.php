@@ -197,10 +197,10 @@ $db[\'default\']	= [
                 ]);
 
                 break;
-
+				
             case 3:
-
-                $data = dr_string2array(file_get_contents(WRITEPATH.'install.info'));
+				$page = intval($_GET['page']);
+				$data = dr_string2array(file_get_contents(WRITEPATH.'install.info'));
                 $error = '';
                 file_put_contents(WRITEPATH.'install.error', '');
                 if (empty($data)) {
@@ -212,10 +212,63 @@ $db[\'default\']	= [
                         // 链接失败,尝试创建数据库
                         $error = '数据库连接失败，请返回前一页重新执行';
                     } else {
+                        // 导入数据结构
+						if ($page) {
+							$sql = file_get_contents(CMSPATH.'Config/Install.sql');
+							$sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
+							$rows = $this->query_rows($sql, 10);
+							$key = $page - 1;
+							if (isset($rows[$key]) && $rows[$key]) {
+								// 安装本次结构
+								foreach($rows[$key] as $query){
+									if (!$query) {
+										continue;
+									}
+									$ret = '';
+									$queries = explode('SQL_FINECMS_EOL', trim($query));
+									foreach($queries as $query) {
+										$ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query;
+									}
+									if (!$ret) {
+										continue;
+									}
+									if (!$this->db->simpleQuery($ret)) {
+										$rt = $this->db->error();
+										$error = '**************************************************************************'
+											.PHP_EOL.$ret.PHP_EOL.$rt['message'].PHP_EOL;
+										$error.= '**************************************************************************'.PHP_EOL;
+										file_put_contents(WRITEPATH.'install.error', $error.PHP_EOL, FILE_APPEND);
+										$this->_json(0, 'SQL执行错误：'.$rt['message']);
+									}
+								}
+								$this->_json(1, '正在执行：'.dr_strcut($ret, 70), ['page' => $page + 1]);
+								
+							} else {
+								$this->_json(1, '执行完成，即将安装数据信息...', ['page' => 99]);
+							}
+						}
+                       
+                    }
+                }
+
+				\Phpcmf\Service::V()->assign([
+					'do_url' => 'index.php?c=install&m=index&step=3',
+				]);
+                break;	
+
+            case 4:
+
+                $data = dr_string2array(file_get_contents(WRITEPATH.'install.info'));
+                if (empty($data)) {
+                    $error = '临时数据获取失败，请返回前一页重新执行';
+                } else {
+                    $this->db = \Config\Database::connect('default');
+                    // 检查数据库是否存在
+                    if (!$this->db->connect(false)) {
+                        // 链接失败,尝试创建数据库
+                        $error = '数据库连接失败，请返回前一页重新执行';
+                    } else {
                         // 导入默认安装数据
-                        $sql = file_get_contents(CMSPATH.'Config/Install.sql');
-                        $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
-                        $this->query($sql);
                         $errorlog = file_get_contents(WRITEPATH.'install.error');
                         if (strlen($errorlog) > 10) {
                             // 出现错误了
@@ -336,20 +389,21 @@ $db[\'default\']	= [
             'step' => $step,
             'error' => $error,
             'pre_url' => 'index.php?c=install&m=index&step='.($step-1),
-            'next_url' => 'index.php?c=install&m=index&step='.($step+1),
+            'next_url' => 'index.php?c=install&m=index&step='.($step+1).'&is_install_db='.intval($_GET['is_install_db']),
         ]);
         \Phpcmf\Service::V()->display('install/'.$step.'.html');
         exit;
     }
 
-
-    // 数据执行
-    private function query($sql) {
+	// 数据分组
+    private function query_rows($sql, $num = 0) {
 
         if (!$sql) {
             return '';
         }
 
+		$rt = [];
+		$sql = dr_format_create_sql($sql);
         $sql_data = explode(';SQL_FINECMS_EOL', trim(str_replace(array(PHP_EOL, chr(13), chr(10)), 'SQL_FINECMS_EOL', $sql)));
 
         foreach($sql_data as $query){
@@ -364,7 +418,35 @@ $db[\'default\']	= [
             if (!$ret) {
                 continue;
             }
-            if (!$this->db->simpleQuery(dr_format_create_sql($ret))) {
+            $rt[] = $ret;
+        }
+		
+		return $num ? array_chunk($rt, $num) : $rt;
+    }
+
+    // 数据执行
+    private function query($sql) {
+
+        if (!$sql) {
+            return '';
+        }
+
+		$sql = dr_format_create_sql($sql);
+        $sql_data = explode(';SQL_FINECMS_EOL', trim(str_replace(array(PHP_EOL, chr(13), chr(10)), 'SQL_FINECMS_EOL', $sql)));
+
+        foreach($sql_data as $query){
+            if (!$query) {
+                continue;
+            }
+            $ret = '';
+            $queries = explode('SQL_FINECMS_EOL', trim($query));
+            foreach($queries as $query) {
+                $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query;
+            }
+            if (!$ret) {
+                continue;
+            }
+            if (!$this->db->simpleQuery($ret)) {
                 $rt = $this->db->error();
                 $error = '**************************************************************************'
                     .PHP_EOL.$ret.PHP_EOL.$rt['message'].PHP_EOL;
