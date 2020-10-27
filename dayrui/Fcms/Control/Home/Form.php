@@ -93,7 +93,7 @@ class Form extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
-            'rt_url' => $this->form['setting']['rt_url'] ? $this->form['setting']['rt_url'] : dr_now_url(),
+            'rt_url' => $this->form['setting']['rt_url'] ? '' : dr_now_url(),
             'is_post_code' => $this->is_post_code,
         ]);
         \Phpcmf\Service::V()->display($tpl);

@@ -332,7 +332,7 @@ class Mform extends \Phpcmf\Table
      * */
     protected function _Call_Post($data) {
 
-        $data['url'] = $this->form['setting']['rt_url'] ? str_replace('{id}', $data[1]['id'], $this->form['setting']['rt_url']) : '';
+        $data['url'] = $this->form['setting']['rt_url'] ? str_replace(['{id}', '{cid}'], [$data[1]['id'],  $data[1]['cid']], $this->form['setting']['rt_url']) : '';
         if ($data[1]['status']) {
             // 挂钩点
             \Phpcmf\Hooks::trigger('module_form_post_after', $data);
