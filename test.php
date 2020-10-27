@@ -27,10 +27,6 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
     dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
 }
 
-// 扩展
-if (!function_exists('intl_is_failure')) {
-    dr_echo_msg(0, "PHP版本需要安装intl扩展");
-}
 
 require WEBPATH.'config/database.php';
 $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
