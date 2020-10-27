@@ -59,7 +59,13 @@
                             </div>
                         </div>
 
-
+                        <div class="form-group dr_search">
+                            <label class="col-md-2 control-label">{dr_lang('最大搜索结果数量')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[{$i}][max]" value="{if $m['setting']['search']['max']}{$m['setting']['search']['max']}{else}0{/if}" ></label>
+                                <span class="help-block">{dr_lang('搜索结果最大数据量限制，0表示不限制结果数量')}</span>
+                            </div>
+                        </div>
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('最小关键字长度')}</label>
                             <div class="col-md-9">

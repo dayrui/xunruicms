@@ -1862,6 +1862,10 @@ class View {
                                 return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                             }
                         }
+                        // 最大搜索量
+                        if ($system['action'] == 'search' && $module['setting']['search']['max']) {
+                            $total = min($total, $module['setting']['search']['max']);
+                        }
                         $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
                         $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
                     } elseif ($system['num']) {
