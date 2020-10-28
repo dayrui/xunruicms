@@ -730,7 +730,7 @@ class Model {
     }
 
     // 分页
-    public function limit_page($size = SYS_ADMIN_PAGESIZE) {
+    public function limit_page($size = SYS_ADMIN_PAGESIZE, $where = '') {
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
         $total = (int)\Phpcmf\Service::L('input')->get('total');
@@ -743,6 +743,7 @@ class Model {
 
         if ($size > 0 && !$total) {
             $select	= $this->db->table($this->table)->select('count(*) as total');
+            $where && $select->where($where);
             $param = $this->_limit_page_where($select, $param);
             $query = $select->get();
             if (!$query) {
@@ -780,6 +781,7 @@ class Model {
             }
         }
 
+        $where && $select->where($where);
         $param = $this->_limit_page_where($select, $param);
         if ($size > 0) {
             $select->limit($size, $size * ($page - 1));

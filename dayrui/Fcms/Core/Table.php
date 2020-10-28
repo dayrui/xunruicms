@@ -22,6 +22,7 @@ class Table extends \Phpcmf\Common
     protected $is_module_index; // 是否支持模块索引
     protected $is_category_data_field; // 是否支持模块栏目模型字段
 
+    protected $list_where; // 列表数据时的条件
     protected $edit_where; // 修改数据时的条件
     protected $delete_where; // 删除数据时的条件
     protected $is_diy_where_list; // 是否支持自定义参数查询的条件
@@ -589,7 +590,7 @@ class Table extends \Phpcmf\Common
         }
 
         // 查询数据结果
-        list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size);
+        list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size, $this->list_where);
         $p && $param = $p + $param;
         $sql = \Phpcmf\Service::M()->get_sql_query();
 
