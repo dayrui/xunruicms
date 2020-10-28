@@ -160,7 +160,6 @@ class Content extends \Phpcmf\Common
 
     }
 
-
     // 提取缩略图
     protected function _Thumb() {
 
@@ -216,6 +215,70 @@ class Content extends \Phpcmf\Common
             if ($row && $row['content'] && preg_match("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", htmlspecialchars_decode($row['content']), $m)) {
                 \Phpcmf\Service::M()->db->table($table)->where('id', $t['id'])->update(array(
                     'thumb' => str_replace(['"', '\''], '', $m[3])
+                ));
+            }
+        }
+
+        $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
+    }
+
+    // 提取描述信息
+    public function desc_index() {
+
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 100; // 每页处理的数量
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+        $table = $this->content_model->mytable;
+
+        $where = 'status = 9';
+        $catid = \Phpcmf\Service::L('input')->get('catid');
+
+        $url = \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
+
+        // 获取生成栏目
+        if ($catid) {
+            $cat = [];
+            foreach ($catid as $i) {
+                if ($i) {
+                    $cat[] = intval($i);
+                    if ($this->module['category'][$i]['child']) {
+                        $cat = dr_array2array($cat, explode(',', $this->module['category'][$i]['childids']));
+                    }
+                    $url.= '&catid[]='.intval($i);
+                }
+            }
+            $cat && $where.= ' AND catid IN ('.implode(',', $cat).')';
+        }
+
+        $nums = max(1, \Phpcmf\Service::L('input')->get('nums'));
+        $keyword = \Phpcmf\Service::L('input')->get('keyword');
+        $keyword && $where.= ' AND description=""';
+        $url.= '&nums='.$nums;
+        $url.= '&keyword='.$keyword;
+
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page='.($page+1));
+        }
+
+        $tpage = ceil($total / $psize); // 总页数
+
+        // 更新完成
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        foreach ($data as $t) {
+            $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$t['tableid'])->select('content')->where('id', $t['id'])->get()->getRowArray();
+            if ($row && $row['content']) {
+                \Phpcmf\Service::M()->db->table($table)->where('id', $t['id'])->update(array(
+                    'description' => trim(dr_strcut(dr_clearhtml(dr_code2html($row['content'])), $nums))
                 ));
             }
         }

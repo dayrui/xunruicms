@@ -3,20 +3,71 @@
     <p><a href="javascript:dr_update_cache_all();">{dr_lang('操作之前请更新下全站缓存')}</a></p>
 </div>
 
-<div class="portlet light bordered ">
-    <div class="portlet-title">
-        <div class="caption">
-            <i class="fa fa-refresh font-dark"></i>
-            <span class="caption-subject font-dark  "> {dr_lang('内容更新')}</span>
+
+
+<div class="row finecms-tool-row">
+
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-th-large font-dark"></i>
+                    <span class="caption-subject font-dark  "> {dr_lang('提取描述信息')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form id="descform">
+                    {$form}
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            {$select}
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-3" style="text-align:left">
+                                    <div class="form-group" style="margin-bottom:5px">
+                                        <label> {dr_lang('提取字数')} </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><input type="text" name="nums" value="100" class="form-control"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" style="text-align:left">
+                                    <div class="form-group" style="margin-bottom:5px">
+                                        <label> {dr_lang('提取范围')} </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="checkbox" name="keyword" value="1" checked data-on-text="{dr_lang('只提取空描述的内容')}" data-off-text="{dr_lang('重新提取全部内容')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="text-align:right;padding-top:25px">
+                                    <button type="button" onclick="dr_submit_todo('descform', '{SELF}?s={APP_DIR}&c=content&m=desc_index')" class="btn blue"> <i class="fa fa-tag"></i> {dr_lang('立即执行')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light bordered ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-refresh font-dark"></i>
+                    <span class="caption-subject font-dark  "> {dr_lang('内容更新')}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+
+                <label style="margin-right:20px"><button type="button" onclick="dr_submit_todo('thumbform', '{SELF}?s={APP_DIR}&c=content&m=url_index')" class="btn blue"> <i class="fa fa-refresh"></i> {dr_lang('批量更新模块的内容URL')} </button></label>
+
+            </div>
         </div>
     </div>
-    <div class="portlet-body">
-
-        <label style="margin-right:20px"><button type="button" onclick="dr_submit_todo('thumbform', '{SELF}?s={APP_DIR}&c=content&m=url_index')" class="btn blue"> <i class="fa fa-th-large"></i> {dr_lang('更新内容URL')} </button></label>
-
-    </div>
 </div>
-
 <div class="row finecms-tool-row">
     <div class="col-md-6">
         <div class="portlet light bordered">
@@ -90,6 +141,8 @@
         </div>
 
     </div>
+
+
 </div>
 
 <div class="portlet light bordered">
