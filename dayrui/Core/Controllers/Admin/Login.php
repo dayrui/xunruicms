@@ -16,6 +16,7 @@ class Login extends \Phpcmf\Common
 
 		// 避免安装时的卡顿超时
 		if (is_file(WRITEPATH.'install.test')) {
+            set_time_limit(0);
             // 创建后台默认菜单
             \Phpcmf\Service::M('Menu')->init('admin');
             \Phpcmf\Service::M('Menu')->init('admin_min');

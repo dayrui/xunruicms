@@ -113,11 +113,6 @@ class Install extends \Phpcmf\Common
                     $is_oem = isset($ls['oem']) && $ls['oem'] ? 1 : 0;
                 }
 
-                // 判断是否是7.3.4,不进行测试数据安装
-                if (PHP_VERSION == '7.3.4') {
-                    $is_oem = 0;
-                }
-
                 if (IS_AJAX_POST) {
 
                     $data = $_POST['data'];

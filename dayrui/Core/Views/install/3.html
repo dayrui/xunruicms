@@ -7,17 +7,16 @@
             <span class="caption-subject font-green">正在安装数据结构</span>
         </div>
     </div>
-    <div class="portlet-body " style="padding:0 50px;">
+    <div class="portlet-body " style="">
         <div class="scroller" style="height:300px" data-rail-visible="1">
 
-
             {if $error}
-            <div class="scroller" style="height:300px" data-rail-visible="1">
+            <div class="scroller" style="height:300px;" data-rail-visible="1">
                 {nl2br($error)}
             </div>
             {else}
-			<div class="scroller" style="height:300px" data-rail-visible="1" id="dr_check_html">
-                
+			<div class="scroller" style="height:300px; font-size: 12px;" data-rail-visible="1" id="dr_check_html">
+                <p>正在执行安装程序</p>
             </div>
             <script>
 			$(function(){
@@ -34,9 +33,8 @@
 						document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
 
 						if (json.code == 0) {
-							$('#dr_check_button').attr('disabled', false);
-							$('#dr_check_button').html('<i class="fa fa-refresh"></i> 重新对比');
-							dr_tips(0, '发现异常');
+                            $('#dr_check_html').append("<p style='color:red'>出现故障："+json.msg+"</p>");
+                            return;
 						} else {
 							if (json.data.page == 99 ) {
 								// 完成 
@@ -51,7 +49,8 @@
 						}
 					},
 					error: function(HttpRequest, ajaxOptions, thrownError) {
-						dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+						dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                        $('#dr_check_html').append("<p style='color:red'>出现故障："+HttpRequest.responseText+"</p>");
 					}
 				});
 			}
