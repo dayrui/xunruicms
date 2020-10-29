@@ -2593,7 +2593,7 @@ class View {
             if ($this->_page_used) {
                 $debug.= '<p>分页功能：已开启</p>';
                 $debug.= '<p>当前页码：'.$page.'</p>';
-                $debug.= '<p>总页数码：'.$nums.'</p>';
+                $debug.= '<p>总页数量：'.$nums. ($nums == 1 ? '（数据量未达到分页数据，因此只有一页）' : '').'</p>';
                 $debug.= '<p>每页数量：'.$pagesize.'</p>';
                 $debug.= '<p>分页地址：'.str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d', '{page}'], '页码', $this->_page_urlrule).'</p>';
             } else {
