@@ -2412,17 +2412,26 @@ class View {
                         $where[$i]['value'] = intval($t['value']);
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
-                        $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $t['value']);
-                        if ($data) {
-                            if ($data['child']) {
-                                $where[$i]['adj'] = 'IN';
-                                $where[$i]['value'] = $data['childids'];
-                            } else {
-                                $where[$i]['value'] = intval($data['ii']);
+                        $arr = explode('|', $t['value']);
+                        $link_where = [];
+                        foreach ($arr as $value) {
+                            $data = dr_linkage($myfield[$t['name']]['setting']['option']['linkage'], $value);
+                            if ($data) {
+                                if ($data['child']) {
+                                    $link_where[] = $where[$i]['name'].' IN ('.$data['childids'].')';
+                                } else {
+                                    $link_where[] = $where[$i]['name'].' = '.intval($data['ii']);
+                                }
                             }
+                        }
+                        if ($link_where) {
+                            $where[$i]['adj'] = 'SQL';
+                            $where[$i]['value'] = '('.implode(' OR ', array_unique($link_where)).')';
                         } else {
-                            // 没找到
-                            $where[$i]['value'] = '联动单选字段('.$t['name'].')没有找到对应的联动菜单['.$myfield[$t['name']]['setting']['option']['linkage'].']的别名值['.$t['value'].']';
+                            // 没有找到就当做普通数据库查询
+                            $where[$i]['value'] = $t['value'];
+                            //$where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
+                            //$where[$i]['value'] = '联动单选字段('.$t['name'].')没有找到对应的联动菜单['.$myfield[$t['name']]['setting']['option']['linkage'].']的别名值['.$t['value'].']';
                         }
                     }
                 }
