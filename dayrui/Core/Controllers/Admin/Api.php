@@ -895,10 +895,10 @@ class Api extends \Phpcmf\Common
             }
 
             if (!preg_match($data['code'], $data['text'])) {
-                $this->_json(0, dr_lang('正则表达式验证结果：%s', '未通过'));
+                $this->_json(0, dr_lang('正则表达式验证结果：%s', dr_lang('未通过')));
             }
 
-            $this->_json(1, dr_lang('正则表达式验证结果：%s', '通过'));
+            $this->_json(1, dr_lang('正则表达式验证结果：%s', dr_lang('通过')));
         }
 
         //\Phpcmf\Service::V()->assign([]);

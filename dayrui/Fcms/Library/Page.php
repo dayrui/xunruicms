@@ -137,6 +137,12 @@ class Page {
     protected $total_anchor_class = '';
     protected $total_remove_anchor = false;
 
+    protected $compel_page = false;
+    protected $compel_prev_page = false;
+    protected $compel_next_page = false;
+    protected $compel_last_page = false;
+    protected $compel_first_page = false;
+
 	/**
 	 * First tag close
 	 *
@@ -361,7 +367,7 @@ class Page {
         $num_pages = (int) ceil($this->total_rows / $this->per_page);
 
         // Is there only one page? Hm... nothing more to do here then.
-        if ($num_pages === 1)
+        if ($num_pages === 1 && !$this->compel_page)
         {
             return '';
         }
@@ -429,7 +435,7 @@ class Page {
 		}
 
         // Render the "First" link.
-        if ($this->first_link !== FALSE && $this->cur_page > ($this->num_links + 1))
+        if ($this->first_link !== FALSE && ($this->cur_page > ($this->num_links + 1) || $this->compel_first_page))
         {
             // Take the general parameters, and squeeze this pagination-page attr in for JS frameworks.
             $attributes = sprintf(' %s="%d"', $this->data_page_attr, 1);
@@ -444,7 +450,7 @@ class Page {
         }
 
         // Render the "Previous" link.
-        if ($this->prev_link !== FALSE && $this->cur_page !== 1)
+        if ($this->prev_link !== FALSE && ($this->cur_page !== 1 || $this->compel_prev_page))
         {
             $i = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
 
@@ -507,7 +513,7 @@ class Page {
         }
 
         // Render the "next" link
-        if ($this->next_link !== FALSE && $this->cur_page < $num_pages)
+        if ($this->next_link !== FALSE && ($this->cur_page < $num_pages || $this->compel_next_page))
         {
             $i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
 
@@ -523,7 +529,7 @@ class Page {
         }
 
         // Render the "Last" link
-        if ($this->last_link !== FALSE && ($this->cur_page + $this->num_links) < $num_pages)
+        if ($this->last_link !== FALSE && (($this->cur_page + $this->num_links) < $num_pages || $this->compel_last_page))
         {
             $i = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
 
