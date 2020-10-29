@@ -96,19 +96,19 @@ class Member_setting_notice extends \Phpcmf\Common
                 'data' => [
                     'mobile' => [
                         'name' => dr_lang('短信和消息'),
-                        'code' => htmlentities(file_get_contents($path.'config/notice/mobile/'.$file.'.html'),ENT_COMPAT,'UTF-8'),
+                        'code' => is_file($path.'config/notice/mobile/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/mobile/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
                         'file' => '/config/notice/mobile/'.$file.'.html',
                         'help' => 'javascript:dr_help(479);', //'http://help.phpcmf.net/479.html',
                     ],
                     'email' => [
                         'name' => dr_lang('邮件'),
-                        'code' => htmlentities(file_get_contents($path.'config/notice/email/'.$file.'.html'),ENT_COMPAT,'UTF-8'),
+                        'code' => is_file($path.'config/notice/email/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/email/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
                         'file' => '/config/notice/email/'.$file.'.html',
                         'help' => 'javascript:dr_help(480);', //'http://help.phpcmf.net/480.html',
                     ],
                     'weixin' => [
                         'name' => dr_lang('微信'),
-                        'code' => htmlentities(file_get_contents($path.'config/notice/weixin/'.$file.'.html'),ENT_COMPAT,'UTF-8'),
+                        'code' => is_file($path.'config/notice/weixin/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/weixin/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
                         'file' => '/config/notice/weixin/'.$file.'.html',
                         'help' => 'javascript:dr_help(481);', //'http://help.phpcmf.net/481.html',
                     ],
