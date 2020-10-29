@@ -882,6 +882,29 @@ class Api extends \Phpcmf\Common
         }
     }
 
+    // 测试正则表达式
+    public function test_pattern() {
+
+        if (IS_POST) {
+
+            $data = \Phpcmf\Service::L('input')->post('data');
+            if (!$data['text']) {
+                $this->_json(0, dr_lang('测试文字不能为空'));
+            } elseif (!$data['code']) {
+                $this->_json(0, dr_lang('正则表达式不能为空'));
+            }
+
+            if (!preg_match($data['code'], $data['text'])) {
+                $this->_json(0, dr_lang('正则表达式验证结果：%s', '未通过'));
+            }
+
+            $this->_json(1, dr_lang('正则表达式验证结果：%s', '通过'));
+        }
+
+        //\Phpcmf\Service::V()->assign([]);
+        \Phpcmf\Service::V()->display('api_pattern.html');exit;
+    }
+
     // 简化模式切换
     public function admin_min() {
 

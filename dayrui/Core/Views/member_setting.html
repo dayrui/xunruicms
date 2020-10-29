@@ -129,16 +129,26 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('密码强度（正则）')}</label>
                             <div class="col-md-9">
-                                <input class="form-control " type="text" name="data[config][pwdpreg]" value="{$data.config.pwdpreg}"/>
-                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的强度验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
+                                <div class="input-group ">
+                                    <input class="form-control" type="text" name="data[config][pwdpreg]" value="{$data.config.pwdpreg}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_iframe_show('{dr_lang('正则表达式')}', '{dr_url('api/test_pattern')}')" type="button">{dr_lang('测试')}</button>
+                                        </span>
+                                </div>
+                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的强度验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9]+$/')}</span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('账号规则（正则）')}</label>
                             <div class="col-md-9">
-                                <input class="form-control " type="text" name="data[register][preg]" value="{$data.register.preg}"/>
-                                <span class="help-block">{dr_lang('针对前端注册时的账号格式验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
+                                <div class="input-group ">
+                                    <input class="form-control" type="text" name="data[register][preg]" value="{$data.register.preg}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_iframe_show('{dr_lang('正则表达式')}', '{dr_url('api/test_pattern')}')" type="button">{dr_lang('测试')}</button>
+                                        </span>
+                                </div>
+                                <span class="help-block">{dr_lang('针对前端注册时的账号格式验证，可以设置自定义正则表达式，例如数字正则表达式格式：/^[0-9]+$/')}</span>
                             </div>
                         </div>
 

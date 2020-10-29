@@ -101,9 +101,13 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('正则验证')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" name="data[setting][validate][pattern]" value="{$data['setting']['validate']['pattern']}"  />
-
-                                    <span class="help-block">{dr_lang('此选项部分字段不可用，例如数字正则表达式格式：/^[0-9.-]+$/')}</span>
+                                    <div class="input-group ">
+                                        <input class="form-control" type="text" name="data[setting][validate][pattern]" value="{$data['setting']['validate']['pattern']}" >
+                                        <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_iframe_show('{dr_lang('正则表达式')}', '{dr_url('api/test_pattern')}')" type="button">{dr_lang('测试')}</button>
+                                        </span>
+                                    </div>
+                                    <span class="help-block">{dr_lang('此选项部分字段不可用，例如数字正则表达式格式：/^[0-9]+$/')}</span>
                                 </div>
                             </div>
                             <div class="form-group">
