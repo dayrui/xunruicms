@@ -2729,7 +2729,7 @@ class View {
         foreach ($this->_load_file_tips as $i => $t) {
             $rt[] = [
                 'name' => $i,
-                'tips' => str_replace(TPLPATH, 'TPLPATH/', $t),
+                'tips' => $t,
             ];
         }
 
