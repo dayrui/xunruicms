@@ -135,6 +135,14 @@ class Urlrule extends \Phpcmf\Table
                 }
             }
         }
+        $site = \Phpcmf\Service::M('Site')->config(SITE_ID);
+        if ($site['client']) {
+            foreach ($site['client'] as $t) {
+                if ($t['domain']) {
+                    $domain[$t['domain']] = dr_lang('%s终端域名', $t['name']);
+                }
+            }
+        }
 
         \Phpcmf\Service::V()->assign([
             'name' => $name,
