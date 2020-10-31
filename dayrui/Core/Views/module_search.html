@@ -58,6 +58,14 @@
                                 <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" style="padding-top: 10px;">{dr_lang('关键词匹配方式')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[{$i}][complete]" value="1" {if $m['setting']['search']['complete']}checked{/if} data-on-text="{dr_lang('完整匹配')}" data-off-text="{dr_lang('模糊匹配')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('完整匹配是关键词绝对相同才视为匹配；模糊匹配是关键词包含其中才视为匹配')}</span>
+                            </div>
+                        </div>
 
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('最大搜索结果数量')}</label>

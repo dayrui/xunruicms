@@ -87,11 +87,11 @@ class Search extends \Phpcmf\Model {
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && in_array($t, $field)) {
-                            $temp[] = '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
+                            $temp[] = $module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$search_keyword.'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
                         }
                     }
                 }
-                $where[] = $temp ? '('.implode(' OR ', $temp).')' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"';
+                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
             }
             // 模块字段过滤
             foreach ($mod_field as $name => $field) {
