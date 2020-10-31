@@ -561,7 +561,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $str.= $js->pack("
         <script type=\"text/javascript\">
             $(function(){
-                var editorOption = {
+                var editor_{$name} = new baidu.editor.ui.Editor({
                     ismobile: ".(dr_is_mobile() ? 1 : 0).", 
                     UEDITOR_HOME_URL: \"/api/ueditor/\",
                     UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
@@ -580,9 +580,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     allowDivTransToP:".(!$field['setting']['option']['div2p'] ? 'true' : 'false').",
                     autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
                     charset:\"utf-8\",
-                };
-                var editor = new baidu.editor.ui.Editor(editorOption);
-                editor.render(\"dr_$name\");
+                });
+                editor_{$name}.render(\"dr_$name\");
+                
             });
         </script>
         ", 0);
