@@ -10,6 +10,11 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('基本设置')} </a>
                 </li>
+                {if $diy_tpl}
+                <li class=" {if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-cog"></i> {dr_lang('自定义设置')} </a>
+                </li>
+                {/if}
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('后台显示字段')} </a>
                 </li>
@@ -20,6 +25,14 @@
         </div>
         <div class="portlet-body">
             <div class="tab-content">
+
+                {if $diy_tpl}
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
+                        {load $diy_tpl}
+                    </div>
+                </div>
+                {/if}
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">

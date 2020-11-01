@@ -1075,7 +1075,10 @@ class Member extends \Phpcmf\Model
         // 归属用户组
         $this->insert_group($uid, $groupid, 0);
 
+        // 组合字段信息
         $data = $member + $data;
+        $data['oauth'] = $oauth;
+        $data['groupid'] = $groupid;
 
         // 审核判断
         if (!$data['is_verify']) {

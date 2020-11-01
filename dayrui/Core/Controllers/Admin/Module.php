@@ -487,6 +487,7 @@ class Module extends \Phpcmf\Common
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
 			'field' => dr_list_field_value($data['setting']['list_field'], $sys_field, $field),
+            'diy_tpl' => is_file(dr_get_app_dir($this->dir).'Views/diy_'.$data['table'].'.html') ? dr_get_app_dir($this->dir).'Views/diy_'.$data['table'].'.html' : '',
         ]);
         \Phpcmf\Service::V()->display('module_form_edit.html');
     }
