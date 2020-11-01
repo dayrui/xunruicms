@@ -210,10 +210,12 @@ class Content extends \Phpcmf\Common
         }
 
         $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
-        foreach ($data as $t) {
-            $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$t['tableid'])->select('content')->where('id', $t['id'])->get()->getRowArray();
+        foreach ($data as $row) {
+            if (!$this->module['field']['content']['ismain']) {
+                $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$row['tableid'])->select('content')->where('id', $row['id'])->get()->getRowArray();
+            }
             if ($row && $row['content'] && preg_match("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", htmlspecialchars_decode($row['content']), $m)) {
-                \Phpcmf\Service::M()->db->table($table)->where('id', $t['id'])->update(array(
+                \Phpcmf\Service::M()->db->table($table)->where('id', $row['id'])->update(array(
                     'thumb' => str_replace(['"', '\''], '', $m[3])
                 ));
             }
@@ -274,10 +276,12 @@ class Content extends \Phpcmf\Common
         }
 
         $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
-        foreach ($data as $t) {
-            $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$t['tableid'])->select('content')->where('id', $t['id'])->get()->getRowArray();
+        foreach ($data as $row) {
+            if (!$this->module['field']['content']['ismain']) {
+                $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$row['tableid'])->select('content')->where('id', $row['id'])->get()->getRowArray();
+            }
             if ($row && $row['content']) {
-                \Phpcmf\Service::M()->db->table($table)->where('id', $t['id'])->update(array(
+                \Phpcmf\Service::M()->db->table($table)->where('id', $row['id'])->update(array(
                     'description' => trim(dr_strcut(dr_clearhtml(dr_code2html($row['content'])), $nums))
                 ));
             }

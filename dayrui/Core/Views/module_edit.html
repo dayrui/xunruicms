@@ -39,6 +39,13 @@
                         </div>
                         {/if}
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('提取内容描述字数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[setting][desc_limit]" value="{if $data['setting']['desc_limit']}{intval($data['setting']['desc_limit'])}{else}100{/if}" ></label>
+                                <span class="help-block">{dr_lang('在内容中提取描述信息的最大字数限制')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('后台默认排序')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-xlarge" type="text" name="data[setting][order]" value="{if $data['setting']['order']}{htmlspecialchars($data['setting']['order'])}{else}displayorder DESC,updatetime DESC{/if}" ></label>

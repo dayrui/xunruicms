@@ -759,8 +759,15 @@ class Content extends \Phpcmf\Model {
 
         isset($data[1]['uid']) && $data[0]['uid'] = (int)$data[1]['uid'];
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
-        !$data[1]['description'] && $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), 100));
 
+        if (!$data[1]['description']) {
+            $limit = \Phpcmf\Service::C()->module['setting']['desc_limit'] ? \Phpcmf\Service::C()->module['setting']['desc_limit'] : 100;
+            if (isset($data[0]['content']) && $data[0]['content']) {
+                $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), $limit));
+            } elseif (isset($data[1]['content']) && $data[1]['content']) {
+                $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[1]['content']), $limit));
+            }
+        }
         if (isset($data[1]['keywords']) && $data[1]['keywords']) {
 			// 不要自动获取关键词，容易卡顿，引起发布延迟
             //!$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
@@ -782,54 +789,7 @@ class Content extends \Phpcmf\Model {
     // 同步到微博
     public function sync_weibo($data) {
 
-        $weibo = \Phpcmf\Service::C()->get_cache('site', $this->siteid, 'weibo', 'module', $this->dirname);
-        if (!$weibo || !$weibo['use']) {
-            return dr_return_data(0, dr_lang('当前模块没有启用微博分享'));
-        }
 
-        // 合并data
-        isset($data[1]) && $data = $data[1] + $data[0];
-
-        if (!$data['id']) {
-            return dr_return_data(0, dr_lang('内容不存在'));
-        }
-
-        $save = [
-            'url' => dr_url_prefix($data['url'], $this->dirname, $this->siteid, 0),
-            'image' => [],
-            'content' => '',
-        ];
-
-        // 图片
-        if ($weibo['image'] && isset($data[$weibo['image']]) && $data[$weibo['image']]) {
-            // 自定义图片
-            // 判断是否是多图
-            $arr = dr_string2array($data[$weibo['image']]);
-            if (is_array($arr) && $arr) {
-                if ($arr['file']) {
-                    foreach ($arr['file'] as $c) {
-                        $save['image'] = dr_get_file($c);
-                        break;
-                    }
-                }
-            } else {
-                $save['image'] = dr_get_file($data[$weibo['image']]);
-            }
-        } else {
-            $save['image'] = dr_get_file($data['thumb']);
-        }
-
-        // 微博内容
-        $save['content'] = dr_clearhtml($weibo['content'] && isset($data[$weibo['content']]) && $data[$weibo['content']] ? $data[$weibo['content']] : $data['description']);
-
-        // 加入队列并执行
-        $rt = \Phpcmf\Service::M('cron')->add_cron($this->siteid, 'weibo', $save);
-        if (!$rt['code']) {
-            log_message('error', '任务注册失败：'.$rt['msg']);
-            return dr_return_data(0, '任务注册失败：'.$rt['msg']);
-        }
-
-        return $rt;
     }
 
     // 同步到其他栏目
