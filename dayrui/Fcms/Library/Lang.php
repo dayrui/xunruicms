@@ -40,8 +40,8 @@ class Lang {
             return $this->lang[$text];
         } else {
             // 加载自定义语言文件接口
-            if (function_exists('dr_translate_lang')) {
-                $rt = call_user_func_array('dr_translate_lang', [
+            if (SITE_LANGUAGE != 'zh-cn' && function_exists('my_translate_lang')) {
+                $rt = call_user_func_array('my_translate_lang', [
                     $text,
                     SITE_LANGUAGE,
                 ]);
