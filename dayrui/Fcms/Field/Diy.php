@@ -96,7 +96,7 @@ class Diy extends \Phpcmf\Library\A_Field {
         }
 
         // 字段显示名称
-        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
         // 表单附加参数
         $attr = isset($field['setting']['validate']['formattr']) && $field['setting']['validate']['formattr'] ? $field['setting']['validate']['formattr'] : '';

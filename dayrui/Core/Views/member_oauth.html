@@ -8,7 +8,7 @@
                 <select name="field" class="form-control">
                     {loop $field $t}
                     {if dr_is_admin_search_field($t)}
-                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
                     {/if}
                     {/loop}
                 </select>
@@ -38,7 +38,7 @@
                     </label>
                 </th>
                 {/if}
-                <th style="text-align:center" width="70" class="{dr_sorting('id')}" name="id">头像</th>
+                <th style="text-align:center" width="70" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
                 <th style="text-align:center" width="70" class="{dr_sorting('oauth')}" name="oauth">{dr_lang('平台')}</th>
                 <th width="280"  class="{dr_sorting('nickname')}" name="nickname">{dr_lang('昵称')}</th>
                 <th width="170" class="{dr_sorting('expire_at')}" name="expire_at">{dr_lang('绑定时间')}</th>

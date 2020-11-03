@@ -219,7 +219,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             }
 
             // 字段显示名称
-            $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+            $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
             // 字段提示信息
             $tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
@@ -306,11 +306,11 @@ class Pays extends \Phpcmf\Library\A_Field  {
             $str = '
             <div class="mt-radio-inline">
                 <label class="mt-radio">
-                    <input type="radio" onclick="$(\'#dr_field_pay\').show();$(\'#dr_field_pays\').hide();" name="is_field_pay" value="0" '.(!$is_field_pay ? 'checked' : '').'> 单一价格
+                    <input type="radio" onclick="$(\'#dr_field_pay\').show();$(\'#dr_field_pays\').hide();" name="is_field_pay" value="0" '.(!$is_field_pay ? 'checked' : '').'> '.dr_lang('单一价格').'
                     <span></span>
                 </label>
                 <label class="mt-radio">
-                    <input type="radio" onclick="$(\'#dr_field_pays\').show();$(\'#dr_field_pay\').hide();" name="is_field_pay" value="1" '.($is_field_pay ? 'checked' : '').'> 组合价格
+                    <input type="radio" onclick="$(\'#dr_field_pays\').show();$(\'#dr_field_pay\').hide();" name="is_field_pay" value="1" '.($is_field_pay ? 'checked' : '').'> '.dr_lang('组合价格').'
                     <span></span>
                 </label>
             </div>
@@ -325,8 +325,8 @@ class Pays extends \Phpcmf\Library\A_Field  {
             </div>
             <div id="dr_field_pays" style="display:'.($is_field_pay ? 'block' : 'none').';">
                 <p>
-                    <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> 添加属性</button></label>
-                    <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> 更新属性</button></label>
+                    <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
+                    <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
                 </p>
                 <div class="portlet light bordered">
                     

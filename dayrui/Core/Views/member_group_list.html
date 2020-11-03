@@ -44,7 +44,7 @@
                 {/if}
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url($uriprefix.'/order_edit', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
                 <td style="text-align:center"> {$t.id} </td>
-                <td>{$t.name}</td>
+                <td>{dr_lang($t.name)}</td>
                 <td style="text-align:center" >{if $t.unit}{SITE_SCORE}{else}{dr_lang('人民币')}{/if}</td>
                 <td>{if $t.level && !$t.setting.level.auto}--{else}{$t.price}{/if}</td>
                 <td style="text-align:center">

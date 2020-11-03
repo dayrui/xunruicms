@@ -44,7 +44,7 @@
                         <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('min_menu/use_edit', ['id'=>$t.id])}', 1);" class="badge badge-{if $t.hidden}no{else}yes{/if}"><i class="fa fa-{if $t.hidden}times{else}check{/if}"></i></a>
                     </td>
                     <td>
-                        {$t.spacer} <a href="javascript:dr_iframe('edit', '{dr_url('min_menu/edit', ['id'=>$t.id])}', '600px');"><i class="{$t.icon}"></i> {$t.name}</a>
+                        {$t.spacer} <a href="javascript:dr_iframe('edit', '{dr_url('min_menu/edit', ['id'=>$t.id])}', '600px');"><i class="{$t.icon}"></i> {dr_lang($t.name)}</a>
                     </td>
                     <td>
                         {if $ci->_is_admin_auth('add') && $t.pid == 0}<a href="javascript:dr_iframe('add', '{dr_url('min_menu/add', ['pid'=>$t.id])}', '600px', '{if @in_array($t.pid, $top)}500px{/if}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}

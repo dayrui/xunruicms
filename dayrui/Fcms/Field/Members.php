@@ -101,7 +101,7 @@ class Members extends \Phpcmf\Library\A_Field {
         $limit = intval($field['setting']['option']['limit']);
         !$limit && $limit = 99999;
         // 字段显示名称
-        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
         $str = '';
         $str.= '

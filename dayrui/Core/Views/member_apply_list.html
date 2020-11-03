@@ -9,7 +9,7 @@
                 <select name="field" class="form-control">
                     {loop $field $t}
                     {if dr_is_admin_search_field($t)}
-                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
                     {/if}
                     {/loop}
                 </select>
@@ -59,7 +59,7 @@
                 </td>
                 {/if}
                 <td>{Function_list::author($t.username)}</td>
-                <td>{$ci->member_cache['group'][$t.gid][name]}</td>
+                <td>{dr_lang($ci->member_cache['group'][$t.gid][name])}</td>
                 <td>{if $ci->member_cache['group'][$t.gid][level][$t.lid][name]}{$ci->member_cache['group'][$t.gid][level][$t.lid][name]}{else}{dr_lang('无')}{/if}</td>
                 <td>{if $ci->member_cache['group'][$t.gid]['unit']}{intval($t.price)}{SITE_SCORE}{else}{$t.price}{dr_lang('元')}{/if}</td>
                 <td>{dr_date($t.inputtime)}</td>

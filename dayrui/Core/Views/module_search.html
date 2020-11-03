@@ -10,7 +10,7 @@
             <ul class="nav nav-tabs" style="float:left;">
                 {loop $module $i $t}
                 <li class="{if $page==$i}active{/if}">
-                    <a href="#tab_{$i}" data-toggle="tab" onclick="$('#dr_page').val('{$i}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} - {dr_lang('搜索设置')} </a>
+                    <a href="#tab_{$i}" data-toggle="tab" onclick="$('#dr_page').val('{$i}')"> <i class="{dr_icon($t.icon)}"></i> {dr_lang($t.name)} - {dr_lang('搜索设置')} </a>
                 </li>
                 {/loop}
             </ul>
@@ -52,7 +52,7 @@
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
                                     {loop $field $f}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if @in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {$f.name} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if @in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} <span></span></label>
                                     {/loop}
                                 </div>
                                 <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>
@@ -112,7 +112,7 @@
                                 <label><select name="data[{$i}][param_join_field][{$c}]" class="form-control">
                                     <option value="">-</option>
                                     {loop $m.search_field $k $f}
-                                    <option value="{$k}" {if $k == $m['setting']['search']['param_join_field'][$c]} selected{/if}>{$f}</option>
+                                    <option value="{$k}" {if $k == $m['setting']['search']['param_join_field'][$c]} selected{/if}>{dr_lang($f)}</option>
                                     {/loop}
                                 </select></label>
                                 {php $c++;}

@@ -475,7 +475,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $name = $field['fieldname'];
 
         // 字段显示名称
-        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+        $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
         if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
             // 来自批量审核内容
@@ -592,21 +592,21 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
             $str.= '<div class="mt-checkbox-inline" style="margin-top: 10px;">';
             $str.= '     <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_thumb_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> 提取第一个图片为缩略图 <span></span>
+                  <input name="is_auto_thumb_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> '.dr_lang('提取第一个图片为缩略图').' <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> 提取前200字为描述信息 <span></span>
+                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取前200字为描述信息').' <span></span>
                  </label>';
             if (!$field['setting']['option']['down_img']) {
                 $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_down_img_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> 下载远程图片 <span></span>
+                  <input name="is_auto_down_img_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> '.dr_lang('下载远程图片').' <span></span>
                  </label>';
             }
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_remove_a_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> 去除站外链接 <span></span>
+                  <input name="is_remove_a_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> '.dr_lang('去除站外链接').' <span></span>
                  </label>';
             $str.= '</div>';
         }

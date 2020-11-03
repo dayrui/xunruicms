@@ -30,7 +30,7 @@
                         <div class="mt-radio-inline">
                             {loop $type $ii $name}
                             <label class="mt-radio">
-                                <input onclick="dr_set_value('{$ii}')" {if $ii==$i}checked{/if} name="data[type]" type="radio" value="{$ii}"> {$name}
+                                <input onclick="dr_set_value('{$ii}')" {if $ii==$i}checked{/if} name="data[type]" type="radio" value="{$ii}"> {dr_lang($name)}
                                 <span></span>
                             </label>
                             {/loop}

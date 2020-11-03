@@ -74,7 +74,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
 
         if (!defined('FC_PAY') && (IS_MEMBER || IS_ADMIN)) {
             // 字段显示名称
-            $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
+            $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
             // 表单宽度设置
             $width = \Phpcmf\Service::_is_mobile() ? '100%' : ((int)$field['setting']['option']['width'] ? $field['setting']['option']['width'] : 250);
 

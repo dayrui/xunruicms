@@ -9,7 +9,7 @@
                 <select name="field" class="form-control">
                     {loop $field $t}
                     {if dr_is_admin_search_field($t)}
-                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
                     {/if}
                     {/loop}
                 </select>

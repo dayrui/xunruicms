@@ -72,7 +72,7 @@
                         {loop $ci->site_info $sid $t}
                         <?php $m = \Phpcmf\Service::M('Site')->config($sid);$t = $m['config'];?>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_strcut($t['SITE_NAME'], 10)}</label>
+                            <label class="col-md-2 control-label">{dr_lang(dr_strcut($t['SITE_NAME'], 10))}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="site[{$sid}][SITE_INDEX_HTML]" value="1" {if $t['SITE_INDEX_HTML']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('开启之后首页将会自动生成静态文件')}</span>
@@ -88,7 +88,7 @@
                         {if !$t.share}
                         <?php $setting = dr_string2array($t['setting']);?>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{$t.name}</label>
+                            <label class="col-md-2 control-label">{dr_lang($t.name)}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="module[{$t.id}][module_index_html]" value="1" {if $setting['module_index_html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('开启之后当前模块的首页将会自动生成静态文件')}</span>

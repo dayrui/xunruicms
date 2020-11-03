@@ -68,7 +68,7 @@
                                     <option value="0"> -- </option>
                                     {loop $ci->member_cache['group'] $t}
                                     {if $t.id != $id}
-                                    <option value="{$t.id}" {if $t.id==$setting.out_gid} selected{/if}> {$t.name} </option>
+                                    <option value="{$t.id}" {if $t.id==$setting.out_gid} selected{/if}> {dr_lang($t.name)} </option>
                                     {/if}
                                     {/loop}
                                 </select></label>

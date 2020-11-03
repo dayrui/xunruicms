@@ -279,7 +279,7 @@
                                     <select class="form-control" name="data[register][groupid]">
                                         {loop $group $t}
                                         {if $t.register}
-                                        <option value="{$t.id}" {if $t.id==$data['register']['groupid']} selected{/if}>{$t.name}</option>
+                                        <option value="{$t.id}" {if $t.id==$data['register']['groupid']} selected{/if}>{dr_lang($t.name)}</option>
                                         {/if}
                                         {/loop}
                                     </select>
@@ -383,7 +383,7 @@
                                     <thead>
                                     <tr class="heading">
                                         <th width="90"> {dr_lang('接入商')} </th>
-                                        <th width="210"> {dr_lang('ID')} </th>
+                                        <th width="280"> {dr_lang('ID')} </th>
                                         <th> {dr_lang('密钥')} </th>
                                         <th width="90">  </th>
                                     </tr>
@@ -399,10 +399,10 @@
                                     {/loop}
                                     {if dr_is_app('weixin')}
                                     <tr class="odd gradeX">
-                                        <td>微信公众号</td>
+                                        <td>{dr_lang('微信公众号')}</td>
                                         <td colspan="3">
 										    <input type="checkbox" name="data[oauth][wechat][id]" value="1" {if $data['oauth']['wechat']['id']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-											&nbsp;用于关注微信公众号绑定账号使用
+											&nbsp;{dr_lang('用于关注微信公众号绑定账号使用')}
                                         </td>
                                     </tr>
                                     {/if}

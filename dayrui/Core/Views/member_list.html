@@ -10,7 +10,7 @@
                 <select name="groupid" class="form-control">
                     <option value=""> {dr_lang('全部')} </option>
                     {loop $group $t}
-                    <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{$t.name}</option>
+                    <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{dr_lang($t.name)}</option>
                     {/loop}
                 </select>
             </label>
@@ -21,7 +21,7 @@
                     <option value="id"> Id </option>
                     {loop $field $t}
                     {if dr_is_admin_search_field($t)}
-                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
                     {/if}
                     {/loop}
                 </select>
@@ -126,7 +126,7 @@
                     <select name="groupid" class="form-control">
                         <option value=""> -- </option>
                         {loop $group $t}
-                        <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{$t.name}</option>
+                        <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{dr_lang($t.name)}</option>
                         {/loop}
                     </select>
                 </label>

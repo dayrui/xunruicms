@@ -32,7 +32,7 @@
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     {loop $ci->type $i $n}
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[type]" onclick="dr_remote('{$i}')" value="{$i}" {if (int)$data['type'] == $i}checked{/if} /> {$n.name} <span></span> </label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[type]" onclick="dr_remote('{$i}')" value="{$i}" {if (int)$data['type'] == $i}checked{/if} /> {dr_lang($n.name)} <span></span> </label>
                                     {/loop}
                                 </div>
                             </div>

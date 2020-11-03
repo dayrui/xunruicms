@@ -136,7 +136,7 @@
                             <label class="col-md-2 control-label">{dr_lang('校验函数/方法')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-large"type="text" name="data[setting][validate][check]" value="{htmlspecialchars($data['setting']['validate']['check'])}" id="dr_check"> </label>
-                                <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_check');"> 检测 </a></label>
+                                <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_check');"> {dr_lang('检测')} </a></label>
                                 <span class="help-block"> <a href="javascript:dr_help('601');"> {dr_lang('此功能需要有PHP编程经验，了解函数的定义')}</a> </span>
                             </div>
                         </div>
@@ -145,7 +145,7 @@
                             <div class="col-md-9">
 
                                 <label><input class="form-control input-large"type="text" name="data[setting][validate][filter]" value="{htmlspecialchars($data['setting']['validate']['filter'])}" id="dr_filter"> </label>
-                                <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_filter');"> 检测 </a></label>
+                                <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_filter');"> {dr_lang('检测')} </a></label>
                                 <span class="help-block"> <a href="javascript:dr_help('602');"> {dr_lang('此功能需要有PHP编程经验，了解函数的定义')}</a> </span>
                             </div>
                         </div>
@@ -210,7 +210,7 @@
                                 <div class="mt-checkbox-inline">
                                     {loop $role $t}
                                     {if $t.id>1}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_admin][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_admin)} checked{/if} /> {$t.name} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_admin][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_admin)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
                                     {/if}
                                     {/loop}
                                 </div>
@@ -223,7 +223,7 @@
                                 <div class="mt-checkbox-inline">
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="0" {if @in_array(0, (array)$data.setting.show_member)} checked{/if} /> {dr_lang('游客')} <span></span></label>
                                     {list action=cache name=MEMBER.group}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_member)} checked{/if} /> {$t.name} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_member)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
                                     {/list}
                                 </div>
                                 <span class="help-block">{dr_lang('前端发布内容时该会员组将不会看到这个字段，如果“前端显示”关闭了此功能就无效')}</span>

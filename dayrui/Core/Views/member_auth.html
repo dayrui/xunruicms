@@ -79,7 +79,7 @@
                             <tbody>
                             {loop $level $i $t}
                             <tr class="odd gradeX">
-                                <td {$t.space}>{if $i}{$t.name}{else}<font color="red">{$t.name}</font>{/if}</td>
+                                <td {$t.space}>{if $i}{dr_lang($t.name)}{else}<font color="red">{dr_lang($t.name)}</font>{/if}</td>
                                 <td>
                                     {if $t.use}
                                     <a href="{dr_url('member_auth/add', ['aid' => $i])}" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>

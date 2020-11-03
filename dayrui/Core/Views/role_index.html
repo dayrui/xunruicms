@@ -38,7 +38,7 @@
             </td>
             {/if}
             <td>
-                {$t.name}
+                {dr_lang($t.name)}
             </td>
             <td style="text-align:center">
                 <a {if $ci->_is_admin_auth('edit')}href="{if $t.id>1}javascript:dr_iframe('{dr_lang('修改')}', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '50%');{else}javascript:;{/if}"{/if} class="badge {if $t.application.tid}badge-danger{else}badge-success{/if}">{if $t.application.tid}{dr_lang('投稿者')}{else}{dr_lang('管理者')}{/if}</a>

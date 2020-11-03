@@ -21,7 +21,7 @@
 </script>
 
 <div class="note note-danger">
-    <p>确保网站目录必须有可写权限</p>
+    <p>{dr_lang('确保网站目录必须有可写权限')}</p>
 </div>
 
 <div class="portlet light bordered " style="margin-bottom: 30px">
@@ -42,11 +42,11 @@
 <div class="row">
     {loop $module $i $mod}
     <div class="col-md-6">
-        <div class="portlet light bordered" style="height: 600px;">
+        <div class="portlet light bordered" style="height: 700px;">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="{$mod.icon} font-dark"></i>
-                    <span class="caption-subject font-dark"> {$mod.name}</span>
+                    <span class="caption-subject font-dark"> {dr_lang($mod.name)}</span>
                 </div>
             </div>
             <div class="portlet-body">

@@ -36,7 +36,7 @@
                 </label>
             </td>
             {/if}
-            <td>{$t.name}</td>
+            <td>{dr_lang($t.name)}</td>
             <td>{$t.table}</td>
             <td>
                 {if !$cg.dev}<label><a href="/index.php?s=form&c={$t.table}&m=post" target="_blank" class="btn btn-xs yellow"> <i class="fa fa-send"></i> {dr_lang('预览')} </a></label>{/if}
