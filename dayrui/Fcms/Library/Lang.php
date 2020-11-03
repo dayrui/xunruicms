@@ -35,7 +35,13 @@ class Lang {
         if (isset($this->lang[$text])) {
             return $this->lang[$text];
         } else {
-            // 没有找到语言时，
+            // 没有找到语言时
+            if (function_exists('dr_translate_lang')) {
+                return call_user_func_array('dr_translate_lang', [
+                    $text,
+                    SITE_LANGUAGE,
+                ]);
+            }
             if (SITE_LANGUAGE != 'zh-cn' && IS_DEV) {
                 $file = WRITEPATH.'lang_'.SITE_LANGUAGE.'.php';
                 if (!is_file($file)) {
