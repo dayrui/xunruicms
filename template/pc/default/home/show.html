@@ -18,12 +18,6 @@
                         <a href="{SITE_URL}">网站首页</a>
                         <i class="fa fa-circle"></i>
                     </li>
-                    {if !IS_SHARE}
-                    <li>
-                        <a href="{MODULE_URL}">{MODULE_NAME}</a>
-                        <i class="fa fa-circle"></i>
-                    </li>
-                    {/if}
                     {dr_catpos($catid, '', true, '<li> <a href="[url]">[name]</a> <i class="fa fa-circle"></i> </li>')}
                     <li>
                         <span>{$title}</span>
