@@ -32,16 +32,24 @@ class Lang {
      */
     public function text($text) {
 
+        if (!$text) {
+            return $text;
+        }
+
         if (isset($this->lang[$text])) {
             return $this->lang[$text];
         } else {
-            // 没有找到语言时
+            // 加载自定义语言文件接口
             if (function_exists('dr_translate_lang')) {
-                return call_user_func_array('dr_translate_lang', [
+                $rt = call_user_func_array('dr_translate_lang', [
                     $text,
                     SITE_LANGUAGE,
                 ]);
+                if ($rt) {
+                    return $rt;
+                }
             }
+            // 没有找到语言时记录日志中
             if (SITE_LANGUAGE != 'zh-cn' && IS_DEV) {
                 $file = WRITEPATH.'lang_'.SITE_LANGUAGE.'.php';
                 if (!is_file($file)) {
