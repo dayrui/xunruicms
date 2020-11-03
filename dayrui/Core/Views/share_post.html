@@ -249,7 +249,7 @@
                                     </li>
                                     {loop $draft_list $t}
                                     <li>
-                                        <a href="{$draft_url}&did={$t.id}" {if $t.id==$did}style="color:red"{/if}> {dr_date($t.inputtime)} </a>
+                                        <a href="{$draft_url}&did={$t.id}" {if $t.id==$did}style="color:red"{/if}> {dr_date($t.inputtime)} - {$t.title} </a>
                                     </li>
                                     {/loop}
                                 </ul>

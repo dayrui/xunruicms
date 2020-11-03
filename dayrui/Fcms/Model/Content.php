@@ -540,16 +540,7 @@ class Content extends \Phpcmf\Model {
         if ($id && $this->db->table($this->mytable.'_draft')->where('id', $id)->countAllResults()) {
             $rt = $this->table($this->mytable.'_draft')->update($id, $save);
         } else {
-            $r = $this->db
-                ->table($this->mytable.'_draft')
-                ->where('uid', $save['uid'])
-                ->where('cid', $save['cid'])
-                ->get()->getRowArray();
-            if ($r) {
-                $rt = $this->table($this->mytable.'_draft')->update($r['id'], $save);
-            } else {
-                $rt = $this->table($this->mytable.'_draft')->insert($save);
-            }
+            $rt = $this->table($this->mytable.'_draft')->insert($save);
         }
 
         return $rt;
