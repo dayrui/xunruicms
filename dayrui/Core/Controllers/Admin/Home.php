@@ -263,7 +263,7 @@ class Home extends \Phpcmf\Common
                         }
                         $_link = 1; // 标识以后的菜单就不是第一个了
                         $link['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
-                        $link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');" title="'.dr_lang($link['name']).'"><i class="iconm '.$link['icon'].'"></i> <span class="title">'.dr_lang($link['name']).'</span></a></li>';
+                        $link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');" class="tooltips" data-container="body" data-placement="top" data-original-title="'.dr_lang($link['name']).'" title="'.dr_lang($link['name']).'"><i class="iconm '.$link['icon'].'"></i> <span class="title">'.dr_lang($link['name']).'</span></a></li>';
                         $mlink_string.= '<li id="dr_menu_m_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title">'.dr_lang($link['name']).'</span></a></li>';
                     }
                     if (!$link_string) {
@@ -271,7 +271,7 @@ class Home extends \Phpcmf\Common
                     }
                     $left_string.= '
 				<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($_left ? '' : 'active open').' " style="'.($first==$tid ? '' : 'display:none').'">
-                    <a href="javascript:;" class="nav-link nav-toggle">
+                    <a href="javascript:;" class="nav-link nav-toggle tooltips" data-container="body" data-placement="top" data-original-title="'.dr_lang($left['name']).'">
                         <i class="'.$left['icon'].'"></i>
                         <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
                         <span class="selected" style="'.($_left ? 'display:none' : '').'"></span>
