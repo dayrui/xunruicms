@@ -23,10 +23,9 @@ class Run extends \Phpcmf\Common
                 }
                 return;
             }
-            $sip = $_SERVER['SERVER_ADDR'];
-            if ($sip != $ip) {
+            if (SYS_CRON_AUTH != $ip) {
                 if (CI_DEBUG) {
-                    log_message('error', '任务执行失败：服务端ip（'.$sip.'）与客户端ip（'.$ip.'）不一致');
+                    log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
                 }
                 return;
             }

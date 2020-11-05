@@ -154,8 +154,12 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('自动任务权限')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_CRON_AUTH]" value="1" {if $data['SYS_CRON_AUTH']}checked{/if} data-on-text="{dr_lang('限本服务器执行')}" data-off-text="{dr_lang('任意服务器执行')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input name="test2" onclick="dr_cron_value(0)" type="radio" {if !$data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('任意服务器执行')} <span></span></label>
+                                    <label class="mt-radio"><input name="test2" onclick="dr_cron_value(1)" type="radio" {if $data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('限本服务器IP')} <span></span></label>
+                                </div>
+                                <label id="dr_cron_row" {if !$data['SYS_CRON_AUTH']}style="display:none"{/if}><input id="dr_cron" class="form-control input-large" type="text" name="data[SYS_CRON_AUTH]" value="{$data['SYS_CRON_AUTH']}" ></label>
+                                <span class="help-block">{dr_lang('填写本服务器的IP地址，限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
                             </div>
                         </div>
                     </div>
@@ -209,6 +213,14 @@
     </div>
 </form>
 <script type="text/javascript">
+    function dr_cron_value(id) {
+        if (id == "1") {
+            $("#dr_cron_row").show();
+        } else {
+            $("#dr_cron_row").hide();
+            $("#dr_cron").val('');
+        }
+    }
     function dr_to_key() {
         $.get("{dr_url('api/syskey')}", function(data){
             $("#sys_key").val(data);

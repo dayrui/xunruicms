@@ -16,7 +16,7 @@ class System extends \Phpcmf\Model
         'SYS_ADMIN_LOG' => '后台操作日志开关',
         'SYS_AUTO_FORM' => '自动存储表单数据',
         'SYS_ADMIN_PAGESIZE' => '后台数据分页显示数量',
-        'SYS_CRON_AUTH' => '自动任务权限',
+        'SYS_CRON_AUTH' => '自动任务权限IP地址',
 
         'SYS_CAT_RNAME' => '栏目目录允许重复',
         'SYS_PAGE_RNAME' => '自定义页面目录允许重复',
