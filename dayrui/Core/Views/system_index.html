@@ -151,6 +151,13 @@
                                 <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('自动任务权限')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_CRON_AUTH]" value="1" {if $data['SYS_CRON_AUTH']}checked{/if} data-on-text="{dr_lang('限本服务器执行')}" data-off-text="{dr_lang('任意服务器执行')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

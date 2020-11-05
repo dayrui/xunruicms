@@ -14,6 +14,24 @@ class Run extends \Phpcmf\Common
 
 	public function index() {
 
+	    // 验证运行权限
+	    if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
+            $ip = \Phpcmf\Service::L('input')->ip_address();
+            if (!$ip) {
+                if (CI_DEBUG) {
+                    log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
+                }
+                return;
+            }
+            $sip = $_SERVER['SERVER_ADDR'];
+            if ($sip != $ip) {
+                if (CI_DEBUG) {
+                    log_message('error', '任务执行失败：服务端ip（'.$sip.'）与客户端ip（'.$ip.'）不一致');
+                }
+                return;
+            }
+        }
+
         if (isset($_GET['is_ajax'])) {
             // 后台脚本自动任务时效验证
             if (\Phpcmf\Service::L('input')->get_cookie('admin_cron')) {

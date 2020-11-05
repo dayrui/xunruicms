@@ -93,10 +93,11 @@ class Content extends \Phpcmf\Model {
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
             if ($verify) {
 				// 修改审核
+                $value = array_merge($data[0], $data[1]);
                 $update = [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
-                    'content' => dr_array2string(@array_merge($data[0], $data[1])),
+                    'content' => dr_array2string($value),
                     'backuid' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? $this->uid : 0,
                     'backinfo' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? dr_array2string([
                         'uid' => $this->uid,
@@ -120,7 +121,7 @@ class Content extends \Phpcmf\Model {
                 $verify = array_merge($verify, $update);
                 \Phpcmf\Hooks::trigger('module_verify_after', $verify);
                 // 执行审核后的回调
-                $this->_call_verify($data[1], $verify);
+                $this->_call_verify($value, $verify);
                 // 通知管理员
                 if ($data[1]['status'] > 0) {
                     \Phpcmf\Service::M('member')->admin_notice(
@@ -144,6 +145,7 @@ class Content extends \Phpcmf\Model {
             } else {
 				// 新增审核
                 $role = $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member);
+                $value = array_merge($data[0], $data[1]);
                 $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
@@ -152,7 +154,7 @@ class Content extends \Phpcmf\Model {
                     'catid' => (int)$data[1]['catid'],
                     'author' => $data[1]['author'],
                     'status' => (int)$data[1]['status'],
-                    'content' => dr_array2string(array_merge($data[0], $data[1])),
+                    'content' => dr_array2string($value),
                     'backuid' => IS_ADMIN ? $this->uid : 0,
                     'backinfo' => IS_ADMIN ? dr_array2string([
                         'uid' => $this->uid,
@@ -198,7 +200,7 @@ class Content extends \Phpcmf\Model {
                 $verify['old'] = $old;
                 \Phpcmf\Hooks::trigger('module_verify_after', $verify);
                 // 执行审核后的回调
-                $this->_call_verify($data[1], $verify);
+                $this->_call_verify($value, $verify);
             }
             return dr_return_data($verify['id'], 'ok', $verify);
         }
@@ -315,9 +317,10 @@ class Content extends \Phpcmf\Model {
             // 通知用户
             \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
 
+            $value = array_merge($data[1], $data[0]);
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
             $verify['status'] = 9;
-            $verify['content'] = dr_array2string(array_merge($data[1], $data[0]));
+            $verify['content'] = dr_array2string($value);
             $verify['backuid'] = IS_ADMIN ? $this->uid : 0;
             $verify['backinfo'] = dr_array2string($old['verify']['backinfo']);
 
@@ -328,7 +331,7 @@ class Content extends \Phpcmf\Model {
             \Phpcmf\Hooks::trigger('module_verify_after', $verify);
 
             // 执行审核后的回调
-            $this->_call_verify($data[1], $verify);
+            $this->_call_verify($value, $verify);
         }
 
         // 表示新发布

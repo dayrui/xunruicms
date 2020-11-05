@@ -325,6 +325,7 @@ $db[\'default\']	= [
                                 'SYS_CAT_RNAME'                 => '0', //栏目目录允许重复
                                 'SYS_CAT_ZSHOW'                 => '0', //栏目目录允许重复
                                 'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
+                                'SYS_CRON_AUTH'                 => '0', //单页目录允许重复
                                 'SYS_CSRF'                      => '1', //跨站验证提交
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
                                 'SYS_HTTPS'                     => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? '1' : '0', //https模式
