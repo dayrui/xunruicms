@@ -234,7 +234,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 				$is_404 = 0;
 				// 开始解析路由 URL参数模式
 				$_GET = [];
-				$queryParts = explode('&', str_replace('index.php?', '', $val));
+				$queryParts = explode('&', str_replace(['index.php?', '/index.php?'], '', $val));
 				if ($queryParts) {
 					foreach ($queryParts as $param) {
 						$item = explode('=', $param);

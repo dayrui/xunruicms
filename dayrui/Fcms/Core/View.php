@@ -397,15 +397,25 @@ class View {
 
         $this->_view_files[$name] = [
             'name' => pathinfo($name, PATHINFO_BASENAME),
-            'path' => str_replace(TPLPATH, 'TPLPATH/', $name),
+            'path' => $name,
         ];
 
         // 当缓存文件不存在时或者缓存文件创建时间少于了模板文件时,再重新生成缓存文件
         // 开发者模式下关闭缓存
         if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
+            // 防止目录未创建的情况
+            $path = dirname($cache_file);
+            if (!is_dir($path)) {
+                dr_mkdirs($path);
+            }
+            // 写入新文件
             $content = $this->handle_view_file(file_get_contents($name));
             if (@file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
-                $this->show_error('请将模板缓存目录 ('.dirname($cache_file).') 权限设为777');
+                if (IS_DEV) {
+                    $this->show_error('模板缓存文件 ('.$cache_file.') 创建失败，请将cache目录权限设为777');
+                } else {
+                    $this->show_error('请将模板缓存目录 ('.$path.') 权限设为777');
+                }
             }
         }
 

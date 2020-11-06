@@ -158,18 +158,27 @@ class Module extends \Phpcmf\Table
             exit;
         } elseif (defined('IS_MODULE_VERIFY') && $data['status'] != 0) {
             // 判断是否来至审核
-            $this->_msg(2, dr_lang('正在审核之中'));
+            $this->_msg(0, dr_lang('正在审核之中'));
             exit;
         }
 
-        if (!$this->is_hcategory) {
+        if (defined('IS_MODULE_VERIFY')) {
+            // 审核文章编辑时采用投稿权限判断
             // 可编辑的栏目
-            $category = $this->_get_module_member_category($this->module, 'edit');
+            $category = $this->_get_module_member_category($this->module, 'add');
             if (!$category[$data['catid']]) {
-                exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name'])));
+                exit($this->_msg(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][$data['catid']]['name'])));
             }
         } else {
-            $this->content_model->_hcategory_member_edit_auth();
+            if (!$this->is_hcategory) {
+                // 可编辑的栏目
+                $category = $this->_get_module_member_category($this->module, 'edit');
+                if (!$category[$data['catid']]) {
+                    exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name'])));
+                }
+            } else {
+                $this->content_model->_hcategory_member_edit_auth();
+            }
         }
 
         \Phpcmf\Service::V()->assign([
