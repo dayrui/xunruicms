@@ -469,7 +469,7 @@ class Module extends \Phpcmf\Table
             'where_list' => 'uid='.$this->uid,
         ]);
 
-        $this->_List();
+        list($tpl, $data) = $this->_List();
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
@@ -477,6 +477,12 @@ class Module extends \Phpcmf\Table
                 ' <i class="'.dr_icon('fa fa-pencil').'"></i>  '.dr_lang('草稿箱管理'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/draft/index'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
+            ),
+            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['param']['catid'],
+                'name="catid"',
+                '--'
             ),
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_draft'));
@@ -678,7 +684,7 @@ class Module extends \Phpcmf\Table
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
         ]);
 
-        $this->_List();
+        list($tpl, $data) = $this->_List();
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
@@ -686,6 +692,12 @@ class Module extends \Phpcmf\Table
                 ' <i class="'.dr_icon('fa fa-clock-o').'"></i>  '.dr_lang('待发布管理'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/time/index'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
+            ),
+            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['param']['catid'],
+                'name="catid"',
+                '--'
             ),
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_time'));
@@ -815,7 +827,7 @@ class Module extends \Phpcmf\Table
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
         ]);
 
-        $this->_List();
+        list($tpl, $data) = $this->_List();
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
@@ -823,6 +835,12 @@ class Module extends \Phpcmf\Table
                 ' <i class="'.dr_icon('fa fa-trash-o').'"></i>  '.dr_lang('回收站管理'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/recycle/index'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
+            ),
+            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['param']['catid'],
+                'name="catid"',
+                '--'
             ),
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_recycle'));

@@ -184,7 +184,7 @@
 <div class="right-card-box">
     <div class="row table-search-tool">
         <form action="{SELF}" method="get">
-            {dr_form_search_hidden()}
+            {dr_form_search_hidden(['field' => 'content'])}
             {if $is_category_show}
             <div class="col-md-12 col-sm-12">
                 <label>
@@ -192,6 +192,9 @@
                 </label>
             </div>
             {/if}
+            <div class="col-md-12 col-sm-12">
+                <label><input type="text" class="form-control" placeholder="{dr_lang('全文搜索')}" value="{$param['keyword']}" name="keyword" /></label>
+            </div>
             <div class="col-md-12 col-sm-12">
                 <label>
                     <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
@@ -201,7 +204,6 @@
                     </div>
                 </label>
             </div>
-
             <div class="col-md-12 col-sm-12">
                 <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
             </div>
