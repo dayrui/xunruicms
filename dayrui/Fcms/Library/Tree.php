@@ -83,9 +83,29 @@ class Tree {
         
         $arrays = [];
 
+        /*
+        if ($k_id && isset($this->data[$k_id]) && $this->data[$k_id] && $this->data[$k_id]['next_ids']) {
+            if (is_array($this->data[$k_id]['next_ids'])) {
+                foreach ($this->data[$k_id]['next_ids'] as $id) {
+                    $arrays[$id] = $this->data[$id];
+                }
+            }
+        }
+
+        if (!$k_id && is_array($this->data)) {
+            foreach($this->data as $id => $a) {
+                if ($a['pid'] == $k_id) {
+                    $arrays[$id] = $a;
+                }
+            }
+        }
+        */
+
         if (is_array($this->data)) {
             foreach($this->data as $id => $a) {
-                $a['pid'] == $k_id && $arrays[$id] = $a;
+                if ($a['pid'] == $k_id) {
+                    $arrays[$id] = $a;
+                }
             }
         }
 

@@ -118,6 +118,22 @@ class Category extends \Phpcmf\Model
         return $childids;
     }
 
+    // 获取栏目下级ids
+    private function _get_next_ids($catid) {
+
+        $rt = [];
+
+        if (is_array($this->categorys)) {
+            foreach ($this->categorys as $id => $cat) {
+                if ($cat['pid'] == $catid) {
+                    $rt[] = $id;
+                }
+            }
+        }
+
+        return $rt;
+    }
+
     /**
      * 所有父目录
      *
@@ -224,6 +240,7 @@ class Category extends \Phpcmf\Model
             $this->categorys[$catid]['childids'] = $this->get_childids($catid);
             $this->categorys[$catid]['child'] = is_numeric($this->categorys[$catid]['childids']) ? 0 : 1;
             $this->categorys[$catid]['pdirname'] = $this->get_pdirname($catid);
+            //$this->categorys[$catid]['next_ids'] = $this->_get_next_ids($catid);
 
             if ($cat['pdirname'] != $this->categorys[$catid]['pdirname']
                 || $cat['pids'] != $this->categorys[$catid]['pids']

@@ -500,9 +500,17 @@ class Module extends \Phpcmf\Table
                     }
                     if ($old) {
                         // 表示修改
-                        $cat = $this->_get_module_member_category($this->module, 'edit');
-                        if (!$cat[$old['catid']]) {
-                            return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$old['catid']]['name']));
+                        if (defined('IS_MODULE_VERIFY')) {
+                            // 审核文章编辑时采用投稿权限判断
+                            $cat = $this->_get_module_member_category($this->module, 'add');
+                            if (!$cat[$old['catid']]) {
+                                return dr_return_data(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][$old['catid']]['name']));
+                            }
+                        } else {
+                            $cat = $this->_get_module_member_category($this->module, 'edit');
+                            if (!$cat[$old['catid']]) {
+                                return dr_return_data(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$old['catid']]['name']));
+                            }
                         }
                         // 禁止修改栏目
                         if ($this->module['category'][$old['catid']]['setting']['notedit']) {
