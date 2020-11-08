@@ -325,9 +325,12 @@ class Module extends \Phpcmf\Table
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids());
     }
 
+    // 同步到多个栏目
     public function syncat_edit() {
 
         $sync = \Phpcmf\Service::L('input')->get('catid');
+
+        $category = $this->_get_module_member_category($this->module, 'add');
 
         if (IS_AJAX_POST) {
 
@@ -341,7 +344,9 @@ class Module extends \Phpcmf\Table
                 //if ($this->where_list_sql && $this->content_model->admin_is_edit(['catid' => $i])) {
                     //$this->_json(0, dr_lang('当前角色无权限管理此栏目'));
                 //}
-                if (!$this->module['category'][$i]) {
+                if (!$category[$i]) {
+                    exit($this->_json(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][$i]['name'])));
+                } elseif (!$this->module['category'][$i]) {
                     continue;
                 } elseif ($this->module['category'][$i]['tid'] != 1) {
                     continue;
@@ -361,10 +366,10 @@ class Module extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
-            'form' => dr_form_hidden(),
             'menu' => '',
+            'form' => dr_form_hidden(),
             'select' => \Phpcmf\Service::L('Tree')->select_category(
-                $this->module['category'],
+                $category,
                 $sync ? explode(',', $sync) : 0,
                 'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
                 '', 1, 1
