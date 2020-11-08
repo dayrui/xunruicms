@@ -146,8 +146,11 @@ class Linkage extends \Phpcmf\Common
 			],
 		];
 		list($data, $return) = \Phpcmf\Service::L('Form')->validation($data, $config);
-		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
-		\Phpcmf\Service::M('Linkage')->table('linkage')->is_exists($id, 'code', $data['code']) && exit($this->_json(0, dr_lang('别名已经存在'), ['field' => 'code']));
+		if ($return) {
+		    exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+        } elseif (\Phpcmf\Service::M('Linkage')->table('linkage')->is_exists($id, 'code', $data['code'])) {
+		    exit($this->_json(0, dr_lang('别名已经存在'), ['field' => 'code']));
+        }
 	}
 
 	public function displayorder_edit() {
@@ -346,9 +349,12 @@ class Linkage extends \Phpcmf\Common
             if ($field) {
                 list($save, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, null, $field, []);
                 // 输出错误
-                $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+                if ($return) {
+                    $this->_json(0, $return['error'], ['field' => $return['name']]);
+                }
                 $update = dr_array22array($update, $save[1]);
             }
+            $update['site'] = SITE_ID;
             $rt = \Phpcmf\Service::M('Linkage')->table('linkage_data_'.$key)->insert($update);
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
@@ -434,7 +440,9 @@ class Linkage extends \Phpcmf\Common
 			if ($field) {
                 list($save, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, null, $field, $data);
                 // 输出错误
-                $return && $this->_json(0, $return['error'], ['field' => $return['name']]);
+                if ($return) {
+                    $this->_json(0, $return['error'], ['field' => $return['name']]);
+                }
                 $update = dr_array22array($update, $save[1]);
             }
 			$rt = \Phpcmf\Service::M('Linkage')->table('linkage_data_'.$key)->update($id, $update);

@@ -220,7 +220,7 @@ class Linkage extends \Phpcmf\Model
             }
             $db = $this->db->table('linkage_data_'.$key);
             // 站点查询
-            $link['type'] == 1 && $db->where('site', SITE_ID);
+            //$link['type'] == 1 && $db->where('site', SITE_ID);
             // 获取菜单数据
             $menu = $db->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
             if (!$menu) {
