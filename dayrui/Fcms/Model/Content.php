@@ -1459,6 +1459,19 @@ class Content extends \Phpcmf\Model {
         return $data;
     }
 
+    // 用于前端模块首页的执行方法
+    public function _call_index() { }
+
+    // 格式化显示内容,用于前端内容栏目页面的格式化
+    public function _call_category($data) {
+        return $data;
+    }
+
+    // 格式化显示内容,用于前端内容搜索页面的格式化
+    public function _call_search($data) {
+        return $data;
+    }
+
     // 格式化显示内容,用于前端内容详情页面的格式化
     public function _call_show($data) {
         return $data;

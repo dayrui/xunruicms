@@ -16,6 +16,9 @@ class Module extends \Phpcmf\Common
         // 初始化模块
         $this->_module_init();
 
+        // 执行自定义方法
+        $this->content_model->_call_index();
+
         // 共享模块时禁止访问首页
         if ($this->module['share']) {
             exit($this->goto_404_page(dr_lang('共享模块没有首页功能')));
@@ -72,8 +75,6 @@ class Module extends \Phpcmf\Common
                 \Phpcmf\Service::V()->display('index.html');
             }
         }
-
-
     }
 
     // 模块栏目页
@@ -114,6 +115,9 @@ class Module extends \Phpcmf\Common
             $this->goto_404_page(dr_lang('模块【%s】栏目不存在', $this->module['dirname']));
             return;
         }
+
+        // 格式化栏目数据
+        $category = $this->content_model->_call_category($category);
 
         // 判断是否外链
         if ($category['tid'] == 2) {
@@ -231,6 +235,9 @@ class Module extends \Phpcmf\Common
             exit($this->_msg(0, $data['msg']));
         }
         unset($data['params']['page']);
+
+        // 格式化数据
+        $data = $this->content_model->_call_search($data);
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
