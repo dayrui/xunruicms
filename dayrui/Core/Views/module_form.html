@@ -21,7 +21,6 @@
             <th width="50" style="text-align:center"> {dr_lang('可用')} </th>
             <th width="150"> {dr_lang('名称')} </th>
             <th width="160"> {dr_lang('表单别名')} </th>
-            <th width="240"> {dr_lang('模板文件')} </th>
             <th>  </th>
         </tr>
         </thead>
@@ -41,7 +40,6 @@
             </td>
             <td>{$t.name}</td>
             <td>{$t.table}</td>
-            <td>{$t.module}/form_{$t.table}.html</td>
             <td>
                 {if $ci->_is_admin_auth('edit')}
                 <label><a href="{dr_url('module/form_edit', ['dir'=>$t.module, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>
