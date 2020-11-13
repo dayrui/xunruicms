@@ -190,7 +190,7 @@ class Form
                     }
                 }
                 // 编辑器长度判断
-                if ($field['fieldtype'] == 'Ueditor' && strlen($data[$name]) > 1000000) {
+                if ($field['fieldtype'] == 'Ueditor' && strlen($data[$name]) > 16000000) {
                     return [[], ['name' => $name, 'error' => dr_lang('%s长度超限', $field['name'])]];
                 }
                 // 函数/方法校验
