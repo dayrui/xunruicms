@@ -44,7 +44,13 @@ class Notice extends \Phpcmf\Table
                 'icon' => '<i class="fa fa-bell"></i>',
             ],
         ];
-        $type = $type + dr_notice_info();
+        $my = dr_notice_info();
+        if ($my) {
+            foreach ($my as $i => $t) {
+                $t['icon'] ='<i class="'.$t['icon'].'"></i>';
+                $type[$i] = $t;
+            }
+        }
         foreach ($type as $i => $t) {
             $data['param']['tid'] = $i;
             $type[$i]['url'] =\Phpcmf\Service::L('Router')->member_url('member/notice/index', $data['param']);

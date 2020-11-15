@@ -111,14 +111,17 @@ class Service
      *
      * @var object
      */
-    public static function R($file) {
+    public static function R($file, $clear = false) {
 
         $_cname = md5($file);
-        if (isset(static::$require[$_cname])) {
-            return static::$require[$_cname];
-        } elseif (!is_file($file)) {
-            log_message('error', '引用文件不存在：'.$file);
-            return false;
+
+        if (!$clear) {
+            if (isset(static::$require[$_cname])) {
+                return static::$require[$_cname];
+            } elseif (!is_file($file)) {
+                log_message('error', '引用文件不存在：'.$file);
+                return false;
+            }
         }
 
         static::$require[$_cname] = require $file;

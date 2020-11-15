@@ -18,6 +18,7 @@ class Member_notice extends \Phpcmf\Table
             [
                 '站内消息' => ['member_notice/index', 'fa fa-bell'],
                 '发送消息' => ['member_notice/add', 'fa fa-plus'],
+                '定义消息类型' => [\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-plus'],
                 'help' => [ 669 ],
             ]
         ));
@@ -65,6 +66,33 @@ class Member_notice extends \Phpcmf\Table
         ]);
         $this->_List();
         \Phpcmf\Service::V()->display('member_notice_list.html');
+    }
+
+    // 类型
+    public function edit() {
+        ​
+        $data = dr_notice_info();
+
+        if (IS_AJAX_POST) {
+
+            $post = \Phpcmf\Service::L('input')->post('data', true);
+            foreach ($post as $i => $t) {
+                if (!$t['name']) {
+                    unset($post[$i]);
+                }
+            }
+
+            \Phpcmf\Service::L('config')->file(WRITEPATH . 'config/notice.php', '设置自定义消息类型')->to_require($post);
+
+            \Phpcmf\Service::L('input')->system_log('设置自定义消息类型');
+
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $data,
+        ]);
+        \Phpcmf\Service::V()->display('member_notice_edit.html');
     }
 
     // 删除

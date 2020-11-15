@@ -425,7 +425,7 @@ class Table extends \Phpcmf\Common
         $this->is_get_catid && $data['catid'] = $mydata['catid'] = $this->is_get_catid;
 
         // 是否包在data里面
-        $is_data && $data['data'] = $mydata;
+        //$is_data && $data['data'] = $mydata;
 
         // 获取自定义字段表单控件
         list($my_field, $sys_field, $diy_field, $cat_field) = $this->_field_group($mydata);

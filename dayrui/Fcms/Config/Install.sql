@@ -515,7 +515,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_paylog` (
 DROP TABLE IF EXISTS `{dbprefix}member_notice`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}member_notice` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` tinyint(1) unsigned NOT NULL COMMENT '类型',
+  `type` tinyint(2) unsigned NOT NULL COMMENT '类型',
   `uid` mediumint(8) unsigned NOT NULL COMMENT '通知者uid',
   `isnew` tinyint(1) unsigned NOT NULL COMMENT '新提醒',
   `content` text NOT NULL COMMENT '通知内容',
