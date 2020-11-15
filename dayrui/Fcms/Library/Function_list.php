@@ -16,6 +16,7 @@ class Function_list
 {
 
     private $uid_data = [];
+    private $cid_data = [];
 
     // 用于列表显示栏目
     function catid($catid, $param = [], $data = []) {
@@ -103,6 +104,16 @@ class Function_list
         }
         $this->uid_data[$uid] = isset($this->uid_data[$uid]) && $this->uid_data[$uid] ? $this->uid_data[$uid] : \Phpcmf\Service::M('member')->username($uid);
         return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($uid).'" member="'.htmlspecialchars($this->uid_data[$uid]).'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
+    }
+
+    // 用于列表关联主题
+    function ctitle($cid, $param = [], $data = []) {
+        // 查询username
+        if (!$cid) {
+            return dr_lang('未关联');
+        }
+        $this->cid_data[$cid] = isset($this->cid_data[$cid]) && $this->cid_data[$cid] ? $this->cid_data[$cid] : \Phpcmf\Service::M()->table_site(MOD_DIR)->get($cid);
+        return $this->cid_data[$cid] ? $this->title($this->cid_data[$cid]['title'], $param, $this->cid_data[$cid]) : dr_lang('关联主题不存在');
     }
 
     // 用于列表显示ip地址

@@ -480,6 +480,19 @@ class Module extends \Phpcmf\Common
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'author', 'inputtime']);
 
+        // 关联信息
+        $field['cid'] = [
+            'name' => dr_lang('关联'),
+            'ismain' => 1,
+            'ismember' => 1,
+            'fieldtype' => 'Cid',
+            'fieldname' => 'cid',
+            'setting' => []
+        ];
+        if (!$data['setting']['list_field']['cid']['func']) {
+            $data['setting']['list_field']['cid']['func'] = 'ctitle';
+        }
+
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
         \Phpcmf\Service::V()->assign([

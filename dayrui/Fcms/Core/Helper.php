@@ -1170,34 +1170,79 @@ function dr_field_options($id) {
 // 提醒说明
 function dr_notice_info() {
 
+    $data = \Phpcmf\Service::R(WRITEPATH . 'config/notice.php');
+
+    if (is_array($data) && $data) {
+        foreach ($data as $i => $t) {
+            if ($t['name']) {
+                $data[$i]['name'] = dr_lang($data[$i]['name']);
+            }
+        }
+        return $data;
+    }
+
     return [
 
         1 => [
             'name' => dr_lang('系统'),
-            'icon' => '<i class="fa fa-bell-o"></i>',
+            'icon' => 'fa fa-bell-o',
         ],
         2 => [
             'name' => dr_lang('用户'),
-            'icon' => '<i class="fa fa-user"></i>',
+            'icon' => 'fa fa-user',
         ],
         3 => [
             'name' => dr_lang('内容'),
-            'icon' => '<i class="fa fa-th-large"></i>',
+            'icon' => 'fa fa-th-large',
         ],
         4 => [
             'name' => dr_lang('应用'),
-            'icon' => '<i class="fa fa-puzzle-piece"></i>',
+            'icon' => 'fa fa-puzzle-piece',
         ],
         5 => [
             'name' => dr_lang('交易'),
-            'icon' => '<i class="fa fa-rmb"></i>',
+            'icon' => 'fa fa-rmb',
         ],
         6 => [
             'name' => dr_lang('订单'),
-            'icon' => '<i class="fa fa-shopping-cart"></i>',
+            'icon' => 'fa fa-shopping-cart',
         ],
 
     ];
+}
+
+// 提醒说明更新
+function ​dr_notice_update($id, $name = '', $icon = '') {
+
+    if (!$id) {
+        return;
+    }
+
+    $data = dr_notice_info();
+    if ($name) {
+        $data[$id] = [
+            'name' => $name,
+            'icon' => $icon,
+        ];
+    } else {
+        unset($data[$id]);
+    }
+
+    \Phpcmf\Service::R(WRITEPATH . 'config/notice.php', true);
+    \Phpcmf\Service::L('config')->file(WRITEPATH . 'config/notice.php', '设置自定义消息类型')->to_require($data);
+}
+
+
+
+// 提醒图标
+function dr_notice_icon($type, $c = '') {
+
+    $data = dr_notice_info();
+    if ($data[$type]) {
+        return '<i class="'.$data[$type]['icon'].'"></i>';
+    }
+
+    return '<i class="fa fa-envelope"></i>';
 }
 
 /**
@@ -1550,51 +1595,6 @@ function dr_html_auth($is = 0) {
             return 0;
         }
     }
-}
-
-// 提醒图标
-function dr_notice_icon($type, $c = '') {
-
-    switch ($type) {
-
-        case 1:
-            return '<span class="label label-sm label-danger '.$c.'">
-                                <i class="fa fa-bell-o"></i> 
-                            </span>';
-            break;
-
-        case 2:
-            return '<span class="label label-sm label-info '.$c.'">
-                                <i class="fa fa-user"></i>
-                            </span>';
-            break;
-
-        case 3:
-            return '<span class="label label-sm label-success '.$c.'">
-                                <i class="fa fa-th-large"></i>
-                            </span>';
-            break;
-
-        case 4:
-            return '<span class="label label-sm label-default '.$c.'">
-                                <i class="fa fa-puzzle-piece"></i>
-                            </span>';
-            break;
-
-        case 5:
-            return '<span class="label label-sm label-warning '.$c.'">
-                                <i class="fa fa-rmb"></i>
-                            </span>';
-            break;
-
-        case 6:
-            return '<span class="label label-sm label-success '.$c.'">
-                                <i class="fa fa-shopping-cart"></i>
-                            </span>';
-            break;
-
-    }
-
 }
 
 /**
@@ -2597,26 +2597,8 @@ function dr_show_stars($num, $starthreshold = 4) {
  */
 function dr_module_comment($dir, $id) {
     $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}";
-    return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\">
-	function dr_ajax_module_comment_{$id}(type, page) {
-		var index = layer.load(2, { time: 10000 });
-	    $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\",
-            success: function (data) {
-            	layer.close(index);
-            	if (data.code) {
-					$(\"#dr_module_comment_{$id}\").html(data.msg);
-				} else {
-					dr_tips(0, data.msg);
-				}
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                layer.closeAll();
-                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
-            }
-        });
-	}
-	dr_ajax_module_comment_{$id}(0, 1);
-	</script>";
+    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
+    return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_module_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });$.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_module_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_module_comment_{$id}(0, 1); </script>";
 }
 
 /**
@@ -2627,26 +2609,8 @@ function dr_module_comment($dir, $id) {
  */
 function dr_mform_comment($dir, $fid,  $id) {
     $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}";
-    return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\">
-	function dr_ajax_mform_{$fid}_comment_{$id}(type, page) {
-		var index = layer.load(2, { time: 10000 });
-	    $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\",
-            success: function (data) {
-            	layer.close(index);
-            	if (data.code) {
-					$(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg);
-				} else {
-					dr_tips(0, data.msg);
-				}
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                layer.closeAll();
-                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
-            }
-        });
-	}
-	dr_ajax_mform_{$fid}_comment_{$id}(0, 1);
-	</script>";
+    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
+    return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_mform_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });  $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll();  var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_mform_{$fid}_comment_{$id}(0, 1); </script>";
 }
 
 /**
@@ -2657,42 +2621,16 @@ function dr_mform_comment($dir, $fid,  $id) {
  */
 function dr_form_comment($fid, $id) {
     $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}";
-    return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\">
-	function dr_ajax_form_{$fid}_comment_{$id}(type, page) {
-		var index = layer.load(2, { time: 10000 });
-	    $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\",
-            success: function (data) {
-            	layer.close(index);
-            	if (data.code) {
-					$(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg);
-				} else {
-					dr_tips(0, data.msg);
-				}
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                layer.closeAll();
-                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
-            }
-        });
-	}
-	dr_ajax_form_{$fid}_comment_{$id}(0, 1);
-	</script>";
+    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
+    return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_form_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 }); $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText; ".$error." } }); } dr_ajax_form_{$fid}_comment_{$id}(0, 1);</script>";
 }
 
 /**
  * 动态调用模板
  */
 function dr_ajax_template($id, $filename) {
-    return "<script type=\"text/javascript\">
-		$.ajax({
-			type: \"GET\",
-			url:\"".ROOT_URL."index.php?s=api&c=api&m=template&name={$filename}\",
-			dataType: \"jsonp\",
-			success: function(data){
-				$(\"#{$id}\").html(data.msg);
-			}
-		});
-    </script>";
+    $error = IS_DEV ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
+    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=api&m=template&name={$filename}\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
 
@@ -2707,20 +2645,7 @@ if (!function_exists('dr_show_hits')) {
         $is = $dom;
         !$dom && $dom = "dr_show_hits_{$id}";
         $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
-        return $html."<script type=\"text/javascript\">
-		$.ajax({
-			type: \"GET\",
-			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\",
-			dataType: \"jsonp\",
-			success: function(data){
-				if (data.code) {
-					$(\"#{$dom}\").html(data.msg);
-				} else {
-					dr_tips(0, data.msg);
-				}
-			}
-		});
-    </script>";
+        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
 
@@ -2731,20 +2656,7 @@ if (!function_exists('dr_show_hits')) {
  * @return	string
  */
 function dr_show_module_total($name, $id, $dom, $dir = MOD_DIR) {
-    return "<script type=\"text/javascript\">
-		$.ajax({
-			type: \"GET\",
-			url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=mcount&name={$name}&id={$id}\",
-			dataType: \"jsonp\",
-			success: function(data){
-				if (data.code) {
-					$(\"#{$dom}\").html(data.msg);
-				} else {
-					dr_tips(0, data.msg);
-				}
-			}
-		});
-    </script>";
+    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=mcount&name={$name}&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
 }
 
 
@@ -3132,24 +3044,24 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
     //n秒前，n分钟前，n小时前，日期
     if ($dTime < 60 ) {
         if ($dTime < 10) {
-            return '刚刚';
+            return dr_lang('刚刚');
         } else {
-            return intval(floor($dTime / 10) * 10).'秒前';
+            return dr_lang('%s秒前', intval(floor($dTime / 10) * 10));
         }
     } elseif ($dTime < 3600 ) {
-        return intval($dTime/60).'分钟前';
+        return dr_lang('%s分钟前', intval($dTime/60));
     } elseif( $dTime >= 3600 && $dDay == 0  ){
-        return intval($dTime/3600).'小时前';
+        return dr_lang('%s小时前', intval($dTime/3600));
     } elseif( $dDay > 0 && $dDay<=7 ){
-        return intval($dDay).'天前';
+        return dr_lang('%s天前', intval($dDay));
     } elseif( $dDay > 7 &&  $dDay <= 30 ){
-        return intval($dDay/7).'周前';
+        return dr_lang('%s周前', intval($dDay/7));
     } elseif( $dDay > 30 && $dDay < 180){
-        return intval($dDay/30).'个月前';
+        return dr_lang('%s个月前', intval($dDay/30));
     } elseif( $dDay >= 180 && $dDay < 360){
-        return '半年前';
-    } elseif ($dYear==0) {
-        return date('m月d日', $sTime);
+        return dr_lang('半年前');
+    } elseif ($dYear == 0) {
+        return dr_date($sTime);
     } else {
         return date($formt, $sTime);
     }
