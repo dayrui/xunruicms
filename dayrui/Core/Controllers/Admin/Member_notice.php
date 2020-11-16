@@ -70,7 +70,7 @@ class Member_notice extends \Phpcmf\Table
 
     // 类型
     public function edit() {
-        ​
+
         $data = dr_notice_info();
 
         if (IS_AJAX_POST) {
