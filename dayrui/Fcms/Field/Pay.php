@@ -95,25 +95,14 @@ class Pay extends \Phpcmf\Library\A_Field  {
 
             // 付款金额
             $html['pay_value'] = $value ? $value : '';
-            // 付款方式
-            $html['pay_type'] = [];
-            $html['pay_default'] = '';
-            if (\Phpcmf\Service::C()->member
-                && $field['setting']['option']['is_finecms']
-                && is_file(ROOTPATH.'api/pay/finecms/config.php')) {
-                // 余额支付
-                $html['pay_default'] = 'finecms';
-                $html['pay_type']['finecms'] = require ROOTPATH.'api/pay/finecms/config.php';
-            }
 
-            if (\Phpcmf\Service::C()->member_cache['payapi']) {
-                foreach (\Phpcmf\Service::C()->member_cache['payapi'] as $name => $t) {
-                    if (!is_file(ROOTPATH.'api/pay/'.$name.'/config.php')) {
-                        continue; // 排除是否存在配置文件
-                    }
-                    !$html['pay_default'] && $html['pay_default'] = $name;
-                    $html['pay_type'][$name] = require ROOTPATH.'api/pay/'.$name.'/config.php';
-                }
+            // 付款方式
+            $html['pay_type'] = \Phpcmf\Service::M('pay')->get_pay_type(\Phpcmf\Service::C()->member && $field['setting']['option']['is_finecms']  && is_file(ROOTPATH.'api/pay/finecms/config.php'));
+
+            // 取默认第一个
+            if ($html['pay_type']) {
+                reset($html['pay_type']);
+                $html['pay_default'] = key($html['pay_type']);
             }
 
             // 付款界面模板

@@ -26,6 +26,9 @@ class Register extends \Phpcmf\Common
 
         // 判断重复登录
         if ($this->uid) {
+            if (IS_POST) {
+                $this->_json(0, dr_lang('请退出登录账号再操作'));
+            }
             dr_redirect($url ? $url : MEMBER_URL);exit;
         }
 

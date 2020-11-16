@@ -895,5 +895,4 @@ class Pay extends \Phpcmf\Model
         $this->db->table('member_paylog')->where('status', 0)->where('inputtime <'.(SYS_TIME - 3600*24*3))->delete();
     }
 
-
 }
