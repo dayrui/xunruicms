@@ -14,8 +14,8 @@
 
 class Html
 {
-    private $webpath;
-    private $psize = 20; // 每页生成多少条
+    protected $webpath;
+    protected $psize = 20; // 每页生成多少条
 
     // 栏目的数量统计
     public function get_category_data($app, $cat) {

@@ -9,7 +9,7 @@
 class Member extends \Phpcmf\Model
 {
 
-    private $sso_url;
+    protected $sso_url;
     
     /**
      * 由用户名获取uid
@@ -66,7 +66,7 @@ class Member extends \Phpcmf\Model
      * @param   intval  $data       会员
      * @param   string  $OAuth      登录方式
      */
-    private function _login_log($data, $type = '') {
+    protected function _login_log($data, $type = '') {
 
         $ip = \Phpcmf\Service::L('input')->ip_address();
         if (!$ip || !$data['id']) {
@@ -712,7 +712,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 查询会员信息
-    private function _find_member_info($username) {
+    protected function _find_member_info($username) {
 
         $data = $this->db->table('member')->where('username', $username)->get()->getRowArray();
         if (!$data && \Phpcmf\Service::C()->member_cache['login']['field']) {
@@ -735,7 +735,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 验证管理员登录权限
-    private function _is_admin_login_member($uid) {
+    protected function _is_admin_login_member($uid) {
 
         if (!$uid) {
             return dr_return_data(1, 'ok');
@@ -1605,7 +1605,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 随机账号
-    private function _rand_username($prefix, $member, $rand = 0) {
+    protected function _rand_username($prefix, $member, $rand = 0) {
 
         if ($member['email']) {
             list($name) = explode('@', $member['email']);
@@ -1680,7 +1680,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 按用户uid查询表id集合
-    private function _get_data_ids($uid, $table) {
+    protected function _get_data_ids($uid, $table) {
 
     }
 

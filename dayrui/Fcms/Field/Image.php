@@ -8,7 +8,7 @@
 
 class Image extends \Phpcmf\Library\A_Field {
 
-    private $img_ext;
+    protected $img_ext;
 
     /**
      * 构造函数
@@ -157,7 +157,7 @@ class Image extends \Phpcmf\Library\A_Field {
         ];
     }
 
-    private function _format_file_size($fileSize, $round = 2) {
+    protected function _format_file_size($fileSize, $round = 2) {
 
         if (!$fileSize) {
             return 0;

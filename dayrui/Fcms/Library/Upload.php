@@ -13,8 +13,8 @@
 class Upload
 {
 
-    private $error;
-    private $notallowed;
+    protected $error;
+    protected $notallowed;
 
     /**
      * 构造函数
@@ -353,14 +353,14 @@ class Upload
     /**
      * 上传错误
      */
-    private function _error_msg($code) {
+    protected function _error_msg($code) {
         return !$this->error[$code] ? '上传错误('.$code.')' : $this->error[$code];
     }
 
     /**
      * 获取文件名
      */
-    private function _file_name($name) {
+    protected function _file_name($name) {
         strpos($name, '/') !== false && $name = trim(strrchr($name, '/'), '/');
         return substr($name, 0, strrpos($name, '.'));
     }
@@ -368,7 +368,7 @@ class Upload
     /**
      * 获取文件扩展名
      */
-    private function _file_ext($name) {
+    protected function _file_ext($name) {
         return str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
     }
 

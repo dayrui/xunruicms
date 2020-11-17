@@ -552,7 +552,7 @@ class Page {
         return $this->full_tag_open.$output.$this->full_tag_close;
     }
 
-    private function _get_link_url($page) {
+    protected function _get_link_url($page) {
 
         return $page <=1 && $this->first_url ? $this->first_url : str_replace('{page}', $page, $this->base_url);
     }

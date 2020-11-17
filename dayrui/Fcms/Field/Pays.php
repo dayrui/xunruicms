@@ -8,7 +8,7 @@
 
 class Pays extends \Phpcmf\Library\A_Field  {
 
-    private $showfield = [
+    protected $showfield = [
         'price' => '价格',
         'quantity' => '数量',
         'sn' => '编码',
@@ -129,7 +129,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     }
 
     // 显示字段
-    private function _get_myfield($field) {
+    protected function _get_myfield($field) {
 
         $my = [];
         $_field = \Phpcmf\Service::L('Field')->get_myfields();
@@ -527,7 +527,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     }
 
     // 格式化js变量
-    private function _js_var($html) {
+    protected function _js_var($html) {
 
         return str_replace([PHP_EOL, chr(13)], "", addslashes($html));
     }

@@ -10,8 +10,8 @@
 
 class Auth extends \Phpcmf\Model {
 
-    private $_is_post_user = -1;
-    private $_is_admin_min_mode = -1;
+    protected $_is_post_user = -1;
+    protected $_is_admin_min_mode = -1;
 
     // 验证操作其他用户身份权限
     public function cleck_edit_member($uid) {
@@ -92,7 +92,7 @@ class Auth extends \Phpcmf\Model {
     }
 
     // 获取当前管理员的角色组id
-    private function _role($uid) {
+    protected function _role($uid) {
 
         $role = $this->db->table('admin_role_index')->where('uid', $uid)->get()->getResultArray();
         if (!$role) {
@@ -183,7 +183,7 @@ class Auth extends \Phpcmf\Model {
     /**
      * 登录记录
      */
-    private function _login_log($uid) {
+    protected function _login_log($uid) {
 
         if (!$uid) {
             return;

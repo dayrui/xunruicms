@@ -1136,7 +1136,7 @@ class Content extends \Phpcmf\Model {
     }
 
     // 变更栏目的一些联动操作
-    private function _edit_category_id($t, $catid) {
+    protected function _edit_category_id($t, $catid) {
 
         $id = intval($t['id']);
         $this->db->table($this->mytable.'_time')->where('id', $id)->update(['catid' => $catid]);
@@ -1166,7 +1166,7 @@ class Content extends \Phpcmf\Model {
     }
 
     // 变更作者的一些联动操作
-    private function _edit_author_id($t) {
+    protected function _edit_author_id($t) {
 
 
         $id = intval($t['id']);

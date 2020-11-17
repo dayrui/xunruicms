@@ -14,8 +14,8 @@ class Router
     public $class;
     public $method;
 
-    private $_uri;
-    private $_temp;
+    protected $_uri;
+    protected $_temp;
 
     public function __construct(...$params)
     {
@@ -1136,7 +1136,7 @@ class Router
 
 
     // 正则解析
-    private function _rule_preg_value($rule) {
+    protected function _rule_preg_value($rule) {
 
         $rule = trim(trim($rule, '/'));
 
@@ -1214,7 +1214,7 @@ class Router
      * @param	string	$name	变量名称
      * @return	string
      */
-    private function _space($name) {
+    protected function _space($name) {
         $len = strlen($name) + 2;
         $cha = 60 - $len;
         $str = '';

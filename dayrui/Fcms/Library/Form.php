@@ -9,8 +9,8 @@
 class Form
 {
 
-    private $id = 0;
-    private $myfields;
+    protected $id = 0;
+    protected $myfields;
 
     // 初始化
     public function id($id) {

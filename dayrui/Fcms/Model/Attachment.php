@@ -12,7 +12,7 @@
 
 class Attachment extends \Phpcmf\Model {
 
-    private $siteid;
+    protected $siteid;
 
     public function __construct(...$params) {
         parent::__construct(...$params);

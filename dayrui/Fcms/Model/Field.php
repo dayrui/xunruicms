@@ -15,8 +15,7 @@ class Field extends \Phpcmf\Model
     public $relatedid;
     public $relatedname;
 
-    private $_table_field = [];
-    //private $_check_table_name = [];
+    protected $_table_field = [];
 
     // 通过字段来查询表名称
     public function get_table_name($siteid, $field) {
@@ -346,7 +345,7 @@ class Field extends \Phpcmf\Model
     /**
      * 判断表字段否存在
      */
-    private function _field_exitsts($id, $name, $table, $siteid = 0) {
+    protected function _field_exitsts($id, $name, $table, $siteid = 0) {
 
         if (!$table)	{
             return 0;
@@ -358,7 +357,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 栏目模型字段
-    private function _sql_category_data($sql, $ismain) {
+    protected function _sql_category_data($sql, $ismain) {
         $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname'].'_category_data'); // 主表名称
         if (!$this->db->tableExists($table)) {
             return;
@@ -378,7 +377,7 @@ class Field extends \Phpcmf\Model
         }
     }
     // 字段是否存在
-    private function _field_category_data($name) {
+    protected function _field_category_data($name) {
         // 模块主表
         $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname']);
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
@@ -410,7 +409,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 评论自定义字段
-    private function _sql_comment($sql, $ismain) {
+    protected function _sql_comment($sql, $ismain) {
         // 更新站点模块
         foreach (\Phpcmf\Service::C()->site_info as $sid => $v) {
             $table = $this->dbprefix($sid.'_'.$this->data.'_comment');
@@ -422,7 +421,7 @@ class Field extends \Phpcmf\Model
         }
     }
     // 字段是否存在
-    private function _field_comment($name) {
+    protected function _field_comment($name) {
         // 主表
         $table = $this->dbprefix(SITE_ID.'_'.$this->data.'_comment');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
@@ -437,7 +436,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 栏目字段
-    private function _sql_category($sql, $ismain) {
+    protected function _sql_category($sql, $ismain) {
         // 更新站点模块
         foreach (\Phpcmf\Service::C()->site_info as $sid => $v) {
             $table = $this->dbprefix($sid.'_'.$this->data.'_category');
@@ -449,7 +448,7 @@ class Field extends \Phpcmf\Model
         }
     }
     // 字段是否存在
-    private function _field_category($name) {
+    protected function _field_category($name) {
         // 主表
         $table = $this->dbprefix(SITE_ID.'_'.$this->data.'_category');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
@@ -463,12 +462,12 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 会员字段
-    private function _sql_member($sql, $ismain) {
+    protected function _sql_member($sql, $ismain) {
         $this->db->simpleQuery(str_replace('{tablename}', $this->dbprefix('member_data'), $sql));
         $this->_table_field[] = $this->dbprefix('member_data');
     }
     // 字段是否存在
-    private function _field_member($name) {
+    protected function _field_member($name) {
         // 保留
         if (in_array($name, ['role', 'uid', 'authid', 'adminid', 'tableid', 'group', 'groupid', 'levelid'])) {
             return 1;
@@ -487,7 +486,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 网站表单字段
-    private function _sql_form($sql, $ismain) {
+    protected function _sql_form($sql, $ismain) {
         $table = $this->dbprefix(SITE_ID.'_form_'.$this->data['table']); // 主表名称
         if (!$this->db->tableExists($table)) {
             return;
@@ -507,7 +506,7 @@ class Field extends \Phpcmf\Model
         }
     }
     // 字段是否存在
-    private function _field_form($name) {
+    protected function _field_form($name) {
         // 主表
         $table = $this->dbprefix(SITE_ID.'_form_'.$this->data['table']);
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
@@ -528,7 +527,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 联动字段
-    private function _sql_linkage($sql, $ismain) {
+    protected function _sql_linkage($sql, $ismain) {
         $table = $this->dbprefix('linkage_data_'.$this->relatedid);
         if (!$this->db->tableExists($table)) {
             return;
@@ -537,7 +536,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_linkage($name) {
+    protected function _field_linkage($name) {
         // 主表
         $table = $this->dbprefix('linkage_data_'.$this->relatedid);
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
@@ -550,7 +549,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // Tag字段
-    private function _sql_tag($sql, $ismain) {
+    protected function _sql_tag($sql, $ismain) {
         $table = $this->dbprefix($this->relatedid.'_tag');
         if (!$this->db->tableExists($table)) {
             return;
@@ -559,7 +558,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_tag($name) {
+    protected function _field_tag($name) {
         // 主表
         $table = $this->dbprefix($this->relatedid.'_tag');
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
@@ -572,7 +571,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------//--------------------------------------------------------------------
 
     // navigator字段
-    private function _sql_navigator($sql, $ismain) {
+    protected function _sql_navigator($sql, $ismain) {
         $table = $this->dbprefix($this->relatedid.'_navigator');
         if (!$this->db->tableExists($table)) {
             return;
@@ -581,7 +580,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_navigator($name) {
+    protected function _field_navigator($name) {
         // 主表
         $table = $this->dbprefix($this->relatedid.'_navigator');
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
@@ -594,7 +593,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 订单插件字段
-    private function _sql_order($sql, $ismain) {
+    protected function _sql_order($sql, $ismain) {
         $table = $this->dbprefix($this->relatedid.'_order');
         if (!$this->db->tableExists($table)) {
             return;
@@ -603,7 +602,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_order($name) {
+    protected function _field_order($name) {
         // 主表
         $table = $this->dbprefix($this->relatedid.'_order');
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
@@ -617,7 +616,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 单页字段
-    private function _sql_page($sql, $ismain) {
+    protected function _sql_page($sql, $ismain) {
         $table = $this->dbprefix($this->relatedid.'_page');
         if (!$this->db->tableExists($table)) {
             return;
@@ -626,7 +625,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_page($name) {
+    protected function _field_page($name) {
         // 主表
         $table = $this->dbprefix($this->relatedid.'_page');
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
@@ -643,7 +642,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 模块字段
-    private function _sql_module($sql, $ismain) {
+    protected function _sql_module($sql, $ismain) {
         // 更新站点模块
         foreach (\Phpcmf\Service::C()->site_info as $sid => $v) {
             $table = $this->dbprefix($sid.'_'.$this->data['dirname']); // 主表名称
@@ -667,7 +666,7 @@ class Field extends \Phpcmf\Model
         }
     }
     // 字段是否存在
-    private function _field_module($name) {
+    protected function _field_module($name) {
         // 保留字段
         if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old', 'mid', 'groupid'])) {
             return 1;
@@ -692,7 +691,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 模块表单字段
-    private function _sql_mform($sql, $ismain) {
+    protected function _sql_mform($sql, $ismain) {
 
         // 更新站点模块
         foreach (\Phpcmf\Service::C()->site_info as $sid => $v) {
@@ -718,7 +717,7 @@ class Field extends \Phpcmf\Model
 
     }
     // 字段是否存在
-    private function _field_mform($name) {
+    protected function _field_mform($name) {
         // 主表
         $table = $this->dbprefix(dr_module_table_prefix($this->data['module']).'_form_'.$this->data['table']);
         $rt = $this->_field_exitsts('id', $name, $table, $this->data['module'] == 'space' ? 0 : SITE_ID);
@@ -739,7 +738,7 @@ class Field extends \Phpcmf\Model
     //--------------------------------------------------------------------
 
     // 任意表
-    private function _sql_table($sql, $ismain) {
+    protected function _sql_table($sql, $ismain) {
         $table = $this->dbprefix($this->data);
         if (!$this->db->tableExists($table)) {
             return;
@@ -748,7 +747,7 @@ class Field extends \Phpcmf\Model
         $this->_table_field[] = $table;
     }
     // 字段是否存在
-    private function _field_table($name) {
+    protected function _field_table($name) {
         // 主表
         $table = $this->dbprefix($this->data);
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);

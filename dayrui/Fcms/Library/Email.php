@@ -16,7 +16,7 @@ class Email
 {
 
     public  $error;
-    private $config;
+    protected $config;
 
     /**
      * 样式配置文件
@@ -177,7 +177,7 @@ class Email
         return $this->error;
     }
 
-    private function runlog($server, $msg) {
+    protected function runlog($server, $msg) {
         if ($this->is_gb2312($msg) && function_exists('iconv')) {
             $msg = iconv('GB2312', 'UTF-8', $msg);
         }
@@ -185,7 +185,7 @@ class Email
         @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
     }
 
-    private function is_gb2312($str) {
+    protected function is_gb2312($str) {
         return function_exists('mb_detect_encoding') && mb_detect_encoding($str,"UTF-8, ISO-8859-1, GBK")!="UTF-8";
 	}
 

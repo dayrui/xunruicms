@@ -19,7 +19,7 @@ class Radio extends \Phpcmf\Library\A_Field {
     }
 
     // 调出字段遍历出来
-    private function _get_select_field($option, $field, $id, $at) {
+    protected function _get_select_field($option, $field, $id, $at) {
 
         $str = '<div class="mt-checkbox-list">';
         foreach ($field as $t) {

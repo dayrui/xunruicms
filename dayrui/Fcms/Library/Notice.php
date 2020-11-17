@@ -188,7 +188,7 @@ class Notice {
     }
 
     // 获取通知模板内容
-    private function _get_tpl_content($siteid, $name, $type, $data) {
+    protected function _get_tpl_content($siteid, $name, $type, $data) {
 
         if ($siteid > 1) {
             $my = \Phpcmf\Service::L('html')->get_webpath($siteid, 'site', 'config/notice/'.$type.'/'.$name.'.html');
@@ -212,7 +212,7 @@ class Notice {
     }
 
     // xml转换数组
-    private function _xml_array($xml) {
+    protected function _xml_array($xml) {
 
         $reg = "/<(\\w+)[^>]*?>(.*?)<\\/\\1>/Us";
         if(preg_match_all($reg, $xml, $matches))

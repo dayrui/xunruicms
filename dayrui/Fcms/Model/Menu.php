@@ -273,7 +273,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 后台菜单合并
-    private function _admin_add_menu($menu, $new) {
+    protected function _admin_add_menu($menu, $new) {
 
         foreach ($new as $mk1 => $top) {
             // 合并顶级菜单
@@ -299,7 +299,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 用户菜单合并
-    private function _member_add_menu($menu, $new) {
+    protected function _member_add_menu($menu, $new) {
 
         foreach ($new as $mk1 => $top) {
             // 合并顶级菜单
@@ -319,7 +319,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 更具mark获取id
-    private function _get_id_for_mark($table, $mark) {
+    protected function _get_id_for_mark($table, $mark) {
 
         if (!$mark) {
             return 0;
@@ -678,7 +678,7 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 获取自己id和子id
-    private function _get_id($table, $id) {
+    protected function _get_id($table, $id) {
 
         if (!$id) {
             return NULL;

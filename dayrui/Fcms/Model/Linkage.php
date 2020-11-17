@@ -258,7 +258,7 @@ class Linkage extends \Phpcmf\Model
      * @param	integer	$n		查找的层次
      * @return	string
      */
-    private function get_pids($catid, $pids = '', $n = 1) {
+    protected function get_pids($catid, $pids = '', $n = 1) {
 
         if ($n > 100 || !$this->categorys || !isset($this->categorys[$catid])) {
             return FALSE;
@@ -277,7 +277,7 @@ class Linkage extends \Phpcmf\Model
      * @param	$catid	栏目ID
      * @return	string
      */
-    private function get_childids($catid, $n = 1) {
+    protected function get_childids($catid, $n = 1) {
 
         $childids = $catid;
 

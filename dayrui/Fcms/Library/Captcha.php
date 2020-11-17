@@ -11,15 +11,15 @@
 class Captcha
 {
 
-    private $code;
-    private $charset = 'adefhkmnprstwyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
-    private $width;
-    private $height;
-    private $img;
-    private $font;
-    private $fontsize = 16;
-    private $fontcolor;
-    private $randstring = ['*', '@', '$', '%', '&', '!'];
+    protected $code;
+    protected $charset = 'adefhkmnprstwyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
+    protected $width;
+    protected $height;
+    protected $img;
+    protected $font;
+    protected $fontsize = 16;
+    protected $fontcolor;
+    protected $randstring = ['*', '@', '$', '%', '&', '!'];
 
     public function __construct(...$params) {
         $this->font = ROOTPATH.'config/font/1.ttf';
@@ -42,7 +42,7 @@ class Captcha
     }
 
     //生成随机验证码
-    private function _code() {
+    protected function _code() {
 
         $code = '';
         $charset_len = strlen($this->charset) - 1;
@@ -54,7 +54,7 @@ class Captcha
     }
 
     //生成背景
-    private function _bg() {
+    protected function _bg() {
 
         $this->img = imagecreatetruecolor($this->width, $this->height);
         $color = imagecolorallocate($this->img,255,255,255);
@@ -63,7 +63,7 @@ class Captcha
     }
 
     //生成文字
-    private function _font() {
+    protected function _font() {
         $_x = $this->width / 4;
         $this->fontcolor = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
         for ($i=0; $i<4; $i++) {
@@ -72,7 +72,7 @@ class Captcha
     }
 
     //生成干扰线条
-    private function _line() {
+    protected function _line() {
         for ($i=0;$i<5;$i++) {
             $color = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
             imageline(
@@ -98,7 +98,7 @@ class Captcha
     }
 
     //显示
-    private function _show() {
+    protected function _show() {
         @ob_start();
         @ob_clean(); //关键代码，防止出现'图像因其本身有错无法显示'的问题。
         header('Content-type:image/png');

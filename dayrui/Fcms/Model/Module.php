@@ -156,7 +156,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 获取归属于本模块的栏目关系
-    private function _get_my_category($mdir, $CAT) {
+    protected function _get_my_category($mdir, $CAT) {
 
         foreach ($CAT as $i => $t) {
             if (!$t['child'] && $t['tid'] == 1 && $t['mid'] != $mdir) {
@@ -577,7 +577,7 @@ class Module extends \Phpcmf\Model
      * 字段入库
      * @return	bool
      */
-    private function _add_field($field, $ismain, $rid, $rname) {
+    protected function _add_field($field, $ismain, $rid, $rname) {
 
         if ($this->db->table('field')->where('fieldname', $field['fieldname'])->where('relatedid', $rid)->where('relatedname', $rname)->countAllResults()) {
             return;
@@ -631,7 +631,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 模块的共享栏目数据
-    private function _get_share_category($siteid, $dir = '') {
+    protected function _get_share_category($siteid, $dir = '') {
 
         !$this->cat_share[$siteid] && $this->cat_share[$siteid] = $this->db->table($siteid.'_share_category')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
 
@@ -655,7 +655,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 栏目缓存数据
-    private function _get_category_cache($siteid, $cache) {
+    protected function _get_category_cache($siteid, $cache) {
 
         if ($cache['share']) {
             $cdir = 'share';

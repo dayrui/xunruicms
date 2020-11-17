@@ -54,7 +54,7 @@ class Category extends \Phpcmf\Model
      * @param	array	$data
      * @return	bool
      */
-    private function get_categorys($data = array()) {
+    protected function get_categorys($data = array()) {
 
         if (is_array($data) && !empty($data)) {
             foreach ($data as $catid => $c) {
@@ -77,7 +77,7 @@ class Category extends \Phpcmf\Model
      * @param	integer	$n		查找的层次
      * @return	string
      */
-    private function get_pids($catid, $pids = '', $n = 1) {
+    protected function get_pids($catid, $pids = '', $n = 1) {
 
         if ($n > 100 || !is_array($this->categorys)
             || !isset($this->categorys[$catid])) {
@@ -100,7 +100,7 @@ class Category extends \Phpcmf\Model
      * @param	$catid	栏目ID
      * @return	string
      */
-    private function get_childids($catid, $n = 1) {
+    protected function get_childids($catid, $n = 1) {
 
         $childids = $catid;
 
@@ -119,7 +119,7 @@ class Category extends \Phpcmf\Model
     }
 
     // 获取栏目下级ids
-    private function _get_next_ids($catid) {
+    protected function _get_next_ids($catid) {
 
         $rt = [];
 

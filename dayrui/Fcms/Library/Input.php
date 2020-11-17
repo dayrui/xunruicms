@@ -7,7 +7,7 @@
 
 class Input {
 
-    private $ip_address;
+    protected $ip_address;
 
     // get post解析
     public function request($name, $xss = true) {

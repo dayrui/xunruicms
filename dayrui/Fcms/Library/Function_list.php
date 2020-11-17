@@ -15,8 +15,8 @@
 class Function_list
 {
 
-    private $uid_data = [];
-    private $cid_data = [];
+    protected $uid_data = [];
+    protected $cid_data = [];
 
     // 用于列表显示栏目
     function catid($catid, $param = [], $data = []) {

@@ -9,9 +9,9 @@
 // 系统缓存
 class Cache extends \Phpcmf\Model
 {
-    private $site_cache;
-    private $module_cache;
-    private $is_sync_cache;
+    protected $site_cache;
+    protected $module_cache;
+    protected $is_sync_cache;
 
     // 更新附件缓存
     public function update_attachment() {
@@ -437,7 +437,7 @@ class Cache extends \Phpcmf\Model
     }
 
     // 错误输出
-    private function _error_msg($msg) {
+    protected function _error_msg($msg) {
         echo dr_array2string(dr_return_data(0, $msg));exit;
     }
 
