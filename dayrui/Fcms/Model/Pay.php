@@ -93,8 +93,13 @@ class Pay extends \Phpcmf\Model
     }
 
     // 获取价格值
-    protected function _get_price_value($value) {
-        return (float)$value;
+    public function get_price_value($data, $field, $sku) {
+		
+		if ($sku) {
+			return (float)$data[$field.'_sku']['value'][$sku]['price'];
+		}
+		
+        return (float)$data[$field];
     }
 
     // 获取支付价格和内容
@@ -129,12 +134,12 @@ class Pay extends \Phpcmf\Model
                 return dr_return_data(0, dr_lang('商品(#'.$rt['id'].')属性（#'.$sku.'）无效'));
             }
             $sn = (string)$rt[$field['fieldname'].'_sku']['value'][$sku]['sn'];
-            $price = $this->_get_price_value($rt[$field['fieldname'].'_sku']['value'][$sku]['price']);
+            $price = $this->get_price_value($rt, $field['fieldname'], $sku);
             $quantity = (int)$rt[$field['fieldname'].'_sku']['value'][$sku]['quantity'];
             list($sku_name, $sku_string) = dr_sku_name($sku, $rt[$field['fieldname'].'_sku'], 1);
         } else {
             $sn = (string)$rt[$field['fieldname'].'_sn'];
-            $price = $this->_get_price_value($rt[$field['fieldname']]);
+            $price = $this->_get_price_value($rt, $field['fieldname']);
             $quantity = (int)$rt[$field['fieldname'].'_quantity'];
             $sku_name = '';
             $sku_string = '';
