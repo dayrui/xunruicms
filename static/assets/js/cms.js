@@ -1002,7 +1002,7 @@ function d_isdomain(name) {
 
 function dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError) {
     layer.closeAll('loading');
-    if (typeof is_admin != "undefined" && is_admin == 1) {
+    if (typeof is_admin != "undefined" && is_admin) {
         var msg = HttpRequest.responseText;
         //console.log(HttpRequest, ajaxOptions, thrownError);
         if (!msg) {

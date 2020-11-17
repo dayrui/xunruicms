@@ -994,31 +994,34 @@ jQuery(document).ready(function() {
     //}
 
     //离开提示失效
-    var _t;
-    var blnCheckUnload = false;
-    window.onunloadcancel = function(){
-        clearTimeout(_t);
-    }
-    window.onbeforeunload = function() {
-        if (blnCheckUnload) {
-            setTimeout(function(){_t = setTimeout(onunloadcancel, 0)}, 0);
-            return lang['unloadtips'];
+    if (is_admin == 1) {
+        var _t;
+        var blnCheckUnload = false;
+        window.onunloadcancel = function(){
+            clearTimeout(_t);
         }
-    }
-    $("[type='submit'], [type='button']").click(function(){
-        blnCheckUnload = false;
-    });
-    $("select").change(function(){
-        blnCheckUnload = true;
-    });
-    $(document).keydown(function (event) {
-        if (event.keyCode >=40 || event.keyCode == 0) {
-            blnCheckUnload = true;
-        };
-        if (event.keyCode == 16 || event.keyCode == 82 || event.keyCode==91) {
+        window.onbeforeunload = function() {
+            if (blnCheckUnload) {
+                setTimeout(function(){_t = setTimeout(onunloadcancel, 0)}, 0);
+                return lang['unloadtips'];
+            }
+        }
+        $("[type='submit'], [type='button']").click(function(){
             blnCheckUnload = false;
-        }
-    });
+        });
+        $("select").change(function(){
+            blnCheckUnload = true;
+        });
+        $(document).keydown(function (event) {
+            if (event.keyCode >=40 || event.keyCode == 0) {
+                blnCheckUnload = true;
+            };
+            if (event.keyCode == 16 || event.keyCode == 82 || event.keyCode==91) {
+                blnCheckUnload = false;
+            }
+        });
+    }
+
     // 宽度小时
     if ($(document).width() < 900) {
         $(".fc-all-menu-top").remove();
