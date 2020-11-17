@@ -33,6 +33,19 @@
     <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="{HOME_THEME_PATH}web/scripts/app.min.js" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/js/quick-sidebar.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        {if IS_MOBILE_USER}
+        $(function () {
+            layer.confirm('当前界面是电脑端界面，需要访问移动端网站吗？', {
+                btn: ['访问移动端','关闭'] //按钮
+            }, function(){
+                dr_pc_or_mobile('{$my_web_url}')
+            }, function(){
+                return true;
+            });
+        });
+        {/if}
+    </script>
 </head>
 <body class="page-container-bg-solid">
 <div class="page-wrapper">

@@ -3032,3 +3032,9 @@ ul,ol,li,dl{list-style-type:none;
 .page-content-wrapper .page-content {
     margin-left: 0px!important;
 }
+/*移动端兼容*/
+@media (max-width: 768px) {
+    .page-header-search, .page-header-menu {
+        display: none !important;
+    }
+}

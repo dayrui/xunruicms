@@ -560,8 +560,7 @@ class Api extends \Phpcmf\Common
             }
         }
 
-        $this->_json(1, dr_lang('正在切换: %s', $url), ['sso' => [], 'url' => str_replace($host, $domain[$host], $url)]);
-
+        $this->_json(1, dr_lang('正在切换: %s', $domain[$host]), ['sso' => [], 'url' => str_replace($host, $domain[$host], $url)]);
     }
 
 }
