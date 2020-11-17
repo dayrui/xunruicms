@@ -324,6 +324,7 @@ $db[\'default\']	= [
                                 'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
                                 'SYS_CAT_RNAME'                 => '0', //栏目目录允许重复
                                 'SYS_CAT_ZSHOW'                 => '0', //栏目目录允许重复
+                                'SYS_SMS_IMG_CODE'              => '0', //栏目目录允许重复
                                 'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
                                 'SYS_CRON_AUTH'                 => '0', //单页目录允许重复
                                 'SYS_CSRF'                      => '1', //跨站验证提交

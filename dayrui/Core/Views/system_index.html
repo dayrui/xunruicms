@@ -162,6 +162,16 @@
                                 <span class="help-block">{dr_lang('填写本服务器的IP地址，限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('发送短信双重验证')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="0" {if !$data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('使用图形验证')} <span></span></label>
+                                    <label class="mt-radio"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="1" {if $data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('关闭图形验证')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在发送短信验证码时，加入图形验证进行双重验证，减少垃圾短信消耗')}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

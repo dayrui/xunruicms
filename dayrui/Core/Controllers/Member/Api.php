@@ -283,21 +283,27 @@ class Api extends \Phpcmf\Common
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
+    /////////////////发送短信验证码部分////////////////////
+
     /**
      * 注册验证码
      */
     public function register_code() {
 
-		$code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        if (!defined('SYS_SMS_IMG_CODE') || SYS_SMS_IMG_CODE == 0) {
+            $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+            if (!$code) {
+                $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+            } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
+            }
+        }
+
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
         if (!$phone) {
             $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
         } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-        } elseif (!$code) {
-            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
-        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
-            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         } elseif (\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
             $this->_json(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
         } elseif (\Phpcmf\Service::L('Form')->get_mobile_code($phone)) {
@@ -320,16 +326,20 @@ class Api extends \Phpcmf\Common
      */
     public function login_code() {
 
-        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        if (!defined('SYS_SMS_IMG_CODE') || SYS_SMS_IMG_CODE == 0) {
+            $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+            if (!$code) {
+                $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+            } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
+            }
+        }
+
         $phone = dr_safe_replace(\Phpcmf\Service::L('input')->get('id'));
         if (!$phone) {
             $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
         } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-        } elseif (!$code) {
-            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
-        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
-            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
         } elseif (!\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
             $this->_json(0, dr_lang('手机号码未注册'), ['field' => 'phone']);
         } elseif (\Phpcmf\Service::L('Form')->get_mobile_code($phone)) {
@@ -362,13 +372,17 @@ class Api extends \Phpcmf\Common
         // 挂钩点 短信验证之前
         \Phpcmf\Hooks::trigger('member_send_phone_before', $phone);
 
-        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
-        if (!$code) {
-            $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
-        } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
-            $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
-        } elseif (\Phpcmf\Service::L('Form')->get_mobile_code($phone)) {
-			// 验证操作间隔
+        if (!defined('SYS_SMS_IMG_CODE') || SYS_SMS_IMG_CODE == 0) {
+            $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+            if (!$code) {
+                $this->_json(0, dr_lang('图片验证码未填写'), ['field' => 'code']);
+            } elseif (!\Phpcmf\Service::L('Form')->check_captcha_value($code)) {
+                $this->_json(0, dr_lang('图片验证码不正确'), ['field' => 'code']);
+            }
+        }
+
+        // 验证操作间隔
+        if (\Phpcmf\Service::L('Form')->get_mobile_code($phone)) {
             $this->_json(1, dr_lang('已经发送稍后再试'));
         }
 

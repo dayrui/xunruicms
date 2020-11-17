@@ -95,7 +95,6 @@ class Login extends \Phpcmf\Common
         } else {
             $this->_json(0, dr_lang('提交方式不正确'));
         }
-
     }
 
 

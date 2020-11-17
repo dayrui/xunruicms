@@ -132,6 +132,13 @@ class Register extends \Phpcmf\Common
             }
             exit;
         }
+
+        $is_img_code = $this->member_cache['register']['code'];
+
+        // 当关闭图形验证码时，启用短信图形验证时，再次开启图形验证
+        if (!$this->member_cache['register']['code'] && $this->member_cache['register']['sms'] && defined('SYS_SMS_IMG_CODE') && SYS_SMS_IMG_CODE) {
+            $is_img_code = 1;
+        }
         
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(['back' => $url]),
@@ -142,6 +149,7 @@ class Register extends \Phpcmf\Common
             'register' => $this->member_cache['register'],
             'meta_name' => dr_lang('用户注册'),
             'meta_title' => dr_lang('用户注册').SITE_SEOJOIN.SITE_NAME,
+            'is_img_code' => $is_img_code,
         ]);
         \Phpcmf\Service::V()->display('register.html');
     }

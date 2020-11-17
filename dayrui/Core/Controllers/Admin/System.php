@@ -23,6 +23,7 @@ class System extends \Phpcmf\Common
                 'SYS_THEME_ROOT' => (int)$post['SYS_THEME_ROOT'],
                 'SYS_AUTO_FORM' => (int)$post['SYS_AUTO_FORM'],
                 'SYS_CRON_AUTH' => dr_safe_replace($post['SYS_CRON_AUTH']),
+                'SYS_SMS_IMG_CODE' => intval($post['SYS_SMS_IMG_CODE']),
 
                 'SYS_CAT_RNAME' => (int)$post['SYS_CAT_RNAME'],
                 'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
