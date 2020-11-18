@@ -200,6 +200,7 @@ class Check extends \Phpcmf\Common
 
                 // 增加长度
                 \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member` CHANGE `salt` `salt` VARCHAR(50) NOT NULL COMMENT \'随机加密码\';');
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member_notice` CHANGE `type` `type` tinyint(2) unsigned NOT NULL COMMENT \'类型\';');
 
                 $table = $prefix.'cron';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {

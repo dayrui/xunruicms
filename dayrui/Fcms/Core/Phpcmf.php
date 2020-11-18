@@ -596,11 +596,13 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_json($code, $msg, $url);
         }
 
-        if (!$url) {
-            $backurl = $_SERVER['HTTP_REFERER'];
-            $backurl && strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
+        $backurl = $url ? $url : $_SERVER['HTTP_REFERER'];
+
+        if ($backurl) {
+            strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
+            $backurl = \Phpcmf\Service::L('input')->xss_clean($backurl);
         } else {
-            $backurl = $url;
+            $backurl = 'javascript:history.go(-1);';
         }
 
         // 不存在URL时进入提示页面
@@ -609,7 +611,7 @@ abstract class Common extends \CodeIgniter\Controller
             'url' => \Phpcmf\Service::L('input')->xss_clean($url),
             'time' => $time,
             'mark' => $code,
-            'backurl' => \Phpcmf\Service::L('input')->xss_clean($backurl),
+            'backurl' => $backurl,
             'meta_title' => dr_clearhtml($msg),
             'is_msg_page' => 1,
         ]);
