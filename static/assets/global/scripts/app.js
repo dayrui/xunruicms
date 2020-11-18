@@ -994,7 +994,7 @@ jQuery(document).ready(function() {
     //}
 
     //离开提示失效
-    if (is_admin == 1) {
+    if (typeof is_admin != "undefined" && is_admin == 1) {
         var _t;
         var blnCheckUnload = false;
         window.onunloadcancel = function(){
