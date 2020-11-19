@@ -2855,7 +2855,7 @@ function dr_get_keyword($s) {
     return dr_safe_keyword($s);
 }
 function dr_safe_keyword($s) {
-    return trim(dr_safe_replace(str_replace(['+', ' ', '_'], '%', urldecode($s))), '%');
+    return trim(\Phpcmf\Service::M()->db->escapeLikeStringDirect(htmlspecialchars(str_replace(['+', ' ', '_'], '%', urldecode($s)))), '%');
 }
 
 /**

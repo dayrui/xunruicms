@@ -74,6 +74,19 @@ class Login extends \Phpcmf\Common
 			}
 		}
 
+        // 检测登录了就跳转首页
+        if ($this->member) {
+            $uid = (int)$this->session()->get('uid');
+            if ($uid == $this->member['uid']) {
+                $rt = \Phpcmf\Service::M('auth')->member($this->member, 1);
+                if (!$rt['code']) {
+                    $this->_admin_msg(0, $rt['msg']);
+                } else {
+                    dr_redirect(SELF);exit;
+                }
+            }
+        }
+
         $license = [];
 		if (is_file(MYPATH.'Config/License.php')) {
             $license = require MYPATH.'Config/License.php';
