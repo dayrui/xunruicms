@@ -262,14 +262,15 @@ class Category extends \Phpcmf\Table
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
         list($tpl, $data) = $this->_Post($id, null, 1);
-        if (!$data['data']) {
+        if (!$data['id']) {
             $this->_admin_msg(0, dr_lang('数据#%s不存在', $id));
         }
 
         \Phpcmf\Service::V()->assign([
             'page' => $page,
+            'data' => $data,
             'form' =>  dr_form_hidden(['page' => $page]),
-            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], $data['data']['pid'], 'name=\'data[pid]\'', dr_lang('顶级栏目')),
+            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], $data['pid'], 'name=\'data[pid]\'', dr_lang('顶级栏目')),
             'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'is_edit_mid' => 1,

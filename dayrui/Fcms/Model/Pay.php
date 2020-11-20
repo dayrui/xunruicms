@@ -93,7 +93,7 @@ class Pay extends \Phpcmf\Model
     }
 
     // 获取价格值
-    public function get_price_value($data, $field, $sku) {
+    public function get_price_value($data, $field, $sku = '') {
 		
 		if ($sku) {
 			return (float)$data[$field.'_sku']['value'][$sku]['price'];
@@ -124,7 +124,7 @@ class Pay extends \Phpcmf\Model
             isset($image['file'][0]) && $image['file'][0] && $rt[$thumb] = $image['file'][0];
         }
 
-        $title = (string)$rt[$name];
+        // 获取商品属性信息
         if ($field['fieldtype'] == 'Pays' && isset($rt[$field['fieldname'].'_sku']) && $rt[$field['fieldname'].'_sku']) {
             $rt[$field['fieldname'].'_sku'] = dr_string2array($rt[$field['fieldname'].'_sku']);
             if (!$sku && $rt[$field['fieldname'].'_sku']) {
@@ -134,16 +134,16 @@ class Pay extends \Phpcmf\Model
                 return dr_return_data(0, dr_lang('商品(#'.$rt['id'].')属性（#'.$sku.'）无效'));
             }
             $sn = (string)$rt[$field['fieldname'].'_sku']['value'][$sku]['sn'];
-            $price = $this->get_price_value($rt, $field['fieldname'], $sku);
             $quantity = (int)$rt[$field['fieldname'].'_sku']['value'][$sku]['quantity'];
             list($sku_name, $sku_string) = dr_sku_name($sku, $rt[$field['fieldname'].'_sku'], 1);
         } else {
             $sn = (string)$rt[$field['fieldname'].'_sn'];
-            $price = $this->_get_price_value($rt, $field['fieldname']);
             $quantity = (int)$rt[$field['fieldname'].'_quantity'];
-            $sku_name = '';
-            $sku_string = '';
+            $sku_name = $sku_string = '';
         }
+
+        // 获取价格
+        $price = $this->get_price_value($rt, $field['fieldname'], $sku);
 
         // buy-表名-主键id-字段id-数量-sku
         $mid = 'buy-'.$table .'-'. $id .'-'. $field['id'] .'-'. max(1, (int)$num) .'-'. ($sku ? $sku : 'null');
@@ -162,7 +162,7 @@ class Pay extends \Phpcmf\Model
             'sku_value' => $sku,
             'touid' => intval($rt['uid']),
             'tousername' => (string)$rt['username'],
-            'title' => $title,
+            'title' => (string)$rt[$name],
             'thumb' => (string)$rt[$thumb],
             'url' => $url ? $url.$id : '',
             'data' => $rt,

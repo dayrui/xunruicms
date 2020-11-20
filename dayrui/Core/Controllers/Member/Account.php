@@ -201,7 +201,7 @@ class Account extends \Phpcmf\Common
 
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-			$cache = \Phpcmf\Service::L('cache')->get_data('member-mobile-code-'.$this->uid);
+			$cache = \Phpcmf\Service::L('cache')->check_auth_data('member-mobile-code-'.$this->uid, 300);
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
@@ -263,7 +263,7 @@ class Account extends \Phpcmf\Common
 
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            $cache = \Phpcmf\Service::L('cache')->get_data('member-email-code-'.$this->uid);
+            $cache = \Phpcmf\Service::L('cache')->check_auth_data('member-email-code-'.$this->uid, 300);
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('邮箱验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
@@ -332,7 +332,7 @@ class Account extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-mobile-code-'.$this->uid;
-		if (\Phpcmf\Service::L('cache')->get_data($name)) {
+		if (\Phpcmf\Service::L('cache')->check_auth_data($name, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} elseif (!\Phpcmf\Service::L('Form')->check_phone($value)) {
 			$this->_json(0, dr_lang('手机号码格式不正确'));
@@ -347,7 +347,7 @@ class Account extends \Phpcmf\Common
 		}
 		
 
-		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
+		\Phpcmf\Service::L('cache')->set_auth_data($name, $value);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -375,7 +375,7 @@ class Account extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-email-code-'.$this->uid;
-		if (\Phpcmf\Service::L('cache')->get_data($name)) {
+		if (\Phpcmf\Service::L('cache')->check_auth_data($name, 3600)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} elseif (!\Phpcmf\Service::L('Form')->check_email($value)) {
 			$this->_json(0, dr_lang('邮箱地址格式不正确'));
@@ -389,7 +389,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, IS_DEV ? $rt['msg'] : dr_lang('发送失败'));
 		}
 
-		\Phpcmf\Service::L('cache')->set_data($name, $value, 300);
+		\Phpcmf\Service::L('cache')->set_auth_data($name, $value);
 
         $this->_json(1, dr_lang('验证码发送成功'));
     }

@@ -68,7 +68,7 @@ class Api extends \Phpcmf\Common
      */
     public function search() {
 
-        $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
+        $dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
         if (!$dir) {
             $this->_msg(0, dr_lang('模块参数不能为空'));
         } elseif (!dr_is_module($dir)) {
@@ -86,8 +86,8 @@ class Api extends \Phpcmf\Common
 
         // 获取参数
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $title = dr_safe_replace(\Phpcmf\Service::L('input')->get('title'));
-        $module = dr_safe_replace(\Phpcmf\Service::L('input')->get('module'));
+        $title = dr_safe_replace(htmlspecialchars(\Phpcmf\Service::L('input')->get('title')));
+        $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
 
         // 判断参数
         (!$title || !$module || !\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module)) && exit('');

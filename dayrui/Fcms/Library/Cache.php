@@ -139,6 +139,23 @@ class Cache {
         return '';
     }
 
+    // 验证内容
+    public function check_auth_data($name, $time = 3600, $siteid = SITE_ID) {
+
+        $code_file = $this->auth_dir.md5($siteid.$name);
+        if (is_file($code_file)) {
+            if (SYS_TIME - filemtime($code_file) > $time) {
+                return '';
+            }
+            $rt = file_get_contents($code_file);
+            if ($rt) {
+                return $rt;
+            }
+        }
+
+        return '';
+    }
+
     //------------------------------------------------
 
     // 调用ci框架缓存

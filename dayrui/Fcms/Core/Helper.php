@@ -1170,19 +1170,19 @@ function dr_field_options($id) {
 // 提醒说明
 function dr_notice_info() {
 
-    $data = \Phpcmf\Service::R(WRITEPATH . 'config/notice.php');
-
-    if (is_array($data) && $data) {
-        foreach ($data as $i => $t) {
-            if ($t['name']) {
-                $data[$i]['name'] = dr_lang($data[$i]['name']);
+    if (is_file(WRITEPATH . 'config/notice.php')) {
+        $data = \Phpcmf\Service::R(WRITEPATH . 'config/notice.php');
+        if (is_array($data) && $data) {
+            foreach ($data as $i => $t) {
+                if ($t['name']) {
+                    $data[$i]['name'] = dr_lang($data[$i]['name']);
+                }
             }
+            return $data;
         }
-        return $data;
     }
 
     return [
-
         1 => [
             'name' => dr_lang('系统'),
             'icon' => 'fa fa-bell-o',
@@ -1207,7 +1207,6 @@ function dr_notice_info() {
             'name' => dr_lang('订单'),
             'icon' => 'fa fa-shopping-cart',
         ],
-
     ];
 }
 
@@ -1231,8 +1230,6 @@ function ​dr_notice_update($id, $name = '', $icon = '') {
     \Phpcmf\Service::R(WRITEPATH . 'config/notice.php', true);
     \Phpcmf\Service::L('config')->file(WRITEPATH . 'config/notice.php', '设置自定义消息类型')->to_require($data);
 }
-
-
 
 // 提醒图标
 function dr_notice_icon($type, $c = '') {

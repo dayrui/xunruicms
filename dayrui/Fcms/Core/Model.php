@@ -704,9 +704,9 @@ class Model {
             // 时间搜索
             if ($this->date_field) {
                 if (isset($param['date_form']) && $param['date_form']) {
-                    $select->where($this->date_field.' BETWEEN ' . max((int)strtotime($param['date_form'].' 00:00:00'), 1) . ' AND ' . ($param['date_to'] ? (int)strtotime($param['date_to'].' 23:59:59') : SYS_TIME));
+                    $select->where($this->date_field.' BETWEEN ' . max((int)strtotime(strpos($param['date_form'], ' ') ? $param['date_form'] : $param['date_form'].' 00:00:00'), 1) . ' AND ' . ($param['date_to'] ? (int)strtotime(strpos($param['date_to'], ' ') ? $param['date_to'] : $param['date_to'].' 23:59:59') : SYS_TIME));
                 } elseif (isset($param['date_to']) && $param['date_to']) {
-                    $select->where($this->date_field.' BETWEEN 1 AND ' . (int)strtotime($param['date_to'].' 23:59:59'));
+                    $select->where($this->date_field.' BETWEEN 1 AND ' . (int)strtotime(strpos($param['date_to'], ' ') ? $param['date_to'] : $param['date_to'].' 23:59:59'));
                 }
             }
             // 栏目查询
