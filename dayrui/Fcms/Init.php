@@ -75,6 +75,7 @@ if (CI_DEBUG) {
     ini_set('display_errors', 1);
     // 重置Zend OPcache
     function_exists('opcache_reset') && opcache_reset();
+    define('ENVIRONMENT', 'development');
 } else {
     ini_set('display_errors', 0);
 }
@@ -178,7 +179,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 			}
 		}
 	}
-	 define('ENVIRONMENT', 'testing');
+	defined('ENVIRONMENT') && define('ENVIRONMENT', 'testing');
 } else {
 	// 正常访问模式
 	// 当前URL
