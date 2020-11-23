@@ -1278,7 +1278,7 @@ class Member extends \Phpcmf\Model
             }
         } else {
             $content = $type == 'code' ? dr_lang('您的本次验证码是: %s', $content) : $content;
-            $url = 'https://www.xunruicms.com/index.php?s=vip&c=home&uid='.$config['uid'].'&key='.$config['key'].'&mobile='.$mobile.'&content='.$content.'【'.$config['note'].'】&domain='.trim(str_replace('http://', '', SITE_URL), '/').'&sitename='.SITE_NAME;
+            $url = 'https://www.xunruicms.com/index.php?s=vip&c=home&uid='.$config['uid'].'&key='.$config['key'].'&mobile='.$mobile.'&content='.urlencode($content).'【'.$config['note'].'】&domain='.trim(str_replace('http://', '', SITE_URL), '/').'&sitename='.SITE_NAME;
             $result = dr_catcher_data($url);
             if (!$result) {
                 log_message('error', '访问官方云短信服务器失败');

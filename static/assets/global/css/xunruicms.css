@@ -15669,10 +15669,8 @@ body[ng-controller] .modal {
 }
 
 .portlet>.portlet-title {
-    border-bottom: 1px solid #eee;
     padding: 0;
-    margin-bottom: 10px;
-    min-height: 41px;
+    margin-bottom: 2px;
     -webkit-border-radius: 4px 4px 0 0;
     -moz-border-radius: 4px 4px 0 0;
     -ms-border-radius: 4px 4px 0 0;
@@ -15705,9 +15703,8 @@ body[ng-controller] .modal {
     float: left;
     margin-top: 4px;
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
     margin-right: 5px;
-    color: #666
 }
 
 .portlet>.portlet-title>.caption>i.glyphicon {
@@ -15994,9 +15991,6 @@ body[ng-controller] .modal {
     border: 1px solid #e7ecf1!important
 }
 
-.portlet.light.bordered>.portlet-title {
-    border-bottom: 1px solid #eef1f5
-}
 
 .portlet.light.bg-inverse {
     background: #f1f4f7
@@ -16004,22 +15998,22 @@ body[ng-controller] .modal {
 
 .portlet.light>.portlet-title {
     padding: 0;
-    min-height: 48px
+    color: #181C32;    font-weight: 500;
 }
 
+.portlet.light>.portlet-title>.caption a {
+    color: #181C32;
+}
 .portlet.light>.portlet-title>.caption {
-    color: #666;
+    color: #181C32;
     padding: 10px 0
 }
 
 .portlet.light>.portlet-title>.caption>.caption-subject {
-    font-size: 16px
+    font-size: 15px
 }
 
 .portlet.light>.portlet-title>.caption>i {
-    color: #777;
-    font-size: 15px;
-    font-weight: 300;
     margin-top: 3px
 }
 
