@@ -27,7 +27,7 @@ return [
           `url` varchar(255) DEFAULT NULL COMMENT '地址',
           `link_id` int(10) NOT NULL DEFAULT '0' COMMENT '同步id',
           `tableid` smallint(5) unsigned NOT NULL COMMENT '附表id',
-          `inputip` varchar(15) DEFAULT NULL COMMENT '录入者ip',
+          `inputip` varchar(100) DEFAULT NULL COMMENT '录入者ip',
           `inputtime` int(10) unsigned NOT NULL COMMENT '录入时间',
           `updatetime` int(10) unsigned NOT NULL COMMENT '更新时间',
           `displayorder` int(10) DEFAULT '0' COMMENT '排序值',
