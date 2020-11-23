@@ -33,23 +33,23 @@ class Auth extends \Phpcmf\Model {
     // 编辑时的获取自定义面板
     public function edit_main_table($table, $name, $tid = 12) {
 
-        $html = '<div class="portlet portlet-sortable light bordered" id="table_'.$table.'">
-                        <input name="tables['.$table.']" id="dr_table_'.$table.'" type="hidden" value="'.$tid.'">
+        $html = '<div class="portlet portlet-sortable light bordered" id="table_'.md5($table).'">
+                        <input name="tables['.$table.']" id="dr_table_'.md5($table).'" type="hidden" value="'.$tid.'">
                         <div class="portlet-title">
                             <div class="caption">
                                 <span class="caption-subject bold uppercase"> <i class="fa fa-arrows-alt"></i> '.$name.'</span>
                             </div>
                             <div class="actions">
-                                <a href="javascript:$(\'#table_'.$table.'\').remove();" class="btn btn-circle btn-default btn-sm">
-                                    <i class="fa fa-close"></i> 移除 
+                                <a href="javascript:$(\'#table_'.md5($table).'\').remove();" class="btn btn-circle btn-default btn-sm">
+                                    <i class="fa fa-close"></i> '.dr_lang('移除').'  
                                 </a>
-                                <a href="javascript:dr_qx(\''.$table.'\');" class="btn btn-circle btn-default btn-sm">
-                                    <i class="fa fa-user"></i> 权限 
+                                <a href="javascript:dr_qx(\''.md5($table).'\');" class="btn btn-circle btn-default btn-sm">
+                                    <i class="fa fa-user"></i> '.dr_lang('权限').' 
                                 </a>
                             </div>
                         </div>
                         <div class="portlet-body text-center" style="color: #ddd;padding: 40px;">
-                            拖动到任意灰色虚线框中
+                            '.dr_lang('拖动到任意灰色虚线框中').'
                         </div>
                     </div>';
 

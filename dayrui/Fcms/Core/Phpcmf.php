@@ -1056,7 +1056,6 @@ abstract class Common extends \CodeIgniter\Controller
             'couts' => '数据统计',
             'notice' => '通知提醒',
             'mylink' => '快捷链接',
-            'share_category' => '共享栏目',
         ];
 
         if (is_file(MYPATH.'/Config/Main.php')) {
