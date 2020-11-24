@@ -60,13 +60,13 @@ class Security {
 	 * @var	array
 	 */
 	protected $_never_allowed_str =	[
-		'document.cookie' => '[removed]',
-		'(document).cookie' => '[removed]',
-		'document.write'  => '[removed]',
-		'(document).write'  => '[removed]',
-		'.parentNode'     => '[removed]',
-		'.innerHTML'      => '[removed]',
-		'-moz-binding'    => '[removed]',
+		'document.cookie' => '[xss_clean]',
+		'(document).cookie' => '[xss_clean]',
+		'document.write'  => '[xss_clean]',
+		'(document).write'  => '[xss_clean]',
+		'.parentNode'     => '[xss_clean]',
+		'.innerHTML'      => '[xss_clean]',
+		'-moz-binding'    => '[xss_clean]',
 		'<!--'            => '&lt;!--',
 		'-->'             => '--&gt;',
 		'<![CDATA['       => '&lt;![CDATA[',
@@ -84,7 +84,7 @@ class Security {
 	 *
 	 * @var	array
 	 */
-	protected $_never_allowed_regex = array(
+	protected $_never_allowed_regex = [
 		'javascript\s*:',
 		'(\(?document\)?|\(?window\)?(\.document)?)\.(location|on\w*)',
 		'expression\s*(\(|&\#40;)', // CSS and IE
@@ -94,7 +94,7 @@ class Security {
 		'vbs\s*:', // IE
 		'Redirect\s+30\d',
 		"([\"'])+data\s*:[^\\1]*?base64[^\\1]*?,[^\\1]*?\\1?"
-	);
+    ];
 
 
 
@@ -146,7 +146,7 @@ class Security {
 		}
 
         if (json_encode( $str) === false) {
-            return '[removed]'; // 判断含有乱码直接过滤为空
+            return '[xss_clean]'; // 判断含有乱码直接过滤为空
         }
 
 		/*
@@ -164,7 +164,7 @@ class Security {
 			{
 				$oldstr = $str;
 				$str = rawurldecode($str);
-				$str = preg_replace_callback('#%(?:\s*[0-9a-f]){2,}#i', array($this, '_urldecodespaces'), $str);
+				$str = preg_replace_callback('#%(?:\s*[0-9a-f]){2,}#i', [$this, '_urldecodespaces'], $str);
 			}
 			while ($oldstr !== $str);
 			unset($oldstr);
@@ -219,7 +219,7 @@ class Security {
 		}
 		else
 		{
-			$str = str_replace(array('<?', '?'.'>'), array('&lt;?', '?&gt;'), $str);
+			$str = str_replace(['<?', '?'.'>'], ['&lt;?', '?&gt;'], $str);
 		}
 
 		/*
@@ -228,11 +228,11 @@ class Security {
 		 * This corrects words like:  j a v a s c r i p t
 		 * These words are compacted back to their correct state.
 		 */
-		$words = array(
-			'javascript', 'expression', 'vbscript', 'jscript', 'wscript',
-			'vbs', 'script', 'base64', 'applet', 'alert', 'document',
-			'write', 'cookie', 'window', 'confirm', 'prompt', 'eval'
-		);
+		$words = [
+            'javascript', 'expression', 'vbscript', 'jscript', 'wscript',
+            'vbs', 'script', 'base64', 'applet', 'alert', 'document',
+            'write', 'cookie', 'window', 'confirm', 'prompt', 'eval'
+        ];
 
 		foreach ($words as $word)
 		{
@@ -271,7 +271,7 @@ class Security {
 
 			if (preg_match('/script|xss/i', $str))
 			{
-				$str = preg_replace('#</*(?:script|xss).*?>#si', '[removed]', $str);
+				$str = preg_replace('#</*(?:script|xss).*?>#si', '[xss_clean]', $str);
 			}
 		}
 		while ($original !== $str);
@@ -359,7 +359,7 @@ class Security {
 
 
         // now the only remaining whitespace attacks are \t, \n, and \r
-        $ra = array('onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload');
+        $ra = ['onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload'];
         foreach ($ra as $t) {
             $str = str_replace(' '.$t.'="', ' '.$t.'=', $str);
         }
@@ -504,7 +504,7 @@ class Security {
 			// Decode standard entities, avoiding false positives
 			if (preg_match_all('/&[a-z]{2,}(?![a-z;])/i', $str, $matches))
 			{
-				$replace = array();
+				$replace = [];
 				$matches = array_unique(array_map('strtolower', $matches[0]));
 				foreach ($matches as &$match)
 				{
@@ -596,7 +596,7 @@ class Security {
 	protected function _urldecodespaces($matches)
 	{
 		$input    = $matches[0];
-		$nospaces = preg_replace('#\s+#', '', $input);
+		$nospaces = preg_replace('#\s+#', '[xss_clean_space]', $input);
 		return ($nospaces === $input)
 			? $input
 			: rawurldecode($nospaces);
@@ -694,9 +694,9 @@ class Security {
 				)
 				{
                     if (CI_DEBUG) {
-                        $attributes[] = 'xss_removed_'.$attribute[0][0];
+                        $attributes[] = 'xss_clean_'.$attribute[0][0];
                     } else {
-                        $attributes[] = 'xss=removed';
+                        $attributes[] = 'xss=clean';
                     }
 				}
 				else
@@ -784,7 +784,7 @@ class Security {
 	 */
 	protected function _convert_attribute($match)
 	{
-		return str_replace(array('>', '<', '\\'), array('&gt;', '&lt;', '\\\\'), $match[0]);
+		return str_replace(['>', '<', '\\'], ['&gt;', '&lt;', '\\\\'], $match[0]);
 	}
 
 	// --------------------------------------------------------------------
