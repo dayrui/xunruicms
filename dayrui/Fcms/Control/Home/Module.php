@@ -13,6 +13,10 @@ class Module extends \Phpcmf\Common
     // 模块首页
     protected function _Index($html = 0) {
 
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
+
         // 初始化模块
         $this->_module_init();
 
@@ -79,6 +83,10 @@ class Module extends \Phpcmf\Common
 
     // 模块栏目页
     protected function _Category($catid = 0, $catdir = null, $page = 1) {
+
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
 
         if ($catid) {
             $category = $this->module['category'][$catid];
@@ -208,6 +216,10 @@ class Module extends \Phpcmf\Common
     // 模块搜索
     protected function _Search($_catid = 0) {
 
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
+
         // 模型类
         $search = \Phpcmf\Service::M('Search', $this->module['dirname'])->init($this->module['dirname']);
 
@@ -308,6 +320,10 @@ class Module extends \Phpcmf\Common
     // 模块内容页
     // $param 自定义字段检索
     protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
+
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
 
         // 通过自定义字段查找id
         $is_id = 1;
@@ -419,6 +435,10 @@ class Module extends \Phpcmf\Common
 
     // 模块草稿、审核、定时、内容页
     protected function _MyShow($type, $id = 0, $page = 1) {
+
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
 
         switch($type) {
 

@@ -11,6 +11,10 @@ class Category extends \Phpcmf\Home\Module
 
 	public function index() {
 
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
+
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
 		$page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
@@ -23,7 +27,9 @@ class Category extends \Phpcmf\Home\Module
 
 		if ($id) {
 			$cat = $module['category'][$id];
-			!$cat && exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $id)));
+			if (!$cat) {
+			    exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $id)));
+            }
 		} elseif ($dir) {
 			$id = intval($module['category_dir'][$dir]);
             $cat = $module['category'][$id];
@@ -44,7 +50,9 @@ class Category extends \Phpcmf\Home\Module
 					}
 				}
 				// 返回无法找到栏目
-				!$id && exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $dir)));
+				if (!$id) {
+				    exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $dir)));
+                }
 			}
 		} else {
             exit($this->goto_404_page(dr_lang('栏目参数不存在')));

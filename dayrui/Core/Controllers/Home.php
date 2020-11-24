@@ -39,9 +39,15 @@ class Home extends \Phpcmf\Common
 
 	// 首页显示
 	public function index() {
+
+	    if (IS_POST) {
+	        $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
+
         // 挂钩点 网站首页时
         \Phpcmf\Hooks::trigger('cms_index');
         \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
+
         $this->_index();
 	}
 
