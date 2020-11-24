@@ -193,7 +193,8 @@ abstract class Common extends \CodeIgniter\Controller
                 && $this->member_cache['domain'][SITE_ID]['domain']) {
                 // 电脑端绑定域名时
                 define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['domain'].'/'));
-            } elseif ($is_auto_mobile_page) {
+            } elseif ($is_auto_mobile_page && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
+                && $this->member_cache['domain'][SITE_ID]['mobile_domain']) {
                 // 移动端绑定域名时
                 define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['mobile_domain'].'/'));
             } else {
