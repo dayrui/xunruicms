@@ -3771,14 +3771,18 @@ function dr_related_cat($data, $catid) {
     $related = $parent = [];
 
     if ($my['child']) {
+        // 当存在子栏目时就显示下级子栏目
         $parent = $my;
         foreach ($data as $t) {
             if (!$t['show']) {
                 continue;
             }
-            $t['pid'] == $my['id'] && $related[$t['id']] = $t;
+            if ($t['pid'] == $my['id']) {
+                $related[$t['id']] = $t;
+            }
         }
     } elseif ($my['pid']) {
+        // 当属于子栏目时就显示同级别栏目
         foreach ($data as $t) {
             if (!$t['show']) {
                 continue;
@@ -3789,6 +3793,7 @@ function dr_related_cat($data, $catid) {
             }
         }
     } else {
+        // 显示顶级栏目
         if (!$data) {
             return [[], []];
         }
@@ -3797,7 +3802,9 @@ function dr_related_cat($data, $catid) {
             if (!$t['show']) {
                 continue;
             }
-            $t['pid'] == 0 && $related[$t['id']] = $t;
+            if ($t['pid'] == 0) {
+                $related[$t['id']] = $t;
+            }
         }
     }
 
@@ -3824,7 +3831,9 @@ function dr_get_cat_pname($mod, $catid, $symbol = '_') {
     $array = explode(',', $cat['pids']);
 
     foreach ($array as $id) {
-        $id && $mod['category'][$id] && $name[] = $mod['category'][$id]['name'];
+        if ($id && $mod['category'][$id]) {
+            $name[] = $mod['category'][$id]['name'];
+        }
     }
 
     $name[] = $cat['name'];

@@ -119,7 +119,14 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('显示状态')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="system[show]" value="1" {if $data['show']}checked{/if} data-on-text="{dr_lang('显示')}" data-off-text="{dr_lang('隐藏')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('前端循环调用不会显示')}</span>
+                                <span class="help-block">{dr_lang('前端循环调用不会显示，但可以正常访问')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('可用状态')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="system[setting][disabled]" value="1" {if $data['setting']['disabled']}checked{/if} data-on-text="{dr_lang('禁止')}" data-off-text="{dr_lang('允许')}" data-on-color="danger" data-off-color="success" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('禁用状态下此栏目不能正常访问')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_0">

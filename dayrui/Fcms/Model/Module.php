@@ -712,7 +712,12 @@ class Module extends \Phpcmf\Model
                     ),
                 ], 1, 0, 'category-'.$cdir);
             }
-            foreach ($category as $c) {
+            foreach ($category as $i => $c) {
+                $c['setting'] = dr_string2array($c['setting']);
+                if (isset($c['setting']['disabled']) && $c['setting']['disabled']) {
+                    unset($category[$i]);
+                    continue;
+                }
                 $pid = explode(',', $c['pids']);
                 $level[] = substr_count($c['pids'], ',');
                 $c['mid'] = isset($c['mid']) ? $c['mid'] : $cache['dirname'];
@@ -720,7 +725,6 @@ class Module extends \Phpcmf\Model
                 $c['domain'] = isset($c['domain']) ? $c['domain'] : $cache['domain'];
                 $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];
                 $c['catids'] = explode(',', $c['childids']);
-                $c['setting'] = dr_string2array($c['setting']);
                 if ($cache['share']) {
                     // 共享栏目时
                     //以本栏目为准

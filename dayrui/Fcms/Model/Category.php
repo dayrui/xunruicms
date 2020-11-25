@@ -272,7 +272,10 @@ class Category extends \Phpcmf\Model
                 }
             }
 
-            $dirname == 'share' && $this->categorys[$catid]['child'] && $this->update_parent_mid($this->categorys, $catid);
+            // 共享栏目是更新mid值
+            if ($dirname == 'share' && $this->categorys[$catid]['child']) {
+                $this->update_parent_mid($this->categorys, $catid);
+            }
         }
 
         return $this->categorys;
