@@ -27,58 +27,59 @@ if (version_compare(PHP_VERSION, '7.1.0') < 0) {
     dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
 }
 
+
+
 if (is_file(WEBPATH.'config/database.php')) {
-
     require WEBPATH.'config/database.php';
-    $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
-    if (!$mysqli) {
-        dr_echo_msg(0, 'PHP环境必须启用Mysqli扩展');
-    }
+}
 
-    if ($db['default']['database']) {
-        if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
-            dr_echo_msg(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
-        } elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
-            dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在，请手动创建');
+$mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
+if (!$mysqli) {
+    dr_echo_msg(0, 'PHP环境必须启用Mysqli扩展');
+}
+
+if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($db['default']['hostname'], '，') === false) {
+    if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
+        dr_echo_msg(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');
+    } elseif (!@mysqli_select_db($mysqli, $db['default']['database'])) {
+        dr_echo_msg(0, '指定的数据库（'.$db['default']['database'].'）不存在，请手动创建');
+    } else {
+        if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
+            dr_echo_msg(1, 'MySQL数据连接正常');
         } else {
-            if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
-                dr_echo_msg(1, 'MySQL数据连接正常');
-            } else {
-                dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
-            }
+            dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
         }
-        if (strpos($db['default']['database'], '.') !== false) {
-            dr_echo_msg(0,  '数据库名称（'.$db['default']['database'].'）不规范，不能存在.号');
-        }
-        $version = mysqli_get_server_version($mysqli);
-        if ($version) {
-            if ($version > 50600) {
-                dr_echo_msg(1, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
-            } else {
-                dr_echo_msg(0, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
-            }
-        }
-        $rs = mysqli_query($mysqli, 'show engines');
-        if ($rs) {
-            $status = false;
-            foreach($rs as $row){
-                if($row['Engine'] == 'InnoDB' && ($row['Support'] == 'YES' || $row['Support'] == 'DEFAULT') ){
-                    $status = true;
-                }
-            }
-            if (!$status) {
-                dr_echo_msg(0, 'MySQL不支持InnoDB存储引擎，无法安装');
-            } else {
-                dr_echo_msg(1, 'MySQL支持InnoDB存储引擎');
-            }
-        }
-        $mysqli && mysqli_close($mysqli);
     }
-
-    if (!$version) {
-        dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
+    if (strpos($db['default']['database'], '.') !== false) {
+        dr_echo_msg(0,  '数据库名称（'.$db['default']['database'].'）不规范，不能存在.号');
     }
+    $version = mysqli_get_server_version($mysqli);
+    if ($version) {
+        if ($version > 50600) {
+            dr_echo_msg(1, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+        } else {
+            dr_echo_msg(0, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+        }
+    }
+    $rs = mysqli_query($mysqli, 'show engines');
+    if ($rs) {
+        $status = false;
+        foreach($rs as $row){
+            if($row['Engine'] == 'InnoDB' && ($row['Support'] == 'YES' || $row['Support'] == 'DEFAULT') ){
+                $status = true;
+            }
+        }
+        if (!$status) {
+            dr_echo_msg(0, 'MySQL不支持InnoDB存储引擎，无法安装');
+        } else {
+            dr_echo_msg(1, 'MySQL支持InnoDB存储引擎');
+        }
+    }
+    $mysqli && mysqli_close($mysqli);
+}
 
+if (!$version) {
+    dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
 }
 
 $post = intval(@ini_get("post_max_size"));

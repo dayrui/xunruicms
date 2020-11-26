@@ -96,21 +96,28 @@ class Member extends \Phpcmf\Model
                     unset($row[$i]);
                 }
             }
-            $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
+            if ($del) {
+                // 删除多余的记录
+                $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
+            }
         }
 
+        // 登录后的通知
+        \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
+
+        // 登录后的钩子
+        $data['log'] = [
+            'now' => $log,
+            'before' => $row,
+        ];
+        \Phpcmf\Hooks::trigger('member_login_after', $data);
+
+        /*
         $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
         if (!$time || date('Ymd') != date('Ymd', $time)) {
-            // 登录后的通知
-            \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
-            // 登录后的钩子
-            $data['log'] = [
-                'now' => $log,
-                'before' => $row,
-            ];
-            \Phpcmf\Hooks::trigger('member_login_after', $data);
+
             \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
-        }
+        }*/
 
         // 同一天Ip一致时只更新一次更新时间
         if ($row = $this->db
