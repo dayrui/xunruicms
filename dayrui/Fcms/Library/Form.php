@@ -405,7 +405,7 @@ class Form
             return dr_return_data(0, dr_lang('密码不能与账号相同'), ['field' => 'password']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdpreg']
             && !preg_match(trim(\Phpcmf\Service::C()->member_cache['config']['pwdpreg']), $value)) {
-            return dr_return_data(0, dr_lang('密码格式不正确').\Phpcmf\Service::C()->member_cache['config']['pwdpreg'], ['field' => 'password']);
+            return dr_return_data(0, dr_lang('密码格式不正确'), ['field' => 'password']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['pwdlen']) {
             return dr_return_data(0, dr_lang('密码长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['pwdlen'], mb_strlen($value)), ['field' => 'password']);
