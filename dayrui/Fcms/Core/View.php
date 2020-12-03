@@ -47,6 +47,9 @@ class View {
     private $_page_urlrule = ''; // 分页地址参数
     private $_page_used = 0; // 是否开启分页
 
+    private $_list_tag = ''; // 循环体标签
+    private $_is_list_search = 0; // 搜索标签
+
     public $call_value; // 动态模板返回调用
 
 
@@ -659,6 +662,8 @@ class View {
 
         $param = $where = [];
 
+        $this->_list_tag = '{list '.$_params.'}';
+
         // 过滤掉自定义where语句
         if (preg_match('/where=\'(.+)\'/sU', $_params, $match)) {
             $param['where'] = $match[1];
@@ -674,7 +679,9 @@ class View {
         }
 
         $params = explode(' ', $_params);
-        in_array($params[0], $this->action) && $params[0] = 'action='.$params[0];
+        if (in_array($params[0], $this->action)) {
+            $params[0] = 'action='.$params[0];
+        }
 
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
@@ -699,7 +706,9 @@ class View {
                     $_pre = explode('_', $match[1]);
                     $_adj = '';
                     foreach ($_pre as $p) {
-                        in_array($p, $sysadj) && $_adj = $p;
+                        if (in_array($p, $sysadj)) {
+                            $_adj = $p;
+                        }
                     }
                     $where[$match[2]] = [
                         'adj' => $_adj,
@@ -751,6 +760,9 @@ class View {
                 ['sql', 'module', 'member', 'form', 'mform', 'comment', 'table', 'tag', 'related'])) {
             return $this->_return($system['return'], 'count标签不支持[acntion='.$action.']的统计');
         }
+
+        // 判断标签是否是搜索标签
+        $this->_is_list_search = 0;
 
         // action
         switch ($system['action']) {
@@ -1600,6 +1612,8 @@ class View {
                 break;
 
             case 'search': // 模块的搜索
+
+                $this->_is_list_search = 1;
 
                 $total = (int)$system['total'];
                 unset($system['total']);
@@ -2584,7 +2598,19 @@ class View {
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0, $is_cache = 0) {
 
         $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto;">';
-        $sql && $debug.= '<p>SQL: '.$sql.'</p>';
+
+        if ($this->_is_list_search && !$this->_options['is_search_page']) {
+            $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
+        }
+
+        if ($this->_list_tag) {
+            $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
+        }
+
+        if ($sql) {
+            $debug.= '<p>查询解析: '.$sql.'</p>';
+        }
+
         if ($data && !is_array($data)) {
             $debug.= '<p>'.$data.'</p>';
             $data = [];
@@ -2595,7 +2621,6 @@ class View {
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-
         $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
         $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';
 
