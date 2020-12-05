@@ -155,12 +155,12 @@ class Linkages extends \Phpcmf\Library\A_Field {
                 if ($value) {
                     $pids = substr($linkage[$linkageid[$value]]['pids'], 2);
                     $level = substr_count($pids, ',') + 1;
-                    $default = !$pids ? '[\"'.$value.'\"]' : '[\"'.str_replace(',', '\",\"', $pids).'\",\"'.$value.'\"]';
+                    $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
 
                     $str.= '<div class="linkages_'.$name.'_row" id="dr_linkages_'.$name.'_row_'.$id.'">';
                     $str.= '<label style="margin-right: 10px;"><a class="btn btn-sm " href="javascript:;" onclick="$(\'#dr_linkages_'.$name.'_row_'.$id.'\').remove()"> <i class="fa fa-close"></i> </a></label>';
                     $str.= '<input type="hidden" name="data['.$name.']['.$id.']" id="dr_'.$name.'_'.$id.'" value="'.$value.'" />';
-                    $str.= '<input type="hidden" id="dr_'.$name.'_'.$id.'_default" value="'.$default.'" />';
+                    $str.= '<input type="hidden" id="dr_'.$name.'_'.$id.'_default" value="'.addslashes($default).'" />';
                     $str.= '<span id="dr_linkages_'.$name.'_select_'.$id.'" style="display:none">';
                     for ($i = 1; $i <= $linklevel; $i++) {
                         $style = $i > $level ? 'style="display:none"' : '';
