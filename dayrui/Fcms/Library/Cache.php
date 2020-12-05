@@ -49,7 +49,7 @@ class Cache {
             return false;
         }
 
-        $cache_file = self::parse_cache_file($key, $cache_dir); // 分析缓存文件
+        $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
         $value = dr_array2string($value); // 分析缓存内容
 
         // 分析缓存目录
@@ -76,7 +76,7 @@ class Cache {
             return false;
         }
 
-        $cache_file = self::parse_cache_file($key, $cache_dir); // 分析缓存文件
+        $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
 
         return is_file($cache_file) ? @json_decode(@file_get_contents($cache_file), true) : false;
     }
@@ -93,7 +93,7 @@ class Cache {
             return true;
         }
 
-        $cache_file = self::parse_cache_file($key, $cache_dir);  // 分析缓存文件
+        $cache_file = self::parse_cache_file(strtolower($key), $cache_dir);  // 分析缓存文件
 
         return is_file($cache_file) ? @unlink($cache_file) : true;
     }
@@ -169,20 +169,20 @@ class Cache {
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
 
-        $time && self::init()->save(md5('cache-'.SITE_ID.'-'.$name), $value, $time);
+        $time && self::init()->save(md5('cache-'.SITE_ID.'-'.strtolower($name)), $value, $time);
 
         return $value;
     }
 
     // 获取内容
     public function get_data($name) {
-        return self::init()->get(md5('cache-'.SITE_ID.'-'.$name));
+        return self::init()->get(md5('cache-'.SITE_ID.'-'.strtolower($name)));
     }
 
     // 删除内容
     public function del_data($name) {
         function_exists('opcache_reset') && opcache_reset();
-        return self::init()->delete(md5('cache-'.SITE_ID.'-'.$name));
+        return self::init()->delete(md5('cache-'.SITE_ID.'-'.strtolower($name)));
     }
 
     // 使用框架
@@ -226,6 +226,7 @@ class Cache {
     // 删除缓存
     public function clear($name) {
 
+        $name = strtolower($name);
         $this->init()->delete('cache-'.SITE_ID.'-'.$name);
         $this->init()->delete(md5('cache-'.SITE_ID.'-'.$name));
 

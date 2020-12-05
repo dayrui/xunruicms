@@ -62,6 +62,7 @@ class Linkage extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
+            $data['code'] = strtolower($data['code']);
 			$this->_validation($id, $data);
 			$rt = \Phpcmf\Service::M('Linkage')->table('linkage')->update($id, $data);
 			if (!$rt['code']) {

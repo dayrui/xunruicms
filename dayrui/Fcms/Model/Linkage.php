@@ -24,7 +24,7 @@ class Linkage extends \Phpcmf\Model
 
         $rt = $this->table('linkage')->insert([
             'name' => $data['name'],
-            'code' => $data['code'],
+            'code' => strtolower($data['code']),
             'type' => (int)$data['type'],
         ]);
         if (!$rt['code']) {
