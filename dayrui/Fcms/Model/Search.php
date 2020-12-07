@@ -179,8 +179,11 @@ class Search extends \Phpcmf\Model {
             }
 
             // 自定义组合查询
+            $get['catid'] = $param['catid'];
+            $get['keyword'] = $param['keyword'];
             $where = $this->mysearch($module, $where, $get);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
+            unset($get);
 
             // 组合sql查询结果
             $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY NULL ";
