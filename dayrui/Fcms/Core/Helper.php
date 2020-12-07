@@ -2625,9 +2625,9 @@ function dr_form_comment($fid, $id) {
 /**
  * 动态调用模板
  */
-function dr_ajax_template($id, $filename) {
+function dr_ajax_template($id, $filename, $param_str = '') {
     $error = IS_DEV ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
-    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=api&m=template&name={$filename}\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
+    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=api&m=template&name={$filename}&".$param_str."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
 
