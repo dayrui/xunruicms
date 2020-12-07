@@ -2599,12 +2599,16 @@ class View {
 
         $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto;">';
 
-        if ($this->_is_list_search && !$this->_options['is_search_page']) {
-            $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
-        }
 
         if ($this->_list_tag) {
             $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
+        }
+
+        if ($this->_is_list_search) {
+            if (!$this->_options['is_search_page']) {
+                $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
+            }
+            $debug.= '<p>搜索解析：'.$this->_options['search_sql'].'</p>';
         }
 
         if ($sql) {
