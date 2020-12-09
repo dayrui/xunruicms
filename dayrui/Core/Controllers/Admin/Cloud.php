@@ -132,6 +132,7 @@ class Cloud extends \Phpcmf\Common
         }
 
         $data = [];
+        $error = [];
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
             if (is_file($path.'Config/App.php')) {
@@ -140,20 +141,28 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
                     if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->cmf_license['license']) {
+                        $error[$key] = [
+                            'id' => $vsn['id'],
+                            'name' => $cfg['name'],
+                            'icon' => $cfg['icon'],
+                            'author' => $cfg['author'],
+                            'version' => $vsn['version'],
+                        ];
                         continue;
+                    } else {
+                        $data[$key] = [
+                            'id' => $vsn['id'],
+                            'name' => $cfg['name'],
+                            'type' => $cfg['type'],
+                            'mtype' => $cfg['mtype'],
+                            'ftype' => $cfg['ftype'],
+                            'icon' => $cfg['icon'],
+                            'author' => $cfg['author'],
+                            'store' => $vsn['store'],
+                            'version' => $vsn['version'],
+                            'install' => is_file($path.'install.lock'),
+                        ];
                     }
-                    $data[$key] = [
-                        'id' => $vsn['id'],
-                        'name' => $cfg['name'],
-                        'type' => $cfg['type'],
-                        'mtype' => $cfg['mtype'],
-                        'ftype' => $cfg['ftype'],
-                        'icon' => $cfg['icon'],
-                        'author' => $cfg['author'],
-                        'store' => $vsn['store'],
-                        'version' => $vsn['version'],
-                        'install' => is_file($path.'install.lock'),
-                    ];
                 }
             }
         }
@@ -167,6 +176,7 @@ class Cloud extends \Phpcmf\Common
                     'help' => [574],
                 ]
             ),
+            'error' => $error,
         ]);
         \Phpcmf\Service::V()->display('cloud_app.html');exit;
     }

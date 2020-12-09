@@ -41,6 +41,22 @@
             </tr>
             {php $i++;}
             {/loop}
+
+            {loop $error $dir $t}
+            <tr class="odd gradeX">
+                <td style="text-align:center">
+                    <span class="badge badge-no"><i class="fa fa-times"></i></span>
+                </td>
+                <td><i class="{$t.icon}"></i> {$t.name} / {$dir}</td>
+                {if !$is_oem}
+                <td>{if $t.store}<a href="{$t.store}" target="_blank">{$t.author}</a>{else}{$t.author}{/if}</td>
+                {/if}
+                <td> {$t.version} </td>
+                <td>
+                    <a href="javascript:dr_help(1075);" style="color: red">{dr_lang('此应用无法被识别')}</a>
+                </td>
+            </tr>
+            {/loop}
             </tbody>
         </table>
     </div>
