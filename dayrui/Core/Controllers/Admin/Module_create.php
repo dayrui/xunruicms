@@ -22,7 +22,10 @@ class Module_create extends \Phpcmf\Common
                 $this->_json(0, dr_lang('名称不能为空'), ['field' => 'name']);
             } elseif (!$data['dirname']) {
                 $this->_json(0, dr_lang('目录不能为空'), ['field' => 'dirname']);
-            } elseif (!preg_match('/^[a-z]+$/i', $data['dirname'])) {
+            }
+
+            $data['dirname'] = strtolower($data['dirname']);
+            if (!preg_match('/^[a-z]+$/i', $data['dirname'])) {
                 $this->_json(0, dr_lang('目录只能是英文字母'), ['field' => 'dirname']);
             } elseif (is_dir(APPSPATH.ucfirst($data['dirname']))) {
                 $this->_json(0, dr_lang('此目录已经存在'), ['field' => 'dirname']);
