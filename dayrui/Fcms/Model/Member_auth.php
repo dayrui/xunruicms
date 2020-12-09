@@ -11,6 +11,7 @@ class Member_auth extends \Phpcmf\Model
 {
     public $auth;
     public $auth_type;
+    public $is_category_public;
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -112,6 +113,7 @@ class Member_auth extends \Phpcmf\Model
         $values = [];
         $groupid = $this->_get_groupid($member);
 
+        $this->is_category_public = 0;
         foreach ($groupid as $gid) {
             if ($module['share']) {
                 // 共享
@@ -121,6 +123,7 @@ class Member_auth extends \Phpcmf\Model
                 } else {
                     // 统一设置
                     $auth = $this->auth[$gid]['share_category_public'];
+                    $this->is_category_public = 1;
                 }
             } else {
                 // 独立
@@ -130,6 +133,7 @@ class Member_auth extends \Phpcmf\Model
                 } else {
                     // 统一设置
                     $auth = $this->auth[$gid]['category_public'][$mid];
+                    $this->is_category_public = 1;
                 }
             }
             if (isset($auth[$name])) {

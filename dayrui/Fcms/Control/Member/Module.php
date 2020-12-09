@@ -530,22 +530,49 @@ class Module extends \Phpcmf\Table
                         if ($this->uid) {
                             // 判断日发布量
                             $day_post = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'day_post', $this->member);
-                            if ($day_post && \Phpcmf\Service::M()->db
-                                    ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
-                                    ->where('uid', $this->uid)
-                                    ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
-                                    ->where('catid', $data[1]['catid'])
-                                    ->countAllResults() >= $day_post) {
-                                return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
+                            if ($day_post) {
+                                if (\Phpcmf\Service::M('member_auth')->is_category_public) {
+                                    // 按全局算
+                                    if (\Phpcmf\Service::M()->db
+                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->where('uid', $this->uid)
+                                            ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
+                                            ->countAllResults() >= $day_post) {
+                                        return dr_return_data(0, dr_lang('当前模块每天发布数量不能超过%s个', $day_post));
+                                    }
+                                } else {
+                                    // 按栏目算
+                                    if (\Phpcmf\Service::M()->db
+                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->where('uid', $this->uid)
+                                            ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
+                                            ->where('catid', $data[1]['catid'])
+                                            ->countAllResults() >= $day_post) {
+                                        return dr_return_data(0, dr_lang('当前栏目[%s]每天发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $day_post));
+                                    }
+                                }
                             }
                             // 判断发布总量
                             $total_post = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'total_post', $this->member);
-                            if ($total_post && \Phpcmf\Service::M()->db
-                                    ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
-                                    ->where('uid', $this->uid)
-                                    ->where('catid', $data[1]['catid'])
-                                    ->countAllResults() >= $total_post) {
-                                return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
+                            if ($total_post) {
+                                if (\Phpcmf\Service::M('member_auth')->is_category_public) {
+                                    // 按全局算
+                                    if (\Phpcmf\Service::M()->db
+                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->where('uid', $this->uid)
+                                            ->countAllResults() >= $total_post) {
+                                        return dr_return_data(0, dr_lang('当前模块发布数量不能超过%s个', $total_post));
+                                    }
+                                } else {
+                                    // 按栏目算
+                                    if (\Phpcmf\Service::M()->db
+                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->where('uid', $this->uid)
+                                            ->where('catid', $data[1]['catid'])
+                                            ->countAllResults() >= $total_post) {
+                                        return dr_return_data(0, dr_lang('当前栏目[%s]发布数量不能超过%s个', $this->module['category'][$data[1]['catid']]['name'], $total_post));
+                                    }
+                                }
                             }
                             // 金币验证
                             $score = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'score', $this->member);
