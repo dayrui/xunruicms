@@ -39,7 +39,7 @@ class File extends \Phpcmf\Common
         }
 
         return [
-            'size' => intval($field['setting']['option']['size']),
+            'size' => ($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'count' => max(1, (int)$field['setting']['option']['count']),
             'attachment' => $field['setting']['option']['attachment'],
@@ -262,7 +262,7 @@ class File extends \Phpcmf\Common
         // 快捷上传字段参数
         $field = [
             'url' => '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
-            'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), intval($p['size']).'MB'),
+            'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), ($p['size']).'MB'),
             'param' => $p,
             'back' => $url.'&pp=0',
         ];

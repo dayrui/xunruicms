@@ -186,7 +186,6 @@ class Category extends \Phpcmf\Table
     // 后台查看列表
     protected function _Admin_List() {
 
-
         \Phpcmf\Service::V()->assign([
             'list' => $this->_get_tree_list($this->module['category']),
             'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
@@ -198,6 +197,7 @@ class Category extends \Phpcmf\Table
                 dr_lang('顶级栏目'),
                 0, 0
             ),
+            'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'),
         ]);
         \Phpcmf\Service::V()->display('share_category_list.html');
     }
@@ -214,6 +214,7 @@ class Category extends \Phpcmf\Table
             'show' => 1,
             'setting' => [
                 'edit' => 1,
+                'disabled' => 0,
                 'template' => [
                     'page' => 'page.html',
                     'list' => 'list.html',
@@ -238,7 +239,7 @@ class Category extends \Phpcmf\Table
         }
 
         $value['mid'] = $this->module['category'][$pid]['mid'];
-        
+        $value['setting'] = dr_string2array($value['setting']);
         list($tpl) = $this->_Post($id, $value, 1);
 
         \Phpcmf\Service::V()->assign([
@@ -338,6 +339,7 @@ class Category extends \Phpcmf\Table
                 }
                 $data['setting'] = dr_array2string(isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
                     'edit' => 1,
+                    'disabled' => 0,
                     'template' => [
                         'list' => 'list.html',
                         'show' => 'show.html',
@@ -350,6 +352,7 @@ class Category extends \Phpcmf\Table
                         'show_title' => '[第{page}页{join}]{title}{join}{catname}{join}{modname}{join}{SITE_NAME}',
                     ],
                 ]);
+
                 $rt = \Phpcmf\Service::M('Category')->insert($data);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);

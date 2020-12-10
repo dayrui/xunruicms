@@ -203,11 +203,11 @@ class Image extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
-        $size = intval($field['setting']['option']['size']);
+        $size = ($field['setting']['option']['size']);
         $count = intval($field['setting']['option']['count']);
 
         $p = dr_authcode([
-            'size' => intval($field['setting']['option']['size']),
+            'size' => $size,
             'exts' => $this->img_ext,
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
@@ -240,7 +240,7 @@ class Image extends \Phpcmf\Library\A_Field {
                 }
             }
         }
-        $ts = dr_lang('每张图片最大%s，最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
+        $ts = dr_lang('每张图片最大%s，最多上传%s张图片', $size . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
         $str = '<div class="dropzone2 dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">

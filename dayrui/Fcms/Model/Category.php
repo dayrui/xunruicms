@@ -231,6 +231,7 @@ class Category extends \Phpcmf\Model
 
         // 全部栏目数据
         foreach ($_data as $t) {
+            $t['setting'] = dr_string2array($t['setting']);
             $this->categorys[$t['id']] = $categorys[$t['id']] = $t;
         }
 

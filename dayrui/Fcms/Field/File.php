@@ -195,10 +195,10 @@ class File extends \Phpcmf\Library\A_Field {
         // 表单附加参数
         $attr = $field['setting']['validate']['formattr'];
 
-		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']).'MB');
+		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', $field['setting']['option']['ext']), ($field['setting']['option']['size']).'MB');
 
         $p = dr_authcode([
-            'size' => intval($field['setting']['option']['size']),
+            'size' => ($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
@@ -242,7 +242,7 @@ class File extends \Phpcmf\Library\A_Field {
         $json = json_encode([
             'name' => $name,
             'ext' => !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? 'null' : ' /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i',
-            'size' => intval($field['setting']['option']['size']) * 1024 * 1024,
+            'size' => ($field['setting']['option']['size']) * 1024 * 1024,
             'url' =>  '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.$p.'&fid='.$field['id'],
             'unused_url' => '/index.php?s=api&c=file&m=input_file_list&p=' . $p . '&fid=' . $field['id'],
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1',

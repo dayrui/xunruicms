@@ -197,6 +197,7 @@ return [
                                 ),
                             'validate' =>
                                 array (
+                                    'xss' => 1,
                                     'required' => 1,
                                 ),
                         ),
