@@ -52,7 +52,7 @@
                                             <ul class="list-unstyled">
                                                 <!--调用新闻模块的最新7条-->
                                                 {module module=news order=updatetime num=7}
-                                                <li style="line-height: 23px"><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 20)}</a></li>
+                                                <li style="line-height: 23px"><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 18)}</a></li>
                                                 {/module}
                                             </ul>
                                         </div>
@@ -60,7 +60,7 @@
                                             <ul class="list-unstyled">
                                                 <!--调用新闻模块的最新从7开始数的7条-->
                                                 {module module=news order=updatetime num=7,7}
-                                                <li style="line-height: 23px"><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 20)}</a></li>
+                                                <li style="line-height: 23px"><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 18)}</a></li>
                                                 {/module}
                                             </ul>
                                         </div>
@@ -89,7 +89,7 @@
                                                     <ul class="list-unstyled fc-list-row">
                                                         <!-- 调用新闻模块的最新10条数据 -->
                                                         {module module=news order=updatetime num=9}
-                                                        <li><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 20)}</a></li>
+                                                        <li><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 18)}</a></li>
                                                         {/module}
                                                     </ul>
                                                 </div>
@@ -97,7 +97,7 @@
                                                     <ul class="list-unstyled fc-list-row">
                                                         <!-- 调用新闻模块浏览量最高的数据 -->
                                                         {module module=news order=hits num=9}
-                                                        <li><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 20)}</a></li>
+                                                        <li><span class="badge badge-empty badge-success"></span>&nbsp;<a href="{$t.url}" class="title">{dr_strcut($t.title, 18)}</a></li>
                                                         {/module}
                                                     </ul>
                                                 </div>
