@@ -1,12 +1,21 @@
-<?php namespace CodeIgniter\Exceptions;
+<?php
+
+/**
+ * This file is part of the CodeIgniter 4 framework.
+ *
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace CodeIgniter\Exceptions;
 
 /**
  * Cast Exceptions.
  */
-
 class CastException extends CriticalError
 {
-
 	/**
 	 * Error code
 	 *
@@ -32,5 +41,4 @@ class CastException extends CriticalError
 				return new static(lang('Cast.jsonErrorUnknown'));
 		}
 	}
-
 }
