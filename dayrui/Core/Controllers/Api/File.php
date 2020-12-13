@@ -86,7 +86,7 @@ class File extends \Phpcmf\Common
             'path' => '',
             'form_name' => 'file_data',
             'file_exts' => @explode(',', $p['exts']),
-            'file_size' => (int)$p['size'] * 1024 * 1024,
+            'file_size' => $p['size'] * 1024 * 1024,
             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
         ]);
         if (!$rt['code']) {

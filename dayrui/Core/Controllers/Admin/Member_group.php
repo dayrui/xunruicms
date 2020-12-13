@@ -263,7 +263,7 @@ class Member_group extends \Phpcmf\Table
     }
 
     // 保存
-    protected function _Save($id = 0, $data = [], $old = [],  $func = null) {
+    protected function _Save($id = 0, $data = [], $old = [],  $func = null, $after = null) {
         return parent::_Save($id, $data, $old, function($id, $data, $old){
             if ($this->type) {
                 $data['setting'] = dr_array2string(\Phpcmf\Service::L('input')->post('setting'));

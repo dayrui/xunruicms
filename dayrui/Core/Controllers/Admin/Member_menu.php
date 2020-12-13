@@ -320,12 +320,9 @@ class Member_menu extends \Phpcmf\Common
             }
         }
 
-
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 		if ($return) {
 		    exit($this->_json(0, $return['error'], ['field' => $return['name']]));
         }
-
 	}
-
 }
