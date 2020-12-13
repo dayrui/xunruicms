@@ -33,9 +33,6 @@ define('FCPATH', dirname(__FILE__).'/dayrui/');
 // 后台管理标识
 !defined('IS_ADMIN') && define('IS_ADMIN', FALSE);
 
-// 显示错误提示
-IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT) : error_reporting(0);
-
 // 开始，自动进入安装界面监测代码 
 if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
 	require WEBPATH.'install.php';
