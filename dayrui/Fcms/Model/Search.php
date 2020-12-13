@@ -169,7 +169,7 @@ class Search extends \Phpcmf\Model {
                 $more = 0;
                 $cat_field = $this->module['category'][$catid]['field'];
                 // 副栏目判断
-                if (isset($this->module['field']['catids']) && $this->module['field']['catids']['fieldtype'] = 'Catids') {
+                if (isset($this->module['field']['catids']) && $this->module['field']['catids']['fieldtype'] == 'Catids') {
                     $fwhere = [];
                     if ($this->module['category'][$catid]['child'] && $this->module['category'][$catid]['childids']) {
                         $fwhere[] = '`'.$table.'`.`catid` IN ('.$this->module['category'][$catid]['childids'].')';

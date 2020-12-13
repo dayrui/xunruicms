@@ -1511,6 +1511,7 @@ class Content extends \Phpcmf\Model {
 
     ////////////////////禁用栏目时，二次开发调用////////////////////
 
+
     // 禁用栏目时，用户保存内容之前的权限验证
     public function _hcategory_member_save_before($data) {
         return $data;
@@ -1532,32 +1533,27 @@ class Content extends \Phpcmf\Model {
     }
 
     // 禁用栏目时，用户发布内容时的权限验证
-    // 直接_json中断提示
     public function _hcategory_member_add_auth() {
-
+        return dr_return_data(1, 'ok');
     }
 
     // 禁用栏目时，用户评论时的权限验证
-    // 直接_json中断提示
     public function _hcategory_member_comment_auth() {
-
+        return dr_return_data(1, 'ok');
     }
 
     // 禁用栏目时，用户修改内容时的权限验证
-    // 直接_json中断提示
     public function _hcategory_member_edit_auth() {
-
+        return dr_return_data(1, 'ok');
     }
 
     // 禁用栏目时，用户删除内容时的权限验证
-    // 直接_json中断提示
     public function _hcategory_member_del_auth() {
-
+        return dr_return_data(1, 'ok');
     }
 
     // 禁用栏目时，用户阅读内容时的权限验证
-    // 直接_msg中断提示
     public function _hcategory_member_show_auth() {
-
+        return dr_return_data(1, 'ok');
     }
 }

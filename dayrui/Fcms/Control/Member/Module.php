@@ -82,6 +82,7 @@ class Module extends \Phpcmf\Table
         $did && $this->auto_save = 0; // 草稿数据时不加载
         $draft = $did ? $this->content_model->get_draft($did) : [];
         $catid = $draft['catid'] ? $draft['catid'] : $catid;
+        $select = '';
 
         if (!$this->is_hcategory) {
             // 走栏目权限
@@ -110,7 +111,10 @@ class Module extends \Phpcmf\Table
             $this->is_post_code = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'code', $this->member);
         } else {
             // 不走栏目权限，走自定义权限
-            $this->content_model->_hcategory_member_add_auth();
+            $rt = $this->content_model->_hcategory_member_add_auth();
+            if (!$rt['code']) {
+                $this->_msg(0, $rt['msg'], $rt['data']);
+            }
             $this->is_post_code = $this->content_model->_hcategory_member_post_code();
         }
 
@@ -140,6 +144,7 @@ class Module extends \Phpcmf\Table
     protected function _Member_Edit() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $did = 0;
         $this->is_get_catid = intval(\Phpcmf\Service::L('input')->get('catid'));
         if (defined('IS_MODULE_VERIFY')) {
             $draft = [];
@@ -162,22 +167,26 @@ class Module extends \Phpcmf\Table
             exit;
         }
 
+        $category = [];
         if (defined('IS_MODULE_VERIFY')) {
             // 审核文章编辑时采用投稿权限判断
             // 可编辑的栏目
             $category = $this->_get_module_member_category($this->module, 'add');
             if (!$category[$data['catid']]) {
-                exit($this->_msg(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][$data['catid']]['name'])));
+                $this->_msg(0, dr_lang('当前栏目[%s]没有发布权限', $this->module['category'][$data['catid']]['name']));
             }
         } else {
             if (!$this->is_hcategory) {
                 // 可编辑的栏目
                 $category = $this->_get_module_member_category($this->module, 'edit');
                 if (!$category[$data['catid']]) {
-                    exit($this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name'])));
+                    $this->_msg(0, dr_lang('当前栏目[%s]没有修改权限', $this->module['category'][$data['catid']]['name']));
                 }
             } else {
-                $this->content_model->_hcategory_member_edit_auth();
+                $rt = $this->content_model->_hcategory_member_edit_auth();
+                if (!$rt['code']) {
+                    $this->_msg(0, $rt['msg'], $rt['data']);
+                }
             }
         }
 
@@ -221,7 +230,10 @@ class Module extends \Phpcmf\Table
                 $this->_json(0, dr_lang('当前栏目[%s]没有删除权限', $this->module['category'][$row['catid']]['name']));
             }
         } else {
-            $this->content_model->_hcategory_member_del_auth();
+            $rt = $this->content_model->_hcategory_member_del_auth();
+            if (!$rt['code']) {
+                $this->_msg(0, $rt['msg'], $rt['data']);
+            }
         }
 
         $rt = $this->content_model->delete_to_recycle([$id]);
@@ -232,7 +244,21 @@ class Module extends \Phpcmf\Table
         }
     }
 
-
+    // 判断删除权限
+    public function check_del_auth($catid) {
+        if (!$this->is_hcategory) {
+            $cat = $this->_get_module_member_category($this->module, 'del');
+            if (!isset($cat[$catid])) {
+                return 0;
+            }
+        } else {
+            $rt = $this->content_model->_hcategory_member_del_auth();
+            if (!$rt['code']) {
+                return 0;
+            }
+        }
+        return 1;
+    }
     
     // ===========================
 

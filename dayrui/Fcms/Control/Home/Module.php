@@ -385,7 +385,10 @@ class Module extends \Phpcmf\Common
 
         if ($this->is_hcategory) {
             $parent = $related = [];
-            $this->content_model->_hcategory_member_show_auth();
+            $rt = $this->content_model->_hcategory_member_show_auth();
+            if (!$rt['code']) {
+                $this->_msg(0, $rt['msg'], $rt['data']);
+            }
         } else {
             // 无权限访问栏目内容
             if (!defined('SC_HTML_FILE') && !\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
