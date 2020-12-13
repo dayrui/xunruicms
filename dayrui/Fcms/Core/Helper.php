@@ -1999,10 +1999,11 @@ function dr_form_hidden($data = []) {
 // 验证字符串
 function dr_get_csrf_token() {
 
-    $code = \Phpcmf\Service::L('cache')->get_auth_data('csrf_token', 1);
+    $code = \Phpcmf\Service::C()->session()->get('auth_csrf_token');
     if (!$code) {
         $code = bin2hex(random_bytes(16));
-        \Phpcmf\Service::L('cache')->set_auth_data('csrf_token', $code, 1);
+        //\Phpcmf\Service::L('cache')->set_auth_data('csrf_token', $code, 1);
+        \Phpcmf\Service::C()->session()->set('auth_csrf_token', $code);
     }
 
     return $code;
