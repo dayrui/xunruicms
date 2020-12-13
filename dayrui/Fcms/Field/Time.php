@@ -76,7 +76,7 @@ class Time extends \Phpcmf\Library\A_Field {
     /**
      * 创建sql语句
      */
-    public function create_sql($name, $option, $cname) {
+    public function create_sql($name, $option, $cname = '') {
         // 无符号int 10位
         $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` VARCHAR( 100 ) DEFAULT NULL COMMENT \''.$cname.'\'';
         return $sql;

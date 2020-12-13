@@ -172,7 +172,7 @@ function dr_is_admin_search_field($t) {
 
 // 通过数组值查找数组key
 function dr_get_array_key($array, $value) {
-	if (!in_array($value, $array)) {
+	if ($array && !in_array($value, $array)) {
 		return false;
 	}
 	$new = array_flip($array);
@@ -517,7 +517,7 @@ function dr_member_menu_show($t) {
 
     // 判断站点显示权限
     $is_site = 0;
-    if (!$t['site'] || in_array(SITE_ID, $t['site'])) {
+    if (!$t['site'] || ($t['site'] && in_array(SITE_ID, $t['site']))) {
         $is_site = 1; // 当前站可用
     }
 
@@ -1531,7 +1531,7 @@ function dr_sku_name($key, $data, $type = 0) {
     $string = [];
     foreach ($data['group'] as $gid => $gname) {
         foreach ($data['name'][$gid] as $vid => $vname) {
-            if (in_array("{$gid}_{$vid}", $sku)) {
+            if ($sku && in_array("{$gid}_{$vid}", $sku)) {
                 $value[$gname] = $vname;
                 $string[] = $gname.'：'.$vname;
             }
@@ -1984,7 +1984,7 @@ function dr_return_data($code, $msg = '', $data = []) {
 function dr_form_hidden($data = []) {
 
     $form = '<input name="is_form" type="hidden" value="1">'.PHP_EOL;
-    $form.= '<input name="is_admin" type="hidden" value="'.(IS_ADMIN && in_array(1, \Phpcmf\Service::C()->admin['roleid']) ? 1 : 0).'">'.PHP_EOL;
+    $form.= '<input name="is_admin" type="hidden" value="'.(IS_ADMIN && \Phpcmf\Service::C()->admin['roleid'] && in_array(1, \Phpcmf\Service::C()->admin['roleid']) ? 1 : 0).'">'.PHP_EOL;
     $form.= '<input name="is_tips" type="hidden" value="">'.PHP_EOL;
     $form.= '<input name="'.csrf_token().'" type="hidden" value="'.csrf_hash().'">'.PHP_EOL;
     if ($data) {
@@ -1998,7 +1998,7 @@ function dr_form_hidden($data = []) {
 
 // 验证字符串
 function dr_get_csrf_token() {
-    return md5(csrf_token().csrf_hash());
+    return csrf_hash();
 }
 
 /**
@@ -3428,7 +3428,7 @@ function dr_get_form_post_value($table) {
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
-    uasort($field, function($a, $b){
+    $field && uasort($field, function($a, $b){
         if($a['displayorder'] == $b['displayorder']){
             return 0;
         }
@@ -3494,7 +3494,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
-    uasort($field, function($a, $b){
+    $field && uasort($field, function($a, $b){
         if($a['displayorder'] == $b['displayorder']){
             return 0;
         }
@@ -3559,7 +3559,7 @@ function dr_get_register_value($groupid = 0, $url = '') {
     // 初始化自定义字段类
     $my_field = $sys_field = $diy_field = [];
 
-    uasort($field, function($a, $b){
+    $field && uasort($field, function($a, $b){
         if($a['displayorder'] == $b['displayorder']){
             return 0;
         }

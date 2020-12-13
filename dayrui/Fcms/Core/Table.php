@@ -109,7 +109,7 @@ class Table extends \Phpcmf\Common
             }
         }
 
-        uasort($field, function($a, $b){
+        $field && uasort($field, function($a, $b){
             if($a['displayorder'] == $b['displayorder']){
                 return 0;
             }
@@ -265,7 +265,7 @@ class Table extends \Phpcmf\Common
 
         // 模块数据
         if ($this->is_module_index) {
-            $rt = $this->content_model->save($id, $data, $old);
+            $rt = $this->content_model->save_content($id, $data, $old);
             if (!$rt['code']) {
                 return $rt;
             }

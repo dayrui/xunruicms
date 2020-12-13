@@ -211,6 +211,13 @@ class View {
             $this->_options = null;
         }
 
+        // 兼容php8
+        !defined('IS_SHARE') && define('IS_SHARE', 1);
+        !defined('IS_OEM_CMS') && define('IS_OEM_CMS', 0);
+        !defined('MOD_DIR') && define('MOD_DIR', '');
+        !defined('MODULE_NAME') && define('MODULE_NAME', '');
+        !defined('SITE_TITLE') && define('SITE_TITLE', SITE_NAME);
+
         include $this->load_view_file($_view_file);
 
         $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
@@ -641,6 +648,7 @@ class View {
             'site' => '', // 站点id
             'flag' => '', // 推荐位id
             'not_flag' => '', // 排除推荐位id
+            'show_flag' => '', // 显示推荐位名称
             'more' => '', // 是否显示栏目模型表
             'catid' => '', // 栏目id，支持多id
             'field' => '', // 显示字段
@@ -1841,9 +1849,14 @@ class View {
 
                 // 推荐位调用
                 if ($system['flag']) {
-                    $flag = "select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
-                    $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` IN (".$flag.")";
-                    unset($flag);
+                    if ($system['show_flag']) {
+                        $sql_from.= ' LEFT JOIN `'.$table.'_flag'.'` ON `'.$table.'`.`id`=`'.$table.'_flag`.`id`';
+                        $sql_where = ($sql_where ? $sql_where.' AND' : '').' `'.$table.'_flag`.'.(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
+                    } else {
+                        $flag = "select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
+                        $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` IN (".$flag.")";
+                        unset($flag);
+                    }
                 }
                 // 排除推荐位
                 if ($system['not_flag']) {
@@ -2341,12 +2354,16 @@ class View {
                             // 当天
                             $stime = strtotime('-'.intval(substr($t['value'], 1)).' day');
                             $etime = strtotime(date('Y-m-d 23:59:59', $stime));
+                        } elseif (strpos($t['value'], ',')) {
+                            // 范围查询
+                            list($s, $e) = explode(',', $t['value']);
+                            $stime = strtotime(($s).' 00:00:00');
+                            $etime = strtotime(($e).' 23:59:59');
                         } else {
                             $stime = strtotime('-'.intval($t['value']).' day');
                             $etime = SYS_TIME;
                         }
-
-                        $string.= $join." {$t['name']}  BETWEEN ".strtotime(date('Y-m-d 00:00:00', $stime))." AND ".$etime;
+                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
                         break;
 
                     case 'MONTH':
@@ -2354,11 +2371,16 @@ class View {
                             // 当月
                             $stime = strtotime('-'.intval(substr($t['value'], 1)).' month');
                             $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day');
+                        } elseif (strpos($t['value'], ',')) {
+                            // 范围查询
+                            list($s, $e) = explode(',', $t['value']);
+                            $stime = strtotime(($s).'-01 00:00:00');
+                            $etime = strtotime(($e).'-31 23:59:59');
                         } else {
                             $stime = strtotime('-'.intval($t['value']).' month');
                             $etime = SYS_TIME;
                         }
-                        $string.= $join." {$t['name']}  BETWEEN ".strtotime(date('Y-m-01 00:00:00', $stime))." AND ".$etime;
+                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
                         break;
 
                     case 'YEAR':
@@ -2370,11 +2392,16 @@ class View {
                             // 今年
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = strtotime(date('Y', $stime).'-12-31 23:59:59');
+                        } elseif (strpos($t['value'], ',')) {
+                            // 范围查询
+                            list($s, $e) = explode(',', $t['value']);
+                            $stime = strtotime(intval($s).'-01-01 00:00:00');
+                            $etime = strtotime(intval($e).'-12-31 23:59:59');
                         } else {
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = SYS_TIME;
                         }
-                        $string.= $join." {$t['name']}  BETWEEN ".strtotime(date('Y-m-01 00:00:00', $stime))." AND ".$etime;
+                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
                         break;
 
 

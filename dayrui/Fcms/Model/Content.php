@@ -35,8 +35,14 @@ class Content extends \Phpcmf\Model {
         return $this;
     }
 
+    // 兼容提示
+    public function save($id, $name, $value, $where = '') {
+        log_message('error', '->save()方法已经失效，请改为->save_content()');
+        return dr_return_data(0, '->save()方法已经失效，请改为->save_content()');
+    }
+
     // 保存内容
-    public function save($id, $data, $old = []) {
+    public function save_content($id, $data, $old = []) {
 
         // 二次开发函数
         $rt = $this->_content_post_before($id, $data, $old);

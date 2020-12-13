@@ -11,7 +11,7 @@ abstract class Common extends \CodeIgniter\Controller
 
     private static $instance;
 
-    private $load_init;
+    private $load_init = [];
 
     public $uid;
     public $admin;

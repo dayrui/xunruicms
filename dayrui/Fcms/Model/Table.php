@@ -250,7 +250,7 @@ class Table extends \Phpcmf\Model
     public function sys_field_form() {
         
         return [
-            1 => ['id', 'title', 'uid', 'inputip', 'inputtime', 'displayorder', 'tableid'],
+            1 => ['id', 'title', 'uid', 'inputip', 'inputtime', 'displayorder', 'tableid', 'flag'],
             0 => ['id', 'uid'],
         ];
     }

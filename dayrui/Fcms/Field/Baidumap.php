@@ -54,7 +54,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
     /**
      * 创建sql语句
      */
-    public function create_sql($name, $option, $cname) {
+    public function create_sql($name, $option, $cname = '') {
         $tips = $cname ? ' COMMENT \''.$cname.'\'' : '';
         return 'ALTER TABLE `{tablename}` ADD `'.$name.'_lng` DECIMAL(9,6) NULL '.$tips.', ADD `'.$name.'_lat` DECIMAL(9,6) NULL '.$tips;
     }
@@ -62,7 +62,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
     /**
      * 修改sql语句
      */
-    public function alter_sql($name, $option, $cname) {
+    public function alter_sql($name, $option, $cname = '') {
         return NULL;
     }
 

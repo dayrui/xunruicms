@@ -92,7 +92,7 @@ class Date extends \Phpcmf\Library\A_Field {
     /**
      * 创建sql语句
      */
-    public function create_sql($name, $option, $cname) {
+    public function create_sql($name, $option, $cname = '') {
         // 无符号int 10位
         $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` INT( 10 ) DEFAULT \'0\' COMMENT \''.$cname.'\'';
         return $sql;

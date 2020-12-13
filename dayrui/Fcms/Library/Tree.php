@@ -207,7 +207,7 @@ class Tree {
 
 
     // 联动菜单选择
-    public function select_linkage($data, $id = 0, $str, $default = ' -- ') {
+    public function select_linkage($data, $id = 0, $str = '', $default = ' -- ') {
 
         $string = '<select class="form-control" '.$str.'>';
         $default && $string.= "<option value='0'>$default</option>";
@@ -240,7 +240,7 @@ class Tree {
      * @param intval		$is_first	是否返回第一个可用栏目id
      * @return string
      */
-    public function select_category($data, $id = 0, $str, $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
+    public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
         $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;

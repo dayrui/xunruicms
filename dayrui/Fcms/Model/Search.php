@@ -10,6 +10,9 @@
 class Search extends \Phpcmf\Model {
 
     public $mytable; // 模块表名称
+    public $module; // 模块属性
+    public $catid; // 栏目id
+    public $get; // 搜索参数
 
     // 初始化搜索主表
     public function init($table) {
@@ -17,22 +20,54 @@ class Search extends \Phpcmf\Model {
         return $this;
     }
 
+    // 获取搜索参数
+    public function get_param($module) {
+
+        $get = $_GET;
+        $get = isset($get['rewrite']) ? dr_search_rewrite_decode($get['rewrite'], $module['setting']['search']) : $get;
+        if ($get) {
+            $get = \Phpcmf\Service::L('input')->xss_clean($get);
+        }
+
+        $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
+        unset($get['s'], $get['c'], $get['m'], $get['id']);
+        if (!$get && IS_API_HTTP) {
+            $get = \Phpcmf\Service::L('input')->xss_clean($_POST);
+        }
+
+        $_GET['page'] = $get['page'];
+        if (isset($get['catdir']) && $get['catdir']) {
+            $catid = (int)$module['category_dir'][$get['catdir']];
+            unset($get['catid']);
+        } else {
+            $catid = (int)$get['catid'];
+            isset($get['catid']) && $get['catid'] = $catid;
+        }
+
+        $this->get = $get;
+        $this->catid = $catid;
+        $this->module = $module;
+        return [$catid, $get];
+    }
+
     /**
      * 查询数据并设置缓存
      */
-    public function get($module, $get, $catid) {
+    public function get_data() {
 
         // 模块表名称
         $table = $this->dbprefix($this->mytable);
 
         // 排序查询参数
-        ksort($get);
-        $param = $get;
-        $get['order'] = $get['page'] = null;
-        unset($get['order'], $get['page']);
+        ksort($this->get);
+        $param = $this->get;
+        $catid = $this->catid;
+        $param_new = [];
+        $this->get['order'] = $this->get['page'] = null;
+        unset($this->get['order'], $this->get['page']);
 
         // 查询缓存
-        $id = md5($table.dr_array2string($get));
+        $id = md5($table.dr_array2string($this->get));
         if (!IS_DEV && SYS_CACHE_SEARCH) {
             $data = $this->db->table($this->mytable.'_search')->where('id', $id)->get()->getRowArray();
             $time = intval(SYS_CACHE_SEARCH) * 3600;
@@ -47,8 +82,8 @@ class Search extends \Phpcmf\Model {
         // 缓存不存在重新入库更新缓存
         if (!$data) {
 
-            $get['keyword'] = $get['catid'] = null;
-            unset($get['keyword'], $get['catid']);
+            $this->get['keyword'] = $this->get['catid'] = null;
+            unset($this->get['keyword'], $this->get['catid']);
 
             // 主表的字段
             $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, $this->dbprefix($this->mytable));
@@ -56,9 +91,11 @@ class Search extends \Phpcmf\Model {
                 return dr_return_data(0, dr_lang('主表【%s】字段不存在', $this->mytable));
             }
 
-            $mod_field = $module['field'];
+            $mod_field = $this->module['field'];
             foreach ($field as $i) {
-                !isset($mod_field[$i]) && $mod_field[$i] = ['ismain' => 1];
+                if (!isset($mod_field[$i])) {
+                    $mod_field[$i] = ['ismain' => 1];
+                }
             }
 
             // 默认搜索条件
@@ -82,24 +119,26 @@ class Search extends \Phpcmf\Model {
             // 关键字匹配条件
             if ($param['keyword'] != '') {
                 $temp = [];
-                $sfield = explode(',', $module['setting']['search']['field'] ? $module['setting']['search']['field'] : 'title,keywords');
+                $sfield = explode(',', $this->module['setting']['search']['field'] ? $this->module['setting']['search']['field'] : 'title,keywords');
                 $search_keyword = dr_safe_keyword($param['keyword']);
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && in_array($t, $field)) {
-                            $temp[] = $module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$search_keyword.'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
+                            $temp[] = $this->module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$search_keyword.'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
                         }
                     }
                 }
-                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
+                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($this->module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
+                $param_new['keyword'] = $search_keyword;
             }
             // 模块字段过滤
             foreach ($mod_field as $name => $field) {
                 if (isset($field['ismain']) && !$field['ismain']) {
                     continue;
                 }
-                if (isset($get[$name]) && strlen($get[$name])) {
-                    $where[] = $this->_where($table, $name, $get[$name], $field);
+                if (isset($this->get[$name]) && strlen($this->get[$name])) {
+                    $where[] = $this->_where($table, $name, $this->get[$name], $field);
+                    $param_new[$name] = $this->get[$name];
                 }
             }
             // 会员字段过滤
@@ -109,14 +148,16 @@ class Search extends \Phpcmf\Model {
                     if (isset($field['ismain']) && !$field['ismain']) {
                         continue;
                     }
-                    if (!isset($mod_field[$name]) && isset($get[$name]) && strlen($get[$name])) {
-                        $member_where[] = $this->_where($this->dbprefix('member_data'), $name, $get[$name], $field);
+                    if (!isset($mod_field[$name]) && isset($this->get[$name]) && strlen($this->get[$name])) {
+                        $member_where[] = $this->_where($this->dbprefix('member_data'), $name, $this->get[$name], $field);
+                        $param_new[$name] = $this->get[$name];
                     }
                 }
             }
             // 按会员组搜索时
             if ($param['groupid'] != '') {
                 $member_where[] = '`'.$this->dbprefix('member_data').'`.`id` IN (SELECT `uid` FROM `'.$this->dbprefix('member').'_group_index` WHERE gid='.intval($param['groupid']).')';
+                $param_new['groupid'] = $this->get['groupid'];
             }
             // 组合会员字段
             if ($member_where) {
@@ -126,13 +167,13 @@ class Search extends \Phpcmf\Model {
             // 栏目的字段
             if ($catid) {
                 $more = 0;
-                $cat_field = $module['category'][$catid]['field'];
+                $cat_field = $this->module['category'][$catid]['field'];
                 // 副栏目判断
-                if (isset($module['field']['catids']) && $module['field']['catids']['fieldtype'] = 'Catids') {
+                if (isset($this->module['field']['catids']) && $this->module['field']['catids']['fieldtype'] = 'Catids') {
                     $fwhere = [];
-                    if ($module['category'][$catid]['child'] && $module['category'][$catid]['childids']) {
-                        $fwhere[] = '`'.$table.'`.`catid` IN ('.$module['category'][$catid]['childids'].')';
-                        $catids = @explode(',', $module['category'][$catid]['childids']);
+                    if ($this->module['category'][$catid]['child'] && $this->module['category'][$catid]['childids']) {
+                        $fwhere[] = '`'.$table.'`.`catid` IN ('.$this->module['category'][$catid]['childids'].')';
+                        $catids = @explode(',', $this->module['category'][$catid]['childids']);
                     } else {
                         $fwhere[] = '`'.$table.'`.`catid` = '.$catid;
                         $catids = [ $catid ];
@@ -149,7 +190,7 @@ class Search extends \Phpcmf\Model {
                     $fwhere && $where[0] = '('.implode(' OR ', $fwhere).')';
                 } else {
                     // 无副栏目时
-                    $where[0] = '`'.$table.'`.`catid`'.($module['category'][$catid]['child'] ? 'IN ('.$module['category'][$catid]['childids'].')' : '='.(int)$catid);
+                    $where[0] = '`'.$table.'`.`catid`'.($this->module['category'][$catid]['child'] ? 'IN ('.$this->module['category'][$catid]['childids'].')' : '='.(int)$catid);
                 }
 
                 if ($cat_field) {
@@ -157,9 +198,10 @@ class Search extends \Phpcmf\Model {
                     $more_where = [];
                     $table_more = $this->dbprefix($this->mytable.'_category_data');
                     foreach ($cat_field as $name) {
-                        if (isset($get[$name]) && strlen($get[$name])) {
+                        if (isset($this->get[$name]) && strlen($this->get[$name])) {
                             $more = 1;
-                            $more_where[] = $this->_where($table_more, $name, $get[$name], $module['category_data_field'][$name]);
+                            $more_where[] = $this->_where($table_more, $name, $this->get[$name], $this->module['category_data_field'][$name]);
+                            $param_new[$name] = $this->get[$name];
                         }
                         /*
                         if (isset($_order_by[$name])) {
@@ -179,11 +221,11 @@ class Search extends \Phpcmf\Model {
             }
 
             // 自定义组合查询
-            $get['catid'] = $param['catid'];
-            $get['keyword'] = $param['keyword'];
-            $where = $this->mysearch($module, $where, $get);
+            $param_new['catid'] = $param['catid'];
+            $param_new['keyword'] = $param['keyword'];
+            $where = $this->my_search($where);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
-            unset($get);
+            unset($param_new);
 
             // 组合sql查询结果
             $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY NULL ";
@@ -219,35 +261,8 @@ class Search extends \Phpcmf\Model {
         return $data;
     }
 
-    // 获取搜索参数
-    public function get_param($module) {
-
-        $get = $_GET;
-        $get = isset($get['rewrite']) ? dr_search_rewrite_decode($get['rewrite'], $module['setting']['search']) : $get;
-        if ($get) {
-            $get = \Phpcmf\Service::L('input')->xss_clean($get);
-        }
-
-        $get['s'] = $get['c'] = $get['m'] = $get['id'] = null;
-        unset($get['s'], $get['c'], $get['m'], $get['id']);
-        if (!$get && IS_API_HTTP) {
-            $get = \Phpcmf\Service::L('input')->xss_clean($_POST);
-        }
-
-        $_GET['page'] = $get['page'];
-        if (isset($get['catdir']) && $get['catdir']) {
-            $catid = (int)$module['category_dir'][$get['catdir']];
-            unset($get['catid']);
-        } else {
-            $catid = (int)$get['catid'];
-            isset($get['catid']) && $get['catid'] = $catid;
-        }
-
-        return [$catid, $get];
-    }
-
     // 自定义组合查询条件
-    protected function mysearch($module, $where, $get) {
+    protected function my_search($where) {
         return $where;
     }
 }

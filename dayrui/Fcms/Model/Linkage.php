@@ -64,7 +64,7 @@ class Linkage extends \Phpcmf\Model
 
 
     // 批量删除
-    public function delete_all($ids) {
+    public function delete_all($ids, $where = '') {
 
         foreach ($ids as $id) {
             $row = $this->table('linkage')->get(intval($id));

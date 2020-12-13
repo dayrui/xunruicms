@@ -101,13 +101,13 @@ class Seo
                 $cat_field = $mod['category'][$catid]['field'];
                 $cat_field && $myfield = dr_array22array($myfield, $cat_field);
             }
+
             $seofield = $myfield;
             foreach ($param as $name => $value) {
                 $now_field = [];
                 if (isset($myfield[$name])) {
                     // 模块字段
                     $now_field = $myfield[$name];
-
                 } elseif ($name == 'groupid') {
                     // 会员组名称
                     if ($value) {

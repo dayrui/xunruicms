@@ -71,7 +71,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
 	/**
 	 * 创建sql语句
 	 */
-	public function create_sql($name, $option, $cname) {
+	public function create_sql($name, $option, $cname = '') {
 		$sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` mediumint( 8 ) UNSIGNED NULL COMMENT \''.$cname.'\'';
 		return $sql;
 	}

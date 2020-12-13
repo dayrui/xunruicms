@@ -26,7 +26,7 @@ class Score extends \Phpcmf\Library\A_Field  {
     /**
      * 创建sql语句
      */
-    public function create_sql($name, $value, $cname) {
+    public function create_sql($name, $value, $cname = '') {
         $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` varchar(255) NULL , ADD `'.$name.'_sku` TEXT NULL';
         return $sql;
     }
@@ -34,7 +34,7 @@ class Score extends \Phpcmf\Library\A_Field  {
     /**
      * 修改sql语句
      */
-    public function alter_sql($name, $value, $cname) {
+    public function alter_sql($name, $value, $cname = '') {
         return NULL;
     }
 

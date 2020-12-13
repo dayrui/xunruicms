@@ -83,7 +83,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     /**
      * 创建sql语句
      */
-    public function create_sql($name, $value, $cname) {
+    public function create_sql($name, $value, $cname = '') {
         $sql = 'ALTER TABLE `{tablename}` ADD `'.$name.'` DECIMAL(9,2) NULL , ADD `'.$name.'_sku` TEXT NULL , ADD `'.$name.'_quantity` INT(10) UNSIGNED NULL , ADD `'.$name.'_sn` VARCHAR(10) NULL';
         return $sql;
     }
@@ -91,7 +91,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     /**
      * 修改sql语句
      */
-    public function alter_sql($name, $value, $cname) {
+    public function alter_sql($name, $value, $cname = '') {
         return NULL;
     }
 

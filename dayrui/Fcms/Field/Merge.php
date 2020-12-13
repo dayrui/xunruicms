@@ -77,14 +77,14 @@ class Merge extends \Phpcmf\Library\A_Field {
 	/**
 	 * create_sql
 	 */
-	public function create_sql($name, $value, $cname) {
+	public function create_sql($name, $value, $cname = '') {
 		
 	}
 	
 	/**
 	 * alter_sql
 	 */
-	public function alter_sql($name, $value, $cname) {
+	public function alter_sql($name, $value, $cname = '') {
 		
 	}
 	

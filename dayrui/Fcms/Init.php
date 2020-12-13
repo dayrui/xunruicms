@@ -5,12 +5,18 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+use CodeIgniter\Config\DotEnv;
+use Config\App;
+use Config\Autoload;
+use Config\Modules;
+use Config\Services;
+
 // 用于显示debug
 $startMemory = memory_get_usage();
 $startTime = microtime(true);
 
 // CI框架目录
-define('BASEPATH', FCPATH.'System/');
+!defined('BASEPATH') && define('BASEPATH', FCPATH.'System/');
 define('SYSTEMPATH', BASEPATH);
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
@@ -30,6 +36,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{xunruicms_img_title}');
 // tests
 define('TESTPATH', WRITEPATH.'tests/');
+// COMPOSER文件
+define('COMPOSER_PATH', is_file(FCPATH . 'Vendor/autoload.php') ? FCPATH . 'Vendor/autoload.php' : FCPATH . 'vendor/autoload.php');
 
 // 是否来自ajax提交
 define('IS_AJAX', (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'));
@@ -71,6 +79,9 @@ foreach ($system as $var => $value) {
 }
 
 // 显示错误提示
+IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_DEPRECATED) : error_reporting(0);
+
+// 显示错误提示
 if (CI_DEBUG) {
     ini_set('display_errors', 1);
     // 重置Zend OPcache
@@ -98,7 +109,6 @@ foreach ([
     define($name, (int)$cache[$name]);
 }
 unset($cache);
-
 
 // 自定义开发目录分布
 if (is_file(MYPATH.'Dev.php')) {
@@ -161,7 +171,7 @@ if (!function_exists('locale_set_default')) {
  * 重新日志记录函数
  */
 function log_message($level, $message, array $context = []) {
-    return Phpcmf\Service::Log($level, $message, $context);
+    return \Phpcmf\Service::Log($level, $message, $context);
 }
 
 
@@ -320,21 +330,23 @@ require COREPATH.'Config/Constants.php';
 require BASEPATH.'Common.php';
 
 // 自动加载机制
+require SYSTEMPATH . 'Config/AutoloadConfig.php';
+require COREPATH . 'Config/Autoload.php';
+require SYSTEMPATH . 'Modules/Modules.php';
 require COREPATH . 'Config/Modules.php';
 
-require BASEPATH.'Autoloader/Autoloader.php';
-require COREPATH .'Config/Autoload.php';
-
-require BASEPATH .'Config/BaseService.php';
-require COREPATH .'Config/Services.php';
+require SYSTEMPATH . 'Autoloader/Autoloader.php';
+require SYSTEMPATH . 'Config/BaseService.php';
+require SYSTEMPATH . 'Config/Services.php';
+require COREPATH . 'Config/Services.php';
 
 
 // Use Config\Services as CodeIgniter\Services
 class_alias('Config\Services', 'CodeIgniter\Services');
 
-$loader = CodeIgniter\Services::autoloader();
+$loader = Services::autoloader();
 //$loader->initialize(new Config\Autoload());
-$auto = new Config\Autoload();
+$auto = new Autoload();
 
 // 应用插件的自动识别
 if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
@@ -344,7 +356,7 @@ if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
     unset($app_auto);
 }
 
-$loader->initialize($auto, new Config\Modules());
+$loader->initialize($auto, new Modules());
 $loader->register();    // Register the loader with the SPL autoloader stack.
 
 // Now load Composer's if it's available
@@ -356,7 +368,7 @@ if (is_file(COMPOSER_PATH)) {
 // into $_SERVER and $_ENV
 require BASEPATH . 'Config/DotEnv.php';
 
-$env = new \CodeIgniter\Config\DotEnv(COREPATH);
+$env = new DotEnv(COREPATH);
 $env->load();
 
 // Always load the URL helper -
@@ -374,6 +386,6 @@ helper('url');
  */
 
 
-$app = new \Phpcmf\Extend\CodeIgniter(config(\Config\App::class));
+$app = new \Phpcmf\Extend\CodeIgniter(new App());
 $app->initialize();
 $app->run();

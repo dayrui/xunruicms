@@ -444,7 +444,7 @@ class Model {
     /*
      * 获取单个数据
      * */
-    public function get_row($id = 0, $id2 = 0) {
+    public function get_row($id, $id2 = 0) {
         return $this->getRow();
     }
     public function getRow() {
@@ -925,7 +925,11 @@ class Model {
         }
 
         $my = $this->db->getLastQuery();
-        if (!method_exists($my, 'getQuery')) {
+        if (!$my) {
+            return '';
+        }
+
+        if ($my && !method_exists($my, 'getQuery')) {
             return '';
         }
 

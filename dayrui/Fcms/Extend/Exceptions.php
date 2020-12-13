@@ -19,7 +19,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
      */
     public function errorHandler( $severity,  $message,  $file = null,  $line = null, $context = null)
     {
-
         if (!in_array($severity, [E_NOTICE, E_WARNING])) { //E_WARNING
             throw new \ErrorException($message, 0, $severity, $file, $line);
         }
@@ -35,6 +34,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         $codes      = $this->determineCodes($exception);
         $statusCode = $codes[0];
         $exitCode   = $codes[1];
+
+        ob_clean();
 
         // Log it
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))

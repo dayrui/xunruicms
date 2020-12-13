@@ -242,7 +242,7 @@ class Module extends \Phpcmf\Common
         }
 
         // 搜索数据
-        $data = $search->get($this->module, $get, $catid);
+        $data = $search->get_data();
         if (isset($data['code']) && $data['code'] == 0 && $data['msg']) {
             exit($this->_msg(0, $data['msg']));
         }
