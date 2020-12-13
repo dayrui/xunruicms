@@ -1998,7 +1998,14 @@ function dr_form_hidden($data = []) {
 
 // 验证字符串
 function dr_get_csrf_token() {
-    return csrf_hash();
+
+    $code = \Phpcmf\Service::L('cache')->get_auth_data('csrf_token', 1);
+    if (!$code) {
+        $code = bin2hex(random_bytes(16));
+        \Phpcmf\Service::L('cache')->set_auth_data('csrf_token', $code, 1);
+    }
+
+    return $code;
 }
 
 /**

@@ -49,7 +49,7 @@ class Local {
     }
 
     // 文件上传模式
-    public function upload($type = 0, $data, $watermark) {
+    public function upload($type, $data, $watermark) {
 
         $this->data = $data;
         $this->watermark = $watermark;
