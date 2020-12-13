@@ -118,6 +118,7 @@ class Member_paylog extends \Phpcmf\Table
 		}
         if (!$data['status']) {
             \Phpcmf\Service::V()->assign([
+                'data' => $data,
                 'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                     [
                         '未付流水' => [APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/not_index', 'fa fa-calendar'],
@@ -125,6 +126,16 @@ class Member_paylog extends \Phpcmf\Table
                     ]
                 ),
                 'reply_url' => str_replace('m=index', 'm=not_index', \Phpcmf\Service::V()->get_value('reply_url'))
+            ]);
+        } else {
+            \Phpcmf\Service::V()->assign([
+                'data' => $data,
+                'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                    [
+                        '已付流水' => [ \Phpcmf\Service::L('Router')->class.'/index', 'fa fa-calendar'],
+                        'help' => [ 594 ],
+                    ]
+                ),
             ]);
         }
 

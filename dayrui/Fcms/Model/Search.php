@@ -223,7 +223,7 @@ class Search extends \Phpcmf\Model {
             // 自定义组合查询
             $param_new['catid'] = $param['catid'];
             $param_new['keyword'] = $param['keyword'];
-            $where = $this->my_search($where);
+            $where = $this->mysearch($this->module, $where, $param_new);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
             unset($param_new);
 
@@ -262,7 +262,8 @@ class Search extends \Phpcmf\Model {
     }
 
     // 自定义组合查询条件
-    protected function my_search($where) {
+    protected function mysearch($module, $where, $get) {
         return $where;
     }
+
 }

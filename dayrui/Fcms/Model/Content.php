@@ -37,7 +37,7 @@ class Content extends \Phpcmf\Model {
 
     // 兼容提示
     public function save($id, $name, $value, $where = '') {
-        log_message('error', '->save()方法已经失效，请改为->save_content()');
+        log_message('error', FC_NOW_URL.'->save()方法已经失效，请改为->save_content()，查看教程：https://www.xunruicms.com/doc/1076.html');
         return dr_return_data(0, '->save()方法已经失效，请改为->save_content()');
     }
 
