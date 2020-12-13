@@ -42,8 +42,10 @@
                         {loop $mform $a}
                         <label><a class="btn blue btn-xs" href="{dr_member_url(APP_DIR.'/'.$a.table.'/index', ['cid'=>$t.id])}"><i class="{dr_icon($a.setting.icon)}"></i> {dr_lang($a.name)} {if isset($t[$a.table.'_total'])} ({intval($t[$a.table.'_total'])}) {/if} </a></label>
                         {/loop}
+                        {if $ci->content_model->check_member_auth($t.catid, 'edit')}
                         <label><a href="{dr_member_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> </a></label>
-                        {if $ci->check_del_auth($t.catid)}
+                        {/if}
+                        {if $ci->content_model->check_member_auth($t.catid, 'del')}
                         <label><a href="javascript:dr_ajax_option('{dr_member_url($uriprefix.'/del', ['id'=>$t.id])}', '你确定要删除吗？', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> </a></label>
                         {/if}
                     </td>

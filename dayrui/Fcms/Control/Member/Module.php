@@ -244,22 +244,6 @@ class Module extends \Phpcmf\Table
         }
     }
 
-    // 判断删除权限
-    public function check_del_auth($catid) {
-        if (!$this->is_hcategory) {
-            $cat = $this->_get_module_member_category($this->module, 'del');
-            if (!isset($cat[$catid])) {
-                return 0;
-            }
-        } else {
-            $rt = $this->content_model->_hcategory_member_del_auth();
-            if (!$rt['code']) {
-                return 0;
-            }
-        }
-        return 1;
-    }
-    
     // ===========================
 
     // 查看审核列表

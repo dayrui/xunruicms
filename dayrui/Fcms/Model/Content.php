@@ -754,6 +754,24 @@ class Content extends \Phpcmf\Model {
         return $row;
     }
 
+    // 判断用户前端权限
+    public function check_member_auth($catid, $action) {
+
+        if (!$this->is_hcategory) {
+            $cat = \Phpcmf\Service::C()->_get_module_member_category(\Phpcmf\Service::C()->module, $action);
+            if (!isset($cat[$catid])) {
+                return 0;
+            }
+        } else {
+            $rt = $this->_hcategory_member_del_auth();
+            if (!$rt['code']) {
+                return 0;
+            }
+        }
+
+        return 1;
+    }
+
     // 格式化入库数据
     public function format_data($data) {
 

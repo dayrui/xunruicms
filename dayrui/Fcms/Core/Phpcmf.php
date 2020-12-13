@@ -26,7 +26,7 @@ abstract class Common extends \CodeIgniter\Controller
 
     public $session; // 网站session对象
     public $is_mobile; // 是否移动端
-    public $temp; // 临时数据存储
+    public $temp = []; // 临时数据存储
 
     protected $is_module_init; // 防止模块重复初始化
     protected $cmf_version; // 版本信息
@@ -813,6 +813,10 @@ abstract class Common extends \CodeIgniter\Controller
             return [];
         }
 
+        if (isset($this->temp['_get_module_member_category'][$module['dirname'].$name]) && $this->temp['_get_module_member_category'][$module['dirname'].$name]) {
+            return $this->temp['_get_module_member_category'][$module['dirname'].$name];
+        }
+
         $category = $module['category'];
         foreach ($category as $id => $t) {
             // 筛选可发布的栏目权限
@@ -827,6 +831,7 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
+        $this->temp['_get_module_member_category'][$module['dirname'].$name] = $category;
         return $category;
     }
 
