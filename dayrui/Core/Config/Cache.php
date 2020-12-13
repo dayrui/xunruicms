@@ -1,10 +1,13 @@
-<?php namespace Config;
+<?php
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
- **/
+namespace Config;
 
+use CodeIgniter\Cache\Handlers\DummyHandler;
+use CodeIgniter\Cache\Handlers\FileHandler;
+use CodeIgniter\Cache\Handlers\MemcachedHandler;
+use CodeIgniter\Cache\Handlers\PredisHandler;
+use CodeIgniter\Cache\Handlers\RedisHandler;
+use CodeIgniter\Cache\Handlers\WincacheHandler;
 use CodeIgniter\Config\BaseConfig;
 
 class Cache extends BaseConfig

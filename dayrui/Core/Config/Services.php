@@ -1,9 +1,8 @@
-<?php namespace Config;
+<?php
+
+namespace Config;
 
 use CodeIgniter\Config\Services as CoreServices;
-use CodeIgniter\Config\BaseConfig;
-
-require_once BASEPATH.'Config/Services.php';
 
 /**
  * Services Configuration file.
@@ -21,120 +20,39 @@ require_once BASEPATH.'Config/Services.php';
 class Services extends CoreServices
 {
 
-//    public static function example($getShared = true)
-//    {
-//        if ($getShared)
-//        {
-//            return self::getSharedInstance('example');
-//        }
-//
-//        return new \CodeIgniter\Example();
-//    }
 
-    public static function honeypot(BaseConfig $config = null, $getShared = true)
-    {
-        if ($getShared)
-        {
-            return static::getSharedInstance('honeypot', $config);
-        }
-
-        if (is_null($config)) 
-        {
-            $config = new \Config\Honeypot();
-        }
-
-        return new \CodeIgniter\Honeypot\Honeypot($config);
-    }
-
-	
-	
-    public static function exceptions(\Config\Exceptions $config = null, \CodeIgniter\HTTP\IncomingRequest $request = null, \CodeIgniter\HTTP\Response $response = null, $getShared = true)
+    public static function exceptions(
+         $config = null,
+         $request = null,
+         $response = null,
+        bool $getShared = true
+    )
     {
         if ($getShared)
         {
             return static::getSharedInstance('exceptions', $config, $request, $response);
         }
 
-        if (empty($config))
-        {
-            $config = new \Config\Exceptions();
-        }
-
-        if (empty($request))
-        {
-            $request = static::request();
-        }
-
-        if (empty($response))
-        {
-            $response = static::response();
-        }
+        $config   = $config ?? config('Exceptions');
+        $request  = $request ?? static::request();
+        $response = $response ?? static::response();
 
         return new \Phpcmf\Extend\Exceptions($config, $request, $response);
     }
 
 
-
-
-    public static function request(\Config\App $config = null, $getShared = true)
-    {
-
-        if ($getShared)
-        {
-            return static::getSharedInstance('request', $config);
-        }
-
-        if ( ! is_object($config))
-        {
-            $config = new \Config\App();
-        }
-
-        return new \Phpcmf\Extend\Request(
-            $config,
-            new \CodeIgniter\HTTP\URI(),
-            'php://input',
-            new \CodeIgniter\HTTP\UserAgent()
-        );
-    }
-
-
-    public static function security(\Config\App $config = null, $getShared = true)
+    public static function security(App $config = null, bool $getShared = true)
     {
         if ($getShared)
         {
             return static::getSharedInstance('security', $config);
         }
 
-        if (! is_object($config))
-        {
-            $config = new \Config\App();
-        }
+        $config = $config ?? config('Security') ?? config('App');
 
         return new \Phpcmf\Extend\Security($config);
     }
 
-
-    /**
-     * @param \Config\Toolbar $config
-     * @param boolean         $getShared
-     *
-     * @return \CodeIgniter\Debug\Toolbar
-     */
-    public static function toolbar(\Config\Toolbar $config = null, bool $getShared = true)
-    {
-        if ($getShared)
-        {
-            return static::getSharedInstance('toolbar', $config);
-        }
-
-        if (! is_object($config))
-        {
-            $config = config('Config\Toolbar');
-        }
-
-
-        return new \CodeIgniter\Debug\Toolbar($config);
-    }
 
 
 }
