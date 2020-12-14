@@ -3,6 +3,8 @@
 namespace Config;
 
 use CodeIgniter\Config\Services as CoreServices;
+use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\UserAgent;
 
 /**
  * Services Configuration file.
@@ -21,6 +23,7 @@ class Services extends CoreServices
 {
 
 
+    // 异常处理
     public static function exceptions(
          $config = null,
          $request = null,
@@ -40,7 +43,7 @@ class Services extends CoreServices
         return new \Phpcmf\Extend\Exceptions($config, $request, $response);
     }
 
-
+    // 防跨站验证
     public static function security(App $config = null, bool $getShared = true)
     {
         if ($getShared)
@@ -53,6 +56,22 @@ class Services extends CoreServices
         return new \Phpcmf\Extend\Security($config);
     }
 
+    // 路由模式
+    public static function request(App $config = null, bool $getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('request', $config);
+        }
 
+        $config = $config ?? config('App');
+
+        return new \Phpcmf\Extend\Request(
+            $config,
+            static::uri(),
+            'php://input',
+            new UserAgent()
+        );
+    }
 
 }
