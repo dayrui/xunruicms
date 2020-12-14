@@ -23,7 +23,7 @@ class Site_domain extends \Phpcmf\Common
                         // 目录不验证
                     } else {
                         // 验证域名可用性
-                        if (in_array($value, $data)) {
+                        if (dr_in_array($value, $data)) {
                             $this->_json(0, dr_lang('域名（%s）绑定重复', $value));
                         } elseif (!\Phpcmf\Service::L('Form')->check_domain($value)) {
                             $this->_json(0, dr_lang('域名（%s）格式不正确', $value));

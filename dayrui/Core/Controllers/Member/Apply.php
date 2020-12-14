@@ -62,7 +62,7 @@ class Apply extends \Phpcmf\Common
         $field = [];
         if ($this->member_cache['field'] && $this->member_cache['group'][$gid]['field']) {
             foreach ($this->member_cache['field'] as $fname => $t) {
-                in_array($fname, $this->member_cache['group'][$gid]['field']) && $field[$fname] = $t;
+                dr_in_array($fname, $this->member_cache['group'][$gid]['field']) && $field[$fname] = $t;
             }
         }
         //print_r($this->member_cache);exit;

@@ -132,13 +132,13 @@
                                 <!--调用共享栏目-->
                                 <!--第一层：调用pid=0表示顶级-->
                                 {category module=share pid=0}
-                                <li class="menu-dropdown classic-menu-dropdown {if IS_SHARE && $catid && in_array($catid, $t.catids)} active{/if}">
+                                <li class="menu-dropdown classic-menu-dropdown {if IS_SHARE && $catid && dr_in_array($catid, $t.catids)} active{/if}">
                                     <a href="{$t.url}" title="{$t.name}" {if $t.tid==2} target="_blank"{/if}>{$t.name}</a>
                                     {if $t.child}
                                     <ul class="dropdown-menu pull-left">
                                         <!--第二层：调用第二级共享栏目-->
                                         {category module=share pid=$t.id return=t2}
-                                        <li class="{if $t2.child} dropdown-submenu{/if} {if IS_SHARE && $catid && in_array($catid, $t2.catids)} active{/if}">
+                                        <li class="{if $t2.child} dropdown-submenu{/if} {if IS_SHARE && $catid && dr_in_array($catid, $t2.catids)} active{/if}">
                                             <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
                                                 {$t2.name}
                                             </a>
@@ -146,7 +146,7 @@
                                             <ul class="dropdown-menu pull-left">
                                                 <!--第三层：调用第三级共享栏目数据-->
                                                 {category module=share pid=$t2.id return=t3}
-                                                <li class="{if IS_SHARE && $catid && in_array($catid, $t3.catids)} active{/if}">
+                                                <li class="{if IS_SHARE && $catid && dr_in_array($catid, $t3.catids)} active{/if}">
                                                     <a href="{$t3.url}" title="{$t3.name}">
                                                         {$t3.name}
                                                     </a>
@@ -171,7 +171,7 @@
                                     <ul class="dropdown-menu pull-left">
                                         <!--第一层：调用独立模块下的顶级栏目-->
                                         {category module=$m.dirname pid=0 return=t2}
-                                        <li class="{if $t2.child} dropdown-submenu{/if} {if MOD_DIR==$m.dirname && $catid && in_array($catid, $t2.catids)} active{/if}">
+                                        <li class="{if $t2.child} dropdown-submenu{/if} {if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t2.catids)} active{/if}">
                                             <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
                                                 {$t2.name}
                                             </a>
@@ -179,7 +179,7 @@
                                             <ul class="dropdown-menu pull-left">
                                                 <!--第二层：调用第二级栏目-->
                                                 {category module=$m.dirname pid=$t2.id return=t3}
-                                                <li class="{if MOD_DIR==$m.dirname && $catid && in_array($catid, $t3.catids)} active{/if}">
+                                                <li class="{if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t3.catids)} active{/if}">
                                                     <a href="{$t3.url}" title="{$t3.name}">
                                                         {$t3.name}
                                                     </a>

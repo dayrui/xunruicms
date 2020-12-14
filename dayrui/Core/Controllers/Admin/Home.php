@@ -28,7 +28,7 @@ class Home extends \Phpcmf\Common
         }
 
         // 验证权限
-        if ($table_data && !in_array(1, $this->admin['roleid'])) {
+        if ($table_data && !dr_in_array(1, $this->admin['roleid'])) {
             // 不是超管用户
             $auth = \Phpcmf\Service::M('system')->get_setting('index_main');
             if ($auth) {
@@ -45,7 +45,7 @@ class Home extends \Phpcmf\Common
             '自定义控制台' => ['home/edit', 'fa fa-edit'],
             '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
         ];
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             unset($menu['自定义控制台']);
         }
 
@@ -72,7 +72,7 @@ class Home extends \Phpcmf\Common
 	//后台自定义面板
 	public function edit() {
 
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             $this->_admin_msg(0, dr_lang('无权限操作'));
         }
 
@@ -152,7 +152,7 @@ class Home extends \Phpcmf\Common
         $menu_top = $my_menu = [];
 		if ($this->admin['adminid'] > 1) {
 			foreach ($menu as $t) {
-				@in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
+				dr_in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
 			}
 		} else {
 			$my_menu = $menu;
@@ -177,7 +177,7 @@ class Home extends \Phpcmf\Common
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
                     continue; // 没有分组菜单就不要
-                } elseif (SITE_ID > 1 && !in_array(SITE_ID, $top['site'])) {
+                } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $top['site'])) {
                     continue; // 没有划分本站点就不显示
                 } elseif ($top['mark'] && strpos($top['mark'], 'app-') === 0) {
                     // 判断应用模块权限
@@ -205,7 +205,7 @@ class Home extends \Phpcmf\Common
                     if (!$left['link']) {
                         unset($top['left'][$if]);
                         continue; // 没有链接菜单就不要
-                    } elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
+                    } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $left['site'])) {
                         unset($top['left'][$if]);
                         continue; // 没有划分本站点就不显示
                     }
@@ -224,7 +224,7 @@ class Home extends \Phpcmf\Common
                                 unset($left['link'][$i]);
                                 continue;
                             }
-                        } elseif (SITE_ID > 1 && !in_array(SITE_ID, $link['site'])) {
+                        } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $link['site'])) {
                             // 没有划分本站点就不显示
                             unset($left['link'][$i]);
                             continue;
@@ -348,7 +348,7 @@ class Home extends \Phpcmf\Common
         $my_menu = [];
         if ($this->admin['adminid'] > 1) {
             foreach ($menu as $t) {
-                @in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
+                dr_in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
             }
         } else {
             $my_menu = $menu;
@@ -396,7 +396,7 @@ class Home extends \Phpcmf\Common
                             unset($left['link'][$i]);
                             continue;
                         }
-                    } elseif (SITE_ID > 1 && $link['uri'] && $admin_menu[$link['uri']] && !in_array(SITE_ID, $admin_menu[$link['uri']]['site'])) {
+                    } elseif (SITE_ID > 1 && $link['uri'] && $admin_menu[$link['uri']] && !dr_in_array(SITE_ID, $admin_menu[$link['uri']]['site'])) {
                         // 没有划分本站点就不显示
                         unset($left['link'][$i]);
                         continue;

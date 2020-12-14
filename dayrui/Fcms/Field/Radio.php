@@ -27,7 +27,7 @@ class Radio extends \Phpcmf\Library\A_Field {
                 continue;
             }
             $str.= '<label class="mt-checkbox mt-checkbox-outline">';
-            $str.= '<input type="checkbox" '.(in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '.$t['name'].' ';
+            $str.= '<input type="checkbox" '.(dr_in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '.$t['name'].' ';
             $str.= '<span></span>';
             $str.= '</label>';
         }

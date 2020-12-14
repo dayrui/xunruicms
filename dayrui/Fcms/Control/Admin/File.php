@@ -458,7 +458,7 @@ class File extends \Phpcmf\Common
                     continue;
                 } elseif (strtolower(strrchr($file, '.')) == '.php') {
                     continue;
-                } elseif ($this->not_root_path && in_array($source_dir . $file, $this->not_root_path)) {
+                } elseif ($this->not_root_path && dr_in_array($source_dir . $file, $this->not_root_path)) {
                     continue;
                 }
                 $list[] = $file;
@@ -467,7 +467,7 @@ class File extends \Phpcmf\Common
             foreach ($list as $file ) {
                 $edit =\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', '/'), ['file' => $this->dir.'/'.$file]);
                 if (is_dir($source_dir.'/'.$file)) {
-                    if (!$dir && $this->exclude_dir && is_array($this->exclude_dir) && in_array($file, $this->exclude_dir)) {
+                    if (!$dir && $this->exclude_dir && is_array($this->exclude_dir) && dr_in_array($file, $this->exclude_dir)) {
                         continue;
                     }
                     // 缩略图预览图

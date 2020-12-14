@@ -187,7 +187,7 @@ class Role extends \Phpcmf\Common
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		if (!$ids) {
             $this->_json(0, dr_lang('你还没有选择呢'));
-        } elseif (in_array(1, $ids)) {
+        } elseif (dr_in_array(1, $ids)) {
             $this->_json(0, dr_lang('超级管理员角色组不能删除'));
         }
 

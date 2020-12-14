@@ -109,7 +109,7 @@ class Member extends \Phpcmf\Table
         }
 
         // 不是超级管理员排除角色账号
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
         }
 
@@ -317,7 +317,7 @@ class Member extends \Phpcmf\Table
         }
 
         $field = [];
-        if (in_array(1, $this->admin['roleid'])) {
+        if (dr_in_array(1, $this->admin['roleid'])) {
             // 超级管理员，显示全部字段并提示
             if ($this->member_cache['field']) {
                 $member = \Phpcmf\Service::M('member')->get_member($uid);
@@ -409,9 +409,9 @@ class Member extends \Phpcmf\Table
     public function del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        if (in_array(1, $ids)) {
+        if (dr_in_array(1, $ids)) {
             $this->_json(0, dr_lang('创始人账号不能删除'));
-        } elseif (in_array($this->uid, $ids)) {
+        } elseif (dr_in_array($this->uid, $ids)) {
             $this->_json(0, dr_lang('不能删除自己'));
         }
 

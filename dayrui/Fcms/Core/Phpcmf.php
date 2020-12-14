@@ -254,7 +254,7 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             } else {
                 // 这是电脑端
-                if (in_array(DOMAIN_NAME, $client)) {
+                if (dr_in_array(DOMAIN_NAME, $client)) {
                     // 表示这个域名属于移动端,需要跳转到pc
                     $arr = array_flip($client);
                     \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix(DOMAIN_NAME), dr_http_prefix($arr[DOMAIN_NAME]), dr_now_url()) , 1);
@@ -422,7 +422,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         $file = dr_get_app_dir($namespace).'Config/Init.php';
-        if (in_array($file, $this->load_init)) {
+        if (dr_in_array($file, $this->load_init)) {
             return;
         }
 

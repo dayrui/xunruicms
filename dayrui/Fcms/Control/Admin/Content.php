@@ -357,7 +357,7 @@ class Content extends \Phpcmf\Common
 
         foreach ($tables as $table => $fields) {
 
-            if (!in_array($fd, $fields)) {
+            if (!dr_in_array($fd, $fields)) {
                 $this->_json(0, dr_lang('表[%s]字段[%s]不存在', $table, $fd));
             }
 

@@ -50,7 +50,7 @@ class Module extends \Phpcmf\Table
         ]);
         $this->content_model->init($this->init); // 初始化内容模型
         // 子管理员推荐位权限
-        if (!in_array(1, $this->admin['roleid']) && $this->module['setting']['flag']) {
+        if (!dr_in_array(1, $this->admin['roleid']) && $this->module['setting']['flag']) {
             foreach ($this->module['setting']['flag'] as $i => $t) {
                 if (!$t['role']) {
                     unset($this->module['setting']['flag'][$i]);

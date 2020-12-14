@@ -52,7 +52,7 @@
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
                                     {loop $field $f}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if @in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if dr_in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} <span></span></label>
                                     {/loop}
                                 </div>
                                 <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>

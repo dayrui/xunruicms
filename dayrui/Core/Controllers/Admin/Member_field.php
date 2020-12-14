@@ -41,7 +41,7 @@ class Member_field extends \Phpcmf\Common
         $field = \Phpcmf\Service::M()->db->table('field')->where('disabled', 0)->where('relatedname', 'member')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
         if ($field) {
             foreach ($field as $f) {
-                $f['register'] = in_array($f['id'], $register);
+                $f['register'] = dr_in_array($f['id'], $register);
                 $f['group'] = $value[$f['id']];
                 $list[$f['fieldname']] = $f;
             }

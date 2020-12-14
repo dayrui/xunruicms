@@ -210,7 +210,7 @@
                                 <div class="mt-checkbox-inline">
                                     {loop $role $t}
                                     {if $t.id>1}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_admin][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_admin)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_admin][]" value="{$t.id}" {if dr_in_array($t.id, (array)$data.setting.show_admin)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
                                     {/if}
                                     {/loop}
                                 </div>
@@ -221,9 +221,9 @@
                             <label class="col-md-2 control-label">{dr_lang('前端不显示该字段')}</label>
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="0" {if @in_array(0, (array)$data.setting.show_member)} checked{/if} /> {dr_lang('游客')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="0" {if dr_in_array(0, (array)$data.setting.show_member)} checked{/if} /> {dr_lang('游客')} <span></span></label>
                                     {list action=cache name=MEMBER.group}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="{$t.id}" {if @in_array($t.id, (array)$data.setting.show_member)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="{$t.id}" {if dr_in_array($t.id, (array)$data.setting.show_member)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
                                     {/list}
                                 </div>
                                 <span class="help-block">{dr_lang('前端发布内容时该会员组将不会看到这个字段，如果“前端显示”关闭了此功能就无效')}</span>

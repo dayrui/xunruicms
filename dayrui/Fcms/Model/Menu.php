@@ -611,7 +611,7 @@ class Menu extends \Phpcmf\Model {
             }
             // 第二级
             foreach ($data as $i => $t) {
-                if (in_array($t['pid'], $top)) {
+                if (dr_in_array($t['pid'], $top)) {
                     $left[$t['id']] = $t['pid'];
                     $data[$i]['level'] = 2;
                 }

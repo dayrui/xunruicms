@@ -54,7 +54,7 @@
                         {$t.spacer} <a href="javascript:dr_iframe('edit', '{dr_url('menu/edit', ['id'=>$t.id])}', '600px');"><i class="{$t.icon}"></i> {dr_lang($t.name)}</a>
                     </td>
                     <td>
-                        {if $ci->_is_admin_auth('add') && ($t.pid == 0 || @in_array($t.pid, (array)$top))}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>$t.id])}', '600px', '{if !in_array($t.pid, $top)}500px{/if}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
+                        {if $ci->_is_admin_auth('add') && ($t.pid == 0 || dr_in_array($t.pid, (array)$top))}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>$t.id])}', '600px', '{if !in_array($t.pid, $top)}500px{/if}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
                     </td>
                     {if dr_count($ci->site_info) > 1}
                     <td>

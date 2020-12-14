@@ -212,8 +212,8 @@
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" checked disabled /> {dr_lang('账号')} <span></span></label>
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[login][field][]" value="phone" {if @in_array('phone', (array)$data.login.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[login][field][]" value="email" {if @in_array('email', (array)$data.login.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[login][field][]" value="phone" {if dr_in_array('phone', (array)$data.login.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[login][field][]" value="email" {if dr_in_array('email', (array)$data.login.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('可同时选择多个字段作为登录主字段')}</span>
                             </div>
@@ -291,10 +291,10 @@
                             <label class="col-md-2 control-label">{dr_lang('注册字段选择')}</label>
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="username" {if @in_array('username', (array)$data.register.field)} checked{/if} /> {dr_lang('账号')} <span></span></label>
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="phone" {if @in_array('phone', (array)$data.register.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="email" {if @in_array('email', (array)$data.register.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="name" {if @in_array('name', (array)$data.register.field)} checked{/if} /> {dr_lang('姓名')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="username" {if dr_in_array('username', (array)$data.register.field)} checked{/if} /> {dr_lang('账号')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="phone" {if dr_in_array('phone', (array)$data.register.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="email" {if dr_in_array('email', (array)$data.register.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
+                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="name" {if dr_in_array('name', (array)$data.register.field)} checked{/if} /> {dr_lang('姓名')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('至少选择一个字段或多个字段组合')}</span>
                             </div>

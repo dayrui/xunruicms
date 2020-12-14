@@ -123,7 +123,7 @@ class Search extends \Phpcmf\Model {
                 $search_keyword = dr_safe_keyword($param['keyword']);
                 if ($sfield) {
                     foreach ($sfield as $t) {
-                        if ($t && in_array($t, $field)) {
+                        if ($t && dr_in_array($t, $field)) {
                             $temp[] = $this->module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$search_keyword.'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
                         }
                     }

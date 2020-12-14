@@ -26,7 +26,7 @@ class Member_setting extends \Phpcmf\Common
             $save = ['register', 'login', 'oauth', 'config'];
             $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['register']['sms']) {
-                if (!in_array('phone', $post['register']['field'])) {
+                if (!dr_in_array('phone', $post['register']['field'])) {
                     $this->_json(0, dr_lang('短信验证注册必须让手机号作为注册字段'));
                 } elseif (!$post['register']['code']) {
                     $this->_json(0, dr_lang('短信验证注册必须开启图片验证码'));

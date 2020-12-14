@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    {if in_array('username', $register.field)}
+                    {if dr_in_array('username', $register.field)}
                     <div class="form-group" id="dr_row_username">
                         <label class="col-md-2 control-label">账号</label>
                         <div class="col-md-9">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     {/if}
-                    {if in_array('email', $register.field)}
+                    {if dr_in_array('email', $register.field)}
                     <div class="form-group " id="dr_row_email">
                         <label class="col-md-2 control-label">邮箱</label>
                         <div class="col-md-9">
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     {/if}
-                    {if in_array('phone', $register.field)}
+                    {if dr_in_array('phone', $register.field)}
                     <div class="form-group " id="dr_row_phone">
                         <label class="col-md-2 control-label">手机号</label>
                         <div class="col-md-9">

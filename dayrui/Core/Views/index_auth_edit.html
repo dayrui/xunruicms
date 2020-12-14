@@ -9,7 +9,7 @@
                 <div class="mt-checkbox-inline">
                     {loop $role $t}
                     {if $t.id>1}
-                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[]" value="{$t.id}" {if !$data || @in_array($t.id, $data)} checked{/if} /> {$t.name} <span></span></label>
+                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[]" value="{$t.id}" {if !$data || dr_in_array($t.id, $data)} checked{/if} /> {$t.name} <span></span></label>
                     {/if}
                     {/loop}
                 </div>

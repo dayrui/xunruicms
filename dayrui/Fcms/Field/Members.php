@@ -26,7 +26,7 @@ class Members extends \Phpcmf\Library\A_Field {
 
 	    $group = '<div class="mt-checkbox-inline">';
 	    foreach (\Phpcmf\Service::C()->member_cache['group'] as $t) {
-            $group.= '<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" value="'.$t['id'].'" name="data[setting][option][group][]" '.(in_array($t['id'], $option['group']) ? 'checked' : '').' /> '.dr_lang($t['name']).' <span></span></label>';
+            $group.= '<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" value="'.$t['id'].'" name="data[setting][option][group][]" '.(dr_in_array($t['id'], $option['group']) ? 'checked' : '').' /> '.dr_lang($t['name']).' <span></span></label>';
         }
 	    $group.= '</div>';
 

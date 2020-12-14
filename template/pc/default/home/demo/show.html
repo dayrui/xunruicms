@@ -168,7 +168,7 @@
 
                                 {php $field = dr_field_options($ci->module['field']['fuxuankuang']['id']);}
                                 {loop $field $name $value}
-                                {if in_array($name, $fuxuankuang)}
+                                {if dr_in_array($name, $fuxuankuang)}
                                 <label class="label label-sm label-default">{$value}</label>
                                 {/if}
                                 {/loop}

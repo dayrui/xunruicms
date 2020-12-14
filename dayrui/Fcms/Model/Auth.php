@@ -17,7 +17,7 @@ class Auth extends \Phpcmf\Model {
     public function cleck_edit_member($uid) {
 
         // 超管不验证
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             return true;
         } elseif ($this->uid == $uid) {
             // 自己不验证
@@ -84,7 +84,7 @@ class Auth extends \Phpcmf\Model {
             return 0;
         } elseif (isset(\Phpcmf\Service::C()->admin['role'][1])) {
             return 1; // 超级管理员
-        } elseif (in_array($siteid, \Phpcmf\Service::C()->admin['site'])) {
+        } elseif (dr_in_array($siteid, \Phpcmf\Service::C()->admin['site'])) {
             return 1;
         }
 
@@ -169,7 +169,7 @@ class Auth extends \Phpcmf\Model {
     // 提醒我的消息
     public function admin_notice($num = 7) {
 
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             // 超管
             $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
         } else {
@@ -238,7 +238,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 非创始人验证登录权限
-        if ($verify && !isset($data['role'][1]) && !in_array(SITE_ID, $data['site'])) {
+        if ($verify && !isset($data['role'][1]) && !dr_in_array(SITE_ID, $data['site'])) {
             return dr_return_data(0, dr_lang('无权限登录此站点'));
         }
 
@@ -269,9 +269,9 @@ class Auth extends \Phpcmf\Model {
 
         if (!\Phpcmf\Service::C()->admin) {
             return 0;
-        } elseif (in_array(1, \Phpcmf\Service::C()->admin['site'])) {
+        } elseif (dr_in_array(1, \Phpcmf\Service::C()->admin['site'])) {
             return 1; // 超级权限识别
-        } elseif (in_array(SITE_ID, \Phpcmf\Service::C()->admin['site'])) {
+        } elseif (dr_in_array(SITE_ID, \Phpcmf\Service::C()->admin['site'])) {
             return 1; // 当前站点权限
         }
 
@@ -339,7 +339,7 @@ class Auth extends \Phpcmf\Model {
             return $this->_is_admin_min_mode;
         }
 
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             $this->_is_admin_min_mode = 0;
         } else {
             $auth = \Phpcmf\Service::C()->get_cache('auth');
@@ -361,7 +361,7 @@ class Auth extends \Phpcmf\Model {
             return $this->_is_post_user;
         }
 
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             $this->_is_post_user = 0;
             return $this->_is_post_user;
         }
@@ -381,7 +381,7 @@ class Auth extends \Phpcmf\Model {
     // 后台内容审核权限编辑时的验证
     public function get_admin_verify_status_edit($vid, $status) {
 
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             return 1; // 超管用户
         } elseif ($status == 0) {
             return 1; // 退稿的可以看到
@@ -405,7 +405,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 有权限了
-        if (in_array($vid, $my)) {
+        if (dr_in_array($vid, $my)) {
             return 1;
         }
 
@@ -415,7 +415,7 @@ class Auth extends \Phpcmf\Model {
     // 后台内容审核列表的权限的sql语句
     public function get_admin_verify_status_list() {
 
-        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             return '`status`>=0'; // 超管用户
         }
 
@@ -428,7 +428,7 @@ class Auth extends \Phpcmf\Model {
         foreach ($verify as $t) {
             if ($t['value']['role']) {
                 foreach ($t['value']['role'] as $status => $rid) {
-                    if (in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
+                    if (dr_in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
                         $where[] = '(`status`='.$status.' and `vid`='.$t['id'].')';
                     }
                 }
@@ -458,7 +458,7 @@ class Auth extends \Phpcmf\Model {
         if (!$member || $uid != $member['uid']) {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
-                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help', 'login'])) {
+                if (dr_in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help', 'login'])) {
                     return FALSE; // 跳过的控制器
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
@@ -519,7 +519,7 @@ class Auth extends \Phpcmf\Model {
         $uri_arr[dr_count($uri_arr) - 1] = $action;
         $this_uri = implode('/', $uri_arr);
 
-        if (in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
+        if (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
             return true;
         }
 
@@ -560,7 +560,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 特殊url权限验证
-        if (in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
+        if (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
             return true;
         }
 

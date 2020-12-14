@@ -79,8 +79,8 @@ class File {
         }
 
         $file = WRITEPATH.'temp/sql.cache';
-        $data = is_file($file) ? json_decode(file_get_contents($file)) : array();
-        if (in_array($sql, $data)) {
+        $data = is_file($file) ? json_decode(file_get_contents($file)) : [];
+        if (dr_in_array($sql, $data)) {
             return ;
         }
 

@@ -42,7 +42,7 @@ class Group extends \Phpcmf\Library\A_Field {
 			$_field[] = '<option value=""> -- </option>';
 			foreach ($field as $t) {
                 $t['fieldtype'] != 'Group'
-                && !@in_array($t['fieldname'], $group)
+                && !dr_in_array($t['fieldname'], $group)
                 && $_field[] = '<option value="'.$t['fieldname'].'">'.$t['name'].'</option>';
 			}
 			$_field = @implode('', @array_unique($_field));

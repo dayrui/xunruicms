@@ -396,7 +396,7 @@ class Category extends \Phpcmf\Table
             $urlrule = \Phpcmf\Service::L('input')->post('urlrule', true);
 
             foreach ($this->module['category'] as $id => $t) {
-                if (in_array($id, $catid)) {
+                if (dr_in_array($id, $catid)) {
                     $c ++;
                     $t['setting']['urlrule'] = $urlrule;
                     \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($t['setting'])]);
@@ -847,7 +847,7 @@ class Category extends \Phpcmf\Table
             $save = $row['setting']['cat_field'] ? $row['setting']['cat_field'] : [];
             foreach ($this->module['category_field'] as $t) {
                 if ($t['id']) {
-                    if (in_array($t['fieldname'], $post)) {
+                    if (dr_in_array($t['fieldname'], $post)) {
                         // 说明勾选了这个字段
                         if (isset($save[$t['fieldname']])) {
                             unset($save[$t['fieldname']]);

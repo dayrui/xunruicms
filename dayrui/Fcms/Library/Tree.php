@@ -289,7 +289,7 @@ class Tree {
                     $first = $t['id'];
                 }
                 // 选中操作
-                $t['selected'] = (is_array($id) ? in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
+                $t['selected'] = (is_array($id) ? dr_in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
                 // 是否可选子栏目
                 $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
                 if (isset($t['setting'])) {

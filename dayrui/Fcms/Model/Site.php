@@ -413,7 +413,7 @@ class Site extends \Phpcmf\Model
             if ($fp = @opendir(WRITEPATH.'data')) {
                 while (FALSE !== ($file = readdir($fp))) {
                     $pos = strpos($file, 'module-');
-                    if ($pos !== false && $pos === 0 && !in_array($file, $module_cache_file)) {
+                    if ($pos !== false && $pos === 0 && !dr_in_array($file, $module_cache_file)) {
                         unlink(WRITEPATH.'data/'.$file);
                     }
                 }

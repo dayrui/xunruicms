@@ -95,7 +95,7 @@ class Member_apply extends \Phpcmf\Table
         ];
         if ($this->member_cache['field'] && $this->member_cache['group'][$data['gid']]['field']) {
             foreach ($this->member_cache['field'] as $fname => $t) {
-                in_array($fname, $this->member_cache['group'][$data['gid']]['field']) && $field[$fname] = $t;
+                dr_in_array($fname, $this->member_cache['group'][$data['gid']]['field']) && $field[$fname] = $t;
             }
         }
 
@@ -135,7 +135,7 @@ class Member_apply extends \Phpcmf\Table
             $field = [];
             if ($this->member_cache['field'] && $this->member_cache['group'][$old['gid']]['field']) {
                 foreach ($this->member_cache['field'] as $fname => $t) {
-                    in_array($fname, $this->member_cache['group'][$old['gid']]['field']) && $field[$fname] = $t;
+                    dr_in_array($fname, $this->member_cache['group'][$old['gid']]['field']) && $field[$fname] = $t;
                 }
             }
 

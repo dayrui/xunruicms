@@ -121,7 +121,7 @@
                         && array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['setting']['show_member'])) {
                         continue; // 非后台时 判断用户权限
                     }
-                } elseif (IS_ADMIN && $t['setting']['show_admin'] && !in_array(1, \Phpcmf\Service::C()->admin['roleid'])
+                } elseif (IS_ADMIN && $t['setting']['show_admin'] && !dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])
                     && @array_intersect(\Phpcmf\Service::C()->admin['roleid'], $t['setting']['show_admin'])) {
                     continue; // 后台时 判断管理员权限
                 }
@@ -492,7 +492,7 @@
             $my = [];
             foreach ($type as $i => $t) {
                 $my[] = $t['id'];
-                if (isset($t['used']) && is_array($t['used']) && !in_array($name, $t['used'])) {
+                if (isset($t['used']) && is_array($t['used']) && !dr_in_array($name, $t['used'])) {
                     unset($type[$i]);
                 } elseif (isset($t['namespace']) && $t['namespace'] && $t['namespace'] != $this->app) {
                     unset($type[$i]);
@@ -503,7 +503,7 @@
             if ($path) {
                 foreach ($path as $file) {
                     $name = substr($file, 0, -4);
-                    if (!in_array($name, $my)
+                    if (!dr_in_array($name, $my)
                         && strpos(file_get_contents(MYPATH.'Field/'.$file), '<?php namespace My\Field;') !== false) {
                         $type[] = [
                             'id' => $name,

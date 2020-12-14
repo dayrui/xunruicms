@@ -47,12 +47,12 @@
         <!--第一层：调用pid=0表示顶级-->
         {category module=share pid=0}
         <div class="p1-nav">
-            <h5><a href="{$t.url}" class="{if IS_SHARE && in_array($catid, $t.catids)} active{/if}" title="{$t.name}">{$t.name}</a></h5>
+            <h5><a href="{$t.url}" class="{if IS_SHARE && dr_in_array($catid, $t.catids)} active{/if}" title="{$t.name}">{$t.name}</a></h5>
             {if $t.child}
             <div class="p2-nav">
                 <!--第二层-->
                 {category module=share pid=$t.id return=t2}
-                <a href="{$t2.url}"  class="{if IS_SHARE && $catid && in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
+                <a href="{$t2.url}"  class="{if IS_SHARE && $catid && dr_in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
                 {/category}
             </div>
             <div class="clearfix"></div>
@@ -69,7 +69,7 @@
             <div class="p2-nav">
                 <!--调用独立模块下的栏目-->
                 {category module=$m.dirname pid=0 return=t2}
-                <a href="{$t2.url}"  class="{if MOD_DIR==$m.dirname && $catid && in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
+                <a href="{$t2.url}"  class="{if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t2.catids)} active{/if}" title="{$t2.name}">{$t2.name}</a>
                 {/category}
             </div>
             <div class="clearfix"></div>

@@ -172,7 +172,7 @@ class Form
                 }
                 // 验证必填字段
                 if ($field['fieldtype'] != 'Group' && $validate['required']) {
-                    if (IS_ADMIN && in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+                    if (IS_ADMIN && dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
                         // 后台超管不验证必填
                     } else {
                         // 开始验证必填字段

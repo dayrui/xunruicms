@@ -723,10 +723,10 @@ class Member extends \Phpcmf\Model
 
         $data = $this->db->table('member')->where('username', $username)->get()->getRowArray();
         if (!$data && \Phpcmf\Service::C()->member_cache['login']['field']) {
-            if (in_array('email', \Phpcmf\Service::C()->member_cache['login']['field'])
+            if (dr_in_array('email', \Phpcmf\Service::C()->member_cache['login']['field'])
                 && \Phpcmf\Service::L('Form')->check_email($username)) {
                 $data = $this->db->table('member')->where('email', $username)->get()->getRowArray();
-            } elseif (in_array('phone', \Phpcmf\Service::C()->member_cache['login']['field'])
+            } elseif (dr_in_array('phone', \Phpcmf\Service::C()->member_cache['login']['field'])
                 && \Phpcmf\Service::L('Form')->check_phone($username)) {
                 $data = $this->db->table('member')->where('phone', $username)->get()->getRowArray();
             }
@@ -977,7 +977,7 @@ class Member extends \Phpcmf\Model
         $member['username'] = strtolower($member['username']);
 
         // 验证格式
-        if (in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
+        if (dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
             $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
             if (!$rt['code']) {
                 return $rt;
@@ -990,10 +990,10 @@ class Member extends \Phpcmf\Model
         if ((\Phpcmf\Service::C()->member_cache['oauth']['login'] || !\Phpcmf\Service::C()->member_cache['oauth']['field']) && $oauth) {
             // 授权登录直接模式
         } else {
-            if (in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
+            if (dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
                 return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-            } elseif (in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
+            } elseif (dr_in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
                 return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
             }

@@ -197,7 +197,7 @@ class Property extends \Phpcmf\Library\A_Field {
 						$v = @explode(',', $t['value']);
 						if ($v) {
 							foreach ($v as $c) {
-								$selected = isset($value[$i]['value']) && @in_array($c, $value[$i]['value']) ? 'checked' : '';
+								$selected = isset($value[$i]['value']) && dr_in_array($c, $value[$i]['value']) ? 'checked' : '';
 								$str.= '<input type="checkbox" name="data['.$name.']['.$i.'][value][]" value="'.$c.'" ' . $selected . ' />'.$c.'';
 							}
 						}

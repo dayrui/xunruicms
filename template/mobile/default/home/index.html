@@ -9,7 +9,7 @@
         <!--调用共享栏目-->
         <!--第一层：调用pid=0表示顶级-->
         {category module=share pid=0}
-        <li class="{if IS_SHARE && $catid && in_array($catid, $t.catids)} active{/if}">
+        <li class="{if IS_SHARE && $catid && dr_in_array($catid, $t.catids)} active{/if}">
             <a href="{$t.url}" title="{$t.name}">{$t.name}</a>
         </li>
         {/category}

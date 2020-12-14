@@ -89,7 +89,7 @@ class Service
         if (is_object($message)) {
             $msg = $message->getMessage();
             $code = md5($msg);
-            if (in_array($code, static::$logs)) {
+            if (dr_in_array($code, static::$logs)) {
                 return;
             }
             static::$logs[] = $code;

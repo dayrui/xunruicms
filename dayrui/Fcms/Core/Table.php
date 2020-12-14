@@ -81,7 +81,7 @@ class Table extends \Phpcmf\Common
                 if (!IS_ADMIN && !$t['ismember']) {
                     // 非管理平台验证字段显示权限
                     unset($field[$i]);
-                } elseif (IS_ADMIN && $t['setting']['show_admin'] && !in_array(1, $this->admin['roleid'])
+                } elseif (IS_ADMIN && $t['setting']['show_admin'] && !dr_in_array(1, $this->admin['roleid'])
                     && @array_intersect($this->admin['roleid'], $t['setting']['show_admin'])) {
                     // 后台时 判断管理员权限
                     unset($field[$i]);

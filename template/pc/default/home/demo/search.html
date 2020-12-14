@@ -50,7 +50,7 @@
                                     <div class="col-md-9">
                                         <label><a class="label {if !$cat}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', NULL)}">不限</a></label>
                                         {category pid=0}
-                                        <label><a class="label {if in_array($cat.id, $t.catids)}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', $t.id)}">{$t.name}</a></label>
+                                        <label><a class="label {if dr_in_array($cat.id, $t.catids)}label-success{else}label-default{/if}" href="{Router::search_url($params, 'catid', $t.id)}">{$t.name}</a></label>
                                         {/category}
                                     </div>
                                 </div>

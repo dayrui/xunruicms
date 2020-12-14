@@ -27,7 +27,7 @@ class Root extends \Phpcmf\Table
         $this->name = dr_lang('管理员');
         $this->role = \Phpcmf\Service::M('auth')->get_role_all();
         // 不是超级管理员,排除超管角色
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             unset($this->role[1]);
         }
     }
@@ -46,7 +46,7 @@ class Root extends \Phpcmf\Table
             $where[] = '`uid` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid='.$p['rid'].')';
         }
         // 不是超级管理员,排除超管账号
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             $where[] = '`uid` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)';
         }
 
@@ -142,7 +142,7 @@ class Root extends \Phpcmf\Table
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
-            if (in_array(1, $post['role'])) {
+            if (dr_in_array(1, $post['role'])) {
                 \Phpcmf\Service::M()->table('admin_role_index')->insert([
                     'uid' => $data['id'],
                     'roleid' => 1,
@@ -191,7 +191,7 @@ class Root extends \Phpcmf\Table
                 $this->_json(0, dr_lang('邮箱%s已经注册', $post['email']), ['field' => 'email']);
             } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'. $member['id'])->where('phone', $post['phone'])->countAllResults()) {
                 $this->_json(0, dr_lang('手机号码%s已经注册', $post['phone']), ['field' => 'phone']);
-            } elseif (!in_array(1, $this->admin['roleid']) && in_array(1, $post['role'])) {
+            } elseif (!dr_in_array(1, $this->admin['roleid']) && dr_in_array(1, $post['role'])) {
                 $this->_admin_msg(0, dr_lang('无权限编辑')); // 不是超级管理员,排除超管账号
             }
             \Phpcmf\Service::M()->table('member')->update($member['id'], [
@@ -221,7 +221,7 @@ class Root extends \Phpcmf\Table
         }
 
         // 不是超级管理员,排除超管账号
-        if (!in_array(1, $this->admin['roleid'])) {
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             unset($this->role[1]);
             if (isset($data['role'][1])) {
                 $this->_admin_msg(0, dr_lang('无权限编辑'));
@@ -241,16 +241,16 @@ class Root extends \Phpcmf\Table
     public function del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
-        if (in_array(1, $ids)) {
+        if (dr_in_array(1, $ids)) {
             $this->_json(0, dr_lang('创始人账号不能删除'));
-        } elseif (in_array($this->uid, $ids)) {
+        } elseif (dr_in_array($this->uid, $ids)) {
             $this->_json(0, dr_lang('不能删除自己'));
         }
 
         // 批量操作
         foreach ($ids as $u) {
             // 不是超级管理员,排除超管账号
-            if (!in_array(1, $this->admin['roleid'])
+            if (!dr_in_array(1, $this->admin['roleid'])
                 && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $u)->where('roleid', 1)->counts()) {
                 continue;
             }

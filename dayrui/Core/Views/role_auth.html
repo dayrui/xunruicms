@@ -42,7 +42,7 @@
                         <tr class="{if $t.pid==0} my_pid_menu{/if} odd gradeX" id="dr_row_{$t.id}">
                             <td class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes group-checkable menu{$t.pid} menu{$t.tid}" data-set="{if $t.uri}.zsg{$t.id}{else}.menu{$t.id}{/if}" name="data[mark][]" {if $t.mark && @in_array($t.mark, (array)$data.system.mark)}checked{/if} value="{$t.mark}" />
+                                    <input type="checkbox" class="checkboxes group-checkable menu{$t.pid} menu{$t.tid}" data-set="{if $t.uri}.zsg{$t.id}{else}.menu{$t.id}{/if}" name="data[mark][]" {if $t.mark && dr_in_array($t.mark, (array)$data.system.mark)}checked{/if} value="{$t.mark}" />
                                     <span></span>
                                 </label>
                             </td>
@@ -55,7 +55,7 @@
                             <td style="text-align:center" class="myselect">
                                 {if $t.uri}
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('add', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="add" />
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if dr_in_array('add', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="add" />
                                     <span></span>
                                 </label>
                                 {/if}
@@ -63,7 +63,7 @@
                             <td style="text-align:center" class="myselect">
                                 {if $t.uri}
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('edit', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="edit" />
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if dr_in_array('edit', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="edit" />
                                     <span></span>
                                 </label>
                                 {/if}
@@ -71,7 +71,7 @@
                             <td style="text-align:center" class="myselect">
                                 {if $t.uri}
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if @in_array('del', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="del" />
+                                    <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if dr_in_array('del', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="del" />
                                     <span></span>
                                 </label>
                                 {/if}
@@ -105,7 +105,7 @@
                         <tr class="odd gradeX">
                             <td class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes group-checkable menu_module_{$dir} menu{md5($uri)}" data-set=".menu{md5($uri)}" name="module[{$uri}index]" {if @in_array($uri.'index', (array)$data.module)}checked{/if} value="{$uri.'index'}" />
+                                    <input type="checkbox" class="checkboxes group-checkable menu_module_{$dir} menu{md5($uri)}" data-set=".menu{md5($uri)}" name="module[{$uri}index]" {if dr_in_array($uri.'index', (array)$data.module)}checked{/if} value="{$uri.'index'}" />
                                     <span></span>
                                 </label>
                             </td>
@@ -114,19 +114,19 @@
                             </td>
                             <td style="text-align:center" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'add', (array)$data.module)}checked{/if} name="module[{$uri}add]" value="{$uri.'add'}" />
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if dr_in_array($uri.'add', (array)$data.module)}checked{/if} name="module[{$uri}add]" value="{$uri.'add'}" />
                                     <span></span>
                                 </label>
                             </td>
                             <td style="text-align:center" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'edit', (array)$data.module)}checked{/if} name="module[{$uri}edit]" value="{$uri.'edit'}" />
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if dr_in_array($uri.'edit', (array)$data.module)}checked{/if} name="module[{$uri}edit]" value="{$uri.'edit'}" />
                                     <span></span>
                                 </label>
                             </td>
                             <td style="text-align:center" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if @in_array($uri.'del', (array)$data.module)}checked{/if} name="module[{$uri}del]" value="{$uri.'del'}" />
+                                    <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if dr_in_array($uri.'del', (array)$data.module)}checked{/if} name="module[{$uri}del]" value="{$uri.'del'}" />
                                     <span></span>
                                 </label>
                             </td>

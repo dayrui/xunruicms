@@ -41,7 +41,7 @@ class Merge extends \Phpcmf\Library\A_Field {
 			$_field = [];
 			$_field[] = '<option value=""> -- </option>';
 			foreach ($field as $t) {
-                $t['fieldtype'] != 'Merge' && !@in_array($t['fieldname'], $Merge) && $_field[] = '<option value="'.$t['fieldname'].'">'.$t['name'].'</option>';
+                $t['fieldtype'] != 'Merge' && !dr_in_array($t['fieldname'], $Merge) && $_field[] = '<option value="'.$t['fieldname'].'">'.$t['name'].'</option>';
 			}
 			$_field = @implode('', @array_unique($_field));
 		}

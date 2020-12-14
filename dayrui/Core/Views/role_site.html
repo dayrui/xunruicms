@@ -7,7 +7,7 @@
             <div class="mt-checkbox-list">
                 {loop $ci->site_info $i $t}
                 <label class="mt-table mt-checkbox mt-checkbox-outline">
-                    <input type="checkbox" {if @in_array($i, (array)$data['site'])}checked{/if} class="checkboxes" name="data[]" value="{$i}" />
+                    <input type="checkbox" {if dr_in_array($i, (array)$data['site'])}checked{/if} class="checkboxes" name="data[]" value="{$i}" />
                     {$t['SITE_NAME']}
                     <span></span>
                 </label>

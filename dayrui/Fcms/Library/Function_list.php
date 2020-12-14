@@ -210,7 +210,7 @@ class Function_list
             if ($options) {
                 $rt = [];
                 foreach ($options as $i => $v) {
-                    if (in_array($i, $arr)) {
+                    if (dr_in_array($i, $arr)) {
                         $rt[] = $v;
                     }
                 }

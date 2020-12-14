@@ -114,16 +114,16 @@
                 </li>
                 {loop $menu $top}
                 {if dr_member_menu_show($top)}
-                <li class="nav-item {if in_array($top.id, $mymenu)}active open{/if}">
+                <li class="nav-item {if dr_in_array($top.id, $mymenu)}active open{/if}">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="{dr_icon($top.icon)}"></i>
                         <span class="title">{$top.name}</span>
-                        <span class="arrow {if in_array($top.id, (array)$mymenu)}open{/if}"></span>
+                        <span class="arrow {if dr_in_array($top.id, (array)$mymenu)}open{/if}"></span>
                     </a>
                     <ul class="sub-menu">
                         {loop $top.link $t}
                         {if dr_member_menu_show($t)}
-                        <li class="nav-item {if in_array($t.id, $mymenu)}active open{/if}">
+                        <li class="nav-item {if dr_in_array($t.id, $mymenu)}active open{/if}">
                             <a href="{if $t.url}{$t.url}{else}{dr_member_url($t.uri)}{/if}" class="nav-link ">
                                 <i class="{dr_icon($t.icon)}"></i>
                                 <span class="title">{$t.name}</span>

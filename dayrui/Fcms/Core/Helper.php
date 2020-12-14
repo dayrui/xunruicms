@@ -16,7 +16,7 @@ function dr_in_array($var, $array) {
         return 0;
     }
 
-    return is_array($var, $array);
+    return in_array($var, $array);
 }
 
 /**
@@ -532,7 +532,7 @@ function dr_member_menu_show($t) {
 
     // 判断站点显示权限
     $is_site = 0;
-    if (!$t['site'] || ($t['site'] && in_array(SITE_ID, $t['site']))) {
+    if (!$t['site'] || ($t['site'] && dr_in_array(SITE_ID, $t['site']))) {
         $is_site = 1; // 当前站可用
     }
 

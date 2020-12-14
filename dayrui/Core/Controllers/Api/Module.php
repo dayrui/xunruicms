@@ -122,7 +122,7 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('favorite')) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装'));
-        } elseif (!in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
+        } elseif (!dr_in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装到本模块[%s]', $this->dirname));
         }
 
@@ -167,7 +167,7 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('favorite')) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装'));
-        } elseif (!in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
+        } elseif (!dr_in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装到本模块[%s]', $this->dirname));
         }
 
@@ -194,9 +194,9 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('zan')) {
             $this->_json(0, dr_lang('应用[模块内容点赞]未安装'));
-        } elseif (!in_array('support', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
+        } elseif (!dr_in_array('support', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
             $this->_json(0, dr_lang('应用[模块内容点赞]未安装到本模块[%s]', $this->dirname));
-        } elseif (!in_array('oppose', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
+        } elseif (!dr_in_array('oppose', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
             $this->_json(0, dr_lang('应用[模块内容点赞]未安装到本模块[%s]', $this->dirname));
         }
 

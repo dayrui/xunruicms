@@ -40,7 +40,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
         $html = '';
         foreach ($myfield as $id => $t) {
             $html.= '<p style="margin-bottom:10px">';
-            $html.= '<input type="checkbox" name="data[setting][option][field][]" '.(in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+            $html.= '<input type="checkbox" name="data[setting][option][field][]" '.(dr_in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 		';
             $html.= '</p>';
         }
