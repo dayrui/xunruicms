@@ -78,6 +78,10 @@ class Cloud extends \Phpcmf\Common
     // 插件应用
     public function app() {
 
+        if ($this->cmf_license['license'] == 'dev') {
+            \Phpcmf\Service::V()->display('cloud_login.html');exit;
+        }
+
         $id = [];
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
@@ -103,6 +107,10 @@ class Cloud extends \Phpcmf\Common
     // 功能组件
     public function func() {
 
+        if ($this->cmf_license['license'] == 'dev') {
+            \Phpcmf\Service::V()->display('cloud_login.html');exit;
+        }
+
         \Phpcmf\Service::V()->assign([
             'url' => $this->service_url.'&action=app&catid=16',
         ]);
@@ -112,15 +120,14 @@ class Cloud extends \Phpcmf\Common
     // 模板界面
     public function template() {
 
+        if ($this->cmf_license['license'] == 'dev') {
+            \Phpcmf\Service::V()->display('cloud_login.html');exit;
+        }
+
         \Phpcmf\Service::V()->assign([
             'url' => $this->service_url.'&action=app&catid=14',
         ]);
         \Phpcmf\Service::V()->display('cloud_online.html');exit;
-    }
-
-    //
-    public function update_sn() {
-
     }
 
 
@@ -239,7 +246,42 @@ class Cloud extends \Phpcmf\Common
             exit($json);
         }
 
-        \Phpcmf\Service::V()->display('cloud_login.html');exit;
+        \Phpcmf\Service::V()->display('cloud_login_ajax.html');exit;
+    }
+
+    // 绑定账号
+    public function license() {
+
+        if (IS_POST) {
+
+            $post = \Phpcmf\Service::L('input')->post('data');
+            $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
+            $json = dr_catcher_data($surl);
+            if (!$json) {
+                $this->_json(0, '本站：没有从服务端获取到数据');
+            }
+            $rt = dr_string2array($json);
+            if (!$rt['code']) {
+                $this->_json(0, '本站：没有从服务端获取到数据');
+            }
+            $text = "<?php
+// 此文件是安装授权文件，每次下载安装包会自动生成，请勿修改
+return [
+
+    'license' => '".$rt['data']."',
+    'name' => '迅睿CMS建站框架',
+    'url' => 'http://www.xunruicms.com',
+
+];
+";
+            if (file_put_contents(MYPATH.'Config/License.php', $text)) {
+                $this->_json(1, '绑定成功');
+            }
+
+            $this->_json(0, '本站：dayrui/My/目录无法写入文件，请给于777权限');
+        }
+
+        $this->_json(0, '提交验证失败');
     }
 
     // 下载程序
