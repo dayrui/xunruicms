@@ -246,6 +246,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'exts' => $field['setting']['option']['ext'],
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
+            'count' => $count,
         ], 'ENCODE');
 
         // 显示模板

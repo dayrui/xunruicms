@@ -352,16 +352,19 @@ function dr_get_files($value) {
     $value = dr_string2array($value);
     if (!$value) {
         return $data;
-    } elseif (!isset($value['file'])) {
+    } elseif (!isset($value['file']) && !isset($value['id'])) {
         return $value;
     }
 
-    foreach ($value['file'] as $i => $file) {
-        $data[] = [
-            'file' => $file, // 对应文件或附件id
-            'title' => $value['title'][$i], // 对应标题
-            'description' => $value['description'][$i], // 对应描述
-        ];
+    $arr = isset($value['id']) && $value['id'] ? $value['id'] : $value['file'];
+    foreach ($arr as $i => $file) {
+        if ($file) {
+            $data[] = [
+                'file' => $file, // 对应文件或附件id
+                'title' => $value['title'][$i], // 对应标题
+                'description' => $value['description'][$i], // 对应描述
+            ];
+        }
     }
 
     return $data;
