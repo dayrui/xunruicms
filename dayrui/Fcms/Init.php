@@ -45,34 +45,58 @@ define('IS_AJAX_POST', IS_POST);
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
 
 // 系统变量
+$system = [
+
+    'SYS_DEBUG'	=> 0,
+    'SYS_ADMIN_CODE' => 0,
+    'SYS_ADMIN_LOG' => 0,
+    'SYS_AUTO_FORM' => 0,
+    'SYS_ADMIN_PAGESIZE' => 10,
+    'SYS_CRON_AUTH' => '',
+    'SYS_SMS_IMG_CODE' => 0,
+
+    'SYS_CAT_RNAME' => 0,
+    'SYS_PAGE_RNAME' => 0,
+    'SYS_CAT_ZSHOW' => 0,
+
+    'SYS_KEY' => 'xunruicms',
+    'SYS_CSRF'	=> 1,
+    'SYS_HTTPS'	=> 0,
+    'SYS_ADMIN_LOGINS'	=> 0,
+    'SYS_ADMIN_LOGIN_TIME'	=> 0,
+    'SYS_ADMIN_OAUTH'    => 0,
+
+    'SYS_ATTACHMENT_DB'	    => 1,
+    'SYS_ATTACHMENT_PATH'	=> '',
+    'SYS_ATTACHMENT_SAVE_TYPE'	=> '',
+    'SYS_ATTACHMENT_SAVE_DIR'	=> '',
+    'SYS_ATTACHMENT_URL'	=> '',
+    'SYS_AVATAR_PATH'	=> '',
+    'SYS_AVATAR_URL'	=> '',
+    'SYS_BDMAP_API'	=> '',
+    'SYS_API_CODE'	=> '',
+    'SYS_THEME_ROOT'	=> '',
+
+    'SYS_FIELD_THUMB_ATTACH'	=> '',
+    'SYS_FIELD_CONTENT_ATTACH'	=> '',
+
+    'SYS_BDNLP_SK'	=> '',
+    'SYS_BDNLP_AK'	=> '',
+];
 if (is_file(WRITEPATH.'config/system.php')) {
-    $system = require WRITEPATH.'config/system.php';
-    define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && $system['SYS_DEBUG']);
+    $my = require WRITEPATH.'config/system.php';
 } else {
-    // 默认系统变量
-    $system = [
-        'SYS_DEBUG'                     => '1', //调试器开关
-        'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
-        'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
-        'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
-        'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
-        'SYS_CAT_RNAME'                 => '1', //栏目目录允许重复
-        'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
-        'SYS_KEY'                       => '', //安全密匙
-        'SYS_CSRF'                      => 1, //安全密匙
-        'SYS_CAT_ZSHOW'                 => 1, //安全密匙
-        'SYS_ADMIN_OAUTH'               => 0, //安全密匙
-        'SYS_CRON_AUTH'                 => 0, //安全密匙
-        'SYS_HTTPS'                     => '0', //https模式
-        'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
-        'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
-        'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-    ];
-    define('CI_DEBUG', 1);
+    $my = [];
 }
+
 foreach ($system as $var => $value) {
-    !defined($var) && define($var, $value);
+    if (!defined($var)) {
+        define($var, isset($my[$var]) ? $my[$var] : $value);
+    }
 }
+unset($my, $system);
+
+define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
 
 // 显示错误提示
 IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_DEPRECATED) : error_reporting(0);

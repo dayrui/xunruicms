@@ -8,6 +8,18 @@
 
 
 /**
+ * 判断存在于数组中
+ */
+function dr_in_array($var, $array) {
+
+    if (!$array) {
+        return 0;
+    }
+
+    return is_array($var, $array);
+}
+
+/**
  * 上传移动文件
  */
 function dr_move_uploaded_file($tempfile, $fullname) {
