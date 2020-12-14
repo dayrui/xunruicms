@@ -11,10 +11,6 @@ use Config\Autoload;
 use Config\Modules;
 use Config\Services;
 
-// 用于显示debug
-$startMemory = memory_get_usage();
-$startTime = microtime(true);
-
 // CI框架目录
 !defined('BASEPATH') && define('BASEPATH', FCPATH.'System/');
 define('SYSTEMPATH', BASEPATH);
@@ -341,11 +337,9 @@ require SYSTEMPATH . 'Config/Services.php';
 require COREPATH . 'Config/Services.php';
 
 
-// Use Config\Services as CodeIgniter\Services
 class_alias('Config\Services', 'CodeIgniter\Services');
 
 $loader = Services::autoloader();
-//$loader->initialize(new Config\Autoload());
 $auto = new Autoload();
 
 // 应用插件的自动识别
@@ -356,35 +350,18 @@ if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
     unset($app_auto);
 }
 
-$loader->initialize($auto, new Modules());
-$loader->register();    // Register the loader with the SPL autoloader stack.
+$loader->initialize($auto, new Modules())->register();
 
-// Now load Composer's if it's available
 if (is_file(COMPOSER_PATH)) {
     require_once COMPOSER_PATH;
 }
 
-// Load environment settings from .env files
-// into $_SERVER and $_ENV
 require BASEPATH . 'Config/DotEnv.php';
 
 $env = new DotEnv(COREPATH);
 $env->load();
 
-// Always load the URL helper -
-// it should be used in 90% of apps.
 helper('url');
-
-/*
- * ---------------------------------------------------------------
- * GRAB OUR CODEIGNITER INSTANCE
- * ---------------------------------------------------------------
- *
- * The CodeIgniter class contains the core functionality to make
- * the application run, and does all of the dirty work to get
- * the pieces all working together.
- */
-
 
 $app = new \Phpcmf\Extend\CodeIgniter(new App());
 $app->initialize();

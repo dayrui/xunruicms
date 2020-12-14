@@ -54,6 +54,35 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     }
 
     /**
+     * 检测框架所需要的PHP扩展
+     */
+    protected function resolvePlatformExtensions()
+    {
+        $requiredExtensions = [
+            'curl',
+            //'intl',
+            'json',
+            'mbstring',
+            'xml',
+        ];
+
+        $missingExtensions = [];
+
+        foreach ($requiredExtensions as $extension)
+        {
+            if (! extension_loaded($extension))
+            {
+                $missingExtensions[] = $extension;
+            }
+        }
+
+        if ($missingExtensions)
+        {
+            dr_exit_msg(0, '当前服务器环境缺少PHP扩展：'.implode(', ', $missingExtensions));
+        }
+    }
+
+    /**
      * 页面缓存名称定义
      */
     protected function generateCacheName($config): string
