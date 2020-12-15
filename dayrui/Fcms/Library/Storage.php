@@ -69,10 +69,10 @@ class Storage {
     }
 
     // 文件上传
-    public function upload($type, $data, $file_path, $attachment, $watermarkk) {
+    public function upload($type, $data, $file_path, $attachment, $watermark) {
 
         $this->_init($attachment);
-        return $this->object->init($attachment, $file_path)->upload($type, $data, $watermarkk);
+        return $this->object->init($attachment, $file_path)->upload($type, $data, $watermark);
     }
 
     // 文件删除
