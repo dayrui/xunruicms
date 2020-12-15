@@ -309,7 +309,7 @@
                                         {table table=member_login uid=$id order=logintime desc cache=0}
                                         <tr>
                                             <td> {dr_date($t.logintime)} </td>
-                                            <td> <a href="https://www.baidu.com/s?wd={$t[loginip]}&action=xunruicms" target="_blank">{Ip::address($t[loginip])}</a> </td>
+                                            <td> <a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t['loginip'])}</a> </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"> {$t.useragent}</td>

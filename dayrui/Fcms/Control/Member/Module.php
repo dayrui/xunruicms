@@ -586,12 +586,12 @@ class Module extends \Phpcmf\Table
                             }
                             // 金币验证
                             $score = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'score', $this->member);
-                            if ($score + $this->member['score'] < 0) {
+                            if ((int)$score + (int)$this->member['score'] < 0) {
                                 return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
                             }
                             // 金额验证
                             $money = \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'money', $this->member);
-                            if ($money + $this->member['money'] < 0) {
+                            if ((float)$money + (float)$this->member['money'] < 0) {
                                 return dr_return_data(0, dr_lang('余额不足，当前栏目[%s]需要%s元', $this->module['category'][$data[1]['catid']]['name'], abs($money)));
                             }
                         }

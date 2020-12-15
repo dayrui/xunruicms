@@ -1094,25 +1094,20 @@ class View {
                 $table = \Phpcmf\Service::M()->dbprefix($system['table']);
                 $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo, $table); // 给显示字段加上表前缀
-                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo, $table); // 给排序字段加上表前缀
+
+                $_order = [];
+                $_order[$table] = $tableinfo[$table];
 
                 $total = 0;
                 $sql_from = $table; // sql的from子句
 
                 // 关联表
                 if ($system['join'] && $system['on']) {
-                    $table2 = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    $tableinfo2 = \Phpcmf\Service::L('cache')->get_data('table-'.$system['join']);
-                    if (!$tableinfo2) {
-                        \Phpcmf\Service::M('Table')->get_field($system['join']);
-                        \Phpcmf\Service::L('cache')->set_data('table-'.$system['join'], $tableinfo, 36000);
+                    $rt = $this->_join_table($table, $system, $where, $_order, $sql_from);
+                    if (!$rt['code']) {
+                        return $this->_return($system['return'], $rt['msg']);
                     }
-                    if (!$tableinfo2) {
-                        return $this->_return($system['return'], '关联数据表('.$system['join'].')结构不存在');
-                    }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $sql_from.= ' LEFT JOIN '.$table2.' ON `'.$table.'`.`'.$a.'`=`'.$table2.'`.`'.$b.'`';
+                    list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
 
                 $sql_limit = $pages = '';
@@ -1139,6 +1134,7 @@ class View {
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
+                    $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
                     $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 }
 
@@ -1221,21 +1217,18 @@ class View {
                 $system['order'] = !$system['order'] ? 'inputtime_desc' : $system['order']; // 默认排序参数
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
-                $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
 
+                // 多表组合排序
+                $_order = [];
+                $_order[$table] = $tableinfo[$table];
                 $sql_from = $table; // sql的from子句
                 // 关联表
                 if ($system['join'] && $system['on']) {
-                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    if (!$tableinfo[$table_more]) {
-                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    $rt = $this->_join_table($table, $system, $where, $_order, $sql_from);
+                    if (!$rt['code']) {
+                        return $this->_return($system['return'], $rt['msg']);
                     }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
-                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
-                    $_order[$table_more] = $tableinfo[$table_more];
-                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                    list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
 
                 $total = 0;
@@ -1262,7 +1255,7 @@ class View {
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
-
+                    $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
                     $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
                 }
 
@@ -1334,19 +1327,18 @@ class View {
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
                 $system['order'] = $this->_set_order_field_prefix($system['order'], $tableinfo[$table], $table); // 给排序字段加上表前缀
 
+                // 多表组合排序
+                $_order = [];
+                $_order[$table] = $tableinfo[$table];
+
                 $sql_from = $table; // sql的from子句
                 // 关联表
                 if ($system['join'] && $system['on']) {
-                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    if (!$tableinfo[$table_more]) {
-                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    $rt = $this->_join_table($table, $system, $where, $_order, $sql_from);
+                    if (!$rt['code']) {
+                        return $this->_return($system['return'], $rt['msg']);
                     }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
-                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
-                    $_order[$table_more] = $tableinfo[$table_more];
-                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                    list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
 
                 $total = 0;
@@ -1374,7 +1366,7 @@ class View {
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
-
+                    $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
                     $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] ? "ORDER BY {$system['order']}" : "") . " $sql_limit";
                 }
 
@@ -1474,23 +1466,16 @@ class View {
 
                 // 关联表
                 if ($system['join'] && $system['on']) {
-                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    if (!$tableinfo[$table_more]) {
-                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    $rt = $this->_join_table($table, $system, $where, $_order, $sql_from);
+                    if (!$rt['code']) {
+                        return $this->_return($system['return'], $rt['msg']);
                     }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
-                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
-                    $_order[$table_more] = $tableinfo[$table_more];
-                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                    list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
 
                 $total = 0;
                 $sql_limit = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
-
-                $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
 
                 // 统计标签
                 if ($this->_list_is_count) {
@@ -1513,6 +1498,7 @@ class View {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
 
+                    $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
                     $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
@@ -1829,16 +1815,11 @@ class View {
 
                 // 关联表
                 if ($system['join'] && $system['on']) {
-                    $table_more = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
-                    if (!$tableinfo[$table_more]) {
-                        return $this->_return($system['return'], '关联数据表（'.$table_more.'）不存在');
+                    $rt = $this->_join_table($table, $system, $where, $_order, $sql_from);
+                    if (!$rt['code']) {
+                        return $this->_return($system['return'], $rt['msg']);
                     }
-                    list($a, $b) = explode(',', $system['on']);
-                    $b = $b ? $b : $a;
-                    $where = $this->_set_where_field_prefix($where, $tableinfo[$table_more], $table_more); // 给条件字段加上表前缀
-                    $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table_more], $table_more); // 给显示字段加上表前缀
-                    $_order[$table_more] = $tableinfo[$table_more];
-                    $sql_from.= ' LEFT JOIN `'.$table_more.'` ON `'.$table.'`.`'.$a.'`=`'.$table_more.'`.`'.$b.'`';
+                    list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
 
                 $sql_limit = $pages = '';
@@ -2562,6 +2543,30 @@ class View {
         $this->pos_order && ($this->pos_baidu ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_baidu['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_baidu['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_baidu['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
 
         return $field;
+    }
+
+    // join 联合查询表
+    public function _join_table($main, $system, $where, $_order, $sql_from) {
+
+        $table = \Phpcmf\Service::M()->dbprefix($system['join']); // 关联表
+        $tableinfo = \Phpcmf\Service::L('cache')->get_data('table-join-'.$system['join']);
+        if (!$tableinfo) {
+            $tableinfo = \Phpcmf\Service::M('Table')->get_field($system['join']);
+            if (!$tableinfo) {
+                return dr_return_data(0, '关联数据表('.$system['join'].')结构不存在');
+            }
+            \Phpcmf\Service::L('cache')->set_data('table-join-'.$system['join'], $tableinfo, 36000);
+        }
+
+        list($a, $b) = explode(',', $system['on']);
+        $b = $b ? $b : $a;
+        $where = $this->_set_where_field_prefix($where, $tableinfo, $table); // 给条件字段加上表前缀
+        $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo, $table); // 给显示字段加上表前缀
+        $_order[$table] = $tableinfo;
+        $sql_from.= ' LEFT JOIN `'.$table.'` ON `'.$main.'`.`'.$a.'`=`'.$table.'`.`'.$b.'`';
+
+        return dr_return_data(1, 'ok', [$system, $where, $_order, $sql_from]);
+
     }
 
     // 给排序字段加上多表前缀

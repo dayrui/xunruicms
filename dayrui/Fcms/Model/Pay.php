@@ -497,7 +497,7 @@ class Pay extends \Phpcmf\Model
                         // 记录消费
                         if ($user) {
                             $this->table('member')->update($data['uid'], [
-                                'spend' => max(0, $user['spend'] + abs($data['value'])),
+                                'spend' => max(0, (float)$user['spend'] + abs($data['value'])),
                             ]);
                         }
                     }
@@ -511,7 +511,7 @@ class Pay extends \Phpcmf\Model
                     // 记录消费
                     if ($user) {
                         $this->table('member')->update($data['uid'], [
-                            'spend' => max(0, $user['spend'] + abs($data['value'])),
+                            'spend' => max(0, (float)$user['spend'] + abs($data['value'])),
                         ]);
                     }
                 }
@@ -602,7 +602,7 @@ class Pay extends \Phpcmf\Model
                         log_message('error', '收款(#'.$id.')回调失败：主题#'.$c.'不存在');
                     } else {
                         // 更新表
-                        $row['nums'] = $row['nums'] + 1;
+                        $row['nums'] = (int)$row['nums'] + 1;
                         $row['total'] = $row['total'] + abs($data['value']);
                         $this->table($c)->update($b, [
                             'total' => $row['total'],

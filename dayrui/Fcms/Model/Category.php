@@ -221,7 +221,7 @@ class Category extends \Phpcmf\Model
     /**
      * 修复菜单数据
      */
-    public function repair($_data = [], $dirname = MOD_DIR) {
+    public function repair($_data = [], $dirname = '') {
 
         $this->categorys = $categorys = [];
         !$_data && $_data = $this->table($this->tablename)->order_by('displayorder ASC,id ASC')->getAll(MAX_CATEGORY);

@@ -444,9 +444,6 @@ class Model {
     /*
      * 获取单个数据
      * */
-    public function get_row($id, $id2 = 0) {
-        return $this->getRow();
-    }
     public function getRow() {
 
         $builder = $this->db->table($this->table);

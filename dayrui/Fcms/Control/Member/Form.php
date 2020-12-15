@@ -205,8 +205,8 @@ class Form extends \Phpcmf\Table
                     // 首次 发布
 
                     // 提醒通知
-                    if ($this->form['setting']['notice']['use']) {
-                        if ($this->form['setting']['notice']['username']) {
+                    if (isset($this->form['setting']['notice']['use']) && $this->form['setting']['notice']['use']) {
+                        if (isset($this->form['setting']['notice']['username']) && $this->form['setting']['notice']['username']) {
                             $arr = explode(',', $this->form['setting']['notice']['username']);
                             foreach ($arr as $autor) {
                                 $user = dr_member_username_info($autor);

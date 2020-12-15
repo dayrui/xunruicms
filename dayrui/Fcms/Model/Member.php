@@ -237,7 +237,7 @@ class Member extends \Phpcmf\Model
 
         // 附表字段
         $data2 = $this->db->table('member_data')->where('id', $uid)->get()->getRowArray();
-        $data2 && $data = $data + \Phpcmf\Service::L('Field')->app('member')->format_value(\Phpcmf\Service::C()->member_cache['field'], $data2);
+        $data2 && $data = array_merge($data, \Phpcmf\Service::L('Field')->app('member')->format_value(\Phpcmf\Service::C()->member_cache['field'], $data2));
 
         $data['uid'] = $data['id'];
         $data['avatar'] = dr_avatar($data['id']);
@@ -1083,7 +1083,7 @@ class Member extends \Phpcmf\Model
         $this->insert_group($uid, $groupid, 0);
 
         // 组合字段信息
-        $data = $member + $data;
+        $data = array_merge($member, $data);
         $data['oauth'] = $oauth;
         $data['groupid'] = $groupid;
 
@@ -1460,7 +1460,7 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('用户不存在'));
         }
 
-        $money = $member['money'] + $value;
+        $money = (float)$member['money'] + $value;
         if ($money < 0) {
             return dr_return_data(0, dr_lang('账户可用余额不足'));
         }
@@ -1468,7 +1468,7 @@ class Member extends \Phpcmf\Model
         $update = [
             'money' => $money,
         ];
-        $value < 0 && $update['spend'] = max(0, $member['spend'] + abs($value));
+        $value < 0 && $update['spend'] = max(0, (float)$member['spend'] + abs($value));
 
         $rt = $this->table('member')->update($uid, $update);
 

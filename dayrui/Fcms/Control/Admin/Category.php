@@ -57,7 +57,7 @@ class Category extends \Phpcmf\Table
         ]);
 
         \Phpcmf\Service::M('category')->init($this->init); // 初始化内容模型
-        $this->module['category'] = \Phpcmf\Service::M('category')->repair([]);
+        $this->module['category'] = \Phpcmf\Service::M('category')->repair([], $dir);
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
