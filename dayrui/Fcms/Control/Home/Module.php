@@ -236,7 +236,7 @@ class Module extends \Phpcmf\Common
                 exit($this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index')));
             } elseif ($get['keyword'] && strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
                 exit($this->_msg(0, dr_lang('关键字不得少于系统规定的长度')));
-            } elseif (strlen($get['keyword']) > 100) {
+            } elseif ($get['keyword'] && strlen($get['keyword']) > 100) {
                 exit($this->_msg(0, dr_lang('关键字太长了')));
             }
         }

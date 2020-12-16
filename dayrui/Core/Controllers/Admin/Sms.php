@@ -28,11 +28,11 @@ class Sms extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data');
-			if (strlen($data['note']) > 30) {
+			if ($data['note'] && strlen($data['note']) > 30) {
 			    $this->_json(0, dr_lang('短信签名超出了范围'));
             }
 
-			if ($_POST['aa'] == 0) {
+			if (isset($_POST['aa']) && $_POST['aa'] == 0) {
 				unset($data['third']);
 			}
 
@@ -66,7 +66,7 @@ class Sms extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data');
-			if (strlen($data['content']) < 10) {
+			if ($data['content'] && strlen($data['content']) < 10) {
 			    exit($this->_json(0, dr_lang('短信内容太短了')));
             }
 

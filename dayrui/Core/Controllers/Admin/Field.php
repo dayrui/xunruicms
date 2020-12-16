@@ -204,6 +204,8 @@ class Field extends \Phpcmf\Common
 				$this->_json(0, dr_lang('字段类别不存在'));
 			} elseif (empty($data['name'])) {
 				$this->_json(0, dr_lang('字段显示名称不能为空'));
+			} elseif (empty($data['fieldname'])) {
+				$this->_json(0, dr_lang('字段名称不能为空'));
 			} elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
 				$this->_json(0, dr_lang('字段名称不规范'));
 			} elseif (strlen($data['fieldname']) > 20) {
@@ -398,6 +400,8 @@ class Field extends \Phpcmf\Common
                         $this->_json(0, dr_lang('字段类别不存在'));
                     } elseif (empty($data['name'])) {
                         $this->_json(0, dr_lang('字段显示名称不能为空'));
+                    } elseif (empty($data['fieldname'])) {
+                        $this->_json(0, dr_lang('字段名称不能为空'));
                     } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
                         $this->_json(0, dr_lang('字段名称不规范'));
                     } elseif (strlen($data['fieldname']) > 20) {

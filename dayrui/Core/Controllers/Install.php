@@ -266,7 +266,7 @@ $db[\'default\']	= [
                     } else {
                         // 导入默认安装数据
                         $errorlog = file_get_contents(WRITEPATH.'install.error');
-                        if (strlen($errorlog) > 10) {
+                        if ($errorlog && strlen($errorlog) > 10) {
                             // 出现错误了
                             $error = $errorlog;
                         } else {

@@ -147,7 +147,7 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
-                    if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->cmf_license['license']) {
+                    if (!IS_DEV && $vsn['license'] && strlen($vsn['license']) > 20 && $vsn['license'] != $this->cmf_license['license']) {
                         $error[$key] = [
                             'id' => $vsn['id'],
                             'name' => $cfg['name'],

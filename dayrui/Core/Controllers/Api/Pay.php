@@ -50,7 +50,7 @@ class Pay extends \Phpcmf\Common
 		if (!$rt['code']) {
 			$this->_msg(0, $rt['msg'], $rt['data']['url']);
 			exit;
-		} elseif (strlen($rt['data']['rturl']) > 10) {
+        } elseif (isset($rt['data']['rturl']) && strlen($rt['data']['rturl']) > 10) {
 			$this->_msg(1, $rt['msg'], $rt['data']['rturl']);
 			exit;
 		}

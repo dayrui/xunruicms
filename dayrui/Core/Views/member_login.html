@@ -13,7 +13,7 @@
         <tr class="odd gradeX">
             <td>
                 <p style="margin: 8px 0">{dr_date($t.logintime)}</p>
-                <p style="margin: 8px 0"><a href="https://www.baidu.com/s?wd={$t[loginip]}&action=xunruicms" target="_blank">{Ip::address($t[loginip])}</a></p>
+                <p style="margin: 8px 0"><a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t['loginip'])}</a></p>
             </td>
             <td> {str_replace(') ', ') <br>', $t.useragent)} </td>
         </tr>

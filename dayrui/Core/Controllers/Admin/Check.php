@@ -154,16 +154,16 @@ class Check extends \Phpcmf\Common
 
                 // 语言文件
                 $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
-                if (strlen($lang) < 10) {
+                if ($lang && strlen($lang) < 10) {
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
-                } elseif (strpos($lang, 'finecms_datepicker_lang') === false) {
+                } elseif ($lang && strpos($lang, 'finecms_datepicker_lang') === false) {
                     $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
                 }
 
                 $lang = dr_catcher_data(LANG_PATH.'ueditor.js', 5);
-                if (strlen($lang) < 10) {
+                if ($lang && strlen($lang) < 10) {
                     $this->halt('百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js', 0);
-                } elseif (strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
+                } elseif ($lang && strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
                     $this->halt('百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js', 0);
                 }
 
@@ -398,7 +398,9 @@ class Check extends \Phpcmf\Common
                 foreach ($local as $file) {
                     if (in_array(strtolower(substr(strrchr($file, '.'), 1)), ['zip', 'rar', 'sql'])) {
                         $rt[] = '文件不安全【/'.$file.'】请及时清理';
-                    } elseif (strlen(file_get_contents(WEBPATH.$file, 0, null, 0, 9286630)) >= 9286630) {
+                    }
+                    $str = file_get_contents(WEBPATH.$file, 0, null, 0, 9286630);
+                    if ($str && strlen($str) >= 9286630) {
                         $rt[] = '存在大文件文件【/'.$file.'】请及时清理';
                     }
                 }
