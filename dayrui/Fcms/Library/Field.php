@@ -15,8 +15,8 @@
         public $post; // 当前post值
         public $data; // 格式化后的post值
         public $value; // 默认值
+        public $fields; // 可用字段
 
-        private $myfields;
         private $is_hide_merge_group = 0;
         private $app;
         private $objects = [];
@@ -30,10 +30,6 @@
         public function app($name = '') {
             $this->app = $name;
             return $this;
-        }
-
-        public function get_myfields() {
-            return $this->myfields;
         }
 
         // 格式化字段输入表单
@@ -86,7 +82,7 @@
             $myfield =  '';
             $mygroup = $mymerge = $merge = $group = [];
             $this->value = $data;
-            $this->myfields = $field;
+            $this->fields = $field;
 
             if (!$this->is_hide_merge_group) {
                 // 分组字段筛选
@@ -118,11 +114,11 @@
                     if (!$t['ismember']) {
                         continue; // 非后台时跳过用户中心显示
                     } elseif ($t['setting']['show_member']
-                        && array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['setting']['show_member'])) {
+                        && dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['setting']['show_member'])) {
                         continue; // 非后台时 判断用户权限
                     }
                 } elseif (IS_ADMIN && $t['setting']['show_admin'] && !dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])
-                    && @array_intersect(\Phpcmf\Service::C()->admin['roleid'], $t['setting']['show_admin'])) {
+                    && dr_array_intersect(\Phpcmf\Service::C()->admin['roleid'], $t['setting']['show_admin'])) {
                     continue; // 后台时 判断管理员权限
                 }
 
@@ -682,7 +678,7 @@
         public function show($field, $value = null) {
 
             // 字段默认值
-            $value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+            $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
             $str = '<div class="form-control-static"> '.htmlspecialchars_decode($value).' </div>';
 
@@ -714,7 +710,7 @@
             return !defined('IS_MODULE_VERIFY')
                 && !IS_ADMIN
                 && $this->id
-                && strlen($value)
+                && dr_strlen($value)
                 && $field['setting']['validate']['isedit'];
         }
 

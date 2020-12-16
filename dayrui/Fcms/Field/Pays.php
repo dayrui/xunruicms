@@ -132,7 +132,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     protected function _get_myfield($field) {
 
         $my = [];
-        $_field = \Phpcmf\Service::L('Field')->get_myfields();
+        $_field = \Phpcmf\Service::L('form')->fields;
         foreach ($field['setting']['option']['field'] as $ff) {
             if (isset($this->showfield[$ff])) {
                 $my[$ff] = $this->showfield[$ff];
@@ -177,7 +177,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname'].'_sn'] = dr_safe_replace($_POST[$field['fieldname']]['sn']);
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname'].'_sku'] = '';
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname'].'_quantity'] = (int)$_POST[$field['fieldname']]['quantity'];
-            $_field = \Phpcmf\Service::L('Form')->get_myfields();
+            $_field = \Phpcmf\Service::L('form')->fields;
             foreach ($field['setting']['option']['field'] as $ff) {
                 if (isset($_field[$ff])) {
                     \Phpcmf\Service::L('Field')->data[$_field[$ff]['ismain']][$ff] = (string)$_POST[$field['fieldname']][$ff];

@@ -9,17 +9,13 @@
 class Form
 {
 
+    public $mfields;
     protected $id = 0;
-    protected $myfields;
 
     // 初始化
     public function id($id) {
         $this->id = (int)$id;
         return $this;
-    }
-
-    public function get_myfields() {
-        return $this->myfields;
     }
 
     // 获取表单临时存储数据
@@ -91,7 +87,7 @@ class Form
         if ($config) {
             foreach ($config as $name => $t) {
                 // 长度验证
-                if ($t['length'] && strlen($data[$name]) > $t['length']) {
+                if ($t['length'] && dr_strlen($data[$name]) > $t['length']) {
                     return [[], ['name' => $name, 'error' => dr_lang('长度不规范')]];
                 }
                 // 规则验证
@@ -99,7 +95,7 @@ class Form
                     foreach ($t['rule'] as $rule => $error) {
                         switch ($rule) {
                             case 'empty':
-                                if (!$data[$name] && !strlen($data[$name])) {
+                                if (!$data[$name] && !dr_strlen($data[$name])) {
                                     return [[], ['name' => $name, 'error' => $error]];
                                 }
                                 break;
@@ -135,7 +131,7 @@ class Form
         // 自定义字段验证
         if ($fields) {
             $post = [];
-            $this->myfields = $fields;
+            $this->fields = $fields;
             // 格式化字段值
             foreach ($fields as $fid => $field) {
                 // 验证字段对象的有效性
@@ -152,7 +148,7 @@ class Form
                     } elseif ($field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']] && !defined('IS_MODULE_VERIFY')) {
                         unset($fields[$fid]);
                         continue; // 前端禁止修改时
-                    } elseif ($field['setting']['show_member'] && array_intersect(\Phpcmf\Service::C()->member['groupid'], $field['setting']['show_member'])) {
+                    } elseif ($field['setting']['show_member'] && dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $field['setting']['show_member'])) {
                         unset($fields[$fid]);
                         continue; // 非后台时 判断用户权限
                     }

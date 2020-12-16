@@ -94,14 +94,17 @@ class Image extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
 
         $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        if ($data && $field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
-            $one = array_key_first($data);
-            if ($data[$one]) {
-                \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data[$one];
+        if ($data && $field['setting']['option']['stslt']) {
+            $_field = \Phpcmf\Service::L('form')->fields;
+            if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
+                $one = array_key_first($data);
+                if ($data[$one]) {
+                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data[$one];
+                }
             }
         }
 
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
+        \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']][$field['fieldname']] = dr_array2string($data);
     }
 
     /**
@@ -149,11 +152,11 @@ class Image extends \Phpcmf\Library\A_Field {
         // 剩下的情况就是删除旧文件增加新文件
 
         // 新旧附件的交集，表示固定的
-        $intersect = @array_intersect($data, $_data);
+        $intersect = array_intersect($data, $_data);
 
         return [
-            @array_diff($data, $intersect), // 固有的与新文件中的差集表示新增的附件
-            @array_diff($_data, $intersect), // 固有的与旧文件中的差集表示待删除的附件
+            array_diff($data, $intersect), // 固有的与新文件中的差集表示新增的附件
+            array_diff($_data, $intersect), // 固有的与旧文件中的差集表示待删除的附件
         ];
     }
 

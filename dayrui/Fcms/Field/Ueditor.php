@@ -347,43 +347,46 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     }
                 }
                 // 缩略图
-                if ($img && $slt && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
-                    if (!is_numeric($img)) {
-                        // 下载缩略图
-                        // 判断域名白名单
-                        $arr = parse_url($img);
-                        $domain = $arr['host'];
-                        if ($domain) {
-                            $file = dr_catcher_data($img, 8);
-                            if (!$file) {
-                                log_message('error', '服务器无法下载文件：'.$img);
-                            } else {
-                                // 尝试找一找附件库
-                                $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
-                                if ($att) {
-                                    $img = $att['id'];
+                if ($img && $slt) {
+                    $_field = \Phpcmf\Service::L('form')->fields;
+                    if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
+                        if (!is_numeric($img)) {
+                            // 下载缩略图
+                            // 判断域名白名单
+                            $arr = parse_url($img);
+                            $domain = $arr['host'];
+                            if ($domain) {
+                                $file = dr_catcher_data($img, 8);
+                                if (!$file) {
+                                    log_message('error', '服务器无法下载文件：'.$img);
                                 } else {
-                                    // 下载归档
-                                    $rt = \Phpcmf\Service::L('upload')->down_file([
-                                        'url' => $img,
-                                        'timeout' => 5,
-                                        'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-                                        'file_content' => $file,
-                                    ]);
-                                    if ($rt['code']) {
-                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
-                                        if ($att['code']) {
-                                            // 归档成功
-                                            $value = str_replace($img, $rt['data']['url'], $value);
-                                            $img = $att['code'];
+                                    // 尝试找一找附件库
+                                    $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
+                                    if ($att) {
+                                        $img = $att['id'];
+                                    } else {
+                                        // 下载归档
+                                        $rt = \Phpcmf\Service::L('upload')->down_file([
+                                            'url' => $img,
+                                            'timeout' => 5,
+                                            'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
+                                            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                            'file_content' => $file,
+                                        ]);
+                                        if ($rt['code']) {
+                                            $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+                                            if ($att['code']) {
+                                                // 归档成功
+                                                $value = str_replace($img, $rt['data']['url'], $value);
+                                                $img = $att['code'];
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb'] = $_POST['data']['thumb'] = $img;
                     }
-                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $_POST['data']['thumb'] = $img;
                 }
             }
         }

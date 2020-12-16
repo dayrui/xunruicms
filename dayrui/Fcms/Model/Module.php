@@ -783,14 +783,16 @@ class Module extends \Phpcmf\Model
                     if ($f['relatedid']) {
                         $f['setting']['diy']['cat_field_catids'][] = $f['relatedid'];
                     }
-                    $fcatids = array_unique($f['setting']['diy']['cat_field_catids']);
-                    if ($fcatids) {
-                        foreach ($fcatids as $fcid) {
-                            if (isset($CAT[$fcid]['childids']) && $CAT[$fcid]['childids']) {
-                                // 将该字段同时归类至其子栏目
-                                $child = explode(',', $CAT[$fcid]['childids']);
-                                foreach ($child as $catid) {
-                                    $CAT[$catid] && $CAT[$catid]['field'][] = $f['fieldname'];
+                    if (isset($f['setting']['diy']['cat_field_catids'])) {
+                        $fcatids = array_unique($f['setting']['diy']['cat_field_catids']);
+                        if ($fcatids) {
+                            foreach ($fcatids as $fcid) {
+                                if (isset($CAT[$fcid]['childids']) && $CAT[$fcid]['childids']) {
+                                    // 将该字段同时归类至其子栏目
+                                    $child = explode(',', $CAT[$fcid]['childids']);
+                                    foreach ($child as $catid) {
+                                        $CAT[$catid] && $CAT[$catid]['field'][] = $f['fieldname'];
+                                    }
                                 }
                             }
                         }

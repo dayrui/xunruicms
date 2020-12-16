@@ -45,7 +45,7 @@
                                                     <div class="mt-radio-inline">
                                                         {loop $register.group $i}
                                                         <label class="mt-radio">
-                                                            <input type="radio" name="groupid" value="{$i}" {if $groupid==$i}checked=""{/if}> {$group[$i][name]}
+                                                            <input type="radio" name="groupid" value="{$i}" {if $groupid==$i}checked=""{/if}> {$group[$i]['name']}
                                                             <span></span>
                                                         </label>
                                                         {/loop}

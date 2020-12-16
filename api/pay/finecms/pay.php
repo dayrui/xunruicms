@@ -13,7 +13,7 @@ if (!$this->uid) {
     $return = dr_return_data(0, dr_lang('无权限操作'));
 } elseif ((float)\Phpcmf\Service::C()->member['money'] <= 0 ) {
     $return = dr_return_data(0, dr_lang('账户余额不足'));
-} elseif (\Phpcmf\Service::C()->member['money'] - $data['value'] < 0) {
+} elseif ((float)\Phpcmf\Service::C()->member['money'] - $data['value'] < 0) {
     $return = dr_return_data(0, dr_lang('账户可用余额不足'));
 } else {
     $rt = $this->paysuccess('fc-'.$id, '');

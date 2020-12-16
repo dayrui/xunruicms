@@ -102,11 +102,12 @@ class JsApiPay
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		/*
 		if(CURL_PROXY_HOST != "0.0.0.0" 
 			&& CURL_PROXY_PORT != 0){
 			curl_setopt($ch,CURLOPT_PROXY, CURL_PROXY_HOST);
 			curl_setopt($ch,CURLOPT_PROXYPORT, CURL_PROXY_PORT);
-		}
+		}*/
 		//运行curl，结果以jason形式返回
 		$res = curl_exec($ch);
 		curl_close($ch);

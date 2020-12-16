@@ -33,7 +33,7 @@ class Home extends \Phpcmf\Common
             $auth = \Phpcmf\Service::M('system')->get_setting('index_main');
             if ($auth) {
                 foreach ($table_data as $name => $t) {
-                    if (!array_intersect($this->admin['roleid'], (array)$auth[$name])) {
+                    if (!dr_array_intersect($this->admin['roleid'], (array)$auth[$name])) {
                         unset($table_data[$name]); // 无权限移除
                     }
                 }

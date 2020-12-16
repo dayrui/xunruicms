@@ -109,11 +109,11 @@
                 <td>{dr_lang($group[$t.gid]['name'])}</td>
                 <td>
                     {if $group[$t.gid]['setting']['level']['auto']}
-                    {dr_lang($group[$t[gid]]['level'][$t.lid]['name'])}
+                    {dr_lang($group[$t['gid']]['level'][$t.lid]['name'])}
                     {else}
                         <select name="data[{$t.gid}][lid]" class="form-control">
                             <option value="0"> -- </option>
-                            {loop $group[$t[gid]]['level'] $lv}
+                            {loop $group[$t['gid']]['level'] $lv}
                             <option value="{$lv.id}" {if $lv.id==$t.lid}selected{/if}>{dr_lang($lv.name)}</option>
                             {/loop}
                         </select>

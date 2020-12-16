@@ -20,6 +20,42 @@ function dr_in_array($var, $array) {
 }
 
 /**
+ * 两个数租比较
+ */
+function dr_array_intersect($arr1, $arr2) {
+
+    if (!is_array($arr1) || !is_array($arr2)) {
+        return false;
+    }
+
+    return array_intersect($arr1, $arr2);
+}
+
+/**
+ * 两个数租比较
+ */
+function dr_array_intersect_key($arr1, $arr2) {
+
+    if (!is_array($arr1) || !is_array($arr2)) {
+        return false;
+    }
+
+    return array_intersect_key($arr1, $arr2);
+}
+
+/**
+ * 字符长度
+ */
+function dr_strlen($string) {
+
+    if (is_array($string)) {
+        return dr_count($string);
+    }
+
+    return strlen($string);
+}
+
+/**
  * 上传移动文件
  */
 function dr_move_uploaded_file($tempfile, $fullname) {
@@ -537,7 +573,7 @@ function dr_member_menu_show($t) {
     }
 
     // 判断用户组显示权限
-    if ($is_site && (!$t['group'] || array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
+    if ($is_site && (!$t['group'] || dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
         return 1;
     }
 

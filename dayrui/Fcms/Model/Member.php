@@ -1760,7 +1760,7 @@ class Member extends \Phpcmf\Model
                 // 用户组的可用字段
                 $t['field'] = $group_field[$t['id']];
                 // 当前用户组开启了注册时, 查询它可注册的字段
-                $t['register'] && $t['field'] && $t['register_field'] = $register_field ? array_intersect($t['field'], $register_field) : [];
+                $t['register'] && $t['field'] && $t['register_field'] = $register_field ? dr_array_intersect($t['field'], $register_field) : [];
                 // 是否允许注册
                 $t['register'] && $cache['register']['group'][] = $t['id'];
                 $cache['group'][$t['id']] = $t;

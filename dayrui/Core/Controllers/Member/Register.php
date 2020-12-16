@@ -41,7 +41,7 @@ class Register extends \Phpcmf\Common
             $this->_msg(0, dr_lang('系统没有可注册的用户组'));
         } elseif (!$this->member_cache['register']['field']) {
             $this->_msg(0, dr_lang('系统没有可用的注册字段'));
-        } elseif (!array_intersect($this->member_cache['register']['field'], ['username', 'email', 'phone'])) {
+        } elseif (!dr_array_intersect($this->member_cache['register']['field'], ['username', 'email', 'phone'])) {
             $this->_msg(0, dr_lang('必须设置用户名、邮箱、手机的其中一个设为可注册字段'));
         }
 

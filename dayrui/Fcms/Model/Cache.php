@@ -294,7 +294,7 @@ class Cache extends \Phpcmf\Model
             }
             $t['site'] = dr_string2array($t['site']);
             foreach ($site as $siteid) {
-                if ($t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
                     $rt = $this->update_webpath('Module_Domain', $t['site'][$siteid]['webpath'], [
                         'SITE_ID' => $siteid,
                         'MOD_DIR' => $t['dirname'],
@@ -403,8 +403,9 @@ class Cache extends \Phpcmf\Model
                 continue;
             }
             $t['site'] = dr_string2array($t['site']);
-            foreach ($site as $siteid) {
-                if ($t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+            foreach ($site as $r) {
+                $siteid = $r['id'];
+                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
                     $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
                     // 复制百度编辑器到当前目录
                     $this->cp_ueditor_file($path);

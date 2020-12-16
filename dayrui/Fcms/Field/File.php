@@ -156,15 +156,19 @@ class File extends \Phpcmf\Library\A_Field {
 
 		$value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
-		// 存在缩略图值时
-		if (!$value && $field['fieldname'] == 'thumb' && isset(\Phpcmf\Service::L('Field')->data[1]['thumb']) && \Phpcmf\Service::L('Field')->data[1]['thumb']) {
+		// 存在缩略图值时，自己就是缩略图
+		if (!$value && $field['fieldname'] == 'thumb' && isset(\Phpcmf\Service::L('Field')->data[$field['ismain']]['thumb']) && \Phpcmf\Service::L('Field')->data[$field['ismain']]['thumb']) {
 			return;
 		}
 
-        if ($value && $field['setting']['option']['stslt'] && !\Phpcmf\Service::L('Field')->data[1]['thumb']) {
-            $info = \Phpcmf\Service::C()->get_attachment($value);
-            if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
-                \Phpcmf\Service::L('Field')->data[1]['thumb'] = $value;
+		// 提取缩略图
+        if ($value && $field['setting']['option']['stslt']) {
+            $_field = \Phpcmf\Service::L('form')->fields;
+            if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
+                $info = \Phpcmf\Service::C()->get_attachment($value);
+                if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                    \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb'] = $value;
+                }
             }
         }
 

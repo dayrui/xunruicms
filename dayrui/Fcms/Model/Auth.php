@@ -394,7 +394,7 @@ class Auth extends \Phpcmf\Model {
 
         $my = [];
         foreach ($verify as $t) {
-            if ($t['value']['role'] && array_intersect($t['value']['role'], \Phpcmf\Service::C()->admin['roleid'] )) {
+            if ($t['value']['role'] && dr_array_intersect($t['value']['role'], \Phpcmf\Service::C()->admin['roleid'] )) {
                 $my[] = $t['id'];
             }
         }

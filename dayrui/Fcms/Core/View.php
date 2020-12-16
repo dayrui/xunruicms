@@ -858,7 +858,7 @@ class View {
                         continue;
                     } elseif (isset($param['child']) && $t['child'] != (int)$param['child']) {
                         continue;
-                    } elseif (isset($param['id']) && !in_array($t['id'], explode(',', $param['id']))) {
+                    } elseif (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
                         continue;
                     } elseif (isset($system['more']) && !$system['more']) {
                         unset($t['field'], $t['setting']);
@@ -918,7 +918,7 @@ class View {
                         break;
                     } elseif (isset($param['pid']) && $t['pid'] != $pid) {
                         continue;
-                    } elseif (isset($param['id']) && !in_array($t['id'], explode(',', $param['id']))) {
+                    } elseif (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
                         continue;
                     }
                     $return[] = $t;
@@ -932,7 +932,7 @@ class View {
                             if ($system['num'] && $i >= $system['num']) {
                                 break;
                             }
-                            if (isset($param['id']) && !in_array($t['id'], explode(',', $param['id']))) {
+                            if (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
                                 continue;
                             }
                             $return[] = $t;
@@ -1096,7 +1096,7 @@ class View {
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo, $table); // 给显示字段加上表前缀
 
                 $_order = [];
-                $_order[$table] = $tableinfo[$table];
+                $_order[$table] = $tableinfo;
 
                 $total = 0;
                 $sql_from = $table; // sql的from子句
@@ -2413,7 +2413,7 @@ class View {
         }
 
         foreach ($where as $i => $t) {
-            if (in_array($t['name'], $field)) {
+            if (dr_in_array($t['name'], $field)) {
                 $where[$i]['use'] = 1;
                 $where[$i]['name'] = "`$prefix`.`{$t['name']}`";
                 if ($myfield && $t['value']) {
@@ -2470,7 +2470,7 @@ class View {
             } elseif (!$t['name'] && $t['value']) {
                 // 标示只有where的条件查询
                 $where[$i]['use'] = 1;
-            } elseif ($t['adj'] == 'MAP' && in_array($t['name'].'_lat', $field) && in_array($t['name'].'_lng', $field)) {
+            } elseif ($t['adj'] == 'MAP' && dr_in_array($t['name'].'_lat', $field) && dr_in_array($t['name'].'_lng', $field)) {
                 $where[$i]['use'] = 1;
                 $where[$i]['prefix'] = "`$prefix`.";
             } else {
@@ -2494,7 +2494,7 @@ class View {
                     $field_prefix = 'DISTINCT ';
                 }
 
-                if (in_array($t, $field)) {
+                if (dr_in_array($t, $field)) {
                     $array[$i] = $field_prefix."`$prefix`.`$t`";
                 } elseif (strpos($t, '.') !== false && strpos($t, '`') === false) {
                     list($a, $b) = explode('.', $t);
@@ -2502,11 +2502,11 @@ class View {
                         if (strpos($b, ':') !== false) {
                             // 存在别名
                             list($b, $cname) = explode(':', $b);
-                            if (in_array($b, $field)) {
+                            if (dr_in_array($b, $field)) {
                                 $array[$i] = $field_prefix."`$prefix`.`$b` as `$cname`";
                             }
                         } else {
-                            if (in_array($b, $field)) {
+                            if (dr_in_array($b, $field)) {
                                 $array[$i] = $field_prefix."`$prefix`.`$b`";
                             }
                         }
@@ -2601,14 +2601,16 @@ class View {
             }
             $b = strtoupper($b);
             foreach ($fields as $prefix => $field) {
-                if (in_array($a, $field)) {
-                    $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
-                } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                    if ($this->pos_baidu) {
-                        $my[$i] = $a.'_map ASC';
-                        $this->pos_order = $a;
-                    } else {
-                        exit('没有定位到您的坐标');
+                if (is_array($field)) {
+                    if (dr_in_array($a, $field)) {
+                        $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
+                    } elseif (dr_in_array($a.'_lat', $field) && dr_in_array($a.'_lng', $field)) {
+                        if ($this->pos_baidu) {
+                            $my[$i] = $a.'_map ASC';
+                            $this->pos_order = $a;
+                        } else {
+                            exit('没有定位到您的坐标');
+                        }
                     }
                 }
             }

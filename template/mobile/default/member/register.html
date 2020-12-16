@@ -7,7 +7,7 @@
             <ul class="nav nav-tabs" style="float:left;">
                 {loop $register.group $i}
                 <li class="{if $groupid == $i}active{/if}">
-                    <a href="{dr_member_url('register/index', ['groupid' => $i])}" >{$group[$i][name]}</a>
+                    <a href="{dr_member_url('register/index', ['groupid' => $i])}" >{$group[$i]['name']}</a>
                 </li>
                 {/loop}
             </ul>

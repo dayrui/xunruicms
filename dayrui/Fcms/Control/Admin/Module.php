@@ -55,7 +55,7 @@ class Module extends \Phpcmf\Table
                 if (!$t['role']) {
                     unset($this->module['setting']['flag'][$i]);
                     continue;
-                } elseif (array_intersect_key($this->admin['roleid'], $t['role'])) {
+                } elseif (dr_array_intersect_key($this->admin['roleid'], $t['role'])) {
                     continue;
                 } else {
                     unset($this->module['setting']['flag'][$i]);

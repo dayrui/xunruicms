@@ -83,7 +83,10 @@ class Html extends \Phpcmf\Common
     public function show_index() {
 
         $app = \Phpcmf\Service::L('input')->get('app');
-        $ids = implode(',', \Phpcmf\Service::L('input')->get('catids'));
+        $ids = \Phpcmf\Service::L('input')->get('catids');
+        if ($ids && is_array($ids)) {
+            $ids = implode(',', $ids);
+        }
 
         \Phpcmf\Service::V()->assign([
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,

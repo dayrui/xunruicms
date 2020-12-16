@@ -99,4 +99,13 @@ class Error extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('error_file.html');exit;
     }
 
+    public function del() {
+
+        $time = dr_safe_filename($_GET['time']);
+        !$time && $time = date('Y-m-d');
+        $file = WRITEPATH.'error/log-'.$time.'.php';
+        unlink($file);
+        exit($this->_json(1, dr_lang('操作成功')));
+    }
+
 }
