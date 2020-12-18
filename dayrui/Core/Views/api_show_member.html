@@ -7,11 +7,11 @@
         </div>
         <div class="text-left fc-user-group">
             {loop $m.group $g}
-            <h5 class=""> {$ci->member_cache['group'][$g.gid][name]}
+            <h5 class=""> {$ci->member_cache['group'][$g.gid]['name']}
             {if $g.lid}
             <br>
             <span>
-                {$ci->member_cache['group'][$g.gid][level][$g.lid][name]}
+                {$ci->member_cache['group'][$g.gid]['level'][$g.lid]['name']}
             </span>
             {/if}</h5>
             {/loop}

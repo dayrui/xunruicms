@@ -111,7 +111,7 @@ class Radio extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
 					<label>'.$this->member_field_select().'</label>
-					<span class="help-block">'.dr_lang('默认选中项，多个选中项用|分隔').'</span>
+					<span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
 				</div>
 			</div>'.$this->field_type($option['fieldtype'], $option['fieldlength']).'
 			<div class="form-group">

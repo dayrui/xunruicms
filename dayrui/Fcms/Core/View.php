@@ -2643,6 +2643,8 @@ class View {
                 $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
             }
             $debug.= '<p>搜索解析：'.$this->_options['search_sql'].'</p>';
+        } elseif ($this->_options['is_search_page'] && (strpos($this->_list_tag, 'page=1') || $this->_page_used)) {
+            $debug.= '<p>标签提醒：当前页面是搜索页面，只有search标签才适用于搜索页面，可能会引起本标签分页无效</p>';
         }
 
         if ($sql) {

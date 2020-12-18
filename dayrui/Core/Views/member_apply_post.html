@@ -31,13 +31,13 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('用户组')}</label>
                             <div class="col-md-9">
-                                <p class="form-control-static">{$ci->member_cache['group'][$gid][name]}</p>
+                                <p class="form-control-static">{$ci->member_cache['group'][$gid]['name']}</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('组级别')}</label>
                             <div class="col-md-9">
-                                <p class="form-control-static">{if $ci->member_cache['group'][$gid][level][$lid][name]}{$ci->member_cache['group'][$gid][level][$lid][name]}{else}{dr_lang('无')}{/if}</p>
+                                <p class="form-control-static">{if $ci->member_cache['group'][$gid]['level'][$lid]['name']}{$ci->member_cache['group'][$gid]['level'][$lid]['name']}{else}{dr_lang('无')}{/if}</p>
                             </div>
                         </div>
                         <div class="form-group">

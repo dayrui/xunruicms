@@ -55,7 +55,7 @@
                     </td>
                     <td>
                         {loop $t.group $b $gid}
-                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {$color[$b]}">{$group[$gid][name]} <i class="fa fa-times"></i> </a></label>
+                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {$color[$b]}">{$group[$gid]['name']} <i class="fa fa-times"></i> </a></label>
                         {/loop}
                     </td>
                     {if dr_count($ci->site_info) > 1}

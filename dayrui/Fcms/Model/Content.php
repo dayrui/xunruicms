@@ -392,7 +392,7 @@ class Content extends \Phpcmf\Model {
         // 二次开发函数
         $this->_content_post_after($id, $data, $old);
 
-        \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
+        \Phpcmf\Service::L('cache')->clear('module_'.$this->dirname.'_show_id_'.$id);
 
         return dr_return_data($data[1]['id'], 'ok', $data);
     }

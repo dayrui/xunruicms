@@ -85,7 +85,7 @@ class File extends \Phpcmf\Common
         $rt = \Phpcmf\Service::L('upload')->upload_file([
             'path' => '',
             'form_name' => 'file_data',
-            'file_exts' => @explode(',', $p['exts']),
+            'file_exts' => explode(',', strtolower($p['exts'])),
             'file_size' => $p['size'] * 1024 * 1024,
             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
         ]);
@@ -251,7 +251,7 @@ class File extends \Phpcmf\Common
         }
 
         $exts = dr_safe_replace($p['exts']);
-        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))->where_in('fileext', explode(',', $exts))->counts();
+        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))->where_in('fileext', explode(',', strtolower($exts)))->counts();
 
         $url = '/index.php?is_ajax=1&s=api&c=file&m=input_file_list'
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
