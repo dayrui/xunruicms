@@ -317,8 +317,6 @@ class Api extends \Phpcmf\Common
             'fieldname' => 'id',
         );
 
-        $builder = \Phpcmf\Service::M()->db->table($site.'_'.$dirname);
-
         if ($this->member && $this->member['adminid'] > 0) {
             $module['field']['author'] = array(
                 'name' => dr_lang('作者'),
@@ -337,6 +335,7 @@ class Api extends \Phpcmf\Common
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
+            $builder = \Phpcmf\Service::M()->db->table($site.'_'.$dirname);
             $builder->whereIn('id', $id);
             $list = $builder->orderBy('updatetime DESC')->get()->getResultArray();
             if (!$list) {
@@ -353,13 +352,14 @@ class Api extends \Phpcmf\Common
         }
 
         $data = $_GET;
-
+        $where = [];
         if ($data['search']) {
             $catid = (int)$data['catid'];
-            $catid && $builder->whereIn('catid', $module['category'][$catid]['catids']);
+            if ($catid && isset($module['category'][$catid]['catids']) && $module['category'][$catid]['catids']) {
+                $where[] = '`catid` in('.implode(',', $module['category'][$catid]['catids']).')';
+            }
             $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
-            if (isset($data['keyword']) && $data['keyword']
-                && $data['field'] && isset($module['field'][$data['field']])) {
+            if (isset($data['keyword']) && $data['keyword'] && $data['field'] && isset($module['field'][$data['field']])) {
                 $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
                 if ($data['field'] == 'id') {
                     // id搜索
@@ -368,22 +368,24 @@ class Api extends \Phpcmf\Common
                     foreach ($ids as $i) {
                         $id[] = (int)$i;
                     }
-                    $builder->whereIn('id', $id);
+                    $where[] = 'id in('.implode(',', $id).')';
                 } else {
                     // 其他模糊搜索
-                    $builder->like($data['field'], $data['keyword']);
+                    $where[] = $data['field'].' LIKE "%'.$data['keyword'].'%"';
                 }
             }
         }
 
         sort($module['field']);
-        $db = $builder->limit(50)->orderBy('updatetime DESC')->get();
-        $list = $db ? $db->getResultArray() : [];
+        $rules = $data;
+        $rules['page'] = '{page}';
 
         \Phpcmf\Service::V()->assign(array(
-            'list' => $list,
+            'mid' => $dirname,
+            'site' => $site,
             'param' => $data,
             'field' => $module['field'],
+            'where' => $where ? urlencode(implode(' AND ', $where)) : '',
             'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site]),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $module['category'],
@@ -391,6 +393,7 @@ class Api extends \Phpcmf\Common
                 'name="catid"',
                 '--'
             ),
+            'urlrule' => dr_url('api/api/related', $rules),
             'category' => $module['category'],
         ));
         \Phpcmf\Service::V()->display('api_related.html');exit;
@@ -443,7 +446,6 @@ class Api extends \Phpcmf\Common
             ),
         );
 
-        $builder = \Phpcmf\Service::M()->db->table('member');
 
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
@@ -454,6 +456,7 @@ class Api extends \Phpcmf\Common
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
+            $builder = \Phpcmf\Service::M()->db->table('member');
             $builder->whereIn('id', $id);
             $list = $builder->orderBy('id DESC')->get()->getResultArray();
             if (!$list) {
@@ -470,9 +473,10 @@ class Api extends \Phpcmf\Common
         }
 
         $data = $_GET;
+        $where = [];
         if ($data['group']) {
-            $builder->where('`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in('.$data['group'].'))');
             $group = [];
+            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in('.$data['group'].'))';
         } else {
             $group = $this->member_cache['group'];
         }
@@ -480,11 +484,10 @@ class Api extends \Phpcmf\Common
         if ($data['search']) {
             $gid = (int)$data['groupid'];
             if ($gid) {
-                $builder->where('`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$gid.')');
+                $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$gid.')';
             }
             $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
-            if (isset($data['keyword']) && $data['keyword']
-                && $data['field'] && isset($field[$data['field']])) {
+            if (isset($data['keyword']) && $data['keyword'] && $data['field'] && isset($field[$data['field']])) {
                 $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
                 if ($data['field'] == 'id') {
                     // id搜索
@@ -493,23 +496,24 @@ class Api extends \Phpcmf\Common
                     foreach ($ids as $i) {
                         $id[] = (int)$i;
                     }
-                    $builder->whereIn('id', $id);
+                    $where[] = 'id in('.implode(',', $id).')';
                 } else {
                     // 其他模糊搜索
-                    $builder->like($data['field'], $data['keyword']);
+                    $where[] = $data['field'].' LIKE "%'.$data['keyword'].'%"';
                 }
             }
         }
 
-        $db = $builder->limit(50)->orderBy('id DESC')->get();
-        $list = $db ? $db->getResultArray() : [];
+        $rules = $data;
+        $rules['page'] = '{page}';
 
         \Phpcmf\Service::V()->assign(array(
-            'list' => $list,
+            'where' => $where ? urlencode(implode(' AND ', $where)) : '',
             'param' => $data,
             'field' => $field,
             'group' => $group,
             'search' => dr_form_search_hidden(['search' => 1]),
+            'urlrule' => dr_url('api/api/related', $rules),
         ));
         \Phpcmf\Service::V()->display('api_members.html');
     }

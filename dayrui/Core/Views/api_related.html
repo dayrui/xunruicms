@@ -45,7 +45,7 @@
             </tr>
             </thead>
             <tbody>
-            {loop $list $t}
+            {module module=$mid siteid=$site where=$where order=updatetime page=1 pagesize=10 urlrule=$urlrule}
             <tr class="odd gradeX" id="dr_row_{$t.id}">
                 <td class="myselect">
                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -57,17 +57,14 @@
                 <td>{$category[$t.catid]['name']}</td>
                 <td><a href="{$t.url}" target="_blank">{$t.title}</a></td>
             </tr>
-            {/loop}
+            {/module}
             </tbody>
         </table>
     </div>
 
-    <div class="row fc-list-footer table-checkable ">
-        <div class="col-md-5 col-sm-5 fc-list-select">
-            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                <span></span>
-            </label>
+    <div class="row fc-list-footer ">
+        <div class="col-md-12 text-center">
+            {$pages}
         </div>
     </div>
 </form>

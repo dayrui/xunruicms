@@ -54,7 +54,7 @@
             </tr>
             </thead>
             <tbody>
-            {loop $list $t}
+            {member where=$where order=id page=1 pagesize=10 urlrule=$urlrule}
             <tr class="odd gradeX" id="dr_row_{$t.id}">
                 <td class="myselect">
                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -80,17 +80,14 @@
                     <p>{Function_list::ip($t.regip, 0, 0, 15)}</p>
                 </td>
             </tr>
-            {/loop}
+            {/member}
             </tbody>
         </table>
     </div>
 
     <div class="row fc-list-footer table-checkable ">
-        <div class="col-md-5 col-sm-5 fc-list-select">
-            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                <span></span>
-            </label>
+        <div class="col-md-12 text-center">
+            {$pages}
         </div>
     </div>
 </form>
