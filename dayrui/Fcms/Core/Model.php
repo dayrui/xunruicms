@@ -301,6 +301,11 @@ class Model {
         return dr_return_data($id);
     }
 
+    // 删除全部内容
+    public function clear_all() {
+        return $this->db->table($this->table)->truncate();
+    }
+
     // 批量删除数据
     /*
     * 主键数组

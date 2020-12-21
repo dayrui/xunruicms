@@ -144,7 +144,6 @@ class Upload
                     // 默认目录格式
                     $path = date('Ym', SYS_TIME).'/';
                 }
-
             }
             $file_path = $path.$name.'.'.$file_ext;
         }
@@ -238,7 +237,6 @@ class Upload
             }
         }
 
-
         $name = substr(md5(SYS_TIME.uniqid().$config['url']), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($config['url']); // 扩展名
 
@@ -287,11 +285,9 @@ class Upload
     public function base64_image($config) {
 
         $data = $config['content'];
-
         $name = substr(md5(SYS_TIME.$config['content'].uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $config['ext'] ? $config['ext'] : 'jpg'; // 扩展名
         $file_name = 'base64_image'; // 文件实际名字
-
 
         // 安全验证
         $rt = $this->_safe_check($file_ext, $data);

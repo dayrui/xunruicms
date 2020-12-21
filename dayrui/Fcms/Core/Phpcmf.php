@@ -203,6 +203,9 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
+        // 预览开发的id
+        !defined('SITE_FID') && define('SITE_FID', 0);
+
         // 姓名字段
         define('MEMBER_CNAME', dr_lang($this->member_cache['config']['cname'] ? $this->member_cache['config']['cname'] : '姓名'));
 
@@ -261,6 +264,14 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
+
+        // 附加程序初始化文件
+        if (is_file(MYPATH.'Init.php')) {
+            require MYPATH.'Init.php';
+        }
+
+        // 插件目录初始化
+        APP_DIR && $this->init_file(APP_DIR);
         
         // 判断网站是否关闭
         if (!IS_DEV && !IS_ADMIN && !IS_API
@@ -270,6 +281,23 @@ abstract class Common extends \CodeIgniter\Controller
             \Phpcmf\Hooks::trigger('cms_close');
             $this->_msg(0, $this->get_cache('site', SITE_ID, 'config', 'SITE_CLOSE_MSG'));
         }
+
+        // 判断是否存在授权登录
+        if (!IS_ADMIN && $code = \Phpcmf\Service::L('input')->get_cookie('admin_login_member')) {
+            list($uid, $adminid) = explode('-', $code);
+            $uid = (int)$uid;
+            if ($this->uid != $uid) {
+                $admin = \Phpcmf\Service::M()->table('member')->get((int)$adminid);
+                if ($this->session()->get('admin_login_member_code') == md5($uid.$admin['id'].$admin['password'])) {
+                    $this->uid = $uid;
+                    $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);
+                }
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'member' => $this->member,
+        ]);
 
         // 站群系统接入
         if (is_file(ROOTPATH.'api/fclient/sync.php')) {
@@ -333,19 +361,6 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        // 判断是否存在授权登录
-        if (!IS_ADMIN && $code = \Phpcmf\Service::L('input')->get_cookie('admin_login_member')) {
-            list($uid, $adminid) = explode('-', $code);
-            $uid = (int)$uid;
-            if ($this->uid != $uid) {
-                $admin = \Phpcmf\Service::M()->table('member')->get((int)$adminid);
-                if ($this->session()->get('admin_login_member_code') == md5($uid.$admin['id'].$admin['password'])) {
-                    $this->uid = $uid;
-                    $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);
-                }
-            }
-        }
-
         if (IS_MEMBER) {
             // 开启session
             $this->session();
@@ -392,21 +407,6 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
-
-        \Phpcmf\Service::V()->assign([
-            'member' => $this->member,
-        ]);
-
-        // 附加程序初始化文件
-        if (is_file(MYPATH.'Init.php')) {
-            require MYPATH.'Init.php';
-        }
-
-        // 插件目录初始化
-        APP_DIR && $this->init_file(APP_DIR);
-
-        // 预览开发的id
-        !defined('SITE_FID') && define('SITE_FID', 0);
 
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('cms_init');

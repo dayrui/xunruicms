@@ -290,9 +290,10 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
 
         // 登陆判断
+        /*
         if (!$this->uid) {
             $this->_json(0, dr_lang('会话超时，请重新登录'));
-        }
+        }*/
 
         // 参数判断
         $dirname = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
@@ -301,7 +302,7 @@ class Api extends \Phpcmf\Common
         }
 
         // 站点选择
-        $site = max(1, (int)$_GET['site']);
+        $site = max(1, (int)\Phpcmf\Service::L('input')->get('site'));
 
         // 模块缓存判断
         $module = $this->get_cache('module-'.$site.'-'.$dirname);
@@ -318,7 +319,7 @@ class Api extends \Phpcmf\Common
 
         $builder = \Phpcmf\Service::M()->db->table($site.'_'.$dirname);
 
-        if ($this->member['adminid'] > 0) {
+        if ($this->member && $this->member['adminid'] > 0) {
             $module['field']['author'] = array(
                 'name' => dr_lang('作者'),
                 'ismain' => 1,
@@ -404,9 +405,10 @@ class Api extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
 
         // 登陆判断
+        /*
         if (!$this->uid) {
             $this->_json(0, dr_lang('会话超时，请重新登录'));
-        }
+        }*/
 
         $field = array(
             'id' => array(
