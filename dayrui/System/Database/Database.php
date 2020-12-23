@@ -43,6 +43,11 @@ class Database
 	 */
 	public function load(array $params = [], string $alias = '')
 	{
+		if ($alias === '')
+		{
+			throw new InvalidArgumentException('You must supply the parameter: alias.');
+		}
+
 		// Handle universal DSN connection string
 		if (! empty($params['DSN']) && strpos($params['DSN'], '://') !== false)
 		{
