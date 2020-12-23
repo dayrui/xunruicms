@@ -416,7 +416,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             || (IS_MEMBER && $field['setting']['option']['remove_style'] == 2)
         ) {
             $value = preg_replace('/<div style=".*?"/iU', '', $value);
-        }*/
+        }dr_rp($value, '<p><br></p>', '')
+        */
 
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']])

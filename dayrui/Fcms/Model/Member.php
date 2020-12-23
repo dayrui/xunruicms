@@ -1154,7 +1154,7 @@ class Member extends \Phpcmf\Model
             if (!is_file($cache_path.$uid.'.jpg')) {
                 // 没有头像下载头像
                 $img = dr_catcher_data($data['avatar']);
-                if (strlen($img) > 20 && @file_put_contents($cache_path.$uid.'.jpg', $img)) {
+                if (strlen($img) > 20 && file_put_contents($cache_path.$uid.'.jpg', $img)) {
                     // 头像状态认证
                     $this->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 }

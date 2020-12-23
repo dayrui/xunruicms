@@ -2991,6 +2991,7 @@ function dr_safe_replace_path($path) {
  */
 function dr_strcut($string, $length = 100, $dot = '...') {
 
+    $length = (int)$length;
     if (!$string || strlen($string) <= $length || !$length) {
         return $string;
     }
