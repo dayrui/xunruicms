@@ -24,12 +24,17 @@ class Oauth extends \Phpcmf\Common
         // 非授权登录时必须验证登录状态
         if ($type != 'login' && !$this->uid) {
             $this->_msg(0, dr_lang('你还没有登录'));
+        } elseif (!$name) {
+            $this->_msg(0, dr_lang('未知接入商'));
         }
 
         // 请求参数
         $appid = $this->member_cache['oauth'][$name]['id'];
         $appkey = $this->member_cache['oauth'][$name]['value'];
-        $callback_url = OAUTH_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type.'&back='.urlencode($back);
+        $callback_url = OAUTH_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type;
+        if ($back) {
+            $callback_url.= '&back='.urlencode($back);
+        }
 
         if (is_file(FCPATH.'ThirdParty/OAuth/'.ucfirst($name).'/Run.php')) {
             require FCPATH.'ThirdParty/OAuth/'.ucfirst($name).'/Run.php';
