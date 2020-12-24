@@ -2923,7 +2923,7 @@ function dr_safe_replace($string, $diy = null) {
     $diy && is_array($diy) && $replace = dr_array2array($replace, $diy);
     $diy && !is_array($diy) && $replace[] = $diy;
 
-    return str_replace($replace, '', $string);
+    return str_replace($replace, '', (string)$string);
 }
 
 /**
@@ -2933,7 +2933,7 @@ function dr_safe_filename($string) {
     return str_replace(
         ['..', "/", '\\', ' ', '<', '>', "{", '}', ';', '[', ']', '\'', '"', '*', '?'],
         '',
-        $string
+        (string)$string
     );
 }
 
@@ -2944,7 +2944,7 @@ function dr_safe_username($string) {
     return str_replace(
         ['..', "/", '\\', ' ', "#",'\'', '"'],
         '',
-        $string
+        (string)$string
     );
 }
 
@@ -2952,7 +2952,7 @@ function dr_safe_username($string) {
  * 安全过滤密码函数
  */
 function dr_safe_password($string) {
-    return trim(str_replace(["'", '"', '&', '?'],'', $string));
+    return trim(str_replace(["'", '"', '&', '?'],'', (string)$string));
 }
 
 

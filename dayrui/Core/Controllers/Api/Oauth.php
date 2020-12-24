@@ -16,7 +16,7 @@ class Oauth extends \Phpcmf\Common
      */
     public function index() {
 
-        $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+        $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
         $type = dr_safe_replace(\Phpcmf\Service::L('input')->get('type'));
         $back = dr_safe_replace(\Phpcmf\Service::L('input')->get('back'));
         $action = dr_safe_replace(\Phpcmf\Service::L('input')->get('action'));
