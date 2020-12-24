@@ -46,6 +46,7 @@ class Install extends \Phpcmf\Common
         define('DR_CMS', $app['id']);
         define('DR_NAME', $app['name']);
         define('DR_VERSION', $app['version']);
+        define('SITE_NAME', $app['name']);
         \Phpcmf\Service::V()->init('pc');
         \Phpcmf\Service::V()->admin();
     }

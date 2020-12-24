@@ -23,7 +23,10 @@ class Home extends \Phpcmf\Common
 
         // 开启过首页静态时
         if ($this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !defined('SC_HTML_FILE')) {
-            if (defined('IS_MOBILE') && IS_MOBILE) {
+            if (IS_CLIENT) {
+                // 自定义终端
+                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', IS_CLIENT.'/index.html'), $html);
+            } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html);

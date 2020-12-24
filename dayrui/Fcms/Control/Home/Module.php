@@ -65,7 +65,9 @@ class Module extends \Phpcmf\Common
                     echo $html;exit;
                 }
 
-                if (defined('IS_MOBILE') && IS_MOBILE) {
+                if (IS_CLIENT) {
+                    // 终端下不生成
+                } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                     // 移动端访问
                     if ($this->module['url'] != $this->module['murl']) {
                         file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
@@ -590,6 +592,8 @@ class Module extends \Phpcmf\Common
             return dr_return_data(0, '栏目id不存在');
         } elseif (!$this->module) {
             return dr_return_data(0, '模块未被初始化');
+        } elseif (IS_CLIENT) {
+            return dr_return_data(0, '终端域名下不能生成静态文件');
         }
 
         $cat = $this->module['category'][$catid];
@@ -663,6 +667,8 @@ class Module extends \Phpcmf\Common
 
         if (!$id) {
             return dr_return_data(0, '内容id不存在');
+        } elseif (IS_CLIENT) {
+            return dr_return_data(0, '终端域名下不能生成静态文件');
         }
 
         // 标识变量
@@ -996,7 +1002,6 @@ class Module extends \Phpcmf\Common
 
     // 前端模块回调处理类
     protected function _Call_Show($data) {
-
         return $data;
     }
 

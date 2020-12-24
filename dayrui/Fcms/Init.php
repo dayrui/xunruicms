@@ -136,9 +136,15 @@ if (is_file(MYPATH.'Dev.php')) {
 } else {
     // 判断是否是app目录
     function dr_is_app_dir($name) {
+        if (!$name) {
+            return false;
+        }
         return is_dir(APPSPATH.ucfirst($name));
     }
     function dr_get_app_dir($name) {
+        if (!$name) {
+            return false;
+        }
         return APPSPATH.ucfirst($name).'/';
     }
     function dr_get_app_tpl($name = '') {
