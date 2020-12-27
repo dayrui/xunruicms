@@ -1500,7 +1500,7 @@ function wx_post_https_json_data($url, $param = []) {
  * 获取折扣价格值
  */
 function dr_zhe_price($value, $zhe) {
-    return max(0, $value * ($zhe/100));
+    return (float)max(0, $value * ($zhe/100));
 }
 
 /**
@@ -1544,8 +1544,9 @@ function dr_sku_price($value, $number = 2, $join = ' - ', $zhe = 0) {
     }
 
     $price = [];
+    $number = (int)$number;
     foreach ($value['value'] as $t) {
-        $price[] = $t['price'];
+        $price[] = (float)$t['price'];
     }
 
     $min = min($price);

@@ -817,7 +817,7 @@ class Module extends \Phpcmf\Table
 
     // ===========================
 
-    // 后台查看草稿列表
+    // 后台查看回收站列表
     protected function _Admin_Recycle_List() {
 
         $this->_init([
@@ -846,7 +846,7 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_recycle'));
     }
 
-    // 后台删除内容
+    // 后台回收站删除内容
     protected function _Admin_Recycle_Del() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
@@ -873,7 +873,7 @@ class Module extends \Phpcmf\Table
         }
     }
 
-    // 后台恢复查看
+    // 后台回收站恢复查看
     protected function _Admin_Recycle_Show() {
 
         // 说明来自页面
@@ -899,7 +899,7 @@ class Module extends \Phpcmf\Table
 
     }
 
-    // 后台恢复内容
+    // 后台回收站恢复内容
     protected function _Admin_Recovery() {
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
@@ -919,6 +919,35 @@ class Module extends \Phpcmf\Table
         }
     }
 
+    // 后台回收站编辑内容
+    protected function _Admin_Recycle_Edit() {
+
+        // 说明来自定时页面
+        define('IS_MODULE_RECYCLE', 1);
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        list($tpl, $data) = $this->_Post($id);
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('内容不存在'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '回收站' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-trash-o"'],
+                    '修改' => ['hide:'.MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit', 'fa fa-edit'],
+                ]
+            ),
+            'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
+            'select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['catid'],
+                'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
+                '', 1, 1
+            ),
+            'is_recycle' => 1,
+        ]);
+        \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
+    }
 
     // ===========================
 
@@ -1143,8 +1172,9 @@ class Module extends \Phpcmf\Table
                     if ($old['catid'] && $this->module['category'][$old['catid']]['setting']['notedit']) {
                         $data[1]['catid'] = $old['catid'];
                     }
-                    // 发布之前判断是否来自审核
+                    // 发布之前判断
                     if ($old && defined('IS_MODULE_VERIFY')) {
+                        // 是否来自审核
                         if ($this->is_post_user) {
                             // 投稿者编辑
                             $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member) : $this->content_model->get_verify_status(
@@ -1179,9 +1209,10 @@ class Module extends \Phpcmf\Table
                                 \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
                             }
                         }
-                    }
-                    // 是否退稿
-                    if (defined('IS_MODULE_TG')) {
+                    } elseif (defined('IS_MODULE_RECYCLE')) {
+                        // 是否回收站恢复
+                    } elseif (defined('IS_MODULE_TG')) {
+                        // 是否退稿
                         $data[1]['status'] = 0;
                         // 通知
                         $_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);

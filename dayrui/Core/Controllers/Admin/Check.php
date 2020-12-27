@@ -375,14 +375,31 @@ class Check extends \Phpcmf\Common
                 $local = dr_dir_map(APPSPATH, 1); // 搜索本地模块
                 foreach ($local as $dir) {
                     if (is_file(APPSPATH.$dir.'/Config/App.php')) {
-                        $file =  APPSPATH.$dir.'/Controllers/Search.php';
+                        $file = APPSPATH.$dir.'/Controllers/Search.php';
                         if (is_file($file)) {
                             // 替换搜索控制器
                             $code = file_get_contents($file);
-                            if (strpos($code, '\Phpcmf\Home\Search') !== false) {
+                            if ($code && strpos($code, '\Phpcmf\Home\Search') !== false) {
                                 file_put_contents($file, str_replace(
                                     ['\Phpcmf\Home\Search', '_Module_Search'],
                                     ['\Phpcmf\Home\Module', '_Search'],
+                                    $code
+                                ));
+                            }
+                        }
+                        $file = APPSPATH.$dir.'/Controllers/Recycle.php';
+                        if (is_file($file)) {
+                            // 替换搜索控制器
+                            $code = file_get_contents($file);
+                            if ($code && strpos($code, '_Admin_Recycle_Edit') === false) {
+                                var_dump($code);
+                                file_put_contents($file, str_replace(
+                                    'public function index() {',
+                                    ' public function edit() {
+        $this->_Admin_Recycle_Edit();
+    }
+    public function index() {
+    ',
                                     $code
                                 ));
                             }

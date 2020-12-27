@@ -19,6 +19,10 @@ class Recycle extends \Phpcmf\Admin\Module
         $this->_Admin_Recycle_Show();
     }
 
+    public function edit() {
+        $this->_Admin_Recycle_Edit();
+    }
+
 	public function recovery_add() {
 		$this->_Admin_Recovery();
 	}

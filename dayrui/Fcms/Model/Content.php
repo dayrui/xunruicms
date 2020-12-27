@@ -317,9 +317,9 @@ class Content extends \Phpcmf\Model {
             $this->sync_update_cat($old['link_id'], $data);
         }
 
-        // 如果来自审核页面,表示完成审核
+        // 来源判断
         if (defined('IS_MODULE_VERIFY')) {
-
+            // 如果来自审核页面,表示完成审核
             // 通知用户
             \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
 
@@ -338,6 +338,9 @@ class Content extends \Phpcmf\Model {
 
             // 执行审核后的回调
             $this->_call_verify($value, $verify);
+        } elseif (defined('IS_MODULE_RECYCLE')) {
+            // 如果来自回收站就删除回收站内容
+            $this->db->table($this->mytable.'_recycle')->where('id', $id)->delete();
         }
 
         // 表示新发布
@@ -923,7 +926,7 @@ class Content extends \Phpcmf\Model {
 
             // 放入回收站
             $rt = $this->table($this->mytable.'_recycle')->insert([
-                'uid' => $this->uid,
+                'uid' => intval($row['uid']),
                 'cid' => $id,
                 'catid' => intval($row['catid']),
                 'content' => dr_array2string($tables),

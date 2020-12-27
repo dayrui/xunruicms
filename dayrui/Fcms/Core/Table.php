@@ -602,7 +602,7 @@ class Table extends \Phpcmf\Common
         // 分页URL格式
         $this->url_params && $param = dr_array22array($param, $this->url_params);
         $uri = \Phpcmf\Service::L('Router')->uri();
-        $url = IS_ADMIN ?\Phpcmf\Service::L('Router')->url($uri, $param) :\Phpcmf\Service::L('Router')->member_url($uri, $param);
+        $url = IS_ADMIN ? \Phpcmf\Service::L('Router')->url($uri, $param) : \Phpcmf\Service::L('Router')->member_url($uri, $param);
         $url = $url.'&page={page}';
 
         // 分页输出样式
