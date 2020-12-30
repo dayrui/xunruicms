@@ -121,7 +121,7 @@ class Category extends \Phpcmf\Table
             $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
 
             $purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
-            $t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
+            //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
             // 是否缓存
             if ($data[$t['id']]) {
                 $t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
@@ -174,7 +174,7 @@ class Category extends \Phpcmf\Table
         if ($this->module['share']) {
             $str.= "<td style='text-align:center'>\$mid</td>";
         }
-        $str.= "<td style='text-align:center'>\$total</td>";
+        //$str.= "<td style='text-align:center'>\$total</td>";
         $str.= "<td style='text-align:center'>\$is_page_html</td>";
         $str.= "<td>\$option</td>";
         $str.= "</tr>";
@@ -293,10 +293,15 @@ class Category extends \Phpcmf\Table
             $pid = intval($post['pid']);
             if ($pid && !$this->module['category'][$pid]) {
                 $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
-            } elseif ($this->module['category'][$pid]['tid'] == 2) {
-                $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
             } elseif (\Phpcmf\Service::M('Category')->check_counts(0, dr_count($list))) {
                 $this->_json(0, dr_lang('网站栏目数量已达到上限'));
+            } elseif ($pid && $post['tid'] != 2 && $this->module['category'][$pid]['tid'] == 2) {
+                return dr_return_data(0, dr_lang('父级栏目是外部地址类型，下级栏目只能选择外部地址'));
+            } elseif ($pid && $this->module['category'][$pid]['child'] == 0 && $this->module['category'][$pid]['tid'] == 1) {
+                $mid = $this->module['category'][$pid]['mid'] ? $this->module['category'][$pid]['mid'] : APP_DIR;
+                if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $pid)->counts()) {
+                    $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$pid]['name']));
+                }
             }
 
             $count = 0;
@@ -314,17 +319,16 @@ class Category extends \Phpcmf\Table
 
                 $data['pid'] = $pid;
                 $data['show'] = 1;
-                $data['thumb'] = '';
                 $data['pids'] = '';
+                $data['thumb'] = '';
                 $data['pdirname'] = '';
                 $data['childids'] = '';
                 if ($this->module['share']) {
-                    $data['content'] = '';
+                    $data['mid'] = $post['mid'];
                     $data['tid'] = (int)$post['tid'];
                     $save['domain'] = '';
+                    $data['content'] = '';
                     $save['mobile_domain'] = '';
-                    //$data['mid'] = $pid ? $this->module['category'][$pid]['mid'] : $post['mid'];
-                    $data['mid'] = $post['mid'];
                     // 作为内容模块的栏目判断
                     if ($data['tid'] == 1) {
                         if (!$data['mid']) {
@@ -988,6 +992,13 @@ class Category extends \Phpcmf\Table
 
                 // 变更栏目时
                 if ($old && $save['pid'] && $save['pid'] != $old['pid']) {
+                    $pid = $save['pid'];
+                } elseif (!$old && $save['pid']) {
+                    $pid = $save['pid'];
+                } else {
+                    $pid = 0;
+                }
+                if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {
                         $this->_json(0, dr_lang('父栏目不存在'));
                     } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
@@ -997,7 +1008,6 @@ class Category extends \Phpcmf\Table
                         }
                     }
                 }
-
                 // 不出现在编辑器中的字段
                 $save['setting']['cat_field'] = $old['setting']['cat_field'];
 

@@ -104,7 +104,11 @@ class Module extends \Phpcmf\Table
                 );
             }
 			if (!$catid) {
-                $this->_msg(0, dr_lang('没有可用的栏目发布权限'));
+			    if ($this->uid) {
+                    $this->_msg(0, dr_lang('没有可用的栏目发布权限'));
+                } else {
+                    $this->_msg(0, dr_lang('您没有登录'), dr_member_url('login/index'));
+                }
             } elseif (!$category[$catid]) {
                 $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', $this->module['category'][$catid]['name']));
             }
@@ -157,14 +161,11 @@ class Module extends \Phpcmf\Table
         list($tpl, $data) = $this->_Post($id, $draft);
         if (!$data) {
             $this->_msg(0, dr_lang('内容不存在'));
-            exit;
         } elseif ($this->uid != $data['uid']) {
             $this->_msg(0, dr_lang('无权限操作'));
-            exit;
         } elseif (defined('IS_MODULE_VERIFY') && $data['status'] != 0) {
             // 判断是否来至审核
             $this->_msg(0, dr_lang('正在审核之中'));
-            exit;
         }
 
         $category = [];

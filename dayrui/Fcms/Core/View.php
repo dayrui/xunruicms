@@ -498,11 +498,11 @@ class View {
             // php标签
             '#{php\s+(.+?)}#is',
             // list标签
-            '#{list\s+(.+?)return=(.+?)\s?}#i',
+            '#{list\s+(.+?)return=([\w]+)}#i', //(.+?)\s?
             '#{list\s+(.+?)\s?}#i',
             '#{\s?\/list\s?}#i',
             // count标签
-            '#{count\s+(.+?)return=(.+?)\s?}#i',
+            '#{count\s+(.+?)return=([\w]+)}#i', //(.+?)\s?
             '#{count\s+(.+?)\s?}#i',
             // if判断语句
             '#{\s?if\s+(.+?)\s?}#i',
@@ -568,7 +568,7 @@ class View {
         // list标签别名
         foreach ($this->action as $name) {
             // 正则表达式匹配的模板标签
-            $regex_array[] = '#{'.$name.'\s+(.+?)return=(.+?)\s?}#i';
+            $regex_array[] = '#{'.$name.'\s+(.+?)return=([\w]+)}#i';// 去掉\s，win平台
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             $regex_array[] = '#{\s?\/'.$name.'\s?}#i';
             // 替换直接变量输出
