@@ -78,12 +78,13 @@ class Category extends \Phpcmf\Table
         $tree = [];
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
         foreach($data as $t) {
+            $option = '';
             !$t['mid'] && $t['mid'] = APP_DIR;
             $t['name'] = dr_strcut($t['name'], 30);
             $t['child'] = $t['pcatpost'] ? 0 : $t['child'];
             $t['setting'] = dr_string2array($t['setting']);
-            $option = '';
             $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
+            $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($this->module, $t));
             if ($this->_is_admin_auth('add')) {
                 // 非外链添加子类 $t['tid'] != 2 &&
                 $option.= '<a class="btn btn-xs blue" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/add', array('pid' => $t['id'])).'> <i class="fa fa-plus"></i> '.dr_lang('子类').'</a>';
@@ -124,7 +125,7 @@ class Category extends \Phpcmf\Table
             //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
             // 是否缓存
             if ($data[$t['id']]) {
-                $t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
+                //$t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
                 // 共享模块显示栏类别
                 if ($this->is_scategory) {
                     // 栏目类型
@@ -236,6 +237,7 @@ class Category extends \Phpcmf\Table
                 $this->_admin_msg(0, dr_lang('栏目【%s】缓存不存在', $pid));
             }
             $value['setting'] = $this->module['category'][$pid]['setting'];
+            $value['setting']['getchild'] = 0;
         }
 
         $value['mid'] = $this->module['category'][$pid]['mid'];
@@ -341,7 +343,7 @@ class Category extends \Phpcmf\Table
                         }
                     }
                 }
-                $data['setting'] = dr_array2string(isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
+                $data['setting'] = isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
                     'edit' => 1,
                     'disabled' => 0,
                     'template' => [
@@ -355,7 +357,9 @@ class Category extends \Phpcmf\Table
                         'list_title' => '[第{page}页{join}]{name}{join}{modname}{join}{SITE_NAME}',
                         'show_title' => '[第{page}页{join}]{title}{join}{catname}{join}{modname}{join}{SITE_NAME}',
                     ],
-                ]);
+                ];
+                $data['setting']['getchild'] = 0;
+                $data['setting'] = dr_array2string($data['setting']);
 
                 $rt = \Phpcmf\Service::M('Category')->insert($data);
                 if (!$rt['code']) {
