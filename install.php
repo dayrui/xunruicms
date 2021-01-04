@@ -16,8 +16,8 @@ if ($pos !== false && $pos > 1) {
     echo "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：http://help.xunruicms.com/741.html";exit;
 }
 
-define('WEBPATH', dirname(__FILE__).'/');
-define('WRITEPATH', WEBPATH.'cache/');
+!defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
+!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
 
 // 判断目录权限
 foreach (array(

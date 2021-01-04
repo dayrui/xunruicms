@@ -48,6 +48,7 @@ class View {
     private $_page_used = 0; // 是否开启分页
 
     private $_list_tag = ''; // 循环体标签
+    private $_list_error = []; // 循环标签遇到的错误
     private $_is_list_search = 0; // 搜索标签
 
     public $call_value; // 动态模板返回调用
@@ -1854,10 +1855,13 @@ class View {
                     if ($system['page']) {
                         $page = max(1, (int)$_GET['page']);
                         if ($system['catid'] && is_numeric($system['catid'])) {
-                            if (!$system['urlrule']) {
-                                $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
-                            }
                             if (!$system['sbpage']) {
+                                if ($system['pagesize']) {
+                                    $this->_list_error[] = '存在catid参数和page参数时，pagesize参数将会无效';
+                                }
+                                if ($system['urlrule']) {
+                                    $this->_list_error[] = '存在catid参数和page参数时，urlrule参数将会无效';
+                                }
                                 if ($this->_is_mobile) {
                                     $system['pagesize'] = (int)$module['category'][$system['catid']]['setting']['template']['mpagesize'];
                                 } else {
@@ -1867,6 +1871,10 @@ class View {
                                 if ($system['action'] == 'module') {
                                     $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
                                 }
+                                $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
+                            }
+                            if ($system['num']) {
+                                $this->_list_error[] = '存在catid参数和page参数时，num参数将会无效';
                             }
                         }
                         $pagesize = (int)$system['pagesize'];
@@ -2636,6 +2644,10 @@ class View {
 
         if ($this->_list_tag) {
             $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
+        }
+
+        if ($this->_list_error) {
+            $debug.= '<p>错误提示：'.implode('、', $this->_list_error).'</p>';
         }
 
         if ($this->_is_list_search) {

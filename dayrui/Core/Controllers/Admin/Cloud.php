@@ -16,10 +16,10 @@ class Cloud extends \Phpcmf\Common
         parent::__construct(...$params);
 
         if (!$this->cmf_license) {
-			$this->cmf_license = [
-				'id' => 10,
-				'license' => 'dev',
-			];
+            $this->cmf_license = [
+                'id' => 10,
+                'license' => 'dev',
+            ];
         } elseif (!$this->cmf_license['license']) {
             $this->cmf_license['license'] = 'dev';
         }
@@ -261,8 +261,11 @@ class Cloud extends \Phpcmf\Common
                 $this->_json(0, '本站：没有从服务端获取到数据');
             }
             $rt = dr_string2array($json);
+            if (!$rt) {
+                $this->_json(0, '本站：从服务端获取到的数据不规范');
+            }
             if (!$rt['code']) {
-                $this->_json(0, '本站：没有从服务端获取到数据');
+                $this->_json(0, '服务端：'.$rt['msg']);
             }
             $text = "<?php
 // 此文件是安装授权文件，每次下载安装包会自动生成，请勿修改
@@ -320,11 +323,11 @@ return [
         $id = dr_safe_replace($_GET['id']);
         $cmspath = WRITEPATH.'temp/'.$id.'/';
         $file = WRITEPATH.'temp/'.$id.'.zip';
-		if (!IS_DEV) {
-			$cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
-			if (!$cache) {
-				$this->_json(0, '本站：授权验证缓存过期，请重试');
-			}
+        if (!IS_DEV) {
+            $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
+            if (!$cache) {
+                $this->_json(0, '本站：授权验证缓存过期，请重试');
+            }
             if (!is_file($file)) {
                 $this->_json(0, '本站：文件还没有被下载');
             } elseif (!class_exists('ZipArchive')) {
@@ -336,7 +339,7 @@ return [
                 $this->_json(0, '本站：文件解压失败');
             }
             unlink($file);
-		} else {
+        } else {
             if (is_file($file)) {
                 if (!class_exists('ZipArchive')) {
                     $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能');
@@ -348,42 +351,42 @@ return [
             }
         }
 
-		// 查询插件目录
+        // 查询插件目录
         $is_app = $is_module_app = $is_tpl = 0;
-		if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
-			$ins = require $cmspath.'Install.php';
-			if (isset($ins['type']) && $ins['type'] == 'app') {
-				if ($ins['name'] && is_file($cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php')) {
-				    $cfg = require $cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php';
-					$is_app = $ins['name'];
+        if (is_file($cmspath.'Install.php') && strpos(file_get_contents($cmspath.'Install.php'), 'return') !== false) {
+            $ins = require $cmspath.'Install.php';
+            if (isset($ins['type']) && $ins['type'] == 'app') {
+                if ($ins['name'] && is_file($cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php')) {
+                    $cfg = require $cmspath.'APPSPATH/'.ucfirst($ins['name']).'/Config/App.php';
+                    $is_app = $ins['name'];
                     $is_module_app = $cfg['ftype'] == 'module' && $cfg['mtype'] == 0;
-				}
-			} elseif (isset($ins['type']) && $ins['type'] == 'tpl') {
-				if ($ins['name']) {
-					$is_tpl = $ins['name'];
-				}
-			}
-		}
+                }
+            } elseif (isset($ins['type']) && $ins['type'] == 'tpl') {
+                if ($ins['name']) {
+                    $is_tpl = $ins['name'];
+                }
+            }
+        }
 
-		// 安装之前的验证
+        // 安装之前的验证
         if (is_file($cmspath.'Check.php')) {
             require $cmspath.'Check.php';
         }
 
-		if (is_file($cmspath.'Run.php')) {
+        if (is_file($cmspath.'Run.php')) {
             copy($cmspath.'Run.php',WRITEPATH.'temp/run-'.$id.'.php');
         }
-		
+
         if (!$is_tpl && !$is_app && is_dir($cmspath.'APPSPATH/')) {
             $p = dr_dir_map($cmspath.'APPSPATH/', 1);
             foreach ($p as $name) {
-                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php') 
-					&& is_file($cmspath.'APPSPATH/'.$name.'/Config/Version.php')) {
+                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/App.php')
+                    && is_file($cmspath.'APPSPATH/'.$name.'/Config/Version.php')) {
                     if (is_file($cmspath.'APPSPATH/'.$name.'/install.lock')) {
                         unlink($cmspath.'APPSPATH/'.$name.'/install.lock');
                     }
-					$is_app = strtolower($name);
-					$cfg = require $cmspath.'APPSPATH/'.$name.'/Config/App.php';
+                    $is_app = strtolower($name);
+                    $cfg = require $cmspath.'APPSPATH/'.$name.'/Config/App.php';
                     $is_module_app = $cfg['ftype'] == 'module' && $cfg['mtype'] == 0;
                     break;
                 }
@@ -437,19 +440,19 @@ return [
         if (!$is_ok) {
             $this->_json(0, '本站：当前下载的应用程序'.($is_app ? '（'.$is_app.'）' : '').'压缩包已损坏，请尝试离线下载安装');
         }
-		
-		if ($is_app) {
+
+        if ($is_app) {
             if ($is_module_app) {
                 $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_install_module_select(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\');">立即安装应用插件</a>';
             } else {
                 $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此程序吗？').'\', \''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
             }
-		} elseif ($is_tpl) {
-			$msg = '模板导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
-		} else {
-			$msg = '程序导入完成<br>请按本商品的使用教程来操作';
-		}
-		
+        } elseif ($is_tpl) {
+            $msg = '模板导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
+        } else {
+            $msg = '程序导入完成<br>请按本商品的使用教程来操作';
+        }
+
         $this->_json(1, $msg);
     }
 
