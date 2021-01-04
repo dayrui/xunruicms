@@ -27,7 +27,7 @@ require "WxPay.NativePay.php";
 $member = \Phpcmf\Service::C()->member;
 // 付款界面模板
 $htmlfile = is_file(WEBPATH.'config/pay/payweixin.html') ? WEBPATH.'config/pay/payweixin.html' : ROOTPATH.'config/pay/payweixin.html';
-
+$data['title'] = dr_strcut($data['title'], 50);
 if (IS_API_HTTP && dr_is_app('weixin')) {
     // 微信插件：客户端小程序请求
     //①、获取用户openid
