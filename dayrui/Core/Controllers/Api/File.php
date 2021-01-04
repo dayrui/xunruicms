@@ -54,7 +54,7 @@ class File extends \Phpcmf\Common
         $error = '';
         if (!IS_API_HTTP && defined('SYS_CSRF') && SYS_CSRF
             && dr_get_csrf_token() != (string)$_GET['token']) {
-            $error = '跨站验证禁止此操作';
+            $error = '跨站验证禁止上传文件';
         } elseif ($this->member && $this->member['is_admin']) {
             return;
         } elseif (!\Phpcmf\Service::M('member_auth')->member_auth('uploadfile', $this->member)) {
