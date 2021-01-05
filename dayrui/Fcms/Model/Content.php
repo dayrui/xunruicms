@@ -450,7 +450,7 @@ class Content extends \Phpcmf\Model {
         !$time && $time = SYS_TIME;
         $save[1]['updatetime'] = $save[1]['inputtime'] = $time;
 
-        $rt = $this->save(0, $save);
+        $rt = $this->save_content(0, $save);
         if ($rt['code']) {
             // 发布成功
             $save[1]['id'] = $rt['code'];
