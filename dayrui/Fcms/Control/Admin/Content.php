@@ -278,7 +278,7 @@ class Content extends \Phpcmf\Common
         $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         foreach ($data as $row) {
             if (!$this->module['field']['content']['ismain']) {
-                $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$row['tableid'])->select('content')->where('id', $row['id'])->get()->getRowArray();
+                $row = \Phpcmf\Service::M()->db->table($table.'_data_'.$row['tableid'])->select('content,id')->where('id', $row['id'])->get()->getRowArray();
             }
             if ($row && $row['content']) {
                 \Phpcmf\Service::M()->db->table($table)->where('id', $row['id'])->update(array(
