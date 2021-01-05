@@ -57,6 +57,6 @@ class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
      */
     public function getBadgeValue(): int
     {
-        return count($this->viewer->get_view_files());
+        return dr_count($this->viewer->get_view_files());
     }
 }
