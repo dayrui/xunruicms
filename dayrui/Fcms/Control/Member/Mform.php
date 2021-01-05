@@ -88,7 +88,7 @@ class Mform extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' => $this->cid],
-            'is_delete' => \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'delete', $this->member),
+            'is_delete' => \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'del', $this->member),
         ]);
         return \Phpcmf\Service::V()->display($tpl);
     }
