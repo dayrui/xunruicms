@@ -554,6 +554,18 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
+        // 按格式返回数据
+        if (isset($_GET['format']) && $_GET['format']) {
+            switch ($_GET['format']) {
+                case 'jsonp':
+                    $this->_jsonp(1, $msg, $data);exit;
+                    break;
+                case 'text':
+                    echo $msg;exit;
+                    break;
+            }
+        }
+
         echo dr_array2string(dr_return_data($code, $msg, $data));exit;
     }
 

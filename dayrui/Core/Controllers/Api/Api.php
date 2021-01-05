@@ -272,13 +272,7 @@ class Api extends \Phpcmf\Common
             $data['call_value'] = \Phpcmf\Service::V()->call_value;
         }
 
-        if (isset($_GET['format']) && $_GET['format'] == 'json') {
-            $this->_json(1, $html, $data);
-        } else if (isset($_GET['format']) && $_GET['format'] == 'text') {
-            exit($html);
-        }
-
-        $this->_jsonp(1, $html, $data);
+        $this->_json(1, $html, $data);
     }
 
     /**
