@@ -449,4 +449,9 @@ class Category extends \Phpcmf\Model
         }
         
     }
+
+    // 兼容老版本
+    public function get_tree_category($data) {
+        return [];
+    }
 }
