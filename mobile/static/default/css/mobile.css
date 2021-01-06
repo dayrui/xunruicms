@@ -9,6 +9,9 @@ ul{list-style-type:none;
     margin: 0;
     padding: 0;
 }
+.xrcontent img {
+    max-width: 100%;
+}
 input{-webkit-appearance: none; -moz-appearance: none; -o-appearance: none; appearance: none;}
 textarea{resize:none; background:inherit;}
 .hui-flex{display:flex;}
