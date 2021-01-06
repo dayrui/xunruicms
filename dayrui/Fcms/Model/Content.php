@@ -340,7 +340,7 @@ class Content extends \Phpcmf\Model {
             $this->_call_verify($value, $verify);
         } elseif (defined('IS_MODULE_RECYCLE')) {
             // 如果来自回收站就删除回收站内容
-            $this->db->table($this->mytable.'_recycle')->where('id', $id)->delete();
+            $this->db->table($this->mytable.'_recycle')->where('cid', $id)->delete();
         }
 
         // 表示新发布

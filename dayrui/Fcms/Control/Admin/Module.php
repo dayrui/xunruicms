@@ -876,10 +876,11 @@ class Module extends \Phpcmf\Table
     // 后台回收站恢复查看
     protected function _Admin_Recycle_Show() {
 
-        // 说明来自页面
-        define('IS_MODULE_RECYCLE', 1);
-
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
+
+        // 说明来自页面
+        define('IS_MODULE_RECYCLE', $id);
+
         list($tpl, $data) = $this->_Show($id);
         if (!$data) {
             $this->_admin_msg(0, dr_lang('内容不存在'));
@@ -923,8 +924,8 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Recycle_Edit() {
 
         // 说明来自定时页面
-        define('IS_MODULE_RECYCLE', 1);
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        define('IS_MODULE_RECYCLE', $id);
         list($tpl, $data) = $this->_Post($id);
         if (!$data) {
             $this->_admin_msg(0, dr_lang('内容不存在'));
@@ -1165,6 +1166,10 @@ class Module extends \Phpcmf\Table
         } else {
             // 删除草稿
             $did && $this->content_model->delete_draft($did);
+            if (defined('IS_MODULE_RECYCLE')) {
+                // 是否回收站恢复，id恢复以前的
+                $id = $data[1]['id'] = $data[0]['id'] = intval($old['id']);
+            }
             // 正常存储
             return parent::_Save($id, $data, $old,
                 function ($id, $data, $old) {
@@ -1211,6 +1216,7 @@ class Module extends \Phpcmf\Table
                         }
                     } elseif (defined('IS_MODULE_RECYCLE')) {
                         // 是否回收站恢复
+                        $this->content_model->recovery([IS_MODULE_RECYCLE]);
                     } elseif (defined('IS_MODULE_TG')) {
                         // 是否退稿
                         $data[1]['status'] = 0;
