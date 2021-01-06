@@ -104,7 +104,7 @@ class Image extends \Phpcmf\Library\A_Field {
             }
         }
 
-        \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']][$field['fieldname']] = dr_array2string($data);
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
     }
 
     /**
