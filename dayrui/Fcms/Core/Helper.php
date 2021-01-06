@@ -985,8 +985,10 @@ function dr_payform($mark, $value = 0, $title = '', $url = '',  $remove_div  = 1
  * 字段表单调用
  * field    字段配置
  * value    默认值
+ * remove_div 移除div区域
+ * load_js 重新加载js文件
  * */
-function dr_fieldform($field, $value = '', $remove_div  = 1) {
+function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
 
     if (!$field) {
         return '字段数据不存在';
@@ -999,6 +1001,9 @@ function dr_fieldform($field, $value = '', $remove_div  = 1) {
 
     $f = \Phpcmf\Service::L('Field')->get($field['fieldtype']);
     $f->remove_div = $remove_div;
+    if ($load_js) {
+        $f->set_load_js($field['fieldtype'], 0);
+    }
     return $f->input($field, $value);
 }
 
