@@ -54,6 +54,9 @@ class File extends \Phpcmf\Common
         $error = '';
         if (!IS_API_HTTP && defined('SYS_CSRF') && SYS_CSRF && dr_get_csrf_token() != (string)$_GET['token']) {
             $error = '跨站验证禁止上传文件';
+            if (strpos(FC_NOW_URL, 'ueditor') !== false) {
+                $error = '快速上传图片，请使用截图软件截图后，再粘贴进编辑器中';
+            }
         } elseif ($this->member && $this->member['is_admin']) {
             return;
         } elseif (!\Phpcmf\Service::M('member_auth')->member_auth('uploadfile', $this->member)) {
@@ -64,9 +67,9 @@ class File extends \Phpcmf\Common
 
         if ($error) {
             if ($editor) {
-                return $error;
+                return dr_lang($error);
             } else {
-                $this->_json(0, $error);
+                $this->_json(0, dr_lang($error));
             }
         }
 
