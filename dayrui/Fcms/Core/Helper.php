@@ -732,6 +732,7 @@ function dr_avatar_path() {
  * 会员头像
  *
  * @param	intval	$uid
+ * @param	intval	$fix 是否加时间戳后缀
  * @return	string
  */
 function dr_avatar($uid, $fix = 1) {
@@ -739,7 +740,7 @@ function dr_avatar($uid, $fix = 1) {
     if ($uid) {
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
-            return $cache_url.$uid.'.jpg'.($fix ? '?xr='.filemtime($cache_path.$uid.'.jpg') : '');
+            return $cache_url.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
         }
     }
 
