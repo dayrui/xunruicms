@@ -734,12 +734,12 @@ function dr_avatar_path() {
  * @param	intval	$uid
  * @return	string
  */
-function dr_avatar($uid) {
+function dr_avatar($uid, $fix = 1) {
 
     if ($uid) {
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
-            return $cache_url.$uid.'.jpg';
+            return $cache_url.$uid.'.jpg'.($fix ? '?xr='.filemtime($cache_path.$uid.'.jpg') : '');
         }
     }
 
