@@ -13,4 +13,13 @@ class Rewrite extends \Phpcmf\Common
 	public function test() {
 		$this->_jsonp(1, '服务器支持伪静态功能，可以自定义URL规则和解析规则了');
 	}
+
+    /**
+     * 跳转地址
+     */
+    public function url() {
+
+        $url = urldecode(\Phpcmf\Service::L('input')->get('url'));
+        dr_redirect(dr_url_prefix($url), 'location', '301');
+    }
 }
