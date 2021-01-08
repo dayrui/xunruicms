@@ -264,14 +264,6 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
-
-        // 附加程序初始化文件
-        if (is_file(MYPATH.'Init.php')) {
-            require MYPATH.'Init.php';
-        }
-
-        // 插件目录初始化
-        APP_DIR && $this->init_file(APP_DIR);
         
         // 判断网站是否关闭
         if (!IS_DEV && !IS_ADMIN && !IS_API
@@ -407,6 +399,14 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
+
+        // 附加程序初始化文件
+        if (is_file(MYPATH.'Init.php')) {
+            require MYPATH.'Init.php';
+        }
+
+        // 插件目录初始化
+        APP_DIR && $this->init_file(APP_DIR);
 
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('cms_init');
