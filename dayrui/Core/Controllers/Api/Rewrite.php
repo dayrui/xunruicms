@@ -20,6 +20,11 @@ class Rewrite extends \Phpcmf\Common
     public function url() {
 
         $url = urldecode(\Phpcmf\Service::L('input')->get('url'));
-        dr_redirect(dr_url_prefix($url), 'location', '301');
+		$arr = [ 0 => [], 1 => []];
+		for ($i = 1 ; $i < 10; $i ++) {
+			$arr[0][] = urldecode(\Phpcmf\Service::L('input')->get('p'.$i));
+			$arr[1][] = '$'.$i;
+		}
+        dr_redirect(dr_url_prefix(str_replace($arr[1], $arr[0], $url)), 'location', '301');
     }
 }
