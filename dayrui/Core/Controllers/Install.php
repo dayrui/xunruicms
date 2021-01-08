@@ -137,19 +137,19 @@ class Install extends \Phpcmf\Common
                     } elseif (empty($data['db_prefix'])) {
                         $this->_json(0, '数据表前缀不能为空');
                     } elseif (is_numeric($data['db_name'])) {
-                        exit($this->_json(0, '数据库名称不能是数字'));
+                        $this->_json(0, '数据库名称不能是数字');
                     } elseif (strpos($data['db_name'], '.') !== false) {
-                        exit($this->_json(0, '数据库名称不能存在.号'));
+                        $this->_json(0, '数据库名称不能存在.号');
                     }
 
                     $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
                     if (!$mysqli) {
-                        exit($this->_json(0, '您的PHP环境必须启用Mysqli扩展'));
+                        $this->_json(0, '您的PHP环境必须启用Mysqli扩展');
                     } elseif (!mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
-                        exit($this->_json(0, '['.mysqli_connect_errno().'] - 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
+                        $this->_json(0, '['.mysqli_connect_errno().'] - 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确');
                     } elseif (!mysqli_select_db($mysqli, $data['db_name'])) {
                         if (!mysqli_query($mysqli, 'CREATE DATABASE '.$data['db_name'])) {
-                            exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库'));
+                            $this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库');
                         }
                     }
 
@@ -157,7 +157,7 @@ class Install extends \Phpcmf\Common
 
                     // 判断是否安装过
                     if ($result = mysqli_query($mysqli, 'SHOW FULL COLUMNS FROM `'.$data['db_prefix'].'cron`')) {
-                        exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）已经被安装过，你可以尝试修改数据库名或者数据表前缀'));
+                        $this->_json(0, '指定的数据库（'.$data['db_name'].'）已经被安装过，你可以尝试修改数据库名或者数据表前缀');
                     }
 
                     // 存储缓存文件中
@@ -365,7 +365,7 @@ $db[\'default\']	= [
                             }
 
                             $errorlog = file_get_contents(WRITEPATH.'install.error');
-                            if ($errorlog && count($errorlog) > 10) {
+                            if ($errorlog && strlen($errorlog) > 10) {
                                 // 出现错误了
                                 $error = $errorlog;
                             } else {
