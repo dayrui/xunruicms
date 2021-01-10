@@ -120,7 +120,7 @@
                     $("#dr_search_module_dir").val(dir);
                     $("#dr_search_module_name").html(name+' <i class="fa fa-angle-down"></i>');
                 }
-                dr_search_module_select('{php echo defined('MOD_DIR') ? MOD_DIR : $top_search.dirname}', '{php echo defined('MOD_DIR') ? MODULE_NAME : $top_search.name}');
+                dr_search_module_select('{php echo MOD_DIR ? MOD_DIR : $top_search.dirname}', '{php echo MOD_DIR ? MODULE_NAME : $top_search.name}');
             </script>
         </form>
 
