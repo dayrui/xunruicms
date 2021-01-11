@@ -236,9 +236,9 @@ class Module extends \Phpcmf\Common
                 exit($this->_msg(0, dr_lang('此模块已经关闭了搜索功能')));
             } elseif (\Phpcmf\Service::M('member_auth')->module_auth($this->module['dirname'], 'search', $this->member)) {
                 exit($this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index')));
-            } elseif ($get['keyword'] && strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
+            } elseif ($get['keyword'] && dr_strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
                 exit($this->_msg(0, dr_lang('关键字不得少于系统规定的长度')));
-            } elseif ($get['keyword'] && strlen($get['keyword']) > 100) {
+            } elseif ($get['keyword'] && dr_strlen($get['keyword']) > 100) {
                 exit($this->_msg(0, dr_lang('关键字太长了')));
             }
         }
