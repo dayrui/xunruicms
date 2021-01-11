@@ -392,7 +392,15 @@ class Uploader
      */
     public function getFileInfo()
     {
-        $title = $_GET['action'] == 'uploadimage' && in_array($this->fileType, ['.jpg', '.jpeg', '.gif', '.png']) ? UEDITOR_IMG_TITLE : $this->oriName;
+        $title = strstr($this->oriName, '.', true);
+        if ($_GET['action'] == 'uploadimage' && in_array($this->fileType, ['.jpg', '.jpeg', '.gif', '.png'])) {
+             // 图片属性
+            if (isset($this->config['imageAltValue']) && $this->config['imageAltValue'] == 'name') {
+
+            } else {
+                $title = UEDITOR_IMG_TITLE;
+            }
+        }
         return [
             "state" => $this->stateInfo,
             "url" => $this->fileUrl,

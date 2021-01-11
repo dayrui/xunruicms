@@ -45,6 +45,7 @@ $data = \Phpcmf\Service::M()->db->table('attachment_data')
 $files = [];
 if ($data) {
     foreach ($data as $t) {
+        $t['filename'] = strstr($t['filename'], '.', true);
         $files[] = array(
             'url'=> dr_get_file_url($t),
             'name'=> $t['filename'],

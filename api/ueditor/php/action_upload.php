@@ -11,6 +11,7 @@ switch (htmlspecialchars($_GET['action'])) {
     case 'uploadimage':
         $config = array(
             "pathFormat" => $CONFIG['imagePathFormat'],
+            "imageAltValue" => $CONFIG['imageAltValue'],
             "maxSize" => $CONFIG['imageMaxSize'],
             "allowFiles" => $CONFIG['imageAllowFiles']
         );
@@ -20,6 +21,7 @@ switch (htmlspecialchars($_GET['action'])) {
         $config = array(
             "pathFormat" => $CONFIG['scrawlPathFormat'],
             "maxSize" => $CONFIG['scrawlMaxSize'],
+            "imageAltValue" => $CONFIG['imageAltValue'],
             "allowFiles" => $CONFIG['scrawlAllowFiles'],
             "oriName" => "scrawl.png"
         );

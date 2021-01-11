@@ -138,11 +138,11 @@ class Score extends \Phpcmf\Library\A_Field  {
         $str = '
             <div class="mt-radio-inline">
                 <label class="mt-radio">
-                    <input type="radio" onclick="$(\'#dr_field_'.$field['fieldname'].'\').show();$(\'#dr_field_'.$field['fieldname'].'2\').hide();" name="is_field_'.$field['fieldname'].'" value="0" '.(!$is_field ? 'checked' : '').'> 全局
+                    <input type="radio" onclick="$(\'#dr_field_'.$field['fieldname'].'\').show();$(\'#dr_field_'.$field['fieldname'].'2\').hide();" name="is_field_'.$field['fieldname'].'" value="0" '.(!$is_field ? 'checked' : '').'> '.dr_lang('全局').'
                     <span></span>
                 </label>
                 <label class="mt-radio">
-                    <input type="radio" onclick="$(\'#dr_field_'.$field['fieldname'].'2\').show();$(\'#dr_field_'.$field['fieldname'].'\').hide();" name="is_field_'.$field['fieldname'].'" value="1" '.($is_field ? 'checked' : '').'> 用户组
+                    <input type="radio" onclick="$(\'#dr_field_'.$field['fieldname'].'2\').show();$(\'#dr_field_'.$field['fieldname'].'\').hide();" name="is_field_'.$field['fieldname'].'" value="1" '.($is_field ? 'checked' : '').'> '.dr_lang('用户组').'
                     <span></span>
                 </label>
             </div>

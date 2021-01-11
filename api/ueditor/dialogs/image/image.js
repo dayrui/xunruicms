@@ -913,6 +913,8 @@
                     img.width = 113;
                     img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
                     img.setAttribute('_src', urlPrefix + list[i].url);
+                    img.setAttribute('alt', list[i].name);
+                    img.setAttribute('title', list[i].name);
                     domUtils.addClass(icon, 'icon');
 
                     item.appendChild(img);
@@ -953,12 +955,16 @@
             for (i = 0; i < lis.length; i++) {
                 if (domUtils.hasClass(lis[i], 'selected')) {
                     var img = lis[i].firstChild,
+                        alt = img.getAttribute('alt'),
                         src = img.getAttribute('_src');
+                    if (editor.getOpt('imgTitleTag')) {
+                        alt = editor.getOpt('imgTitleTag');
+                    }
                     list.push({
                         src: src,
                         _src: src,
-                        alt: editor.getOpt('imgTitleTag'),
-                        title: editor.getOpt('imgTitleTag'),
+                        alt: alt,
+                        title: alt,
                         floatStyle: align
                     });
                 }

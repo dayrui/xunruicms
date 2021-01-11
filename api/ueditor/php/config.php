@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 return [
 
     /* 上传图片配置项 */
+    "imageAltValue" => "name", /*图片alt属性和title属性填充值：title为内容标题字段值、name为图片名称*/
     "imageActionName" => "uploadimage", /* 执行上传图片的action名称 */
     "imageFieldName" => "upfile", /* 提交的图片表单名称 */
     "imageMaxSize" => 2048000, /* 上传大小限制，单位B */

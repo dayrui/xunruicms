@@ -17,7 +17,11 @@ if (is_file(ROOTPATH."api/ueditor/php/config.php")) {
 	), JSON_UNESCAPED_UNICODE);exit;
 }
 
-$CONFIG["imgTitleTag"] = UEDITOR_IMG_TITLE;
+if (isset($CONFIG['imageAltValue']) && $CONFIG['imageAltValue'] == 'name') {
+    $CONFIG["imgTitleTag"] = '';
+} else {
+    $CONFIG["imgTitleTag"] = UEDITOR_IMG_TITLE;
+}
 
 $action = $_GET['action'];
 
