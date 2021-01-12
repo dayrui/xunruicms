@@ -77,7 +77,11 @@ class Category extends \Phpcmf\Table
 
         $tree = [];
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
-        foreach($data as $t) {
+        foreach($data as $k => $t) {
+            if (dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+                unset($data[$k]);
+                continue;
+            }
             $option = '';
             !$t['mid'] && $t['mid'] = APP_DIR;
             $t['name'] = dr_strcut($t['name'], 30);

@@ -43,9 +43,8 @@ class Search extends \Phpcmf\Model {
             $catid = (int)$get['catid'];
             isset($get['catid']) && $get['catid'] = $catid;
         }
-
         if (isset($get['keyword'])) {
-            $get['keyword'] = dr_safe_keyword($get['keyword']);
+            $get['keyword'] = dr_safe_replace($get['keyword']);
         }
 
         $this->get = $get;
@@ -124,15 +123,16 @@ class Search extends \Phpcmf\Model {
             if ($param['keyword'] != '') {
                 $temp = [];
                 $sfield = explode(',', $this->module['setting']['search']['field'] ? $this->module['setting']['search']['field'] : 'title,keywords');
+                $search_keyword = dr_safe_keyword($param['keyword']);
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && dr_in_array($t, $field)) {
-                            $temp[] = $this->module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$param['keyword'].'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$param['keyword'].'%"';
+                            $temp[] = $this->module['setting']['search']['complete'] ? '`'.$table.'`.`'.$t.'` = "'.$search_keyword.'"' : '`'.$table.'`.`'.$t.'` LIKE "%'.$search_keyword.'%"';
                         }
                     }
                 }
-                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($this->module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$param['keyword'].'"' : '`'.$table.'`.`title` LIKE "%'.$param['keyword'].'%"');
-                $param_new['keyword'] = $param['keyword'];
+                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($this->module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
+                $param_new['keyword'] = $search_keyword;
             }
             // 模块字段过滤
             foreach ($mod_field as $name => $field) {
