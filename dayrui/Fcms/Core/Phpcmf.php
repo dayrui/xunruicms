@@ -12,6 +12,7 @@ abstract class Common extends \CodeIgniter\Controller
     private static $instance;
 
     private $load_init = [];
+    private $is_load_init_run = false;
 
     public $uid;
     public $admin;
@@ -400,6 +401,21 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
+        // 加载初始化文件
+        $this->_init_run();
+    }
+
+    /**
+     * 加载初始化文件
+     */
+    private function _init_run() {
+
+        if ($this->is_load_init_run) {
+            return;
+        }
+
+        $this->is_load_init_run = true;
+
         // 附加程序初始化文件
         if (is_file(MYPATH.'Init.php')) {
             require MYPATH.'Init.php';
@@ -407,8 +423,10 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 插件目录初始化
         APP_DIR && $this->init_file(APP_DIR);
+
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('cms_init');
+
     }
 
     /**
@@ -617,6 +635,9 @@ abstract class Common extends \CodeIgniter\Controller
             $backurl = 'javascript:history.go(-1);';
         }
 
+        // 加载初始化文件
+        $this->_init_run();
+
         // 不存在URL时进入提示页面
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
@@ -649,6 +670,9 @@ abstract class Common extends \CodeIgniter\Controller
         } else {
             $backurl = $url;
         }
+
+        // 加载初始化文件
+        $this->_init_run();
 
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
