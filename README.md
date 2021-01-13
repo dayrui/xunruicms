@@ -4,9 +4,13 @@
 有任何开发建议都可以向作者提出，作者联系邮箱：finecms@qq.com
 
 #### 运行环境
-PHP7.2以上
-MySQL5以上，推荐5.7+
-Apache、Nginx、IIS都可以
+PHP7.2以上（支持PHP8）
+MySQL5以上，推荐5.7及以上
+Apache、Nginx、IIS等Web服务器都可以
+
+#### 在线预览
+http://demo4.xunruicms.com/admin.php
+
 
 #### 安装教程
 
