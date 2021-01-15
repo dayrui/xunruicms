@@ -1511,7 +1511,7 @@ function fileupload_file_init(json){
             if (data.result.code == 0) {
                 return false;
             }
-            if (data.result.info.id == undefined || data.result.info.preview == 'undefined') {
+            if (data.result.info.id == undefined || data.result.info.id == 'undefined') {
                 return false;
             }
 
@@ -1703,6 +1703,9 @@ function fileupload_files_init(json) {
             if (data.result.code == 0) {
                 return false;
             }
+            if (data.result.id == undefined || data.result.id == 'undefined') {
+                return false;
+            }
 
             var tpl = json.tpl;
             tpl = tpl.replace(/\{preview\}/g, data.result.info.preview);
@@ -1748,6 +1751,8 @@ function fileupload_files_init(json) {
             $("#fileupload_"+json.name+" .fileupload-progress").hide();
             dr_tips(data.result.code, data.result.msg);
             if (data.result.code == 0) {
+                return false;
+            }if (data.result.id == undefined || data.result.id == 'undefined') {
                 return false;
             }
 
@@ -1799,6 +1804,9 @@ function fileupload_files_init(json) {
                             for(var i in json2.data.result){
                                 var tpl = temp;
                                 var v = json2.data.result[i];
+                                if (v.id == undefined || v.id == 'undefined') {
+                                    continue;
+                                }
                                 tpl = tpl.replace(/\{preview\}/g, v.preview);
                                 tpl = tpl.replace(/\{id\}/g, v.id);
                                 tpl = tpl.replace(/\{disabled\}/g, v.disabled);
