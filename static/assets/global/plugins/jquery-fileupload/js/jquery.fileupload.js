@@ -1511,6 +1511,10 @@ function fileupload_file_init(json){
             if (data.result.code == 0) {
                 return false;
             }
+            if (data.result.info.id == undefined || data.result.info.preview == 'undefined') {
+                return false;
+            }
+
             var tpl = json.tpl;
             tpl = tpl.replace(/\{preview\}/g, data.result.info.preview);
             tpl = tpl.replace(/\{id\}/g, data.result.id);
