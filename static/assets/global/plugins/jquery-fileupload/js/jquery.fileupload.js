@@ -1511,7 +1511,7 @@ function fileupload_file_init(json){
             if (data.result.code == 0) {
                 return false;
             }
-            if (data.result.info.id == undefined || data.result.info.id == 'undefined') {
+            if (data.result.id == undefined || data.result.id == 'undefined') {
                 return false;
             }
 
