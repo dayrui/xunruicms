@@ -265,7 +265,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 是否下载图片
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
-		// 下载远程图片
+        // 下载远程图片
         if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png|webp))\\2/i", $value, $imgs)) {
             foreach ($imgs[3] as $img) {
                 if (strpos($img, '/api/ueditor/') !== false
@@ -322,23 +322,23 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 										$img = '';
 									} else {
                                     */
-										// 同步模式
-										// 下载远程文件
-										$rt = \Phpcmf\Service::L('upload')->down_file([
-											'url' => $img,
-											'timeout' => 5,
-											'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-										]);
-										if ($rt['code']) {
-											$att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
-											if ($att['code']) {
-												// 归档成功
-                                                $value = str_replace($img, $rt['data']['url'], $value);
-                                                $img = $att['code'];
-											}
-										}
-									//}
+                                    // 同步模式
+                                    // 下载远程文件
+                                    $rt = \Phpcmf\Service::L('upload')->down_file([
+                                        'url' => $img,
+                                        'timeout' => 5,
+                                        'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
+                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                    ]);
+                                    if ($rt['code']) {
+                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+                                        if ($att['code']) {
+                                            // 归档成功
+                                            $value = str_replace($img, $rt['data']['url'], $value);
+                                            $img = $att['code'];
+                                        }
+                                    }
+                                    //}
                                 }
                             }
 
@@ -560,9 +560,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 break;
         }
 
-        $chrome = isset($_SERVER['HTTP_USER_AGENT']) ? (int)str_replace('Chrome/', '', strrchr($_SERVER['HTTP_USER_AGENT'], 'Chrome/')) : 0;
-        if ($chrome && $chrome < 77) {
-            $tool = str_replace(['"simpleupload",', ',"simpleupload"',"'simpleupload',", ",'simpleupload'"], '', $tool);
+        if (preg_match('/Chrome\/([0-9]+)\./iU', $_SERVER['HTTP_USER_AGENT'], $mt)) {
+            $chrome = intval($mt[1]);
+            if ($chrome && $chrome < 78) {
+                $tool = str_replace(['"simpleupload",', ',"simpleupload"',"'simpleupload',", ",'simpleupload'"], '', $tool);
+            }
         }
 
         $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";

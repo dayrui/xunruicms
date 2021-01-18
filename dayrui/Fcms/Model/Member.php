@@ -1737,7 +1737,7 @@ class Member extends \Phpcmf\Model
         }
 
         // 注册配置
-        $cache['register']['notallow'] = explode(',', $cache['register']['notallow']);
+        $cache['register']['notallow'] = explode(',', trim($cache['register']['notallow']));
 
         // 用户组权限id
         $cache['authid'] = [ 0 ];
