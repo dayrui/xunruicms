@@ -560,6 +560,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 break;
         }
 
+        $chrome = isset($_SERVER['HTTP_USER_AGENT']) ? (int)str_replace('Chrome/', '', strrchr($_SERVER['HTTP_USER_AGENT'], 'Chrome/')) : 0;
+        if ($chrome && $chrome < 75) {
+            $tool = str_replace(["'simpleupload',", ",'simpleupload'"], '', $tool);
+        }
+
         $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";
         $js = \Phpcmf\Service::L('js_packer');
         $str.= $js->pack("
