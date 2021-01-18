@@ -197,7 +197,7 @@ class Member extends \Phpcmf\Table
 
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
-            @unlink($cache_path.$uid.'.jpg');
+            unlink($cache_path.$uid.'.jpg');
             if (is_file($cache_path.$uid.'.jpg')) {
                 $this->_json(0, dr_lang('文件删除失败，请检查头像目录权限'));
             }
@@ -237,13 +237,13 @@ class Member extends \Phpcmf\Table
                 }
                 $file = $cache_path.$uid.'.jpg';
                 $temp = dr_upload_temp_path().'member.'.$uid.'.jpg';
-                $size = @file_put_contents($temp, $content);
+                $size = file_put_contents($temp, $content);
                 if (!$size) {
                     $this->_json(0, dr_lang('头像存储失败'));
                 } elseif (!is_file($temp)) {
                     $this->_json(0, dr_lang('头像存储失败'));
                 } elseif (!getimagesize($temp)) {
-                    @unlink($file);
+                    unlink($file);
                     $this->_json(0, '文件不是规范的图片');
                 }
                 // 上传图片到服务器
@@ -625,13 +625,13 @@ class Member extends \Phpcmf\Table
                 $member['regtime'] = strtotime($post['regtime']);
 
                 $member_data = $data[1] ? $data[1] : [];
-                $member_data['is_lock'] = (int)$status['is_lock'];
-                $member_data['is_auth'] = (int)$status['is_auth'];
-                $member_data['is_mobile'] = (int)$status['is_mobile'];
-                $member_data['is_email'] = (int)$status['is_email'];
-                $member_data['is_verify'] = (int)$status['is_verify'];
-                $member_data['is_complete'] = (int)$status['is_complete'];
-                $member_data['is_avatar'] = (int)$status['is_avatar'];
+                $member_data['is_lock'] = isset($status['is_lock']) ? (int)$status['is_lock'] : 0;
+                $member_data['is_auth'] = isset($status['is_auth']) ? (int)$status['is_auth'] : 0;
+                $member_data['is_mobile'] = isset($status['is_mobile']) ? (int)$status['is_mobile'] : 0;
+                $member_data['is_email'] = isset($status['is_email']) ? (int)$status['is_email'] : 0;
+                $member_data['is_verify'] = isset($status['is_verify']) ? (int)$status['is_verify'] : 0;
+                $member_data['is_complete'] = isset($status['is_complete']) ? (int)$status['is_complete'] : 0;
+                $member_data['is_avatar'] = isset($status['is_avatar']) ? (int)$status['is_avatar'] : 0;
                 \Phpcmf\Service::M()->table('member_data')->update($id, $member_data);
                 return dr_return_data(1, '', [1 => $member]);
             },
@@ -649,7 +649,9 @@ class Member extends \Phpcmf\Table
 
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');
-                $old['is_verify'] == 0 && $status['is_verify'] == 1 && \Phpcmf\Service::M('member')->verify_member($id);
+                if (isset($old['is_verify']) && $old['is_verify'] == 0 && $status['is_verify'] == 1) {
+                    \Phpcmf\Service::M('member')->verify_member($id);
+                }
                 return $data;
             }
         );

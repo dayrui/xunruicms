@@ -3963,6 +3963,18 @@ function dr_module_url($dir) {
 }
 
 /**
+ * 转为utf8编码格式
+ */
+function dr_code2utf8($str) {
+
+    if (function_exists('mb_convert_encoding')) {
+        return mb_convert_encoding($str, 'UTF-8', 'GBK');
+    }
+
+    return $str;
+}
+
+/**
  * 获取对应的手机端地址
  */
 function dr_mobile_url($url = SITE_MURL) {
