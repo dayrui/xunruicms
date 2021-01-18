@@ -561,8 +561,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         $chrome = isset($_SERVER['HTTP_USER_AGENT']) ? (int)str_replace('Chrome/', '', strrchr($_SERVER['HTTP_USER_AGENT'], 'Chrome/')) : 0;
-        if ($chrome && $chrome < 75) {
-            $tool = str_replace(["'simpleupload',", ",'simpleupload'"], '', $tool);
+        if ($chrome && $chrome < 77) {
+            $tool = str_replace(['"simpleupload",', ',"simpleupload"',"'simpleupload',", ",'simpleupload'"], '', $tool);
         }
 
         $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";
