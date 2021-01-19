@@ -226,7 +226,7 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'thread',
         ];
         foreach ($path as $p) {
-            if ($fp = @opendir($p)) {
+            if ($fp = opendir($p)) {
                 while (FALSE !== ($file = readdir($fp))) {
                     if ($file === '.' OR $file === '..'
                         OR $file === 'index.html'
@@ -243,8 +243,8 @@ class Cache extends \Phpcmf\Model
         }
 
         // 删除首页静态文件
-        @unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
-        @unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'));
+        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
+        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'));
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();

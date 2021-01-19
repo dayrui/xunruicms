@@ -711,4 +711,8 @@ i.file-preview.file-type-psd{
     #remote .top {
         margin-bottom: 20px;
     }
+
+    #online li {
+        margin: 20px 20px 20px 25px;
+    }
 }

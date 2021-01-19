@@ -771,3 +771,11 @@ i.file-preview.file-type-psd{
     border: 3px solid #1094fa;
     background-position: 72px 72px;
 }
+
+
+@media (max-width: 400px) {
+
+    #online li {
+        margin: 20px 20px 20px 25px;
+    }
+}

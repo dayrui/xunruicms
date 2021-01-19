@@ -754,7 +754,11 @@ class View {
         // 格式化field
         $system['field'] && $system['field'] = urldecode($system['field']);
 
-        $cache_name = 'cache_view_'.$this->_list_is_count.md5(dr_array2string($system)).'_'.md5($_params).'_'.md5(dr_now_url().$this->_tname);
+        // 判断关闭缓存时
+        if (!SYS_CACHE) {
+            $system['cache'] = 0;
+        }
+        $cache_name = 'view-'.$this->_list_is_count.md5(dr_array2string($system).$_params.dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
@@ -945,7 +949,7 @@ class View {
                     }
                 }
 
-                $data = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
+                $data = isset($param['call']) && $param['call'] ? array_reverse($return) : $return;
 
                 // 存储缓存
                 $system['cache'] && $data && $this->_save_cache_data($cache_name, [
@@ -2119,7 +2123,6 @@ class View {
                         return $this->_return($system['return'], '无此标签('.$system['action'].')');
                     }
                 }
-
                 break;
         }
     }
@@ -2129,16 +2132,11 @@ class View {
      */
     public function _query($sql, $db, $cache, $all = TRUE) {
 
-        // 缓存存在时读取缓存文件
-        $cname = md5($db.$sql.dr_now_url());
-        if (SYS_CACHE && $cache && $data = \Phpcmf\Service::L('cache')->get_data($cname)) {
-            return $data;
-        }
-
         $mysql = \Phpcmf\Service::M()->db;
         if ($db) {
             $mysql = \Config\Database::connect($db, false);
         }
+
         // 执行SQL
         $query = $mysql->query($sql);
 
@@ -2148,9 +2146,6 @@ class View {
 
         // 查询结果
         $data = $all ? $query->getResultArray() : $query->getRowArray();
-
-        // 开启缓存时，重新存储缓存数据
-        $cache && \Phpcmf\Service::L('cache')->set_data($cname, $data, $cache);
 
         return $data;
     }

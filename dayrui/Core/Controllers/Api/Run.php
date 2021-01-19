@@ -102,16 +102,17 @@ class Run extends \Phpcmf\Common
         \Phpcmf\Hooks::trigger('cron');
 
         // 清理缓存数据
-        if (!is_file(WRITEPATH.'config/update_auto_cache_time.php')) {
+        if (!is_file(WRITEPATH.'config/run_auto_cache_time.php')) {
             $time = SYS_TIME;
-            file_put_contents(WRITEPATH.'config/update_auto_cache_time.php', $time);
+            file_put_contents(WRITEPATH.'config/run_auto_cache_time.php', $time);
         } else {
-            $time = file_get_contents(WRITEPATH.'config/update_auto_cache_time.php');
+            $time = file_get_contents(WRITEPATH.'config/run_auto_cache_time.php');
         }
 
         // 3天清理一次系统缓存
         if (SYS_TIME - $time > 3600 * 24 * 3) {
             \Phpcmf\Service::M('cache')->update_data_cache();
+            file_put_contents(WRITEPATH.'config/run_auto_cache_time.php', SYS_TIME);
         }
 
         // 项目计划
@@ -129,6 +130,9 @@ class Run extends \Phpcmf\Common
                 }
             }
         }
+
+        // 自动任务执行时间
+        file_put_contents(WRITEPATH.'config/run_time.php', dr_date(SYS_TIME));
 		
         exit('Run '.$i);
 	}

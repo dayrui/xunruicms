@@ -659,7 +659,6 @@
     width: 113px;
     height: 113px;
     margin: 0 0 9px 9px;
-    *margin: 0 0 6px 6px;
     background-color: #eee;
     overflow: hidden;
     cursor: pointer;
@@ -914,5 +913,11 @@
     }
     #remote .top {
         margin-bottom: 20px;
+    }
+    #online li {
+        margin: 20px 20px 20px 25px;
+    }
+    #remote #url{
+        width: 200px;
     }
 }

@@ -55,7 +55,7 @@ class File extends \Phpcmf\Common
         if (!IS_API_HTTP && defined('SYS_CSRF') && SYS_CSRF && dr_get_csrf_token() != (string)$_GET['token']) {
             $error = '跨站验证禁止上传文件';
             if (strpos(FC_NOW_URL, 'ueditor') !== false) {
-                $error = '快速上传图片，请使用截图软件截图后，再粘贴进编辑器中';
+                $error = '本图标功能已禁用，请使用截图软件截图后，再粘贴进编辑器中';
             }
         } elseif ($this->member && $this->member['is_admin']) {
             return;

@@ -73,7 +73,7 @@ class Cache extends BaseConfig
 	| if you run multiple applications with the same cache engine.
 	|
 	*/
-	public $prefix = SYS_KEY;
+	public $prefix = '';
 
 	/*
 	| -------------------------------------------------------------------------
@@ -135,5 +135,6 @@ class Cache extends BaseConfig
         if (is_file(ROOTPATH.'config/memcached.php')) {
             $this->memcached = require ROOTPATH.'config/memcached.php';
         }
+        $this->prefix = substr(SYS_KEY, 0, 10).'-';
     }
 }

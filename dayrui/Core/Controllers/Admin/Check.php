@@ -25,6 +25,7 @@ class Check extends \Phpcmf\Common
         '12' => 'HTTPS检测',
         '13' => '应用插件兼容性检测',
         '14' => '移动端检测',
+        '16' => '自动任务配置检测',
 
     ];
 
@@ -663,6 +664,15 @@ class Check extends \Phpcmf\Common
                 }
 
                 $this->_json(1, '完成');
+                break;
+
+            case '16':
+                // 自动任务检测
+                if (is_file(WRITEPATH.'config/run_time.php')) {
+                    $this->_json(1, '完成');
+                }
+
+                $this->_json(0, '网站没有配置自动任务功能，无法自动清理缓存和更新缓存，<a href="javascript:dr_help(353);">查看解决方案</a>');
                 break;
 
             case '99':
