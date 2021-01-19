@@ -102,7 +102,58 @@ class Search extends \Phpcmf\Model {
             }
 
             // 默认搜索条件
-            $where = [ '`'.$table.'`.`status` = 9' ];
+            $where = [
+                'status' => '`'.$table.'`.`status` = 9'
+            ];
+
+            // 栏目的字段
+            if ($catid) {
+                $more = 0;
+                $cat_field = $this->module['category'][$catid]['field'];
+                // 副栏目判断
+                if (isset($this->module['field']['catids']) && $this->module['field']['catids']['fieldtype'] == 'Catids') {
+                    $fwhere = [];
+                    if ($this->module['category'][$catid]['child'] && $this->module['category'][$catid]['childids']) {
+                        $fwhere[] = '`'.$table.'`.`catid` IN ('.$this->module['category'][$catid]['childids'].')';
+                        $catids = explode(',', $this->module['category'][$catid]['childids']);
+                    } else {
+                        $fwhere[] = '`'.$table.'`.`catid` = '.$catid;
+                        $catids = [ $catid ];
+                    }
+                    foreach ($catids as $c) {
+                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                            // 兼容写法
+                            $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
+                        } else {
+                            // 高版本写法
+                            $fwhere[] = "(`{$table}`.`catids` <>'' AND JSON_CONTAINS (`{$table}`.`catids`->'$[*]', '\"".intval($c)."\"', '$'))";
+                        }
+                    }
+                    $fwhere && $where['catid'] = '('.implode(' OR ', $fwhere).')';
+                } else {
+                    // 无副栏目时
+                    $where['catid'] = '`'.$table.'`.`catid`'.($this->module['category'][$catid]['child'] ? 'IN ('.$this->module['category'][$catid]['childids'].')' : '='.(int)$catid);
+                }
+
+                if ($cat_field) {
+                    // 栏目模型表
+                    $more_where = [];
+                    $table_more = $this->dbprefix($this->mytable.'_category_data');
+                    foreach ($cat_field as $name) {
+                        if (isset($this->get[$name]) && strlen($this->get[$name])) {
+                            $more = 1;
+                            $more_where[] = $this->_where($table_more, $name, $this->get[$name], $this->module['category_data_field'][$name]);
+                            $param_new[$name] = $this->get[$name];
+                        }
+                        /*
+                        if (isset($_order_by[$name])) {
+                            $more = 1;
+                            $order_by[] = '`'.$table.'`.`'.$name.'` '.$_order_by[$name];
+                        }*/
+                    }
+                    $more && $where[] = '`'.$table.'`.`id` IN (SELECT `id` FROM `'.$table_more.'` WHERE '.implode(' AND ', $more_where).')';
+                }
+            }
             /*
             if (dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain']) {
                 $where[] = [ '`'.$table.'`.`fstatus` = 1' ];
@@ -131,19 +182,21 @@ class Search extends \Phpcmf\Model {
                         }
                     }
                 }
-                $where[] = $temp ? '('.implode(' OR ', $temp).')' : ($this->module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
+                $where['keyword'] = $temp ? '('.implode(' OR ', $temp).')' : ($this->module['setting']['search']['complete'] ? '`'.$table.'`.`title` = "'.$search_keyword.'"' : '`'.$table.'`.`title` LIKE "%'.$search_keyword.'%"');
                 $param_new['keyword'] = $search_keyword;
             }
+
             // 模块字段过滤
             foreach ($mod_field as $name => $field) {
                 if (isset($field['ismain']) && !$field['ismain']) {
                     continue;
                 }
                 if (isset($this->get[$name]) && strlen($this->get[$name])) {
-                    $where[] = $this->_where($table, $name, $this->get[$name], $field);
+                    $where[$name] = $this->_where($table, $name, $this->get[$name], $field);
                     $param_new[$name] = $this->get[$name];
                 }
             }
+
             // 会员字段过滤
             $member_where = [];
             if (\Phpcmf\Service::C()->member_cache['field']) {
@@ -167,58 +220,9 @@ class Search extends \Phpcmf\Model {
                 $where[] =  '`'.$table.'`.`uid` IN (select `id` from `'.$this->dbprefix('member_data').'` where '.implode(' AND ', $member_where).')';
             }
 
-            // 栏目的字段
-            if ($catid) {
-                $more = 0;
-                $cat_field = $this->module['category'][$catid]['field'];
-                // 副栏目判断
-                if (isset($this->module['field']['catids']) && $this->module['field']['catids']['fieldtype'] == 'Catids') {
-                    $fwhere = [];
-                    if ($this->module['category'][$catid]['child'] && $this->module['category'][$catid]['childids']) {
-                        $fwhere[] = '`'.$table.'`.`catid` IN ('.$this->module['category'][$catid]['childids'].')';
-                        $catids = @explode(',', $this->module['category'][$catid]['childids']);
-                    } else {
-                        $fwhere[] = '`'.$table.'`.`catid` = '.$catid;
-                        $catids = [ $catid ];
-                    }
-                    foreach ($catids as $c) {
-                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                            // 兼容写法
-                            $fwhere[] = '`'.$table.'`.`catids` LIKE "%\"'.intval($c).'\"%"';
-                        } else {
-                            // 高版本写法
-                            $fwhere[] = "(`{$table}`.`catids` <>'' AND JSON_CONTAINS (`{$table}`.`catids`->'$[*]', '\"".intval($c)."\"', '$'))";
-                        }
-                    }
-                    $fwhere && $where[0] = '('.implode(' OR ', $fwhere).')';
-                } else {
-                    // 无副栏目时
-                    $where[0] = '`'.$table.'`.`catid`'.($this->module['category'][$catid]['child'] ? 'IN ('.$this->module['category'][$catid]['childids'].')' : '='.(int)$catid);
-                }
-
-                if ($cat_field) {
-                    // 栏目模型表
-                    $more_where = [];
-                    $table_more = $this->dbprefix($this->mytable.'_category_data');
-                    foreach ($cat_field as $name) {
-                        if (isset($this->get[$name]) && strlen($this->get[$name])) {
-                            $more = 1;
-                            $more_where[] = $this->_where($table_more, $name, $this->get[$name], $this->module['category_data_field'][$name]);
-                            $param_new[$name] = $this->get[$name];
-                        }
-                        /*
-                        if (isset($_order_by[$name])) {
-                            $more = 1;
-                            $order_by[] = '`'.$table.'`.`'.$name.'` '.$_order_by[$name];
-                        }*/
-                    }
-                    $more && $where[] = '`'.$table.'`.`id` IN (SELECT `id` FROM `'.$table_more.'` WHERE '.implode(' AND ', $more_where).')';
-                }
-            }
-
             // 筛选空值
             foreach ($where as $i => $t) {
-                if (strlen($t) == 0) {
+                if (dr_strlen($t) == 0) {
                     unset($where[$i]);
                 }
             }

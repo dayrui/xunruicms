@@ -28,7 +28,7 @@ class $NAME$_verify extends \Phpcmf\Admin\Form
 	}
 
 	// 修改排序
-	public function edit_order() {
+	public function order_edit() {
 		$this->_Admin_Order();
 	}
 
