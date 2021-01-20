@@ -75,7 +75,7 @@ class Menu extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation($type, $data);
+			$data = $this->_validation($type, $data);
             if ($data['uri']
                 && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
@@ -166,7 +166,7 @@ class Menu extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation($type, $data);
+			$data = $this->_validation($type, $data);
             if ($data['uri']
                 && \Phpcmf\Service::M()->table('admin_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
@@ -175,7 +175,7 @@ class Menu extends \Phpcmf\Common
 			\Phpcmf\Service::M('menu')->_update('admin', $id, $data);
             \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改后台菜单: '.$data['name']);
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -192,13 +192,13 @@ class Menu extends \Phpcmf\Common
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		if (!$ids) {
-		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
 		\Phpcmf\Service::M('menu')->_delete('admin', $ids);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量删除后台菜单: '. @implode(',', $ids));
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		\Phpcmf\Service::L('input')->system_log('批量删除后台菜单: '. implode(',', $ids));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 	
 
@@ -209,7 +209,7 @@ class Menu extends \Phpcmf\Common
 
 		\Phpcmf\Service::L('input')->system_log('初始化后台菜单');
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		exit($this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面')));
+		$this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面'));
 	}
 
 	// 隐藏或者启用
@@ -218,11 +218,11 @@ class Menu extends \Phpcmf\Common
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
 		$v = \Phpcmf\Service::M('menu')->_uesd('admin', $i);
 		if ($v == -1) {
-		    exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+		    $this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]);
         }
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改后台菜单状态: '. $i);
-		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
+		$this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]);
 
 	}
 
@@ -239,7 +239,7 @@ class Menu extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改后台菜单信息: '. $i);
-		exit($this->_json(1, dr_lang('更改成功')));
+		$this->_json(1, dr_lang('更改成功'));
 	}
 
 
@@ -251,8 +251,12 @@ class Menu extends \Phpcmf\Common
 			unset($this->form['url'], $this->form['uri']);
 		} else {
 			// url和uri 只验证一个
-			if ($data['url']) unset($this->form['uri']);
-			if ($data['uri']) unset($this->form['url']);
+			if ($data['url']) {
+			    unset($this->form['uri']);
+            }
+			if ($data['uri']) {
+			    unset($this->form['url']);
+            }
 		}
 
 		//$type是菜单级别 1 2 3
@@ -263,8 +267,11 @@ class Menu extends \Phpcmf\Common
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 
         if ($return) {
-            exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+            $this->_json(0, $return['error'], ['field' => $return['name']]);
         }
+
+        $data['uri'] = strtolower($data['uri']);
+        return $data;
 	}
 
 }

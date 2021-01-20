@@ -381,7 +381,7 @@ class Page {
         // Determine the current page number.
         $base_page = ($this->use_page_numbers) ? 1 : 0;
 
-        $this->cur_page = max(1, (int)$_GET['page']);
+        $this->cur_page = max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
         // If something isn't quite right, back to the default base page.
         if ( $this->use_page_numbers && (int) $this->cur_page === 0)
@@ -446,7 +446,7 @@ class Page {
             }
 
             $output .= $this->first_tag_open.'<a href="'.$this->_get_link_url(1).'"'.$attributes.$this->_attr_rel('start').'>'
-                .$this->first_link.'</a>'.$this->first_tag_close;
+                .dr_lang($this->first_link).'</a>'.$this->first_tag_close;
         }
 
         // Render the "Previous" link.
@@ -465,12 +465,12 @@ class Page {
             {
                 // First page
                 $output .= $this->prev_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes.$this->_attr_rel('prev').'>'
-                    .$this->prev_link.'</a>'.$this->prev_tag_close;
+                    .dr_lang($this->prev_link).'</a>'.$this->prev_tag_close;
             }
             else
             {
                 $output .= $this->prev_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes.$this->_attr_rel('prev').'>'
-                    .$this->prev_link.'</a>'.$this->prev_tag_close;
+                    .dr_lang($this->prev_link).'</a>'.$this->prev_tag_close;
             }
 
         }
@@ -525,7 +525,7 @@ class Page {
             }
 
             $output .= $this->next_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes
-                .$this->_attr_rel('next').'>'.$this->next_link.'</a>'.$this->next_tag_close;
+                .$this->_attr_rel('next').'>'.dr_lang($this->next_link).'</a>'.$this->next_tag_close;
         }
 
         // Render the "Last" link
@@ -541,7 +541,7 @@ class Page {
             }
 
             $output .= $this->last_tag_open.'<a href="'.$this->_get_link_url($i).'"'.$attributes.'>'
-                .$this->last_link.'</a>'.$this->last_tag_close;
+                .dr_lang($this->last_link).'</a>'.$this->last_tag_close;
         }
 
         // Kill double slashes. Note: Sometimes we can end up with a double slash

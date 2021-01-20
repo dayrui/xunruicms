@@ -1168,7 +1168,7 @@ function dr_down_file($id) {
 
     \Phpcmf\Service::L('cache')->set_auth_data(md5($id), $id);
 
-    return ROOT_URL."index.php?s=api&c=file&m=down&id=".md5($id);
+    return SITE_URL."index.php?s=api&c=file&m=down&id=".md5($id);
 }
 
 /**
@@ -3314,7 +3314,7 @@ function _format_feed_content_url_length($match) {
 
 // 二维码
 function dr_qrcode_url($text, $uid = 0, $level = 'L', $size = 5) {
-    return ROOT_URL.'index.php?c=api&m=qrcode&uid='.urlencode($uid).'&text='.urlencode($text).'&size='.$size.'&level='.$level;
+    return ROOT_URL.'index.php?s=api&c=api&m=qrcode&uid='.urlencode($uid).'&text='.urlencode($text).'&size='.$size.'&level='.$level;
 }
 
 // 过滤非法字段

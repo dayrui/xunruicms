@@ -127,7 +127,7 @@ class Min_menu extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation($data);
+            $data = $this->_validation($data);
 			\Phpcmf\Service::L('input')->system_log('添加简化菜单: '.$data['name']);
             $rt = \Phpcmf\Service::M('Menu')->_add('admin_min', $pid, $data);
             if ($rt['code']) {
@@ -159,7 +159,7 @@ class Min_menu extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
-			$this->_validation($data);
+			$data = $this->_validation($data);
 			if ($data['uri']
                 && \Phpcmf\Service::M()->table('admin_min_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
 			    // 链接菜单判断重复
@@ -169,7 +169,7 @@ class Min_menu extends \Phpcmf\Common
 			\Phpcmf\Service::L('input')->system_log('修改简化菜单: '.$data['name']);
 
             \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -186,13 +186,13 @@ class Min_menu extends \Phpcmf\Common
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		if (!$ids) {
-		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+            $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
 		\Phpcmf\Service::M('Menu')->_delete('admin_min', $ids);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量删除简化菜单: '. @implode(',', $ids));
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		\Phpcmf\Service::L('input')->system_log('批量删除简化菜单: '. implode(',', $ids));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
 
@@ -201,7 +201,7 @@ class Min_menu extends \Phpcmf\Common
 
 		\Phpcmf\Service::M('Menu')->init('admin_min');
 		\Phpcmf\Service::L('input')->system_log('初始化简化菜单');
-		exit($this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面')));
+		$this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面'));
 	}
 
 	// 隐藏或者启用
@@ -210,11 +210,11 @@ class Min_menu extends \Phpcmf\Common
 		$i = intval(\Phpcmf\Service::L('input')->get('id'));
 		$v = \Phpcmf\Service::M('Menu')->_uesd('admin_min', $i);
 		if ($v == -1) {
-		    exit($this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]));
+            $this->_json(0, dr_lang('数据#%s不存在', $i), ['value' => $v]);
         }
 		\Phpcmf\Service::L('input')->system_log('修改简化菜单状态: '. $i);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		exit($this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]));
+		$this->_json(1, dr_lang($v ? '此菜单已被隐藏' : '此菜单已被启用'), ['value' => $v]);
 
 	}
 
@@ -231,7 +231,7 @@ class Min_menu extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改简化菜单信息: '. $i);
-		exit($this->_json(1, dr_lang('更改成功')));
+		$this->_json(1, dr_lang('更改成功'));
 	}
 
 
@@ -272,6 +272,8 @@ class Min_menu extends \Phpcmf\Common
             $this->_json(0, $return['error'], ['field' => $return['name']]);
         }
 
+        $data['uri'] = strtolower($data['uri']);
+        return $data;
 	}
 
 }
