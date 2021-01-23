@@ -981,6 +981,11 @@ class Category extends \Phpcmf\Table
                         // 单页模板识别
                         //!$save['tid'] && $save['setting']['template']['list'] == 'list.html' && $save['setting']['template']['list'] = 'page.html';
                     }
+					if ($old && $old['mid'] && $old['mid'] != $save['mid']) {
+						if (\Phpcmf\Service::M()->is_table_exists(SITE_ID.'_'.$old['mid']) && \Phpcmf\Service::M()->table_site($old['mid'])->where('catid', $old['id'])->counts()) {
+							$this->_json(0, dr_lang('本栏目存在所属模块内容数据，请删除数据后，再变更模块操作'));
+						}
+					}
                     // 判断存在mid
                     /*
                     if ($save['mid']) {
