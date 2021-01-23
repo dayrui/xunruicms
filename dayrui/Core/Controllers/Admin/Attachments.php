@@ -45,6 +45,12 @@ class Attachments extends \Phpcmf\Table
                 'fieldname' => 'fileext',
                 'name' => dr_lang('扩展名'),
             ],
+            'filename' => [
+                'ismain' => 1,
+                'fieldtype' => 'Text',
+                'fieldname' => 'filename',
+                'name' => dr_lang('附件名称'),
+            ],
             'uid' => [
                 'ismain' => 1,
                 'fieldtype' => 'Text',

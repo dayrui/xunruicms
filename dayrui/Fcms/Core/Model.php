@@ -298,7 +298,7 @@ class Model {
 
         $this->_clear();
 
-        return dr_return_data($id);
+        return dr_return_data(1);
     }
 
     // 删除全部内容

@@ -261,4 +261,13 @@ class Form extends \Phpcmf\Table
         \Phpcmf\Hooks::trigger('form_post_after', $row);
     }
 
+    // 修改排序
+    public function edit_order() {
+        $this->_Admin_Order();
+    }
+
+    // 修改排序
+    public function order_edit() {
+        $this->_Admin_Order();
+    }
 }

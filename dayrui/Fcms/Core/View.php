@@ -925,6 +925,8 @@ class View {
                         continue;
                     } elseif (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
                         continue;
+                    } elseif (isset($param['ii']) && !dr_in_array($t['ii'], explode(',', $param['ii']))) {
+                        continue;
                     }
                     $return[] = $t;
                     $i ++;
@@ -938,6 +940,9 @@ class View {
                                 break;
                             }
                             if (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
+                                continue;
+                            }
+                            if (isset($param['ii']) && !dr_in_array($t['ii'], explode(',', $param['ii']))) {
                                 continue;
                             }
                             $return[] = $t;
