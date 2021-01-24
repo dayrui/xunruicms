@@ -191,9 +191,9 @@ class Tree {
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
-                @extract($a);
+                extract($a);
 
-                @eval("\$this->ret.= \"$str\";");
+                eval("\$this->ret.= \"$str\";");
                 
                 $number++;
 
@@ -348,16 +348,16 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
                 $html_disabled = '';
-                @extract($a);
+                extract($a);
 
                 //$now = $this->get_child($id);
                 // 如果没有子栏目且当前禁用就不再显示
                 //if (!$now && $html_disabled) continue;
 
                 if ($html_disabled) {
-                    @eval("\$this->ret.= \"$str2\";");
+                    eval("\$this->ret.= \"$str2\";");
                 } else {
-                    @eval("\$this->ret.= \"$str\";");
+                    eval("\$this->ret.= \"$str\";");
                 }
 
                 $number++;
@@ -407,9 +407,9 @@ class Tree {
                 $class = 'dr_catid_'.$value['id'];
                 $parent = SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
-                @extract($value);
+                extract($value);
 
-                $pid == 0 && $str_group ? @eval("\$nstr = \"$str_group\";") : @eval("\$nstr = \"$str\";");
+                $pid == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
                 $this->get_tree($id, $str, $sid, $adds.$k.$this->nbsp, $str_group);
                 $number++;
@@ -484,9 +484,9 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
 
-                @extract($a);
+                extract($a);
 
-                @eval("\$nstr = \"$str\";");
+                eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
                 $this->get_tree_multi($id, $str, $sid, $adds.$k.$this->nbsp);
                 $number++;

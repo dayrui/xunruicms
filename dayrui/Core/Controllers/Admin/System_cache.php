@@ -24,14 +24,14 @@ class System_cache extends \Phpcmf\Common
             $site = \Phpcmf\Service::L('input')->post('site', true);
             foreach ($this->site_info as $sid => $t) {
                 \Phpcmf\Service::M('Site')->config_value($sid, 'config', [
-                    'SITE_INDEX_HTML' => intval($site[$sid]['SITE_INDEX_HTML'])
+                    'SITE_INDEX_HTML' => isset($site[$sid]['SITE_INDEX_HTML']) ? intval($site[$sid]['SITE_INDEX_HTML']) : 0,
                 ]);
             }
 
             $module_value = \Phpcmf\Service::L('input')->post('module', true);
             foreach ($module as $t) {
                 $setting = dr_string2array($t['setting']);
-                $setting['module_index_html'] = $module_value[$t['id']]['module_index_html'];
+                $setting['module_index_html'] = isset($module_value[$t['id']]['module_index_html']) ? $module_value[$t['id']]['module_index_html'] : 0;
                 \Phpcmf\Service::M()->table('module')->update($t['id'], [
                     'setting' => dr_array2string($setting),
                 ]);
