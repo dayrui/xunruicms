@@ -2588,6 +2588,8 @@ class View {
         } elseif (strpos($order, 'instr(') === 0) {
             // id序列排序
             return $order;
+        } else {
+            $order = urldecode($order);
         }
 
         // 字段排序

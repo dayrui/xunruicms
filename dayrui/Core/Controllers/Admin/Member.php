@@ -8,6 +8,7 @@
 // 会员管理
 class Member extends \Phpcmf\Table
 {
+    public $group;
 
     public function __construct(...$params)
     {
@@ -68,6 +69,7 @@ class Member extends \Phpcmf\Table
         if ($this->member_cache['field']) {
             foreach ($this->member_cache['field'] as $i => $t) {
                 $this->member_cache['field'][$i]['setting']['validate']['required'] = 0;
+                $this->my_field[$t['fieldname']] = $t;
             }
         }
         $this->_init([
@@ -98,7 +100,12 @@ class Member extends \Phpcmf\Table
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->request('keyword'));
 
         if ($name && $value && isset($this->my_field[$name])) {
-            $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
+            if (isset($this->member_cache['field'][$name])) {
+                $where[] = 'id in (select id from `'.\Phpcmf\Service::M()->dbprefix('member_data').'` where `'.$name.'` LIKE "%'.$value.'%")';
+                unset($this->init['field'][$name]);
+            } else {
+                $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
+            }
             $p[$name] = $value;
         }
 
