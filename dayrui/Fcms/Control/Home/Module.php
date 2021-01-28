@@ -191,10 +191,10 @@ class Module extends \Phpcmf\Common
             'id' => $catid,
             'cat' => $category,
             'top' => $catid && $category['topid'] ? $this->module['category'][$category['topid']] : $category,
-            'page' => $page,
             'catid' => $catid,
             'params' => ['catid' => $catid],
             'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
+            'pageid' => max(1, $page),
             'parent' => $parent,
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->category_url($this->module, $category, '[page]'),
@@ -204,9 +204,6 @@ class Module extends \Phpcmf\Common
         // 识别栏目单网页模板
         if (($this->module['share'] || (isset($this->module['config']['scategory']) && $this->module['config']['scategory'])) && $category['tid'] == 0) {
             \Phpcmf\Service::V()->assign($category);
-            \Phpcmf\Service::V()->assign(array(
-                'pageid' => $catid,
-            ));
             $tpl = !$category['setting']['template']['page'] ? 'page.html' : $category['setting']['template']['page'];
         } else {
             \Phpcmf\Service::V()->module($this->module['dirname']);
@@ -425,7 +422,7 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'cat' => $this->module['category'][$catid],
             'top' => $this->module['category'][$catid]['topid'] ? $this->module['category'][$this->module['category'][$catid]['topid']] : $this->module['category'][$catid],
-            'page' => $page,
+            'pageid' => max(1, $page),
             'params' => ['catid' => $catid],
             'parent' => $parent,
             'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
@@ -732,15 +729,16 @@ class Module extends \Phpcmf\Common
                 @unlink($hfile);
                 return dr_return_data(0, '无权限写入文件【'.$hfile.'】');
             }
+        }
 
-            if ($page == 0 && $data['content_page']) {
-                // 生成分页的页面
-                foreach ($data['content_page'] as $i => $t) {
+        // 生成分页的页面
+        if ($page == 0 && $data['content_page']) {
+            foreach ($data['content_page'] as $i => $t) {
+                if ($i > 1) {
                     $this->_Create_Show_Html($id, $i);
                 }
             }
         }
-
 
         return dr_return_data(1, 'ok');
     }

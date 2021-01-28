@@ -54,9 +54,9 @@
                                 <div class="col-md-12">
                                     <div class="blog-single-foot fc-news-tag-list">
                                         <ul class="blog-post-tags">
-                                            {loop $content_page $pageid $pagehtml}
+                                            {loop $content_page $sn $pagehtml}
                                             <li class="uppercase">
-                                                <a {if $page==$pageid}style="color:red"{/if} href="{str_replace('[page]', $pageid, $urlrule)}">{$pageid}</a>
+                                               <a {if $sn==$pageid}style="color:red"{/if} href="{php echo $sn > 1 ? str_replace('[page]', $sn, $urlrule) : $url;}">{$sn}</a>
                                             </li>
                                             {/loop}
                                         </ul>
