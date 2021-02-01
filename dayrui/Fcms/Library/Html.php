@@ -63,7 +63,7 @@ class Html
                         if ($files) {
                             $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid']);
                             if ($t['child'] && $t['childids']) {
-                                $db->whereIn('catid', @explode(',', $t['childids']));
+                                $db->whereIn('catid', explode(',', $t['childids']));
                             } else {
                                 $db->where('catid', (int)$t['id']);
                             }
@@ -82,7 +82,7 @@ class Html
                     if ($find) {
                         $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
                         if ($t['child'] && $t['childids']) {
-                            $db->whereIn('catid', @explode(',', $t['childids']));
+                            $db->whereIn('catid', explode(',', $t['childids']));
                         } else {
                             $db->where('catid', (int)$t['id']);
                         }

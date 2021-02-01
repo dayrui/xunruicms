@@ -84,7 +84,7 @@ class Module extends \Phpcmf\Common
     }
 
     // 模块栏目页
-    protected function _Category($catid = 0, $catdir = null, $page = 1) {
+    protected function _Category($catid = 0, $catdir = null, $page = 1, $rt = 0) {
 
         if (IS_POST) {
             $this->_json(0, '禁止提交，请检查提交地址是否有误');
@@ -176,8 +176,9 @@ class Module extends \Phpcmf\Common
                 }
             }
         }
+
         // 判断内容唯一性
-        \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($category['url'], $this->module['dirname']));
+        !$rt && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($category['url'], $this->module['dirname']));
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
@@ -209,7 +210,14 @@ class Module extends \Phpcmf\Common
             \Phpcmf\Service::V()->module($this->module['dirname']);
             $tpl = $category['child'] ? $category['setting']['template']['category'] : $category['setting']['template']['list'];
         }
-        \Phpcmf\Service::V()->display($tpl);
+
+        // 输出方式
+        if (!$rt) {
+            \Phpcmf\Service::V()->display($tpl);
+        } else {
+            $category['tpl'] = $tpl;
+            return $category;
+        }
     }
 
     // 模块搜索
