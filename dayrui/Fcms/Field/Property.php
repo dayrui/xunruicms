@@ -166,7 +166,7 @@ class Property extends \Phpcmf\Library\A_Field {
 		$i = 0;
 
         unset($field['setting']['width']);
-        // 默认属性选项
+        // 固定属性选项
 		if (isset($field['setting']['option']['default_value']) && $field['setting']['option']['default_value']) {
             $i = 1;
 			foreach ($field['setting']['option']['default_value'] as $t) {
@@ -174,7 +174,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			        continue;
                 }
 				$str.= '<tr id="dr_items_'.$name.'_'.$i.'">';
-				$str.= '<td class="highlight"><input type="text" class="form-control input-sm" value="'.$t['name'].'" name="data['.$name.']['.$i.'][name]"></td>';
+				$str.= '<td class="highlight"><input type="text" readonly class="form-control input-sm" value="'.$t['name'].'" name="data['.$name.']['.$i.'][name]"></td>';
 				$str.= '<td>';
 				switch ($t['type']) {
 					case 1:
@@ -182,7 +182,7 @@ class Property extends \Phpcmf\Library\A_Field {
 						$str.= '<input type="text" class="form-control input-sm" value="'.$v.'" name="data['.$name.']['.$i.'][value]" />';
 						break;
 					case 2:
-						$v = @explode(',', $t['value']);
+						$v = explode(',', $t['value']);
 						$str.= '<select class="form-control" name="data['.$name.']['.$i.'][value]">';
 						$str.= '<option value=""> -- </option>';
 						if ($v) {
@@ -194,7 +194,7 @@ class Property extends \Phpcmf\Library\A_Field {
 						$str.= '</select>';
 						break;
 					case 3:
-						$v = @explode(',', $t['value']);
+						$v = explode(',', $t['value']);
 						if ($v) {
 							foreach ($v as $c) {
 								$selected = isset($value[$i]['value']) && dr_in_array($c, $value[$i]['value']) ? 'checked' : '';
