@@ -521,7 +521,7 @@ return [
         }
 
         $vid = dr_safe_replace($_GET['version']);
-        $surl = $this->service_url.'&action=check_version&get_http=1&time='.strtotime($this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
+        $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION.'&get_http=1&time='.strtotime($this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据');
@@ -548,7 +548,7 @@ return [
             $this->_json(0, '本站：没有选择任何升级程序');
         }
 
-        $surl = $this->service_url.'&action=update_file&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']);
+        $surl = $this->service_url.'&action=update_file&php='.PHP_VERSION.'&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']);
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据', $surl);
@@ -632,6 +632,7 @@ return [
             $this->_json(0, '本站：文件还没有被下载');
         }
     }
+
     // 升级程序
     public function update_file_install() {
 
