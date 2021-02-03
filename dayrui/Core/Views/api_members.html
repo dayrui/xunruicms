@@ -1,6 +1,5 @@
 {template "header.html"}
 
-
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {$search}
@@ -91,5 +90,27 @@
         </div>
     </div>
 </form>
+<script>
+    $(function () {
+        $('.pagination a').click(function () {
+            if ($('.checkboxes').is(':checked')) {
+                var url = $(this).attr('href');
+                var msg = '{dr_lang('离开本页面后，当前选择的项目将被取消')}';
+                layer.confirm(
+                    msg,
+                    {
+                        icon: 3,
+                        shade: 0,
+                        title: lang['ts'],
+                        btn: [lang['ok'], lang['esc']]
+                    }, function(index){
+                        window.location.href = url;
+                        return true;
+                    });
+                return false;
+            }
 
+        });
+    })
+</script>
 {template "footer.html"}
