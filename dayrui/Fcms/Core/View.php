@@ -179,8 +179,8 @@ class View {
         $xunruicms_start = microtime(true);
 
 		// 定义当前模板的url地址
-        if (!$this->_options['my_web_url']) {
-            $this->_options['my_web_url'] = $this->_options['fix_html_now_url'] ? $this->_options['fix_html_now_url'] : dr_now_url();
+        if (!isset($this->_options['my_web_url']) or !$this->_options['my_web_url']) {
+            $this->_options['my_web_url'] = isset($this->_options['fix_html_now_url']) && $this->_options['fix_html_now_url'] ? $this->_options['fix_html_now_url'] : dr_now_url();
         }
 		
 		// 定义当前url参数值
