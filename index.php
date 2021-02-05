@@ -9,15 +9,11 @@ declare(strict_types=1);
 header('Content-Type: text/html; charset=utf-8');
 //header('X-Frame-Options: SAMEORIGIN'); // 防止被站外加入iframe中浏览
 
-define('BASEPATH', '/Users/xr/Dev/CodeIgniter/system/');
-//define('COMPOSER_PATH', '/Users/xr/Dev/CodeIgniter4/vendor/autoload.php');
-
 // 是否是开发者模式（1开启、0关闭）
-define('IS_DEV', 1);
+define('IS_DEV', 0);
 
 // 是否允许后台修改模板文件（1开启、0关闭），请不要长期开启此功能
 define('IS_EDIT_TPL', 0);
-define('MAX_CATEGORY', 11110);
 
 // 主网站目录,表示index.php文件的目录
 define('ROOTPATH', dirname(__FILE__).'/');
