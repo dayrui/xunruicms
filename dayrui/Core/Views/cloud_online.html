@@ -1,21 +1,26 @@
-{if SYS_HTTPS && substr($url, 0, 7) == "http://"}
+{if $is_oem || (SYS_HTTPS && substr($url, 0, 7) == "http://")}
 <html>
 <head>
+    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 </head>
-<body style="text-align: center;padding: 160px 0px;background-color: #fff;">
-<p>{dr_lang('由于你的服务器启用了HTTPS安全认证，需要单击下发链接进行访问该页面')}</p>
-<p><a href="{$url}" target="_blank">{dr_strcut($url, 100)}</a></p>
-
+<body class="page-content-white">
+<div style="{if IS_MOBILE_USER} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+    <a href="{$url}" target="_blank" class="btn default btn-block ">{dr_lang('单击下发链接进行访问该页面')}</a>
+</div>
 </body>
 </html>
-{else}
-{if IS_DEV}
+{elseif IS_DEV}
 <html>
 <head>
+    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 </head>
-<body style="text-align: center;padding: 160px 0px;background-color: #fff;">
-<p>{dr_lang('由于你的服务器开发者模式，需要单击下发链接进行访问该页面')}</p>
-<p><a href="{$url}">{dr_strcut($url, 100)}</a></p>
+<body class="page-content-white">
+<div style="{if IS_MOBILE_USER} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+    <a href="{$url}" class="btn default btn-block">{dr_lang('单击下发链接进行访问该页面')}</a>
+    <p>{$url}</p>
+</div>
 </body>
 </html>
 {else}
@@ -25,5 +30,4 @@
 </head>
 <body style="background: url({THEME_PATH}assets/images/loading-0.gif);background-position: center;background-color: #fff;background-repeat: no-repeat;"> </body>
 </html>
-{/if}
 {/if}

@@ -101,6 +101,7 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'url' => $this->service_url.'&action=app&catid=15&id='.implode(',', $id),
         ]);
+
         \Phpcmf\Service::V()->display('cloud_online.html');exit;
     }
 

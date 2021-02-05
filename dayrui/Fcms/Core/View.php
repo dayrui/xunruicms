@@ -828,7 +828,7 @@ class View {
 
                 if ($_param) {
                     $data = [];
-                    @eval('$data=$cache'.$this->_get_var($_param).';');
+                    eval('$data=$cache'.$this->_get_var($_param).';');
                     if (!$data) {
                         return $this->_return($system['return'], "缓存({$_name})参数不存在!!");
                     }
