@@ -353,7 +353,7 @@ class Module extends \Phpcmf\Common
                 foreach ($this->module['field'] as $t) {
                     if ($t['fieldtype'] == 'Redirect' && $data[$t['fieldname']]) {
                         // 存在转向字段时的情况
-                        \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$this->module['dirname'])->where('id', $id)->set('hits', 'hits+1', FALSE)->update();
+                        \Phpcmf\Service::M()->db->table(dr_module_table_prefix($this->module['dirname']))->where('id', $id)->set('hits', 'hits+1', FALSE)->update();
                         \Phpcmf\Service::V()->assign('goto_url', $data[$t['fieldname']]);
                         \Phpcmf\Service::V()->display('goto_url');
                         return $data;
@@ -453,7 +453,7 @@ class Module extends \Phpcmf\Common
         switch($type) {
 
             case 'time':
-                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_time')->get($id);
+                $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_time')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
                     $this->goto_404_page(dr_lang('定时内容#%s不存在', $id));
@@ -463,7 +463,7 @@ class Module extends \Phpcmf\Common
                 break;
 
             case 'recycle':
-                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_recycle')->get($id);
+                $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_recycle')->get($id);
                 $row = dr_string2array($row['content']);
                 if (!$row) {
                     $this->goto_404_page(dr_lang('回收站内容#%s不存在', $id));
@@ -480,7 +480,7 @@ class Module extends \Phpcmf\Common
                 break;
 
             case 'verify':
-                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_verify')->get($id);
+                $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_verify')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
                     $this->goto_404_page(dr_lang('审核内容#%s不存在', $id));
@@ -492,7 +492,7 @@ class Module extends \Phpcmf\Common
                 break;
 
             case 'draft':
-                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_draft')->get($id);
+                $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_draft')->get($id);
                 $data = dr_string2array($row['content']);
                 if (!$data) {
                     $this->goto_404_page( dr_lang('草稿内容#%s不存在', $id));

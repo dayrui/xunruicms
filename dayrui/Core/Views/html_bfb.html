@@ -61,7 +61,7 @@
             url: "{$todo_url}&pp="+page,
             success: function (json) {
 
-                $('#dr_check_html').append(json.msg);
+                $('#dr_check_html').html(json.msg);
                 document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
 
                 //$('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');

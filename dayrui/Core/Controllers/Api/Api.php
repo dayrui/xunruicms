@@ -93,7 +93,7 @@ class Api extends \Phpcmf\Common
         (!$title || !$module || !\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module)) && exit('');
 
         // 判断是否重复存在
-        $num = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$module)->where('id<>', $id)->where('title', $title)->countAllResults();
+        $num = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>', $id)->where('title', $title)->countAllResults();
         $num ? exit(dr_lang('重复')) : exit('');
     }
 

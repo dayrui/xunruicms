@@ -16,7 +16,7 @@ class Search extends \Phpcmf\Model {
 
     // 初始化搜索主表
     public function init($table) {
-        $this->mytable = SITE_ID.'_'.$table;
+        $this->mytable = dr_module_table_prefix($table, SITE_ID);
         return $this;
     }
 

@@ -127,7 +127,7 @@ class Seo_category extends \Phpcmf\Common
         }
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $data = \Phpcmf\Service::M()->table(SITE_ID.'_'.$dir.'_category')->where('id', $id)->getRow();
+        $data = \Phpcmf\Service::M()->table(dr_module_table_prefix($dir).'_category')->where('id', $id)->getRow();
         if (!$data) {
             $this->_admin_msg(0, dr_lang('栏目#%s不存在', $id));
         }
@@ -141,7 +141,7 @@ class Seo_category extends \Phpcmf\Common
             }
             $data['setting']['html'] = (int)$set['html'];
             $data['setting']['urlrule'] = (int)$set['urlrule'];
-            \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_category')->where('id', $id)->update([
+            \Phpcmf\Service::M()->db->table(dr_module_table_prefix($dir).'_category')->where('id', $id)->update([
                 'setting' => dr_array2string($data['setting']),
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('');

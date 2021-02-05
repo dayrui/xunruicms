@@ -82,7 +82,7 @@ class Model {
 
     // 设置操作站点的表
     public function table_site($name, $site = SITE_ID) {
-        $this->table = $site.'_'.$name;
+        $this->table = dr_site_table_prefix($name, $site);
         return $this;
     }
 

@@ -704,7 +704,7 @@ class View {
             if (!$var) {
                 continue;
             }
-            $val = defined($val) ? constant($val) : $val;
+            $val = defined($val) ? constant($val) : str_replace('_SP_', ' ', $val);
             if ($var == 'fid' && !$val) {
                 continue;
             }
@@ -712,8 +712,8 @@ class View {
                 $system[$var] = dr_safe_replace($val);
             } else {
                 if (preg_match('/^([A-Z_]+)(.+)/', $var, $match)) { // 筛选修饰符参数
-                    $_pre = explode('_', $match[1]);
                     $_adj = '';
+                    $_pre = explode('_', $match[1]);
                     foreach ($_pre as $p) {
                         if (in_array($p, $sysadj)) {
                             $_adj = $p;
@@ -737,7 +737,7 @@ class View {
 
         // 替换order中的非法字符
         isset($system['order']) && $system['order'] && $system['order'] = str_ireplace(
-            ['"', "'", ')', '(', ';', 'select', 'insert', '`'],
+            ['"', "'", ';', 'select', 'insert'], //, '`', ')', '('
             '',
             $system['order']
         );
@@ -1080,7 +1080,7 @@ class View {
 
                 // 填充当前站点id的写法
                 if ($system['table_site']) {
-                    $system['table'] = SITE_ID.'_'.$system['table_site'];
+                    $system['table'] = dr_site_table_prefix($system['table_site'], SITE_ID);
                 }
 
                 $tableinfo = \Phpcmf\Service::L('cache')->get_data('table-'.$system['table']);
@@ -1193,7 +1193,8 @@ class View {
                     // 没有表结构缓存时返回空
                     return $this->_return($system['return'], '表结构缓存不存在');
                 }
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_form_'.$form['table']); // 主表
+
+                $table = \Phpcmf\Service::M()->dbprefix(dr_form_table_prefix($form['table'], $system['site'])); // 主表
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
@@ -1308,7 +1309,7 @@ class View {
                     return $this->_return($system['return'], '表结构缓存不存在');
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname.'_form_'.$form['table']); // 模块主表
+                $table = \Phpcmf\Service::M()->dbprefix(dr_mform_table_prefix($dirname, $form['table'], $system['site'])); // 模块主表
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
@@ -1554,7 +1555,7 @@ class View {
                     return $this->_return($system['return'], '表结构缓存不存在');
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$module['dirname']); // 模块主表`
+                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module['dirname'], $system['site'])); // 模块主表`
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
@@ -1596,7 +1597,7 @@ class View {
                     return $this->_return($system['return'], '没有传入tag参数的内容'); // 没有查询到内容
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
+                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($dirname, $system['site'])); // 模块主表
 
                 $sql = [];
                 $array = explode(',', $param['tag']);
@@ -1644,7 +1645,7 @@ class View {
                     }
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
+                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($dirname, $system['site'])); // 模块主表
                 $index = \Phpcmf\Service::L('cache')->get_data('module-search-'.$dirname.'-'.$param['id']);
                 if (!$index) {
                     $index = $this->_query('SELECT `params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
@@ -1684,7 +1685,7 @@ class View {
                     return $this->_return($system['return'], '表结构缓存不存在');
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$module['dirname']); // 模块主表`
+                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module['dirname'], $system['site'])); // 模块主表`
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }

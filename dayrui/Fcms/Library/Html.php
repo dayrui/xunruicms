@@ -40,7 +40,7 @@ class Html
             } elseif ($t['tid'] == 1) {
                 // 模块
                 // 判断模块表是否存在被安装
-                if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$t['mid']))) {
+                if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($t['mid'])))) {
                     unset($list[$t['mid']]);
                     continue;
                 }
@@ -61,14 +61,14 @@ class Html
                     if (is_dir(dr_get_app_dir($t['mid']).'Mwhere/')) {
                         $files = dr_file_map(dr_get_app_dir($t['mid']).'Mwhere/');
                         if ($files) {
-                            $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid']);
+                            $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($t['mid']));
                             if ($t['child'] && $t['childids']) {
                                 $db->whereIn('catid', explode(',', $t['childids']));
                             } else {
                                 $db->where('catid', (int)$t['id']);
                             }
                             $mid = $t['mid'];
-                            $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$t['mid']));
+                            $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($t['mid'])));
                             $siteid = SITE_ID;
                             foreach ($files as $f) {
                                 $w = require dr_get_app_dir($t['mid']).'Mwhere/'.$f;
@@ -80,7 +80,7 @@ class Html
                         }
                     }
                     if ($find) {
-                        $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$t['mid'].'_index');
+                        $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($t['mid']).'_index');
                         if ($t['child'] && $t['childids']) {
                             $db->whereIn('catid', explode(',', $t['childids']));
                         } else {
@@ -174,7 +174,7 @@ class Html
                 }
                 $data = [];
                 foreach ($mids as $mid) {
-                    $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$mid)->select('id,catid,title,url');
+                    $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($mid))->select('id,catid,title,url');
                     if (isset($param['date_form']) && $param['date_form']) {
                         $db->where('`updatetime` BETWEEN ' . strtotime($param['date_form'].' 00:00:00') . ' AND ' . ($param['date_to'] ? strtotime($param['date_to'].' 23:59:59') : SYS_TIME));
                     } elseif (isset($param['date_to']) && $param['date_to']) {
@@ -187,7 +187,7 @@ class Html
                     // 查找mwhere目录
                     $mwhere = \Phpcmf\Service::Mwhere_Apps();
                     if ($mwhere) {
-                        $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$mid));
+                        $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($mid)));
                         $siteid = SITE_ID;
                         foreach ($mwhere as $mapp) {
                             $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
@@ -209,7 +209,7 @@ class Html
             }
         } else {
             // 独立
-            $db = \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$app)->select('id,catid,title,url');
+            $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($app))->select('id,catid,title,url');
             if (isset($param['date_form']) && $param['date_form']) {
                 $db->where('`updatetime` BETWEEN ' . strtotime($param['date_form'].' 00:00:00') . ' AND ' . ($param['date_to'] ? strtotime($param['date_to'].' 23:59:59') : SYS_TIME));
             } elseif (isset($param['date_to']) && $param['date_to']) {
@@ -224,7 +224,7 @@ class Html
             // 查找mwhere目录
             $mwhere = \Phpcmf\Service::Mwhere_Apps();
             if ($mwhere) {
-                $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$app));
+                $field = \Phpcmf\Service::L('cache')->get('table-'.SITE_ID, \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($app)));
                 $siteid = SITE_ID;
                 foreach ($mwhere as $mapp) {
                     $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';

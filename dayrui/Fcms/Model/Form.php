@@ -13,12 +13,12 @@ class Form extends \Phpcmf\Model
 
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->table = SITE_ID.'_form';
+        $this->table = dr_site_table_prefix('form');
     }
 
     // 设置操作表
     public function table($name) {
-        $this->table = SITE_ID.'_'.$name;
+        $this->table = dr_form_table_prefix($name, SITE_ID);
         return $this;
     }
 
@@ -107,7 +107,7 @@ class Form extends \Phpcmf\Model
             $t['relatedname'] = 'form-'.SITE_ID;
             $r = parent::table('field')->insert($t);
             if (!$r['code']) {
-                $this->db->table(SITE_ID.'_form')->where('id', $id)->delete();
+                $this->db->table(dr_site_table_prefix('form'))->where('id', $id)->delete();
                 $this->db->table('field')->where('relatedid', $t['relatedid'])->where('relatedname', $t['relatedname'])->delete();
                 return $r;
             }
@@ -117,10 +117,10 @@ class Form extends \Phpcmf\Model
         $this->create_file($data['table']);
 
         // 创建表
-        $rt = \Phpcmf\Service::M('Table')->_query(str_replace('{table}', $this->dbprefix(SITE_ID.'_form_'.$data['table']), $data['sql']));
+        $rt = \Phpcmf\Service::M('Table')->_query(str_replace('{table}', $this->dbprefix(dr_site_table_prefix('form').'_'.$data['table']), $data['sql']));
 
         if (!$rt['code']) {
-            $this->db->table(SITE_ID.'_form')->where('id', $id)->delete();
+            $this->db->table(dr_site_table_prefix('form'))->where('id', $id)->delete();
             $this->db->table('field')->where('relatedid', $id)->where('relatedname', 'form-'.SITE_ID)->delete();
             return $rt;
         }
@@ -155,7 +155,7 @@ class Form extends \Phpcmf\Model
     // 缓存
     public function cache($siteid = SITE_ID) {
 
-        $data = $this->init(['table' => $siteid.'_form'])->getAll();
+        $data = $this->init(['table' => dr_site_table_prefix('form', $siteid)])->getAll();
         if ($data) {
             foreach ($data as $t) {
                 $t['field'] = [];

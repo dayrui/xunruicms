@@ -39,7 +39,7 @@ class Module extends \Phpcmf\Table
         $this->where_list_sql = $this->content_model->get_admin_list_where();
         // 初始化数据表
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR,
+            'table' => dr_module_table_prefix(APP_DIR),
             'field' => $this->module['field'],
             'sys_field' => ['inputtime', 'updatetime', 'inputip', 'displayorder', 'hits', 'author'],
             'date_field' => 'updatetime',
@@ -463,7 +463,7 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Draft_List() {
 
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_draft',
+            'table' => dr_module_table_prefix(APP_DIR).'_draft',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
             'where_list' => 'uid='.$this->uid,
@@ -495,7 +495,7 @@ class Module extends \Phpcmf\Table
         $this->is_data = 0;
         $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('草稿'));
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_draft',
+            'table' => dr_module_table_prefix(APP_DIR).'_draft',
         ]);
 
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids());
@@ -528,7 +528,7 @@ class Module extends \Phpcmf\Table
             $list = [];
             $note = \Phpcmf\Service::L('input')->get('note');
             foreach ($ids as $id) {
-                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
+                $row = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_verify')->get($id);
                 if (!$row) {
                     $this->_json(0, dr_lang('选中内容[#%s]不存在', $id));
                 }
@@ -557,7 +557,7 @@ class Module extends \Phpcmf\Table
 
         $this->_init([
             'db' => SITE_ID,
-            'table' => SITE_ID.'_'.APP_DIR.'_verify',
+            'table' => dr_module_table_prefix(APP_DIR).'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
             'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : ''). \Phpcmf\Service::M('auth')->get_admin_verify_status_list().')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
@@ -651,7 +651,7 @@ class Module extends \Phpcmf\Table
         $this->is_data = 0;
         $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('审核'));
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_verify',
+            'table' => dr_module_table_prefix(APP_DIR).'_verify',
         ]);
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids(), function ($rows) {
             foreach ($rows as $t) {
@@ -663,7 +663,7 @@ class Module extends \Phpcmf\Table
         }, function($rows) {
             foreach ($rows as $t) {
                 // 删除索引
-                $t['isnew'] && \Phpcmf\Service::M()->table(SITE_ID.'_'.APP_DIR.'_index')->delete($t['id']);
+                $t['isnew'] && \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_index')->delete($t['id']);
                 // 删除审核提醒
                 \Phpcmf\Service::M('member')->delete_admin_notice(APP_DIR.'/verify/edit:id/'.$t['id'], SITE_ID);
             }
@@ -678,7 +678,7 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Time_List() {
 
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_time',
+            'table' => dr_module_table_prefix(APP_DIR).'_time',
             'order_by' => 'inputtime desc',
             'date_field' => 'inputtime',
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
@@ -725,7 +725,7 @@ class Module extends \Phpcmf\Table
             }
             $html = [];
             foreach ($ids as $id) {
-                $rt = $this->content_model->post_time(\Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id));
+                $rt = $this->content_model->post_time(\Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_time')->get($id));
                 $rt['data'] && $html[] = $rt['data'];
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg'], ['htmlfile' => $html]);
@@ -749,7 +749,7 @@ class Module extends \Phpcmf\Table
         // 说明来自定时页面
         define('IS_MODULE_TIME', 1);
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        $data = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id);
+        $data = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_time')->get($id);
         if (!$data) {
             $this->_admin_msg(0, dr_lang('内容不存在'));
         }
@@ -760,7 +760,7 @@ class Module extends \Phpcmf\Table
                 $this->_json(0, dr_lang('定时时间不能晚于当前时间'));
             }
 
-            \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->update($id, [
+            \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_time')->update($id, [
                 'posttime' => $time
             ]);
             $this->_json(1, dr_lang('操作成功'));
@@ -809,7 +809,7 @@ class Module extends \Phpcmf\Table
         $this->is_data = 0;
         $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('定时'));
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_time',
+            'table' => dr_module_table_prefix(APP_DIR).'_time',
         ]);
 
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids());
@@ -821,7 +821,7 @@ class Module extends \Phpcmf\Table
     protected function _Admin_Recycle_List() {
 
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR.'_recycle',
+            'table' => dr_module_table_prefix(APP_DIR).'_recycle',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
@@ -972,12 +972,12 @@ class Module extends \Phpcmf\Table
         }
 
         $this->_init([
-            'table' => SITE_ID.'_'.APP_DIR,
+            'table' => dr_module_table_prefix(APP_DIR),
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
             'show_field' => 'title',
             'list_field' => $this->module['setting']['list_field'],
-            'where_list' => 'id IN (select id from `'.\Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.APP_DIR.'_flag').'` where flag='.$flag.')'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => 'id IN (select id from `'.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix(APP_DIR).'_flag').'` where flag='.$flag.')'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         list($tpl, $data) = $this->_List();
@@ -1025,7 +1025,7 @@ class Module extends \Phpcmf\Table
 
         if (defined('IS_MODULE_VERIFY')) {
             // 判断是否来至审核
-            $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
+            $row = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_verify')->get($id);
             if ($row) {
                 // 调用当前表数据
                 $now = $this->content_model->get_data($id);
@@ -1050,7 +1050,7 @@ class Module extends \Phpcmf\Table
             return $data;
         } elseif (defined('IS_MODULE_TIME')) {
             // 判断是否来至定时发布
-            $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_time')->get($id);
+            $row = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_time')->get($id);
             $data = dr_string2array($row['content']);
             //$data['myflag'] = $data['flag'];
             $data['posttime'] = $row['posttime'];
@@ -1058,7 +1058,7 @@ class Module extends \Phpcmf\Table
             return $data;
         } elseif (defined('IS_MODULE_RECYCLE')) {
             // 判断是否来至回收站
-            $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_recycle')->get($id);
+            $row = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_recycle')->get($id);
             $c = dr_string2array($row['content']);
             $data = [];
             if ($c) {
@@ -1155,13 +1155,13 @@ class Module extends \Phpcmf\Table
                 return dr_return_data(0, dr_lang('定时发布时间不正确'), $data);
             }
             // 保存定时发布数据
-            $this->init['table'] = SITE_ID.'_'.APP_DIR.'_time';
+            $this->init['table'] = dr_module_table_prefix(APP_DIR).'_time';
             $rt = $this->content_model->save_post_time($id, $data, $this->post_time);
             $this->_json($rt['code'], $rt['msg']);
         } elseif ($is_draft) {
             // 草稿箱存储
             $data[1]['id'] = $id;
-            $this->init['table'] = SITE_ID.'_'.APP_DIR.'_draft';
+            $this->init['table'] = dr_module_table_prefix(APP_DIR).'_draft';
             return $this->content_model->insert_draft($did, $data);
         } else {
             // 删除草稿

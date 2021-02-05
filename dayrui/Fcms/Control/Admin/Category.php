@@ -50,7 +50,7 @@ class Category extends \Phpcmf\Table
 
         // 初始化数据表
         $this->_init([
-            'table' => SITE_ID.'_'.$dir.'_category',
+            'table' => dr_module_table_prefix($dir).'_category',
             'field' => $this->module['category_field'],
             'show_field' => 'name',
             'order_by' => 'displayorder ASC,id ASC',
@@ -982,7 +982,7 @@ class Category extends \Phpcmf\Table
                         //!$save['tid'] && $save['setting']['template']['list'] == 'list.html' && $save['setting']['template']['list'] = 'page.html';
                     }
 					if ($old && $old['mid'] && $old['mid'] != $save['mid']) {
-						if (\Phpcmf\Service::M()->is_table_exists(SITE_ID.'_'.$old['mid']) && \Phpcmf\Service::M()->table_site($old['mid'])->where('catid', $old['id'])->counts()) {
+						if (\Phpcmf\Service::M()->is_table_exists(dr_module_table_prefix($old['mid'])) && \Phpcmf\Service::M()->table_site($old['mid'])->where('catid', $old['id'])->counts()) {
 							$this->_json(0, dr_lang('本栏目存在所属模块内容数据，请删除数据后，再变更模块操作'));
 						}
 					}

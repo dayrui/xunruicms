@@ -33,7 +33,7 @@ class Module extends \Phpcmf\Table
         $this->name = dr_lang('内容模块[%s]（%s）', $this->module['dirname'], $this->module['title']);
         // 初始化数据表
         $this->_init([
-            'table' => SITE_ID.'_'.$this->module['dirname'],
+            'table' => dr_module_table_prefix($this->module['dirname']),
             'field' => $this->module['field'],
             'date_field' => 'updatetime',
             'show_field' => 'title',
@@ -218,7 +218,7 @@ class Module extends \Phpcmf\Table
             $this->_json(0, dr_lang('id不存在'));
         }
 
-        $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_index')->get($id);
+        $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_index')->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('内容不存在'));
         } elseif ($row['uid'] != $this->uid) {
@@ -251,7 +251,7 @@ class Module extends \Phpcmf\Table
     protected function _Member_Verify_List() {
 
         $this->_init([
-            'table' => SITE_ID.'_'.$this->module['dirname'].'_verify',
+            'table' => dr_module_table_prefix($this->module['dirname']).'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
             'where_list' => 'uid='.$this->uid,
@@ -280,7 +280,7 @@ class Module extends \Phpcmf\Table
         // 支持附表存储
         $this->is_data = 0;
         $this->_init([
-            'table' => SITE_ID.'_'.$this->module['dirname'].'_verify',
+            'table' => dr_module_table_prefix($this->module['dirname']).'_verify',
         ]);
 
         // 删除条件
@@ -290,7 +290,7 @@ class Module extends \Phpcmf\Table
         $this->_Del(\Phpcmf\Service::L('input')->get_post_ids(), null, function($rows) {
             foreach ($rows as $t) {
                 // 删除索引
-                $t['isnew'] && \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_index')->delete($t['id']);
+                $t['isnew'] && \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_index')->delete($t['id']);
                 // 删除审核提醒
                 \Phpcmf\Service::M('member')->delete_admin_notice($this->module['dirname'].'/verify/edit:id/'.$t['id'], SITE_ID);
             }
@@ -306,7 +306,7 @@ class Module extends \Phpcmf\Table
 
         $this->_init([
             'db' => SITE_ID,
-            'table' => SITE_ID.'_'.$this->module['dirname'].'_draft',
+            'table' => dr_module_table_prefix($this->module['dirname']).'_draft',
             'order_by' => 'inputtime desc',
             'date_field' => 'inputtime',
             'where_list' => 'uid='.$this->uid,
@@ -326,7 +326,7 @@ class Module extends \Phpcmf\Table
         // 支持附表存储
         $this->is_data = 0;
         $this->_init([
-            'table' => SITE_ID.'_'.$this->module['dirname'].'_draft',
+            'table' => dr_module_table_prefix($this->module['dirname']).'_draft',
         ]);
 
         // 删除条件
@@ -400,7 +400,7 @@ class Module extends \Phpcmf\Table
 
         // 判断是否来至审核
         if (defined('IS_MODULE_VERIFY')) {
-            $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_verify')->get($id);
+            $row = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']).'_verify')->get($id);
             if (!$row) {
                 return [];
             } elseif ($this->uid != $row['uid']) {
@@ -545,7 +545,7 @@ class Module extends \Phpcmf\Table
                                 if (\Phpcmf\Service::M('member_auth')->is_category_public) {
                                     // 按全局算
                                     if (\Phpcmf\Service::M()->db
-                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->table(dr_module_table_prefix($this->module['dirname']).'_index')
                                             ->where('uid', $this->uid)
                                             ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
                                             ->countAllResults() >= $day_post) {
@@ -554,7 +554,7 @@ class Module extends \Phpcmf\Table
                                 } else {
                                     // 按栏目算
                                     if (\Phpcmf\Service::M()->db
-                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->table(dr_module_table_prefix($this->module['dirname']).'_index')
                                             ->where('uid', $this->uid)
                                             ->where('DATEDIFF(from_unixtime(inputtime),now())=0')
                                             ->where('catid', $data[1]['catid'])
@@ -569,7 +569,7 @@ class Module extends \Phpcmf\Table
                                 if (\Phpcmf\Service::M('member_auth')->is_category_public) {
                                     // 按全局算
                                     if (\Phpcmf\Service::M()->db
-                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->table(dr_module_table_prefix($this->module['dirname']).'_index')
                                             ->where('uid', $this->uid)
                                             ->countAllResults() >= $total_post) {
                                         return dr_return_data(0, dr_lang('当前模块发布数量不能超过%s个', $total_post));
@@ -577,7 +577,7 @@ class Module extends \Phpcmf\Table
                                 } else {
                                     // 按栏目算
                                     if (\Phpcmf\Service::M()->db
-                                            ->table(SITE_ID.'_'.$this->module['dirname'].'_index')
+                                            ->table(dr_module_table_prefix($this->module['dirname']).'_index')
                                             ->where('uid', $this->uid)
                                             ->where('catid', $data[1]['catid'])
                                             ->countAllResults() >= $total_post) {

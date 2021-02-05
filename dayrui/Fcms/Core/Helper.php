@@ -1025,7 +1025,7 @@ function dr_is_favorite($dir, $id, $uid = 0) {
         return 0;
     }
 
-    return \Phpcmf\Service::M()->db->table(SITE_ID.'_'.$dir.'_favorite')->where('uid', $uid)->where('cid', $id)->countAllResults();
+    return \Phpcmf\Service::M()->db->table(dr_module_table_prefix($dir).'_favorite')->where('uid', $uid)->where('cid', $id)->countAllResults();
 }
 
 // 获取字段表单框
@@ -1780,12 +1780,32 @@ function dr_array22array($a1, $a2) {
     return $a;
 }
 
+/**
+ * 站点表前缀
+ */
+function dr_site_table_prefix($table, $siteid = SITE_ID) {
+    return $siteid.'_'.$table;
+}
 
 /**
  * 模块表前缀
  */
 function dr_module_table_prefix($dir, $siteid = SITE_ID) {
-    return $siteid.'_'.$dir;;
+    return $siteid.'_'.$dir;
+}
+
+/**
+ * 模块表单前缀
+ */
+function dr_mform_table_prefix($dir, $table, $siteid = SITE_ID) {
+    return $siteid.'_'.$dir.'_form_'.$table;
+}
+
+/**
+ * 网站表单表前缀
+ */
+function dr_form_table_prefix($dir, $siteid = SITE_ID) {
+    return $siteid.'_form_'.$dir;
 }
 
 /**

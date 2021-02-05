@@ -131,7 +131,7 @@ class Related extends \Phpcmf\Library\A_Field {
 
         $value = @trim($value, ',');
         if ($value && is_string($value)) {
-			$db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$module).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+			$db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $query = $db ? $db->getResultArray() : [];
             if ($query) {
                 foreach ($query as $t) {
@@ -248,7 +248,7 @@ class Related extends \Phpcmf\Library\A_Field {
         $value = @trim($value, ',');
         $module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
         if ($value && is_string($value)) {
-            $db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(SITE_ID.'_'.$module).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+            $db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $query = $db ? $db->getResultArray() : [];
             if ($query) {
                 foreach ($query as $t) {

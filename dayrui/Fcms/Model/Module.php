@@ -425,7 +425,7 @@ class Module extends \Phpcmf\Model
         // 执行站点sql语句
         if (is_file($mpath.'Config/Install_site.sql')) {
             $sql = file_get_contents($mpath.'Config/Install_site.sql');
-            $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix(SITE_ID.'_'), $sql));
+            $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix(dr_site_table_prefix('')), $sql));
             if ($rt) {
                 return dr_return_data(0, $rt);
             }

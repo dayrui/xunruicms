@@ -123,10 +123,10 @@ class Field extends \Phpcmf\Model
                             if ($module == 'share') {
                                 if ($data['tid'] != 1) {
                                 } else {
-                                    $table = $field['ismain'] ? SITE_ID.'_'.$data['mid'].'_category_data' :  SITE_ID.'_'.$data['mid'].'_category_data_{tableid}';
+                                    $table = $field['ismain'] ? dr_module_table_prefix($data['mid']).'_category_data' :  dr_module_table_prefix($data['mid']).'_category_data_{tableid}';
                                 }
                             } else {
-                                $table = $field['ismain'] ? SITE_ID.'_'.$module.'_category_data' :  SITE_ID.'_'.$module.'_category_data_{tableid}';
+                                $table = $field['ismain'] ? dr_module_table_prefix($module).'_category_data' :  dr_module_table_prefix($module).'_category_data_{tableid}';
                             }
                         }
                     }
@@ -358,7 +358,7 @@ class Field extends \Phpcmf\Model
 
     // 栏目模型字段
     protected function _sql_category_data($sql, $ismain) {
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname'].'_category_data'); // 主表名称
+        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']).'_category_data'); // 主表名称
         if (!$this->db->tableExists($table)) {
             return;
         }
@@ -379,7 +379,7 @@ class Field extends \Phpcmf\Model
     // 字段是否存在
     protected function _field_category_data($name) {
         // 模块主表
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname']);
+        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']));
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;
@@ -390,7 +390,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 栏目模型主表
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname'].'_category_data');
+        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']).'_category_data');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;
@@ -423,7 +423,7 @@ class Field extends \Phpcmf\Model
     // 字段是否存在
     protected function _field_comment($name) {
         // 主表
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data.'_comment');
+        $table = $this->dbprefix(dr_module_table_prefix($this->data).'_comment');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;
@@ -450,7 +450,7 @@ class Field extends \Phpcmf\Model
     // 字段是否存在
     protected function _field_category($name) {
         // 主表
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data.'_category');
+        $table = $this->dbprefix(dr_module_table_prefix($this->data).'_category');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;
@@ -672,7 +672,7 @@ class Field extends \Phpcmf\Model
             return 1;
         }
         // 主表
-        $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname']);
+        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']));
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;

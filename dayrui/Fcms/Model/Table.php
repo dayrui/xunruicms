@@ -393,7 +393,7 @@ class Table extends \Phpcmf\Model
     public function delete_module_form($data) {
 
         $id = intval($data['id']);
-        $table = $this->dbprefix(SITE_ID.'_'.$data['module'].'_form_'.$data['table']);
+        $table = $this->dbprefix(dr_module_table_prefix($data['module']).'_form_'.$data['table']);
         // 判断模块是否存在表
         if (!$this->is_table_exists($table)) {
             return;
@@ -414,7 +414,7 @@ class Table extends \Phpcmf\Model
         }
 
         // 模块表统计字段删除
-        $par = $this->dbprefix(SITE_ID.'_'.$data['module']);
+        $par = $this->dbprefix(dr_module_table_prefix($data['module']));
         // 判断模块是否存在表
         if (!$this->is_table_exists($par)) {
             return;

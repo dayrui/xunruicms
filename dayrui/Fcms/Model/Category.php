@@ -357,27 +357,27 @@ class Category extends \Phpcmf\Model
                    // 删除栏目模型字段
 					$this->db->table('field')->where('relatedid', $t['id'])
                        ->where('relatedname', 'share-'.SITE_ID)->delete();
-					if (!$this->db->tableExists($this->dbprefix(SITE_ID.'_'.$t['mid']))) {
+					if (!$this->db->tableExists($this->dbprefix(dr_module_table_prefix($t['mid'])))) {
 					   continue;
 					}   
                    // 删除内容
-                   $this->table(SITE_ID.'_'.$t['mid'])->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_draft')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_flag')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_index')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_time')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_verify')->where('catid', $t['id'])->delete();
-                   $this->table(SITE_ID.'_'.$t['mid'].'_category_data')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']))->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_draft')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_flag')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_index')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_time')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_verify')->where('catid', $t['id'])->delete();
+                   $this->table(dr_module_table_prefix($t['mid']).'_category_data')->where('catid', $t['id'])->delete();
                    // 附表分表删除
                    for ($i = 0; $i <= 255 ;$i++) {
-                       $table = $this->dbprefix(SITE_ID.'_'.$t['mid'].'_data_'.$i);
+                       $table = $this->dbprefix(dr_module_table_prefix($t['mid']).'_data_'.$i);
                        if (!$this->db->tableExists($table)) {
                            continue;
                        }
                        $this->table($table)->where('catid', $t['id'])->delete();
                    }
                    for ($i = 0; $i <= 255 ;$i++) {
-                       $table = $this->dbprefix(SITE_ID.'_'.$t['mid'].'_category_data_'.$i);
+                       $table = $this->dbprefix(dr_module_table_prefix($t['mid']).'_category_data_'.$i);
                        if (!$this->db->tableExists($table)) {
                            continue;
                        }
@@ -410,23 +410,23 @@ class Category extends \Phpcmf\Model
                     ->where('relatedname', APP_DIR.'-'.SITE_ID)->delete();
             }
             // 批量删除
-            $this->table(SITE_ID.'_'.APP_DIR)->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_draft')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_flag')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_index')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_time')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_verify')->where_in('catid', $catids)->delete();
-            $this->table(SITE_ID.'_'.APP_DIR.'_category_data')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR))->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_draft')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_flag')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_index')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_time')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_verify')->where_in('catid', $catids)->delete();
+            $this->table(dr_module_table_prefix(APP_DIR).'_category_data')->where_in('catid', $catids)->delete();
             // 附表分表删除
             for ($i = 0; $i <= 255 ;$i++) {
-                $table = $this->dbprefix(SITE_ID.'_'.APP_DIR.'_data_'.$i);
+                $table = $this->dbprefix(dr_module_table_prefix(APP_DIR).'_data_'.$i);
                 if (!$this->db->tableExists($table)) {
                     continue;
                 }
                 $this->table($table)->where_in('catid', $catids)->delete();
             }
             for ($i = 0; $i <= 255 ;$i++) {
-                $table = $this->dbprefix(SITE_ID.'_'.APP_DIR.'_category_data_'.$i);
+                $table = $this->dbprefix(dr_module_table_prefix(APP_DIR).'_category_data_'.$i);
                 if (!$this->db->tableExists($table)) {
                     continue;
                 }
