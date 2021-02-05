@@ -627,7 +627,11 @@ return [
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (is_file($file)) {
             $now = max(1, filesize($file));
-            $jd = max(1, round($now / $cache['size'] * 100, 0));
+            $jd = max(1, round($now / $cache['size'] * 100, 0)); // 进度百分百
+            $count = isset($_GET['is_count']) ? intval($_GET['is_count']) : 0; // 表示请求次数
+            if ($count > 3 && $jd > 98) {
+                $jd = 100;
+            }
             $this->_json($jd, '<p><label class="rleft">需下载文件大小：'.dr_format_file_size($cache['size']).'，已下载：'.dr_format_file_size($now).'</label><label class="rright"><span class="ok">'.$jd.'%</span></label></p>');
         } else {
             $this->_json(0, '本站：文件还没有被下载');

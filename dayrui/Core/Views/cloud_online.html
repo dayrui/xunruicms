@@ -1,4 +1,4 @@
-{if $is_oem || (SYS_HTTPS && substr($url, 0, 7) == "http://")}
+{if (SYS_HTTPS && substr($url, 0, 7) == "http://")}
 <html>
 <head>
     <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />

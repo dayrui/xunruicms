@@ -16,7 +16,7 @@
             {loop $list $i $t}
             <tr class="odd gradeX">
                 <td>{dr_date($t.logintime, '', 'red')} </td>
-                <td><a href="https://www.baidu.com/s?wd={$t[loginip]}&action=xunruicms" target="_blank">{Ip::address($t[loginip])}</a> {str_replace(') ', ')  ', $t.useragent)} </td>
+                <td><a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t[loginip])}</a> {str_replace(') ', ')  ', $t.useragent)} </td>
             </tr>
             {/loop}
             </tbody>

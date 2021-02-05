@@ -84,14 +84,15 @@
         });
         // 检测下载结果
         var is_ok_lock = 0;
+        var is_count = 0;
         var interval_id = window.setInterval(function() {
 
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "{dr_url('cloud/update_file_check')}&id={$app_id}",
+                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&is_count="+is_count,
                 success: function (json) {
-
+                    is_count++;
                     document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
 
                     if (json.code == 0) {
@@ -102,7 +103,7 @@
                         clearInterval(interval_id);
                     } else {
                         $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
-                        if (json.code == 100) {
+                        if (json.code >= 100) {
                             // 下在完成
                             clearInterval(interval_id);
                             //dr_checking_install();
