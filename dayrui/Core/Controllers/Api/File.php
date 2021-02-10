@@ -39,7 +39,7 @@ class File extends \Phpcmf\Common
         }
 
         return [
-            'size' => ($field['setting']['option']['size']),
+            'size' => floatval($field['setting']['option']['size']),
             'exts' => $field['setting']['option']['ext'],
             'count' => max(1, (int)$field['setting']['option']['count']),
             'attachment' => $field['setting']['option']['attachment'],

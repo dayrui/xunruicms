@@ -12,7 +12,7 @@
  */
 function dr_in_array($var, $array) {
 
-    if (!$array) {
+    if (!$array || !is_array($array)) {
         return 0;
     }
 
@@ -3945,7 +3945,7 @@ class php5replace {
     function php55_replace_var($value) {
         $v = '';
         $val = (defined($value[1]) ? $value[1] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'config', $value[1]));
-        @eval('$v = '.($val ? $val : '""').';');
+        eval('$v = '.($val ? $val : '""').';');
         return $v;
     }
 
@@ -3961,7 +3961,7 @@ class php5replace {
             $param = $value[2] == '$data' ? $this->data : $value[2];
             return call_user_func_array(
                 $value[1],
-                is_array($param) ? ['data' => $param] : @explode(',', $param)
+                is_array($param) ? ['data' => $param] : explode(',', $param)
             );
         } else {
             return '函数['.$value[1].']未定义';
