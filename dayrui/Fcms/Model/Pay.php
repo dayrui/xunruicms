@@ -467,10 +467,21 @@ class Pay extends \Phpcmf\Model
         return \Phpcmf\Service::M('member')->add_money($uid, $value);
     }
 
+    // 通过支付流水号获取id号
+    protected function get_pay_id($mark) {
+        return (int)substr(strrchr($mark, '-'), 1);
+    }
+
+    // 生成支付流水id号
+    protected function get_pay_sn($data) {
+        return trim(\Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', $data['inputtime']).'-'.$data['id'];
+    }
+
     // 充值成功的返回
     public function paysuccess($mark, $payid) {
 
-        list($a, $id) = explode('-', $mark);
+        // 找流水id
+        $id = $this->get_pay_id($mark);
         $data = $this->table('member_paylog')->get($id);
         if (!$data) {
             return dr_return_data(0, dr_lang('支付记录不存在'));
@@ -868,8 +879,9 @@ class Pay extends \Phpcmf\Model
     public function dopay($apifile, $data) {
 
         $id = $data['id']; // 支付记录的id
+
         // 生成唯一支付id 接口使用
-        $sn = $pid = str_replace('-', '', \Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', $data['inputtime']).'-'.$id;
+        $sn = $pid = $this->get_pay_sn($data);
 
         // 接口配置参数
         $config = \Phpcmf\Service::C()->member_cache['payapi'][$data['type']];
