@@ -1050,7 +1050,7 @@ class Content extends \Phpcmf\Model {
         // 模块表单
         if ($module['form']) {
             foreach ($module['form'] as $t) {
-                $table = $this->siteid.'_'.$this->dirname.'_form_'.$t['table'];
+                $table = $this->mytable.'_form_'.$t['table'];
                 if (!$this->is_table_exists($table)) {
                     break;
                 }

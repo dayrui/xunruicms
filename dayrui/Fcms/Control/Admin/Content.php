@@ -94,7 +94,6 @@ class Content extends \Phpcmf\Common
 
     }
 
-
     // 提取tag
     protected function _Tag() {
 
@@ -288,6 +287,87 @@ class Content extends \Phpcmf\Common
         }
 
         $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
+    }
+
+    // 批量删除
+    public function del_index() {
+
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 100; // 每页处理的数量
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+        $table = $this->content_model->mytable;
+
+        $where = [];
+        $catid = \Phpcmf\Service::L('input')->get('catid');
+
+        $url = \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
+
+        // 获取生成栏目
+        if ($catid) {
+            $cat = [];
+            foreach ($catid as $i) {
+                if ($i) {
+                    $cat[] = intval($i);
+                    if ($this->module['category'][$i]['child']) {
+                        $cat = dr_array2array($cat, explode(',', $this->module['category'][$i]['childids']));
+                    }
+                    $url.= '&catid[]='.intval($i);
+                }
+            }
+            $cat && $where[] = 'catid IN ('.implode(',', $cat).')';
+        }
+
+        $author = \Phpcmf\Service::L('input')->get('author');
+        if ($author) {
+            $where[] = 'author="'.dr_safe_replace($author).'"';
+            $url.= '&author='.$author;
+        }
+
+        $uid = (int)\Phpcmf\Service::L('input')->get('uid');
+        if ($uid) {
+            $where[] = 'uid='.$uid;
+            $url.= '&uid='.$uid;
+        }
+
+        $id1 = (int)\Phpcmf\Service::L('input')->get('id1');
+        $id2 = (int)\Phpcmf\Service::L('input')->get('id2');
+        if ($id1 || $id2) {
+            if (!$id2) {
+                $where[] = 'id>'.$id1;
+            } else {
+                $where[] = '`id` BETWEEN '.$id1.' AND '.$id2;
+            }
+            $url.= '&id1='.$id1.'&id2='.$id2;
+        }
+
+        if (!$where) {
+            $this->_html_msg(0, dr_lang('没有设置条件'));
+        }
+
+        $where = implode(' AND ', $where);
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容'));
+            }
+
+            $this->_html_msg(1, dr_lang('正在删除中...'), $url.'&total='.$total.'&page='.($page+1));
+        }
+
+        $tpage = ceil($total / $psize); // 总页数
+
+        // 更新完成
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('删除完成'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table($table)->where($where)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        foreach ($data as $row) {
+            $this->content_model->delete_content($row['id']);
+        }
+
+        $this->_html_msg(1, dr_lang('正在删除中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
     }
 
 
