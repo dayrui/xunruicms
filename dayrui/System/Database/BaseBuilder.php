@@ -2226,8 +2226,6 @@ class BaseBuilder
 		return $this->compileFinalQuery($sql);
 	}
 
-	//--------------------------------------------------------------------
-
 	/**
 	 * Insert
 	 *
@@ -2318,8 +2316,6 @@ class BaseBuilder
 	{
 		return 'INSERT ' . $this->compileIgnore('insert') . 'INTO ' . $table . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', $unescapedKeys) . ')';
 	}
-
-	//--------------------------------------------------------------------
 
 	/**
 	 * Replace
@@ -2803,9 +2799,8 @@ class BaseBuilder
 	 */
 	public function getCompiledDelete(bool $reset = true): string
 	{
-		$table = $this->QBFrom[0];
-
-		$sql = $this->delete($table, null, $reset);
+		$sql = $this->testMode()->delete('', null, $reset);
+		$this->testMode(false);
 
 		return $this->compileFinalQuery($sql);
 	}

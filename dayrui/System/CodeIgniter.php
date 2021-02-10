@@ -18,13 +18,14 @@ use CodeIgniter\Exceptions\FrameworkException;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\DownloadResponse;
-use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\Request;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\URI;
 use CodeIgniter\Router\Exceptions\RedirectException;
 use CodeIgniter\Router\RouteCollectionInterface;
+use CodeIgniter\Router\Router;
 use Config\App;
 use Config\Cache;
 use Config\Services;
@@ -43,7 +44,7 @@ class CodeIgniter
 	/**
 	 * The current version of CodeIgniter Framework
 	 */
-	const CI_VERSION = '4.0.4';
+	const CI_VERSION = '4.1.1';
 
 	/**
 	 * App startup time.
@@ -76,7 +77,7 @@ class CodeIgniter
 	/**
 	 * Current request.
 	 *
-	 * @var Request|HTTP\IncomingRequest|CLIRequest
+	 * @var Request|IncomingRequest|CLIRequest
 	 */
 	protected $request;
 
@@ -90,7 +91,7 @@ class CodeIgniter
 	/**
 	 * Router to use.
 	 *
-	 * @var Router\Router
+	 * @var Router
 	 */
 	protected $router;
 
@@ -234,7 +235,6 @@ class CodeIgniter
 		// If we have KINT_DIR it means it's already loaded via composer
 		if (! defined('KINT_DIR'))
 		{
-			// @phpstan-ignore-next-line
 			spl_autoload_register(function ($class) {
 				$class = explode('\\', $class);
 
@@ -406,6 +406,11 @@ class CodeIgniter
 			if ($possibleResponse instanceof ResponseInterface)
 			{
 				return $returnResponse ? $possibleResponse : $possibleResponse->pretend($this->useSafeOutput)->send();
+			}
+
+			if ($possibleResponse instanceof Request)
+			{
+				$this->request = $possibleResponse;
 			}
 		}
 

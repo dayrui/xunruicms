@@ -58,7 +58,7 @@ class Message implements MessageInterface
 	/**
 	 * Returns an array containing all headers.
 	 *
-	 * @return array<string,Header> An array of the request headers
+	 * @return array<string, Header> An array of the request headers
 	 *
 	 * @deprecated Use Message::headers() to make room for PSR-7
 	 */
@@ -142,7 +142,14 @@ class Message implements MessageInterface
 	 */
 	public function isJSON()
 	{
-		return $this->hasHeader('Content-Type')
-			&& $this->header('Content-Type')->getValue() === 'application/json';
+		if (! $this->hasHeader('Content-Type'))
+		{
+			return false;
+		}
+
+		$header = $this->header('Content-Type')->getValue();
+		$parts  = explode(';', $header);
+
+		return in_array('application/json', $parts, true);
 	}
 }
