@@ -116,6 +116,7 @@ class Login extends \Phpcmf\Common
         }
 
         // 查询关联用户
+        $member = [];
         if ($oauth['uid']) {
             $member = \Phpcmf\Service::M('member')->get_member($oauth['uid']);
         } elseif ($oauth['unionid']) {
@@ -170,7 +171,10 @@ class Login extends \Phpcmf\Common
             // 验证用户组
             $groupid = (int)\Phpcmf\Service::L('input')->get('groupid');
             if (!$groupid) {
-                $groupid = (int)@current($this->member_cache['register']['group']);
+                $groupid = (int)$this->member_cache['register']['groupid'];
+                if (!$groupid) {
+                    $this->_msg(0, dr_lang('系统没有设置默认注册的用户组'));
+                }
             }
 
             if (!$groupid) {
