@@ -209,7 +209,7 @@ class Form extends \Phpcmf\Common
 
 		list($data, $return) = \Phpcmf\Service::L('form')->validation($data, $this->form);
 		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
-		\Phpcmf\Service::M('Form')->table('form')->is_exists($id, 'table', $data['table']) && exit($this->_json(0, dr_lang('数据表名称已经存在'), ['field' => 'table']));
+		\Phpcmf\Service::M('Form')->table_site('form')->is_exists($id, 'table', $data['table']) && exit($this->_json(0, dr_lang('数据表名称已经存在'), ['field' => 'table']));
 	}
 
 	// 导出
