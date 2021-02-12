@@ -87,7 +87,7 @@ class Form extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('导入参数没有table参数'));
 		} elseif (!$data['name']) {
             return dr_return_data(0, dr_lang('导入参数没有name参数'));
-        } elseif ($this->table('form')->is_exists(0, 'table', $data['table'])) {
+        } elseif ($this->table_site('form')->is_exists(0, 'table', $data['table'])) {
             return dr_return_data(0, dr_lang('数据表名称已经存在'));
         }
 
