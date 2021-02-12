@@ -132,11 +132,11 @@ class Form extends \Phpcmf\Model
     public function delete_form($ids) {
 
         foreach ($ids as $id) {
-            $row = $this->table('form')->get(intval($id));
+            $row = $this->table_site('form')->get(intval($id));
             if (!$row) {
                 return dr_return_data(0, dr_lang('数据不存在(id:%s)', $id));
             }
-            $rt = $this->table('form')->delete($id);
+            $rt = $this->table_site('form')->delete($id);
             if (!$rt['code']) {
                 return dr_return_data(0, $rt['msg']);
             }
