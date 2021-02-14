@@ -88,6 +88,20 @@ class Category extends \Phpcmf\Table
             $t['child'] = $t['pcatpost'] ? 0 : $t['child'];
             $t['setting'] = dr_string2array($t['setting']);
             $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
+            if ($this->module['share']) {
+                // 共享栏目时
+                //以本栏目为准
+                $t['setting']['html'] = intval($t['setting']['html']);
+                $t['setting']['urlrule'] = intval($t['setting']['urlrule']);
+            } else {
+                // 独立模块栏目
+                //以站点为准
+                if (!isset($t['tid'])) {
+                    $t['tid'] = $t['setting']['linkurl'] ? 2 : 1; // 判断栏目类型 2表示外链
+                }
+                $t['setting']['html'] = intval($this->module['html']);
+                $t['setting']['urlrule'] = isset($this->module['site'][SITE_ID]['urlrule']) ? intval($this->module['site'][SITE_ID]['urlrule']) : 0;
+            }
             $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($this->module, $t));
             if ($this->_is_admin_auth('add')) {
                 // 非外链添加子类 $t['tid'] != 2 &&

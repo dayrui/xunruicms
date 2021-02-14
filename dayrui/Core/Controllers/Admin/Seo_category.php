@@ -82,6 +82,7 @@ class Seo_category extends \Phpcmf\Common
             } else {
                 $t['html'] = '<a href="javascript:edit_seo2();" class="btn btn-xs green">  <i class="fa fa-code"></i> '.$name.'</a>';
             }
+            $t['url'] = dr_url_prefix($t['url']);
             $tree[$t['id']] = $t;
         }
 
