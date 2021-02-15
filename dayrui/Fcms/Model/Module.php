@@ -783,7 +783,7 @@ class Module extends \Phpcmf\Model
                     if ($f['relatedid']) {
                         $f['setting']['diy']['cat_field_catids'][] = $f['relatedid'];
                     }
-                    if (isset($f['setting']['diy']['cat_field_catids'])) {
+                    if (isset($f['setting']['diy']['cat_field_catids']) && is_array($f['setting']['diy']['cat_field_catids'])) {
                         $fcatids = array_unique($f['setting']['diy']['cat_field_catids']);
                         if ($fcatids) {
                             foreach ($fcatids as $fcid) {
