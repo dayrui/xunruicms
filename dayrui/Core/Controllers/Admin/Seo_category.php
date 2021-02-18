@@ -140,8 +140,8 @@ class Seo_category extends \Phpcmf\Common
             foreach (['list_title', 'list_keywords', 'list_description'] as $name) {
                 $data['setting']['seo'][$name] = $seo[$name];
             }
-            $data['setting']['html'] = (int)$set['html'];
-            $data['setting']['urlrule'] = (int)$set['urlrule'];
+            $data['setting']['html'] = isset($set['html']) ? (int)$set['html'] : 0;
+            $data['setting']['urlrule'] = isset($set['urlrule']) ? (int)$set['urlrule'] : 0;
             \Phpcmf\Service::M()->db->table(dr_module_table_prefix($dir).'_category')->where('id', $id)->update([
                 'setting' => dr_array2string($data['setting']),
             ]);
