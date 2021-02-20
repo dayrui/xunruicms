@@ -98,6 +98,9 @@ class Member_paymeet extends \Phpcmf\Table
     public function edit() {
         list($tpl, $data) = $this->_Post((int)\Phpcmf\Service::L('input')->get('id'), [], 1);
         !$data && $this->_admin_msg(0, dr_lang('支付记录不存在'));
+        \Phpcmf\Service::V()->assign([
+            'data' => $data,
+        ]);
         \Phpcmf\Service::V()->display('member_paylog_edit.html');
     }
     
