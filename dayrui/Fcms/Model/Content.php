@@ -782,11 +782,10 @@ class Content extends \Phpcmf\Model {
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
 
         if (!$data[1]['description']) {
-            $limit = \Phpcmf\Service::C()->module['setting']['desc_limit'] ? \Phpcmf\Service::C()->module['setting']['desc_limit'] : 100;
             if (isset($data[0]['content']) && $data[0]['content']) {
-                $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), $limit));
+                $data[1]['description'] = dr_get_description($data[0]['content']);
             } elseif (isset($data[1]['content']) && $data[1]['content']) {
-                $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[1]['content']), $limit));
+                $data[1]['description'] = dr_get_description($data[1]['content']);
             }
         }
         if (isset($data[1]['keywords']) && $data[1]['keywords']) {

@@ -53,7 +53,7 @@
             </tr>
             </thead>
             <tbody>
-            {member where=$where order=id page=1 pagesize=10 urlrule=$urlrule}
+            {member where=$where order=id page=1 pagesize=$pagesize urlrule=$urlrule}
             <tr class="odd gradeX" id="dr_row_{$t.id}">
                 <td class="myselect">
                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">

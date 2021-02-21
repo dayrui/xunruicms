@@ -676,13 +676,14 @@ class Table extends \Phpcmf\Common
     // 获取模板文件名 name模板文件；fname为优先的模板
     public function _tpl_filename($name, $fname = '') {
 
+        $my_file = '';
         if (IS_ADMIN) {
             // 存在优先模板
             if ($fname) {
                 $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
             }
             // 优先模板不存在的情况下
-            if (!is_file($my_file)) {
+            if (!$my_file || !is_file($my_file)) {
                 $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
             }
             \Phpcmf\Service::V()->admin($this->admin_tpl_path);
@@ -692,7 +693,7 @@ class Table extends \Phpcmf\Common
                 $my_file = is_file(dr_tpl_path().$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
             }
             // 优先模板不存在的情况下
-            if (!is_file($my_file)) {
+            if (!$my_file || !is_file($my_file)) {
                 $my_file = is_file(dr_tpl_path().$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
             }
         }

@@ -122,7 +122,6 @@ class Form extends \Phpcmf\Table
         );
     }
 
-
     // 后台批量保存排序值
     protected function _Member_Order() {
         $this->_Display_Order(
@@ -148,12 +147,10 @@ class Form extends \Phpcmf\Table
     // 格式化保存数据 保存之前
     protected function _Format_Data($id, $data, $old) {
 
-
         // 新增数据
         if (!$old) {
             if ($this->uid) {
                 // 判断日发布量
-
                 $day_post = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'day_post', $this->member);
                 if ($day_post && \Phpcmf\Service::M()->db
                         ->table($this->init['table'])
@@ -162,7 +159,6 @@ class Form extends \Phpcmf\Table
                         ->countAllResults() >= $day_post) {
                     $this->_json(0, dr_lang('每天发布数量不能超过%s个', $day_post));
                 }
-
                 // 判断发布总量
                 $total_post = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'total_post', $this->member);
                 if ($total_post && \Phpcmf\Service::M()->db
@@ -172,6 +168,7 @@ class Form extends \Phpcmf\Table
                     $this->_json(0, dr_lang('发布数量不能超过%s个', $total_post));
                 }
             }
+
 			// 审核状态
 			$data[1]['status'] = \Phpcmf\Service::M('member_auth')->form_auth($this->form['id'], 'verify', $this->member) ? 0 : 1;
 
@@ -203,7 +200,6 @@ class Form extends \Phpcmf\Table
             function ($id, $data, $old) {
                 if (!$old) {
                     // 首次 发布
-
                     // 提醒通知
                     if (isset($this->form['setting']['notice']['use']) && $this->form['setting']['notice']['use']) {
                         if (isset($this->form['setting']['notice']['username']) && $this->form['setting']['notice']['username']) {
@@ -220,18 +216,16 @@ class Form extends \Phpcmf\Table
                             log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但未设置通知人');
                         }
                     }
-
                 }
                 if (!$data[1]['status']) {
                     // 审核
                     \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
                     $data['url'] = $this->form['setting']['rt_url'];
-                    $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+                    return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
                 }
-
                 // 挂钩点
                 \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
-                $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
+                return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
             }
         );
     }

@@ -57,6 +57,13 @@ class Related extends \Phpcmf\Library\A_Field {
 					<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
                     </div>
                 </div>
+				<div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('每页显示条数').'</label>
+                    <div class="col-md-9">
+                    <label><input type="text" class="form-control" size="10" name="data[setting][option][pagesize]" value="'.$option['pagesize'].'"></label>
+					<span class="help-block">'.dr_lang('选择列表分页条数，按多少条数据分页').'</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('友情提示').'</label>
                     <div class="col-md-9">
@@ -104,7 +111,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		// 字段提示信息
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 		// 区域大小
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "65%"]';
         // 模块名称
 		$module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
 		// 添加模板
@@ -129,7 +136,7 @@ class Related extends \Phpcmf\Library\A_Field {
         </thead>
         <tbody id="related_'.$name.'-sort-items" class="scroller_body">';
 
-        $value = @trim($value, ',');
+        $value = trim($value, ',');
         if ($value && is_string($value)) {
 			$db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $query = $db ? $db->getResultArray() : [];
@@ -159,7 +166,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?s=api&c=api&m=related&site='.SITE_ID.'&module='.$module.'&is_ajax=1";
+		    var url = "/index.php?s=api&c=api&m=related&site='.SITE_ID.'&module='.$module.'&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-cog"></i> '.dr_lang('关联内容').'\',

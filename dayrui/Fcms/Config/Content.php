@@ -167,7 +167,7 @@ return [
                             'validate' =>
                                 array (
                                     'xss' => 1,
-                                    'filter' => 'dr_clearhtml',
+                                    'filter' => 'dr_get_description',
                                 ),
                         ),
                     'displayorder' => '0',

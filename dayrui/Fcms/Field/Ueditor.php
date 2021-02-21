@@ -69,7 +69,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').' <span></span></label>
                         </div>
-						<span class="help-block">自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
+						<span class="help-block">'.dr_lang('自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”').'</span>
                     </div>
                 </div>
 				'.$wm.
@@ -82,7 +82,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                              &nbsp; &nbsp;
                             <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$(\'#sdmrx\').hide()" value="0" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">编辑器底部工具栏，有截取字符选择、提取缩略图、下载远程图等控制按钮</span>
+						<span class="help-block">'.dr_lang('编辑器底部工具栏，有截取字符选择、提取缩略图、下载远程图等控制按钮').'</span>
                     </div>
                 </div>
                 <div class="form-group" id="sdmrx" '.(!$option['show_bottom_boot'] ? 'style="display:none"' : '').'>
@@ -122,7 +122,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">当开启时，在完整模式下，编辑器图标栏会固定在页面，不会随浏览器滚动</span>
+						<span class="help-block">'.dr_lang('当开启时，在完整模式下，编辑器图标栏会固定在页面，不会随浏览器滚动').'</span>
                     </div>
                 </div>
                 <div class="form-group hide">
@@ -133,7 +133,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="1" name="data[setting][option][remove_style]" '.($option['remove_style'] ==1 ? 'checked' : '').' > '.dr_lang('后台过滤').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio"  value="2" name="data[setting][option][remove_style]" '.($option['remove_style'] ==2 ? 'checked' : '').' > '.dr_lang('前端过滤').' <span></span></label>
                         </div>
-						<span class="help-block">过滤编辑器里面的多余的style属性参数</span>
+						<span class="help-block">'.dr_lang('过滤编辑器里面的多余的style属性参数').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -143,7 +143,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][div2p]" '.(!$option['div2p'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][div2p]" '.($option['div2p'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">将编辑器的div标签强制转换为p标签</span>
+						<span class="help-block">'.dr_lang('将编辑器的div标签强制转换为p标签').'</span>
                     </div>
                 </div>
                 
@@ -155,7 +155,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][autoheight]" '.($option['autoheight'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
 						
-						<span class="help-block">编辑器会自动增加高度</span>
+						<span class="help-block">'.dr_lang('编辑器会自动增加高度').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -165,7 +165,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][page]" '.($option['page'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][page]" '.(!$option['page'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">文章内容的分页功能</span>
+						<span class="help-block">'.dr_lang('文章内容的分页功能').'</span>
                     </div>
                 </div>
                 
@@ -422,7 +422,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']])
             && !\Phpcmf\Service::L('Field')->data[1]['description'] && $_POST['is_auto_description_'.$field['fieldname']]) {
-            \Phpcmf\Service::L('Field')->data[1]['description'] = $_POST['data']['description'] = trim(dr_strcut(dr_clearhtml($value), 200));
+            \Phpcmf\Service::L('Field')->data[1]['description'] = $_POST['data']['description'] = dr_get_description($value);
         }
 
         // 替换分页
@@ -599,15 +599,14 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         ", 0);
 
 
-        if ($field['setting']['option']['show_bottom_boot']) {
-
+        if (isset($field['setting']['option']['show_bottom_boot']) && $field['setting']['option']['show_bottom_boot']) {
             $str.= '<div class="mt-checkbox-inline" style="margin-top: 10px;">';
             $str.= '     <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
                   <input name="is_auto_thumb_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_1'] ? 'checked' : '').' value="1"> '.dr_lang('提取第一个图片为缩略图').' <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取前200字为描述信息').' <span></span>
+                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取内容作为描述信息').' <span></span>
                  </label>';
             if (!$field['setting']['option']['down_img']) {
                 $str.= '

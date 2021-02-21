@@ -297,6 +297,10 @@ class Api extends \Phpcmf\Common
 
         // 站点选择
         $site = max(1, (int)\Phpcmf\Service::L('input')->get('site'));
+        $pagesize = (int)\Phpcmf\Service::L('input')->get('pagesize');
+        if (!$pagesize) {
+            $pagesize = 10;
+        }
 
         // 模块缓存判断
         $module = $this->get_cache('module-'.$site.'-'.$dirname);
@@ -304,20 +308,20 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('模块（%s）不存在', $dirname));
         }
 
-        $module['field']['id'] = array(
+        $module['field']['id'] = [
             'name' => 'Id',
             'ismain' => 1,
             'fieldtype' => 'Text',
             'fieldname' => 'id',
-        );
+        ];
 
         if ($this->member && $this->member['adminid'] > 0) {
-            $module['field']['author'] = array(
+            $module['field']['author'] = [
                 'name' => dr_lang('作者'),
                 'ismain' => 1,
                 'fieldtype' => 'Text',
                 'fieldname' => 'author',
-            );
+            ];
         }
 
         if (IS_POST) {
@@ -380,7 +384,7 @@ class Api extends \Phpcmf\Common
             'param' => $data,
             'field' => $module['field'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
-            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site]),
+            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site, 'pagesize' => $pagesize]),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $module['category'],
                 $data['catid'],
@@ -389,6 +393,7 @@ class Api extends \Phpcmf\Common
             ),
             'urlrule' => dr_url('api/api/related', $rules),
             'category' => $module['category'],
+            'pagesize' => $pagesize,
         ));
         \Phpcmf\Service::V()->display('api_related.html');exit;
     }

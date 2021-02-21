@@ -281,7 +281,7 @@ class Content extends \Phpcmf\Common
             }
             if ($row && $row['content']) {
                 \Phpcmf\Service::M()->db->table($table)->where('id', $row['id'])->update(array(
-                    'description' => trim(dr_strcut(dr_clearhtml(dr_code2html($row['content'])), $nums))
+                    'description' => dr_get_description(dr_code2html($row['content']), $nums)
                 ));
             }
         }

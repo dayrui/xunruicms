@@ -4081,6 +4081,17 @@ if (! function_exists('dr_clearhtml')) {
     }
 }
 
+if (! function_exists('dr_get_description')) {
+    /**
+     * 提取描述信息
+     */
+    function dr_get_description($text, $limit = 0) {
+        if (!$limit) {
+            $limit = isset(\Phpcmf\Service::C()->module['setting']['desc_limit']) && \Phpcmf\Service::C()->module['setting']['desc_limit'] ? \Phpcmf\Service::C()->module['setting']['desc_limit'] : 200;
+        }
+        return trim(dr_strcut(dr_clearhtml($text), $limit));
+    }
+}
 if (! function_exists('dr_get_keywords')) {
     /**
      * 提取关键字

@@ -38,6 +38,13 @@ class Members extends \Phpcmf\Library\A_Field {
 					<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
                     </div>
                 </div>
+				<div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('每页显示条数').'</label>
+                    <div class="col-md-9">
+                    <label><input type="text" class="form-control" size="10" name="data[setting][option][pagesize]" value="'.$option['pagesize'].'"></label>
+					<span class="help-block">'.dr_lang('选择列表分页条数，按多少条数据分页').'</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('指定用户组').'</label>
                     <div class="col-md-9">
@@ -93,7 +100,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
 		// 区域大小
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "45%"]';
+        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "65%"]';
 
 		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
 
@@ -117,7 +124,7 @@ class Members extends \Phpcmf\Library\A_Field {
         </thead>
         <tbody id="rmember_'.$name.'-sort-items" class="scroller_body">';
 
-        $value = @trim($value, ',');
+        $value = trim($value, ',');
         if ($value && is_string($value)) {
 			$db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $query = $db ? $db->getResultArray() : [];
@@ -146,7 +153,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?s=api&c=api&m=members&group='.(implode(',', $field['setting']['option']['group'])).'";
+		    var url = "/index.php?s=api&c=api&m=members&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.(implode(',', $field['setting']['option']['group'])).'";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',
