@@ -21,12 +21,12 @@
     <div class="margin-bottom-5">
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('访问')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['show'] || !$auth['form']} checked {/if} name="form[show]" value="1" />
+            <input type="checkbox" class="checkboxes" {if !$auth['form'] || $auth['form']['show']} checked {/if} name="form[show]" value="1" />
             <span></span>
         </label>
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('发布')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['add'] || !$auth['form']} checked {/if} name="form[add]" value="1" />
+            <input type="checkbox" class="checkboxes" {if !$auth['form'] || $auth['form']['add']} checked {/if} name="form[add]" value="1" />
             <span></span>
         </label>
 
@@ -43,12 +43,12 @@
 
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('验证码')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['code'] || !$auth['form']} checked {/if} name="form[code]" value="1" />
+            <input type="checkbox" class="checkboxes" {if !$auth['form'] || $auth['form']['code']} checked {/if} name="form[code]" value="1" />
             <span></span>
         </label>
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('发布审核')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['verify'] || !$auth['form']} checked {/if} name="form[verify]" value="1" />
+            <input type="checkbox" class="checkboxes" {if !$auth['form'] || $auth['form']['verify']} checked {/if} name="form[verify]" value="1" />
             <span></span>
         </label>
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
