@@ -18,6 +18,14 @@
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
     {/if}
+	<?php 
+	if (!isset($auth['mform']) || !$auth['mform']) {
+		$auth['mform'] = [];
+	}
+	if (!isset($auth['mform'][$mid])) {
+		$auth['mform'][$mid] = [];
+	}
+	?>
     <div class="margin-bottom-5">
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('访问')}
