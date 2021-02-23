@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 // 模块ajax操作接口
 class Module extends \Phpcmf\Common
 {
@@ -122,42 +120,11 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('favorite')) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装'));
-        } elseif (!dr_in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
-            $this->_json(0, dr_lang('应用[模块内容收藏]未安装到本模块[%s]', $this->dirname));
         }
 
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
-        if (!$this->uid) {
-            $this->_json(0, dr_lang('还没有登录'));
-        } elseif (!$id) {
-            $this->_json(0, dr_lang('id参数不完整'));
-        }
+        $rt = \Phpcmf\Service::M('op', 'favorite')->run($this->tablename, $this->dirname);
 
-        $data = \Phpcmf\Service::M()->db->table($this->tablename.'_index')->where('id', $id)->countAllResults();
-        if (!$data) {
-            $this->_json(0, dr_lang('模块内容不存在'));
-        }
-
-        $favorite = \Phpcmf\Service::M()->db->table($this->tablename.'_favorite')->where('cid', $id)->where('uid', $this->uid)->get()->getRowArray();
-        if ($favorite) {
-            // 已经收藏了,我们就删除它
-            $msg = dr_lang('取消收藏');
-            \Phpcmf\Service::M()->db->table($this->tablename.'_favorite')->where('id', intval($favorite['id']))->delete();
-        } else {
-            $msg = dr_lang('收藏成功');
-            \Phpcmf\Service::M()->db->table($this->tablename.'_favorite')->insert(array(
-                'cid' => $id,
-                'uid' => $this->uid
-            ));
-        }
-
-        // 更新数量
-        $c = \Phpcmf\Service::M()->db->table($this->tablename.'_favorite')->where('cid', $id)->countAllResults();
-        \Phpcmf\Service::M()->db->table($this->tablename)->where('id', $id)->set('favorites', $c)->update();
-        \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
-
-        // 返回结果
-        $this->_json(1, $msg, $c);
+        $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
 
     /**
@@ -167,24 +134,11 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('favorite')) {
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装'));
-        } elseif (!dr_in_array('favorites', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
-            $this->_json(0, dr_lang('应用[模块内容收藏]未安装到本模块[%s]', $this->dirname));
         }
 
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        $rt = \Phpcmf\Service::M('is_favorite', 'favorite')->run($this->tablename, $this->dirname);
 
-        if (!$this->uid) {
-            $this->_json(0, dr_lang('还没有登录'));
-        } elseif (!$id) {
-            $this->_json(0, dr_lang('id参数不完整'));
-        }
-
-        $favorite = \Phpcmf\Service::M()->db->table($this->tablename.'_favorite')->where('cid', $id)->where('uid', $this->uid)->countAllResults();
-        if ($favorite) {
-            $this->_json(1, '已经收藏');
-        } else {
-            $this->_json(0, '没有收藏');
-        }
+        $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
 
     /**
@@ -194,59 +148,10 @@ class Module extends \Phpcmf\Common
 
         if (!dr_is_app('zan')) {
             $this->_json(0, dr_lang('应用[模块内容点赞]未安装'));
-        } elseif (!dr_in_array('support', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
-            $this->_json(0, dr_lang('应用[模块内容点赞]未安装到本模块[%s]', $this->dirname));
-        } elseif (!dr_in_array('oppose', \Phpcmf\Service::M('table')->get_cache_field($this->tablename)) ) {
-            $this->_json(0, dr_lang('应用[模块内容点赞]未安装到本模块[%s]', $this->dirname));
         }
 
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
-        if (!$id) {
-            $this->_json(0, dr_lang('id参数不完整'));
-        }
+        $rt = \Phpcmf\Service::M('op', 'zan')->run($this->tablename, $this->dirname);
 
-        $value = (int)\Phpcmf\Service::L('input')->get('value');
-        $data = \Phpcmf\Service::M()->db->table($this->tablename.'_index')->where('id', $id)->countAllResults();
-        if (!$data) {
-            $this->_json(0, dr_lang('模块内容不存在'));
-        }
-
-        $field = $value ? 'support' : 'oppose';
-        $table = $this->tablename.'_'.$field;
-        if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-            $this->_json(0, dr_lang('应用[模块内容点赞]未安装到本模块[%s]', $this->dirname));
-        }
-
-        $agent = md5(\Phpcmf\Service::L('input')->get_user_agent().\Phpcmf\Service::L('input')->ip_address());
-        if (!$this->uid) {
-            $result = \Phpcmf\Service::M()->db->table($table)->where('cid', $id)->where('uid', $this->uid)->where('agent', $agent)->get()->getRowArray();
-        } else {
-            $result = \Phpcmf\Service::M()->db->table($table)->where('cid', $id)->where('uid', $this->uid)->get()->getRowArray();
-        }
-
-
-        if ($result) {
-            // 已经操作了,我们就删除它
-            \Phpcmf\Service::M()->db->table($table)->where('id', intval($result['id']))->delete();
-            $msg = dr_lang('操作取消');
-        } else {
-            \Phpcmf\Service::M()->db->table($table)->insert(array(
-                'cid' => $id,
-                'uid' => $this->uid,
-                'agent' => $agent,
-            ));
-            $msg = dr_lang('操作成功');
-        }
-
-        // 更新数量
-        $c = \Phpcmf\Service::M()->db->table($table)->where('cid', $id)->countAllResults();
-        \Phpcmf\Service::M()->db->table($this->tablename)->where('id', $id)->set($field, $c)->update();
-        \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_show_id_'.$id);
-
-        // 返回结果
-        $this->_json(1, $msg, $c);
+        $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
-
-
-
 }
