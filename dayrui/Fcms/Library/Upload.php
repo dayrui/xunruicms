@@ -45,7 +45,7 @@ class Upload
             "ERROR_HTTP_CONTENTTYPE" => dr_lang("链接contentType不正确")
         ];
         // 禁止以下文件上传
-        $this->notallowed = ['php', 'asp', 'jsp', 'aspx', 'exe', 'sh'];
+        $this->notallowed = ['php', 'asp', 'jsp', 'aspx', 'exe', 'sh', 'phtml'];
     }
 
     // 安全验证
