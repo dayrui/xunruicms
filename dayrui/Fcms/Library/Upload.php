@@ -238,7 +238,7 @@ class Upload
         }
 
         $name = substr(md5(SYS_TIME.uniqid().$config['url']), rand(0, 20), 15); // 随机新名字
-        $file_ext = $this->_file_ext($config['url']); // 扩展名
+        $file_ext = isset($config['file_ext']) && $config['file_ext'] ? $config['file_ext'] : $this->_file_ext($config['url']); // 扩展名
 
         // 安全验证
         $rt = $this->_safe_check($file_ext, $data);

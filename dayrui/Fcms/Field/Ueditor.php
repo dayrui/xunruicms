@@ -266,7 +266,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
         // 下载远程图片
-        if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png|webp))\\2/i", $value, $imgs)) {
+        if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $value, $imgs)) {
             foreach ($imgs[3] as $img) {
                 if (strpos($img, '/api/ueditor/') !== false
                     || strpos($img, '/api/umeditor/') !== false) {
@@ -281,7 +281,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         // 判断域名白名单
                         $arr = parse_url($img);
                         $domain = $arr['host'];
-                        if ($domain) {
+                        $ext = $this->_get_file_ext($img);
+                        if ($domain && $ext) {
                             $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
                             if (isset($sites[$domain])) {
                                 // 过滤站点域名
@@ -329,6 +330,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         'timeout' => 5,
                                         'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                         'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                        'file_ext' => $ext,
                                     ]);
                                     if ($rt['code']) {
                                         $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
@@ -338,12 +340,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             $img = $att['code'];
                                         }
                                     }
-                                    //}
                                 }
                             }
-
                         }
-
                     }
                 }
                 // 缩略图
@@ -355,10 +354,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             // 判断域名白名单
                             $arr = parse_url($img);
                             $domain = $arr['host'];
-                            if ($domain) {
+                            $ext = $this->_get_file_ext($img);
+                            if ($domain && $ext) {
                                 $file = dr_catcher_data($img, 8);
                                 if (!$file) {
-                                    log_message('error', '服务器无法下载文件：'.$img);
+                                    log_message('error', '服务器无法下载图片：'.$img);
                                 } else {
                                     // 尝试找一找附件库
                                     $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
@@ -371,6 +371,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             'timeout' => 5,
                                             'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                            'file_ext' => $ext,
                                             'file_content' => $file,
                                         ]);
                                         if ($rt['code']) {
@@ -435,6 +436,26 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         } else {
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
         }
+    }
+
+    // 获取远程附件扩展名
+    protected function _get_file_ext($url) {
+
+        $arr = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
+        $ext = str_replace('.', '', trim(strtolower(strrchr($url, '.')), '.'));
+        if ($ext && in_array($ext, $arr)) {
+            return $ext;
+        }
+
+        foreach ($arr as $t) {
+            if (strpos($url, '.'.$t) !== false) {
+                return $t;
+            }
+        }
+
+        log_message('error', '服务器无法下载图片：'.$url);
+
+        return '';
     }
 
     /**
