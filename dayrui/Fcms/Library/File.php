@@ -133,4 +133,61 @@ class File {
         return 0;
     }
 
+    // zip压缩
+    public function zip($zfile, $path, $remove = []) {
+
+        if (!class_exists('ZipArchive')) {
+            return dr_lang('PHP环境不支持ZipArchive类');
+        }
+
+        $zpath = dirname($zfile);
+        if (!is_dir($zpath)) {
+            dr_mkdirs($zpath);
+        }
+
+        $zip = new \ZipArchive;//新建一个ZipArchive的对象
+
+        if(!$zip->open($zfile, \ZipArchive::CREATE)) {
+            return dr_lang("创建zip失败");
+        }
+
+        $this->_create_zip(opendir($path), $zip, $path, '', $remove);
+        $zip->close();
+
+        if (!is_file($zfile)) {
+            return dr_lang('文件压缩失败');
+        }
+
+        return '';
+    }
+
+    /*压缩多级目录
+        $openFile:目录句柄
+        $zipObj:Zip对象
+        $sourceAbso:源文件夹路径
+    */
+    protected function _create_zip($openFile, $zipObj, $sourceAbso, $newRelat = '', $remove = []) {
+        while (($file = readdir($openFile)) != false) {
+            if ($file=="." || $file=="..") {
+                continue;
+            }
+            /*源目录路径(绝对路径)*/
+            $sourceTemp = $sourceAbso.'/'.$file;
+            /*目标目录路径(相对路径)*/
+            $newTemp = $newRelat=='' ? $file : $newRelat.'/'.$file;
+            if (is_dir($sourceTemp)) {
+                if ($remove && in_array($sourceTemp, $remove)) {
+                    continue;
+                }
+                //echo '创建'.$newTemp.'文件夹<br/>';
+                $zipObj->addEmptyDir($newTemp);/*这里注意：php只需传递一个文件夹名称路径即可*/
+                $this->_create_zip(opendir($sourceTemp), $zipObj,$sourceTemp, $newTemp, $remove);
+            }
+            if (is_file($sourceTemp)) {
+                //echo '创建'.$newTemp.'文件<br/>';
+                $zipObj->addFile($sourceTemp, $newTemp);
+            }
+        }
+    }
+
 }

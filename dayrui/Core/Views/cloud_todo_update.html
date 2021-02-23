@@ -38,26 +38,41 @@
         $('#dr_check_button_ing').addClass('green-meadow');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
-        $('#dr_check_html').append('<p class=""><label class="rleft">正在验证服务端授权信息</label></p>');
+        $('#dr_check_html').append('<p class=""><label class="rleft">正在备份本站文件</label></p>');
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
+            url: "{dr_url('cloud/update_backup')}&id={$app_id}&dir={$dir}",
             success: function (json) {
                 if (json.code == 0) {
-                    $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
-                    $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
-                    $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
-                } else {
-                    dr_do_cron();
                 }
+                $('#dr_check_html').append('<p class=""><label class="rleft">正在验证版本信息</label></p>');
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
+                    success: function (json) {
+                        if (json.code == 0) {
+                            $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+                            $('#dr_check_button_ing').addClass('red');
+                            $('#dr_check_button_ing').removeClass('green-meadow');
+                            $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                            $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
+                        } else {
+                            dr_do_cron();
+                        }
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    }
+                });
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
             }
         });
+
     }
     // 执行下载
     function dr_do_cron() {

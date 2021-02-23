@@ -14,6 +14,7 @@
                 <th width="250"> 程序名称</th>
                 <th width="110"> 更新时间 </th>
                 <th width="100"> 版本 </th>
+                <th width="110" style="text-align: center"> 备份 </th>
                 <th> </th>
             </tr>
             </thead>
@@ -25,9 +26,16 @@
                 <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
                 <td> {$t.updatetime} </td>
                 <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
+                <td align="center">
+                {if is_dir($t.backup)}
+                    <a href="javascript:dr_tips(1, '备份目录：{$t.backup}', -1);" class="label label-success"> 已备份 </a>
+                    {else}
+                    <span class="label label-danger"> 未备份 </span>
+                    {/if}
+                </td>
                 <td>
                     <label style="display: none" id="dr_update_{$dir}">
-					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
+					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
 					{if $dir == 'phpcmf' && !$is_oem}
 					<a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
 					{/if}

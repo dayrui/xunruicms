@@ -459,6 +459,7 @@ return [
         $data['phpcmf'] = $this->cmf_version;
         $data['phpcmf']['id'] = 'cms-1';
         $data['phpcmf']['tname'] = $this->cmf_license['oem'] ? '系统' : '<a href="javascript:dr_help(538);">系统</a>';
+        $data['phpcmf']['backup'] = WRITEPATH.'backups/update/cms/';
 
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
@@ -476,6 +477,7 @@ return [
                         'version' => $vsn['version'],
                         'license' => $vsn['license'],
                         'updatetime' => $vsn['updatetime'],
+                        'backup' => WRITEPATH.'backups/update/'.$key.'/',
                     ];
                 }
             }
@@ -536,9 +538,35 @@ return [
 
         \Phpcmf\Service::V()->assign([
             'ls' => dr_safe_replace($_GET['ls']),
+            'dir' => dr_safe_replace($_GET['dir']),
             'app_id' => dr_safe_replace($_GET['id']),
         ]);
         \Phpcmf\Service::V()->display('cloud_todo_update.html');exit;
+    }
+
+    // 备份本站文件
+    public function update_backup() {
+
+        $dir = dr_safe_filename($_GET['dir']);
+        if (!$dir) {
+            $this->_json(0, '本站：没有选择任何升级程序');
+        }
+
+        if ($dir == 'phpcmf') {
+            // 主程序备份
+            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/cms/'.date('Y-m-d H:i:s').'.zip', rtrim(WEBPATH, '/'), [
+                WEBPATH.'cache',
+                WEBPATH.'uploadfile',
+            ]);
+        } else {
+            // 插件备份
+            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/'.$dir.'/'.date('Y-m-d H:i:s').'.zip', dr_get_app_dir($dir));
+        }
+
+        if ($rt) {
+            $this->_json(0, '本站：文件备份失败（'.$rt.'）');
+        }
+        $this->_json(1, 'ok');
     }
 
     // 服务器下载升级文件
