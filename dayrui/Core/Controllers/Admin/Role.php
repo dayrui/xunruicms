@@ -172,7 +172,7 @@ class Role extends \Phpcmf\Common
 			\Phpcmf\Service::M('auth')->table('admin_role')->update($id, ['site' => dr_array2string($data)]);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
 			\Phpcmf\Service::L('input')->system_log('设置角色组('.$data['name'].')站点权限');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -202,7 +202,7 @@ class Role extends \Phpcmf\Common
 	private function _validation($data) {
 		list($data, $return) = \Phpcmf\Service::L('Form')->validation($data, $this->form);
 		if ($return) {
-            $this->_json(0, $return['error'], ['field' => $return['name']])
+            $this->_json(0, $return['error'], ['field' => $return['name']]);
 		}
 	}
 
