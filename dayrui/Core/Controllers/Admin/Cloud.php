@@ -450,6 +450,24 @@ return [
 
         $this->_json(1, $msg);
     }
+	
+	// 判断备份目录是否有效
+	private function _is_backup_file($path) {
+		
+		if (is_dir($path)) {
+			if ($dh = opendir($path)) {
+				while (($file = readdir($dh)) !== false) {
+					if (strpos($file, '.zip') !== false){
+						closedir($dh);
+						return $path;
+					}
+				}
+				closedir($dh);
+			}
+		}
+		
+		return '';
+	}
 
     // 程序升级
     public function update() {
@@ -459,7 +477,7 @@ return [
         $data['phpcmf'] = $this->cmf_version;
         $data['phpcmf']['id'] = 'cms-1';
         $data['phpcmf']['tname'] = $this->cmf_license['oem'] ? '系统' : '<a href="javascript:dr_help(538);">系统</a>';
-        $data['phpcmf']['backup'] = WRITEPATH.'backups/update/cms/';
+        $data['phpcmf']['backup'] = $this->_is_backup_file(WRITEPATH.'backups/update/cms/');
 
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
@@ -477,7 +495,7 @@ return [
                         'version' => $vsn['version'],
                         'license' => $vsn['license'],
                         'updatetime' => $vsn['updatetime'],
-                        'backup' => WRITEPATH.'backups/update/'.$key.'/',
+                        'backup' => $this->_is_backup_file(WRITEPATH.'backups/update/'.$key.'/'),
                     ];
                 }
             }
@@ -557,6 +575,8 @@ return [
             $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/cms/'.date('Y-m-d H:i:s').'.zip', rtrim(WEBPATH, '/'), [
                 WEBPATH.'cache',
                 WEBPATH.'uploadfile',
+                WEBPATH.'.svn',
+                WEBPATH.'.idea',
             ]);
         } else {
             // 插件备份

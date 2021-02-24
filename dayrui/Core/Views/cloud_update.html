@@ -27,7 +27,7 @@
                 <td> {$t.updatetime} </td>
                 <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
                 <td align="center">
-                {if is_dir($t.backup)}
+					{if $t.backup}
                     <a href="javascript:dr_tips(1, '备份目录：{$t.backup}', -1);" class="label label-success"> 已备份 </a>
                     {else}
                     <span class="label label-danger"> 未备份 </span>

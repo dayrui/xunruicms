@@ -107,6 +107,36 @@ class File {
         $base64_image = 'data:' . $image_info['mime'] . ';base64,' . chunk_split(base64_encode($image_data));
         return $base64_image;
     }
+	
+	protected function _zip_error($code) {
+		
+		$error = [
+			1 => '不支持多磁盘zip压缩包',
+			2 => '重命名临时文件失败',
+			3 => '关闭zip压缩包失败',
+			4 => '寻址错误',
+			5 => '读取错误',
+			6 => '写入错误',
+			7 => 'CRC校验失败',
+			8 => 'zip压缩包已关闭',
+			9 => '没有文件',
+			10 => '文件已经存在',
+			11 => '不能打开文件',
+			12 => '创建临时文件失败',
+			13 => 'Zlib错误',
+			14 => '内存分配失败',
+			15 => '条目已被改变',
+			16 => '不支持的压缩方式',
+			17 => '过早的EOF',
+			18 => '无效的参数',
+			19 => '不是一个zip压缩包',
+			20 => 'Internal',
+			21 => 'Zip压缩包不一致',
+			22 => '不能移除文件',
+			23 => '条目已被删除',
+		];
+		return isset($error[$code]) ? $error[$code] : $code;
+	}
 
     // zip解压
     public function unzip($zipfile, $path = '') {
@@ -123,8 +153,7 @@ class File {
         $zip->open这个方法的参数表示处理的zip文件名。
         如果对zip文件对象操作成功，$zip->open这个方法会返回TRUE
         */
-        if ($zip->open($zipfile) === TRUE)
-        {
+        if ($zip->open($zipfile) === TRUE) {
             $zip->extractTo($path);//假设解压缩到在当前路径下images文件夹的子文件夹php
             $zip->close();//关闭处理的zip文件
             return 1;
@@ -145,10 +174,10 @@ class File {
             dr_mkdirs($zpath);
         }
 
-        $zip = new \ZipArchive;//新建一个ZipArchive的对象
-
-        if(!$zip->open($zfile, \ZipArchive::CREATE)) {
-            return dr_lang("创建zip失败");
+        $zip = new \ZipArchive;
+		$code = $zip->open($zfile, \ZipArchive::OVERWRITE | \ZipArchive::CREATE);
+        if ($code) {
+            return dr_lang('创建Zip文件失败#%s', $this->_zip_error($code));
         }
 
         $this->_create_zip(opendir($path), $zip, $path, '', $remove);
@@ -181,7 +210,7 @@ class File {
                 }
                 //echo '创建'.$newTemp.'文件夹<br/>';
                 $zipObj->addEmptyDir($newTemp);/*这里注意：php只需传递一个文件夹名称路径即可*/
-                $this->_create_zip(opendir($sourceTemp), $zipObj,$sourceTemp, $newTemp, $remove);
+                $this->_create_zip(opendir($sourceTemp), $zipObj, $sourceTemp, $newTemp, $remove);
             }
             if (is_file($sourceTemp)) {
                 //echo '创建'.$newTemp.'文件<br/>';

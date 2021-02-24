@@ -45,28 +45,15 @@
             url: "{dr_url('cloud/update_backup')}&id={$app_id}&dir={$dir}",
             success: function (json) {
                 if (json.code == 0) {
-                    $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
-                }
-                $('#dr_check_html').append('<p class=""><label class="rleft">正在验证版本信息</label></p>');
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
-                    success: function (json) {
-                        if (json.code == 0) {
-                            $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
-                            $('#dr_check_button_ing').addClass('red');
-                            $('#dr_check_button_ing').removeClass('green-meadow');
-                            $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
-                            $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
-                        } else {
-                            dr_do_cron();
-                        }
-                    },
-                    error: function(HttpRequest, ajaxOptions, thrownError) {
-                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
-                    }
-                });
+					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 备份失败');
+					$('#dr_check_button_ing').addClass('red');
+					$('#dr_check_button_ing').removeClass('green-meadow');
+					$('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_do_check()" class="btn green"> <i class="fa fa-refresh"></i> 忽略备份继续升级 </button>');
+					$('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
+					$('#dr_check_html').append('<p class=""><label class="rleft">建议手动备份本站全部文件，然后再点击上方的【继续升级】按钮</label></p>');
+                } else {
+					dr_do_check();
+				}
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
@@ -74,6 +61,39 @@
         });
 
     }
+	
+	// 验证版本开始下载
+	function dr_do_check() {
+        $('#dr_check_html').html("");
+        $('#dr_check_result').html($('#dr_check_ing').html());
+        $('#dr_check_div').show();
+        $('#dr_check_result').show();
+        $('#dr_check_reing').remove();
+        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').removeClass('red');
+        $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
+		$('#dr_check_html').append('<p class=""><label class="rleft">正在验证版本信息</label></p>');
+		$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
+			success: function (json) {
+				if (json.code == 0) {
+					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
+					$('#dr_check_button_ing').addClass('red');
+					$('#dr_check_button_ing').removeClass('green-meadow');
+					$('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+					$('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
+				} else {
+					dr_do_cron();
+				}
+			},
+			error: function(HttpRequest, ajaxOptions, thrownError) {
+				dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+			}
+		});
+	}
+	
     // 执行下载
     function dr_do_cron() {
         // 开始下载他
