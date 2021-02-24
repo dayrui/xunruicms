@@ -195,15 +195,15 @@ class Role extends \Phpcmf\Common
         \Phpcmf\Service::M('cache')->sync_cache('auth');
 		\Phpcmf\Service::L('input')->system_log('批量删除角色组: '. @implode(',', $ids));
 
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 	
 	// 验证数据
 	private function _validation($data) {
-
 		list($data, $return) = \Phpcmf\Service::L('Form')->validation($data, $this->form);
-		$return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
-
+		if ($return) {
+            $this->_json(0, $return['error'], ['field' => $return['name']])
+		}
 	}
 
 }

@@ -42,7 +42,7 @@ class Linkage extends \Phpcmf\Common
 			    $this->_json(0, $rt['msg']);
             }
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -70,7 +70,7 @@ class Linkage extends \Phpcmf\Common
             }
 			\Phpcmf\Service::L('input')->system_log('修改联动菜单('.$data['name'].')');
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -110,18 +110,18 @@ class Linkage extends \Phpcmf\Common
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		if (!$ids) {
-		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
 		$rt = \Phpcmf\Service::M('Linkage')->delete_all($ids);
 		if (!$rt['code']) {
-		    exit($this->_json(0, $rt['msg']));
+		    $this->_json(0, $rt['msg']);
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量联动菜单: '. @implode(',', $ids));
+		\Phpcmf\Service::L('input')->system_log('批量联动菜单: '. implode(',', $ids));
 
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
 	// 验证数据

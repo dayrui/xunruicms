@@ -231,6 +231,7 @@ class Min_menu extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改简化菜单信息: '. $i);
+
 		$this->_json(1, dr_lang('更改成功'));
 	}
 

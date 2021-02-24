@@ -510,26 +510,30 @@ class Module extends \Phpcmf\Common
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
-            exit($this->_json(0, dr_lang('你还没有选择呢')));
+            $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
         $rt = \Phpcmf\Service::M('Module')->delete_form($ids);
         if (!$rt['code']) {
-            exit($this->_json(0, $rt['msg']));
+            $this->_json(0, $rt['msg']);
         }
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
         \Phpcmf\Service::L('input')->system_log('批量删除模块表单: '. @implode(',', $ids));
 
-        exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+        $this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
     }
 
     // 验证数据
     private function _validation($id, $data) {
 
         list($data, $return) = \Phpcmf\Service::L('Form')->validation($data, $this->form);
-        $return && exit($this->_json(0, $return['error'], ['field' => $return['name']]));
-        \Phpcmf\Service::M()->table('module_form')->where('module', $this->dir)->is_exists($id, 'table', $data['table']) && exit($this->_json(0, dr_lang('数据表名称已经存在'), ['field' => 'table']));
+        if ($return) {
+            $this->_json(0, $return['error'], ['field' => $return['name']]);
+        }
+        if (\Phpcmf\Service::M()->table('module_form')->where('module', $this->dir)->is_exists($id, 'table', $data['table'])) {
+            $this->_json(0, dr_lang('数据表名称已经存在'), ['field' => 'table']);
+        }
     }
 
 
