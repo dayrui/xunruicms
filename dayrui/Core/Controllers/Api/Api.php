@@ -395,7 +395,7 @@ class Api extends \Phpcmf\Common
             'category' => $module['category'],
             'pagesize' => $pagesize,
         ));
-        \Phpcmf\Service::V()->display('api_related.html');exit;
+        \Phpcmf\Service::V()->display('api_related.html');
     }
 
     /**
@@ -539,7 +539,7 @@ class Api extends \Phpcmf\Common
      */
     public function client() {
 
-        if ($this->site_info[SITE_ID]['SITE_AUTO']) {
+        if (isset($this->site_info[SITE_ID]['SITE_AUTO']) && $this->site_info[SITE_ID]['SITE_AUTO']) {
             $this->_json(0, dr_lang('系统已经开启自动识别移动端，此功能无效'));
         }
 

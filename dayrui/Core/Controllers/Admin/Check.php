@@ -70,32 +70,50 @@ class Check extends \Phpcmf\Common
 
                 break;
 
-
             case '02':
 
+                $rt = [];
                 if (!function_exists('mb_substr')) {
-                    $this->_json(0, 'PHP不支持mbstring扩展，必须开启');
-                } elseif (!function_exists('curl_init')) {
-                    $this->halt('PHP不支持CURL扩展，必须开启', 0);
-                } elseif (!function_exists('mb_convert_encoding')) {
-                    $this->halt('PHP的mb函数不支持，无法使用百度关键词接口', 0);
-                } elseif (!function_exists('imagecreatetruecolor')) {
-                    $this->halt('PHP的GD库版本太低，无法支持验证码图片', 0);
-                } elseif (!function_exists('ini_get')) {
-                    $this->_json(0, '系统函数ini_get未启用，将无法获取到系统环境参数');
-                } elseif (!function_exists('gzopen')) {
-                    $this->halt('zlib扩展未启用，您将无法进行在线升级、无法下载应用插件等', 0);
-                } elseif (!function_exists('gzinflate')) {
-                    $this->halt('函数gzinflate未启用，您将无法进行在线升级、无法下载应用插件等', 0);
-                } elseif (!function_exists('fsockopen')) {
-                    $this->halt('PHP不支持fsockopen，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
-                } elseif (!function_exists('openssl_open')) {
-                    $this->halt('PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
-                } elseif (!ini_get('allow_url_fopen')) {
-                    $this->halt('allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
-                } elseif (!class_exists('ZipArchive')) {
-                    $this->halt('php_zip扩展未开启，无法使用应用市场功能', 0);
+                    $rt[] = 'PHP不支持mbstring扩展，必须开启';
                 }
+                if (!function_exists('imagettftext')) {
+                    $rt[] = 'PHP扩展库：GD库未安装或GD库版本太低，可能无法正常显示验证码和图片缩略图';
+                }
+                if (!function_exists('curl_init')) {
+                    $rt[] = 'PHP不支持CURL扩展，必须开启';
+                }
+                if (!function_exists('mb_convert_encoding')) {
+                    $rt[] = 'PHP的mb函数不支持，无法使用百度关键词接口';
+                }
+                if (!function_exists('imagecreatetruecolor')) {
+                    $rt[] = 'PHP的GD库版本太低，无法支持验证码图片';
+                }
+                if (!function_exists('ini_get')) {
+                    $rt[] = '系统函数ini_get未启用，将无法获取到系统环境参数';
+                }
+                if (!function_exists('gzopen')) {
+                    $rt[] = 'zlib扩展未启用，您将无法进行在线升级、无法下载应用插件等';
+                }
+                if (!function_exists('gzinflate')) {
+                    $rt[] = '函数gzinflate未启用，您将无法进行在线升级、无法下载应用插件等';
+                }
+                if (!function_exists('fsockopen')) {
+                    $rt[] = 'PHP不支持fsockopen，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等';
+                }
+                if (!function_exists('openssl_open')) {
+                    $rt[] = 'PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等';
+                }
+                if (!ini_get('allow_url_fopen')) {
+                    $rt[] = 'allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等';
+                }
+                if (!class_exists('ZipArchive')) {
+                    $rt[] = 'php_zip扩展未开启，无法使用应用市场功能';
+                }
+
+                if ($rt) {
+                    $this->halt(implode('<br>', $rt), 0);
+                }
+
                 break;
 
             case '03':
