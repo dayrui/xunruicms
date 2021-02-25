@@ -94,11 +94,10 @@ class Pay extends \Phpcmf\Model
 
     // 获取价格值
     public function get_price_value($data, $field, $sku = '') {
-		
-		if ($sku) {
+
+		if ($sku && $sku != 'null') {
 			return (float)$data[$field.'_sku']['value'][$sku]['price'];
 		}
-		
         return (float)$data[$field];
     }
 
@@ -149,13 +148,13 @@ class Pay extends \Phpcmf\Model
         $mid = 'buy-'.$table .'-'. $id .'-'. $field['id'] .'-'. max(1, (int)$num) .'-'. ($sku ? $sku : 'null');
 
         return [
+            'sn' => $sn,
             'mid' => $mid,
             'num' => $num,
             'price' => $price,
             'price_sku' => isset($rt[$field['fieldname'].'_sku']) ? $rt[$field['fieldname'].'_sku'] : '',
             'total' => $price * $num,
             'table' => $table,
-            'sn' => $sn,
             'quantity' => $quantity,
             'sku_name' => $sku_name,
             'sku_string' => $sku_string,
