@@ -133,6 +133,7 @@ class Db extends \Phpcmf\Common
                         break;
 
                     case 's':
+                        // 取消刷新表，可能数据库的某些账号权限不允许
                         \Phpcmf\Service::M()->db->query('FLUSH TABLE `'.$table.'`');
                         break;
 
