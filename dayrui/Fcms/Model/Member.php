@@ -913,10 +913,9 @@ class Member extends \Phpcmf\Model
     // 直接登录模式 授权注册
     public function register_oauth($groupid, $oauth) {
 
-        $name = dr_clear_emoji($oauth['nickname']);
         $member = [
             'username' => '',
-            'name' => $name,
+            'name' => dr_clear_emoji($oauth['nickname']),
             'email' => '',
             'phone' => '',
         ];

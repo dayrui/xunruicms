@@ -3786,7 +3786,6 @@ function dr_html2emoji($msg){
 // 处理带Emoji的数据，写入数据库前的emoji转为HTML
 function dr_emoji2html($msg) {
     return $msg; // utf8mb4模式下原样输出
-    //return str_replace('\\', '|', json_encode($msg));;
 }
 
 /**
@@ -3795,8 +3794,7 @@ function dr_emoji2html($msg) {
  * @return type
  */
 function dr_clear_emoji($str){
-    preg_match_all("#(\|ud[0-9a-f]{3})#ie", $str, $match) && $str = str_replace($match[1], '', $str);
-    return dr_clear_empty(dr_html2emoji($str));
+    return dr_clear_empty(dr_html2emoji(preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '';}, $str)));
 }
 
 // 判断是否支持回复
