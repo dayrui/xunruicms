@@ -448,7 +448,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         foreach ($arr as $t) {
-            if (strpos($url, '.'.$t) !== false) {
+            if (stripos($url, $t) !== false) {
                 return $t;
             }
         }
