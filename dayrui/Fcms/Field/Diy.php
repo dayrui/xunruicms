@@ -30,11 +30,15 @@ class Diy extends \Phpcmf\Library\A_Field {
 
         $str = '<select class="form-control" name="data[setting][option][file]"><option value=""> -- </option>';
         $files = dr_file_map(ROOTPATH.'config/myfield/', 1);
-        $files2 = dr_file_map(dr_get_app_dir($this->app).'Config/myfield/', 1);
-        $files2 && $files = dr_array2array($files2, $files);
+		if ($this->app) {
+			$files2 = dr_file_map(dr_get_app_dir($this->app).'Config/myfield/', 1);
+			$files2 && $files = dr_array2array($files2, $files);
+		}
         if ($files) {
             foreach ($files as $t) {
-                $t && strpos($t, '.php') !== 0 && $str.= '<option value="'.$t.'" '.($option['file'] == $t ? 'selected' : '').'> '.$t.' </option>';
+                if ($t && strpos($t, '.php') !== 0) {
+					$str.= '<option value="'.$t.'" '.($option['file'] == $t ? 'selected' : '').'> '.$t.' </option>';
+				}
             }
         }
         $str.= '</select>';
