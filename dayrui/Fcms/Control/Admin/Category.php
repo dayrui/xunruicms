@@ -52,8 +52,8 @@ class Category extends \Phpcmf\Table
         $this->_init([
             'table' => dr_module_table_prefix($dir).'_category',
             'field' => $this->module['category_field'],
-            'show_field' => 'name',
             'order_by' => 'displayorder ASC,id ASC',
+            'show_field' => 'name',
         ]);
 
         \Phpcmf\Service::M('category')->init($this->init); // 初始化内容模型
@@ -133,8 +133,8 @@ class Category extends \Phpcmf\Table
             }
             $t['option'] = $option;
             // 判断显示和隐藏开关
-            $t['is_show_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['id'=>$t['id']]).'\', 0);" class="badge badge-'.(!$t['show'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['show'] ? 'times' : 'check').'"></i></a>';
-            $t['is_used_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'used', 'id'=>$t['id']]).'\', 1);" class="badge badge-'.($t['setting']['disabled'] ? 'no' : 'yes').'"><i class="fa fa-'.($t['setting']['disabled'] ? 'times' : 'check').'"></i></a>';
+            $t['is_show_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('前端循环调用不会显示，但可以正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['id'=>$t['id']]).'\', 0);" class="tooltips badge badge-'.(!$t['show'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['show'] ? 'times' : 'check').'"></i></a>';
+            $t['is_used_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('禁用状态下此栏目不能正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'used', 'id'=>$t['id']]).'\', 1);" class="tooltips badge badge-'.($t['setting']['disabled'] ? 'no' : 'yes').'"><i class="fa fa-'.($t['setting']['disabled'] ? 'times' : 'check').'"></i></a>';
             // 判断是否生成静态
             $is_html = intval($this->module['share'] ? $t['setting']['html'] : $this->module['html']);
             $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
@@ -267,7 +267,7 @@ class Category extends \Phpcmf\Table
             'data' => $value,
             'form' =>  dr_form_hidden(['page' => $page]),
             'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], $pid, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
-            'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'list_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'is_edit_mid' => $pid && $value['mid'] ? 1 : 0,
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
@@ -521,6 +521,7 @@ class Category extends \Phpcmf\Table
             if (!$catids) {
                 $this->_json(0, dr_lang('你还没有选择栏目呢'));
             }
+
             $c = 0;
             $row['setting'] = dr_string2array($row['setting']);
             if (isset($catids[0]) && $catids[0] == 0) {
@@ -660,12 +661,22 @@ class Category extends \Phpcmf\Table
             // 可用状态
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['disabled'] = $row['setting']['disabled'] ? 0 : 1;
+
+            if ($row['setting']['disabled']) {
+                if ($this->module['share'] && $row['tid'] == 1 && dr_is_module($row['mid'])
+                    && \Phpcmf\Service::M()->table(dr_module_table_prefix($row['mid']))->where_in('catid', $row['childids'])->counts()) {
+                    $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
+                } elseif (!$this->module['share'] && \Phpcmf\Service::M()->table(dr_module_table_prefix(MOD_DIR))->where_in('catid', $row['childids'])->counts()) {
+                    $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
+                }
+            }
+
             \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
 
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             \Phpcmf\Service::L('input')->system_log('修改栏目的可用状态: '. $id);
-            exit($this->_json(1, dr_lang($row['setting']['disabled'] ? '禁用状态' : '可用状态'), ['value' => $row['setting']['disabled'], 'share' => 0]));
+            $this->_json(1, dr_lang($row['setting']['disabled'] ? '禁用状态' : '可用状态'), ['value' => $row['setting']['disabled'], 'share' => 0]);
         } else {
             // 显示状态
             $v = $row['show'] ? 0 : 1;
@@ -674,7 +685,7 @@ class Category extends \Phpcmf\Table
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             \Phpcmf\Service::L('input')->system_log('修改栏目的显示状态: '. $id);
-            exit($this->_json(1, dr_lang($v ? '显示状态' : '隐藏状态'), ['value' => $v, 'share' => 0]));
+            $this->_json(1, dr_lang($v ? '显示状态' : '隐藏状态'), ['value' => $v, 'share' => 0]);
         }
     }
 

@@ -23,6 +23,10 @@ class Captcha
 
     public function __construct(...$params) {
         $this->font = WRITEPATH.'captcha.ttf';
+        if (!is_file($this->font)) {
+            // 加载老版本的字体文件
+            $this->font = ROOTPATH.'config/font/1.ttf';
+        }
     }
 
     // todo

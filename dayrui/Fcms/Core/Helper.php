@@ -220,11 +220,11 @@ function dr_is_admin_search_field($t) {
 
 // 通过数组值查找数组key
 function dr_get_array_key($array, $value) {
-	if ($array && !in_array($value, $array)) {
-		return false;
-	}
-	$new = array_flip($array);
-	return isset($new[$value]) ? $new[$value] : false;
+    if ($array && !in_array($value, $array)) {
+        return false;
+    }
+    $new = array_flip($array);
+    return isset($new[$value]) ? $new[$value] : false;
 }
 
 // 站点信息输出
@@ -731,9 +731,9 @@ function dr_avatar_path() {
 /**
  * 会员头像
  *
- * @param	intval	$uid
- * @param	intval	$fix 是否加时间戳后缀
- * @return	string
+ * @param   intval  $uid
+ * @param   intval  $fix 是否加时间戳后缀
+ * @return  string
  */
 function dr_avatar($uid, $fix = 1) {
 
@@ -750,10 +750,10 @@ function dr_avatar($uid, $fix = 1) {
 /**
  * 调用会员详细信息（自定义字段需要手动格式化）
  *
- * @param	intval	$uid	会员uid
- * @param	intval	$name	输出字段
- * @param	intval	$cache	缓存时间
- * @return	string
+ * @param   intval  $uid    会员uid
+ * @param   intval  $name   输出字段
+ * @param   intval  $cache  缓存时间
+ * @return  string
  */
 function dr_member_info($uid, $name = '', $cache = -1) {
 
@@ -781,8 +781,8 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
 /**
  * 获取到上级邀请者的信息
  *
- * @param	intval	$uid	我的uid
- * @param	string	$name	字段信息
+ * @param   intval  $uid    我的uid
+ * @param   string  $name   字段信息
  * @return
  */
 function dr_member_invite($uid, $name = 'uid') {
@@ -816,11 +816,11 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = []) {
 /**
  * 模块栏目面包屑导航
  *
- * @param	intval	$catid	栏目id
- * @param	string	$symbol	面包屑间隔符号
- * @param	string	$url	是否显示URL
- * @param	string	$html	格式替换
- * @return	string
+ * @param   intval  $catid  栏目id
+ * @param   string  $symbol 面包屑间隔符号
+ * @param   string  $url    是否显示URL
+ * @param   string  $html   格式替换
+ * @return  string
  */
 function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = MOD_DIR, $url_call_func = '') {
 
@@ -853,12 +853,12 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
 /**
  * 联动菜单包屑导航
  *
- * @param	string	$code	联动菜单代码
- * @param	intval	$id		id
- * @param	string	$symbol	间隔符号
- * @param	string	$url	url地址格式，必须存在[linkage]，否则返回不带url的字符串
- * @param	string	$html	格式替换
- * @return	string
+ * @param   string  $code   联动菜单代码
+ * @param   intval  $id     id
+ * @param   string  $symbol 间隔符号
+ * @param   string  $url    url地址格式，必须存在[linkage]，否则返回不带url的字符串
+ * @param   string  $html   格式替换
+ * @return  string
  */
 function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
 
@@ -894,11 +894,11 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
 /**
  * 联动菜单调用
  *
- * @param	string	$code	菜单代码
- * @param	intval	$id		菜单id
- * @param	intval	$level	调用级别，1表示顶级，2表示第二级，等等
- * @param	string	$name	菜单名称，如果有显示它的值，否则返回数组
- * @return	array
+ * @param   string  $code   菜单代码
+ * @param   intval  $id     菜单id
+ * @param   intval  $level  调用级别，1表示顶级，2表示第二级，等等
+ * @param   string  $name   菜单名称，如果有显示它的值，否则返回数组
+ * @return  array
  */
 function dr_linkage($code, $id, $level = 0, $name = '') {
 
@@ -942,10 +942,10 @@ function dr_linkage($code, $id, $level = 0, $name = '') {
 /**
  * 单页面包屑导航
  *
- * @param	intval	$id
- * @param	string	$symbol
- * @param	string	$html
- * @return	string
+ * @param   intval  $id
+ * @param   string  $symbol
+ * @param   string  $html
+ * @return  string
  */
 function dr_page_catpos($id, $symbol = ' > ', $html = '') {
 
@@ -1048,8 +1048,8 @@ function dr_field_form($field, $value = '', $app = '', $remove_div  = 1) {
 /**
  * 资料块内容
  *
- * @param	intval	$id
- * @return	array
+ * @param   intval  $id
+ * @return  array
  */
 function dr_block($id, $type = 0, $site = 0) {
     return \Phpcmf\Service::C()->get_cache('block-'.($site ? $site : SITE_ID), $id, $type);
@@ -1063,7 +1063,7 @@ function dr_is_weixin_app() {
 /**
  * 全局变量调用
  *
- * @param	string	$name	别名
+ * @param   string  $name   别名
  * @return
  */
 function dr_var_value($name) {
@@ -1132,7 +1132,7 @@ function dr_comment_cname($name) {
 /**
  * 文件真实地址
  *
- * @param	string	$id
+ * @param   string  $id
  * @return  array
  */
 function dr_get_file($id) {
@@ -1157,7 +1157,7 @@ function dr_get_file($id) {
 /**
  * 文件下载地址
  *
- * @param	string	$id
+ * @param   string  $id
  * @return  array
  */
 function dr_down_file($id) {
@@ -1174,7 +1174,7 @@ function dr_down_file($id) {
 /**
  * 根据附件信息获取文件地址
  *
- * @param	array	$data
+ * @param   array   $data
  * @return  string
  */
 function dr_get_file_url($data, $w = 0, $h = 0) {
@@ -1189,8 +1189,8 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
             return '自定义附件（'.$data['remote'].'）的配置已经不存在';
         }
     } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
-		return dr_thumb($data['id'], $w, $h, 0, 'crop');
-	}
+        return dr_thumb($data['id'], $w, $h, 0, 'crop');
+    }
 
     return SYS_UPLOAD_URL.$data['attachment'];
 }
@@ -1198,8 +1198,8 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
 /**
  * 任意字段的选项值（用于options参数的字段，如复选框、下拉选择框、单选按钮）
  *
- * @param	intval	$id
- * @return	array
+ * @param   intval  $id
+ * @return  array
  */
 function dr_field_options($id) {
 
@@ -1301,12 +1301,12 @@ function dr_notice_icon($type, $c = '') {
 
 /**
  * 验证用户权限(废弃)
- * my	我的authid
+ * my   我的authid
  * auth 目标权限组
  * return 1有权限 0无权限
  */
 function dr_member_auth($my, $auth) {
-   return 1;
+    return 1;
 }
 
 /**
@@ -1719,33 +1719,33 @@ function dr_list_field_order($field) {
     foreach ($field as $name => $m) {
         $m['use'] && $rt[$name] = $m;
     }
-	
+
     return $rt;
 }
 
 function dr_list_field_value($value, $sys_field, $field) {
-	
-	foreach ($field as $t) {
-		$sys_field[$t['fieldname']] = $t;
-	}
-	
-	$rt = [];
-	foreach ($value as $name => $t) {
+
+    foreach ($field as $t) {
+        $sys_field[$t['fieldname']] = $t;
+    }
+
+    $rt = [];
+    foreach ($value as $name => $t) {
         if ($t['name']) {
             $rt[$name] = $sys_field[$name];
             unset($sys_field[$name]);
         }
-	}
-	
-	if (!$sys_field) {
-		return $rt;
-	}
-	
-	foreach ($sys_field as $name => $t) {
-		$rt[$name] = $t;
-	}
-	
-	return $rt;
+    }
+
+    if (!$sys_field) {
+        return $rt;
+    }
+
+    foreach ($sys_field as $name => $t) {
+        $rt[$name] = $t;
+    }
+
+    return $rt;
 }
 
 /**
@@ -1818,7 +1818,7 @@ function dr_icon($value) {
 /**
  * 完整的文件路径
  *
- * @param	string	$url
+ * @param   string  $url
  * @return  string
  */
 function dr_file($url) {
@@ -1876,15 +1876,15 @@ function dr_file_list_preview_html($t) {
 
 // 文件是否是图片
 function dr_is_image($value) {
-	return in_array(trim(strtolower(strrchr($value, '.')), '.'), ['jpg', 'gif', 'png', 'jpeg']);
+    return in_array(trim(strtolower(strrchr($value, '.')), '.'), ['jpg', 'gif', 'png', 'jpeg']);
 }
 
 /**
  * 单页层次关系
  *
- * @param	intval	$id
- * @param	string	$symbol
- * @return	string
+ * @param   intval  $id
+ * @param   string  $symbol
+ * @return  string
  */
 function dr_get_page_pname($id, $symbol = '_', $page) {
 
@@ -1970,7 +1970,7 @@ function dr_format_option_array($value) {
 /**
  * 字段输出表单
  *
- * @param	string	$username
+ * @param   string  $username
  * @return  intval
  */
 function dr_field_input($name, $type, $option, $value = NULL, $id = 0) {
@@ -1980,11 +1980,11 @@ function dr_field_input($name, $type, $option, $value = NULL, $id = 0) {
 /**
  * 目录扫描
  *
- * @param	string	$source_dir		Path to source
- * @param	int	$directory_depth	Depth of directories to traverse
- *						(0 = fully recursive, 1 = current dir, etc)
- * @param	bool	$hidden			Whether to show hidden files
- * @return	array
+ * @param   string  $source_dir     Path to source
+ * @param   int $directory_depth    Depth of directories to traverse
+ *                      (0 = fully recursive, 1 = current dir, etc)
+ * @param   bool    $hidden         Whether to show hidden files
+ * @return  array
  */
 function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 
@@ -1992,7 +1992,7 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 
         $filedata = [];
         $new_depth = $directory_depth - 1;
-        $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
         while (FALSE !== ($file = readdir($fp))) {
             if ($file === '.' OR $file === '..'
@@ -2017,18 +2017,18 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 /**
  * 文件扫描
  *
- * @param	string	$source_dir		Path to source
- * @param	int	$directory_depth	Depth of directories to traverse
- *						(0 = fully recursive, 1 = current dir, etc)
- * @param	bool	$hidden			Whether to show hidden files
- * @return	array
+ * @param   string  $source_dir     Path to source
+ * @param   int $directory_depth    Depth of directories to traverse
+ *                      (0 = fully recursive, 1 = current dir, etc)
+ * @param   bool    $hidden         Whether to show hidden files
+ * @return  array
  */
 function dr_file_map($source_dir) {
 
     if ($fp = @opendir($source_dir)) {
 
         $filedata = [];
-        $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
         while (FALSE !== ($file = readdir($fp))) {
             if ($file === '.' OR $file === '..'
@@ -2109,8 +2109,8 @@ function dr_form_search_hidden($p = []) {
 /**
  * Base64加密
  *
- * @param	string	$string
- * @return	string
+ * @param   string  $string
+ * @return  string
  */
 function dr_base64_encode($string) {
     $data = base64_encode($string);
@@ -2121,8 +2121,8 @@ function dr_base64_encode($string) {
 /**
  * Base64解密
  *
- * @param	string	$string
- * @return	string
+ * @param   string  $string
+ * @return  string
  */
 function dr_base64_decode($string) {
     $data = str_replace(['-', '_'], ['+', '/'], $string);
@@ -2136,7 +2136,7 @@ function dr_base64_decode($string) {
 /**
  * 网站风格目录
  *
- * @return	string|NULL
+ * @return  string|NULL
  */
 function dr_get_theme() {
 
@@ -2157,9 +2157,9 @@ function dr_randcode() {
 /**
  * 删除目录及目录下面的所有文件
  *
- * @param	string	$dir		路径
- * @param	string	$is_all		包括删除当前目录
- * @return	bool	如果成功则返回 TRUE，失败则返回 FALSE
+ * @param   string  $dir        路径
+ * @param   string  $is_all     包括删除当前目录
+ * @return  bool    如果成功则返回 TRUE，失败则返回 FALSE
  */
 
 function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
@@ -2527,9 +2527,9 @@ function dr_member_order($url) {
  * 百度地图定位浏览器坐标
  */
 function dr_baidu_position_js($ak = SYS_BDMAP_API) {
-	$code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-	$code.= '<script type="text/javascript">';
-	$code.= '// 百度地图定位坐标
+    $code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
+    $code.= '<script type="text/javascript">';
+    $code.= '// 百度地图定位坐标
    var geolocation = new BMap.Geolocation();
    geolocation.getCurrentPosition(function(r){
       if(this.getStatus() == BMAP_STATUS_SUCCESS){
@@ -2538,29 +2538,29 @@ function dr_baidu_position_js($ak = SYS_BDMAP_API) {
          alert(\'定位失败：\'+this.getStatus());
       }
    },{enableHighAccuracy: true});';
-	$code.= '</script>';
-	return $code;
+    $code.= '</script>';
+    return $code;
 }
 
 /**
  * 百度地图定位浏览器坐标并设置为隐藏表单域
  */
 function dr_baidu_map_form_hidden($field, $ak = SYS_BDMAP_API) {
-	$code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-	$code.= '<input type="hidden" id="dr_'.$field.'" name="data['.$field.']" value=""><script type="text/javascript">';
-	$code.= '<script type="text/javascript">';
-	$code.= '// 百度地图定位坐标
+    $code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
+    $code.= '<input type="hidden" id="dr_'.$field.'" name="data['.$field.']" value=""><script type="text/javascript">';
+    $code.= '<script type="text/javascript">';
+    $code.= '// 百度地图定位坐标
    var geolocation = new BMap.Geolocation();
    geolocation.getCurrentPosition(function(r){
       if(this.getStatus() == BMAP_STATUS_SUCCESS){
-		 $("#dr_'.$field.'").val(r.point.lng+\',\'+r.point.lat);
+         $("#dr_'.$field.'").val(r.point.lng+\',\'+r.point.lat);
          $.ajax({type: "GET", url: "/index.php?s=api&c=api&m=baidu_position&value="+r.point.lng+\',\'+r.point.lat, dataType:"jsonp"});
       } else {
          alert(\'定位失败：\'+this.getStatus());
       }
    },{enableHighAccuracy: true});';
-	$code.= '</script>';
-	return $code;
+    $code.= '</script>';
+    return $code;
 }
 
 
@@ -2568,7 +2568,7 @@ function dr_baidu_map_form_hidden($field, $ak = SYS_BDMAP_API) {
  * 百度地图JS
  */
 function dr_baidu_map_js($ak = SYS_BDMAP_API) {
-	return \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
+    return \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
 }
 
 /**
@@ -2588,29 +2588,29 @@ function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS
     $js = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
 
     return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . $width . 'px; height:' . $height . 'px; overflow:hidden"></div>
-	<script type="text/javascript">
-	var mapObj=null;
-	lngX = "' . $lngX . '";
-	latY = "' . $latY . '";
-	zoom = "' . $zoom . '";		
-	var mapObj = new BMap.Map("'.$id.'");
-	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
-	mapObj.addControl(ctrl_nav);
-	mapObj.enableDragging();
-	mapObj.enableScrollWheelZoom();
-	mapObj.enableDoubleClickZoom();
-	mapObj.enableKeyboard();//启用键盘上下左右键移动地图
-	mapObj.centerAndZoom(new BMap.Point(lngX,latY),zoom);
-	drawPoints();
-	function drawPoints(){
-		var myIcon = new BMap.Icon("' . ROOT_THEME_PATH . 'assets/images/mak.png", new BMap.Size(27, 45));
-		var center = mapObj.getCenter();
-		var point = new BMap.Point(lngX,latY);
-		var marker = new BMap.Marker(point, {icon: myIcon});
-		mapObj.addOverlay(marker);
-		'.($tips ? 'mapObj.openInfoWindow(new BMap.InfoWindow("'.str_replace('"', '\'', $tips).'",{offset:new BMap.Size(0,-17)}),point);' : '').'
-	}
-	</script>';
+    <script type="text/javascript">
+    var mapObj=null;
+    lngX = "' . $lngX . '";
+    latY = "' . $latY . '";
+    zoom = "' . $zoom . '";     
+    var mapObj = new BMap.Map("'.$id.'");
+    var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+    mapObj.addControl(ctrl_nav);
+    mapObj.enableDragging();
+    mapObj.enableScrollWheelZoom();
+    mapObj.enableDoubleClickZoom();
+    mapObj.enableKeyboard();//启用键盘上下左右键移动地图
+    mapObj.centerAndZoom(new BMap.Point(lngX,latY),zoom);
+    drawPoints();
+    function drawPoints(){
+        var myIcon = new BMap.Icon("' . ROOT_THEME_PATH . 'assets/images/mak.png", new BMap.Size(27, 45));
+        var center = mapObj.getCenter();
+        var point = new BMap.Point(lngX,latY);
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        mapObj.addOverlay(marker);
+        '.($tips ? 'mapObj.openInfoWindow(new BMap.InfoWindow("'.str_replace('"', '\'', $tips).'",{offset:new BMap.Size(0,-17)}),point);' : '').'
+    }
+    </script>';
 }
 
 /**
@@ -2628,7 +2628,7 @@ function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $cl
     list($lngX, $latY) = explode(',', $value);
     $js = \Phpcmf\Service::V()->load_js('http://map.qq.com/api/js?v=2.exp');
     return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . $width . 'px; height:' . $height . 'px; overflow:hidden"></div>
-	<script type="text/javascript">
+    <script type="text/javascript">
         var center = new qq.maps.LatLng('.$latY.','.$lngX.');
         var map = new qq.maps.Map(document.getElementById(\''.$id.'\'),{
             center: center,
@@ -2643,7 +2643,7 @@ function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $cl
             icon: icon,
             map: map,
             position:map.getCenter()});
-	</script>';
+    </script>';
 }
 
 
@@ -2651,9 +2651,9 @@ function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $cl
 /**
  * 显示星星
  *
- * @param	intval	$num
- * @param	intval	$starthreshold	星星数在达到此阈值(设为 N)时，N 个星星显示为 1 个月亮、N 个月亮显示为 1 个太阳。
- * @return	string
+ * @param   intval  $num
+ * @param   intval  $starthreshold  星星数在达到此阈值(设为 N)时，N 个星星显示为 1 个月亮、N 个月亮显示为 1 个太阳。
+ * @return  string
  */
 function dr_show_stars($num, $starthreshold = 4) {
 
@@ -2675,8 +2675,8 @@ function dr_show_stars($num, $starthreshold = 4) {
 /**
  * 模块评论js调用
  *
- * @param	intval	$id
- * @return	string
+ * @param   intval  $id
+ * @return  string
  */
 function dr_module_comment($dir, $id) {
     $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}";
@@ -2687,8 +2687,8 @@ function dr_module_comment($dir, $id) {
 /**
  * 模块表单评论js调用
  *
- * @param	intval	$id
- * @return	string
+ * @param   intval  $id
+ * @return  string
  */
 function dr_mform_comment($dir, $fid,  $id) {
     $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}";
@@ -2699,8 +2699,8 @@ function dr_mform_comment($dir, $fid,  $id) {
 /**
  * 网站表单评论js调用
  *
- * @param	intval	$id
- * @return	string
+ * @param   intval  $id
+ * @return  string
  */
 function dr_form_comment($fid, $id) {
     $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}";
@@ -2720,8 +2720,8 @@ function dr_ajax_template($id, $filename, $param_str = '') {
 /**
  * 模块内容阅读量显示js
  *
- * @param	intval	$id
- * @return	string
+ * @param   intval  $id
+ * @return  string
  */
 if (!function_exists('dr_show_hits')) {
     function dr_show_hits($id, $dom = "", $dir = MOD_DIR) {
@@ -2735,8 +2735,8 @@ if (!function_exists('dr_show_hits')) {
 /**
  * 模块内容收藏量显示js
  *
- * @param	intval	$id
- * @return	string
+ * @param   intval  $id
+ * @return  string
  */
 function dr_show_module_total($name, $id, $dom, $dir = MOD_DIR) {
     return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=mcount&name={$name}&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
@@ -2746,16 +2746,16 @@ function dr_show_module_total($name, $id, $dom, $dir = MOD_DIR) {
 /**
  * 调用远程数据
  *
- * @param	string	$url
- * @param	intval	$timeout 超时时间，0不超时
- * @return	string
+ * @param   string  $url
+ * @param   intval  $timeout 超时时间，0不超时
+ * @return  string
  */
 function dr_catcher_data($url, $timeout = 0) {
 
     // 获取本地文件
-	if (strpos($url, 'file://')  === 0) {
-		return file_get_contents($url);
-	}
+    if (strpos($url, 'file://')  === 0) {
+        return file_get_contents($url);
+    }
 
     // curl模式
     if (function_exists('curl_init')) {
@@ -2812,9 +2812,9 @@ function dr_catcher_data($url, $timeout = 0) {
 /**
  * 伪静态代码处理
  *
- * @param	array	$params	参数数组
- * @param	array	$search	搜索配置
- * @return	string
+ * @param   array   $params 参数数组
+ * @param   array   $search 搜索配置
+ * @return  string
  */
 function dr_search_rewrite_encode($params, $search) {
 
@@ -2847,8 +2847,8 @@ function dr_search_rewrite_encode($params, $search) {
 /**
  * 伪静态代码转换为数组
  *
- * @param	string	$params	参数字符串
- * @return	array
+ * @param   string  $params 参数字符串
+ * @return  array
  */
 function dr_search_rewrite_decode($params, $search) {
 
@@ -2881,8 +2881,8 @@ function dr_search_rewrite_decode($params, $search) {
 /**
  * 伪静态代码处理
  *
- * @param	array	$params	参数数组
- * @return	string
+ * @param   array   $params 参数数组
+ * @return  string
  */
 function dr_rewrite_encode($params, $join = '-', $field = []) {
 
@@ -2904,8 +2904,8 @@ function dr_rewrite_encode($params, $join = '-', $field = []) {
 /**
  * 伪静态代码转换为数组
  *
- * @param	string	$params	参数字符串
- * @return	array
+ * @param   string  $params 参数字符串
+ * @return  array
  */
 function dr_rewrite_decode($params, $join = '-', $field = []) {
 
@@ -3011,9 +3011,9 @@ function dr_safe_replace_path($path) {
 /**
  * 字符截取
  *
- * @param	string	$str
- * @param	intval	$length
- * @param	string	$dot
+ * @param   string  $str
+ * @param   intval  $length
+ * @param   string  $dot
  * @return  string
  */
 function dr_strcut($string, $length = 100, $dot = '...') {
@@ -3077,7 +3077,7 @@ function dr_strcut($string, $length = 100, $dot = '...') {
 /**
  * 随机颜色
  *
- * @return	string
+ * @return  string
  */
 function dr_random_color() {
 
@@ -3107,8 +3107,8 @@ function dr_random_color() {
 /**
  * 友好时间显示函数
  *
- * @param	int		$time	时间戳
- * @return	string
+ * @param   int     $time   时间戳
+ * @return  string
  */
 function dr_fdate($sTime, $formt = 'Y-m-d') {
 
@@ -3154,10 +3154,10 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
 /**
  * 时间显示函数
  *
- * @param	int		$time	时间戳
- * @param	string	$format	格式与date函数一致
- * @param	string	$color	当天显示颜色
- * @return	string
+ * @param   int     $time   时间戳
+ * @param   string  $format 格式与date函数一致
+ * @param   string  $color  当天显示颜色
+ * @return  string
  */
 function dr_date($time = NULL, $format = SITE_TIME_FORMAT, $color = NULL) {
 
@@ -3179,8 +3179,8 @@ function dr_date($time = NULL, $format = SITE_TIME_FORMAT, $color = NULL) {
 /**
  * 将对象转换为数组
  *
- * @param	object	$obj	数组对象
- * @return	array
+ * @param   object  $obj    数组对象
+ * @return  array
  */
 function dr_object2array($obj) {
     $_arr = is_object($obj) ? get_object_vars($obj) : $obj;
@@ -3196,8 +3196,8 @@ function dr_object2array($obj) {
 /**
  * 将字符串转换为数组
  *
- * @param	string	$data	字符串
- * @return	array
+ * @param   string  $data   字符串
+ * @return  array
  */
 function dr_string2array($data) {
 
@@ -3218,8 +3218,8 @@ function dr_string2array($data) {
 /**
  * 将数组转换为字符串
  *
- * @param	array	$data	数组
- * @return	string
+ * @param   array   $data   数组
+ * @return  string
  */
 function dr_array2string($data) {
     return $data ? json_encode($data, JSON_UNESCAPED_UNICODE) : '';
@@ -3228,8 +3228,8 @@ function dr_array2string($data) {
 /**
  * 递归创建目录
  *
- * @param	string	$dir	目录名称
- * @return	bool|void
+ * @param   string  $dir    目录名称
+ * @return  bool|void
  */
 function dr_mkdirs($dir, $null = true) {
 
@@ -3248,9 +3248,9 @@ function dr_mkdirs($dir, $null = true) {
 /**
  * 格式化输出文件大小
  *
- * @param	int	$fileSize	大小
- * @param	int	$round		保留小数位
- * @return	string
+ * @param   int $fileSize   大小
+ * @param   int $round      保留小数位
+ * @return  string
  */
 function dr_format_file_size($fileSize, $round = 2) {
 
@@ -3276,9 +3276,9 @@ function dr_format_file_size($fileSize, $round = 2) {
 /**
  * 关键字高亮显示
  *
- * @param	string	$string		字符串
- * @param	string	$keyword	关键字
- * @return	string
+ * @param   string  $string     字符串
+ * @param   string  $keyword    关键字
+ * @return  string
  */
 function dr_keyword_highlight($string, $keyword, $rule = '') {
 
@@ -3288,7 +3288,7 @@ function dr_keyword_highlight($string, $keyword, $rule = '') {
 
     $arr = explode(' ', trim(str_replace('%', ' ', urldecode($keyword)), '%'));
     if (!$arr) {
-       return $string;
+        return $string;
     }
 
     !$rule && $rule = '<font color=red><strong>[value]</strong></font>';
@@ -3770,12 +3770,17 @@ function dr_member_group_dtype($dtype) {
 // 处理带Emoji的数据，HTML转为emoji码
 function dr_html2emoji($msg){
 
-    $txt = json_decode(str_replace('|', '\\', $msg));
-    if ($txt !== null) {
-        $msg = $txt;
-    }
+    if (substr($msg, 0, 1) == '"' && substr($msg, -1, 1) == '"') {
 
-    return trim($msg, '"');
+        $txt = json_decode(str_replace('|', '\\', $msg));
+        if ($txt !== null) {
+            $msg = $txt;
+        }
+
+        return trim($msg, '"');
+    } else {
+        return $msg;
+    }
 }
 
 // 处理带Emoji的数据，写入数据库前的emoji转为HTML
@@ -3901,10 +3906,10 @@ function dr_related_cat($data, $catid) {
 /**
  * 模块栏目层次关系
  *
- * @param	array	$mod
- * @param	array	$cat
- * @param	string	$symbol
- * @return	string
+ * @param   array   $mod
+ * @param   array   $cat
+ * @param   string  $symbol
+ * @return  string
  */
 function dr_get_cat_pname($mod, $catid, $symbol = '_') {
 
@@ -4063,7 +4068,7 @@ if (! function_exists('dr_clearhtml')) {
     /**
      * 清除HTML标记
      *
-     * @param	string	$str
+     * @param   string  $str
      * @return  string
      */
     function dr_clearhtml($str) {
@@ -4182,19 +4187,19 @@ if ( ! function_exists('dr_directory_map'))
      * representation of it. Sub-folders contained with the
      * directory will be mapped as well.
      *
-     * @param	string	$source_dir		Path to source
-     * @param	int	$directory_depth	Depth of directories to traverse
-     *						(0 = fully recursive, 1 = current dir, etc)
-     * @param	bool	$hidden			Whether to show hidden files
-     * @return	array
+     * @param   string  $source_dir     Path to source
+     * @param   int $directory_depth    Depth of directories to traverse
+     *                      (0 = fully recursive, 1 = current dir, etc)
+     * @param   bool    $hidden         Whether to show hidden files
+     * @return  array
      */
     function dr_directory_map($source_dir, $directory_depth = 0, $hidden = FALSE)
     {
         if ($fp = @opendir($source_dir))
         {
-            $filedata	= [];
-            $new_depth	= $directory_depth - 1;
-            $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            $filedata   = [];
+            $new_depth  = $directory_depth - 1;
+            $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
             while (FALSE !== ($file = readdir($fp)))
             {
