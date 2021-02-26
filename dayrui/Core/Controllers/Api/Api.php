@@ -22,6 +22,7 @@ class Api extends \Phpcmf\Common
             \Phpcmf\Service::L('input')->set_cookie('baidu_position', $value, 10000);
             exit('ok');
         }
+
         exit('none');
     }
 
@@ -37,22 +38,26 @@ class Api extends \Phpcmf\Common
 
         //生成二维码图片
         require_once FCPATH.'ThirdParty/Qrcode/Phpqrcode.php';
-        $QR = WRITEPATH.'caching/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
-        \QRcode::png($value, $QR, $errorCorrectionLevel, $matrixPointSize, 3);
-        $QR = imagecreatefromstring(file_get_contents($QR));
-
-        if ($thumb) {
-            $logo = imagecreatefromstring(file_get_contents($thumb));
-            $QR_width = imagesx($QR);//二维码图片宽度
-            $QR_height = imagesy($QR);//二维码图片高度
-            $logo_width = imagesx($logo);//logo图片宽度
-            $logo_height = imagesy($logo);//logo图片高度
-            $logo_qr_width = $QR_width / 4;
-            $scale = $logo_width/$logo_qr_width;
-            $logo_qr_height = $logo_height/$scale;
-            $from_width = ($QR_width - $logo_qr_width) / 2;
-            //重新组合图片并调整大小
-            imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height);
+        $file = WRITEPATH.'caching/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
+        if (is_file($file)) {
+            $QR = imagecreatefrompng($file);
+        } else {
+            \QRcode::png($value, $file, $errorCorrectionLevel, $matrixPointSize, 3);
+            $QR = imagecreatefromstring(file_get_contents($file));
+            if ($thumb) {
+                $logo = imagecreatefromstring(dr_catcher_data($thumb));
+                $QR_width = imagesx($QR);//二维码图片宽度
+                $QR_height = imagesy($QR);//二维码图片高度
+                $logo_width = imagesx($logo);//logo图片宽度
+                $logo_height = imagesy($logo);//logo图片高度
+                $logo_qr_width = $QR_width / 4;
+                $scale = $logo_width/$logo_qr_width;
+                $logo_qr_height = $logo_height/$scale;
+                $from_width = ($QR_width - $logo_qr_width) / 2;
+                //重新组合图片并调整大小
+                imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height);
+                imagepng($QR, $file);
+            }
         }
 
         // 输出图片

@@ -1674,9 +1674,9 @@ class Image
         return $cache_url.$cache_file;
     }
 
-    public function base64($file){
+    public function base64($file) {
         $base64_file = '';
-        if(file_exists($file)){
+        if (file_exists($file)) {
             $mime_type= mime_content_type($file);
             $base64_data = base64_encode(file_get_contents($file));
             $base64_file = 'data:'.$mime_type.';base64,'.$base64_data;
@@ -1692,19 +1692,19 @@ class Image
         $source_mime  = $this->image_info['mime'];
         $source_ratio = $source_height / $source_width;
         $target_ratio = $target_height / $target_width;
-        if ($source_ratio > $target_ratio){
+        if ($source_ratio > $target_ratio) {
             // image-to-height
             $cropped_width = $source_width;
             $cropped_height = $source_width * $target_ratio;
             $source_x = 0;
             $source_y = ($source_height - $cropped_height) / 2;
-        }elseif ($source_ratio < $target_ratio){
+        } elseif ($source_ratio < $target_ratio){
             //image-to-widht
             $cropped_width = $source_height / $target_ratio;
             $cropped_height = $source_height;
             $source_x = ($source_width - $cropped_width) / 2;
             $source_y = 0;
-        }else{
+        } else {
             //image-size-ok
             $cropped_width = $source_width;
             $cropped_height = $source_height;
