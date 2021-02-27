@@ -4116,20 +4116,6 @@ if (! function_exists('dr_get_keywords')) {
             }
         }
 
-        if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
-            require_once FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php';
-            \PhpAnalysis::$loadInit = false;
-            $pa = new \PhpAnalysis ( 'utf-8', 'utf-8', false );
-            $pa->LoadDict ();
-            $pa->SetSource ($kw);
-            $pa->StartAnalysis ( true );
-
-            $tags = $pa->GetFinallyKeywords (20);
-            if ($tags) {
-                return $tags;
-            }
-        }
-
         if (!$rt && function_exists('mb_convert_encoding')
             && defined('SYS_BDNLP_AK') && SYS_BDNLP_AK && SYS_BDNLP_SK) {
 
@@ -4148,10 +4134,25 @@ if (! function_exists('dr_get_keywords')) {
                 foreach ($baidu['data']['items'] as $t) {
                     $rt[] = $t['tag']; // 找到了
                 }
+                return implode(',', $rt);
             }
         }
 
-        return @implode(',', $rt);;
+        if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
+            require_once FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php';
+            \PhpAnalysis::$loadInit = false;
+            $pa = new \PhpAnalysis ( 'utf-8', 'utf-8', false );
+            $pa->LoadDict ();
+            $pa->SetSource ($kw);
+            $pa->StartAnalysis ( true );
+
+            $tags = $pa->GetFinallyKeywords (20);
+            if ($tags) {
+                return $tags;
+            }
+        }
+
+        return implode(',', $rt);
     }
 }
 
