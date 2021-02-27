@@ -1857,6 +1857,30 @@ class View {
                     unset($flag);
                 }
 
+                // groupid查询
+                if (isset($param['groupid']) && $param['groupid']) {
+
+                    if (strpos($param['groupid'], ',') !== false) {
+                        $gwhere = ' `'.$table.'`.`uid` in (select uid from `'.\Phpcmf\Service::M()->dbprefix('member').'_group_index` where `gid` in ('.dr_safe_replace($param['groupid']).'))';
+                    } elseif (strpos($param['groupid'], '-') !== false) {
+                        $arr = explode('-', $param['groupid']);
+                        $gwhere = [];
+                        foreach ($arr as $t) {
+                            $t = intval($t);
+                            $t && $gwhere[] = ' `'.$table.'`.`uid` in (select uid from `'.\Phpcmf\Service::M()->dbprefix('member').'_group_index` where `gid` = '. $t.')';
+                        }
+                        $gwhere = $gwhere ? '('.implode(' AND ', $gwhere).')' : '';
+                    } else {
+                        $gwhere = ' `'.$table.'`.`uid` in (select uid from `'.\Phpcmf\Service::M()->dbprefix('member').'_group_index` where `gid` = '. intval($param['groupid']).')';
+                    }
+                    $gwhere && $where['id'] = [
+                        'adj' => 'SQL',
+                        'name' => 'id',
+                        'value' => $gwhere
+                    ];
+                    unset($param['groupid']);
+                }
+
                 // 统计标签
                 if ($this->_list_is_count) {
                     $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
