@@ -132,7 +132,7 @@ class Security {
 			return $str;
 		} elseif (!$str) {
 	        return '';
-        } 
+        }
 
 		// Is the string an array?
 		if (is_array($str))

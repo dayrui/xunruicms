@@ -164,11 +164,6 @@ class Input {
      * XSS Clean
      */
     public function xss_clean($str, $is_image = FALSE) {
-
-        if (!$str) {
-            return '';
-        }
-
         return \Phpcmf\Service::L('Security')->xss_clean($str, $is_image);
     }
 

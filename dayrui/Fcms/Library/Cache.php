@@ -58,7 +58,7 @@ class Cache {
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
-        $rt = @file_put_contents($cache_file, $value, LOCK_EX);
+        $rt = file_put_contents($cache_file, $value, LOCK_EX);
 
         if ($rt === false) {
             log_message('error', '缓存文件['.$cache_file.']无法写入');
@@ -78,7 +78,7 @@ class Cache {
 
         $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
 
-        return is_file($cache_file) ? @json_decode(@file_get_contents($cache_file), true) : false;
+        return is_file($cache_file) ? json_decode(file_get_contents($cache_file), true) : false;
     }
 
     /**
@@ -95,7 +95,7 @@ class Cache {
 
         $cache_file = self::parse_cache_file(strtolower($key), $cache_dir);  // 分析缓存文件
 
-        return is_file($cache_file) ? @unlink($cache_file) : true;
+        return is_file($cache_file) ? unlink($cache_file) : true;
     }
 
     // 删除全部文件缓存
