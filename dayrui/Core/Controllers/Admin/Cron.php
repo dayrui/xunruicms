@@ -72,9 +72,15 @@ class Cron extends \Phpcmf\Table
             }
         }
 
+        $run_time = '';
+        if (is_file(WRITEPATH.'config/run_time.php')) {
+            $run_time = file_get_contents(WRITEPATH.'config/run_time.php');
+        }
+
         \Phpcmf\Service::V()->assign([
             'type' => $this->type,
-            'list' => $data['list']
+            'list' => $data['list'],
+            'run_time' => $run_time,
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }

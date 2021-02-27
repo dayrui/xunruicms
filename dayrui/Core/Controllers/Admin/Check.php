@@ -687,7 +687,8 @@ class Check extends \Phpcmf\Common
             case '16':
                 // 自动任务检测
                 if (is_file(WRITEPATH.'config/run_time.php')) {
-                    $this->_json(1, '完成');
+                    $time = file_get_contents(WRITEPATH.'config/run_time.php');
+                    $this->_json(1, '最近执行时间：'.$time);
                 }
 
                 $this->_json(0, '网站没有配置自动任务功能，无法自动清理缓存和更新缓存，<a href="javascript:dr_help(353);">查看解决方案</a>');
