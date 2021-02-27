@@ -43,6 +43,16 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             // 传入对象到日志中
             log_message('critical', $exception);
         }
+		
+		 // ajax 返回
+        if (IS_AJAX || IS_API) {
+			$message = $exception->getMessage();
+			// 前端访问屏蔽敏感信息
+			if (!IS_ADMIN) {
+				$message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+			}
+            dr_exit_msg(0, $message);
+        }
 
         if (! is_cli())
         {
@@ -58,6 +68,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             }
         }
 
+    
         $this->render($exception, $statusCode);
 
         exit($exitCode);
