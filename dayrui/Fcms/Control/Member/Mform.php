@@ -40,9 +40,9 @@ class Mform extends \Phpcmf\Table
         // 模块显示名称
         $this->name = dr_lang('内容模块[%s]表单（%s）', APP_DIR, $this->form['name']);
         // 获取父级内容
-        $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
+        $this->url_params['cid'] = $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         if ($this->cid) {
-            $this->index = $this->content_model->get_data( $this->cid);
+            $this->index = $this->content_model->get_data($this->cid);
             if ($this->index) {
                 if ($this->index['uid'] != $this->uid) {
                     $this->_msg(0, dr_lang('模块表单【%s】父内容[%s]不是你创建', $this->form['name'], $this->cid));
@@ -244,19 +244,33 @@ class Mform extends \Phpcmf\Table
                 if ($data[1]['status']) {
                     // 增减金币
                     $score = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'score', $this->member);
-                    $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
+                    $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s[%s]: %s发布', MODULE_NAME, $this->index['title'], $this->form['name']), $this->index['curl']);
                     // 增减经验
                     $exp = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'exp', $this->member);
-                    $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
-                    // 挂钩点
-                    \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));
+                    $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s[%s]: %s发布', MODULE_NAME, $this->index['title'], $this->form['name']), $this->index['curl']);
                 } else {
-                    \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s: %s提交内容审核', MODULE_NAME, $this->form['name']), MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'. $this->cid.'/id/'.$id, SITE_ID);
+                    \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s[%s]: %s提交内容审核', MODULE_NAME, $this->index['title'], $this->form['name']), MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'. $this->cid.'/id/'.$id, SITE_ID);
                 }
                 //更新total字段
                 $this->content_model->update_form_total( $this->cid, $this->form['table']);
             }
         );
+    }
+
+    /**
+     * 回调处理结果
+     * $data
+     * */
+    protected function _Call_Post($data) {
+
+        $data['url'] = $this->form['setting']['rt_url'] ? str_replace(['{id}', '{cid}'], [$data[1]['id'],  $data[1]['cid']], $this->form['setting']['rt_url']) : '';
+        if ($data[1]['status']) {
+            // 挂钩点
+            \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));
+            return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
+        } else {
+            return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+        }
     }
 
 }

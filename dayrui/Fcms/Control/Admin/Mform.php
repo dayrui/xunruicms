@@ -41,7 +41,7 @@ class Mform extends \Phpcmf\Table
         // 模块显示名称
         $this->name = dr_lang('内容模块[%s]表单（%s）', APP_DIR, $this->form['name']);
         // 获取父级内容
-        $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
+        $this->url_params['cid'] = $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->cid ? $this->content_model->get_data( $this->cid) : [];
         // 自定义条件
         $where = $this->is_verify ? 'status<>1' : 'status=1';
@@ -50,6 +50,7 @@ class Mform extends \Phpcmf\Table
         $cwhere && $where.= ' AND '. $cwhere;
         $sysfield = ['inputtime', 'inputip', 'displayorder', 'author'];
         $this->is_verify && $sysfield[] = 'status';
+
         // 初始化数据表
         $this->_init([
             'field' => $this->form['field'],
@@ -77,7 +78,7 @@ class Mform extends \Phpcmf\Table
             'mform' => $this->form,
             'index' => $this->index,
             'field' => $this->init['field'],
-            'form_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/'.$this->form['table'].'/index', ['cid' =>  $this->cid]),
+            'form_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/'.$this->form['table'].'/index', ['cid' =>  $this->cid]),
             'is_verify' => $this->is_verify,
             'form_table' => $this->form['table'],
         ]);
@@ -127,7 +128,7 @@ class Mform extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('数据不存在: '.$id));
         } elseif ($this->cid != $data['cid']) {
             $this->_admin_msg(0, dr_lang('cid不匹配'));
-        } elseif ($this->is_verify && $data['status']) {
+        } elseif ($this->is_verify && $data['status'] == 1) {
             $this->_admin_msg(0, dr_lang('已经通过了审核'));
         }
 

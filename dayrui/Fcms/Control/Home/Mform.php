@@ -290,12 +290,12 @@ class Mform extends \Phpcmf\Table
                 if ($data[1]['status']) {
                     // 增减金币
                     $score = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'score', $this->member);
-                    $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
+                    $score && \Phpcmf\Service::M('member')->add_score($this->member['uid'], $score, dr_lang('%s[%s]: %s发布', MODULE_NAME, $this->index['title'], $this->form['name']), $this->index['curl']);
                     // 增减经验
                     $exp = \Phpcmf\Service::M('member_auth')->mform_auth(MOD_DIR, $this->form['id'], 'exp', $this->member);
-                    $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s: %s发布', MODULE_NAME, $this->form['name']), $this->index['curl']);
+                    $exp && \Phpcmf\Service::M('member')->add_experience($this->member['uid'], $exp, dr_lang('%s[%s]: %s发布', MODULE_NAME, $this->index['title'], $this->form['name']), $this->index['curl']);
                 } else {
-                    \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s: %s提交内容审核', MODULE_NAME, $this->form['name']), MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'. $this->cid.'/id/'.$id, SITE_ID);
+                    \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s[%s]: %s提交内容审核', MODULE_NAME, $this->index['title'], $this->form['name']), MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'. $this->cid.'/id/'.$id, SITE_ID);
                 }
 
                 //更新total字段
