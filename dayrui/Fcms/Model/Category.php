@@ -196,7 +196,7 @@ class Category extends \Phpcmf\Model
             return;
         }
 
-        $ids = @explode(',',  $category[$catid]['childids']);
+        $ids = explode(',',  $category[$catid]['childids']);
         if (!$ids) {
             return;
         }

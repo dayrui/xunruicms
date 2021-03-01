@@ -29,8 +29,8 @@ class Tree {
         $this->nbsp_str = '<span class="tree-icon"></span>';
         $this->icon = [
             $this->nbsp_str,
-            '<span class="tree-icon">├</span>',
-            '<span class="tree-icon">└</span>'
+            '<span class="tree-icon">├&nbsp;</span>',
+            '<span class="tree-icon">└&nbsp;</span>'
         ];
         return $this;
     }
@@ -42,8 +42,8 @@ class Tree {
         $this->nbsp_str = '&nbsp;';
         $this->icon = [
             $this->nbsp_str,
-            '├',
-            '└'
+            '├&nbsp;',
+            '└&nbsp;'
         ];
         return $this;
     }
@@ -209,7 +209,7 @@ class Tree {
     // 联动菜单选择
     public function select_linkage($data, $id = 0, $str = '', $default = ' -- ') {
 
-        $string = '<select class="form-control" '.$str.'>';
+        $string = '<select class="bs-select form-control" '.$str.'>';
         $default && $string.= "<option value='0'>$default</option>";
 
         $tree = [];
@@ -242,7 +242,7 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
-        $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
+        $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
 
@@ -291,7 +291,11 @@ class Tree {
                 // 选中操作
                 $t['selected'] = (is_array($id) ? dr_in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
                 // 是否可选子栏目
-                $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
+                if (isset($t['pcatpost']) && $t['pcatpost']) {
+                    $t['html_disabled'] = 0;
+                } else {
+                    $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
+                }
                 if (isset($t['setting'])) {
                     unset($t['setting']);
                 }
@@ -299,9 +303,7 @@ class Tree {
             }
         }
 
-        $str = "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL;
-        $str2 = "<optgroup label='\$spacer\$name'></optgroup>".PHP_EOL;
-        $string.= $this->icon()->_data($tree)->_category_tree_result(0, $str, $str2);
+        $string.= $this->icon()->_data($tree)->_category_tree_result(0, "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL);
         $string.= '</select>'.PHP_EOL;
 
         if ($is_first) {
@@ -323,7 +325,7 @@ class Tree {
      * @param integer	$sid	默认选中
      * @param integer	$adds	前缀
      */
-    protected function _category_tree_result($myid, $str, $str2, $sid = 0, $adds = '') {
+    protected function _category_tree_result($myid, $str, $str2 = '', $sid = 0, $adds = '') {
 
         if ($this->deep > 5000) {
             return $this->ret; // 防止死循环
@@ -355,16 +357,16 @@ class Tree {
                 //if (!$now && $html_disabled) continue;
 
                 if ($html_disabled) {
-                    eval("\$this->ret.= \"$str2\";");
-                } else {
-                    eval("\$this->ret.= \"$str\";");
+                    $selected = ' disabled';
                 }
+
+                eval("\$this->ret.= \"$str\";");
 
                 $number++;
 
                 // 如果有下级菜单就递归
                 if ($a['child']) {
-                    $this->_category_tree_result($id, $str, $str2, $sid, $adds.$k.$this->nbsp);
+                    $this->_category_tree_result($id, $str, null, $sid, $adds.$k.$this->nbsp);
                 }
             }
         }

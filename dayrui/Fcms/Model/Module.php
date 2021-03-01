@@ -721,6 +721,11 @@ class Module extends \Phpcmf\Model
                 $pid = explode(',', $c['pids']);
                 $level[] = substr_count($c['pids'], ',');
                 $c['mid'] = isset($c['mid']) ? $c['mid'] : $cache['dirname'];
+                if (isset($cache['setting']['pcatpost']) && $cache['setting']['pcatpost']) {
+                    $c['pcatpost'] = 1;
+                } else {
+                    $c['pcatpost'] = 0;
+                }
                 $c['topid'] = isset($pid[1]) ? $pid[1] : $c['id'];
                 $c['domain'] = isset($c['domain']) ? $c['domain'] : $cache['domain'];
                 $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];
@@ -739,8 +744,6 @@ class Module extends \Phpcmf\Model
                     $c['setting']['html'] = intval($cache['html']);
                     $c['setting']['urlrule'] = intval($cache['site'][$siteid]['urlrule']);
                 }
-                // 权限
-                $c['permission'] = $c['child'] && !$cache['setting']['pcatpost'] ? '' : dr_string2array($c['permission']);
                 // 获取栏目url
                 $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
                 //$c['furl'] = $c['setting']['linkurl'] ? $c['setting']['linkurl'] : \Phpcmf\Service::L('router')->category_url($cache, $c, 0, '{fid}');
@@ -964,6 +967,7 @@ class Module extends \Phpcmf\Model
                         'search' => $cache['setting']['search']['use'] ? 1 : 0,
                         'dirname' => $mdir,
                         'is_index_html' => $cache['setting']['module_index_html'] ? 1 : 0,
+                        'pcatpost' => isset($cache['setting']['pcatpost']) && $cache['setting']['pcatpost'] ? 1 : 0,
                     ];
 
                     // 内容模块
