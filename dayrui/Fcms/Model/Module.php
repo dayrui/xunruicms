@@ -726,6 +726,7 @@ class Module extends \Phpcmf\Model
                 } else {
                     $c['pcatpost'] = 0;
                 }
+                $c['is_post'] = $c['pcatpost'] ? 1 : ($c['child'] ? 0 : 1); // 是否允许发布内容
                 $c['topid'] = isset($pid[1]) ? $pid[1] : $c['id'];
                 $c['domain'] = isset($c['domain']) ? $c['domain'] : $cache['domain'];
                 $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];

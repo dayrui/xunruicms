@@ -318,7 +318,7 @@ class Category extends \Phpcmf\Table
                 $this->_json(0, dr_lang('网站栏目数量已达到上限'));
             } elseif ($pid && $post['tid'] != 2 && $this->module['category'][$pid]['tid'] == 2) {
                 return dr_return_data(0, dr_lang('父级栏目是外部地址类型，下级栏目只能选择外部地址'));
-            } elseif ($pid && $this->module['category'][$pid]['child'] == 0 && $this->module['category'][$pid]['tid'] == 1) {
+            } elseif ($pid && $this->module['category'][$pid]['pcatpost'] == 0 && $this->module['category'][$pid]['child'] == 0 && $this->module['category'][$pid]['tid'] == 1) {
                 $mid = $this->module['category'][$pid]['mid'] ? $this->module['category'][$pid]['mid'] : APP_DIR;
                 if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $pid)->counts()) {
                     $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$pid]['name']));
@@ -609,34 +609,21 @@ class Category extends \Phpcmf\Table
         $mmid = '';*/
         if ($topid) {
             // 重新获取数据
+            $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
             $category = \Phpcmf\Service::M('Category')->data_for_move();
             if (!$category[$topid]) {
                 $this->_json(0, dr_lang('目标栏目不存在'));
             } elseif ($this->is_scategory && $category[$topid]['child'] == 0 && $category[$topid]['tid'] == 1) {
                 $mid = $category[$topid]['mid'] ? $category[$topid]['mid'] : APP_DIR;
-                if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $topid)->counts()) {
-                    $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $category[$topid]['name']));
+                if (isset($module[$mid]['pcatpost']) && $module[$mid]['pcatpost']) {
+                    // 说明父栏目允许发布，不怕你的父栏目数据
+                } else {
+                    if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $topid)->counts()) {
+                        $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $category[$topid]['name']));
+                    }
                 }
+
             }
-            /*
-        foreach ($ids as $id) {
-            if ($mid) {
-                // 本身有模块属性的栏目
-                if ($category[$id]['mid'] && $category[$id]['mid'] != $mid) {
-                    $this->_json(0, dr_lang('所选栏目【%s】与目标栏目的模块不一致', $category[$id]['name']));
-                }
-            } else {
-                // 本身没有模块属性的栏目
-                !$mmid && $category[$id]['mid'] && $mmid = $category[$id]['mid'];
-                if ($category[$id]['mid'] && $category[$id]['mid'] != $mmid) {
-                    $this->_json(0, dr_lang('所选栏目【%s】与其他栏目的模块不一致', $category[$id]['name']));
-                }
-            }
-            // 批量更新内容栏目
-            if ($mid) {
-                //$this->content_model->_init($mid)->update_catids($id, $cid);
-            }
-            }*/
         }
 
         // 批量更换栏目
@@ -1040,7 +1027,7 @@ class Category extends \Phpcmf\Table
                 if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {
                         $this->_json(0, dr_lang('父栏目不存在'));
-                    } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
+                    } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['pcatpost'] == 0 && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
                         $mid = $this->module['category'][$save['pid']]['mid'] ? $this->module['category'][$save['pid']]['mid'] : APP_DIR;
                         if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $save['pid'])->counts()) {
                             $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$save['pid']]['name']));
