@@ -44,7 +44,7 @@ class Html
                     unset($list[$t['mid']]);
                     continue;
                 }
-                if ($t['child'] && $t['setting']['template']['list'] != $t['setting']['template']['category']) {
+                if ($t['child'] && !$t['pcatpost'] && $t['setting']['template']['list'] != $t['setting']['template']['category']) {
                     // 判断是封面页面
                     $list[$t['mid']][] = [
                         'id' => $t['id'],

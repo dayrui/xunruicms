@@ -924,7 +924,7 @@ class Module extends \Phpcmf\Common
                 }
             }
 
-            $html.= '<p class="'.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['title'].'</label><label class="rright">'.$ok.'</label></p>';
+            $html.= '<p class="todo_p '.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['title'].'</label><label class="rright">'.$ok.'</label></p>';
 
         }
 
@@ -990,7 +990,7 @@ class Module extends \Phpcmf\Common
                 }
 
             }
-            $html.= '<p class="'.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
+            $html.= '<p class="todo_p '.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
 
         }
 
