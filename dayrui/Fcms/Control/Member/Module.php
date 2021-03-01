@@ -361,7 +361,7 @@ class Module extends \Phpcmf\Table
                     continue;
                 } elseif ($this->module['category'][$i]['tid'] != 1) {
                     continue;
-                } elseif ($this->module['category'][$i]['child'] != 0) {
+                } elseif (!$this->module['category'][$i]['pcatpost'] && $this->module['category'][$i]['child'] != 0) {
                     continue;
                 } else {
                     $syncat[] = $i;
