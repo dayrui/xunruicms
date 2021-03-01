@@ -626,13 +626,11 @@ class Auth extends \Phpcmf\Model {
                     $t[1] = 'fa fa-question-circle';
                     $name = dr_lang('在线帮助');
                     $url = 'javascript:dr_help(\''.$uri.'\');';
-                    /*
-                    if (SYS_HTTPS) {
-                        $url = 'http://help.xunruicms.com/'.$uri.'.html" target="_blank';
-                    }*/
                 } else {
                     continue;
                 }
+            } elseif (strpos($uri, 'js:') === 0) {
+                $url = 'javascript:'.substr($uri, 3).'();';
             } elseif (strpos($uri, 'hide:') === 0) {
                 $uri = substr($uri, 5);
                 $url = dr_now_url();

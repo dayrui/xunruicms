@@ -43,6 +43,7 @@ class Home extends \Phpcmf\Common
         $menu = [
             '控制台' => ['home/main', 'fa fa-home'],
             '自定义控制台' => ['home/edit', 'fa fa-edit'],
+            //'后台功能地图' => ['js:dr_sitemap', 'fa fa-sitemap'],
             '访问网站首页' => ['blank:api/gohome', 'fa fa-send'],
         ];
         if (!dr_in_array(1, $this->admin['roleid'])) {

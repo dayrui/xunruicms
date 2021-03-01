@@ -77,13 +77,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <select class="form-control" name="site[urlrule]">
-                                        <option value="0"> -- </option>
+                                        <option value="0"> {dr_lang('动态地址')} </option>
                                         {list action=cache name=urlrule return=u}
                                         {if $u.type==1}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
                                         {/list}
                                     </select>
                                 </label>
-                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                                <label>&nbsp;&nbsp;<a href="{dr_url('urlrule/index')}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a></label>
                             </div>
                         </div>
                         {else}
@@ -92,13 +92,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <select class="form-control" name="site[urlrule]">
-                                        <option value="0"> -- </option>
+                                        <option value="0"> {dr_lang('动态地址')} </option>
                                         {list action=cache name=urlrule return=u}
                                         {if $u.type==2}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
                                         {/list}
                                     </select>
                                 </label>
-                                <label>&nbsp;&nbsp;{dr_lang('<a href="'.dr_url('urlrule/index').'" style="color:blue !important">[URL规则管理]</a>')}</label>
+                                <label>&nbsp;&nbsp;<a href="{dr_url('urlrule/index')}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a></label>
                             </div>
                         </div>
                         {/if}
