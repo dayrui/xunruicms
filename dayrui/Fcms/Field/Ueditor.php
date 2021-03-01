@@ -331,6 +331,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                         'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
                                         'file_ext' => $ext,
+                                        'image_reduce' => $field['setting']['option']['image_reduce'],
                                     ]);
                                     if ($rt['code']) {
                                         $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
@@ -373,6 +374,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
                                             'file_ext' => $ext,
                                             'file_content' => $file,
+                                            'image_reduce' => $field['setting']['option']['image_reduce'],
                                         ]);
                                         if ($rt['code']) {
                                             $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
