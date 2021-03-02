@@ -1138,7 +1138,7 @@ function dr_comment_cname($name) {
 function dr_get_file($id) {
 
     if (!$id) {
-        return '文件参数没有值';
+        return IS_DEV ? '文件参数没有值' : '';
     }
 
     if (is_numeric($id)) {
@@ -1163,7 +1163,7 @@ function dr_get_file($id) {
 function dr_down_file($id) {
 
     if (!$id) {
-        return '文件参数不能为空';
+        return IS_DEV ? '文件参数不能为空' : '';
     }
 
     \Phpcmf\Service::L('cache')->set_auth_data(md5($id), $id);
@@ -1180,13 +1180,13 @@ function dr_down_file($id) {
 function dr_get_file_url($data, $w = 0, $h = 0) {
 
     if (!$data) {
-        return '文件信息不存在';
+        return IS_DEV ? '文件信息不存在' : '';
     } elseif ($data['remote']) {
         $remote = \Phpcmf\Service::C()->get_cache('attachment', $data['remote']);
         if ($remote) {
             return $remote['url'].$data['attachment'];
         } else {
-            return '自定义附件（'.$data['remote'].'）的配置已经不存在';
+            return IS_DEV ? '自定义附件（'.$data['remote'].'）的配置已经不存在' : '';
         }
     } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
         return dr_thumb($data['id'], $w, $h, 0, 'crop');

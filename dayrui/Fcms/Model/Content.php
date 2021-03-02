@@ -589,6 +589,73 @@ class Content extends \Phpcmf\Model {
         return dr_return_data($rt['code'], $rt['code'] ? dr_lang('定时内容保存成功') : $rt['msg']);
     }
 
+    // 更新阅读量
+    public function update_hits($id, $is_qx = 0) {
+
+        $data = $this->db->table($this->mytable)->where('id', $id)->select('hits,updatetime')->get()->getRowArray();
+        if (!$data) {
+            return dr_return_data(0, dr_lang('阅读统计: 模块内容不存在'));
+        }
+
+        $name = 'module-'.md5($this->mytable).'-'.$id;
+        if (!$is_qx && \Phpcmf\Service::L('input')->get_cookie($name)) {
+            return dr_return_data(1, $data['hits'], '不重复统计');
+        }
+
+        $plus = max(1, defined('IS_HITS_PLUS') && is_numeric(IS_HITS_PLUS) ? intval(IS_HITS_PLUS) : 1);
+        $hits = (int)$data['hits'] + $plus;
+
+        // 更新主表
+        $this->db->table($this->mytable)->where('id', $id)->set('hits', $hits)->update();
+
+        // 获取统计数据
+        $total = $this->db->table($this->mytable.'_hits')->where('id', $id)->get()->getRowArray();
+        if (!$total) {
+            $total['day_hits'] = $total['week_hits'] = $total['month_hits'] = $total['year_hits'] = 0;
+            $total['day_time'] = $total['week_time'] = $total['month_time'] = $total['year_time'] = SYS_TIME;
+        } else {
+            // 按类别归零
+            if (date('Ymd', $total['day_time']) != date('Ymd', SYS_TIME)) {
+                $total['day_time'] = SYS_TIME;
+                $total['day_hits'] = 0;
+            }
+            if (date('YW', $total['week_time']) != date('YW', SYS_TIME)) {
+                $total['week_time'] = SYS_TIME;
+                $total['week_hits'] = 0;
+            }
+            if (date('Ym', $total['month_time']) != date('Ym', SYS_TIME)) {
+                $total['month_time'] = SYS_TIME;
+                $total['month_hits'] = 0;
+            }
+            if (date('Y', $total['year_time']) != date('Y', SYS_TIME)) {
+                $total['year_time'] = SYS_TIME;
+                $total['year_hits'] = 0;
+            }
+        }
+
+        // 更新到统计表
+        $save = [
+            'id' => $id,
+            'hits' => $hits,
+            'day_hits' => $total['day_hits'] + $plus,
+            'day_time' => $total['day_time'],
+            'week_hits' => $total['week_hits'] + $plus,
+            'week_time' => $total['week_time'],
+            'month_hits' => $total['month_hits'] + $plus,
+            'month_time' => $total['month_time'],
+            'year_hits' => $total['year_hits'] + $plus,
+            'year_time' => $total['year_time'],
+        ];
+        \Phpcmf\Service::M()->table($this->mytable.'_hits')->replace($save);
+
+        //session()->save($name, $id, 300); 考虑并发性能还是不用session了
+        \Phpcmf\Service::L('input')->set_cookie($name, $id, 300);
+
+        // 输出
+        return dr_return_data(1, $hits);
+
+    }
+
     // 更新url
     public function update_url($row, $url) {
         $this->table($this->mytable)->update((int)$row['id'], ['url' => $url]);
