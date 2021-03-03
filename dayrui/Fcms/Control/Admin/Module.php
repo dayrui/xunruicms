@@ -211,7 +211,7 @@ class Module extends \Phpcmf\Table
 
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
-                $this->_json(0, dr_lang('参数不存在'));
+                $this->_json(0, dr_lang('没有选择内容'));
             }
 
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
@@ -225,9 +225,12 @@ class Module extends \Phpcmf\Table
         } else {
             // 选择选项
             $ids = $_GET['ids'];
+            if (!$ids) {
+                $this->_json(0, dr_lang('没有选择内容'));
+            }
             \Phpcmf\Service::V()->assign([
                 'ids' => $ids,
-                'delete_msg' => $this->module['setting']['delete_msg'] ? @explode(PHP_EOL, $this->module['setting']['delete_msg']) : [],
+                'delete_msg' => $this->module['setting']['delete_msg'] ? explode(PHP_EOL, $this->module['setting']['delete_msg']) : [],
             ]);
             \Phpcmf\Service::V()->display('share_delete.html');
             exit;
