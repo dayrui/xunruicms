@@ -471,6 +471,10 @@ return [
 
     // 程序升级
     public function update() {
+		
+		if ($this->cmf_license['license'] == 'dev') {
+            \Phpcmf\Service::V()->display('cloud_login.html');exit;
+        }
 
         $data = [];
 
