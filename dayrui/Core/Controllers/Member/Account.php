@@ -114,32 +114,33 @@ class Account extends \Phpcmf\Common
                 }
                 $file = $cache_path.$this->uid.'.jpg';
                 $temp = dr_upload_temp_path().'member.'.$this->uid.'.jpg';
-                $size = @file_put_contents($temp, $content);
+                $size = file_put_contents($temp, $content);
                 if (!$size) {
                     $this->_json(0, dr_lang('头像存储失败'));
                 } elseif (!is_file($temp)) {
                     $this->_json(0, dr_lang('头像存储失败'));
                 } elseif (!getimagesize($temp)) {
-                    @unlink($file);
+                    unlink($file);
                     $this->_json(0, '文件不是规范的图片');
                 }
+                // 头像上传成功之前
+                \Phpcmf\Hooks::trigger('upload_avatar_before', [
+                    'member' => $this->member,
+                    'avatar_file' => $temp,
+                ]);
                 // 上传图片到服务器
                 copy($temp, $file);
                 if (!is_file($file)) {
                     $this->_json(0, dr_lang('头像复制失败'));
                 }
+                // 头像上传成功之后
+                \Phpcmf\Hooks::trigger('upload_avatar_after', [
+                    'member' => $this->member,
+                    'avatar_file' => $file,
+                ]);
                 // 头像认证成功
                 if (!$this->member['is_avatar']) {
-                    \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
-                    // avatar_score
-                    $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_score', $this->member);
-                    if ($value) {
-                        \Phpcmf\Service::M('member')->add_experience($this->member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
-                    }
-                    $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_exp', $this->member);
-                    if ($value) {
-                        \Phpcmf\Service::M('member')->add_score($this->member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
-                    }
+                    \Phpcmf\Service::M('member')->do_avatar($this->member);
                 }
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             } else {

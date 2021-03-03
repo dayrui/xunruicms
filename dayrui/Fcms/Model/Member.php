@@ -1607,7 +1607,25 @@ class Member extends \Phpcmf\Model
                 }
             }
         }
+    }
 
+    // 头像认证执行
+    public function do_avatar($member) {
+
+        if (!$member['is_avatar']) {
+            return;
+        }
+
+        $this->db->table('member_data')->where('id', $member['id'])->update(['is_avatar' => 1]);
+        // avatar_score
+        $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_score', $member);
+        if ($value) {
+            \Phpcmf\Service::M('member')->add_experience($member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
+        }
+        $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_exp', $member);
+        if ($value) {
+            $this->add_score($member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
+        }
     }
 
     // 随机账号
@@ -1768,4 +1786,5 @@ class Member extends \Phpcmf\Model
 
         \Phpcmf\Service::L('cache')->set_file('member', $cache);
     }
+
 }
