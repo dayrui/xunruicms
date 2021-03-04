@@ -15,13 +15,14 @@ class Site_image extends \Phpcmf\Common
             \Phpcmf\Service::M('Site')->config(
                 SITE_ID,
                 'watermark',
-                \Phpcmf\Service::L('input')->post('data', true)
+                \Phpcmf\Service::L('input')->post('data')
             );
+            /*
             \Phpcmf\Service::M('Site')->config(
                 SITE_ID,
                 'image_reduce',
-                \Phpcmf\Service::L('input')->post('image', true)
-            );
+                \Phpcmf\Service::L('input')->post('image')
+            );*/
             \Phpcmf\Service::M('cache')->sync_cache('');
             \Phpcmf\Service::L('input')->system_log('设置网站图片参数');
             $this->_json(1, dr_lang('操作成功'));
@@ -55,14 +56,51 @@ class Site_image extends \Phpcmf\Common
             ),
             'page' => $page,
             'data' => $data['watermark'],
-            'image' => $data['image_reduce'],
+            //'image' => $data['image_reduce'],
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,
-            'waterfont' => dr_file_map(ROOTPATH.'config/font/', 1),
             'waterfile' => dr_file_map(ROOTPATH.'config/watermark/', 1),
         ]);
         \Phpcmf\Service::V()->display('site_image.html');
 	}
 
+	// 上传字体文件或图片
+    public function upload_index() {
+
+        $at = dr_safe_filename($_GET['at']);
+        if ($at == 'font') {
+            $rt = \Phpcmf\Service::L('upload')->upload_file([
+                //'save_file' => .,
+                'path' => ROOTPATH.'config/watermark/',
+                'form_name' => 'file_data',
+                'file_exts' => ['ttf'],
+                'file_size' => 20 * 1024 * 1024,
+                'attachment' => [
+                    'value' => [
+                        'path' => 'null'
+                    ]
+                ],
+            ]);
+        } else {
+            $rt = \Phpcmf\Service::L('upload')->upload_file([
+                //'save_file' => .,
+                'path' => ROOTPATH.'config/watermark/',
+                'form_name' => 'file_data',
+                'file_exts' => ['png'],
+                'file_size' => 3 * 1024 * 1024,
+                'attachment' => [
+                    'value' => [
+                        'path' => 'null'
+                    ]
+                ],
+            ]);
+        }
+
+        if (!$rt['code']) {
+            exit(dr_array2string($rt));
+        }
+
+        $this->_json(1, dr_lang('上传成功'));
+    }
 	
 }

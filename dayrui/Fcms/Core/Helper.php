@@ -1105,6 +1105,11 @@ function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto',
 
         list($cache_path, $cache_url) = dr_thumb_path();
 
+        // 强制缩略图水印
+        if (defined('SITE_THUMB_WATERMARK') && SITE_THUMB_WATERMARK) {
+            $water = 1;
+        }
+
         // 图片缩略图文件
         $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
         if (is_file($cache_path.$cache_file)) {

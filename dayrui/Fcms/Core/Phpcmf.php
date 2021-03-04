@@ -104,6 +104,7 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_MURL', $this->site_info[SITE_ID]['SITE_MURL']);
         define('SITE_NAME', $this->site_info[SITE_ID]['SITE_NAME']);
         define('SITE_LOGO', $this->site_info[SITE_ID]['SITE_LOGO']);
+        define('SITE_THUMB_WATERMARK', $this->site_info[SITE_ID]['SITE_THUMB_WATERMARK']);
         define('SITE_IS_MOBILE', $this->site_info[SITE_ID]['SITE_IS_MOBILE']); // 是否存在移动端
         define('SITE_IS_MOBILE_HTML', (int)$this->site_info[SITE_ID]['SITE_IS_MOBILE_HTML']);
         define('SITE_MOBILE_NOT_PAD', (int)$this->site_info[SITE_ID]['SITE_MOBILE_NOT_PAD']); // pad不归类为移动端

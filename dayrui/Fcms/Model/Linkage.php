@@ -314,9 +314,9 @@ class Linkage extends \Phpcmf\Model
         
         // 站点独立 // 共享共享
         $table = 'linkage_data_'.$link['id'];
-        $_data = $link['type'] 
-            ? $this->db->table($table)->where('site', $siteid)->limit(10000)->orderBy('displayorder ASC,id ASC')->get()->getResultArray()
-            : $this->db->table($table)->limit(10000)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
+        $_data = $link['type']
+            ? $this->db->table($table)->where('site', $siteid)->orderBy('displayorder ASC,id ASC')->get()->getResultArray()
+            : $this->db->table($table)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
         if (!$_data) {
             return;
         }
@@ -405,7 +405,7 @@ class Linkage extends \Phpcmf\Model
             }
         }
 
-        return;
+        return $data;
     }
     
 }

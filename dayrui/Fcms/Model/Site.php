@@ -300,6 +300,7 @@ class Site extends \Phpcmf\Model
                     'SITE_TIMEZONE' => $t['setting']['config']['SITE_TIMEZONE'],
                     'SITE_TIME_FORMAT' => $t['setting']['config']['SITE_TIME_FORMAT'],
                     'SITE_INDEX_HTML' => (string)$t['setting']['config']['SITE_INDEX_HTML'],
+                    'SITE_THUMB_WATERMARK' => (int)$t['setting']['watermark']['thumb'],
                 ];
                 unset($t['setting']['mobile']['auto'],
                     $t['setting']['mobile']['domain'],

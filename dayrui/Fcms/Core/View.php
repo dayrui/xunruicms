@@ -622,7 +622,7 @@ class View {
 
         $value = [];
         foreach ($params as $var) {
-            if (strpos($var, '$') === 0) {
+            if ($var && strpos($var, '$') === 0) {
                 $value[] = preg_replace('/\[(.+)\]/U', '[\'\\1\']', $var);
             } else {
                 $value[] = $var;
@@ -704,7 +704,7 @@ class View {
             if (!$var) {
                 continue;
             }
-            $val = defined($val) ? constant($val) : str_replace('_SP_', ' ', $val);
+            $val = defined($val) ? constant($val) : str_replace('_XUNRUICMS_SK_', ' ', $val);
             if ($var == 'fid' && !$val) {
                 continue;
             }
