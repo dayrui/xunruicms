@@ -57,6 +57,16 @@
                 });
                 return false;
             },
+            success: function(layero, index){
+                // 主要用于后台权限验证
+                var body = layer.getChildFrame('body', index);
+                var json = $(body).html();
+                if (json.indexOf('"code":0') > 0 && json.length < 500){
+                    var obj = JSON.parse(json);
+                    layer.close(index);
+                    dr_cmf_tips(0, obj.msg);
+                }
+            },
             content: url+'&'+data
         });
     }
