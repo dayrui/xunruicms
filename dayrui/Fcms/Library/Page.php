@@ -302,6 +302,9 @@ class Page {
 	 */
 	protected $data_page_attr = 'data-ci-pagination-page';
 
+	// get参数名称
+	protected $page_name = 'page';
+
 
 	// --------------------------------------------------------------------
 
@@ -321,7 +324,6 @@ class Page {
 				$this->$key = $val;
 			}
 		}
-
 		return $this;
 	}
 
@@ -348,6 +350,15 @@ class Page {
 
 
 	// --------------------------------------------------------------------
+
+    protected function _get_page_id() {
+
+	    if (!$this->page_name || is_numeric($this->page_name) || $this->page_name == 'page') {
+            return max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
+        }
+
+        return max(1, isset($_GET[$this->page_name]) ? (int)$_GET[$this->page_name] : 1);
+    }
 
 	/**
 	 * Generate the pagination links
@@ -381,7 +392,7 @@ class Page {
         // Determine the current page number.
         $base_page = ($this->use_page_numbers) ? 1 : 0;
 
-        $this->cur_page = max(1, isset($_GET['page']) ? (int)$_GET['page'] : 1);
+        $this->cur_page = $this->_get_page_id();
 
         // If something isn't quite right, back to the default base page.
         if ( $this->use_page_numbers && (int) $this->cur_page === 0)

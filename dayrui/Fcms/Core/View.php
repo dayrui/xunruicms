@@ -50,6 +50,7 @@ class View {
     private $_list_tag = ''; // 循环体标签
     private $_list_error = []; // 循环标签遇到的错误
     private $_is_list_search = 0; // 搜索标签
+    private $_page_value = 0; // 页码变量
 
     public $call_value; // 动态模板返回调用
 
@@ -753,6 +754,9 @@ class View {
         (IS_DEV || defined('SC_HTML_FILE')) && $system['cache'] = 0;
         // 格式化field
         $system['field'] && $system['field'] = urldecode($system['field']);
+        // 分页页码变量
+        $this->_page_value = $system['page'];
+
 
         // 判断关闭缓存时
         if (!SYS_CACHE) {
@@ -1040,7 +1044,7 @@ class View {
                     } else {
                         // 如存在分页条件才进行分页查询
                         if ($system['page']) {
-                            $page = max(1, (int)$_GET['page']);
+                            $page = $this->_get_page_id($system['page']);
                             $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system['db'], $system['cache'], FALSE);
                             $total = (int)$row['c'];
                             $pagesize = $system['pagesize'] ? $system['pagesize'] : 10;
@@ -1128,7 +1132,7 @@ class View {
                     $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         $urlrule = $system['urlrule'];
                         $pagesize = (int) $system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
@@ -1251,7 +1255,7 @@ class View {
                     $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
@@ -1362,7 +1366,7 @@ class View {
                     $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
@@ -1493,7 +1497,7 @@ class View {
                     $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) { // 如存在分页条件才进行分页查询
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
@@ -1887,7 +1891,7 @@ class View {
                 } else {
                     $first_url = '';
                     if ($system['page']) {
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         if ($system['catid'] && is_numeric($system['catid'])) {
                             if (!$system['sbpage']) {
                                 if ($system['pagesize']) {
@@ -2081,7 +2085,7 @@ class View {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
                         // 计算分页标签
-                        $page = max(1, (int)$_GET['page']);
+                        $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         !$pagesize && $pagesize = 10;
                         $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
@@ -2217,6 +2221,7 @@ class View {
         $config['base_url'] = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
         $config['first_url'] = $first_url;
         $config['per_page'] = $pagesize;
+        $config['page_name'] = $this->_page_value;
         $config['total_rows'] = $total;
         $config['use_page_numbers'] = TRUE;
         $config['query_string_segment'] = 'page';
@@ -2552,6 +2557,15 @@ class View {
         return $select;
     }
 
+    // 获取分页页数
+    private function _get_page_id($page) {
+
+        if (is_numeric($page)) {
+            return max(1, (int)$_GET['page']);
+        } else {
+            return max(1, isset($_GET[$page]) ? (int)$_GET[$page] : 0);
+        }
+    }
 
     // 格式化查询参数
     private function _get_select_field($field) {
@@ -2698,7 +2712,7 @@ class View {
         $this->pos_baidu = $this->pos_order = null;
 
         $total = isset($total) && $total ? $total : dr_count($data);
-        $page = max(1, (int)$_GET['page']);
+        $page = $this->_get_page_id($this->_page_value);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
         $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
         $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';

@@ -121,7 +121,7 @@ class Mform extends \Phpcmf\Table
         if (!$data) {
             $this->_msg(0, dr_lang('数据不存在: '.$id));
         } elseif ($this->cid != $data['cid'] || $this->uid != $data['uid']) {
-            $this->_msg(0, dr_lang('cid不匹配'));
+            $this->_msg(0, dr_lang('所属主题cid不匹配'));
         }
 
         \Phpcmf\Service::V()->assign([
@@ -180,9 +180,13 @@ class Mform extends \Phpcmf\Table
     // 格式化保存数据 保存之前
     protected function _Format_Data($id, $data, $old) {
 
+        if ($this->cid) {
+            $this->_json(0, dr_lang('所属主题cid参数不能为空'));
+        }
+
         // 默认数据
         $data[0]['uid'] = (int)$data[1]['uid'];
-        $data[1]['cid'] = $data[0]['cid'] =  $this->cid;
+        $data[1]['cid'] = $data[0]['cid'] = $this->cid;
         $data[1]['catid'] = $data[0]['catid'] = (int)$this->index['catid'];
 
         if (!$id) {

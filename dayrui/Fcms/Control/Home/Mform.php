@@ -107,7 +107,7 @@ class Mform extends \Phpcmf\Table
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->_Module_Row($this->cid);
         if (!$this->index) {
-            $this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid));
+            $this->_msg(0, dr_lang('所属主题【cid#%s】不存在',  $this->cid));
         };
 
         list($tpl) = $this->_Post(0);
@@ -194,7 +194,6 @@ class Mform extends \Phpcmf\Table
         ]);
         \Phpcmf\Service::V()->display($tpl);
     }
-
 
     // ===========================
 
