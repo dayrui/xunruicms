@@ -1370,8 +1370,10 @@ class Member extends \Phpcmf\Model
      */
     public function add_experience($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
-        if (!$uid || !$val) {
-            return dr_return_data(0, dr_lang('参数失败'));
+        if (!$uid) {
+            return dr_return_data(0, dr_lang('用户不存在'));
+        } elseif (empty(intval($val))) {
+            return dr_return_data(0, dr_lang('变动值不规范'));
         }
 
         $user = $this->member_info($uid);
@@ -1412,8 +1414,10 @@ class Member extends \Phpcmf\Model
      */
     public function add_score($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
-        if (!$uid || !$val) {
-            return dr_return_data(0, dr_lang('参数错误'));
+        if (!$uid) {
+            return dr_return_data(0, dr_lang('用户不存在'));
+        } elseif (empty(intval($val))) {
+            return dr_return_data(0, dr_lang('变动值不规范'));
         }
 
         $user = $this->member_info($uid);

@@ -16,9 +16,9 @@ class Member_pay extends \Phpcmf\Common
                 $this->_json(0, dr_lang('账号[%s]不存在', $post['username']), ['field' => 'username']);
             } elseif (!$post['value']) {
                 $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
-            }  elseif (!$post['unit']) {
+            } elseif (!$post['unit']) {
                 $this->_json(0, dr_lang('充值类型未选择'), ['field' => 'unit']);
-            }  elseif (!$post['note']) {
+            } elseif (!$post['note']) {
                 $this->_json(0, dr_lang('备注说明未填写'), ['field' => 'note']);
             }
             if ($post['unit'] == 1) {
@@ -71,7 +71,6 @@ class Member_pay extends \Phpcmf\Common
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-
                 $call = [
                     'uid' => $user['id'],
                     'username' => $user['username'],
@@ -85,7 +84,6 @@ class Member_pay extends \Phpcmf\Common
                 \Phpcmf\Service::L('Notice')->send_notice('pay_admin', $call);
                 // 钩子
                 \Phpcmf\Hooks::trigger('pay_admin_after', $call);
-
                 $this->_json(1, dr_lang('充值%s成功', 'RMB'.$post['value']));
             }
         }
