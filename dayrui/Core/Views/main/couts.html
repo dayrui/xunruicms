@@ -21,6 +21,8 @@
         'verify' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/verify/index', $dir.'/verify/index'),
         'recycle' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/recycle/index'),
         'timing' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/time/index'),
+        'post' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/add'),
+        'list' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
         ];
         }
         }
@@ -35,6 +37,7 @@
                     <th>{dr_lang('待审核')}</th>
                     <th>{dr_lang('待发布')}</th>
                     <th>{dr_lang('回收站')}</th>
+                    <th>{dr_lang('操作')}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,6 +49,10 @@
                     <td><a class="drlabel drlabel-important" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td><a class="drlabel drlabel-important" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td><a class="drlabel drlabel-important" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                    <td>
+                        <a class="btn btn-xs green" href="{$t.list}" >{dr_lang('管理')}</a>
+                        {if $ci->_is_admin_auth($dir.'/home/add')}<a class="btn btn-xs blue" href="{$t.post}" >{dr_lang('发布')}</a>{/if}
+                    </td>
                 </tr>
                 <script type="text/javascript">
                     $(function(){

@@ -84,9 +84,9 @@ class Category extends \Phpcmf\Table
             }
             $option = '';
             !$t['mid'] && $t['mid'] = APP_DIR;
+            $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
             $t['name'] = dr_strcut($t['name'], 30);
             $t['setting'] = dr_string2array($t['setting']);
-            $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
             if ($this->module['share']) {
                 // 共享栏目时
                 //以本栏目为准
