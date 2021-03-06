@@ -228,7 +228,7 @@ class Image extends \Phpcmf\Library\A_Field {
                     if ($file) {
                         $tpl.= '<div id="image-'.$name.'-'.$id.'" class="dz-preview dz-processing dz-success dz-complete dz-image-preview">';
                         $tpl.=     '<div class="dz-image">';
-                        $tpl.=        ' <img data-dz-thumbnail="" src="'.dr_thumb($id, 110, 110).'">';
+                        $tpl.=        ' <img data-dz-thumbnail="" src="'.dr_get_file($id).'">';
                         $tpl.=     '</div>';
 
                         $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div></div>';
@@ -308,7 +308,6 @@ function dr_delete_image_'.$name.'(e) {
 		
 		', 0);
 
-
         // 输出最终表单显示
         return $this->input_format($name, $text, $str.$tips);
     }
@@ -329,7 +328,7 @@ function dr_delete_image_'.$name.'(e) {
             foreach ($value as $id) {
                 $html.= '<div class="col-sm-3 col-md-2">';
                 $html.= '<a href="javascript:dr_preview_image(\''.dr_get_file($id).'\');" class="thumbnail">';
-                $html.= '<img src="'.dr_thumb($id, 200, 200).'" style="width:100%">';
+                $html.= '<img src="'.dr_get_file($id).'" style="width:100%">';
                 $html.= '</a>';
                 $html.= '</div>';
             }

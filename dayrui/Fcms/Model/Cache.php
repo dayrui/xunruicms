@@ -13,6 +13,14 @@ class Cache extends \Phpcmf\Model
     protected $module_cache;
     protected $is_sync_cache;
 
+    // 清理缩略图
+    public function update_thumb() {
+        list($cache_path) = dr_thumb_path();
+        dr_dir_delete($cache_path);
+        dr_mkdirs($cache_path);
+        exit(\Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1));
+    }
+
     // 更新附件缓存
     public function update_attachment() {
 

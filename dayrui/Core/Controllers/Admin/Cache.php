@@ -16,6 +16,7 @@ class Cache extends \Phpcmf\Common
                 ['系统配置缓存', 'update_cache'],
                 ['重建搜索索引', 'update_search_index'],
                 ['更新附件缓存', 'update_attachment'],
+                ['清理缩略图文件', 'update_thumb'],
                 ['更新百度编辑器', 'update_ueditor'],
                 ['更新子站目录、更新模块域名目录、更新终端目录', 'update_site_config'],
             ],

@@ -101,12 +101,13 @@ class Upload
             return dr_return_data(0, $this->error['ERROR_TMPFILE']);
         }
 
-        $name = substr(md5(SYS_TIME.$file['name'].uniqid()), rand(0, 20), 15); // 随机新名字
+        $code = file_get_contents($file["tmp_name"]);
+        $name = substr(md5(SYS_TIME.$file['name'].$code.uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($file['name']); // 扩展名
         $file_name = $this->_file_name($file['name']); // 文件实际名字
 
         // 安全验证
-        $rt = $this->_safe_check($file_ext, file_get_contents($file["tmp_name"]));
+        $rt = $this->_safe_check($file_ext, $code);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
