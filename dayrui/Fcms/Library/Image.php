@@ -305,7 +305,7 @@ class Image
         $this->wm_vrt_offset 		= 0;
         $this->wm_font_color		= '#ffffff';
         $this->wm_shadow_distance 	= 2;
-        $this->wm_opacity 			= 50;
+        $this->wm_opacity 			= 100;
         $this->create_fnc 			= 'imagecreatetruecolor';
         $this->copy_fnc 			= 'imagecopyresampled';
         $this->error_msg 			= array();
@@ -923,7 +923,7 @@ class Image
             // 图片水印
             $config['wm_type'] = 'overlay';
             $config['wm_overlay_path'] = ROOTPATH.'config/watermark/'.$data['wm_overlay_path'];
-            $config['wm_opacity'] = $data['wm_opacity'];
+            //$config['wm_opacity'] = $data['wm_opacity'];
         }
 
         list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', $data['locate']);

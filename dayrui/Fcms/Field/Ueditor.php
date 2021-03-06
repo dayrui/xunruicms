@@ -229,7 +229,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
 					<textarea id="field_default_value" style="width: 90%;height: 100px;" class="form-control" name="data[setting][option][value]">'.$option['value'].'</textarea>
 					<p><label>'.$this->member_field_select().'</label>
-					<span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span></p>
+					<span class="help-block">'.dr_lang('用于字段为空时显示该填充值，并不会去主动变更数据库中的实际值；可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span></p>
                     </div>
                 </div>
                 '.$this->field_type($option['fieldtype'], $option['fieldlength']),
