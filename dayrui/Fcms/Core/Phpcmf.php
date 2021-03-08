@@ -351,7 +351,11 @@ abstract class Common extends \CodeIgniter\Controller
                         $name = dr_lang('【使用】');
                         break;
                 }
-                $this->_admin_msg(0, dr_lang('没有%s权限（#%s）', $name, $uri));
+                $cname = \Phpcmf\Service::M('auth')->get_auth_name();
+                if (!$cname) {
+                    $cname = '#'.$uri;
+                }
+                $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name));
             }
         }
 

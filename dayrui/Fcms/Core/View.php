@@ -1728,7 +1728,7 @@ class View {
                 if ($system['catid']) {
                     $fwhere = [];
                     if (strpos($system['catid'], ',') !== FALSE) {
-                        $temp = @explode(',', $system['catid']);
+                        $temp = explode(',', $system['catid']);
                         if ($temp) {
                             $catids = [];
                             foreach ($temp as $i) {
@@ -1738,7 +1738,7 @@ class View {
                         }
                         unset($temp);
                     } elseif ($module['category'][$system['catid']]['child']) {
-                        $catids = @explode(',', $module['category'][$system['catid']]['childids']);
+                        $catids = explode(',', $module['category'][$system['catid']]['childids']);
                         $fwhere[] = '`'.$table.'`.`catid` IN ('.$module['category'][$system['catid']]['childids'].')';
                     } else {
                         $fwhere[] = '`'.$table.'`.`catid` = '.(int)$system['catid'];

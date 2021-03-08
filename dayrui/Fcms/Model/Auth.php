@@ -10,6 +10,7 @@
 
 class Auth extends \Phpcmf\Model {
 
+    protected $_auth_uri = '';
     protected $_is_post_user = -1;
     protected $_is_admin_min_mode = -1;
 
@@ -576,7 +577,24 @@ class Auth extends \Phpcmf\Model {
             }
         }
 
+        $this->_auth_uri = $this_uri;
+
         return false;
+    }
+
+    // 获取权限菜单名称
+    public function get_auth_name() {
+
+        if (!$this->_auth_uri) {
+            return '';
+        }
+
+        $cache = \Phpcmf\Service::C()->get_cache('menu-admin-uri');
+        if (isset($cache[$this->_auth_uri]) && $cache[$this->_auth_uri]) {
+            return $cache[$this->_auth_uri]['name'];
+        }
+
+        return '';
     }
 
     // 后台菜单字符串
