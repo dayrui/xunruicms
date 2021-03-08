@@ -98,7 +98,6 @@ class View {
             'cache', 'navigator'
             ,'modules'
         ];
-
     }
 
     // 终端路径
@@ -290,15 +289,26 @@ class View {
             if ($dir === '/' && is_file($this->_root.$file)) {
                 // 强制主目录
                 return $this->_root.$file;
-            } else if (@is_file($this->_dir.$file)) {
+            } elseif (is_file($this->_dir.$file)) {
                 // 调用本目录
                 return $this->_dir.$file;
-            } else if (@is_file($this->_root.$file)) {
+            } elseif (is_file($this->_root.$file)) {
                 // 再次调用主程序下的文件
                 $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_root.$file.']';
                 return $this->_root.$file;
             }
+            // 尝试判断主defualt目录
+            $default_file = TPLPATH.$this->_tname.'/default/home/'.$file;
+            if (is_file($default_file)) {
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用default目录的模板['.$default_file.']';
+                return $default_file;
+            }
             $error = $dir === '/' ? $this->_root.$file : $this->_dir.$file;
+            $default_file = str_replace($this->_root, TPLPATH.$this->_tname.'/default/home/', $error);
+            if (is_file($default_file)) {
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用default目录的模板['.$default_file.']';
+                return $default_file;
+            }
         }
 
         /*
@@ -308,8 +318,8 @@ class View {
         } elseif ($this->_is_mobile && is_file(str_replace('/mobile/', '/pc/', $this->_root.$file))) {
             return str_replace('/mobile/', '/pc/', $this->_root.$file);
         }*/
-        if ($file == 'msg.html' && is_file(TPLPATH.'pc/default/home/msg.html')) {
-            return TPLPATH.'pc/default/home/msg.html';
+        if ($file == 'msg.html' && is_file(TPLPATH.'pc/default/home/'.$file)) {
+            return TPLPATH.'pc/default/home/'.$file;
         }
 
         $this->show_error('模板文件不存在', $error);
