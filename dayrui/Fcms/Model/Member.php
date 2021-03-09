@@ -1616,7 +1616,7 @@ class Member extends \Phpcmf\Model
     // 头像认证执行
     public function do_avatar($member) {
 
-        if (!$member['is_avatar']) {
+        if ($member['is_avatar']) {
             return;
         }
 
