@@ -93,13 +93,19 @@ class Api extends \Phpcmf\Common
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $title = dr_safe_replace(htmlspecialchars(\Phpcmf\Service::L('input')->get('title')));
         $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
+        $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
 
         // 判断参数
-        (!$title || !$module || !\Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module)) && exit('');
+        if (!$title || !$module || !$cache) {
+            exit('');
+        }
 
         // 判断是否重复存在
-        $num = \Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>', $id)->where('title', $title)->countAllResults();
-        $num ? exit(dr_lang('重复')) : exit('');
+        if (\Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>', $id)->where('title', $title)->countAllResults()) {
+            exit(dr_lang('已经有相同的%s存在', isset($cache['field']['title']['name']) ? $cache['field']['title']['name'] : dr_lang('主题')));
+        }
+
+        exit('');
     }
 
     /**

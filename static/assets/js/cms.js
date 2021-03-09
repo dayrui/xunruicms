@@ -927,21 +927,11 @@ function check_title(t) {
     var val = $("#dr_title").val();
     var mod = $("#dr_module").val();
     $.get("/index.php?s=api&c=api&m=checktitle&title=" + val + "&module=" + mod + "&id=" + id+'&is_ajax=1',
-        function(data) {
-            if (data) {
-                if (t == "1") {
-                    dr_cmf_tips(0, data);
-                } else {
-                    $("#dr_title_tips").html(data);
-                }
-            } else {
-                if (t == "1") {
-                    //dr_cmf_tips(1, 'ok');
-                } else {
-                    $("#dr_title_tips").html("");
-                }
-            }
-        })
+    function(data) {
+        if (data) {
+            dr_cmf_tips(0, data);
+        }
+    });
 }
 function get_keywords(to) {
     var title = $("#dr_title").val();
