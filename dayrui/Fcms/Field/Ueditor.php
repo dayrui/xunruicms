@@ -272,6 +272,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     || strpos($img, '/api/umeditor/') !== false) {
                     continue;
                 }
+                $ext = $this->_get_file_ext($img);
+                if (!$ext) {
+                    continue;
+                }
                 // 下载图片
                 if ($yct && strpos($img, 'http') === 0) {
                     if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
@@ -281,8 +285,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         // 判断域名白名单
                         $arr = parse_url($img);
                         $domain = $arr['host'];
-                        $ext = $this->_get_file_ext($img);
-                        if ($domain && $ext) {
+                        if ($domain) {
                             $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
                             if (isset($sites[$domain])) {
                                 // 过滤站点域名
@@ -355,11 +358,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             // 判断域名白名单
                             $arr = parse_url($img);
                             $domain = $arr['host'];
-                            $ext = $this->_get_file_ext($img);
-                            if ($domain && $ext) {
+                            if ($domain) {
                                 $file = dr_catcher_data($img, 8);
                                 if (!$file) {
-                                    log_message('error', '服务器无法下载图片：'.$img);
+                                     CI_DEBUG && log_message('error', '服务器无法下载图片：'.$img);
                                 } else {
                                     // 尝试找一找附件库
                                     $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
@@ -446,7 +448,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $arr = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
         $ext = str_replace('.', '', trim(strtolower(strrchr($url, '.')), '.'));
         if ($ext && in_array($ext, $arr)) {
-            return $ext;
+            return $ext; // 满足扩展名
+        } elseif ($ext && strlen($ext) < 4) {
+            //CI_DEBUG && log_message('error', '此路径不是远程图片：'.$url);
+            return ''; // 表示不是图片扩展名了
         }
 
         foreach ($arr as $t) {
@@ -455,7 +460,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
         }
 
-        log_message('error', '服务器无法下载图片：'.$url);
+        CI_DEBUG && log_message('error', '服务器无法获取远程图片的扩展名：'.$url);
 
         return '';
     }
