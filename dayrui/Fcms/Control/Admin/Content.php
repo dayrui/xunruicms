@@ -149,9 +149,6 @@ class Content extends \Phpcmf\Common
                 \Phpcmf\Service::M()->db->table($table)->where('id', $t['id'])->update(array(
                     'keywords' => $tag
                 ));
-                if (\Phpcmf\Service::C()->module['setting']['auto_save_tag']) {
-                    $this->content_model->auto_save_tag($tag);
-                }
             }
         }
 
