@@ -168,13 +168,13 @@ class Field extends \Phpcmf\Model
     // 获取任意表的自定义字段
     public function get_mytable_field($table, $siteid = 0) {
 
-        $name = 'table-'.$table;
+        $name = 'my-table-'.$table;
         $value = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$value) {
             $field = $this->db->table('field')
                         ->where('disabled', 0)
                         ->where('relatedid', $siteid)
-                        ->where('relatedname', $name)
+                        ->where('relatedname', 'table-'.$table)
                         ->orderBy('displayorder ASC,id ASC')
                         ->get()
                         ->getResultArray();
