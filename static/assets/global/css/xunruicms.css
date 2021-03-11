@@ -5898,7 +5898,7 @@ button.close {
     content: "\f107";
     display: inline-block;
     border: 0;
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     font-style: normal;
     font-weight: 400
 }
@@ -7075,7 +7075,7 @@ table.dataTable>tbody>tr.child ul li {
 }
 
 .portlet.calendar .fc-button .fc-icon-left-single-arrow,.portlet.calendar .fc-button .fc-icon-right-single-arrow {
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     font-size: 16px;
     display: inline-block
 }
@@ -13270,7 +13270,7 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     font-size: 14px;
     right: 7px;
     top: 7px;
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     height: auto;
     content: "\f105";
     font-weight: 300
@@ -15757,7 +15757,7 @@ body[ng-controller] .modal {
 }
 
 .portlet>.portlet-title>.actions .btn-icon-only.btn-default.fullscreen {
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     color: #a0a0a0;
     padding-top: 3px
 }
@@ -15824,7 +15824,7 @@ body[ng-controller] .modal {
     top: -3px;
     position: relative;
     font-size: 13px;
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     color: #ACACAC
 }
 
@@ -33029,7 +33029,7 @@ code.form-control-static {
     text-align: center;
     display: inline;
     font-size: 16px;
-    font-family: "Font Awesome 5 Pro";
+    font-family: "Font Awesome 5 Free";
     height: auto;
     content: "\f104";
     font-weight: 300;
