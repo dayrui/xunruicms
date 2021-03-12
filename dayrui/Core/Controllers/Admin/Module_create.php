@@ -31,8 +31,6 @@ class Module_create extends \Phpcmf\Common
                 $this->_json(0, dr_lang('此目录已经存在'), ['field' => 'dirname']);
             } elseif (!$data['icon']) {
                 $this->_json(0, dr_lang('模块图标不能为空'), ['field' => 'icon']);
-            } elseif (strpos($data['icon'], 'fa') === false) {
-                $this->_json(0, dr_lang('模块图标格式不正确，格式为：fa fa-code'), ['field' => 'icon']);
             } elseif (!dr_check_put_path(APPSPATH)) {
                 $this->_json(0, dr_lang('服务器没有创建目录的权限'), ['field' => 'dirname']);
             } elseif (\Phpcmf\Service::M('app')->is_sys_dir($data['dirname'])) {

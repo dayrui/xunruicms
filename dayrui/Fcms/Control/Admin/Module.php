@@ -319,7 +319,7 @@ class Module extends \Phpcmf\Table
     // 批量推送
     protected function _Admin_Send() {
 
-        $page = \Phpcmf\Service::L('input')->get('page');
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
         if ($page != 5) {
             $ids = \Phpcmf\Service::L('input')->get('ids');
             if (!$ids) {

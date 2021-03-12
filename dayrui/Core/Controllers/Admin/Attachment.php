@@ -145,7 +145,9 @@ class Attachment extends \Phpcmf\Common
                     'value' => dr_array2string($data['value']),
                 ]
             );
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache('attachment');
             $this->_json(1, dr_lang('操作成功'));
@@ -175,14 +177,16 @@ class Attachment extends \Phpcmf\Common
 
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
-            exit($this->_json(0, dr_lang('你还没有选择呢')));
+            $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
         \Phpcmf\Service::M()->table('attachment_remote')->deleteAll($ids);
-        \Phpcmf\Service::L('input')->system_log('批量删除远程附件策略: '. @implode(',', $ids));
+        \Phpcmf\Service::L('input')->system_log('批量删除远程附件策略: '. implode(',', $ids));
+
         // 自动更新缓存
         \Phpcmf\Service::M('cache')->sync_cache('attachment');
-        exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+
+        $this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
     }
 	
 }

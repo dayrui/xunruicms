@@ -45,7 +45,16 @@ class Select extends \Phpcmf\Library\A_Field {
 					<label>'.$this->member_field_select().'</label>
 					<span class="help-block">'.dr_lang('用于字段为空时显示该填充值，并不会去主动变更数据库中的实际值；可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
 				</div>
-			</div>'
+			</div>
+			<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('启用选项搜索').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][is_search]" '.($option['is_search'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                
+					<span class="help-block">'.dr_lang('当选项值过多时，可以在选择框中搜索选项值').'</span>
+                </div>
+            </div>
+			'
 			.
 			$this->field_type($option['fieldtype'], $option['fieldlength'])
 		];
@@ -81,7 +90,7 @@ class Select extends \Phpcmf\Library\A_Field {
 		// 字段默认值
 		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
-		$str = '<label><select '.$required.' class="form-control '.$field['setting']['option']['css'].'" name="data['.$name.']" id="dr_'.$name.'" '.$attr.' >';
+		$str = '<label><select '.$required.' class="'.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? 'bs-select' : '').' form-control" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' '.$field['setting']['option']['css'].'" name="data['.$name.']" id="dr_'.$name.'" '.$attr.' >';
 
 		// 表单选项
 		$options = dr_format_option_array($field['setting']['option']['options']);
@@ -92,6 +101,14 @@ class Select extends \Phpcmf\Library\A_Field {
 		}
 
 		$str.= '</select></label>'.$tips;
+
+		if (isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search']) {
+            // 防止重复加载JS
+            if (!$this->is_load_js($field['filetype'])) {
+                $str.= $this->get_select_search_code();
+            }
+        }
+
 		return $this->input_format($name, $text, $str);
 	}
 

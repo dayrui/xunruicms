@@ -1,16 +1,6 @@
 {template "header.html"}
 
-<link href="{THEME_PATH}assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
-<script src="{THEME_PATH}assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
 <script>
-    if (App.isAngularJsApp() === false) {
-        jQuery(document).ready(function() {
-            $('.bs-select').selectpicker({
-                iconBase: 'fa',
-                tickIcon: 'fa-check'
-            });
-        });
-    }
     {if $is_verify}
     $(function () {
         $('#dr_row_hits').hide();
@@ -281,6 +271,7 @@
                                     </label>
                                     <input type="hidden" id="dr_catid" name="catid" value="{$catid}">
                                     {else}
+                                        {php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
                                         <label style="margin-right:10px">{$select}</label>
                                         {if $module['setting']['sync_category']}
                                         {if !$id || $is_sync_cat}

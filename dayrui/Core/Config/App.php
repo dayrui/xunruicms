@@ -39,7 +39,7 @@ class App extends BaseConfig
 	public $cookieDomain   = '';
 	public $cookiePath     = '/';
 	public $cookieSecure   = false;
-	public $cookieHTTPOnly = false;
+	public $cookieHTTPOnly = true;
     public $cookieSameSite = 'Lax';
 
 
@@ -63,6 +63,7 @@ class App extends BaseConfig
     public function __construct()
     {
         parent::__construct();
+        $this->cookieSecure = strpos(FC_NOW_URL, 'https://') === 0 ? true : false;
         $this->sessionCookieName = 'xunruicms_'.md5(SYS_KEY);
     }
 }

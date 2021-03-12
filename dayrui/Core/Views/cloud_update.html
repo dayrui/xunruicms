@@ -48,15 +48,14 @@
             </tbody>
         </table>
     </div>
+    {if !$is_oem}
     <div class="row fc-list-footer table-checkable ">
         <div class="col-md-12">
-            {if dr_is_app('beifen')}
-            <label><button type="button" onclick="dr_beifen_cms('{dr_url('beifen/home/add')}', '{dr_lang('你确定要备份全站文件吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('备份全站')}</button></label>
-            {/if}
-            <label><a href="javascript:dr_help('610');" class="btn blue btn-sm"> <i class="fa fa-book"></i> {dr_lang('离线升级程序')}</a></label>
+            <label><a href="https://www.xunruicms.com/doc/video-%E8%BF%85%E7%9D%BFCMS%E5%9C%A8%E7%BA%BF%E5%8D%87%E7%BA%A7%E6%95%99%E7%A8%8B.html" target="_blank" class="btn green btn-sm"> <i class="fa fa-book"></i> {dr_lang('在线升级教程')}</a></label>
+            <label><a href="https://www.xunruicms.com/doc/video-%E8%BF%85%E7%9D%BFCMS%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E6%95%99%E7%A8%8B.html" target="_blank" class="btn blue btn-sm"> <i class="fa fa-book"></i> {dr_lang('离线升级教程')}</a></label>
         </div>
     </div>
-
+    {/if}
 </form>
 </div>
 <script type="text/javascript">

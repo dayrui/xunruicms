@@ -308,6 +308,7 @@ class Api extends \Phpcmf\Common
 
 		$url = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('v')));
 		$name = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('n')));
+
 		// 替换URL
 		if ($this->admin) {
 			$menu = dr_string2array($this->admin['history']);
@@ -347,8 +348,7 @@ class Api extends \Phpcmf\Common
         $name = dr_safe_replace($_GET['id']);
         \Phpcmf\Service::M('cache')->$name();
 
-        exit($this->_json(1, dr_lang('更新完成'), 0));
-
+        $this->_json(1, dr_lang('更新完成'), 0);
     }
 
 
@@ -356,22 +356,21 @@ class Api extends \Phpcmf\Common
 	public function cache_clear() {
 
         \Phpcmf\Service::M('cache')->update_data_cache();
-        exit($this->_json(1, dr_lang('前台数据缓存已被更新')));
+        $this->_json(1, dr_lang('前台数据缓存已被更新'));
 	}
 
 	// 执行更新缓存
 	public function cache_update() {
 
-
         \Phpcmf\Service::M('cache')->update_cache();
-        exit($this->_json(1, dr_lang('更新完成')));
+        $this->_json(1, dr_lang('更新完成'));
 	}
 
 	// 执行重建模块索引
 	public function cache_search() {
 
         \Phpcmf\Service::M('cache')->update_search_index();
-        exit($this->_json(1, dr_lang('更新完成')));
+        $this->_json(1, dr_lang('更新完成'));
 	}
 
     // 执行重建模块索引
@@ -385,7 +384,7 @@ class Api extends \Phpcmf\Common
     public function cache_ueditor() {
 
         \Phpcmf\Service::M('cache')->update_ueditor();
-        exit($this->_json(1, dr_lang('更新完成')));
+        $this->_json(1, dr_lang('更新完成'));
     }
 
 	/**
@@ -397,7 +396,7 @@ class Api extends \Phpcmf\Common
 
 	// 当前时间值
 	public function site_time() {
-        exit($this->_json(1, dr_date(SYS_TIME)));
+	    $this->_json(1, dr_date(SYS_TIME));
 	}
 
 	/**
@@ -675,7 +674,6 @@ class Api extends \Phpcmf\Common
         } else {
             $this->_json(0, dr_lang('目录[%s]不存在', $path));
         }
-
     }
 
     /**
@@ -745,7 +743,6 @@ class Api extends \Phpcmf\Common
         } else {
             $this->_json(0, dr_lang('目录[%s]不存在', $path));
         }
-
     }
 
     /**
@@ -915,10 +912,13 @@ class Api extends \Phpcmf\Common
 
     // 完整模式切换
     public function admin_all() {
+
         if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
             $this->_admin_msg(0, dr_lang('此账号无法切换到完整模式'));
         }
+
         \Phpcmf\Service::M('auth')->update_admin_setting('admin_min', 0);
+
         $this->_admin_msg(1, dr_lang('正在切换完整模式'), dr_url('home/index'), 0);
     }
 

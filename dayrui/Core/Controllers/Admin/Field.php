@@ -269,7 +269,7 @@ class Field extends \Phpcmf\Common
             }
             $this->_cache(); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -291,7 +291,7 @@ class Field extends \Phpcmf\Common
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M()->table('field')->get($id);
 		if (!$data) {
-			exit($this->_json(0, dr_lang('字段不存在')));
+			$this->_json(0, dr_lang('字段不存在'));
 		}
 		
 		switch (\Phpcmf\Service::L('input')->get('op')) {
@@ -300,7 +300,7 @@ class Field extends \Phpcmf\Common
 				\Phpcmf\Service::M()->table('field')->save($id, 'disabled', $value);
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log(($value ? '禁用' : '启用').$this->name.'【'.$data['fieldname'].'】'); // 记录日志
-				exit($this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]));
+				$this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]);
 				break;
 			case 'xss':
                 // 验证字段对象的有效性
@@ -319,24 +319,24 @@ class Field extends \Phpcmf\Common
 				\Phpcmf\Service::M()->table('field')->save($id, 'setting', dr_array2string($data['setting']));
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '开启XSS' : '关闭XSS')); // 记录日志
-				exit($this->_json(1, dr_lang('操作成功'), ['value' => $value]));
+				$this->_json(1, dr_lang('操作成功'), ['value' => $value]);
 				break;
 			case 'member':
 				$value = $data['ismember'] ? 0 : 1;
 				\Phpcmf\Service::M()->table('field')->save($id, 'ismember', $value);
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '前端显示' : '前端隐藏')); // 记录日志
-				exit($this->_json(1, dr_lang('操作成功'), ['value' => $value]));
+                $this->_json(1, dr_lang('操作成功'), ['value' => $value]);
 				break;
 			case 'save':
 				\Phpcmf\Service::M()->table('field')->save($id, 'displayorder', dr_safe_replace(\Phpcmf\Service::L('input')->get('value')));
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log('修改排序值: '. $this->name.'【'.$data['fieldname'].'】');
-				exit($this->_json(1, dr_lang('操作成功')));
+				$this->_json(1, dr_lang('操作成功'));
 				break;
 		}
 
-		exit($this->_json(0, dr_lang('未知操作')));
+		$this->_json(0, dr_lang('未知操作'));
 	}
 
 	// 删除字段
@@ -344,18 +344,18 @@ class Field extends \Phpcmf\Common
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		if (!$ids) {
-			exit($this->_json(0, dr_lang('你还没有选择呢')));
+			$this->_json(0, dr_lang('你还没有选择呢'));
 		}
 
 		$rt = \Phpcmf\Service::M('Field')->delete_field($ids);
 		if (!$rt['code']) {
-			exit($this->_json(0, $rt['msg']));
+			$this->_json(0, $rt['msg']);
 		} 
 
         $this->_cache(); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('删除字段'. $this->name.' '. @implode(',', $ids));
+		\Phpcmf\Service::L('input')->system_log('删除字段'. $this->name.' '. implode(',', $ids));
 
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
     // 导出
@@ -386,14 +386,14 @@ class Field extends \Phpcmf\Common
             $code = \Phpcmf\Service::L('input')->post('code');
             $arr = explode(PHP_EOL, $code);
             if (!$arr) {
-                exit($this->_json(0, dr_lang('代码不能为空')));
+                $this->_json(0, dr_lang('代码不能为空'));
             }
             $save = [];
             foreach ($arr as $t) {
                 if ($t) {
                     $data = dr_string2array($t);
                     if (!$data) {
-                        exit($this->_json(0, dr_lang('代码解析失败')));
+                        $this->_json(0, dr_lang('代码解析失败'));
                     }
                     $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
                     if (!$field) {
@@ -414,7 +414,7 @@ class Field extends \Phpcmf\Common
                 }
             }
             if (!$save) {
-                exit($this->_json(0, dr_lang('没有可用的导出字段')));
+                $this->_json(0, dr_lang('没有可用的导出字段'));
             }
             // 入库操作
             foreach ($save as $data) {

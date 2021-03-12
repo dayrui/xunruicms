@@ -180,8 +180,6 @@ class Module extends \Phpcmf\Common
                 $this->_json(0, dr_lang('名称不能为空'), ['field' => 'name']);
             } elseif (!$data['icon']) {
                 $this->_json(0, dr_lang('模块图标不能为空'), ['field' => 'icon']);
-            } elseif (strpos($data['icon'], 'fa') === false) {
-                $this->_json(0, dr_lang('模块图标格式不正确，格式为：fa fa-code'), ['field' => 'icon']);
             } elseif (!dr_check_put_path(dirname($file))) {
                 $this->_json(0, dr_lang('目录[%s]没有创建文件权限', dirname($file)), ['field' => 'dirname']);
             }
