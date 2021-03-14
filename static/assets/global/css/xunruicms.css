@@ -9454,14 +9454,6 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     width: 100%
 }
 
-.bs-glyphicons,.glyphicons-demo ul {
-    padding-left: 0;
-    padding-bottom: 1px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    list-style: none
-}
-
 .simplelineicons-demo .item-box .item span {
     font-size: 22px
 }
@@ -9476,38 +9468,11 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     text-align: center
 }
 
-.glyphicons-demo ul li {
-    float: left;
-    width: 25%;
-    height: 115px;
-    padding: 10px;
-    margin: 0 -1px -1px 0;
-    font-size: 14px;
-    line-height: 1.4;
-    text-align: center;
-    border: 1px solid #ddd
-}
-
-.glyphicons-demo .glyphicon {
-    display: block;
-    margin: 5px auto 10px;
-    font-size: 24px;
-    color: #444
-}
-
-.glyphicons-demo ul li:hover {
-    background-color: rgba(86,61,124,.1)
-}
-
 .badge-default,.label-default {
     background-color: #bac3d0
 }
 
-@media (min-width:768px) {
-    .glyphicons-demo ul li {
-        width: 12.5%
-    }
-}
+
 
 .alert {
     border-width: 1px
@@ -31869,36 +31834,6 @@ body .ui-tooltip {
     padding-bottom: 30px!important
 }
 
-@font-face {
-    font-family:iconfont;src:url(../font/iconfont.eot?t=1474530644);src:url(../font/iconfont.eot?t=1474530644#iefix) format('embedded-opentype'),url(../font/iconfont.woff?t=1474530644) format('woff'),url(../font/iconfont.ttf?t=1474530644) format('truetype'),url(../font/iconfont.svg?t=1474530644#iconfont) format('svg')
-}
-
-.iconfont {
-    font-family: iconfont!important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-text-stroke-width: .2px
-}
-
-.icon-rectangle390:before {
-    content: "\e600"
-}
-
-.icon-icon:before {
-    content: "\e602"
-}
-
-.icon-licaishouyi:before {
-    content: "\e65e"
-}
-
-.icon-zhifubaoa:before {
-    content: "\e662"
-}
-
-.icon-yiban:before {
-    content: "\e63e"
-}
 
 .icon-caifua:before {
     content: "\e668"
