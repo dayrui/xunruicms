@@ -783,16 +783,16 @@
 
             $this->set_load_js('Select', 1);
 
-            return '<link href="'.THEME_PATH.'assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
-<script src="'.THEME_PATH.'assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-            <script type="text/javascript">jQuery(document).ready(function() {
-            $(\'.bs-select\').selectpicker({
-                noneResultsText: \''.dr_lang('没有搜索到 %s', '{0}').'\',
-                noneSelectedText: \''.dr_lang('没有找到').'\',
-                iconBase: \'fa\',
-                tickIcon: \'fa-check\'
+            return '<script type="text/javascript">
+            var bs_noneSelectedText = \''.dr_lang('没有选择').'\';
+            var bs_noneResultsText = \''.dr_lang('没有找到 %s', '{0}').'\';</script>
+            <link href="'.THEME_PATH.'assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+            <script src="'.THEME_PATH.'assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+            <script type="text/javascript">
+            jQuery(document).ready(function() {
+                $(\'.bs-select\').selectpicker();
             });
-        });</script>';
+            </script>';
         }
 
         /**

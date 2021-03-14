@@ -619,7 +619,7 @@ class Module extends \Phpcmf\Table
             dr_lang('词文不对'),
         ];
         if ($this->module['setting']['verify_msg']) {
-            $msg = @explode(PHP_EOL, $this->module['setting']['verify_msg']);
+            $msg = explode(PHP_EOL, $this->module['setting']['verify_msg']);
             $msg && $verify_msg = $msg;
         }
 
@@ -1297,7 +1297,7 @@ class Module extends \Phpcmf\Table
                 $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
+            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmlfile' => $list]);
         } else {
             if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
                 // 草稿

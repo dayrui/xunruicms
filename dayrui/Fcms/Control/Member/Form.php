@@ -94,7 +94,9 @@ class Form extends \Phpcmf\Table
     protected function _Member_Edit() {
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         list($tpl, $data) = $this->_Post($id);
-        !$data && $this->_msg(0, dr_lang('数据不存在: '.$id));
+        if (!$data) {
+            $this->_msg(0, dr_lang('数据不存在: '.$id));
+        }
         \Phpcmf\Service::V()->display($tpl);
     }
 

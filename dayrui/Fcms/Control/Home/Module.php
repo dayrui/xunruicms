@@ -764,7 +764,8 @@ class Module extends \Phpcmf\Common
         }
 
         // 初始化模块
-        $this->_module_init();
+
+        $this->_module_init(APP_DIR ? APP_DIR : 'share');
 
         /*
         if ($this->member_cache['auth_site'][SITE_ID]['home']) {

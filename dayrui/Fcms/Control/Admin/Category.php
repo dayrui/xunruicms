@@ -654,7 +654,8 @@ class Category extends \Phpcmf\Table
                 if ($this->module['share'] && $row['tid'] == 1 && dr_is_module($row['mid'])
                     && \Phpcmf\Service::M()->table(dr_module_table_prefix($row['mid']))->where_in('catid', $row['childids'])->counts()) {
                     $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
-                } elseif (!$this->module['share'] && \Phpcmf\Service::M()->table(dr_module_table_prefix(MOD_DIR))->where_in('catid', $row['childids'])->counts()) {
+                } elseif (!$this->module['share']
+                    && \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']))->where_in('catid', $row['childids'])->counts()) {
                     $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
                 }
             }
@@ -818,8 +819,16 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改栏目内容: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
+            if (isset($this->module['category'][$id]['setting']['html'])
+                && $this->module['category'][$id]['setting']['html']) {
+                // 生成权限文件
+                if (!dr_html_auth(1)) {
+                    $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                }
+                $list = '/index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$id;
+                $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
+            }
             $this->_json(1, dr_lang('操作成功'));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -846,8 +855,16 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改栏目外链地址: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
+            if (isset($this->module['category'][$id]['setting']['html'])
+                && $this->module['category'][$id]['setting']['html']) {
+                // 生成权限文件
+                if (!dr_html_auth(1)) {
+                    $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                }
+                $list = '/index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$id;
+                $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
+            }
             $this->_json(1, dr_lang('操作成功'));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -1047,6 +1064,15 @@ class Category extends \Phpcmf\Table
             }, function ($id, $data, $old) {
                 // 自动更新缓存
                 \Phpcmf\Service::M('cache')->sync_cache();
+                if (isset($this->module['category'][$data[1]['id']]['setting']['html'])
+                    && $this->module['category'][$data[1]['id']]['setting']['html']) {
+                    // 生成权限文件
+                    if (!dr_html_auth(1)) {
+                        $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                    }
+                    $list = '/index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id'];
+                    $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
+                }
             }
         );
     }

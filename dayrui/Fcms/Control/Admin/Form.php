@@ -154,7 +154,6 @@ class Form extends \Phpcmf\Table
             if ($row['status'] != 1) {
                 if ($tid) {
                     // 拒绝
-
                 } else {
                     // 通过
                     $this->_verify($row);

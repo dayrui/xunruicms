@@ -618,7 +618,7 @@ class Module extends \Phpcmf\Table
     protected function _Call_Post($data) {
 
         if ($data[1]['status'] == 9) {
-            $html = '';
+            $list = $html = '';
             if ($this->module['category'][$data[1]['catid']]['setting']['html']) {
                 // 生成权限文件
                 if (!dr_html_auth(1)) {
@@ -627,7 +627,7 @@ class Module extends \Phpcmf\Table
                 $html = '/index.php?s='.$this->module['dirname'].'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.$this->module['dirname'].'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            return dr_return_data(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
+            return dr_return_data(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmllist' => $list]);
         } else {
             if (\Phpcmf\Service::L('input')->post('is_draft')) {
                 return dr_return_data(1, dr_lang('操作成功，已存储到草稿箱'));
