@@ -768,7 +768,7 @@ Page sidebar
       margin-top: -32px;
       display: inline;
       font-size: 16px;
-      font-family: "Font Awesome 5 Pro";
+      font-family: "FontAwesome";
       height: auto;
       content: "\f104";
       font-weight: 300;
@@ -1055,7 +1055,7 @@ Page sidebar
     z-index: 1;
     right: 0px;
     margin-top: -36px; }
-    .page-"Font Awesome 5 Pro" .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
+    .page-fontawesome .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
       margin-top: -34px; }
     .page-glyphicons .page-sidebar-menu.page-sidebar-menu-hover-submenu > li:hover > a > .arrow {
       margin-top: -38px; }
@@ -1454,116 +1454,6 @@ Page footer
     .scroll-to-top > i {
       font-size: 28px; } }
 
-/***
-Theme Panel
-***/
-.theme-panel {
-  width: 400px;
-  margin-top: -15px;
-  margin-right: 0px;
-  z-index: 100;
-  float: right;
-  position: relative; }
-  .theme-panel > .toggler {
-    top: 5px;
-    right: 1px;
-    height: 40px;
-    width: 40px;
-    border-radius: 50% !important;
-    cursor: pointer;
-    position: absolute;
-    text-align: center;
-    background-color: #fff; }
-    .theme-panel > .toggler > i {
-      position: relative;
-      top: 12px;
-      font-size: 20px;
-      color: #9fb3ca; }
-    .theme-panel > .toggler:hover {
-      background: #ACB5C3; }
-      .theme-panel > .toggler:hover > i {
-        color: #fff; }
-  .theme-panel > .toggler-close {
-    display: none;
-    top: 5px;
-    right: 1px;
-    z-index: 101;
-    cursor: pointer;
-    position: absolute; }
-    .theme-panel > .toggler-close > i {
-      position: relative;
-      top: 12px;
-      right: 12px;
-      font-size: 20px;
-      color: #f2f2f2; }
-    .theme-panel > .toggler-close:hover {
-      opacity: 0.8 ;
-      filter: alpha(opacity=80) ; }
-  .theme-panel > .theme-options {
-    box-shadow: 5px 5px rgba(63, 77, 86, 0.1);
-    top: 4px;
-    right: 0;
-    display: none;
-    position: absolute;
-    z-index: 100;
-    background: #3f4d56;
-    border: 1px solid #39454d;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -ms-border-radius: 4px;
-    -o-border-radius: 4px;
-    border-radius: 4px; }
-    .theme-panel > .theme-options > .theme-option {
-      color: #eee;
-      padding: 11px;
-      border-top: 1px solid #46545f;
-      margin-top: 0px;
-      margin-bottom: 0px; }
-      .theme-panel > .theme-options > .theme-option > span {
-        text-transform: uppercase;
-        display: inline-block;
-        width: 115px;
-        font-size: 13px;
-        font-weight: 300; }
-      .theme-panel > .theme-options > .theme-option > select.form-control {
-        display: inline;
-        width: 100px;
-        padding: 2px;
-        text-transform: lowercase; }
-      .theme-panel > .theme-options > .theme-option.theme-colors {
-        border-top: 0; }
-        .theme-panel > .theme-options > .theme-option.theme-colors > span {
-          display: block;
-          width: auto; }
-        .theme-panel > .theme-options > .theme-option.theme-colors > ul {
-          list-style: none;
-          padding: 0;
-          display: block;
-          margin-bottom: 10px !important;
-          margin-top: 15px; }
-          .theme-panel > .theme-options > .theme-option.theme-colors > ul > li {
-            width: 46px;
-            height: 45px;
-            margin: 0 4px;
-            cursor: pointer;
-            list-style: none;
-            float: left;
-            border: solid 1px #707070;
-            /* theme colors */ }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li:first-child {
-              margin-left: 0; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li:hover, .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.current {
-              border: solid 2px #d64635; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.color-default {
-              background: #2b3643; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.color-dark {
-              background: #333438; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.color-blue {
-              background: #26344B; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.color-grey {
-              background: #4D5B69; }
-            .theme-panel > .theme-options > .theme-option.theme-colors > ul > li.color-light {
-              background: #f5f5f5; }
 
 /* Page Portlet Fullscreen */
 .page-portlet-fullscreen .page-quick-sidebar-wrapper,
@@ -1900,8 +1790,8 @@ Theme Panel
       .page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-settings .page-quick-sidebar-settings-list .list-items li select.form-control {
         padding: 4px 0px !important; }
 
-/***     
-Page Loading    
+/***
+Page Loading
 ***/
 .page-on-load {
   background: #fefefe; }
