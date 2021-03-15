@@ -251,7 +251,7 @@ class File extends \Phpcmf\Library\A_Field {
             'unused_url' => '/index.php?s=api&c=file&m=input_file_list&p=' . $p . '&fid=' . $field['id'],
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1',
             'tpl' => $tpl,
-            'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["70%", "70%"],
+            'area' => \Phpcmf\Service::C()->_is_mobile() ? ["95%", "90%"] : ["650px", "320px"],
             'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ]);
 

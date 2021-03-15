@@ -1575,9 +1575,6 @@ function dr_call_alert() {
 function dr_seo_rule() {
     layer.alert('通用标签<br>'+
         '{join}	SEO连接符号，默认“_”<br>'+
-        '{modulename}	当前模型名称<br>'+
-        '{keyword}	搜索时的关键字<br>'+
-        '{param}	搜索时的参数<br>'+
         '[{page}]	分页页码<br>'+
         '{SITE_NAME}	网站名称<br>'+
         '支持“对应表”任何字段，格式：{字段名}，<br>如：{title}表示标题<br>'+

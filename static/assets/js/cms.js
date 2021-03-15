@@ -271,7 +271,26 @@ function dr_iframe(type, url, width, height, rt) {
                             } else {
                                 setTimeout("window.location.reload(true)", 2000);
                             }
-
+                        }
+                        if (json.data.htmlfile) {
+                            // 执行生成htmljs
+                            $.ajax({
+                                type: "GET",
+                                url: json.data.htmlfile,
+                                dataType: "jsonp",
+                                success: function(json){ },
+                                error: function(){ }
+                            });
+                        }
+                        if (json.data.htmllist) {
+                            // 执行生成htmljs
+                            $.ajax({
+                                type: "GET",
+                                url: json.data.htmllist,
+                                dataType: "jsonp",
+                                success: function(json){ },
+                                error: function(){ }
+                            });
                         }
                         dr_cmf_tips(1, json.msg);
                     } else {
