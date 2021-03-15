@@ -24,10 +24,59 @@
                 <li class="{if $page==4}active{/if}">
                     <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-user"></i> {dr_lang('用户中心')} </a>
                 </li>
+                <li class="{if $page==5}active{/if}">
+                    <a href="#tab_5" data-toggle="tab" onclick="$('#dr_page').val('5')"> <i class="fa fa-internet-explorer"></i> {dr_lang('前端SEO设置')} </a>
+                </li>
             </ul>
         </div>
         <div class="portlet-body">
             <div class="tab-content">
+
+                <div class="tab-pane {if $page==5}active{/if}" id="tab_5">
+                    <div class="form-body">
+
+                        <?php !$data['setting']['seo']['title'] && $data['setting']['seo']['title'] = '{title}{join}{formname}{join}{'.'SITE_NAME}';?>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容SEO标题')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][title]">{$data['setting']['seo']['title']}</textarea>
+                                <span class="help-block">
+                                    <button class="btn btn-xs green" onclick="dr_seo_title_rule()" type="button"><i class="fa fa-code"></i> {dr_lang('可用通配符标签')}</button>
+                                    <script>
+                                        function dr_seo_title_rule() {
+                                            layer.alert('通用标签<br>'+
+                                                '{join}	SEO连接符号，默认“_”<br>'+
+                                                '[{page}]	分页页码<br>'+
+                                                '{formname}	表单名称<br>'+
+                                                '支持“网站表单表”任何字段，格式：{字段名}，<br>如：{title}表示标题<br>'+
+                                                '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
+                                                ''+
+                                                '', {
+                                                shade: 0,
+                                                title: '',
+                                                btn: []
+                                            });
+                                        }
+                                    </script>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容SEO关键字')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][keywords]">{$data['setting']['seo']['keywords']}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容SEO描述信息')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control " style="height:90px" name="data[setting][seo][description]">{$data['setting']['seo']['description']}</textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
 
                 <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
                     <div class="form-body">

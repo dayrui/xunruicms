@@ -34,6 +34,26 @@
             <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
             <div class="col-md-9">
                 <textarea class="form-control " style="height:90px" name="seo[list_title]">{$data['setting']['seo']['list_title']}</textarea>
+                <span class="help-block">
+                    <button class="btn btn-xs green" onclick="dr_seo_title_rule()" type="button"><i class="fa fa-code"></i> {dr_lang('可用通配符标签')}</button>
+                    <script>
+                        function dr_seo_title_rule() {
+                            layer.alert('{join}	SEO连接符号，默认“_”<br>'+
+                                '[{page}]	分页页码<br>'+
+                                '{modulename}	当前模块的名称<br>'+
+                                '{catname}	当前栏目名称<br>'+
+                                '{catpname}	当前栏目带层次的栏目名称<br>'+
+                                '支持“栏目表”任何字段，格式：{字段名}，<br>如：{name}表示栏目名称<br>'+
+                                '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
+                                ''+
+                                '', {
+                                shade: 0,
+                                title: '',
+                                btn: []
+                            });
+                        }
+                    </script>
+                </span>
             </div>
         </div>
         <div class="form-group">
@@ -47,7 +67,6 @@
             <label class="col-md-2 control-label">{dr_lang('SEO描述信息')}</label>
             <div class="col-md-9">
                 <textarea class="form-control " style="height:90px" name="seo[list_description]">{$data['setting']['seo']['list_description']}</textarea>
-
             </div>
         </div>
 

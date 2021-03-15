@@ -71,7 +71,6 @@ class Seo
         $seo['meta_keywords'] = '';
 
         $data['page'] = $page > 1 ? $page : '';
-        $data['join'] = SITE_SEOJOIN ? SITE_SEOJOIN : '_';
         $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
         $data['param'] = '';
         $data['keyword'] = '';
@@ -193,51 +192,11 @@ class Seo
             $meta_title = str_replace($replace, $new, $meta_title);
         }
 
-        $rep = new \php5replace($data);
-        $seo['meta_title'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $meta_title);
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_title']);
-        $seo['meta_title'] = trim(str_replace($data['join'].$data['join'], $data['join'], $seo['meta_title']), $data['join']);
-        $seo['meta_title'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']));
-
-
-        $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));
-        $seo['meta_keywords'].= $mod['site'][SITE_ID]['search_keywords'];
-        $seo['meta_keywords'] = str_replace('%', ',', trim($seo['meta_keywords'], ','));
-
-        $seo['meta_keywords'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_keywords']);
-        $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_keywords']);
-        $seo['meta_keywords'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_keywords']));
-
-        $seo['meta_description'] = $mod['site'][SITE_ID]['search_description'];
-        $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
-        $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
-
-        $seo['meta_description'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_description']);
-        $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_description']);
-        $seo['meta_description'] = str_replace('%', '', preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_description']));
-
-        if (!$seo['meta_keywords']) {
-            // 留空时使用模块seo
-            $seo['meta_keywords'] = $mod['site'][SITE_ID]['module_keywords'];
-        }
-
-        if (!$seo['meta_description']) {
-            // 留空时使用模块seo
-            $seo['meta_description'] = $mod['site'][SITE_ID]['module_description'];
-        }
-
-        if (!$seo['meta_keywords']) {
-            // 留空时使用主站seo
-            $seo['meta_keywords'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS');
-        }
-
-        if (!$seo['meta_description']) {
-            // 留空时使用主站seo
-            $seo['meta_description'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION');
-        }
-
-        unset($rep);
-        return $seo;
+        return $this->_get_seo_value($data, [
+            'meta_title' => $meta_title,
+            'meta_keywords' => $seo['meta_keywords'] ? $seo['meta_keywords'] : (isset($mod['site'][SITE_ID]['search_keywords']) && $mod['site'][SITE_ID]['search_keywords'] ? $mod['site'][SITE_ID]['search_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
+            'meta_description' => isset($mod['site'][SITE_ID]['search_description']) && $mod['site'][SITE_ID]['search_description'] ? $mod['site'][SITE_ID]['search_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION'),
+        ]);
     }
 
     /**
@@ -250,57 +209,20 @@ class Seo
      */
     function category($mod, $catid, $page = 1) {
 
-        $seo = [];
-
         $cat = $mod['category'][$catid];
         $cat['page'] = intval($page);
-        $cat['join'] = SITE_SEOJOIN;
         $cat['name'] = $cat['catname'] = $cat['name'];
         $cat['catpname'] = dr_get_cat_pname($mod, $catid, $cat['join']);
         $cat['modulename'] = $cat['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
-        $rep = new \php5replace($cat);
 
         $meta_title = $cat['setting']['seo']['list_title'] ? $cat['setting']['seo']['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
-        $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));
 
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $meta_title);
-        $seo['meta_title'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_title']);
-        $seo['meta_title'] = str_replace($cat['join'].$cat['join'], $cat['join'], $seo['meta_title']);
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']);
-
-        $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $cat['setting']['seo']['list_keywords']);
-        $seo['meta_keywords'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_keywords']);
-        $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_keywords']);
-
-        $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $cat['setting']['seo']['list_description']);
-        $seo['meta_description'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_description']);
-        $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_description']);
-
-        $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
-        $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
-
-        if (!$seo['meta_keywords']) {
-            // 留空时使用模块seo
-            $seo['meta_keywords'] = $mod['site'][SITE_ID]['module_keywords'];
-        }
-
-        if (!$seo['meta_description']) {
-            // 留空时使用模块seo
-            $seo['meta_description'] = $mod['site'][SITE_ID]['module_description'];
-        }
-
-        if (!$seo['meta_keywords']) {
-            // 留空时使用主站seo
-            $seo['meta_keywords'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS');
-        }
-
-        if (!$seo['meta_description']) {
-            // 留空时使用主站seo
-            $seo['meta_description'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION');
-        }
-
-        return $seo;
+        return $this->_get_seo_value($cat, [
+            'meta_title' => $meta_title,
+            'meta_keywords' => isset($cat['setting']['seo']['list_keywords']) && $cat['setting']['seo']['list_keywords'] ? $cat['setting']['seo']['list_keywords'] : ($mod['site'][SITE_ID]['module_keywords'] ? $mod['site'][SITE_ID]['module_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
+            'meta_description' => isset($cat['setting']['seo']['list_description']) && $cat['setting']['seo']['list_description'] ? $cat['setting']['seo']['list_description'] : ($mod['site'][SITE_ID]['module_description'] ? $mod['site'][SITE_ID]['module_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')),
+        ]);
     }
 
     /**
@@ -313,11 +235,8 @@ class Seo
      */
     function show($mod, $data, $page = 1) {
 
-        $seo = [];
-
         $cat = $mod['category'][$data['catid']];
         $data['page'] = $page;
-        $data['join'] = SITE_SEOJOIN;
         $data['name'] = $data['catname'] = $cat['name'];
         $data['title'] = dr_clearhtml($data['title']);
         $data['catname'] = $cat['name'];
@@ -327,39 +246,32 @@ class Seo
         $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
         $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));
 
-        $meta_title = $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
+        $meta_title = isset($mod['site'][SITE_ID]['show_title']) && $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
+        return $this->_get_seo_value($data, [
+            'meta_title' => $meta_title,
+            'meta_keywords' => isset($mod['site'][SITE_ID]['show_keywords']) && $mod['site'][SITE_ID]['show_keywords'] ? $mod['site'][SITE_ID]['show_keywords'] : $data['keywords'],
+            'meta_description' => isset($mod['site'][SITE_ID]['show_description']) && $mod['site'][SITE_ID]['show_description'] ? $mod['site'][SITE_ID]['show_description'] : $data['description'],
+        ]);
+    }
+
+    // 替换seo信息字符
+    protected function _get_seo_value($data, $seo) {
+
+        $data['join'] = SITE_SEOJOIN ? SITE_SEOJOIN : '_';
+
         $rep = new \php5replace($data);
-        $seo['meta_title'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $meta_title);
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_title']);
-        $seo['meta_title'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_title']);
-        $seo['meta_title'] = str_replace($data['join'].$data['join'], $data['join'], $seo['meta_title']);
-        $seo['meta_title'] = htmlspecialchars(dr_clearhtml($seo['meta_title']));
 
-        if ($mod['site'][SITE_ID]['show_keywords']) {
-            $seo['meta_keywords'] = $mod['site'][SITE_ID]['show_keywords'];
-            $seo['meta_keywords'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_keywords']);
-            $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_keywords']);
-            $seo['meta_keywords'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_keywords']);
-        } else {
-            $seo['meta_keywords'] = $data['keywords'];
+        foreach ($seo as $key => $value) {
+            $seo[$key] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $value);
+            $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo[$key]);
+            $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo[$key]);
+            $seo[$key] = str_replace($data['join'].$data['join'], $data['join'], $seo[$key]);
+            $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
+            $seo[$key] = str_replace('"', '', $seo[$key]);
+            $seo[$key] = str_replace([',,', '%'], ',', $seo[$key]);
         }
-
-        if ($mod['site'][SITE_ID]['show_description']) {
-            $seo['meta_description'] = $mod['site'][SITE_ID]['show_description'];
-            $seo['meta_description'] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $seo['meta_description']);
-            $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo['meta_description']);
-            $seo['meta_description'] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo['meta_description']);
-        } else {
-            $seo['meta_description'] = $data['description'];
-        }
-
-        $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
-        $seo['meta_description'] = str_replace('"', '', $seo['meta_description']);
-        $seo['meta_keywords'] = str_replace('"', '', $seo['meta_keywords']);
-        $seo['meta_keywords'] = str_replace(',,', ',', $seo['meta_keywords']);
-        $seo['meta_title'] = str_replace('"', '', $seo['meta_title']);
 
         return $seo;
     }
@@ -404,13 +316,22 @@ class Seo
     // 模块表单
     function mform_show($form, $index, $data) {
 
-        $seo = [
-            'meta_title' => ($data['title'] ? $data['title'].SITE_SEOJOIN : '').$index['title'],
-            'meta_keywords' => $index['keywords'],
-            'meta_description' => $index['description'],
-        ];
+        $mod = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$form['module']);
+        if (isset($data['catid']) && isset($mod['category'][$data['catid']])) {
+            $data['catname'] = $mod['category'][$data['catid']]['name'];
+            $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], $data['join']);
+        } else {
+            $data['catname'] = $data['catpname'] = '';
+        }
 
-        return $seo;
+        $data['formname'] = dr_lang($form['name']);
+        $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
+
+        return $this->_get_seo_value($data, [
+            'meta_title' => isset($form['setting']['seo']['title']) && $form['setting']['seo']['title'] ? $form['setting']['seo']['title'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_keywords' => isset($form['setting']['seo']['keywords']) && $form['setting']['seo']['keywords'] ? $form['setting']['seo']['keywords'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_description' => isset($form['setting']['seo']['description']) && $form['setting']['seo']['description'] ? $form['setting']['seo']['description'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+        ]);
     }
 
     // 网站表单
@@ -418,8 +339,8 @@ class Seo
 
         $seo = [
             'meta_title' => dr_lang($form['name']),
-            'meta_keywords' => '',
-            'meta_description' => '',
+            'meta_keywords' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS'),
+            'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
         ];
 
         return $seo;
@@ -430,8 +351,8 @@ class Seo
 
         $seo = [
             'meta_title' => dr_lang($form['name']),
-            'meta_keywords' => '',
-            'meta_description' => '',
+            'meta_keywords' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS'),
+            'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
         ];
 
         return $seo;
@@ -440,13 +361,13 @@ class Seo
     // 网站表单
     function form_show($form, $data) {
 
-        $seo = [
-            'meta_title' => $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-            'meta_keywords' => '',
-            'meta_description' => '',
-        ];
+        $data['formname'] = dr_lang($form['name']);
 
-        return $seo;
+        return $this->_get_seo_value($data, [
+            'meta_title' => isset($form['setting']['seo']['title']) && $form['setting']['seo']['title'] ? $form['setting']['seo']['title'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_keywords' => isset($form['setting']['seo']['keywords']) && $form['setting']['seo']['keywords'] ? $form['setting']['seo']['keywords'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+            'meta_description' => isset($form['setting']['seo']['description']) && $form['setting']['seo']['description'] ? $form['setting']['seo']['description'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
+        ]);
     }
 
     // 用户中心seo
