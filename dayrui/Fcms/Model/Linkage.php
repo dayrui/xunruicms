@@ -125,7 +125,6 @@ class Linkage extends \Phpcmf\Model
         ]);
 
         return dr_return_data(1, '');
-
     }
 
     // 添加子内容
@@ -144,6 +143,9 @@ class Linkage extends \Phpcmf\Model
                     continue;
                 }
                 $cname = $py->result($t);
+                if (is_numeric($cname)) {
+                    $cname = 'a'.$cname;
+                }
                 $cf = $this->db->table('linkage_data_'.$key)->where('cname', $cname)->countAllResults();
                 $rt = $this->table('linkage_data_'.$key)->insert(array(
                     'pid' => $pid,
@@ -177,7 +179,11 @@ class Linkage extends \Phpcmf\Model
                 return dr_return_data(0, dr_lang('名称不能为空'));
             } elseif (!$data['cname']) {
                 return dr_return_data(0, dr_lang('别名不能为空'));
-            } elseif ($this->db->table('linkage_data_'.$key)->where('cname', $data['cname'])->countAllResults()) {
+            }
+            if (is_numeric($data['cname'])) {
+                $data['cname'] = 'a'.$data['cname'];
+            }
+            if ($this->db->table('linkage_data_'.$key)->where('cname', $data['cname'])->countAllResults()) {
                 return dr_return_data(0, dr_lang('别名已经存在'));
             }
             $rt = $this->table('linkage_data_'.$key)->insert(array(

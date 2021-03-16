@@ -96,6 +96,9 @@ class Linkage extends \Phpcmf\Common
 		// 开始导入
 		$data = require APPPATH.'Config/Linkage/'.$code.'.php';
 		foreach ($data as $t) {
+            if (is_numeric($t['cname'])) {
+                $t['cname'] = 'a'.$t['cname'];
+            }
 			$rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
 			if ($rt['code']) {
 				$count++;
@@ -148,9 +151,9 @@ class Linkage extends \Phpcmf\Common
 		];
 		list($data, $return) = \Phpcmf\Service::L('Form')->validation($data, $config);
 		if ($return) {
-		    exit($this->_json(0, $return['error'], ['field' => $return['name']]));
+		    $this->_json(0, $return['error'], ['field' => $return['name']]);
         } elseif (\Phpcmf\Service::M('Linkage')->table('linkage')->is_exists($id, 'code', $data['code'])) {
-		    exit($this->_json(0, dr_lang('别名已经存在'), ['field' => 'code']));
+		    $this->_json(0, dr_lang('别名已经存在'), ['field' => 'code']);
         }
 	}
 
@@ -191,7 +194,7 @@ class Linkage extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改联动菜单状态: '. $i);
-		exit($this->_json(1, dr_lang($v ? '此菜单已被禁用' : '此菜单已被启用'), ['value' => $v]));
+		$this->_json(1, dr_lang($v ? '此菜单已被禁用' : '此菜单已被启用'), ['value' => $v]);
 
 	}
 
@@ -200,18 +203,18 @@ class Linkage extends \Phpcmf\Common
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
 		$key = (int)\Phpcmf\Service::L('input')->get('key');
 		if (!$ids) {
-		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
 		$rt = \Phpcmf\Service::M('Linkage')->delete_list_all($key, $ids);
 		if (!$rt['code']) {
-		    exit($this->_json(0, $rt['msg']));
+		    $this->_json(0, $rt['msg']);
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量删除联动菜单: '. @implode(',', $ids));
+		\Phpcmf\Service::L('input')->system_log('批量删除联动菜单: '. implode(',', $ids));
 
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
     // 变更分类
@@ -221,18 +224,18 @@ class Linkage extends \Phpcmf\Common
 		$key = (int)\Phpcmf\Service::L('input')->get('key');
 		$pid = (int)\Phpcmf\Service::L('input')->post('pid');
 		if (!$ids) {
-		    exit($this->_json(0, dr_lang('你还没有选择呢')));
+		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
 		$rt = \Phpcmf\Service::M('Linkage')->edit_pid_all($key, $pid, $ids);
 		if (!$rt['code']) {
-		    exit($this->_json(0, $rt['msg']));
+		    $this->_json(0, $rt['msg']);
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量更改联动菜单分类: '. @implode(',', $ids));
+		\Phpcmf\Service::L('input')->system_log('批量更改联动菜单分类: '. implode(',', $ids));
 
-		exit($this->_json(1, dr_lang('操作成功'), ['ids' => $ids]));
+		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
     // 数据列表
@@ -339,7 +342,9 @@ class Linkage extends \Phpcmf\Common
                 $this->_json(0, dr_lang('名称不能为空'));
             } elseif (!$post['cname']) {
                 $this->_json(0, dr_lang('别名不能为空'));
-            } else if (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('cname', $post['cname'])->countAllResults()) {
+            } elseif (is_numeric($post['cname'])) {
+                $this->_json(0, dr_lang('别名不能是数字'));
+            } elseif (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('cname', $post['cname'])->countAllResults()) {
                 $this->_json(0, dr_lang('别名已经存在'));
             }
             $update = [
@@ -368,7 +373,7 @@ class Linkage extends \Phpcmf\Common
             );
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
             \Phpcmf\Service::L('input')->system_log('创建联动菜单('.$post['name'].')');
-            exit($this->_json(1, dr_lang('操作成功')));
+            $this->_json(1, dr_lang('操作成功'));
 		}
 
 		$select = '';
@@ -430,6 +435,8 @@ class Linkage extends \Phpcmf\Common
 				$this->_json(0, dr_lang('名称不能为空'));
 			} elseif (!$post['cname']) {
 				$this->_json(0, dr_lang('别名不能为空'));
+			} elseif (is_numeric($post['cname'])) {
+				$this->_json(0, dr_lang('别名不能是数字'));
 			} else if (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('id<>', $id)->where('cname', $post['cname'])->countAllResults()) {
 				$this->_json(0, dr_lang('别名已经存在'));
 			}
@@ -458,7 +465,7 @@ class Linkage extends \Phpcmf\Common
             );
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改联动菜单('.$post['name'].')');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
