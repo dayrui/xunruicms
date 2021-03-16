@@ -75,16 +75,15 @@ class Seo
         $data['param'] = '';
         $data['keyword'] = '';
 
+        $param_value = [];
         if ($param['keyword']) {
-            $data['keyword'] = $param['keyword'];
-            $seo['meta_keywords'].= $data['keyword'].',';
+            $param_value['keyword'] = $data['keyword'] = $param['keyword'];
             unset($param['keyword']);
         }
         if ($param['groupid']) {
             $data['groupid'] = $param['groupid'];
         }
 
-        $param_value = [];
         if ($catid) {
             $t = dr_get_cat_pname($mod, $catid, $data['join']);
             if ($t) {
@@ -177,6 +176,7 @@ class Seo
             $data['param'] = implode($data['join'], $str);
             $seo['meta_keywords'].= implode(',', $str).',';
         }
+
 
         $meta_title = $mod['site'][SITE_ID]['search_title'] ? $mod['site'][SITE_ID]['search_title'] : '['.dr_lang('第%s页', '{page}').'{join}][{keyword}{join}][{param}{join}]{modulename}{join}{SITE_NAME}';
 
@@ -271,6 +271,7 @@ class Seo
             $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);
             $seo[$key] = str_replace([',,', '%'], ',', $seo[$key]);
+            $seo[$key] = trim($seo[$key], $data['join']);
         }
 
         return $seo;

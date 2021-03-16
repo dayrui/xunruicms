@@ -206,9 +206,9 @@ class Router
                 break;
         }
 
-        $query && $uri = @array_merge($uri, $query);
+        $query && $uri = array_merge($uri, $query);
 
-        return $self . '?' . @http_build_query($uri);
+        return $self . '?' . http_build_query($uri);
     }
 
     /**
@@ -252,10 +252,10 @@ class Router
                 break;
         }
 
-        $query && $uri = @array_merge($uri, $query);
+        $query && $uri = array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::V()->_is_mobile ? SITE_MURL : SITE_URL)) . 'index.php?' . @http_build_query($uri);
+        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::V()->_is_mobile ? SITE_MURL : SITE_URL)) . 'index.php?' . http_build_query($uri);
     }
 
     /**
@@ -285,12 +285,8 @@ class Router
             $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
             $data['pdirname'].= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
-            $rep = new \php5replace($data);
             $url = ltrim($page ? $rule['list_page'] : $rule['list'], '/');
-            $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-            $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
-            $url = str_replace('//', '/', $url);
-            return $this->url_prefix('rewrite', $mod, $data, $fid) . $url;
+            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
         }
 
         return $this->url_prefix('module_php', $mod, $data, $fid) . 'c=category&id=' . (isset($data['id']) ? $data['id'] : 0) . ($page ? '&page=' . $page : '');
@@ -327,13 +323,9 @@ class Router
             $data['yy'] = date('y', $inputtime);
             $data['m'] = date('m', $inputtime);
             $data['d'] = date('d', $inputtime);
-            //$data['fid'] = defined('IS_PLUS_FENZHAN') ? dr_get_show_fid($data) : 0;
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
             $url = ltrim($page ? $rule['show_page'] : $rule['show'], '/');
-            $rep = new \php5replace($data);
-            $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-            $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
-            return $this->url_prefix('rewrite', $mod, $cat) . $url;
+            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
         }
 
         return $this->url_prefix('module_php', $mod, $cat) . 'c=show&id=' . $data['id'] . ($page ? '&page=' . $page : '');
@@ -364,12 +356,7 @@ class Router
             $data['pdirname'] .= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $url = $page ? $rule['page_page'] : $rule['page'];
-            $rep = new \php5replace($data);
-            $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-            $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
-            $url = '/' . $url;
-            $url = str_replace('//', '/', $url);
-            return $url;
+            return $this->_get_url_value($data, $url, '/');
         }
 
         return $this->url_prefix('php') . 's=page&id=' . $data['id'] . ($page ? '&page=' . $page : '');
@@ -395,12 +382,7 @@ class Router
             $data['tag'] = $name;
             $data['tag'] = str_replace('/', $rule['catjoin'], $data['tag']);
             $url = ltrim($rule['tag'], '/');
-            $rep = new \php5replace($data);
-            $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-            $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
-            $url = str_replace('//', '/', $url);
-            unset($rep);
-            return $this->url_prefix('rewrite', [], [], SITE_FID) . $url;
+            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', [], [], SITE_FID));
         } else {
             return $this->url_prefix('php', [], [], SITE_FID) . 's=tag&name=' . $name;
         }
@@ -508,19 +490,24 @@ class Router
                 log_message('error', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
             }
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
-            $rep = new \php5replace($data);
-            $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-            $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
-            return str_replace('//', '/', $this->url_prefix('rewrite', $mod) . $url);
+            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod));
         } else {
             return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . @http_build_query($params), '&');
         }
     }
 
+    // 伪静态替换
+    protected function _get_url_value($data, $url, $prefix) {
+        $rep = new \php5replace($data);
+        $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
+        $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
+        $url = str_replace('//', '/', $prefix.$url);
+        return $url;
+    }
+
     // 评论地址
     public function comment_url($id, $moddir = '')
     {
-
         // 模块目录识别
         defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
         $moddir && $dir = $moddir;
@@ -537,7 +524,6 @@ class Router
     // 打赏
     public function donation_url($id, $moddir = '')
     {
-
         if (!dr_is_app('shang')) {
             return '没有安装【打赏】应用';
         }
@@ -556,7 +542,6 @@ class Router
     // 模块表单内容地址
     public function mform_show_url($form, $id, $moddir = '', $page = 0)
     {
-
         // 模块目录识别
         defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
         $moddir && $dir = $moddir;
@@ -573,7 +558,6 @@ class Router
     // 模块表单提交地址
     public function mform_post_url($form, $cid, $moddir = '')
     {
-
         // 模块目录识别
         defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
         $moddir && $dir = $moddir;
@@ -684,7 +668,6 @@ class Router
         } else {
             return $this->url_prefix('php', [], [], $fid);
         }
-
     }
 
     // 去除url中的域名
@@ -720,10 +703,9 @@ class Router
             $item = explode('=', $param);
             $params[$item[0]] = $item[1];
         }
+
         return $params;
-
     }
-
 
     // 生成伪静态解析代码
     public function get_rewrite_code() {

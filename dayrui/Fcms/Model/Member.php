@@ -1060,10 +1060,10 @@ class Member extends \Phpcmf\Model
         // 审核状态值
         if (IS_ADMIN) {
             $status = \Phpcmf\Service::L('input')->post('status');
-            $data['is_lock'] = intval($status['is_lock']);
-            $data['is_verify'] = intval($status['is_verify']);
-            $data['is_mobile'] = intval($status['is_mobile']);
-            $data['is_email'] = intval($status['is_email']);
+            $data['is_lock'] = isset($status['is_lock']) ? intval($status['is_lock']) : 0;
+            $data['is_email'] = isset($status['is_email']) ? intval($status['is_email']) : 0;
+            $data['is_verify'] = isset($status['is_verify']) ? intval($status['is_verify']) : 0;
+            $data['is_mobile'] = isset($status['is_mobile']) ? intval($status['is_mobile']) : 0;
         } else {
             $data['is_lock'] = 0;
             $data['is_email'] = 0;
