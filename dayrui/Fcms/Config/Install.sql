@@ -527,37 +527,8 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_notice` (
   KEY `type` (`type`,`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='会员通知提醒表';
 
-DROP TABLE IF EXISTS `{dbprefix}member_scorelog`;
-CREATE TABLE IF NOT EXISTS `{dbprefix}member_scorelog` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `username` varchar(50) NOT NULL COMMENT '账号',
-  `value` int(10) NOT NULL COMMENT '分数变化值',
-  `mark` varchar(50) NOT NULL COMMENT '标记',
-  `note` varchar(255) NOT NULL COMMENT '备注',
-  `url` varchar(255) NOT NULL COMMENT '相关地址',
-  `inputtime` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `mark` (`mark`),
-  KEY `inputtime` (`inputtime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='金币流水日志';
 
-DROP TABLE IF EXISTS `{dbprefix}member_explog`;
-CREATE TABLE IF NOT EXISTS `{dbprefix}member_explog` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `username` varchar(50) NOT NULL COMMENT '账号',
-  `value` int(10) NOT NULL COMMENT '分数变化值',
-  `mark` varchar(50) NOT NULL COMMENT '标记',
-  `note` varchar(255) NOT NULL COMMENT '备注',
-  `url` varchar(255) NOT NULL COMMENT '相关地址',
-  `inputtime` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `mark` (`mark`),
-  KEY `inputtime` (`inputtime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='经验值流水日志';
+
 
 REPLACE INTO `{dbprefix}admin_role` VALUES(1, '', '超级管理员', '', '', '');
 REPLACE INTO `{dbprefix}admin_role` VALUES(2, '', '网站编辑员', '', '', '');

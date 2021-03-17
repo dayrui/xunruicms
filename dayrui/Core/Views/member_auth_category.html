@@ -56,18 +56,22 @@
                 {/loop}
             </select>
         </label>
+        {if dr_is_app('explog')}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="category[{$mid}][exp]" value="{htmlspecialchars($auth['category'][$mid]['exp'])}" class="form-control" placeholder="">
                 <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
             </div>
         </div>
+        {/if}
+        {if dr_is_app('scorelog')}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="category[{$mid}][score]" value="{htmlspecialchars($auth['category'][$mid]['score'])}" class="form-control" placeholder="">
                 <span class="input-group-addon">±{SITE_SCORE}</span>
             </div>
         </div>
+        {/if}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="category[{$mid}][money]" value="{htmlspecialchars($auth['category'][$mid]['money'])}" class="form-control" placeholder="">

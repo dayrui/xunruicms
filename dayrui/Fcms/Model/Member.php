@@ -162,17 +162,21 @@ class Member extends \Phpcmf\Model
         $time = strtotime(date('Y-m-d', strtotime('+1 day')));
 
         // 每日登录积分处理
-        $value = \Phpcmf\Service::M('member_auth')->member_auth('login_exp', $member);
-        if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_experience_'.$member['id'])) {
-            $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_exp_'.date('Ymd', SYS_TIME), 1);
-            \Phpcmf\Service::L('input')->set_cookie('login_experience_'.$member['id'], 1, $time - SYS_TIME);
+        if (dr_is_app('explog')) {
+            $value = \Phpcmf\Service::M('member_auth')->member_auth('login_exp', $member);
+            if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_experience_'.$member['id'])) {
+                $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_exp_'.date('Ymd', SYS_TIME), 1);
+                \Phpcmf\Service::L('input')->set_cookie('login_experience_'.$member['id'], 1, $time - SYS_TIME);
+            }
         }
 
         // 每日登录金币处理
-        $value = \Phpcmf\Service::M('member_auth')->member_auth('login_score', $member);
-        if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_score_'.$member['id'])) {
-            $this->add_score($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
-            \Phpcmf\Service::L('input')->set_cookie('login_score_'.$member['id'], 1, $time - SYS_TIME);
+        if (dr_is_app('scorelog')) {
+            $value = \Phpcmf\Service::M('member_auth')->member_auth('login_score', $member);
+            if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_score_'.$member['id'])) {
+                $this->add_score($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
+                \Phpcmf\Service::L('input')->set_cookie('login_score_'.$member['id'], 1, $time - SYS_TIME);
+            }
         }
     }
 
@@ -1370,36 +1374,11 @@ class Member extends \Phpcmf\Model
      */
     public function add_experience($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
-        if (!$uid) {
-            return dr_return_data(0, dr_lang('用户不存在'));
-        } elseif (empty(intval($val))) {
-            return dr_return_data(0, dr_lang('变动值不规范'));
+        if (!dr_is_app('explog')) {
+            return dr_return_data(0, '未安装explog插件');
         }
 
-        $user = $this->member_info($uid);
-        if (!$user) {
-            return dr_return_data(0, dr_lang('用户不存在'));
-        }
-        
-        // 判断次数
-        if ($mark && $count && $this->db->table('member_explog')->where('uid', $uid)->where('mark', $mark)->countAllResults() >= $count) {
-            return dr_return_data(0, dr_lang('本次不能累计增减金币'));
-        }
-
-        //$val = abs($val); // 经验值只能加
-        $value = max(0, (int)$user['experience'] + $val); // 不允许小于0
-        $this->db->table('member')->where('id', (int)$uid)->update(['experience' => $value]);
-
-        // 交易记录
-        return $this->table('member_explog')->insert([
-            'uid' => $uid,
-            'username' => $user['username'],
-            'url' => $url ? $url : '',
-            'mark' => $mark ? $mark : '',
-            'note' => $note,
-            'value' => $val,
-            'inputtime' => SYS_TIME,
-        ]);
+        return \Phpcmf\Service::M('exp', 'explog')->add_experience($uid, $val, $note, $url, $mark, $count);
     }
 
     /**
@@ -1414,40 +1393,11 @@ class Member extends \Phpcmf\Model
      */
     public function add_score($uid, $val, $note = '', $url = '', $mark = '', $count = 0) {
 
-        if (!$uid) {
-            return dr_return_data(0, dr_lang('用户不存在'));
-        } elseif (empty(intval($val))) {
-            return dr_return_data(0, dr_lang('变动值不规范'));
+        if (!dr_is_app('scorelog')) {
+            return dr_return_data(0, '未安装scorelog插件');
         }
 
-        $user = $this->member_info($uid);
-        if (!$user) {
-            return dr_return_data(0, dr_lang('用户不存在'));
-        }
-
-        // 判断次数
-        if ($mark && $count && $this->db->table('member_scorelog')->where('uid', $uid)->where('mark', $mark)->countAllResults() >= $count) {
-            return dr_return_data(0, dr_lang('本次不能累计增减%s', SITE_SCORE));
-        }
-
-        $value = (int)$user['score'] + $val; // 不允许小于0
-        if ($value < 0) {
-            return dr_return_data(0, dr_lang('账户可用[%s]不足', SITE_SCORE));
-        }
-
-
-        $this->db->table('member')->where('id', (int)$uid)->update(['score' => $value]);
-
-        // 交易记录
-        return $this->table('member_scorelog')->insert([
-            'uid' => $uid,
-            'username' => $user['username'],
-            'url' => $url ? $url : '',
-            'mark' => $mark ? $mark : '',
-            'note' => $note,
-            'value' => $val,
-            'inputtime' => SYS_TIME,
-        ]);
+        return \Phpcmf\Service::M('score', 'scorelog')->add_score($uid, $val, $note, $url, $mark, $count);
     }
 
     // 增加money
@@ -1527,12 +1477,11 @@ class Member extends \Phpcmf\Model
         $this->db->table('admin_login')->where('uid', $id)->delete();
         $this->db->table('admin_role_index')->where('uid', $id)->delete();
         $this->db->table('member_notice')->where('uid', $id)->delete();
-        //$this->db->table('member_cashlog')->where('uid', $id)->delete();
-        $this->db->table('member_explog')->where('uid', $id)->delete();
         $this->db->table('member_group_verify')->where('uid', $id)->delete();
-        //$this->db->table('member_oauth')->where('uid', $id)->delete();
         $this->db->table('member_paylog')->where('uid', $id)->delete();
-        $this->db->table('member_scorelog')->where('uid', $id)->delete();
+        $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $id)->delete();
+        $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $id)->delete();
+        $this->is_table_exists('member_cashlog') && $this->db->table('member_cashlog')->where('uid', $id)->delete();
         $this->delete_admin_notice('member_verify/index:field/id/keyword/'.$id, 0);
 
         // 删除头像
@@ -1542,7 +1491,7 @@ class Member extends \Phpcmf\Model
         }
 
         // 删除微信uid
-        if (dr_is_app('weixin')) {
+        if (dr_is_app('weixin') && $this->is_table_exists('weixin_user')) {
             $this->db->table('weixin_user')->where('uid', $id)->update([
                 'uid' => 0,
                 'username' => '',
@@ -1699,9 +1648,9 @@ class Member extends \Phpcmf\Model
 
         $this->db->table('member_paylog')->where('uid', $uid)->update([ 'username' => $username ]);
         $this->db->table('member_paylog')->where('touid', $uid)->update([ 'tousername' => $username ]);
-        $this->db->table('member_scorelog')->where('uid', $uid)->update([ 'username' => $username ]);
         $this->db->table('member_group_verify')->where('uid', $uid)->update([ 'username' => $username ]);
-        $this->db->table('member_explog')->where('uid', $uid)->update([ 'username' => $username ]);
+        $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $uid)->update([ 'username' => $username ]);
+        $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $uid)->update([ 'username' => $username ]);
 
         \Phpcmf\Service::L('cache')->set_data('member-info-'.$uid, '', 1);
 

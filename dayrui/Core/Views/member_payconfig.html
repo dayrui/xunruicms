@@ -19,6 +19,7 @@
 
                     <div class="form-body">
 
+                        {if dr_is_app('explog')}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('经验')}</label>
                             <div class="col-md-9">
@@ -26,6 +27,8 @@
                                 <span class="help-block">{dr_lang('例如“经验值”，“积分值”等等')}</span>
                             </div>
                         </div>
+                        {/if}
+                        {if dr_is_app('scorelog')}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('金币')}</label>
                             <div class="col-md-9">
@@ -34,18 +37,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('支付号前缀')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('1元兑换')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control " type="text" name="data[prefix]" value="{htmlspecialchars($data['prefix'])}" /></label>
-                                <span class="help-block">{dr_lang('用于生成唯一支付id前缀，只允许填写字母')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('最小充值%s', dr_lang('金额'))}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control " type="text" name="data[min]" value="{htmlspecialchars($data['min'])}" /></label>
-                                <label>&nbsp;&nbsp;{dr_lang('元')}</label>
-                                <span class="help-block">{dr_lang('用户中心在线充值功能的最小充值金额')}</span>
+                                <label><input class="form-control input-small" style="width:75px!important;" type="text" name="data[convert]" value="{htmlspecialchars($data['convert'])}" /></label>
+                                <label>&nbsp;&nbsp;{SITE_SCORE}</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -55,11 +50,20 @@
                                 <span class="help-block">{dr_lang('用户中心在线充值或兑换%s的最小值', SITE_SCORE)}</span>
                             </div>
                         </div>
+                        {/if}
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('1元兑换')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('最小充值%s', dr_lang('金额'))}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-small" style="width:75px!important;" type="text" name="data[convert]" value="{htmlspecialchars($data['convert'])}" /></label>
-                                <label>&nbsp;&nbsp;{SITE_SCORE}</label>
+                                <label><input class="form-control " type="text" name="data[min]" value="{htmlspecialchars($data['min'])}" /></label>
+                                <label>&nbsp;&nbsp;{dr_lang('元')}</label>
+                                <span class="help-block">{dr_lang('用户中心在线充值功能的最小充值金额')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('支付号前缀')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control " type="text" name="data[prefix]" value="{htmlspecialchars($data['prefix'])}" /></label>
+                                <span class="help-block">{dr_lang('用于生成唯一支付id前缀，只允许填写字母')}</span>
                             </div>
                         </div>
 

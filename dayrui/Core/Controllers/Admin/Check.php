@@ -242,7 +242,7 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_scorelog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
                 }
 
@@ -252,7 +252,7 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_explog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
                 }
 

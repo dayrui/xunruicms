@@ -66,18 +66,22 @@
         </label>
     </div>
     <div class="margin-bottom-15">
+        {if dr_is_app('explog')}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="mform[{$mid}][exp]" value="{htmlspecialchars($auth['mform'][$mid]['exp'])}" class="form-control" placeholder="">
                 <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
             </div>
         </div>
+        {/if}
+        {if dr_is_app('scorelog')}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="mform[{$mid}][score]" value="{htmlspecialchars($auth['mform'][$mid]['score'])}" class="form-control" placeholder="">
                 <span class="input-group-addon">+{SITE_SCORE}</span>
             </div>
         </div>
+        {/if}
         <div class="input-inline input-small">
             <div class="input-group">
                 <input type="text" name="mform[{$mid}][day_post]" value="{htmlspecialchars($auth['mform'][$mid]['day_post'])}" class="form-control" placeholder="">

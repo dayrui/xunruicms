@@ -31,7 +31,7 @@
                             <label class="col-md-2 control-label">{dr_lang('付费方式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="1" {if $unit}checked{/if} /> {SITE_SCORE} <span></span></label>
+                                    {if dr_is_app('scorelog')}<label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="1" {if $unit}checked{/if} /> {SITE_SCORE} <span></span></label> {/if}
                                     <label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="0" {if !$unit}checked{/if} /> {dr_lang('人民币')} <span></span></label>
                                 </div>
                             </div>

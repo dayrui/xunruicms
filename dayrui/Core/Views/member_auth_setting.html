@@ -77,13 +77,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group" style="width: 200px;">
-                                        <input type="text" name="data[member][login_score]" value="{intval($data['member']['login_score'])}" class="form-control">
+                                        <input {if !dr_is_app('scorelog')} readonly {/if} type="text" name="data[member][login_score]" value="{intval($data['member']['login_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group" style="width: 200px;">
-                                        <input type="text" name="data[member][login_exp]" value="{intval($data['member']['login_exp'])}" class="form-control">
+                                        <input {if !dr_is_app('explog')} readonly {/if}  type="text" name="data[member][login_exp]" value="{intval($data['member']['login_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>
@@ -94,13 +94,13 @@
                             <div class="col-md-9">
                                 <label>
                                     <div class="input-group" style="width: 200px;">
-                                        <input type="text" name="data[member][avatar_score]" value="{intval($data['member']['avatar_score'])}" class="form-control">
+                                        <input {if !dr_is_app('scorelog')} readonly {/if}  type="text" name="data[member][avatar_score]" value="{intval($data['member']['avatar_score'])}" class="form-control">
                                         <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
                                     </div>
                                 </label>
                                 <label>
                                     <div class="input-group" style="width: 200px;">
-                                        <input type="text" name="data[member][avatar_exp]" value="{intval($data['member']['avatar_exp'])}" class="form-control">
+                                        <input {if !dr_is_app('explog')} readonly {/if}  type="text" name="data[member][avatar_exp]" value="{intval($data['member']['avatar_exp'])}" class="form-control">
                                         <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
                                     </div>
                                 </label>

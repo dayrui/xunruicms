@@ -62,10 +62,10 @@ class Category extends \Phpcmf\Table
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'module' => $this->module,
-            'post_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/add'),
-            'reply_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'post_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/add'),
+            'reply_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/index'),
             'field_url' => \Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$this->module['dirname']]),
-            'post_all_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/all_add'),
+            'post_all_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/all_add'),
             'is_scategory' => $this->is_scategory,
         ]);
     }
@@ -157,9 +157,9 @@ class Category extends \Phpcmf\Table
                             $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
                         }
                     } elseif ($t['tid'] == 2) {
+                        $t['mid'] = '';
                         $t['type_html'] = '<span class="badge badge-warning"> '.dr_lang('外链').' </span>';
                         $t['is_page_html'] = '';
-                        $t['mid'] = '';
                     } else {
                         $t['mid'] = '';
                         $t['type_html'] = '<span class="badge badge-info"> '.dr_lang('单页').' </span>';
@@ -201,7 +201,7 @@ class Category extends \Phpcmf\Table
         $str.= "</tr>";
 
 
-        return \Phpcmf\Service::L('Tree')->init($tree)->html_icon()->get_tree(0, $str);
+        return \Phpcmf\Service::L('tree')->init($tree)->html_icon()->get_tree(0, $str);
     }
 
     // 后台查看列表
@@ -209,16 +209,16 @@ class Category extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'list' => $this->_get_tree_list($this->module['category']),
-            'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
-            'move_select' => \Phpcmf\Service::L('Tree')->select_category(
+            'move_select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
                 0,
                 'name="catid"',
                 dr_lang('顶级栏目'),
                 0, 0
             ),
-            'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'),
+            'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('router')->class, '/'),
         ]);
         \Phpcmf\Service::V()->display('share_category_list.html');
     }
@@ -268,8 +268,8 @@ class Category extends \Phpcmf\Table
             'page' => $page,
             'data' => $value,
             'form' =>  dr_form_hidden(['page' => $page]),
-            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], $pid, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
-            'list_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], $pid, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
+            'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'is_edit_mid' => $pid && $value['mid'] ? 1 : 0,
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
@@ -292,8 +292,8 @@ class Category extends \Phpcmf\Table
             'page' => $page,
             'data' => $data,
             'form' =>  dr_form_hidden(['page' => $page]),
-            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], $data['pid'], 'name=\'data[pid]\'', dr_lang('顶级栏目')),
-            'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], $data['pid'], 'name=\'data[pid]\'', dr_lang('顶级栏目')),
+            'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'is_edit_mid' => 1,
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
@@ -319,7 +319,8 @@ class Category extends \Phpcmf\Table
                 $this->_json(0, dr_lang('网站栏目数量已达到上限'));
             } elseif ($pid && $post['tid'] != 2 && $this->module['category'][$pid]['tid'] == 2) {
                 return dr_return_data(0, dr_lang('父级栏目是外部地址类型，下级栏目只能选择外部地址'));
-            } elseif ($pid && $this->module['category'][$pid]['pcatpost'] == 0 && $this->module['category'][$pid]['child'] == 0 && $this->module['category'][$pid]['tid'] == 1) {
+            } elseif ($pid && $this->module['category'][$pid]['pcatpost'] == 0
+                && $this->module['category'][$pid]['child'] == 0 && $this->module['category'][$pid]['tid'] == 1) {
                 $mid = $this->module['category'][$pid]['mid'] ? $this->module['category'][$pid]['mid'] : APP_DIR;
                 if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $pid)->counts()) {
                     $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$pid]['name']));
@@ -337,7 +338,7 @@ class Category extends \Phpcmf\Table
                 }
                 $data['dirname'] = trim($dir);
                 !$data['dirname'] && $data['dirname'] = \Phpcmf\Service::L('pinyin')->result($data['name']);
-                $cf = \Phpcmf\Service::M('Category')->check_dirname(0, $data['dirname']);
+                $cf = \Phpcmf\Service::M('category')->check_dirname(0, $data['dirname']);
 
                 $data['pid'] = $pid;
                 $data['show'] = 1;
@@ -352,15 +353,14 @@ class Category extends \Phpcmf\Table
                     $data['content'] = '';
                     $save['mobile_domain'] = '';
                     // 作为内容模块的栏目判断
-                    if ($data['tid'] == 1) {
-                        if (!$data['mid']) {
-                            $this->_json(0, dr_lang('必须选择一个模块'));
-                        }
+                    if ($data['tid'] == 1 && !$data['mid']) {
+                        $this->_json(0, dr_lang('必须选择一个模块'));
                         // 判断逐个父级栏目的mid值
-                        list($pmid, $ids) = \Phpcmf\Service::M('Category')->get_parent_mid($this->module['category'], $pid);
+                        /*
+                        list($pmid, $ids) = \Phpcmf\Service::M('category')->get_parent_mid($this->module['category'], $pid);
                         if ($pmid && $pmid != $data['mid']) {
                             $this->_json(0, dr_lang('必须选择与上级栏目相同的内容模块（%s）', $pmid));
-                        }
+                        }*/
                     }
                 }
                 $data['setting'] = isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
@@ -381,13 +381,13 @@ class Category extends \Phpcmf\Table
                 $data['setting']['getchild'] = 0;
                 $data['setting'] = dr_array2string($data['setting']);
 
-                $rt = \Phpcmf\Service::M('Category')->insert($data);
+                $rt = \Phpcmf\Service::M('category')->insert($data);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
                 if ($cf) {
                     // 重复验证
-                    \Phpcmf\Service::M('Category')->update($rt['code'], [
+                    \Phpcmf\Service::M('category')->update($rt['code'], [
                         'dirname' => $data['dirname'].$rt['code']
                     ]);
                 }
@@ -400,8 +400,8 @@ class Category extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
-            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], 0, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
-            'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/index'),
+            'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], 0, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
+            'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
         ]);
@@ -412,20 +412,20 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Url_Edit() {
 
         if (!$this->module['share']) {
-            $this->_admin_msg(2, dr_lang('独立模块在模块配置中设置URL规则'),\Phpcmf\Service::L('Router')->url('seo_module/show', ['dir' => $this->module['dirname'], 'page' => 2, 'hide_menu' => 1]));
+            $this->_admin_msg(2, dr_lang('独立模块在模块配置中设置URL规则'), dr_url('seo_module/show', ['dir' => $this->module['dirname'], 'page' => 2, 'hide_menu' => 1]));
         }
 
         if (IS_AJAX_POST) {
 
             $c = 0;
             $catid = \Phpcmf\Service::L('input')->post('catid');
-            $urlrule = \Phpcmf\Service::L('input')->post('urlrule', true);
+            $urlrule = \Phpcmf\Service::L('input')->post('urlrule');
 
             foreach ($this->module['category'] as $id => $t) {
                 if (dr_in_array($id, $catid)) {
-                    $c ++;
+                    $c++;
                     $t['setting']['urlrule'] = $urlrule;
-                    \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($t['setting'])]);
+                    \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($t['setting'])]);
                 }
             }
 
@@ -436,8 +436,8 @@ class Category extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
-            'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], 0, 'name=\'catid[]\' multiple style=\'height:200px\'', ''),
-            'list_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/url_edit'),
+            'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], 0, 'name=\'catid[]\' multiple style=\'height:200px\'', ''),
+            'list_url' =>\Phpcmf\Service::L('router')->url(APP_DIR.'/category/url_edit'),
             'list_name' => ' <i class="fa fa-link"></i>  '.dr_lang('自定义URL'),
         ]);
         \Phpcmf\Service::V()->display('share_category_url.html');
@@ -452,7 +452,7 @@ class Category extends \Phpcmf\Table
         }
 
         // 重新获取数据
-        $category = \Phpcmf\Service::M('Category')->data_for_delete();
+        $category = \Phpcmf\Service::M('category')->data_for_delete();
 
         // 筛选栏目id
         $catid = '';
@@ -516,14 +516,14 @@ class Category extends \Phpcmf\Table
 
         foreach ($ids as $id) {
 
-            $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+            $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
             if (!$row) {
                 $this->_json(0, dr_lang('栏目数据不存在'));
             }
 
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['html'] = 1;
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目状态为: 静态模式 ['. $id.']');
         }
 
@@ -537,7 +537,7 @@ class Category extends \Phpcmf\Table
 
         $at = \Phpcmf\Service::L('input')->get('at');
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($catid);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($catid);
         if (!$row) {
             $this->_json(0, dr_lang('栏目数据不存在'));
         }
@@ -555,13 +555,13 @@ class Category extends \Phpcmf\Table
                 foreach ($this->module['category'] as $id => $t) {
                     $c ++;
                     // 全部栏目
-                    \Phpcmf\Service::M('Category')->init($this->init)->copy_value($at, $row['setting'], $id);
+                    \Phpcmf\Service::M('category')->init($this->init)->copy_value($at, $row['setting'], $id);
                 }
             } else {
                 foreach ($catids as $id) {
                     $c ++;
                     // 指定栏目
-                    \Phpcmf\Service::M('Category')->init($this->init)->copy_value($at, $row['setting'], $id);
+                    \Phpcmf\Service::M('category')->init($this->init)->copy_value($at, $row['setting'], $id);
                 }
             }
 
@@ -572,7 +572,7 @@ class Category extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'form' =>  dr_form_hidden(),
-            'select' => \Phpcmf\Service::L('Tree')->select_category(
+            'select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
                 0,
                 'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
@@ -594,14 +594,14 @@ class Category extends \Phpcmf\Table
 
         foreach ($ids as $id) {
 
-            $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+            $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
             if (!$row) {
                 $this->_json(0, dr_lang('栏目数据不存在'));
             }
 
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['html'] = 0;
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目状态为: 动态模式 ['. $id.']');
         }
 
@@ -635,7 +635,7 @@ class Category extends \Phpcmf\Table
         if ($topid) {
             // 重新获取数据
             $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
-            $category = \Phpcmf\Service::M('Category')->data_for_move();
+            $category = \Phpcmf\Service::M('category')->data_for_move();
             if (!$category[$topid]) {
                 $this->_json(0, dr_lang('目标栏目不存在'));
             } elseif ($this->is_scategory && $category[$topid]['child'] == 0 && $category[$topid]['tid'] == 1) {
@@ -647,7 +647,6 @@ class Category extends \Phpcmf\Table
                         $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $category[$topid]['name']));
                     }
                 }
-
             }
         }
 
@@ -663,7 +662,7 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Show_Edit() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('栏目数据不存在'));
         }
@@ -685,7 +684,7 @@ class Category extends \Phpcmf\Table
                 }
             }
 
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
 
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
@@ -694,7 +693,7 @@ class Category extends \Phpcmf\Table
         } else {
             // 显示状态
             $v = $row['show'] ? 0 : 1;
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['show' => $v]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['show' => $v]);
 
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
@@ -707,7 +706,7 @@ class Category extends \Phpcmf\Table
     protected function _Admin_Html_Edit() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('栏目数据不存在'));
         }
@@ -722,7 +721,7 @@ class Category extends \Phpcmf\Table
             $v = $html ? 0 : 1;
             $name = $v ? '静态模式' : '动态模式';
             $row['setting']['html'] = $v;
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目状态为: '. $name . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
@@ -759,7 +758,7 @@ class Category extends \Phpcmf\Table
             $this->_json(0, dr_lang('没有选择任何栏目'));
         }
 
-        if (IS_SHARE) {
+        if ($this->module['share']) {
             $this->_json(1, dr_url('html/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
         } else {
             $this->_json(1, dr_url('html/category_index', ['app' => APP_DIR, 'ids' => implode(',', $ids)]));
@@ -774,7 +773,7 @@ class Category extends \Phpcmf\Table
             $this->_json(0, dr_lang('没有选择任何栏目'));
         }
 
-        if (IS_SHARE) {
+        if ($this->module['share']) {
             $this->_json(1, dr_url('html/show_index', ['app' => '', 'catids' => implode(',', $ids)]));
         } else {
             $this->_json(1, dr_url('html/show_index', ['app' => APP_DIR, 'catids' => implode(',', $ids)]));
@@ -829,18 +828,19 @@ class Category extends \Phpcmf\Table
         }
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
             $this->_admin_msg(0, dr_lang('栏目数据不存在'));
         }
+
         $row['setting'] = dr_string2array($row['setting']);
-        if ($row['setting']['getchild']) {
+        if (isset($row['setting']['getchild']) && $row['setting']['getchild']) {
             $this->_admin_msg(0, dr_lang('本栏目已开启【继承下级】请编辑它下级第一个单页面数据'));
         }
 
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', false);
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['content' => ($post['content'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['content' => ($post['content'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目内容: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
@@ -867,7 +867,7 @@ class Category extends \Phpcmf\Table
     public function link_edit() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('栏目数据不存在'));
         }
@@ -876,7 +876,7 @@ class Category extends \Phpcmf\Table
 
         if (IS_POST) {
             $row['setting']['linkurl'] = \Phpcmf\Service::L('input')->post('url');
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目外链地址: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
@@ -902,7 +902,7 @@ class Category extends \Phpcmf\Table
     public function field_edit() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        $row = \Phpcmf\Service::M('Category')->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('栏目数据不存在'));
         }
@@ -927,7 +927,7 @@ class Category extends \Phpcmf\Table
             }
             $save['name'] = 'test';
             $row['setting']['cat_field'] = $save;
-            \Phpcmf\Service::M('Category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
             \Phpcmf\Service::L('input')->system_log('修改栏目自定义字段权限: '. $row['name'] . '['. $id.']');
 
             $catids = \Phpcmf\Service::L('input')->post('catid');
@@ -938,13 +938,13 @@ class Category extends \Phpcmf\Table
                     foreach ($this->module['category'] as $id => $t) {
                         $c ++;
                         // 全部栏目
-                        \Phpcmf\Service::M('Category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                        \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
                     }
                 } else {
                     foreach ($catids as $id) {
                         $c ++;
                         // 指定栏目
-                        \Phpcmf\Service::M('Category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                        \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
                     }
                 }
             }
@@ -955,7 +955,7 @@ class Category extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'field' => $this->module['category_field'],
-            'select' => \Phpcmf\Service::L('Tree')->select_category(
+            'select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
                 0,
                 'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
@@ -977,7 +977,7 @@ class Category extends \Phpcmf\Table
      * */
     protected function _Data($id = 0) {
 
-        $row = \Phpcmf\Service::M('Category')->get($id);
+        $row = \Phpcmf\Service::M('category')->get($id);
         if (!$row) {
             return [];
         }
@@ -1008,9 +1008,9 @@ class Category extends \Phpcmf\Table
                     return dr_return_data(0, dr_lang('栏目名称不能为空'), ['field' => 'name']);
                 } elseif (!$save['dirname']) {
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
-                } elseif (\Phpcmf\Service::M('Category')->check_dirname($id, $save['dirname'])) {
+                } elseif (\Phpcmf\Service::M('category')->check_dirname($id, $save['dirname'])) {
                     return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
-                } elseif (\Phpcmf\Service::M('Category')->check_counts($id)) {
+                } elseif (\Phpcmf\Service::M('category')->check_counts($id)) {
                     return dr_return_data(0, dr_lang('网站栏目数量已达到上限'));
                 }
 
@@ -1035,10 +1035,10 @@ class Category extends \Phpcmf\Table
                         // 单页模板识别
                         //!$save['tid'] && $save['setting']['template']['list'] == 'list.html' && $save['setting']['template']['list'] = 'page.html';
                     }
-					if ($old && $old['mid'] && $old['mid'] != $save['mid']) {
-						if (\Phpcmf\Service::M()->is_table_exists(dr_module_table_prefix($old['mid'])) && \Phpcmf\Service::M()->table_site($old['mid'])->where('catid', $old['id'])->counts()) {
-							$this->_json(0, dr_lang('本栏目存在所属模块内容数据，请删除数据后，再变更模块操作'));
-						}
+					if ($old && $old['mid'] && $old['mid'] != $save['mid']
+                        && \Phpcmf\Service::M()->is_table_exists(dr_module_table_prefix($old['mid']))
+                        && \Phpcmf\Service::M()->table_site($old['mid'])->where('catid', $old['id'])->counts()) {
+                        $this->_json(0, dr_lang('本栏目存在所属模块内容数据，请删除数据后，再变更模块操作'));
 					}
                     // 判断存在mid
                     /*
@@ -1065,16 +1065,19 @@ class Category extends \Phpcmf\Table
                 } else {
                     $pid = 0;
                 }
+
                 if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {
                         $this->_json(0, dr_lang('父栏目不存在'));
-                    } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['pcatpost'] == 0 && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
+                    } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['pcatpost'] == 0
+                        && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
                         $mid = $this->module['category'][$save['pid']]['mid'] ? $this->module['category'][$save['pid']]['mid'] : APP_DIR;
                         if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $save['pid'])->counts()) {
                             $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$save['pid']]['name']));
                         }
                     }
                 }
+
                 // 不出现在编辑器中的字段
                 $save['setting']['cat_field'] = $old['setting']['cat_field'];
 
@@ -1084,7 +1087,7 @@ class Category extends \Phpcmf\Table
                 $save['pdirname'] = '';
                 $save['childids'] = '';
 
-                return dr_return_data(1, '', [1 => $save]);
+                return dr_return_data(1, '', [ 1 => $save]);
             }, function ($id, $data, $old) {
                 // 自动更新缓存
                 \Phpcmf\Service::M('cache')->sync_cache();

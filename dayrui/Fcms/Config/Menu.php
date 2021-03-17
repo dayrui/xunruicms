@@ -473,16 +473,6 @@ return [
                             'uri' => 'member_paylog/not_index',
                         ],
                         [
-                            'name' => '虚拟金币',
-                            'icon' => 'fa fa-diamond',
-                            'uri' => 'member_scorelog/index',
-                        ],
-                        [
-                            'name' => '升级经验',
-                            'icon' => 'fa fa-compass',
-                            'uri' => 'member_explog/index',
-                        ],
-                        [
                             'name' => '用户充值',
                             'icon' => 'fa fa-plus',
                             'uri' => 'member_pay/index',
@@ -772,16 +762,6 @@ return [
                     'name' => '我的交易',
                     'icon' => 'fa fa-calendar',
                     'uri' => 'paylog/index',
-                ],
-                [
-                    'name' => '虚拟金币',
-                    'icon' => 'fa fa-diamond',
-                    'uri' => 'scorelog/index',
-                ],
-                [
-                    'name' => '升级经验',
-                    'icon' => 'fa fa-compass',
-                    'uri' => 'explog/index',
                 ],
             ],
         ],
