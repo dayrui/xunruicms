@@ -473,11 +473,6 @@ return [
                             'uri' => 'member_paylog/not_index',
                         ],
                         [
-                            'name' => '转账汇款',
-                            'icon' => 'fa fa-credit-card',
-                            'uri' => 'member_payremit/index',
-                        ],
-                        [
                             'name' => '上门收款',
                             'icon' => 'fa fa-user',
                             'uri' => 'member_paymeet/index',

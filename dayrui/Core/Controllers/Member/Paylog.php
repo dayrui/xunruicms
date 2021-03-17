@@ -53,7 +53,7 @@ class Paylog extends \Phpcmf\Table
             $data['param']['tid'] = $i;
             $my[$i] = [
                 'name' => dr_lang($t),
-                'url' =>\Phpcmf\Service::L('Router')->member_url('member/paylog/index', $data['param'])
+                'url' => dr_member_url('paylog/index', $data['param'])
             ];
         }
 
@@ -67,7 +67,9 @@ class Paylog extends \Phpcmf\Table
     public function show() {
 
         $id = \Phpcmf\Service::L('input')->get('id');
-        strpos($id, '-') !== false && list($a, $id) = explode('-', $id);
+        if (strpos($id, '-') !== false) {
+            list($a, $id) = explode('-', $id);
+        }
 
         list($a, $data) = $this->_Show((int)$id);
         if (!$data) {

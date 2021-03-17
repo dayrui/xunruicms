@@ -31,5 +31,4 @@ class Explog extends \Phpcmf\Table
         \Phpcmf\Service::V()->display('explog_index.html');
     }
 
-
 }

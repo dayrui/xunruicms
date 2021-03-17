@@ -53,17 +53,17 @@ class Scorelog extends \Phpcmf\Table
             $data['param']['tid'] = $i;
             $my[$i] = [
                 'name' => dr_lang($t),
-                'url' =>\Phpcmf\Service::L('Router')->member_url('member/scorelog/index', $data['param'])
+                'url' => dr_member_url('scorelog/index', $data['param'])
             ];
         }
 
         $my[9] = [
             'name' => dr_lang('兑换'),
-            'url' =>\Phpcmf\Service::L('Router')->member_url('member/scorelog/add')
+            'url' =>\Phpcmf\Service::L('Router')->member_url('scorelog/add')
         ];
         $my[10] = [
             'name' => dr_lang('充值'),
-            'url' =>\Phpcmf\Service::L('Router')->member_url('member/scorelog/pay')
+            'url' => \Phpcmf\Service::L('Router')->member_url('scorelog/pay')
         ];
 
         \Phpcmf\Service::V()->assign([
@@ -76,8 +76,8 @@ class Scorelog extends \Phpcmf\Table
     /**
      * 兑换金币
      */
-    public function add()
-    {
+    public function add() {
+
         if (IS_POST) {
 
             $value = intval(\Phpcmf\Service::L('input')->post('value'));
