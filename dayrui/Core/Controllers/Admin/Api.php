@@ -460,6 +460,28 @@ class Api extends \Phpcmf\Common
 		echo '$("#'.$dir.'_timing").html('.$t5.');';
 		exit;
 	}
+
+	// 统计栏目
+	public function ctotal() {
+
+        $rt = '';
+	    if (IS_POST) {
+	        $ids = \Phpcmf\Service::L('input')->post('cid');
+	        if ($ids) {
+	            foreach ($ids as $t) {
+                    list($id, $mid) = explode('-', $t);
+                    if ($id && $mid && dr_is_module($mid) ) {
+                        $num = \Phpcmf\Service::M()->table(dr_module_table_prefix($mid).'_index')->where('catid', $id)->where('status=9')->counts();
+                        if ($num) {
+                            $rt.= '$(".cat-total-'.$id.'").html("'.$num.'");';
+                        }
+                    }
+                }
+            }
+        }
+
+	    $this->_json(1, $rt);
+	}
 	
 	// api
 	public function icon() {

@@ -345,6 +345,7 @@ class Category extends \Phpcmf\Model
     // 删除内容模块
     public function delete_content($cats, $module) {
 
+        /*
         if (!$cats) {
             return;
         }
@@ -447,7 +448,7 @@ class Category extends \Phpcmf\Model
                 }
             }
         }
-        
+        */
     }
 
     // 兼容老版本

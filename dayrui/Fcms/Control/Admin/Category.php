@@ -140,7 +140,8 @@ class Category extends \Phpcmf\Table
             $is_html = intval($this->module['share'] ? $t['setting']['html'] : $this->module['html']);
             $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
 
-            $purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
+            $t['ctotal'] = "<input type='hidden' name='cid[]' value='".$t['id']."-".$t['mid']."' />";
+            //$purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
             //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
             // 是否缓存
             if ($data[$t['id']]) {
@@ -194,7 +195,7 @@ class Category extends \Phpcmf\Table
         if ($this->module['share']) {
             $str.= "<td style='text-align:center'>\$mid</td>";
         }
-        //$str.= "<td style='text-align:center'>\$total</td>";
+        $str.= "<td style='text-align:center' class='cat-total-\$id'> \$ctotal- </td>";
         $str.= "<td style='text-align:center'>\$is_page_html</td>";
         $str.= "<td>\$option</td>";
         $str.= "</tr>";
@@ -395,7 +396,6 @@ class Category extends \Phpcmf\Table
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             $this->_json(1, dr_lang('批量添加%s个栏目', $count));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -413,7 +413,6 @@ class Category extends \Phpcmf\Table
 
         if (!$this->module['share']) {
             $this->_admin_msg(2, dr_lang('独立模块在模块配置中设置URL规则'),\Phpcmf\Service::L('Router')->url('seo_module/show', ['dir' => $this->module['dirname'], 'page' => 2, 'hide_menu' => 1]));
-            exit;
         }
 
         if (IS_AJAX_POST) {
@@ -433,7 +432,6 @@ class Category extends \Phpcmf\Table
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             $this->_json(1, dr_lang('批量设置%s个栏目', $c));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -467,11 +465,39 @@ class Category extends \Phpcmf\Table
 
         parent::_Del(
             $catid,
-            null,
+            function ($rows) {
+                // 判断删除的栏目是否存在数据
+                if ($this->module['share']) {
+                    foreach ($rows as $t) {
+                        if (!$t['mid']) {
+                            continue;
+                        }
+                        $mod = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-content', $t['mid']);
+                        if ($mod) {
+                            $table = dr_module_table_prefix($t['mid']);
+                            if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table))) {
+                                continue;
+                            } elseif (\Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
+                                return dr_return_data(0, dr_lang('目标栏目【%s】存在内容数据，无法删除', $t['name']));
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($rows as $t) {
+                        $table = dr_module_table_prefix($this->module['dirname']);
+                        if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table))) {
+                            continue;
+                        } elseif (\Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
+                            return dr_return_data(0, dr_lang('目标栏目【%s】存在内容数据，无法删除', $t['name']));
+                        }
+                    }
+                }
+                return dr_return_data(1);
+            },
             function ($rows) {
                 // 计算栏目
                 // 删除之后记得删除相关模块数据
-                \Phpcmf\Service::M('Category')->delete_content($rows, $this->module);
+                //\Phpcmf\Service::M('Category')->delete_content($rows, $this->module);
                 // 自动更新缓存
                 \Phpcmf\Service::M('cache')->sync_cache();
                 return dr_return_data(1);
@@ -542,7 +568,6 @@ class Category extends \Phpcmf\Table
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             $this->_json(1, dr_lang('共同步到%s个栏目', $c));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -701,7 +726,7 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改栏目状态为: '. $name . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
-            exit($this->_json(1, dr_lang($v ? '静态模式' : '动态模式'), ['value' => $v, 'share' => 1]));
+            $this->_json(1, dr_lang($v ? '静态模式' : '动态模式'), ['value' => $v, 'share' => 1]);
         } else {
             // 独立模块
             $html = (int)$this->module['html'];
@@ -709,7 +734,7 @@ class Category extends \Phpcmf\Table
             $name = $v ? '静态模式' : '动态模式';
             $module = \Phpcmf\Service::M()->db->table('module')->where('id', $this->module['id'])->get()->getRowArray();
             if (!$module) {
-                exit($this->_json(0, dr_lang('模块不存在')));
+                $this->_json(0, dr_lang('模块不存在'));
             }
             $site = dr_string2array($module['site']);
             $site[SITE_ID]['html'] = $v;
@@ -722,7 +747,7 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改模块状态为: '. $name);
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
-            exit($this->_json(1, dr_lang($name), ['value' => $v, 'share' => 0]));
+            $this->_json(1, dr_lang($name), ['value' => $v, 'share' => 0]);
         }
     }
 
@@ -926,7 +951,6 @@ class Category extends \Phpcmf\Table
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             $this->_json(1, dr_lang('操作成功'));
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
