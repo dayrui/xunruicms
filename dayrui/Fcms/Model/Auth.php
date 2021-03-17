@@ -127,8 +127,10 @@ class Auth extends \Phpcmf\Model {
         // 判断用户状态
         if (!$data) {
             return dr_return_data(0, dr_lang('账号[%s]不存在', $username));
-        } elseif (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
-            return dr_return_data(0, dr_lang('密码不正确'));
+        } elseif (md5($password.$data['salt'].$password) != $data['password']) {
+           if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
+                return dr_return_data(0, dr_lang('密码不正确'));
+           }
         }
 
         $data['uid'] = $uid = (int)$data['id'];
