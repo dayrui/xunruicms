@@ -473,11 +473,6 @@ return [
                             'uri' => 'member_paylog/not_index',
                         ],
                         [
-                            'name' => '上门收款',
-                            'icon' => 'fa fa-user',
-                            'uri' => 'member_paymeet/index',
-                        ],
-                        [
                             'name' => '虚拟金币',
                             'icon' => 'fa fa-diamond',
                             'uri' => 'member_scorelog/index',
