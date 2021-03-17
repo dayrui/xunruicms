@@ -139,6 +139,16 @@ class Cache {
         return '';
     }
 
+    // 删除内容
+    public function del_auth_data($name, $siteid = SITE_ID) {
+
+        $code_file = $this->auth_dir.md5($siteid.$name);
+        unlink($code_file);
+
+        // 重置Zend OPcache
+        function_exists('opcache_reset') && opcache_reset();
+    }
+
     // 验证内容
     public function check_auth_data($name, $time = 3600, $siteid = SITE_ID) {
 

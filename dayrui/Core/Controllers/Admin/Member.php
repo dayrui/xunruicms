@@ -585,7 +585,7 @@ class Member extends \Phpcmf\Table
      * 后台授权登录
      */
     public function alogin_index() {
-        $this->_msg(1, dr_lang('正在授权登录此用户...'), dr_url('api/alogin', ['id' => intval(\Phpcmf\Service::L('input')->get('id'))]), 0);exit;
+        $this->_msg(1, dr_lang('正在授权登录此用户...'), dr_url('api/alogin', ['id' => intval(\Phpcmf\Service::L('input')->get('id'))]), 0);
     }
 
     /**

@@ -105,7 +105,7 @@ class Login extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        $oauth_id = \Phpcmf\Service::L('cache')->get_data('member_auth_login_'.$name.'_'.$id);
+        $oauth_id = \Phpcmf\Service::L('cache')->get_auth_data('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
             $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
@@ -206,7 +206,7 @@ class Login extends \Phpcmf\Common
                         // 登录成功
                         $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                         // 删除认证缓存
-                        \Phpcmf\Service::L('cache')->del_data('member_auth_login_'.$name.'_'.$id);
+                        \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
                         $this->_json(1, 'ok', $rt['data']);
                     } else {
                         $this->_json(0, $rt['msg']);
@@ -292,7 +292,7 @@ class Login extends \Phpcmf\Common
                                 }
                                 $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                                 // 删除认证缓存
-                                \Phpcmf\Service::L('cache')->del_data('member_auth_login_'.$name.'_'.$id);
+                                \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
                                 $this->_json(1, 'ok', $rt['data']);
                             } else {
                                 $this->_json(0, $rt['msg'], ['field' => $rt['data']['field']]);
@@ -308,7 +308,7 @@ class Login extends \Phpcmf\Common
                                 // 登录成功
                                 $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                                 // 删除认证缓存
-                                \Phpcmf\Service::L('cache')->del_data('member_auth_login_'.$name.'_'.$id);
+                                \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
                                 // 更改状态
                                 \Phpcmf\Service::M()->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $rt['data']['member']['id']]);
                                 dr_is_app('weixin') && $oauth['oauth'] == 'wechat' && \Phpcmf\Service::M()->db->table('weixin_user')->where('openid', $oauth['oid'])->update([

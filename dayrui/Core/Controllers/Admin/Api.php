@@ -536,6 +536,11 @@ class Api extends \Phpcmf\Common
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
+        // 当不具备用户操作权限时，只能授权登录当前账号
+        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/index') && $uid != $this->uid) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他账号'));
+        }
+
         $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['id']);
         \Phpcmf\Service::L('cache')->set_data('admin_login_member', $admin, 300);
 
