@@ -423,11 +423,6 @@ return [
                             'uri' => 'member_group/index',
                         ],
                         [
-                            'name' => '提醒消息',
-                            'icon' => 'fa fa-bell',
-                            'uri' => 'member_notice/index',
-                        ],
-                        [
                             'name' => '授权账号管理',
                             'icon' => 'fa fa-qq',
                             'uri' => 'member_oauth/index',
@@ -740,11 +735,6 @@ return [
                     'name' => '登录记录',
                     'icon' => 'fa fa-calendar',
                     'uri' => 'account/login',
-                ],
-                [
-                    'name' => '提醒消息',
-                    'icon' => 'fa fa-envelope',
-                    'uri' => 'notice/index',
                 ],
             ],
         ],

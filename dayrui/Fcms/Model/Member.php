@@ -577,17 +577,8 @@ class Member extends \Phpcmf\Model
             return '';
         }
 
-        $uids = is_array($uid) ? $uid : explode(',', $uid);
-        foreach ($uids as $uid) {
-            $this->db->table('member_notice')->insert([
-                'uid' => $uid,
-                'type' => max(1, (int)$type),
-                'isnew' => 1,
-                'content' => $note,
-                'url' => (string)$url,
-                'mark' => (string)$mark,
-                'inputtime' => SYS_TIME,
-            ]);
+        if (dr_is_app('notice')) {
+            \Phpcmf\Service::M('notice', 'notice')->add_notice($uid, $type, $note, $url, $mark);
         }
 
         return '';
@@ -1476,12 +1467,12 @@ class Member extends \Phpcmf\Model
         $this->db->table('admin')->where('uid', $id)->delete();
         $this->db->table('admin_login')->where('uid', $id)->delete();
         $this->db->table('admin_role_index')->where('uid', $id)->delete();
-        $this->db->table('member_notice')->where('uid', $id)->delete();
         $this->db->table('member_group_verify')->where('uid', $id)->delete();
         $this->db->table('member_paylog')->where('uid', $id)->delete();
         $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $id)->delete();
         $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $id)->delete();
         $this->is_table_exists('member_cashlog') && $this->db->table('member_cashlog')->where('uid', $id)->delete();
+        $this->is_table_exists('member_notice') && $this->db->table('member_notice')->where('uid', $id)->delete();
         $this->delete_admin_notice('member_verify/index:field/id/keyword/'.$id, 0);
 
         // 删除头像

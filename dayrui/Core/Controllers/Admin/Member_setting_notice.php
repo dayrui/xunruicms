@@ -46,10 +46,14 @@ class Member_setting_notice extends \Phpcmf\Common
                     ];
                     $notice[$i]['value'][$ii]['file'] = [
                         'mobile' => is_file($path.'config/notice/mobile/'.$ii.'.html') ? 1 : 0,
-                        'notice' => is_file($path.'config/notice/mobile/'.$ii.'.html') ? 1 : 0,
                         'email' => is_file($path.'config/notice/email/'.$ii.'.html') ? 1 : 0,
-                        'weixin' => is_file($path.'config/notice/weixin/'.$ii.'.html') ? 1 : 0,
                     ];
+                    if (dr_is_app('notice')) {
+                        $notice[$i]['value'][$ii]['file']['notice'] = $notice[$i]['value'][$ii]['file']['mobile'];
+                    }
+                    if (dr_is_app('weixin')) {
+                        $notice[$i]['value'][$ii]['file']['weixin'] = is_file($path.'config/notice/weixin/'.$ii.'.html') ? 1 : 0;
+                    }
                 }
             }
         }
@@ -114,6 +118,10 @@ class Member_setting_notice extends \Phpcmf\Common
                     ],
                 ]
             ];
+
+            if (!dr_is_app('weixin')) {
+                unset($list[$sid]['data']['weixin']);
+            }
         }
 
         \Phpcmf\Service::V()->assign([

@@ -38,6 +38,7 @@
         <div class="page-top">
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    {if dr_is_app('notice')}
                     <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <i class="fa fa-bell"></i>
@@ -47,13 +48,13 @@
                             <li class="external dr_notice_html">
                                 <h3>
                                     <span class="bold dr_notice_num"> 0 </span> 条未读提醒</h3>
-                                <a href="{dr_member_url('notice/index')}">查看</a>
+                                <a href="{dr_member_url('notice/home/index')}">查看</a>
                             </li>
                             <li>
                                 <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
                                     {table table=member_notice isnew=1 uid=$member.uid order=inputtime cahce=0}
                                     <li>
-                                        <a {if $t.url} href="{$t.url}" target="_blank" {else}href="{dr_member_url('notice/index')}"{/if}>
+                                        <a {if $t.url} href="{$t.url}" target="_blank" {else}href="{dr_member_url('notice/home/index')}"{/if}>
                                             <span class="time">{dr_fdate($t.inputtime)}</span>
                                             <span class="details">
                                                 {dr_notice_icon($t.type, 'label-icon')}
@@ -69,6 +70,7 @@
                             </li>
                         </ul>
                     </li>
+                    {/if}
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                             <img class="img-circle" src="{dr_avatar($member.uid)}" />
