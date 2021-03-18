@@ -150,7 +150,11 @@ class Category extends \Phpcmf\Table
                 if ($this->is_scategory) {
                     // 栏目类型
                     if ($t['tid'] == 1) {
-                        $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('模块').' </span>';
+                        if ($t['child']) {
+                            $t['type_html'] = '<span class="badge badge-danger"> '.dr_lang('封面').' </span>';
+                        } else {
+                            $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('列表').' </span>';
+                        }
                         if ($module[$t['mid']]['name']) {
                             $t['mid'] = $module[$t['mid']]['name'];
                         } else {
@@ -844,8 +848,8 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改栏目内容: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
-            if (isset($this->module['category'][$id]['setting']['html'])
-                && $this->module['category'][$id]['setting']['html']) {
+            $is_html = $this->module['share'] ? $this->module['category'][$id]['setting']['html'] : $this->module['html'];
+            if ($is_html) {
                 // 生成权限文件
                 if (!dr_html_auth(1)) {
                     $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
@@ -880,8 +884,8 @@ class Category extends \Phpcmf\Table
             \Phpcmf\Service::L('input')->system_log('修改栏目外链地址: '. $row['name'] . '['. $id.']');
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
-            if (isset($this->module['category'][$id]['setting']['html'])
-                && $this->module['category'][$id]['setting']['html']) {
+            $is_html = $this->module['share'] ? $this->module['category'][$id]['setting']['html'] : $this->module['html'];
+            if ($is_html) {
                 // 生成权限文件
                 if (!dr_html_auth(1)) {
                     $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
@@ -1091,8 +1095,8 @@ class Category extends \Phpcmf\Table
             }, function ($id, $data, $old) {
                 // 自动更新缓存
                 \Phpcmf\Service::M('cache')->sync_cache();
-                if (isset($this->module['category'][$data[1]['id']]['setting']['html'])
-                    && $this->module['category'][$data[1]['id']]['setting']['html']) {
+                $is_html = $this->module['share'] ? $this->module['category'][$data[1]['id']]['setting']['html'] : $this->module['html'];
+                if ($is_html) {
                     // 生成权限文件
                     if (!dr_html_auth(1)) {
                         $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
