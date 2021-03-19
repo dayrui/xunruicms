@@ -75,10 +75,10 @@ class Module extends \Phpcmf\Model
 
         $name = ucfirst($table);
         $files = [
-            $path.'Controllers/'.$name.'.php' => FCPATH.'Temp/Mform/$NAME$.php',
-            $path.'Controllers/Member/'.$name.'.php' => FCPATH.'Temp/Mform/Member$NAME$.php',
-            $path.'Controllers/Admin/'.$name.'.php' => FCPATH.'Temp/Mform/Admin$NAME$.php',
-            $path.'Controllers/Admin/'.$name.'_verify.php' => FCPATH.'Temp/Mform/Admin$NAME$_verify.php',
+            $path.'Controllers/'.$name.'.php' => TEMPPATH.'Mform/$NAME$.php',
+            $path.'Controllers/Member/'.$name.'.php' => TEMPPATH.'Mform/Member$NAME$.php',
+            $path.'Controllers/Admin/'.$name.'.php' => TEMPPATH.'Mform/Admin$NAME$.php',
+            $path.'Controllers/Admin/'.$name.'_verify.php' => TEMPPATH.'Mform/Admin$NAME$_verify.php',
         ];
 
         $ok = 0;

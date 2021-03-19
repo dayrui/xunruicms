@@ -39,7 +39,7 @@ class Module_create extends \Phpcmf\Common
 
             // 开始复制到指定目录
             $path = APPSPATH.ucfirst($data['dirname']).'/';
-            \Phpcmf\Service::L('File')->copy_file(FCPATH.'Temp/Module/', $path);
+            \Phpcmf\Service::L('File')->copy_file(TEMPPATH.'Module/', $path);
             if (!is_file($path.'Config/App.php')) {
                 $this->_json(0, dr_lang('目录创建失败，请检查文件权限'), ['field' => 'dirname']);
             }

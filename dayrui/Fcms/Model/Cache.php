@@ -322,14 +322,14 @@ class Cache extends \Phpcmf\Model
     public function update_mobile_webpath($path, $dirname) {
 
         foreach (['api.php', 'index.php'] as $file) {
-            if (is_file(FCPATH.'Temp/Web/mobile/'.$file)) {
+            if (is_file(TEMPPATH.'Web/mobile/'.$file)) {
                 $dst = $path.$dirname.'/'.$file;
                 dr_mkdirs(dirname($dst));
                 $size = file_put_contents($dst, str_replace([
                     '{FIX_WEB_DIR}'
                 ], [
                     (defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').$dirname
-                ], file_get_contents(FCPATH.'Temp/Web/mobile/'.$file)));
+                ], file_get_contents(TEMPPATH.'Web/mobile/'.$file)));
                 if (!$size) {
                     return '文件['.$dst.']无法写入';
                 }
@@ -367,7 +367,7 @@ class Cache extends \Phpcmf\Model
                      'mobile/api.php',
                      'mobile/index.php',
                  ] as $file) {
-            if (is_file(FCPATH.'Temp/'.$name.'/'.$file)) {
+            if (is_file(TEMPPATH.''.$name.'/'.$file)) {
                 if ($file == 'admin.php') {
                     $dst = $path.(SELF == 'index.php' ? 'admin.php' : SELF);
                 } else {
@@ -397,7 +397,7 @@ class Cache extends \Phpcmf\Model
                     $value['MOD_DIR'],
                     $value['SITE_ID'],
                     $fix_web_dir
-                ], file_get_contents(FCPATH.'Temp/'.$name.'/'.$file)));
+                ], file_get_contents(TEMPPATH.$name.'/'.$file)));
                 if (!$size) {
                     return '文件['.$dst.']无法写入';
                 }

@@ -27,10 +27,10 @@ class Form extends \Phpcmf\Model
 
         $name = ucfirst($table);
         $files = [
-            APPSPATH.'Form/Controllers/'.$name.'.php' => FCPATH.'Temp/Form/$NAME$.php',
-            APPSPATH.'Form/Controllers/Member/'.$name.'.php' => FCPATH.'Temp/Form/Member$NAME$.php',
-            APPSPATH.'Form/Controllers/Admin/'.$name.'.php' => FCPATH.'Temp/Form/Admin$NAME$.php',
-            APPSPATH.'Form/Controllers/Admin/'.$name.'_verify.php' => FCPATH.'Temp/Form/Admin$NAME$_verify.php',
+            APPSPATH.'Form/Controllers/'.$name.'.php' => TEMPPATH.'Form/$NAME$.php',
+            APPSPATH.'Form/Controllers/Member/'.$name.'.php' => TEMPPATH.'Form/Member$NAME$.php',
+            APPSPATH.'Form/Controllers/Admin/'.$name.'.php' => TEMPPATH.'Form/Admin$NAME$.php',
+            APPSPATH.'Form/Controllers/Admin/'.$name.'_verify.php' => TEMPPATH.'Form/Admin$NAME$_verify.php',
         ];
 
         $ok = 0;
