@@ -438,6 +438,26 @@ class Form
         return true;
     }
 
+    // 验证目录式域名
+    public function check_domain_dir($value) {
+
+        if (!$value) {
+            return false;
+        }
+
+        foreach (['?', '&', '\\', '*', ' ', '..'] as $p) {
+            if (strpos($value, $p) !== false) {
+                return false;
+            }
+        }
+
+        if (substr_count($value, '/') > 1) {
+            return false;
+        }
+
+        return true;
+    }
+
     // 生成随机验证码
     public function get_rand_value() {
         return rand(100000, 999999);
