@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('字段类别')}</label>
                             <div class="col-md-9">
-                                <label><select class="form-control" id="dr_fieldtype" name="data[fieldtype]" onChange="show_field_option(this.value)" {if $id}disabled{/if}>
+                                <label><select class="form-control" {if $id && !$is_edit} readonly="readonly"{/if} id="dr_fieldtype" name="data[fieldtype]" onChange="show_field_option(this.value)">
                                     <option value=""> -- </option>
                                     {loop $ftype $t}
                                     <option value="{$t.id}" {if $t.id==$data.fieldtype} selected="selected"{/if}> {$t.name}（{$t.id}） </option>
@@ -253,9 +253,49 @@
 <script type="text/javascript">
     $(function() {
         set_required({intval($data['setting']['validate']['required'])});
-        show_field_option("{$data['fieldtype']}");
+        $("#dr_loading").show();
+        $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+            data: {type:'{$data['fieldtype']}', relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
+            success: function(data) {
+                $('#dr_css').html(data.style);
+                $('#dr_option').html(data.option);
+                $("#dr_loading").hide();
+                App.init();
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
     });
     function show_field_option(type) {
+        {if $id}
+        var ftype = '{$data.fieldtype}';
+        if (ftype != type) {
+            layer.confirm(
+                '{dr_lang('变更字段类别可能会影响已有的数据，你确定吗？')}',
+                {
+                    icon: 3,
+                    shade: 0,
+                    title: lang['ts'],
+                    btn: [lang['ok'], lang['esc']]
+                }, function(index){
+                    $("#dr_loading").show();
+                    $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+                        data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
+                        success: function(data) {
+                            $('#dr_css').html(data.style);
+                            $('#dr_option').html(data.option);
+                            $("#dr_loading").hide();
+                            App.init();
+                            layer.close(index);
+                        },
+                        error: function(HttpRequest, ajaxOptions, thrownError) {
+                            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                        }
+                    });
+                });
+        }
+        {else}
         $("#dr_loading").show();
         $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
             data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
@@ -269,7 +309,7 @@
                 dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
             }
         });
-
+        {/if}
     }
     function set_required(id) {
         if (id == 0) {

@@ -13,6 +13,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
+        $this->is_edit = false; // 不允许修改字段类别
         $this->fieldtype = ['INT' => 10];
         $this->defaulttype = 'INT';
     }

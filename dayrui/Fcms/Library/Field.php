@@ -431,16 +431,31 @@
 
             $name = ucfirst(strtolower($name));
             if (!isset($this->objects[$name])) {
-                if ($this->app && is_file(dr_get_app_dir($this->app).'Fields/'.$name.'.php')) {
-                    $class = '\\My\\Field\\'.$this->app.'\\'.$name;
-                    require dr_get_app_dir($this->app).'Fields/'.$name.'.php';
-                } elseif (is_file(MYPATH.'Field/'.$name.'.php')) {
-                    $class = '\\My\\Field\\'.$name;
+                $class = '';
+                if (is_file(MYPATH.'Field/'.$name.'.php')) {
+                    $class = '\\My\\Field\\'.$name; // my目录继承类别
+                } elseif (is_file(CMSPATH.'Field/'.$name.'.php')) {
+                    $class = '\\Phpcmf\\Field\\'.$name; // 系统类别
                 } else {
-                    $class = '\\Phpcmf\\Field\\'.$name;
+                    // 加载插件的字段
+                    list($app, $fname) = explode('::', $name);
+                    if ($app && $fname) {
+                        if (!dr_is_app($app)) {
+                            log_message('error', '字段类别['.$name.']所属插件['.$app.']未安装');
+                            return;
+                        }
+                        $file = dr_get_app_dir($app).'Fields/'.ucfirst($fname).'.php';
+                        if (is_file($file)) {
+                            $class = '\\My\\Field\\'.$app.'\\'.ucfirst($fname);
+                            require $file;
+                        } else {
+                            log_message('error', '字段类别['.$name.']所属插件['.$app.']的字段文件不存在');
+                            return;
+                        }
+                    }
                 }
 
-                if (!class_exists($class)) {
+                if (!$class || !class_exists($class)) {
                     log_message('error', '字段类别['.$class.']未定义');
                     return;
                 }
@@ -479,10 +494,17 @@
                 $my = require MYPATH.'Field/Field.php';
                 $my && $type = dr_array2array($type, $my);
             }
-            // 应用目录自定义字段类别
-            if ($this->app && is_file(dr_get_app_dir($this->app).'Fields/Field.php')) {
-                $my = require dr_get_app_dir($this->app).'Fields/Field.php';
-                $my && $type = dr_array2array($type, $my);
+            // 加载全部插件的字段
+            $local = \Phpcmf\Service::Apps();
+            foreach ($local as $dir => $path) {
+                if (!is_file($path.'install.lock')) {
+                    continue;
+                }
+                // 加载
+                if (is_file($path.'Fields/Field.php')) {
+                    $my = require $path.'Fields/Field.php';
+                    $my && $type = dr_array2array($type, $my);
+                }
             }
             // 组合组装
             $my = [];
@@ -621,6 +643,7 @@
         public $app; // 当前app目录，option可用
         public $close_xss; // 强制关闭xss
         public $use_xss; // 强制开启xss
+        public $is_edit = true; // 是否允许修改字段类别
         public $remove_div; // 去掉div盒模块
 
         protected $fieldtype; // 可用字段类型

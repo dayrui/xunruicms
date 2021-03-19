@@ -13,6 +13,7 @@ class Merge extends \Phpcmf\Library\A_Field {
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->close_xss = 1; // 关闭xss验证
+        $this->is_edit = false; // 不允许修改字段类别
 		$this->fieldtype = ['TEXT'];
 		$this->defaulttype = 'TEXT';
     }

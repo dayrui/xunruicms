@@ -13,6 +13,7 @@ class Group extends \Phpcmf\Library\A_Field {
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->close_xss = 1; // 关闭xss验证
+        $this->is_edit = false; // 不允许修改字段类别
 		$this->fieldtype = ''; // TRUE表全部可用字段类型,自定义格式为 array('可用字段类型名称' => '默认长度', ... )
 		$this->defaulttype = ''; // 当用户没有选择字段类型时的缺省值
     }

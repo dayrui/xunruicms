@@ -278,6 +278,7 @@ class Field extends \Phpcmf\Common
 			'page' => $page,
 			'form' => dr_form_hidden(['page' => $page]),
             'role' => \Phpcmf\Service::C()->get_cache('auth'),
+            'is_edit' => $obj->is_edit,
 		]);
 		\Phpcmf\Service::V()->display('field_add.html');
 	}
