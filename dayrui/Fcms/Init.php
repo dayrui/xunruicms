@@ -17,7 +17,7 @@ define('SYSTEMPATH', BASEPATH);
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
 // 核心程序目录
-define('COREPATH', FCPATH.'Core/');
+define('COREPATH', CMSPATH.'Http/');
 // App程序目录
 !defined('APPSPATH') && define('APPSPATH', FCPATH.'App/');
 // 程序初始化
@@ -32,6 +32,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{xunruicms_img_title}');
 // tests
 define('TESTPATH', WRITEPATH.'tests/');
+// temp目录
+define('TEMPPATH', CMSPATH.'Temp/');
 // COMPOSER文件
 define('COMPOSER_PATH', is_file(FCPATH . 'Vendor/autoload.php') ? FCPATH . 'Vendor/autoload.php' : FCPATH . 'vendor/autoload.php');
 
