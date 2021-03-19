@@ -1,0 +1,80 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p>{dr_lang('如果你的数据库账号没有高级操作权限，将无法获取数据表信息')}</p>
+</div>
+
+
+<div class="right-card-box">
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="table-scrollable">
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                {if $ci->_is_admin_auth('del')}
+                <th class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                        <span></span>
+                    </label>
+                </th>
+                {/if}
+                <th width="250">{dr_lang('表名')}</th>
+                <th width="150">{dr_lang('描述')}</th>
+                <th width="100">{dr_lang('记录')}</th>
+                <th width="100">{dr_lang('容量')}</th>
+                <th width="100">{dr_lang('引擎')}</th>
+                <th width="160">{dr_lang('编码')}</th>
+                <th>{dr_lang('最近更新')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $t}
+            <tr class="odd gradeX">
+                {if $ci->_is_admin_auth('del')}
+                <td class="myselect">
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.Name}" />
+                        <span></span>
+                    </label>
+                </td>
+                {/if}
+                <td><a href="javascript:dr_iframe_show('{dr_lang('表结构')}', '{dr_url($uriprefix.'/show_index', ['id'=>$t.Name])}');">{$t.Name}</a></td>
+                <td><a href="javascript:dr_iframe_show('{dr_lang('表结构')}', '{dr_url($uriprefix.'/show_index', ['id'=>$t.Name])}');">{$t.Comment}</a></td>
+                <td>{$t.Rows}</td>
+                <td>{dr_format_file_size($t.Data_length)}</td>
+                <td>{$t.Engine}</td>
+                <td>{$t.Collation}</td>
+                <td>{$t.Update_time}</td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+
+     <div class="row fc-list-footer table-checkable ">
+         <div class="col-md-5 fc-list-select">
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+            <button type="button" onclick="dr_bfb_submit('{dr_lang('优化表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'y'])}')" class="btn green btn-sm"> <i class="fa fa-refresh"></i> {dr_lang('优化表')}</button>
+
+            <button type="button" onclick="dr_bfb_submit('{dr_lang('修复表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'x'])}')" class="btn blue btn-sm"> <i class="fa fa-wrench"></i> {dr_lang('修复表')}</button>
+
+             <button type="button" onclick="dr_bfb_submit('{dr_lang('检查表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'jc'])}')" class="btn yellow btn-sm"> <i class="fa fa-cogs"></i> {dr_lang('检查表')}</button>
+            <!--
+             <button type="button" onclick="dr_bfb_submit('{dr_lang('刷新表')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'s'])}')" class="btn red btn-sm"> <i class="fa fa-retweet"></i> {dr_lang('刷新表')}</button>
+             {if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.6.0') > 0) }
+             <button type="button" onclick="dr_bfb_submit('{dr_lang('转换为utf8mb4编码')}', 'myform', '{dr_url($uriprefix.'/add', ['at'=>'ut'])}')" class="btn dark btn-sm"> <i class="fa fa-database"></i> {dr_lang('转换为utf8mb4编码')}</button>
+             {/if}-->
+        </div>
+        <div class="myright">
+
+        </div>
+    </div>
+</form></div>
+
+
+{template "footer.html"}

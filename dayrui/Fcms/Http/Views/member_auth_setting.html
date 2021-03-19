@@ -1,0 +1,403 @@
+{template "header.html"}
+
+<div class="note note-danger  ">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden(['page' => $page])}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class=" {if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-user"></i> {dr_lang('用户权限')} </a>
+                </li>
+                <li class=" {if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('内容权限')} </a>
+                </li>
+                {if $diy.app}
+                <li class="{if $page==2}active{/if}">
+                    <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-puzzle-piece"></i> {dr_lang('应用插件')} </a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制上传头像')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][avatar]" value="1" {if $data['member']['avatar']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制完善资料')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][complete]" value="1" {if $data['member']['complete']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制手机认证')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][mobile]" value="1" {if $data['member']['mobile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('强制邮箱认证')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][email]" value="1" {if $data['member']['email']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件下载权限')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][downfile]" value="1" {if $data['member']['downfile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件上传权限')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[member][uploadfile]" value="1" {if $data['member']['uploadfile']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('每日登录奖励')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <div class="input-group" style="width: 200px;">
+                                        <input {if !dr_is_app('scorelog')} readonly {/if} type="text" name="data[member][login_score]" value="{intval($data['member']['login_score'])}" class="form-control">
+                                        <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <div class="input-group" style="width: 200px;">
+                                        <input {if !dr_is_app('explog')} readonly {/if}  type="text" name="data[member][login_exp]" value="{intval($data['member']['login_exp'])}" class="form-control">
+                                        <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('头像认证奖励')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <div class="input-group" style="width: 200px;">
+                                        <input {if !dr_is_app('scorelog')} readonly {/if}  type="text" name="data[member][avatar_score]" value="{intval($data['member']['avatar_score'])}" class="form-control">
+                                        <span class="input-group-btn"><button class="btn default" type="button">+{SITE_SCORE}</button></span>
+                                    </div>
+                                </label>
+                                <label>
+                                    <div class="input-group" style="width: 200px;">
+                                        <input {if !dr_is_app('explog')} readonly {/if}  type="text" name="data[member][avatar_exp]" value="{intval($data['member']['avatar_exp'])}" class="form-control">
+                                        <span class="input-group-btn"> <button class="btn default" type="button">+{SITE_EXPERIENCE}</button></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        {loop $diy.member $d}
+                        <div app="{$d.app}">
+                            {php $dfile=$d.file;}
+                            {load "$dfile"}
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+
+
+                <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{dr_lang('整站访问')}</label>
+                        <div class="col-md-9">
+                            <div class="mt-radio-inline">
+                                <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[home][show]" value="0" {if !$data['home']['show']}checked{/if} /> {dr_lang('开放访问')} <span></span></label>
+                                <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[home][show]" value="1" {if $data['home']['show']}checked{/if} /> {dr_lang('禁止访问')} <span></span></label>
+                            </div>
+                            <span class="help-block">{dr_lang('针对整个网站的前端界面访问权限')}</span>
+                        </div>
+                    </div>
+
+                    {if $share_categroy}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{dr_lang('共享栏目')}</label>
+                        <div class="col-md-9">
+                            <div class="mt-radio-inline">
+                                <label class="mt-radio mt-radio-outline"><input onclick="rr('share_cat', this.value)" type="radio" name="data[home][is_category]" value="0" {if !$data.home.is_category}checked=""{/if}> {dr_lang('统一设置')} <span></span></label>
+                                <label class="mt-radio mt-radio-outline"><input onclick="rr('share_cat', this.value)" type="radio" name="data[home][is_category]" value="1" {if $data.home.is_category}checked=""{/if}> {dr_lang('按栏目设置')} <span></span></label>
+                            </div>
+
+                            <div  id="rr_share_cat_0" style="display: none" class="margin-bottom-15">
+                                <div class="table-scrollable" style="padding: 10px">
+                                    {template "member_auth_share_category.html"}
+                                </div>
+                            </div>
+                            <div  id="rr_share_cat_1" style="display: none">
+                                <div class="table-scrollable">
+                                    <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                                        <thead>
+                                        <tr class="heading">
+                                            <th class="myselect">Id</th>
+                                            <th width="300">{dr_lang('栏目')}</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {loop $share_categroy $catid $cat}
+                                        <tr class="">
+                                            <td> {$cat.id}</td>
+                                            <td> {$cat.spacer} <a href="{$cat.url}" target="_blank">{$cat.name}</a></td>
+                                            <td>
+                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'share_category', 'aid'=>$aid, 'id'=>$catid])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'share_category', 'aid'=>$aid, 'id'=>$catid])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他栏目')}</button>
+                                            </td>
+                                        </tr>
+                                        {/loop}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    {/if}
+
+                    {if $form}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{dr_lang('网站表单')}</label>
+                        <div class="col-md-9">
+                            <div class="mt-radio-inline">
+                                <label class="mt-radio mt-radio-outline"><input onclick="rr('form', this.value)" type="radio" name="data[home][is_form]" value="0" {if !$data.home.is_form}checked=""{/if}> {dr_lang('统一设置')} <span></span></label>
+                                <label class="mt-radio mt-radio-outline"><input onclick="rr('form', this.value)" type="radio" name="data[home][is_form]" value="1" {if $data.home.is_form}checked=""{/if}> {dr_lang('按表单设置')} <span></span></label>
+                            </div>
+
+                            <div  id="rr_form_0" style="display: none" class="margin-bottom-15">
+                                <div class="table-scrollable" style="padding: 10px">
+                                    {template "member_auth_form.html"}
+                                </div>
+                            </div>
+                            <div  id="rr_form_1" style="display: none">
+                                <div class="table-scrollable">
+                                    <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                                        <thead>
+                                        <tr class="heading">
+                                            <th width="150">Table</th>
+                                            <th width="200">{dr_lang('表单')}</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {loop $form $t}
+                                        <tr>
+                                            <td> {$t.table}</td>
+                                            <td> {$t.name}</td>
+                                            <td>
+                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'form', 'aid'=>$aid, 'id'=>$t.id])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'form', 'aid'=>$aid, 'id'=>$t.id])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他表单')}</button>
+                                            </td>
+                                        </tr>
+
+                                        {/loop}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {/if}
+
+                    {loop $module $mid $m}
+                    <hr>
+                    <h5>{$m.name} - {$mid}</h5>
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模块访问')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[module][{$mid}][show]" value="0" {if !$data['module'][$mid]['show']}checked{/if} /> {dr_lang('开放访问')} <span></span></label>
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[module][{$mid}][show]" value="1" {if $data['module'][$mid]['show']}checked{/if} /> {dr_lang('禁止访问')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('控制整个模块的访问权限，变更之后模块无法生成静态文件')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('搜索内容')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[module][{$mid}][search]" value="0" {if !$data['module'][$mid]['search']}checked{/if} /> {dr_lang('开放搜索')} <span></span></label>
+                                    <label class="mt-radio mt-checkbox-outline"><input type="radio" name="data[module][{$mid}][search]" value="1" {if $data['module'][$mid]['search']}checked{/if} /> {dr_lang('禁止搜索')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        {if !$m.share}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模块栏目')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input onclick="rr('module_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_category]" value="0" {if !$data['module'][$mid]['is_category']}checked=""{/if}> {dr_lang('统一设置')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input onclick="rr('module_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_category]" value="1" {if $data['module'][$mid]['is_category']}checked=""{/if}> {dr_lang('按栏目设置')} <span></span></label>
+                                </div>
+
+                                <div  id="rr_module_{$mid}_cat_0" style="display: none" class="margin-bottom-15">
+                                    <div class="table-scrollable" style="padding: 10px">
+                                        {template "member_auth_category.html"}
+                                    </div>
+                                </div>
+                                <div  id="rr_module_{$mid}_cat_1" style="display: none">
+                                    <div class="table-scrollable">
+                                        <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                                            <thead>
+                                            <tr class="heading">
+                                                <th class="myselect">Id</th>
+                                                <th width="300">{dr_lang('栏目')}</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {loop $m.category $catid $cat}
+                                            <tr class="">
+                                                <td> {$cat.id}</td>
+                                                <td> {$cat.spacer} <a href="{$cat.url}" target="_blank">{$cat.name}</a></td>
+                                                <td>
+                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'category', 'aid'=>$aid,'mid'=>$mid, 'id'=>$catid])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                    <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'category', 'aid'=>$aid,'mid'=>$mid, 'id'=>$catid])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他栏目')}</button>
+
+                                                </td>
+                                            </tr>
+                                            {/loop}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <script>
+                            $(function () {
+                                rr('module_{$mid}_cat', {intval($data['module'][$mid]['is_category'])});
+                            });
+                        </script>
+                        {/if}
+
+                        {if $m.mform}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模块表单')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input onclick="rr('mform_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_mform]" value="0" {if !$data['module'][$mid]['is_mform']}checked=""{/if}> {dr_lang('统一设置')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input onclick="rr('mform_{$mid}_cat', this.value)" type="radio" name="data[module][{$mid}][is_mform]" value="1" {if $data['module'][$mid]['is_mform']}checked=""{/if}> {dr_lang('按表单设置')} <span></span></label>
+                                </div>
+
+                                <div  id="rr_mform_{$mid}_cat_0" style="display: none" class="margin-bottom-15">
+                                    <div class="table-scrollable" style="padding: 10px">
+                                        {template "member_auth_mform.html"}
+                                    </div>
+                                </div>
+                                <div  id="rr_mform_{$mid}_cat_1" style="display: none">
+                                    <div class="table-scrollable">
+                                        <table class="fc-user-table table table-striped table-bordered table-checkable dataTable">
+                                            <thead>
+                                            <tr class="heading">
+                                                <th width="150">Table</th>
+                                                <th width="200">{dr_lang('表单')}</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {loop $m.mform $t}
+                                            <tr>
+                                                <td> {$t.table}</td>
+                                                <td> {$t.name}</td>
+                                                <td>
+                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'mform', 'aid'=>$aid, 'mid'=>$mid, 'id'=>$t.id])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                    <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'mform', 'aid'=>$aid, 'mid'=>$mid, 'id'=>$t.id])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他表单')}</button>
+                                                </td>
+                                            </tr>
+
+                                            {/loop}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <script>
+                            $(function () {
+                                rr('mform_{$mid}_cat', {intval($data['module'][$mid]['is_mform'])});
+                            });
+                        </script>
+                        {/if}
+                        {loop $diy.module $d}
+                        <div app="{$d.app}">
+                            {php $dfile=$d.file;}
+                            {load "$dfile"}
+                        </div>
+                        {/loop}
+                    </div>
+                    {/loop}
+                </div>
+
+
+
+                <div class="tab-pane {if $page==2}active{/if}" id="tab_2">
+                    <div class="form-body">
+                        {loop $diy.app $d}
+                        <div app="{$d.app}">
+                            {php $dfile=$d.file;}
+                            {load "$dfile"}
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存权限配置')}</button>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    function rr(name, id) {
+        $('#rr_'+name+'_1').hide();
+        $('#rr_'+name+'_0').hide();
+        $('#rr_'+name+'_'+id).show();
+    }
+    $(function () {
+        rr('share_cat', {intval($data.home.is_category)});
+        rr('form', {intval($data.home.is_form)});
+    });
+</script>
+<style>
+    .mt-checkbox-single {
+        margin-right: 10px;
+    }
+    </style>
+{template "footer.html"}

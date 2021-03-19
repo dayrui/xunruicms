@@ -1,0 +1,40 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="">{dr_lang('本次批量删除')}</label>
+                <label class="label label-danger">{dr_count($ids)}</label>
+                {loop $ids $id}
+                <input type="hidden" name="ids[]" value="{$id}">
+                {/loop}
+                <label class="">{dr_lang('条数据')}</label>
+            </div>
+        </div>
+
+        {if $delete_msg}
+        <div class="form-group">
+            <label class="col-md-2 control-label ajax_name">{dr_lang('常用理由')}</label>
+            <div class="col-md-8">
+                <select class="form-control" onchange="$('#dr_note').val(this.value)">
+                    <option value=""> -- </option>
+                    {loop $delete_msg $t}
+                    {if $t}<option value="{$t}">{$t}</option>{/if}
+                    {/loop}
+                </select>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group" id="dr_row_note">
+            <label class="col-md-2 control-label ajax_name">{dr_lang('删除理由')}</label>
+            <div class="col-md-8">
+                <textarea class="form-control" id="dr_note" name="note" rows="5"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+{template "footer.html"}

@@ -1,0 +1,22 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="form-body">
+
+        <div class="form-group" id="dr_row_username">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('账号')}</label>
+            <div class="col-xs-8">
+                <input type="text" class="form-control" id="dr_username" name="data[username]">
+            </div>
+        </div>
+        <div class="form-group" id="dr_row_password">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('密码')}</label>
+            <div class="col-xs-8">
+                <input type="password" class="form-control" id="dr_password" name="data[password]">
+            </div>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}

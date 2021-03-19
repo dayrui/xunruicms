@@ -1,0 +1,175 @@
+{template "header.html"}
+
+<link href="{THEME_PATH}assets/global/plugins/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/codemirror/theme/neat.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/codemirror/addon/merge/merge.css" rel="stylesheet" type="text/css" />
+
+<script src="{THEME_PATH}assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/codemirror/mode/{$file_js}" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/codemirror/lib/diff_match_patch.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/codemirror/addon/merge/merge.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+
+        var value, orig1, orig2, dv, panes = 2, highlight = true, connect = null, collapse = false;
+        var target = document.getElementById("view");
+        target.innerHTML = "";
+
+        value = $("#file_code1").val();
+        orig2 = $("#file_code2").val();
+
+        dv = CodeMirror.MergeView(target, {
+            value: value,
+            origLeft: null,
+            orig: orig2,
+            lineNumbers: true,
+            matchBrackets: true,
+            styleActiveLine: true,
+            mode: '{$file_ext}',
+            highlightDifferences: highlight,
+            connect: connect,
+            collapseIdentical: collapse
+        });
+
+        function toggleDifferences() {
+            dv.setShowDifferences(highlight = !highlight);
+        }
+
+
+        function mergeViewHeight(mergeView) {
+            function editorHeight(editor) {
+                if (!editor) return 0;
+                return editor.getScrollInfo().height;
+            }
+            return Math.max(editorHeight(mergeView.leftOriginal()),
+                    editorHeight(mergeView.editor()),
+                    editorHeight(mergeView.rightOriginal()));
+        }
+
+        function resize(mergeView) {
+            var height = mergeViewHeight(mergeView);
+            for(;;) {
+                if (mergeView.leftOriginal())
+                    mergeView.leftOriginal().setSize(null, height);
+                mergeView.editor().setSize(null, height);
+                if (mergeView.rightOriginal())
+                    mergeView.rightOriginal().setSize(null, height);
+
+                var newHeight = mergeViewHeight(mergeView);
+                if (newHeight >= height) break;
+                else height = newHeight;
+            }
+            mergeView.wrap.style.height = height + "px";
+        }
+
+        $('#my_submit').click(function () {
+
+            url = '{dr_now_url()}';
+
+            var loading = layer.load(2, {
+                shade: [0.3,'#fff'], //0.1透明度的白色背景
+                time: 1000
+            });
+
+            $("#html_result").html(' ... ');
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                data: {code: dv.edit.getValue(), {csrf_token()}: "{csrf_hash()}"},
+                success: function(json) {
+                    layer.close(loading);
+                    if (json.code == 1) {
+                        dr_tips(1, json.msg);
+                        setTimeout("window.location.reload(true)", 2000)
+                    } else {
+                        $("#html_result").html('<div class="alert alert-danger">'+json.msg+'</div>');
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                }
+            });
+        });
+    });
+
+</script>
+
+<div class="note note-danger">
+    <p>{dr_safe_replace_path($path)}</p>
+</div>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="row myfbody">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green">{$name}</span>
+                    </div>
+
+                    <div class="actions">
+                        {if $backups}
+                        <div class="btn-group">
+                            <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                {dr_lang('历史文件')}
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="{$backups_url}"> {dr_lang('查看当前文件')}</a>
+                                </li>
+                                <li class="divider"> </li>
+                                {loop $backups $i}
+                                <li>
+                                    <a href="{$backups_url}&bfile={$i}"> {dr_date($i)}</a>
+                                </li>
+                                {/loop}
+                                <li class="divider"> </li>
+                                <li>
+                                    <a href="javascript:dr_load_ajax('{dr_lang('确定要删除吗？')}', '{$backups_del}', 1);"> {dr_lang('清空历史文件')}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        {/if}
+                        <div class="btn-group">
+                            <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+
+                        <div id=view></div>
+
+                        <textarea style="display: none" id="file_code1">{$code}</textarea>
+                        <textarea style="display: none" id="file_code2">{$diff_code}</textarea>
+
+                        <div class="form-group" style="padding-top:30px">
+                            <div class="col-md-12" id="html_result">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" id="my_submit" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+        </div>
+    </div>
+</form>
+
+
+{template "footer.html"}

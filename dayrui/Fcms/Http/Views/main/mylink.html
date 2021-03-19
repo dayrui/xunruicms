@@ -1,0 +1,16 @@
+
+<div class="portlet portlet-sortable light bordered">
+    <div class="portlet-title tabbable-line">
+        <div class="caption">
+            <i class="fa fa-send"></i>
+            <span class="caption-subject"> {dr_lang('快捷链接')} </span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="admin-usermenu">
+            {loop $admin.usermenu $t}
+            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
+            {/loop}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="mt-checkbox-inline">
+                    {loop $role $t}
+                    {if $t.id>1}
+                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[]" value="{$t.id}" {if !$data || dr_in_array($t.id, $data)} checked{/if} /> {$t.name} <span></span></label>
+                    {/if}
+                    {/loop}
+                </div>
+                <span class="help-block">{dr_lang('只有选中的角色组才能看到此面板')}</span>
+            </div>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

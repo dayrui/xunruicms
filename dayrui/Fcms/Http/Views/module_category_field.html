@@ -1,0 +1,52 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p>{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；选择父栏目时，其所有子栏目都会继承该字段')}</p>
+</div>
+
+<div class="right-card-box">
+    <form class="form-horizontal" role="form" id="myform">
+        {dr_form_hidden()}
+        <div class="portlet bordered light myfbody">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green "><i class="fa fa-code"></i> {dr_lang('字段划分')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+
+                    {loop $list $t}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{$t.name} / {$t.fieldname}</label>
+                        <div class="col-md-9" id="multi-select" >
+                            {$t.select}
+                        </div>
+                    </div>
+                    {/loop}
+
+                </div>
+
+                {if !$list}
+                <div class="alert"> {dr_lang('你没有创建自定义栏目模型字段')} </div>
+                {/if}
+            </div>
+        </div>
+        <div class="portlet-body form myfooter">
+            <div class="form-actions text-center">
+                <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa save"></i> {dr_lang('保存')} </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<link href="{THEME_PATH}assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+        $('#multi-select select').multiSelect();
+    });
+</script>
+
+{template "footer.html"}

@@ -1,0 +1,47 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody field-sort-items">
+    {loop $data $dir $t}
+    {if is_file(ROOTPATH.'api/pay/'.$dir.'/setting.php')}
+    <div class="portlet bordered light">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green">{$t.config.icon}&nbsp;{dr_lang($t.config.name)}</span>
+            </div>
+            <div class="actions">
+                <a class="btn btn-circle btn-default btn-sm">
+                    <i class="fa fa-arrows-alt"></i> {dr_lang('拖动排序')}
+                </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">{dr_lang('启用')}</label>
+                    <div class="col-md-9">
+                        <input type="checkbox" name="data[{$dir}][use]" value="1" {if $t['use']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                    </div>
+                </div>
+                <?php require ROOTPATH.'api/pay/'.$dir.'/setting.php';?>
+            </div>
+        </div>
+    </div>
+    {/if}
+    {/loop}
+        </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function() {
+        $(".field-sort-items").sortable();
+    });
+</script>
+{template "footer.html"}

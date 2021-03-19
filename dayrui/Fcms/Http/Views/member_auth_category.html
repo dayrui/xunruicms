@@ -1,0 +1,104 @@
+{if $is_ajax_edit}
+{template "header.html"}
+<script type="text/javascript">
+    $(function() { //防止回车提交表单
+        document.onkeydown = function(e){
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode==13) {
+                return false;
+            }
+        }
+    });
+</script>
+<style>
+    .mt-checkbox-single {
+        margin-right: 10px;
+    }
+</style>
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    {/if}
+    <div class="margin-bottom-5">
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('访问')}
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['show'] || !$auth['category'][$mid]} checked {/if} name="category[{$mid}][show]" value="1" />
+            <span></span>
+        </label>
+
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('发布')}
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['add']} checked {/if} name="category[{$mid}][add]" value="1" />
+            <span></span>
+        </label>
+
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('修改')}
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['edit']} checked {/if} name="category[{$mid}][edit]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('删除')}
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['del']} checked {/if} name="category[{$mid}][del]" value="1" />
+            <span></span>
+        </label>
+        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+            {dr_lang('验证码')}
+            <input type="checkbox" class="checkboxes" {if $auth['category'][$mid]['code']} checked {/if} name="category[{$mid}][code]" value="1" />
+            <span></span>
+        </label>
+    </div>
+    <div class="margin-bottom-15">
+        <label>
+            <select name="category[{$mid}][verify]" class="form-control">
+                <option value="0"> {dr_lang('不审核')} </option>
+                {loop $verify $v}
+                <option value="{$v.id}" {if $auth['category'][$mid]['verify'] == $v.id} selected{/if}> {dr_lang($v.name)} </option>
+                {/loop}
+            </select>
+        </label>
+        {if dr_is_app('explog')}
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="category[{$mid}][exp]" value="{htmlspecialchars($auth['category'][$mid]['exp'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
+            </div>
+        </div>
+        {/if}
+        {if dr_is_app('scorelog')}
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="category[{$mid}][score]" value="{htmlspecialchars($auth['category'][$mid]['score'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">±{SITE_SCORE}</span>
+            </div>
+        </div>
+        {/if}
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="category[{$mid}][money]" value="{htmlspecialchars($auth['category'][$mid]['money'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">±{dr_lang('金额')}</span>
+            </div>
+        </div>
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="category[{$mid}][day_post]" value="{htmlspecialchars($auth['category'][$mid]['day_post'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">{dr_lang('日投稿')}</span>
+            </div>
+        </div>
+        <div class="input-inline input-small">
+            <div class="input-group">
+                <input type="text" name="category[{$mid}][total_post]" value="{htmlspecialchars($auth['category'][$mid]['total_post'])}" class="form-control" placeholder="">
+                <span class="input-group-addon">{dr_lang('投稿总数')}</span>
+            </div>
+        </div>
+    </div>
+    {loop $diy.category $d}
+    <div app="{$d.app}" class="margin-bottom-15">
+        {php $dfile=$d.file;}
+        {load "$dfile"}
+    </div>
+    {/loop}
+    <input type="hidden" name="category[{$mid}][test]" value="1">
+    {if $is_ajax_edit}
+
+</form>
+{/if}

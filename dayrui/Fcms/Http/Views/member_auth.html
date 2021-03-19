@@ -1,0 +1,131 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('member', '');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<div class="right-card-box">
+    <form class="form-horizontal myfbody" id="myform">
+        {dr_form_hidden()}
+        <div class="form-group">
+            <label class="col-md-2 control-label ">{dr_lang('模式选择')}</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input onclick="rr(this.value, true)" type="radio" name="test" value="0" {if !$auth_type}checked=""{/if}> {dr_lang('按全局设置')} <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input onclick="rr(this.value, true)" type="radio" name="test" value="1" {if $auth_type == 1}checked=""{/if}> {dr_lang('按用户组设置')} <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input onclick="rr(this.value, true)" type="radio" name="test" value="2" {if $auth_type == 2}checked=""{/if}> {dr_lang('按用户组等级设置')} <span></span></label>
+                </div>
+            </div>
+        </div>
+        <div id="rr_0" style="display: none">
+            <div class="form-group">
+                <label class="col-md-2 control-label"></label>
+                <div class="col-md-9">{dr_lang('本页是全局设置，全部用户组成员生效')}
+                    <br><br>
+                    <a href="{dr_url('member_auth/add', ['aid' => 'public'])}" class="btn blue btn-sm"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
+                    <a onclick="dr_ajax_confirm_url('{dr_url('member_auth/init_edit', ['aid'=>'public'])}','{dr_lang('确定要将本组权限初始化吗？')}', '')" class="btn green btn-sm"> <i class="fa fa-refresh"></i> {dr_lang('初始化权限')}</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="rr_1" style="display: none">
+            <div class="form-group">
+                <label class="col-md-2 control-label "></label>
+                <div class="col-md-9">{dr_lang('本页是按用户组设置，每一个用户组成员可以分别设置不同的权限')}
+                    <br>
+                    <br>
+                    <div class="table-scrollable ">
+                        <table class="table table-striped table-bordered  table-checkable dataTable">
+                            <thead>
+                            <tr class="heading">
+                                <th width="200">{dr_lang('用户组')}</th>
+                                <th>{dr_lang('操作')}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop $group $i $t}
+                            <tr class="odd gradeX">
+                                <td>{if $i}{$t}{else}<font color="red">{$t}</font>{/if}</td>
+                                <td>
+                                    <a href="{dr_url('member_auth/add', ['aid' => $i])}" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
+                                    <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'group', 'aid'=>$i, 'id'=>$i])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他组')}</>
+                                    <a onclick="dr_ajax_confirm_url('{dr_url('member_auth/init_edit', ['aid'=>$i])}','{dr_lang('确定要将本组权限初始化吗？')}', '')" class="btn green btn-xs"> <i class="fa fa-refresh"></i> {dr_lang('初始化权限')}</>
+                                </td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="rr_2" style="display: none">
+            <div class="form-group">
+                <label class="col-md-2 control-label "></label>
+                <div class="col-md-9">{dr_lang('本页是按用户组等级设置，每一个用户组等级成员可以分别设置不同的权限')}
+                    <br>
+                    <br>
+                    <div class="table-scrollable ">
+                        <table class="table table-striped table-bordered  table-checkable dataTable">
+                            <thead>
+                            <tr class="heading">
+                                <th width="200" style="text-align: left;padding-left:10px;">{dr_lang('用户组等级')}</th>
+                                <th>{dr_lang('操作')}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {loop $level $i $t}
+                            <tr class="odd gradeX">
+                                <td {$t.space}>{if $i}{dr_lang($t.name)}{else}<font color="red">{dr_lang($t.name)}</font>{/if}</td>
+                                <td>
+                                    {if $t.use}
+                                    <a href="{dr_url('member_auth/add', ['aid' => $i])}" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</a>
+                                    <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'level', 'aid'=>$i, 'id'=>$i])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他组')}</>
+                                    <a onclick="dr_ajax_confirm_url('{dr_url('member_auth/init_edit', ['aid'=>$i])}','{dr_lang('确定要将本组权限初始化吗？')}', '')" class="btn green btn-xs"> <i class="fa fa-refresh"></i> {dr_lang('初始化权限')}</>
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/loop}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<script>
+
+    function rr(id, is_save) {
+        $('#rr_1').hide();
+        $('#rr_2').hide();
+        $('#rr_0').hide();
+        $('#rr_'+id).show();
+        if (is_save) {
+            // 存储值
+            var loading = layer.load(2, {
+                shade: [0.3,'#fff'], //0.1透明度的白色背景
+                time: 100000000
+            });
+            $.ajax({type: "GET",dataType:"json", url: "{dr_url('member_auth/save_edit')}&value="+id,
+                success: function(json) {
+                    layer.close(loading);
+                    dr_cmf_tips(1, json.msg);
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
+        }
+    }
+    $(function () {
+        rr('{intval($auth_type)}', false);
+    });
+</script>
+{template "footer.html"}
