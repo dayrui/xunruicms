@@ -12,7 +12,7 @@ class Site_domain extends \Phpcmf\Common
     public function index() {
 
         if (IS_AJAX_POST) {
-            $data = $post = \Phpcmf\Service::L('input')->post('data', true);
+            $data = $post = \Phpcmf\Service::L('input')->post('data');
             if ($data['site_domain'] == $data['mobile_domain']) {
                 $this->_json(0, dr_lang('手机域名不能与电脑相同'));
             }
@@ -21,6 +21,10 @@ class Site_domain extends \Phpcmf\Common
                 if ($value) {
                     if (strpos($name, 'webpath') === 0) {
                         // 目录不验证
+                    } elseif ($name == 'site_domain') {
+                        if (!\Phpcmf\Service::L('Form')->check_domain_dir($value)) {
+                            $this->_json(0, dr_lang('域名（%s）格式不正确', $value));
+                        }
                     } else {
                         // 验证域名可用性
                         if (dr_in_array($value, $data)) {
@@ -39,7 +43,7 @@ class Site_domain extends \Phpcmf\Common
             \Phpcmf\Service::M('Site')->domain($post);
             \Phpcmf\Service::M('cache')->sync_cache('');
             \Phpcmf\Service::L('input')->system_log('设置网站域名参数');
-            exit($this->_json(1, dr_lang('操作成功')));
+            $this->_json(1, dr_lang('操作成功'));
         }
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
@@ -78,7 +82,7 @@ class Site_domain extends \Phpcmf\Common
         if (IS_POST) {
 
             if ($is_fclient) {
-                exit($this->_json(0, dr_lang('当前网站不能修改主域名')));
+                $this->_json(0, dr_lang('当前网站不能修改主域名'));
             }
 
             $domain = trim(\Phpcmf\Service::L('input')->post('domain'));
@@ -88,7 +92,7 @@ class Site_domain extends \Phpcmf\Common
 
             \Phpcmf\Service::M('Site')->edit_domain($domain);
             \Phpcmf\Service::L('input')->system_log('变更网站主域名');
-            exit($this->_json(1, dr_lang('操作成功，请域名解析到本站IP')));
+            $this->_json(1, dr_lang('操作成功，请域名解析到本站IP'));
         }
 
         \Phpcmf\Service::V()->assign([

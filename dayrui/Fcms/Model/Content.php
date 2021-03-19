@@ -1034,10 +1034,10 @@ class Content extends \Phpcmf\Model {
 
 		// 删除文件
 		if (is_file($root.$file)) {
-            @unlink($root.$file);
+            unlink($root.$file);
         }
-        if (is_file($root.'mobile/'.$file)) {
-            @unlink($root.'mobile/'.$file);
+        if (is_file($root.SITE_MOBILE_DIR.'/'.$file)) {
+            unlink($root.SITE_MOBILE_DIR.'/'.$file);
         }
 	}
 

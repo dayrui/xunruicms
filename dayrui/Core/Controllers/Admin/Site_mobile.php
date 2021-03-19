@@ -22,11 +22,15 @@ class Site_mobile extends \Phpcmf\Common
             }
 			\Phpcmf\Service::L('input')->system_log('设置手机网站参数');
             \Phpcmf\Service::M('cache')->sync_cache('');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));
 		$data = \Phpcmf\Service::M('Site')->config(SITE_ID);
+
+		if (!isset($data['mobile']['dirname']) || !$data['mobile']['dirname']) {
+            $data['mobile']['dirname'] = 'mobile';
+        }
 
 		\Phpcmf\Service::V()->assign([
 			'page' => $page,

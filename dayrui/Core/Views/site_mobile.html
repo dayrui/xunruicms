@@ -22,6 +22,46 @@
                     <div class="form-body">
 
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('访问模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_0').show();$('.dr_mode_1').hide()" name="data[mode]" value="0" {if empty($data['mode'])}checked{/if} /> {dr_lang('域名模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_1').show();$('.dr_mode_0').hide()" name="data[mode]" value="1" {if $data['mode']}checked{/if} /> {dr_lang('目录模式')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_0" style="{if empty($data['mode'])}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
+                            <div class="col-md-9">
+
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars($data['domain'])}" class="form-control input-large">
+                                    <span class="input-group-btn">
+                                        <a class="btn green" href="javascript:dr_test_domain('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试域名')}</a>
+                                    </span>
+                                </div>
+                                <span class="help-block">{dr_lang('格式：m.test.com，不能包含/符号')}</span>
+                                <div class="form-control-static" id="dr_domian_error" style="color: red;display: none"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_1" style="{if !empty($data['mode'])}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('手机目录')}</label>
+                            <div class="col-md-9">
+
+                                <div class="input-group" style="width:250px;">
+                                    <input type="text" id="dr_dirname" type="text" name="data[dirname]" value="{htmlspecialchars($data['dirname'])}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn green" href="javascript:dr_test_dir('dr_dirname');"><i class="fa fa-send"></i> {dr_lang('生成目录')}</a>
+                                    </span>
+                                </div>
+                                <span class="help-block">{dr_lang('格式：mobile，不能包含/符号')}</span>
+                                <div class="form-control-static" id="dr_dir_error" style="color: red;display: none"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('自动识别')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[auto]" value="1" {if $data['auto']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
@@ -40,20 +80,6 @@
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[not_pad]" value="1" {if $data['not_pad']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('平板端访问时不会识别为移动端界面，平板将访问PC界面')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
-                            <div class="col-md-9">
-
-                                <div class="input-group" style="width: 300px;">
-                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars($data['domain'])}" class="form-control input-large">
-                                    <span class="input-group-btn">
-                                        <a class="btn green" href="javascript:dr_test_domain_dir('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试')}</a>
-                                    </span>
-                                </div>
-                                <span class="help-block">{dr_lang('格式：m.test.com，不能包含/符号')}</span>
-                                <div class="form-control-static" id="dr_domian_error" style="color: red;display: none"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -87,7 +113,7 @@
     </div>
 </form>
 <script>
-    function dr_test_domain_dir(id) {
+    function dr_test_domain(id) {
         $('#dr_domian_error').html('{dr_lang('正在测试中...')}');
         $('#dr_domian_error').show();
         $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_mobile_domain&v="+encodeURIComponent($("#"+id).val()),
@@ -97,6 +123,23 @@
                     $('#dr_domian_error').hide();
                 } else {
                     $('#dr_domian_error').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_test_dir(id) {
+        $('#dr_dir_error').html('{dr_lang('正在测试中...')}');
+        $('#dr_dir_error').show();
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_mobile_dir&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                if (json.code) {
+                    dr_tips(json.code, json.msg);
+                    $('#dr_dir_error').hide();
+                } else {
+                    $('#dr_dir_error').html(json.msg);
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {

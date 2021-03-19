@@ -107,6 +107,7 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_THUMB_WATERMARK', $this->site_info[SITE_ID]['SITE_THUMB_WATERMARK']);
         define('SITE_IS_MOBILE', $this->site_info[SITE_ID]['SITE_IS_MOBILE']); // 是否存在移动端
         define('SITE_IS_MOBILE_HTML', (int)$this->site_info[SITE_ID]['SITE_IS_MOBILE_HTML']);
+        define('SITE_MOBILE_DIR', $this->site_info[SITE_ID]['SITE_MOBILE_DIR']); // 移动端目录
         define('SITE_MOBILE_NOT_PAD', (int)$this->site_info[SITE_ID]['SITE_MOBILE_NOT_PAD']); // pad不归类为移动端
         define('SITE_THEME', strlen($this->site_info[SITE_ID]['SITE_THEME']) ? $this->site_info[SITE_ID]['SITE_THEME'] : 'default');
         define('SITE_SEOJOIN', strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
@@ -144,7 +145,7 @@ abstract class Common extends \CodeIgniter\Controller
             define('HOME_THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
             if (!defined('IS_MOBILE') && ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
-                define('MOBILE_THEME_PATH', SITE_URL.'mobile/static/'.SITE_THEME.'/'); // 移动端站点风格
+                define('MOBILE_THEME_PATH', SITE_URL.SITE_MOBILE_DIR.'/static/'.SITE_THEME.'/'); // 移动端站点风格
             } else {
                 define('MOBILE_THEME_PATH', SITE_MURL.'static/'.SITE_THEME.'/'); // 移动端站点风格
             }

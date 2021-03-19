@@ -252,7 +252,7 @@ class Cache extends \Phpcmf\Model
 
         // 删除首页静态文件
         unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
-        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'));
+        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'));
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
@@ -268,14 +268,15 @@ class Cache extends \Phpcmf\Model
             $t['setting'] = dr_string2array($t['setting']);
             if ($t['id'] > 1 && $t['setting']['webpath']) {
                 $rt = $this->update_webpath('Web', $t['setting']['webpath'], [
-                    'SITE_ID' => $t['id']
+                    'SITE_ID' => $t['id'],
+                    'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
                 ]);
                 if ($rt) {
                     $this->_error_msg('站点['.$t['domain'].']: '.$rt);
                 }
                 $path = rtrim($t['setting']['webpath'], '/').'/';
             } else {
-                $path = WEBPATH;
+                $path = ROOTPATH;
             }
             if ($t['setting']['client']) {
                 foreach ($t['setting']['client'] as $c) {
@@ -283,6 +284,8 @@ class Cache extends \Phpcmf\Model
                         $rt = $this->update_webpath('Client', $path.$c['name'].'/', [
                             'CLIENT' => $c['name'],
                             'SITE_ID' => $t['id'],
+                            'FIX_WEB_DIR' => $c['domain'] == $t['domain'].'/'.$c['name'] ? $c['name'] : '',
+                            'SITE_FIX_WEB_DIR' => $t['id'] > 1 && $t['setting']['webpath'] && strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
                         ]);
                         if ($rt) {
                             $this->_error_msg('站点['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
@@ -313,7 +316,27 @@ class Cache extends \Phpcmf\Model
                 }
             }
         }
+    }
 
+    // 生成目录式手机目录
+    public function update_mobile_webpath($path, $dirname) {
+
+        foreach (['api.php', 'index.php'] as $file) {
+            if (is_file(FCPATH.'Temp/Web/mobile/'.$file)) {
+                $dst = $path.$dirname.'/'.$file;
+                dr_mkdirs(dirname($dst));
+                $size = file_put_contents($dst, str_replace([
+                    '{FIX_WEB_DIR}'
+                ], [
+                    (defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').$dirname
+                ], file_get_contents(FCPATH.'Temp/Web/mobile/'.$file)));
+                if (!$size) {
+                    return '文件['.$dst.']无法写入';
+                }
+            }
+        }
+
+        return;
     }
 
     // 更新站点
@@ -336,6 +359,7 @@ class Cache extends \Phpcmf\Model
         }
 
         // 创建入口文件
+        //(defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').
         foreach ([
                      'admin.php',
                      'index.php',
@@ -349,17 +373,30 @@ class Cache extends \Phpcmf\Model
                 } else {
                     $dst = $path.$file;
                 }
+                $fix_web_dir = isset($value['FIX_WEB_DIR']) && $value['FIX_WEB_DIR'] ? $value['FIX_WEB_DIR'] : '';
+                if (isset($value['SITE_ID']) && $value['SITE_ID'] > 1 && $fix_web_dir) {
+                    // 移动端加二级
+                    if (strpos($file, 'mobile/') !== false) {
+                        $fix_web_dir.= '/mobile';
+                    }
+                    // 终端加二级
+                    if ($name == 'Client') {
+                        $fix_web_dir= (isset($value['SITE_FIX_WEB_DIR']) && $value['SITE_FIX_WEB_DIR'] ? $value['SITE_FIX_WEB_DIR'].'/' : '').$fix_web_dir;
+                    }
+                }
                 dr_mkdirs(dirname($dst));
                 $size = file_put_contents($dst, str_replace([
                     '{CLIENT}',
                     '{ROOTPATH}',
                     '{MOD_DIR}',
-                    '{SITE_ID}'
+                    '{SITE_ID}',
+                    '{FIX_WEB_DIR}'
                 ], [
                     $value['CLIENT'],
                     ROOTPATH,
                     $value['MOD_DIR'],
-                    $value['SITE_ID']
+                    $value['SITE_ID'],
+                    $fix_web_dir
                 ], file_get_contents(FCPATH.'Temp/'.$name.'/'.$file)));
                 if (!$size) {
                     return '文件['.$dst.']无法写入';

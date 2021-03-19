@@ -70,7 +70,7 @@ class Module extends \Phpcmf\Common
                 } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                     // 移动端访问
                     if ($this->module['url'] != $this->module['murl']) {
-                        file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], 'mobile/'.$file), $html);
+                        file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], SITE_MOBILE_DIR.'/'.$file), $html);
                     }
                 } else {
                     // 电脑端访问
@@ -563,6 +563,9 @@ class Module extends \Phpcmf\Common
         $is_fstatus && $builder->where('fstatus', 1);
         $builder->where('id<', (int)$data['id'])->orderBy('id desc');
         $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
+        if (isset($data['prev_page']['url']) && $data['prev_page']['url']) {
+            $data['prev_page']['url'] = dr_url_prefix($data['prev_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
+        }
 
         // 下一篇文章
         $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
@@ -570,6 +573,9 @@ class Module extends \Phpcmf\Common
         $is_fstatus && $builder->where('fstatus', 1);
         $builder->where('id>', (int)$data['id'])->orderBy('id asc');
         $data['next_page'] = $builder->limit(1)->get()->getRowArray();
+        if (isset($data['next_page']['url']) && $data['next_page']['url']) {
+            $data['next_page']['url'] = dr_url_prefix($data['next_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
+        }
 
         // 格式化输出自定义字段
         $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
@@ -644,8 +650,8 @@ class Module extends \Phpcmf\Common
         $html = ob_get_clean();
 
         // 格式化生成文件
-        if (!@file_put_contents($hfile, $html, LOCK_EX)) {
-            @unlink($hfile);
+        if (!file_put_contents($hfile, $html, LOCK_EX)) {
+            unlink($hfile);
             return dr_return_data(0, '文件【'.$hfile.'】写入失败');
         }
 
@@ -656,10 +662,10 @@ class Module extends \Phpcmf\Common
             $_GET['page'] = $page;
             $this->_Category($catid, '', $page);
             $html = ob_get_clean();
-            $hfile = dr_to_html_file($file, $root . 'mobile/');
+            $hfile = dr_to_html_file($file, $root . SITE_MOBILE_DIR.'/');
             $size = file_put_contents($hfile, $html, LOCK_EX);
             if (!$size) {
-                @unlink($hfile);
+                unlink($hfile);
                 return dr_return_data(0, '无权限写入文件【' . $hfile . '】');
             }
         }
@@ -731,10 +737,10 @@ class Module extends \Phpcmf\Common
             \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
             $data = $this->_Show($id, '', $page);
             $html = ob_get_clean();
-            $hfile = dr_to_html_file($file, $root.'mobile/');
+            $hfile = dr_to_html_file($file, $root.SITE_MOBILE_DIR.'/');
             $size = file_put_contents($hfile, $html, LOCK_EX);
             if (!$size) {
-                @unlink($hfile);
+                unlink($hfile);
                 return dr_return_data(0, '无权限写入文件【'.$hfile.'】');
             }
         }
@@ -855,7 +861,7 @@ class Module extends \Phpcmf\Common
             \Phpcmf\Service::V()->init('mobile');
             $this->_Index(1);
             $html = ob_get_clean();
-            $mfile = dr_format_html_file('mobile/' . $file, $root);
+            $mfile = dr_format_html_file(SITE_MOBILE_DIR.'/' . $file, $root);
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
             !$mobile && log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：'.$mfile);
         } else {

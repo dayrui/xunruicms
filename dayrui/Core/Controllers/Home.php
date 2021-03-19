@@ -29,7 +29,7 @@ class Home extends \Phpcmf\Common
             } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html);
+                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'), $html);
                 }
             } else {
                 // pc
@@ -100,7 +100,7 @@ class Home extends \Phpcmf\Common
             ]);
             $this->_index();
             $html = ob_get_clean();
-            $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html');
+            $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
             if (!$mobile) {
                 log_message('error', '网站首页移动端首页生成失败：'.$mfile);

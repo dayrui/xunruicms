@@ -27,7 +27,7 @@ class Site_client extends \Phpcmf\Common
                             $this->_json(0, dr_lang('域名必须填写'));
                         } elseif (strpos($t['domain'], '//') !== false) {
                             $this->_json(0, dr_lang('域名只能填写纯域名，不能加http://'));
-                        } elseif (!\Phpcmf\Service::L('Form')->check_domain($t['domain'])) {
+                        } elseif (!\Phpcmf\Service::L('Form')->check_domain_dir($t['domain'])) {
                             $this->_json(0, dr_lang('域名（%s）格式不正确', $t['domain']));
                         } elseif ($this->site_info[SITE_ID]['SITE_DOMAIN'] == $t['domain']) {
                             $this->_json(0, dr_lang('域名（%s）已经其他地方绑定过', $t['domain']));
@@ -47,7 +47,7 @@ class Site_client extends \Phpcmf\Common
             }
             \Phpcmf\Service::M('cache')->sync_cache('');
 			\Phpcmf\Service::L('input')->system_log('设置网站自定义终端参数');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));

@@ -754,6 +754,36 @@ class Api extends \Phpcmf\Common
     }
 
     /**
+     * 测试目录模式的域名是否可用
+     */
+    public function test_mobile_dir() {
+
+        $v = trim(\Phpcmf\Service::L('input')->get('v'));
+        if (!$v) {
+            $this->_json(0, dr_lang('目录不能为空'));
+        } elseif (strpos($v, '/') !== false) {
+            $this->_json(0, dr_lang('目录不能包含/符号'));
+        } elseif (!function_exists('stream_context_create')) {
+            $this->_json(0, '函数没有被启用：stream_context_create');
+        }
+
+        // 生成手机目录
+        $rt = \Phpcmf\Service::M('cache')->update_mobile_webpath(WEBPATH, $v);
+        if ($rt) {
+            $this->_json(0, dr_lang($rt));
+        }
+
+        $url = SITE_URL.$v . '/api.php';
+
+        $code = dr_catcher_data($url, 5);
+        if ($code != 'phpcmf ok') {
+            $this->_json(0, '['.$v.']目录绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功');
+        }
+
+        $this->_json(1, dr_lang('目录正常'));
+    }
+
+    /**
      * 测试附件目录是否可用
      */
     public function test_attach_dir() {

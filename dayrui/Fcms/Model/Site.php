@@ -193,7 +193,7 @@ class Site extends \Phpcmf\Model
         $data = [];
         $site = $this->config(SITE_ID);
         if ($value) {
-            $site['mobile']['domain'] = $value['mobile_domain'];
+
             $site['webpath'] = $value['webpath'];
             $this->db->table('site')->where('id', SITE_ID)->update([
                 'domain' => $value['site_domain'] ? $value['site_domain'] : $site['domain'],
@@ -203,7 +203,13 @@ class Site extends \Phpcmf\Model
 
         $data['webpath'] = $site['webpath'];
         $data['site_domain'] = $site['config']['SITE_DOMAIN'];
-        $data['mobile_domain'] = $site['mobile']['domain'];
+
+        // 识别手机域名
+        if (isset($site['mobile']['mode']) && $site['mobile']['mode']) {
+            $data['mobile_domain'] = $site['config']['SITE_DOMAIN'].'/'.trim($site['mobile']['dirname'] ? $site['mobile']['dirname'] : 'mobile');
+        } else {
+            $data['mobile_domain'] = $site['mobile']['domain'];
+        }
 
         if ($site['client']) {
             foreach ($site['client'] as $c) {
@@ -282,12 +288,22 @@ class Site extends \Phpcmf\Model
                 }
 
                 $t['setting'] = dr_string2array($t['setting']);
+                $mobile_dirname = 'mobile';
+
+                // 识别手机域名
+                if (isset($t['setting']['mobile']['mode']) && $t['setting']['mobile']['mode']) {
+                    $mobile_dirname = trim($t['setting']['mobile']['dirname'] ? $t['setting']['mobile']['dirname'] : 'mobile');
+                    $mobile_domain = $t['domain'].'/'.$mobile_dirname;
+                } else {
+                    $mobile_domain = (string)$t['setting']['mobile']['domain'];
+                }
 
                 $config[$t['id']] = [
                     'SITE_NAME' => $t['name'],
                     'SITE_DOMAIN' => $t['domain'],
                     'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
-                    'SITE_MOBILE' => (string)$t['setting']['mobile']['domain'],
+                    'SITE_MOBILE' => $mobile_domain,
+                    'SITE_MOBILE_DIR' => $mobile_dirname,
                     'SITE_AUTO' => (string)$t['setting']['mobile']['auto'],
                     'SITE_IS_MOBILE_HTML' => (string)$t['setting']['mobile']['tohtml'],
                     'SITE_MOBILE_NOT_PAD' => (string)$t['setting']['mobile']['not_pad'],
@@ -346,9 +362,10 @@ class Site extends \Phpcmf\Model
                         continue;
                     }
                 }
+
                 // 删除首页静态文件
-                @unlink($webpath[$t['id']]['site'].'index.html');
-                @unlink($webpath[$t['id']]['site'].'mobile/index.html');
+                unlink($webpath[$t['id']]['site'].'index.html');
+                unlink($webpath[$t['id']]['site'].$mobile_dirname.'/index.html');
 
                 $module_cache_file[] = 'module-'.$t['id'].'-content.cache'; // 删除多余的模块缓存文件
                 $module_cache_file[] = 'module-'.$t['id'].'-share.cache'; // 删除多余的模块缓存文件

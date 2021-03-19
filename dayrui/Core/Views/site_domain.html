@@ -42,13 +42,19 @@
                                 </div>
                                 <span class="help-block">{dr_lang('本站的域名，通常www.xxx.com')}</span>
                             </div>
-
-
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('本站手机域名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[mobile_domain]" value="{htmlspecialchars($data['mobile_domain'])}"></label>
+                                <div class="input-group" style="width: 300px;">
+                                <input class="form-control input-large" readonly type="text"  value="{htmlspecialchars($data['mobile_domain'])}"></label>
+                                <span class="input-group-btn">
+                                        <a class="btn red" href="{dr_url("site_mobile/index")}"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+
+                                    </span>
+
+                            </div>
                                 <span class="help-block">{dr_lang('手机访问时的域名，通常m.xxx.com')}</span>
                             </div>
                         </div>
@@ -184,7 +190,7 @@
                     <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{$data['mobile_domain']}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/');}</span>
+                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/');}</span>
                     </div>
                 </div>
                 {/if}
