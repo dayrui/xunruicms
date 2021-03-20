@@ -18,7 +18,7 @@ class Html
     protected $psize = 20; // 每页生成多少条
 
     // 栏目的数量统计
-    public function get_category_data($app, $cat) {
+    public function get_category_data($app, $cat, $maxsize) {
 
         // 获取生成栏目
         if (!$cat) {
@@ -105,6 +105,9 @@ class Html
                         }
                         !$pagesize && $pagesize = 10; // 默认10条分页
                         $count = ceil($total/$pagesize); // 计算总页数
+                        if ($maxsize && $count > $maxsize) {
+                            $count = $maxsize;
+                        }
                         if ($count > 1) {
                             for ($i = 1; $i <= $count; $i++) {
                                 $list[$t['mid']][] = [

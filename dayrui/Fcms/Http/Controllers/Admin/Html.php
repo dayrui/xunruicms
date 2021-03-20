@@ -38,10 +38,14 @@ class Html extends \Phpcmf\Common
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = \Phpcmf\Service::L('input')->get('ids');
+        if ($ids && is_array($ids)) {
+            $ids = implode(',', $ids);
+        }
+        $maxsize = \Phpcmf\Service::L('input')->get('maxsize');
 
         \Phpcmf\Service::V()->assign([
-            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids,
-            'count_url' => \Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids]),
+            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&maxsize='.$maxsize,
+            'count_url' => \Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids, 'maxsize' => $maxsize]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
     }
@@ -69,6 +73,7 @@ class Html extends \Phpcmf\Common
 
         $app = \Phpcmf\Service::L('input')->get('app');
         $ids = \Phpcmf\Service::L('input')->get('ids');
+        $maxsize = (int)\Phpcmf\Service::L('input')->get('maxsize');
 
         if ($app) {
             $cat = $this->get_cache('module-'.SITE_ID.'-'.$app, 'category');
@@ -76,7 +81,7 @@ class Html extends \Phpcmf\Common
             $cat = $this->get_cache('module-'.SITE_ID.'-share', 'category');
         }
 
-        \Phpcmf\Service::L('html')->get_category_data($app, $this->_category_data($ids, $cat));
+        \Phpcmf\Service::L('html')->get_category_data($app, $this->_category_data($ids, $cat), $maxsize);
     }
 
     // 内容
