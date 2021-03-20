@@ -76,7 +76,7 @@
                         $('#dr_check_button').attr('disabled', false);
                         $('#dr_check_button').html('<i class="fa fa-check-circle"></i> {dr_lang("生成完毕")}');
                     } else {
-                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 正在生成第'+json.code+'页 / 共'+(json.data.pcount + 1)+'页');
+                        $('#dr_check_button').html('<i class="fa fa-refresh"></i> 正在生成第'+json.code+'页 / 共'+(json.data.pcount)+'页');
                         dr_ajax2ajax(json.code);
                     }
                 }

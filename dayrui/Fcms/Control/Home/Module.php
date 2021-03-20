@@ -939,7 +939,7 @@ class Module extends \Phpcmf\Common
 
         \Phpcmf\Service::L('cache')->clear($name);
 
-        $this->_json($page + 1, $html, ['pcount' => $pcount]);
+        $this->_json($page + 1, $html, ['pcount' => $pcount + 1]);
     }
 
     // 生成内容静态选项
@@ -1007,7 +1007,7 @@ class Module extends \Phpcmf\Common
 
         \Phpcmf\Service::L('cache')->clear($name);
 
-        $this->_json($page + 1, $html, ['pcount' => $pcount]);
+        $this->_json($page + 1, $html, ['pcount' => $pcount + 1]);
 
     }
 
