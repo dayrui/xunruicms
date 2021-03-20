@@ -1373,7 +1373,7 @@ function dr_bfb(title, myform, url) {
             var json = $(body).html();
             if (json.indexOf('"code":0') > 0 && json.length < 150){
                 var obj = JSON.parse(json);
-                layer.closeAll(index);
+                layer.closeAll();
                 dr_tips(0, obj.msg);
             }
         },

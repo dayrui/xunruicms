@@ -44,10 +44,50 @@ class Html extends \Phpcmf\Common
         $maxsize = \Phpcmf\Service::L('input')->get('maxsize');
 
         \Phpcmf\Service::V()->assign([
+            'spage' => 1,
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&maxsize='.$maxsize,
             'count_url' => \Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids, 'maxsize' => $maxsize]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
+    }
+
+    // 断点生成栏目
+    public function category_point_index() {
+
+        $app = \Phpcmf\Service::L('input')->get('app');
+        $name = 'category-'.$app.'-html-file';
+        $page = \Phpcmf\Service::L('cache')->get_auth_data($name.'-error'); // 设置断点
+        if (!$page) {
+            $this->_json(0, dr_lang('没有找到上次中断生成的记录'));
+        }
+
+        $ids = \Phpcmf\Service::L('input')->get('ids');
+        if ($ids && is_array($ids)) {
+            $ids = implode(',', $ids);
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'spage' => $page,
+            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&',
+            'count_url' => \Phpcmf\Service::L('Router')->url('html/category_point_count_index', ['app' => $app]),
+        ]);
+        \Phpcmf\Service::V()->display('html_bfb.html');exit;
+    }
+    // 断点栏目的数量统计
+    public function category_point_count_index() {
+
+        $app = \Phpcmf\Service::L('input')->get('app');
+        $name = 'category-'.$app.'-html-file';
+        $page = \Phpcmf\Service::L('cache')->get_auth_data($name.'-error'); // 设置断点
+        if (!$page) {
+            $this->_json(0, dr_lang('没有找到上次中断生成的记录'));
+        } elseif (!\Phpcmf\Service::L('cache')->get_auth_data($name)) {
+            $this->_json(0, dr_lang('生成记录已过期，请重新开始生成'));
+        } elseif (!\Phpcmf\Service::L('cache')->get_auth_data($name.'-'.$page)) {
+            $this->_json(0, dr_lang('生成记录已过期，请重新开始生成'));
+        }
+
+        $this->_json(1, 'ok');
     }
 
     // 获取生成的栏目
@@ -94,10 +134,49 @@ class Html extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
+            'spage' => 1,
             'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
             'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'), 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
+    }
+
+    // 断点内容
+    public function show_point_index() {
+
+        $app = \Phpcmf\Service::L('input')->get('app');
+        $ids = \Phpcmf\Service::L('input')->get('catids');
+        if ($ids && is_array($ids)) {
+            $ids = implode(',', $ids);
+        }
+        $name = 'show-'.$app.'-html-file';
+        $page = \Phpcmf\Service::L('cache')->get_auth_data($name.'-error'); // 设置断点
+        if (!$page) {
+            $this->_json(0, dr_lang('没有找到上次中断生成的记录'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'spage' => $page,
+            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
+            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_point_count_index', ['app' => $app]),
+        ]);
+        \Phpcmf\Service::V()->display('html_bfb.html');exit;
+    }
+    // 断点内容的数量统计
+    public function show_point_count_index() {
+
+        $app = \Phpcmf\Service::L('input')->get('app');
+        $name = 'show-'.$app.'-html-file';
+        $page = \Phpcmf\Service::L('cache')->get_auth_data($name.'-error'); // 设置断点
+        if (!$page) {
+            $this->_json(0, dr_lang('没有找到上次中断生成的记录'));
+        } elseif (!\Phpcmf\Service::L('cache')->get_auth_data($name)) {
+            $this->_json(0, dr_lang('生成记录已过期，请重新开始生成'));
+        } elseif (!\Phpcmf\Service::L('cache')->get_auth_data($name.'-'.$page)) {
+            $this->_json(0, dr_lang('生成记录已过期，请重新开始生成'));
+        }
+
+        $this->_json(1, 'ok');
     }
 
     // 内容数量统计

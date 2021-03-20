@@ -25,6 +25,9 @@ class Html
             \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
         }
 
+        $name = 'category-'.$app.'-html-file';
+        \Phpcmf\Service::L('cache')->del_auth_data($name, SITE_ID);
+
         $list = [];
         foreach ($cat as $i => $t) {
             if ($t['tid'] == 0) {
@@ -129,7 +132,6 @@ class Html
             \Phpcmf\Service::C()->_json(0, '没有可用生成的栏目数据');
         }
 
-        $name = 'category-'.$app.'-html-file';
         $ct = 0;
 
         $cache = [];
@@ -139,18 +141,21 @@ class Html
             $cache = dr_array2array($cache, $arr);
         }
         foreach ($cache as $i => $t) {
-            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_auth_data($name.'-'.($i+1), $t, SITE_ID);
         }
 
         $count = dr_count($cache);
 
-        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_auth_data($name, $count, SITE_ID);
 
         \Phpcmf\Service::C()->_json(1, '共'.$ct.'个，分'.$count.'页');
     }
 
     // 内容的数量统计
     public function get_show_data($app, $param) {
+
+        $name = 'show-'.$app.'-html-file';
+        \Phpcmf\Service::L('cache')->del_auth_data($name, SITE_ID);
 
         // 获取生成栏目
         $cids = [];
@@ -243,15 +248,13 @@ class Html
             \Phpcmf\Service::C()->_json(0, '没有可用生成的内容数据');
         }
 
-        $name = 'show-'.$app.'-html-file';
-
         $arr = array_chunk($data, $param['pagesize'] ? $param['pagesize'] : $this->psize);
         $count = dr_count($arr);
         foreach ($arr as $i => $t) {
-            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_auth_data($name.'-'.($i+1), $t, SITE_ID);
         }
 
-        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_auth_data($name, $count, SITE_ID);
 
         \Phpcmf\Service::C()->_json(1, '共'.dr_count($data).'条，分'.$count.'页');
     }

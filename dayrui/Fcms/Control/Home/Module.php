@@ -716,7 +716,7 @@ class Module extends \Phpcmf\Common
         if (!$data) {
             return dr_return_data(0, 'URL为空白不执行生成');
         }
-        $file =\Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
+        $file = \Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
 
         $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
         $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
@@ -725,8 +725,8 @@ class Module extends \Phpcmf\Common
             return dr_return_data(0, '地址【'.$data['url'].'】不规范');
         }
 
-        if (!@file_put_contents($hfile, $html, LOCK_EX)) {
-            @unlink($hfile);
+        if (!file_put_contents($hfile, $html, LOCK_EX)) {
+            unlink($hfile);
             return dr_return_data(0, '文件【'.$hfile.'】写入失败');
         }
 
@@ -881,16 +881,17 @@ class Module extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'show-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_auth_data($name2);
         if (!$pcount) {
             $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
             // 完成
+            \Phpcmf\Service::L('cache')->del_auth_data($name2);
             $this->_json(-1, '');
         }
 
         $name = 'show-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->get_data($name);
+        $cache = \Phpcmf\Service::L('cache')->get_auth_data($name);
         if (!$cache) {
             $this->_json(0, '临时缓存数据不存在：'.$name);
         }
@@ -923,6 +924,7 @@ class Module extends \Phpcmf\Common
                 $class = ' p_error';*/
             } else {
                 $rt = $this->_Create_Show_Html($t['id']);
+                \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
                 if ($rt['code']) {
                     $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
                 } else {
@@ -950,16 +952,17 @@ class Module extends \Phpcmf\Common
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'category-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_auth_data($name2);
         if (!$pcount) {
             $this->_json(0, '临时缓存数据不存在：'.$name2);
         } elseif ($page > $pcount) {
             // 完成
+            \Phpcmf\Service::L('cache')->del_auth_data($name2);
             $this->_json(-1, '');
         }
 
         $name = 'category-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->get_data($name);
+        $cache = \Phpcmf\Service::L('cache')->get_auth_data($name);
         if (!$cache) {
             $this->_json(0, '临时缓存数据不存在：'.$name);
         }
@@ -989,6 +992,7 @@ class Module extends \Phpcmf\Common
                 $class = ' p_error';*/
             } else {
                 $rt = $this->_Create_Category_Html($t['id'], $t['page']);
+                \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
                 if ($rt['code']) {
                     $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
                 } else {

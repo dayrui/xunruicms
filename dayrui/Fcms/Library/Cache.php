@@ -120,7 +120,7 @@ class Cache {
 
         dr_mkdirs($this->auth_dir);
 
-        file_put_contents($this->auth_dir.md5($siteid.$name), $value, LOCK_EX);
+        file_put_contents($this->auth_dir.md5($siteid.$name), is_array($value) ? dr_array2string($value) : $value, LOCK_EX);
 
         return $value;
     }
@@ -132,6 +132,10 @@ class Cache {
         if (is_file($code_file)) {
             $rt = file_get_contents($code_file);
             if ($rt) {
+                $arr = dr_string2array($rt);
+                if (is_array($arr)) {
+                    return $arr;
+                }
                 return $rt;
             }
         }
@@ -143,6 +147,10 @@ class Cache {
     public function del_auth_data($name, $siteid = SITE_ID) {
 
         $code_file = $this->auth_dir.md5($siteid.$name);
+        if (!is_file($code_file)) {
+            return;
+        }
+
         unlink($code_file);
 
         // 重置Zend OPcache
