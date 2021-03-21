@@ -209,6 +209,11 @@ class Form extends \Phpcmf\Table
                 }
                 \Phpcmf\Service::L('cache')->clear('from_'.$this->form['table'].'_show_id_'.$id);
                 \Phpcmf\Service::M('member')->todo_admin_notice('form/'.$this->form['table'].'_verify/edit:id/'.$id, SITE_ID);// clear
+
+                if (!$old) {
+                    // 挂钩点
+                    \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
+                }
             }
         );
     }
@@ -253,11 +258,8 @@ class Form extends \Phpcmf\Table
         // 提醒
         \Phpcmf\Service::M('member')->notice($row['uid'], 3, dr_lang('%s审核成功', $this->form['name']));
 
-        // 挂钩点 程序初始化之后
-        \Phpcmf\Hooks::trigger('form_verify', $row);
-
         // 挂钩点
-        \Phpcmf\Hooks::trigger('form_post_after', $row);
+        \Phpcmf\Hooks::trigger('form_verify', $row);
     }
 
     // 修改排序

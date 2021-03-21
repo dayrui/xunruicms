@@ -292,6 +292,10 @@ class Mform extends \Phpcmf\Table
                 \Phpcmf\Service::M('member')->todo_admin_notice(MOD_DIR.'/'.$this->form['table'].'_verify/edit:cid/'.$old['cid'].'/id/'.$old['id'], SITE_ID);
                 // clear
                 \Phpcmf\Service::L('cache')->clear('module_'.MOD_DIR.'_from_'.$this->form['table'].'_show_id_'.$id);
+                if (!$old) {
+                    // 挂钩点
+                    \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));
+                }
             }
         );
     }
@@ -328,8 +332,5 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::M()->db->table($this->init['table'])->where('id', $row['id'])->update(['status' => 1]);
 
         \Phpcmf\Service::L('Notice')->send_notice('module_form_verify_1', $row);
-
-        // 挂钩点
-        \Phpcmf\Hooks::trigger('module_form_post_after', $row);
     }
 }

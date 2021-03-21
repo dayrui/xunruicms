@@ -80,8 +80,6 @@ class Form extends \Phpcmf\Table
             'is_edit' => $this->_is_edit,
             'is_post_code' => $this->is_post_code,
         ]);
-
-
     }
 
     // 添加表单内容
@@ -218,6 +216,8 @@ class Form extends \Phpcmf\Table
                             log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但未设置通知人');
                         }
                     }
+                    // 挂钩点
+                    \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
                 }
                 if (!$data[1]['status']) {
                     // 审核
@@ -225,8 +225,6 @@ class Form extends \Phpcmf\Table
                     $data['url'] = $this->form['setting']['rt_url'];
                     return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
                 }
-                // 挂钩点
-                \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
                 return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
             }
         );

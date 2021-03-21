@@ -259,6 +259,10 @@ class Mform extends \Phpcmf\Table
                 }
                 //更新total字段
                 $this->content_model->update_form_total( $this->cid, $this->form['table']);
+                if (!$old) {
+                    // 挂钩点
+                    \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));
+                }
             }
         );
     }
@@ -271,8 +275,6 @@ class Mform extends \Phpcmf\Table
 
         $data['url'] = $this->form['setting']['rt_url'] ? str_replace(['{id}', '{cid}'], [$data[1]['id'],  $data[1]['cid']], $this->form['setting']['rt_url']) : '';
         if ($data[1]['status']) {
-            // 挂钩点
-            \Phpcmf\Hooks::trigger('module_form_post_after', dr_array2array($data[1], $data[0]));
             return dr_return_data($data[1]['id'], dr_lang('操作成功'), $data);
         } else {
             return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);

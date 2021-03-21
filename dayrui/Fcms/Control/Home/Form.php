@@ -186,6 +186,22 @@ class Form extends \Phpcmf\Table
         return $data;
     }
 
+    /**
+     * 保存内容
+     * $id      内容id,新增为0
+     * $data    提交内容数组,留空为自动获取
+     * $func    格式化提交的数据
+     * */
+    protected function _Save($id = 0, $data = [], $old = [], $func = null, $func2 = null) {
+
+        return parent::_Save($id, $data, $old, null,
+            function ($id, $data, $old) {
+                // 挂钩点
+                \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
+            }
+        );
+    }
+
 
     /**
      * 回调处理结果
@@ -217,9 +233,6 @@ class Form extends \Phpcmf\Table
 
         // 提醒
         \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
-
-        // 挂钩点
-        \Phpcmf\Hooks::trigger('form_post_after', dr_array2array($data[1], $data[0]));
 
         return dr_return_data($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
     }
