@@ -438,20 +438,23 @@
                     $class = '\\Phpcmf\\Field\\'.$name; // 系统类别
                 } else {
                     // 加载插件的字段
-                    list($app, $fname) = explode('::', $name);
-                    if ($app && $fname) {
-                        if (!dr_is_app($app)) {
-                            log_message('error', '字段类别['.$name.']所属插件['.$app.']未安装');
-                            return;
-                        }
-                        $file = dr_get_app_dir($app).'Fields/'.ucfirst($fname).'.php';
-                        if (is_file($file)) {
-                            $class = '\\My\\Field\\'.$app.'\\'.ucfirst($fname);
-                            require $file;
-                        } else {
-                            log_message('error', '字段类别['.$name.']所属插件['.$app.']的字段文件不存在');
-                            return;
-                        }
+                    if (strpos($name, '::') !== false) {
+                        list($app, $fname) = explode('::', $name);
+                    } elseif ($this->app) {
+                        $app = $this->app;
+                        $fname = $name;
+                    }
+                    if (!$app || !dr_is_app($app)) {
+                        log_message('error', '字段类别['.$name.']所属插件['.$app.']未安装');
+                        return;
+                    }
+                    $file = dr_get_app_dir($app).'Fields/'.ucfirst($fname).'.php';
+                    if (is_file($file)) {
+                        $class = '\\My\\Field\\'.$app.'\\'.ucfirst($fname);
+                        require $file;
+                    } else {
+                        log_message('error', '字段类别['.$name.']所属插件['.$app.']的字段文件不存在');
+                        return;
                     }
                 }
 

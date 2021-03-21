@@ -8,6 +8,17 @@
 
 
 /**
+ * 返回包含数组中所有键名的一个新数组
+ */
+function dr_array_keys($array, $value = '', $strict = false) {
+
+    if (!$array || !is_array($array)) {
+        return 0;
+    }
+
+    return array_keys($array, $value, $strict);
+}
+/**
  * 判断存在于数组中
  */
 function dr_in_array($var, $array) {
