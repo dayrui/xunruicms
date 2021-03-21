@@ -164,7 +164,7 @@ function dr_show_info(msg, width) {
         shadeClose: true,
         title: lang['show'],
         area: [width+'%', height+'%'],
-        content: '<div style="padding:20px;overflow-y:scrol">'+(msg)+'</div>'
+        content: '<div style="padding:20px;overflow-y:scroll">'+(msg)+'</div>'
     });
 }
 function dr_tips(code, msg, time) {

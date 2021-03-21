@@ -32097,17 +32097,15 @@ code.form-control-static {
     width: 158px;
     height: 50px;
     overflow: hidden;
-    padding-left: 20px;
-    padding-right: 20px
+    text-align: center;
 }
 
 .page-header.navbar .page-logo>.logo-image,.page-header.navbar .page-logo>a {
     display: inline-block;
-    float: left
 }
 
 .page-header.navbar .page-logo .logo-default {
-    margin: 25px 0 0!important
+    margin: 25px 0 0;
 }
 
 .page-header.navbar .page-logo .logo-mini {
