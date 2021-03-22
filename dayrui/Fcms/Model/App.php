@@ -43,7 +43,6 @@ class App extends \Phpcmf\Model
             $config['share'] = $type ? 0 : 1;
             \Phpcmf\Service::M('module')->install($dir, $config, 1);
         } else {
-
             // 安装前的判断
             if (is_file($path.'Config/Before.php')) {
                 $rt = require $path.'Config/Before.php';
@@ -58,7 +57,6 @@ class App extends \Phpcmf\Model
                     return dr_return_data(0, $rt);
                 }
             }
-
             // 执行各个站点sql语句
             if (is_file($path.'Config/Install_site.sql')) {
                 $sql = file_get_contents($path.'Config/Install_site.sql');
@@ -69,7 +67,6 @@ class App extends \Phpcmf\Model
                     }
                 }
             }
-
             // 执行模块自己的安装程序
             if (is_file($path.'Config/Install.php')) {
                 require $path.'Config/Install.php';

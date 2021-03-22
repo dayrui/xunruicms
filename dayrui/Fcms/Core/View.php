@@ -207,6 +207,7 @@ class View {
 
         extract($this->_options, EXTR_OVERWRITE);
 
+        $ci = \Phpcmf\Service::C(); // 控制器对象简写
         $this->_filename = str_replace('..', '[removed]', $xunruicms_name);
 
         // 挂钩点 模板加载之后
@@ -230,19 +231,17 @@ class View {
         !defined('MOD_DIR') && define('MOD_DIR', '');
         !defined('MODULE_NAME') && define('MODULE_NAME', '');
         !defined('SITE_TITLE') && define('SITE_TITLE', SITE_NAME);
+
         !defined('IS_PC') && define('IS_PC', $this->_is_pc);
         !defined('IS_MOBILE') && define('IS_MOBILE', $this->_is_mobile);
-        !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
-        !defined('IS_PC_USER') && define('IS_PC_USER', \Phpcmf\Service::IS_PC_USER());
-
 
         include $this->load_view_file($_view_file);
 
         $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
 
         // 消毁变量
-        $this->_include_file = null;
         $this->loadjs = null;
+        $this->_include_file = null;
     }
 
     // 动态加载js
@@ -615,9 +614,6 @@ class View {
         $view_content = preg_replace_callback("/list_tag\(\"(.*)\"\)/Ui", function ($match) {
             return "list_tag(\"".preg_replace('#\[\'(\w+)\'\]#Ui', '[\\1]', $match[1])."\")";
         }, $view_content);
-
-        // 替换$ci
-        $view_content = str_replace('$ci->', '\Phpcmf\Service::C()->', $view_content);
 
         return $view_content;
     }
