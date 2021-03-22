@@ -80,12 +80,15 @@ class Service
     public static function IS_MOBILE_TPL() {
         return static::V()->is_mobile();
     }
-    public static function _is_mobile() {
-        return dr_is_mobile();
+    public static function IS_MOBILE() {
+        return static::V()->is_mobile();
     }
 
     // 当前客户端是否是移动端访问
     public static function IS_MOBILE_USER() {
+        return dr_is_mobile();
+    }
+    public static function _is_mobile() {
         return dr_is_mobile();
     }
 

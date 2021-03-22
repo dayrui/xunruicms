@@ -614,16 +614,16 @@ class View {
         // 替换$ci  IS_PC   IS_MOBILE  USER
         $view_content = str_replace([
             '$ci->',
-            'IS_PC_USER',
             'IS_PC',
-            'IS_MOBILE_USER',
             'IS_MOBILE',
+            'IS_MOBILE_USER',
+            'IS_PC_USER',
         ], [
             '\Phpcmf\Service::C()->',
-            '\Phpcmf\Service::IS_PC_USER()',
             '$this->_is_pc',
-            '\Phpcmf\Service::IS_MOBILE_USER()',
             '$this->_is_mobile',
+            '\Phpcmf\Service::IS_MOBILE_USER()',
+            '\Phpcmf\Service::IS_PC_USER()',
         ], $view_content);
 
         return $view_content;
