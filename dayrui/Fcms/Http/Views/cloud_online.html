@@ -5,7 +5,7 @@
     <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 </head>
 <body class="page-content-white">
-<div style="{if IS_MOBILE_USER} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+<div style="{if \Phpcmf\Service::IS_MOBILE_USER()} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
     <a href="{$url}" target="_blank" class="btn default btn-block ">{dr_lang('单击下发链接进行访问该页面')}</a>
 </div>
 </body>
@@ -17,7 +17,7 @@
     <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 </head>
 <body class="page-content-white">
-<div style="{if IS_MOBILE_USER} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+<div style="{if \Phpcmf\Service::IS_MOBILE_USER()} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
     <a href="{$url}" class="btn default btn-block">{dr_lang('单击下发链接进行访问该页面')}</a>
     <p>{$url}</p>
 </div>

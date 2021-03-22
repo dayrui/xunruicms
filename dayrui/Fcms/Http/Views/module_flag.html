@@ -68,7 +68,7 @@
             title: '{dr_lang('后台权限设置')}',
             shadeClose: true,
             shade: 0.3,
-            area: [{php echo !IS_MOBILE_USER ? '\'500px\', \'50%\'' : '"95%", "90%"'}],
+            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'500px\', \'50%\'' : '"95%", "90%"'}],
             btn: [lang['ok']],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);

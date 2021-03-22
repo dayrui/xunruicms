@@ -52,7 +52,7 @@
                     title: "{dr_lang('批量审核')}",
                     shadeClose: true,
                     shade: 0,
-                    area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+                    area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
                     btn: [lang['ok'], lang['esc']],
                     yes: function(index, layero){
                         layer.close(loading);
@@ -129,7 +129,7 @@
                     title: "{dr_lang('批量审核')}",
                     shadeClose: true,
                     shade: 0,
-                    area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+                    area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
                     btn: [lang['ok'], lang['esc']],
                     yes: function(index, layero){
                         layer.close(loading);

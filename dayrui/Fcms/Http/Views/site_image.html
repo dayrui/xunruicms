@@ -226,7 +226,7 @@ function dr_preview() {
         scrollbar: false,
         shadeClose: true,
         shade: 0,
-        area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+        area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
         success: function(layero, index){
             var body = layer.getChildFrame('body', index);
             $(body).attr("style", "text-align:center");

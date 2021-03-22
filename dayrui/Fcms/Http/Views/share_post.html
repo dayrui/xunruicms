@@ -16,7 +16,7 @@
             title: title,
             shadeClose: true,
             shade: 0,
-            area: [{php echo !IS_MOBILE_USER ? '"40%", "70%"' : '"95%", "90%"'}],
+            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '"40%", "70%"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);
@@ -59,7 +59,7 @@
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: [{php echo !IS_MOBILE_USER ? '"500px", "450px"' : '"95%", "90%"'}],
+            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '"500px", "450px"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             success: function (json) {
                 if (json.code == 0) {
@@ -118,7 +118,7 @@
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: [{php echo !IS_MOBILE_USER ? '"40%", "70%"' : '"95%", "90%"'}],
+            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '"40%", "70%"' : '"95%", "90%"'}],
             btn: [lang['ok']],
             success: function (json) {
                 if (json.code == 0) {

@@ -29,7 +29,7 @@
             title: '{dr_lang('删除确认')}',
             shadeClose: true,
             shade: 0,
-            area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
             btn: [lang['ok']],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);

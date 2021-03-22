@@ -7361,7 +7361,7 @@
                 scrollbar: false,
                 shadeClose: true,
                 shade: 0,
-                area: [{php echo !IS_MOBILE_USER ? '\'300px\', \'150px\'' : '"95%", "90%"'}],
+                area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'300px\', \'150px\'' : '"95%", "90%"'}],
                 content: '<div style="padding:30px 10px 20px 10px; text-align: center"><input type="text" class="form-control " value="'+icon+'"></div>'
             });
         });

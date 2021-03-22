@@ -259,7 +259,7 @@
                         fix:true,
                         shadeClose: true,
                         shade: 0,
-                        area: [{php echo !IS_MOBILE_USER ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+                        area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
                         content: "<div style=\"padding:30px 10px; color:red; text-align: center\">"+json.msg+"</div>"
                     });
                 }
