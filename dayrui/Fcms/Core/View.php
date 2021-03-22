@@ -38,7 +38,7 @@ class View {
 
     private $action; // 指定action
 
-    private $_is_mobile; // 是否是移动端模板
+    public $_is_mobile; // 是否是移动端模板
     private $_is_pc; // 是否是pc模板
 
     private $performanceData = []; // 用于调试栏数据
@@ -61,8 +61,8 @@ class View {
      */
     public function init($name = 'pc') {
 
-        $this->_is_pc = $name == 'pc';
-        $this->_is_mobile = $name == 'mobile';
+        $this->_is_pc = $name == 'pc'; // 标记为pc端模板
+        $this->_is_mobile = $name == 'mobile'; // 标记为移动端模板
 
         // 模板缓存目录
         $this->_cache = WRITEPATH.'template/';
@@ -2937,7 +2937,6 @@ class View {
         }
 
         dr_show_error($msg);
-
     }
 
 }
