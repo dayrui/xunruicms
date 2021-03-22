@@ -100,7 +100,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
 		// 区域大小
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "65%"]';
+        $area = \Phpcmf\Service::IS_MOBILE_USER() ? '["95%", "90%"]' : '["50%", "65%"]';
 
 		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
 

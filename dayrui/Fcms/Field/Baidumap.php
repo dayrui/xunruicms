@@ -134,7 +134,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         return $this->input_format($field['fieldname'], $field['name'], dr_baidu_map(
             $value,
             (int)$field['setting']['option']['level'],
-            \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 400),
+            \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 400),
             $field['setting']['option']['height'] ? $field['setting']['option']['height'] : 200,
             'form-control-static'
         ));
@@ -159,7 +159,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
         // 表单宽度设置
-        $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 400);
+        $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 400);
         $height = $field['setting']['option']['height'] ? $field['setting']['option']['height'] : 200;
 
         // 表单附加参数

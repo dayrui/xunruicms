@@ -83,7 +83,7 @@ class Color extends \Phpcmf\Library\A_Field {
 		$tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
 		// 表单宽度设置
-		$width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 200);
+		$width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 200);
 
 		// 风格
 		$style = 'style="width:'.$width.(is_numeric($width) ? 'px' : '').';"';

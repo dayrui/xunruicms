@@ -117,7 +117,7 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
         // 客户端识别
-        $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : $this->_is_mobile());
+        $this->is_mobile = defined('IS_MOBILE') ? 1 : (IS_ADMIN ? 0 : \Phpcmf\Service::IS_MOBILE_USER());
 
         // 后台域名
         !defined('ADMIN_URL') && define('ADMIN_URL', dr_http_prefix(DOMAIN_NAME.'/'));
@@ -143,7 +143,7 @@ abstract class Common extends \CodeIgniter\Controller
         } else {
             // 本地资源
             define('HOME_THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
-            if (!defined('IS_MOBILE') && ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
+            if (!defined('IS_MOBILE') && (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.SITE_MOBILE_DIR.'/static/'.SITE_THEME.'/'); // 移动端站点风格
             } else {
@@ -175,7 +175,7 @@ abstract class Common extends \CodeIgniter\Controller
             // 存在自定义终端
             define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
             \Phpcmf\Service::V()->init(defined('IS_CLIENT_TPL') && IS_CLIENT_TPL ? IS_CLIENT_TPL : IS_CLIENT);
-        } elseif (defined('IS_MOBILE') || ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
+        } elseif (defined('IS_MOBILE') || (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
             // 移动端模板 // 开启自动识别移动端
             \Phpcmf\Service::V()->init('mobile');
             $is_auto_mobile_page = 1;
@@ -252,7 +252,7 @@ abstract class Common extends \CodeIgniter\Controller
             //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
             && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
         ) {
-            if ($this->_is_mobile()) {
+            if (\Phpcmf\Service::IS_MOBILE_USER()) {
                 // 这是移动端
                 if (isset($client[DOMAIN_NAME])) {
                     // 表示这个域名属于电脑端,需要跳转到移动端
@@ -329,7 +329,7 @@ abstract class Common extends \CodeIgniter\Controller
             \Phpcmf\Service::V()->assign([
                 'admin' => $this->admin,
                 'is_ajax' => \Phpcmf\Service::L('input')->get('is_ajax'),
-                'is_mobile' => $this->_is_mobile() ? 1 : 0,
+                'is_mobile' => \Phpcmf\Service::IS_MOBILE_USER() ? 1 : 0,
             ]);
             // 权限判断
             $uri = \Phpcmf\Service::L('Router')->uri();

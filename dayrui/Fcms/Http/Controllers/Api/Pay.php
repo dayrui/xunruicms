@@ -56,7 +56,7 @@ class Pay extends \Phpcmf\Common
 		}
 		
 		$data['html'] = $rt['data'];
-		if (SITE_IS_MOBILE && $this->_is_mobile()) {
+		if (SITE_IS_MOBILE && \Phpcmf\Service::IS_MOBILE_TPL()) {
 		    // 开启了移动端时，支付判断模板是否是移动端的
             \Phpcmf\Service::V()->init('mobile');
         }
@@ -121,7 +121,7 @@ class Pay extends \Phpcmf\Common
             $this->_msg(1, dr_lang('支付成功'));
         }
 
-        if (SITE_IS_MOBILE && $this->_is_mobile()) {
+        if (SITE_IS_MOBILE && \Phpcmf\Service::IS_MOBILE_TPL()) {
             // 开启了移动端时，支付判断模板是否是移动端的
             \Phpcmf\Service::V()->init('mobile');
         }

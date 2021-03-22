@@ -199,7 +199,7 @@ class Module extends \Phpcmf\Common
             'parent' => $parent,
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->category_url($this->module, $category, '[page]'),
-            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(\Phpcmf\Service::L('Router')->category_url($this->module, $category, $page), $this->module['dirname'], SITE_ID, \Phpcmf\Service::V()->_is_mobile == 'mobile') : '', // 修复静态下的当前url变量
+            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(\Phpcmf\Service::L('Router')->category_url($this->module, $category, $page), $this->module['dirname'], SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL()) : '', // 修复静态下的当前url变量
         ));
 
         // 识别栏目单网页模板
@@ -436,7 +436,7 @@ class Module extends \Phpcmf\Common
             'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->show_url($this->module, $data, '[page]'),
-            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(\Phpcmf\Service::L('Router')->show_url($this->module, $data, $page), $this->module['dirname'], SITE_ID, \Phpcmf\Service::V()->_is_mobile == 'mobile') : '', // 修复静态下的当前url变量
+            'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(\Phpcmf\Service::L('Router')->show_url($this->module, $data, $page), $this->module['dirname'], SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL()) : '', // 修复静态下的当前url变量
         ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
         !$rt && (\Phpcmf\Service::V()->display(isset($data['template']) && strpos($data['template'], '.html') !== FALSE && is_file(\Phpcmf\Service::V()->get_dir().$data['template']) ? $data['template'] : ($this->module['category'][$data['catid']]['setting']['template']['show'] ? $this->module['category'][$data['catid']]['setting']['template']['show'] : 'show.html')));

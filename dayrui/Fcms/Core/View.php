@@ -38,7 +38,8 @@ class View {
 
     private $action; // 指定action
 
-    public $_is_mobile; // 是否是移动端模板
+    private $_is_mobile; // 是否是移动端模板
+    private $_is_pc; // 是否是pc模板
 
     private $performanceData = []; // 用于调试栏数据
     private $loadjs = []; // 加载的js
@@ -60,6 +61,7 @@ class View {
      */
     public function init($name = 'pc') {
 
+        $this->_is_pc = $name == 'pc';
         $this->_is_mobile = $name == 'mobile';
 
         // 模板缓存目录
@@ -98,6 +100,16 @@ class View {
             'cache', 'navigator'
             ,'modules'
         ];
+    }
+
+    // 判断是pc端模板
+    public function is_pc() {
+        return $this->_is_pc;
+    }
+
+    // 判断是移动端模板
+    public function is_mobile() {
+        return $this->_is_mobile;
     }
 
     // 终端路径
@@ -602,14 +614,16 @@ class View {
         // 替换$ci  IS_PC   IS_MOBILE  USER
         $view_content = str_replace([
             '$ci->',
+            'IS_PC_USER',
             'IS_PC',
             'IS_MOBILE_USER',
             'IS_MOBILE',
         ], [
             '\Phpcmf\Service::C()->',
-            '\Phpcmf\Service::IS_PC()',
-            '\Phpcmf\Service::C()->_is_mobile()',
-            '\Phpcmf\Service::IS_MOBILE()',
+            '\Phpcmf\Service::IS_PC_USER()',
+            '$this->_is_pc',
+            '\Phpcmf\Service::IS_MOBILE_USER()',
+            '$this->_is_mobile',
         ], $view_content);
 
         return $view_content;

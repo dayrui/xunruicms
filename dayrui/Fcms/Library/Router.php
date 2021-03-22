@@ -169,7 +169,7 @@ class Router
             if (defined('IS_CLIENT')) {
                 // 终端前缀
                 $self = CLIENT_URL.'index.php';
-            } elseif (\Phpcmf\Service::V()->_is_mobile){
+            } elseif (\Phpcmf\Service::IS_MOBILE_TPL()){
                 // 移动端模板 域名
                 $self = SITE_MURL.'index.php';
             } else {
@@ -196,9 +196,9 @@ class Router
                     $mod = \Phpcmf\Service::C()->get_cache('module-' . SITE_ID . '-' . $uri['s']);
                     if ($mod['domain']) {
                         unset($uri['s']);
-                        $self = (!\Phpcmf\Service::V()->_is_mobile ? $mod['url'] : dr_mobile_url($mod['url'])) . 'index.php';
+                        $self = (!\Phpcmf\Service::IS_MOBILE_TPL() ? $mod['url'] : dr_mobile_url($mod['url'])) . 'index.php';
                     } else {
-                        $self = (!\Phpcmf\Service::V()->_is_mobile ? SITE_URL : SITE_MURL) . 'index.php';
+                        $self = (!\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_URL : SITE_MURL) . 'index.php';
                     }
                 }
                 $uri['c'] = $url[1];
@@ -255,7 +255,7 @@ class Router
         $query && $uri = array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::V()->_is_mobile ? SITE_MURL : SITE_URL)) . 'index.php?' . http_build_query($uri);
+        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_MURL : SITE_URL)) . 'index.php?' . http_build_query($uri);
     }
 
     /**

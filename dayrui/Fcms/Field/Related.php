@@ -111,7 +111,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		// 字段提示信息
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 		// 区域大小
-        $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["50%", "65%"]';
+        $area = \Phpcmf\Service::IS_MOBILE_USER() ? '["95%", "90%"]' : '["50%", "65%"]';
         // 模块名称
 		$module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
 		// 添加模板

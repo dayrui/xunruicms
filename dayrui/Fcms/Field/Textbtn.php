@@ -130,7 +130,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 		$text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
 		// 表单宽度设置
-		$width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 200);
+		$width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : 200);
 
 		// 风格
 		$style = 'style="width:'.$width.(is_numeric($width) ? 'px' : '').';"';

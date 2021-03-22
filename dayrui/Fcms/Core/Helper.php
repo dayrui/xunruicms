@@ -165,40 +165,7 @@ if (!function_exists('dr_is_mobile')) {
             return true;
         } elseif (isset ($_SERVER['HTTP_USER_AGENT'])) {
             // 判断手机发送的客户端标志,兼容性有待提高
-            $clientkeywords = [
-                'nokia',
-                'sony',
-                'ericsson',
-                'mot',
-                'samsung',
-                'htc',
-                'sgh',
-                'lg',
-                'sharp',
-                'sie-',
-                'philips',
-                'panasonic',
-                'alcatel',
-                'lenovo',
-                'iphone',
-                'ipod',
-                'blackberry',
-                'meizu',
-                'android',
-                'netfront',
-                'symbian',
-                'ucweb',
-                'windowsce',
-                'palm',
-                'operamini',
-                'operamobi',
-                'openwave',
-                'nexusone',
-                'cldc',
-                'midp',
-                'wap',
-                'mobile'
-            ];
+            $clientkeywords=['nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','xiaomi','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile'];
             // 从HTTP_USER_AGENT中查找手机浏览器的关键字
             if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))){
                 return true;
@@ -257,7 +224,7 @@ function dr_get_ftable($id, $value, $class = '') {
     // 字段默认值
     $value = dr_string2array($value);
     // 表单宽度设置
-    $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+    $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
     $str = '<table id="dr_table_'.$field['fieldname'].'" class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
     $str.= ' <thead><tr>';
@@ -3498,7 +3465,7 @@ function dr_delete_html_file($url, $root = WEBPATH) {
 function dr_tpl_path($is_member = IS_MEMBER) {
 
     $tpl = dr_get_app_tpl(APP_DIR && APP_DIR != 'member' ? APP_DIR : '');
-    $path = $is_member ? $tpl.(\Phpcmf\Service::V()->_is_mobile && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/member/' : $tpl.(\Phpcmf\Service::V()->_is_mobile && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/home/';
+    $path = $is_member ? $tpl.(\Phpcmf\Service::IS_MOBILE_TPL() && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/member/' : $tpl.(\Phpcmf\Service::V()->_is_mobile && is_dir($tpl.'mobile/'.SITE_TEMPLATE.'/') ? 'mobile' : 'pc').'/'.SITE_TEMPLATE.'/home/';
 
     APP_DIR && APP_DIR != 'member' && $path.= APP_DIR.'/';
 

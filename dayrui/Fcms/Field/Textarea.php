@@ -6,7 +6,7 @@
  **/
 
 class Textarea extends \Phpcmf\Library\A_Field {
-	
+
 	/**
      * 构造函数
      */
@@ -15,7 +15,7 @@ class Textarea extends \Phpcmf\Library\A_Field {
 		$this->fieldtype = ['TEXT' => ''];
 		$this->defaulttype = 'TEXT';
     }
-	
+
 	/**
 	 * 字段相关属性参数
 	 *
@@ -63,14 +63,14 @@ class Textarea extends \Phpcmf\Library\A_Field {
         $html = '
         <div class="portlet  bordered light">
         <div class="portlet-body">
-        <div class="scroller" style="width:'.(\Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? ($field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '')) : '400px')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '100').'px" data-always-visible="1" data-rail-visible="1">
+        <div class="scroller" style="width:'.(\Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? ($field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '')) : '400px')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '100').'px" data-always-visible="1" data-rail-visible="1">
         '.nl2br(htmlentities($value)).'                
         </div>
         </div>
         </div>';
         return $this->input_format($field['fieldname'], $field['name'], $html);
     }
-	
+
 	/**
 	 * 字段表单输入
 	 */
@@ -88,7 +88,7 @@ class Textarea extends \Phpcmf\Library\A_Field {
 		$text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
 		// 表单宽度设置
-		$width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+		$width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
 		// 表单附加参数
 		$attr = $field['setting']['validate']['formattr'];
@@ -106,5 +106,5 @@ class Textarea extends \Phpcmf\Library\A_Field {
 
 		return $this->input_format($name, $text, $str.$tips);
 	}
-	
+
 }

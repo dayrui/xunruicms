@@ -484,7 +484,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $html = '
         <div class="portlet  bordered light">
         <div class="portlet-body">
-        <div class="scroller" style="width:'.(\Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '') : '100%')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '300').'px" data-always-visible="1" data-rail-visible="1">
+        <div class="scroller" style="width:'.(\Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '') : '100%')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '300').'px" data-always-visible="1" data-rail-visible="1">
         '.htmlspecialchars_decode($value).'                
         </div>
         </div>
@@ -516,8 +516,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         }
 
         // 表单宽度设置
-        $is_mobile = \Phpcmf\Service::C()->_is_mobile();
-        $width = $is_mobile ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+        $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
         // 表单高度设置
         $height = $field['setting']['option']['height'] ? $field['setting']['option']['height'] : '300';
@@ -546,7 +545,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
 
         // 编辑器模式
-        if ($is_mobile) {
+        if (\Phpcmf\Service::IS_MOBILE_USER()) {
             $mode = $field['setting']['option']['mode3'] ? $field['setting']['option']['mode3'] : $field['setting']['option']['mode'];
             $field['setting']['option']['tool'] = $field['setting']['option']['tool3'] ? $field['setting']['option']['tool3'] : $field['setting']['option']['tool'];
         } elseif (IS_ADMIN) {

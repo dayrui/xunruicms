@@ -68,19 +68,30 @@ class Service
         return static::$mwhere_apps;
     }
 
-    // 是否是电脑端
+    // 是否是电脑端模板
+    public static function IS_PC_TPL() {
+        return static::V()->is_pc();
+    }
     public static function IS_PC() {
-        return !static::C()->is_mobile;
+        return static::V()->is_pc();
     }
 
-    // 是否是移动端
-    public static function IS_MOBILE() {
-        return static::C()->is_mobile;
+    // 是否是移动端模板
+    public static function IS_MOBILE_TPL() {
+        return static::V()->is_mobile();
+    }
+    public static function _is_mobile() {
+        return dr_is_mobile();
     }
 
     // 当前客户端是否是移动端访问
-    public static function _is_mobile() {
-        return static::C()->_is_mobile();
+    public static function IS_MOBILE_USER() {
+        return dr_is_mobile();
+    }
+
+    // 当前客户端是否是PC端访问
+    public static function IS_PC_USER() {
+        return !dr_is_mobile();
     }
 
     // 错误日志记录

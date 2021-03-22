@@ -101,7 +101,7 @@ class Html
                     ];
                     if ($total) {
                         // 分页
-                        if (\Phpcmf\Service::V()->_is_mobile) {
+                        if (\Phpcmf\Service::IS_MOBILE_TPL()) {
                             $pagesize = (int)$t['setting']['template']['mpagesize']; // 每页数量
                         } else {
                             $pagesize = (int)$t['setting']['template']['pagesize']; // 每页数量

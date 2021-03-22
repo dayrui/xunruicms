@@ -103,7 +103,7 @@ class Catids extends \Phpcmf\Library\A_Field {
 		$str = '';
 
         // 表单宽度设置
-        $width = \Phpcmf\Service::_is_mobile() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+        $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 		$str.= '<div class="dropzone-file-area" style="text-align:left" id="catids-'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
 
         // 输出默认菜单

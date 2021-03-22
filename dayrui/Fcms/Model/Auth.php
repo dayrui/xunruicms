@@ -676,7 +676,7 @@ class Auth extends \Phpcmf\Model {
                 $_select = 1;
             }
             // 生成链接
-            $name = !\Phpcmf\Service::C()->_is_mobile() ? dr_lang($name) : dr_strcut(dr_lang($name), 4, '');
+            $name = \Phpcmf\Service::IS_PC_USER() ? dr_lang($name) : dr_strcut(dr_lang($name), 4, '');
             $_link .= '<li class="' . $_li_class . '"> <a ' . $_attr . ' href="' . $url . '" class="' . $class . '">' . ($t[1] ? '<i class="' . $t[1] . '"></i> ' : '') . $name . '</a> <i class="fa fa-circle"></i> </li>';
             $_i++;
         }
@@ -710,7 +710,7 @@ class Auth extends \Phpcmf\Model {
     public function _module_menu($module, $list_name, $list_url, $post_url) {
 
         // <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false">
-        $module_menu = '<a class="dropdown-toggle {ON}" '.(\Phpcmf\Service::C()->_is_mobile() ? ' data-toggle="dropdown"' : '').' data-hover="dropdown" data-close-others="true" aria-expanded="true"><i class="fa fa-angle-double-down"></i></a>';
+        $module_menu = '<a class="dropdown-toggle {ON}" '.(\Phpcmf\Service::IS_MOBILE_USER() ? ' data-toggle="dropdown"' : '').' data-hover="dropdown" data-close-others="true" aria-expanded="true"><i class="fa fa-angle-double-down"></i></a>';
         $module_menu.= '<ul class="dropdown-menu">';
         $this->_is_admin_auth($module['dirname'].'/home/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/home/index').'"> <i class="'.dr_icon($module['icon']).'"></i> '.dr_lang('%s管理', $module['cname']).' </a></li>';
 

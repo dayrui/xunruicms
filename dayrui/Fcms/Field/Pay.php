@@ -76,7 +76,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
             // 字段显示名称
             $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
             // 表单宽度设置
-            $width = \Phpcmf\Service::_is_mobile() ? '100%' : ((int)$field['setting']['option']['width'] ? $field['setting']['option']['width'] : 250);
+            $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ((int)$field['setting']['option']['width'] ? $field['setting']['option']['width'] : 250);
 
             // 表单附加参数
             $attr = 'style="width:'.$width.(is_numeric($width) ? 'px' : '').';" '.$field['setting']['validate']['formattr'];
