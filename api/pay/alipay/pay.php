@@ -4,7 +4,7 @@
  * 支付宝发起接口
  */
 
-if (\Phpcmf\Service::IS_PC() || !$config['wap']) {
+if (\Phpcmf\Service::IS_PC_TPL() || !$config['wap']) {
 	require 'pc_pay.php';
 } else {
 	
