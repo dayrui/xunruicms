@@ -230,6 +230,11 @@ class View {
         !defined('MOD_DIR') && define('MOD_DIR', '');
         !defined('MODULE_NAME') && define('MODULE_NAME', '');
         !defined('SITE_TITLE') && define('SITE_TITLE', SITE_NAME);
+        !defined('IS_PC') && define('IS_PC', $this->_is_pc);
+        !defined('IS_MOBILE') && define('IS_MOBILE', $this->_is_mobile);
+        !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
+        !defined('IS_PC_USER') && define('IS_PC_USER', \Phpcmf\Service::IS_PC_USER());
+
 
         include $this->load_view_file($_view_file);
 
@@ -611,20 +616,8 @@ class View {
             return "list_tag(\"".preg_replace('#\[\'(\w+)\'\]#Ui', '[\\1]', $match[1])."\")";
         }, $view_content);
 
-        // 替换$ci  IS_PC   IS_MOBILE  USER
-        $view_content = str_replace([
-            '$ci->',
-            'IS_PC',
-            'IS_MOBILE',
-            'IS_MOBILE_USER',
-            'IS_PC_USER',
-        ], [
-            '\Phpcmf\Service::C()->',
-            '$this->_is_pc',
-            '$this->_is_mobile',
-            '\Phpcmf\Service::IS_MOBILE_USER()',
-            '\Phpcmf\Service::IS_PC_USER()',
-        ], $view_content);
+        // 替换$ci
+        $view_content = str_replace('$ci->', '\Phpcmf\Service::C()->', $view_content);
 
         return $view_content;
     }
