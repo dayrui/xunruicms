@@ -28,6 +28,36 @@ class Service
         return class_exists('\Phpcmf\Common') ? \Phpcmf\Common::get_instance() : null;
     }
 
+
+    // 获取应用自动加载
+    public static function Auto($auto) {
+
+        $local = \Phpcmf\Service::Apps();
+        if ($local) {
+            foreach ($local as $dir => $path) {
+                if (!is_file($path.'install.lock')) {
+                    continue;
+                }
+                if (is_file($path.'Config/Auto.php')) {
+                    $app_auto = require $path.'Config/Auto.php';
+                    isset($app_auto['psr4']) && $app_auto['psr4'] && $auto->psr4 = array_merge($auto->psr4, $app_auto['psr4']);
+                    isset($app_auto['classmap']) && $app_auto['classmap'] && $auto->classmap = array_merge($auto->classmap, $app_auto['classmap']);
+                    unset($app_auto);
+                }
+                // 加载钩子
+                if (is_file($path.'Config/Hooks.php')) {
+                    require $path.'Config/Hooks.php';
+                }
+                // 判断是否存在自定义where
+                if (is_file($path.'Config/Mwhere.php')) {
+                    \Phpcmf\Service::Set_Mwhere_App($dir);
+                }
+            }
+        }
+
+        return $auto;
+    }
+
     // 获取应用目录
     public static function Apps() {
 
@@ -37,16 +67,16 @@ class Service
 
         static::$apps = [];
         $source_dir = dr_get_app_list();
-        if ($fp = @opendir($source_dir)) {
+        if ($fp = opendir($source_dir)) {
             $filedata = [];
             $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             while (FALSE !== ($file = readdir($fp))) {
                 if ($file === '.' OR $file === '..'
                     OR $file[0] === '.'
-                    OR !@is_dir($source_dir.$file)) {
+                    OR !is_dir($source_dir.$file)) {
                     continue;
                 }
-                if (@is_dir($source_dir.$file)) {
+                if (is_dir($source_dir.$file)) {
                     $filedata[$file] = dr_get_app_dir($file);
                 }
             }

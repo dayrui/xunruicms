@@ -27,22 +27,6 @@ class Hooks extends \CodeIgniter\Events\Events
         // 框架主钩子
         require ROOTPATH.'config/hooks.php';
 
-        // 加载全部插件的钩子
-        $local = \Phpcmf\Service::Apps();
-        foreach ($local as $dir => $path) {
-            if (!is_file($path.'install.lock')) {
-                continue;
-            }
-            // 加载钩子
-            if (is_file($path.'Config/Hooks.php')) {
-                require $path.'Config/Hooks.php';
-            }
-            // 判断是否存在自定义where
-            if (is_file($path.'Config/Mwhere.php')) {
-                \Phpcmf\Service::Set_Mwhere_App($dir);
-            }
-        }
-
         self::on('pre_system', function () {
             while (\ob_get_level() > 0)
             {

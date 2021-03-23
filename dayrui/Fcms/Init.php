@@ -368,6 +368,9 @@ require SYSTEMPATH . 'Config/BaseService.php';
 require SYSTEMPATH . 'Config/Services.php';
 require COREPATH . 'Config/Services.php';
 
+require SYSTEMPATH . 'Events/Events.php';
+require CMSPATH.'Core/Service.php';
+require CMSPATH.'Core/Hooks.php';
 
 class_alias('Config\Services', 'CodeIgniter\Services');
 
@@ -375,12 +378,7 @@ $loader = Services::autoloader();
 $auto = new Autoload();
 
 // 应用插件的自动识别
-if (APP_DIR && is_file(APPPATH.'Config/Auto.php')) {
-    $app_auto = require APPPATH.'Config/Auto.php';
-    isset($app_auto['psr4']) && $app_auto['psr4'] && $auto->psr4 = array_merge($auto->psr4, $app_auto['psr4']);
-    isset($app_auto['classmap']) && $app_auto['classmap'] && $auto->classmap = array_merge($auto->classmap, $app_auto['classmap']);
-    unset($app_auto);
-}
+$auto = \Phpcmf\Service::Auto($auto);
 
 $loader->initialize($auto, new Modules())->register();
 

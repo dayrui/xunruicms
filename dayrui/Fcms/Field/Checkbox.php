@@ -110,7 +110,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
 			$value = dr_string2array($value);
 		} elseif ($field['setting']['option']['value']) {
 			$value = $this->get_default_value($field['setting']['option']['value']);
-			$value = is_array($value) ? $value : @explode('|', $value);
+			$value = is_array($value) ? $value : explode('|', $value);
 		} else {
 			$value = null;
 		}
