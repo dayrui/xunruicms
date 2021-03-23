@@ -35,7 +35,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
 		}
 		$str.= '</select>';
 
-		return ['<div class="form-group">
+		return [$this->_search_field().'<div class="form-group">
                   	<label class="col-md-2 control-label">'.dr_lang('选择菜单').'</label>
                     <div class="col-md-9"><label>'.$str.'</label></div>
                 </div>

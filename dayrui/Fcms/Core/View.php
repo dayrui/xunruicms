@@ -2390,8 +2390,8 @@ class View {
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
-                            $stime = strtotime(($s).' 00:00:00');
-                            $etime = strtotime(($e).' 23:59:59');
+                            $stime = strtotime($s.' 00:00:00');
+                            $etime = strtotime($e.' 23:59:59');
                         } else {
                             $time = strtotime('-'.intval($t['value']).' day');
                             $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
@@ -2409,8 +2409,8 @@ class View {
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
-                            $stime = strtotime(($s).'-01 00:00:00');
-                            $etime = strtotime(($e).'-31 23:59:59');
+                            $stime = strtotime($s.'-01 00:00:00');
+                            $etime = strtotime($e.'-31 23:59:59');
                         } else {
                             $time = strtotime('-'.intval($t['value']).' month');
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;

@@ -30,7 +30,7 @@ class Members extends \Phpcmf\Library\A_Field {
         }
 	    $group.= '</div>';
 
-		return ['
+		return [$this->_search_field().'
 				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('最大选择数').'</label>
                     <div class="col-md-9">

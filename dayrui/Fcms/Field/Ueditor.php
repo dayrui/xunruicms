@@ -61,7 +61,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>';
 
-        return ['<div class="form-group">
+        return [$this->_search_field().'<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">

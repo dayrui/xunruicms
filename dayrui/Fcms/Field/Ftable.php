@@ -49,7 +49,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 			</div>';
         }
 
-        return ['
+        return [$this->_search_field().'
             <script>
             $(function() {
               dr_is_first_hang('.(int)$option['is_first_hang'].');

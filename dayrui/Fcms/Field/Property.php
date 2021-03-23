@@ -98,7 +98,7 @@ class Property extends \Phpcmf\Library\A_Field {
             </div>
         </div>
 		';
-		return [$str];
+		return [$this->_search_field().$str];
 	}
 	
 	/**

@@ -28,7 +28,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
 
 		$option['options'] = isset($option['options']) ? $option['options'] : 'name1|value1'.PHP_EOL.'name2|value2';
 		
-		return [
+		return [$this->_search_field().
 			'
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('选项列表').'</label>

@@ -34,7 +34,7 @@ class Related extends \Phpcmf\Library\A_Field {
 			}
 		}
 		
-		return ['<div class="form-group">
+		return [$this->_search_field().'<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('内容模块').'</label>
                     <div class="col-md-9">
                     <label><select class="form-control" name="data[setting][option][module]">

@@ -49,7 +49,7 @@ class Group extends \Phpcmf\Library\A_Field {
 			$_field = @implode('', @array_unique($_field));
 		}
 		
-		return ['
+		return [$this->_search_field().'
 				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('可用字段').'</label>
                     <div class="col-md-9">

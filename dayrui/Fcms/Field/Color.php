@@ -25,7 +25,7 @@ class Color extends \Phpcmf\Library\A_Field {
 	 */
 	public function option($option) {
 
-		return ['
+		return [$this->_search_field().'
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('附加到指定字段').'</label>
 				<div class="col-md-9">

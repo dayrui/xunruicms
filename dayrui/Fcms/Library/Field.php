@@ -912,6 +912,14 @@
             return $select;
         }
 
+        // 是否可以作为搜索字段
+        public function _search_field() {
+            return '<div class="form-group">
+			<label class="col-md-2 control-label">'.dr_lang('字段优化').' </label>
+			<div class="col-md-9"><label class="form-control-static" style="color: red">'.dr_lang('本类型字段不建议作为条件筛选字段').'</label></div>
+		</div>';
+        }
+
         /**
          * 获取会员默认值
          *
