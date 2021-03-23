@@ -77,7 +77,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
 		</div>
 		';
 
-        return [$opt, $style];
+        return [$this->_search_field().$opt, $style];
 	}
 
     /**

@@ -103,6 +103,12 @@ return [
         'namespace' => '',
     ],
     [
+        'id' => 'Linkages',
+        'name' => '联动菜单（多选）',
+        'used' => '',
+        'namespace' => '',
+    ],
+    [
         'id' => 'Touchspin',
         'name' => '增减量',
         'used' => [],
@@ -165,12 +171,6 @@ return [
         'id' => 'Catids',
         'name' => '副栏目',
         'used' => ['module'],
-        'namespace' => '',
-    ],
-    [
-        'id' => 'Linkages',
-        'name' => '联动菜单（多选）',
-        'used' => '',
         'namespace' => '',
     ],
 ];
