@@ -2385,6 +2385,7 @@ class View {
                         if (substr($t['value'], 0, 1) == 'E') {
                             // 当天
                             $stime = strtotime('-'.intval(substr($t['value'], 1)).' day');
+                            $stime = strtotime(date('Y-m-d', $stime).' 00:00:00');
                             $etime = strtotime(date('Y-m-d 23:59:59', $stime));
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
@@ -2392,7 +2393,8 @@ class View {
                             $stime = strtotime(($s).' 00:00:00');
                             $etime = strtotime(($e).' 23:59:59');
                         } else {
-                            $stime = strtotime('-'.intval($t['value']).' day');
+                            $time = strtotime('-'.intval($t['value']).' day');
+                            $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
                             $etime = SYS_TIME;
                         }
                         $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
@@ -2402,6 +2404,7 @@ class View {
                         if (substr($t['value'], 0, 1) == 'E') {
                             // 当月
                             $stime = strtotime('-'.intval(substr($t['value'], 1)).' month');
+                            $stime = strtotime(date('Y-m', $stime).'-01 00:00:00');;
                             $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day');
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
@@ -2409,7 +2412,8 @@ class View {
                             $stime = strtotime(($s).'-01 00:00:00');
                             $etime = strtotime(($e).'-31 23:59:59');
                         } else {
-                            $stime = strtotime('-'.intval($t['value']).' month');
+                            $time = strtotime('-'.intval($t['value']).' month');
+                            $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
                             $etime = SYS_TIME;
                         }
                         $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
@@ -2422,7 +2426,7 @@ class View {
                             $etime = strtotime($t['value'].'-12-31 23:59:59');
                         } elseif (substr($t['value'], 0, 1) == 'E') {
                             // 今年
-                            $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
+                            $stime = strtotime(date('Y', strtotime('-'.intval(substr($t['value'], 1)).' year')).'-01-01 00:00:00');
                             $etime = strtotime(date('Y', $stime).'-12-31 23:59:59');
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
@@ -2442,7 +2446,6 @@ class View {
                             // 缩略图筛选
                             $t['value'] == 1 ? $string.= $join." {$t['name']}<>''" : $string.= $join." {$t['name']}=''";
                         } elseif (!$t['name'] && $t['value']) {
-
                             $string.= $join.' '.$t['value'];
                         } else {
                             $string.= $join.(is_numeric($t['value']) ? " {$t['name']} = ".$t['value'] : " {$t['name']} = \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");

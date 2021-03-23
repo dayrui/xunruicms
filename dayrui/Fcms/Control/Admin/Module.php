@@ -1297,7 +1297,7 @@ class Module extends \Phpcmf\Table
                 $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmlfile' => $list]);
+            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmllist' => $list]);
         } else {
             if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
                 // 草稿

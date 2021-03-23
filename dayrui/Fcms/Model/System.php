@@ -47,6 +47,8 @@ class System extends \Phpcmf\Model
         'SYS_BDNLP_SK'	=> '百度自然语言处理',
         'SYS_BDNLP_AK'	=> '百度自然语言处理',
 
+        'SYS_NOT_UPDATE'	=> '禁止自动检测版本',
+
     ];
     
     

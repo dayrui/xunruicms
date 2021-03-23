@@ -986,6 +986,9 @@ class Api extends \Phpcmf\Common
 
     // 版本检查
     public function version_cmf() {
+        if (defined('SYS_NOT_UPDATE') && SYS_NOT_UPDATE) {
+            $this->_json(1, '');
+        }
         exit($this->_api_version_cmf());
     }
 
