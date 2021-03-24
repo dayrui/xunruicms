@@ -37,6 +37,7 @@ class Table extends \Phpcmf\Common
 
     protected $url_params; // url参数固定
     protected $admin_tpl_path; // 后台模板指定目录
+    protected $fix_admin_tpl_path; // 修正值的后台模板指定目录
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -685,6 +686,10 @@ class Table extends \Phpcmf\Common
             // 优先模板不存在的情况下
             if (!$my_file || !is_file($my_file)) {
                 $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+            }
+            // 修正后台模板
+            if ($this->fix_admin_tpl_path && !is_file($my_file)) {
+                $this->admin_tpl_path = $this->fix_admin_tpl_path;
             }
             \Phpcmf\Service::V()->admin($this->admin_tpl_path);
         } else {
