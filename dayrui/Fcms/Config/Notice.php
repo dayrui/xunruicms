@@ -25,14 +25,8 @@ return [
     'member_edit_level'         => '用户组等级变更',
 
     'module_content_delete'     => '模块内容删除通知作者',
-    'module_form_verify_1'      => '模块表单审核后通知表单作者',
-    'module_form_verify_0'      => '模块表单被拒绝后通知表单作者',
-
-    'module_comment_verify_1'   => '模块内容评论后通知评论作者',
-    'module_comment_verify_2'   => '模块内容评论后通知内容作者',
 
     'module_content_verify_1'   => '模块内容审核通过通知作者',
     'module_content_verify_0'   => '模块内容审核被拒通知作者',
-
 
 ];

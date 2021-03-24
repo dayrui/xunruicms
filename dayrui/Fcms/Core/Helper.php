@@ -3680,46 +3680,59 @@ function dr_http_prefix($url) {
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
     if ($url && strpos($url, 'http') === 0) {
-        return $url;
-    }
+        // 本身就是绝对域名
+    } else {
+        // 相对域名
+        strlen($is_mobile) == 0 && $is_mobile = \Phpcmf\Service::IS_MOBILE();
 
-    strlen($is_mobile) == 0 && $is_mobile = \Phpcmf\Service::IS_MOBILE();
-
-    if (is_array($domain) && isset($domain['setting']['html_domain']) && $domain['setting']['html_domain']) {
-        $domain = $is_mobile && $domain['setting']['html_domain'] ? $domain['setting']['html_domain'] : $domain['setting']['html_domain'];
-        $domain = dr_http_prefix($domain);
-    }
-
-    in_array($domain, ['MOD_DIR', 'share']) && $domain = '';
-
-    // 判断是否是模块，如果domain不是http开头
-    if ($domain && strpos($url, 'http') === false) {
-        if (is_dir(APPSPATH.ucfirst($domain))) {
-            $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
-            $domain = $mod && $mod['domain'] ? (\Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain']) : '';
-        }
-        // 域名是不是http开通
-        if (strpos($domain, 'http') === false) {
-            $domain = '';
-        }
-    }
-
-
-    // 指定域名判断
-    if (!$domain) {
-        if (IS_CLIENT) {
-            // 来自客户端
-            $domain = CLIENT_URL;
-        } elseif ($siteid > 1 && \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL']) {
-            // 存在多站点时
-            $domain = $is_mobile ? \Phpcmf\Service::C()->site_info[$siteid]['SITE_MURL'] : \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL'];
-        } else {
-            $domain = $is_mobile ? SITE_MURL : SITE_URL;
+        if (is_array($domain) && isset($domain['setting']['html_domain']) && $domain['setting']['html_domain']) {
+            $domain = $is_mobile && $domain['setting']['html_domain'] ? $domain['setting']['html_domain'] : $domain['setting']['html_domain'];
+            $domain = dr_http_prefix($domain);
         }
 
+        in_array($domain, ['MOD_DIR', 'share']) && $domain = '';
+
+        // 判断是否是模块，如果domain不是http开头
+        if ($domain && strpos($url, 'http') === false) {
+            if (is_dir(APPSPATH.ucfirst($domain))) {
+                $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
+                $domain = $mod && $mod['domain'] ? (\Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain']) : '';
+            }
+            // 域名是不是http开通
+            if (strpos($domain, 'http') === false) {
+                $domain = '';
+            }
+        }
+
+        // 指定域名判断
+        if (!$domain) {
+            if (IS_CLIENT) {
+                // 来自客户端
+                $domain = CLIENT_URL;
+            } elseif ($siteid > 1 && \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL']) {
+                // 存在多站点时
+                $domain = $is_mobile ? \Phpcmf\Service::C()->site_info[$siteid]['SITE_MURL'] : \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL'];
+            } else {
+                $domain = $is_mobile ? SITE_MURL : SITE_URL;
+            }
+        }
+        $url = strpos($url, 'http') === 0 ? $url : rtrim($domain, '/').'/'.ltrim($url, '/');
     }
 
-    return strpos($url, 'http') === 0 ? $url : rtrim($domain, '/').'/'.ltrim($url, '/');
+    // url地址替换动作
+    if (defined('SYS_URL_REPLACE') && SYS_URL_REPLACE) {
+        $arr = explode(',', SYS_URL_REPLACE);
+        if ($arr) {
+            foreach ($arr as $t) {
+                list($a, $b) = explode('|', $t);
+                if ($a) {
+                    $url = str_replace($a, $b, $url);
+                }
+            }
+        }
+    }
+
+    return $url;
 }
 
 // 计算用户组到期时间

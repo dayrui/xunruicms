@@ -469,7 +469,7 @@ class Check extends \Phpcmf\Common
                 if ($module) {
                     foreach ($module as $m) {
                         $site = dr_string2array($m['site']);
-                        $mform = \Phpcmf\Service::M()->table('module_form')->where('module', $m['dirname'])->getAll();
+                        $mform = \Phpcmf\Service::M()->is_table_exists('module_form') ? \Phpcmf\Service::M()->table('module_form')->where('module', $m['dirname'])->getAll() : [];
                         foreach ($this->site_info as $siteid => $s) {
                             if (isset($site[$siteid]) && $site[$siteid]) {
                                 $r = $this->_check_table_counts($siteid . '_' . $m['dirname'], $m['dirname'] . '模块主表');

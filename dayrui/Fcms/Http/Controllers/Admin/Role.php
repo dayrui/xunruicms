@@ -140,7 +140,7 @@ class Role extends \Phpcmf\Common
                 if (dr_is_app('comment')) {
                     $module_auth[$mdir]['auth'][$mdir.'/comment/'] = dr_lang('内容评论');
                 }
-                $mform = \Phpcmf\Service::M()->db->table('module_form')->where('module', $mdir)->get()->getResultArray();
+                $mform = \Phpcmf\Service::M()->is_table_exists('module_form') ? \Phpcmf\Service::M()->db->table('module_form')->where('module', $mdir)->get()->getResultArray() : [];
                 if ($mform) {
                     foreach ($mform as $c) {
                         $module_auth[$mdir]['auth'][$mdir.'/'.$c['table'].'/'] = dr_lang($c['name']);
