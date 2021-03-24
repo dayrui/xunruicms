@@ -232,8 +232,8 @@ class View {
         !defined('MODULE_NAME') && define('MODULE_NAME', '');
         !defined('SITE_TITLE') && define('SITE_TITLE', SITE_NAME);
 
-        !defined('IS_PC') && define('IS_PC', $this->_is_pc);
-        !defined('IS_MOBILE') && define('IS_MOBILE', $this->_is_mobile);
+        !defined('IS_PC') && define('IS_PC', \Phpcmf\Service::IS_PC_USER());
+        !defined('IS_MOBILE') && define('IS_MOBILE', \Phpcmf\Service::IS_MOBILE_USER());
 
         include $this->load_view_file($_view_file);
 

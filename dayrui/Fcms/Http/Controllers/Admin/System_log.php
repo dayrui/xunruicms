@@ -57,7 +57,7 @@ class System_log extends \Phpcmf\Common
         $time = strtotime($time);
         $file = WRITEPATH.'log/'.date('Ym', $time).'/'.date('d', $time).'.php';
         unlink($file);
-        
+
         $this->_json(1, dr_lang('操作成功'));
     }
 
