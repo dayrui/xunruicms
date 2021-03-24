@@ -303,7 +303,7 @@ class Auth extends \Phpcmf\Model {
     public function add_role($data) {
 
         return $this->table('admin_role')->insert([
-            'site' => '',
+            'site' => dr_array2string([1]),
             'name' => $data['name'],
             'system' => '',
             'module' => '',

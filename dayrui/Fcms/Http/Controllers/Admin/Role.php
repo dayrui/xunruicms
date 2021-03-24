@@ -39,8 +39,7 @@ class Role extends \Phpcmf\Common
 		]);
 		\Phpcmf\Service::V()->display('role_index.html');
 	}
-	
-	
+
 	public function add() {
 
 		if (IS_AJAX_POST) {
@@ -49,9 +48,9 @@ class Role extends \Phpcmf\Common
 			\Phpcmf\Service::L('input')->system_log('添加角色组('.$data['name'].')');
 			if (\Phpcmf\Service::M('auth')->add_role($data)) {
                 \Phpcmf\Service::M('cache')->sync_cache('auth');
-			    exit($this->_json(1, dr_lang('操作成功')));
+			    $this->_json(1, dr_lang('操作成功'));
             } else {
-			    exit($this->_json(0, dr_lang('操作失败')));
+			    $this->_json(0, dr_lang('操作失败'));
             }
 		}
 
@@ -79,7 +78,7 @@ class Role extends \Phpcmf\Common
 			\Phpcmf\Service::M('auth')->update_role($id, $post);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
 			\Phpcmf\Service::L('input')->system_log('修改角色组('.$post['name'].')');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -109,7 +108,7 @@ class Role extends \Phpcmf\Common
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
 			\Phpcmf\Service::L('input')->system_log('设置角色组('.$data['name'].')权限');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 		//print_r($data);
 		#print_r($this->_M('Menu')->gets('admin'));
@@ -166,7 +165,7 @@ class Role extends \Phpcmf\Common
 		if (!$data) {
 		    $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
         }
-		
+
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			\Phpcmf\Service::M('auth')->table('admin_role')->update($id, ['site' => dr_array2string($data)]);
