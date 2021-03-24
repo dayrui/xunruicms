@@ -679,19 +679,15 @@ class Table extends \Phpcmf\Common
 
         $my_file = '';
         if (IS_ADMIN) {
-            // 存在优先模板
-            if ($fname) {
-                $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
-            }
-            // 优先模板不存在的情况下
-            if (!$my_file || !is_file($my_file)) {
-                $my_file = is_file($this->admin_tpl_path.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
-            }
             // 修正后台模板
-            if ($this->fix_admin_tpl_path && !is_file($my_file)) {
-                $this->admin_tpl_path = $this->fix_admin_tpl_path;
+            if ($this->fix_admin_tpl_path) {
+				$my_file = $this->_admin_tpl_path($this->fix_admin_tpl_path, $name, $fname);
             }
-            \Phpcmf\Service::V()->admin($this->admin_tpl_path);
+			// 原样加载
+			if (!$my_file || !is_file($my_file)) {
+				$my_file = $this->_admin_tpl_path($this->admin_tpl_path, $name, $fname);
+			}
+			return $my_file;
         } else {
             // 存在优先模板
             if ($fname) {
@@ -705,5 +701,19 @@ class Table extends \Phpcmf\Common
 
         return $my_file;
     }
+	
+	// 加载后台模板
+	private function _admin_tpl_path($path, $name, $fname) {
+		// 存在优先模板
+		if ($fname) {
+			$my_file = is_file($path.$this->tpl_name.'_'.$fname.'.html') ? $this->tpl_name.'_'.$fname.'.html' : $this->tpl_prefix.$fname.'.html';
+		}
+		// 优先模板不存在的情况下
+		if (!$my_file || !is_file($my_file)) {
+			$my_file = is_file($path.$this->tpl_name.'_'.$name.'.html') ? $this->tpl_name.'_'.$name.'.html' : $this->tpl_prefix.$name.'.html';
+		}
+		\Phpcmf\Service::V()->admin($path);
+		return $my_file;
+	}
 
 }
