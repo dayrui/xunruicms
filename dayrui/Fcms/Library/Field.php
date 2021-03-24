@@ -286,8 +286,8 @@
                     'fieldname' => 'author',
                     'setting' => array(
                         'option' => array(
-                            'width' => 200,
-                            'name' => '资料',
+                            'width' => '100%',
+                            'name' => dr_lang('资料'),
                             'icon' => 'fa fa-user',
                             'func' => 'dr_show_member',
                             'extend_field' => 'uid',
@@ -309,7 +309,7 @@
                     'fieldname' => 'inputtime',
                     'setting' => array(
                         'option' => array(
-                            'width' => 170,
+                            'width' => '100%',
                             'value' => 'SYS_TIME',
                             'is_left' => 1,
                         ),
@@ -326,7 +326,7 @@
                     'fieldname' => 'updatetime',
                     'setting' => array(
                         'option' => array(
-                            'width' => 170,
+                            'width' => '100%',
                             'value' => 'SYS_TIME',
                             'is_left' => 1,
                         ),
@@ -343,7 +343,7 @@
                     'fieldname' => 'inputip',
                     'setting' => array(
                         'option' => array(
-                            'width' => 200,
+                            'width' => '100%',
                             'name' => '查看',
                             'icon' => 'fa fa-arrow-right',
                             'func' => 'dr_show_ip',
@@ -359,7 +359,7 @@
                     'fieldname' => 'displayorder',
                     'setting' => array(
                         'option' => array(
-                            'width' => 200,
+                            'width' => '100%',
                             'max' => '',
                             'min' => '0',
                             'step' => '1',
@@ -376,7 +376,7 @@
                     'fieldname' => 'hits',
                     'setting' => array(
                         'option' => array(
-                            'width' => 200,
+                            'width' => '100%',
                             'max' => '9999999',
                             'min' => '1',
                             'step' => '1',

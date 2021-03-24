@@ -242,6 +242,10 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
+        if (\Phpcmf\Service::IS_MOBILE_USER() && strpos($str, 'multiple') !== false) {
+            $str = str_replace('style', '_style', $str);
+        }
+
         $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
