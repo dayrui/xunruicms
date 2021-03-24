@@ -90,7 +90,6 @@ class Cache extends \Phpcmf\Model
         $this->update_data_cache();
     }
 
-
     // 更新缓存
     public function update_cache() {
 
@@ -106,7 +105,6 @@ class Cache extends \Phpcmf\Model
 
         // 按站点更新的缓存
         $cache = [
-            'form' => '',
             'linkage' => '',
         ];
 

@@ -182,11 +182,6 @@ return [
                             'icon' => 'fa fa-search',
                             'uri' => 'module_search/index',
                         ],
-                        [
-                            'name' => '网站表单',
-                            'icon' => 'fa fa-table',
-                            'uri' => 'form/index',
-                        ],
                     ]
                 ],
 
@@ -344,11 +339,6 @@ return [
                             'uri' => 'module_content/index',
                         ],
                     ]
-                ],
-                'content-form' => [
-                    'name' => '网站表单',
-                    'icon' => 'fa fa-table',
-                    'link' => []
                 ],
                 'content-verify' => [
                     'name' => '内容审核',
@@ -653,11 +643,6 @@ return [
                     'uri' => 'member_group/index',
                 ],
             ]
-        ],
-        'content-form' => [
-            'name' => '网站表单',
-            'icon' => 'fa fa-table',
-            'link' => []
         ],
         'content-verify' => [
             'name' => '内容审核',

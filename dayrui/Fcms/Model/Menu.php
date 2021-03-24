@@ -34,7 +34,7 @@ class Menu extends \Phpcmf\Model {
                 'name' => $data['name'],
                 'uri' => $data['uri'] ? $data['uri'] : '',
                 'url' => $data['url'] ? $data['url'] : '',
-                'mark' => $mark,
+                'mark' => $mark ? $mark : (string)$data['mark'],
                 'site' => '',
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'hidden' => (int)$data['hidden'],
@@ -56,7 +56,7 @@ class Menu extends \Phpcmf\Model {
                 'name' => $data['name'],
                 'uri' => $data['uri'] ? $data['uri'] : '',
                 'url' => $data['url'] ? $data['url'] : '',
-                'mark' => $mark,
+                'mark' => $mark ? $mark : (string)$data['mark'],
                 'site' => '',
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'hidden' => (int)$data['hidden'],
@@ -170,19 +170,8 @@ class Menu extends \Phpcmf\Model {
                         $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
                     }
                     // 表单入库
-                    if ($form) {
-                        foreach ($form as $t) {
-                            $mark = 'verify-mform-'.$mdir.'-'.$t['table'];
-                            $menu = $this->db->table($table.'_menu')->where('mark', $mark)->get()->getRowArray();
-                            $save = [
-                                'uri' => $mdir.'/'.$t['table'].'_verify/index',
-                                'mark' => $mark,
-                                'name' => $menu && $menu['name'] ? $menu['name'] : dr_lang('%s%s', $config['name'], $t['name']),
-                                'icon' => $menu && $menu['icon'] ? $menu['icon'] : dr_icon($t['setting']['icon']),
-                                'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
-                            ];
-                            $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
-                        }
+                    if ($form && dr_is_app('mform')) {
+                        \Phpcmf\Service::M('mform', 'mform')->link_menu($form, $table, $mdir, $config, $left);
                     }
                 }
             }
@@ -204,72 +193,6 @@ class Menu extends \Phpcmf\Model {
                 $menu ? $this->_edit('member', $menu['id'], $save) : $this->_add('member', $left['id'], $save);
             }
         }
-    }
-
-    // 从网站表单中更新菜单
-    public function form($data) {
-
-        foreach (['admin', 'admin_min'] as $table) {
-            // 后台管理菜单
-            $menu = $this->db->table($table.'_menu')->where('mark', 'form-' . $data['table'])->get()->getRowArray();
-            if ($menu) {
-                // 更新
-                /*
-                $this->db->table('admin_menu')->where('id', intval($menu['id']))->update([
-                    'name' => dr_lang('%s管理', $data['name']),
-                    'icon' => (string)$data['setting']['icon'],
-                ]);*/
-            } else {
-                // 新增菜单
-                $menu = $this->db->table($table.'_menu')->where('mark', 'content-form')->get()->getRowArray();
-                if ($menu) {
-                    $this->_add($table, $menu['id'], [
-                        'name' => dr_lang('%s管理', $data['name']),
-                        'icon' => (string)$data['setting']['icon'],
-                        'uri' => 'form/' . $data['table'] . '/index',
-                    ], 'form-' . $data['table']);
-                }
-            }
-            // 后台审核菜单
-            $menu = $this->db->table($table.'_menu')->where('mark', 'verify-form-' . $data['table'])->get()->getRowArray();
-            if ($menu) {
-                // 更新
-                /*
-                $this->db->table('admin_menu')->where('id', intval($menu['id']))->update([
-                    'name' => dr_lang('%s审核', $data['name']),
-                    'icon' => $data['setting']['icon'],
-                ]);*/
-            } else {
-                // 新增菜单
-                $menu = $this->db->table($table.'_menu')->where('mark', 'content-verify')->get()->getRowArray();
-                if ($menu) {
-                    $this->_add($table, $menu['id'], [
-                        'name' => dr_lang('%s审核', $data['name']),
-                        'icon' => (string)$data['setting']['icon'],
-                        'uri' => 'form/' . $data['table'] . '_verify/index',
-                    ], 'verify-form-' . $data['table']);
-                }
-            }
-        }
-        // 用户菜单
-        $menu = $this->db->table('member_menu')->where('mark', 'form-'.$data['table'])->get()->getRowArray();
-        if ($menu) {
-            // 更新
-            $this->db->table('member_menu')->where('id', intval($menu['id']))->update([
-                'hidden' => $data['setting']['is_member'] ? 0 : 1,
-            ]);
-        } else {
-            // 新增菜单
-            $menu = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();
-            if ($menu) {
-                $this->_add('member', $menu['id'], [
-                    'name' => dr_lang('%s管理', $data['name']),
-                    'icon' => (string)$data['setting']['icon'],
-                    'uri' => 'form/'.$data['table'].'/index',
-                ], 'form-'.$data['table']);
-            }
-        }
-
     }
 
     // 后台菜单合并
@@ -739,7 +662,6 @@ class Menu extends \Phpcmf\Model {
 
     // 缓存
     public function cache($site = SITE_ID) {
-
 
         $menu = [
             'admin' => [],

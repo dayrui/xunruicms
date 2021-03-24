@@ -174,6 +174,7 @@ class Home extends \Phpcmf\Common
                     }
                 }
             }
+
 		    // 权限判断并筛选
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
@@ -220,8 +221,13 @@ class Home extends \Phpcmf\Common
                             continue;
                         } elseif ($link['mark'] && $left['mark'] == 'content-module') {
                             // 内容模块权限判断
-                            list($ac, $name) = explode('-', $link['mark']);
+                            list($ac, $name, $cname) = explode('-', $link['mark']);
                             if ($ac == 'module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
+                                unset($left['link'][$i]);
+                                continue;
+                            }
+                            // 网站表单权限判断
+                            if ($ac == 'app' && $name == 'form' && !$this->get_cache('form-'.SITE_ID, $cname)) {
                                 unset($left['link'][$i]);
                                 continue;
                             }
@@ -233,13 +239,6 @@ class Home extends \Phpcmf\Common
                             // 多站点不显示应用
                             unset($left['link'][$i]);
                             continue;
-                        } elseif ($link['mark'] && $left['mark'] == 'content-form') {
-                            // 网站表单权限判断
-                            list($ac, $name) = explode('-', $link['mark']);
-                            if ($ac == 'form' && !$this->get_cache('form-'.SITE_ID, $name)) {
-                                unset($left['link'][$i]);
-                                continue;
-                            }
                         } elseif ($link['mark'] && $left['mark'] == 'content-verify') {
                             // 内容模块审核部分权限判断
                             list($ac, $ab, $name, $cc, $dd) = explode('-', $link['mark']);
@@ -397,6 +396,12 @@ class Home extends \Phpcmf\Common
                             unset($left['link'][$i]);
                             continue;
                         }
+                        // 网站表单权限判断
+                        list($ac, $name, $cname) = explode('-', $link['mark']);
+                        if ($ac == 'app' && $name == 'form' && !$this->get_cache('form-'.SITE_ID, $cname)) {
+                            unset($left['link'][$i]);
+                            continue;
+                        }
                     } elseif (SITE_ID > 1 && $link['uri'] && $admin_menu[$link['uri']] && !dr_in_array(SITE_ID, $admin_menu[$link['uri']]['site'])) {
                         // 没有划分本站点就不显示
                         unset($left['link'][$i]);
@@ -407,11 +412,6 @@ class Home extends \Phpcmf\Common
                         continue;
                     } elseif ($link['mark'] && $left['mark'] == 'content-form') {
                         // 网站表单权限判断
-                        list($ac, $name) = explode('-', $link['mark']);
-                        if ($ac == 'form' && !$this->get_cache('form-'.SITE_ID, $name)) {
-                            unset($left['link'][$i]);
-                            continue;
-                        }
                     } elseif ($link['mark'] && $left['mark'] == 'content-verify') {
                         // 内容模块审核部分权限判断
                         list($ac, $ab, $name, $cc) = explode('-', $link['mark']);

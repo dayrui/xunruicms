@@ -267,7 +267,7 @@ abstract class Common extends \CodeIgniter\Controller
                 }
             }
         }
-        
+
         // 判断网站是否关闭
         if (!IS_DEV && !IS_ADMIN && !IS_API
             && $this->site_info[SITE_ID]['SITE_CLOSE']

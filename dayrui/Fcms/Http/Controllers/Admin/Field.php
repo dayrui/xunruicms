@@ -526,7 +526,7 @@ class Field extends \Phpcmf\Common
 					$this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
 				} 
                 $this->name = '网站表单【'.$this->data['name'].'】字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('form/index'); // 返回uri地址
+                $this->backurl = dr_url('form/form/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
                 break;
@@ -606,7 +606,7 @@ class Field extends \Phpcmf\Common
                 if (!$this->data) {
 					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
 				} 
-                $this->backurl =\Phpcmf\Service::L('Router')->url('module/form_index', ['dir' => $a]); // 返回uri地址
+                $this->backurl =\Phpcmf\Service::L('Router')->url('mform/module/index', ['dir' => $a]); // 返回uri地址
                 $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
                 \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;

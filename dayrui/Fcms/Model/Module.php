@@ -64,96 +64,6 @@ class Module extends \Phpcmf\Model
         return $this->table('module')->update(intval($data['id']), $update);
     }
 
-    // 创建表单文件
-    public function create_form_file($dir, $table, $call = 0) {
-
-        $dir = ucfirst($dir);
-        $path = dr_get_app_dir($dir);
-        if (!is_dir($path)) {
-            return dr_return_data(1, 'ok');
-        }
-
-        $name = ucfirst($table);
-        $files = [
-            $path.'Controllers/'.$name.'.php' => TEMPPATH.'Mform/$NAME$.php',
-            $path.'Controllers/Member/'.$name.'.php' => TEMPPATH.'Mform/Member$NAME$.php',
-            $path.'Controllers/Admin/'.$name.'.php' => TEMPPATH.'Mform/Admin$NAME$.php',
-            $path.'Controllers/Admin/'.$name.'_verify.php' => TEMPPATH.'Mform/Admin$NAME$_verify.php',
-        ];
-
-        $ok = 0;
-        foreach ($files as $file => $form) {
-            if (!is_file($file)) {
-                $c = @file_get_contents($form);
-                $size = @file_put_contents($file, str_replace('$NAME$', $name, $c));
-                if (!$size && $call) {
-                    @unlink($file);
-                    return dr_return_data(0, dr_lang('文件%s创建失败，无可写权限', str_replace(FCPATH, '', $file)));
-                }
-                $ok ++;
-            }
-        }
-
-        return dr_return_data(1, $ok);
-    }
-
-
-    // 创建模块表单
-    public function create_form($dir, $data) {
-
-        // 插入表单数据
-        $data['table'] = strtolower($data['table']);
-        $rt = $this->table('module_form')->insert(array(
-            'name' => $data['name'],
-            'table' => $data['table'],
-            'module' => $dir,
-            'setting' => '',
-            'disabled' => 0,
-        ));
-
-        if (!$rt['code']) {
-            return $rt;
-        }
-
-        $id = $data['id'] = $rt['code'];
-        $data['module'] = $dir;
-
-        // 创建文件
-        $rt = $this->create_form_file($dir, $data['table']);
-        if (!$rt['code']) {
-            $this->table('module_form')->delete($id);
-            return $rt;
-        }
-
-        // 创建表
-        \Phpcmf\Service::M('Table')->create_module_form($data);
-
-        return dr_return_data(1, 'ok');
-    }
-
-    // 删除模块表单
-    public function delete_form($ids) {
-
-        foreach ($ids as $id) {
-            $row = $this->table('module_form')->get(intval($id));
-            if (!$row) {
-                return dr_return_data(0, dr_lang('模块表单不存在(id:%s)', $id));
-            }
-            $rt = $this->table('module_form')->delete($id);
-            if (!$rt['code']) {
-                return dr_return_data(0, $rt['msg']);
-            }
-            $name = ucfirst($row['table']);
-            @unlink(APPPATH.'Controllers/'.$name.'.php');
-            @unlink(APPPATH.'Controllers/Admin/'.$name.'.php');
-            @unlink(APPPATH.'Controllers/Member/'.$name.'.php');
-            @unlink(APPPATH.'Controllers/Admin/'.$name.'_verify.php');
-            // 删除表数据
-            \Phpcmf\Service::M('Table')->delete_module_form($row);
-        }
-
-        return dr_return_data(1, '');
-    }
 
     // 获取归属于本模块的栏目关系
     protected function _get_my_category($mdir, $CAT) {
@@ -323,72 +233,8 @@ class Module extends \Phpcmf\Model
 
         // =========== 这里是公共部分 ===========
 
-        // 创建表单
-        if (dr_count($module['site']) == 1) {
-            // 表示第一个站就创建表单
-            if (is_file($mpath.'Config/Form.php')) {
-                $form = require $mpath.'Config/Form.php';
-                if ($form) {
-                    foreach ($form as $ftable => $t) {
-                        // 插入表单数据
-                        $rt = $this->table('module_form')->insert(array(
-                            'name' => $t['form']['name'],
-                            'table' => $ftable,
-                            'module' => $dir,
-                            'setting' => $t['form']['setting'],
-                            'disabled' => 0,
-                        ));
-                        if ($rt['code']) {
-                            // 插入sql
-                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable, dr_format_create_sql($t['table'][1])));
-                            $this->db->simpleQuery(str_replace('{tablename}', $table.'_form_'.$ftable.'_data_0', dr_format_create_sql($t['table'][0])));
-                            // 插入自定义字段
-                            foreach ([1, 0] as $is_main) {
-                                $f = $t['field'][$is_main];
-                                if ($f) {
-                                    foreach ($f as $field) {
-                                        $this->_add_field($field, $is_main, $rt['code'], 'mform-'.$dir);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            // 创建模块已经存在的表单
-            $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
-            if ($form) {
-                foreach ($form as $t) {
-                    // 表示存在多个站
-                    foreach ($module['site'] as $sid => $t) {
-                        if ($this->is_table_exists($this->dbprefix($sid.'_'.$dir).'_form_'.$t['table'])) {
-                            // 表示已经在其他站创建过了,我们就复制它以前创建的表结构
-                            break;
-                        }
-                    }
-                    // 开始创建表单
-                    $mytable = $table.'_form_'.$t['table'];
-                    // 主表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($sid.'_'.$dir).'_form_'.$t['table']."`")->getRowArray();
-                    $sql = str_replace(
-                        array($sql['Table'], 'CREATE TABLE'),
-                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                        $sql['Create Table']
-                    );
-                    $sql = dr_format_create_sql(str_replace('{tablename}', $mytable, $sql));
-                    $this->db->query($sql);
-                    // 附表
-                    $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix($sid.'_'.$dir).'_form_'.$t['table']."_data_0`")->getRowArray();
-                    $sql = str_replace(
-                        array($sql['Table'], 'CREATE TABLE'),
-                        array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                        $sql['Create Table']
-                    );
-                    $sql = dr_format_create_sql(str_replace('{tablename}', $mytable.'_data_0', $sql));
-                    $this->db->query($sql);
-                }
-            }
+        if (dr_is_app('mform')) {
+            \Phpcmf\Service::M('mform', 'mform')->link_install($module, $mpath, $dir, $table);
         }
 
         if (is_file($mpath.'Config/Install.php')) {
@@ -485,21 +331,8 @@ class Module extends \Phpcmf\Model
                 $this->db->query('DROP TABLE IF EXISTS '.$table.'_category_data_'.$i);
             }
 
-            // 删除表单
-            $form = $this->db->table('module_form')->where('module', $dir)->get()->getResultArray();
-            if ($form) {
-                foreach ($form as $t) {
-                    $mytable = $table.'_form_'.$t['table'];
-                    // 主表
-                    $this->db->simpleQuery('DROP TABLE IF EXISTS `'.$mytable.'`');
-                    // 附表
-                    for ($i = 0; $i < 200; $i ++) {
-                        if (!$this->db->query("SHOW TABLES LIKE '".$mytable.'_data_'.$i."'")->getRowArray()) {
-                            break;
-                        }
-                        $this->db->simpleQuery('DROP TABLE IF EXISTS `'.$mytable.'_data_'.$i.'`');
-                    }
-                }
+            if (dr_is_app('mform')) {
+                \Phpcmf\Service::M('mform', 'mform')->link_uninstall($table, $dir);
             }
 
             // 执行模块自己的卸载程序
@@ -559,7 +392,7 @@ class Module extends \Phpcmf\Model
             $this->db->table('field')->where('relatedid', $module['id'])->where('relatedname', 'mform-'.$dir)->delete();
             // 删除菜单
             $this->db->table('admin_menu')->like('mark', 'module-'.$dir)->delete();
-            $this->db->table('admin_menu')->like('mark', 'verify-mform-'.$dir)->delete();
+            $this->db->table('admin_menu')->like('mark', 'app-mform-verify-'.$dir)->delete();
             $this->db->table('member_menu')->like('mark', 'module-'.$dir)->delete();
             // 删除自定义菜单
             \Phpcmf\Service::M('Menu')->delete_app($dir);
@@ -577,7 +410,7 @@ class Module extends \Phpcmf\Model
      * 字段入库
      * @return	bool
      */
-    protected function _add_field($field, $ismain, $rid, $rname) {
+    public function _add_field($field, $ismain, $rid, $rname) {
 
         if ($this->db->table('field')->where('fieldname', $field['fieldname'])->where('relatedid', $rid)->where('relatedname', $rname)->countAllResults()) {
             return;
@@ -636,14 +469,14 @@ class Module extends \Phpcmf\Model
         !$this->cat_share[$siteid] && $this->cat_share[$siteid] = $this->db->table($siteid.'_share_category')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
 
         if (!$this->cat_share[$siteid]) {
-            return array();
+            return [];
         }
 
         if (!$dir) {
             return $this->cat_share[$siteid];
         }
 
-        $category = array();
+        $category = [];
         foreach ($this->cat_share[$siteid] as $i => $t) {
             if (!$t['child'] && $t['tid'] == 1 && $t['mid'] != $dir) {
                 continue;
@@ -897,23 +730,8 @@ class Module extends \Phpcmf\Model
 
                     // 模块表单
                     $cache['form'] = [];
-                    $form = $this->table('module_form')->where('module', $mdir)->where('disabled', 0)->order_by('id ASC')->getAll();
-                    if ($form) {
-                        foreach ($form as $t) {
-                            $t['field'] = [];
-                            // 模块表单的自定义字段
-                            $field = $this->db->table('field')->where('disabled', 0)->where('relatedid', intval($t['id']))->where('relatedname', 'mform-'.$mdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
-                            if ($field) {
-                                foreach ($field as $f) {
-                                    $f['setting'] = dr_string2array($f['setting']);
-                                    $t['field'][$f['fieldname']] = $f;
-                                }
-                            }
-                            $t['setting'] = dr_string2array($t['setting']);
-                            // 排列table字段顺序
-                            $t['setting']['list_field'] = dr_list_field_order($t['setting']['list_field']);
-                            $cache['form'][$t['table']] = $t;
-                        }
+                    if (dr_is_app('mform')) {
+                        $cache = \Phpcmf\Service::M('mform', 'mform')->link_cache($mdir, $cache);
                     }
 
                     // 搜索验证

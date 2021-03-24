@@ -139,7 +139,7 @@ class Member_auth extends \Phpcmf\Common
         }
 
         // 网站表单
-        $form = \Phpcmf\Service::M()->table(SITE_ID.'_form')->getAll();
+        $form = dr_is_app('form') ? \Phpcmf\Service::M()->table(SITE_ID.'_form')->getAll() : [];
 
         // 模块部分
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
@@ -413,6 +413,9 @@ class Member_auth extends \Phpcmf\Common
                 ]);
                 \Phpcmf\Service::V()->display('member_auth_copy_group.html');exit;
             case 'form':
+                if (!dr_is_app('form')) {
+                    $this->_json(0, dr_lang('无权限操作'));
+                }
                 // 网站表单
                 $form = \Phpcmf\Service::M()->table(SITE_ID.'_form')->get_all();
                 if (IS_AJAX_POST) {
@@ -461,7 +464,6 @@ class Member_auth extends \Phpcmf\Common
                     ),
                 ]);
                 \Phpcmf\Service::V()->display('member_auth_copy_form.html');exit;
-
                 break;
             case 'share_category':
                 // 共享栏目
@@ -568,6 +570,9 @@ class Member_auth extends \Phpcmf\Common
 
             case 'mform':
                 // 模块表单
+                if (!dr_is_app('mform')) {
+                    $this->_json(0, dr_lang('无权限操作'));
+                }
                 $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
                 $form = \Phpcmf\Service::M()->table('module_form')->where('module', $mid)->where('disabled', 0)->order_by('id ASC')->getAll();
                 if (IS_AJAX_POST) {
