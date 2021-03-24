@@ -425,6 +425,35 @@ class Check extends \Phpcmf\Common
                         }
                     }
                 }
+
+                // 升级插件兼容测试
+                $error = [];
+                $table_app = [
+                    SITE_ID.'_form' => 'form',
+                    'module_form' => 'mform',
+                    'member_notice' => 'notice',
+                    'member_scorelog' => 'scorelog',
+                    'member_explog' => 'explog',
+                ];
+                $app_name = [
+                    'form' => '全局网站表单',
+                    'mform' => '模块内容表单',
+                    'notice' => '站内消息',
+                    'scorelog' => '虚拟币系统',
+                    'explog' => '经验值系统',
+                ];
+                foreach ($table_app as $table => $name) {
+                    if (\Phpcmf\Service::M()->is_table_exists($table) && \Phpcmf\Service::M()->table($table)->counts() && !dr_is_app($name)) {
+                        $error[] = $app_name[$name];
+                    }
+                }
+
+                if ($error) {
+                    $this->halt('需要手动安装这些应用插件：'.implode('、', $error).'，<a href="javascript:dr_help(1104);">查看解决方案</a>', 0);
+                }
+
+                $this->_json(1,'完成');
+
                 break;
 
             case '09':
