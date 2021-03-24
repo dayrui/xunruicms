@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-
-
 class System_log extends \Phpcmf\Common
 {
 	public function index() {
@@ -18,8 +16,8 @@ class System_log extends \Phpcmf\Common
 		$file = WRITEPATH.'log/'.date('Ym', $time).'/'.date('d', $time).'.php';
 
 		$list = [];
-		$data = @explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, file_get_contents($file)));
-		$data = @array_reverse($data);
+		$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, file_get_contents($file)));
+		$data = array_reverse($data);
 
 		$page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
         $total = max(0, dr_count($data) - 1);
@@ -50,6 +48,17 @@ class System_log extends \Phpcmf\Common
 		));
 		\Phpcmf\Service::V()->display('system_log.html');
 	}
-	
+
+    public function del() {
+
+        $time = dr_safe_filename($_GET['time']);
+        !$time && $time = date('Y-m-d');
+
+        $time = strtotime($time);
+        $file = WRITEPATH.'log/'.date('Ym', $time).'/'.date('d', $time).'.php';
+        unlink($file);
+        
+        $this->_json(1, dr_lang('操作成功'));
+    }
 
 }

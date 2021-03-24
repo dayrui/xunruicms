@@ -145,14 +145,20 @@ class Cache extends \Phpcmf\Model
             }
 
             // 插件缓存
+            $apps = [];
             if ($app_cache) {
                 foreach ($app_cache as $namespace => $c) {
                     \Phpcmf\Service::C()->init_file($namespace);
                     foreach ($c as $i => $apt) {
-                        \Phpcmf\Service::M(is_numeric($i) ? $apt : $i, $namespace)->cache($t['id']);
+                        $class = is_numeric($i) ? $apt : $i;
+                        $apps[] = '['.$namespace.'-'.$class.']';
+                        \Phpcmf\Service::M($class, $namespace)->cache($t['id']);
                     }
                 }
             }
+
+            // 记录日志
+            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[站点#'.$t['id'].']缓存： '.implode(' - ', $apps));
         }
 
         \Phpcmf\Service::M('menu')->cache();

@@ -18,7 +18,7 @@ class Error extends \Phpcmf\Common
         if (is_file($file)) {
 
             $c = file_get_contents($file);
-            $data = @explode(PHP_EOL, trim(str_replace('<?php defined(\'BASEPATH\') OR exit(\'No direct script access allowed\'); ?>'.PHP_EOL.PHP_EOL, '', str_replace(array(chr(13), chr(10)), PHP_EOL, $c)), PHP_EOL));
+            $data = explode(PHP_EOL, trim(str_replace('<?php defined(\'BASEPATH\') OR exit(\'No direct script access allowed\'); ?>'.PHP_EOL.PHP_EOL, '', str_replace(array(chr(13), chr(10)), PHP_EOL, $c)), PHP_EOL));
             $data && $data = @array_reverse($data);
 
             $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
@@ -30,7 +30,7 @@ class Error extends \Phpcmf\Common
 
             foreach ($data as $t) {
                 if ($t && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
-                    $v = @explode(' --> ', $t);
+                    $v = explode(' --> ', $t);
                     $time2 = $v ? @explode(' - ', $v[0]) : [1=>''];
                     if ($time2[1]) {
                         $value = [

@@ -21,7 +21,7 @@
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {dr_form_search_hidden()}
-        <div class="{if $is_mobile}col-md-12{else}col-md-3{/if}">
+        <div class="col-md-12" style="padding-right: 0">
             <label>
                 <div class="input-group fc-input-time date date-picker" data-date-format="yyyy-mm-dd">
                     <input type="text" class="form-control" name="time" value="{$time}">
@@ -34,8 +34,9 @@
             </label>
         </div>
 
-        <div class="col-md-12 col-sm-12">
-            <button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button>
+        <div class="col-md-12">
+            <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+            <label><button type="button" onclick="dr_ajax_option('{dr_url('system_log/del', ['time'=>$time])}', '{dr_lang('你确定要清空当天记录吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('清空')}</button></label>
         </div>
     </form>
 </div>

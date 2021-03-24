@@ -50,9 +50,9 @@ class Sms_log extends \Phpcmf\Common
 
 	public function del() {
 
-		@unlink(WRITEPATH.'sms_log.php');
+		unlink(WRITEPATH.'sms_log.php');
 
-		exit($this->_json(1, dr_lang('操作成功')));
+		$this->_json(1, dr_lang('操作成功'));
 	}
 	
 
