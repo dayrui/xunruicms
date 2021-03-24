@@ -98,7 +98,6 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
  */
 function dr_exit_msg($code, $msg, $data = []) {
 
-
     ob_end_clean();
 
     $rt = [
@@ -109,11 +108,11 @@ function dr_exit_msg($code, $msg, $data = []) {
 
     if (isset($_GET['callback'])) {
         // jsonp
-        @header('HTTP/1.1 200 OK');
+        header('HTTP/1.1 200 OK');
         echo ($_GET['callback'] ? $_GET['callback'] : 'callback').'('.json_encode($rt, JSON_UNESCAPED_UNICODE).')';
     } else if (($_GET['is_ajax'] || (defined('IS_API_HTTP') && IS_API_HTTP) || IS_AJAX)) {
         // json
-        @header('HTTP/1.1 200 OK');
+        header('HTTP/1.1 200 OK');
         echo json_encode($rt, JSON_UNESCAPED_UNICODE);
     } else {
         // html

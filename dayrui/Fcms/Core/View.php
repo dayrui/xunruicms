@@ -2467,8 +2467,7 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0, $is_cache = 0) {
 
-        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto;">';
-
+        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto; text-align: left">';
 
         if ($this->_list_tag) {
             $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';

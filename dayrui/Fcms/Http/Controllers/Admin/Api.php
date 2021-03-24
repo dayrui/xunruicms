@@ -351,7 +351,6 @@ class Api extends \Phpcmf\Common
         $this->_json(1, dr_lang('更新完成'), 0);
     }
 
-
 	// 执行清空缓存数据
 	public function cache_clear() {
 
@@ -377,7 +376,7 @@ class Api extends \Phpcmf\Common
     public function cache_site_config() {
 
         \Phpcmf\Service::M('cache')->update_site_config();
-        exit($this->_json(1, dr_lang('更新完成')));
+        $this->_json(1, dr_lang('更新完成'));
     }
 
     // 执行编辑器更新
@@ -1004,7 +1003,5 @@ class Api extends \Phpcmf\Common
 
     public function count_total() {
 
-
     }
-
 }
