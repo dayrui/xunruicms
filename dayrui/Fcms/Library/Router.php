@@ -483,7 +483,7 @@ class Router
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value');
         if ($rule && $rule['search']) {
-            //$fid && $data['fid'] = $fid;
+            $fid && $data['fid'] = $fid;
             $data['modname'] = $mod['dirname'];
             $data['param'] = dr_search_rewrite_encode($params, $mod['setting']['search']);
             if ($params && !$data['param']) {

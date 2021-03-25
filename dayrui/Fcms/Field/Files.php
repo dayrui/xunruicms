@@ -65,6 +65,13 @@ class Files extends \Phpcmf\Library\A_Field {
                 <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提示上传效率').'</span>
                 </div>
             </div>
+			<div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('滚动显示').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][scroller]" '.($option['scroller'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('当文件文件上传太多时，已上传文件列表可以以固定高度来下来滚动显示').'</span>
+                </div>
+            </div>
             <div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('上传数量').'</label>
 				<div class="col-md-9">
@@ -314,7 +321,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'unused_url' => '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'],
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'],
             'tpl' => $tpl,
-            'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["650px", "320px"],
+            'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["80%", "80%"],
             'count' => $count,
             'error' => dr_lang('上传文件不能超过%s个', $count),
             'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
@@ -360,7 +367,7 @@ class Files extends \Phpcmf\Library\A_Field {
         }
         $str.= '
 			<div class="scroller_'.$name.'_files">
-                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+                <div class="'.($field['setting']['option']['scroller'] ? 'scroller' : '').'" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
                     <table role="presentation" class="table table-striped table-fc-upload clearfix">
                         <tbody id="fileupload_'.$name.'_files" class="files scroller_body">'.$val.'</tbody>
                     </table>
