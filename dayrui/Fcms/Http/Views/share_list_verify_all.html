@@ -25,14 +25,12 @@
     <div style="padding: 20px;">
         <ul class="list-group">
 
-
             {loop $list $id $t}
             <li class="list-group-item">
                 {$t.title}
                 <span id="content_{$id}" style="margin-top: 5px;float: right;"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> </span>
                 <iframe scrolling="yes" src="{$t.url}" style="width:100%; display: none" frameborder=1></iframe>
             </li>
-
             {/loop}
 
         </ul>
