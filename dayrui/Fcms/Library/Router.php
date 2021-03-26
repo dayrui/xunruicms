@@ -285,7 +285,7 @@ class Router
             $data['pdirname'].= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $url = ltrim($page ? $rule['list_page'] : $rule['list'], '/');
-            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
+            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
         }
 
         return $this->url_prefix('module_php', $mod, $data, $fid) . 'c=category&id=' . (isset($data['id']) ? $data['id'] : 0) . ($page ? '&page=' . $page : '');
@@ -324,7 +324,7 @@ class Router
             $data['d'] = date('d', $inputtime);
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
             $url = ltrim($page ? $rule['show_page'] : $rule['show'], '/');
-            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
+            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
         }
 
         return $this->url_prefix('module_php', $mod, $cat) . 'c=show&id=' . $data['id'] . ($page ? '&page=' . $page : '');
@@ -355,7 +355,7 @@ class Router
             $data['pdirname'] .= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $url = $page ? $rule['page_page'] : $rule['page'];
-            return $this->_get_url_value($data, $url, '/');
+            return $this->get_url_value($data, $url, '/');
         }
 
         return $this->url_prefix('php') . 's=page&id=' . $data['id'] . ($page ? '&page=' . $page : '');
@@ -381,7 +381,7 @@ class Router
             $data['tag'] = $name;
             $data['tag'] = str_replace('/', $rule['catjoin'], $data['tag']);
             $url = ltrim($rule['tag'], '/');
-            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', [], [], SITE_FID));
+            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', [], [], SITE_FID));
         } else {
             return $this->url_prefix('php', [], [], SITE_FID) . 's=tag&name=' . $name;
         }
@@ -489,14 +489,14 @@ class Router
                 log_message('error', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
             }
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
-            return $this->_get_url_value($data, $url, $this->url_prefix('rewrite', $mod));
+            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod));
         } else {
             return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . @http_build_query($params), '&');
         }
     }
 
     // 伪静态替换
-    protected function _get_url_value($data, $url, $prefix) {
+    public function get_url_value($data, $url, $prefix) {
         $rep = new \php5replace($data);
         $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
         $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);

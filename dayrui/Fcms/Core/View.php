@@ -23,6 +23,7 @@ class View {
     private $_mroot; // 默认会员项目模板目录
 
     private $_aroot; // 默认后台项目模板目录
+    private $_froot; // 默认后台项目的修正模板目录
     private $_load_file_tips; // 模板引用提示
 
     private $_options; // 模板变量
@@ -67,7 +68,7 @@ class View {
         // 模板缓存目录
         $this->_cache = WRITEPATH.'template/';
         $this->_tname = $this->_is_mobile ? 'mobile' : ($name ? $name : 'pc');
-        $this->_aroot = COREPATH.'Views/';
+        $this->_aroot = $this->_froot = COREPATH.'Views/';
         // 当前项目模板目录
         if (IS_ADMIN) {
             // 后台
@@ -169,8 +170,9 @@ class View {
     /**
      * 强制设置为后台模板目录
      */
-    public function admin($_dir = '') {
-        $this->_dir = $_dir ? $_dir : APPPATH.'Views/';
+    public function admin($path = '', $fix_path = '') {
+        $this->_dir = $path ? $path : APPPATH.'Views/';
+        $this->_froot = $fix_path ? $fix_path : APPPATH.'Views/';
         $this->_aroot = COREPATH.'Views/';
         $this->_is_admin = 1;
     }
@@ -274,6 +276,9 @@ class View {
                 return MYPATH.'View/'.$file;
             } elseif (is_file($this->_dir.$file)) {
                 return $this->_dir.$file; // 调用当前后台的模板
+            } elseif (is_file($this->_froot.$file)) {
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_froot.$file.']';
+                return $this->_froot.$file; // 当前项目目录模板不存在时调用主项目的
             } elseif (is_file($this->_aroot.$file)) {
                 $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_aroot.$file.']';
                 return $this->_aroot.$file; // 当前项目目录模板不存在时调用主项目的
@@ -1695,9 +1700,9 @@ class View {
                                 }
                                 $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
                             }
-                            if ($system['num']) {
-                                $this->_list_error[] = '存在catid参数和page参数时，num参数将会无效';
-                            }
+                        }
+                        if ($system['num']) {
+                            $this->_list_error[] = '存在page参数时，num参数将会无效';
                         }
                         $pagesize = (int)$system['pagesize'];
                         !$pagesize && $pagesize = 10;
