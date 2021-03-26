@@ -26,7 +26,7 @@ class File {
                 if (is_file($path2)) {
                     $file = $path2;
                     $newfile = "{$toFile}/{$f1}";
-                    @copy($file, $newfile);
+                    copy($file, $newfile);
                 } elseif (is_dir($path2)) {
                     $toFiles = $toFile.'/'.$f1;
                     $this->copy_file($path2, $toFiles);
@@ -56,17 +56,18 @@ class File {
         }
     }
 
+
     /**
      * 递归创建文件夹
      */
     public function _create_folder($dir, $mode = 0777){
-        if (is_dir($dir) || @mkdir($dir, $mode)) {
+        if (is_dir($dir) || mkdir($dir, $mode)) {
             return true;
         }
         if (!$this->_create_folder(dirname($dir), $mode)) {
             return false;
         }
-        return @mkdir($dir, $mode);
+        return mkdir($dir, $mode);
     }
 
     /**
@@ -176,7 +177,7 @@ class File {
 
         $zip = new \ZipArchive;
 		$code = $zip->open($zfile, \ZipArchive::OVERWRITE | \ZipArchive::CREATE);
-        if ($code) {
+        if ($code !== TRUE) {
             return dr_lang('创建Zip文件失败#%s', $this->_zip_error($code));
         }
 

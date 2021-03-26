@@ -24,7 +24,8 @@ class Member_setting_notice extends \Phpcmf\Common
 
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
-            if (is_file($path.'/Config/Notice.php')
+            if (is_file($path.'install.lock')
+                && is_file($path.'/Config/Notice.php')
                 && is_file($path.'/Config/App.php')) {
                 $app = require $path.'/Config/App.php';
                 $cfg = require $path.'/Config/Notice.php';
@@ -92,6 +93,9 @@ class Member_setting_notice extends \Phpcmf\Common
         $file = dr_safe_filename($_GET['file']);
         $list = [];
         foreach ($this->site_info as $sid => $t) {
+            if ($sid != SITE_ID) {
+                continue;
+            }
             $path = \Phpcmf\Service::L('html')->get_webpath($sid, 'site', '');
             $list[$sid] = [
                 'name' => $t['SITE_NAME'],

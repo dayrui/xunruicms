@@ -357,7 +357,7 @@ class File extends \Phpcmf\Common
                 while (!feof($handle)) {
                     $contents = fread($handle, 4096);
                     echo $contents;
-                    @ob_flush();  //把数据从PHP的缓冲中释放出来
+                    ob_flush();  //把数据从PHP的缓冲中释放出来
                     flush();      //把被释放出来的数据发送到浏览器
                 }
 				

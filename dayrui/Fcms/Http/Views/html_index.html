@@ -68,8 +68,8 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('生成共享栏目')}</label>
                             <div class="col-md-9">
-                                <button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_index')}&app=')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button>
-                                <button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_point_index')}&app=')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button>
+                                <label><button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_index')}&app=')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button></label>
+                                <label><button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_point_index')}&app=')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button></label>
                             </div>
                         </div>
                     </form>
@@ -104,8 +104,8 @@
                     <div class="form-group" style="border-bottom: 1px dashed #eef1f5; padding-bottom: 10px;">
                         <label class="col-md-2 control-label">{dr_lang('生成栏目')}</label>
                         <div class="col-md-9">
-                            <button type="button" onclick="dr_bfb('{dr_lang('生成栏目')}', 'myform_category_{$i}', '{dr_url('html/category_index')}&app={$mod.dirname}')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button>
-                            <button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_point_index')}&app={$mod.dirname}')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button>
+                            <label><button type="button" onclick="dr_bfb('{dr_lang('生成栏目')}', 'myform_category_{$i}', '{dr_url('html/category_index')}&app={$mod.dirname}')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button></label>
+                            <label><button type="button" onclick="dr_bfb('{dr_lang('生成共享栏目')}', 'myform_share_category', '{dr_url('html/category_point_index')}&app={$mod.dirname}')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button></label>
                         </div>
                     </div>
                 </form>
@@ -151,8 +151,8 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">{dr_lang('生成内容页面')}</label>
                         <div class="col-md-9">
-                            <button type="button" onclick="dr_bfb('{dr_lang('生成内容页面')}', 'myform{$i}', '{dr_url('html/show_index')}&app={$mod.dirname}')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button>
-                            <button type="button" onclick="dr_bfb('{dr_lang('生成内容页面')}', 'myform{$i}', '{dr_url('html/show_point_index')}&app={$mod.dirname}')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button>
+                            <label><button type="button" onclick="dr_bfb('{dr_lang('生成内容页面')}', 'myform{$i}', '{dr_url('html/show_index')}&app={$mod.dirname}')" class="btn dark"> <i class="fa fa-th-large"></i> {dr_lang('开始生成静态')} </button></label>
+                            <label><button type="button" onclick="dr_bfb('{dr_lang('生成内容页面')}', 'myform{$i}', '{dr_url('html/show_point_index')}&app={$mod.dirname}')" class="btn red"> <i class="fa fa-th-large"></i> {dr_lang('上次未执行完毕时继续执行')} </button></label>
                         </div>
                     </div>
 

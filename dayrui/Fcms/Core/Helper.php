@@ -2654,15 +2654,14 @@ function dr_show_stars($num, $starthreshold = 4) {
     return $str;
 }
 
-
 /**
  * 模块评论js调用
  *
  * @param   intval  $id
  * @return  string
  */
-function dr_module_comment($dir, $id) {
-    $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}";
+function dr_module_comment($dir, $id, $url = '') {
+    $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_module_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });$.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_module_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_module_comment_{$id}(0, 1); </script>";
 }
@@ -2673,8 +2672,8 @@ function dr_module_comment($dir, $id) {
  * @param   intval  $id
  * @return  string
  */
-function dr_mform_comment($dir, $fid,  $id) {
-    $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}";
+function dr_mform_comment($dir, $fid, $id, $url = '') {
+    $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_mform_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });  $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll();  var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_mform_{$fid}_comment_{$id}(0, 1); </script>";
 }
@@ -2685,8 +2684,8 @@ function dr_mform_comment($dir, $fid,  $id) {
  * @param   intval  $id
  * @return  string
  */
-function dr_form_comment($fid, $id) {
-    $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}";
+function dr_form_comment($fid, $id, $url = '') {
+    $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_form_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 }); $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText; ".$error." } }); } dr_ajax_form_{$fid}_comment_{$id}(0, 1);</script>";
 }
@@ -2781,11 +2780,11 @@ function dr_catcher_data($url, $timeout = 0) {
             ]
         ];
         $ptl = substr($url, 0, 8) == "https://" ? 'https' : 'http';
-        $data = @file_get_contents($url, 0, stream_context_create([
+        $data = file_get_contents($url, 0, stream_context_create([
             $ptl => $opt[$ptl]
         ]));
     } else {
-        $data = @file_get_contents($url);
+        $data = file_get_contents($url);
     }
 
     return $data;
@@ -3839,7 +3838,7 @@ function dr_check_put_path($dir) {
     if ($size === false) {
         return 0;
     } else {
-        @unlink($dir.'test.html');
+        unlink($dir.'test.html');
         return 1;
     }
 }
@@ -4190,7 +4189,7 @@ if ( ! function_exists('dr_directory_map'))
      */
     function dr_directory_map($source_dir, $directory_depth = 0, $hidden = FALSE)
     {
-        if ($fp = @opendir($source_dir))
+        if ($fp = opendir($source_dir))
         {
             $filedata   = [];
             $new_depth  = $directory_depth - 1;
