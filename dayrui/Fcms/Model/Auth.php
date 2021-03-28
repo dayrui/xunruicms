@@ -169,13 +169,18 @@ class Auth extends \Phpcmf\Model {
     }
 
     // 提醒我的消息
-    public function admin_notice($num = 7) {
+    public function admin_notice($num = 7, $zt = false) {
 
+        if ($zt) {
+            $zt = '`status`<>3';
+        } else {
+            $zt = '`status` not in (1,3)';
+        }
         if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             // 超管
-            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         } else {
-            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ((`to_uid`='.$this->uid.') '.(' or (`to_rid` IN ('.implode(',', \Phpcmf\Service::C()->admin['roleid']).'))').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and `status`<>3 order by `status` asc, `inputtime` desc limit '.$num;
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ((`to_uid`='.$this->uid.') '.(' or (`to_rid` IN ('.implode(',', \Phpcmf\Service::C()->admin['roleid']).'))').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         }
 
         $query = $this->db->query($sql);

@@ -174,7 +174,7 @@
     </a>
     <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
         <div class="page-quick-sidebar">
-            <?php $notice = \Phpcmf\Service::M('auth')->admin_notice();?>
+            <?php $notice = \Phpcmf\Service::M('auth')->admin_notice(10, true);?>
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> {dr_lang('快速导航')}</a>
