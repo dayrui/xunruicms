@@ -83,6 +83,9 @@ class Seo
         if ($param['groupid']) {
             $data['groupid'] = $param['groupid'];
         }
+        if ($param['updatetime']) {
+            $param_value['updatetime'] = $param['updatetime'];
+        }
 
         if ($catid) {
             $t = dr_get_cat_pname($mod, $catid, $data['join']);
@@ -117,7 +120,6 @@ class Seo
                     $now_field = \Phpcmf\Service::C()->member_cache['field'][$name];
                     $seofield[$name] = $now_field;
                 }
-
                 // 按字段属性组合
                 if ($now_field) {
                     switch ($now_field['fieldtype']) {
@@ -151,7 +153,6 @@ class Seo
                             break;
                     }
                 }
-
             }
         }
 
@@ -161,6 +162,7 @@ class Seo
             $seofield['catid'] = $seofield['catdir'] = [ 'name' => dr_lang('栏目') ];
             $seofield['groupid'] = ['name' => dr_lang('用户组')];
             $seofield['keyword'] = ['name' => dr_lang('关键词')];
+            $seofield['updatetime'] = ['name' => dr_lang('更新时间')];
             $db = \Phpcmf\Service::C()->content_model;
             if ($db) {
                 list($seofield, $param_value) = $db->_format_search_param_value($seofield, $param_value);
