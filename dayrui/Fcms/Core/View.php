@@ -1417,7 +1417,7 @@ class View {
                 unset($system['total']);
 
                 // 没有数据时返回空
-                if (!$total) {
+                if (!dr_strlen($total)) {
                     return $this->_return($system['return'], 'total参数为空', '', 0);
                 } elseif (!$dirname) {
                     return $this->_return($system['return'], 'module参数不能为空');

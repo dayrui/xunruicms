@@ -278,7 +278,9 @@ class Pay extends \Phpcmf\Model
                     case 'my':
                         // 二次开发
                         $obj = $this->my_pay_obj($rid);
-                        if (method_exists($obj, 'paytype')) {
+                        if (!$obj) {
+                            return '<span class="label label-danger"> '.dr_lang('未知').' </span>';
+                        } elseif (method_exists($obj, 'paytype')) {
                             return $obj->paytype();
                         } else {
                             return '<span class="label label-warning"> '.dr_lang('应用').' </span>';
@@ -906,6 +908,7 @@ class Pay extends \Phpcmf\Model
         list($app, $class) = explode('_', $name);
         $classFile = dr_get_app_dir($app).'Models/'.ucfirst($class).'.php';
         if (!is_file($classFile)) {
+            CI_DEBUG && log_message('error', '支付对象('.$name.')类文件（'.$classFile.'）不存在');
             return;
         }
         return \Phpcmf\Service::M($class, $app);

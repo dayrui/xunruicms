@@ -177,7 +177,6 @@ class Seo
             $seo['meta_keywords'].= implode(',', $str).',';
         }
 
-
         $meta_title = $mod['site'][SITE_ID]['search_title'] ? $mod['site'][SITE_ID]['search_title'] : '['.dr_lang('第%s页', '{page}').'{join}][{keyword}{join}][{param}{join}]{modulename}{join}{SITE_NAME}';
 
         if (preg_match_all('/\[.*\{(.+)\}.*\]/U', $meta_title, $m)) {
@@ -194,6 +193,7 @@ class Seo
 
         return $this->_get_seo_value($data, [
             'meta_title' => $meta_title,
+            'param_value' => $seo['param_value'],
             'meta_keywords' => $seo['meta_keywords'] ? $seo['meta_keywords'] : (isset($mod['site'][SITE_ID]['search_keywords']) && $mod['site'][SITE_ID]['search_keywords'] ? $mod['site'][SITE_ID]['search_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
             'meta_description' => isset($mod['site'][SITE_ID]['search_description']) && $mod['site'][SITE_ID]['search_description'] ? $mod['site'][SITE_ID]['search_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION'),
         ]);
@@ -264,6 +264,9 @@ class Seo
         $rep = new \php5replace($data);
 
         foreach ($seo as $key => $value) {
+            if (!$value || is_array($value)) {
+                continue;
+            }
             $seo[$key] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $value);
             $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo[$key]);
             $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo[$key]);
@@ -272,6 +275,7 @@ class Seo
             $seo[$key] = str_replace('"', '', $seo[$key]);
             $seo[$key] = str_replace([',,', '%'], ',', $seo[$key]);
             $seo[$key] = trim($seo[$key], $data['join']);
+            $seo[$key] = trim($seo[$key], ',');
         }
 
         return $seo;
