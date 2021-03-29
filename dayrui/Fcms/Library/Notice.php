@@ -170,13 +170,7 @@ class Notice {
                         $title = $mt[1];
                         $content = str_replace($mt[0], '', $content);
                     }
-                    $rt = \Phpcmf\Service::M('member')->sendmail(
-                        $email,
-                        $title ? $title : '通知',
-                        $content,
-                        [],
-                        \Phpcmf\Service::C()->site_info[$siteid]['SITE_NAME']
-                    );
+                    $rt = \Phpcmf\Service::M('email')->site_name($siteid)->sendmail($email, $title ? $title : '通知', $content);
                     if (!$rt['code']) {
                         $error[] = $debug = '邮件发送失败：'.$rt['msg'];
                         CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);

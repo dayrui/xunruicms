@@ -1012,6 +1012,7 @@
             if (\Phpcmf\Service::C()->is_mobile) {
                 $fomart = str_replace(['control-label col-md-2', 'col-md-9'], ['control-label col-md-12', 'col-md-12'], $fomart);
             }
+
             return str_replace(['{name}', '{text}', '{value}'], [$name, $text, $value], $fomart);
         }
 
@@ -1039,13 +1040,13 @@
 			<label class="col-md-2 control-label">'.dr_lang('附件存储策略').' </label>
 			<div class="col-md-9">
 				'.$html.'
-                <span class="help-block">远程附件存储建议设置小文件存储，推荐10MB内，大文件会导致数据传输失败</span>
+                <span class="help-block">'.dr_lang('远程附件存储建议设置小文件存储，推荐10MB内，大文件会导致数据传输失败').'</span>
 			</div>
 		</div><div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('图片压缩大小').' </label>
 			<div class="col-md-9">
                 <label><input type="text" class="form-control" value="'.$option['image_reduce'].'" name="data[setting][option][image_reduce]"></label>
-                <span class="help-block">填写图片宽度，例如1000，表示图片大于1000px时进行压缩图片</span>
+                <span class="help-block">'.dr_lang('填写图片宽度，例如1000，表示图片大于1000px时进行压缩图片').'</span>
 			</div>
 		</div>';
         }
