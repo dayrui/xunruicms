@@ -1188,7 +1188,7 @@ class Member extends \Phpcmf\Model
     /**
      * 邮件发送
      */
-    public function sendmail($tomail, $subject, $msg, $data = []) {
+    public function sendmail($tomail, $subject, $msg, $data = [], $fname = '') {
 
         if (!$tomail) {
             return dr_return_data(0, dr_lang('第一个参数不能为空'));
@@ -1228,7 +1228,7 @@ class Member extends \Phpcmf\Model
                 'port' => $data['port'],
                 'from' => $data['user'],
             ));
-            if ($dmail->send($tomail, $subject, $content)) {
+            if ($dmail->send($tomail, $subject, $content, $fname)) {
                 return dr_return_data(1, 'ok');
             }
         }

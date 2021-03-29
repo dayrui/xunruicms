@@ -18,7 +18,7 @@ class Cache extends \Phpcmf\Model
         list($cache_path) = dr_thumb_path();
         dr_dir_delete($cache_path);
         dr_mkdirs($cache_path);
-        exit(\Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1));
+        \Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1);
     }
 
     // 更新附件缓存
@@ -32,12 +32,12 @@ class Cache extends \Phpcmf\Model
             list($cache_path) = dr_thumb_path();
             dr_dir_delete($cache_path);
             dr_mkdirs($cache_path);*/
-            exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1));
+            \Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1);
         }
 
         $total = $this->table('attachment')->counts();
         if (!$total) {
-            exit(\Phpcmf\Service::C()->_json(1, dr_lang('无可用附件更新'), 0));
+            \Phpcmf\Service::C()->_json(1, dr_lang('无可用附件更新'), 0);
         }
 
         $psize = 300;
@@ -50,10 +50,10 @@ class Cache extends \Phpcmf\Model
         }
 
         if ($page > $tpage) {
-            exit(\Phpcmf\Service::C()->_json(1, dr_lang('已更新%s个附件', $total), 0));
+            \Phpcmf\Service::C()->_json(1, dr_lang('已更新%s个附件', $total), 0);
         }
 
-        exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s/%s）', $page, $tpage), $page + 1));
+        \Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s/%s）', $page, $tpage), $page + 1);
     }
 
     // 同步更新缓存
@@ -185,7 +185,6 @@ class Cache extends \Phpcmf\Model
                 $this->db->table($table.'_search')->truncate();
             }
         }
-
     }
 
     // 更新数据
@@ -226,7 +225,7 @@ class Cache extends \Phpcmf\Model
         // 开始删除目录数据
         foreach ($path as $p) {
             dr_dir_delete($p);
-            @mkdir($p, 0777);
+            mkdir($p, 0777);
             file_put_contents($p.'/index.html', $cache_index);
         }
 
@@ -243,7 +242,7 @@ class Cache extends \Phpcmf\Model
                     if ($file === '.' OR $file === '..'
                         OR $file === 'index.html'
                         OR $file[0] === '.'
-                        OR !@is_file($p.'/'.$file)
+                        OR !is_file($p.'/'.$file)
                         OR SYS_TIME - filemtime($p.'/'.$file) <  3600 * 24 // 保留24小时内的文件
                     ) {
                         continue;
@@ -260,7 +259,6 @@ class Cache extends \Phpcmf\Model
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
-
     }
 
     // 重建子站配置文件

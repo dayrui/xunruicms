@@ -246,7 +246,7 @@ class Table extends \Phpcmf\Common
      * 保存内容
      * $id      内容id,新增为0
      * $data    提交内容数组,留空为自动获取
-     * $old    老数据 
+     * $old     老数据
      * $func    格式化提交的数据 提交前   
      * $func    格式化提交的数据 保存后
      * */ 
@@ -383,9 +383,9 @@ class Table extends \Phpcmf\Common
                 $this->_json(0, $return['error'], ['field' => $return['name']]);
             }
             // 格式化数据
-            $post = $this->_Format_Data($id, $post, $data);
+            $post = $this->_Format_Data($id, $post, $id ? $data : []);
             // 保存数据
-            $rt = $this->_Save($id, $post, $data);
+            $rt = $this->_Save($id, $post, $id ? $data : []);
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg'], $rt['data']);
             }

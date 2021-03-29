@@ -111,7 +111,6 @@ class Notice {
                     }
                 }
             }
-
         }
 
         // 短信通知
@@ -171,7 +170,13 @@ class Notice {
                         $title = $mt[1];
                         $content = str_replace($mt[0], '', $content);
                     }
-                    $rt = \Phpcmf\Service::M('member')->sendmail($email, $title ? $title : '通知', $content);
+                    $rt = \Phpcmf\Service::M('member')->sendmail(
+                        $email,
+                        $title ? $title : '通知',
+                        $content,
+                        [],
+                        \Phpcmf\Service::C()->site_info[$siteid]['SITE_NAME']
+                    );
                     if (!$rt['code']) {
                         $error[] = $debug = '邮件发送失败：'.$rt['msg'];
                         CI_DEBUG && log_message('error', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
@@ -180,7 +185,6 @@ class Notice {
                         unset($value['config']['email']);
                     }
                 }
-
             }
         }
 
@@ -200,6 +204,13 @@ class Notice {
         $content_code = $my ? $my : file_get_contents(ROOTPATH.'config/notice/'.$type.'/'.$name.'.html');
         if (!$content_code) {
             return dr_return_data(0, '模板不存在【config/notice/'.$type.'/'.$name.'.html】');
+        }
+
+        // 替换多站点变量
+        if (isset(\Phpcmf\Service::C()->site_info[$siteid]) && \Phpcmf\Service::C()->site_info[$siteid]) {
+            $site_info = \Phpcmf\Service::C()->site_info[$siteid];
+            $content_code = str_replace('{SITE_NAME}', $site_info['SITE_NAME'], $content_code);
+            $content_code = str_replace('{SITE_URL}', $site_info['SITE_URL'], $content_code);
         }
 
         ob_start();
@@ -243,7 +254,6 @@ class Notice {
         }else{
             return $xml;
         }
-
     }
 
 }
