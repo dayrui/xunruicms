@@ -729,8 +729,8 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 合并变量
         $info = $data + $info;
-
         $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
+
         // 文件真实地址
         if ($info['remote']) {
             $remote = $this->get_cache('attachment', $info['remote']);

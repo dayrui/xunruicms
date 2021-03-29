@@ -199,6 +199,71 @@ class Attachments extends \Phpcmf\Table
         $this->_json(1, dr_lang('操作成功'));
     }
 
+    // 图片编辑
+    public function image_edit() {
+
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!$id) {
+            $this->_json(0, dr_lang('附件id不能为空'));
+        }
+
+        $data = \Phpcmf\Service::M()->table('attachment')->get($id);
+        if (!$data) {
+            $this->_json(0, dr_lang('附件%s不存在', $id));
+        }
+
+        if ($data['related']) {
+            $info = \Phpcmf\Service::M()->table('attachment_data')->get($id);
+        } else {
+            $info = \Phpcmf\Service::M()->table('attachment_unused')->get($id);
+        }
+
+        if (!in_array($info['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+            $this->_json(0, dr_lang('此文件不属于图片'));
+        }
+
+        $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
+
+        // 文件真实地址
+        if ($info['remote']) {
+            $remote = $this->get_cache('attachment', $info['remote']);
+            if (!$remote) {
+                // 远程地址无效
+                $this->_json(0, dr_lang('自定义附件（%s）的配置已经不存在', $info['remote']));
+            } else {
+                $info['file'] = $remote['value']['path'].$info['attachment'];
+                if (!is_file($info['file'])) {
+                    $this->_json(0, dr_lang('远程附件无法编辑'));
+                }
+            }
+        }
+
+        if (IS_POST) {
+
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if (!$post['w']) {
+                $this->_json(0, dr_lang('图形宽度不规范'));
+            }
+            try {
+                $image = \Config\Services::image()
+                    ->withFile($info['file'])
+                    ->crop($post['w'], $post['h'], $post['x'], $post['y'])
+                    ->save($info['file']);
+            } catch (CodeIgniter\Images\ImageException $e) {
+                $this->_json(0, $e->getMessage());
+            }
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        $info['url'] = dr_get_file_url($info);
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'data' => $info,
+        ]);
+        \Phpcmf\Service::V()->display('attachment_image.html');exit;
+    }
+
     // 附件改名
     public function name_edit() {
 
@@ -211,7 +276,6 @@ class Attachments extends \Phpcmf\Table
         if (!$data) {
             $this->_json(0, dr_lang('附件%s不存在', $id));
         }
-
 
         if (IS_POST) {
             $name = \Phpcmf\Service::L('input')->post('name');

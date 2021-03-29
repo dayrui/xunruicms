@@ -79,7 +79,7 @@ class Email
             return FALSE;
         }
 
-        fputs($fp, "EHLO uchome\r\n");
+        fputs($fp, "EHLO phpcmf\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
             $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "EHLO - $lastmessage");
@@ -88,7 +88,7 @@ class Email
 
         // 是否starttls
         if ($is_starttls) {
-            fputs($fp, "STARTTLS uchome\r\n");
+            fputs($fp, "STARTTLS phpcmf\r\n");
             $lastmessage = fgets($fp, 512);
             if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
                 $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "STARTTLS - $lastmessage");

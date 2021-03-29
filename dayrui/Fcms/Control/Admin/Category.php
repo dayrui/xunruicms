@@ -74,10 +74,13 @@ class Category extends \Phpcmf\Table
     // 获取树形结构列表
     protected function _get_tree_list($data) {
 
-        $tree = [];
+        $cqx = dr_is_app('cqx') ? \Phpcmf\Service::M('content', 'cqx') : null;
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
+        $is_cat_code = dr_is_app('mbdy') && isset($this->admin['role'][1]) && method_exists(\Phpcmf\Service::M('code', 'mbdy'), 'cat_code') ? 1 : 0;
+
+        $tree = [];
         foreach($data as $k => $t) {
-            if (dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+            if ($cqx && $cqx->is_edit($t['id'])) {
                 unset($data[$k]);
                 continue;
             }
@@ -130,6 +133,10 @@ class Category extends \Phpcmf\Table
             if (isset($this->admin['role'][1])
                 && ((!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
                 $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
+            }
+            // 第三方插件接入
+            if ($is_cat_code) {
+                $option.= '<a class="btn btn-xs yellow" href="javascript:dr_iframe_show(\'show\', \''.dr_url('mbdy/category/cms', ['mid'=>APP_DIR, 'id'=>$t['id']]).'\');"> <i class="fa fa-code"></i> '.dr_lang('前端调用').'</a>';
             }
             $t['option'] = $option;
             // 判断显示和隐藏开关
