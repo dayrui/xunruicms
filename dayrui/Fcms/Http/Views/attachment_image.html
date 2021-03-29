@@ -33,7 +33,7 @@
 <form class="form-horizontal" method="post" role="form" id="myform">
     {$form}
     <div class="responsive-1024">
-        <img src="{$data.url}" style="max-width: 100%" id="cut_image" />
+        <img src="{$data.url}?{SYS_TIME}" id="cut_image" />
     </div>
     <input type="hidden" id="crop_x" name="data[x]" />
     <input type="hidden" id="crop_y" name="data[y]" />

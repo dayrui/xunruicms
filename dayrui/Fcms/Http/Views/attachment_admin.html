@@ -120,7 +120,7 @@
                     <td>
                         <a href="{$t.url}">{Function_list::title($t.filename, $param)}</a>
                         <a class="btn blue btn-xs" href="javascript:dr_iframe('{dr_lang('改名')}', '{dr_url($uriprefix.'/name_edit', ['id'=>$t.id])}', '350px', '220px');">{dr_lang('改名')}</a>
-                        {if in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg'])}<a class="btn blue btn-xs" href="javascript:dr_iframe('{dr_lang('改图')}', '{dr_url($uriprefix.'/image_edit', ['id'=>$t.id])}');">{dr_lang('改图')}</a>{/if}
+                        {if in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg'])}<a class="btn red btn-xs" href="javascript:dr_iframe('{dr_lang('改图')}', '{dr_url($uriprefix.'/image_edit', ['id'=>$t.id])}');">{dr_lang('改图')}</a>{/if}
                     </td>
                     <td style="text-align:center">{$t.fileext}</td>
                     <td>{dr_format_file_size($t.filesize)}</td>
