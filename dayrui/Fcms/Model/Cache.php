@@ -254,8 +254,11 @@ class Cache extends \Phpcmf\Model
         }
 
         // 删除首页静态文件
-        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
-        unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'));
+        if (isset(\Phpcmf\Service::C()->site_info[SITE_ID]['SITE_INDEX_HTML'])
+            && \Phpcmf\Service::C()->site_info[SITE_ID]['SITE_INDEX_HTML']) {
+            unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'));
+            unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'));
+        }
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();

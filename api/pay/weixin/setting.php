@@ -1,3 +1,4 @@
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <div class="form-group">
     <label class="col-md-2 control-label">AppId</label>
     <div class="col-md-9">

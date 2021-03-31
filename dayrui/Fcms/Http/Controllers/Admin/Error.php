@@ -19,7 +19,7 @@ class Error extends \Phpcmf\Common
 
             $c = file_get_contents($file);
             $data = explode(PHP_EOL, trim(str_replace('<?php defined(\'BASEPATH\') OR exit(\'No direct script access allowed\'); ?>'.PHP_EOL.PHP_EOL, '', str_replace(array(chr(13), chr(10)), PHP_EOL, $c)), PHP_EOL));
-            $data && $data = @array_reverse($data);
+            $data && $data = array_reverse($data);
 
             $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
             //$total = max(0, count($data));
@@ -31,7 +31,7 @@ class Error extends \Phpcmf\Common
             foreach ($data as $t) {
                 if ($t && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
                     $v = explode(' --> ', $t);
-                    $time2 = $v ? @explode(' - ', $v[0]) : [1=>''];
+                    $time2 = $v ? explode(' - ', $v[0]) : [1=>''];
                     if ($time2[1]) {
                         $value = [
                             'time' => $time2[1] ? $time2[1] : '',
@@ -105,7 +105,27 @@ class Error extends \Phpcmf\Common
         !$time && $time = date('Y-m-d');
         $file = WRITEPATH.'error/log-'.$time.'.php';
         unlink($file);
-        exit($this->_json(1, dr_lang('操作成功')));
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
+    public function add() {
+
+        $time = dr_safe_filename($_GET['time']);
+        !$time && $time = date('Y-m-d');
+        $file = WRITEPATH.'error/log-'.$time.'.php';
+        if (is_file($file)) {
+            $code = file_get_contents($file);
+            if (!$code) {
+                $this->_json(0, dr_lang('日志记录为空'));
+            }
+            $url = 'https://www.xunruicms.com/api/error.php?domain=' . dr_get_domain_name(ROOT_URL) . '&version=' . $this->cmf_version['version']  . '&license=' . $this->cmf_license['license'];
+            $rt = dr_post_json_data($url, ['error' => $code]);
+            if (!$rt || !$rt['code']) {
+                $this->_json(0, dr_lang('上报失败'));
+            }
+        }
+        $this->_json(1, dr_lang('操作成功'));
     }
 
 }

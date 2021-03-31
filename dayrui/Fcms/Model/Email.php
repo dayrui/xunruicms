@@ -57,9 +57,9 @@ class Email extends \Phpcmf\Model
         $dmail = \Phpcmf\Service::L('email');
         foreach ($cache as $data) {
             $dmail->set(array(
-                'host' => $data['host'],
-                'user' => $data['user'],
-                'pass' => $data['pass'],
+                'host' => trim($data['host']),
+                'user' => trim($data['user']),
+                'pass' => trim($data['pass']),
                 'port' => $data['port'],
                 'from' => $data['user'],
             ));

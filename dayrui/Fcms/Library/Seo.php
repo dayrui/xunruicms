@@ -15,7 +15,7 @@ class Seo
     /**
      * 首页SEO信息
      *
-     * @return	array
+     * @return  array
      */
     public function index() {
 
@@ -34,7 +34,7 @@ class Seo
     /**
      * 模块SEO信息
      *
-     * @return	array
+     * @return  array
      */
     public function module($mod) {
 
@@ -88,7 +88,7 @@ class Seo
         }
 
         if ($catid) {
-            $t = dr_get_cat_pname($mod, $catid, $data['join']);
+            $t = dr_get_cat_pname($mod, $catid, SITE_SEOJOIN);
             if ($t) {
                 $param_value['catid'] = $t;
             }
@@ -143,7 +143,7 @@ class Seo
                             $arr = explode('|', $value);
                             if ($arr) {
                                 foreach ($arr as $a) {
-                                    $param_value[$name][] = dr_linkagepos($now_field['setting']['option']['linkage'], $a, $data['join']);
+                                    $param_value[$name][] = dr_linkagepos($now_field['setting']['option']['linkage'], $a, SITE_SEOJOIN);
                                 }
                             }
                             break;
@@ -175,7 +175,7 @@ class Seo
                 ];
                 $str[] = is_array($t) ? implode('|', $t) : $t;
             }
-            $data['param'] = implode($data['join'], $str);
+            $data['param'] = implode(SITE_SEOJOIN, $str);
             $seo['meta_keywords'].= implode(',', $str).',';
         }
 
@@ -204,17 +204,17 @@ class Seo
     /**
      * 模块栏目SEO信息
      *
-     * @param	array	$mod
-     * @param	array	$cat
-     * @param	intval	$page
-     * @return	array
+     * @param   array   $mod
+     * @param   array   $cat
+     * @param   intval  $page
+     * @return  array
      */
     function category($mod, $catid, $page = 1) {
 
         $cat = $mod['category'][$catid];
         $cat['page'] = intval($page);
         $cat['name'] = $cat['catname'] = $cat['name'];
-        $cat['catpname'] = dr_get_cat_pname($mod, $catid, $cat['join']);
+        $cat['catpname'] = dr_get_cat_pname($mod, $catid, SITE_SEOJOIN);
         $cat['modulename'] = $cat['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
 
         $meta_title = $cat['setting']['seo']['list_title'] ? $cat['setting']['seo']['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
@@ -230,10 +230,10 @@ class Seo
     /**
      * 模块内容SEO信息
      *
-     * @param	array	$mod
-     * @param	array	$cat
-     * @param	intval	$page
-     * @return	array
+     * @param   array   $mod
+     * @param   array   $cat
+     * @param   intval  $page
+     * @return  array
      */
     function show($mod, $data, $page = 1) {
 
@@ -242,14 +242,14 @@ class Seo
         $data['name'] = $data['catname'] = $cat['name'];
         $data['title'] = dr_clearhtml($data['title']);
         $data['catname'] = $cat['name'];
-        $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], $data['join']);
+        $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], SITE_SEOJOIN);
         $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
 
         $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
         $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));
 
         $meta_title = isset($mod['site'][SITE_ID]['show_title']) && $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
-        $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
+        $meta_title = $page > 1 ? str_replace(['[', ']'], '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
         return $this->_get_seo_value($data, [
             'meta_title' => $meta_title,
@@ -261,8 +261,7 @@ class Seo
     // 替换seo信息字符
     protected function _get_seo_value($data, $seo) {
 
-        $data['join'] = SITE_SEOJOIN ? SITE_SEOJOIN : '_';
-
+        $data['join'] = SITE_SEOJOIN;
         $rep = new \php5replace($data);
 
         foreach ($seo as $key => $value) {
@@ -272,11 +271,11 @@ class Seo
             $seo[$key] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $value);
             $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo[$key]);
             $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo[$key]);
-            $seo[$key] = str_replace($data['join'].$data['join'], $data['join'], $seo[$key]);
+            $seo[$key] = str_replace(SITE_SEOJOIN.SITE_SEOJOIN, SITE_SEOJOIN, $seo[$key]);
             $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);
             $seo[$key] = str_replace([',,', '%'], ',', $seo[$key]);
-            $seo[$key] = trim($seo[$key], $data['join']);
+            $seo[$key] = trim($seo[$key], SITE_SEOJOIN);
             $seo[$key] = trim($seo[$key], ',');
         }
 
@@ -326,7 +325,7 @@ class Seo
         $mod = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$form['module']);
         if (isset($data['catid']) && isset($mod['category'][$data['catid']])) {
             $data['catname'] = $mod['category'][$data['catid']]['name'];
-            $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], $data['join']);
+            $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], SITE_SEOJOIN);
         } else {
             $data['catname'] = $data['catpname'] = '';
         }

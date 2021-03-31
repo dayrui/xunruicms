@@ -1454,6 +1454,17 @@ function wx_get_https_json_data($url) {
 
 // 从url获取json数据
 function wx_post_https_json_data($url, $param = []) {
+    $rt = dr_post_json_data($url, json_encode($param, JSON_UNESCAPED_UNICODE));
+    if ($rt['code']) {
+        if (isset($rt['data']['errcode']) && $rt['data']['errcode']) {
+            return dr_return_data(0, '错误代码（'.dr_weixin_error_msg($rt['data']['errcode']).'）：'.$rt['data']['errmsg']);
+        }
+    }
+    return $rt;
+}
+
+// https进行post数据
+function dr_post_json_data($url, $param = []) {
 
     if (!$url) {
         return dr_return_data(0, 'url为空');
@@ -1467,23 +1478,21 @@ function wx_post_https_json_data($url, $param = []) {
     curl_setopt ( $ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)' );
     curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, 1 );
     curl_setopt ( $ch, CURLOPT_AUTOREFERER, 1 );
-    curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($param, JSON_UNESCAPED_UNICODE));
+    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $param);
     curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
     $response = curl_exec ( $ch );
     if ($error=curl_error($ch)){
         return dr_return_data(0, $error);
     }
+
     curl_close($ch);
     $data = json_decode($response, true);
     if (!$data) {
         return dr_return_data(0, $response);
-    } elseif (isset($data['errcode']) && $data['errcode']) {
-        return dr_return_data(0, '错误代码（'.dr_weixin_error_msg($data['errcode']).'）：'.$data['errmsg']);
     }
 
     return dr_return_data(1, 'ok', $data);
 }
-
 
 /**
  * 获取折扣价格值
@@ -3930,7 +3939,7 @@ function dr_get_cat_pname($mod, $catid, $symbol = '_') {
     return implode($symbol, $name);
 }
 
-// php 5.5 以上版本的正则替换方法
+// 正则替换方法
 class php5replace {
 
     private $data;

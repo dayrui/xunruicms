@@ -452,7 +452,7 @@ class Field extends \Phpcmf\Common
 
             case 'form':
                 // 网站表单 form-站点id, 表单id
-                \Phpcmf\Service::M('cache')->sync_cache('form', '', 1); // 自动更新缓存
+                \Phpcmf\Service::M('cache')->sync_cache('form', 'form', 1); // 自动更新缓存
                 break;
 
             case 'tag':
