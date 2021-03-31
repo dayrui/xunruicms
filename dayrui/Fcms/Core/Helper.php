@@ -3480,6 +3480,27 @@ function dr_tpl_path($is_member = IS_MEMBER) {
     return $path;
 }
 
+// 数组的指定元素大小排序
+function dr_array_sort($arr, $key, $type = 'asc') {
+
+    if (!is_array($arr)) {
+        return [];
+    }
+
+    uasort($arr, function($a, $b) use ($key, $type) {
+        if ($a[$key] == $b[$key]) {
+            return 0;
+        }
+        if ($type == 'asc') {
+            return ($a[$key] < $b[$key]) ? -1 : 1;
+        } else {
+            return ($a[$key] > $b[$key]) ? -1 : 1;
+        }
+    });
+
+    return $arr;
+}
+
 // 获取网站表单发布页面需要的变量值
 function dr_get_form_post_value($table) {
 
@@ -3506,13 +3527,7 @@ function dr_get_form_post_value($table) {
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
-    $field && uasort($field, function($a, $b){
-        if($a['displayorder'] == $b['displayorder']){
-            return 0;
-        }
-        return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-    });
-
+    $field = dr_array_sort($field, 'displayorder');
     foreach ($field as $i => $t) {
         if ($t['setting']['is_right'] == 1) {
             // 右边字段归类为系统字段
@@ -3572,13 +3587,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $field = $form['field'];
     $my_field = $sys_field = $diy_field = [];
 
-    $field && uasort($field, function($a, $b){
-        if($a['displayorder'] == $b['displayorder']){
-            return 0;
-        }
-        return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-    });
-
+    $field = dr_array_sort($field, 'displayorder');
     foreach ($field as $i => $t) {
         if ($t['setting']['is_right'] == 1) {
             // 右边字段归类为系统字段
@@ -3637,13 +3646,7 @@ function dr_get_register_value($groupid = 0, $url = '') {
     // 初始化自定义字段类
     $my_field = $sys_field = $diy_field = [];
 
-    $field && uasort($field, function($a, $b){
-        if($a['displayorder'] == $b['displayorder']){
-            return 0;
-        }
-        return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-    });
-
+    $field = dr_array_sort($field, 'displayorder');
     foreach ($field as $i => $t) {
         if ($t['setting']['is_right'] == 1) {
             // 右边字段归类为系统字段
