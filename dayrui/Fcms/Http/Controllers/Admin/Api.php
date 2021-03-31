@@ -519,7 +519,8 @@ class Api extends \Phpcmf\Common
 		]);
 
 		if ($dmail->send($this->member['email'], 'test', 'test for '.SITE_NAME)) {
-			$this->_json(1, dr_lang('已发送到邮箱：%s', $this->member['email']));
+
+			$this->_json(1, dr_lang('已发送至邮箱：%s，并不代表已发送成功', $this->member['email']));
 		} else {
 			$this->_json(0, $dmail->error());
 		}

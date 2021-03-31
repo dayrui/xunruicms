@@ -13,7 +13,7 @@ class Email extends \Phpcmf\Common
 		parent::__construct(...$params);
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
-				'SMTP服务器' => ['email/index', 'fa fa-envelope'],
+				'邮件服务器' => ['email/index', 'fa fa-envelope'],
 				'添加' => ['add:email/add', 'fa fa-plus'],
                 'help' => [361],
 			]
@@ -25,31 +25,25 @@ class Email extends \Phpcmf\Common
 				'rule' => [
 					'empty' => dr_lang('服务器不能为空')
 				],
-				'filter' => [],
+                'filter' => [],
 				'length' => '200'
 			],
 			'port' => [
 				'name' => '端口号',
-				'rule' => [
-					'empty' => dr_lang('端口号不能为空')
-				],
 				'filter' => ['intval'],
 				'length' => '30'
 			],
 			'user' => [
 				'name' => '邮箱账号',
-				'rule' => [
-					'empty' => dr_lang('邮箱账号不能为空')
-				],
-				'filter' => [],
+                'filter' => [],
+                'rule' => [
+                    'empty' => dr_lang('邮箱账号不能为空')
+                ],
 				'length' => '200'
 			],
 			'pass' => [
 				'name' => '邮箱密码',
-				'rule' => [
-					'empty' => dr_lang('邮箱密码不能为空')
-				],
-				'filter' => [],
+                'filter' => [],
 				'length' => '200'
 			],
 		];
@@ -67,7 +61,10 @@ class Email extends \Phpcmf\Common
 	public function add() {
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
+            if (\Phpcmf\Service::L('input')->post('type')) {
+                $data['host'] = 'mail';
+            }
 			$this->_validation($data);
 			\Phpcmf\Service::L('input')->system_log('添加SMTP服务器: '.$data['name']);
 			$data['displayorder'] = intval($data['displayorder']);
@@ -94,13 +91,13 @@ class Email extends \Phpcmf\Common
         }
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($data);
 			\Phpcmf\Service::M()->table('mail_smtp')->update($id, $data);
-			\Phpcmf\Service::L('input')->system_log('修改SMTP服务器: '.$data['name']);
+			\Phpcmf\Service::L('input')->system_log('修改邮件服务器: '.$data['name']);
 
             \Phpcmf\Service::M('cache')->sync_cache('email'); // 自动更新缓存
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		\Phpcmf\Service::V()->assign([
@@ -121,7 +118,7 @@ class Email extends \Phpcmf\Common
 			dr_safe_replace(\Phpcmf\Service::L('input')->get('value'))
 		);
 
-		\Phpcmf\Service::L('input')->system_log('修改SMTP服务器排序值: '. $i);
+		\Phpcmf\Service::L('input')->system_log('修改邮件服务器排序值: '. $i);
         \Phpcmf\Service::M('cache')->sync_cache('email'); // 自动更新缓存
 
         $this->_json(1, dr_lang('更改成功'));
@@ -136,7 +133,8 @@ class Email extends \Phpcmf\Common
 
 		\Phpcmf\Service::M()->table('mail_smtp')->deleteAll($ids);
         \Phpcmf\Service::M('cache')->sync_cache('email'); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('批量删除SMTP服务器: '. implode(',', $ids));
+		\Phpcmf\Service::L('input')->system_log('批量删除邮件服务器: '. implode(',', $ids));
+
 		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 

@@ -33,11 +33,28 @@ class Email
         return $this;
     }
 
+    // mail 发送
+    public function mail($toemail, $subject, $message, $fname = '') {
+
+        $subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+        $from_user = "=?UTF-8?B?".base64_encode($fname ? $fname : SITE_NAME)."?=";
+        $headers = "From: ".$from_user." <".$this->config['from'].">\r\n".
+            "MIME-Version: 1.0" . "\r\n" .
+            "Content-type: text/html; charset=UTF-8" . "\r\n";
+
+        return mail($toemail, $subject, $message, $headers);
+    }
+
+    // smtp发送
     public function send($toemail, $subject, $message, $fname = '') {
 
         $mail = $this->config;
         if (!$mail['server']) {
             return FALSE;
+        }
+
+        if ($mail['server'] == 'mail') {
+            return $this->mail($toemail, $subject, $message, $fname);
         }
 
         $cfg = [];
