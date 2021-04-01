@@ -132,6 +132,7 @@ class Login extends \Phpcmf\Common
 			'form' => dr_form_hidden(),
             'oauth' => $oauth,
 			'license' => $license,
+            'login_url' => dr_rp(FC_NOW_URL, FC_NOW_HOST, '/'),
 		));
 		\Phpcmf\Service::V()->display('login.html');exit;
 	}

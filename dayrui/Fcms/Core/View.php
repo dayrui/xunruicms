@@ -714,7 +714,7 @@ class View {
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
 			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH', 'MAP', 'YEAR',
+			'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON',
 			'JSON', 'FIND'
 		];
         foreach ($params as $t) {
@@ -738,7 +738,7 @@ class View {
                             $_adj = $p;
                         }
                     }
-                    $where[$match[2]] = [
+                    $where[$var] = [
                         'adj' => $_adj,
                         'name' => $match[2],
                         'value' => $val
@@ -774,7 +774,6 @@ class View {
         $system['field'] && $system['field'] = urldecode($system['field']);
         // 分页页码变量
         $this->_page_value = $system['page'];
-
 
         // 判断关闭缓存时
         if (!SYS_CACHE) {
@@ -923,7 +922,7 @@ class View {
                 }
 
                 // 通过别名找id
-                $ids = @array_flip(\Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id'));
+                $ids = array_flip(\Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id'));
                 if (isset($param['pid'])) {
                     if (is_numeric($param['pid'])) {
                         $pid = intval($param['pid']);
@@ -1565,7 +1564,7 @@ class View {
                         }
                     }
 				}
-				
+
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
 
@@ -2134,7 +2133,7 @@ class View {
 
                     case 'BETWEEN':
                         BETWEEN:
-                        $string.= $join." {$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value'])."";
+                        $string.= $join." ({$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value']).")";
                         break;
 
                     case 'GT':
@@ -2173,7 +2172,26 @@ class View {
                             $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
                             $etime = SYS_TIME;
                         }
-                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
+                        $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
+                        break;
+
+                    case 'SEASON':
+                        list($s, $y) = explode('-', $t['value']);
+                        if (!$y) {
+                            $y = date('Y');
+                        }
+                        if (!$s || !in_array($s, [1,2,3,4])) {
+                            $s = ceil(date('n')/3);
+                        }
+                        $season = [
+                            1 => ['-01-01 00:00:00', '-03-31 23:59:59'],
+                            2 => ['-04-01 00:00:00', '-06-30 23:59:59'],
+                            3 => ['-07-01 00:00:00', '-09-30 23:59:59'],
+                            4 => ['-10-01 00:00:00', '-12-31 23:59:59'],
+                        ];
+                        $stime = strtotime($y.$season[$s][0]);
+                        $etime = strtotime($y.$season[$s][1]);
+                        $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
 
                     case 'MONTH':
@@ -2192,7 +2210,7 @@ class View {
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
                             $etime = SYS_TIME;
                         }
-                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
+                        $string.= $join."  ({$t['name']}  BETWEEN ".$stime." AND ".$etime.")";
                         break;
 
                     case 'YEAR':
@@ -2213,9 +2231,8 @@ class View {
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = SYS_TIME;
                         }
-                        $string.= $join." {$t['name']}  BETWEEN ".$stime." AND ".$etime;
+                        $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
-
 
                     default:
                         if (strpos($t['name'], '`thumb`')) {

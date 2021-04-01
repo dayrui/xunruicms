@@ -49,7 +49,7 @@ define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time())
 // 系统变量
 $system = [
 
-    'SYS_DEBUG'	=> 0,
+    'SYS_DEBUG' => 0,
     'SYS_ADMIN_CODE' => 0,
     'SYS_ADMIN_LOG' => 0,
     'SYS_AUTO_FORM' => 0,
@@ -62,28 +62,28 @@ $system = [
     'SYS_CAT_ZSHOW' => 0,
 
     'SYS_KEY' => 'xunruicms',
-    'SYS_CSRF'	=> 1,
-    'SYS_HTTPS'	=> 0,
-    'SYS_ADMIN_LOGINS'	=> 0,
-    'SYS_ADMIN_LOGIN_TIME'	=> 0,
+    'SYS_CSRF'  => 1,
+    'SYS_HTTPS' => 0,
+    'SYS_ADMIN_LOGINS'  => 0,
+    'SYS_ADMIN_LOGIN_TIME'  => 0,
     'SYS_ADMIN_OAUTH'    => 0,
 
-    'SYS_ATTACHMENT_DB'	    => 1,
-    'SYS_ATTACHMENT_PATH'	=> '',
-    'SYS_ATTACHMENT_SAVE_TYPE'	=> '',
-    'SYS_ATTACHMENT_SAVE_DIR'	=> '',
-    'SYS_ATTACHMENT_URL'	=> '',
-    'SYS_AVATAR_PATH'	=> '',
-    'SYS_AVATAR_URL'	=> '',
-    'SYS_BDMAP_API'	=> '',
-    'SYS_API_CODE'	=> '',
-    'SYS_THEME_ROOT'	=> '',
+    'SYS_ATTACHMENT_DB'     => 1,
+    'SYS_ATTACHMENT_PATH'   => '',
+    'SYS_ATTACHMENT_SAVE_TYPE'  => '',
+    'SYS_ATTACHMENT_SAVE_DIR'   => '',
+    'SYS_ATTACHMENT_URL'    => '',
+    'SYS_AVATAR_PATH'   => '',
+    'SYS_AVATAR_URL'    => '',
+    'SYS_BDMAP_API' => '',
+    'SYS_API_CODE'  => '',
+    'SYS_THEME_ROOT'    => '',
 
-    'SYS_FIELD_THUMB_ATTACH'	=> '',
-    'SYS_FIELD_CONTENT_ATTACH'	=> '',
+    'SYS_FIELD_THUMB_ATTACH'    => '',
+    'SYS_FIELD_CONTENT_ATTACH'  => '',
 
-    'SYS_BDNLP_SK'	=> '',
-    'SYS_BDNLP_AK'	=> '',
+    'SYS_BDNLP_SK'  => '',
+    'SYS_BDNLP_AK'  => '',
 ];
 if (is_file(WRITEPATH.'config/system.php')) {
     $my = require WRITEPATH.'config/system.php';
@@ -192,7 +192,7 @@ function config ($name, $getShared = true) {
  * 函数是否被启用
  */
 if (!function_exists('locale_set_default')) {
-	function locale_set_default($a) { }
+    function locale_set_default($a) { }
 }
 
 /*
@@ -204,104 +204,107 @@ function log_message($level, $message, array $context = []) {
 
 
 if (PHP_SAPI === 'cli' || defined('STDIN')) {
-	// CLI命令行模式
-	 define('ADMIN_URL', 'http://localhost/');
-	 define('FC_NOW_URL', 'http://localhost/');
-	 define('FC_NOW_HOST', 'http://localhost/');
-	 define('DOMAIN_NAME', 'http://localhost/');
-	if ($_SERVER["argv"]) {
-		foreach ($_SERVER["argv"] as $val) {
-			if (strpos($val, '=') !== false) {
-				list($name) = explode('=', $val);
-				$_GET[$name] = substr($val, strlen($name)+1);
-			}
-		}
-	}
-	defined('ENVIRONMENT') && define('ENVIRONMENT', 'testing');
+    // CLI命令行模式
+     define('ADMIN_URL', 'http://localhost/');
+     define('FC_NOW_URL', 'http://localhost/');
+     define('FC_NOW_HOST', 'http://localhost/');
+     define('DOMAIN_NAME', 'http://localhost/');
+    if ($_SERVER["argv"]) {
+        foreach ($_SERVER["argv"] as $val) {
+            if (strpos($val, '=') !== false) {
+                list($name) = explode('=', $val);
+                $_GET[$name] = substr($val, strlen($name)+1);
+            }
+        }
+    }
+    defined('ENVIRONMENT') && define('ENVIRONMENT', 'testing');
 } else {
-	// 正常访问模式
-	// 当前URL
-	$pageURL = 'http';
-	((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
-		|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
-		|| (defined('IS_HTTPS_FIX') && IS_HTTPS_FIX)
-		|| (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
-	$pageURL.= '://';
-	// 优先定义后台域名
-	IS_ADMIN && define('ADMIN_URL', $pageURL.$_SERVER['HTTP_HOST'].'/');
-	if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
-		$url = explode(':', $_SERVER['HTTP_HOST']);
-		$url[0] ? $pageURL.= $_SERVER['HTTP_HOST'] : $pageURL.= $url[0];
-	} else {
-		$pageURL.= $_SERVER['HTTP_HOST'];
-	}
-	
-	define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
-	define('FC_NOW_HOST', $pageURL.'/');
+    // 正常访问模式
+    // 当前URL
+    $pageURL = 'http';
+    ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+        || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+        || (isset($_SERVER['HTTP_FROM_HTTPS']) && $_SERVER['HTTP_FROM_HTTPS'] == 'on')
+        || (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
+        || (defined('IS_HTTPS_FIX') && IS_HTTPS_FIX)
+        || (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
+    $pageURL.= '://';
+    // 优先定义后台域名
+    IS_ADMIN && define('ADMIN_URL', $pageURL.$_SERVER['HTTP_HOST'].'/');
+    if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
+        $url = explode(':', $_SERVER['HTTP_HOST']);
+        $url[0] ? $pageURL.= $_SERVER['HTTP_HOST'] : $pageURL.= $url[0];
+    } else {
+        $pageURL.= $_SERVER['HTTP_HOST'];
+    }
+    
+    define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
+    define('FC_NOW_HOST', $pageURL.'/');
 
-	// 当前域名
-	define('DOMAIN_NAME', strtolower($_SERVER['HTTP_HOST']));
-	
-	// 伪静态字符串
-	$uu = isset($_SERVER['HTTP_X_REWRITE_URL']) || trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : NULL);
-	if (defined('FIX_WEB_DIR') && FIX_WEB_DIR && strpos($uu, FIX_WEB_DIR) !== false &&  strpos($uu, FIX_WEB_DIR) === 0) {
-		$uu = trim(substr($uu, strlen(FIX_WEB_DIR)), '/');
-	}
+    // 当前域名
+    define('DOMAIN_NAME', strtolower($_SERVER['HTTP_HOST']));
+    
+    // 伪静态字符串
+    $uu = isset($_SERVER['HTTP_X_REWRITE_URL']) || trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : NULL);
+    if (defined('FIX_WEB_DIR') && FIX_WEB_DIR && strpos($uu, FIX_WEB_DIR) !== false &&  strpos($uu, FIX_WEB_DIR) === 0) {
+        $uu = trim(substr($uu, strlen(FIX_WEB_DIR)), '/');
+    }
 
-	// 以index.php或者?开头的uri不做处理
-	$uri = strpos($uu, SELF) === 0 || strpos($uu, '?') === 0 ? '' : $uu;
+    // 以index.php或者?开头的uri不做处理
+    $uri = strpos($uu, SELF) === 0 || strpos($uu, '?') === 0 ? '' : $uu;
 
-	// 当前URI
-	define('CMSURI', $uri);
+    // 当前URI
+    define('CMSURI', $uri);
 
-	// 根据自定义URL规则来识别路由
-	if (!IS_ADMIN && $uri && !defined('IS_API')) {
-		// 自定义URL解析规则
-		$routes = [];
-		$routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
-		if (is_file(ROOTPATH.'config/rewrite.php')) {
-			$my = require ROOTPATH.'config/rewrite.php';
-			$my && $routes = array_merge($routes, $my);
-		}
-		// 正则匹配路由规则
-		$is_404 = 1;
-		foreach ($routes as $key => $val) {
-			$rewrite = $match = [];
-			if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
-				unset($match[0]);
-				// 开始匹配
-				$is_404 = 0;
-				// 开始解析路由 URL参数模式
-				$_GET = [];
-				$queryParts = explode('&', str_replace(['index.php?', '/index.php?'], '', $val));
-				if ($queryParts) {
-					foreach ($queryParts as $param) {
-						$item = explode('=', $param);
-						$_GET[$item[0]] = $item[1];
-						if (strpos($item[1], '$') !== FALSE) {
-							$id = (int)substr($item[1], 1);
-							$_GET[$item[0]] = isset($match[$id]) ? $match[$id] : $item[1];
-						}
-					}
-				}
-				!$_GET['c'] && $_GET['c'] = 'home';
-				!$_GET['m'] && $_GET['m'] = 'index';
-				// 结束匹配
-				break;
-			}
-		}
-		// 自定义路由模式
-		if (is_file(ROOTPATH.'config/router.php')) {
-			require ROOTPATH.'config/router.php';
-		}
-		// 说明是404
-		if ($is_404) {
-			$_GET['s'] = '';
-			$_GET['c'] = 'home';
-			$_GET['m'] = 's404';
-			$_GET['uri'] = $uri;
-		}
-	}
+    // 根据自定义URL规则来识别路由
+    if (!IS_ADMIN && $uri && !defined('IS_API')) {
+        // 自定义URL解析规则
+        $routes = [];
+        $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
+        if (is_file(ROOTPATH.'config/rewrite.php')) {
+            $my = require ROOTPATH.'config/rewrite.php';
+            $my && $routes = array_merge($routes, $my);
+        }
+        // 正则匹配路由规则
+        $is_404 = 1;
+        foreach ($routes as $key => $val) {
+            $rewrite = $match = [];
+            if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
+                unset($match[0]);
+                // 开始匹配
+                $is_404 = 0;
+                // 开始解析路由 URL参数模式
+                $_GET = [];
+                $queryParts = explode('&', str_replace(['index.php?', '/index.php?'], '', $val));
+                if ($queryParts) {
+                    foreach ($queryParts as $param) {
+                        $item = explode('=', $param);
+                        $_GET[$item[0]] = $item[1];
+                        if (strpos($item[1], '$') !== FALSE) {
+                            $id = (int)substr($item[1], 1);
+                            $_GET[$item[0]] = isset($match[$id]) ? $match[$id] : $item[1];
+                        }
+                    }
+                }
+                !$_GET['c'] && $_GET['c'] = 'home';
+                !$_GET['m'] && $_GET['m'] = 'index';
+                // 结束匹配
+                break;
+            }
+        }
+        // 自定义路由模式
+        if (is_file(ROOTPATH.'config/router.php')) {
+            require ROOTPATH.'config/router.php';
+        }
+        // 说明是404
+        if ($is_404) {
+            $_GET['s'] = '';
+            $_GET['c'] = 'home';
+            $_GET['m'] = 's404';
+            $_GET['uri'] = $uri;
+        }
+    }
 }
 
 // API接口项目标识 放到后面是为了识别api 的伪静态

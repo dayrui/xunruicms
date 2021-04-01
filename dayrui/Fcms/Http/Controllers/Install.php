@@ -161,11 +161,10 @@ class Install extends \Phpcmf\Common
                     }
 
                     // 存储缓存文件中
-                    $size = @file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
+                    $size = file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
                     if (!$size || $size < 10) {
                         $this->_json(0, '临时数据存储失败，cahce目录无法写入');
                     }
-
 
                     // 存储mysql
                     $database = '<?php
@@ -181,7 +180,7 @@ $db[\'default\']	= [
     \'database\'	=> \''.$data['db_name'].'\',
     \'DBPrefix\'	=> \''.dr_safe_filename($data['db_prefix']).'\',
 ];';
-                    $size = @file_put_contents(WEBPATH.'config/database.php', $database);
+                    $size = file_put_contents(WEBPATH.'config/database.php', $database);
                     if (!$size || $size < 10) {
                         $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
                     }
@@ -190,6 +189,7 @@ $db[\'default\']	= [
                 }
 
                 \Phpcmf\Service::V()->assign([
+                    'do_url' => '/index.php?c=install&m=index&is_install_db='.($is_oem ? 0 : intval($_POST['is_install_db'])).'&step=2',
                     'is_oem' => $is_oem,
                 ]);
 
@@ -317,6 +317,11 @@ $db[\'default\']	= [
                                 'domain' => DOMAIN_NAME,
                             ]);
 
+                            $ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? 1 : 0;;
+                            if (isset($_GET['protocol']) && trim($_GET['protocol'], ':') == 'https') {
+                                $ssl = 1;
+                            }
+
                             // 写配置文件
                             $sys = [
                                 'SYS_DEBUG'                     => '1', //调试器开关
@@ -331,7 +336,7 @@ $db[\'default\']	= [
                                 'SYS_CRON_AUTH'                 => '0', //单页目录允许重复
                                 'SYS_CSRF'                      => '1', //跨站验证提交
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
-                                'SYS_HTTPS'                     => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? '1' : '0', //https模式
+                                'SYS_HTTPS'                     => $ssl, //https模式
                                 'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
                                 'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
                                 'SYS_ATTACHMENT_URL'            => '', //附件访问地址
@@ -372,8 +377,8 @@ $db[\'default\']	= [
                                 // 安装完成
                                 file_put_contents($this->lock, time());
                                 file_put_contents(WRITEPATH.'install.test', time());
-                                @unlink(WRITEPATH.'install.info');
-                                @unlink(WRITEPATH.'install.error');
+                                unlink(WRITEPATH.'install.info');
+                                unlink(WRITEPATH.'install.error');
                             }
                         }
                     }

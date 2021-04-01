@@ -42,7 +42,7 @@
 									shade: [0.3,'#fff'], //0.1透明度的白色背景
 									time: 100000000
 								});
-								window.location.href = "{$next_url}";
+								window.location.href = "{$next_url}&protocol="+document.location.protocol;
 							} else {
 								dr_ajax2ajax(json.data.page);
 							}
