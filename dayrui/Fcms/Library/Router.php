@@ -469,7 +469,6 @@ class Router
                     unset($params[$name]);
                 }
             }
-
         }
 
         if (is_array($params)) {
@@ -496,11 +495,18 @@ class Router
     }
 
     // 伪静态替换
-    public function get_url_value($data, $url, $prefix) {
+    public function get_url_value($data, $rule, $prefix) {
+
         $rep = new \php5replace($data);
-        $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", array($rep, 'php55_replace_data'), $url);
-        $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $url);
+
+        $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", [$rep, 'php55_replace_data'], $rule);
+        $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$rep, 'php55_replace_function'], $url);
         $url = str_replace('//', '/', $prefix.$url);
+
+        if (strpos($url, '?') !== false) {
+            return '自定义URL规则['.$rule.']不能包含问号?';
+        }
+
         return $url;
     }
 

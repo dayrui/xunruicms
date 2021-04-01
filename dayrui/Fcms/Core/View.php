@@ -1914,9 +1914,7 @@ class View {
                 ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
-
                 break;
-
 
             default :
 
