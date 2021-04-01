@@ -206,12 +206,21 @@ class Urlrule extends \Phpcmf\Table
             // 保存前的格式化
             $type = (int)\Phpcmf\Service::L('input')->post('type');
             $value = \Phpcmf\Service::L('input')->post('value');
+            if ($value[$type]) {
+                foreach ($value[$type] as $t) {
+                    if (strpos($t, '?') !== false) {
+                        $this->_json(0, dr_lang('URL规则中不能包含%s号', '?'));
+                    } elseif (strpos($t, '#') !== false) {
+                        $this->_json(0, dr_lang('URL规则中不能包含%s号', '#'));
+                    }
+                }
+            }
             $data[1]['type'] = $type;
-            $value[$type]['catjoin'] = \Phpcmf\Service::L('input')->post('catjoin') ? \Phpcmf\Service::L('input')->post('catjoin') : '/';
+            $join = \Phpcmf\Service::L('input')->post('catjoin');
+            $value[$type]['catjoin'] = $join ? $join : '/';
             $data[1]['value'] = dr_array2string($value[$type]);
             return dr_return_data(1, 'ok', $data);
         }, function ($id, $data, $old) {
-
             \Phpcmf\Service::M('cache')->sync_cache('urlrule');
         });
     }
@@ -248,7 +257,7 @@ class Urlrule extends \Phpcmf\Table
                 $this->_json(0, $rt['msg']);
             }
             \Phpcmf\Service::M('cache')->sync_cache('urlrule');
-            exit($this->_json(1, dr_lang('操作成功')));
+            $this->_json(1, dr_lang('操作成功'));
         }
 
         \Phpcmf\Service::V()->assign([

@@ -343,6 +343,10 @@ class View {
             return TPLPATH.'pc/default/home/'.$file;
         }
 
+        if (IS_DEV) {
+            log_message('error', '模板文件['.$error.']不存在');
+        }
+
         $this->show_error('模板文件不存在', $error);
     }
 
