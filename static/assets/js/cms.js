@@ -650,6 +650,12 @@ function dr_ajax_submit(url, form, time, go) {
 // 处理post提交
 function dr_post_submit(url, form, time, go) {
 
+    var p = url.split('/');
+    if ((p[0] == 'http:' || p[0] == 'https:') && document.location.protocol != p[0]) {
+        alert('当前提交的URL是'+p[0]+'模式，请使用'+document.location.protocol+'模式访问再提交');
+        return;
+    }
+
     url = url.replace(/&page=\d+&page/g, '&page');
 
     var loading = layer.load(2, {
