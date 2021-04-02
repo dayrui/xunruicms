@@ -412,5 +412,4 @@ class Linkage extends \Phpcmf\Model
 
         return $data;
     }
-    
 }

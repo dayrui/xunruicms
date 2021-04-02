@@ -66,7 +66,7 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'field' => $this->init['field'],
             'module' => $this->module,
-            'post_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])]),
+            'post_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])]),
             'is_post_user' => $this->is_post_user,
             'is_hcategory' => $this->is_hcategory,
             'is_category_show' => $this->is_hcategory ? 0 : (dr_count($this->module['category']) == 1 ? 0 : 1),

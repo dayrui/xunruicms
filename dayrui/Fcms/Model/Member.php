@@ -9,7 +9,7 @@ class Member extends \Phpcmf\Model
 {
 
     protected $sso_url;
-    
+
     /**
      * 由用户名获取uid
      */
@@ -20,7 +20,7 @@ class Member extends \Phpcmf\Model
         $data = $this->db->table('member')->select('id')->where('username', dr_safe_replace($name))->get()->getRowArray();
         return intval($data['id']);
     }
-    
+
     /**
      * 由uid获取用户名
      */
@@ -283,7 +283,7 @@ class Member extends \Phpcmf\Model
 
         return $rt;
     }
-    
+
     // 更新用户组
     // member 用户信息
     // groups 拥有的用户组
@@ -509,7 +509,7 @@ class Member extends \Phpcmf\Model
             }
         }
     }
-    
+
     // 手动变更等级
     public function update_level($uid, $gid, $lid) {
         $old = $data = $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->get()->getRowArray();
@@ -618,7 +618,7 @@ class Member extends \Phpcmf\Model
         // 挂钩点
         \Phpcmf\Hooks::trigger('admin_notice', $data);
     }
-    
+
     // 执行提醒
     public function todo_admin_notice($uri, $site = 0) {
         $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->update([
@@ -631,7 +631,7 @@ class Member extends \Phpcmf\Model
     public function delete_admin_notice($uri, $site = 0) {
         $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->delete();
     }
-    
+
 
     // 审核用户
     public function verify_member($uid) {
@@ -673,7 +673,7 @@ class Member extends \Phpcmf\Model
                 $this->sso_url[] = dr_http_prefix($u).'/';
             }
         }
-        
+
         return $this->sso_url;
     }
 
@@ -827,19 +827,19 @@ class Member extends \Phpcmf\Model
                 'sso' => $this->sso($data, $remember)]
         );
     }
-    
+
     // 授权登录
     public function login_oauth($name, $data) {
-        
+
         // 保存本地会话
         $this->save_cookie($data);
-        
+
         // 记录日志
         $this->_login_log($data, $name);
 
         return $this->sso($data);
     }
-    
+
     // 绑定注册模式 授权注册绑定
     public function register_oauth_bang($oauth, $groupid, $member, $data = []) {
 
@@ -903,7 +903,7 @@ class Member extends \Phpcmf\Model
             'member' => $member,
         ]);
     }
-    
+
     // 直接登录模式 授权注册
     public function register_oauth($groupid, $oauth) {
 
@@ -957,7 +957,7 @@ class Member extends \Phpcmf\Model
      * @param   快捷登录注册
      */
     public function register($groupid, $member, $data = [], $oauth = []) {
-        
+
         $member['email'] && $member['email'] = strtolower($member['email']);
         $member['name'] = htmlspecialchars(!$member['name'] ? '' : dr_strcut($member['name'], intval(\Phpcmf\Service::C()->member_cache['register']['cutname']), ''));
 
@@ -1160,7 +1160,7 @@ class Member extends \Phpcmf\Model
         return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
     }
 
-    // 修改密码 
+    // 修改密码
     public function edit_password($member, $password) {
 
         $id = (int)$member['id'];

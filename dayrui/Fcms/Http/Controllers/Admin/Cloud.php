@@ -186,7 +186,7 @@ class Cloud extends \Phpcmf\Common
             ),
             'error' => $error,
         ]);
-        \Phpcmf\Service::V()->display('cloud_app.html');exit;
+        \Phpcmf\Service::V()->display('cloud_app.html');
     }
 
     // 安装程序

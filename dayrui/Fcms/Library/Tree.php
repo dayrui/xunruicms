@@ -15,10 +15,24 @@ class Tree {
     protected $deep = 1;
     protected $ret;
     protected $cache;
+    protected $result;
 
     // 初始化函数
     public function __construct() {
         $this->icon();
+    }
+
+    // 释放变量
+    public function __destruct()
+    {
+        unset($this->data);
+        unset($this->cache);
+        unset($this->ret);
+        unset($this->icon);
+        unset($this->result_array);
+        unset($this->nbsp_str);
+        unset($this->nbsp);
+        unset($this->result);
     }
 
     /**
@@ -211,6 +225,14 @@ class Tree {
         $string = '<select class="bs-select form-control" '.$str.'>';
         $default && $string.= "<option value='0'>$default</option>";
 
+        if (!IS_DEV) {
+            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default);
+            $cache = \Phpcmf\Service::L('cache')->get_data($name);
+            if ($cache) {
+                return $cache;
+            }
+        }
+
         $tree = [];
         if (is_array($data)) {
             foreach($data as $t) {
@@ -223,6 +245,13 @@ class Tree {
         $str = "<option value='\$id' \$selected>\$spacer \$name</option>";
         $string.= $this->icon()->_data($tree)->_linkage_tree_result(0, $str);
         $string.= '</select>';
+
+        unset($this->ret);
+        unset($this->data);
+
+        if (!IS_DEV) {
+            \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
+        }
 
         return $string;
     }
@@ -245,9 +274,16 @@ class Tree {
             $str = str_replace('style', '_style', $str);
         }
 
+        if (!IS_DEV) {
+            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first);
+            $cache = \Phpcmf\Service::L('cache')->get_data($name);
+            if ($cache) {
+                return $cache;
+            }
+        }
+
         $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
-
 
         $tree = [];
         $first = 0; // 第一个可用栏目
@@ -316,6 +352,13 @@ class Tree {
         }
 
         $data = $is_first ? [$string, $first] : $string;
+
+        unset($this->ret);
+        unset($this->data);
+
+        if (!IS_DEV) {
+            \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
+        }
 
         return $data;
     }

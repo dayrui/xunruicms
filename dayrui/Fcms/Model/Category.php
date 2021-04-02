@@ -57,10 +57,12 @@ class Category extends \Phpcmf\Model
 
         if (is_array($data) && !empty($data)) {
             foreach ($data as $catid => $c) {
+                $result = [];
                 $this->categorys[$catid] = $c;
-                $result = array();
                 foreach ($this->categorys as $_k => $_v) {
-                    $_v['pid'] && $result[] = $_v;
+                    if ($_v['pid']) {
+                        $result[] = $_v;
+                    }
                 }
             }
         }
@@ -110,7 +112,9 @@ class Category extends \Phpcmf\Model
 
         if (is_array($this->categorys)) {
             foreach ($this->categorys as $id => $cat) {
-                $cat['pid'] && $id != $catid && $cat['pid'] == $catid && $childids.= ','.$this->get_childids($id, ++$n);
+                if ($cat['pid'] && $id != $catid && $cat['pid'] == $catid) {
+                    $childids.= ','.$this->get_childids($id, ++$n);
+                }
             }
         }
 
@@ -148,7 +152,7 @@ class Category extends \Phpcmf\Model
         $t = $this->categorys[$catid];
         $pids = $t['pids'];
         $pids = explode(',', $pids);
-        $catdirs = array();
+        $catdirs = [];
         krsort($pids);
 
         foreach ($pids as $id) {

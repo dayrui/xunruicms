@@ -224,7 +224,7 @@ class View {
             && !IS_API_HTTP && !IS_AJAX) {
             echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
         } else {
-            $this->_options = null;
+            unset($this->_options);
         }
 
         // 兼容php8
@@ -242,8 +242,9 @@ class View {
         $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
 
         // 消毁变量
-        $this->loadjs = null;
-        $this->_include_file = null;
+        unset($this->loadjs);
+        unset($this->_include_file);
+        //unset($this->_options);
     }
 
     // 动态加载js
