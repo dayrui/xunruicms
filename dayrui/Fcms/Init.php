@@ -221,29 +221,22 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
 } else {
     // 正常访问模式
     // 当前URL
-    $pageURL = 'http';
-    ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+    $url = 'http';
+    if ((!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])
+        || (defined('IS_HTTPS_FIX') && IS_HTTPS_FIX)
+        || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
         || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
         || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
         || (isset($_SERVER['HTTP_FROM_HTTPS']) && $_SERVER['HTTP_FROM_HTTPS'] == 'on')
         || (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
-        || (defined('IS_HTTPS_FIX') && IS_HTTPS_FIX)
-        || (!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])) && $pageURL.= 's';
-    $pageURL.= '://';
-    // 优先定义后台域名
-    IS_ADMIN && define('ADMIN_URL', $pageURL.$_SERVER['HTTP_HOST'].'/');
-    if (strpos($_SERVER['HTTP_HOST'], ':') !== FALSE) {
-        $url = explode(':', $_SERVER['HTTP_HOST']);
-        $url[0] ? $pageURL.= $_SERVER['HTTP_HOST'] : $pageURL.= $url[0];
-    } else {
-        $pageURL.= $_SERVER['HTTP_HOST'];
+    ) {
+        $url.= 's';
     }
-    
-    define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
-    define('FC_NOW_HOST', $pageURL.'/');
-
-    // 当前域名
-    define('DOMAIN_NAME', strtolower($_SERVER['HTTP_HOST']));
+    $url.= '://'.$_SERVER['HTTP_HOST'];
+    IS_ADMIN && define('ADMIN_URL', $url.'/'); // 优先定义后台域名
+    define('FC_NOW_URL', $url.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
+    define('FC_NOW_HOST', $url.'/'); // 域名部分
+    define('DOMAIN_NAME', strtolower($_SERVER['HTTP_HOST'])); // 当前域名
     
     // 伪静态字符串
     $uu = isset($_SERVER['HTTP_X_REWRITE_URL']) || trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : NULL);

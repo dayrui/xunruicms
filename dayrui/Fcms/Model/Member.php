@@ -767,7 +767,7 @@ class Member extends \Phpcmf\Model
         // 登录
         $data = $this->_find_member_info($username);
         if (!$data) {
-            return dr_return_data(0, dr_lang('用户不存在'));
+            return dr_return_data(0, dr_lang('用户[%s]不存在', $username));
         }
         // 密码验证
         $password2 = dr_safe_password($password);
