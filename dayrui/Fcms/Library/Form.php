@@ -243,6 +243,9 @@ class Form
                 }
                 // 判断表字段值的唯一性
                 if ($field['ismain'] && $field['setting']['option']['unique']) {
+                    if (empty(dr_strlen($post[$name]))) {
+                        return [[], ['name' => $name, 'error' => dr_lang('%s不能为空', $field['name'])]];
+                    }
                     if (\Phpcmf\Service::C()->init['table']) {
                         $table = \Phpcmf\Service::M()->dbprefix(\Phpcmf\Service::C()->init['table']);
                         if (\Phpcmf\Service::M()->db->fieldExists($name, $table)) {
