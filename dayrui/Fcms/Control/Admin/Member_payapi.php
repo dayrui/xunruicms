@@ -1,0 +1,55 @@
+<?php namespace Phpcmf\Control\Admin;
+/**
+ * http://www.xunruicms.com
+ * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 迅睿内容管理框架系统（简称：迅睿CMS）软件著作权登记号：2019SR0854684
+ **/
+
+class Member_payapi extends \Phpcmf\Common
+{
+
+    public function index() {
+
+        $data = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'payapi')->get()->getRowArray();
+        $data = dr_string2array($data['value']);
+
+        if (IS_AJAX_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+
+            \Phpcmf\Service::M()->db->table('member_setting')->replace([
+                'name' => 'payapi',
+                'value' => dr_array2string($post)
+            ]);
+            \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        $local = dr_dir_map(ROOTPATH.'api/pay/', 1);
+        foreach ($local as $dir) {
+            if ($dir != 'finecms' && is_file(ROOTPATH.'api/pay/'.$dir.'/config.php')) {
+                $config = require ROOTPATH.'api/pay/'.$dir.'/config.php';
+                if ($data[$dir]) {
+                    $data[$dir]['config'] = $config;
+                } else {
+                    $data[$dir] = [
+                        'config' => $config,
+                    ];
+                }
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $data,
+            'form' => dr_form_hidden(),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '支付接口' => ['member_payapi/index', 'fa fa-code'],
+                    'help' => [387]
+                ]
+            ),
+        ]);
+        \Phpcmf\Service::V()->display('member_payapi.html');
+    }
+
+
+}

@@ -68,7 +68,7 @@ class View {
         // 模板缓存目录
         $this->_cache = WRITEPATH.'template/';
         $this->_tname = $this->_is_mobile ? 'mobile' : ($name ? $name : 'pc');
-        $this->_aroot = $this->_froot = COREPATH.'Views/';
+        $this->_aroot = $this->_froot = COREPATH.'View/';
         // 当前项目模板目录
         if (IS_ADMIN) {
             // 后台
@@ -173,7 +173,7 @@ class View {
     public function admin($path = '', $fix_path = '') {
         $this->_dir = $path ? $path : APPPATH.'Views/';
         $this->_froot = $fix_path ? $fix_path : APPPATH.'Views/';
-        $this->_aroot = COREPATH.'Views/';
+        $this->_aroot = COREPATH.'View/';
         $this->_is_admin = 1;
     }
 

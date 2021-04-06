@@ -67,6 +67,7 @@ class Service
 
         static::$apps = [];
         $source_dir = dr_get_app_list();
+
         if ($fp = opendir($source_dir)) {
             $filedata = [];
             $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;

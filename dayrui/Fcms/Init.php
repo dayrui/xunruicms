@@ -17,7 +17,7 @@ define('SYSTEMPATH', BASEPATH);
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
 // 核心程序目录
-define('COREPATH', CMSPATH.'Http/');
+define('COREPATH', CMSPATH);
 // App程序目录
 !defined('APPSPATH') && define('APPSPATH', FCPATH.'App/');
 // 程序初始化
