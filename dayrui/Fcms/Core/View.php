@@ -171,9 +171,9 @@ class View {
      * 强制设置为后台模板目录
      */
     public function admin($path = '', $fix_path = '') {
-        $this->_dir = $path ? $path : APPPATH.'Views/';
-        $this->_froot = $fix_path ? $fix_path : APPPATH.'Views/';
         $this->_aroot = COREPATH.'View/';
+        $this->_dir = $path ? $path : (APP_DIR ? APPPATH.'Views/' : $this->_aroot);
+        $this->_froot = $fix_path ? $fix_path : (APP_DIR ? APPPATH.'Views/' : $this->_aroot);
         $this->_is_admin = 1;
     }
 
@@ -278,7 +278,7 @@ class View {
             } elseif (is_file($this->_dir.$file)) {
                 return $this->_dir.$file; // 调用当前后台的模板
             } elseif (is_file($this->_froot.$file)) {
-                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_froot.$file.']';
+                $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_froot.$file.']！';
                 return $this->_froot.$file; // 当前项目目录模板不存在时调用主项目的
             } elseif (is_file($this->_aroot.$file)) {
                 $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_aroot.$file.']';
@@ -306,7 +306,7 @@ class View {
             $error = $dir === '/' ? $this->_root.$file : $this->_dir.$file;
         } elseif ($file == 'goto_url') {
             // 转向字段模板
-            return COREPATH.'Views/go.html';
+            return COREPATH.'View/go.html';
         } else {
             if ($dir === '/' && is_file($this->_root.$file)) {
                 // 强制主目录

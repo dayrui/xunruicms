@@ -49,7 +49,7 @@ class Table extends \Phpcmf\Common
         $this->is_module_index = 0;
         $this->is_category_data_field = 0;
         $this->is_diy_where_list = 0;
-        $this->admin_tpl_path = APPPATH.'Views/';
+        $this->admin_tpl_path = (APP_DIR ? APPPATH.'Views/' : COREPATH.'View/');
     }
     
     // 数据表初始化
