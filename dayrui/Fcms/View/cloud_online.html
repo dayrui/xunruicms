@@ -1,0 +1,33 @@
+{if (SYS_HTTPS && substr($url, 0, 7) == "http://")}
+<html>
+<head>
+    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+</head>
+<body class="page-content-white">
+<div style="{if \Phpcmf\Service::IS_MOBILE_USER()} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+    <a href="{$url}" target="_blank" class="btn default btn-block ">{dr_lang('单击下发链接进行访问该页面')}</a>
+</div>
+</body>
+</html>
+{elseif IS_DEV}
+<html>
+<head>
+    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+</head>
+<body class="page-content-white">
+<div style="{if \Phpcmf\Service::IS_MOBILE_USER()} padding:100px 10px 10px 10px; {else}padding:220px;{/if}text-align: center">
+    <a href="{$url}" class="btn default btn-block">{dr_lang('单击下发链接进行访问该页面')}</a>
+    <p>{$url}</p>
+</div>
+</body>
+</html>
+{else}
+<html>
+<head>
+    <meta http-equiv="refresh" content="0;url={$url}">
+</head>
+<body style="background: url({THEME_PATH}assets/images/loading-0.gif);background-position: center;background-color: #fff;background-repeat: no-repeat;"> </body>
+</html>
+{/if}

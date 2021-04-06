@@ -1,0 +1,72 @@
+<html><head>
+    <title>关注微信公众号</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://res.wx.qq.com/connect/zh_CN/htmledition/style/impowerApp45a337.css">
+    <link href="https://res.wx.qq.com/connect/zh_CN/htmledition/images/favicon.ico" rel="Shortcut Icon">
+    <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/jquery.min.js"></script>
+</head>
+<body style="background-color: rgb(51, 51, 51); padding: 50px;">
+<div class="old-template" style="">
+    <div class="main impowerBox">
+        <div class="loginPanel normalPanel">
+            <div class="title">{SITE_NAME}</div>
+            <div class="waiting panelContent">
+                <div class="wrp_code"><img class="qrcode lightBorder" src="{$qrcode_url}"></div>
+                <div class="info">
+                    <div class="status status_browser js_status js_wx_default_tip normal" id="wx_default_tip">
+                        <p>请使用微信扫描二维码关注公众号</p>
+                    </div>
+                    <div class="status status_succ js_status js_wx_after_scan normal" style="display:none" id="wx_after_scan">
+                        <i class="status_icon icon38_msg succ"></i>
+                        <div class="status_txt">
+                            <h4>扫码成功</h4>
+                            <p>请在返回网站进行操作</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function dr_weixin_notify() {
+        $.ajax({
+            type : "post",
+            url : "{$notify_url}",
+            dataType : "json",
+            success : function(json){
+                if (json.code == 1) {
+                    $('#wx_default_tip').hide();
+                    $('#wx_after_scan').show();
+                    var oss_url = json.data.sso;
+                    // 发送同步登录信息
+                    for(var i in oss_url){
+                        $.ajax({
+                            type: "GET",
+                            url:oss_url[i],
+                            dataType: "jsonp",
+                            success: function(json){ },
+                            error: function(){ }
+                        });
+                    }
+                    if (json.data.url) {
+                        setTimeout("window.location.href = '"+json.data.url+"'", 2000);
+                    } else{
+                        setTimeout("window.location.href = '{$back_url}'", 2000);
+                    }
+
+
+                }
+            },
+            error:function(){ }
+        });
+    }
+    $(function(){
+        setInterval('dr_weixin_notify()', 1000);
+    });
+</script>
+
+
+</body>
+</html>

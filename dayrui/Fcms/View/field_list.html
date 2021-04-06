@@ -1,0 +1,161 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
+</div>
+
+<div class="right-card-box">
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="row" id="sortable_portlets">
+        <div class="col-md-2">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption font-green-sharp">
+                        <i class="icon-speech font-green-sharp"></i>
+                        <span class="caption-subject bold uppercase"> 基础字段</span>
+                    </div>
+                </div>
+                <div class="portlet-body row">
+                    {loop $ftype $t}
+                    <div class="field-items margin-top-20 col-md-6">
+                        <a href="javascript:;" class="btn default btn-block field-handle">{$t.name}</a>
+                    </div>
+                    {/loop}
+                </div>
+            </div>
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption font-green-sharp">
+                        <i class="icon-speech font-green-sharp"></i>
+                        <span class="caption-subject bold uppercase"> 高级字段</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="field-items margin-top-10">
+                        <a href="javascript:;" class="btn default btn-block field-handle">多行多列表格填空</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption font-green-sharp">
+                        <i class="icon-speech font-green-sharp"></i>
+                        <span class="caption-subject bold uppercase"> 自定义表单布局</span>
+                    </div>
+                    <div class="actions">
+                        <a href="javascript:;" class="btn btn-circle btn-default btn-sm">
+                            <i class="fa fa-plus"></i> 预览 </a>
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;"></a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+
+                    <div class="column sortable">
+                        <div class="dr_field_html form-group field-items portlet-sortable">
+                            <label class="col-md-3 control-label field-handle">{dr_lang('显示名称')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text"/></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column sortable">
+                        <div class="dr_field_html form-group field-items portlet-sortable">
+                            <label class="col-md-3 control-label field-handle">{dr_lang('显示名称22')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text"/></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column sortable">
+                        <div class="dr_field_html form-group field-items portlet-sortable">
+                            <label class="col-md-3 control-label field-handle">{dr_lang('显示名称2333')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text"/></label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-2">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption font-green-sharp">
+                        <i class="icon-speech font-green-sharp"></i>
+                        <span class="caption-subject bold uppercase"> 字段属性</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    12
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+</div>
+<script type="text/javascript">
+    var PortletDraggable = function () {
+
+        return {
+            //main function to initiate the module
+            init: function () {
+
+                if (!jQuery().sortable) {
+                    return;
+                }
+
+                $("#sortable_portlets").sortable({
+                    connectWith: ".portlet",
+                    items: ".field-items",
+                    opacity: 0.8,
+                    handle : '.field-handle',
+                    coneHelperSize: true,
+                    placeholder: 'portlet-sortable-placeholder',
+                    forcePlaceholderSize: true,
+                    tolerance: "pointer",
+                    helper: "clone",
+                    tolerance: "pointer",
+                    forcePlaceholderSize: !0,
+                    helper: "clone",
+                    //cancel: ".portlet-sortable-empty, .portlet-fullscreen", // cancel dragging if portlet is in fullscreen mode
+                    revert: 250, // animation in milliseconds
+                    update: function(b, c) {
+                        console.log(b);
+                        console.log(c);
+                        console.log($(this));
+                        if (c.item.prev().hasClass("portlet-sortable-empty")) {
+                            c.item.prev().before(c.item);
+                        }
+                    }
+                });
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        PortletDraggable.init();
+        $('.dr_field_html').click(function () {
+            $('.dr_field_html').removeClass('xuanz');
+            $(this).addClass('xuanz');
+        });
+    });
+</script>
+<style>
+    .xuanz {
+        background-color: #f1f4f7;
+        padding: 10px 0;
+    }
+    </style>
+
+{template "footer.html"}

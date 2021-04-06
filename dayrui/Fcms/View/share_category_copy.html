@@ -1,0 +1,27 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-12" id="multi-select">
+                {$select}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                {dr_lang('可以将本栏目的配置信息复制到其他栏目中去')}
+            </div>
+        </div>
+
+    </div>
+</form>
+<link href="{THEME_PATH}assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+        $('#multi-select select').multiSelect();
+    });
+</script>
+{template "footer.html"}

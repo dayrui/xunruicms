@@ -1,0 +1,29 @@
+{if $url}
+<div class="alert">
+    <a href="{$url}">{$msg}</a>
+    <p>{$note}</p>
+</div>
+<meta http-equiv="refresh" content="0; url={$url}">
+{else}
+<div class="alert">
+    {$msg}
+</div>
+{/if}
+
+<style>
+    .alert {
+        background: #ffffff!important;
+        text-align: center;
+        margin-top: 70px;
+    }
+    .alert p {
+        margin-top: 10px;
+        font-size: 12px;
+        color: rgba(2, 1, 1, 0.41);
+    }
+    .alert a {
+        text-shadow: none;
+        color: #337ab7;
+        text-decoration: none;
+    }
+</style>

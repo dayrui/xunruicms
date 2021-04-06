@@ -1,0 +1,116 @@
+{template "header.html"}
+
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+
+
+<div class="note note-danger">
+    <p>{$path}</p>
+</div>
+
+<form action="" class="form-horizontal" enctype="multipart/form-data" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="row myfbody">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green">{dr_lang('文件修改')}</span>
+                    </div>
+
+                    <div class="actions">
+                        <div class="btn-group">
+                            <a class="btn" href="{$reply_url}"> <i class="fa fa-mail-reply"></i> {dr_lang('返回列表')}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {$preview} </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('文件名')}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"> {basename($path)} </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">{dr_lang('上传文件')}</label>
+                            <div class="col-md-9">
+                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <div class="input-group input-large">
+                                        <div class="form-control uneditable-input input-fixed input-medium" data-trigger="fileinput">
+                                            <i class="fa fa-file fileinput-exists"></i>&nbsp;
+                                            <span class="fileinput-filename"> </span>
+                                        </div>
+                                        <span class="input-group-addon btn default btn-file">
+                                            <span class="fileinput-new"> {dr_lang('上传文件')} </span>
+                                            <span class="fileinput-exists"> {dr_lang('重新选择')} </span>
+                                            <input type="file" name="file">
+                                        </span>
+                                        <a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> {dr_lang('取消')} </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button id="my_submit2" type="submit" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存文件')}</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        $('#my_submit').click(function () {
+
+            url = '{dr_now_url()}';
+
+            var loading = layer.load(2, {
+                shade: [0.3,'#fff'], //0.1透明度的白色背景
+                time: 10000
+            });
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                data: $('#myform').serialize(),
+                success: function(json) {
+                    layer.close(loading);
+                    if (json.code == 1) {
+                        dr_tips(1, json.msg);
+                        setTimeout("window.location.reload(true)", 2000)
+                    } else {
+                        dr_tips(0, json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                }
+            });
+        });
+    });
+
+</script>
+
+
+{template "footer.html"}

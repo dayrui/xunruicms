@@ -1,0 +1,19 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group" style="padding:0 30px;">
+            <div class="mt-checkbox-list">
+                {loop $ci->site_info $i $t}
+                <label class="mt-table mt-checkbox mt-checkbox-outline">
+                    <input type="checkbox" {if dr_in_array($i, (array)$data['site'])}checked{/if} class="checkboxes" name="data[]" value="{$i}" />
+                    {$t['SITE_NAME']}
+                    <span></span>
+                </label>
+                {/loop}
+            </div>
+        </div>
+    </div>
+</form>
+{template "footer.html"}

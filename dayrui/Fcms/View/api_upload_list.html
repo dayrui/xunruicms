@@ -1,0 +1,154 @@
+{template "header.html"}
+
+<form class="form-horizontal" method="post" role="form" id="myform" style="margin-top:-20px;">
+    {$form}
+    <div class="portlet light " style="padding: 0">
+
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {if $unused}
+                <li id="tab_nav_0" class="{if $pp==0}active{/if}">
+                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未使用的附件')} </a>
+                </li>
+                {/if}
+                <li class="dev {if $pp==1}active{/if}">
+                    <a href="{$tab_url}&pp=1"><i class="fa fa-folder-open"></i> {dr_lang('已使用的附件')} </a>
+                </li>
+                {if $field}
+                <link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
+                <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js" type="text/javascript"></script>
+                <li class="dev" id="fileupload">
+                    <a href="JavaScript:;" title="{$field.tips}" class="fileinput-button tooltips" data-container="body" data-placement="bottom" data-original-title="{$field.tips}"> <i class="fa fa-upload"></i> {dr_lang('上传新附件')}<input type="file" name="file_data"> </a>
+                </li>
+                <script type="text/javascript">
+                    $(function() {
+                        $("#fileupload").fileupload({
+                            disableImageResize: false,
+                            autoUpload: true,
+                            maxFileSize: "{$field.param.size}",
+                            url: "{$field.url}",
+                            dataType: "json",
+                            acceptFileTypes: "{$field.param.exts}",
+                            maxChunkSize: '{$field.param.chunk}',
+                            progressall: function (e, data) {
+                                // 上传进度条 all
+                            },
+                            add: function (e, data) {
+                                $(".fileupload-progress").hide();
+                                data.submit();
+                            },
+                            done: function (e, data) {
+                                if (data.result.code > 0) {
+                                    dr_tips(data.result.code, data.result.msg);
+                                    setTimeout("window.location.href = '{$field.back}'", 2000);
+                                } else {
+                                    dr_tips(data.result.code, data.result.msg, -1);
+                                }
+                            },
+                            fail: function (e, data) {
+                                //console.log(data.errorThrown);
+                                dr_tips(0, "系统故障："+data.errorThrown, -1);
+                                layer.closeAll('tips');
+
+                            },
+                        });
+                    });
+                </script>
+                {/if}
+            </ul>
+        </div>
+
+        <div class="portlet-body table-finecms-upload">
+
+            {if $unused && $pp==0}
+            <div role="presentation" class="table table-fc-upload table-striped clearfix">
+                <div class="files row">
+                    {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
+                    <div class="col-md-2 col-sm-2 col-xs-6">
+                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
+                            <div class="color-view bg-default bg-font-default bold uppercase">
+                                {dr_file_list_preview_html($t)}
+                            </div>
+                            <div class="color-info bg-white c-font-14 sbold">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
+                                    <span style="top:4px;"></span>
+                                </label>
+                                <label><button onclick="dr_file_delete_tips(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
+                            </div>
+                        </div>
+                    </div>
+                    {/table}
+                </div>
+            </div>
+            {else}
+            <div class="row">
+                <div class="col-md-12 text-center margin-bottom-20">
+                    <label><select  id="dr_field_name"class="form-control">
+                        {loop $sfield $i $t}
+                        <option value="{$i}" {if $param.name == $i} selected{/if}>{$t}</option>
+                        {/loop}
+                    </select></label>
+                    <label>
+                        <input type="text" class="form-control" value="{$param.value}" id="dr_field_value">
+                    </label>
+                    <label><a class="btn green btn-sm onloading" href="javascript:;" onclick="dr_fsearch()"> <i class="fa fa-search"></i> {dr_lang('搜索')}</a></label>
+                </div>
+            </div>
+            <div role="presentation" class="table table-fc-upload table-striped clearfix">
+
+                <div class="files row">
+                    {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
+                    <div class="col-md-2 col-sm-2 col-xs-6">
+                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
+                            <div class="color-view bg-default bg-font-default bold uppercase">
+                                {dr_file_list_preview_html($t)}
+                            </div>
+                            <div class="color-info bg-white c-font-14 sbold">
+                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline" style="padding-left:15px">
+                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {/table}
+                </div>
+            </div>
+
+            {/if}
+            <div class="row">
+                <div class="col-md-12 text-center margin-bottom-20">
+                    {$pages}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <input type="hidden" name="is_ajax" value="1">
+    <input type="hidden" name="is_page" id="dr_page" value="{$pp}">
+</form>
+
+<script>
+    function dr_fsearch() {
+        var url = '{$search_url}&name='+$('#dr_field_name').val()+'&value='+$('#dr_field_value').val();
+        window.location.href = url;
+    }
+    function dr_file_delete_tips(obj, id) {
+        layer.confirm(
+            "{dr_lang('确定要删除本文件吗？')}",
+            {
+                icon: 3,
+                shade: 0,
+                title: lang['ts'],
+                btn: [lang['ok'], lang['esc']]
+            }, function(index){
+                layer.close(index);
+                dr_file_delete(obj, id)
+            });
+    }
+</script>
+
+{template "footer.html"}

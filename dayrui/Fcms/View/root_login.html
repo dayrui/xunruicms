@@ -1,0 +1,33 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('当前账号：%s', $user.username)}</p>
+</div>
+
+<form class="form-horizontal" role="form" id="myform">
+    <div class="table-scrollable" >
+        <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="170"> {dr_lang('时间')} </th>
+                <th> {dr_lang('客户端详情')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $i $t}
+            <tr class="odd gradeX">
+                <td>{dr_date($t.logintime, '', 'red')} </td>
+                <td><a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t['loginip'])}</a> {str_replace(') ', ')  ', $t.useragent)} </td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+    <div class="row fc-list-footer table-checkable ">
+        <div class="col-md-7 fc-list-page">
+            {$mypages}
+        </div>
+    </div>
+
+</form>
+
+{template "footer.html"}

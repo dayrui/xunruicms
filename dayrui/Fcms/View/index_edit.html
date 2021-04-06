@@ -1,0 +1,216 @@
+{template "header.html"}
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+    <div class="alert alert-danger">
+        自定义后台首页界面的显示内容
+    </div>
+    <h3 class="page-title"> 面板区 <small>系统可用的面板，单击即可加入到预设区</small>
+    </h3>
+    <div class="">
+        {loop $tables $table $name}
+        <label><a href="javascript:dr_add_main_table('{$table}');" class="btn btn-default">{$name}</a></label>
+        {/loop}
+    </div>
+    <style>
+        #sortable_portlets {
+            margin: 10px;
+        }
+        .sortable , .sortable2{
+            border: 2px dashed #e7ecf1;
+            min-height: 150px;
+            background: white;
+            margin: 10px 0;
+            padding: 0;
+        }
+        .sortable2 {
+            border: 2px dashed #e73d4a;
+        }
+    </style>
+    <script type="text/javascript">
+        function dr_add_main_table(name) {
+            if ($("#table_"+name).length>0){
+                dr_cmf_tips(0, '此面板已经存在');
+                return;
+            }
+            $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=add_main_table&table="+name,
+                success: function(json) {
+                    if (json.code) {
+                        $('#dr_init_add_table').html(json.msg);
+                        dr_cmf_tips(json.code, '面板添加成功，请手动进行移动调整');
+                    } else {
+                        dr_cmf_tips(json.code, json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
+        }
+        var PortletDraggable = function () {
+
+            return {
+                //main function to initiate the module
+                init: function () {
+
+                    if (!jQuery().sortable) {
+                        return;
+                    }
+
+                    $("#sortable_portlets").sortable({
+                        connectWith: ".portlet",
+                        items: ".portlet",
+                        opacity: 0.8,
+                        handle : '.portlet-title',
+                        coneHelperSize: true,
+                        placeholder: 'portlet-sortable-placeholder',
+                        tolerance: "pointer",
+                        forcePlaceholderSize: !0,
+                        helper: "clone",
+                        cancel: ".portlet-sortable-empty, .portlet-fullscreen", // cancel dragging if portlet is in fullscreen mode
+                        revert: 250, // animation in milliseconds
+                        update: function(b, c) {
+                            var value = c.item.parent().attr('id');
+                            if (!value) {
+                                dr_tips(0, '数据添加异常');
+                                return;
+                            }
+                            var tid = c.item.attr('id');
+                            $('#dr_'+tid).val(value);
+                            dr_tips(1, '添加成功');
+                            if (c.item.prev().hasClass("portlet-sortable-empty")) {
+                                c.item.prev().before(c.item);
+                            }
+                        }
+                    });
+
+                }
+            };
+        }();
+
+        jQuery(document).ready(function() {
+            PortletDraggable.init();
+        });
+    </script>
+
+
+    <div id="sortable_portlets" class="sortable_portlets3">
+        <div class="myfbody">
+            <h3 class="page-title"> 预设区 <small>可以将本区域的面板移动到正式区</small>
+            </h3>
+            <div class="row">
+                <div class="col-md-12 column sortable sortable2" id="dr_init_add_table">
+                </div>
+            </div>
+            <h3 class="page-title"> 正式区 <small>在后台首页界面显示的面板</small>
+            </h3>
+            <div class="row">
+                <div class="col-md-3 column sortable" id="3-1">
+                    {loop $table_data $table $tid}
+                    {if $tid == '3-1'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+                <div class="col-md-3 column sortable" id="3-2">
+                    {loop $table_data $table $tid}
+                    {if $tid == '3-2'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+                <div class="col-md-3 column sortable" id="3-3">
+                    {loop $table_data $table $tid}
+                    {if $tid == '3-3'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+                <div class="col-md-3 column sortable" id="3-4">
+                    {loop $table_data $table $tid}
+                    {if $tid == '3-4'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 column sortable" id="4-1">
+                    {loop $table_data $table $tid}
+                    {if $tid == '4-1'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+
+                <div class="col-md-4 column sortable" id="4-2">
+                    {loop $table_data $table $tid}
+                    {if $tid == '4-2'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+
+                <div class="col-md-4 column sortable" id="4-3">
+                    {loop $table_data $table $tid}
+                    {if $tid == '4-3'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 column sortable" id="6-1">
+                    {loop $table_data $table $tid}
+                    {if $tid == '6-1'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty">  </div>
+                </div>
+                <div class="col-md-6 column sortable" id="6-2">
+                    {loop $table_data $table $tid}
+                    {if $tid == '6-2'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty">  </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 column sortable" id="12">
+                    {loop $table_data $table $tid}
+                    {if $tid == '12'}
+                    {php echo \Phpcmf\Service::M('auth')->edit_main_table($table, $tables[$table], $tid);}
+                    {/if}
+                    {/loop}
+                    <div class="portlet portlet-sortable-empty"> </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存页面布局')}</button>
+			 <button type="button" onclick="dr_ajax_confirm_url('{dr_url('home/init_edit')}', '{dr_lang("确定要恢复面板吗？")}', '{dr_url('home/main')}')" class="btn red"> <i class="fa fa-cog"></i> {dr_lang('恢复默认面板')}</button>
+       
+		</div>
+    </div>
+</form>
+
+<script>
+    function dr_qx(name) {
+        dr_iframe('面板权限', '{dr_url('home/auth_edit')}&name='+name, '50%', '50%', 'nogo');
+    }
+</script>
+
+{template "footer.html"}
