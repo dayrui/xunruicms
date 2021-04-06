@@ -719,7 +719,7 @@ class View {
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
 			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON',
+			'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON', 'WEEK',
 			'JSON', 'FIND'
 		];
         foreach ($params as $t) {
@@ -2173,6 +2173,30 @@ class View {
                         } else {
                             $time = strtotime('-'.intval($t['value']).' day');
                             $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
+                            $etime = SYS_TIME;
+                        }
+                        $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
+                        break;
+
+                    case 'WEEK':
+                        if (substr($t['value'], 0, 1) == 'E') {
+                            $num = intval(substr($t['value'], 1));
+                            if ($num) {
+                                $stime = strtotime(date('Y-m-d', strtotime('-' . ($num+1) . ' monday')) . ' 00:00:00');
+                                $etime = strtotime(date('Y-m-d 23:59:59', ($stime + (8 - (date('w') == 0 ? 8 : date('w'))) * 24 * 3600)));
+                            } else {
+                                // 本周
+                                $stime = strtotime(date('Y-m-d 00:00:00', (time() - ((date('w') == 0 ? 7 : date('w')) - 1) * 24 * 3600)));
+                                $etime = strtotime(date('Y-m-d 23:59:59', ($stime + (8 - (date('w') == 0 ? 8 : date('w'))) * 24 * 3600)));
+                            }
+                        } else {
+                            $num = intval($t['value']);
+                            if ($num) {
+                                $stime = strtotime(date('Y-m-d', strtotime('-' . ($num+1) . ' monday')) . ' 00:00:00');
+                            } else {
+                                // 本周
+                                $stime = strtotime(date('Y-m-d 00:00:00', (time() - ((date('w') == 0 ? 7 : date('w')) - 1) * 24 * 3600)));
+                            }
                             $etime = SYS_TIME;
                         }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
