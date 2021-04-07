@@ -1127,11 +1127,15 @@ class Content extends \Phpcmf\Model {
                     }
                     $this->db->table($table.'_data_'.$i)->where('cid', $cid)->delete();
                 }
+                //\Phpcmf\Service::M('attachment')->related_delete($this->dbprefix($table), );
             }
         }
 
         // 执行删除同步
         \Phpcmf\Service::M('Sync')->delete_content($cid, $this->siteid, $this->dirname);
+
+        // 删除归档的附件
+        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->related_delete($this->dbprefix($this->mytable), $cid);
     }
 
     // 恢复数据

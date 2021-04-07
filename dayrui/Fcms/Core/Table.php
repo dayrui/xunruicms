@@ -551,7 +551,7 @@ class Table extends \Phpcmf\Common
                 }
             }
             // 删除附件
-            SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->cid_delete((int)$t['uid'], $id, $attach);
+            SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->cid_delete($this->member, $id, $attach);
             $ids[] = $id;
         }
 

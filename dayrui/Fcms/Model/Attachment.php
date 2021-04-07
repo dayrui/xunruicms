@@ -86,6 +86,17 @@ class Attachment extends \Phpcmf\Model {
                     ));
                     // 删除未使用附件
                     $this->table('attachment_unused')->delete($id);
+                } else {
+                    // 已使用的附件库
+                    $t = $this->table('attachment_data')->get($id);
+                    if ($t && strpos($t['related'], 'ueditor') !== false) {
+                        $this->table('attachment')->update($id, array(
+                            'related' => $related
+                        ));
+                        $this->table('attachment_data')->update($id, array(
+                            'related' => $related
+                        ));
+                    }
                 }
             }
         }
@@ -138,10 +149,25 @@ class Attachment extends \Phpcmf\Model {
                 }
             }
         }
+    }
 
+    // related删除
+    public function related_delete($related, $id = 0) {
+
+        if ($id) {
+            $indexs = $this->table('attachment')->where('related', $related.'-'.$id)->getAll();
+        } else {
+            $indexs = $this->table('attachment')->where('related LIKE "'.$related.'-%"')->getAll();
+        }
+
+        if ($indexs) {
+            foreach ($indexs as $index) {
+                $this->_delete_file($index);
+            }
+        }
     }
     
-    // 删除文件
+    // 删除文件判断
     public function file_delete($member, $id) {
 
         if (!$member) {
@@ -157,22 +183,28 @@ class Attachment extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('不能删除他人的文件'));
         }
 
+        return $this->_delete_file($index);
+    }
+
+    // 开始删除文件
+    protected function _delete_file($index) {
+
         $table = $index['related'] ? 'attachment_data' : 'attachment_unused';
 
         // 获取文件信息
-        $info = $this->table($table)->get($id);
+        $info = $this->table($table)->get($index['id']);
         if (!$info) {
-            $this->table('attachment')->delete($id);
+            $this->table('attachment')->delete($index['id']);
             return dr_return_data(0, dr_lang('文件数据不存在'));
         }
 
-        $rt = $this->table('attachment')->delete($id);
+        $rt = $this->table('attachment')->delete($index['id']);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
 
         // 删除记录
-        $this->table($table)->delete($id);
+        $this->table($table)->delete($index['id']);
 
         // 开始删除文件
         $storage = new \Phpcmf\Library\Storage(\Phpcmf\Service::C());
@@ -181,11 +213,11 @@ class Attachment extends \Phpcmf\Model {
         // 删除缩略图的缓存
         if (in_array($info['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
             list($cache_path) = dr_thumb_path();
-            dr_dir_delete($cache_path.md5($id).'/', true);
+            dr_dir_delete($cache_path.md5($index['id']).'/', true);
         }
 
         // 删除缓存
-        \Phpcmf\Service::L('cache')->del_file('attach-info-'.$id, 'attach');
+        \Phpcmf\Service::L('cache')->del_file('attach-info-'.$index['id'], 'attach');
 
         return dr_return_data(1, dr_lang('删除成功'));
     }
@@ -198,7 +230,6 @@ class Attachment extends \Phpcmf\Model {
                 'id'=> 0,
                 'username' => 'guest',
             ];
-
         }
 
         // 按uid散列分表
@@ -219,7 +250,7 @@ class Attachment extends \Phpcmf\Model {
         ]);
         if (!$rt['code']) {
             // 入库失败
-            @unlink($data['path']);
+            unlink($data['path']);
             return $rt;
         }
         $id = $rt['code'];
@@ -248,7 +279,6 @@ class Attachment extends \Phpcmf\Model {
                 'filename' => $data['name'],
                 'fileext' => $data['ext'],
                 'filesize' => $data['size'],
-                'attachment' => $data['file'],
                 'remote' => $data['remote'],
                 'attachinfo' => dr_array2string($data['info']),
                 'attachment' => $data['file'],
@@ -259,7 +289,7 @@ class Attachment extends \Phpcmf\Model {
         // 入库失败 无主键id 返回msg为准
         if ($rt['msg']) {
             // 删除附件索引
-            @unlink($data['path']);
+            unlink($data['path']);
             $this->table('attachment')->delete($id);
             return dr_return_data(0, $rt['msg']);
         }
@@ -291,8 +321,28 @@ class Attachment extends \Phpcmf\Model {
                 'path' => SYS_UPLOAD_PATH
             ]
         ];
-
     }
+
+    // 存储aid到内存中
+    public function save_ueditor_aid($rid, $aid) {
+        $name = 'ueditor_aid_'.$rid;
+        $data = \Phpcmf\Service::L('cache')->get_auth_data($name);
+        if (!$data) {
+            $data = [$aid];
+        } else {
+            $data[] = $aid;
+        }
+        \Phpcmf\Service::L('cache')->set_auth_data($name, $data);
+    }
+
+    // 读取aid
+    public function get_ueditor_aid($rid, $is_del = false) {
+        $name = 'ueditor_aid_'.$rid;
+        $data = \Phpcmf\Service::L('cache')->get_auth_data($name);
+        $is_del && \Phpcmf\Service::L('cache')->del_auth_data($name);
+        return $data;
+    }
+
 
     // 远程附件缓存
     public function cache($site = SITE_ID) {

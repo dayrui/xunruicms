@@ -5,6 +5,7 @@
  */
 class Uploader
 {
+    private $aid; //附件id号
     private $rid; //存储标识
     private $watermark; //是否图片水印
     private $attachment_info; //附件存储信息
@@ -66,7 +67,7 @@ class Uploader
             return;
         }
 
-        $this->rid = 'ueditor:'.str_replace('/', '-', $_GET['rid']);
+        $this->rid = dr_safe_filename($_GET['rid']);
         $this->watermark = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') ? 1 : intval($_GET['is_wm']);
         $this->attachment_info = $this->attachment_model->get_attach_info((int)$_GET['attachment']);
         $this->attachment_info['image_reduce'] = (int)$_GET['image_reduce'];
@@ -368,7 +369,7 @@ class Uploader
      */
     private function save_attach($rt)
     {
-        $this->attachment_model->save_data([
+        $rt = $this->attachment_model->save_data([
             'ext' => trim($this->fileType, '.'),
             'url' => $this->fileUrl,
             'md5' => $rt['data']['md5'],
@@ -378,11 +379,17 @@ class Uploader
             'name' => $this->oriName,
             'info' => '',
             'remote' => $this->attachment_info['id'],
-        ], $this->rid);
-        // yuanchengfujian
-        if ($this->attachment_info['id'] && $this->attachment_info['value']) {
-            // 输出带后缀的图片
-            $this->fileUrl.=$this->attachment_info['value']['image'];
+        ], 'ueditor:'.$this->rid);
+        if ($rt['code']) {
+            // 远程附件时
+            if ($this->attachment_info['id'] && $this->attachment_info['value']) {
+                // 输出带后缀的图片
+                $this->fileUrl.=$this->attachment_info['value']['image'];
+            }
+            $this->aid = $rt['code'];
+            $this->attachment_model->save_ueditor_aid($this->rid, $this->aid);
+        } else {
+            $this->stateInfo = $rt['msg'];
         }
     }
 
@@ -402,6 +409,7 @@ class Uploader
             }
         }
         return [
+            "aid" => $this->aid,
             "state" => $this->stateInfo,
             "url" => $this->fileUrl,
             "title" => $title,

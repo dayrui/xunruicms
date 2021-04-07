@@ -7,6 +7,8 @@
 
 class Ueditor extends \Phpcmf\Library\A_Field {
 
+    protected $rid; // 附件入库标记字符
+
     /**
      * 构造函数
      */
@@ -15,6 +17,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $this->use_xss = 1; // 强制xss验证
         $this->fieldtype = ['MEDIUMTEXT' => ''];
         $this->defaulttype = 'MEDIUMTEXT';
+        $this->rid = md5(FC_NOW_URL.\Phpcmf\Service::L('input')->get_user_agent().\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::C()->uid);
     }
 
     /**
@@ -304,29 +307,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 }
                                 if ($zj == 0) {
                                     // 可以下载文件
-                                    /*
-									if ($field['setting']['option']['down_img_type']) {
-										// 异步模式
-										 if (!$table) {
-											$table = \Phpcmf\Service::M('field')->get_table_name(SITE_ID, $field);
-										}
-										$rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'ueditor_down_img', [
-											'url' => $img,
-											'table' => $table,
-											'field' => $field['fieldname'],
-											'siteid' => SITE_ID,
-											'member' => \Phpcmf\Service::C()->member,
-											'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-											'image_reduce' => $field['setting']['option']['image_reduce'],
-										]);
-										if (!$rt['code']) {
-											log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
-										}
-										$value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
-										$img = '';
-									} else {
-                                    */
-                                    // 同步模式
                                     // 下载远程文件
                                     $rt = \Phpcmf\Service::L('upload')->down_file([
                                         'url' => $img,
@@ -337,11 +317,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                         'image_reduce' => $field['setting']['option']['image_reduce'],
                                     ]);
                                     if ($rt['code']) {
-                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
                                         if ($att['code']) {
                                             // 归档成功
                                             $value = str_replace($img, $rt['data']['url'], $value);
                                             $img = $att['code'];
+                                            // 标记附件
+                                            \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
                                         }
                                     }
                                 }
@@ -379,11 +361,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             'image_reduce' => $field['setting']['option']['image_reduce'],
                                         ]);
                                         if ($rt['code']) {
-                                            $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor_down_img');
+                                            $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
                                             if ($att['code']) {
                                                 // 归档成功
                                                 $value = str_replace($img, $rt['data']['url'], $value);
                                                 $img = $att['code'];
+                                                // 标记附件
+                                                \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
                                             }
                                         }
                                     }
@@ -466,6 +450,20 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     }
 
     /**
+     * 获取附件id
+     */
+    public function get_attach_id($value) {
+        return \Phpcmf\Service::M('Attachment')->get_ueditor_aid($this->rid);
+    }
+
+    /**
+     * 附件处理
+     */
+    public function attach($data, $_data) {
+        return [\Phpcmf\Service::M('Attachment')->get_ueditor_aid($this->rid, true), NULL];
+    }
+
+    /**
      * 字段输出
      *
      * @param   array   $value  数据库值
@@ -526,9 +524,6 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
         // 字段默认值
         $value = htmlspecialchars_decode(strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']));
-
-        $uri = \Phpcmf\Service::L('router')->uri();
-        APP_DIR != 'member' && $uri = str_replace('member/', '', $uri);
 
         // 输出
         $str = '';
@@ -603,7 +598,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     ismobile: ".(dr_is_mobile() ? 1 : 0).", 
                     UEDITOR_HOME_URL: \"/api/ueditor/\",
                     UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
-                    serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
+                    serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".$this->rid."&\",
                     lang: \"".SITE_LANGUAGE."\",
                     langPath: \"".ROOT_URL."api/language/\",
                     toolbars: [
