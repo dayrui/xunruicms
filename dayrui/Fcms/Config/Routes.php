@@ -1,7 +1,12 @@
 <?php namespace Config;
+/**
+ * www.xunruicms.com
+ * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 迅睿内容管理框架系统
+ **/
 
 /**
- * PHPCMF 路由文件
+ * 路由文件
  */
 
 // Create a new instance of our RouteCollection class.
