@@ -672,6 +672,16 @@ class Model {
                     }
                     dr_count($id) == 1 ? $select->where($this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
                     $param['keyword'] = htmlspecialchars($param['keyword']);
+                } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
+                    // 自定义的匹配模式
+                    if (function_exists($field[$param['field']]['myfunc'])) {
+                        $rt = call_user_func_array($field[$param['field']]['myfunc'], [$param]);
+                        if ($rt) {
+                            $select->where($rt);
+                        }
+                    } else {
+                        CI_DEBUG && log_message('error', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
+                    }
                 } elseif ($field[$param['field']]['fieldtype'] == 'Linkage'
                     && $field[$param['field']]['setting']['option']['linkage']) {
                     // 联动菜单搜索
@@ -687,17 +697,17 @@ class Model {
                 } elseif (in_array($field[$param['field']]['fieldtype'], ['INT'])) {
                     // 数字类型
                     $select->where($param['field'], intval($param['keyword']));
-                } elseif ($field[$param['field']]['isemoji']) {
+                } elseif (isset($field[$param['field']]['isemoji']) && $field[$param['field']]['isemoji']) {
                     // 表情符号查询
                     $key = $param['keyword'];
                     $key2 = str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) );
                     // 搜索用户表
                     $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
-                } elseif ($field[$param['field']]['isint']) {
+                } elseif (isset($field[$param['field']]['isint']) && $field[$param['field']]['isint']) {
                     // 整数绝对匹配
                     $select->where($param['field'], intval($param['keyword']));
-                } elseif ($field[$param['field']]['iswhere']) {
-                    // 正确匹配模式
+                } elseif (isset($field[$param['field']]['iswhere']) && $field[$param['field']]['iswhere']) {
+                    // 准确匹配模式
                     $select->where($param['field'], urldecode($param['keyword']));
                 } else {
                     $select->like($param['field'], urldecode($param['keyword']));
