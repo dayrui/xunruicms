@@ -221,8 +221,31 @@ class Function_list
     // 联动字段name值
     function linkage_name($value, $param = [], $data = [], $field = []) {
 
+        if (!$value) {
+            return '';
+        }
+
         if ($field && $field['setting']['option']['linkage']) {
             return dr_linkagepos($field['setting']['option']['linkage'], $value, '-');
+        }
+
+        return $value;
+    }
+
+    // 联动多项字段name值
+    function linkages_name($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
+
+        if ($field && $field['setting']['option']['linkage']) {
+            $rt = [];
+            $values = dr_string2array($value);
+            foreach ($values as $value) {
+                $rt[] = dr_linkagepos($field['setting']['option']['linkage'], $value, '-');
+            }
+            return implode('、', $rt);
         }
 
         return $value;
