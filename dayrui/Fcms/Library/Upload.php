@@ -100,7 +100,6 @@ class Upload
         }
 
         $code = file_get_contents($file["tmp_name"]);
-        $name = substr(md5(SYS_TIME.$file['name'].$code.uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($file['name']); // 扩展名
         $file_name = $this->_file_name($file['name']); // 文件实际名字
 
@@ -119,33 +118,7 @@ class Upload
         }
 
         // 保存目录名称
-        if (isset($config['save_file']) && $config['save_file']) {
-            $file_path = $config['save_file'];
-            $config['save_file'] = dirname($file_path);
-            $config['attachment']['value']['path'] = 'null';
-        } else {
-            if (isset($config['save_path']) && $config['save_path']) {
-                $path = $config['save_path'];
-            } else {
-                if (isset($config['path']) && $config['path']) {
-                    $path = $config['path'].'/'; // 按开发自定义参数
-                } elseif (defined('SYS_ATTACHMENT_SAVE_TYPE') && SYS_ATTACHMENT_SAVE_TYPE) {
-                    // 按后台设置目录
-                    if (SYS_ATTACHMENT_SAVE_DIR) {
-                        $path = str_replace(
-                            ['{y}', '{m}', '{d}', '{yy}', '.'],
-                            [date('Y', SYS_TIME), date('m', SYS_TIME), date('d', SYS_TIME), date('y', SYS_TIME), ''],
-                            trim(SYS_ATTACHMENT_SAVE_DIR, '/')).'/';
-                    } else {
-                        $path = '';
-                    }
-                } else {
-                    // 默认目录格式
-                    $path = date('Ym', SYS_TIME).'/';
-                }
-            }
-            $file_path = $path.$name.'.'.$file_ext;
-        }
+        $file_path = $this->_rand_save_file_path($config, $file_ext, $file);
 
         // 开始上传存储文件
         $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment'], (int)$config['watermark']);
@@ -236,7 +209,6 @@ class Upload
             }
         }
 
-        $name = substr(md5(SYS_TIME.uniqid().$config['url']), rand(0, 20), 15); // 随机新名字
         $file_ext = isset($config['file_ext']) && $config['file_ext'] ? $config['file_ext'] : $this->_file_ext($config['url']); // 扩展名
 
         // 安全验证
@@ -252,8 +224,7 @@ class Upload
         }
 
         // 保存目录名称
-        $path = isset($config['path']) && $config['path'] ? $config['path'].'/' : date('Ym', SYS_TIME).'/';
-        $file_path = $path.$name.'.'.$file_ext;
+        $file_path = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -284,7 +255,6 @@ class Upload
     public function base64_image($config) {
 
         $data = $config['content'];
-        $name = substr(md5(SYS_TIME.$config['content'].uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $config['ext'] ? $config['ext'] : 'jpg'; // 扩展名
         $file_name = 'base64_image'; // 文件实际名字
 
@@ -295,8 +265,7 @@ class Upload
         }
 
         // 保存目录名称
-        $path = isset($config['path']) && $config['path'] ? $config['path'].'/' : date('Ym', SYS_TIME).'/';
-        $file_path = $path.$name.'.'.$file_ext;
+        $file_path = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -367,4 +336,41 @@ class Upload
         return str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
     }
 
+    /**
+     * 随机存储的文件路径
+     */
+    protected function _rand_save_file_path($config, $file_ext, $file) {
+
+        $name = substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15); // 随机新名字
+
+        if (isset($config['save_file']) && $config['save_file']) {
+            $file_path = $config['save_file'];
+            $config['save_file'] = dirname($file_path);
+            $config['attachment']['value']['path'] = 'null';
+        } else {
+            if (isset($config['save_path']) && $config['save_path']) {
+                $path = $config['save_path'];
+            } else {
+                if (isset($config['path']) && $config['path']) {
+                    $path = $config['path'].'/'; // 按开发自定义参数
+                } elseif (defined('SYS_ATTACHMENT_SAVE_TYPE') && SYS_ATTACHMENT_SAVE_TYPE) {
+                    // 按后台设置目录
+                    if (SYS_ATTACHMENT_SAVE_DIR) {
+                        $path = str_replace(
+                                ['{y}', '{m}', '{d}', '{yy}', '.'],
+                                [date('Y', SYS_TIME), date('m', SYS_TIME), date('d', SYS_TIME), date('y', SYS_TIME), ''],
+                                trim(SYS_ATTACHMENT_SAVE_DIR, '/')).'/';
+                    } else {
+                        $path = '';
+                    }
+                } else {
+                    // 默认目录格式
+                    $path = date('Ym', SYS_TIME).'/';
+                }
+            }
+            $file_path = $path.$name.'.'.$file_ext;
+        }
+
+        return $file_path;
+    }
 }

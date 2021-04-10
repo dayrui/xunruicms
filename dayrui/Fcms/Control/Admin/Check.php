@@ -32,8 +32,8 @@ class Check extends \Phpcmf\Common
     public function index() {
 
         if (is_file(WRITEPATH.'install.info')) {
-            @unlink(WRITEPATH.'install.info');
-            @unlink(WRITEPATH.'install.error');
+            unlink(WRITEPATH.'install.info');
+            unlink(WRITEPATH.'install.error');
         }
 
         \Phpcmf\Service::V()->assign([

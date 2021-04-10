@@ -505,18 +505,12 @@ return [
             }
         }
 
-        $menu = [
-            '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
-            '文件对比' => [\Phpcmf\Service::L('Router')->class.'/bf', 'fa fa-code'],
-            'help' => [379],
-        ];
-        if ($this->cmf_license['oem']) {
-            unset($menu['文件对比']);
-        }
-
         \Phpcmf\Service::V()->assign([
             'list' => $data,
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu([
+                '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
+                'help' => [379],
+            ]),
             'cms_id' => $this->cmf_version['cms'],
             'domain_id' => $this->cmf_license['id'],
         ]);

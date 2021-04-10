@@ -88,7 +88,9 @@ class Home extends \Phpcmf\Common
         ]);
 		$this->_index();
 		$html = ob_get_clean();
-		$pc = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html, LOCK_EX);
+		$file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html');
+		$pc = file_put_contents($file, $html, LOCK_EX);
+        !$pc && CI_DEBUG && log_message('error', '网站首页PC端首页生成失败：'.$file);
 
         if (SITE_MURL != SITE_URL) {
             // 开启ob函数
@@ -102,14 +104,11 @@ class Home extends \Phpcmf\Common
             $html = ob_get_clean();
             $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
-            if (!$mobile) {
-                log_message('error', '网站首页移动端首页生成失败：'.$mfile);
-            }
+            !$mobile && CI_DEBUG && log_message('error', '网站首页移动端生成失败：'.$mfile);
         } else {
-            log_message('error', '网站首页移动端首页生成失败：移动端未绑定域名');
+            CI_DEBUG && log_message('error', '网站首页移动端生成失败：移动端未绑定域名');
         }
 
 		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
 	}
-
 }

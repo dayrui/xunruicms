@@ -755,20 +755,6 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
     return $name ? $data[$name] : $data;
 }
 
-
-/**
- * 获取到上级邀请者的信息
- *
- * @param   intval  $uid    我的uid
- * @param   string  $name   字段信息
- * @return
- */
-function dr_member_invite($uid, $name = 'uid') {
-    $data = \Phpcmf\Service::M()->db->where('rid', $uid)->get('member_invite')->row_array();
-    return $data[$name] ? $data[$name] : '';
-}
-
-
 /**
  * 执行函数
  */
@@ -894,7 +880,7 @@ function dr_linkage($code, $id, $level = 0, $name = '') {
         // 别名查询
         $data = $link[$id];
     }
-    $pids = @explode(',', $data['pids']);
+    $pids = explode(',', $data['pids']);
     if ($level == 0) {
         return $name ? $data[$name] : $data;
     }
@@ -1980,7 +1966,7 @@ function dr_field_input($name, $type, $option, $value = NULL, $id = 0) {
  */
 function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 
-    if ($fp = @opendir($source_dir)) {
+    if ($fp = opendir($source_dir)) {
 
         $filedata = [];
         $new_depth = $directory_depth - 1;
@@ -1989,11 +1975,11 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
         while (FALSE !== ($file = readdir($fp))) {
             if ($file === '.' OR $file === '..'
                 OR ($hidden === FALSE && $file[0] === '.')
-                OR !@is_dir($source_dir.$file)) {
+                OR !is_dir($source_dir.$file)) {
                 continue;
             }
             if (($directory_depth < 1 OR $new_depth > 0)
-                && @is_dir($source_dir.$file)) {
+                && is_dir($source_dir.$file)) {
                 $filedata[$file] = dr_dir_map($source_dir.DIRECTORY_SEPARATOR.$file, $new_depth, $hidden);
             } else {
                 $filedata[] = $file;
@@ -2017,7 +2003,7 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
  */
 function dr_file_map($source_dir) {
 
-    if ($fp = @opendir($source_dir)) {
+    if ($fp = opendir($source_dir)) {
 
         $filedata = [];
         $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -2025,7 +2011,7 @@ function dr_file_map($source_dir) {
         while (FALSE !== ($file = readdir($fp))) {
             if ($file === '.' OR $file === '..'
                 OR $file[0] === '.'
-                OR !@is_file($source_dir.$file)) {
+                OR !is_file($source_dir.$file)) {
                 continue;
             }
             $filedata[] = $file;
@@ -2123,8 +2109,6 @@ function dr_base64_decode($string) {
     return base64_decode($data);
 }
 
-
-
 /**
  * 网站风格目录
  *
@@ -2174,15 +2158,15 @@ function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
             {
                 dr_dir_delete($filepath, $del_dir, $htdocs, $_level + 1);
             } else {
-                @unlink($filepath);
+                unlink($filepath);
             }
         }
     }
 
     closedir($current_dir);
-    $_level > 0  && @rmdir($path); // 删除子目录
+    $_level > 0  && rmdir($path); // 删除子目录
 
-    return $del_dir && $_level == 0 ? @rmdir($path) : TRUE;
+    return $del_dir && $_level == 0 ? rmdir($path) : TRUE;
 }
 
 
@@ -2501,7 +2485,7 @@ function dr_sorting($name) {
  */
 function dr_member_order($url) {
 
-    $data = @explode('&', $url);
+    $data = explode('&', $url);
     if ($data) {
         foreach ($data as $t) {
             if (strpos($t, 'order=') === 0) {
