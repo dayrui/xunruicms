@@ -57,8 +57,8 @@ class Check extends \Phpcmf\Common
 
             case '01':
 
-                $post = intval(@ini_get("post_max_size"));
-                $file = intval(@ini_get("upload_max_filesize"));
+                $post = intval(ini_get("post_max_size"));
+                $file = intval(ini_get("upload_max_filesize"));
 
                 if ($file > $post) {
                     $this->_json(0,'系统配置不合理，post_max_size值('.$post.')必须大于upload_max_filesize值('.$file.')');
@@ -191,6 +191,8 @@ class Check extends \Phpcmf\Common
                     $this->halt('网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
                 } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
                     $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html', 0);
+                } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/msg.html')) {
+                    $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/msg.html', 0);
                 }
 
                 // 必备模板检测
@@ -209,6 +211,8 @@ class Check extends \Phpcmf\Common
                     $this->halt('网站前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
                 } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/index.html')) {
                     $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
+                } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/msg.html')) {
+                    $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/msg.html', 1);
                 }
 
                 break;
