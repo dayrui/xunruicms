@@ -136,6 +136,16 @@ class Module extends \Phpcmf\Model
                 // 首次安装模块时，验证应用模块
                 return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去安装'));
             }
+            $setting = '';
+            if (is_file($mpath.'Config/Setting.php')) {
+                $setting = require $mpath.'Config/Setting.php';
+                if (is_array($setting)) {
+                    $setting = dr_array2string($setting);
+                }
+            }
+            if (!$setting) {
+                $setting = '{"order":"displayorder DESC,updatetime DESC","verify_msg":"","delete_msg":"","list_field":{"title":{"use":"1","order":"1","name":"主题","width":"","func":"title"},"catid":{"use":"1","order":"2","name":"栏目","width":"130","func":"catid"},"author":{"use":"1","order":"3","name":"作者","width":"120","func":"author"},"updatetime":{"use":"1","order":"4","name":"更新时间","width":"160","func":"datetime"}},"comment_list_field":{"content":{"use":"1","order":"1","name":"评论","width":"","func":"comment"},"author":{"use":"1","order":"3","name":"作者","width":"100","func":"author"},"inputtime":{"use":"1","order":"4","name":"评论时间","width":"160","func":"datetime"}},"flag":null,"param":null,"search":{"use":"1","field":"title,keywords","total":"500","length":"4","param_join":"-","param_rule":"0","param_field":"","param_join_field":["","","","","","",""],"param_join_default_value":"0"}}';
+            }
             $module = [
                 'site' => dr_array2string([
                     SITE_ID => [
@@ -147,7 +157,7 @@ class Module extends \Phpcmf\Model
                 ]),
                 'share' => intval($config['share']),
                 'dirname' => $dir,
-                'setting' => '{"order":"displayorder DESC,updatetime DESC","verify_msg":"","delete_msg":"","list_field":{"title":{"use":"1","order":"1","name":"主题","width":"","func":"title"},"catid":{"use":"1","order":"2","name":"栏目","width":"130","func":"catid"},"author":{"use":"1","order":"3","name":"作者","width":"120","func":"author"},"updatetime":{"use":"1","order":"4","name":"更新时间","width":"160","func":"datetime"}},"comment_list_field":{"content":{"use":"1","order":"1","name":"评论","width":"","func":"comment"},"author":{"use":"1","order":"3","name":"作者","width":"100","func":"author"},"inputtime":{"use":"1","order":"4","name":"评论时间","width":"160","func":"datetime"}},"flag":null,"param":null,"search":{"use":"1","field":"title,keywords","total":"500","length":"4","param_join":"-","param_rule":"0","param_field":"","param_join_field":["","","","","","",""],"param_join_default_value":"0"}}',
+                'setting' => $setting,
                 'comment' => '',
                 'disabled' => 0,
                 'displayorder' => 0,

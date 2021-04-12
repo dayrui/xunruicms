@@ -2169,7 +2169,7 @@ class View {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
                             $stime = strtotime($s.' 00:00:00');
-                            $etime = strtotime($e.' 23:59:59');
+                            $etime = strtotime(($e ? $e : date('Y-m-d')).' 23:59:59');
                         } else {
                             $time = strtotime('-'.intval($t['value']).' day');
                             $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
@@ -2231,7 +2231,7 @@ class View {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
                             $stime = strtotime($s.'-01 00:00:00');
-                            $etime = strtotime($e.'-31 23:59:59');
+                            $etime = strtotime(($e ? $e : date('Y-m')).'-31 23:59:59');
                         } else {
                             $time = strtotime('-'.intval($t['value']).' month');
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
@@ -2253,7 +2253,7 @@ class View {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
                             $stime = strtotime(intval($s).'-01-01 00:00:00');
-                            $etime = strtotime(intval($e).'-12-31 23:59:59');
+                            $etime = strtotime(intval($e ? $e : date('Y')).'-12-31 23:59:59');
                         } else {
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = SYS_TIME;
