@@ -908,7 +908,7 @@ class Category extends \Phpcmf\Table
         \Phpcmf\Service::V()->display('share_category_linkurl.html');exit;
     }
 
-    // 编辑自定义字段
+    // 编辑自定义字段权限
     public function field_edit() {
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));

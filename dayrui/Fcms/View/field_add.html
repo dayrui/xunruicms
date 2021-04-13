@@ -55,15 +55,6 @@
                             </div>
                         </div>
                         {/if}
-                        {if $issearch}
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('category_search_field标签')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[issearch]" value="1" {if $data['issearch']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('只针对栏目模型字段搜索时，category_search_field标签使用，只支持Select、Radio、Checkbox')}</span>
-                            </div>
-                        </div>
-                        {/if}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('字段类别')}</label>
                             <div class="col-md-9">
@@ -236,6 +227,50 @@
                                 <span class="help-block">{dr_lang('前端发布内容时，如果想前端表单或者会员中心不显示那么请选择“否”，否则选“是”')}</span>
                             </div>
                         </div>
+
+                        {if $fmid == 'category' && !$data.id}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('设置栏目权限')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" checked /> {dr_lang('全部可用')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  /> {dr_lang('指定栏目')}  <span></span></label>
+                                </div>
+                                <div style="display: none" id="dr_cat">
+                                    {$select_category}
+                                    <span class="help-block">{dr_lang('只有勾选的栏目，才可以显示在该栏目的编辑页面中，表示可以使用此字段')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $issearch}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('category_search_field标签')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[issearch]" value="1" {if $data['issearch']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('只针对栏目模型字段搜索时，category_search_field标签使用，只支持Select、Radio、Checkbox')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $fmid == 'category_data' && !$data.id}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('设置栏目归属')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" checked /> {dr_lang('不使用')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  /> {dr_lang('指定栏目')}  <span></span></label>
+                                </div>
+                                <div style="display: none" id="dr_cat">
+                                    {$select_category}
+                                    <span class="help-block">{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；选择父栏目时，其所有子栏目都会继承该字段')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+
+
+
+
                     </div>
                 </div>
 

@@ -191,14 +191,14 @@ class Module extends \Phpcmf\Model
                 }
             }
             // 多站点时的复制站点表$siteid
-        }
-
-        // 创建内容表字段
-        foreach ([1, 0] as $is_main) {
-            $t = $content_table['field'][$is_main];
-            if ($t) {
-                foreach ($t as $field) {
-                    $this->_add_field($field, $is_main, $module['id'], 'module');
+        } else {
+            // 创建内容表字段
+            foreach ([1, 0] as $is_main) {
+                $t = $content_table['field'][$is_main];
+                if ($t) {
+                    foreach ($t as $field) {
+                        $this->_add_field($field, $is_main, $module['id'], 'module');
+                    }
                 }
             }
         }
@@ -612,12 +612,17 @@ class Module extends \Phpcmf\Model
                         $CAT[$c['id']]['total']+= $CAT[$i]['total'];
                     }
                 }
+                if ($c['setting']['module_field']) {
+                    foreach ($c['setting']['module_field'] as $_fname => $o) {
+                        $CAT[$c['id']]['field'][] = $_fname;
+                    }
+                }
             }
 
             // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
-            $like = [$cache['dirname'].'-'.$siteid];
+            $like = ['catmodule-'.$cache['dirname']];
             if ($cache['share']) {
-                $like[] = 'share-'.$siteid;
+                $like[] = 'catmodule-share';
             }
 
             // 模型字段查询
@@ -626,28 +631,11 @@ class Module extends \Phpcmf\Model
             if ($field) {
                 foreach ($field as $f) {
                     $f['setting'] = dr_string2array($f['setting']);
-                    //
-                    if ($f['relatedid']) {
-                        $f['setting']['diy']['cat_field_catids'][] = $f['relatedid'];
-                    }
-                    if (isset($f['setting']['diy']['cat_field_catids']) && is_array($f['setting']['diy']['cat_field_catids'])) {
-                        $fcatids = array_unique($f['setting']['diy']['cat_field_catids']);
-                        if ($fcatids) {
-                            foreach ($fcatids as $fcid) {
-                                if (isset($CAT[$fcid]['childids']) && $CAT[$fcid]['childids']) {
-                                    // 将该字段同时归类至其子栏目
-                                    $child = explode(',', $CAT[$fcid]['childids']);
-                                    foreach ($child as $catid) {
-                                        $CAT[$catid] && $CAT[$catid]['field'][] = $f['fieldname'];
-                                    }
-                                }
-                            }
-                        }
-                    }
                     $cat_data_field[$f['fieldname']] = $f;
                 }
             }
             $cache['category_data_field'] = $cat_data_field;
+
             // 栏目结束
             if (!$cache['share']) {
                 // 此变量说明本模块存在栏目模型字段

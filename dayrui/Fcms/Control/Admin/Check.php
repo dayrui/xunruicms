@@ -319,6 +319,9 @@ class Check extends \Phpcmf\Common
                 // 模块
                 $module = \Phpcmf\Service::M()->table('module')->order_by('displayorder ASC,id ASC')->getAll();
 
+                // 栏目模型字段修正
+                \Phpcmf\Service::M()->db->table('field')->where('relatedname', 'share-'.SITE_ID)->update(['relatedname' => 'catmodule-share']);
+
                 // 站点
                 foreach ($this->site as $siteid) {
                     // 升级资料库
@@ -366,6 +369,8 @@ class Check extends \Phpcmf\Common
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `'.$a.'` INT(10) DEFAULT NULL');
                                 }
                             }
+                            // 栏目模型字段修正
+                            \Phpcmf\Service::M()->db->table('field')->where('relatedname', $m['dirname'].'-'.$siteid)->update(['relatedname' => 'catmodule-'.$m['dirname']]);
 							// 无符号修正
 							//\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `updatetime` `updatetime` INT(10) NOT NULL COMMENT \'更新时间\'');
 							//\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `inputtime` `inputtime` INT(10) NOT NULL COMMENT \'更新时间\'');

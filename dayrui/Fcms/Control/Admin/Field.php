@@ -9,7 +9,7 @@ class Field extends \Phpcmf\Common
 {
 	public $name;
 	public $data;
-	
+
 	public $ftype;
 
 	public $backurl; // 返回链接
@@ -217,6 +217,41 @@ class Field extends \Phpcmf\Common
 				if (!$rt['code']) {
 					$this->_json(0, dr_lang($rt['msg']));
 				}
+                if (\Phpcmf\Service::M('Field')->func == 'category') {
+                    // 栏目自定义字段
+                    $cat = \Phpcmf\Service::L('input')->post('cat');
+                    if ($cat['use'] && $cat['catid']) {
+                        $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->getAll();
+                        if ($cats) {
+                            foreach ($cats as $t) {
+                                if (in_array($t['id'], $cat['catid'])) {
+                                    // 表示选中的栏目了
+                                } else {
+                                    // 这种这些未选择的栏目属性
+                                    $setting = dr_string2array($t['setting']);
+                                    $setting['cat_field'][$data['fieldname']] = 1;
+                                    \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
+                                }
+                            }
+                        }
+                    }
+                } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
+                    // 栏目模型字段
+                    $cat = \Phpcmf\Service::L('input')->post('cat');
+                    if ($cat['use'] && $cat['catid']) {
+                        $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->getAll();
+                        if ($cats) {
+                            foreach ($cats as $t) {
+                                if (in_array($t['id'], $cat['catid'])) {
+                                    // 表示选中的栏目了
+                                    $setting = dr_string2array($t['setting']);
+                                    $setting['module_field'][$data['fieldname']] = 1;
+                                    \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
+                                }
+                            }
+                        }
+                    }
+                }
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
 				$this->_json(1, dr_lang('操作成功'));
@@ -620,6 +655,65 @@ class Field extends \Phpcmf\Common
                 $this->backurl =\Phpcmf\Service::L('Router')->url(($a == 'share' ? '' : $a).'/category/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'category'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $a;
+                $this->module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$a);
+                if (!$this->module) {
+                    $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $a));
+                }
+                \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->select_category(
+                    $this->module['category'],
+                    0,
+                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" style="height:200px"',
+                    '',
+                    0,
+                    0
+                ));
+                break;
+
+            case 'catmodule':
+                // 识别栏目模型字段
+                $issearch = 1;
+                $iscategory = 1;
+                $module = $a;
+                $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
+                if (!$cache) {
+                    $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                }
+                if ($this->relatedid) {
+                    $this->data = $cache['category'][$this->relatedid];
+                    if (!$this->data) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                    }
+                    if ($module == 'share') {
+                        $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
+                        $this->data['dirname'] = $this->data['mid'];
+                        $this->backurl = \Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
+                        $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                    } else {
+                        $this->data['dirname'] = $module;
+                        $this->backurl = \Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
+                        $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                    }
+                } else {
+                    $this->data = [
+                        'dirname' => $module,
+                    ];
+                    $this->name = '模块【'.$module.'】栏目公共模型字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir' => $module]); // 返回uri地址
+                }
+
+                $this->module = $cache;
+                \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->select_category(
+                    $this->module['category'],
+                    0,
+                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" style="height:200px"',
+                    '',
+                    0,
+                    0
+                ));
+
+                \Phpcmf\Service::M('Field')->func = 'category_data'; // 重要标识: 函数和识别码
+                \Phpcmf\Service::M('Field')->data = $this->data;
+                $this->namespace = $module;
                 break;
 
             default:
@@ -627,7 +721,6 @@ class Field extends \Phpcmf\Common
                     // 模块评论字段
                     if (!dr_is_app('comment')) {
                         $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));
-                        exit;
                     }
                     $ismain = 1;
                     list($a, $b, $module) = explode('-', $this->relatedname);
@@ -677,44 +770,11 @@ class Field extends \Phpcmf\Common
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $cache['dirname'];
                     $this->namespace = $cache['dirname'];
-                } else {
-                    // 识别栏目模型字段
-                    $issearch = 1;
-                    $iscategory = 1;
-                    list($module, $s) = explode('-', $this->relatedname);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
-                    if (!$cache) {
-						$this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-					} 
-                    if ($this->relatedid) {
-                        $this->data = $cache['category'][$this->relatedid];
-                        if (!$this->data) {
-							$this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
-						} 
-                        if ($module == 'share') {
-                            $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
-                            $this->data['dirname'] = $this->data['mid'];
-                            $this->backurl =\Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
-                            $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
-                        } else {
-                            $this->data['dirname'] = $module;
-                            $this->backurl =\Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
-                            $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
-                        }
-                    } else {
-                        $this->data = [
-                            'dirname' => $module,
-                        ];
-                        $this->name = '模块【'.$module.'】栏目公共模型字段';
-                        $this->backurl = \Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir' => $module]); // 返回uri地址
-                    }
-
-                    \Phpcmf\Service::M('Field')->func = 'category_data'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $this->data;
-                    $this->namespace = $module;
                 }
                 break;
         }
+
+        \Phpcmf\Service::V()->assign('fmid', \Phpcmf\Service::M('Field')->func);
 
         return [$ismain, $issearch, $iscategory];
     }
