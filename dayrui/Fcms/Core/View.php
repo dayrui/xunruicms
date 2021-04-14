@@ -29,7 +29,7 @@ class View {
     private $_options; // 模板变量
     private $_filename; // 主模板名称
     private $_include_file; // 引用计数
-    private $_list_is_count; // 是否是统计标签
+    private $_return_sql; // 是否返回sql语句用于运算
 
     private $_view_time; // 模板的运行时间
     private $_view_files; // 模板的引用文件
@@ -539,9 +539,6 @@ class View {
             '#{list\s+(.+?)return=([\w]+)}#i', //(.+?)\s?
             '#{list\s+(.+?)\s?}#i',
             '#{\s?\/list\s?}#i',
-            // count标签
-            '#{count\s+(.+?)return=([\w]+)}#i', //(.+?)\s?
-            '#{count\s+(.+?)\s?}#i',
             // if判断语句
             '#{\s?if\s+(.+?)\s?}#i',
             '#{\s?else\sif\s+(.+?)\s?}#i',
@@ -585,8 +582,6 @@ class View {
             "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
             "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return);} if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
-            "<?php \$return_count_\\2 = [];\$list_return_count_\\2 = \$this->list_tag(\"count \\1 return=\\2\"); if (\$list_return_count_\\2) { extract(\$list_return_count_\\2, EXTR_OVERWRITE); }  \$\\2_count=intval(\$return_count[0]['ct']);  ?>",
-            "<?php \$return_count = [];\$list_return_count = \$this->list_tag(\"count \\1\"); if (\$list_return_count) { extract(\$list_return_count, EXTR_OVERWRITE); }  echo intval(\$return_count[0]['ct']);   ?>",
             "<?php if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
@@ -602,6 +597,16 @@ class View {
             " ?>",
             " ",
         ];
+
+        // 统计和求和
+        foreach (['sum', 'count'] as $name) {
+            // 正则表达式匹配的模板标签
+            $regex_array[] = '#{'.$name.'\s+(.+?)return=([\w]+)}#i';// 去掉\s，win平台
+            $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
+            // 替换直接变量输出
+            $replace_array[] = "<?php \$return_".$name."_\\2 = [];\$list_return_".$name."_\\2 = \$this->list_tag(\"".$name." \\1 return=\\2\"); if (\$list_return_".$name."_\\2) { extract(\$list_return_".$name."_\\2, EXTR_OVERWRITE); }  \$\\2_".$name."=intval(\$return_".$name."[0]['ct']);  ?>";
+            $replace_array[] = "<?php \$return_".$name." = [];\$list_return_".$name." = \$this->list_tag(\"".$name." \\1\"); if (\$list_return_".$name.") { extract(\$list_return_".$name.", EXTR_OVERWRITE); }  echo intval(\$return_".$name."[0]['ct']);   ?>";
+        }
 
         // list标签别名
         foreach ($this->action as $name) {
@@ -668,6 +673,7 @@ class View {
             'db' => '', // 数据源
             'app' => '', // 指定插件时
             'num' => '', // 显示数量
+            'sum' => '', // 求和字段
             'form' => '', // 表单
             'page' => '', // 是否分页
             'site' => '', // 站点id
@@ -706,9 +712,12 @@ class View {
         // 判断是否是统计
         if (stripos($_params, 'count') === 0) {
             $_params = trim(substr($_params, 5));
-            $this->_list_is_count = 1;
+            $this->_return_sql = 'count';
+        } elseif (stripos($_params, 'sum') === 0) {
+            $_params = trim(substr($_params, 3));
+            $this->_return_sql = 'sum';
         } else {
-            $this->_list_is_count = 0;
+            $this->_return_sql = '';
         }
 
         $params = explode(' ', $_params);
@@ -784,7 +793,7 @@ class View {
         if (!SYS_CACHE) {
             $system['cache'] = 0;
         }
-        $cache_name = 'view-'.$this->_list_is_count.md5(dr_array2string($system).$_params.dr_now_url().$this->_tname);
+        $cache_name = 'view-'.$this->_return_sql.md5(dr_array2string($system).$_params.dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
@@ -794,10 +803,10 @@ class View {
             }
         }
 
-        // 统计排除
-        if ($this->_list_is_count && !in_array($action,
+        // 运算排除
+        if ($this->_return_sql && !in_array($action,
                 ['sql', 'module', 'member', 'form', 'mform', 'comment', 'table', 'tag', 'related'])) {
-            return $this->_return($system['return'], 'count标签不支持[acntion='.$action.']的统计');
+            return $this->_return($system['return'], $this->_return_sql.'标签不支持[acntion='.$action.']的运算');
         }
 
         // 判断标签是否是搜索标签
@@ -1061,13 +1070,13 @@ class View {
                     $pages = '';
 
                     // 统计标签
-                    if ($this->_list_is_count) {
-                        $sql = preg_replace('/select .* from /iUs', 'SELECT count(*) as ct FROM ', $sql);
+                    if ($this->_return_sql) {
+                        $sql = preg_replace('/select .* from /iUs', 'SELECT _XUNRUICMS_RT_ FROM ', $sql);
                     } else {
                         // 如存在分页条件才进行分页查询
                         if ($system['page']) {
                             $page = $this->_get_page_id($system['page']);
-                            $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system['db'], $system['cache'], FALSE);
+                            $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system, FALSE);
                             $total = (int)$row['c'];
                             $pagesize = $system['pagesize'] ? $system['pagesize'] : 10;
                             // 没有数据时返回空
@@ -1079,7 +1088,7 @@ class View {
                         }
                     }
 
-                    $data = $this->_query($sql, $system['db'], $system['cache']);
+                    $data = $this->_query($sql, $system);
 
                     // 存储缓存
                     $system['cache'] && $data && $this->_save_cache_data($cache_name, [
@@ -1150,8 +1159,8 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
 
                 // 统计标签
-                if ($this->_list_is_count) {
-                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                if ($this->_return_sql) {
+                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) {
                         $page = $this->_get_page_id($system['page']);
@@ -1159,7 +1168,7 @@ class View {
                         $pagesize = (int) $system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
-                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $row = $this->_query($sql, $system, FALSE);
                         $total = (int)$row['c'];
                         // 没有数据时返回空
                         if (!$total) {
@@ -1174,7 +1183,7 @@ class View {
                     $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 }
 
-                $data = $this->_query($sql, $system['db'], $system['cache']);
+                $data = $this->_query($sql, $system);
 
                 if (is_array($data) && $data) {
                     // 表的系统字段
@@ -1286,15 +1295,15 @@ class View {
                 $sql_where = $this->_get_where($where); // sql的where子句
 
                 // 统计标签
-                if ($this->_list_is_count) {
-                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                if ($this->_return_sql) {
+                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) { // 如存在分页条件才进行分页查询
                         $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
-                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $row = $this->_query($sql, $system, FALSE);
                         $total = (int)$row['c'];
                         if (!$total) {
                             // 没有数据时返回空
@@ -1310,7 +1319,7 @@ class View {
                     $sql = "SELECT " . $this->_get_select_field($system['field'] ? $system['field'] : "*") . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " " . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
-                $data = $this->_query($sql, $system['db'], $system['cache']);
+                $data = $this->_query($sql, $system);
 
                 // 缓存查询结果
                 if (is_array($data) && $data) {
@@ -1445,7 +1454,7 @@ class View {
                 $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($dirname, $system['site'])); // 模块主表
                 $index = \Phpcmf\Service::L('cache')->get_data('module-search-'.$dirname.'-'.$param['id']);
                 if (!$index) {
-                    $index = $this->_query('SELECT `params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
+                    $index = $this->_query('SELECT `params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system, 0);
                     if ($index) {
                         $p = dr_string2array($index['params']);
                         $index['sql'] = $p['sql'];
@@ -1679,8 +1688,8 @@ class View {
                 }
 
                 // 统计标签
-                if ($this->_list_is_count) {
-                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                if ($this->_return_sql) {
+                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     $first_url = '';
                     if ($system['page']) {
@@ -1712,7 +1721,7 @@ class View {
                         !$pagesize && $pagesize = 10;
                         if (!$total) {
                             $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
-                            $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                            $row = $this->_query($sql, $system, FALSE);
                             $total = (int)$row['c'];
                             // 没有数据时返回空
                             if (!$total) {
@@ -1734,7 +1743,7 @@ class View {
                     $sql = "SELECT " .$this->_get_select_field($system['field'] ? $system['field'] : '*') . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
-                $data = $this->_query($sql, $system['db'], $system['cache']);
+                $data = $this->_query($sql, $system);
 
                 // 缓存查询结果
                 if (is_array($data) && $data) {
@@ -1864,14 +1873,14 @@ class View {
                 $sql_from = '('. implode(' UNION ALL ', $form).') as my';
 
                 // 统计标签
-                if ($this->_list_is_count) {
-                    $sql = "SELECT count(*) as ct FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                if ($this->_return_sql) {
+                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     $first_url = '';
                     if ($system['page']) {
                         // 统计数量
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
-                        $row = $this->_query($sql, $system['db'], $system['cache'], FALSE);
+                        $row = $this->_query($sql, $system, FALSE);
                         $total = (int)$row['c'];
                         // 没有数据时返回空
                         if (!$total) {
@@ -1892,7 +1901,7 @@ class View {
                     $sql = "SELECT " .$system['field'] . ",mid FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
                 }
 
-                $data = $this->_query($sql, $system['db'], $system['cache']);
+                $data = $this->_query($sql, $system);
 
                 // 缓存查询结果
                 if (is_array($data) && $data) {
@@ -1955,11 +1964,26 @@ class View {
     /**
      * 查询缓存
      */
-    public function _query($sql, $db, $cache, $all = TRUE) {
+    public function _query($sql, $system, $all = TRUE) {
 
         $mysql = \Phpcmf\Service::M()->db;
-        if ($db) {
-            $mysql = \Config\Database::connect($db, false);
+        if (isset($system['db']) && $system['db']) {
+            $mysql = \Config\Database::connect($system['db'], false);
+        }
+
+        // 运算替换
+        if ($this->_return_sql && strpos($sql, '_XUNRUICMS_RT_') !== false) {
+            switch ($this->_return_sql) {
+                case 'count':
+                    $sql = str_replace('_XUNRUICMS_RT_', 'count(*) as ct', $sql);
+                    break;
+                case 'sum':
+                    if (!$system['sum']) {
+                        return '缺少参数sum，指定求和的字段名称';
+                    }
+                    $sql = str_replace('_XUNRUICMS_RT_', 'sum('.$system['sum'].') as ct', $sql);
+                    break;
+            }
         }
 
         // 执行SQL
@@ -2552,13 +2576,13 @@ class View {
         $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
         $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';
 
-        if ($this->_list_is_count) {
-            $debug.= '<p>统计数量：'.intval($data[0]['ct']).'</p>';
-            $debug.= '<p>统计变量：'.($return ? '{$'.$return.'_count} 不输出，需要手动调用变量':'自动输出').'</p>';
+        if ($this->_return_sql) {
+            $debug.= '<p>运算数量：'.intval($data[0]['ct']).'</p>';
+            $debug.= '<p>运算变量：'.($return ? '{$'.$return.'_'.$this->_return_sql.'} 不输出，需要手动调用变量':'自动输出').'</p>';
             $debug.= '</pre>';
             return [
-                'debug_count' => $debug,
-                'return_count' => $data,
+                'debug_'.$this->_return_sql => $debug,
+                'return_'.$this->_return_sql => $data,
             ];
         } else {
             $total && $debug.= '<p>总记录数：'.$total.'</p>';
