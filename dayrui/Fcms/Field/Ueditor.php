@@ -434,7 +434,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     // 获取远程附件扩展名
     protected function _get_file_ext($url) {
 
-        if (strlen($url) > 100) {
+        if (strlen($url) > 300) {
             return '';
         }
 
