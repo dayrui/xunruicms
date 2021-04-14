@@ -306,7 +306,7 @@ class Attachment extends \Phpcmf\Model {
     public function get_attach_info($id = 0, $image_reduce = 0) {
 
         $remote = \Phpcmf\Service::C()->get_cache('attachment');
-        if ($remote[$id]) {
+        if (isset($remote[$id]) && $remote[$id]) {
             $rt = $remote[$id];
             $rt['image_reduce'] = $image_reduce;
             return $rt;

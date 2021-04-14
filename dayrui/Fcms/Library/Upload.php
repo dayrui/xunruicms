@@ -118,7 +118,7 @@ class Upload
         }
 
         // 保存目录名称
-        $file_path = $this->_rand_save_file_path($config, $file_ext, $file);
+        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $file);
 
         // 开始上传存储文件
         $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment'], (int)$config['watermark']);
@@ -137,7 +137,7 @@ class Upload
             'md5' => $rt['data']['md5'],
             'file' => $file_path,
             'size' => $file['size'],
-            'path' => $config['attachment']['value']['path'].$file_path,
+            'path' => ($config['attachment']['value']['path'] && $config['attachment']['value']['path'] != 'null' ? $config['attachment']['value']['path'] : '').$file_path,
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
@@ -224,7 +224,7 @@ class Upload
         }
 
         // 保存目录名称
-        $file_path = $this->_rand_save_file_path($config, $file_ext, $data);
+        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -243,7 +243,7 @@ class Upload
             'md5' => md5($data),
             'file' => $file_path,
             'size' => (int)$rt['data']['size'],
-            'path' => $config['attachment']['value']['path'].$file_path,
+            'path' => ($config['attachment']['value']['path'] && $config['attachment']['value']['path'] != 'null' ? $config['attachment']['value']['path'] : '').$file_path,
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
@@ -265,7 +265,7 @@ class Upload
         }
 
         // 保存目录名称
-        $file_path = $this->_rand_save_file_path($config, $file_ext, $data);
+        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -284,7 +284,7 @@ class Upload
             'md5' => md5($data),
             'file' => $file_path,
             'size' => $rt['data']['size'],
-            'path' => $config['attachment']['value']['path'].$file_path,
+            'path' => ($config['attachment']['value']['path'] && $config['attachment']['value']['path'] != 'null' ? $config['attachment']['value']['path'] : '').$file_path,
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
@@ -350,6 +350,8 @@ class Upload
         } else {
             if (isset($config['save_path']) && $config['save_path']) {
                 $path = $config['save_path'];
+                $config['save_file'] = $path;
+                $config['attachment']['value']['path'] = 'null';
             } else {
                 if (isset($config['path']) && $config['path']) {
                     $path = $config['path'].'/'; // 按开发自定义参数
@@ -371,6 +373,6 @@ class Upload
             $file_path = $path.$name.'.'.$file_ext;
         }
 
-        return $file_path;
+        return [$file_path, $config];
     }
 }
