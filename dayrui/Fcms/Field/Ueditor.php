@@ -269,95 +269,54 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
         // 下载远程图片
-        if (($yct || $slt) && preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $value, $imgs)) {
-            foreach ($imgs[3] as $img) {
-                if (strpos($img, '/api/ueditor/') !== false
-                    || strpos($img, '/api/umeditor/') !== false) {
-                    continue;
-                }
-                $ext = $this->_get_file_ext($img);
-                if (!$ext) {
-                    continue;
-                }
-                // 下载图片
-                if ($yct && strpos($img, 'http') === 0) {
-                    if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
-                        //用户存储空间已满
-                    } else {
-                        // 正常下载
-                        // 判断域名白名单
-                        $arr = parse_url($img);
-                        $domain = $arr['host'];
-                        if ($domain) {
-                            $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
-                            if (isset($sites[$domain])) {
-                                // 过滤站点域名
-                            } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
-                                // 过滤附件白名单
-                            } else {
-                                $zj = 0;
-                                $remote = \Phpcmf\Service::C()->get_cache('attachment');
-                                if ($remote) {
-                                    foreach ($remote as $t) {
-                                        if (strpos($t['url'], $domain) !== false) {
-                                            $zj = 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if ($zj == 0) {
-                                    // 可以下载文件
-                                    // 下载远程文件
-                                    $rt = \Phpcmf\Service::L('upload')->down_file([
-                                        'url' => $img,
-                                        'timeout' => 5,
-                                        'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
-                                        'file_ext' => $ext,
-                                        'image_reduce' => $field['setting']['option']['image_reduce'],
-                                    ]);
-                                    if ($rt['code']) {
-                                        $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
-                                        if ($att['code']) {
-                                            // 归档成功
-                                            $value = str_replace($img, $rt['data']['url'], $value);
-                                            $img = $att['code'];
-                                            // 标记附件
-                                            \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+        if ($yct || $slt) {
+            $temp = preg_replace('/<pre(.*)<\/pre>/siU', '', $value);
+            $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
+            if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
+                foreach ($imgs[3] as $img) {
+                    if (strpos($img, '/api/ueditor/') !== false
+                        || strpos($img, '/api/umeditor/') !== false) {
+                        continue;
                     }
-                }
-                // 缩略图
-                if ($img && $slt) {
-                    $_field = \Phpcmf\Service::L('form')->fields;
-                    if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
-                        if (!is_numeric($img)) {
-                            // 下载缩略图
+                    $ext = $this->_get_file_ext($img);
+                    if (!$ext) {
+                        continue;
+                    }
+                    // 下载图片
+                    if ($yct && strpos($img, 'http') === 0) {
+                        if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
+                            //用户存储空间已满
+                        } else {
+                            // 正常下载
                             // 判断域名白名单
                             $arr = parse_url($img);
                             $domain = $arr['host'];
                             if ($domain) {
-                                $file = dr_catcher_data($img, 8);
-                                if (!$file) {
-                                     CI_DEBUG && log_message('error', '服务器无法下载图片：'.$img);
+                                $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
+                                if (isset($sites[$domain])) {
+                                    // 过滤站点域名
+                                } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
+                                    // 过滤附件白名单
                                 } else {
-                                    // 尝试找一找附件库
-                                    $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
-                                    if ($att) {
-                                        $img = $att['id'];
-                                    } else {
-                                        // 下载归档
+                                    $zj = 0;
+                                    $remote = \Phpcmf\Service::C()->get_cache('attachment');
+                                    if ($remote) {
+                                        foreach ($remote as $t) {
+                                            if (strpos($t['url'], $domain) !== false) {
+                                                $zj = 1;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if ($zj == 0) {
+                                        // 可以下载文件
+                                        // 下载远程文件
                                         $rt = \Phpcmf\Service::L('upload')->down_file([
                                             'url' => $img,
                                             'timeout' => 5,
                                             'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
                                             'file_ext' => $ext,
-                                            'file_content' => $file,
                                             'image_reduce' => $field['setting']['option']['image_reduce'],
                                         ]);
                                         if ($rt['code']) {
@@ -374,10 +333,56 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 }
                             }
                         }
-                        \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb'] = $_POST['data']['thumb'] = $img;
+                    }
+                    // 缩略图
+                    if ($img && $slt) {
+                        $_field = \Phpcmf\Service::L('form')->fields;
+                        if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
+                            if (!is_numeric($img)) {
+                                // 下载缩略图
+                                // 判断域名白名单
+                                $arr = parse_url($img);
+                                $domain = $arr['host'];
+                                if ($domain) {
+                                    $file = dr_catcher_data($img, 8);
+                                    if (!$file) {
+                                        CI_DEBUG && log_message('error', '服务器无法下载图片：'.$img);
+                                    } else {
+                                        // 尝试找一找附件库
+                                        $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
+                                        if ($att) {
+                                            $img = $att['id'];
+                                        } else {
+                                            // 下载归档
+                                            $rt = \Phpcmf\Service::L('upload')->down_file([
+                                                'url' => $img,
+                                                'timeout' => 5,
+                                                'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
+                                                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                                'file_ext' => $ext,
+                                                'file_content' => $file,
+                                                'image_reduce' => $field['setting']['option']['image_reduce'],
+                                            ]);
+                                            if ($rt['code']) {
+                                                $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
+                                                if ($att['code']) {
+                                                    // 归档成功
+                                                    $value = str_replace($img, $rt['data']['url'], $value);
+                                                    $img = $att['code'];
+                                                    // 标记附件
+                                                    \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb'] = $_POST['data']['thumb'] = $img;
+                        }
                     }
                 }
             }
+
         }
 
         // 去除站外链接
@@ -429,6 +434,10 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     // 获取远程附件扩展名
     protected function _get_file_ext($url) {
 
+        if (strlen($url) > 100) {
+            return '';
+        }
+
         $arr = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
         $ext = str_replace('.', '', trim(strtolower(strrchr($url, '.')), '.'));
         if ($ext && in_array($ext, $arr)) {
@@ -444,7 +453,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
         }
 
-        CI_DEBUG && log_message('error', '服务器无法获取远程图片的扩展名：'.$url);
+        CI_DEBUG && log_message('error', '服务器无法获取远程图片的扩展名：'.dr_safe_replace($url));
 
         return '';
     }
