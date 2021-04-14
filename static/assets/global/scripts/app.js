@@ -1131,6 +1131,61 @@ function dr_load_ajax(msg, url, go) {
         });
 }
 
+// 弹出提示
+function dr_install_confirm(url) {
+    layer.confirm(
+        '确定要刷新整个后台吗？',
+        {
+            icon: 3,
+            shade: 0,
+            title: lang['ts'],
+            btn: [lang['ok'], lang['esc']]
+        }, function(index){
+            layer.close(index);
+            parent.location.reload(true);
+        }, function(index){
+            layer.close(index);
+            if (url) {
+                window.location.href = url;
+            } else {
+                window.location.reload(true);
+            }
+
+        });
+}
+
+
+// 安装app提示
+function dr_install_app(url) {
+    layer.confirm(
+        '当您在使用第三方应用程序时，官方不保证它的合法性、安全性、完整性、真实性或品质等，请用户自行判断是否安装并承担所有风险。',
+        {
+            shade: 0,
+            title: '免责声明',
+            btn: ['安装', '取消']
+        }, function(index){
+            var index = layer.load(2, {
+                shade: [0.3,'#fff'], //0.1透明度的白色背景
+                time: 5000
+            });
+            $.ajax({type: "GET",dataType:"json", url: url,
+                success: function(json) {
+                    layer.close(index);
+                    dr_tips(json.code, json.msg);
+                    if (json.code == 1) {
+                        setTimeout("dr_install_confirm()", 2000);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+                }
+            });
+        }, function(index){
+            return;
+        }
+    );
+}
+
 // 安装模块提示
 function dr_install_module_select(url) {
     layer.confirm(
@@ -1153,7 +1208,9 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
+                        setTimeout("dr_install_confirm('"+admin_file+"?c=module&m=index')", 2000);
+                        //dr_install_confirm(admin_file+"?c=module&m=index")
+                        //setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -1170,7 +1227,8 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
+                        setTimeout("dr_install_confirm('"+admin_file+"?c=module&m=index')", 2000);
+                        //setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -1181,6 +1239,7 @@ function dr_install_module_select(url) {
     );
 }
 
+// 直接安装
 function dr_install_module(url) {
     layer.confirm(
         '你确定要安装到当前站点吗？',
@@ -1198,38 +1257,8 @@ function dr_install_module(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("window.location.reload(true)", 2000)
-                    }
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
-                }
-            });
-        }, function(index){
-            return;
-        }
-    );
-}
-
-// 安装app提示
-function dr_install_app(url) {
-    layer.confirm(
-        '您在使用第三方应用程序时，官方不保证它的合法性、安全性、完整性、真实性或品质等，请用户自行判断是否安装并承担所有风险。',
-        {
-            shade: 0,
-            title: '免责声明',
-            btn: ['安装', '取消']
-        }, function(index){
-            var index = layer.load(2, {
-                shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
-            });
-            $.ajax({type: "GET",dataType:"json", url: url,
-                success: function(json) {
-                    layer.close(index);
-                    dr_tips(json.code, json.msg);
-                    if (json.code == 1) {
-                        setTimeout("window.location.reload(true)", 2000)
+                        setTimeout("dr_install_confirm()", 2000);
+                        //setTimeout("window.location.reload(true)", 2000)
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {

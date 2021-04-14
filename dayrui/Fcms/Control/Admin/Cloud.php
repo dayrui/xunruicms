@@ -505,12 +505,18 @@ return [
             }
         }
 
+        $menu = [
+            '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
+            '文件对比' => [\Phpcmf\Service::L('Router')->class.'/bf', 'fa fa-code'],
+            'help' => [379],
+        ];
+        if ($this->cmf_license['oem']) {
+            unset($menu['文件对比']);
+        }
+
         \Phpcmf\Service::V()->assign([
             'list' => $data,
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu([
-                '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
-                'help' => [379],
-            ]),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
             'cms_id' => $this->cmf_version['cms'],
             'domain_id' => $this->cmf_license['id'],
         ]);
@@ -785,8 +791,84 @@ return [
 
     // 文件对比
     public function bf() {
-        $this->_admin_msg(0, '无法使用此功能');
+
+        if ($this->cmf_license['oem']) {
+            $this->_admin_msg(0, '无法使用此功能');
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '文件对比' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-code'],
+                    'help' => [608],
+                ]
+            ),
+        ]);
+        \Phpcmf\Service::V()->display('cloud_bf.html');exit;
     }
+
+    public function bf_count() {
+
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->cmf_license['license'];
+        $json = dr_catcher_data($surl);
+        if (!$json) {
+            $this->_json(0, '本站：没有从服务端获取到数据');
+        }
+
+        $data = dr_string2array($json);
+        if (!$data) {
+            $this->_json(0, '本站：服务端数据异常，请重新再试');
+        } elseif (!$data['code']) {
+            $this->_json(0, $data['msg']);
+        }
+
+        \Phpcmf\Service::L('cache')->set_data('cloud-bf', $data['data'], 3600);
+
+        $this->_json(dr_count($data['data']), $data['msg']);
+    }
+
+    public function bf_check() {
+
+        $page = max(1, intval($_GET['page']));
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-bf');
+        if (!$cache) {
+            $this->_json(0, '本站：数据缓存不存在');
+        }
+
+        $data = $cache[$page];
+        if ($data) {
+            $html = '';
+            foreach ($data as $filename => $value) {
+                if (strpos($filename, '/dayrui') === 0) {
+                    $cname = 'FCPATH'.substr($filename, 7);
+                    $ofile = FCPATH.substr($filename, 8);
+                } else {
+                    $cname = 'WEBPATH'.$filename;
+                    $ofile = WEBPATH.substr($filename, 1);
+                }
+                $class = '';
+                if (!is_file($ofile)) {
+                    $ok = "<span class='error'>不存在</span>";
+                    $class = 'p_error';
+                } elseif (md5_file($ofile) != $value) {
+                    $ok = "<span class='error'>有变化</span>";
+                    $class = 'p_error';
+                } else {
+                    $ok = "<span class='ok'>正常</span>";
+                }
+                $html.= '<p class="'.$class.'"><label class="rleft">'.$cname.'</label><label class="rright">'.$ok.'</label></p>';
+                if ($class) {
+                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.(CI_DEBUG ? $ofile : $cname).'</label><label class="rright">'.$ok.'</label></p>';
+                }
+            }
+            $this->_json($page + 1, $html);
+        }
+
+        // 完成
+        \Phpcmf\Service::L('cache')->clear('cloud-bf');
+        $this->_json(100, '');
+    }
+
 
     // 复制目录
     private function _copy_dir($src, $dst) {

@@ -35,7 +35,7 @@
                     {if $t.install}
                     <label><a href="javascript:dr_load_ajax('{dr_lang('确定卸载此程序吗？')}', '{dr_url('cloud/uninstall', ['dir'=>$dir])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>
                     {else}
-                    <label><a href="javascript:{if !$t.mtype && $t.ftype=='module'}dr_install_module_select('{dr_url('cloud/install', ['dir'=>$dir])}'){else}dr_load_ajax('{dr_lang('确定安装此程序吗？')}', '{dr_url('cloud/install', ['dir'=>$dir])}', 1){/if};" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('安装')} </a></label>
+                    <label><a href="javascript:{if !$t.mtype && $t.ftype=='module'}dr_install_module_select('{dr_url('cloud/install', ['dir'=>$dir])}'){else}dr_install_app('{dr_url('cloud/install', ['dir'=>$dir])}'){/if};" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('安装')} </a></label>
                     {/if}
                 </td>
             </tr>
