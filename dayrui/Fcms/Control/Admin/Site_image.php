@@ -69,8 +69,8 @@ class Site_image extends \Phpcmf\Common
         $at = dr_safe_filename($_GET['at']);
         if ($at == 'font') {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
-                //'save_file' => .,
-                'path' => ROOTPATH.'config/watermark/',
+                'save_name' => 'null',
+                'save_path' => ROOTPATH.'config/watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['ttf'],
                 'file_size' => 20 * 1024 * 1024,
@@ -82,8 +82,8 @@ class Site_image extends \Phpcmf\Common
             ]);
         } else {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
-                //'save_file' => .,
-                'path' => ROOTPATH.'config/watermark/',
+                'save_name' => 'null',
+                'save_path' => ROOTPATH.'config/watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['png'],
                 'file_size' => 3 * 1024 * 1024,

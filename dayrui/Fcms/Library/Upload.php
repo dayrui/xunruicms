@@ -341,7 +341,20 @@ class Upload
      */
     protected function _rand_save_file_path($config, $file_ext, $file) {
 
-        $name = substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15); // 随机新名字
+        $name = '';
+        if (isset($config['save_name']) && $config['save_name']) {
+            if ($config['save_name'] == 'null') {
+                // 按原始名称
+                if (is_array($file) && isset($file['name']) && $file['name']) {
+                    $name = trim(\Phpcmf\Service::L('pinyin')->result(dr_safe_filename($file['name'])), '.'.$file_ext);
+                }
+            } else {
+                $name = $config['save_name'];
+            }
+        }
+
+        // 随机新名字
+        !$name && $name = substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15);
 
         if (isset($config['save_file']) && $config['save_file']) {
             $file_path = $config['save_file'];

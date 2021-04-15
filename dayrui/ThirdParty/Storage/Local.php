@@ -75,7 +75,6 @@ class Local {
         }
 
         $info = [];
-
         // 图片处理
         if (dr_is_image($this->fullname)) {
             // 图片压缩处理
