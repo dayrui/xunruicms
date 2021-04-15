@@ -131,7 +131,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
     protected function _get_myfield($field) {
 
         $my = [];
-        $_field = \Phpcmf\Service::L('form')->fields;
+        $_field = \Phpcmf\Service::L('field')->fields;
         foreach ($field['setting']['option']['field'] as $ff) {
             if (isset($this->showfield[$ff])) {
                 $my[$ff] = $this->showfield[$ff];
@@ -182,9 +182,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     \Phpcmf\Service::L('Field')->data[$_field[$ff]['ismain']][$ff] = (string)$_POST[$field['fieldname']][$ff];
                 }
             }
-
         }
-
     }
 
     /**
@@ -298,7 +296,6 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 }
             }
 
-
             // 是否单一模式
             $is_field_pay = $result && $ovalue ? 1 : 0;
 
@@ -315,9 +312,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             </div>
             <div id="dr_field_pay" style="display:'.(!$is_field_pay ? 'block' : 'none').';">
                 <div class="portlet light bordered">
-                    
                    <div class="form-body" style="padding:30px 0 10px 0">
-                   
                         '.$pay_html.'
                    </div>
                 </div>
@@ -328,18 +323,12 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
                 </p>
                 <div class="portlet light bordered">
-                    
                     <div id="dr_sku_result">
                         '.$result.'
                     </div>
-                    
                 </div>
-                
-                
                 <div id="dr_sku_table">
-                        
                 </div>
-            
                 <script type="text/javascript">
                 var arrayValue = new Array();
                 var tpl_group = "'.$this->_js_var($tpl_group).'";
@@ -400,10 +389,8 @@ class Pays extends \Phpcmf\Library\A_Field  {
      */
     public function show($field, $value = null) {
 
-
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
-
 
         $tpl_group = '
             <div class="portlet-body fc-sku-group" id="dr_sku_group_{id}" did="{id}">
@@ -474,7 +461,6 @@ class Pays extends \Phpcmf\Library\A_Field  {
             }
         }
 
-
         // 是否单一模式
         $is_field_pay = $result && $ovalue ? 1 : 0;
 
@@ -522,12 +508,10 @@ class Pays extends \Phpcmf\Library\A_Field  {
             </div>
             ';
         return $this->input_format($field['fieldname'], $text, $str);
-
     }
 
     // 格式化js变量
     protected function _js_var($html) {
-
         return str_replace([PHP_EOL, chr(13)], "", addslashes($html));
     }
 }
