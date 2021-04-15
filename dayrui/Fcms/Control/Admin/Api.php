@@ -919,27 +919,28 @@ class Api extends \Phpcmf\Common
      */
     public function test_cache() {
 
+		$type = intval(isset($_POST['data']['SYS_CACHE_TYPE']) ? $_POST['data']['SYS_CACHE_TYPE'] : 0);
+		switch ($type) {
+            case 1:
+                $name = 'memcached';
+                break;
+            case 2:
+                $name = 'redis';
+                break;
+            default:
+                $name = 'file';
+                break;
+        }
+
         $config = new \Config\Cache();
-		
-		$type = intval($_POST['data']['SYS_CACHE_TYPE']);
-		if ($type == 2) {
-			$name = 'redis';
-			if (!is_file(ROOTPATH.'config/'.$name.'.php')) {
-				$this->_json(0, dr_lang('缓存配置文件[%s]未创建', 'config/'.$name.'.php'));
-			}
-		} elseif ($type == 1) {
-			$name = 'memcached';
-			if (!is_file(ROOTPATH.'config/'.$name.'.php')) {
-				$this->_json(0, dr_lang('缓存配置文件[%s]未创建', 'config/'.$name.'.php'));
-			}
-		} else {
-			$name = 'file';
-		}
-		
-		$config->handler = $name;
+        $config->handler = $name;
         $adapter = new $config->validHandlers[$config->handler]($config);
         if (!$adapter->isSupported()) {
-            $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $config->handler));
+            if ($type) {
+                $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $config->handler));
+            } else {
+                $this->_json(0, dr_lang('请分配cache目录的可读写权限'));
+            }
         }
 
         $adapter->initialize();

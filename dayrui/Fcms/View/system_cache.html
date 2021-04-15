@@ -112,12 +112,9 @@
         </div>
     </div>
 </form>
+
 <script type="text/javascript">
-    function dr_to_key() {
-        $.get("{dr_url('api/syskey')}", function(data){
-            $("#sys_key").val(data);
-        });
-    }  function dr_test_cache() {
+    function dr_test_cache() {
         var loading = layer.load(2, {
             shade: [0.3,'#fff'], //0.1透明度的白色背景
             time: 10000
