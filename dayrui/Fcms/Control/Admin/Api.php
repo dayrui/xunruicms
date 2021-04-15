@@ -920,10 +920,26 @@ class Api extends \Phpcmf\Common
     public function test_cache() {
 
         $config = new \Config\Cache();
-
+		
+		$type = intval($_POST['data']['SYS_CACHE_TYPE']);
+		if ($type == 2) {
+			$name = 'redis';
+			if (!is_file(ROOTPATH.'config/'.$name.'.php')) {
+				$this->_json(0, dr_lang('缓存配置文件[%s]未创建', 'config/'.$name.'.php'));
+			}
+		} elseif ($type == 1) {
+			$name = 'memcached';
+			if (!is_file(ROOTPATH.'config/'.$name.'.php')) {
+				$this->_json(0, dr_lang('缓存配置文件[%s]未创建', 'config/'.$name.'.php'));
+			}
+		} else {
+			$name = 'file';
+		}
+		
+		$config->handler = $name;
         $adapter = new $config->validHandlers[$config->handler]($config);
         if (!$adapter->isSupported()) {
-            $this->_json(0, dr_lang('缓存方式[%s]，PHP环境不支持', $config->handler));
+            $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $config->handler));
         }
 
         $adapter->initialize();

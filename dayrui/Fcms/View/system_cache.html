@@ -37,7 +37,7 @@
                             <label class="col-md-2 control-label">{dr_lang('缓存方式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="0" {if empty($data['SITE_CLOSE'])}checked{/if} /> {dr_lang('文件')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="0" {if empty($data['SYS_CACHE_TYPE'])}checked{/if} /> {dr_lang('文件')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="1" {if $data['SYS_CACHE_TYPE'] == 1}checked{/if} /> Memcached <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_TYPE]" value="2" {if $data['SYS_CACHE_TYPE'] == 2}checked{/if} /> Redis <span></span></label>
                                 </div>
@@ -123,9 +123,10 @@
             time: 10000
         });
         $.ajax({
-            type: "GET",
+            type: "POST",
             dataType: "json",
             url: "{dr_url('api/test_cache')}",
+			data: $('#myform').serialize(),
             success: function(json) {
                 layer.close(loading);
                 dr_tips(json.code, json.msg);
