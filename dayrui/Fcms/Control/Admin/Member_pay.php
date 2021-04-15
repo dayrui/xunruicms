@@ -99,7 +99,7 @@ class Member_pay extends \Phpcmf\Common
                     'help' => [ 600 ],
                 ]
             ),
-            'myfield' => \Phpcmf\Service::L('Field')->toform(0, $fdata),
+            'myfield' => dr_rp(\Phpcmf\Service::L('Field')->toform(0, $fdata), 'width:100%;', 'width:300px;'),
         ]);
         \Phpcmf\Service::V()->display('member_pay.html');
     }

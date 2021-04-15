@@ -133,7 +133,7 @@ function dr_preview_url(url) {
     if (is_mobile_cms == 1) {
         width = height = '90%';
     }
-    layer.alert('<a href="'+url+'" target="_blank">'+url+'</a>', {
+    layer.alert('<div style="text-align: center;"><a href="'+url+'" target="_blank">'+url+'</a></div>', {
         shade: 0,
         title: '',
         area: [width, width],

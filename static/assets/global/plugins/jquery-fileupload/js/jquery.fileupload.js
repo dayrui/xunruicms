@@ -1533,7 +1533,7 @@ function fileupload_file_init(json){
         },
     });
     // 浏览
-    $('#fileupload_' +json.name+ ' .fileinput-unused' ).click(function(){
+    $('#fileupload_' +json.name+ ' .fileinput-unused').click(function(){
         var c = $('#fileupload_' + json.name +' .files_row').length;
         var url = json.unused_url+"&ct="+c+"&rand=" + Math.random();
         layer.open({
@@ -1605,7 +1605,7 @@ function fileupload_file_init(json){
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: json.area,
+            area: json.url_area,
             btn: [ lang['ok'] ],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);
@@ -1856,7 +1856,7 @@ function fileupload_files_init(json) {
             scrollbar: false,
             shadeClose: true,
             shade: 0,
-            area: json.area,
+            area: json.url_area,
             btn: [ lang['ok'] ],
             yes: function(index, layero){
                 var body = layer.getChildFrame('body', index);
@@ -1934,7 +1934,7 @@ function fileupload_file_edit(name, e)
         scrollbar: false,
         shadeClose: true,
         shade: 0,
-        area: json.area,
+        area: json.url_area,
         btn: [ lang['ok'] ],
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);

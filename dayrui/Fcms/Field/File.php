@@ -249,6 +249,7 @@ class File extends \Phpcmf\Library\A_Field {
             'input_url' => '/index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&file='.$file_url.'&one=1',
             'tpl' => $tpl,
             'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["80%", "80%"],
+            'url_area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["50%", "300px"],
             'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ]);
 
