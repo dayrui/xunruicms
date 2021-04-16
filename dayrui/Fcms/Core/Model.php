@@ -510,7 +510,7 @@ class Model {
     // 条件组合
     protected function _where($table, $name, $value, $field) {
 
-        if (!$value && strlen($value) == 0) {
+        if (!$value && dr_strlen($value) == 0) {
             return ''; //空值
         }
 
