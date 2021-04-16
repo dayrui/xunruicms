@@ -388,8 +388,8 @@ class Module extends \Phpcmf\Table
                         $this->_json(0, dr_lang('你还没有选择推荐位'));
                     }
 
-                    \Phpcmf\Service::M()->db->table($this->init['table'].'_flag')->whereIn('id', $in)->delete();
                     if ($clear) {
+                        \Phpcmf\Service::M()->db->table($this->init['table'].'_flag')->whereIn('id', $in)->delete();
                         $this->_json(1, dr_lang('推荐位清除成功'));
                     }
 
