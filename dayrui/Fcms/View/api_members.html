@@ -61,17 +61,17 @@
                         <span></span>
                     </label>
                 </td>
-                <td style="text-align:center"> <a href="{dr_url($uriprefix.'/alogin_index', ['id'=>$t.id])}" target="_blank" ><img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"></a> </td>
+                <td style="text-align:center"> <img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"> </td>
                 <td class="member_info_p">
-                    <p>{Function_list::uid($t.id)}</p>
+                    <p>{$t.username}</p>
                     <p>{$t.email}</p>
                 </td>
                 <td class="member_info_p">
-                    <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_paylog/index', 'member_paylog/index', ['field'=>'uid','keyword'=>$t.id])}">{dr_lang('余额')}: {$t.money}</a></p>
+                    <p>{dr_lang('余额')}: {$t.money}</p>
                     <p>{dr_lang('消费')}: {$t.spend}</p>
                 </td>
                 <td class="member_info_p">
-                    <p><a href="{if dr_is_app('scorelog')}{php echo \Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$t.id])}{/if}">{SITE_SCORE}: {$t.score}</a></p>
+                    <p>{SITE_SCORE}: {$t.score}</p>
                     <p>{SITE_EXPERIENCE}: {$t.experience}</p>
                 </td>
                 <td class="member_info_p">
