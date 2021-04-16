@@ -1065,6 +1065,10 @@ function dr_thumb_path() {
 // 缩略图
 function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto', $webimg = 0) {
 
+    if (!$img) {
+        return ROOT_THEME_PATH.'assets/images/nopic.gif';
+    }
+
     if (is_numeric($img) || $webimg) {
 
         list($cache_path, $cache_url) = dr_thumb_path();
@@ -1801,7 +1805,7 @@ function dr_icon($value) {
  */
 function dr_file($url) {
 
-    if (!$url || strlen($url) == 1) {
+    if (!$url || dr_strlen($url) == 1) {
         return NULL;
     } elseif (substr($url, 0, 7) == 'http://' || substr($url, 0, 8) == 'https://') {
         return $url;
@@ -1809,7 +1813,7 @@ function dr_file($url) {
         return ROOT_URL.substr($url, 1);
     }
 
-    return SYS_UPLOAD_URL . $url;
+    return SYS_UPLOAD_URL.$url;
 }
 
 /**
