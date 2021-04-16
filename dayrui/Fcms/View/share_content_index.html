@@ -18,6 +18,7 @@
         <label><button type="button" onclick="dr_iframe_show_html('thumb')" class="btn green"> <i class="fa fa-photo"></i> {dr_lang('批量提取缩略图')} </button></label>
         <label><button type="button" onclick="dr_iframe_show_html('tag')" class="btn yellow"> <i class="fa fa-tag"></i> {dr_lang('批量提取关键词')} </button></label>
         <label><button type="button" onclick="dr_iframe_show_html('del')" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('批量彻底删除内容')} </button></label>
+        <label><button type="button" onclick="dr_iframe_show_html('cat')" class="btn green"> <i class="fa fa-reorder"></i> {dr_lang('批量变更栏目')} </button></label>
     </div>
 </div>
 
@@ -175,6 +176,33 @@
 
                         <div class="col-md-12" style="text-align:center;padding-top:20px">
                             <button type="button" onclick="dr_submit_todo('delform_post', '{SELF}?s={APP_DIR}&c=content&m=del_index')" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('立即执行')}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="catform_html">
+        <form id="catform">
+            {$form}
+            <div class="form-body">
+
+                <div class="form-group">
+                    {$select}
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:left">
+                            <div class="form-group" style="margin-bottom:5px">
+                                <label> {dr_lang('变更为')} </label>
+                            </div>
+                            <div class="form-group">
+                                {$select_post}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="text-align:center;padding-top:20px">
+                            <button type="button" onclick="dr_submit_todo('catform_post', '{SELF}?s={APP_DIR}&c=content&m=cat_index')" class="btn blue"> <i class="fa fa-tag"></i> {dr_lang('立即执行')}</button>
                         </div>
                     </div>
                 </div>

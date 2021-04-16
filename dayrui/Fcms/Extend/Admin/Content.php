@@ -41,6 +41,12 @@ class Content extends \Phpcmf\Common
             'form' =>  dr_form_hidden(),
             'tables' => $bm,
             'select' => \Phpcmf\Service::L('Tree')->select_category($this->module['category'], 0, 'name=\'catid[]\' multiple style=\'height:200px\'', dr_lang('全部栏目')),
+            'select_post' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                0,
+                'name=\'toid\'',
+                dr_lang('选择栏目'), 1, 1
+            ),
         ]);
         \Phpcmf\Service::V()->display('share_content_index.html');
     }
@@ -91,7 +97,6 @@ class Content extends \Phpcmf\Common
         $this->_html_msg( 1, dr_lang('正在执行中【%s】...', "$tpage/$page"),
             \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method, array('total' => $total, 'page' => $page + 1))
         );
-
     }
 
     // 提取tag
@@ -153,7 +158,6 @@ class Content extends \Phpcmf\Common
         }
 
         $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1), dr_lang('在使用网络分词接口时可能会很慢'));
-
     }
 
     // 提取缩略图
@@ -282,6 +286,70 @@ class Content extends \Phpcmf\Common
                 ));
             }
         }
+
+        $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
+    }
+
+    // 提取变更栏目
+    public function cat_index() {
+
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 100; // 每页处理的数量
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+        $table = $this->content_model->mytable;
+
+        $toid = (int)\Phpcmf\Service::L('input')->get('toid');
+        if (!$toid) {
+            $this->_html_msg(0, dr_lang('目标栏目必须选择'));
+        }
+
+        $url = \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
+        $url.= '&toid='.$toid;
+        $where = '';
+
+        // 获取生成栏目
+        $catid = \Phpcmf\Service::L('input')->get('catid');
+        if ($catid) {
+            $cat = [];
+            foreach ($catid as $i) {
+                if ($i) {
+                    $cat[] = intval($i);
+                    if ($this->module['category'][$i]['child']) {
+                        $cat = dr_array2array($cat, explode(',', $this->module['category'][$i]['childids']));
+                    }
+                    $url.= '&catid[]='.intval($i);
+                }
+            }
+            $cat && $where = 'catid IN ('.implode(',', $cat).')';
+        }
+
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->table($table.'_index')->where($where)->counts();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page='.($page+1));
+        }
+
+        $tpage = ceil($total / $psize); // 总页数
+
+        // 更新完成
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
+
+        $db = \Phpcmf\Service::M()->db->table($table.'_index');
+        $where && $db->where($where);
+        $data = $db->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+
+        $ids = [];
+        foreach ($data as $row) {
+            $ids[] = $row['id'];
+        }
+
+        $this->content_model->move_category($ids, $toid);
 
         $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
     }
