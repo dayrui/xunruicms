@@ -20,6 +20,8 @@ if (isset($_GET['log']) && $_GET['log']) {
     exit;
 }
 
+dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
+
 // 判断环境
 if (version_compare(PHP_VERSION, '7.1.0') < 0) {
     exit("<font color=red>PHP版本必须在7.2及以上</font>");
