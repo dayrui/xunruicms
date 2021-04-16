@@ -914,7 +914,7 @@ class Image
         $config['dynamic_output'] = $data['dynamic_output'];
         if ($data['type']) {
             // 文字水印
-            $config['wm_text'] = $data['wm_text'];
+            $config['wm_text'] = $data['wm_text'] ? $data['wm_text'] : 'xunruicms';
             $config['wm_type'] = 'text';
             $config['wm_font_path'] = ROOTPATH.'config/watermark/'.$data['wm_font_path'];
             $config['wm_font_size'] = $data['wm_font_size'];

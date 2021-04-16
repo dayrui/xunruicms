@@ -512,7 +512,7 @@ class Content extends \Phpcmf\Model {
             ->where('catid', $catid)->counts()) {
             return;
         }
-        
+
         $this->db->table($this->mytable.'_flag')->replace([
             'id' => $id,
             'uid' => $uid,
