@@ -504,12 +504,21 @@ class Content extends \Phpcmf\Model {
 
     // 新增推荐位
     public function insert_flag($flag, $id, $uid, $catid) {
-        $this->db->table($this->mytable.'_flag')->insert(array(
+
+        if ($this->table($this->mytable.'_flag')
+            ->where('id', $id)
+            ->where('uid', $uid)
+            ->where('flag', $flag)
+            ->where('catid', $catid)->counts()) {
+            return;
+        }
+        
+        $this->db->table($this->mytable.'_flag')->replace([
             'id' => $id,
             'uid' => $uid,
             'flag' => $flag,
             'catid' => $catid,
-        ));
+        ]);
     }
 
     // 获取推荐位
