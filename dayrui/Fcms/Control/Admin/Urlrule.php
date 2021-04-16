@@ -131,7 +131,6 @@ class Urlrule extends \Phpcmf\Table
                     .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
                     .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /'.$site['mobile']['dirname'].'/index.php [NC,L]'.PHP_EOL.PHP_EOL;
             }
-
             // 主目录
             $code.= 'RewriteBase '.$root.'/'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
@@ -140,7 +139,6 @@ class Urlrule extends \Phpcmf\Table
         } elseif (strpos($server, 'nginx') !== FALSE) {
             $name = $server;
             $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码）</b></font>';
-
             // 子目录
             $code = '###当存在多个子目录格式的域名时，需要多写几组location标签：location /目录/ '.PHP_EOL;
             if (isset($site['mobile']['mode']) && $site['mobile']['mode'] && $site['mobile']['dirname']) {
@@ -156,9 +154,8 @@ class Urlrule extends \Phpcmf\Table
                     .'    }'.PHP_EOL
                     .'}'.PHP_EOL.PHP_EOL;
             }
-
             // 主目录
-            $code = 'location '.$root.'/ { '.PHP_EOL
+            $code.= 'location '.$root.'/ { '.PHP_EOL
                 .'    if (-f $request_filename) {'.PHP_EOL
                 .'           break;'.PHP_EOL
                 .'    }'.PHP_EOL
