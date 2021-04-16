@@ -31,7 +31,7 @@ function dr_in_array($var, $array) {
 }
 
 /**
- * 两个数租比较
+ * 两个数组比较
  */
 function dr_array_intersect($arr1, $arr2) {
 
@@ -43,7 +43,7 @@ function dr_array_intersect($arr1, $arr2) {
 }
 
 /**
- * 两个数租比较
+ * 两个数组比较
  */
 function dr_array_intersect_key($arr1, $arr2) {
 
