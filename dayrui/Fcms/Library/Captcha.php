@@ -12,7 +12,7 @@ class Captcha
 {
 
     protected $code;
-    protected $charset = 'adefhkmnprstwyADEFGHKMNPRSTVWY683457';
+    protected $charset = 'adehkmnprstwyADEFGHKMNPRSTVWY683457';
     protected $width;
     protected $height;
     protected $img;
