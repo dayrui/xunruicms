@@ -1,4 +1,7 @@
 /* xunruicms */
+if(typeof jQuery == 'undefined'){
+    window.alert("没有引用jquery库");
+}
 $(function(){
     if ($(document).width() < 600) {
         $('.hidden-mobile').hide();
