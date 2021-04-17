@@ -2956,7 +2956,7 @@ function dr_safe_username($string) {
  * 安全过滤密码函数
  */
 function dr_safe_password($string) {
-    return trim(str_replace(["'", '"', '&', '?'],'', (string)$string));
+    return trim($string);
 }
 
 
