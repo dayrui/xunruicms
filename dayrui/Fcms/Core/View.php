@@ -236,6 +236,7 @@ class View {
 
         !defined('IS_PC') && define('IS_PC', \Phpcmf\Service::IS_PC_USER());
         !defined('IS_MOBILE') && define('IS_MOBILE', \Phpcmf\Service::IS_MOBILE_USER());
+        !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
 
         include $this->load_view_file($_view_file);
 
