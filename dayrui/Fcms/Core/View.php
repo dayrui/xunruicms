@@ -54,6 +54,8 @@ class View {
     private $_is_list_search = 0; // 搜索标签
     private $_page_value = 0; // 页码变量
 
+    private $_select_rt_name = '_XUN'.'RUI'.'CMS_RT_'; // select替换字符
+
     public $call_value; // 动态模板返回调用
 
 
@@ -184,13 +186,13 @@ class View {
      * @param	string	$_dir		模块名称
      * @return  void
      */
-    public function display($xunruicms_name, $xunruicms_dir = '') {
+    public function display($phpcmf_name, $phpcmf_dir = '') {
 
         if ($this->_is_return) {
-            return $xunruicms_name;
+            return $phpcmf_name;
         }
 
-        $xunruicms_start = microtime(true);
+        $phpcmf_start = microtime(true);
 
 		// 定义当前模板的url地址
         if (!isset($this->_options['my_web_url']) or !$this->_options['my_web_url']) {
@@ -210,14 +212,14 @@ class View {
         extract($this->_options, EXTR_OVERWRITE);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
-        $this->_filename = str_replace('..', '[removed]', $xunruicms_name);
+        $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
 
         // 挂钩点 模板加载之后
         \Phpcmf\Hooks::trigger('cms_view', $this->_options);
 
         // 加载编译后的缓存文件
-        $this->_disp_dir = $xunruicms_dir;
-        $_view_file = $this->get_file_name($this->_filename, $xunruicms_dir);
+        $this->_disp_dir = $phpcmf_dir;
+        $_view_file = $this->get_file_name($this->_filename, $phpcmf_dir);
 
         if ((IS_DEV || (IS_ADMIN && SYS_DEBUG))
             && !isset($_GET['callback']) && !isset($_GET['is_ajax'])
@@ -240,7 +242,7 @@ class View {
 
         include $this->load_view_file($_view_file);
 
-        $this->_view_time = round(microtime(true) - $xunruicms_start, 2);
+        $this->_view_time = round(microtime(true) - $phpcmf_start, 2);
 
         // 消毁变量
         unset($this->loadjs);
@@ -459,7 +461,7 @@ class View {
             }
             // 写入新文件
             $content = $this->handle_view_file(file_get_contents($name));
-            if (@file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
+            if (file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
                 if (IS_DEV) {
                     $this->show_error('模板缓存文件 ('.$cache_file.') 创建失败，请将cache目录权限设为777');
                 } else {
@@ -485,7 +487,7 @@ class View {
             ], $code);
         }
         if (!is_file($this->_cache.$file)) {
-            @file_put_contents($this->_cache.$file, str_replace('$this->', '\Phpcmf\Service::V()->', $this->handle_view_file($code)));
+            file_put_contents($this->_cache.$file, str_replace('$this->', '\Phpcmf\Service::V()->', $this->handle_view_file($code)));
         }
 
         return $this->_cache.$file;
@@ -739,7 +741,7 @@ class View {
             if (!$var) {
                 continue;
             }
-            $val = defined($val) ? constant($val) : str_replace('_XUNRUICMS_SK_', ' ', $val);
+            $val = defined($val) ? constant($val) : str_replace('_XUN'.'RUI'.'CMS_SK_', ' ', $val);
             if ($var == 'fid' && !$val) {
                 continue;
             }
@@ -1073,7 +1075,7 @@ class View {
 
                     // 统计标签
                     if ($this->_return_sql) {
-                        $sql = preg_replace('/select .* from /iUs', 'SELECT _XUNRUICMS_RT_ FROM ', $sql);
+                        $sql = preg_replace('/select .* from /iUs', 'SELECT '.$this->_select_rt_name.' FROM ', $sql);
                     } else {
                         // 如存在分页条件才进行分页查询
                         if ($system['page']) {
@@ -1162,7 +1164,7 @@ class View {
 
                 // 统计标签
                 if ($this->_return_sql) {
-                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                    $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) {
                         $page = $this->_get_page_id($system['page']);
@@ -1298,7 +1300,7 @@ class View {
 
                 // 统计标签
                 if ($this->_return_sql) {
-                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                    $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     if ($system['page']) { // 如存在分页条件才进行分页查询
                         $page = $this->_get_page_id($system['page']);
@@ -1691,7 +1693,7 @@ class View {
 
                 // 统计标签
                 if ($this->_return_sql) {
-                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                    $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     $first_url = '';
                     if ($system['page']) {
@@ -1876,7 +1878,7 @@ class View {
 
                 // 统计标签
                 if ($this->_return_sql) {
-                    $sql = "SELECT _XUNRUICMS_RT_ FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
+                    $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
                     $first_url = '';
                     if ($system['page']) {
@@ -1974,16 +1976,16 @@ class View {
         }
 
         // 运算替换
-        if ($this->_return_sql && strpos($sql, '_XUNRUICMS_RT_') !== false) {
+        if ($this->_return_sql && strpos($sql, $this->_select_rt_name) !== false) {
             switch ($this->_return_sql) {
                 case 'count':
-                    $sql = str_replace('_XUNRUICMS_RT_', 'count(*) as ct', $sql);
+                    $sql = str_replace($this->_select_rt_name, 'count(*) as ct', $sql);
                     break;
                 case 'sum':
                     if (!$system['sum']) {
                         return '缺少参数sum，指定求和的字段名称';
                     }
-                    $sql = str_replace('_XUNRUICMS_RT_', 'sum('.$system['sum'].') as ct', $sql);
+                    $sql = str_replace($this->_select_rt_name, 'sum('.$system['sum'].') as ct', $sql);
                     break;
             }
         }

@@ -748,10 +748,10 @@ class Field extends \Phpcmf\Common
                         $this->_admin_msg(0, dr_lang('模块【%s】表单【%s】缓存不存在', $module, $fid));
                     }
                     $this->name = '模块【'.$cache['name'].'】表单【'.$cache['form'][$fid]['name'].'】评论字段';
-                    $this->data = $cache['dirname'];
+                    $this->data = $cache['dirname'].'_form_'.$cache['form'][$fid]['table'];
                     $this->backurl = \Phpcmf\Service::L('Router')->url('comment/mform/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $cache['dirname'];
+                    \Phpcmf\Service::M('Field')->data = $this->data;
                     $this->namespace = $cache['dirname'];
                 } elseif (strpos($this->relatedname, 'comment-form') !== false) {
                     // 表单评论字段
@@ -764,17 +764,20 @@ class Field extends \Phpcmf\Common
                     if (!$cache) {
                         $this->_admin_msg(0, dr_lang('表单【%s】缓存不存在', $fid));
                     }
-                    $this->name = '表单【'.$cache[$fid]['name'].'】评论字段';
-                    $this->data = $cache['dirname'];
+                    $this->name = '表单【'.$cache['name'].'】评论字段';
+                    $this->data = 'form_'.$cache['table'];
                     $this->backurl = \Phpcmf\Service::L('Router')->url('comment/form/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $cache['dirname'];
-                    $this->namespace = $cache['dirname'];
+                    \Phpcmf\Service::M('Field')->data = $this->data;
                 }
                 break;
         }
 
         \Phpcmf\Service::V()->assign('fmid', \Phpcmf\Service::M('Field')->func);
+
+        if (!$this->name) {
+            $this->_admin_msg(0, dr_lang('字段来源未定义'));
+        }
 
         return [$ismain, $issearch, $iscategory];
     }
