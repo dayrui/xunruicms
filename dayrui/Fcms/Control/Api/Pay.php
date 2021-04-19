@@ -15,9 +15,9 @@ class Pay extends \Phpcmf\Common
 		$id = (int)\Phpcmf\Service::L('input')->get('id');
 		$data = \Phpcmf\Service::M('pay')->table('member_paylog')->get($id);
 		if (!$data) {
-			$this->_msg(0, dr_lang('该账单不存在'));exit;
+			$this->_msg(0, dr_lang('该账单不存在'));
 		} elseif ($data['status'] == 1) {
-			$this->_msg(0, dr_lang('该账单已被支付'));exit;
+			$this->_msg(0, dr_lang('该账单已被支付'));
 		}
 
 		// 付钱之前再次验证
@@ -31,30 +31,42 @@ class Pay extends \Phpcmf\Common
                     if (method_exists($obj, 'paylog_before')) {
                         $error = $obj->paylog_before($fid, $num, $sku, $data);
                         if ($error) {
-                            $this->_msg(0, $error);exit;
+                            $this->_msg(0, $error);
                         }
                     }
                 }
-
             }
         }
 
         // 支付接口文件
 		$apifile = ROOTPATH.'api/pay/'.$data['type'].'/pay.php';
 		if (!is_file($apifile)) {
-			$this->_msg(0, dr_lang('支付接口文件（%s）不存在', $data['type']));exit;
+			$this->_msg(0, dr_lang('支付接口文件（%s）不存在', $data['type']));
 		}
 
 		// 发起支付
 		$rt = \Phpcmf\Service::M('pay')->dopay($apifile, $data);
 		if (!$rt['code']) {
 			$this->_msg(0, $rt['msg'], $rt['data']['url']);
-			exit;
         } elseif (isset($rt['data']['rturl']) && strlen($rt['data']['rturl']) > 10) {
 			$this->_msg(1, $rt['msg'], $rt['data']['rturl']);
-			exit;
 		}
-		
+
+        // 请求模式下返回结果
+        if (IS_API_HTTP || (\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
+            $this->_json(1, $rt['msg'], $rt['data']);
+        }
+
+        // 运行模式直接输出代码
+        switch ($rt['msg']) {
+            case 'html':
+                exit($rt['data']);
+
+            case 'url':
+                dr_redirect($rt['data']);
+                break;
+        }
+
 		$data['html'] = $rt['data'];
 		if (SITE_IS_MOBILE && \Phpcmf\Service::IS_MOBILE_TPL()) {
 		    // 开启了移动端时，支付判断模板是否是移动端的

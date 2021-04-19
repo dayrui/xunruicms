@@ -63,16 +63,18 @@ class Auth extends \Phpcmf\Model {
             list($app, $name) = explode('-', $table);
             $file = dr_get_app_dir($app).'Views/main/'.$name.'.html';
         } else {
-            if (is_file(MYPATH.'Views/main/'.$table.'.html')) {
-                $file = MYPATH.'Views/main/'.$table.'.html';
+            if (is_file(MYPATH.'View/main/'.$table.'.html')) {
+                $file = MYPATH.'View/main/'.$table.'.html';
             } else {
-                $file = COREPATH.'Views/main/'.$table.'.html';
+                $file = COREPATH.'View/main/'.$table.'.html';
             }
         }
 
         if (is_file($file)) {
             return $file;
         }
+
+        CI_DEBUG && log_message('error', '自定义面板['.$table.']文件'.$file.'不存在');
 
         return COREPATH.'Views/main/none.html';
     }

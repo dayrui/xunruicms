@@ -20,7 +20,7 @@ if (!$this->uid) {
     if (!$rt['code']) {
         $return = $rt;
     } else {
-        dr_redirect(dr_url('api/pay/call', ['id'=>$id]));exit;
+        $return = dr_return_data(1, 'url', dr_url('api/pay/call', ['id'=>$id]));
     }
 }
 

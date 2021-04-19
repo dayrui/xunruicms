@@ -99,6 +99,7 @@ $parameter = array(
 
 //建立请求
 $alipaySubmit = new AlipaySubmit($alipay_config);
-$html_text = $alipaySubmit->buildRequestForm($parameter,"get", "确认");
+$html = $alipaySubmit->buildRequestForm($parameter,"get", "确认");
 // 支付宝直接输出
-exit($html_text);
+
+$return = dr_return_data(1, 'html', $html);
