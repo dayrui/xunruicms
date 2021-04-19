@@ -11,15 +11,15 @@
 class Captcha
 {
 
-    protected $code;
-    protected $charset = 'adehkmnprstwyADEFGHKMNPRSTVWY683457';
-    protected $width;
-    protected $height;
-    protected $img;
-    protected $font;
-    protected $fontsize = 16;
-    protected $fontcolor;
-    protected $randstring = ['*', '@', '$', '%', '&', '!'];
+    private $code;
+    private $charset = 'adefhkmnprswyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
+    private $width;
+    private $height;
+    private $img;
+    private $font;
+    private $fontsize = 16;
+    private $fontcolor;
+    private $randstring = ['*', '@', '$', '%', '&', '!'];
 
     public function __construct(...$params) {
         $this->font = WRITEPATH.'captcha.ttf';
@@ -42,11 +42,12 @@ class Captcha
         $this->_font();
         $this->_show();
 
+
         return $this->code;
     }
 
     //生成随机验证码
-    protected function _code() {
+    private function _code() {
 
         $code = '';
         $charset_len = strlen($this->charset) - 1;
@@ -58,44 +59,43 @@ class Captcha
     }
 
     //生成背景
-    protected function _bg() {
+    private function _bg() {
 
         $this->img = imagecreatetruecolor($this->width, $this->height);
-        $this->fontcolor = imagecolorallocate($this->img, mt_rand(0,180), mt_rand(0,180), mt_rand(0,180));
-        $color = imagecolorallocate($this->img, 255, 255, 255);
-        imagecolortransparent($this->img, $this->fontcolor);
-        imagefill($this->img, 0, 0, $color);
+        $color = imagecolorallocate($this->img,255,255,255);
+        imagecolortransparent($this->img, $color);
+        imagefill($this->img,0,0, $color);
     }
 
     //生成文字
-    protected function _font() {
+    private function _font() {
         $_x = $this->width / 4;
+        $this->fontcolor = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
         for ($i=0; $i<4; $i++) {
-            imagettftext($this->img, $this->fontsize, mt_rand(-30,30), $_x*$i+mt_rand(1,5), $this->height / 1.4, $this->fontcolor, $this->font, $this->code[$i]);
-            //imagestring($this->img, $font, ($i==0 ? $_x/3 : 0) + $_x*$i+mt_rand(3,5),$this->height / (3 + mt_rand(1,9)/4),$this->code[$i], $this->fontcolor);
+            imagettftext($this->img,$this->fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),$this->height / 1.4,$this->fontcolor,$this->font,$this->code[$i]);
         }
     }
 
-    //生成线条
-    protected function _line() {
+    //生成干扰线条
+    private function _line() {
         for ($i=0;$i<5;$i++) {
-            $color = imagecolorallocate($this->img, mt_rand(0,180), mt_rand(0,180), mt_rand(0,180));
+            $color = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
             imageline(
                 $this->img,
-                mt_rand(0, $this->width),
-                mt_rand(0, $this->height),
-                mt_rand(0, $this->width),
-                mt_rand(0, $this->height),
+                mt_rand(0,$this->width),
+                mt_rand(0,$this->height),
+                mt_rand(0,$this->width),
+                mt_rand(0,$this->height),
                 $color
             );
         }
-        for ($i=0;$i<10;$i++) {
-            $color = imagecolorallocate($this->img, mt_rand(100,255), mt_rand(100,255), mt_rand(100,255));
+        for ($i=0;$i<30;$i++) {
+            $color = imagecolorallocate($this->img,mt_rand(100,255),mt_rand(100,255),mt_rand(100,255));
             imagestring(
                 $this->img,
-                1,
-                mt_rand(0, $this->width),
-                mt_rand(0, $this->height),
+                mt_rand(1,5),
+                mt_rand(0,$this->width),
+                mt_rand(0,$this->height),
                 $this->randstring[rand(0, 5)],
                 $color
             );
@@ -103,9 +103,9 @@ class Captcha
     }
 
     //显示
-    protected function _show() {
-		ob_start();
-        ob_clean(); //关键代码，防止出现'图像因其本身有错无法显示'的问题。
+    private function _show() {
+        @ob_start();
+        @ob_clean(); //关键代码，防止出现'图像因其本身有错无法显示'的问题。
         header('Content-type:image/png');
         imagepng($this->img);
         imagedestroy($this->img);
