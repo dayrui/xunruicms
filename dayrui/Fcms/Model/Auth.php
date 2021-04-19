@@ -76,7 +76,7 @@ class Auth extends \Phpcmf\Model {
 
         CI_DEBUG && log_message('error', '自定义面板['.$table.']文件'.$file.'不存在');
 
-        return COREPATH.'Views/main/none.html';
+        return COREPATH.'View/main/none.html';
     }
 
     // 判断当前站点权限 有权限1 无权限0
