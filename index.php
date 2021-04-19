@@ -33,12 +33,16 @@ define('FCPATH', dirname(__FILE__).'/dayrui/');
 // 后台管理标识
 !defined('IS_ADMIN') && define('IS_ADMIN', FALSE);
 
-// 开始，自动进入安装界面监测代码 
+// ======开始，自动进入安装界面监测代码 
 if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
 	require WEBPATH.'install.php';
 	exit;
 }
-// 结束，安装之后可以删除此段代码
+// 判断环境
+if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+    echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
+}
+//=======结束，安装之后可以删除此段代码
 
 // 执行主程序
 require FCPATH.'Fcms/Init.php';
