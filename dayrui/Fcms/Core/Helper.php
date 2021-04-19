@@ -4077,6 +4077,13 @@ if (! function_exists('dr_clearhtml')) {
     }
 }
 
+/**
+ * 提取描述信息过滤函数
+ */
+function dr_filter_description($value, $data = [], $old = []) {
+    return dr_get_description($value, 0);
+}
+
 if (! function_exists('dr_get_description')) {
     /**
      * 提取描述信息

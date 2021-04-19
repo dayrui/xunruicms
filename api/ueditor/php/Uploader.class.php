@@ -334,7 +334,7 @@ class Uploader
         $format = str_replace("{filename}", $oriName, $format);
 
         //替换随机字符串
-        $randNum = substr(md5(SYS_TIME.$oriName), rand(0, 20), 15); // 随机新名字
+        $randNum = substr(md5(SITE_ID.SYS_TIME.$oriName), rand(0, 20), 15); // 随机新名字
         if (preg_match("/\{rand\:([\d]*)\}/i", $format, $matches)) {
             $format = preg_replace("/\{rand\:[\d]*\}/i", substr($randNum, 0, $matches[1]), $format);
         }
