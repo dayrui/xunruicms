@@ -47,5 +47,5 @@ class Exceptions extends BaseConfig
      *
      * @var string
      */
-    public $errorViewPath = COREPATH . 'Views/errors';
+    public $errorViewPath = COREPATH . 'View/errors';
 }
