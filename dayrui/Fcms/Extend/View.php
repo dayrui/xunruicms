@@ -34,6 +34,9 @@ class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
         $tpl_var = $this->viewer->get_data();
         if ($tpl_var) {
             foreach ($tpl_var as $key => $value) {
+                if (in_array($key, ['member', 'admin'])) {
+                    continue;
+                }
                 $vars[] = [
                     'name' => $key,
                     'value' => var_export($value, true),

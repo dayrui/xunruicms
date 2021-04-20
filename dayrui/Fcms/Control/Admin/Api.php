@@ -718,6 +718,9 @@ class Api extends \Phpcmf\Common
         }
 
         $url = dr_http_prefix($v) . '/mobile/api.php';
+        if (strpos($v, ':') !== false) {
+            $this->_json(0, '可以尝试手动访问：' . $url . '，如果提示phpcmf ok就表示成功');
+        }
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {
@@ -744,6 +747,9 @@ class Api extends \Phpcmf\Common
         }
 
         $url = dr_http_prefix($v) . '/api.php';
+        if (strpos($v, ':') !== false) {
+            $this->_json(0, '可以尝试手动访问：' . $url . '，如果提示phpcmf ok就表示成功');
+        }
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {
@@ -774,6 +780,9 @@ class Api extends \Phpcmf\Common
         }
 
         $url = SITE_URL.$v . '/api.php';
+        if (strpos($v, ':') !== false) {
+            $this->_json(0, '可以尝试手动访问：' . $url . '，如果提示phpcmf ok就表示成功');
+        }
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {

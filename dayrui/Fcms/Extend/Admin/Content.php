@@ -550,15 +550,12 @@ class Content extends \Phpcmf\Common
                 if (!$ck) {
                     $this->_json(0, dr_lang('存在不允许执行的SQL语句：%s', dr_strcut($sql, 20)));
                 }
-                if (preg_match('/select(.*)into outfile(.*)/i', $sql)) {
-                    $this->_json(0, dr_lang('存在非法select'));
-                } elseif (preg_match('/select(.*)into dumpfile(.*)/i', $sql)) {
-                    $this->_json(0, dr_lang('存在非法select'));
-                } elseif (strpos(strtolower($sql), '.php') !== false) {
-                    $this->_json(0, dr_lang('存在非法SQL'));
-                } elseif (strpos(strtolower($sql), 'union') !== false) {
-                    $this->_json(0, dr_lang('存在非法SQL语句'));
-                } elseif (stripos($sql, 'select') === 0) {
+                foreach (['outfile', 'dumpfile', '.php', 'union'] as $kw) {
+                    if (strpos(strtolower($sql), $kw) !== false) {
+                        $this->_json(0, dr_lang('存在非法SQL关键词：%s', $kw));
+                    }
+                }
+                if (stripos($sql, 'select') === 0) {
                     // 查询语句
                     $db = \Phpcmf\Service::M()->db->query($sql);
                     !$db && $this->_json(0, dr_lang('查询出错'));

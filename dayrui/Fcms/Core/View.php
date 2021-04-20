@@ -247,6 +247,7 @@ class View {
         // 消毁变量
         unset($this->loadjs);
         unset($this->_include_file);
+
         //unset($this->_options);
     }
 
