@@ -41,6 +41,13 @@ class Related extends \Phpcmf\Library\A_Field {
 					<span class="help-block">'.dr_lang('必须选择一个模块作为关联数据源').'</span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('显示归属内容').'</label>
+                    <div class="col-md-9">
+                        <input type="checkbox" name="data[setting][option][my]" '.($option['my'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                        <span class="help-block">'.dr_lang('开启之后只显示当前登录的用户自己所发布的内容').'</span>
+                    </div>
+                </div>
 				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('主题显示名称').'</label>
                     <div class="col-md-9">
@@ -164,7 +171,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?s=api&c=api&m=related&site='.SITE_ID.'&module='.$module.'&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
+		    var url = "/index.php?s=api&c=api&m=related&site='.SITE_ID.'&module='.$module.'&my='.intval($field['setting']['option']['my']).'.&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-cog"></i> '.dr_lang('关联内容').'\',

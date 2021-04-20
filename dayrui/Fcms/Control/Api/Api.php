@@ -360,6 +360,10 @@ class Api extends \Phpcmf\Common
 
         $data = $_GET;
         $where = [];
+        $my = intval(\Phpcmf\Service::L('input')->get('my'));
+        if ($my) {
+            $where[] = 'uid = '.$this->uid;
+        }
         if ($data['search']) {
             $catid = (int)$data['catid'];
             if ($catid && isset($module['category'][$catid]['catids']) && $module['category'][$catid]['catids']) {
@@ -393,7 +397,7 @@ class Api extends \Phpcmf\Common
             'param' => $data,
             'field' => $module['field'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
-            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site, 'pagesize' => $pagesize]),
+            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site, 'my' => $my, 'pagesize' => $pagesize]),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $module['category'],
                 $data['catid'],
