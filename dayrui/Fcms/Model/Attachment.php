@@ -235,9 +235,10 @@ class Attachment extends \Phpcmf\Model {
         // 按uid散列分表
         $tid = (int)substr((string)$this->member['id'], -1, 1);
         $related = $related ? $related : (SYS_ATTACHMENT_DB ? '' : 'rand');
+        $data['name'] = dr_safe_filename($data['name']);
 
         // 入库索引表
-        $rt = $this->table('attachment')->insert([
+        $rt = $this->table('attachment')->replace([
             'uid' => (int)$this->member['id'],
             'author' => $this->member['username'],
             'siteid' => $this->siteid,
@@ -256,7 +257,7 @@ class Attachment extends \Phpcmf\Model {
         $id = $rt['code'];
         if (strpos($related, 'ueditor') === 0 ? 0 : SYS_ATTACHMENT_DB) {
             // 归档存储
-            $rt = $this->table('attachment_unused')->insert([
+            $rt = $this->table('attachment_unused')->replace([
                 'id' => $id,
                 'uid' => (int)$this->member['id'],
                 'author' => $this->member['username'],
@@ -271,7 +272,7 @@ class Attachment extends \Phpcmf\Model {
             ]);
         } else {
             // 随机存储
-            $rt = $this->table('attachment_data')->insert([
+            $rt = $this->table('attachment_data')->replace([
                 'id' => $id,
                 'uid' => (int)$this->member['id'],
                 'author' => $this->member['username'],

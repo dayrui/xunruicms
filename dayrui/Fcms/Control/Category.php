@@ -27,7 +27,7 @@ class Category extends \Phpcmf\Home\Module
 		if ($id) {
 			$cat = $module['category'][$id];
 			if (!$cat) {
-			    exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $id)));
+			    $this->goto_404_page(dr_lang('栏目（%s）不存在', $id));
             }
 		} elseif ($dir) {
 			$id = intval($module['category_dir'][$dir]);
@@ -50,11 +50,11 @@ class Category extends \Phpcmf\Home\Module
 				}
 				// 返回无法找到栏目
 				if (!$id) {
-				    exit($this->goto_404_page(dr_lang('栏目（%s）不存在', $dir)));
+				    $this->goto_404_page(dr_lang('栏目（%s）不存在', $dir));
                 }
 			}
 		} else {
-            exit($this->goto_404_page(dr_lang('栏目参数不存在')));
+            $this->goto_404_page(dr_lang('栏目参数不存在'));
 		}
 
 		// 初始化模块
@@ -62,7 +62,7 @@ class Category extends \Phpcmf\Home\Module
 		    if ($cat['mid']) {
                 $this->_module_init($cat['mid']);
             } else {
-                exit($this->goto_404_page(dr_lang('栏目所属模块不存在')));
+                $this->goto_404_page(dr_lang('栏目所属模块不存在'));
             }
         } else {
             $this->_module_init('share');
