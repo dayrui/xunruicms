@@ -50,7 +50,7 @@ class Image
     /**
      * Quality percentage of new image
      */
-    public $quality = 90;
+    public $quality = 100;
 
     /**
      * Whether to create a thumbnail
@@ -289,7 +289,7 @@ class Image
         }
         $this->image_library 		= 'gd2';
         $this->dynamic_output 		= FALSE;
-        $this->quality 				= 90;
+        $this->quality 				= 100;
         $this->create_thumb 		= FALSE;
         $this->thumb_marker 		= '_thumb';
         $this->maintain_ratio 		= TRUE;
@@ -483,7 +483,7 @@ class Image
         $this->quality = trim(str_replace('%', '', $this->quality));
         if ($this->quality === '' OR $this->quality === 0 OR ! ctype_digit($this->quality))
         {
-            $this->quality = 90;
+            $this->quality = 100;
         }
         // Set the x/y coordinates
         is_numeric($this->x_axis) OR $this->x_axis = 0;
@@ -928,7 +928,6 @@ class Image
 
         list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', $data['locate']);
 
-        $config['quality'] = $data['quality'].'%';
         $config['wm_padding'] = $data['wm_padding'];
         $config['wm_hor_offset'] = $data['wm_hor_offset'];
         $config['wm_vrt_offset'] = $data['wm_vrt_offset'];
@@ -1271,7 +1270,7 @@ class Image
                     $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_jpg_not_supported'));
                     return FALSE;
                 }
-                if ( ! @imagejpeg($resource, $this->full_dst_path, $this->quality))
+                if ( ! imagejpeg($resource, $this->full_dst_path, $this->quality))
                 {
                     $this->set_error('imglib_save_failed');
                     return FALSE;
@@ -1639,7 +1638,6 @@ class Image
             } else {
                 $config['source_image'] = $file;
                 $config['new_image'] = $cache_path . $cache_file;
-                $config['quality'] = '100%';
                 $config['width'] = $width;
                 $config['height'] = $height;
                 $config['dynamic_output'] = FALSE;
