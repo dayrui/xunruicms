@@ -69,8 +69,8 @@ class Member_field extends \Phpcmf\Common
             $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
-        $gid = (int)\Phpcmf\Service::L('input')->post('groupid');
-        if (!$gid) {
+        $gids = \Phpcmf\Service::L('input')->post('groupid');
+        if (!$gids) {
             $this->_json(0, dr_lang('你还没有选择用户组'));
         }
 
@@ -78,7 +78,9 @@ class Member_field extends \Phpcmf\Common
         $value = $data ? dr_string2array($data['value']) : [];
 
         foreach ($ids as $id) {
-            $value[$id][$gid] = $gid;
+            foreach ($gids as $gid) {
+                $value[$id][$gid] = $gid;
+            }
         }
 
         \Phpcmf\Service::M()->db->table('member_setting')->replace([

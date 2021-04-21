@@ -228,15 +228,35 @@
                             </div>
                         </div>
 
-                        {if $fmid == 'category' && !$data.id}
+                        {if $fmid == 'member'}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('设置用户组权限')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" {if !$cat_show}checked{/if} /> {dr_lang('不分配')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1" {if $cat_show}checked{/if} /> {dr_lang('指定用户组')}  <span></span></label>
+                                </div>
+                                <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
+                                    <div class="mt-checkbox-inline">
+                                        {list action=cache name=MEMBER.group}
+                                        <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="cat[gids][]" value="{$t.id}" {if dr_in_array($t.id, (array)$group_value)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
+                                        {/list}
+                                    </div>
+                                    <span class="help-block">{dr_lang('只有勾选的用户组才能使用此字段')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+
+                        {if $fmid == 'category'}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('设置栏目权限')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" checked /> {dr_lang('全部可用')}  <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  /> {dr_lang('指定栏目')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" {if !$cat_show}checked{/if} /> {dr_lang('全部可用')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1" {if $cat_show}checked{/if} /> {dr_lang('指定栏目')}  <span></span></label>
                                 </div>
-                                <div style="display: none" id="dr_cat">
+                                <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
                                     {$select_category}
                                     <span class="help-block">{dr_lang('只有勾选的栏目，才可以显示在该栏目的编辑页面中，表示可以使用此字段')}</span>
                                 </div>
@@ -252,15 +272,15 @@
                             </div>
                         </div>
                         {/if}
-                        {if $fmid == 'category_data' && !$data.id}
+                        {if $fmid == 'category_data'}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('设置栏目归属')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0" checked /> {dr_lang('不使用')}  <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  /> {dr_lang('指定栏目')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="cat[use]" value="0"  {if !$cat_show}checked{/if} /> {dr_lang('不使用')}  <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  {if $cat_show}checked{/if} /> {dr_lang('指定栏目')}  <span></span></label>
                                 </div>
-                                <div style="display: none" id="dr_cat">
+                                <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
                                     {$select_category}
                                     <span class="help-block">{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；选择父栏目时，其所有子栏目都会继承该字段')}</span>
                                 </div>
