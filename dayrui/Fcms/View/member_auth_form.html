@@ -32,12 +32,12 @@
 
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('修改')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['edit']} checked {/if} name="form[edit]" value="1" />
+            <input type="checkbox" class="checkboxes" {if $auth['form'] && $auth['form']['edit']} checked {/if} name="form[edit]" value="1" />
             <span></span>
         </label>
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('删除')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['del']} checked {/if} name="form[del]" value="1" />
+            <input type="checkbox" class="checkboxes" {if $auth['form'] && $auth['form']['del']} checked {/if} name="form[del]" value="1" />
             <span></span>
         </label>
 
@@ -53,7 +53,7 @@
         </label>
         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
             {dr_lang('修改审核')}
-            <input type="checkbox" class="checkboxes" {if $auth['form']['verify2']} checked {/if} name="form[verify2]" value="1" />
+            <input type="checkbox" class="checkboxes" {if $auth['form'] && $auth['form']['verify2']} checked {/if} name="form[verify2]" value="1" />
             <span></span>
         </label>
     </div>
@@ -62,7 +62,7 @@
         {if dr_is_app('explog')}
         <div class="input-inline input-small">
             <div class="input-group">
-                <input type="text" name="form[exp]" value="{htmlspecialchars($auth['form']['exp'])}" class="form-control" placeholder="">
+                <input type="text" name="form[exp]" value="{htmlspecialchars($auth['form'] ? $auth['form']['exp'] : '')}" class="form-control" placeholder="">
                 <span class="input-group-addon">+{SITE_EXPERIENCE}</span>
             </div>
         </div>
@@ -70,20 +70,20 @@
         {if dr_is_app('scorelog')}
         <div class="input-inline input-small">
             <div class="input-group">
-                <input type="text" name="form[score]" value="{htmlspecialchars($auth['form']['score'])}" class="form-control" placeholder="">
+                <input type="text" name="form[score]" value="{htmlspecialchars($auth['form'] ? $auth['form']['score'] : '')}" class="form-control" placeholder="">
                 <span class="input-group-addon">+{SITE_SCORE}</span>
             </div>
         </div>
         {/if}
         <div class="input-inline input-small">
             <div class="input-group">
-                <input type="text" name="form[day_post]" value="{htmlspecialchars($auth['form']['day_post'])}" class="form-control" placeholder="">
+                <input type="text" name="form[day_post]" value="{htmlspecialchars($auth['form'] ? $auth['form']['day_post'] : '')}" class="form-control" placeholder="">
                 <span class="input-group-addon">{dr_lang('日发布')}</span>
             </div>
         </div>
         <div class="input-inline input-small">
             <div class="input-group">
-                <input type="text" name="form[total_post]" value="{htmlspecialchars($auth['form']['total_post'])}" class="form-control" placeholder="">
+                <input type="text" name="form[total_post]" value="{htmlspecialchars($auth['form'] ? $auth['form']['total_post'] : '')}" class="form-control" placeholder="">
                 <span class="input-group-addon">{dr_lang('发布总数')}</span>
             </div>
         </div>
