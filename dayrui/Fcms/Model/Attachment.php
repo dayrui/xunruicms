@@ -90,19 +90,28 @@ class Attachment extends \Phpcmf\Model {
                     $t = $this->table('attachment_data')->get($id);
                     if ($t) {
                         if (strpos($t['related'], 'ueditor') !== false) {
+                            // 编辑器字段归属
                             $this->table('attachment')->update($id, array(
                                 'related' => $related
                             ));
                             $this->table('attachment_data')->update($id, array(
                                 'related' => $related
                             ));
-                        } else {
+                        } elseif ($t['related'] != $related) {
                             // 表示多表复用
                             $this->table('attachment')->update($id, array(
                                 'related' => 'rand'
                             ));
                             $this->table('attachment_data')->update($id, array(
                                 'related' => 'rand'
+                            ));
+                        } else {
+                            // 表示多表复用
+                            $this->table('attachment')->update($id, array(
+                                'related' => $related.'-rand'
+                            ));
+                            $this->table('attachment_data')->update($id, array(
+                                'related' => $related.'-rand'
                             ));
                         }
                     }
@@ -121,7 +130,7 @@ class Attachment extends \Phpcmf\Model {
             return;
         }
 
-        $indexs = $this->table('attachment')->where('related', $related.'-'.$cid)->getAll();
+        $indexs = $this->table('attachment')->like('related', $related.'-'.$cid)->getAll();
         if ($indexs) {
             foreach ($indexs as $i) {
                 $this->file_delete($member, intval($i['id']));
@@ -152,7 +161,7 @@ class Attachment extends \Phpcmf\Model {
         }
 
         foreach ($ids as $id) {
-            $indexs = $this->table('attachment')->where('related', $related.'-'.$id)->getAll();
+            $indexs = $this->table('attachment')->like('related', $related.'-'.$id)->getAll();
             if ($indexs) {
                 foreach ($indexs as $i) {
                     $this->file_delete($member, intval($i['id']));
@@ -165,7 +174,7 @@ class Attachment extends \Phpcmf\Model {
     public function related_delete($related, $id = 0) {
 
         if ($id) {
-            $indexs = $this->table('attachment')->where('related', $related.'-'.$id)->getAll();
+            $indexs = $this->table('attachment')->like('related', $related.'-'.$id)->getAll();
         } else {
             $indexs = $this->table('attachment')->where('related LIKE "'.$related.'-%"')->getAll();
         }
