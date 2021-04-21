@@ -128,7 +128,7 @@ class Image extends \Phpcmf\Library\A_Field {
         }
 
         // 新旧数据都一样时表示没做改变就跳出
-        if ($data === $_data) {
+        if ($data == $_data) {
             return NULL;
         }
 
