@@ -1545,8 +1545,13 @@ class Member extends \Phpcmf\Model
             $name.= rand(1000, 9999);
         }
 
-        $name = trim(strtolower($prefix.str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
-        if ($this->table('member')->where('username', $name)->counts()) {
+        $name = trim(strtolower(str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
+        if (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
+            && mb_strlen($name) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
+            $name = dr_strcut($name, \Phpcmf\Service::C()->member_cache['config']['userlenmax'], '');
+        }
+
+        if ($this->table('member')->where('username', strtolower($prefix.$name))->counts()) {
             return $this->_rand_username($prefix, $member, 1);
         }
 

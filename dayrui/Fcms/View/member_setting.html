@@ -87,21 +87,32 @@
                                                 buttonup_class: "btn default",
                                                 verticalbuttons: false,
                                                 step: 1,
-                                                min: 1,
+                                                min: 0,
                                                 max: 50
                                             });
                                         });
                                     </script></div>
-                                <span class="help-block">{dr_lang('账号名的最小长度控制，最大设置50位数')}</span>
+                                <span class="help-block">{dr_lang('账号名的最小长度控制，0表示不限制')}</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('允许账号与密码相同')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('账号最大长度')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[config][user2pwd]" value="1" {if $data['config']['user2pwd']}checked{/if} data-on-text="{dr_lang('允许')}" data-off-text="{dr_lang('禁止')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-
-                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的验证')}</span>
+                                <div class="input-small"><input class="form-control" id="dr_usernamemax" type="text" name="data[config][userlenmax]" value="{intval($data['config']['userlenmax'] ? $data['config']['userlenmax'] : 50)}" >
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            $("#dr_usernamemax").TouchSpin({
+                                                buttondown_class: "btn default",
+                                                buttonup_class: "btn default",
+                                                verticalbuttons: false,
+                                                step: 1,
+                                                min: 0,
+                                                max: 50
+                                            });
+                                        });
+                                    </script></div>
+                                <span class="help-block">{dr_lang('账号名的最大长度控制，最大50个字符，0表示不限制')}</span>
                             </div>
                         </div>
 
@@ -116,7 +127,7 @@
                                                 buttonup_class: "btn default",
                                                 verticalbuttons: false,
                                                 step: 1,
-                                                min: 1,
+                                                min: 0,
                                                 max: 50
                                             });
                                         });
@@ -125,6 +136,15 @@
                             </div>
                         </div>
 
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('允许账号与密码相同')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[config][user2pwd]" value="1" {if $data['config']['user2pwd']}checked{/if} data-on-text="{dr_lang('允许')}" data-off-text="{dr_lang('禁止')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+
+                                <span class="help-block">{dr_lang('针对前端注册或修改密码时的验证')}</span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('密码强度（正则）')}</label>

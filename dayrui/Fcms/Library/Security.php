@@ -155,7 +155,7 @@ class Security {
 		 * <a href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">Google</a>
 		 *
 		 * Note: Use rawurldecode() so it does not remove plus signs
-		 */
+
 		if (stripos($str, '%') !== false)
 		{
 			do
@@ -166,7 +166,7 @@ class Security {
 			}
 			while ($oldstr !== $str);
 			unset($oldstr);
-		}
+		}*/
 
 		/*
 		 * Convert character entities to ASCII

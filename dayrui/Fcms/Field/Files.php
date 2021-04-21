@@ -158,8 +158,8 @@ class Files extends \Phpcmf\Library\A_Field {
         if ($value) {
             foreach ($value['title'] as $id => $title) {
                 $data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
-                $data['title'][$id] = $title;
-                $data['description'][$id] = $value['description'][$id] ? $value['description'][$id] : '';
+                $data['title'][$id] = dr_safe_keyword($title);
+                $data['description'][$id] = $value['description'][$id] ? dr_safe_keyword($value['description'][$id]) : '';
             }
         }
 

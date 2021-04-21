@@ -383,6 +383,9 @@ class Form
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
             return dr_return_data(0, dr_lang('账号长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlen'], mb_strlen($value)), ['field' => 'username']);
+        } elseif (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
+            && mb_strlen($value) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
+            return dr_return_data(0, dr_lang('账号长度不能大于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlenmax'], mb_strlen($value)), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
             // 放在最后一次比较
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $a) {
