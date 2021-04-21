@@ -8,6 +8,20 @@
 
 
 /**
+ * 模糊比较两个变量
+ */
+function dr_diff($str1, $str2) {
+
+    if (is_array($str1) && is_array($str2)) {
+        return array_diff($str1, $str2);
+    } elseif (dr_strlen($str1) != dr_strlen($str2)) {
+        return false;
+    }
+
+    return $str1 == $str2;
+}
+
+/**
  * 返回包含数组中所有键名的一个新数组
  */
 function dr_array_keys($array, $value = '', $strict = false) {

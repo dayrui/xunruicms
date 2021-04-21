@@ -108,14 +108,14 @@ class File extends \Phpcmf\Library\A_Field {
 	 * 附件处理
 	 */
 	public function attach($data, $_data) {
-		
+
 		// 新旧数据都无附件就跳出
 		if (!$data && !$_data) {
 			return NULL;
 		}
 		
 		// 新旧数据都一样时表示没做改变就跳出
-		if ($data == $_data) {
+		if (dr_diff($data, $_data)) {
 			return NULL;
 		}
 		

@@ -42,7 +42,6 @@ class Attachment extends \Phpcmf\Model {
 
         $uid = intval($uid);
         $member = dr_member_info($uid);
-
         // 删除文件
         if ($data['del'] && $related && $related != 'rand') {
             $delete = $this->table('attachment')->where_in('id', $data['del'])->getAll();
@@ -89,14 +88,25 @@ class Attachment extends \Phpcmf\Model {
                 } else {
                     // 已使用的附件库
                     $t = $this->table('attachment_data')->get($id);
-                    if ($t && strpos($t['related'], 'ueditor') !== false) {
-                        $this->table('attachment')->update($id, array(
-                            'related' => $related
-                        ));
-                        $this->table('attachment_data')->update($id, array(
-                            'related' => $related
-                        ));
+                    if ($t) {
+                        if (strpos($t['related'], 'ueditor') !== false) {
+                            $this->table('attachment')->update($id, array(
+                                'related' => $related
+                            ));
+                            $this->table('attachment_data')->update($id, array(
+                                'related' => $related
+                            ));
+                        } else {
+                            // 表示多表复用
+                            $this->table('attachment')->update($id, array(
+                                'related' => 'rand'
+                            ));
+                            $this->table('attachment_data')->update($id, array(
+                                'related' => 'rand'
+                            ));
+                        }
                     }
+
                 }
             }
         }

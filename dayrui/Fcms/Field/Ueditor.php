@@ -263,7 +263,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
         // 第一张作为缩略图
-        $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']])  && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
+        $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']]) && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
 
         // 是否下载图片
         $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
