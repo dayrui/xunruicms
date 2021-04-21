@@ -421,6 +421,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 
         // 替换分页
         $value = str_replace('_ueditor_page_break_tag_', '<hr class="pagebreak">', $value);
+        $value = str_replace(' style=""', '', $value);
 
         // 入库操作
         if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
