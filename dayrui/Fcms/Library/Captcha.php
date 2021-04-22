@@ -12,7 +12,7 @@ class Captcha
 {
 
     private $code;
-    private $charset = 'adefhkmnprswyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
+    private $charset = 'adehkmnprswyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
     private $width;
     private $height;
     private $img;

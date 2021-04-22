@@ -706,6 +706,7 @@ class View {
 
         $param = $where = [];
 
+        $_params = trim($_params);
         $this->_list_tag = '{list '.$_params.'}';
 
         // 过滤掉自定义where语句
@@ -771,6 +772,11 @@ class View {
                 }
                 $param[$var] = $val; // 用于特殊action
             }
+        }
+
+        // return位置判断
+        if ($system['return'] && strpos(end($params), 'return=') === false) {
+            return $this->_return($system['return'], $this->_return_sql.'标签中的return参数只能放在标签的尾部');
         }
 
         // 替换order中的非法字符
