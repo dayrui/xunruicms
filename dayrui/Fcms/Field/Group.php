@@ -46,7 +46,7 @@ class Group extends \Phpcmf\Library\A_Field {
                 && !dr_in_array($t['fieldname'], $group)
                 && $_field[] = '<option value="'.$t['fieldname'].'">'.$t['name'].'</option>';
 			}
-			$_field = @implode('', @array_unique($_field));
+			$_field = implode('', array_unique($_field));
 		}
 		
 		return [$this->_search_field().'

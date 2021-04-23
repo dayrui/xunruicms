@@ -61,7 +61,7 @@
                         <label><a title="{$ci->site_info[1]['SITE_NAME']}" class="btn btn-xs dark" style="background-color:#3fa9e4;border-color:#3fa9e4"> {dr_lang('主站')} </a></label>
                         {loop $t.site $b $sid}
                         {if $sid > 1}
-                        <label id="dr_site_{$t.id}_{$sid}"><a href="javascript:dr_site_delete('{$t.id}', '{$sid}');" title="{$ci->site_info[$sid]['SITE_NAME']}" class="btn btn-xs {$color[$b]}">{dr_strcut($ci->site_info[$sid]['SITE_NAME'], 4)} <i class="fa fa-times"></i> </a></label>
+                        <label id="dr_site_{$t.id}_{$sid}"><a href="javascript:dr_site_delete('{$t.id}', '{$sid}');" title="{$ci->site_info[$sid]['SITE_NAME']}" class="btn btn-xs {if $color[$b]}{$color[$b]}{else}default{/if}">{dr_strcut($ci->site_info[$sid]['SITE_NAME'], 4)} <i class="fa fa-times"></i> </a></label>
                         {/if}
                         {/loop}
                     </td>

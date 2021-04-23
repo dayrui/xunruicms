@@ -22,13 +22,26 @@ class Color extends \Phpcmf\Library\A_Field {
 	 * @param	array	$value	值
 	 * @return  string
 	 */
-	public function option($option) {
+	public function option($option, $field = NULL) {
+
+	    $_field = [
+            '<option value=""> -- </option>'
+        ];
+        if ($field) {
+            foreach ($field as $t) {
+                if ($t['fieldtype'] == 'Text') {
+                    $st = $option['field'] == $t['fieldname'] ? 'selected' : '';
+                    $_field[] = '<option '.$st.' value="'.$t['fieldname'].'">'.$t['name'].'</option>';
+                }
+            }
+            $_field = implode('', array_unique($_field));
+        }
 
 		return [$this->_search_field().'
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('附加到指定字段').'</label>
 				<div class="col-md-9">
-					<label><input type="text" class="form-control" size="10" name="data[setting][option][field]" value="'.$option['field'].'"></label>
+					<label><select class="form-control" name="data[setting][option][field]">'.$_field.'</select></label>
 					<span class="help-block">'.dr_lang('对文本类型字段有效,会实时变动颜色').'</span>
 				</div>
 			</div>
@@ -103,6 +116,11 @@ class Color extends \Phpcmf\Library\A_Field {
             $this->set_load_js($field['filetype'], 1);
 		}
 
+        $default = '';
+		if ($field['setting']['option']['field'] && $value) {
+		    $default = '$("#dr_'.$field['setting']['option']['field'].'").css("color", "'.$value.'");';
+        }
+
 		$str.= '
 		<input type="text" class="form-control color '.$field['setting']['option']['css'].'" data-control="brightness" name="data['.$name.']" id="dr_'.$name.'" '.$style.' value="'.$value.'" >';
         $js = \Phpcmf\Service::L('js_packer');
@@ -122,6 +140,7 @@ class Color extends \Phpcmf\Library\A_Field {
                 },
                 theme: "bootstrap"
             });
+			'.$default.'
 		});
 		</script>', 0);
 

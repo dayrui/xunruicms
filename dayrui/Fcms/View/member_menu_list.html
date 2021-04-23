@@ -54,14 +54,16 @@
                         {if $ci->_is_admin_auth('add') && $t.pid == 0}<a href="javascript:dr_iframe('add', '{dr_url('member_menu/add', ['pid'=>$t.id])}', '', '{if @in_array($t.pid, $top)}500px{/if}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
                     </td>
                     <td>
+                        {if !$t.group}<label><a title="{dr_lang('全部')}" class="btn btn-xs dark" style="background-color:#3fa9e4;border-color:#3fa9e4"> {dr_lang('全部')} </a></label>{/if}
                         {loop $t.group $b $gid}
-                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {$color[$b]}">{$group[$gid]['name']} <i class="fa fa-times"></i> </a></label>
+                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {if $color[$b]}{$color[$b]}{else}default{/if}">{$group[$gid]['name']} <i class="fa fa-times"></i> </a></label>
                         {/loop}
                     </td>
                     {if dr_count($ci->site_info) > 1}
                     <td>
+                        {if !$t.site}<label><a title="{dr_lang('全部')}" class="btn btn-xs dark" style="background-color:#3fa9e4;border-color:#3fa9e4"> {dr_lang('全部')} </a></label>{/if}
                         {loop $t.site $b $sid}
-                        <label id="dr_site_{$t.id}_{$sid}"><a href="javascript:dr_site_delete('{$t.id}', '{$sid}');" class="btn btn-xs {$color[$b]}">{$ci->site_info[$sid]['SITE_NAME']} <i class="fa fa-times"></i> </a></label>
+                        <label id="dr_site_{$t.id}_{$sid}"><a href="javascript:dr_site_delete('{$t.id}', '{$sid}');" class="btn btn-xs {if $color[$b]}{$color[$b]}{else}default{/if}">{$ci->site_info[$sid]['SITE_NAME']} <i class="fa fa-times"></i> </a></label>
                         {/loop}
                     </td>
                     {/if}
