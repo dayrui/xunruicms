@@ -1146,8 +1146,12 @@ abstract class Common extends \CodeIgniter\Controller
 
     // 版本检查
     protected function _api_version_cmf() {
-        $json = dr_catcher_data('https://www.xunruicms.com/version.php?action=new&php='.PHP_VERSION.'&id=1&time='.strtotime($this->cmf_version['downtime']).'&v='.$this->cmf_version['version']);
-        exit($json);
+		
+		if (defined('SYS_NOT_UPDATE') && SYS_NOT_UPDATE) {
+            $this->_json(1, '');
+        }
+		
+        exit(dr_catcher_data('https://www.xunruicms.com/version.php?action=new&php='.PHP_VERSION.'&id=1&time='.strtotime($this->cmf_version['downtime']).'&v='.$this->cmf_version['version']));
     }
 
     // 版本检查
