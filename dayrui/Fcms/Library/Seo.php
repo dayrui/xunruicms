@@ -77,7 +77,7 @@ class Seo
 
         $param_value = [];
         if ($param['keyword']) {
-            $param_value['keyword'] = $data['keyword'] = $param['keyword'];
+            $param_value['keyword'] = $data['keyword'] = urldecode($param['keyword']);
             unset($param['keyword']);
         }
         if ($param['groupid']) {
