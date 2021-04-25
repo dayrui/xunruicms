@@ -34,7 +34,7 @@ class Module extends \Phpcmf\Table
         // 单独模板命名
         $this->tpl_name = APP_DIR;
         // 模块显示名称
-        $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, $this->module['cname']);
+        $this->name = dr_lang('内容模块【%s（%s）】', $this->module['cname'], APP_DIR);
         $this->is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
         $this->where_list_sql = $this->content_model->get_admin_list_where();
         // 初始化数据表

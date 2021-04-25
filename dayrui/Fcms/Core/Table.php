@@ -391,13 +391,23 @@ class Table extends \Phpcmf\Common
             }
             $post['id'] = $rt['code'];
             // 记录日志
-            $logname = isset($post[$this->init['show_field']]) && $post[$this->init['show_field']] ? $post[$this->init['show_field']] : $data[$this->init['show_field']];
-            !$logname && $logname = $post['id'];
-            $id ? \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$logname.')') : \Phpcmf\Service::L('input')->system_log($this->name.'：新增('.$logname.')');
+            $logname = 'id：'.$post['id'];
+            if (isset($post[$this->init['show_field']]) && $post[$this->init['show_field']]) {
+                $logname = ($this->init['show_field'] != 'id' ? $logname.' ' : '').$this->init['show_field'].'：'.$post[$this->init['show_field']];
+            } elseif (isset($data[$this->init['show_field']]) && $data[$this->init['show_field']]) {
+                $logname = ($this->init['show_field'] != 'id' ? $logname.' ' : '').$this->init['show_field'].'：'.$data[$this->init['show_field']];
+            }
+            \Phpcmf\Service::L('input')->system_log($this->name . dr_lang($id ? '修改' : '新增').' ('.$logname.')');
             // 获取新的存储id
             $id = $rt['code'];
             // 附件归档
-            SYS_ATTACHMENT_DB && $attach && \Phpcmf\Service::M('Attachment')->handle(isset($data['uid']) ? $data['uid'] : $this->member['id'], \Phpcmf\Service::M()->dbprefix($this->init['table']).'-'.$id, $attach);
+            if (SYS_ATTACHMENT_DB && $attach) {
+                \Phpcmf\Service::M('Attachment')->handle(
+                    isset($data['uid']) ? $data['uid'] : $this->member['id'],
+                    \Phpcmf\Service::M()->dbprefix($this->init['table']).'-'.$id,
+                    $attach
+                );
+            }
             // 删除临时存储数据
             \Phpcmf\Service::L('Form')->auto_form_data_delete($name);
             // 执行回调方法
