@@ -496,7 +496,7 @@ class Module extends \Phpcmf\Table
 
         // 支持附表存储
         $this->is_data = 0;
-        $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('草稿'));
+        $this->name.= dr_lang('草稿');
         $this->_init([
             'table' => dr_module_table_prefix(APP_DIR).'_draft',
         ]);
@@ -572,7 +572,7 @@ class Module extends \Phpcmf\Table
             dr_lang('词文不对'),
         ];
         if ($this->module['setting']['verify_msg']) {
-            $msg = @explode(PHP_EOL, $this->module['setting']['verify_msg']);
+            $msg = explode(PHP_EOL, $this->module['setting']['verify_msg']);
             $msg && $verify_msg = $msg;
         }
 
@@ -652,7 +652,7 @@ class Module extends \Phpcmf\Table
 
         // 支持附表存储
         $this->is_data = 0;
-        $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('审核'));
+        $this->name.= dr_lang('审核');
         $this->_init([
             'table' => dr_module_table_prefix(APP_DIR).'_verify',
         ]);
@@ -810,7 +810,7 @@ class Module extends \Phpcmf\Table
 
         // 支持附表存储
         $this->is_data = 0;
-        $this->name = dr_lang('内容模块[%s]（%s）', APP_DIR, dr_lang('定时'));
+        $this->name.= dr_lang('定时');
         $this->_init([
             'table' => dr_module_table_prefix(APP_DIR).'_time',
         ]);
@@ -1165,6 +1165,7 @@ class Module extends \Phpcmf\Table
         } elseif ($is_draft) {
             // 草稿箱存储
             $data[1]['id'] = $id;
+            $this->name.= dr_lang('草稿箱');
             $this->init['table'] = dr_module_table_prefix(APP_DIR).'_draft';
             return $this->content_model->insert_draft($did, $data);
         } else {
@@ -1228,6 +1229,7 @@ class Module extends \Phpcmf\Table
                         $_POST['verify']['msg'] = $old['note'] = \Phpcmf\Service::L('input')->get('note', true);
                         \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_0', $old);
                         $this->content_model->table($this->content_model->mytable.'_verify')->delete($id);
+                        $this->name.= dr_lang('退稿审核');
                     }
 
                     return dr_return_data(1, 'ok', $data);
