@@ -8,6 +8,20 @@
 class Api extends \Phpcmf\Common
 {
 
+    // 清理通知
+    public function clear_notice() {
+
+        if (\Phpcmf\Service::M('auth')->is_post_user()) {
+            \Phpcmf\Service::M()->db->table('member_notice')->where('uid', $this->uid)->update(['isnew' => 0]);
+        } else {
+
+        }
+
+        $this->_json(1, dr_lang('操作成功'), [
+            'url' => dr_url('home/main')
+        ]);
+    }
+
     // 设置风格
     public function set_theme() {
 
