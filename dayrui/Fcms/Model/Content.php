@@ -1150,6 +1150,7 @@ class Content extends \Phpcmf\Model {
     // 恢复数据
     public function recovery($ids) {
 
+        $rt = [];
         foreach ($ids as $id) {
 
             $id = intval($id);
@@ -1158,7 +1159,7 @@ class Content extends \Phpcmf\Model {
                 return NULL;
             }
 
-            $cid = intval($row['cid']);
+            $rt[] = $cid = intval($row['cid']);
             $tables = dr_string2array($row['content']);
             if (!$tables) {
                 return NULL;
@@ -1181,7 +1182,7 @@ class Content extends \Phpcmf\Model {
             $this->_recovery_content($cid, $row);
         }
 
-        return dr_return_data(1);
+        return dr_return_data(1, 'ok', $rt);
     }
 
     // 移动栏目

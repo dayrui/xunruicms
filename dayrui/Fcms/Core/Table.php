@@ -225,7 +225,7 @@ class Table extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
-        $value = \Phpcmf\Service::L('input')->get('value', true);
+        $value = \Phpcmf\Service::L('input')->get('value');
         $after = dr_safe_filename(\Phpcmf\Service::L('input')->get('after'));
 
         if (!$id) {

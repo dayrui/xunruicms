@@ -217,7 +217,7 @@ class Module extends \Phpcmf\Table
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
             if ($rt['code']) {
                 // 写入日志
-                \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：放入回收站('.implode(', ', $ids).')');
+                \Phpcmf\Service::L('input')->system_log($this->name.'：放入回收站id ('.implode(', ', $ids).')');
                 $this->_json(1, dr_lang('所选内容已被放入回收站中'));
             } else {
                 $this->_json(0, $rt['msg']);
@@ -264,7 +264,7 @@ class Module extends \Phpcmf\Table
 
         // 写入日志
         if ($rt['code']) {
-            \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：批量修改栏目('.implode(', ', $ids).')');
+            \Phpcmf\Service::L('input')->system_log($this->name.'：批量修改栏目id ('.implode(', ', $ids).')');
             $this->_json(1, dr_lang('操作成功'));
         }
         $this->_json(0, $rt['msg']);
@@ -867,7 +867,7 @@ class Module extends \Phpcmf\Table
         );
 
         // 写入日志
-        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：删除('.implode(', ', $ids).')');
+        \Phpcmf\Service::L('input')->system_log($this->name.'：删除回收站id ('.implode(', ', $ids).')');
 
         if ($rt['code']) {
             $this->_json(1, dr_lang('操作成功'));
@@ -913,10 +913,9 @@ class Module extends \Phpcmf\Table
 
         $rt = $this->content_model->recovery($ids);
 
-        // 写入日志
-        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：恢复('.implode(', ', $ids).')');
-
         if ($rt['code']) {
+            // 写入日志
+            \Phpcmf\Service::L('input')->system_log($this->name.'：恢复回收站id ('.implode(', ', $rt['data']).')');
             $this->_json(1, dr_lang('操作成功'));
         } else {
             $this->_json(0, $rt['msg']);
@@ -929,6 +928,8 @@ class Module extends \Phpcmf\Table
         // 说明来自定时页面
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         define('IS_MODULE_RECYCLE', $id);
+        $this->init['show_field'] = 'cid';
+        $this->name.= dr_lang('恢复回收站');
         list($tpl, $data) = $this->_Post($id);
         if (!$data) {
             $this->_admin_msg(0, dr_lang('内容不存在'));
