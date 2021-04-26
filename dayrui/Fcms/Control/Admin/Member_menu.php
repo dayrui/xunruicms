@@ -83,19 +83,26 @@ class Member_menu extends \Phpcmf\Common
 		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
-		$gid = (int)\Phpcmf\Service::L('input')->post('groupid');
-		if (!$gid) {
-		    $this->_json(0, dr_lang('你还没有选择用户组'));
+        $data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
+        if (!$data) {
+            $this->_json(0, dr_lang('无可用菜单'));
         }
 
-		$data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
-		if (!$data) {
-		    $this->_json(0, dr_lang('无可用菜单'));
+		$gids = \Phpcmf\Service::L('input')->post('groupid');
+		if (!$gids) {
+            foreach ($data as $t) {
+                \Phpcmf\Service::M()->db->table('member_menu')->where('id', $t['id'])->update([
+                    'group' => ''
+                ]);
+            }
+            $this->_json(1, dr_lang('取消成功'));
         }
 
 		foreach ($data as $t) {
 			$value = dr_string2array($t['group']);
-			$value[$gid] = $gid;
+            foreach ($gids as $gid) {
+                $value[$gid] = $gid;
+            }
 			\Phpcmf\Service::M()->db->table('member_menu')->where('id', $t['id'])->update([
 				'group' => dr_array2string($value)
 			]);
@@ -136,23 +143,30 @@ class Member_menu extends \Phpcmf\Common
 		    $this->_json(0, dr_lang('你还没有选择呢'));
         }
 
-		$sid = (int)\Phpcmf\Service::L('input')->post('siteid');
-		if (!$sid) {
-		    $this->_json(0, dr_lang('你还没有选择站点'));
+        $data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
+        if (!$data) {
+            $this->_json(0, dr_lang('无可用菜单'));
         }
 
-		$data = \Phpcmf\Service::M()->db->table('member_menu')->whereIN('id', $ids)->get()->getResultArray();
-		if (!$data) {
-		    $this->_json(0, dr_lang('无可用菜单'));
+		$sids = \Phpcmf\Service::L('input')->post('siteid');
+		if (!$sids) {
+            foreach ($data as $t) {
+                \Phpcmf\Service::M()->db->table('member_menu')->where('id', $t['id'])->update([
+                    'site' => ''
+                ]);
+            }
+		    $this->_json(1, dr_lang('取消成功'));
         }
 
-		foreach ($data as $t) {
-			$value = dr_string2array($t['site']);
-			$value[$sid] = $sid;
-			\Phpcmf\Service::M()->db->table('member_menu')->where('id', $t['id'])->update([
-				'site' => dr_array2string($value)
-			]);
-		}
+        foreach ($data as $t) {
+            $value = dr_string2array($t['site']);
+            foreach ($sids as $sid) {
+                $value[$sid] = $sid;
+            }
+            \Phpcmf\Service::M()->db->table('member_menu')->where('id', $t['id'])->update([
+                'site' => dr_array2string($value)
+            ]);
+        }
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 		$this->_json(1, dr_lang('划分成功'));

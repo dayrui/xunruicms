@@ -2,7 +2,7 @@
 <div class="note note-danger">
     <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
 </div>
-
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
 <div class="right-card-box">
     <form class="form-horizontal" role="form" id="myform">
         {dr_form_hidden()}
@@ -83,9 +83,8 @@
                 {/if}
                 {if $ci->_is_admin_auth('edit')}
                 <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/group_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分用户组可见权限')}</button></label>
-                <label>
-                    <select name="groupid" class="form-control">
-                        <option value=""> {dr_lang('--')} </option>
+                <label style="min-width: 200px;">
+                    <select name="groupid[]" class="bs-select form-control"  multiple="multiple"  data-actions-box="true">
                         {loop $group $t}
                         <option value="{$t.id}">{dr_lang($t.name)}</option>
                         {/loop}
@@ -94,9 +93,8 @@
 
                 {if dr_count($ci->site_info) > 1}
                 <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('member_menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分站点可见权限')}</button></label>
-                <label>
-                    <select name="siteid" class="form-control">
-                        <option value=""> {dr_lang('--')} </option>
+                <label style="min-width: 200px;">
+                    <select name="siteid[]" class="bs-select form-control"  multiple="multiple"  data-actions-box="true">
                         {loop $ci->site_info $t}
                         <option value="{$t.SITE_ID}">{$t.SITE_NAME}</option>
                         {/loop}
