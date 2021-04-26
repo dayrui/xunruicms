@@ -92,6 +92,7 @@ class Member_field extends \Phpcmf\Common
         $this->_json(1, dr_lang('划分成功'));
     }
 
+    // 注册权限
     public function reg_edit() {
 
         $fid = (int)\Phpcmf\Service::L('input')->get('id');
@@ -117,6 +118,30 @@ class Member_field extends \Phpcmf\Common
 
         \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
         $this->_json(1, dr_lang('操作成功'), ['value' => $rt]);
+    }
+
+    // 用户组划分删除全部
+    public function all_del() {
+
+        $fid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!$fid) {
+            $this->_json(0, dr_lang('字段id不存在'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
+        $value = $data ? dr_string2array($data['value']) : [];
+
+        if (isset($value[$fid])) {
+            unset($value[$fid]);
+        }
+
+        \Phpcmf\Service::M()->db->table('member_setting')->replace([
+            'name' => 'field',
+            'value' => dr_array2string($value)
+        ]);
+
+        \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
+        $this->_json(1, dr_lang('操作成功'));
     }
 
     public function del() {

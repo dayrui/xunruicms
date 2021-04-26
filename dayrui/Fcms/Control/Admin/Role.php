@@ -90,6 +90,55 @@ class Role extends \Phpcmf\Common
 		exit;
 	}
 
+	// 复制动作
+	public function copy_edit() {
+
+		$id = intval(\Phpcmf\Service::L('input')->get('id'));
+		$data = \Phpcmf\Service::M('auth')->get_role($id);
+		if (!$data) {
+		    $this->_json(0, dr_lang('数据#%s不存在', $id));
+        }
+
+		if (IS_AJAX_POST) {
+
+			$post = \Phpcmf\Service::L('input')->post('data');
+			if (!$post['ids']) {
+                $this->_json(0, dr_lang('没有选择目标角色组'));
+            } elseif (!$post['option']) {
+                $this->_json(0, dr_lang('没有选择复制项目'));
+            }
+
+            $save = [];
+			if (dr_in_array(1, $post['option'])) {
+			    $save['site'] = dr_array2string($data['site']);
+            }
+
+            if (dr_in_array(2, $post['option'])) {
+			    $save['system'] = dr_array2string($data['system']);
+			    $save['module'] = dr_array2string($data['module']);
+            }
+
+			if (!$save) {
+                $this->_json(0, dr_lang('没有选择复制项目'));
+            }
+
+			foreach ($post['ids'] as $rid) {
+                \Phpcmf\Service::M('auth')->table('admin_role')->update($rid, $save);
+            }
+
+            \Phpcmf\Service::M('cache')->sync_cache('auth');
+			\Phpcmf\Service::L('input')->system_log('修改角色组('.$data['name'].')到'.implode('、', $post['ids']));
+			$this->_json(1, dr_lang('操作成功'));
+		}
+
+        \Phpcmf\Service::V()->assign([
+            'id' => $id,
+            'role' => \Phpcmf\Service::M('auth')->get_role_all()
+        ]);
+		\Phpcmf\Service::V()->display('role_copy.html');
+		exit;
+	}
+
 	// 角色组权限，超级管理员有权限
 	public function auth_edit() {
 

@@ -36,10 +36,12 @@
                     </td>
                     <td>
                         {loop $t.group $gid}
-                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {$color[$gid]}">{dr_lang($group[$gid]['name'])} <i class="fa fa-times"></i> </a></label>
+                        <label id="dr_row_{$t.id}_{$gid}"><a href="javascript:dr_delete('{$t.id}', '{$gid}');" class="btn btn-xs {if $color[$gid]}{$color[$gid]}{else}default{/if}">{dr_lang($group[$gid]['name'])} <i class="fa fa-times"></i> </a></label>
                         {/loop}
                         {if !$t.group}
                         <font color="red">{dr_lang('未划分字段不能在前端显示')}</font>
+                        {else}
+                        <label><a href="javascript:dr_ajax_confirm_url('{dr_url($uriprefix.'/all_del', ['id'=>$t.id])}', '{dr_lang('确定要删除该字段的全部用户组权限吗？')}', '{dr_now_url()}');" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('一键清除')} </a></label>
                         {/if}
                     </td>
                 </tr>

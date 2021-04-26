@@ -49,9 +49,10 @@
             <td>
                 {if $ci->_is_admin_auth('edit') && $t.id>1}
                 <a href="{dr_url('role/auth_edit', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
-                <a href="javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '50%');"class="btn btn-xs red"> <i class="fa fa-cog"></i> {dr_lang('站点权限')}</a>
+                <a href="javascript:dr_iframe('{dr_lang('站点权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '50%');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('站点权限')}</a>
+                <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('role/copy_edit', ['id'=>$t.id])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他角色')}</a>
                 {/if}
-                {if $ci->_is_admin_auth('edit')}<a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '400px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
+                {if $ci->_is_admin_auth('edit')}<a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '60%');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
              </td>
         </tr>
         {/loop}
