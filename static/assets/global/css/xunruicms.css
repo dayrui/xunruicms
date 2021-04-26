@@ -32012,7 +32012,7 @@ code.form-control-static {
     margin-top: 20px
 }
 
-.fc-list-select button {
+.fc-list-select .btn-sm {
     margin-right: 8px
 }
 
