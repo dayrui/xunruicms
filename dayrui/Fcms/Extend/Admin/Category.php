@@ -585,8 +585,8 @@ class Category extends \Phpcmf\Table
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
                 0,
-                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
-                dr_lang('全部栏目'),
+                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple"  data-actions-box="true"',
+                '',
                 0,
                 0
             ),
@@ -968,8 +968,8 @@ class Category extends \Phpcmf\Table
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
                 0,
-                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
-                dr_lang('全部栏目'),
+                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple"  data-actions-box="true"',
+                '',
                 0,
                 0
             ),

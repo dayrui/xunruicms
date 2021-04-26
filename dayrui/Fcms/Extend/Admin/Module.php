@@ -309,7 +309,7 @@ class Module extends \Phpcmf\Table
             'select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $sync ? explode(',', $sync) : 0,
-                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple" style="height:200px"',
+                'id=\'dr_catid\' name=\'catid[]\' multiple="multiple"  data-actions-box="true"',
                 '', 1, 1
             ),
         ]);

@@ -668,8 +668,8 @@
     // to-do: replace with more advanced template/customization options
     BUTTONCLASS: 'btn-default',
     POPOVERHEADER: 'popover-title',
-    ICONBASE: 'glyphicon',
-    TICKICON: 'glyphicon-ok'
+    ICONBASE: 'fa',
+    TICKICON: 'fa-check'
   }
 
   var Selector = {
@@ -879,8 +879,8 @@
         (numGroup == 1) ? 'Group limit reached ({n} item max)' : 'Group limit reached ({n} items max)'
       ];
     },
-    selectAllText: 'Select All',
-    deselectAllText: 'Deselect All',
+    selectAllText: bs_selectAllText,
+    deselectAllText: bs_deselectAllText,
     doneButton: false,
     doneButtonText: 'Close',
     multipleSeparator: ', ',

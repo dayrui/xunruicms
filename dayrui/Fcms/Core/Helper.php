@@ -2914,7 +2914,7 @@ function dr_rewrite_decode($params, $join = '-', $field = []) {
     foreach ($array as $k => $t) {
         $name = str_replace('$', '_', $t);
         $name = isset($field[$name]) && $field[$name] ? $field[$name] : $name;
-        $i%2 == 0 && $return[$name] = isset($array[$k+1]) ? $array[$k+1] : '';
+        $i%2 == 0 && $return[$name] = isset($array[$k+1]) ? urldecode($array[$k+1]) : '';
         $i ++;
     }
 

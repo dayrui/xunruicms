@@ -97,56 +97,15 @@ class Catids extends \Phpcmf\Library\A_Field {
 		// 字段提示信息
 		$tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
-
 		// 开始输出
 		$str = '';
-
-        // 表单宽度设置
-        $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
-		$str.= '<div class="dropzone-file-area" style="text-align:left" id="catids-'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
-
-        // 输出默认菜单
-        $tpl = '<div class="catids_'.$name.'_row" id="dr_catids_'.$name.'_row_{id}">';
-        $tpl.= '<label style="margin-right: 10px;"><a class="btn btn-sm " href="javascript:;" onclick="$(\'#dr_catids_'.$name.'_row_{id}\').remove()"> <i class="fa fa-close"></i> </a></label>';
-        $tpl.= '<label>'.\Phpcmf\Service::L('Tree')->select_category(
-            \Phpcmf\Service::C()->module['category'],
-            0,
-            ' name=\'data['.$field['fieldname'].'][]\'',
-            '', 1, 1
-        ).'</label>';
-        $tpl.= '</div>';
-
-        // 字段默认值
-        $values = dr_string2array($value);
-        if ($values) {
-            foreach ($values as $id => $value) {
-                if ($value) {
-                    $str.= '<div class="catids_'.$name.'_row" id="dr_catids_'.$name.'_row_'.$value.'">';
-                    $str.= '<label style="margin-right: 10px;"><a class="btn btn-sm " href="javascript:;" onclick="$(\'#dr_catids_'.$name.'_row_'.$value.'\').remove()"> <i class="fa fa-close"></i> </a></label>';
-                    $str.= '<label>'.\Phpcmf\Service::L('Tree')->select_category(
-                            \Phpcmf\Service::C()->module['category'],
-                            $value,
-                            ' name=\'data['.$field['fieldname'].'][]\'',
-                            '', 1, 1
-                        ).'</label>';
-                    $str.= '</div>';
-                }
-            }
-        }
-
-		// 整体
-		$str.= '</div>';
-        $str.= '<div class="margin-top-10">	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_catids_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
-        $str.= '</div>';
-        $str.= '<script type="text/javascript">
-        $("#catids-'.$name.'-sort-items").sortable();
-		function dr_add_catids_'.$name.'() {
-			var id=($("#catids-'.$name.'-sort-items .catids_'.$name.'_row").length + 1) * 10;
-			var html = "'.addslashes(str_replace(PHP_EOL, '', $tpl)).'";
-			html = html.replace(/\{id\}/g, id);
-			$("#catids-'.$name.'-sort-items").append(html);
-		}
-		</script><span class="help-block">'.$tips.'</span>';
+        $str.= '<label style="min-width: 200px">'.\Phpcmf\Service::L('Tree')->select_category(
+                \Phpcmf\Service::C()->module['category'],
+                dr_string2array($value),
+                ' name=\'data['.$field['fieldname'].'][]\'  multiple="multiple" data-actions-box="true"',
+                '', 1, 1
+            ).'</label>';
+        $str.= \Phpcmf\Service::L('Field')->get('select')->get_select_search_code().'<span class="help-block">'.$tips.'</span>';
 		return $this->input_format($name, $text, $str);
 	}
 

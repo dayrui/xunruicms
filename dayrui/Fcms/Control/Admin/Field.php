@@ -274,7 +274,7 @@ class Field extends \Phpcmf\Common
         in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data']) && \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->select_category(
             $this->module['category'],
             0,
-            'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" style="height:200px"',
+            'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
             '',
             0,
             0
@@ -432,7 +432,7 @@ class Field extends \Phpcmf\Common
                 'select_category' => \Phpcmf\Service::L('tree')->select_category(
                     $this->module['category'],
                     $ids,
-                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" style="height:200px"',
+                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
                     '',
                     0,
                     0
@@ -454,7 +454,7 @@ class Field extends \Phpcmf\Common
                 'select_category' => \Phpcmf\Service::L('tree')->select_category(
                     $this->module['category'],
                     $ids,
-                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" style="height:200px"',
+                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
                     '',
                     0,
                     0

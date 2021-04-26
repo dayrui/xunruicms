@@ -2,6 +2,7 @@
 <div class="note note-danger">
     <p><a href="javascript:dr_update_cache_all();">{dr_lang('更改数据之后请更新下全站缓存')}</a></p>
 </div>
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}
     <div class="portlet bordered light myfbody">
@@ -198,25 +199,33 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('后台不显示该字段')}</label>
                             <div class="col-md-9">
-                                <div class="mt-checkbox-inline">
-                                    {loop $role $t}
-                                    {if $t.id>1}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_admin][]" value="{$t.id}" {if dr_in_array($t.id, (array)$data.setting.show_admin)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
-                                    {/if}
-                                    {/loop}
-                                </div>
+                                <label style="min-width: 200px">
+                                    <select class="form-control bs-select" style="height: 200px" name="data[setting][show_admin][]" multiple data-actions-box="true">
+                                        {loop $role $t}
+                                        {if $t.id>1}
+                                        <option {if dr_in_array($t.id, (array)$data.setting.show_admin)} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>
+                                        {/if}
+                                        {/loop}
+                                    </select>
+                                </label>
+
                                 <span class="help-block">{dr_lang('后台发布内容时该角色将不会看到这个字段')}</span>
                             </div>
                         </div>
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('前端不显示该字段')}</label>
                             <div class="col-md-9">
-                                <div class="mt-checkbox-inline">
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="0" {if dr_in_array(0, (array)$data.setting.show_member)} checked{/if} /> {dr_lang('游客')} <span></span></label>
-                                    {list action=cache name=MEMBER.group}
-                                    <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[setting][show_member][]" value="{$t.id}" {if dr_in_array($t.id, (array)$data.setting.show_member)} checked{/if} /> {dr_lang($t.name)} <span></span></label>
-                                    {/list}
-                                </div>
+
+                                <label style="min-width: 200px">
+                                    <select class="form-control bs-select" name="data[setting][show_member][]" multiple data-actions-box="true">
+                                        <option {if dr_in_array(0, (array)$data.setting.show_member)} selected{/if} value="{$t.id}">{dr_lang('游客')}</option>
+                                        {list action=cache name=MEMBER.group}
+                                        <option {if dr_in_array($t.id, (array)$data.setting.show_member)} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>
+                                        {/list}
+                                    </select>
+                                </label>
+
+
                                 <span class="help-block">{dr_lang('前端发布内容时该会员组将不会看到这个字段，如果“前端显示”关闭了此功能就无效')}</span>
                             </div>
                         </div>
@@ -257,7 +266,10 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1" {if $cat_show}checked{/if} /> {dr_lang('指定栏目')}  <span></span></label>
                                 </div>
                                 <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
+
+                                    <label style="min-width: 200px">
                                     {$select_category}
+                                    </label>
                                     <span class="help-block">{dr_lang('只有勾选的栏目，才可以显示在该栏目的编辑页面中，表示可以使用此字段')}</span>
                                 </div>
                             </div>
@@ -281,7 +293,9 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="cat[use]" value="1"  {if $cat_show}checked{/if} /> {dr_lang('指定栏目')}  <span></span></label>
                                 </div>
                                 <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
+                                    <label style="min-width: 200px">
                                     {$select_category}
+                                    </label>
                                     <span class="help-block">{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；选择父栏目时，其所有子栏目都会继承该字段')}</span>
                                 </div>
                             </div>
