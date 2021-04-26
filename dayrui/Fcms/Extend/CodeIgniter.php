@@ -90,7 +90,16 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
         return 'page-'.md5(FC_NOW_URL);
     }
 
-
+    /**
+     * 过滤保留的方法名称
+     */
+    protected function startController()
+    {
+        parent::startController();
+        if ($this->method && in_array($this->method, ['get_attachment', 'get_cache', 'session', 'cachePage', 'init_file'])) {
+            dr_exit_msg(0, '控制器方法（'.$this->method.'）是系统保留关键词，不能被访问');
+        }
+    }
 }
 
 /**
@@ -116,7 +125,7 @@ function dr_exit_msg($code, $msg, $data = []) {
         echo json_encode($rt, JSON_UNESCAPED_UNICODE);
     } else {
         // html
-        exit($msg);
+        dr_show_error($msg);
     }
     exit;
 }

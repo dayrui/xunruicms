@@ -492,6 +492,65 @@ abstract class Common extends \CodeIgniter\Controller
         return \Phpcmf\Service::L('cache')->get(...$params);
     }
 
+    /**
+     * 附件信息
+     */
+    public function get_attachment($id) {
+
+        if (!$id) {
+            return null;
+        }
+
+        $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
+        if ($data) {
+            return $data;
+        }
+
+        $id = (int)$id;
+        $data = \Phpcmf\Service::M()->db->table('attachment')->where('id', $id)->get()->getRowArray();
+        if (!$data) {
+            return null;
+        } elseif ($data['related']) {
+            $info = \Phpcmf\Service::M()->db->table('attachment_data')->where('id', $id)->get()->getRowArray();
+        } else {
+            $info = \Phpcmf\Service::M()->db->table('attachment_unused')->where('id', $id)->get()->getRowArray();
+        }
+
+        if (!$info) {
+            if ($data['related']) {
+                $info = \Phpcmf\Service::M()->db->table('attachment_unused')->where('id', $id)->get()->getRowArray();
+            }
+            if (!$info) {
+                return null;
+            }
+        }
+
+        // 合并变量
+        $info = $data + $info;
+        $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
+
+        // 文件真实地址
+        if ($info['remote']) {
+            $remote = $this->get_cache('attachment', $info['remote']);
+            if (!$remote) {
+                // 远程地址无效
+                $info['url'] = $info['file'] = '自定义附件（'.$info['remote'].'）的配置已经不存在';
+                return $info;
+            } else {
+                $info['file'] = $remote['value']['path'].$info['attachment'];
+            }
+        }
+
+        // 附件属性信息
+        $info['attachinfo'] = dr_string2array($info['attachinfo']);
+
+        $info['url'] = dr_get_file_url($info);
+
+        \Phpcmf\Service::L('cache')->set_file('attach-info-'.$id, $info, 'attach');
+
+        return $info;
+    }
+
     // 初始化模块
     public function _module_init($dirname = '', $siteid = SITE_ID) {
 
@@ -691,66 +750,6 @@ abstract class Common extends \CodeIgniter\Controller
         ]);
         \Phpcmf\Service::V()->display('msg.html');
         !defined('SC_HTML_FILE') && exit();
-    }
-
-
-    /**
-     * 附件信息
-     */
-    public function get_attachment($id) {
-
-        if (!$id) {
-            return null;
-        }
-
-        $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
-        if ($data) {
-            return $data;
-        }
-
-        $id = (int)$id;
-        $data = \Phpcmf\Service::M()->db->table('attachment')->where('id', $id)->get()->getRowArray();
-        if (!$data) {
-            return null;
-        } elseif ($data['related']) {
-            $info = \Phpcmf\Service::M()->db->table('attachment_data')->where('id', $id)->get()->getRowArray();
-        } else {
-            $info = \Phpcmf\Service::M()->db->table('attachment_unused')->where('id', $id)->get()->getRowArray();
-        }
-
-        if (!$info) {
-            if ($data['related']) {
-                $info = \Phpcmf\Service::M()->db->table('attachment_unused')->where('id', $id)->get()->getRowArray();
-            }
-            if (!$info) {
-                return null;
-            }
-        }
-
-        // 合并变量
-        $info = $data + $info;
-        $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
-
-        // 文件真实地址
-        if ($info['remote']) {
-            $remote = $this->get_cache('attachment', $info['remote']);
-            if (!$remote) {
-                // 远程地址无效
-                $info['url'] = $info['file'] = '自定义附件（'.$info['remote'].'）的配置已经不存在';
-                return $info;
-            } else {
-                $info['file'] = $remote['value']['path'].$info['attachment'];
-            }
-        }
-
-        // 附件属性信息
-        $info['attachinfo'] = dr_string2array($info['attachinfo']);
-
-        $info['url'] = dr_get_file_url($info);
-
-        \Phpcmf\Service::L('cache')->set_file('attach-info-'.$id, $info, 'attach');
-
-        return $info;
     }
 
     /**
