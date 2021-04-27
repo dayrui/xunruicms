@@ -66,7 +66,8 @@ class Login extends \Phpcmf\Common
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            \Phpcmf\Hooks::trigger('member_login_before', $post);
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
                 $this->_json(0, dr_lang('图片验证码不正确'));
@@ -302,6 +303,7 @@ class Login extends \Phpcmf\Common
                         if (empty($post['username']) || empty($post['password'])) {
                             $this->_json(0, dr_lang('账号或密码必须填写'));
                         } else {
+                            \Phpcmf\Hooks::trigger('member_login_before', $post);
                             $rt = \Phpcmf\Service::M('member')->login($post['username'], $post['password'], (int)$_POST['remember']);
                             if ($rt['code']) {
                                 // 登录成功
