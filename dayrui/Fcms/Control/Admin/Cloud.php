@@ -612,6 +612,7 @@ return [
 
         $data = dr_string2array($json);
         if (!$data) {
+			CI_DEBUG && log_message('error', '服务端['.$surl.']返回数据异常：'.$json);
             $this->_json(0, '本站：服务端数据异常，请重新下载', $json);
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
@@ -820,6 +821,7 @@ return [
 
         $data = dr_string2array($json);
         if (!$data) {
+			CI_DEBUG && log_message('error', '迅睿云端返回数据异常：'.$json);
             $this->_json(0, '本站：服务端数据异常，请重新再试');
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
