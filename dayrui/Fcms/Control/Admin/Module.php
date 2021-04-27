@@ -307,8 +307,20 @@ class Module extends \Phpcmf\Common
         $data['setting'] = dr_string2array($data['setting']);
 
         if (IS_AJAX_POST) {
+            $post = \Phpcmf\Service::L('input')->post('flag');
+            if ($post) {
+                $role = \Phpcmf\Service::L('input')->post('role');
+                foreach ($post as $fid => $t) {
+                    $post[$fid]['role'] = [];
+                    if (isset($role[$fid]) && $role[$fid]) {
+                        foreach ($role[$fid] as $fid2 => $aid) {
+                            $post[$fid]['role'][$aid] = 1;
+                        }
+                    }
+                }
+            }
             $rt = \Phpcmf\Service::M('Module')->config($data, null, [
-                'flag' => \Phpcmf\Service::L('input')->post('flag'),
+                'flag' => $post,
             ]);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存

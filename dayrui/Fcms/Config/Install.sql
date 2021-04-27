@@ -322,6 +322,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member` (
   `phone` varchar(20) NOT NULL COMMENT '手机号码',
   `username` varchar(50) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(50) NOT NULL DEFAULT '' COMMENT '加密密码',
+  `login_attr` varchar(100) NOT NULL DEFAULT '' COMMENT '登录附加验证字符',
   `salt` varchar(50) NOT NULL COMMENT '随机加密码',
   `name` varchar(50) NOT NULL COMMENT '姓名',
   `money` decimal(10,2) unsigned NOT NULL COMMENT 'RMB',

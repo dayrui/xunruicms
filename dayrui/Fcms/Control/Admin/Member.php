@@ -109,10 +109,28 @@ class Member extends \Phpcmf\Table
             $p[$name] = $value;
         }
 
-        $groupid = (int)\Phpcmf\Service::L('input')->request('groupid');
+        $groupid = \Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
-            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid='.$groupid.')';
+            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $groupid).'))';
             $p['groupid'] = $groupid;
+        }
+
+        $sname = [
+            'is_lock' => '已锁定',
+            'is_verify' => '审核中',
+            'is_mobile' => '手机认证',
+            'is_email' => '邮箱认证',
+        ];
+        $status = \Phpcmf\Service::L('input')->request('status');
+        if ($status) {
+            $wh = [];
+            foreach ($status as $v) {
+                if (isset($sname[$v])) {
+                    $wh[] = $v.'=1';
+                }
+            }
+            $wh && $where[] = '`id` IN (select id from `'.\Phpcmf\Service::M()->dbprefix('member_data').'` where '.implode(' or ', $wh).')';
+            $p['status'] = $status;
         }
 
         // 不是超级管理员排除角色账号
@@ -123,6 +141,9 @@ class Member extends \Phpcmf\Table
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
 
         list($tpl) = $this->_List($p);
+        \Phpcmf\Service::V()->assign([
+            'status' => $sname,
+        ]);
         \Phpcmf\Service::V()->display($tpl);
     }
 

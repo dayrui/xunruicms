@@ -200,7 +200,7 @@
                             <label class="col-md-2 control-label">{dr_lang('后台不显示该字段')}</label>
                             <div class="col-md-9">
                                 <label style="min-width: 200px">
-                                    <select class="form-control bs-select" style="height: 200px" name="data[setting][show_admin][]" multiple data-actions-box="true">
+                                    <select class="form-control bs-select" name="data[setting][show_admin][]" multiple data-actions-box="true">
                                         {loop $role $t}
                                         {if $t.id>1}
                                         <option {if dr_in_array($t.id, (array)$data.setting.show_admin)} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>

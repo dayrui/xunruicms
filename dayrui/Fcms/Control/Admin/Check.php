@@ -265,6 +265,11 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `unionid` VARCHAR(100) DEFAULT NULL');
                 }
 
+                $table = $prefix.'member';
+                if (!\Phpcmf\Service::M()->db->fieldExists('login_attr', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `login_attr` VARCHAR(100) DEFAULT NULL');
+                }
+
                 $table = $prefix.'member_menu';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');

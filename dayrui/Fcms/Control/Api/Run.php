@@ -67,8 +67,8 @@ class Run extends \Phpcmf\Common
                             $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
                         }
                         if ($file) {
-                            @unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, $file));
-                            @unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, 'mobile/'.$file));
+                            unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, $file));
+                            unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, 'mobile/'.$file));
                         }
                     }
                     // 定时发布动作

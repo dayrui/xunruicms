@@ -1,16 +1,25 @@
 {template "header.html"}
 
 
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
 <div class="right-card-box">
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {dr_form_search_hidden()}
         <div class="col-md-12 col-sm-12">
             <label>
-                <select name="groupid" class="form-control">
-                    <option value=""> {dr_lang('全部')} </option>
+                <select name="status[]" class="form-control bs-select" data-title="{dr_lang('账号状态')}" multiple="multiple">
+                    {loop $status $i $t}
+                    <option value="{$i}" {if dr_in_array($i, $param.status)}selected{/if}>{dr_lang($t)}</option>
+                    {/loop}
+                </select>
+            </label>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <label style="min-width: 200px;">
+                <select name="groupid[]" class="form-control bs-select" multiple="multiple" data-title="{dr_lang('用户组')}" data-actions-box="true">
                     {loop $group $t}
-                    <option value="{$t.id}" {if $param.groupid==$t.id}selected{/if}>{dr_lang($t.name)}</option>
+                    <option value="{$t.id}" {if dr_in_array($t.id, $param.groupid)}selected{/if}>{dr_lang($t.name)}</option>
                     {/loop}
                 </select>
             </label>

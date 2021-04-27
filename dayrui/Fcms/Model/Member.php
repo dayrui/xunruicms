@@ -180,6 +180,20 @@ class Member extends \Phpcmf\Model
     }
 
     /**
+     * 存储cookie
+     */
+    public function save_cookie($data, $remember = 0) {
+
+        // 存储cookie
+        $expire = $remember ? 8640000 : SITE_LOGIN_TIME;
+        \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], $expire);
+        \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].isset($data['login_attr']) ? $data['login_attr'] : ''), $expire);
+
+        // 登录后的钩子
+        \Phpcmf\Hooks::trigger('member_login_after', $data);
+    }
+
+    /**
      * 验证会员有效性 1表示通过 0表示不通过
      */
     public function check_member_cookie($member) {
@@ -192,7 +206,7 @@ class Member extends \Phpcmf\Model
             return 1;
         } elseif (!$cookie) {
             return 0;
-        } elseif (substr(md5(SYS_KEY.$member['password']), 5, 20) !== $cookie) {
+        } elseif (md5(SYS_KEY.$member['password'].isset($member['login_attr']) ? $member['login_attr'] : '') !== $cookie) {
             return 0;
         }
 
@@ -644,18 +658,6 @@ class Member extends \Phpcmf\Model
         \Phpcmf\Service::L('Notice')->send_notice('member_register_verify', $this->get_member($uid));
     }
 
-    /**
-     * 存储cookie
-     */
-    public function save_cookie($data, $remember = 0) {
-
-        // 存储cookie
-        $expire = $remember ? 8640000 : SITE_LOGIN_TIME;
-        \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], $expire);
-        \Phpcmf\Service::L('input')->set_cookie('member_cookie', substr(md5(SYS_KEY.$data['password']), 5, 20), $expire);
-
-    }
-
     // 获取本站通讯地址
     public function get_sso_url() {
 
@@ -1022,6 +1024,7 @@ class Member extends \Phpcmf\Model
 
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
         $member['password'] = $member['password'] ? md5(md5($member['password']).$member['salt'].md5($member['password'])) : '';
+        $member['login_attr'] = '';
         $member['money'] = 0;
         $member['freeze'] = 0;
         $member['spend'] = 0;
