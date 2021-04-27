@@ -34,7 +34,7 @@ class Sso extends \Phpcmf\Common
                     $this->_jsonp(0, '格式错误');
                 }
 
-                $member = \Phpcmf\Service::M()->db->table('member')->select('password,salt')->where('id', $uid)->get()->getRowArray();
+                $member = \Phpcmf\Service::M()->db->table('member')->where('id', $uid)->get()->getRowArray();
                 if (!$member) {
                     $this->_jsonp(0, '账号不存在');
                 } elseif ($salt != $member['salt']) {
