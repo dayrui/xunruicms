@@ -1019,6 +1019,38 @@ class Api extends \Phpcmf\Common
         $this->_admin_msg(1, dr_lang('正在切换完整模式'), dr_url('home/index'), 0);
     }
 
+    // 删除app的提示信息
+    public function delete_app() {
+
+        if (!$this->_is_admin_auth()) {
+            $this->_json(0, dr_lang('需要超级管理员账号操作'));
+        }
+
+        $dir = dr_safe_filename($_GET['dir']);
+        if (!$dir) {
+            $this->_json(0, dr_lang('目录不能为空'));
+        }
+
+        $path = dr_get_app_dir($dir);
+
+        if (IS_POST) {
+
+            dr_dir_delete($path, true);
+            if (is_dir($path)) {
+                $this->_json(0, dr_lang('目录未删除成功，建议手动删除该目录'), [
+                    'time' => -1
+                ]);
+            }
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'dir' => $dir,
+            'path' => IS_DEV ? $path : dr_safe_replace_path($path)
+        ]);
+        \Phpcmf\Service::V()->display('api_delete_app.html');exit;
+    }
+
     // 短信接口查询
     public function sms_info() {
         exit($this->_api_sms_info());

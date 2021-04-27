@@ -721,7 +721,7 @@
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
                     if (json.state == 'SUCCESS') {
-                        _this.imageList.push(json);
+                        _this.imageList[$file.index()] = json; // 修改这里：按选择好的文件列表顺序存储
                         $file.append('<span class="success"></span>');
                     } else {
                         $file.find('.error').text(json.state).show();

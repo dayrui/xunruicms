@@ -300,7 +300,7 @@ function dr_iframe(type, url, width, height, rt) {
                         dr_cmf_tips(1, json.msg);
                     } else {
                         $(body).find('#dr_row_'+json.data.field).addClass('has-error');
-                        dr_cmf_tips(0, json.msg);
+                        dr_cmf_tips(0, json.msg, json.data.time);
                     }
                     return false;
                 },
@@ -450,7 +450,7 @@ function dr_ajax_url(url) {
                     $('#dr_'+json.data.field).focus();
                 }
 			}
-            dr_cmf_tips(json.code, json.msg);
+            dr_cmf_tips(json.code, json.msg, json.data.time);
             if (json.data.url) {
                 setTimeout("window.location.href = '"+json.data.url+"'", 2000);
             }
@@ -473,7 +473,7 @@ function dr_ajaxp_url(url) {
         dataType: "jsonp",
         success: function (json) {
             layer.close(index);
-            dr_cmf_tips(json.code, json.msg);
+            dr_cmf_tips(json.code, json.msg, json.data.time);
             if (json.data.url) {
                 setTimeout("window.location.href = '"+json.data.url+"'", 2000);
             }
