@@ -116,8 +116,7 @@ class Member extends \Phpcmf\Table
         }
 
         $sname = [
-            'is_lock' => '已锁定',
-            'is_verify' => '审核中',
+            'is_lock' => '账号锁定',
             'is_mobile' => '手机认证',
             'is_email' => '邮箱认证',
         ];

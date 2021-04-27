@@ -119,7 +119,6 @@ class Auth extends \Phpcmf\Model {
 
         $data = $this->db
             ->table('member')
-            ->select('password, salt, id, login_attr')
             ->where('username', $username)
             ->limit(1)
             ->get()
@@ -155,6 +154,7 @@ class Auth extends \Phpcmf\Model {
 
         // 保存会话
         \Phpcmf\Service::C()->session()->set('uid', $data['id']);
+
         \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], SITE_LOGIN_TIME);
         \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].isset($data['login_attr']) ? $data['login_attr'] : ''), SITE_LOGIN_TIME);
 

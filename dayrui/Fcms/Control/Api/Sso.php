@@ -42,9 +42,7 @@ class Sso extends \Phpcmf\Common
                 }
 
                 header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-                $expire = \Phpcmf\Service::L('input')->get('remember') ? 8640000 : SITE_LOGIN_TIME;
-                \Phpcmf\Service::L('input')->set_cookie('member_uid', $uid, $expire);
-                \Phpcmf\Service::L('input')->set_cookie('member_cookie', substr(md5(SYS_KEY.$member['password']), 5, 20), $expire);
+                \Phpcmf\Service::M('member')->save_cookie($member, \Phpcmf\Service::L('input')->get('remember'));
 
                 break;
 
@@ -68,33 +66,11 @@ class Sso extends \Phpcmf\Common
                 header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
                 \Phpcmf\Service::L('input')->set_cookie('admin_login_member', $uid.'-'.$admin['id'], 3600);
                 $this->session()->setTempdata('admin_login_member_code', md5($uid.$admin['id'].$admin['password']), 3600);
-
                 break;
 
             case 'slogin': // 后台登录其他站点
 
-                $code = dr_authcode(\Phpcmf\Service::L('input')->get('code'), 'DECODE');
-                if (!$code) {
-                    $this->_jsonp(0, '解密失败');
-                }
-
-                list($uid, $password) = explode('-', $code);
-
-                $admin = \Phpcmf\Service::L('cache')->init('', 'site')->get('admin_login_site');
-                if (!$admin) {
-                    $this->_jsonp(0, '缓存失败');
-                } elseif ($password != md5($admin['uid'].$admin['password']) ) {
-                    $this->_jsonp(0, '验证失败');
-                }
-
-                // 存储状态
-                header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
-                \Phpcmf\Service::L('input')->set_cookie('admin_login_member', 0, -3600);
-                $this->session()->set('admin_login_member_code', 0, -3600);
-                $this->session()->set('uid', $uid);
-                $this->session()->set('admin', $uid);
-                \Phpcmf\Service::L('input')->set_cookie('member_uid', $uid, SITE_LOGIN_TIME);
-                \Phpcmf\Service::L('input')->set_cookie('member_cookie', substr(md5(SYS_KEY . $admin['password']), 5, 20), SITE_LOGIN_TIME);
+                exit('功能废弃');
                 break;
 
         }
