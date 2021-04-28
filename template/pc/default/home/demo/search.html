@@ -182,6 +182,18 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-md-2 control-label">推荐位</label>
+                                    <div class="col-md-9">
+                                        <label><a class="label {if !$params.flag}label-success{else}label-default{/if}" href="{Router::search_url($params, 'flag', NULL)}">不限</a></label>
+                                        <!--调用单选字段数据方法-->
+                                        {php $field = $ci->module['setting']['flag'];}
+                                        {loop $field $value $t}
+                                        <label><a class="label {if dr_is_double_search($params.flag, $value)}label-success{else}label-default{/if}" href="{Router::search_url($params, 'flag', dr_get_double_search($params.flag, $value))}">{$t.name}</a></label>
+                                        {/loop}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-md-2 control-label">组合购买价格自定义</label>
                                     <div class="col-md-9">
                                         {php $zhxgm = explode(',', $params.zhxgm);}
