@@ -6,6 +6,7 @@
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {dr_form_search_hidden()}
+        {if $status}
         <div class="col-md-12 col-sm-12">
             <label>
                 <select name="status[]" class="form-control bs-select" data-title="{dr_lang('账号状态')}" multiple="multiple">
@@ -15,6 +16,7 @@
                 </select>
             </label>
         </div>
+        {/if}
         <div class="col-md-12 col-sm-12">
             <label style="min-width: 200px;">
                 <select name="groupid[]" class="form-control bs-select" multiple="multiple" data-title="{dr_lang('用户组')}" data-actions-box="true">

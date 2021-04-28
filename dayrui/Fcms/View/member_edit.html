@@ -120,7 +120,7 @@
                                 <div class="input-group" style="width: 300px;">
                                     <input type="text" readonly value="{$username}" class="form-control">
                                     <span class="input-group-btn">
-                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更")}', '{dr_url("member/username_edit", ['id' => $id])}', '500px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更")}', '{dr_url("member/username_edit", ['id' => $id])}', '500px', '280px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
                                     </span>
                                 </div>
                             </div>
@@ -301,7 +301,7 @@
                                     <table class="table table-hover table-light">
                                         <thead>
                                         <tr class="uppercase">
-                                            <th width="150"> {dr_lang('登录时间')} </th>
+                                            <th width="160"> {dr_lang('登录时间')} </th>
                                             <th> {dr_lang('登录地点')} </th>
                                         </tr>
                                         </thead>
@@ -309,10 +309,10 @@
                                         {table table=member_login uid=$id order=logintime desc cache=0}
                                         <tr>
                                             <td> {dr_date($t.logintime)} </td>
-                                            <td> <a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t['loginip'])}</a> </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2"> {$t.useragent}</td>
+                                            <td>
+                                                <a href="https://www.baidu.com/s?wd={$t['loginip']}&action=xunruicms" target="_blank">{Ip::address($t['loginip'])}</a>
+                                                <span>{$t.useragent}</span>
+                                            </td>
                                         </tr>
                                         {/table}
                                         </tbody>

@@ -108,11 +108,11 @@ class Member_verify extends \Phpcmf\Table
             $p[$name] = $value;
             $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
         }
-        
-        $groupid = (int)\Phpcmf\Service::L('input')->request('groupid');
+
+        $groupid = \Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
+            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $groupid).'))';
             $p['groupid'] = $groupid;
-            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where id='.$groupid.')';
         }
         
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
