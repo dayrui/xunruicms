@@ -175,7 +175,7 @@ class Member extends \Phpcmf\Table
             \Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
             \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$name);
 
-            exit($this->_json(1, dr_lang('操作成功')));
+            $this->_json(1, dr_lang('操作成功'));
         }
 
         \Phpcmf\Service::V()->assign([
@@ -502,13 +502,10 @@ class Member extends \Phpcmf\Table
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
-        $list = \Phpcmf\Service::M()->table('member_login')->where('uid', $uid)->order_by('logintime desc')->getAll();
-
         \Phpcmf\Service::V()->assign([
-            'list' => $list,
+            'list' => \Phpcmf\Service::M()->table('member_login')->where('uid', $uid)->order_by('logintime desc')->getAll(),
         ]);
         \Phpcmf\Service::V()->display('member_login.html');exit;
-
     }
 
     // 删除用户组
@@ -645,8 +642,8 @@ class Member extends \Phpcmf\Table
                     return dr_return_data(0, dr_lang('手机号码%s已经注册', $member['phone']), ['field' => 'phone']);
                 }
                 // 保存附表内容
-                $status = \Phpcmf\Service::L('input')->post('status');
                 $post = \Phpcmf\Service::L('input')->post('data');
+                $status = \Phpcmf\Service::L('input')->post('status');
 
                 $member['regip'] = $post['regip'];
                 $member['regtime'] = strtotime($post['regtime']);
@@ -679,6 +676,7 @@ class Member extends \Phpcmf\Table
                 if (isset($old['is_verify']) && $old['is_verify'] == 0 && $status['is_verify'] == 1) {
                     \Phpcmf\Service::M('member')->verify_member($id);
                 }
+
                 return $data;
             }
         );
