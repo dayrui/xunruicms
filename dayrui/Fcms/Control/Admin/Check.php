@@ -134,12 +134,12 @@ class Check extends \Phpcmf\Common
 
                 foreach ($dir as $path => $note) {
                     if (!dr_check_put_path($path)) {
-                        $this->_json(0, $note.'【'.$path.'】');
+                        $this->_json(0, $note.'【'.(IS_DEV ? $path : dr_safe_replace_path($path)).'】');
                     }
                 }
 
                 if (!is_dir(WEBPATH.'api/ueditor/')) {
-                    $this->halt('百度编辑器目录不存在：'.WEBPATH.'api/ueditor/', 0);
+                    $this->halt('百度编辑器目录不存在：'.(IS_DEV ? WEBPATH : '/').'api/ueditor/', 0);
                 }
 
                 break;
@@ -329,35 +329,35 @@ class Check extends \Phpcmf\Common
 
                 if ($module) {
                     foreach ($module as $m) {
-                        if (\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
+                        if (!\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
                             ->where('relatedid', $m['id'])->where('fieldname', 'author')->counts()) {
-                            continue;
+                            \Phpcmf\Service::M()->db->table('field')->insert(array(
+                                'name' => '作者',
+                                'fieldname' => 'author',
+                                'fieldtype' => 'Text',
+                                'relatedid' => $m['id'],
+                                'relatedname' => 'module',
+                                'isedit' => 1,
+                                'ismain' => 1,
+                                'ismember' => 1,
+                                'issystem' => 1,
+                                'issearch' => 1,
+                                'disabled' => 0,
+                                'setting' => dr_array2string(array(
+                                    'is_right' => 1,
+                                    'option' => array(
+                                        'width' => 200, // 表单宽度
+                                        'fieldtype' => 'VARCHAR', // 字段类型
+                                        'fieldlength' => '255', // 字段长度
+                                        'value' => '{username}'
+                                    ),
+                                    'validate' => array(
+                                        'xss' => 1, // xss过滤
+                                    )
+                                )),
+                                'displayorder' => 0,
+                            ));
                         }
-                        \Phpcmf\Service::M()->db->table('field')->insert(array(
-                            'name' => '作者',
-                            'fieldname' => 'author',
-                            'fieldtype' => 'Text',
-                            'relatedid' => $m['id'],
-                            'relatedname' => 'module',
-                            'isedit' => 1,
-                            'ismain' => 1,
-                            'ismember' => 1,
-                            'issystem' => 1,
-                            'issearch' => 1,
-                            'disabled' => 0,
-                            'setting' => dr_array2string(array(
-                                'is_right' => 1,
-                                'option' => array(
-                                    'width' => 200, // 表单宽度
-                                    'fieldtype' => 'VARCHAR', // 字段类型
-                                    'fieldlength' => '255' // 字段长度
-                                ),
-                                'validate' => array(
-                                    'xss' => 1, // xss过滤
-                                )
-                            )),
-                            'displayorder' => 0,
-                        ));
                     }
                 }
 
@@ -627,7 +627,7 @@ class Check extends \Phpcmf\Common
                 ];
                 foreach ($domain as $t) {
                     if (!file_put_contents($t['path'].'api.html', 'phpcmf ok')) {
-                        $this->_json(0, $t['path'].' 无法写入文件');
+                        $this->_json(0, (IS_DEV ? $t['path'] : dr_safe_replace_path($t['path'])).' 无法写入文件');
                     }
                     $code = dr_catcher_data($t['url'].'api.html', 5);
                     if ($code != 'phpcmf ok') {
