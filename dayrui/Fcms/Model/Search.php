@@ -219,6 +219,15 @@ class Search extends \Phpcmf\Model {
             if ($member_where) {
                 $where[] =  '`'.$table.'`.`uid` IN (select `id` from `'.$this->dbprefix('member_data').'` where '.implode(' AND ', $member_where).')';
             }
+            // flag
+            if (isset($param['flag']) && $param['flag']) {
+                $wh = [];
+                $arr = explode('|', $param['flag']);
+                foreach ($arr as $k) {
+                    $wh[] = intval($k);
+                }
+                $where[] =  '`'.$table.'`.`id` IN (select `id` from `'.$table.'_flag` where `flag` in ('.implode(',', $wh).'))';
+            }
 
             // 筛选空值
             foreach ($where as $i => $t) {

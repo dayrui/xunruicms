@@ -109,6 +109,20 @@ class Seo
                 if (isset($myfield[$name])) {
                     // 模块字段
                     $now_field = $myfield[$name];
+                } elseif ($name == 'flag') {
+                    // 推荐位
+                    if ($value) {
+                        $flag = $mod['setting']['flag'];
+                        $arr = explode('|', $value);
+                        if ($arr) {
+                            foreach ($arr as $a) {
+                                if (isset($flag[$a]) && $flag[$a]) {
+                                    $param_value[$name][] = $flag[$a]['name'];
+                                }
+                            }
+                        }
+                    }
+                    continue;
                 } elseif ($name == 'groupid') {
                     // 会员组名称
                     if ($value) {
@@ -161,6 +175,7 @@ class Seo
             $str = [];
             $seofield['catid'] = $seofield['catdir'] = [ 'name' => dr_lang('栏目') ];
             $seofield['groupid'] = ['name' => dr_lang('用户组')];
+            $seofield['flag'] = ['name' => dr_lang('推荐位')];
             $seofield['keyword'] = ['name' => dr_lang('关键词')];
             $seofield['updatetime'] = ['name' => dr_lang('更新时间')];
             $db = \Phpcmf\Service::C()->content_model;
