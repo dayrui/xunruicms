@@ -13,6 +13,6 @@ if (isset($_GET['is_install_db']) && $_GET['is_install_db']) {
     }
 }
 
-if (is_file(APPSPATH.'Mbdy/Config/App')) {
+if (is_file(APPSPATH.'Mbdy/Config/App.php')) {
     \Phpcmf\Service::M('app')->install('mbdy');
 }
