@@ -103,6 +103,9 @@ class Function_list
         } elseif ((isset($data['username']) || isset($data['author'])) && $data['uid']) {
             // 模块需要重新查询名字
             $member = $this->uid_data[$data['uid']] = isset($this->uid_data[$data['uid']]) && $this->uid_data[$data['uid']] ? $this->uid_data[$data['uid']] : \Phpcmf\Service::M('member')->username($data['uid']);
+            if (!$value) {
+                $value = $member;
+            }
         } else {
             $member = $value;
         }

@@ -277,24 +277,23 @@
                     'fieldname' => 'catid',
                     'setting' => array()
                 ),
-                'author' => array(
+                'uid' => array(
                     'name' => dr_lang('账号'),
                     'ismain' => 1,
                     'ismember' => 1,
                     'fieldtype' => 'Textbtn',
-                    'fieldname' => 'author',
+                    'fieldname' => 'uid',
                     'setting' => array(
                         'option' => array(
                             'width' => '100%',
                             'name' => dr_lang('资料'),
                             'icon' => 'fa fa-user',
                             'func' => 'dr_show_member',
-                            'extend_field' => 'uid',
-                            'extend_function' => 'member:uid',
-                            'value'	=> \Phpcmf\Service::C()->member['username']
+                            'diy_show_value' => 'member:username',
+                            'diy_insert_value' => 'member:uid',
+                            'value'	=> \Phpcmf\Service::C()->member['uid']
                         ),
                         'validate' => array(
-                            'tips' => (IS_ADMIN ? '</span><span class="help-block"><input name="no_author" class="dr_no_author" type="checkbox" value="1" /> '.dr_lang('不验证账号').'</label>' : ''),
                             'check' => '_check_member',
                             'required' => 1,
                         )

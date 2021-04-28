@@ -327,6 +327,40 @@ class Check extends \Phpcmf\Common
                 // 栏目模型字段修正
                 \Phpcmf\Service::M()->db->table('field')->where('relatedname', 'share-'.SITE_ID)->update(['relatedname' => 'catmodule-share']);
 
+                if ($module) {
+                    foreach ($module as $m) {
+                        if (\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
+                            ->where('relatedid', $m['id'])->where('fieldname', 'author')->counts()) {
+                            continue;
+                        }
+                        \Phpcmf\Service::M()->db->table('field')->insert(array(
+                            'name' => '作者',
+                            'fieldname' => 'author',
+                            'fieldtype' => 'Text',
+                            'relatedid' => $m['id'],
+                            'relatedname' => 'module',
+                            'isedit' => 1,
+                            'ismain' => 1,
+                            'ismember' => 1,
+                            'issystem' => 1,
+                            'issearch' => 1,
+                            'disabled' => 0,
+                            'setting' => dr_array2string(array(
+                                'is_right' => 1,
+                                'option' => array(
+                                    'width' => 200, // 表单宽度
+                                    'fieldtype' => 'VARCHAR', // 字段类型
+                                    'fieldlength' => '255' // 字段长度
+                                ),
+                                'validate' => array(
+                                    'xss' => 1, // xss过滤
+                                )
+                            )),
+                            'displayorder' => 0,
+                        ));
+                    }
+                }
+
                 // 站点
                 foreach ($this->site as $siteid) {
                     // 升级资料库

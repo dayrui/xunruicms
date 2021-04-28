@@ -2346,11 +2346,13 @@ class View {
                         } else {
                             // 没有找到就当做普通数据库查询
                             $where[$i]['value'] = $t['value'];
-                            //$where[$i]['value'] = '没有找到对应的联动菜单值['.$t['value'].']';
                         }
                     } elseif (isset($myfield[$t['name']]['fieldtype']) && in_array($myfield[$t['name']]['fieldtype'], ['Members', 'Related'])) {
-                        $where[$i]['adj'] = 'FIND';
-                        $where[$i]['value'] = intval($t['value']);
+                        // 关联字段
+                        if (!$where[$i]['adj']) {
+                            $where[$i]['adj'] = 'FIND';
+                            $where[$i]['value'] = intval($t['value']);
+                        }
                     } elseif ($myfield[$t['name']]['fieldtype'] == 'Linkage') {
                         // 联动菜单
                         $arr = explode('|', $t['value']);

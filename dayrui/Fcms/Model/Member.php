@@ -1567,39 +1567,6 @@ class Member extends \Phpcmf\Model
         $this->table('member')->update($uid, [
             'username' => $username,
         ]);
-        // 按站点数据删除
-        foreach ($this->site as $siteid) {
-            // 表单
-            $form = $this->is_table_exists($siteid.'_form') ? $this->init(['table' => $siteid.'_form'])->getAll() : [];
-            if ($form) {
-                foreach ($form as $t) {
-                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_form_'.$t['table']))
-                    && $this->db->table($siteid.'_form_'.$t['table'])->where('uid', $uid)->update([
-                        'author' => $username,
-                    ]);
-                }
-            }
-            // 模块
-            $module = $this->table('module')->getAll();
-            if ($module) {
-                foreach ($module as $m) {
-                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname']))
-                    && $this->db->table($siteid.'_'.$m['dirname'])->where('uid', $uid)->update([
-                        'author' => $username,
-                    ]);
-                    $form = $this->is_table_exists('module_form') ? $this->db->table('module_form')->where('module', $m['dirname'])->get()->getResultArray() : [];
-                    if ($form) {
-                        foreach ($form as $t) {
-                            \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($siteid.'_'.$m['dirname'].'_form_'.$t['table']))
-                            && $this->db->table($siteid.'_'.$m['dirname'].'_form_'.$t['table'])->where('uid', $uid)->update([
-                                'author' => $username,
-                            ]);
-                        }
-                    }
-                }
-            }
-        }
-
         $this->db->table('member_paylog')->where('uid', $uid)->update([ 'username' => $username ]);
         $this->db->table('member_paylog')->where('touid', $uid)->update([ 'tousername' => $username ]);
         $this->db->table('member_group_verify')->where('uid', $uid)->update([ 'username' => $username ]);

@@ -41,7 +41,7 @@ class Module extends \Phpcmf\Table
         $this->_init([
             'table' => dr_module_table_prefix(APP_DIR),
             'field' => $this->module['field'],
-            'sys_field' => ['inputtime', 'updatetime', 'inputip', 'displayorder', 'hits', 'author'],
+            'sys_field' => ['inputtime', 'updatetime', 'inputip', 'displayorder', 'hits', 'uid'],
             'date_field' => 'updatetime',
             'show_field' => 'title',
             'where_list' => $this->where_list_sql,
@@ -1131,11 +1131,6 @@ class Module extends \Phpcmf\Table
         } elseif ($id && isset($_POST['no_time'])
             && $_POST['no_time']) {
             $data[1]['updatetime'] = $old['updatetime'];
-        }
-
-        // 不验证账号
-        if ($id && $_POST['no_author']) {
-            $data[1]['uid'] = (int)$old['uid'];
         }
 
         return $data;

@@ -452,7 +452,6 @@ class Module extends \Phpcmf\Table
 
         // 默认数据
         $data[1]['uid'] = $data[0]['uid'] = $this->uid;
-        $data[1]['author'] = $this->member ? $this->member['username'] : 'guest';
         $data[1]['catid'] = $data[0]['catid'] = $catid;
         $data[1]['updatetime'] = SYS_TIME;
 

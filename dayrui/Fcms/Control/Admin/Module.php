@@ -266,7 +266,7 @@ class Module extends \Phpcmf\Common
             ->where('relatedid', $id)
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
-        $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'author', 'inputtime', 'updatetime', 'hits']);
+        $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'uid', 'inputtime', 'updatetime', 'hits']);
         $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));

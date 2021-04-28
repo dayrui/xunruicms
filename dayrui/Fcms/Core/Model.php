@@ -672,6 +672,9 @@ class Model {
                     }
                     dr_count($id) == 1 ? $select->where($this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
                     $param['keyword'] = htmlspecialchars($param['keyword']);
+                } elseif ($param['field'] == 'uid') {
+                    // 账户查询
+                    $select->where('uid in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
                 } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
                     // 自定义的匹配模式
                     if (function_exists($field[$param['field']]['myfunc'])) {

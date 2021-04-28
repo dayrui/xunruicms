@@ -173,6 +173,35 @@ return [
                     'displayorder' => '0',
                     'textname' => '描述',
                 ),
+            4 =>
+                array (
+                    'fieldname' => 'author',
+                    'fieldtype' => 'Text',
+                    'relatedname' => 'module',
+                    'isedit' => '1',
+                    'ismain' => '1',
+                    'issystem' => 1,
+                    'ismember' => '1',
+                    'issearch' => '1',
+                    'disabled' => '0',
+                    'setting' =>
+                        array (
+                            'is_right' => 1,
+                            'option' =>
+                                array (
+                                    'width' => 200,
+                                    'fieldtype' => 'VARCHAR',
+                                    'fieldlength' => '255',
+                                    'value' => '{username}'
+                                ),
+                            'validate' =>
+                                array (
+                                    'xss' => 1,
+                                ),
+                        ),
+                    'displayorder' => '0',
+                    'textname' => '作者',
+                ),
         ),
         
         0 =>  array (

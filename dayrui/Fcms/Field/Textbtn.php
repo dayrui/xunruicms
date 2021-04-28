@@ -88,20 +88,14 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 		// 格式化入库值
 		$value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
 
-		if ($field['setting']['option']['extend_field'] && $field['setting']['option']['extend_function']) {
+		if (isset($field['setting']['option']['diy_insert_value']) && $field['setting']['option']['diy_insert_value']) {
 			// 扩展字段函数
-			list($a, $method) = explode(':', $field['setting']['option']['extend_function']);
+			list($a, $method) = explode(':', $field['setting']['option']['diy_insert_value']);
 			$obj = \Phpcmf\Service::M($a);
 			if (method_exists($obj, $method)) {
-                if (IS_ADMIN && isset($_POST['no_author']) && $_POST['no_author']
-                    && $field['setting']['option']['extend_function'] == 'member:uid') {
-                    // 不验证会员就不变更uid
-                } else {
-                    \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['setting']['option']['extend_field']] = call_user_func([$obj, $method], $value);
-                }
-
+                $value = call_user_func([$obj, $method], $value);
 			} else {
-				log_message('error', '扩展函数方法 '.$field['setting']['option']['extend_function'].' 不存在！');
+				log_message('error', '扩展函数方法 '.$field['setting']['option']['diy_insert_value'].' 不存在！');
 			}
 		}
 
@@ -116,6 +110,20 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 	 * @return  string
 	 */
 	public function input($field, $value = null) {
+
+        // 字段默认值
+        $value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+
+        if (isset($field['setting']['option']['diy_show_value']) && $field['setting']['option']['diy_show_value']) {
+            // 扩展字段函数
+            list($a, $method) = explode(':', $field['setting']['option']['diy_show_value']);
+            $obj = \Phpcmf\Service::M($a);
+            if (method_exists($obj, $method)) {
+                $value = call_user_func([$obj, $method], $value);
+            } else {
+                log_message('error', '扩展函数方法 '.$field['setting']['option']['diy_show_value'].' 不存在！');
+            }
+        }
 
 		// 字段禁止修改时就返回显示字符串
 		if ($this->_not_edit($field, $value)) {
@@ -148,9 +156,6 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 		
 		// 函数
 		$func = $field['setting']['option']['func'] ? $field['setting']['option']['func'] : 'dr_diy_func';
-
-		// 字段默认值
-		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$ipt = '<input class="form-control '.$field['setting']['option']['css'].'" type="text" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$required.' '.$attr.' />';
 		$str = '
