@@ -159,7 +159,7 @@
                                             <td> {$cat.id}</td>
                                             <td> {$cat.spacer} <a href="{$cat.url}" target="_blank">{$cat.name}</a></td>
                                             <td>
-                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'share_category', 'aid'=>$aid, 'id'=>$catid])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'share_category', 'aid'=>$aid, 'id'=>$catid])}', '700px', '300px', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
                                                 <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'share_category', 'aid'=>$aid, 'id'=>$catid])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他栏目')}</button>
                                             </td>
                                         </tr>
@@ -205,7 +205,7 @@
                                             <td> {$t.table}</td>
                                             <td> {$t.name}</td>
                                             <td>
-                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'form', 'aid'=>$aid, 'id'=>$t.id])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'form', 'aid'=>$aid, 'id'=>$t.id])}', '700px', '330px', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
                                                 <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'form', 'aid'=>$aid, 'id'=>$t.id])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他表单')}</button>
                                             </td>
                                         </tr>
@@ -274,9 +274,8 @@
                                                 <td> {$cat.id}</td>
                                                 <td> {$cat.spacer} <a href="{$cat.url}" target="_blank">{$cat.name}</a></td>
                                                 <td>
-                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'category', 'aid'=>$aid,'mid'=>$mid, 'id'=>$catid])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $cat.name)}', '{dr_url('member_auth/edit', ['at' => 'category', 'aid'=>$aid,'mid'=>$mid, 'id'=>$catid])}', '700px', '300px', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
                                                     <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'category', 'aid'=>$aid,'mid'=>$mid, 'id'=>$catid])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他栏目')}</button>
-
                                                 </td>
                                             </tr>
                                             {/loop}
@@ -326,11 +325,10 @@
                                                 <td> {$t.table}</td>
                                                 <td> {$t.name}</td>
                                                 <td>
-                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'mform', 'aid'=>$aid, 'mid'=>$mid, 'id'=>$t.id])}', '75%', '', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
+                                                    <button onclick="dr_iframe('{dr_lang('[%s]权限', $t.name)}', '{dr_url('member_auth/edit', ['at' => 'mform', 'aid'=>$aid, 'mid'=>$mid, 'id'=>$t.id])}', '700px', '330px', 'nogo')" type="button" class="btn blue btn-xs"> <i class="fa fa-cog"></i> {dr_lang('设置权限')}</button>
                                                     <button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('member_auth/copy_edit', ['at'=>'mform', 'aid'=>$aid, 'mid'=>$mid, 'id'=>$t.id])}')" type="button" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他表单')}</button>
                                                 </td>
                                             </tr>
-
                                             {/loop}
                                             </tbody>
                                         </table>
