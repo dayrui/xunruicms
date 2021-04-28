@@ -294,7 +294,7 @@
                             'value'	=> \Phpcmf\Service::C()->member['username']
                         ),
                         'validate' => array(
-                            'tips' => (IS_ADMIN ? '</span><span class="help-block"><input name="no_author" type="checkbox" value="1" /> '.dr_lang('不验证账号').'</label>' : ''),
+                            'tips' => (IS_ADMIN ? '</span><span class="help-block"><input name="no_author" class="dr_no_author" type="checkbox" value="1" /> '.dr_lang('不验证账号').'</label>' : ''),
                             'check' => '_check_member',
                             'required' => 1,
                         )

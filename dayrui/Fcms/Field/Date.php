@@ -221,7 +221,7 @@ class Date extends \Phpcmf\Library\A_Field {
 			';
         }
 
-        APP_DIR && $name == 'updatetime' && $str.= '<label><input name="no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
+        APP_DIR && $name == 'updatetime' && $str.= '<label><input name="no_time" class="dr_no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
 
         $str.= $tips;
 
