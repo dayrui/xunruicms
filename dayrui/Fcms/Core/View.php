@@ -221,12 +221,12 @@ class View {
         $this->_disp_dir = $phpcmf_dir;
         $_view_file = $this->get_file_name($this->_filename, $phpcmf_dir);
 
+        $is_dev = 0;
         if ((IS_DEV || (IS_ADMIN && SYS_DEBUG))
             && !isset($_GET['callback']) && !isset($_GET['is_ajax'])
             && !IS_API_HTTP && !IS_AJAX) {
+            $is_dev = 1;
             echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
-        } else {
-            unset($this->_options);
         }
 
         // 兼容php8
@@ -247,8 +247,9 @@ class View {
         // 消毁变量
         unset($this->loadjs);
         unset($this->_include_file);
-
-        //unset($this->_options);
+        if (!$is_dev) {
+            unset($this->_options);
+        }
     }
 
     // 动态加载js
