@@ -15,6 +15,10 @@ class Cloud extends \Phpcmf\Common
     {
         parent::__construct(...$params);
 
+        if (!$this->_is_admin_auth()) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
+
         if (!$this->cmf_license) {
             $this->cmf_license = [
                 'id' => 10,

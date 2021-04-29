@@ -109,11 +109,7 @@ class Install extends \Phpcmf\Common
             case 2:
                 // 安装信息填写
 
-                $is_oem = 0;
-                if (is_file(MYPATH.'Config/License.php')) {
-                    $ls = require MYPATH.'Config/License.php';
-                    $is_oem = isset($ls['oem']) && $ls['oem'] ? 1 : 0;
-                }
+                $is_demo = is_file(MYPATH.'Config/demo.sql');
 
                 if (IS_AJAX_POST) {
 
@@ -185,12 +181,12 @@ $db[\'default\']	= [
                         $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
                     }
 
-                    $this->_json(1, 'index.php?c=install&m=index&is_install_db='.($is_oem ? 0 : intval($_POST['is_install_db'])).'&step='.($step+1));
+                    $this->_json(1, 'index.php?c=install&m=index&is_install_db='.(!$is_demo ? 0 : intval($_POST['is_install_db'])).'&step='.($step+1));
                 }
 
                 \Phpcmf\Service::V()->assign([
-                    'do_url' => '/index.php?c=install&m=index&is_install_db='.($is_oem ? 0 : intval($_POST['is_install_db'])).'&step=2',
-                    'is_oem' => $is_oem,
+                    'do_url' => '/index.php?c=install&m=index&is_install_db='.(!$is_demo ? 0 : intval($_POST['is_install_db'])).'&step=2',
+                    'is_demo' => $is_demo,
                 ]);
 
                 break;
@@ -353,7 +349,7 @@ $db[\'default\']	= [
                             $local = \Phpcmf\Service::Apps();
                             foreach ($local as $dir => $path) {
                                 if (is_file($path.'install.lock')) {
-                                    @unlink($path.'install.lock');
+                                    unlink($path.'install.lock');
                                 }
                             }
 

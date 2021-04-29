@@ -5,14 +5,13 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-class Checkbox extends \Phpcmf\Library\A_Field  {
+class Selects extends \Phpcmf\Library\A_Field {
 	
 	/**
      * 构造函数
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->close_xss = 1;
 		$this->fieldtype = TRUE;
 		$this->defaulttype = 'VARCHAR';
     }
@@ -25,15 +24,16 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
 	 */
 	public function option($option) {
 
-		$option['options'] = isset($option['options']) ? $option['options'] : 'name1|value1'.PHP_EOL.'name2|value2';
-		
-		return [$this->_search_field().
-			'
+        $option['options'] = isset($option['options']) ? $option['options'] : '选项名称1|1'.PHP_EOL.'选项名称2|2';
+
+		return [
+            $this->_search_field().'
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('选项列表').'</label>
 				<div class="col-md-9">
 					<textarea class="form-control" name="data[setting][option][options]" style="height:150px;width:400px;">'.$option['options'].'</textarea>
 					<span class="help-block">'.dr_lang('格式：选项名称|选项值[回车换行]选项名称2|值2....').'</span>
+					<span class="help-block">'.dr_lang('选项值建议使用从1开始的数字，不得带符号，也可以省略不写').'</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -41,46 +41,37 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
 				<div class="col-md-9">
 					<label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
 					<label>'.$this->member_field_select().'</label>
-					<span class="help-block">'.dr_lang('默认选中项，多个选中项用|分隔').'</span>
+					<span class="help-block">'.dr_lang('用于字段为空时显示该填充值，并不会去主动变更数据库中的实际值；可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
 				</div>
 			</div>
-			'
-			,
-			'
 			<div class="form-group">
-				<label class="col-md-2 control-label">'.dr_lang('显示格式').'</label>
-				<div class="col-md-9">
-					<div class="mt-radio-inline">
-						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][show_type]" value="0" '.(!$option['option']['show_type'] ? 'checked' : '').'> '.dr_lang('横排显示').'
-							<span></span>
-						</label>
-						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][show_type]" value="1" '.($option['option']['show_type'] ? 'checked' : '').'> '.dr_lang('竖排显示').'
-							<span></span>
-						</label>
-					</div>
-					
-				</div>
-			</div>
+                <label class="col-md-2 control-label">'.dr_lang('启用选项搜索').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][is_search]" '.($option['is_search'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                
+					<span class="help-block">'.dr_lang('当选项值过多时，可以在选择框中搜索选项值').'</span>
+                </div>
+            </div>
 			'
+			.
+			$this->field_type($option['fieldtype'], $option['fieldlength'])
 		];
 	}
-	
-	/**
-	 * 字段入库值
-	 */
-	public function insert_value($field) {
-		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
-	}
-	
-	/**
-	 * 字段入库值
-	 */
-	public function output($value) {
-		return dr_string2array($value);
-	}
-	
+
+    /**
+     * 字段入库值
+     */
+    public function insert_value($field) {
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
+    }
+
+    /**
+     * 字段入库值
+     */
+    public function output($value) {
+        return dr_string2array($value);
+    }
+
 	/**
 	 * 字段表单输入
 	 *
@@ -105,33 +96,33 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
 		// 字段提示信息
 		$tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
+		// 是否必填
+		$required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
+
 		// 字段默认值
-		if ($value) {
-			$value = dr_string2array($value);
-		} elseif ($field['setting']['option']['value']) {
-			$value = $this->get_default_value($field['setting']['option']['value']);
-			$value = is_array($value) ? $value : explode('|', $value);
-		} else {
-			$value = null;
-		}
+		$value = dr_string2array(strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']));
 
-        $str = '';
-
-		// 显示方式
-		$show_type = (int)$field['setting']['option']['show_type'];
+		$str = '<label style="min-width: 200px"><select '.$required.' class="bs-select  form-control" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' '.$field['setting']['option']['css'].'" data-actions-box="true"  multiple="multiple" name="data['.$name.'][]" id="dr_'.$name.'" '.$attr.' >';
 
 		// 表单选项
 		$options = dr_format_option_array($field['setting']['option']['options']);
 		if ($options) {
             foreach ($options as $v => $n) {
-				$s = is_array($value) && in_array($v, $value) ? ' checked' : '';
-				$kj = '<input type="checkbox" name="data['.$name.'][]" value="'.$v.'" '.$s.' '.$attr.' />';
-				$str.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.$n.' <span></span> </label>';
+				$str.= '<option value="'.$v.'" '.(dr_in_array($v, $value) ? ' selected' : '').'>'.$n.'</option>';
 			}
 		}
-		
-		return $this->input_format($name, $text, '<div class="'.(!$show_type ? 'mt-checkbox-inline' : 'mt-checkbox-list').'">'.$str.'</div>'.$tips);
+
+		$str.= '</select></label>'.$tips;
+
+        // 防止重复加载JS
+        if (!$this->is_load_js('Select')) {
+            $str.= $this->get_select_search_code();
+        }
+
+		return $this->input_format($name, $text, $str);
 	}
+
+
 
     /**
      * 字段表单显示
@@ -151,7 +142,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
             }
         }
 
-
         return $this->input_format($field['fieldname'], $field['name'], '<div class="form-control-static">'.$str.'</div>');
     }
+	
 }

@@ -14,7 +14,7 @@
     <div class="portlet-body">
         <div class="scroller" style="height: 250px;" data-always-visible="1" data-rail-visible="0">
         {if dr_is_app('notice')}
-            {table table=member_notice isnew=1 uid=$member.uid order=inputtime cahce=0} {/table}
+            {table table=member_notice isnew=1 uid=$member.uid order=inputtime cache=0} {/table}
             {if !$return}
             <div style="padding-top: 30px;padding-bottom: 30px;text-align: center;color: #d7d8da;"> {dr_lang('无任何提醒')} </div>
             {/if}

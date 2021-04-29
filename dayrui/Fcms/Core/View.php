@@ -1039,7 +1039,7 @@ class View {
                     if ($t) {
                         $data = dr_format_option_array($t['setting']['option']['options']);
                         if ($t['issearch'] && $t['ismain']
-                            && in_array($t['fieldtype'], ['Select', 'Radio', 'Checkbox']) && $data) {
+                            && in_array($t['fieldtype'], ['Select', 'Selects', 'Radio', 'Checkbox']) && $data) {
                             $list = [];
                             foreach ($data as $value => $name) {
                                 $name && !is_null($value) && $list[] = array(

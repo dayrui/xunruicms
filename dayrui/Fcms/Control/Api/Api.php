@@ -256,11 +256,13 @@ class Api extends \Phpcmf\Common
      */
     public function template() {
 
+        $app = dr_safe_filename(\Phpcmf\Service::L('input')->get('app'));
         $file = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
         $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
 
         $data = [
             'file' => $file,
+            'app' => $app,
             'module' => $module,
         ];
 
@@ -270,6 +272,8 @@ class Api extends \Phpcmf\Common
             if ($module) {
                 $this->_module_init($module);
                 \Phpcmf\Service::V()->module($module);
+            } elseif ($app) {
+                \Phpcmf\Service::V()->module($app);
             }
 
             \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('input')->get('', true));

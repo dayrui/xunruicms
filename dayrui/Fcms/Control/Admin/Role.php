@@ -142,6 +142,10 @@ class Role extends \Phpcmf\Common
 	// 角色组权限，超级管理员有权限
 	public function auth_edit() {
 
+	    if (!$this->_is_admin_auth()) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
+
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);
 		if (!$data) {

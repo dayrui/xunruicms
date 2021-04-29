@@ -583,7 +583,7 @@ class Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Checkbox') {
+        } elseif (isset($field['fieldtype']) && ($field['fieldtype'] == 'Selects' || $field['fieldtype'] == 'Checkbox')) {
             // 复选字段
             $arr = explode('|', $value);
             $where = [];

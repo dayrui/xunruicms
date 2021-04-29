@@ -48,7 +48,12 @@ return [
     ],
     [
         'id' => 'Select',
-        'name' => '下拉选择',
+        'name' => '下拉选择（单选）',
+        'namespace' => '',
+    ],
+    [
+        'id' => 'Selects',
+        'name' => '下拉选择（多选）',
         'namespace' => '',
     ],
     [
