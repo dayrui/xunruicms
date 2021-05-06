@@ -441,8 +441,7 @@ class Router
      * @param    string $fid 指定fid
      * @return    string
      */
-    public function search_url($params = [], $name = '', $value = '', $mid = '', $fid = SITE_FID)
-    {
+    public function search_url($params = [], $name = '', $value = '', $mid = '', $fid = SITE_FID) {
 
         // 模块目录识别
         defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
@@ -490,7 +489,7 @@ class Router
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod));
         } else {
-            return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . @http_build_query($params), '&');
+            return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&');
         }
     }
 
@@ -501,13 +500,13 @@ class Router
 
         $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", [$rep, 'php55_replace_data'], $rule);
         $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$rep, 'php55_replace_function'], $url);
-        $url = str_replace('//', '/', $prefix.$url);
+        $url = ltrim(str_replace('//', '/', $url), '/');
 
         if (strpos($url, '?') !== false) {
             return '自定义URL规则['.$rule.']不能包含问号?';
         }
 
-        return $url;
+        return $prefix.$url;
     }
 
     // 评论地址
@@ -622,40 +621,36 @@ class Router
 
 
     // 地址前缀部分
-    public function url_prefix($type, $mod = [], $cat = [], $fid = 0)
-    {
+    public function url_prefix($type, $mod = [], $cat = [], $fid = 0) {
 
         $dir = isset($mod['dirname']) ? $mod['dirname'] : '';
         $domain = isset($mod['domain']) ? $mod['domain'] : '';
 
         if ($cat) {
             $dir = isset($cat['mid']) ? $cat['mid'] : $dir;
-            //$domain = isset($cat['domain']) ? $cat['domain'] : $domain;
         }
 
         // 默认主网站的地址
-        $site_url = '/';
-
+        $url = '/';
         switch ($type) {
 
             // 动态模式
             case 'php':
-                $url = $site_url . 'index.php?' . (!$mod || $domain ? '' : 's=' . $dir . '&') . (!$fid ? '' : 'fid=' . $fid . '&');
+                $url = '/index.php?' . (!$mod || $domain ? '' : 's=' . $dir . '&') . (!$fid ? '' : 'fid=' . $fid . '&');
                 break;
 
             // 模块动态模式
             case 'module_php':
-                $url = $site_url . 'index.php?' . ($mod['share'] || $domain ? '' : 's=' . $dir . '&') . (!$fid ? '' : 'fid=' . $fid . '&');
+                $url = '/index.php?' . ($mod['share'] || $domain ? '' : 's=' . $dir . '&') . (!$fid ? '' : 'fid=' . $fid . '&');
                 break;
 
             // 自定义url模式
             case 'rewrite':
-                $url = $site_url;
+                $url = '/';
                 break;
-
         }
 
-        return $url;
+        return dr_url_prefix($url);
     }
 
     // 分站url
