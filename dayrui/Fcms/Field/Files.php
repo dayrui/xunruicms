@@ -158,8 +158,8 @@ class Files extends \Phpcmf\Library\A_Field {
         if ($value) {
             foreach ($value['title'] as $id => $title) {
                 $data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
-                $data['title'][$id] = dr_safe_keyword($title);
-                $data['description'][$id] = $value['description'][$id] ? dr_safe_keyword($value['description'][$id]) : '';
+                $data['title'][$id] = trim($title);
+                $data['description'][$id] = $value['description'][$id] ? trim($value['description'][$id]) : '';
             }
         }
 
@@ -228,8 +228,7 @@ class Files extends \Phpcmf\Library\A_Field {
      *
      * @return  string
      */
-    public function input($field, $value = '')
-    {
+    public function input($field, $value = '') {
 
         // 字段禁止修改时就返回显示字符串
         if ($this->_not_edit($field, $value)) {
