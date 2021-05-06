@@ -317,6 +317,9 @@ class Field extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$post = \Phpcmf\Service::L('input')->post('data');
 			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
+            if (!$field) {
+                $this->_json(0, dr_lang('字段类别不存在'));
+            }
 			$rt = \Phpcmf\Service::M('Field')->edit(
 				$data,
 				$post,
