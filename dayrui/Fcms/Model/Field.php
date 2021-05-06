@@ -112,7 +112,6 @@ class Field extends \Phpcmf\Model
                     if (!$cache) {
                         $table = $siteid.'_form_'.$cache['table'].'_comment';
                     }
-                    var_dump($table);exit;
                 } else {
                     // 识别栏目模型字段
                     list($module, $s) = explode('-', $field['relatedname']);

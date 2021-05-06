@@ -316,7 +316,7 @@ class Field extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 			$post = \Phpcmf\Service::L('input')->post('data');
-			$field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
+			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
 			$rt = \Phpcmf\Service::M('Field')->edit(
 				$data,
 				$post,
