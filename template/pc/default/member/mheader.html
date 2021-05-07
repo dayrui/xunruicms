@@ -52,7 +52,7 @@
                             </li>
                             <li>
                                 <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                    {table table=member_notice isnew=1 uid=$member.uid order=inputtime cahce=0}
+                                    {table table=member_notice isnew=1 uid=$member.uid order=inputtime cache=0}
                                     <li>
                                         <a {if $t.url} href="{$t.url}" target="_blank" {else}href="{dr_member_url('notice/home/index')}"{/if}>
                                             <span class="time">{dr_fdate($t.inputtime)}</span>

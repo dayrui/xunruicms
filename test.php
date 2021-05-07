@@ -24,7 +24,7 @@ dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
 if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-    exit("<font color=red>PHP版本必须在7.2及以上</font>");
+    exit("<font color=red>PHP版本必须在7.2及以上，当前".PHP_VERSION."</font>");
 } else {
     dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
 }
