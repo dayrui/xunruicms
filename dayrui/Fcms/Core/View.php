@@ -1095,7 +1095,7 @@ class View {
                             if (!$total) {
                                 return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                             }
-                            $sql.= ' LIMIT '.$pagesize * ($page - 1).','.$pagesize;
+                            $sql.= ' LIMIT '.intval($pagesize * ($page - 1)).','.$pagesize;
                             $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
                         }
                     }
@@ -1186,7 +1186,7 @@ class View {
                         if (!$total) {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
-                        $sql_limit = 'LIMIT '.$pagesize * ($page - 1).','.$pagesize;
+                        $sql_limit = 'LIMIT '.intval($pagesize * ($page - 1)).','.$pagesize;
                         $pages = $this->_get_pagination($urlrule, $pagesize, $total, $system['pagefile']);
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
@@ -1321,7 +1321,7 @@ class View {
                             // 没有数据时返回空
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
-                        $sql_limit = ' LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $sql_limit = ' LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
                         $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
@@ -1744,8 +1744,9 @@ class View {
                         if ($system['action'] == 'search' && $module['setting']['search']['max']) {
                             $total = min($total, $module['setting']['search']['max']);
                         }
+
                         $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
-                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
                     } elseif ($system['num']) {
                         $pages = '';
                         $sql_limit = "LIMIT {$system['num']}";
@@ -1903,7 +1904,7 @@ class View {
                         $pagesize = (int)$system['pagesize'];
                         !$pagesize && $pagesize = 10;
                         $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
-                        $sql_limit = 'LIMIT ' . $pagesize * ($page - 1) . ',' . $pagesize;
+                        $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
                     } elseif ($system['num']) {
                         $pages = '';
                         $sql_limit = "LIMIT {$system['num']}";

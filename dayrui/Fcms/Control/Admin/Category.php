@@ -56,5 +56,4 @@ class Category extends \Phpcmf\Admin\Category
         $this->_Admin_Del();
     }
 
-
 }

@@ -5,10 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
 // 文件操作控制器
-class File extends \Phpcmf\Common
-{
+class File extends \Phpcmf\Common {
     protected $dir;
     protected $root_path;
     protected $not_root_path;
@@ -16,8 +14,7 @@ class File extends \Phpcmf\Common
     protected $exclude_dir;
     protected $backups_path;
 
-    public function __construct(...$params)
-    {
+    public function __construct(...$params) {
         parent::__construct(...$params);
         $this->dir = $this->_safe_path(\Phpcmf\Service::L('input')->get('dir'));
         \Phpcmf\Service::V()->assign([

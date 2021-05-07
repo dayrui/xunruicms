@@ -5,10 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
-// 内容模块操作类 基于 Ftable
-class Module extends \Phpcmf\Table
-{
+// 内容模块操作类 基于 Table
+class Module extends \Phpcmf\Table {
     protected $post_time; // 定时发布时间
     protected $module_menu; // 是否显示模块菜单
     protected $is_post_user; // 投稿者权限
@@ -674,7 +672,6 @@ class Module extends \Phpcmf\Table
         });
     }
 
-
     // ===========================
 
     // 后台定时发布列表
@@ -773,7 +770,6 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign('posttime', dr_date($data['posttime'], 'Y-m-d H:i:s'));
         \Phpcmf\Service::V()->display('share_time.html');exit;
     }
-
 
     // 后台修改定时内容
     protected function _Admin_Time_Edit() {
@@ -1010,8 +1006,6 @@ class Module extends \Phpcmf\Table
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list'));
     }
-
-
 
     // ===========================
 

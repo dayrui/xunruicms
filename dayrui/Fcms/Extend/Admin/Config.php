@@ -5,10 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
 // 属性配置
-class Config extends \Phpcmf\Common
-{
+class Config extends \Phpcmf\Common {
 
     // 模块自由属性配置
     protected function _Module_Param() {
@@ -28,7 +26,6 @@ class Config extends \Phpcmf\Common
         }
 
         if (IS_POST) {
-
             $post = \Phpcmf\Service::L('input')->post('data');
             $data['setting']['param'] = $post;
             \Phpcmf\Service::M()->db->table('module')->where('dirname', APP_DIR)->update([

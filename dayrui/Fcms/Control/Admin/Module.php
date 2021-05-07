@@ -5,8 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Module extends \Phpcmf\Common
-{
+class Module extends \Phpcmf\Common {
 
     private $dir;
 
@@ -26,7 +25,6 @@ class Module extends \Phpcmf\Common
         }
         \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu($menu));
     }
-
 
     // 安装模块
     public function install() {

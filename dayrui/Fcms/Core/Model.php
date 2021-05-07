@@ -799,7 +799,7 @@ class Model {
         $where && $select->where($where);
         $param = $this->_limit_page_where($select, $param);
         if ($size > 0) {
-            $select->limit($size, $size * ($page - 1));
+            $select->limit($size, intval($size * ($page - 1)));
         }
         $query = $select->orderBy($order_str ? $order_str : 'id desc')->get();
         if (!$query) {

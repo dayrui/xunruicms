@@ -6,8 +6,7 @@
  **/
 
 // 内容维护
-class Content extends \Phpcmf\Common
-{
+class Content extends \Phpcmf\Common {
 
     public $module; // 模块信息
 

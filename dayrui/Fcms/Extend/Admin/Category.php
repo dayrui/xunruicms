@@ -5,9 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-// 模块栏目操作类 基于 Ftable
-class Category extends \Phpcmf\Table
-{
+// 模块栏目操作类 基于 Table
+class Category extends \Phpcmf\Table {
     public $module; // 模块信息
     public $is_scategory; // 选择栏目类型
     protected $_is_extend_var = 0; // 继承属性变量
@@ -977,7 +976,6 @@ class Category extends \Phpcmf\Table
         ]);
         \Phpcmf\Service::V()->display('share_category_field.html');exit;
     }
-
 
     // ===========================
 
