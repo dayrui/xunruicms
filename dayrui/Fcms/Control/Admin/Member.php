@@ -579,23 +579,26 @@ class Member extends \Phpcmf\Table
             $this->_json(0, dr_lang('所选用户组不存在'));
         }
 
-        $c = 0;
+        // 验证用户
         foreach ($ids as $i) {
             $uid = intval($i);
             if (!$uid) {
-                continue;
+                $this->_json(0, dr_lang('所选用户不存在'));
             } elseif (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
-                continue;
+                $this->_json(0, dr_lang('无权限操作用户#%s', $uid));
             } elseif (!$this->member_cache['config']['groups']
                 && dr_count(\Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()) > 1) {
-                $this->_json(0, dr_lang('不能同时拥有多个用户组'));
-            } elseif (!\Phpcmf\Service::M()->counts('member_group_index', 'uid='.$uid.' and gid='.$gid)) {
-                \Phpcmf\Service::M('member')->insert_group($uid, $gid);
-                $c++;
+                $this->_json(0, dr_lang('用户#%s不能同时拥有多个用户组', $uid));
+            } elseif (\Phpcmf\Service::M()->counts('member_group_index', 'uid='.$uid.' and gid='.$gid)) {
+                $this->_json(0, dr_lang('用户#%s已经拥有了此用户组', $uid));
             }
         }
 
-        $this->_json(1, dr_lang('共执行%s个用户', $c));
+        foreach ($ids as $i) {
+            \Phpcmf\Service::M('member')->insert_group(intval($i), $gid);
+        }
+
+        $this->_json(1, dr_lang('共执行%s个用户', dr_count($ids)));
     }
 
     /**

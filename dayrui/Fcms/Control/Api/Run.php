@@ -150,7 +150,7 @@ class Run extends \Phpcmf\Common
         }
 
         $time = (int)file_get_contents($file);
-        @unlink($file);
+        unlink($file);
         if (SYS_TIME - $time > 500) {
             // 500秒外无效
             log_message('error', '线程任务auth过期：'.FC_NOW_URL);
@@ -178,7 +178,7 @@ class Run extends \Phpcmf\Common
 
                 $avatar = dr_catcher_data($oauth['avatar']);
                 if ($avatar) {
-                    @file_put_contents(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg', $avatar);
+                    file_put_contents(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg', $avatar);
                 }
 
                 if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg')) {
@@ -201,6 +201,5 @@ class Run extends \Phpcmf\Common
         }
 
         exit('ok');
-
     }
 }

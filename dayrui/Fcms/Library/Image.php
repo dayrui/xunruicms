@@ -1566,10 +1566,10 @@ class Image
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
-                CI_DEBUG && log_message('error', '图片id['.$img.']不存在，thumb函数无法调用');
+                CI_DEBUG && log_message('error', '图片[id#'.$img.']不存在，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg'])) {
-                CI_DEBUG && log_message('error', '图片id['.$img.']扩展名不符合条件，thumb函数无法调用');
+                CI_DEBUG && log_message('error', '图片[id#'.$img.']扩展名不符合条件，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         } else {
@@ -1590,12 +1590,12 @@ class Image
                 // 远程图片下载到本地进行缩略图处理
                 $data = dr_catcher_data($attach['url'], 10);
                 if (!$data) {
-                    CI_DEBUG && log_message('error', '图片['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
+                    CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
                     return $attach['url'];
                 }
                 $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
                 if (!file_put_contents($file, $data)) {
-                    CI_DEBUG && log_message('error', '图片['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
+                    CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
                     return $attach['url'];
                 }
             } else {
@@ -1615,6 +1615,7 @@ class Image
             }
         } elseif (!is_file($file)) {
             // 本地图片不存在
+            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，thumb函数无法调用');
             return ROOT_THEME_PATH.'assets/images/nopic.gif';
         }
 
@@ -1627,7 +1628,7 @@ class Image
         $max = ($this->image_info[0] * $this->image_info[1] * 3 * 1.7)/1024/1024;
         $limit = intval(ini_get("memory_limit")) / 1.7; // 多预留一些内存
         if ($limit && $limit - $max < 0) {
-            CI_DEBUG && log_message('error', '图片['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
+            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
             return $attach['url']; // 原样输出
         }
 
@@ -1653,7 +1654,7 @@ class Image
         }
 
         if (!is_file($cache_path.$cache_file)) {
-            CI_DEBUG && log_message('error', '图片['.$attach['url'].']生成失败['.$cache_file.']原样输出');
+            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败['.$cache_file.']原样输出');
             return $attach['url']; // 原样输出
         }
 

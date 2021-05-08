@@ -342,9 +342,12 @@ class Member extends \Phpcmf\Model
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 余额不足 删除
-                                // 提醒通知
-                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
-                                $this->delete_group($uid, $group['gid'], 0);
+                                if ($this->delete_group($uid, $group['gid'], 0)) {
+                                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
+                                } else {
+                                    // false 情况下保留
+                                    $g[$group['gid']] = $group;
+                                }
                                 continue;
                             }
                             $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
@@ -393,9 +396,13 @@ class Member extends \Phpcmf\Model
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 金币不足 删除
-                                // 提醒通知
-                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
-                                $this->delete_group($uid, $group['gid'], 0);
+                                if ($this->delete_group($uid, $group['gid'], 0)) {
+                                    // 提醒通知
+                                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
+                                } else {
+                                    // false 情况下保留
+                                    $g[$group['gid']] = $group;
+                                }
                                 continue;
                             }
                             // 自动续费
@@ -425,11 +432,15 @@ class Member extends \Phpcmf\Model
                     }
                 } else {
                     // 未开通自动续费直接删除
-                    // 提醒通知
-                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
-                    $this->delete_group($uid, $group['gid'], 0);
+                    if ($this->delete_group($uid, $group['gid'], 0)) {
+                        // 提醒通知
+                        $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
+                    } else {
+                        // false 情况下保留
+                        $g[$group['gid']] = $group;
+                    }
+                    continue;
                 }
-
             }
             // 开启自动升级时需要判断等级
             if ($levels
@@ -465,7 +476,9 @@ class Member extends \Phpcmf\Model
         $this->db->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->delete();
 
         // 管理员删除时提醒
-        $is_admin && $this->notice($uid, 2, dr_lang('您的用户组（%s）被取消', \Phpcmf\Service::C()->member_cache['group'][$gid]['name']));
+        if ($is_admin) {
+            $this->notice($uid, 2, dr_lang('您的用户组（%s）被取消', \Phpcmf\Service::C()->member_cache['group'][$gid]['name']));
+        }
 
         // 判断微信标记组
         if (dr_is_app('weixin')) {
@@ -480,6 +493,8 @@ class Member extends \Phpcmf\Model
         }
 
         \Phpcmf\Hooks::trigger('member_del_group_after', $call);
+
+        return true;
     }
 
     // 新增用户组
