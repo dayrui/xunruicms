@@ -63,7 +63,6 @@ class Content extends \Phpcmf\Model {
 
         // 防止时间字段入库为空
         !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;
-        !$data[1]['inputtime'] && $data[1]['inputtime'] = $data[1]['updatetime'];
 
         // 昵称为空的情况下
         if (!$data[1]['author'] && $data[1]['uid']) {
@@ -75,6 +74,7 @@ class Content extends \Phpcmf\Model {
 
         if (!$id) {
             // 新增
+            !$data[1]['inputtime'] && $data[1]['inputtime'] = $data[1]['updatetime']; // 防止时间字段入库为空
             // 生成索引id
             $nid = $this->index($id, $data);
             if (!$nid) {

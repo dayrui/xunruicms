@@ -246,6 +246,8 @@ class Member extends \Phpcmf\Model
         } elseif ($name) {
             $data = $this->db->table('member')->where('username', $name)->get()->getRowArray();
             $uid = (int)$data['id'];
+        } else {
+            return null;
         }
 
         if (!$data) {
@@ -980,11 +982,10 @@ class Member extends \Phpcmf\Model
 
         // 没有账号，随机一个默认登录账号
         if (!$member['username']) {
-            $member['username'] = $this->_rand_username(\Phpcmf\Service::C()->member_cache['register']['unprefix'], $member);
+            $member['username'] = $this->_register_rand_username($member);
         } else {
-            $member['username'] =  dr_safe_filename($member['username']);
+            $member['username'] = strtolower(dr_safe_filename($member['username']));
         }
-        $member['username'] = strtolower($member['username']);
 
         // 验证格式
         if (dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
@@ -1047,7 +1048,7 @@ class Member extends \Phpcmf\Model
         $member['experience'] = 0;
         $member['regip'] = (string)\Phpcmf\Service::L('input')->ip_address();
         $member['regtime'] = SYS_TIME;
-        $member['randcode'] = \Phpcmf\Service::L('Form')->get_rand_value();
+        $member['randcode'] = \Phpcmf\Service::L('form')->get_rand_value();
 
         $rt = $this->table('member')->insert($member);
         if (!$rt['code']) {
@@ -1545,8 +1546,8 @@ class Member extends \Phpcmf\Model
         }
     }
 
-    // 随机账号
-    protected function _rand_username($prefix, $member, $rand = 0) {
+    // 注册随机账号
+    protected function _register_rand_username($member) {
 
         if ($member['email']) {
             list($name) = explode('@', $member['email']);
@@ -1555,22 +1556,12 @@ class Member extends \Phpcmf\Model
         } elseif ($member['name']) {
             $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
         } else {
-            $name = rand(10000, 99999999);
+            return '';
         }
 
-        // 两个字母加点随机数
-        if (strlen($name) < 3) {
-            $name.= rand(1000, 9999);
-        }
-
-        $name = trim(strtolower(str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
         if (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
             && mb_strlen($name) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
             $name = dr_strcut($name, \Phpcmf\Service::C()->member_cache['config']['userlenmax'], '');
-        }
-
-        if ($this->table('member')->where('username', strtolower($prefix.$name))->counts()) {
-            return $this->_rand_username($prefix, $member, 1);
         }
 
         return $name;
