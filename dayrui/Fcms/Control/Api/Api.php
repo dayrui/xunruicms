@@ -408,7 +408,7 @@ class Api extends \Phpcmf\Common
                 'name="catid"',
                 '--'
             ),
-            'urlrule' => dr_url('api/api/related', $rules),
+            'urlrule' => dr_url('api/api/related', $rules, '/index.php'),
             'category' => $module['category'],
             'pagesize' => $pagesize,
         ));
@@ -529,7 +529,7 @@ class Api extends \Phpcmf\Common
             'field' => $field,
             'group' => $group,
             'search' => dr_form_search_hidden(['search' => 1]),
-            'urlrule' => dr_url('api/api/related', $rules),
+            'urlrule' => dr_url('api/api/members', $rules, '/index.php'),
         ));
         \Phpcmf\Service::V()->display('api_members.html');
     }

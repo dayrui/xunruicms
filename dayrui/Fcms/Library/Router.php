@@ -165,14 +165,19 @@ class Router
 
         if (!IS_ADMIN) {
             // 非后台统一index.php入口
-            if (defined('IS_CLIENT')) {
-                // 终端前缀
-                $self = CLIENT_URL.'index.php';
-            } elseif (\Phpcmf\Service::IS_MOBILE_TPL()){
-                // 移动端模板 域名
-                $self = SITE_MURL.'index.php';
+            if ($self == '/index.php') {
+                // 表示相对路径
+                $self = '/index.php';
             } else {
-                $self = SITE_URL.'index.php';
+                if (defined('IS_CLIENT')) {
+                    // 终端前缀
+                    $self = CLIENT_URL.'index.php';
+                } elseif (\Phpcmf\Service::IS_MOBILE_TPL()){
+                    // 移动端模板 域名
+                    $self = SITE_MURL.'index.php';
+                } else {
+                    $self = SITE_URL.'index.php';
+                }
             }
         }
         

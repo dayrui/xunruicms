@@ -58,8 +58,8 @@ class Content extends \Phpcmf\Model {
             $data = $rt;
         }
 
-        // 挂钩点 模块内容发布或修改完成之后
-        $rt = \Phpcmf\Hooks::trigger('module_content_before', $data);
+        // 挂钩点 模块内容发布或修改之前
+        $rt = \Phpcmf\Hooks::trigger_callback('module_content_before', $data);
         if ($rt && isset($rt['code'])) {
             // 钩子中存在特殊返回值
             if ($rt['code'] == 0) {
