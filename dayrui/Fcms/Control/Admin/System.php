@@ -41,8 +41,6 @@ class System extends \Phpcmf\Common
                 'SYS_CSRF' => (int)$post['SYS_CSRF'],
                 'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
                 'SYS_BDMAP_API' => $post['SYS_BDMAP_API'],
-                'SYS_BDNLP_AK' => $post['SYS_BDNLP_AK'],
-                'SYS_BDNLP_SK' => $post['SYS_BDNLP_SK'],
             ];
             foreach ($data as $name => $value) {
                 strpos($name, 'SYS_CACHE') === 0 && $save[$name] = intval($post[$name]);

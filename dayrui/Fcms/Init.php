@@ -82,8 +82,6 @@ $system = [
     'SYS_FIELD_THUMB_ATTACH'    => '',
     'SYS_FIELD_CONTENT_ATTACH'  => '',
 
-    'SYS_BDNLP_SK'  => '',
-    'SYS_BDNLP_AK'  => '',
 ];
 if (is_file(WRITEPATH.'config/system.php')) {
     $my = require WRITEPATH.'config/system.php';

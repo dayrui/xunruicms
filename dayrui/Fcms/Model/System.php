@@ -44,9 +44,6 @@ class System extends \Phpcmf\Model
         'SYS_FIELD_THUMB_ATTACH'	=> '缩略图字段存储策略',
         'SYS_FIELD_CONTENT_ATTACH'	=> '内容字段存储策略',
 
-        'SYS_BDNLP_SK'	=> '百度自然语言处理',
-        'SYS_BDNLP_AK'	=> '百度自然语言处理',
-
         'SYS_NOT_UPDATE'	=> '禁止自动检测版本',
 
     ];
