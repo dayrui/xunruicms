@@ -4120,21 +4120,9 @@ if (! function_exists('dr_get_keywords')) {
             return '';
         }
 
-        $rt = [];
-
-        //tag数据
-        if (dr_is_app('tag')) {
-            $obj = \Phpcmf\Service::M('tag', 'tag');
-            if (method_exists($obj, 'get_keywords')) {
-                $rt = $obj->get_keywords($kw);
-            }
-        }
-
-        if (!$rt && dr_is_app('baiduai')) {
-            $rt2 = \Phpcmf\Service::L('kw', 'baiduai')->get_keywords($kw, $siteid);
-            if ($rt2) {
-                return $rt2;
-            }
+        $rs = \Phpcmf\Hooks::trigger_callback('cms_get_keywords', $kw, $siteid);
+        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+            return $rs['msg'];
         }
 
         if (is_file(FCPATH.'ThirdParty/WordAnalysis/phpanalysis.class.php')) {
@@ -4151,7 +4139,7 @@ if (! function_exists('dr_get_keywords')) {
             }
         }
 
-        return implode(',', $rt);
+        return '';
     }
 }
 

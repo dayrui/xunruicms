@@ -59,7 +59,14 @@ class Content extends \Phpcmf\Model {
         }
 
         // 挂钩点 模块内容发布或修改完成之后
-        \Phpcmf\Hooks::trigger('module_content_before', $data);
+        $rt = \Phpcmf\Hooks::trigger('module_content_before', $data);
+        if ($rt && isset($rt['code'])) {
+            // 钩子中存在特殊返回值
+            if ($rt['code'] == 0) {
+                return dr_return_data(0, $rt['msg']);
+            }
+            $data = $rt['data'];
+        }
 
         // 防止时间字段入库为空
         !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;

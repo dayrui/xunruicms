@@ -54,5 +54,47 @@ class Hooks extends \CodeIgniter\Events\Events
         static::$initialized_hook = true;
     }
 
+
+    /**
+     * 运行带返回参数的钩子点，其中某个钩子返回值时终止运行
+     *
+     * @param string $eventName
+     * @param mixed  $arguments
+     *
+     * @return boolean
+     */
+    public static function trigger_callback($eventName, ...$arguments)
+    {
+
+        // Read in our Config/Events file so that we have them all!
+        if (! static::$initialized)
+        {
+            static::initialize();
+        }
+
+        $listeners = static::listeners($eventName);
+
+        foreach ($listeners as $listener)
+        {
+            $start = microtime(true);
+
+            $rt = call_user_func($listener, ...$arguments);
+
+            if (CI_DEBUG)
+            {
+                static::$performanceLog[] = [
+                    'start' => $start,
+                    'end'   => microtime(true),
+                    'event' => strtolower($eventName),
+                ];
+            }
+
+            if ($rt && isset($rt['code'])) {
+                return $rt;
+            }
+        }
+
+        return dr_return_data(0, dr_lang('没有返回变量'));
+    }
 }
 
