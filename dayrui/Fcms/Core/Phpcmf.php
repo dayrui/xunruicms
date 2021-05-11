@@ -691,11 +691,11 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_json($code, $msg, $url);
         }
 
+        $url = dr_safe_url($url);
         $backurl = $url ? $url : dr_safe_url($_SERVER['HTTP_REFERER']);
 
         if ($backurl) {
             strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
-            $backurl = \Phpcmf\Service::L('input')->xss_clean($backurl);
         } else {
             $backurl = 'javascript:history.go(-1);';
         }
@@ -706,7 +706,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 不存在URL时进入提示页面
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
-            'url' => dr_safe_url($url),
+            'url' => $url,
             'time' => $time,
             'mark' => $code,
             'backurl' => $backurl,
@@ -733,7 +733,7 @@ abstract class Common extends \CodeIgniter\Controller
             $backurl = dr_safe_url($_SERVER['HTTP_REFERER']);
             (!$backurl || $backurl == dr_now_url() ) && $backurl = SITE_URL;
         } else {
-            $backurl = $url;
+            $backurl = dr_safe_url($url);
         }
 
         // 加载初始化文件
@@ -741,7 +741,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
-            'url' => dr_safe_url($url),
+            'url' => $url,
             'time' => $time,
             'mark' => $code,
             'code' => $code,
@@ -758,7 +758,7 @@ abstract class Common extends \CodeIgniter\Controller
     public function goto_404_page($msg) {
 
         if (IS_API_HTTP) {
-            exit($this->_json(0, $msg));
+            $this->_json(0, $msg);
         }
 
         // 调试模式下不进行404状态码
