@@ -214,9 +214,6 @@ class View {
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
         $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
 
-        // 挂钩点 模板加载之后
-        \Phpcmf\Hooks::trigger('cms_view', $this->_options);
-
         // 加载编译后的缓存文件
         $this->_disp_dir = $phpcmf_dir;
         $_view_file = $this->get_file_name($this->_filename, $phpcmf_dir);
@@ -240,7 +237,12 @@ class View {
         !defined('IS_MOBILE') && define('IS_MOBILE', \Phpcmf\Service::IS_MOBILE_USER());
         !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
 
-        include $this->load_view_file($_view_file);
+        $file = $this->load_view_file($_view_file);
+
+        // 挂钩点 模板加载之后
+        \Phpcmf\Hooks::trigger('cms_view', $this->_options, $file);
+
+        include $file;
 
         $this->_view_time = round(microtime(true) - $phpcmf_start, 2);
 
