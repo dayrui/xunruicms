@@ -546,7 +546,7 @@ class Api extends \Phpcmf\Common
         }
 
         $this->_json(1, dr_lang('您的账号已退出系统'), [
-            'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : SITE_URL,
+            'url' => isset($_SERVER['HTTP_REFERER']) ? dr_safe_url($_SERVER['HTTP_REFERER']) : SITE_URL,
             'sso' => \Phpcmf\Service::M('member')->logout(),
         ]);
     }

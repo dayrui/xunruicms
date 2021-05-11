@@ -12,7 +12,7 @@ class Login extends \Phpcmf\Common
     public function index() {
 
         // 获取返回页面
-        $url = \Phpcmf\Service::L('Security')->xss_clean($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
+        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
         if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
             $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
         }
@@ -40,7 +40,7 @@ class Login extends \Phpcmf\Common
                 $rt = \Phpcmf\Service::M('member')->login(dr_safe_username($post['username']), $post['password'], (int)$_POST['remember']);
                 if ($rt['code']) {
                     // 登录成功
-                    $rt['data']['url'] = urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL));
+                    $rt['data']['url'] = urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL, true));
                     $this->_json(1, 'ok', $rt['data']);
                 } else {
                     $this->_json(0, $rt['msg']);
@@ -62,7 +62,7 @@ class Login extends \Phpcmf\Common
     public function sms() {
 
         // 获取返回页面
-        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
+        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
         if (IS_AJAX_POST) {
@@ -414,7 +414,7 @@ class Login extends \Phpcmf\Common
         }
         
         $this->_json(1, dr_lang('您的账号已退出系统'), [
-            'url' => \Phpcmf\Service::L('input')->xss_clean(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : SITE_URL),
+            'url' => dr_safe_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : SITE_URL),
             'sso' => \Phpcmf\Service::M('member')->logout(),
         ]);
     }

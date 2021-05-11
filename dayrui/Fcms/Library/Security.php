@@ -34,6 +34,19 @@ class Security {
 		'%3d'		// =
     ];
 
+    protected $naughty_tags  = array(
+        'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
+        'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
+        'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
+        'plaintext', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
+        //'iframe', 'video', 'embed', 'style'  //排除过滤
+    );
+
+    protected $evil_attributes = array(
+        'on\w+', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
+        //  ,'style' 排除过滤
+    );
+
 	/**
 	 * Character set
 	 *
@@ -121,7 +134,7 @@ class Security {
 	 *		harvested from examining vulnerabilities in other programs.
 	 *
 	 * @param	string|string[]	$str		Input data
-	 * @param 	bool		$is_image	Whether the input is an image
+	 * @param 	bool		$is_image	    严格的过滤
 	 * @return	string
 	 */
 	public function xss_clean($str, $is_image = FALSE)
@@ -137,7 +150,7 @@ class Security {
 		{
 			foreach ($str as $key => &$value)
 			{
-				$str[$key] = $this->xss_clean($value);
+				$str[$key] = $this->xss_clean($value, $is_image);
 			}
 
 			return $str;
@@ -147,38 +160,45 @@ class Security {
             return '[xss_clean]'; // 判断含有乱码直接过滤为空
         }
 
-		/*
-		 * URL Decode
-		 *
-		 * Just in case stuff like this is submitted:
-		 *
-		 * <a href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">Google</a>
-		 *
-		 * Note: Use rawurldecode() so it does not remove plus signs
+        if ($is_image) {
+            // 严格的过滤
+            $this->naughty_tags = array_merge($this->naughty_tags, array('iframe', 'video', 'embed', 'style'));
+            $this->evil_attributes = array_merge($this->evil_attributes, array('style'));
+            /*
+             * URL Decode
+             *
+             * Just in case stuff like this is submitted:
+             *
+             * <a href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">Google</a>
+             *
+             * Note: Use rawurldecode() so it does not remove plus signs
+             * */
 
-		if (stripos($str, '%') !== false)
-		{
-			do
-			{
-				$oldstr = $str;
-				$str = rawurldecode($str);
-				$str = preg_replace_callback('#%(?:\s*[0-9a-f]){2,}#i', [$this, '_urldecodespaces'], $str);
-			}
-			while ($oldstr !== $str);
-			unset($oldstr);
-		}*/
+            if (stripos($str, '%') !== false)
+            {
+                do
+                {
+                    $oldstr = $str;
+                    $str = rawurldecode($str);
+                    $str = preg_replace_callback('#%(?:\s*[0-9a-f]){2,}#i', [$this, '_urldecodespaces'], $str);
+                }
+                while ($oldstr !== $str);
+                unset($oldstr);
+            }
 
-		/*
-		 * Convert character entities to ASCII
-		 *
-		 * This permits our tests below to work reliably.
-		 * We only convert entities that are within tags since
-		 * these are the ones that will pose security problems.
-		 */
+            /*
+             * Convert character entities to ASCII
+             *
+             * This permits our tests below to work reliably.
+             * We only convert entities that are within tags since
+             * these are the ones that will pose security problems.
+             */
 
-		// 不进行二次编码的xss过滤
-		//$str = preg_replace_callback("/[^a-z0-9>]+[a-z0-9]+=([\'\"]).*?\\1/si", array($this, '_convert_attribute'), $str);
-		//$str = preg_replace_callback('/<\w+.*/si', array($this, '_decode_entity'), $str);
+            // 不进行二次编码的xss过滤
+            $str = preg_replace_callback("/[^a-z0-9>]+[a-z0-9]+=([\'\"]).*?\\1/si", array($this, '_convert_attribute'), $str);
+            $str = preg_replace_callback('/<\w+.*/si', array($this, '_decode_entity'), $str);
+        }
+
 
 		// Remove Invisible Characters Again!
 		$str = remove_invisible_characters($str);
@@ -208,7 +228,7 @@ class Security {
 		 *
 		 * But it doesn't seem to pose a problem.
 		 */
-		if ($is_image === TRUE)
+		if ($is_image)
 		{
 			// Images have a tendency to have the PHP short opening and
 			// closing tags every so often so we skip those and only
@@ -340,20 +360,6 @@ class Security {
         //
         ////有东西通过了上面的过滤器
 		$str = $this->_do_never_allowed($str);
-
-		/*
-		 * Images are Handled in a Special Way
-		 * - Essentially, we want to know that after all of the character
-		 * conversion is done whether any unwanted, likely XSS, code was found.
-		 * If not, we return TRUE, as the image is clean.
-		 * However, if the string post-conversion does not matched the
-		 * string post-removal of XSS, then it fails, as there was unwanted XSS
-		 * code found and removed/changed during processing.
-		 */
-		if ($is_image === TRUE)
-		{
-			return ($str === $converted_string);
-		}
 
 
         // now the only remaining whitespace attacks are \t, \n, and \r
@@ -631,18 +637,7 @@ class Security {
 	protected function _sanitize_naughty_html($matches)
 	{
 
-		static $naughty_tags    = array(
-			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
-			'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
-			 'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
-			'plaintext', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
-            //'iframe', 'video', 'embed', 'style'  //排除过滤
-		);
 
-		static $evil_attributes = array(
-			'on\w+', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
-            //  ,'style' 排除过滤
-		);
 
 		// First, escape unclosed tags
 		if (empty($matches['closeTag']))
@@ -650,7 +645,7 @@ class Security {
 			return '&lt;'.$matches[1];
 		}
 		// Is the element that we caught naughty? If so, escape it
-		elseif (in_array(strtolower($matches['tagName']), $naughty_tags, TRUE))
+		elseif (in_array(strtolower($matches['tagName']), $this->naughty_tags, TRUE))
 		{
 			return '&lt;'.$matches[1].'&gt;';
 		}
@@ -668,7 +663,7 @@ class Security {
 				.'#i';
 
 			// Blacklist pattern for evil attribute names
-			$is_evil_pattern = '#^('.implode('|', $evil_attributes).')$#i';
+			$is_evil_pattern = '#^('.implode('|', $this->evil_attributes).')$#i';
 
 			// Each iteration filters a single attribute
 			do

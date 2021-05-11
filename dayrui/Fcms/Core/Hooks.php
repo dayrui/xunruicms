@@ -66,7 +66,6 @@ class Hooks extends \CodeIgniter\Events\Events
     public static function trigger_callback($eventName, ...$arguments)
     {
 
-        // Read in our Config/Events file so that we have them all!
         if (! static::$initialized)
         {
             static::initialize();
@@ -94,7 +93,7 @@ class Hooks extends \CodeIgniter\Events\Events
             }
         }
 
-        return dr_return_data(0, dr_lang('没有返回变量'));
+        return false;
     }
 }
 

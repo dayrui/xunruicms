@@ -27,7 +27,7 @@ class Api extends \Phpcmf\Common
         }
 
         // 获取返回页面
-        $url = $_SERVER['HTTP_REFERER'];
+        $url = dr_safe_url($_SERVER['HTTP_REFERER']);
         (strpos($url, 'verify') !== false || !$url) && $url = MEMBER_URL;
 
         if ($this->member['is_verify']) {
@@ -200,7 +200,7 @@ class Api extends \Phpcmf\Common
     public function verify_code() {
 
         // 获取返回页面
-        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
+        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
         // 挂钩点 短信验证之前

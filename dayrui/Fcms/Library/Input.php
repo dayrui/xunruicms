@@ -95,7 +95,7 @@ class Input {
 	
 	// 安全过滤
 	public function get_user_agent() {
-		return str_replace(['"', "'"], '', \Phpcmf\Service::L('Security')->xss_clean($_SERVER['HTTP_USER_AGENT']));
+		return str_replace(['"', "'"], '', \Phpcmf\Service::L('Security')->xss_clean($_SERVER['HTTP_USER_AGENT'], true));
 	}
 
     /**
@@ -163,8 +163,8 @@ class Input {
     /**
      * XSS Clean
      */
-    public function xss_clean($str, $is_image = FALSE) {
-        return \Phpcmf\Service::L('Security')->xss_clean($str, $is_image);
+    public function xss_clean($str, $is = FALSE) {
+        return \Phpcmf\Service::L('Security')->xss_clean($str, $is);
     }
 
 }

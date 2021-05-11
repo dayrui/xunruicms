@@ -8,6 +8,18 @@
 
 
 /**
+ * 安全url过滤
+ */
+function dr_safe_url($url) {
+
+    if (!$url) {
+        return '';
+    }
+
+    return htmlspecialchars(\Phpcmf\Service::L('Security')->xss_clean($url, true));
+}
+
+/**
  * 模糊比较两个变量
  */
 function dr_diff($str1, $str2) {

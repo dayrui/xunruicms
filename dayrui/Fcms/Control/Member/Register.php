@@ -12,7 +12,7 @@ class Register extends \Phpcmf\Common
     public function index() {
 
         // 获取返回URL
-        $url = $_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER'];
+        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
         $url && parse_str($url, $arr);
         if (isset($arr['back']) && $arr['back']) {
             $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
@@ -20,7 +20,7 @@ class Register extends \Phpcmf\Common
         if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
             $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
         } else {
-            $url = \Phpcmf\Service::L('input')->xss_clean($url);
+            $url = \Phpcmf\Service::L('input')->xss_clean($url, true);
         }
 
         // 判断重复登录
@@ -121,7 +121,7 @@ class Register extends \Phpcmf\Common
                         \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_mobile' => 1]);
                     }
                     $this->_json(1, 'ok', [
-                        'url' => urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL)),
+                        'url' => urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL, true)),
                         'sso' => \Phpcmf\Service::M('member')->sso($this->member, $remember),
                         'member' => $this->member,
                     ]);

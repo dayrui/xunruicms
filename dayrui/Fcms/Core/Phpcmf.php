@@ -691,7 +691,7 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_json($code, $msg, $url);
         }
 
-        $backurl = $url ? $url : $_SERVER['HTTP_REFERER'];
+        $backurl = $url ? $url : dr_safe_url($_SERVER['HTTP_REFERER']);
 
         if ($backurl) {
             strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
@@ -706,7 +706,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 不存在URL时进入提示页面
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
-            'url' => \Phpcmf\Service::L('input')->xss_clean($url),
+            'url' => dr_safe_url($url),
             'time' => $time,
             'mark' => $code,
             'backurl' => $backurl,
@@ -730,7 +730,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         if (!$url) {
-            $backurl = $_SERVER['HTTP_REFERER'];
+            $backurl = dr_safe_url($_SERVER['HTTP_REFERER']);
             (!$backurl || $backurl == dr_now_url() ) && $backurl = SITE_URL;
         } else {
             $backurl = $url;
@@ -741,7 +741,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
-            'url' => $url,
+            'url' => dr_safe_url($url),
             'time' => $time,
             'mark' => $code,
             'code' => $code,

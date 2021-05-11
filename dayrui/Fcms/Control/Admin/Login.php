@@ -59,7 +59,7 @@ class Login extends \Phpcmf\Common
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
 						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
 					}
-                    $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url)]);
+                    $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url, true)]);
                 } else {
                     // 登录失败
                     if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
