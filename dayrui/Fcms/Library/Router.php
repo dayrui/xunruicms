@@ -655,7 +655,7 @@ class Router
                 break;
         }
 
-        return dr_url_prefix($url);
+        return trim($url);
     }
 
     // 分站url
