@@ -65,7 +65,7 @@ class Seo
     /**
      * 模块搜索SEO信息
      */
-    function search($mod, $catid, $param, $page = 1) {
+    public function search($mod, $catid, $param, $page = 1) {
 
         $seo = [];
         $seo['meta_keywords'] = '';
@@ -208,7 +208,7 @@ class Seo
             $meta_title = str_replace($replace, $new, $meta_title);
         }
 
-        return $this->_get_seo_value($data, [
+        return $this->get_seo_value($data, [
             'meta_title' => $meta_title,
             'param_value' => $seo['param_value'],
             'meta_keywords' => $seo['meta_keywords'] ? $seo['meta_keywords'] : (isset($mod['site'][SITE_ID]['search_keywords']) && $mod['site'][SITE_ID]['search_keywords'] ? $mod['site'][SITE_ID]['search_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
@@ -224,7 +224,7 @@ class Seo
      * @param   intval  $page
      * @return  array
      */
-    function category($mod, $catid, $page = 1) {
+    public function category($mod, $catid, $page = 1) {
 
         $cat = $mod['category'][$catid];
         $cat['page'] = intval($page);
@@ -235,7 +235,7 @@ class Seo
         $meta_title = $cat['setting']['seo']['list_title'] ? $cat['setting']['seo']['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
-        return $this->_get_seo_value($cat, [
+        return $this->get_seo_value($cat, [
             'meta_title' => $meta_title,
             'meta_keywords' => isset($cat['setting']['seo']['list_keywords']) && $cat['setting']['seo']['list_keywords'] ? $cat['setting']['seo']['list_keywords'] : ($mod['site'][SITE_ID]['module_keywords'] ? $mod['site'][SITE_ID]['module_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
             'meta_description' => isset($cat['setting']['seo']['list_description']) && $cat['setting']['seo']['list_description'] ? $cat['setting']['seo']['list_description'] : ($mod['site'][SITE_ID]['module_description'] ? $mod['site'][SITE_ID]['module_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')),
@@ -250,7 +250,7 @@ class Seo
      * @param   intval  $page
      * @return  array
      */
-    function show($mod, $data, $page = 1) {
+    public function show($mod, $data, $page = 1) {
 
         $cat = $mod['category'][$data['catid']];
         $data['page'] = $page;
@@ -266,7 +266,7 @@ class Seo
         $meta_title = isset($mod['site'][SITE_ID]['show_title']) && $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(['[', ']'], '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
-        return $this->_get_seo_value($data, [
+        return $this->get_seo_value($data, [
             'meta_title' => $meta_title,
             'meta_keywords' => isset($mod['site'][SITE_ID]['show_keywords']) && $mod['site'][SITE_ID]['show_keywords'] ? $mod['site'][SITE_ID]['show_keywords'] : $data['keywords'],
             'meta_description' => isset($mod['site'][SITE_ID]['show_description']) && $mod['site'][SITE_ID]['show_description'] ? $mod['site'][SITE_ID]['show_description'] : $data['description'],
@@ -274,7 +274,7 @@ class Seo
     }
 
     // 替换seo信息字符
-    protected function _get_seo_value($data, $seo) {
+    public function get_seo_value($data, $seo) {
 
         $data['join'] = SITE_SEOJOIN;
         $rep = new \php5replace($data);
@@ -297,102 +297,8 @@ class Seo
         return $seo;
     }
 
-
-    // 评论的
-    function comment($mod, $data) {
-
-        $seo = [
-            'meta_title' => dr_lang('%s: %s', dr_comment_cname($mod['comment']['cname']), $data['title']).SITE_SEOJOIN.dr_lang($mod['name']),
-            'meta_keywords' => $data['keywords'],
-            'meta_description' => $data['description'],
-        ];
-
-        return $seo;
-    }
-
-    // 模块表单
-    function mform_list($form, $index, $page = 1) {
-
-        $seo = [
-            'meta_title' => dr_lang($form['name']).SITE_SEOJOIN.$index['title'],
-            'meta_keywords' => $index['keywords'],
-            'meta_description' => $index['description'],
-        ];
-
-        return $seo;
-    }
-
-    // 模块表单
-    function mform_post($form, $index) {
-
-        $seo = [
-            'meta_title' => dr_lang($form['name']).SITE_SEOJOIN.$index['title'],
-            'meta_keywords' => $index['keywords'],
-            'meta_description' => $index['description'],
-        ];
-
-        return $seo;
-    }
-
-    // 模块表单
-    function mform_show($form, $index, $data) {
-
-        $mod = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$form['module']);
-        if (isset($data['catid']) && isset($mod['category'][$data['catid']])) {
-            $data['catname'] = $mod['category'][$data['catid']]['name'];
-            $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], SITE_SEOJOIN);
-        } else {
-            $data['catname'] = $data['catpname'] = '';
-        }
-
-        $data['formname'] = dr_lang($form['name']);
-        $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
-
-        return $this->_get_seo_value($data, [
-            'meta_title' => isset($form['setting']['seo']['title']) && $form['setting']['seo']['title'] ? $form['setting']['seo']['title'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-            'meta_keywords' => isset($form['setting']['seo']['keywords']) && $form['setting']['seo']['keywords'] ? $form['setting']['seo']['keywords'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-            'meta_description' => isset($form['setting']['seo']['description']) && $form['setting']['seo']['description'] ? $form['setting']['seo']['description'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-        ]);
-    }
-
-    // 网站表单
-    function form_list($form, $page = 1) {
-
-        $seo = [
-            'meta_title' => dr_lang($form['name']),
-            'meta_keywords' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS'),
-            'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
-        ];
-
-        return $seo;
-    }
-
-    // 网站表单
-    function form_post($form) {
-
-        $seo = [
-            'meta_title' => dr_lang($form['name']),
-            'meta_keywords' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS'),
-            'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
-        ];
-
-        return $seo;
-    }
-
-    // 网站表单
-    function form_show($form, $data) {
-
-        $data['formname'] = dr_lang($form['name']);
-
-        return $this->_get_seo_value($data, [
-            'meta_title' => isset($form['setting']['seo']['title']) && $form['setting']['seo']['title'] ? $form['setting']['seo']['title'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-            'meta_keywords' => isset($form['setting']['seo']['keywords']) && $form['setting']['seo']['keywords'] ? $form['setting']['seo']['keywords'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-            'meta_description' => isset($form['setting']['seo']['description']) && $form['setting']['seo']['description'] ? $form['setting']['seo']['description'] : $data['title'].SITE_SEOJOIN.dr_lang($form['name']),
-        ]);
-    }
-
     // 用户中心seo
-    function member($menu) {
+    public function member($menu) {
 
         $seo = [
             'menu' => $menu['url'],
