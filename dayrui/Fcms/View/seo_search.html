@@ -1,75 +1,29 @@
 {template "header.html"}
-<script>
-    function dr_page_content(id) {
-        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url('category/content_edit')}&id='+id, '90%', '90%');
-    }
-    function dr_link_url(id) {
-        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url('category/link_edit')}&id='+id, '50%', '30%');
-    }
-    $(function() {
-        $(".select-cat").click(function(){
-            var action = $(this).attr("action");
-            var childs = $(this).attr("childs");
-            var catid = $(this).attr("catid");
-            var catids= new Array(); //定义一数组
-            catids = childs.split(","); //字符分割
-            if (action == 'close') {
-                $.cookie('dr_{SITE_ID}_{$dirname}_'+catid, null,{path:"/",expires: -1});
-                $(this).attr("action", "open");
-                $(this).html("[-]");
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).show();
-                    }
-                }
-            } else {
-                // 关闭状态存储cookie
-                $.cookie('dr_{SITE_ID}_{$dirname}_'+catid, 1);
-                $(this).attr("action", "close");
-                $(this).html("[+]");
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).hide();
-                    }
-                }
-            }
-        });
-        $(".select-cat").each(function(){
-            var childs = $(this).attr("childs");
-            var catid = $(this).attr("catid");
-            var cache = $.cookie('dr_{SITE_ID}_{$dirname}_'+catid);
-            if (cache) {
-                $(this).attr("action", "close");
-                $(this).html("[+]");
-                var catids= new Array(); //定义一数组
-                catids = childs.split(","); //字符分割
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).hide();
-                    }
-                }
-            }
-        });
-    });
-</script>
-<div class="note note-danger my-content-top-tool">
+
+<div class="note note-danger">
     <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
 </div>
-<form action="" class="form-horizontal" method="post" name="myform" id="myform">
-{dr_form_hidden()}
-    <div class="portlet bordered light myfbody">
+
+<div class="form-horizontal">
+    <div class="portlet bordered light ">
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
-                <li class="active">
-                    <a href="#" data-toggle="tab" > <i class="fa fa-internet-explorer"></i> {$site_name} </a>
+                {loop $module $dir $t}
+                <li class="{if $page == $dir}active{/if}">
+                    <a href="#tab_{$dir}" data-toggle="tab" onclick="$('#dr_page').val('{$dir}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} </a>
                 </li>
+                {/loop}
             </ul>
         </div>
+        <input type="hidden" id="dr_page" value="{$page}">
         <div class="portlet-body">
-            <div class="tab-content">
+            <div class="tab-content" style="padding-top: 30px">
 
-                <div class="tab-pane  active" id="">
-                    <div class="form-body">
+                {loop $module $dir $data}
+                {php $site=$data.site;}
+                <div class="tab-pane {if $page==$dir}active{/if}" id="tab_{$dir}">
+                    <form method="post" name="myform_{$dir}" id="myform_{$dir}">
+                        {$form}
 
                         {if !$data.share}
                         <div class="form-group">
@@ -110,24 +64,7 @@
                                 <textarea class="form-control " style="height:70px" name="site[search_title]">{$site['search_title']}</textarea>
                                 <span class="help-block">
                                     <button class="btn btn-xs green" onclick="dr_seo_title_rule()" type="button"><i class="fa fa-code"></i> {dr_lang('可用通配符标签')}</button>
-                                    <script>
-                                        function dr_seo_title_rule() {
-                                            layer.alert('{join}	SEO连接符号，默认“_”<br>'+
-                                                '[{page}]	分页页码<br>'+
-                                                '{modulename}	当前模块的名称<br>'+
-                                                '{catname}	当前栏目名称<br>'+
-                                                '{catpname}	当前栏目带层次的栏目名称<br>'+
-                                                '{keyword}	搜索时的关键字<br>'+
-                                                '{param}	搜索时的参数列表<br>'+
-                                                '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
-                                                ''+
-                                                '', {
-                                                shade: 0,
-                                                title: '',
-                                                btn: []
-                                            });
-                                        }
-                                    </script>
+
                                 </span>
                             </div>
                         </div>
@@ -146,16 +83,40 @@
                             </div>
                         </div>
 
-                    </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">&nbsp;</label>
+                            <div class="col-md-9">
+                                <button type="button" onclick="dr_ajax_submit('{$data.save_url}', 'myform_{$dir}', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存当前模块')}</button>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
+
+                {/loop}
+
+
             </div>
         </div>
     </div>
 
-    <div class="portlet-body form myfooter">
-        <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{$save_url}', 'myform', '2000', '{dr_now_url()}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
-        </div>
-    </div>
-</form>
+</div>
+<script>
+    function dr_seo_title_rule() {
+        layer.alert('{join}	SEO连接符号，默认“_”<br>'+
+            '[{page}]	分页页码<br>'+
+            '{modulename}	当前模块的名称<br>'+
+            '{catname}	当前栏目名称<br>'+
+            '{catpname}	当前栏目带层次的栏目名称<br>'+
+            '{keyword}	搜索时的关键字<br>'+
+            '{param}	搜索时的参数列表<br>'+
+            '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
+            ''+
+            '', {
+            shade: 0,
+            title: '',
+            btn: []
+        });
+    }
+</script>
 {template "footer.html"}
