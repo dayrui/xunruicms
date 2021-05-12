@@ -19,47 +19,41 @@ class Seo_content extends \Phpcmf\Common
                     unset($module[$dir]);
                     continue;
                 }
-                $module[$dir]['url'] = dr_url(\Phpcmf\Service::L('Router')->class.'/show_index', ['dir' => $dir]);
+                $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
+                if (!$data) {
+                    unset($module[$dir]);
+                    continue;
+                }
+                $site = dr_string2array($data['site']);
+                $module[$dir]['site'] = $site[SITE_ID];
+                $module[$dir]['setting'] = dr_string2array($data['setting']);
+                $module[$dir]['save_url'] = dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]);
             }
         } else {
             $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
         }
 
         $one = reset($module);
-
-        // 只存在一个项目
-        dr_count($module) == 1 && dr_redirect($one['url']);
-
-        $dirname = $one['dirname'];
-
-        \Phpcmf\Service::V()->assign([
-            'url' => $one['url'],
-            'menu' => \Phpcmf\Service::M('auth')->_iframe_menu($module, $dirname, 398),
-            'module' => $module,
-            'dirname' => $dirname,
-        ]);
-        \Phpcmf\Service::V()->display('iframe_content.html');exit;
-    }
-
-    public function show_index() {
-
-        $dir = \Phpcmf\Service::L('input')->get('dir');
-        $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
-        if (!$data) {
-            $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        $page = \Phpcmf\Service::L('input')->get('page');
+        if (!$page) {
+            $page = $one['dirname'];
         }
 
-        $data['site'] = dr_string2array($data['site']);
-        $data['setting'] = dr_string2array($data['setting']);
-
         \Phpcmf\Service::V()->assign([
-            'data' => $data,
-            'site' => $data['site'][SITE_ID],
-            'save_url' => dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]),
+            'page' => $page,
+            'form' => dr_form_hidden(),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '内容SEO' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-th-large'],
+                    'help' => [398],
+                ]
+            ),
+            'module' => $module,
             'site_name' => $this->site_info[SITE_ID]['SITE_NAME'],
         ]);
         \Phpcmf\Service::V()->display('seo_content.html');
     }
+
 
     public function edit() {
 
@@ -83,7 +77,9 @@ class Seo_content extends \Phpcmf\Common
                 'setting' => dr_array2string($data['setting']),
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('');
-            $this->_json(1, '操作成功');
+            $this->_json(1, dr_lang('操作成功'), [
+                'url' => dr_url(\Phpcmf\Service::L('Router')->class.'/index', ['page' => $dir])
+            ]);
         }
     }
 
