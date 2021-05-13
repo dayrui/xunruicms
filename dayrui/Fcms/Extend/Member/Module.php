@@ -42,6 +42,7 @@ class Module extends \Phpcmf\Table
         ]);
         // 写入模板
         \Phpcmf\Service::V()->assign([
+            'field' => $this->init['field'],
             'module' => $this->module,
             'module_memu' => $this->content_model->module_menu(),
         ]);
