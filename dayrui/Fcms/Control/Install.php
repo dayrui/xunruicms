@@ -47,6 +47,7 @@ class Install extends \Phpcmf\Common
         define('DR_NAME', $app['name']);
         define('DR_VERSION', $app['version']);
         define('SITE_NAME', $app['name']);
+        define('CMF_UPDATE_TIME', SYS_TIME);
         \Phpcmf\Service::V()->init('pc');
         \Phpcmf\Service::V()->admin();
     }
