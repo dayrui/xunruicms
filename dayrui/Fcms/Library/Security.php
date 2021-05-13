@@ -34,18 +34,9 @@ class Security {
 		'%3d'		// =
     ];
 
-    protected $naughty_tags  = array(
-        'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
-        'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
-        'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
-        'plaintext', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
-        //'iframe', 'video', 'embed', 'style'  //排除过滤
-    );
+    protected $naughty_tags  = [];
 
-    protected $evil_attributes = array(
-        'on\w+', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
-        //  ,'style' 排除过滤
-    );
+    protected $evil_attributes = [];
 
 	/**
 	 * Character set
@@ -139,6 +130,7 @@ class Security {
 	 */
 	public function xss_clean($str, $is_image = FALSE)
 	{
+
 		if (is_numeric($str)) {
 			return $str;
 		} elseif (!$str) {
@@ -159,6 +151,20 @@ class Security {
         if (json_encode( $str) === false) {
             return '[xss_clean]'; // 判断含有乱码直接过滤为空
         }
+
+        $this->naughty_tags = [
+            'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
+            'blink', 'body',  'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
+            'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
+            'plaintext', 'script', 'textarea', 'title', 'math',  'svg', 'xml', 'xss',
+            //'iframe', 'video', 'embed', 'style'  //排除过滤
+
+        ];
+        $this->evil_attributes = [
+            'on\w+', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
+            //  ,'style' 排除过滤
+
+        ];
 
         if ($is_image) {
             // 严格的过滤
