@@ -608,6 +608,10 @@ class Api extends \Phpcmf\Common
 	public function test_attach() {
 
 	    $data = \Phpcmf\Service::L('input')->post('data');
+	    if (!$data) {
+            $this->_json(0, dr_lang('参数错误'));
+        }
+
         $type = intval($data['type']);
         $value = $data['value'][$type];
         if (!$value) {
@@ -653,6 +657,10 @@ class Api extends \Phpcmf\Common
 	public function test_mobile() {
 
 	    $data = \Phpcmf\Service::L('input')->post('data');
+        if (!$data) {
+            $this->_json(0, dr_lang('参数错误'));
+        }
+
 		if (is_file(ROOTPATH.'config/mysms.php')) {
 			require_once ROOTPATH.'config/mysms.php';
 		}
@@ -832,7 +840,9 @@ class Api extends \Phpcmf\Common
 
         $note = '';
         $data = \Phpcmf\Service::L('input')->post('data');
-        if (!$data['SYS_ATTACHMENT_PATH']) {
+        if (!$data) {
+            $this->_json(0, dr_lang('参数错误'));
+        } elseif (!$data['SYS_ATTACHMENT_PATH']) {
             $note = dr_lang('上传目录留空时，采用系统默认分配的目录');
             $data['SYS_ATTACHMENT_PATH'] = 'uploadfile';
         } elseif (!$data['SYS_ATTACHMENT_URL']) {
@@ -867,7 +877,9 @@ class Api extends \Phpcmf\Common
 
         $note = '';
         $data = \Phpcmf\Service::L('input')->post('image');
-        if (!$data['cache_path']) {
+        if (!$data) {
+            $this->_json(0, dr_lang('参数错误'));
+        } elseif (!$data['cache_path']) {
             $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
             $data['cache_path'] = 'uploadfile/thumb/';
         } elseif (!$data['cache_url']) {
@@ -899,7 +911,9 @@ class Api extends \Phpcmf\Common
 
         $note = '';
         $data = \Phpcmf\Service::L('input')->post('image');
-        if (!$data['avatar_path']) {
+        if (!$data) {
+            $this->_json(0, dr_lang('参数错误'));
+        } elseif (!$data['avatar_path']) {
             $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
             $data['avatar_path'] = 'api/member/';
         } elseif (!$data['cache_url']) {
@@ -941,6 +955,10 @@ class Api extends \Phpcmf\Common
      * 测试缓存是否可用
      */
     public function test_cache() {
+
+        if (!isset($_POST['data'])) {
+            $this->_json(0, dr_lang('参数错误'));
+        }
 
 		$type = intval(isset($_POST['data']['SYS_CACHE_TYPE']) ? $_POST['data']['SYS_CACHE_TYPE'] : 0);
 		switch ($type) {
