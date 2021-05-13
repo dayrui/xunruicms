@@ -40,4 +40,4 @@ foreach ($source as $imgUrl) {
 return json_encode(array(
     'state'=> count($list) ? 'SUCCESS':'ERROR',
     'list'=> $list
-));
+), JSON_UNESCAPED_UNICODE);

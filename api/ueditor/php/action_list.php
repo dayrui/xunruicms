@@ -61,7 +61,7 @@ if (!count($files)) {
         "list" => array(),
         "start" => $start,
         "total" => count($files)
-    ));
+    ), JSON_UNESCAPED_UNICODE);
 }
 
 /* 返回数据 */
@@ -70,6 +70,6 @@ $result = json_encode(array(
     "list" => $files,
     "start" => $start,
     "total" => count($files)
-));
+), JSON_UNESCAPED_UNICODE);
 
 return $result;

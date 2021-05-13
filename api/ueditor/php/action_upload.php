@@ -63,4 +63,4 @@ $up = new Uploader($fieldName, $config, $base64);
  */
 
 /* 返回数据 */
-return json_encode($up->getFileInfo());
+return json_encode($up->getFileInfo(), JSON_UNESCAPED_UNICODE);
