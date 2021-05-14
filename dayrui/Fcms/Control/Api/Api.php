@@ -35,7 +35,7 @@ class Api extends \Phpcmf\Common
         $errorCorrectionLevel = dr_safe_replace(\Phpcmf\Service::L('input')->get('level'));
 
         //生成二维码图片
-        require_once FCPATH.'ThirdParty/Qrcode/Phpqrcode.php';
+        require_once CMSPATH.'Library/Phpqrcode.php';
         $file = WRITEPATH.'caching/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
         if (is_file($file)) {
             $QR = imagecreatefrompng($file);

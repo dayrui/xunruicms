@@ -21,17 +21,19 @@ class Storage {
             // 云存储
             $path = FCPATH.'ThirdParty/Storage/';
             $local = dr_dir_map($path, 1);
-            foreach ($local as $dir) {
-                if (is_file($path.$dir.'/App.php')) {
-                    $cfg = require $path.$dir.'/App.php';
-                    if ($cfg['id'] && $cfg['id'] == $attachment['type']) {
-                        $newClassName2 = '\\Phpcmf\\ThirdParty\\Storage\\'.ucfirst($dir);
-                        $this->object = new $newClassName2;
+            if ($local) {
+                foreach ($local as $dir) {
+                    if (is_file($path.$dir.'/App.php')) {
+                        $cfg = require $path.$dir.'/App.php';
+                        if ($cfg['id'] && $cfg['id'] == $attachment['type']) {
+                            $newClassName2 = '\\Phpcmf\\ThirdParty\\Storage\\'.ucfirst($dir);
+                            $this->object = new $newClassName2;
+                        }
                     }
                 }
             }
             if (!$this->object) {
-                exit(dr_array2string(dr_return_data(0, '云存储类型['.$attachment['type'].']对应的程序不存在')));
+                exit(dr_array2string(dr_return_data(0, '存储类型['.$attachment['type'].']对应的程序不存在')));
             }
         } else {
             // 本地存储
@@ -144,6 +146,7 @@ class Local {
                 $attachment['value']['path'] = SYS_UPLOAD_PATH.$attachment['value']['path'];
             }
         }
+
         $this->attachment = $attachment;
         $this->fullpath = $this->attachment['value']['path'].$this->filepath;
         $this->fullname = $this->attachment['value']['path'].$this->filename;
@@ -182,7 +185,6 @@ class Local {
     // 删除文件
     public function delete() {
         @unlink($this->fullname);
-        //log_message('info', 'CSRF token verified');
     }
 
 }
