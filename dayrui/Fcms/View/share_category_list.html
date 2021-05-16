@@ -1,8 +1,5 @@
 {template "header.html"}
 <script>
-    function dr_page_content(id) {
-        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url(APP_DIR.'/category/content_edit')}&id='+id, '90%', '90%', 'nogo');
-    }
     function dr_link_url(id) {
         dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url(APP_DIR.'/category/link_edit')}&id='+id, '50%', '40%');
     }

@@ -190,7 +190,11 @@ class Member_auth extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'));
         }
 
-        $page = intval(\Phpcmf\Service::L('input')->get('page'));
+        $page = trim(\Phpcmf\Service::L('input')->get('page'));
+        if (!$page) {
+            $page = 'user';
+        }
+
         \Phpcmf\Service::V()->assign([
             'aid' => $aid,
             'diy' => $this->_get_diy(),
