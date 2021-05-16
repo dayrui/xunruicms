@@ -122,7 +122,7 @@ class Category extends \Phpcmf\Table {
                 if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
                     // 当开启字段权限时不显示内容
                 } else {
-                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_page_content('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                    $option.= '<a class="btn btn-xs dark" href="'.dr_url(APP_DIR.'/category/edit', ['id' => $t['id'], 'page'=>1]).'"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
                 }
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {
@@ -787,89 +787,6 @@ class Category extends \Phpcmf\Table {
         } else {
             $this->_json(1, dr_url('html/show_index', ['app' => APP_DIR, 'catids' => implode(',', $ids)]));
         }
-    }
-
-    // 编辑单页内容
-    public function content_edit() {
-
-        if (APP_DIR && !$this->init['field']['content']) {
-            // 没有content字段时
-            if (!\Phpcmf\Service::M()->db->fieldExists('content', $this->init['table'])) {
-                $this->_admin_msg(0, dr_lang('在本模块的栏目字段中，请创建content字段'));
-            }
-            // 入库content表
-            $this->init['field']['content'] = [
-                'name' => dr_lang('内容'),
-                'ismain' => 1,
-                'ismember' => 1,
-                'issystem' => 1,
-                'disabled' => 0,
-                'displayorder' => 0,
-                'relatedid' => 0,
-                'relatedname' => 'category-'.APP_DIR,
-                'fieldtype' => 'Ueditor',
-                'fieldname' => 'content',
-                'setting' => dr_array2string([
-                    'option' => array (
-                        'watermark' => '0',
-                        'autofloat' => '0',
-                        'autoheight' => '0',
-                        'page' => '1',
-                        'mode' => '1',
-                        'tool' => '\'bold\', \'italic\', \'underline\'',
-                        'mode2' => '1',
-                        'tool2' => '\'bold\', \'italic\', \'underline\'',
-                        'mode3' => '1',
-                        'tool3' => '\'bold\', \'italic\', \'underline\'',
-                        'attachment' => '0',
-                        'value' => '',
-                        'width' => '100%',
-                        'height' => '400',
-                        'css' => '',
-                    ),
-                    'validate' => [
-                        'xss' => 1,
-                    ],
-                ])
-            ];
-            \Phpcmf\Service::M()->table('field')->insert($this->init['field']['content']);
-            $this->init['field']['content']['setting'] = dr_string2array($this->init['field']['content']['setting']);
-        }
-
-        $id = intval(\Phpcmf\Service::L('input')->get('id'));
-        $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
-        if (!$row) {
-            $this->_admin_msg(0, dr_lang('栏目数据不存在'));
-        }
-
-        $row['setting'] = dr_string2array($row['setting']);
-        if (isset($row['setting']['getchild']) && $row['setting']['getchild']) {
-            $this->_admin_msg(0, dr_lang('本栏目已开启【继承下级】请编辑它下级第一个单页面数据'));
-        }
-
-        if (IS_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', false);
-            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['content' => ($post['content'])]);
-            \Phpcmf\Service::L('input')->system_log('修改栏目内容: '. $row['name'] . '['. $id.']');
-            // 自动更新缓存
-            \Phpcmf\Service::M('cache')->sync_cache();
-            $is_html = $this->module['share'] ? $this->module['category'][$id]['setting']['html'] : $this->module['html'];
-            if ($is_html) {
-                // 生成权限文件
-                if (!dr_html_auth(1)) {
-                    $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
-                }
-                $list = '/index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$id;
-                $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
-            }
-            $this->_json(1, dr_lang('操作成功'));
-        }
-
-        \Phpcmf\Service::V()->assign([
-            'myfield' => dr_fieldform($this->init['field']['content'], $row['content']),
-        ]);
-        \Phpcmf\Service::V()->display('share_category_content.html');exit;
-
     }
 
     // 编辑外链
