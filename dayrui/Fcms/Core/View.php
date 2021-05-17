@@ -840,7 +840,19 @@ class View {
                 $name = 'function-'.md5(dr_array2string($param));
                 $cache = \Phpcmf\Service::L('cache')->get_data($name);
                 if (!$cache) {
-                    $rt = call_user_func($param['name'], $param['param']);
+                    $p = [];
+                    foreach ($param as $var => $t) {
+                        if (strpos($var, 'param') === 0) {
+                            $n = intval(substr($var, 5));
+                            $p[$n] = $t;
+                        }
+                    }
+                    if ($p) {
+                        $rt = call_user_func_array($param['name'], $p);
+                    } else {
+                        $rt = call_user_func($param['name']);
+                    }
+
                     $cache = [
                         $rt
                     ];
@@ -2590,6 +2602,7 @@ class View {
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = $this->_get_page_id($this->_page_value);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
+        $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
         $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
         $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';
 
@@ -2613,7 +2626,7 @@ class View {
                 $debug.= '<p>分页功能：未开启</p>';
             }
 
-            isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
+            isset($data[0]) && is_array($data[0]) && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
             $debug.= '</pre>';
 
             // 返回数据格式
