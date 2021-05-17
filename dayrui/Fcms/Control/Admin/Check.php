@@ -558,14 +558,14 @@ class Check extends \Phpcmf\Common
                                     }
                                 }
                                 if (\Phpcmf\Service::M()->table($siteid.'_'.$m['dirname'].'_category')->counts() > MAX_CATEGORY) {
-                                    $rt[] = '<font color="red">模块【'.$m['name'].'/'.$m['dirname'].'】的栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>';
+                                    $rt[] = '<font color="red">模块【'.$m['name'].'/'.$m['dirname'].'】的栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>，<a href="javascript:dr_help(909);">查看解决方案</a>';
                                 }
                             }
                         }
                     }
                 }
                 if (\Phpcmf\Service::M()->table(SITE_ID.'_share_category')->counts() > MAX_CATEGORY) {
-                    $rt[] = '<font color="red">共享栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>';
+                    $rt[] = '<font color="red">共享栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>，<a href="javascript:dr_help(909);">查看解决方案</a>';
                 }
                 if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);

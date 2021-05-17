@@ -139,7 +139,8 @@ class Module extends \Phpcmf\Common
             $temp = explode(',', $category['childids']);
             if ($temp) {
                 foreach ($temp as $i) {
-                    if ($i != $catid && $this->module['category'][$i]['show'] && !$this->module['category'][$i]['child']) {
+                    if ($i != $catid && $this->module['category'][$i]['show']
+                        && $this->module['category'][$i]['tid'] == 0 && !$this->module['category'][$i]['getchild']) {
                         $catid = $i;
                         $category = $this->module['category'][$i];
                         // 初始化模块
