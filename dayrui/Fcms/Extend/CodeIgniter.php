@@ -14,18 +14,18 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     /**
      * 初始化程序
      */
-    public function __construct(...$params)
-    {
-        parent::__construct(...$params);
+    public function __construct($config) {
+        // 执行时间标记
+        $this->startTime = microtime(true);
+        $this->config = $config;
         // 自定义函数库
-        if (is_file(ROOTPATH.'config/custom.php'))
-        {
+        if (is_file(ROOTPATH.'config/custom.php')) {
             require ROOTPATH.'config/custom.php';
         }
-        if (is_file(MYPATH.'Helper.php'))
-        {
+        if (is_file(MYPATH.'Helper.php')) {
             require MYPATH.'Helper.php';
         }
+        // 系统函数库
         require CMSPATH.'Core/Helper.php';
     }
 

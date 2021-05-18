@@ -470,12 +470,12 @@ class Pay extends \Phpcmf\Model
 
     // 通过支付流水号获取id号
     protected function get_pay_id($mark) {
-        return (int)substr(strrchr($mark, '-'), 1);
+        return (int)substr($mark, strlen(\Phpcmf\Service::C()->member_cache['pay']['prefix'].date('YmdHis', SYS_TIME))+2);
     }
 
     // 生成支付流水id号
     protected function get_pay_sn($data) {
-        return trim(\Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', $data['inputtime']).'-'.$data['id'];
+        return trim(\Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', SYS_TIME).'00'.$data['id'];
     }
 
     // 充值成功的返回
