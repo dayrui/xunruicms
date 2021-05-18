@@ -54,7 +54,7 @@ class Services extends CoreServices
             return static::getSharedInstance('security', $config);
         }
 
-        $config = $config ?? config('Security') ?? config('App');
+		$config = $config ?? config('App');
 
         return new \Phpcmf\Extend\Security($config);
     }

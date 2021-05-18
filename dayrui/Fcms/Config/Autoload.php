@@ -12,6 +12,8 @@ class Autoload extends AutoloadConfig
 	public $psr4 = [];
 
 	public $classmap = [];
+	
+	public $files = [];
 
 	//--------------------------------------------------------------------
 

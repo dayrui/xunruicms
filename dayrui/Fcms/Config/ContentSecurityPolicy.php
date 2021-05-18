@@ -116,6 +116,14 @@ class ContentSecurityPolicy extends BaseConfig
      * @var string|string[]
      */
     public $formAction = 'self';
+	
+	/**
+	 * The frame-src directive restricts the URLs which may
+	 * be loaded into nested browsing contexts.
+	 *
+	 * @var array|string|null
+	 */
+	public $frameSrc = null;
 
     /**
      * Specifies the sources that can embed the current page.

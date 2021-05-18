@@ -48,4 +48,16 @@ class Exceptions extends BaseConfig
      * @var string
      */
     public $errorViewPath = COREPATH . 'View/errors';
+	
+	/**
+	 * --------------------------------------------------------------------------
+	 * HIDE FROM DEBUG TRACE
+	 * --------------------------------------------------------------------------
+	 * Any data that you would like to hide from the debug trace.
+	 * In order to specify 2 levels, use "/" to separate.
+	 * ex. ['server', 'setup/password', 'secret_token']
+	 *
+	 * @var array
+	 */
+	public $sensitiveDataInTrace = [];
 }
