@@ -24,6 +24,9 @@
 </div>
 
 <script>
+    {if IS_OEM_CMS}
+    var is_oem_cms_down = 1;
+    {/if}
     $(function () {
         dr_checking();
     });
@@ -84,17 +87,17 @@
         });
         // 检测下载结果
         var is_ok_lock = 0;
+        var is_jd = 0;
         var is_count = 0;
         var interval_id = window.setInterval(function() {
-
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&is_count="+is_count,
+                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&is_count="+is_count+"&is_jd="+is_jd,
                 success: function (json) {
                     is_count++;
                     document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
-
+                    is_jd = json.code;
                     if (json.code == 0) {
                         $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                         $('#dr_check_button_ing').addClass('red');
@@ -111,7 +114,6 @@
                                 $('#dr_check_html').append('<p class=""><label class="rleft">文件下载完成</label></p>');
                                 $('#dr_check_button_ing').html('<i class="fa fa-check-circle"></i> 下载完成');
                                 $('#dr_check_button').append('<button type="button" id="dr_check_install" onclick="dr_install()" class="btn blue"> <i class="fa fa-cog"></i> 导入程序 </button>');
-
                             }
                             is_ok_lock = 1;
                         } else {
@@ -124,7 +126,6 @@
                     dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
                 }
             });
-
         }, 1000);
     }
     function dr_install() {

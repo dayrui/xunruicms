@@ -445,12 +445,12 @@ return [
 
         if ($is_app) {
             if ($is_module_app) {
-                $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_install_module_select(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\');">立即安装应用插件</a>';
+                $msg = '程序导入完成</p><p style="margin-top:20px;"><a href="javascript:dr_install_module_select(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\');">立即安装应用插件</a>';
             } else {
-                $msg = '程序导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_install_app(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
+                $msg = '程序导入完成</p><p style="margin-top:20px;"><a href="javascript:dr_install_app(\''.dr_url('cloud/install', ['id' => $id, 'dir'=>$is_app]).'\', 0);">立即安装应用插件</a>';
             }
         } elseif ($is_tpl) {
-            $msg = '模板导入完成</p><p  style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
+            $msg = '模板导入完成</p><p style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
         } else {
             $msg = '程序导入完成<br>请按本商品的使用教程来操作';
         }
@@ -689,7 +689,7 @@ return [
             $now = max(1, filesize($file));
             $jd = max(1, round($now / $cache['size'] * 100, 0)); // 进度百分百
             $count = isset($_GET['is_count']) ? intval($_GET['is_count']) : 0; // 表示请求次数
-            if ($count > 3 && $jd > 98) {
+            if (($count > 3 && $jd > 98) || (isset($_GET['is_jd']) && $_GET['is_jd'] == $jd)) {
                 $jd = 100;
             }
             $this->_json($jd, '<p><label class="rleft">需下载文件大小：'.dr_format_file_size($cache['size']).'，已下载：'.dr_format_file_size($now).'</label><label class="rright"><span class="ok">'.$jd.'%</span></label></p>');
