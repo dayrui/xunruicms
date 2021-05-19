@@ -72,7 +72,7 @@ class WxPayNotify extends WxPayNotifyReply
 	 * 回复通知
 	 * @param bool $needSign 是否需要签名输出
 	 */
-	final private function ReplyNotify($needSign = true)
+	final public function ReplyNotify($needSign = true)
 	{
 		//如果需要签名
 		if($needSign == true && 

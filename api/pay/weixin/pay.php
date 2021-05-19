@@ -209,7 +209,7 @@ if (IS_API_HTTP && dr_is_app('weixin')) {
         // 存储支付结果
         $result['sn'] = $sn;
         $code = '
-    <img  src="'.dr_qrcode($result["code_url"]).'" style="width:150px;height:150px;margin-top:20px;"/>
+    <img class="wxpay" src="'.dr_qrcode($result["code_url"]).'"/>
     <script>
         function dr_weixin_notify() {
             $.ajax({
