@@ -470,6 +470,9 @@ class Pay extends \Phpcmf\Model
 
     // 通过支付流水号获取id号
     protected function get_pay_id($mark) {
+        if (strpos($mark, 'fc-') === 0) {
+            return intval(substr($mark, 3));
+        }
         return (int)substr($mark, strlen(\Phpcmf\Service::C()->member_cache['pay']['prefix'].date('YmdHis', SYS_TIME))+2);
     }
 
@@ -483,6 +486,10 @@ class Pay extends \Phpcmf\Model
 
         // 找流水id
         $id = $this->get_pay_id($mark);
+        if (!$id) {
+            return dr_return_data(0, dr_lang('没有获取到支付ID号'));
+        }
+
         $data = $this->table('member_paylog')->get($id);
         if (!$data) {
             return dr_return_data(0, dr_lang('支付记录不存在'));

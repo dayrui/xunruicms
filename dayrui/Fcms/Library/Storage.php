@@ -89,7 +89,7 @@ class Storage {
             $img = getimagesize($fullname);
             if (!$img) {
                 // 删除文件
-                @unlink($fullname);
+                unlink($fullname);
                 return dr_return_data(0, dr_lang('此图片不是一张可用的图片'));
             }
             $info = [
