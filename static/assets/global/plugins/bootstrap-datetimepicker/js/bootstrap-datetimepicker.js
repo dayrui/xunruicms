@@ -448,6 +448,7 @@
 
 			this.date = DPGlobal.parseDate(date, this.format, this.language, this.formatType);
 
+
 			if (fromArgs) this.setValue();
 
 			if (this.date < this.startDate) {
@@ -1216,16 +1217,7 @@
 	};
 	$.fn.datetimepicker.Constructor = Datetimepicker;
 	var dates = $.fn.datetimepicker.dates = {
-		en: {
-			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-			months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-			monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-			meridiem: ["am", "pm"],
-			suffix: ["st", "nd", "rd", "th"],
-			today: "Today"
-		}
+		en: finecms_datetimepicker_lang
 	};
 
 	var DPGlobal = {
@@ -1297,6 +1289,7 @@
 			return {separators: separators, parts: parts};
 		},
 		parseDate: function(date, format, language, type) {
+
 			if (date instanceof Date) {
 				var dateUTC = new Date(date.valueOf() - date.getTimezoneOffset() * 60000);
 								dateUTC.setMilliseconds(0);

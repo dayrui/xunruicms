@@ -1133,7 +1133,14 @@ function dr_load_ajax(msg, url, go) {
 
 // 弹出提示
 function dr_install_confirm(url) {
-    layer.confirm(
+
+    if (typeof is_oem_cms_down != "undefined" && is_oem_cms_down) {
+        window.opener=null;
+        window.open('','_self');
+        window.close();
+        alert('请关闭当前窗口');
+    } else {
+        layer.confirm(
         '确定要刷新整个后台吗？',
         {
             icon: 3,
@@ -1150,8 +1157,8 @@ function dr_install_confirm(url) {
             } else {
                 window.location.reload(true);
             }
-
         });
+    }
 }
 
 
