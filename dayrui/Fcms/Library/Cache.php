@@ -187,20 +187,20 @@ class Cache {
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
 
-        $time && self::init()->save(dr_safe_filename(SITE_ID.'-'.strtolower($name)), $value, $time);
+        $time && self::init()->save(md5(SITE_ID.'-'.$name), $value, $time);
 
         return $value;
     }
 
     // 获取内容
     public function get_data($name) {
-        return self::init()->get(dr_safe_filename(SITE_ID.'-'.strtolower($name)));
+        return self::init()->get(md5(SITE_ID.'-'.$name));
     }
 
     // 删除内容
     public function del_data($name) {
         function_exists('opcache_reset') && opcache_reset();
-        return self::init()->delete(dr_safe_filename(SITE_ID.'-'.strtolower($name)));
+        return self::init()->delete(md5(SITE_ID.'-'.$name));
     }
 
     // 使用框架
