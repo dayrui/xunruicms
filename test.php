@@ -23,10 +23,10 @@ if (isset($_GET['log']) && $_GET['log']) {
 dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
-if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-    exit("<font color=red>PHP版本必须在7.2及以上，当前".PHP_VERSION."</font>");
+if (version_compare(PHP_VERSION, '7.3.0') < 0) {
+    exit("<font color=red>PHP版本必须在7.3及以上，当前".PHP_VERSION."</font>");
 } else {
-    dr_echo_msg(1, 'PHP版本要求：7.2及以上，当前'.PHP_VERSION);
+    dr_echo_msg(1, 'PHP版本要求：7.3及以上，当前'.PHP_VERSION);
 }
 
 // GD库判断

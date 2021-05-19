@@ -49,7 +49,7 @@ class CodeIgniter
 	/**
 	 * @var string
 	 */
-	private const MIN_PHP_VERSION = '7.2';
+	private const MIN_PHP_VERSION = '7.3';
 
 	/**
 	 * App startup time.
