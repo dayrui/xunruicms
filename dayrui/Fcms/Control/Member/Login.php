@@ -105,8 +105,10 @@ class Login extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        $oauth_id = \Phpcmf\Service::L('cache')->get_auth_data('member_auth_login_'.$name.'_'.$id);
+        $auth_name = 'member_auth_login_'.$name.'_'.$id;
+        $oauth_id = \Phpcmf\Service::L('cache')->get_auth_data($auth_name, SITE_ID, 300);
         if (!$oauth_id) {
+            // 需要加强判断条件
             $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
 
@@ -147,6 +149,9 @@ class Login extends \Phpcmf\Common
             foreach ($rt as $url) {
                 $sso.= '<script src="'.$url.'"></script>';
             }
+
+            // 删除认证缓存
+            \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
 
             if (strpos($goto_url, 'is_admin_call')) {
                 // 存储后台回话
@@ -206,7 +211,7 @@ class Login extends \Phpcmf\Common
                         // 登录成功
                         $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                         // 删除认证缓存
-                        \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
+                        \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
                         $this->_json(1, 'ok', $rt['data']);
                     } else {
                         $this->_json(0, $rt['msg']);
@@ -292,7 +297,7 @@ class Login extends \Phpcmf\Common
                                 }
                                 $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                                 // 删除认证缓存
-                                \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
+                                \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
                                 $this->_json(1, 'ok', $rt['data']);
                             } else {
                                 $this->_json(0, $rt['msg'], ['field' => $rt['data']['field']]);
@@ -309,7 +314,7 @@ class Login extends \Phpcmf\Common
                                 // 登录成功
                                 $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                                 // 删除认证缓存
-                                \Phpcmf\Service::L('cache')->del_auth_data('member_auth_login_'.$name.'_'.$id);
+                                \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
                                 // 更改状态
                                 \Phpcmf\Service::M()->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $rt['data']['member']['id']]);
                                 dr_is_app('weixin') && $oauth['oauth'] == 'wechat' && \Phpcmf\Service::M()->db->table('weixin_user')->where('openid', $oauth['oid'])->update([

@@ -126,10 +126,14 @@ class Cache {
     }
 
     // 获取内容
-    public function get_auth_data($name, $siteid = SITE_ID) {
+    public function get_auth_data($name, $siteid = SITE_ID, $time = 0) {
 
         $code_file = $this->auth_dir.md5($siteid.$name);
         if (is_file($code_file)) {
+            if ($time && SYS_TIME - filemtime($code_file) > $time) {
+                log_message('error', '缓存（'.$name.'）自动失效（'.dr_now_url().'）超时: '.(SYS_TIME - filemtime($code_file)).'秒');
+                return ''; // 超出了指定的时间时
+            }
             $rt = file_get_contents($code_file);
             if ($rt) {
                 $arr = dr_string2array($rt);
