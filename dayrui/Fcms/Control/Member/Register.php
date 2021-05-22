@@ -12,7 +12,7 @@ class Register extends \Phpcmf\Common
     public function index() {
 
         // 获取返回URL
-        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
+        $url = dr_safe_url($_GET['back'] ? urldecode((string)\Phpcmf\Service::L('input')->get('back')) : $_SERVER['HTTP_REFERER']);
         $url && parse_str($url, $arr);
         if (isset($arr['back']) && $arr['back']) {
             $url = \Phpcmf\Service::L('input')->xss_clean($arr['back']);
@@ -121,7 +121,7 @@ class Register extends \Phpcmf\Common
                         \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_mobile' => 1]);
                     }
                     $this->_json(1, 'ok', [
-                        'url' => urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL, true)),
+                        'url' => urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? \Phpcmf\Service::L('input')->post('back') : MEMBER_URL, true)),
                         'sso' => \Phpcmf\Service::M('member')->sso($this->member, $remember),
                         'member' => $this->member,
                     ]);

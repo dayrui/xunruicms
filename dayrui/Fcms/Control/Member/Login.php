@@ -12,7 +12,7 @@ class Login extends \Phpcmf\Common
     public function index() {
 
         // 获取返回页面
-        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
+        $url = dr_safe_url($_GET['back'] ? urldecode((string)\Phpcmf\Service::L('input')->get('back')) : $_SERVER['HTTP_REFERER']);
         if (strpos($url, 'login') !== false || strpos($url, 'register') !== false) {
             $url = MEMBER_URL; // 当来自登录或注册页面时返回到用户中心去
         }
@@ -40,7 +40,7 @@ class Login extends \Phpcmf\Common
                 $rt = \Phpcmf\Service::M('member')->login(dr_safe_username($post['username']), $post['password'], (int)$_POST['remember']);
                 if ($rt['code']) {
                     // 登录成功
-                    $rt['data']['url'] = urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL, true));
+                    $rt['data']['url'] = urldecode((string)\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? \Phpcmf\Service::L('input')->post('back') : MEMBER_URL, true));
                     $this->_json(1, 'ok', $rt['data']);
                 } else {
                     $this->_json(0, $rt['msg']);
@@ -62,7 +62,7 @@ class Login extends \Phpcmf\Common
     public function sms() {
 
         // 获取返回页面
-        $url = dr_safe_url($_GET['back'] ? urldecode($_GET['back']) : $_SERVER['HTTP_REFERER']);
+        $url = dr_safe_url($_GET['back'] ? urldecode((string)\Phpcmf\Service::L('input')->get('back')) : $_SERVER['HTTP_REFERER']);
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
         if (IS_AJAX_POST) {
@@ -85,7 +85,7 @@ class Login extends \Phpcmf\Common
                     $rt = \Phpcmf\Service::M('member')->login_sms($post['phone'], (int)$_POST['remember']);
                     if ($rt['code']) {
                         // 登录成功
-                        $rt['data']['url'] = urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? $_POST['back'] : MEMBER_URL));
+                        $rt['data']['url'] = urldecode(\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? \Phpcmf\Service::L('input')->post('back') : MEMBER_URL));
                         $this->_json(1, 'ok', $rt['data']);
                     } else {
                         $this->_json(0, $rt['msg']);
@@ -131,7 +131,7 @@ class Login extends \Phpcmf\Common
         }
 
         // 跳转地址
-        $back = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('back')));
+        $back = urldecode(dr_safe_replace((string)\Phpcmf\Service::L('input')->get('back')));
         $state = \Phpcmf\Service::L('input')->get('state');
         $goto_url = $back ? $back : MEMBER_URL;
         if ($state && $state != 'member') {

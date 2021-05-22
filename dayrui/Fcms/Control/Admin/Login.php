@@ -10,7 +10,7 @@ class Login extends \Phpcmf\Common
 
 	public function index() {
 
-		$url = pathinfo(\Phpcmf\Service::L('input')->get('go') ? urldecode(\Phpcmf\Service::L('input')->get('go')) : \Phpcmf\Service::L('Router')->url('home'));
+		$url = pathinfo(\Phpcmf\Service::L('input')->get('go') ? urldecode((string)\Phpcmf\Service::L('input')->get('go')) : \Phpcmf\Service::L('Router')->url('home'));
 		$url = $url['basename'] ? $url['basename'] :\Phpcmf\Service::L('Router')->url('home/index');
 
 		// 避免安装时的卡顿超时
