@@ -131,6 +131,7 @@ class Cache {
         $code_file = $this->auth_dir.md5($siteid.$name);
         if (is_file($code_file)) {
             if ($time && SYS_TIME - filemtime($code_file) > $time) {
+                unlink($code_file);
                 log_message('error', '缓存（'.$name.'）自动失效（'.dr_now_url().'）超时: '.(SYS_TIME - filemtime($code_file)).'秒');
                 return ''; // 超出了指定的时间时
             }

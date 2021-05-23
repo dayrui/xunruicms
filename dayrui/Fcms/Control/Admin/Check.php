@@ -171,37 +171,39 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'config/language/', ROOTPATH.'config/language/', ROOTPATH.'api/language/');
                 }
 
+                $rt = [];
+
                 // 语言文件
                 $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
                 if ($lang && strlen($lang) < 10) {
-                    $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
+                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
                 } elseif ($lang && strpos($lang, 'finecms_datepicker_lang') === false) {
-                    $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
+                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
                 }
 
                 $lang = dr_catcher_data(LANG_PATH.'ueditor.js', 5);
                 if ($lang && strlen($lang) < 10) {
-                    $this->halt('百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js', 0);
+                    $rt[] = '百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js';
                 } elseif ($lang && strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
-                    $this->halt('百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js', 0);
+                    $rt[] = '百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js';
                 }
 
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
-                    $this->halt('网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
+                    $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html';
                 } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
-                    $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html', 0);
+                    $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html';
                 } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/msg.html')) {
-                    $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/msg.html', 0);
+                    $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/msg.html';
                 }
 
                 // 必备模板检测
-                $rt = [];
                 foreach (['msg.html', '404.html'] as $tt) {
                     if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/'.$tt)) {
                         $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/'.$tt;
                     }
                 }
+
                 if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);
                 }
