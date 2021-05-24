@@ -15,7 +15,7 @@ class Page {
 	 *
 	 * @var	string
 	 */
-	protected $base_url		= '';
+	protected $base_url	= '';
 
 	/**
 	 * Prefix
@@ -133,8 +133,6 @@ class Page {
 	protected $last_anchor_class = '';
 	protected $first_anchor_class = '';
     protected $anchor_class = '';
-    protected $total_anchor_class = '';
-    protected $total_remove_anchor = false;
 
     protected $compel_page = false;
     protected $compel_prev_page = false;
@@ -436,11 +434,6 @@ class Page {
         $output = '';
 
 		if ($this->total_link) {
-		    if (!$this->total_remove_anchor) {
-                $this->total_tag_open.='<a'.($this->total_anchor_class ? ' class="'.$this->total_anchor_class.'"' : '').'>';
-                $this->total_tag_close.='</a>';
-            }
-
 			$output .= $this->total_tag_open.dr_lang($this->total_link, $this->total_rows).$this->total_tag_close;
 		}
 
