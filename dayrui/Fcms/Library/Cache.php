@@ -104,10 +104,9 @@ class Cache {
         !$dir && $dir = 'data';
         $path = WRITEPATH.$dir.'/';
 
-
         dr_dir_delete($path);
 
-        return ;
+        return;
     }
 
     //------------------------------------------------
@@ -185,6 +184,8 @@ class Cache {
     public function init() {
         return cache();
     }
+
+    //------------------------------------------------
 
     // 存储内容
     public function set_data($name, $value, $time = 3600) {
