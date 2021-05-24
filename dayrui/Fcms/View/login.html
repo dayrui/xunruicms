@@ -88,6 +88,10 @@
         var pwd = $('#password').val();
         pwd = $.md5(pwd); // 进行md5加密
         $('#password').val(pwd);
+        //var post_data = $(".login-form").serializeArray();
+        //post_data+='&data[password]='+pwd;
+        //post_data[5]['value'] = pwd;
+        //console.log(post_data);
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
             success: function(json) {
                 if (json.code == 1) {
