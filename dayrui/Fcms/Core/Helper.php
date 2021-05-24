@@ -2682,6 +2682,9 @@ function dr_show_stars($num, $starthreshold = 4) {
  * @return  string
  */
 function dr_module_comment($dir, $id, $url = '') {
+    if (defined('MODULE_MYSHOW')) {
+        return '';
+    }
     $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_module_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });$.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_module_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_module_comment_{$id}(0, 1); </script>";
@@ -2731,6 +2734,9 @@ if (!function_exists('dr_show_hits')) {
         $is = $dom;
         !$dom && $dom = "dr_show_hits_{$id}";
         $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
+        if (defined('MODULE_MYSHOW')) {
+            return $html;
+        }
         return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }

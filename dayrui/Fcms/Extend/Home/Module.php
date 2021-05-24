@@ -451,6 +451,10 @@ class Module extends \Phpcmf\Common
             $this->_json(0, '禁止提交，请检查提交地址是否有误');
         }
 
+        // 标记字符
+        define('MODULE_MYSHOW', $type);
+
+        // 按类型加载内容
         switch($type) {
 
             case 'time':
@@ -534,7 +538,7 @@ class Module extends \Phpcmf\Common
             'parent' => $parent,
             'markid' => 'module-'.$this->module['dirname'].'-'.$data['catid'],
             'related' => $related,
-            'urlrule' =>\Phpcmf\Service::L('Router')->show_url($this->module, $data, '[page]'),
+            'urlrule' => \Phpcmf\Service::L('Router')->show_url($this->module, $data, '[page]'),
         ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
         \Phpcmf\Service::V()->display(is_file(dr_tpl_path().'show_'.$type.'.html') ? 'show_'.$type.'.html' : 'show.html');

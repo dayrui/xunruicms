@@ -53,7 +53,7 @@
                                     {if dr_is_app('comment')}
                                     <div class="search-post-meta">
                                         <i class="fa fa-comments font-blue"></i>
-                                        <a href="{Router::comment_url($id)}">{$comments}</a>
+                                        <a href="{Router::comment_url($id)}">{intval($comments)}</a>
                                     </div>
                                     {/if}
                                 </div>
