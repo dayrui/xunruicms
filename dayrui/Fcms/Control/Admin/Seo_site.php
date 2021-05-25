@@ -33,7 +33,6 @@ class Seo_site extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign([
 			'page' => $page,
 			'data' => $data['seo'],
-			'SITE_INDEX_HTML' => $data['config']['SITE_INDEX_HTML'],
 			'form' => dr_form_hidden(['page' => $page]),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -42,6 +41,7 @@ class Seo_site extends \Phpcmf\Common
                 ]
             ),
             'site_name' => $this->site_info[SITE_ID]['SITE_NAME'],
+            'SITE_INDEX_HTML' => $data['config']['SITE_INDEX_HTML'],
 		]);
 		\Phpcmf\Service::V()->display('seo_site.html');
 	}

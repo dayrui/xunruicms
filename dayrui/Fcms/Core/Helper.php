@@ -1734,12 +1734,12 @@ function dr_list_field_order($field) {
 function dr_list_field_value($value, $sys_field, $field) {
 
     foreach ($field as $t) {
-        $sys_field[$t['fieldname']] = $t;
+        $t && $sys_field[$t['fieldname']] = $t;
     }
 
     $rt = [];
     foreach ($value as $name => $t) {
-        if ($t['name']) {
+        if ($t && $t['name']) {
             $rt[$name] = $sys_field[$name];
             unset($sys_field[$name]);
         }
@@ -2740,17 +2740,6 @@ if (!function_exists('dr_show_hits')) {
         return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
-
-/**
- * 模块内容收藏量显示js
- *
- * @param   intval  $id
- * @return  string
- */
-function dr_show_module_total($name, $id, $dom, $dir = MOD_DIR) {
-    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=mcount&name={$name}&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
-}
-
 
 /**
  * 调用远程数据

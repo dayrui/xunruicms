@@ -50,7 +50,7 @@ class Site extends \Phpcmf\Model
 
         $site['setting'] = dr_string2array($site['setting']);
         $site['setting']['config']['SITE_NAME'] = $site['name'];
-        $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
+        $site['setting']['config']['SITE_DOMAIN'] = strtolower($site['domain']);
 
         if ($name && $data) {
             // 更新数据
@@ -63,7 +63,7 @@ class Site extends \Phpcmf\Model
             $site['setting'][$name] = $data;
             $this->table('site')->update($siteid, [
                 'name' => $site['name'],
-                'domain' => $site['domain'],
+                'domain' => strtolower($site['domain']),
                 'setting' => dr_array2string($site['setting']),
             ]);
         }
@@ -82,7 +82,7 @@ class Site extends \Phpcmf\Model
 
         $site['setting'] = dr_string2array($site['setting']);
         $site['setting']['config']['SITE_NAME'] = $site['name'];
-        $site['setting']['config']['SITE_DOMAIN'] = $site['domain'];
+        $site['setting']['config']['SITE_DOMAIN'] = strtolower($site['domain']);
 
         // 更新数据
         if ($data['SITE_NAME']) {
@@ -94,7 +94,7 @@ class Site extends \Phpcmf\Model
         $site['setting'][$name] = $data;
         $this->table('site')->update($siteid, [
             'name' => $site['name'],
-            'domain' => $site['domain'],
+            'domain' => strtolower($site['domain']),
             'setting' => dr_array2string($site['setting']),
         ]);
 
@@ -181,7 +181,7 @@ class Site extends \Phpcmf\Model
 
         $site = $this->config(1);
         $this->db->table('site')->where('id', 1)->update([
-            'domain' => $value,
+            'domain' => strtolower($value),
             'setting' => dr_array2string($site),
         ]);
 
@@ -196,13 +196,13 @@ class Site extends \Phpcmf\Model
 
             $site['webpath'] = $value['webpath'];
             $this->db->table('site')->where('id', SITE_ID)->update([
-                'domain' => $value['site_domain'] ? $value['site_domain'] : $site['domain'],
+                'domain' => strtolower($value['site_domain'] ? $value['site_domain'] : $site['domain']),
                 'setting' => dr_array2string($site),
             ]);
         }
 
         $data['webpath'] = $site['webpath'];
-        $data['site_domain'] = $site['config']['SITE_DOMAIN'];
+        $data['site_domain'] = strtolower($site['config']['SITE_DOMAIN']);
 
         // 识别手机域名
         if (isset($site['mobile']['mode']) && $site['mobile']['mode']) {
@@ -256,15 +256,15 @@ class Site extends \Phpcmf\Model
             }
             if ($t['site'][SITE_ID]) {
                 if ($value) {
-                    $t['site'][SITE_ID]['domain'] = $value['module_'.$t['dirname']];
+                    $t['site'][SITE_ID]['domain'] = strtolower($value['module_'.$t['dirname']]);
                     $t['site'][SITE_ID]['mobile_domain'] = $value['module_mobile_'.$t['dirname']];
                     $t['site'][SITE_ID]['webpath'] = $value['webpath_'.$t['dirname']];
                     $this->db->table('module')->where('id', $t['id'])->update([
                         'site' => dr_array2string($t['site'])
                     ]);
                 }
-                $data['module_'.$t['dirname']] = $t['site'][SITE_ID]['domain'];
-                $data['module_mobile_'.$t['dirname']] = $t['site'][SITE_ID]['mobile_domain'];
+                $data['module_'.$t['dirname']] = strtolower($t['site'][SITE_ID]['domain']);
+                $data['module_mobile_'.$t['dirname']] = strtolower($t['site'][SITE_ID]['mobile_domain']);
                 $data['webpath_'.$t['dirname']] = $t['site'][SITE_ID]['webpath'];
             } else {
                 $my[$t['dirname']]['error'] = dr_lang('当前站点未安装');
@@ -300,7 +300,7 @@ class Site extends \Phpcmf\Model
 
                 $config[$t['id']] = [
                     'SITE_NAME' => $t['name'],
-                    'SITE_DOMAIN' => $t['domain'],
+                    'SITE_DOMAIN' => strtolower($t['domain']),
                     'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
                     'SITE_MOBILE' => $mobile_domain,
                     'SITE_MOBILE_DIR' => $mobile_dirname,
