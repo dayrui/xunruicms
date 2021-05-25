@@ -807,7 +807,12 @@ class View {
         if (!SYS_CACHE) {
             $system['cache'] = 0;
         }
-        $cache_name = 'view-'.$this->_return_sql.md5(dr_array2string($system).$_params.dr_now_url().$this->_tname);
+        if ($system['page'] || in_array(strtoupper($system['order']), ['RAND()', 'RAND'])) {
+            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_tname);
+        } else {
+            $cache_name = 'view-'.$this->_return_sql.md5($_params.$this->_tname);
+        }
+
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
@@ -2604,7 +2609,7 @@ class View {
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
         $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
         $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
-        $debug.= '<p>数据缓存：'.($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')).'</p>';
+        $debug.= '<p>数据缓存：'.(SYS_CACHE ? ($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')) : '后台未开启缓存').'</p>';
 
         if ($this->_return_sql) {
             $debug.= '<p>运算数量：'.intval($data[0]['ct']).'</p>';
