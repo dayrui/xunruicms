@@ -1,44 +1,58 @@
 {template "header.html"}
 
-<link href="{THEME_PATH}assets/global/plugins/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" />
-<script src="{THEME_PATH}assets/global/plugins/jcrop/js/jquery.color.js" type="text/javascript"></script>
-<script src="{THEME_PATH}assets/global/plugins/jcrop/js/jquery.Jcrop.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-    $(function () {
-        $('#cut_image').Jcrop({
-            aspectRatio: 1,
-            onSelect: updateCoords
-        });
+<link href="{THEME_PATH}assets/global/plugins/cropper/css/cropper.css" rel="stylesheet" type="text/css" />
+<link href="{THEME_PATH}assets/global/plugins/cropper/css/main.css" rel="stylesheet" type="text/css" />
 
-        function updateCoords(c)
-        {
-            $('#crop_x').val(c.x);
-            $('#crop_y').val(c.y);
-            $('#crop_w').val(c.w);
-            $('#crop_h').val(c.h);
-        };
+<script src="{THEME_PATH}assets/global/plugins/cropper/js/cropper.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/cropper/js/main.js" type="text/javascript"></script>
 
-        $('#myform').submit(function(){
-            if (parseInt($('#crop_w').val())) {
-
-            } else {
-                dr_tips(0, '{dr_lang('图形宽度不规范')}');
-            }
-            return false;
-        });
-    });
-
-</script>
 
 <form class="form-horizontal" method="post" role="form" id="myform">
     {$form}
-    <div class="responsive-1024">
-        <img src="{$data.url}?{SYS_TIME}" id="cut_image" />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="img-container">
+                    <img id="image" src="{$data.url}?{SYS_TIME}" alt="Picture">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- <h3>Preview:</h3> -->
+                <div class="docs-preview clearfix">
+                    <div class="img-preview preview-lg"></div>
+                </div>
+
+                <!-- <h3>Data:</h3> -->
+                <div class="docs-data">
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataX">X</label>
+                        <input type="text" class="form-control" name="data[x]" id="dataX" placeholder="x">
+                        <span class="input-group-addon">px</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataY">Y</label>
+                        <input type="text" class="form-control" name="data[y]" id="dataY" placeholder="y">
+                        <span class="input-group-addon">px</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataWidth">Width</label>
+                        <input type="text" class="form-control" name="data[w]" id="dataWidth" placeholder="width">
+                        <span class="input-group-addon">px</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataHeight">Height</label>
+                        <input type="text" class="form-control" name="data[h]" id="dataHeight" placeholder="height">
+                        <span class="input-group-addon">px</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <input type="hidden" id="crop_x" name="data[x]" />
-    <input type="hidden" id="crop_y" name="data[y]" />
-    <input type="hidden" id="crop_w" name="data[w]" />
-    <input type="hidden" id="crop_h" name="data[h]" />
+
+
+
 </form>
 
 {template "footer.html"}
