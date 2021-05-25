@@ -141,7 +141,7 @@ class Install extends \Phpcmf\Common
 
                     $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
                     if (!$mysqli) {
-                        $this->_json(0, '您的PHP环境必须启用Mysqli扩展');
+                        $this->_json(0, 'PHP环境必须启用Mysqli扩展');
                     } elseif (!mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
                         $this->_json(0, '['.mysqli_connect_errno().'] - 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确');
                     } elseif (!mysqli_select_db($mysqli, $data['db_name'])) {
@@ -150,12 +150,18 @@ class Install extends \Phpcmf\Common
                         }
                     }
 
+					if (!mysqli_set_charset($mysqli, "utf8mb4")) {
+					    $this->_json(0, "当前MySQL不支持utf8mb4编码（".mysqli_error($mysqli)."）");
+					}
+					
                     $data['db_prefix'] = strtolower($data['db_prefix']);
 
                     // 判断是否安装过
                     if ($result = mysqli_query($mysqli, 'SHOW FULL COLUMNS FROM `'.$data['db_prefix'].'cron`')) {
                         $this->_json(0, '指定的数据库（'.$data['db_name'].'）已经被安装过，你可以尝试修改数据库名或者数据表前缀');
                     }
+                    
+                    exit;
 
                     // 存储缓存文件中
                     $size = file_put_contents(WRITEPATH.'install.info', dr_array2string($data));

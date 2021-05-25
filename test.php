@@ -92,6 +92,9 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
             dr_echo_msg(1, 'MySQL支持InnoDB存储引擎');
         }
     }
+    if (!mysqli_set_charset($mysqli, "utf8mb4")) {
+		dr_echo_msg(0, "MySQL不支持utf8mb4编码（".mysqli_error($mysqli)."）");
+	}
     $mysqli && mysqli_close($mysqli);
 }
 
