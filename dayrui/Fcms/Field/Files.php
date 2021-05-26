@@ -411,7 +411,7 @@ class Files extends \Phpcmf\Library\A_Field {
             // 显示模板
             $tpl = '<tr class="template-download files_row">';
             $tpl.= '<td style="text-align:center;width:90px;border-top:0">';
-            $tpl.= '<span class="files_row_preview preview">{preview}</span>';
+            $tpl.= '<div class="files_row_preview preview">{preview}</div>';
             $tpl.= '</td>';
             $tpl.= '<td style="border-top:0">';
             $tpl.= '{title} {description}';

@@ -334,7 +334,7 @@ class File extends \Phpcmf\Library\A_Field {
             } else {
                 $preview = dr_file_preview_html($value);
             }
-            $html = '<div class="files_row_preview" style="width: 70px; height: 70px;">'.$preview.'</div>';
+            $html = '<div class="files_row_preview preview">'.$preview.'</div>';
         }
 
         return $this->input_format($field['fieldname'], $field['name'], $html);
