@@ -7,6 +7,10 @@ $(function () {
     dr_tid(1);
     {/if}
 });
+
+function dr_select_tpl(file, name) {
+    $('.'+name).val(file);
+}
 function dr_tid(i) {
     $('.dr_tid_0').hide();
     $('.dr_tid_1').hide();
@@ -214,7 +218,16 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_0">
                             <label class="col-md-2 control-label">{dr_lang('单网页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['page'])}" name="system[setting][template][page]"></label>
+
+                                <div class="input-group  input-large">
+                                    <input class="form-control dr_page_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['page'])}" name="system[setting][template][page]">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        {dr_rp($select_tpl, '{name}', 'dr_page_tpl')}
+                                    </div>
+                                </div>
                                 <span class="help-block">{dr_lang('单网页模板默认page.html')}</span>
                             </div>
                         </div>
@@ -222,29 +235,63 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容列表页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['list'])}" name="system[setting][template][list]"></label>
+                                <div class="input-group  input-large">
+                                    <input class="form-control dr_list_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['list'])}" name="system[setting][template][list]">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        {dr_rp($select_tpl, '{name}', 'dr_list_tpl')}
+                                    </div>
+                                </div>
                                 <span class="help-block">{dr_lang('模块栏目列表默认list.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容栏目封面模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['category'])}" name="system[setting][template][category]"></label>
+
+                                <div class="input-group  input-large">
+                                    <input class="form-control dr_category_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['category'])}" name="system[setting][template][category]">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        {dr_rp($select_tpl, '{name}', 'dr_category_tpl')}
+                                    </div>
+                                </div>
                                 <span class="help-block">{dr_lang('默认category.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容搜索页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{php echo $data['setting']['template']['search'] ? htmlspecialchars($data['setting']['template']['search']) : 'search.html'}" name="system[setting][template][search]"></label>
-                                <span class="help-block">{dr_lang('默认search.html')}</span>
+                                <div class="input-group  input-large">
+                                    <input class="form-control dr_search_tpl" type="text" value="{php echo $data['setting']['template']['search'] ? htmlspecialchars($data['setting']['template']['search']) : 'search.html'}" name="system[setting][template][search]">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        {dr_rp($select_tpl, '{name}', 'dr_search_tpl')}
+                                    </div>
+                                </div>
+                                    <span class="help-block">{dr_lang('默认search.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('内容详细页模板')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" value="{htmlspecialchars($data['setting']['template']['show'])}" name="system[setting][template][show]"></label>
-                                <span class="help-block">{dr_lang('默认show.html')}</span>
+
+                                <div class="input-group  input-large">
+                                    <input class="form-control dr_show_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['show'])}" name="system[setting][template][show]">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        {dr_rp($select_tpl, '{name}', 'dr_show_tpl')}
+                                    </div>
+                                </div>
+                                    <span class="help-block">{dr_lang('默认show.html')}</span>
                             </div>
                         </div>
                         {if $id}
@@ -273,9 +320,9 @@ function dr_tid(i) {
 
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_url(APP_DIR.'/category/add')}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button>
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{dr_url(APP_DIR.'/category/index')}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url(APP_DIR.'/category/add')}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url(APP_DIR.'/category/index')}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
         </div>
     </div>
 </form>

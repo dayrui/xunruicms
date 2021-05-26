@@ -280,6 +280,7 @@ class Category extends \Phpcmf\Table {
             'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], $pid, 'name=\'data[pid]\'', dr_lang('顶级栏目')),
             'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
+            'select_tpl' => $this->_select_tpl(),
             'is_edit_mid' => $pid && $value['mid'] ? 1 : 0,
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
         ]);
@@ -304,10 +305,52 @@ class Category extends \Phpcmf\Table {
             'select' => \Phpcmf\Service::L('tree')->select_category($this->module['category'], $data['pid'], 'name=\'data[pid]\'', dr_lang('顶级栏目')),
             'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
+            'select_tpl' => $this->_select_tpl($data['mid']),
             'is_edit_mid' => 1,
             'module_share' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
         ]);
         \Phpcmf\Service::V()->display($tpl);
+    }
+
+    // 模板选择
+    protected function _select_tpl($mid) {
+
+        $path = dr_tpl_path();
+        $rpath = dirname(dirname($path));
+
+        $ini = dirname($path).'/config.ini';
+        if (is_file($ini)) {
+            $data = json_decode(file_get_contents($ini), true);
+        } else {
+            $data = [];
+        }
+
+        $html = '<ul class="dropdown-menu dr_select_tpl">';
+        $files = dr_file_map($path);
+        if ($files) {
+            foreach ($files as $file) {
+                $key = md5(trim(str_replace(['/', '\\'], '*', str_replace($rpath, '', $path.$file)), '*'));
+                $name = isset($data[$key]) && $data[$key] ? $data[$key].'（'.$file.'）' : $file;
+                $html.= '<li><a href="javascript:dr_select_tpl(\''.$file.'\', \'{name}\');"> '.$name.' </a></li>';
+            }
+        }
+
+        if ($mid) {
+            $path.= $mid.'/';
+            $files = dr_file_map($path);
+            if ($files) {
+                $html.= '<li class="divider"> </li>';
+                foreach ($files as $file) {
+                    $key = md5(trim(str_replace(['/', '\\'], '*', str_replace($rpath, '', $path.$file)), '*'));
+                    $name = isset($data[$key]) && $data[$key] ? $data[$key].'（'.$file.'）' : $file;
+                    $html.= '<li><a href="javascript:dr_select_tpl(\''.$file.'\', \'{name}\');"> '.$name.' </a></li>';
+                }
+            }
+        }
+
+        $html.= '</ul>';
+
+        return $html;
     }
 
     // 后台批量添加
