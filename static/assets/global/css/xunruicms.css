@@ -34748,7 +34748,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     position: fixed;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 100;
     bottom: 0
 }
 
