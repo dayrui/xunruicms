@@ -36,13 +36,41 @@ class Pays extends \Phpcmf\Library\A_Field  {
         foreach ($field as $t) {
             $t['fieldtype'] == 'Paystext' && $myfield[$t['fieldname']] = $t['name'];
         }
-        $html = '';
+        $param_html = '';
         foreach ($myfield as $id => $t) {
-            $html.= '<p style="margin-bottom:10px">';
-            $html.= '<input type="checkbox" name="data[setting][option][field][]" '.(dr_in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+            $param_html.= '<p style="margin-bottom:10px">';
+            $param_html.= '<input type="checkbox" name="data[setting][option][field][]" '.(dr_in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 		';
-            $html.= '</p>';
+            $param_html.= '</p>';
         }
+
+        $tpl_group = $this->_get_tpl_group('data[setting][option][sku]');
+        $tpl_value = $this->_get_tpl_value('data[setting][option][sku]');
+        $value = $option;
+
+        // 显示字段
+
+        $result = '';
+        if (isset($value['sku']['group']) && $value['sku']['group']) {
+            foreach ($value['sku']['group'] as $id => $name) {
+                $html = '';
+                if (isset($value['sku']['name'][$id]) && $value['sku']['name'][$id]) {
+                    foreach ($value['sku']['name'][$id] as $iid => $vname) {
+                        $html.= str_replace(
+                            ['{id}', '{name}', '{iid}'],
+                            [$id, $vname, $iid],
+                            $tpl_value
+                        );
+                    }
+                }
+                $result.= str_replace(
+                    ['{id}', '{name}', '{value}'],
+                    [$id, $name, $html],
+                    $tpl_group
+                );
+            }
+        }
+
 
 	    $opt = '
 	    <div class="form-group">
@@ -52,6 +80,57 @@ class Pays extends \Phpcmf\Library\A_Field  {
 				<span class="help-block">'.dr_lang('模板位于./config/pay/模板文件名').'</span>
 			</div>
 		</div>
+		<div class="form-group">
+            <label class="col-md-2 control-label">'.dr_lang('单一定价模式').'</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][close_one]" '.(!$option['close_one'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                 &nbsp; &nbsp;
+                    <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][close_one]" '.($option['close_one'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                   
+                </div>
+                <span class="help-block">'.dr_lang('开启后可以选择单一定价模式和组合定价模式两种方式').'</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">'.dr_lang('固定规格').'</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input onclick="$(\'.gdggb\').show()" type="radio" value="1" name="data[setting][option][is_sku]" '.($option['is_sku'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                    &nbsp; &nbsp;
+                    <label class="mt-radio mt-radio-outline"><input onclick="$(\'.gdggb\').hide()" type="radio" value="0" name="data[setting][option][is_sku]" '.(!$option['is_sku'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                   
+                </div>
+                <span class="help-block">'.dr_lang('固定规格会调用指定的规格表，用户不能修改和添加属性').'</span>
+            </div>
+        </div>
+		<div class="form-group gdggb" style="display: '.($option['is_sku'] ? 'blank' : 'none').'" >
+            <label class="col-md-2 control-label">'.dr_lang('指定规格表').'</label>
+            <div class="col-md-9">
+            <div id="dr_field_pays">
+                <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
+                <div class="portlet light bordered">
+                    <div id="dr_sku_result">
+                        '.$result.'
+                    </div>
+                </div>
+                <script type="text/javascript">
+                var arrayValue = new Array();
+                var tpl_group = "'.$this->_js_var($tpl_group).'";
+                var tpl_value = "'.$this->_js_var($tpl_value).'";
+                var field_name = "_sku";
+                var sku_field_name = "";
+                var sku_field_id = "";
+                </script>
+                <script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/sku.js"></script>
+                <script type="text/javascript">
+                $(function(){
+                    dr_sku_init();
+                });
+                </script>
+            </div>
+            </div>
+        </div>
 	    <div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('余额付款').'</label>
 			<div class="col-md-9">
@@ -61,7 +140,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
 	    <div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('显示参数').'</label>
 			<div class="col-md-9">
-			         '.$html.'
+			         '.$param_html.'
 			</div>
 		</div>
 	    ';
@@ -153,11 +232,22 @@ class Pays extends \Phpcmf\Library\A_Field  {
      */
     public function insert_value($field) {
 
-        if ((int)$_POST['is_field_pay']) {
+        if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
+            $is_field_pay = 1;
+        } else {
+            $is_field_pay = (int)$_POST['is_field_pay'];
+        }
+
+        if ($is_field_pay) {
             // 组合
             $price = 0;
             $quantity = 0;
-            $sku = $_POST['data'][$field['fieldname'].'_sku'];
+            if (isset($field['setting']['option']['is_sku']) && $field['setting']['option']['is_sku']) {
+                $sku = $field['setting']['option']['sku'];
+                $sku['value'] = $_POST['data'][$field['fieldname'].'_sku']['value'];
+            } else {
+                $sku = $_POST['data'][$field['fieldname'].'_sku'];
+            }
             if ($sku['value']) {
                 $price_array = [];
                 foreach ($sku['value'] as $v) {
@@ -202,6 +292,39 @@ class Pays extends \Phpcmf\Library\A_Field  {
         return (float)$value;
     }
 
+    protected function _get_tpl_value($name) {
+        return '
+            <div class="fc-sku-group-value col-md-4" id="dr_sku_value_{id}_{iid}" did="{iid}">
+		        <div class="input-group input-group-sm">
+                    <input type="text" class="fc-sku-value-name-input form-control" onblur="dr_sku_init()" name="'.$name.'[name][{id}][{iid}]" fname="{id}_{iid}" value="{name}">
+                    <span class="input-group-btn">
+                        <button class="btn red" onclick="javascript:dr_sku_del_value(\'{id}\', \'{iid}\');" type="button"><i class="fa fa-trash"></i></button>
+                    </span>
+                </div>
+            </div>
+            ';
+    }
+    protected function _get_tpl_group($name) {
+
+        return '
+            <div class="portlet-body fc-sku-group" id="dr_sku_group_{id}" did="{id}">
+                <input type="hidden" id="dr_sku_group_text_{id}" name="'.$name.'[group][{id}]" value="{name}">
+		        <div class="row fc-sku-group-name">
+                    <div class="col-md-6 fc-sku-group-name-input">{name}</div>
+                    <div class="text-right col-md-6">
+                        <button onclick="javascript:dr_sku_add_value(\'{id}\');" type="button" class="btn green btn-sm"> '.dr_lang('添加值').'</button>
+                        <button onclick="javascript:dr_sku_edit_group(\'{id}\');" type="button" class="edit btn blue btn-sm"> '.dr_lang('修改').'</button>
+                        <button onclick="javascript:dr_sku_save_group(\'{id}\');" type="button" class="save btn blue btn-sm" style="display:none"> '.dr_lang('保存').'</button>
+                        <button onclick="javascript:dr_sku_del_group(\'{id}\');" type="button" class="btn red btn-sm"> '.dr_lang('删除').'</button>
+                    </div>
+                </div>
+		        <div class="row fc-sku-group-body" id="dr_sku_value_{id}">
+		        {value}
+                </div>
+            </div>
+            ';
+    }
+
     /**
      * 字段表单输入
      *
@@ -221,34 +344,9 @@ class Pays extends \Phpcmf\Library\A_Field  {
             // 字段提示信息
             $tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
-            $tpl_group = '
-            <div class="portlet-body fc-sku-group" id="dr_sku_group_{id}" did="{id}">
-                <input type="hidden" id="dr_sku_group_text_{id}" name="data['.$field['fieldname'].'_sku][group][{id}]" value="{name}">
-		        <div class="row fc-sku-group-name">
-                    <div class="col-md-6 fc-sku-group-name-input">{name}</div>
-                    <div class="text-right col-md-6">
-                        <button onclick="javascript:dr_sku_add_value(\'{id}\');" type="button" class="btn green btn-sm"> '.dr_lang('添加值').'</button>
-                        <button onclick="javascript:dr_sku_edit_group(\'{id}\');" type="button" class="edit btn blue btn-sm"> '.dr_lang('修改').'</button>
-                        <button onclick="javascript:dr_sku_save_group(\'{id}\');" type="button" class="save btn blue btn-sm" style="display:none"> '.dr_lang('保存').'</button>
-                        <button onclick="javascript:dr_sku_del_group(\'{id}\');" type="button" class="btn red btn-sm"> '.dr_lang('删除').'</button>
-                    </div>
-                </div>
-		        <div class="row fc-sku-group-body" id="dr_sku_value_{id}">
-		        {value}
-                </div>
-            </div>
-            ';
+            $tpl_group = $this->_get_tpl_group('data['.$field['fieldname'].'_sku]');
 
-            $tpl_value = '
-            <div class="fc-sku-group-value col-md-4" id="dr_sku_value_{id}_{iid}" did="{iid}">
-		        <div class="input-group input-group-sm">
-                    <input type="text" class="fc-sku-value-name-input form-control" onblur="dr_sku_init()" name="data['.$field['fieldname'].'_sku][name][{id}][{iid}]" fname="{id}_{iid}" value="{name}">
-                    <span class="input-group-btn">
-                        <button class="btn red" onclick="javascript:dr_sku_del_value(\'{id}\', \'{iid}\');" type="button"><i class="fa fa-trash"></i></button>
-                    </span>
-                </div>
-            </div>
-            ';
+            $tpl_value = $this->_get_tpl_value('data['.$field['fieldname'].'_sku]');
 
             // 显示字段
             $pay_html = '';
@@ -264,6 +362,11 @@ class Pays extends \Phpcmf\Library\A_Field  {
                         </div>';
                 $sku_field_name.= '<th>'.$name.'</th>';
                 $sku_field_id[] = $ff;
+            }
+
+            if (isset($field['setting']['option']['is_sku']) && $field['setting']['option']['is_sku']) {
+                $value['sku']['name'] = $field['setting']['option']['sku']['name'];
+                $value['sku']['group'] = $field['setting']['option']['sku']['group'];
             }
 
             $result = '';
@@ -296,11 +399,15 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 }
             }
 
-            // 是否单一模式
-            $is_field_pay = $result && $ovalue ? 1 : 0;
+            $str = '';
 
-            $str = '
-            <div class="mt-radio-inline">
+            // 是否单一模式
+            if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
+                $is_field_pay = 1;
+                $sku_html = '<div id="dr_sku_result" style="display: none">'.$result.'</div>';
+            } else {
+                $is_field_pay = $result && $ovalue ? 1 : 0;
+                $str.= '<div class="mt-radio-inline">
                 <label class="mt-radio">
                     <input type="radio" onclick="$(\'#dr_field_pay\').show();$(\'#dr_field_pays\').hide();" name="is_field_pay" value="0" '.(!$is_field_pay ? 'checked' : '').'> '.dr_lang('单一价格').'
                     <span></span>
@@ -309,7 +416,21 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     <input type="radio" onclick="$(\'#dr_field_pays\').show();$(\'#dr_field_pay\').hide();" name="is_field_pay" value="1" '.($is_field_pay ? 'checked' : '').'> '.dr_lang('组合价格').'
                     <span></span>
                 </label>
-            </div>
+            </div>';
+                $sku_html = '<p>
+                    <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
+                    <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
+                </p>
+                <div class="portlet light bordered">
+                    <div id="dr_sku_result">
+                        '.$result.'
+                    </div>
+                </div>';
+            }
+
+
+            $str.= '
+           
             <div id="dr_field_pay" style="display:'.(!$is_field_pay ? 'block' : 'none').';">
                 <div class="portlet light bordered">
                    <div class="form-body" style="padding:30px 0 10px 0">
@@ -318,15 +439,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 </div>
             </div>
             <div id="dr_field_pays" style="display:'.($is_field_pay ? 'block' : 'none').';">
-                <p>
-                    <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
-                    <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
-                </p>
-                <div class="portlet light bordered">
-                    <div id="dr_sku_result">
-                        '.$result.'
-                    </div>
-                </div>
+                '.$sku_html.'
                 <div id="dr_sku_table">
                 </div>
                 <script type="text/javascript">
