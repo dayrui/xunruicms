@@ -38,7 +38,7 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
         if ((is_file(SYSTEMPATH.'ThirdParty/Kint/kint.php')
                 && strpos(file_get_contents(SYSTEMPATH.'ThirdParty/Kint/kint.php'), 'eval(gzuncompress(') !== false)
             || !is_file(SYSTEMPATH.'ThirdParty/Kint/Kint.php')) {
-            exit('核心框架升级兼容调整<br>1、请删除目录：'.SYSTEMPATH.'ThirdParty/Kint/<br>2、再到官网下载升级包，将此目录（'.SYSTEMPATH.'ThirdParty/Kint/）重新上传覆盖一次');
+            exit('历史版本冗余文件未清理干净<br>第一步、请删除目录：'.SYSTEMPATH.'ThirdParty/<br>第二步、再到官网下载升级包，找的目录（dayrui/System/ThirdParty/），然后重新上传覆盖到第一步的路径中。');
         }
 
         parent::initialize();
