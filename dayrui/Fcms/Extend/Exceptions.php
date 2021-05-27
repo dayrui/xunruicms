@@ -48,7 +48,11 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         if (IS_AJAX || IS_API) {
 			$message = $exception->getMessage();
 			// 前端访问屏蔽敏感信息
-            !IS_ADMIN && $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+            if (CI_DEBUG) {
+                $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
+            } else {
+                $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+            }
             dr_exit_msg(0, $message);
         }
 
