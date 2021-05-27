@@ -1623,11 +1623,8 @@ class Image
             return $attach['url']; // 原样输出
         }
 
-        // 处理图片大小是否溢出内存（图片分辨率，图片对象的width和height ）X（图片的通道数，一般是3）X 1.7
         $this->image_info = getimagesize($file);
-        $max = ($this->image_info[0] * $this->image_info[1] * 3 * 1.7)/1024/1024;
-        $limit = intval(ini_get("memory_limit")) / 1.7; // 多预留一些内存
-        if ($limit && $limit - $max < 0) {
+        if ($this->memory_limit($this->image_info)) {
             CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
             return $attach['url']; // 原样输出
         }
@@ -1671,6 +1668,13 @@ class Image
         }
 
         return $cache_url.$cache_file;
+    }
+
+    // 处理图片大小是否溢出内存（图片分辨率，图片对象的width和height ）X（图片的通道数，一般是3）X 1.7
+    public function memory_limit($img) {
+        $max = ($img[0] * $img[1] * 3 * 1.7)/1024/1024;
+        $limit = intval(ini_get("memory_limit")) / 1.7; // 多预留一些内存
+        return $limit && $limit - $max < 0;
     }
 
     public function base64($file) {

@@ -75,22 +75,32 @@ class Storage {
         $info = [];
         // 图片处理
         if (dr_is_image($fullname)) {
-            // 图片压缩处理
-            if ($attachment['image_reduce']) {
-                \Phpcmf\Service::L('image')->reduce($fullname, $attachment['image_reduce']);
-            }
-            // 强制水印
-            if ($watermark && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark'))) {
-                $config['source_image'] = $fullname;
-                $config['dynamic_output'] = false;
-                \Phpcmf\Service::L('image')->watermark($config);
-            }
             // 获取图片尺寸
             $img = getimagesize($fullname);
             if (!$img) {
                 // 删除文件
                 unlink($fullname);
                 return dr_return_data(0, dr_lang('此图片不是一张可用的图片'));
+            }
+            // 图片压缩处理
+            if ($attachment['image_reduce']) {
+                // 处理图片大小是否溢出内存
+                if (\Phpcmf\Service::L('image')->memory_limit($img)) {
+                    CI_DEBUG && log_message('error', '图片['.$fullname.']分辨率太大导致服务器内存溢出，无法进行压缩处理，已按原图存储');
+                } else {
+                    \Phpcmf\Service::L('image')->reduce($fullname, $attachment['image_reduce']);
+                }
+            }
+            // 强制水印
+            if ($watermark && ($config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark'))) {
+                // 处理图片大小是否溢出内存
+                if (\Phpcmf\Service::L('image')->memory_limit($img)) {
+                    CI_DEBUG && log_message('error', '图片['.$fullname.']分辨率太大导致服务器内存溢出，无法进行压缩处理，已按原图存储');
+                } else {
+                    $config['source_image'] = $fullname;
+                    $config['dynamic_output'] = false;
+                    \Phpcmf\Service::L('image')->watermark($config);
+                }
             }
             $info = [
                 'width' => $img[0],
