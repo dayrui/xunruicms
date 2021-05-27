@@ -47,7 +47,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
 		 // ajax 返回
         if (IS_AJAX || IS_API) {
 			$message = $exception->getMessage();
-			// 前端访问屏蔽敏感信息
+			// 调试模式屏蔽敏感信息
             if (CI_DEBUG) {
                 $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
             } else {
@@ -87,8 +87,10 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         $title = get_class($exception);
         $message = $exception->getMessage();
 
-        // 前端访问屏蔽敏感信息
-        if (!IS_ADMIN) {
+        // 调试模式屏蔽敏感信息
+        if (CI_DEBUG) {
+            $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
+        } else {
             $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
         }
 
