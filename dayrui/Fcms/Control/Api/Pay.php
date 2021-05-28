@@ -119,6 +119,10 @@ class Pay extends \Phpcmf\Common
     public function call() {
 
         $id = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!$id) {
+            $this->_msg(0, dr_lang('支付ID号不存在'));
+        }
+
         $data = \Phpcmf\Service::M()->table('member_paylog')->get($id);
         if (!$data) {
             $this->_msg(0, dr_lang('支付记录[%s]不存在', $id));

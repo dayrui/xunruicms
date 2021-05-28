@@ -469,7 +469,7 @@ class Pay extends \Phpcmf\Model
     }
 
     // 通过支付流水号获取id号
-    protected function get_pay_id($mark) {
+    public function get_pay_id($mark) {
         if (strpos($mark, 'fc-') === 0) {
             return intval(substr($mark, 3));
         }
@@ -477,7 +477,7 @@ class Pay extends \Phpcmf\Model
     }
 
     // 生成支付流水id号
-    protected function get_pay_sn($data) {
+    public function get_pay_sn($data) {
         return trim(\Phpcmf\Service::C()->member_cache['pay']['prefix']).date('YmdHis', SYS_TIME).'00'.$data['id'];
     }
 
@@ -641,7 +641,7 @@ class Pay extends \Phpcmf\Model
                     break;
             }
 
-            return dr_return_data(1, dr_lang('支付成功'));
+            return dr_return_data($id, dr_lang('支付成功'));
         }
     }
 
