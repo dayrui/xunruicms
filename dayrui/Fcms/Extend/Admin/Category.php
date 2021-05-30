@@ -313,7 +313,7 @@ class Category extends \Phpcmf\Table {
     }
 
     // 模板选择
-    protected function _select_tpl($mid) {
+    protected function _select_tpl($mid = '') {
 
         $path = dr_tpl_path();
         $rpath = dirname(dirname($path));
