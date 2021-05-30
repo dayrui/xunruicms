@@ -237,10 +237,7 @@ class Module extends \Phpcmf\Table {
 
     // 后台批量保存排序值
     protected function _Admin_Order() {
-        $this->_Display_Order(
-            intval(\Phpcmf\Service::L('input')->get('id')),
-            intval(\Phpcmf\Service::L('input')->get('value'))
-        );
+        $this->_json(0, '此功能已经失效，请在模块设置中配置后台显示本字段');
     }
 
     // 批量移动栏目
