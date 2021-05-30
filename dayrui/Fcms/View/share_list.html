@@ -128,7 +128,7 @@
                         </label>
                     </th>
                     {if $ci->_is_admin_auth('edit')}
-                    <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('排序')}</th>
+                    <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('序号')}</th>
                     {/if}
                     {loop $list_field $i $t}
                     <th {if $t.width} width="{$t.width}"{/if} {if $t.center} style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
