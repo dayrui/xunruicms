@@ -492,9 +492,9 @@ class Router
                 log_message('error', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
             }
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
-            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod));
+            return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)));
         } else {
-            return $this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&');
+            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&'));
         }
     }
 
@@ -527,7 +527,7 @@ class Router
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
 
-        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=comment&id=' . $id;
+        return dr_url_prefix($this->url_prefix('php', $module, [], SITE_FID) . 'c=comment&id=' . $id);
     }
 
     // 打赏

@@ -176,7 +176,7 @@
 
     function dr_ajax_load_more(){
         Mpage++;
-        $.get('/index.php?s=api&c=api&m=template&name=index_data.html&format=json&page='+Mpage+'&'+Math.random(),function(res){
+        $.get('{SITE_URL}index.php?s=api&c=api&m=template&name=index_data.html&format=json&page='+Mpage+'&'+Math.random(),function(res){
             $('.footer-cont').hide();
             if(res.code==1){
                 if (res.msg.indexOf("</li>") != -1) {

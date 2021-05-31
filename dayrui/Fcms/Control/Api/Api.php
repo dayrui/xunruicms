@@ -261,8 +261,8 @@ class Api extends \Phpcmf\Common
         $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
 
         $data = [
-            'file' => $file,
             'app' => $app,
+            'file' => $file,
             'module' => $module,
         ];
 

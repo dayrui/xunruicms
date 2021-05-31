@@ -2064,9 +2064,10 @@ class View {
 
         !$url && $url = '此标签没有设置urlrule参数';
 
+        $url = dr_url_prefix($url);
 		$this->_page_urlrule = $url;
         $config['base_url'] = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
-        $config['first_url'] = $first_url;
+        $config['first_url'] = dr_url_prefix($first_url);
         $config['per_page'] = $pagesize;
         $config['page_name'] = $this->_page_value;
         $config['total_rows'] = $total;

@@ -78,7 +78,7 @@
                             {/if}
                         </div>
                         <div class="page-header-search">
-                            <form class="search-form" action="/index.php" method="get">
+                            <form class="search-form" action="{SITE_URL}index.php" method="get">
                                 <input type="hidden" name="s" value="api">
                                 <input type="hidden" name="c" value="api">
                                 <input type="hidden" name="m" value="search">
@@ -167,7 +167,7 @@
 								{cache name=module-content return=m}
                                 {if !$m.share}
                                 <li class="menu-dropdown classic-menu-dropdown {if MOD_DIR==$m.dirname}active{/if}">
-                                    <a href="{$m.url}">{$m.name}</a>
+                                    <a href="{dr_url_prefix($m.url)}">{$m.name}</a>
                                     <ul class="dropdown-menu pull-left">
                                         <!--第一层：调用独立模块下的顶级栏目-->
                                         {category module=$m.dirname pid=0 return=t2}

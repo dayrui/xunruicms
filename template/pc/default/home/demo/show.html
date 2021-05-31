@@ -79,26 +79,42 @@
                             </div>
                             <div class="row fc-show-total">
                                 <div class="col-md-12 text-center">
-                                    <a href="javascript:dr_module_favorite('{MOD_DIR}', '{$id}');" class="icon-btn">
+                                    <a href="javascript:dr_app_favorite('{$id}');" class="icon-btn">
                                         <i class="fa fa-star"></i>
                                         <div> 收藏 </div>
                                         <span class="badge badge-danger" id="module_favorite_{$id}"> {intval($favorites)} </span>
                                     </a>
-                                    <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
+                                    <a href="javascript:dr_app_digg('{$id}', 1);" class="icon-btn">
                                         <i class="fa fa-thumbs-o-up"></i>
                                         <div> 有帮助 </div>
                                         <span class="badge badge-danger" id="module_digg_{$id}_1"> {intval($support)} </span>
                                     </a>
-                                    <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 0);" class="icon-btn">
+                                    <a href="javascript:dr_app_digg('{$id}', 0);" class="icon-btn">
                                         <i class="fa fa-thumbs-o-down"></i>
                                         <div> 没帮助 </div>
                                         <span class="badge badge-danger" id="module_digg_{$id}_0"> {intval($oppose)} </span>
                                     </a>
-                                    <a href="{Router::donation_url($id)}" class="icon-btn">
-                                        <i class="fa fa-rmb"></i>
-                                        <div> 打赏 </div>
-                                        <span class="badge badge-danger"> {floatval($donation)} </span>
-                                    </a>
+                                    <script>
+                                        // 模块收藏
+                                        function dr_app_favorite(id) {
+                                            $.get("{dr_url_prefix('index.php')}?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=favorite&id="+id, function(data){
+                                                dr_cmf_tips(data.code, data.msg);
+                                                if (data.code) {
+                                                    $('#module_favorite_'+id).html(data.data);
+                                                }
+                                            }, 'json');
+                                        }
+
+                                        // 模块支持反对
+                                        function dr_app_digg(id, value) {
+                                            $.get("{dr_url_prefix('index.php')}?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=digg&id="+id+'&value='+value, function(data){
+                                                dr_cmf_tips(data.code, data.msg);
+                                                if (data.code) {
+                                                    $('#module_digg_'+id+'_'+value).html(data.data);
+                                                }
+                                            }, 'json');
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>

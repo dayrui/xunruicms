@@ -831,7 +831,7 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
             if ($url_call_func && function_exists($url_call_func)) {
                 $murl = $url_call_func($cat[$id]);
             } else {
-                $murl = $cat[$id]['url'];
+                $murl = dr_url_prefix($cat[$id]['url']);
             }
             $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], [$murl, $cat[$id]['name']], $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
         }
@@ -869,12 +869,16 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
     }
 
     $name = [];
-    $array = @explode(',', $data['pids']);
+    $array = explode(',', $data['pids']);
     $array[] = $data['ii'];
 
     foreach ($array as $ii) {
         if ($ii) {
-            $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url), $link[$cids[$ii]]['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url)."\">{$link[$cids[$ii]]['name']}</a>") : $link[$cids[$ii]]['name'];
+            if ($url) {
+                $name[] = ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url), $link[$cids[$ii]]['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url)."\">{$link[$cids[$ii]]['name']}</a>");
+            } else {
+                $name[] = $link[$cids[$ii]]['name'];
+            }
         }
     }
 
@@ -954,7 +958,7 @@ function dr_page_catpos($id, $symbol = ' > ', $html = '') {
 
     foreach ($array as $i) {
         if ($i && $page[$i]) {
-            $murl = $page[$i]['url'];
+            $murl = dr_url_prefix($page[$i]['url']);
             $name[] = $html ? str_replace(['[url]', '[name]'], [$murl, $page[$i]['name']], $html) : "<a href=\"{$murl}\">{$page[$i]['name']}</a>";
         }
     }
@@ -2719,7 +2723,7 @@ function dr_form_comment($fid, $id, $url = '') {
  */
 function dr_ajax_template($id, $filename, $param_str = '') {
     $error = IS_DEV ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
-    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
+    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".(\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_MURL : SITE_URL)."index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
 
@@ -2737,7 +2741,7 @@ if (!function_exists('dr_show_hits')) {
         if (defined('MODULE_MYSHOW')) {
             return $html;
         }
-        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".ROOT_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
+        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".SITE_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
 
