@@ -50,7 +50,7 @@
                     <td><a class="drlabel drlabel-important" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td><a class="drlabel drlabel-important" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td>
-                        <a class="btn btn-xs green" href="{$t.list}" >{dr_lang('管理')}</a>
+                        {if strpos($t.list, 'javascript:') !== false}<a class="btn btn-xs green" href="{$t.list}" >{dr_lang('管理')}</a>{/if}
                         {if $ci->_is_admin_auth($dir.'/home/add')}<a class="btn btn-xs blue" href="{$t.post}" >{dr_lang('发布')}</a>{/if}
                     </td>
                 </tr>
