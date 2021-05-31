@@ -45,19 +45,6 @@
                                     </div>
                                 </div>
 
-                                <!--category_search_field是调用当前栏目下的附加字段是否具有搜索字段功能，这种用法只能用于模块列表与搜索页面-->
-                                {category_search_field module=MOD_DIR catid=$catid}
-                                <div class="form-group row">
-                                    <label class="col-md-2 control-label">{$t.name}</label>
-                                    <div class="col-md-9">
-                                        <label><a class="label {if !$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, NULL)}">不限</a></label>
-                                        {loop $t.data $v}
-                                            <label><a class="label {if $v.value==$params[$t.field]}label-success{else}label-default{/if}" href="{Router::search_url($params, $t.field, $v.value)}">{$v.name}</a></label>
-                                        {/loop}
-                                    </div>
-                                </div>
-                                {/category_search_field}
-
                                 <!--按关键字搜索-->
                                 <div class="form-group row">
                                     <label class="col-md-2 control-label" style="padding-top:5px">内容搜索</label>
