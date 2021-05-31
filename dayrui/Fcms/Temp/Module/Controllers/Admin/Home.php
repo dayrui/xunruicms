@@ -23,10 +23,6 @@ class Home extends \Phpcmf\Admin\Module
 		$this->_Admin_Show();
 	}
 
-	public function order_edit() {
-		$this->_Admin_Order();
-	}
-
 	public function move_edit() {
 		$this->_Admin_Move();
 	}

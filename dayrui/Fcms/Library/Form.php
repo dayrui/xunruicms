@@ -377,17 +377,21 @@ class Form
             return dr_return_data(0, dr_lang('账号不能为空'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['preg']
             && !preg_match(\Phpcmf\Service::C()->member_cache['register']['preg'], $value)) {
+            // 验证账号的组成格式
             return dr_return_data(0, dr_lang('账号格式不正确'), ['field' => 'username']);
         } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
+            // 引号判断
             return dr_return_data(0, dr_lang('账号名存在非法字符'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['userlen']) {
+            // 验证账号长度
             return dr_return_data(0, dr_lang('账号长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlen'], mb_strlen($value)), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
             && mb_strlen($value) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
+            // 验证账号长度
             return dr_return_data(0, dr_lang('账号长度不能大于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlenmax'], mb_strlen($value)), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['register']['notallow']) {
-            // 放在最后一次比较
+            // 后台不允许注册的词语，放在最后一次比较
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $a) {
                 if (dr_strlen($a) && strpos($value, $a) !== false) {
                     return dr_return_data(0, dr_lang('账号名不允许注册'), ['field' => 'username']);
