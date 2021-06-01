@@ -214,7 +214,7 @@ class Image extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-        $url = '/index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
+        $url = WEB_DIR.'index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板
         $i = 0;

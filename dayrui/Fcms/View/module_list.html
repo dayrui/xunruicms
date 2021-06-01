@@ -37,7 +37,7 @@
                         {/if}
                         {/if}
                     </td>
-                    <td><a {if !$t.share}href="/index.php?s={$t.dirname}" target="_blank"{/if}>{$t.name} / {$t.dirname}</a></td>
+                    <td><a {if !$t.share}href="{WEB_DIR}index.php?s={$t.dirname}" target="_blank"{/if}>{$t.name} / {$t.dirname}</a></td>
                     <td>
                         {if $t.install}
                         {if $ci->_is_admin_auth('edit')}

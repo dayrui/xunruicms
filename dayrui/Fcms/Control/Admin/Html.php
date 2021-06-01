@@ -45,7 +45,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'spage' => 1,
-            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&maxsize='.$maxsize,
+            'todo_url' => WEB_DIR.'index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&maxsize='.$maxsize,
             'count_url' => \Phpcmf\Service::L('Router')->url('html/category_count_index', ['app' => $app, 'ids' => $ids, 'maxsize' => $maxsize]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
@@ -68,7 +68,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'spage' => $page,
-            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&',
+            'todo_url' => WEB_DIR.'index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=category&ids='.$ids.'&',
             'count_url' => \Phpcmf\Service::L('Router')->url('html/category_point_count_index', ['app' => $app]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
@@ -135,7 +135,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'spage' => 1,
-            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
+            'todo_url' => WEB_DIR.'index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
             'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'), 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
@@ -157,7 +157,7 @@ class Html extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'spage' => $page,
-            'todo_url' => '/index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
+            'todo_url' => WEB_DIR.'index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
             'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_point_count_index', ['app' => $app]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;

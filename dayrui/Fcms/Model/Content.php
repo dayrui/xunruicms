@@ -480,7 +480,7 @@ class Content extends \Phpcmf\Model {
             // 生成权限文件
             if (\Phpcmf\Service::C()->module['category'][$data['catid']]['setting']['html']) {
                 dr_html_auth(1);
-                $rt['data'] = '/index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
+                $rt['data'] = WEB_DIR.'index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
 
             }
         } else {

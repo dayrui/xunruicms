@@ -1283,8 +1283,8 @@ class Module extends \Phpcmf\Table {
                 if (!dr_html_auth(1)) {
                     $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
                 }
-                $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
-                $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
+                $html = WEB_DIR.'index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
+                $list = WEB_DIR.'index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
             $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmllist' => $list]);
         } else {

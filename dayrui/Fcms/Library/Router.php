@@ -59,7 +59,7 @@ class Router
     // 跳转到登录页面
     public function go_member_login($url) {
 
-        $url = \Phpcmf\Service::L('Router')->member_url('login/index', ['back' => urlencode($url)]);
+        $url = $this->member_url('login/index', ['back' => urlencode($url)]);
         dr_redirect($url);
         exit;
     }
@@ -167,7 +167,7 @@ class Router
             // 非后台统一index.php入口
             if ($self == '/index.php') {
                 // 表示相对路径
-                $self = '/index.php';
+                $self = WEB_DIR.'index.php';
             } else {
                 if (defined('IS_CLIENT')) {
                     // 终端前缀
@@ -259,7 +259,7 @@ class Router
         $query && $uri = array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_MURL : SITE_URL)) . 'index.php?' . http_build_query($uri);
+        return IS_CLIENT ? CLIENT_URL : (WEB_DIR.'index.php?' . http_build_query($uri));
     }
 
     /**
@@ -415,7 +415,7 @@ class Router
             return $this->search_url([], 'keyword', $name, $mid);
         }
 
-        return '/';
+        return WEB_DIR;
     }
 
     // 模块URL
@@ -430,10 +430,10 @@ class Router
         // 自定义规则的情况下
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value', 'module');
         if ($rule) {
-            return '/' . str_replace('{modname}', $mod['dirname'], $rule);
+            return WEB_DIR . str_replace('{modname}', $mod['dirname'], $rule);
         }
 
-        return '/index.php?s=' . $mod['dirname'];
+        return WEB_DIR.'index.php?s=' . $mod['dirname'];
     }
 
     /**

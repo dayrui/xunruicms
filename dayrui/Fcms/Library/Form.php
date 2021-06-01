@@ -46,7 +46,7 @@ class Form
         function auto_form_data_ajax() {
             $.ajax({
                 type: "POST",
-                url: "/index.php?s=api&c=api&m=save_form_data&name='.$name.'",
+                url: "'.WEB_DIR.'index.php?s=api&c=api&m=save_form_data&name='.$name.'",
                 dataType: "json",
                 data: $("#myform").serialize(),
                 success: function(data){ }
@@ -59,7 +59,7 @@ class Form
             });
             $.ajax({
                 type: "GET",
-                url: "/index.php?s=api&c=api&m=delete_form_data&name='.$name.'",
+                url: "'.WEB_DIR.'index.php?s=api&c=api&m=delete_form_data&name='.$name.'",
                 dataType: "json",
                 success: function(json){ 
                     layer.close(index);

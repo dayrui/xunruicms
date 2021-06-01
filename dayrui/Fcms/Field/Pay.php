@@ -132,9 +132,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
      * @return  string
      */
     public function show($field, $value = null) {
-
-        $url = 'dr_iframe_show(\'cart\', \'/index.php?s=cart&c=show&m=index&fid='.$field['id'].'&id='.$this->id.'\')';
-        return $this->input_format($field['fieldname'], $field['name'], '<div class="form-control-static"><a href="javascript:'.$url.'">¥'.$value.'元</a></div>');
+        return $this->input_format($field['fieldname'], $field['name'], '<div class="form-control-static">¥'.$value.'元</div>');
     }
 	
 }

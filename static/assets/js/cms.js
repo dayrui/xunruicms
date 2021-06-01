@@ -51,6 +51,14 @@ $(function(){
     }
 });
 
+// 主目录相对路径
+function dr_get_web_dir() {
+    if (typeof web_dir != "undefined" && web_dir) {
+        return web_dir;
+    }
+    return '/';
+}
+
 // 是否有隐藏区域
 function dr_isEllipsis(dom) {
 	var checkDom = dom.cloneNode(), parent, flag;
@@ -390,7 +398,7 @@ function dr_insert_emoji(name) {
         shadeClose: true,
         shade: 0,
         area: [width, height],
-        content: '/index.php?s=api&c=emoji&name='+name
+        content: dr_get_web_dir()+'index.php?s=api&c=emoji&name='+name
     });
 }
 
@@ -729,7 +737,7 @@ function dr_post_submit(url, form, time, go) {
 }
 // 退出登录
 function dr_loginout(msg) {
-    $.ajax({type: "GET",dataType:"json", url: "/index.php?s=api&c=api&m=loginout",
+    $.ajax({type: "GET",dataType:"json", url: dr_get_web_dir()+'index.php?s=api&c=api&m=loginout',
         success: function(json) {
             var oss_url = json.data.sso;
             // 发送同步登录信息
@@ -822,7 +830,7 @@ function dr_pc_or_mobile(url) {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: '/index.php?s=api&c=api&m=client&at=select&url='+encodeURIComponent(url.replace(/http:\/\//, '')),
+        url: dr_get_web_dir()+'index.php?s=api&c=api&m=client&at=select&url='+encodeURIComponent(url.replace(/http:\/\//, '')),
         success: function(json) {
             layer.close(loading);
             if (json.code) {
@@ -901,7 +909,7 @@ function dr_diy_func(name) {
 
 // 模块收藏
 function dr_module_favorite(dir, id) {
-    $.get("/index.php?is_ajax=1&s=api&app="+dir+"&c=module&m=favorite&id="+id, function(data){
+    $.get(dr_get_web_dir()+"index.php?is_ajax=1&s=api&app="+dir+"&c=module&m=favorite&id="+id, function(data){
         dr_cmf_tips(data.code, data.msg);
         if (data.code) {
             $('#module_favorite_'+id).html(data.data);
@@ -911,7 +919,7 @@ function dr_module_favorite(dir, id) {
 
 // 模块支持反对
 function dr_module_digg(dir, id, value) {
-    $.get("/index.php?is_ajax=1&s=api&app="+dir+"&c=module&m=digg&id="+id+'&value='+value, function(data){
+    $.get(dr_get_web_dir()+"index.php?is_ajax=1&s=api&app="+dir+"&c=module&m=digg&id="+id+'&value='+value, function(data){
         dr_cmf_tips(data.code, data.msg);
         if (data.code) {
             $('#module_digg_'+id+'_'+value).html(data.data);
@@ -931,7 +939,7 @@ function dr_show_protocol() {
         title: lang['protocol'],
         shadeClose: true,
         area: ['70%', '70%'],
-        content: '/index.php?s=member&c=api&m=protocol'
+        content: dr_get_web_dir()+'index.php?s=member&c=api&m=protocol'
     });
 }
 
@@ -956,7 +964,7 @@ function check_title(t) {
     var id = $("#dr_id").val();
     var val = $("#dr_title").val();
     var mod = $("#dr_module").val();
-    $.get("/index.php?s=api&c=api&m=checktitle&title=" + val + "&module=" + mod + "&id=" + id+'&is_ajax=1',
+    $.get(dr_get_web_dir()+"index.php?s=api&c=api&m=checktitle&title=" + val + "&module=" + mod + "&id=" + id+'&is_ajax=1',
     function(data) {
         if (data) {
             dr_cmf_tips(0, data);
@@ -969,7 +977,7 @@ function get_keywords(to) {
     if ($("#dr_"+to).val()) {
         return false
     }
-    $.get("/index.php?s=api&c=api&m=getkeywords&title="+title+"&module="+module+'&is_ajax=1',
+    $.get(dr_get_web_dir()+"index.php?s=api&c=api&m=getkeywords&title="+title+"&module="+module+'&is_ajax=1',
         function(data) {
             $("#dr_"+to).val(data);
             $("#dr_"+to).tagsinput('add', data);

@@ -46,7 +46,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">{dr_lang('网站首页')}</label>
                         <div class="col-md-9">
-                            <label><button type="button" onclick="dr_admin_menu_ajax('/index.php?c=home&m=html', 1)" class="btn blue"> <i class="fa fa-file-o"></i> {dr_lang('生成首页')} </button></label>
+                            <label><button type="button" onclick="dr_admin_menu_ajax('{WEB_DIR}index.php?c=home&m=html', 1)" class="btn blue"> <i class="fa fa-file-o"></i> {dr_lang('生成首页')} </button></label>
                         </div>
                     </div>
 
@@ -82,7 +82,7 @@
                 {if !$mod.share}
                 <div class="form-group">
                     <label class="col-md-2 control-label">{dr_lang('模块首页')}</label>
-                    <div class="col-md-9"><label><button type="button" onclick="dr_admin_menu_ajax('/index.php?s={$mod.dirname}&c=html&m=index', 1)" class="btn blue"> <i class="fa fa-home"></i> {dr_lang('生成模块首页')} </button></label>
+                    <div class="col-md-9"><label><button type="button" onclick="dr_admin_menu_ajax('{WEB_DIR}index.php?s={$mod.dirname}&c=html&m=index', 1)" class="btn blue"> <i class="fa fa-home"></i> {dr_lang('生成模块首页')} </button></label>
                     </div>
                 </div>
 

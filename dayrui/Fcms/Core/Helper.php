@@ -1171,7 +1171,7 @@ function dr_down_file($id) {
 
     \Phpcmf\Service::L('cache')->set_auth_data(md5($id), $id);
 
-    return SITE_URL."index.php?s=api&c=file&m=down&id=".md5($id);
+    return WEB_DIR."index.php?s=api&c=file&m=down&id=".md5($id);
 }
 
 /**
@@ -2489,7 +2489,7 @@ function dr_now_url() {
  * 验证码图片获取
  */
 function dr_code($width, $height, $url = '') {
-    $url = '/index.php?s=api&c=api&m=captcha&width='.$width.'&height='.$height;
+    $url = WEB_DIR.'index.php?s=api&c=api&m=captcha&width='.$width.'&height='.$height;
     return '<img align="absmiddle" style="cursor:pointer;" onclick="this.src=\''.$url.'&\'+Math.random();" src="'.$url.'" />';
 }
 
@@ -2689,7 +2689,7 @@ function dr_module_comment($dir, $id, $url = '') {
     if (defined('MODULE_MYSHOW')) {
         return '';
     }
-    $url = "/index.php?s=".$dir."&c=comment&m=index&id={$id}&".$url;
+    $url = WEB_DIR."index.php?s=".$dir."&c=comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_module_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });$.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_module_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_module_comment_{$id}(0, 1); </script>";
 }
@@ -2701,7 +2701,7 @@ function dr_module_comment($dir, $id, $url = '') {
  * @return  string
  */
 function dr_mform_comment($dir, $fid, $id, $url = '') {
-    $url = "/index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}&".$url;
+    $url = WEB_DIR."index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_mform_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });  $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll();  var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_mform_{$fid}_comment_{$id}(0, 1); </script>";
 }
@@ -2713,7 +2713,7 @@ function dr_mform_comment($dir, $fid, $id, $url = '') {
  * @return  string
  */
 function dr_form_comment($fid, $id, $url = '') {
-    $url = "/index.php?s=form&c=".$fid."_comment&m=index&id={$id}&".$url;
+    $url = WEB_DIR."index.php?s=form&c=".$fid."_comment&m=index&id={$id}&".$url;
     $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
     return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_form_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 }); $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText; ".$error." } }); } dr_ajax_form_{$fid}_comment_{$id}(0, 1);</script>";
 }
@@ -2723,7 +2723,7 @@ function dr_form_comment($fid, $id, $url = '') {
  */
 function dr_ajax_template($id, $filename, $param_str = '') {
     $error = IS_DEV ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
-    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".(\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_MURL : SITE_URL)."index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
+    return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".WEB_DIR."index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
 
@@ -2741,7 +2741,7 @@ if (!function_exists('dr_show_hits')) {
         if (defined('MODULE_MYSHOW')) {
             return $html;
         }
-        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".SITE_URL."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
+        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".WEB_DIR."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
 
@@ -3560,7 +3560,7 @@ function dr_get_form_post_value($table) {
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
 
-    $rt['post_url'] = defined('SC_HTML_FILE') ? '/index.php?s=form&c='.$table.'&m=post' : dr_url('form/'.$table.'/post');
+    $rt['post_url'] = defined('SC_HTML_FILE') ? WEB_DIR.'index.php?s=form&c='.$table.'&m=post' : dr_url('form/'.$table.'/post');
 
     return $rt;
 }
@@ -3619,7 +3619,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $rt['myfield'] = \Phpcmf\Service::L('Field')->toform(0, $my_field, []);
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
-    $rt['post_url'] = defined('SC_HTML_FILE') ? '/index.php?s='.$mid.'&c='.$table.'&m=post&cid='.$cid : dr_url($mid.'/'.$table.'/post', ['cid' => $cid]);
+    $rt['post_url'] = defined('SC_HTML_FILE') ? WEB_DIR.'index.php?s='.$mid.'&c='.$table.'&m=post&cid='.$cid : dr_url($mid.'/'.$table.'/post', ['cid' => $cid]);
 
     return $rt;
 }
