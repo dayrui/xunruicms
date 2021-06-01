@@ -1633,6 +1633,7 @@ class Image
         if ($width > 0 || $height > 0) {
             if ($mode == 'crop') {
                 $this->imageCropper($file, $cache_path . $cache_file, $width, $height);
+                $this->clear();
             } else {
                 $config['source_image'] = $file;
                 $config['new_image'] = $cache_path . $cache_file;
@@ -1685,6 +1686,29 @@ class Image
             $base64_file = 'data:'.$mime_type.';base64,'.$base64_data;
         }
         return $base64_file;
+    }
+
+    protected function imageCropper_size($target_width, $target_height) {
+
+        $source_width = $this->image_info[0];
+        $source_height = $this->image_info[1];
+        $source_ratio = $source_height / $source_width;
+        $target_ratio = $target_height / $target_width;
+        if ($source_ratio > $target_ratio) {
+            // image-to-height
+            $cropped_width = $source_width;
+            $cropped_height = $source_width * $target_ratio;
+        } elseif ($source_ratio < $target_ratio){
+            //image-to-widht
+            $cropped_width = $source_height / $target_ratio;
+            $cropped_height = $source_height;
+        } else {
+            //image-size-ok
+            $cropped_width = $source_width;
+            $cropped_height = $source_height;
+        }
+
+        return [$cropped_width, $cropped_height];
     }
 
     // 图片剪切函数可继承
