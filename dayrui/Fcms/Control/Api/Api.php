@@ -555,34 +555,7 @@ class Api extends \Phpcmf\Common
      * 电脑和手机网站切换处理接口
      */
     public function client() {
-
-        if (isset($this->site_info[SITE_ID]['SITE_AUTO']) && $this->site_info[SITE_ID]['SITE_AUTO']) {
-            $this->_json(0, dr_lang('系统已经开启自动识别移动端，此功能无效'));
-        }
-
-        $url = urldecode(\Phpcmf\Service::L('input')->get('url'));
-        if (!is_file(WRITEPATH.'config/domain_client.php')) {
-            $this->_json(0, dr_lang('配置文件domain_client不存在'));
-        }
-
-        $domain = require WRITEPATH.'config/domain_client.php';
-        if (!$domain) {
-            $this->_json(0, dr_lang('系统没有绑定手机域名'));
-        }
-
-        $url = dr_http_prefix($url);
-        $temp = parse_url($url);
-        $host = $temp['host'];
-        if (isset($domain[$host])) {
-            // 如果现在是电脑端,我们就找对应的移动端域名
-        } else {
-            $domain = array_flip($domain);
-            if (!isset($domain[$host])) {
-                $this->_json(0, dr_lang('域名[%s]切换失败', $host));
-            }
-        }
-
-        $this->_json(1, dr_lang('正在切换: %s', $domain[$host]), ['sso' => [], 'url' => str_replace($host, $domain[$host], $url)]);
+        $this->_json(0, dr_lang('此功能已废弃'));
     }
 
 }

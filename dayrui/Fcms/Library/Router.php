@@ -680,7 +680,8 @@ class Router
     {
 
         if (!$this->_temp['domain']) {
-            foreach (\Phpcmf\Service::C()->site_domain as $u => $i) {
+            $site_domian = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
+            foreach ($site_domian as $u => $i) {
                 $this->_temp['domain'][] = 'http://' . $u . '/';
                 $this->_temp['domain'][] = 'https://' . $u . '/';
             }

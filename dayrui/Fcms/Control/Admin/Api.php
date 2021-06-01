@@ -427,9 +427,10 @@ class Api extends \Phpcmf\Common
 	    $post = \Phpcmf\Service::L('input')->post('data');
 		if ($post) {
 		    $my = [];
-            foreach ($this->site_domain as $name => $sid) {
+		    $site_domian = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
+            foreach ($site_domian as $name => $sid) {
                 if ($sid == SITE_ID) {
-                    unset($this->site_domain[$name]);
+                    unset($site_domian[$name]);
                 }
             }
 		    foreach ($post as $name => $t) {
@@ -437,7 +438,7 @@ class Api extends \Phpcmf\Common
 		            continue;
                 }
                 $my[] = $t;
-                $this->site_domain[$t] && $html.= $t.' 已经存在于其他站点';
+                isset($site_domian[$t]) && $html.= $t.' 已经存在于其他站点';
             }
             $unique = array_unique ( $my );
             if ($my && count($my) != count($unique)) {

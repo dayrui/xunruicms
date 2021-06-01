@@ -92,11 +92,6 @@ abstract class Common extends \CodeIgniter\Controller
             $client = require WRITEPATH.'config/domain_client.php';
         }
 
-        $this->site_domain = []; // 全网域名对应的站点id
-        if (is_file(WRITEPATH.'config/domain_site.php')) {
-            $this->site_domain = require WRITEPATH.'config/domain_site.php';
-        }
-
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
 
@@ -253,18 +248,19 @@ abstract class Common extends \CodeIgniter\Controller
             //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
             && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
         ) {
+            $domain = trim(DOMAIN_NAME.WEB_DIR, '/');
             if (\Phpcmf\Service::IS_MOBILE_USER()) {
                 // 这是移动端
-                if (isset($client[DOMAIN_NAME])) {
+                if (isset($client[$domain])) {
                     // 表示这个域名属于电脑端,需要跳转到移动端
-                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix(DOMAIN_NAME), dr_http_prefix($client[DOMAIN_NAME]), dr_now_url()), 1);
+                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix($domain), dr_http_prefix($client[$domain]), dr_now_url()), 1);
                 }
             } else {
                 // 这是电脑端
-                if (dr_in_array(DOMAIN_NAME, $client)) {
+                if (dr_in_array($domain, $client)) {
                     // 表示这个域名属于移动端,需要跳转到pc
                     $arr = array_flip($client);
-                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix(DOMAIN_NAME), dr_http_prefix($arr[DOMAIN_NAME]), dr_now_url()) , 1);
+                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix($domain), dr_http_prefix($arr[$domain]), dr_now_url()) , 1);
                 }
             }
         }
