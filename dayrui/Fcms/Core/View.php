@@ -231,6 +231,7 @@ class View {
         !defined('IS_OEM_CMS') && define('IS_OEM_CMS', 0);
         !defined('MOD_DIR') && define('MOD_DIR', '');
         !defined('MODULE_NAME') && define('MODULE_NAME', '');
+        !defined('MODULE_URL') && define('MODULE_URL', '');
         !defined('SITE_TITLE') && define('SITE_TITLE', SITE_NAME);
 
         !defined('IS_PC') && define('IS_PC', \Phpcmf\Service::IS_PC_USER());
@@ -2067,7 +2068,7 @@ class View {
         $url = dr_url_prefix($url);
 		$this->_page_urlrule = $url;
         $config['base_url'] = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
-        $config['first_url'] = dr_url_prefix($first_url);
+        $config['first_url'] = $first_url ? dr_url_prefix($first_url) : '';
         $config['per_page'] = $pagesize;
         $config['page_name'] = $this->_page_value;
         $config['total_rows'] = $total;
