@@ -819,34 +819,6 @@ function dr_ajax_member(url, form) {
         }
     });
 }
-// 电脑版和手机版切换
-function dr_pc_or_mobile(url) {
-
-    var loading = layer.load(2, {
-        shade: [0.3,'#fff'], //0.1透明度的白色背景
-        time: 100000000
-    });
-
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: dr_get_web_dir()+'index.php?s=api&c=api&m=client&at=select&url='+encodeURIComponent(url.replace(/http:\/\//, '')),
-        success: function(json) {
-            layer.close(loading);
-            if (json.code) {
-                dr_cmf_tips(1, json.msg);
-                if (json.data.url) {
-                    window.location.href = json.data.url;
-                }
-            } else {
-                dr_cmf_tips(0, json.msg, json.data.time);
-            }
-        },
-        error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
-        }
-    });
-}
 
 function d_topinyin(name, from, letter) {
     var val = $("#dr_" + from).val();

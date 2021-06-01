@@ -33,7 +33,7 @@
             layer.confirm('当前界面是电脑端界面，需要访问移动端网站吗？', {
                 btn: ['访问移动端','关闭'] //按钮
             }, function(){
-                dr_pc_or_mobile('{$my_web_url}')
+                window.location.href = '{dr_rp($my_web_url, SITE_URL, SITE_MURL)}';
             }, function(){
                 return true;
             });
@@ -51,13 +51,13 @@
                     <div class="container">
                         <div class="page-top-index-left">
                             <a href="{SITE_URL}">网站首页</a> <span>|</span>
-                            <a href="javascript:dr_pc_or_mobile('{$my_web_url}');">手机网站</a> <span>|</span>
+                            <a href="{SITE_MURL}">手机网站</a> <span>|</span>
                             <a href="{MEMBER_URL}">用户中心</a>
                         </div>
                         <div class="page-top-index-right">
                             {if dr_is_module('store')}
-                            <a href="/index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
-                            <a href="/index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
+                            <a href="{WEB_DIR}index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
+                            <a href="{WEB_DIR}index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
                             {/if}
                             <a href="{MEMBER_URL}">用户中心</a>
                         </div>
@@ -78,7 +78,7 @@
                             {/if}
                         </div>
                         <div class="page-header-search">
-                            <form class="search-form" action="{SITE_URL}index.php" method="get">
+                            <form class="search-form" action="{WEB_DIR}index.php" method="get">
                                 <input type="hidden" name="s" value="api">
                                 <input type="hidden" name="c" value="api">
                                 <input type="hidden" name="m" value="search">
