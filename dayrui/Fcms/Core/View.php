@@ -238,12 +238,12 @@ class View {
         !defined('IS_MOBILE') && define('IS_MOBILE', \Phpcmf\Service::IS_MOBILE_USER());
         !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
 
-        $file = $this->load_view_file($_view_file);
+        $_temp_file = $this->load_view_file($_view_file);
 
         // 挂钩点 模板加载之后
-        \Phpcmf\Hooks::trigger('cms_view', $this->_options, $file);
+        \Phpcmf\Hooks::trigger('cms_view', $this->_options, $_temp_file);
 
-        include $file;
+        include $_temp_file;
 
         $this->_view_time = round(microtime(true) - $phpcmf_start, 2);
 
