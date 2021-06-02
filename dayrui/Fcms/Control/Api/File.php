@@ -318,10 +318,12 @@ class File extends \Phpcmf\Common
         }
 
         // 读取附件信息
-        $id = \Phpcmf\Service::L('cache')->get_auth_data(\Phpcmf\Service::L('input')->get('id'));
-        if (!$id) {
+        $rt = \Phpcmf\Service::L('cache')->get_auth_data('down-file-'.\Phpcmf\Service::L('input')->get('id'));
+        if (!$rt) {
             $this->_msg(0, dr_lang('此附件下载链接已经失效'));
         }
+
+        $id = intval($rt['id']);
 
         // 下载文件钩子
         \Phpcmf\Hooks::trigger('down_file', $id);
@@ -352,7 +354,7 @@ class File extends \Phpcmf\Common
 				header('Content-Type: application/octet-stream');
                 header("Accept-Ranges:bytes");
                 header("Accept-Length:".$filesize);
-                header("Content-Disposition: attachment; filename=".urlencode($info['filename'].'.'.$info['fileext']));
+                header("Content-Disposition: attachment; filename=".urlencode((isset($rt['name']) && $rt['name'] ? $rt['name'] : $info['filename']).'.'.$info['fileext']));
 
                 while (!feof($handle)) {
                     $contents = fread($handle, 4096);

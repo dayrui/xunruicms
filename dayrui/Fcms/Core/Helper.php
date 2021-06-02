@@ -1163,15 +1163,19 @@ function dr_get_file($id) {
  * @param   string  $id
  * @return  array
  */
-function dr_down_file($id) {
+function dr_down_file($id, $name = '') {
 
     if (!$id) {
         return IS_DEV ? '文件参数不能为空' : '';
     }
 
-    \Phpcmf\Service::L('cache')->set_auth_data(md5($id), $id);
+    $sn = md5($id);
+    \Phpcmf\Service::L('cache')->set_auth_data('down-file-'.$sn, [
+        'id' => $id,
+        'name' => $name,
+    ]);
 
-    return WEB_DIR."index.php?s=api&c=file&m=down&id=".md5($id);
+    return WEB_DIR."index.php?s=api&c=file&m=down&id=".$sn;
 }
 
 /**

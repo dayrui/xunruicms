@@ -87,10 +87,7 @@ abstract class Common extends \CodeIgniter\Controller
         // 版本更新时间字符串
         define('CMF_UPDATE_TIME', str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']));
 
-        $client = []; // 电脑域名对应的手机域名
-        if (is_file(WRITEPATH.'config/domain_client.php')) {
-            $client = require WRITEPATH.'config/domain_client.php';
-        }
+        $client = \Phpcmf\Service::R(WRITEPATH.'config/domain_client.php'); // 电脑域名对应的手机域名
 
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
@@ -317,7 +314,7 @@ abstract class Common extends \CodeIgniter\Controller
                 define('IS_OEM_CMS', 0);
                 $this->cmf_license = [];
             } else {
-                $this->cmf_license = require MYPATH.'Config/License.php';
+                $this->cmf_license = \Phpcmf\Service::R(MYPATH.'Config/License.php');
                 define('IS_OEM_CMS', $this->cmf_license['oem'] ? 1 : 0);
             }
             // 后台登录判断

@@ -472,11 +472,13 @@ class Auth extends \Phpcmf\Model {
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
             } elseif (\Phpcmf\Service::L('router')->class == 'cloud') {
-                // iframe fix
-                \Phpcmf\Service::V()->assign([
-                    'url' => dr_now_url(),
-                ]);
-                \Phpcmf\Service::V()->display('cloud_online.html');exit;
+                $ls = \Phpcmf\Service::R(MYPATH.'Config/Version.php');
+                if (isset($ls['id']) && $ls['id'] == 11) {
+                    \Phpcmf\Service::V()->assign([
+                        'url' => dr_now_url(),
+                    ]);
+                    \Phpcmf\Service::V()->display('cloud_online.html');exit;
+                }
             }
             dr_redirect(ADMIN_URL . \Phpcmf\Service::L('router')->url('login/index', array('go' => urlencode(dr_now_url()))));
             return FALSE;
