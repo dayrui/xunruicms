@@ -126,7 +126,7 @@ class App extends \Phpcmf\Model
 
         // 删除菜单
         \Phpcmf\Service::M('Menu')->delete_app($dir);
-        unlink($path.'install.lock');
+        @unlink($path.'install.lock');
 
         return dr_return_data(1, dr_lang('卸载成功'));
     }
