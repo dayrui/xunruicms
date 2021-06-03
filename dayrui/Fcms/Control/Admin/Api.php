@@ -573,7 +573,7 @@ class Api extends \Phpcmf\Common
         $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
         !$url && $url = MEMBER_URL;
 
-        $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, $url, 0);exit;
+        $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, dr_url_prefix(dr_member_url('api/alogin', ['url' => $url])), 0);exit;
     }
 
 	/**

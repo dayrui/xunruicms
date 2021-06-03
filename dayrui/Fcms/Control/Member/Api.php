@@ -10,6 +10,35 @@ class Api extends \Phpcmf\Common
 {
 
     /**
+     * 授权登录用户中心跳转
+     */
+    public function alogin() {
+
+        $code = \Phpcmf\Service::L('input')->get_cookie('admin_login_member');
+        if (!$code) {
+            $this->_msg(0, dr_lang('没有获取到会话信息'));
+        }
+
+        $session = $this->session()->get('admin_login_member_code');
+        if (!$code) {
+            $this->_msg(0, dr_lang('没有获取到会话信息'));
+        }
+
+        list($uid, $adminid) = explode('-', $code);
+        $uid = (int)$uid;
+        if ($this->uid != $uid) {
+            $admin = \Phpcmf\Service::M()->table('member')->get((int)$adminid);
+            if ($session != md5($uid.$admin['id'].$admin['password'])) {
+                $this->_msg(0, dr_lang('会话信息不匹配'));
+            }
+        }
+
+        $url = dr_safe_url(urldecode(\Phpcmf\Service::L('input')->get('url')));
+        !$url && $url = MEMBER_URL;
+        dr_redirect($url);
+    }
+
+    /**
      * 头像更新
      */
     public function avatar() {
