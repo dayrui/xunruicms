@@ -159,55 +159,6 @@
 
 
 
-<div class="hide">
-
-
-
-    <div id="delform_html">
-        <form id="delform">
-            {$form}
-
-        </form>
-    </div>
-    <div id="catform_html">
-        <form id="catform">
-            {$form}
-
-        </form>
-    </div>
-</div>
-
-
-<script>
-    function dr_iframe_show_html(id) {
-        var html = $("#"+id+"form_html").html();
-        html = html.replace('<form id="'+id+'form">', '<form id="'+id+'form_post">');
-        layer.open({
-            type: 1,
-            title: '{dr_lang('批量操作')}',
-            shadeClose: true,
-            shade: 0,
-            area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
-        content: "<div  style=\"padding: 20px;\">"+html+"</div>"
-    });
-    }
-    function dr_fd(v) {
-        $.ajax({type: "get",dataType:"json", url: "{dr_url('content/field_index')}&table="+v,
-            success: function(json) {
-                if (json.code == 1) {
-                    $('#dr_fd').html(json.msg);
-                } else {
-                    dr_cmf_tips(0, json.msg);
-                }
-                return false;
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
-            }
-        });
-    }
-</script>
-
 <script>
     function dr_fd(v) {
         $.ajax({type: "get",dataType:"json", url: "{dr_url('module_content/field_index')}&table="+v,

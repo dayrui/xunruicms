@@ -6,8 +6,8 @@
  **/
 
 
-class Seo_site extends \Phpcmf\Common
-{
+class Seo_site extends \Phpcmf\Common {
+
 	public function index() {
 
 		if (IS_AJAX_POST) {
@@ -24,7 +24,7 @@ class Seo_site extends \Phpcmf\Common
             }
 			\Phpcmf\Service::L('input')->system_log('设置网站SEO');
             \Phpcmf\Service::M('cache')->sync_cache('');
-			exit($this->_json(1, dr_lang('操作成功')));
+            $this->_json(1, dr_lang('操作成功'));
 		}
 
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));
@@ -40,11 +40,39 @@ class Seo_site extends \Phpcmf\Common
                     'help' => [494],
                 ]
             ),
+            'module' => \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content'),
             'site_name' => $this->site_info[SITE_ID]['SITE_NAME'],
             'SITE_INDEX_HTML' => $data['config']['SITE_INDEX_HTML'],
 		]);
 		\Phpcmf\Service::V()->display('seo_site.html');
 	}
 
-	
+	public function sync_index() {
+
+        $value = intval(\Phpcmf\Service::L('input')->get('value'));
+        if (!$value) {
+            $this->_json(0, dr_lang('未选择URL规则'));
+        }
+
+        if ($value == 999) {
+            $value = 0;
+        }
+
+        $category = \Phpcmf\Service::M()->table_site('share_category')->getAll();
+        if (!$category) {
+            $this->_json(0, dr_lang('系统没有创建共享栏目'));
+        }
+
+        foreach ($category as $data) {
+            $data['setting'] = dr_string2array($data['setting']);
+            $data['setting']['urlrule'] = $value;
+            \Phpcmf\Service::M()->table_site('share_category')->update($data['id'], [
+                'setting' => dr_array2string($data['setting']),
+            ]);
+        }
+
+        \Phpcmf\Service::M('cache')->sync_cache('');
+        $this->_json(1, dr_lang('共设置%s个共享栏目', count($category)));
+    }
+
 }

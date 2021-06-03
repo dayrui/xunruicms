@@ -85,8 +85,10 @@ class Seo_category extends \Phpcmf\Common
         if ($rule) {
             foreach ($rule as $b) {
                 $select = isset($t['setting']['urlrule']) && $t['setting']['urlrule'] == $b['id'] ? 'selected' : '';
-                if ($dir == 'share' && $b['type'] == 3) {
-                    $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
+                if ($dir == 'share') {
+                    if ($b['type'] == 3) {
+                        $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
+                    }
                 } elseif ($b['type'] == 1) {
                     $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
                 }
