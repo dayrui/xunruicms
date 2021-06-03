@@ -151,7 +151,8 @@
   }
 
   function getCrossOrigin(crossOrigin) {
-    return crossOrigin ? ' crossOrigin="' + crossOrigin + '"' : '';
+    return '';
+    //return crossOrigin ? ' crossOrigin="' + crossOrigin + '"' : '';
   }
 
   function getImageSize(image, callback) {
