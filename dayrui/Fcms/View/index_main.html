@@ -92,7 +92,15 @@
         {/loop}
     </div>
 </div>
-
 {/if}
-
+<script>
+    $(function () {
+        $('.sortable').each(function () {
+           var html = $(this).html();
+           if (html.length < 20) {
+               $(this).remove();
+           }
+        });
+    });
+</script>
 {template "footer.html"}

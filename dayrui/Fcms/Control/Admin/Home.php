@@ -34,7 +34,7 @@ class Home extends \Phpcmf\Common
             if ($auth) {
                 foreach ($table_data as $name => $t) {
                     $key = md5($name);
-                    if (!dr_array_intersect($this->admin['roleid'], (array)$auth[$key])) {
+                    if (isset($auth[$key]) && !dr_array_intersect($this->admin['roleid'], (array)$auth[$key])) {
                         unset($table_data[$name]); // 无权限移除
                     }
                 }
