@@ -559,22 +559,25 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 特殊url权限验证
+        /*
         if ($this_c == 'content') {
             // 内容维护
             $this_uri = APP_DIR ? str_replace(APP_DIR.'/', 'module_', $this_uri) : 'module_content/'.$action;
-        } elseif (APP_DIR && $this_c == 'flag') {
+        } else*/
+        if (APP_DIR && $this_c == 'flag') {
             // 特殊推荐位权限
             $this_uri = str_replace('/flag/', '/home/', $this_uri);
         } elseif ($this_c == 'category') {
             // 栏目权限
             $this_uri = APP_DIR ? str_replace(APP_DIR.'/', 'module_', $this_uri) : 'module_category/'.$action;
-        } elseif ($this_c == 'member' && APP_DIR) {
+        }
+        /* elseif ($this_c == 'member' && APP_DIR) {
             // 用户内容权限
             $this_uri =  str_replace(APP_DIR.'/', 'module_', $this_uri);
-        } elseif ($this_c == 'site_member' && !APP_DIR) {
+        }elseif ($this_c == 'site_member' && !APP_DIR) {
             // 用户内容权限
             $this_uri =  'module_member/'.$action;
-        }
+        }*/
 
         // 特殊url权限验证
         if (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
