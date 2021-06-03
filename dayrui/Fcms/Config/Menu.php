@@ -195,23 +195,13 @@ return [
                         ],
                         [
                             'name' => '模块SEO',
-                            'icon' => 'fa fa-gears',
-                            'uri' => 'seo_module/index',
-                        ],
-                        [
-                            'name' => '内容SEO',
                             'icon' => 'fa fa-th-large',
-                            'uri' => 'seo_content/index',
+                            'uri' => 'seo_module/index',
                         ],
                         [
                             'name' => '栏目SEO',
                             'icon' => 'fa fa-reorder',
                             'uri' => 'seo_category/index',
-                        ],
-                        [
-                            'name' => '搜索SEO',
-                            'icon' => 'fa fa-search',
-                            'uri' => 'seo_search/index',
                         ],
                         [
                             'name' => 'URL规则',
@@ -587,19 +577,9 @@ return [
                     'uri' => 'seo_module/index',
                 ],
                 [
-                    'name' => '内容SEO',
-                    'icon' => 'fa fa-th-large',
-                    'uri' => 'seo_content/index',
-                ],
-                [
                     'name' => '栏目SEO',
                     'icon' => 'fa fa-reorder',
                     'uri' => 'seo_category/index',
-                ],
-                [
-                    'name' => '搜索SEO',
-                    'icon' => 'fa fa-search',
-                    'uri' => 'seo_search/index',
                 ],
                 [
                     'name' => 'URL规则',

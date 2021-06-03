@@ -13,7 +13,7 @@ class Db extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'数据结构' => ['db/index', 'fa fa-database'],
-				'执行SQL' => ['content/index{p=1}', 'fa fa-code'],
+				'执行SQL' => ['module_content/index{p=1}', 'fa fa-code'],
 			]
 		));
 	}

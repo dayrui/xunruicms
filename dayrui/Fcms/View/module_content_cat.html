@@ -1,0 +1,33 @@
+{template "header.html"}
+
+<form id="myform" class="form-horizontal" style="padding: 30px;">
+    <div class="form-body">
+
+        <div class="form-group">
+            {$select}
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-12" style="text-align:left">
+                    <div class="form-group" style="margin-bottom:5px">
+                        <label> {dr_lang('变更为')} </label>
+                    </div>
+                    <div class="form-group">
+                        {$select_post}
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="text-align:center;padding-top:20px">
+                    <button type="button" onclick="dr_content_submit_todo()" class="btn blue"> <i class="fa fa-tag"></i> {dr_lang('立即执行')}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function dr_content_submit_todo() {
+        window.location.href = '{$todo_url}&'+$('#myform').serialize()
+    }
+</script>
+
+{template "footer.html"}

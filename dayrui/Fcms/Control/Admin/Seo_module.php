@@ -14,7 +14,7 @@ class Seo_module extends \Phpcmf\Common {
         // 设置url
         if ($module) {
             foreach ($module as $dir => $t) {
-                if ($t['hlist'] == 1 || $t['share']) {
+                if ($t['hlist'] == 1) {
                     unset($module[$dir]);
                     continue;
                 }
@@ -29,7 +29,7 @@ class Seo_module extends \Phpcmf\Common {
                 $module[$dir]['save_url'] = dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]);
             }
         } else {
-            $this->_admin_msg(0, dr_lang('系统没有安装独立模块'));
+            $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
         }
 
         $one = reset($module);
@@ -43,8 +43,8 @@ class Seo_module extends \Phpcmf\Common {
             'form' => dr_form_hidden(),
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '模块SEO' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-cogs'],
-                    'help' => [495],
+                    '内容模块SEO' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-cogs'],
+                    'help' => [398],
                 ]
             ),
             'module' => $module,
