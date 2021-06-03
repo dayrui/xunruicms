@@ -52,7 +52,7 @@ class Seo_search extends \Phpcmf\Common
             'module' => $module,
             'site_name' => $this->site_info[SITE_ID]['SITE_NAME'],
         ]);
-        \Phpcmf\Service::V()->display('seo_module.html');
+        \Phpcmf\Service::V()->display('seo_search.html');
     }
 
 

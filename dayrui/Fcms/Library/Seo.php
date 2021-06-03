@@ -71,9 +71,9 @@ class Seo
         $seo['meta_keywords'] = '';
 
         $data['page'] = $page > 1 ? $page : '';
-        $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
         $data['param'] = '';
         $data['keyword'] = '';
+        $data['modulename'] = $data['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
 
         $param_value = [];
         if ($param['keyword']) {
@@ -259,6 +259,7 @@ class Seo
         $data['catname'] = $cat['name'];
         $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], SITE_SEOJOIN);
         $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
+        $data['modulename'] = $data['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
 
         $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
         $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));

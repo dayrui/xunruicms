@@ -30,6 +30,7 @@
         </div>
         {/if}
 
+        <?php !$data['setting']['seo']['list_title'] && $data['setting']['seo']['list_title'] = '[第{page}页{join}]{catpname}{join}{modname}{join}{'.'SITE_NAME}';?>
         <div class="form-group">
             <label class="col-md-2 control-label">{dr_lang('SEO标题')}</label>
             <div class="col-md-9">
