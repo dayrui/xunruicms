@@ -332,13 +332,18 @@ function dr_get_double_search($param, $value) {
     return $arr ? @implode('|', $arr) : '';
 }
 
-
 // 获取内容中的缩略图
 function dr_get_content_img($value, $num = 0) {
+    return dr_get_content_url($value, 'src', 'gif|jpg|jpeg|png', $num);
+}
+
+// 获取内容中的指定标签URL地址
+function dr_get_content_url($value, $attr, $ext, $num = 0) {
 
     $rt = [];
-    $value = preg_replace('/\.(gif|jpg|jpeg|png)@(.*)(\'|")/iU', '.$1$3', $value);
-    if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+\.(gif|jpg|jpeg|png))\\2/i", $value, $imgs)) {
+    $ext = str_replace(',', '|', $ext);
+    $value = preg_replace('/\.('.$ext.')@(.*)(\'|")/iU', '.$1$3', $value);
+    if (preg_match_all("/(".$attr.")=([\"|']?)([^ \"'>]+\.(".$ext."))\\2/i", $value, $imgs)) {
         $imgs[3] = array_unique($imgs[3]);
         foreach ($imgs[3] as $i => $img) {
             if ($num && $i+1 > $num) {
@@ -347,6 +352,7 @@ function dr_get_content_img($value, $num = 0) {
             $rt[] = dr_file(trim($img, '"'));
         }
     }
+
     return $rt;
 }
 

@@ -1048,6 +1048,9 @@ class Category extends \Phpcmf\Table {
 
                 // 不出现在编辑器中的字段
                 $save['setting']['cat_field'] = $old['setting']['cat_field'];
+                if (isset($save['tid']) && $save['tid'] != 1) {
+                    $save['setting']['notedit'] = 0;
+                }
 
                 // 数组json化
                 $save['pids'] = '';

@@ -209,6 +209,12 @@ class View {
             \Phpcmf\Service::C()->_json(1, 'view', $this->_options);
         }
 
+        // 生成静态时退出账号记录
+        if (defined('SC_HTML_FILE')) {
+            $this->_options['uid'] = 0;
+            $this->_options['member'] = [];
+        }
+
         extract($this->_options, EXTR_OVERWRITE);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写

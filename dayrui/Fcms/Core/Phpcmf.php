@@ -606,7 +606,7 @@ abstract class Common extends \CodeIgniter\Controller
         define('IS_SHARE', $this->module['share']);
         define('IS_COMMENT', $this->module['comment']);
         define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
-        define('MODULE_NAME', $this->module['name']);
+        define('MODULE_NAME', dr_lang($this->module['name']));
 
         $this->content_model->is_hcategory = $this->is_hcategory = isset($this->module['config']['hcategory']) && $this->module['config']['hcategory'];
 
