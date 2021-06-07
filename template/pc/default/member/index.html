@@ -33,6 +33,7 @@
             </div>
         </div>
         <div class="profile-sidebar-r pull-left">
+            {if dr_is_app('scorelog')}
             <div class="user-body-title">
                 {SITE_SCORE}<span class="home-colon">:</span>
             </div>
@@ -44,9 +45,10 @@
                 </div>
             </div>
             <div class="user-bottom">
-                <a href="{dr_member_url('scorelog/index', ['tid'=>1])}" class=""> 收入记录 </a>
-                <a href="{dr_member_url('scorelog/index', ['tid'=>-1])}" class=""> 消费记录 </a>
+                <a href="{dr_member_url('scorelog/home/index', ['tid'=>1])}"> 收入记录 </a>
+                <a href="{dr_member_url('scorelog/home/index', ['tid'=>-1])}"> 消费记录 </a>
             </div>
+            {/if}
         </div>
     </div>
 
@@ -65,9 +67,9 @@
                 <table class="table table-striped table-bordered table-advance ">
                     <thead>
                     <tr>
-                        <th><i class="fa fa-users"></i> 用户组 </th>
-                        <th><i class="fa fa-star"></i> 级别 </th>
-                        <th><i class="fa fa-clock-o"></i> 有效期 </th>
+                        <th width="200"><i class="fa fa-users"></i> 用户组 </th>
+                        <th width="200"><i class="fa fa-star"></i> 级别 </th>
+                        <th width="250"><i class="fa fa-clock-o"></i> 有效期 </th>
                         <th> </th>
                     </tr>
                     </thead>
@@ -76,17 +78,16 @@
                     {if $member['groupid'][$gid]}
                     <tr>
                         <td class="highlight">
-                            <div class="success"></div>
-                            <a href="javascript:;"> {$t.name} </a>
+                            <div class="success"></div>&nbsp;&nbsp;{$t.name}
                         </td>
                         <td>{if $t['level']}{$t['level'][$member['levelid'][$gid]]['name']}{else}无{/if}</td>
                         <td>{dr_date($member['group'][$gid]['stime'], 'Y-m-d')} ~ {if $member['group'][$gid]['etime']}{dr_date($member['group'][$gid]['etime'], 'Y-m-d')}{else}永久{/if}</td>
                         <td>
                             {php $next = dr_level_next_value($t.level, $member['levelid'][$gid]);}
                             {if $next}
-                            {if $t[setting][level][auto]}
+                            {if $t['setting']['level']['auto']}
                             升级要求:
-                                {if $t[setting][level][unit]}
+                                {if $t['setting']['level']['unit']}
                                 消费额{$member.spend} >= {$next.value}
                                 {else}
                                 {SITE_EXPERIENCE} >= {$next.value}
@@ -104,8 +105,7 @@
                     {if $t.apply}
                     <tr>
                         <td class="highlight">
-                            <div class="danger"></div>
-                            <a href="javascript:;"> {$t.name} </a>
+                            <div class="danger"></div>&nbsp;&nbsp;{$t.name}
                         </td>
                         <td> 无 </td>
                         <td> {if $t.days}{$t.days}{dr_member_group_dtype($t.setting.dtype)}{else}永久{/if} </td>
