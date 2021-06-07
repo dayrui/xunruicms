@@ -40,10 +40,10 @@
 
             if (is_file(ROOTPATH.'config/field.php')) {
                 $field = require ROOTPATH.'config/field.php';
-                if (IS_ADMIN && isset($field['admin']) && $field['admin']) {
-                    $this->format = $field['admin'];
-                } elseif (IS_MEMBER && isset($field['member']) && $field['member']) {
-                    $this->format = $field['member'];
+                if (IS_ADMIN) {
+                    isset($field['admin']) && $field['admin'] && $this->format = $field['admin'];
+                } elseif (IS_MEMBER) {
+                    isset($field['member']) && $field['member'] && $this->format = $field['member'];
                 } elseif (isset($field['home']) && $field['home']) {
                     $this->format = $field['home'];
                 }
@@ -476,10 +476,28 @@
          * @param   string	$name	字段类别名称
          * @param   array 	$option	选项值
          * @param	array	$field	字段集合
-         * @return  string
+         * @return  array
          */
         public function option($name, $option = NULL, $field = NULL) {
-            return $name ? $this->get($name)->option($option, $field) : NULL;
+
+            if (!$name) {
+                return ['', ''];
+            }
+
+            $obj = $this->get($name);
+            if (!$obj) {
+                return ['', ''];
+            }
+
+            list($a, $b) = $obj->option($option, $field);
+
+            if ($obj->is_validate) {
+                $a.= '<script>$(\'.dr_is_validate\').show()</script>';
+            } else {
+                $a.= '<script>$(\'.dr_is_validate\').hide()</script>';
+            }
+
+            return [$a, $b];
         }
 
         /**
@@ -645,6 +663,7 @@
         public $close_xss; // 强制关闭xss
         public $use_xss; // 强制开启xss
         public $is_edit = true; // 是否允许修改字段类别
+        public $is_validate = true; // 是否允许字段验证
         public $remove_div; // 去掉div盒模块
 
         protected $fieldtype; // 可用字段类型

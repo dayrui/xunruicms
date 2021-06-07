@@ -245,7 +245,12 @@ class Api extends \Phpcmf\Common
         $data = $id ? $all[$id] : null;
         $value = $data ? $data['setting']['option'] : []; // 当前字段属性信息
 
-        list($option, $style) = \Phpcmf\Service::L('field')->app($app)->option($type, $value, $all);
+        $obj = \Phpcmf\Service::L('field')->app($app);
+        if (!$obj) {
+            exit(json_encode(['option' => '', 'style' => '']));
+        }
+
+        list($option, $style) = $obj->option($type, $value, $all);
 
         exit(json_encode(['option' => $option, 'style' => $style], JSON_UNESCAPED_UNICODE));
     }

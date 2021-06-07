@@ -15,6 +15,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
         $this->close_xss = 1;
 		$this->fieldtype = TRUE;
 		$this->defaulttype = 'VARCHAR';
+        $this->is_validate = false; // 不允许字段验证
     }
 	
 	/**

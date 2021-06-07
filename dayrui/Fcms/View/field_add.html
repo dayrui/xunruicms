@@ -79,17 +79,17 @@
                 </div>
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
-                        <div class="form-group">
+                        <div class="form-group dr_is_validate">
                             <label class="col-md-2 control-label">{dr_lang('是否必填')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][validate][required]" value="0" {if $data['setting']['validate']['required']==0}checked{/if} onclick="set_required(0)" /> {dr_lang('否')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][validate][required]" value="1" {if $data['setting']['validate']['required']==1}checked{/if} onclick="set_required(1)" /> {dr_lang('是')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('此选项部分字段不可用')}</span>
+                                <span class="help-block">{dr_lang('前端用户必须填写才能提交此字段')}</span>
                             </div>
                         </div>
-                        <div id="required" style="display:none">
+                        <div id="required" class="dr_is_validate" style="display:none">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('正则验证')}</label>
                                 <div class="col-md-9">
@@ -99,7 +99,7 @@
                                             <button class="btn blue" onclick="dr_iframe_show('{dr_lang('正则表达式')}', '{dr_url('api/test_pattern')}')" type="button">{dr_lang('测试')}</button>
                                         </span>
                                     </div>
-                                    <span class="help-block">{dr_lang('此选项部分字段不可用，例如数字正则表达式格式：/^[0-9]+$/')}</span>
+                                    <span class="help-block">{dr_lang('例如数字正则表达式格式：/^[0-9]+$/')}</span>
                                 </div>
                             </div>
                             <div class="form-group">

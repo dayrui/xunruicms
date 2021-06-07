@@ -97,7 +97,6 @@ class Login extends \Phpcmf\Common
         }
     }
 
-
     /**
      * 授权登录
      */
@@ -400,7 +399,7 @@ class Login extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
-            'api_url' =>\Phpcmf\Service::L('Router')->member_url('api/find_code'),
+            'api_url' => dr_member_url('api/find_code'),
             'meta_name' => dr_lang('找回密码'),
             'meta_title' => dr_lang('找回密码').SITE_SEOJOIN.SITE_NAME,
         ]);

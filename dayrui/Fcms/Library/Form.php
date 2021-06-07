@@ -167,7 +167,7 @@ class Form
                     return [[], ['name' => $name, 'error' => $frt]];
                 }
                 // 验证必填字段
-                if ($field['fieldtype'] != 'Group' && $validate['required']) {
+                if ($obj->is_validate && $validate['required']) {
                     if (IS_ADMIN && dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
                         // 后台超管不验证必填
                     } else {

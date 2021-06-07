@@ -2848,7 +2848,6 @@ function dr_search_rewrite_encode($params, $search) {
             $v = isset($params[$name]) ? $params[$name] : $default;
             $url.= $join.urlencode($v);
         }
-
         return trim($url, $join);
     } else {
         // 自由组合
@@ -2880,9 +2879,8 @@ function dr_search_rewrite_decode($params, $search) {
             if (!$name) {
                 break;
             }
-            $rt[$name] = !strcasecmp($array[$i], $default) ? '' : $array[$i];
+            $rt[$name] = !strcasecmp($array[$i], $default) ? '' : urldecode($array[$i]);
         }
-
         return $rt;
     } else {
         // 自由组合
