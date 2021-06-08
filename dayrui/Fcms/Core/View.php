@@ -50,6 +50,7 @@ class View {
     private $_page_used = 0; // 是否开启分页
 
     private $_list_tag = ''; // 循环体标签
+    private $_list_where = []; // 循环体解析的条件数组
     private $_list_error = []; // 循环标签遇到的错误
     private $_is_list_search = 0; // 搜索标签
     private $_page_value = 0; // 页码变量
@@ -2350,6 +2351,8 @@ class View {
             return [];
         }
 
+        $this->_list_where = $where;
+
         foreach ($where as $i => $t) {
             if (dr_in_array($t['name'], $field)) {
                 $where[$i]['use'] = 1;
@@ -2526,11 +2529,11 @@ class View {
         } elseif (in_array(strtoupper($order), ['RAND()', 'RAND'])) {
             // 随机排序
             return 'RAND()';
-        } elseif (strpos($order, 'instr(') === 0) {
-            // id序列排序
+        }
+
+        $order = urldecode($order);
+        if (strpos($order, '`') !== false) {
             return $order;
-        } else {
-            $order = urldecode($order);
         }
 
         // 字段排序
@@ -2538,13 +2541,9 @@ class View {
         $array = explode(',', $order);
 
         foreach ($array as $i => $t) {
-            if (strpos($t, '`') !== false) {
-                $my[$i] = $t;
-                continue;
-            }
             $a = explode('_', $t);
             $b = end($a);
-            if (in_array(strtolower($b), ['desc', 'asc'])) {
+            if (in_array(strtolower($b), ['desc', 'asc', 'instr'])) {
                 $a = str_replace('_'.$b, '', $t);
             } else {
                 $a = $t;
@@ -2554,13 +2553,21 @@ class View {
             foreach ($fields as $prefix => $field) {
                 if (is_array($field)) {
                     if (dr_in_array($a, $field)) {
-                        $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
+                        if ($b == 'INSTR') {
+                            if (isset($this->_list_where['IN_'.$a]) && $this->_list_where['IN_'.$a]) {
+                                $my[$i] = "instr(\"".$this->_list_where['IN_'.$a]['value']."\",`$a`)";
+                            } else {
+                                $this->_list_error[] = '无法找到字段'.$a.'的IN通配符参数，order参数将会无效';
+                            }
+                        } else {
+                            $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
+                        }
                     } elseif (dr_in_array($a.'_lat', $field) && dr_in_array($a.'_lng', $field)) {
                         if ($this->pos_baidu) {
                             $my[$i] = $a.'_map ASC';
                             $this->pos_order = $a;
                         } else {
-                            exit('没有定位到您的坐标');
+                            $this->_list_error[] = '没有定位到您的坐标，order参数将会无效';
                         }
                     }
                 }
