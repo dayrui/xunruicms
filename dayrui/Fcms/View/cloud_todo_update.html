@@ -121,16 +121,18 @@
         });
         // 检测下载结果
         var is_ok_lock = 0;
+        var is_jd = 0;
+        var is_count = 0;
         var interval_id = window.setInterval(function() {
 
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&ls={$ls}",
+                url: "{dr_url('cloud/update_file_check')}&id={$app_id}&ls={$ls}&is_count="+is_count+"&is_jd="+is_jd,
                 success: function (json) {
-
+                    is_count++;
                     document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
-
+                    is_jd = json.code;
                     if (json.code == 0) {
                         $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                         $('#dr_check_button_ing').addClass('red');

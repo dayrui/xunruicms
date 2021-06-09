@@ -94,8 +94,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<?= $this->renderTimeline($collectors, (float)$startTime, $segmentCount, $segmentDuration,
-				$styles) ?>
+			<?= $this->renderTimeline($collectors, (float)$startTime, (int)$segmentCount, (int)$segmentDuration, $styles) ?>
 			</tbody>
 		</table>
 	</div>

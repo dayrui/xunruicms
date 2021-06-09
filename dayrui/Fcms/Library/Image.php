@@ -939,10 +939,10 @@ class Image
         if (!$is_test) {
             list($nw, $nh) = $this->image_info ? $this->image_info : getimagesize($this->source_image);
             if ($data['width'] && $data['width'] > $nw) {
-                CI_DEBUG && log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_path']);
+                CI_DEBUG && log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_image']);
                 return '';
             } elseif ($data['height'] && $data['height'] > $nh) {
-                CI_DEBUG && log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_path']);
+                CI_DEBUG && log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_image']);
                 return '';
             }
         }

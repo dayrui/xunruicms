@@ -37,6 +37,10 @@ class Seo_category extends \Phpcmf\Common
                 unset($module[$dir]);
                 continue;
             }
+            if (!isset($cache['site'][SITE_ID]['is_cat']) || !$cache['site'][SITE_ID]['is_cat']) {
+                unset($module[$dir]);
+                continue;
+            }
 
             $module[$dir]['list'] = $this->_get_tree_list($dir, $cache['category']);
             $module[$dir]['save_url'] = dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]);

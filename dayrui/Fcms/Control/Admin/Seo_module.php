@@ -67,7 +67,10 @@ class Seo_module extends \Phpcmf\Common {
 
         if (IS_AJAX_POST) {
             $site = \Phpcmf\Service::L('input')->post('site');
-            foreach (['html', 'urlrule', 'module_title', 'module_keywords', 'module_description'] as $name) {
+            foreach (['html', 'urlrule', 'is_cat',
+                         'show_title', 'show_keywords', 'show_description',
+                         'list_title', 'list_keywords', 'list_description',
+                         'module_title', 'module_keywords', 'module_description'] as $name) {
                 $data['site'][SITE_ID][$name] = $site[$name];
             }
             $data['setting']['module_index_html'] = intval($_POST['module_index_html']);

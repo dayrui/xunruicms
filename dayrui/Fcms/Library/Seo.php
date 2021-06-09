@@ -232,13 +232,20 @@ class Seo
         $cat['catpname'] = dr_get_cat_pname($mod, $catid, SITE_SEOJOIN);
         $cat['modulename'] = $cat['modname'] = $mod['dirname'] == 'share' ? '': dr_lang($mod['name']);
 
-        $meta_title = $cat['setting']['seo']['list_title'] ? $cat['setting']['seo']['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
+        if (!$mod['share'] && (!isset($mod['site'][SITE_ID]['is_cat']) || !$mod['site'][SITE_ID]['is_cat'])) {
+            // 独立模块统一规则模式
+            $seo = $mod['site'][SITE_ID];
+        } else {
+            $seo = $cat['setting']['seo'];
+        }
+
+        $meta_title = $seo['list_title'] ? $seo['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
         return $this->get_seo_value($cat, [
             'meta_title' => $meta_title,
-            'meta_keywords' => isset($cat['setting']['seo']['list_keywords']) && $cat['setting']['seo']['list_keywords'] ? $cat['setting']['seo']['list_keywords'] : ($mod['site'][SITE_ID]['module_keywords'] ? $mod['site'][SITE_ID]['module_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
-            'meta_description' => isset($cat['setting']['seo']['list_description']) && $cat['setting']['seo']['list_description'] ? $cat['setting']['seo']['list_description'] : ($mod['site'][SITE_ID]['module_description'] ? $mod['site'][SITE_ID]['module_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')),
+            'meta_keywords' => isset($seo['list_keywords']) && $seo['list_keywords'] ? $seo['list_keywords'] : ($mod['site'][SITE_ID]['module_keywords'] ? $mod['site'][SITE_ID]['module_keywords'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_KEYWORDS')),
+            'meta_description' => isset($seo['list_description']) && $seo['list_description'] ? $seo['list_description'] : ($mod['site'][SITE_ID]['module_description'] ? $mod['site'][SITE_ID]['module_description'] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')),
         ]);
     }
 

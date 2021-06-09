@@ -60,6 +60,7 @@ class Category extends \Phpcmf\Table {
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'module' => $this->module,
+            'is_seo' => ($this->module['share'] ? 1 : (isset($this->module['site'][SITE_ID]['is_cat']) && $this->module['site'][SITE_ID]['is_cat'])),
             'post_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/add'),
             'reply_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/index'),
             'field_url' => \Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$this->module['dirname']]),

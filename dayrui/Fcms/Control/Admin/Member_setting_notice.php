@@ -78,7 +78,7 @@ class Member_setting_notice extends \Phpcmf\Common
         if (IS_AJAX_POST) {
             \Phpcmf\Service::M()->db->table('member_setting')->replace([
                 'name' => 'notice',
-                'value' => dr_array2string(\Phpcmf\Service::L('input')->post('data', true))
+                'value' => dr_array2string(\Phpcmf\Service::L('input')->post('data'))
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
             $this->_json(1, dr_lang('操作成功'));
@@ -102,21 +102,24 @@ class Member_setting_notice extends \Phpcmf\Common
                 'data' => [
                     'mobile' => [
                         'name' => dr_lang('短信和消息'),
-                        'code' => is_file($path.'config/notice/mobile/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/mobile/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
+                        'code' => is_file($path.'config/notice/mobile/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/mobile/'.$file.'.html'),ENT_COMPAT,'UTF-8') : (!IS_DEV ? dr_lang('文件不存在，请手动创建此文件') : ''),
                         'file' => (CI_DEBUG ? $path : '') . 'config/notice/mobile/'.$file.'.html',
                         'help' => 'javascript:dr_help(479);', //'http://help.phpcmf.net/479.html',
+                        'height' => '100',
                     ],
                     'email' => [
                         'name' => dr_lang('邮件'),
-                        'code' => is_file($path.'config/notice/email/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/email/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
+                        'code' => is_file($path.'config/notice/email/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/email/'.$file.'.html'),ENT_COMPAT,'UTF-8') : (!IS_DEV ? dr_lang('文件不存在，请手动创建此文件') : ''),
                         'file' => (CI_DEBUG ? $path : '') . 'config/notice/email/'.$file.'.html',
                         'help' => 'javascript:dr_help(480);', //'http://help.phpcmf.net/480.html',
+                        'height' => '200',
                     ],
                     'weixin' => [
                         'name' => dr_lang('微信'),
-                        'code' => is_file($path.'config/notice/weixin/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/weixin/'.$file.'.html'),ENT_COMPAT,'UTF-8') : dr_lang('文件不存在，请手动创建此文件'),
+                        'code' => is_file($path.'config/notice/weixin/'.$file.'.html') ? htmlentities(file_get_contents($path.'config/notice/weixin/'.$file.'.html'),ENT_COMPAT,'UTF-8') : (!IS_DEV ? dr_lang('文件不存在，请手动创建此文件') : ''),
                         'file' => (CI_DEBUG ? $path : '') . 'config/notice/weixin/'.$file.'.html',
                         'help' => 'javascript:dr_help(481);', //'http://help.phpcmf.net/481.html',
+                        'height' => '200',
                     ],
                 ]
             ];
@@ -124,6 +127,33 @@ class Member_setting_notice extends \Phpcmf\Common
             if (!dr_is_app('weixin')) {
                 unset($list[$sid]['data']['weixin']);
             }
+        }
+
+        if (IS_POST) {
+
+            if (!IS_DEV) {
+                $this->_json(0, dr_lang('禁止修改'));
+            }
+
+            $post = \Phpcmf\Service::L('input')->post('data', false);
+            if (!$post) {
+                $this->_json(0, dr_lang('内容没有填写完整'));
+            }
+
+            $ok = 0;
+            foreach ($post as $sid => $t) {
+                foreach ($t as $name => $value) {
+                    if (isset($list[$sid]['data'][$name]) && $list[$sid]['data'][$name] && $value) {
+                        $rt = file_put_contents($list[$sid]['data'][$name]['file'], $value);
+                        if (!$rt) {
+                            $this->_json(0, dr_lang('文件%s写入失败', $list[$sid]['data'][$name]['file']));
+                        }
+                        $ok++;
+                    }
+                }
+            }
+
+            $this->_json(1, dr_lang('共修改%s个文件', $ok));
         }
 
         \Phpcmf\Service::V()->assign([

@@ -94,7 +94,7 @@ class File extends \Phpcmf\Common {
 
         if (IS_AJAX_POST) {
 
-            if (!IS_EDIT_TPL) {
+            if (!IS_EDIT_TPL && !IS_DEV) {
                 $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
             }
 
@@ -141,7 +141,7 @@ class File extends \Phpcmf\Common {
                 if (IS_AJAX_POST) {
 
                     $name = dr_safe_filename(\Phpcmf\Service::L('input')->post('name'));
-                    if (!IS_EDIT_TPL) {
+                    if (!IS_EDIT_TPL && !IS_DEV) {
                         $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                     } elseif (!is_dir($filename)) {
                         $this->_json(0, dr_lang('此目录不存在'));
@@ -173,7 +173,7 @@ class File extends \Phpcmf\Common {
                 if (IS_AJAX_POST) {
 
                     $name = dr_safe_filename(\Phpcmf\Service::L('input')->post('name'));
-                    if (!IS_EDIT_TPL) {
+                    if (!IS_EDIT_TPL && !IS_DEV) {
                         $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                     } elseif (!$name) {
                         $this->_json(0, dr_lang('文件名称不能为空'), ['field' => 'name']);
@@ -203,7 +203,7 @@ class File extends \Phpcmf\Common {
                 if (IS_AJAX_POST) {
 
                     $name = dr_safe_filename(\Phpcmf\Service::L('input')->post('name'));
-                    if (!IS_EDIT_TPL) {
+                    if (!IS_EDIT_TPL && !IS_DEV) {
                         $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                     } elseif (!$name) {
                         $this->_json(0, dr_lang('文件名称不能为空'), ['field' => 'name']);
@@ -249,7 +249,7 @@ class File extends \Phpcmf\Common {
                     if (IS_AJAX_POST) {
 
                         $code = \Phpcmf\Service::L('input')->post('code', false);
-                        if (!IS_EDIT_TPL) {
+                        if (!IS_EDIT_TPL && !IS_DEV) {
                             $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                         } elseif (!$code) {
                             $this->_json(0, dr_lang('内容不能为空'));
@@ -310,7 +310,7 @@ class File extends \Phpcmf\Common {
 
                     $reply_url =\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', '/'), ['dir' => dirname($file)]);
                     if (IS_POST) {
-                        if (!IS_EDIT_TPL) {
+                        if (!IS_EDIT_TPL && !IS_DEV) {
                             $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                         }
                         $rt = \Phpcmf\Service::L('upload')->update_file([
@@ -339,7 +339,7 @@ class File extends \Phpcmf\Common {
 
             case 'zip':
 
-                if (!IS_EDIT_TPL) {
+                if (!IS_EDIT_TPL && !IS_DEV) {
                     $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
                 } elseif ($fileext != 'zip') {
                     $this->_json(0, dr_lang('不是zip压缩文件'));
@@ -360,7 +360,7 @@ class File extends \Phpcmf\Common {
         $ids = \Phpcmf\Service::L('input')->post('ids');
         if (!$ids) {
             $this->_json(0, dr_lang('还没有选择呢'));
-        } elseif (!IS_EDIT_TPL) {
+        } elseif (!IS_EDIT_TPL && !IS_DEV) {
             $this->_json(0, dr_lang('系统不允许创建和修改模板文件'), ['field' => 'name']);
         }
 

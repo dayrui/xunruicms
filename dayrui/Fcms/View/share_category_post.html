@@ -46,9 +46,11 @@ function dr_tid(i) {
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('内容设置')} </a>
                 </li>
                 {/if}
+                {if $is_seo}
                 <li class="{if $page==3}active{/if}">
                     <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-internet-explorer"></i> {dr_lang('SEO优化')} </a>
                 </li>
+                {/if}
                 <li class="{if $page==4}active{/if}">
                     <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-html5"></i> {dr_lang('模板设置')} </a>
                 </li>
