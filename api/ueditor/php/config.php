@@ -27,21 +27,6 @@ return [
                                 /* {ii} 会替换成两位分钟 */
                                 /* {ss} 会替换成两位秒 */
                                 /* 非法字符 \ : * ? " < > | */
-                                /* 具请体看线上文档: fex.baidu.com/ueditor/#use-format_upload_filename */
-
-    /* 涂鸦图片上传配置项 */
-    "scrawlActionName" => "uploadscrawl", /* 执行上传涂鸦的action名称 */
-    "scrawlFieldName" => "upfile", /* 提交的图片表单名称 */
-    "scrawlPathFormat" => "/ueditor/image/{yyyy}{mm}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
-    "scrawlMaxSize" => 2048000, /* 上传大小限制，单位B */
-    "scrawlUrlPrefix" => "", /* 图片访问路径前缀 */
-    "scrawlInsertAlign" => "none",
-
-    /* 截图工具上传 */
-    "snapscreenActionName" => "uploadimage", /* 执行上传截图的action名称 */
-    "snapscreenPathFormat" => "/ueditor/image/{yyyy}{mm}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
-    "snapscreenUrlPrefix" => "", /* 图片访问路径前缀 */
-    "snapscreenInsertAlign" => "none", /* 插入的图片浮动方式 */
 
     /* 上传视频配置 */
     "videoActionName" => "uploadvideo", /* 执行上传视频的action名称 */

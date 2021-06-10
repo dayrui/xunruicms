@@ -4642,11 +4642,15 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
     padding-bottom: 75%
 }
 
+
 .well {
     min-height: 20px;
     margin-bottom: 20px;
     background-color: #f1f4f7;
     border-radius: 4px
+}
+.well2 {
+    background-color: #f1f4f7;
 }
 
 .well blockquote {

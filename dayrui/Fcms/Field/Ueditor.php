@@ -60,7 +60,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                              &nbsp; &nbsp;
                              <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][watermark]" '.($option['watermark'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">上传的图片会加上水印图</span>
+						<span class="help-block">'.dr_lang('上传的图片会加上水印图').'</span>
                     </div>
                 </div>';
 
@@ -227,6 +227,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>'.$this->attachment($option).'
+                <div class="form-group">
+			<label class="col-md-2 control-label">'.dr_lang('图片补加后缀字符').' </label>
+			<div class="col-md-9">
+                <label><input type="text" class="form-control" value="'.$option['image_endstr'].'" name="data[setting][option][image_endstr]"></label>
+                <span class="help-block">'.dr_lang('上传图片后自动为图片补加指定的后缀字符串').'</span>
+			</div>
+		</div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('默认存储值').'</label>
                     <div class="col-md-9">
@@ -608,7 +615,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     ismobile: ".(dr_is_mobile() ? 1 : 0).", 
                     UEDITOR_HOME_URL: \"/api/ueditor/\",
                     UEDITOR_ROOT_URL: \"".ROOT_URL."api/ueditor/\",
-                    serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".$this->rid."&\",
+                    serverUrl:\"/index.php?s=api&c=file&token=".dr_get_csrf_token()."&m=ueditor&image_endstr=".trim($field['setting']['option']['image_endstr'])."&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".$this->rid."&\",
                     lang: \"".SITE_LANGUAGE."\",
                     langPath: \"".ROOT_URL."api/language/\",
                     toolbars: [

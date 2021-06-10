@@ -408,6 +408,9 @@ class Uploader
                 $title = UEDITOR_IMG_TITLE;
             }
         }
+        if (isset($_GET['image_endstr']) && $_GET['image_endstr']) {
+            $this->fileUrl.= trim($_GET['image_endstr']);
+        }
         return [
             "aid" => $this->aid,
             "state" => $this->stateInfo,
