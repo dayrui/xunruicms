@@ -274,8 +274,8 @@ class Tree {
             $str = str_replace('style', '_style', $str);
         }
 
-        if (!IS_DEV) {
-            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first);
+        if (!CI_DEBUG) {
+            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
             $cache = \Phpcmf\Service::L('cache')->get_data($name);
             if ($cache) {
                 return $cache;
