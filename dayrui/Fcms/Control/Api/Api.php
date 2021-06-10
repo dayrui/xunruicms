@@ -10,6 +10,20 @@ class Api extends \Phpcmf\Common
 {
 
     /**
+     * ip地址
+     */
+    public function ip_address() {
+
+        $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
+        if (!$value) {
+            exit(dr_lang('IP地址为空'));
+        }
+
+        $address = \Phpcmf\Service::L('ip')->address($value);
+        exit(dr_lang('IP归属地：%s', $address));
+    }
+
+    /**
      * 保存浏览器定位坐标
      */
     public function baidu_position() {

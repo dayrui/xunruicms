@@ -859,20 +859,13 @@ function dr_file_edit(e) {
 
 // 显示ip信息
 function dr_show_ip(name) {
-    if (is_mobile_cms == 1) {
-        width = height = '95%';
-    } else {
-        width = height = '70%';
-    }
-    var url = "https://www.baidu.com/s?wd="+$("#dr_"+name).val();
-    layer.open({
-        type: 2,
-        title: '<i class="fa fa-home"></i> ' + lang['ip'],
-        shadeClose: true,
-        shade: 0,
-        area: [width, height],
-        content: url
-    });
+    $.get(dr_get_web_dir()+'index.php?is_ajax=1&s=api&c=api&m=ip_address&value='+$('#dr_'+name).val(), function(html){
+        layer.alert(html, {
+            shade: 0,
+            title: "",
+            icon: 1
+        })
+    }, 'text');
 }
 
 function dr_diy_func(name) {
