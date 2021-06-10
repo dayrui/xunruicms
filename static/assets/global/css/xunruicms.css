@@ -4650,7 +4650,7 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
     border-radius: 4px
 }
 .well2 {
-    background-color: #f1f4f7;
+    background-color: #f1f4f7 !important;;
 }
 
 .well blockquote {

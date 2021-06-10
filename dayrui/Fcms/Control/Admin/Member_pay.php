@@ -11,9 +11,9 @@ class Member_pay extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
-            $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['username'])->get()->getRowArray();
+            $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['uid'])->get()->getRowArray();
             if (!$user) {
-                $this->_json(0, dr_lang('账号[%s]不存在', $post['username']), ['field' => 'username']);
+                $this->_json(0, dr_lang('账号[%s]不存在', $post['uid']), ['field' => 'uid']);
             } elseif (!$post['value']) {
                 $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
             } elseif (!$post['unit']) {
@@ -88,8 +88,8 @@ class Member_pay extends \Phpcmf\Common
             }
         }
 
-        $fdata = \Phpcmf\Service::L('Field')->sys_field(['username']);
-        $fdata['username']['name'] = dr_lang('充值账号');
+        $fdata = \Phpcmf\Service::L('Field')->sys_field(['uid']);
+        $fdata['uid']['name'] = dr_lang('充值账号');
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
