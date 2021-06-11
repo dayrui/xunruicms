@@ -70,6 +70,7 @@ class Seo_module extends \Phpcmf\Common {
             foreach (['html', 'urlrule', 'is_cat',
                          'show_title', 'show_keywords', 'show_description',
                          'list_title', 'list_keywords', 'list_description',
+                         'search_title', 'search_keywords', 'search_description',
                          'module_title', 'module_keywords', 'module_description'] as $name) {
                 $data['site'][SITE_ID][$name] = $site[$name];
             }

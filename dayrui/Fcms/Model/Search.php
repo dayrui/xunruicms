@@ -73,7 +73,7 @@ class Search extends \Phpcmf\Model {
         $id = md5($table.dr_array2string($this->get));
         if (!IS_DEV && SYS_CACHE_SEARCH) {
             $data = $this->db->table($this->mytable.'_search')->where('id', $id)->get()->getRowArray();
-            $time = intval(SYS_CACHE_SEARCH) * 3600;
+            $time = SYS_CACHE_SEARCH * 3600;
             if ($data && $data['inputtime'] + $time < SYS_TIME) {
                 $this->db->table($this->mytable.'_search')->where('id', $id)->delete();
                 $data = [];

@@ -170,6 +170,7 @@ class Seo
             }
         }
 
+        $meta_title = $mod['site'][SITE_ID]['search_title'] ? $mod['site'][SITE_ID]['search_title'] : '['.dr_lang('第%s页', '{page}').'{join}][{keyword}{join}][{param}{join}]{modulename}{join}{SITE_NAME}';
         $seo['param_value'] = [];
         if ($param_value) {
             $str = [];
@@ -188,13 +189,17 @@ class Seo
                     'value' => is_array($t) ? implode('|', $t) : $t,
                     'value_array' => is_array($t) ? $t : [],
                 ];
-                $str[] = is_array($t) ? implode('|', $t) : $t;
+                $str[$f] = is_array($t) ? implode('|', $t) : $t;
+            }
+
+            $seo['meta_keywords'].= implode(',', $str).',';
+
+            // 避免重复keyword
+            if (isset($str['keyword']) && strpos($meta_title, 'keyword') !== false) {
+                unset($str['keyword']);
             }
             $data['param'] = implode(SITE_SEOJOIN, $str);
-            $seo['meta_keywords'].= implode(',', $str).',';
         }
-
-        $meta_title = $mod['site'][SITE_ID]['search_title'] ? $mod['site'][SITE_ID]['search_title'] : '['.dr_lang('第%s页', '{page}').'{join}][{keyword}{join}][{param}{join}]{modulename}{join}{SITE_NAME}';
 
         if (preg_match_all('/\[.*\{(.+)\}.*\]/U', $meta_title, $m)) {
             $new = '';
