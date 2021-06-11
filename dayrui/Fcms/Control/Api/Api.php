@@ -420,7 +420,7 @@ class Api extends \Phpcmf\Common
             'param' => $data,
             'field' => $module['field'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
-            'search' => dr_form_search_hidden(['search' => 1, 'module' => $dirname, 'site' => $site, 'my' => $my, 'pagesize' => $pagesize]),
+            'search' => dr_form_search_hidden(['search' => 1, 'is_ajax' => 1, 'module' => $dirname, 'site' => $site, 'my' => $my, 'pagesize' => $pagesize]),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $module['category'],
                 $data['catid'],
@@ -547,7 +547,7 @@ class Api extends \Phpcmf\Common
             'param' => $data,
             'field' => $field,
             'group' => $group,
-            'search' => dr_form_search_hidden(['search' => 1]),
+            'search' => dr_form_search_hidden(['search' => 1, 'is_ajax' => 1]),
             'urlrule' => dr_url('api/api/members', $rules, '/index.php'),
         ));
         \Phpcmf\Service::V()->display('api_members.html');

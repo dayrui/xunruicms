@@ -25,7 +25,6 @@
             </label>
             <label><i class="fa fa-caret-right"></i></label>
             <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
-
             <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
         </div>
     </form>
@@ -46,10 +45,8 @@
                     </label>
                 </th>
                 <th style="text-align:center" width="70" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
-                <th width="200" class="{dr_sorting('username')}" name="username">{dr_lang('账号 / 邮箱')}</th>
-                <th width="140" class="{dr_sorting('money')}" name="money">{dr_lang('实际资金')}</th>
-                <th width="130" class="{dr_sorting('experience')}" name="score">{dr_lang('虚拟资产')}</th>
-                <th width="160" class="{dr_sorting('regtime')}" name="regtime">{dr_lang('注册时间')}</th>
+                <th width="250" class="{dr_sorting('username')}" name="username">{dr_lang('账号 / 邮箱')}</th>
+                <th >{dr_lang('注册时间')}</th>
             </tr>
             </thead>
             <tbody>
@@ -65,14 +62,6 @@
                 <td class="member_info_p">
                     <p>{$t.username}</p>
                     <p>{$t.email}</p>
-                </td>
-                <td class="member_info_p">
-                    <p>{dr_lang('余额')}: {$t.money}</p>
-                    <p>{dr_lang('消费')}: {$t.spend}</p>
-                </td>
-                <td class="member_info_p">
-                    <p>{SITE_SCORE}: {$t.score}</p>
-                    <p>{SITE_EXPERIENCE}: {$t.experience}</p>
                 </td>
                 <td class="member_info_p">
                     <p>{dr_date($t.regtime, 'Y-m-d H:i:s', 'red')}</p>

@@ -62,7 +62,7 @@
                                 myCodeMirror.setSize(null, 500);
                             });
                         </script>
-                        
+
 
 
                     </div>
@@ -72,7 +72,6 @@
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
 
-
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('附件归档')}</label>
                             <div class="col-md-9">
@@ -81,29 +80,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group hide">
-                            <label class="col-md-2 control-label">{dr_lang('栏目缩略图')}</label>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('上传安全策略')}</label>
                             <div class="col-md-9">
-                                <label><select class="form-control" name="data[SYS_FIELD_THUMB_ATTACH]">
-                                    <option value="0"> {dr_lang('本地存储')} </option>
-                                    {loop $remote $i $t}
-                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_THUMB_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
-                                    {/loop}
-                                </select></label>
-                                <span class="help-block">{dr_lang('适用于栏目缩略图的存储策略')}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group hide">
-                            <label class="col-md-2 control-label">{dr_lang('栏目编辑器')}</label>
-                            <div class="col-md-9">
-                                <label><select class="form-control" name="data[SYS_FIELD_CONTENT_ATTACH]">
-                                    <option value="0"> {dr_lang('本地存储')} </option>
-                                    {loop $remote $i $t}
-                                    <option value="{$i}" {php echo ($i == $data['SYS_FIELD_CONTENT_ATTACH'] ? 'selected' : '');}> {dr_lang($t['name'])} </option>
-                                    {/loop}
-                                </select></label>
-                                <span class="help-block">{dr_lang('适用于栏目内容的编辑器附件存储策略')}</span>
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_SAFE]" value="0" {if empty($data['SYS_ATTACHMENT_SAFE'])}checked{/if} /> {dr_lang('严格模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_SAFE]" value="1" {if $data['SYS_ATTACHMENT_SAFE']}checked{/if} /> {dr_lang('宽松模式')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('严格模式将对文件进行全面检测是否存在非法特征')}</span>
                             </div>
                         </div>
 
@@ -111,8 +95,8 @@
                             <label class="col-md-2 control-label">{dr_lang('存储目录方式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').hide()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="0" {if empty($data['SYS_ATTACHMENT_SAVE_TYPE'])}checked{/if} /> {dr_lang('默认')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').show()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="1" {if $data['SYS_ATTACHMENT_SAVE_TYPE']}checked{/if} /> {dr_lang('自定义')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').hide()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="0" {if empty($data['SYS_ATTACHMENT_SAVE_TYPE'])}checked{/if} /> {dr_lang('默认目录')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_attachment_type').show()" name="data[SYS_ATTACHMENT_SAVE_TYPE]" value="1" {if $data['SYS_ATTACHMENT_SAVE_TYPE']}checked{/if} /> {dr_lang('自定义目录')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('默认存储目录为：/年月/文件名')}</span>
                             </div>

@@ -153,7 +153,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?s=api&c=api&m=members&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
+		    var url = "/index.php?is_ajax=1&s=api&c=api&m=members&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',

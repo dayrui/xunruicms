@@ -63,6 +63,11 @@ class Upload
             return dr_return_data(0, dr_lang('此文件扩展名[%s]不安全，禁止上传', $file_ext));
         }
 
+        // 是否进行严格验证
+        if (defined('SYS_ATTACHMENT_SAFE') && SYS_ATTACHMENT_SAFE) {
+            return dr_return_data(1, 'ok');
+        }
+
         // 验证伪装图片
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
             $data = strtolower($data);

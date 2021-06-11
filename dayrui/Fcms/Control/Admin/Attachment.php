@@ -41,8 +41,7 @@ class Attachment extends \Phpcmf\Common
             $image = \Phpcmf\Service::L('input')->post('image');
             \Phpcmf\Service::M('System')->save_config($data,
                 [
-                    'SYS_FIELD_THUMB_ATTACH' => (int)$post['SYS_FIELD_THUMB_ATTACH'],
-                    'SYS_FIELD_CONTENT_ATTACH' => (int)$post['SYS_FIELD_CONTENT_ATTACH'],
+                    'SYS_ATTACHMENT_SAFE' => (int)$post['SYS_ATTACHMENT_SAFE'],
                     'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
                     'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
                     'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),

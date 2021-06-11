@@ -31,6 +31,7 @@ class System extends \Phpcmf\Model
         'SYS_ADMIN_OAUTH'    => '后台启用快捷登录',
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
+        'SYS_ATTACHMENT_SAFE'	=> '附件上传安全模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
         'SYS_ATTACHMENT_SAVE_TYPE'	=> '附件存储方式',
         'SYS_ATTACHMENT_SAVE_DIR'	=> '附件存储目录',
@@ -40,9 +41,6 @@ class System extends \Phpcmf\Model
         'SYS_BDMAP_API'	=> '百度地图API',
         'SYS_API_CODE'	=> 'API请求时验证码开关',
         'SYS_THEME_ROOT'	=> '风格目录引用作用域',
-
-        'SYS_FIELD_THUMB_ATTACH'	=> '缩略图字段存储策略',
-        'SYS_FIELD_CONTENT_ATTACH'	=> '内容字段存储策略',
 
         'SYS_NOT_UPDATE'	=> '禁止自动检测版本',
 

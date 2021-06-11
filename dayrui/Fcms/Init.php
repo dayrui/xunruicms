@@ -79,8 +79,7 @@ $system = [
     'SYS_API_CODE'  => '',
     'SYS_THEME_ROOT'    => '',
 
-    'SYS_FIELD_THUMB_ATTACH'    => '',
-    'SYS_FIELD_CONTENT_ATTACH'  => '',
+    'SYS_ATTACHMENT_SAFE'    => '',
 
 ];
 if (is_file(WRITEPATH.'config/system.php')) {
