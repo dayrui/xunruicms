@@ -676,6 +676,15 @@ class Pay extends \Phpcmf\Model
                 // 来自组合订单商城订单系统
                 $url = dr_url_prefix('index.php?s=member&app=order&c=home&m=index', '', $data['site']);
                 break;
+
+            case 'gathering':
+                // 来自收款
+                $row = $this->table($fid)->get($rid);
+                if ($row && $row['url']) {
+                    $url = $row['url'];
+                }
+
+                break;
         }
 
         return $url;
@@ -770,7 +779,6 @@ class Pay extends \Phpcmf\Model
 
                     case 'gathering':
                         // 来自收款
-                        $field = $this->myfield[$rname];
                         $row = $this->table($fid)->get($rid);
                         if (!$row) {
                             return dr_return_data(0, dr_lang('收款主题不存在'));

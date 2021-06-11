@@ -463,7 +463,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
         } else {
 
             // 付款金额
-            $html['pay_value'] = $value ? $value : '';
+            $html['pay_value'] = $value ? $value : 0;
 
             // 付款方式
             $html['pay_type'] = \Phpcmf\Service::M('pay')->get_pay_type(\Phpcmf\Service::C()->member && $field['setting']['option']['is_finecms']  && is_file(ROOTPATH.'api/pay/finecms/config.php'));
