@@ -705,7 +705,7 @@ class View {
             'total' => '', // 分页总数据
             'join' => '', // 关联表名
             'on' => '', // 关联表条件
-            'cache' => SYS_CACHE ? (int)SYS_CACHE_LIST * 3600 : 0, // 默认缓存时间
+            'cache' => SYS_CACHE ? SYS_CACHE_LIST * 3600 : 0, // 默认缓存时间
             'action' => '', // 动作标识
             'return' => '', // 返回变量
             'sbpage' => '', // 不按默认分页

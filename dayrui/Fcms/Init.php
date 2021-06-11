@@ -125,7 +125,7 @@ foreach ([
              'SYS_CACHE_SEARCH',
              'SYS_CACHE_SMS',
          ] as $name) {
-    define($name, (int)$cache[$name]);
+    define($name, floatval($cache[$name]));
 }
 unset($cache);
 

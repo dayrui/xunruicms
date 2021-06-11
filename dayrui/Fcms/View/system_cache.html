@@ -11,12 +11,6 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('缓存设置')} </a>
                 </li>
-                <li class="{if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-share-alt"></i> {dr_lang('站点首页静态')} </a>
-                </li>
-                <li class="{if $page==2}active{/if}">
-                    <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-th-large"></i> {dr_lang('模块首页静态')} </a>
-                </li>
             </ul>
         </div>
         <div class="portlet-body">
@@ -52,7 +46,7 @@
                             <div class="col-md-9">
                                 <div class="input-inline input-medium">
                                     <div class="input-group">
-                                        <input type="text" name="data[SYS_CACHE_{$value}]" value="{intval($data['SYS_CACHE_'.$value])}" class="form-control">
+                                        <input type="text" name="data[SYS_CACHE_{$value}]" value="{floatval($data['SYS_CACHE_'.$value])}" class="form-control">
                                         <span class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </span>
@@ -64,38 +58,6 @@
                         {/loop}
 
 
-                    </div>
-                </div>
-
-                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
-                    <div class="form-body">
-                        {loop $ci->site_info $sid $t}
-                        <?php $m = \Phpcmf\Service::M('Site')->config($sid);$t = $m['config'];?>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang(dr_strcut($t['SITE_NAME'], 10))}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="site[{$sid}][SITE_INDEX_HTML]" value="1" {if $t['SITE_INDEX_HTML']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('开启之后首页将会自动生成静态文件')}</span>
-                            </div>
-                        </div>
-                        {/loop}
-                    </div>
-                </div>
-
-                <div class="tab-pane  {if $page==2}active{/if}" id="tab_2">
-                    <div class="form-body">
-                        {loop $module $t}
-                        {if !$t.share}
-                        <?php $setting = dr_string2array($t['setting']);?>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang($t.name)}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="module[{$t.id}][module_index_html]" value="1" {if $setting['module_index_html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('开启之后当前模块的首页将会自动生成静态文件')}</span>
-                            </div>
-                        </div>
-                        {/if}
-                        {/loop}
                     </div>
                 </div>
 

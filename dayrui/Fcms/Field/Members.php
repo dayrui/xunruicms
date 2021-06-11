@@ -131,7 +131,7 @@ class Members extends \Phpcmf\Library\A_Field {
             if ($query) {
                 foreach ($query as $t) {
                     $id = $t['id'];
-                    $value = '<img class="img-circle" src="'.dr_avatar($t['id']).'" style="width:30px;height:30px;margin-right:10px;"> '.$t['username'];
+                    $value = '<a class="fc_member_show" href="javascript:;" uid="'.$t['id'].'"><img class="img-circle" src="'.dr_avatar($t['id']).'" style="width:30px;height:30px;margin-right:10px;"> '.$t['username'].'</a>';
                     $str.= str_replace(array('{avatar}', '{id}', '{value}', '\\'), array(dr_avatar($t['id']), $id, $value, ''), $tpl);
                 }
             }
@@ -233,8 +233,8 @@ class Members extends \Phpcmf\Library\A_Field {
         <table class="table table-striped table-bordered table-advance">
         <thead>
         <tr>
-            <th width="90" style="border-left-width: 2px!important;"> Id </th>
-            <th>'.dr_lang('主题').' </th>
+            <th width="90" style="border-left-width: 2px!important;"> Uid </th>
+            <th>'.dr_lang('账号').' </th>
         </tr>
         </thead>
         <tbody>';
@@ -245,7 +245,7 @@ class Members extends \Phpcmf\Library\A_Field {
             $query = $db ? $db->getResultArray() : [];
             if ($query) {
                 foreach ($query as $t) {
-                    $str .= '<tr><td>' . $t['id'] . '</td><td><a href="' . $t['url'] . '" target="_blank">' . $t['title'] . '</a></td></tr>';;
+                    $str .= '<tr><td>' . $t['id'] . '</td><td>' . $t['username'] . '</td></tr>';;
                 }
             }
         }
