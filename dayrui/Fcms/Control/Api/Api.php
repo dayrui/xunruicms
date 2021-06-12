@@ -50,7 +50,7 @@ class Api extends \Phpcmf\Common
 
         //生成二维码图片
         require_once CMSPATH.'Library/Phpqrcode.php';
-        $file = WRITEPATH.'caching/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
+        $file = WRITEPATH.'file/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
         if (is_file($file)) {
             $QR = imagecreatefrompng($file);
         } else {

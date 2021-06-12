@@ -89,9 +89,6 @@ class Run extends \Phpcmf\Common
         // 执行队列
         $i = \Phpcmf\Service::M('cron')->run_cron(intval($_GET['num']));
 
-        // 3天未付款的清理
-        \Phpcmf\Service::M('pay')->clear_paylog();
-
         // 最少100秒调用本程序
         \Phpcmf\Service::L('input')->set_cookie('cron', 1, 100);
 
@@ -111,6 +108,9 @@ class Run extends \Phpcmf\Common
 
         // 3天清理一次系统缓存
         if (SYS_TIME - $time > 3600 * 24 * 3) {
+            // 未付款的清理
+            \Phpcmf\Service::M('pay')->clear_paylog();
+            // 缓存清理
             \Phpcmf\Service::M('cache')->update_data_cache();
             file_put_contents(WRITEPATH.'config/run_auto_cache_time.php', SYS_TIME);
         }

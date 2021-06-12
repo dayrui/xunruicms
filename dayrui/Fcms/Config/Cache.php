@@ -47,7 +47,7 @@ class Cache extends BaseConfig
 	| system.
 	|
 	*/
-	public $storePath = WRITEPATH.'caching/';
+	public $storePath = WRITEPATH.'file/';
 
 	/*
 	|--------------------------------------------------------------------------

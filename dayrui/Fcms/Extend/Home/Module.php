@@ -288,7 +288,8 @@ class Module extends \Phpcmf\Common
         $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
 
         // 识别自定义地址，301定向
-        if (!IS_API_HTTP && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
+        if (!defined('IS_NOT_301')
+            && !IS_API_HTTP && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
             $get['page'] > 1 && $data['params']['page'] = $get['page'];
             dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
         }
