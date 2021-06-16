@@ -51,6 +51,17 @@ $(function(){
     }
 });
 
+// 时间戳转换
+function dr_strtotime(datetime) {
+    if (datetime.indexOf(" ") == -1) {
+        datetime+= ' 00:00:00';
+    }
+    var tmp_datetime = datetime.replace(/:/g,'-');
+    tmp_datetime = tmp_datetime.replace(/ /g,'-');
+    var arr = tmp_datetime.split("-");
+    var now = new Date(Date.UTC(arr[0],arr[1]-1,arr[2],arr[3]-8,arr[4],arr[5]));
+    return parseInt(now.getTime()/1000);
+}
 // 主目录相对路径
 function dr_get_web_dir() {
     if (typeof web_dir != "undefined" && web_dir) {
