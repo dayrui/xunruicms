@@ -919,10 +919,10 @@ class Module extends \Phpcmf\Common
 
             $class = '';
             if (!$this->module) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
+                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>模块".$t['mid']."未被初始化</a>";
                 $class = ' p_error';
             } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
+                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
                 /*
             } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$t['id']]['show']) {
@@ -932,9 +932,9 @@ class Module extends \Phpcmf\Common
                 $rt = $this->_Create_Show_Html($t['id']);
                 \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
                 if ($rt['code']) {
-                    $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
+                    $ok = "<a class='ok' href='".dr_url_prefix($t['url'])."' target='_blank'>生成成功</a>";
                 } else {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
+                    $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>".$rt['msg']."</a>";
                     $class = ' p_error';
                 }
             }
@@ -987,10 +987,10 @@ class Module extends \Phpcmf\Common
 
             $class = '';
             if (!$this->module) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>模块".$t['mid']."未被初始化</a>";
+                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>模块".$t['mid']."未被初始化</a>";
                 $class = ' p_error';
             } elseif (!$t['html']) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>它是动态模式</a>";
+                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>它是动态模式</a>";
                 $class = ' p_error';
                 /*
             } elseif ($this->member_cache['auth_module'][SITE_ID][($this->module['share'] ? 'share' : $this->module['dirname'])]['category'][$t['id']]['show']) {
@@ -1000,9 +1000,9 @@ class Module extends \Phpcmf\Common
                 $rt = $this->_Create_Category_Html($t['id'], $t['page']);
                 \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
                 if ($rt['code']) {
-                    $ok = "<a class='ok' href='".$t['url']."' target='_blank'>生成成功</a>";
+                    $ok = "<a class='ok' href='".dr_url_prefix($t['url'])."' target='_blank'>生成成功</a>";
                 } else {
-                    $ok = "<a class='error' href='".$t['url']."' target='_blank'>".$rt['msg']."</a>";
+                    $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>".$rt['msg']."</a>";
                     $class = ' p_error';
                 }
 

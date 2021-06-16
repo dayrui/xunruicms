@@ -11,7 +11,7 @@
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-list-alt"></i> {dr_lang('菜单权限')} </a>
                 </li>
                 <li class="{if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-th-large"></i> {dr_lang('内容权限')} </a>
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1');"> <i class="fa fa-th-large"></i> {dr_lang('内容权限')} </a>
                 </li>
 
             </ul>
@@ -23,7 +23,7 @@
 
                     <table class="table table-striped table-bordered table-checkable">
                         <thead>
-                        <tr>
+                        <tr style="background-color: #fbfcfd;">
                             <th width="50" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
@@ -87,7 +87,7 @@
                     {loop $module_auth $dir $t}
                     <table class="table table-striped table-bordered table-hover table-checkable">
                         <thead>
-                        <tr>
+                        <tr style="background-color: #fbfcfd;">
                             <th width="50" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="group-checkable" data-set=".menu_module_{$dir}" />

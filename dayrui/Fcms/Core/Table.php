@@ -177,7 +177,7 @@ class Table extends \Phpcmf\Common
      * $name    字段名称
      * $value   字段值
      * */
-    protected function _Save_Value($id, $name, $value, $after = null) {
+    protected function _Save_Value($id, $name, $value, $after = null, $before = null) {
 
         if (!\Phpcmf\Service::M()->is_table_exists($this->init['table'])) {
             $this->_json(0, dr_lang('数据表（%s）不存在', $this->init['table']));
@@ -191,6 +191,15 @@ class Table extends \Phpcmf\Common
             $this->_json(0, dr_lang('数据%s不存在', $id));
         } elseif ($row[$name] == $value) {
             $this->_json(1, dr_lang('操作成功'));
+        }
+
+        // 存储之前
+        if ($before) {
+            $rt = call_user_func_array($before, [$row]);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            $rt['data'] && $value = $rt['data'];
         }
 
         $rt = \Phpcmf\Service::M()->init($this->init)->save($id, $name, $value, $this->edit_where);
@@ -227,6 +236,7 @@ class Table extends \Phpcmf\Common
         $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
         $value = \Phpcmf\Service::L('input')->get('value');
         $after = dr_safe_filename(\Phpcmf\Service::L('input')->get('after'));
+        $before = dr_safe_filename(\Phpcmf\Service::L('input')->get('before'));
 
         if (!$id) {
             $this->_json(0, dr_lang('缺少id参数'));
@@ -234,7 +244,7 @@ class Table extends \Phpcmf\Common
             $this->_json(0, dr_lang('缺少name参数'));
         }
 
-        $this->_Save_Value($id, $name, $value, $after);
+        $this->_Save_Value($id, $name, $value, $after, $before);
     }
     
     // 格式化保存数据

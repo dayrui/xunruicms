@@ -107,13 +107,17 @@
 
          <div class="row fc-list-footer table-checkable ">
              <div class="col-md-5 fc-list-select">
-                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                 {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
                     <span></span>
                 </label>
+                 {/if}
+                 {if $ci->_is_admin_auth('del')
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
-                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/add')}&at=post', '{dr_lang('你确定要批量发布它们吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-post"></i> {dr_lang('批量立即发布')}</button></label>
+                 {/if}
+                 {if $ci->_is_admin_auth('edit')}
+                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/add')}&at=post', '{dr_lang('你确定要批量发布它们吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-post"></i> {dr_lang('批量立即发布')}</button></label>
                 {/if}
             </div>
              <div class="col-md-7 fc-list-page">

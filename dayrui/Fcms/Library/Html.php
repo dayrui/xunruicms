@@ -263,7 +263,7 @@ class Html
             $this->webpath = require WRITEPATH.'config/webpath.php';
         }
 
-        $webpath = WEBPATH;
+        $webpath = isset($this->webpath[$siteid]['site']) && $this->webpath[$siteid]['site'] ? $this->webpath[$siteid]['site'] : WEBPATH;
         if (isset($this->webpath[$siteid][$mid]) && $this->webpath[$siteid][$mid]) {
             $webpath = $this->webpath[$siteid][$mid];
         }

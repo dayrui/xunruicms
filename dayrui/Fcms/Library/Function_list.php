@@ -134,7 +134,7 @@ class Function_list
 
     // 用于列表显示ip地址
     public function ip($value, $param = [], $data = [], $len = 200) {
-        return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len).'</a>';
+        return dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len);
     }
 
     // url链接输出
@@ -268,6 +268,18 @@ class Function_list
         }
 
         return $value;
+    }
+
+    // 实时存储时间值
+    public function save_time_value($value, $param = [], $data = [], $field = []) {
+
+        $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
+        $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
+        $html = '<input type="text" class="form-control" placeholder="" value="'.dr_date($value).'" onblur="dr_ajax_save(dr_strtotime(this.value), \''.$url.'\', \''.$field['fieldname'].'\')">';
+
+        \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
+
+        return $html;
     }
 
     // 实时存储文本值
