@@ -256,8 +256,8 @@ class Category extends \Phpcmf\Table {
                     'mpagesize' => 10,
                 ],
                 'seo' => [
-                    'list_title' => '[第{page}页{join}]{catpname}{join}{modname}{join}{SITE_NAME}',
-                    'show_title' => '[第{page}页{join}]{title}{join}{catpname}{join}{modname}{join}{SITE_NAME}',
+                    'list_title' => '[第{page}页{join}]{catpname}{join}{SITE_NAME}',
+                    'show_title' => '[第{page}页{join}]{title}{join}{catpname}{join}{SITE_NAME}',
                 ],
             ]
         ];
@@ -427,8 +427,8 @@ class Category extends \Phpcmf\Table {
                         'pagesize' => 20,
                     ],
                     'seo' => [
-                        'list_title' => '[第{page}页{join}]{name}{join}{modname}{join}{SITE_NAME}',
-                        'show_title' => '[第{page}页{join}]{title}{join}{catname}{join}{modname}{join}{SITE_NAME}',
+                        'list_title' => '[第{page}页{join}]{name}{join}{SITE_NAME}',
+                        'show_title' => '[第{page}页{join}]{title}{join}{catname}{join}{SITE_NAME}',
                     ],
                 ];
                 $data['setting']['getchild'] = 0;

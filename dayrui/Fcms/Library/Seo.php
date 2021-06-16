@@ -244,7 +244,7 @@ class Seo
             $seo = $cat['setting']['seo'];
         }
 
-        $meta_title = $seo['list_title'] ? $seo['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{modulename}{join}{SITE_NAME}';
+        $meta_title = $seo['list_title'] ? $seo['list_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(array('[', ']'), '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
         return $this->get_seo_value($cat, [
@@ -276,7 +276,7 @@ class Seo
         $data['keywords'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['keywords'])));
         $data['description'] = htmlspecialchars(dr_safe_replace(dr_clearhtml($data['description'])));
 
-        $meta_title = isset($mod['site'][SITE_ID]['show_title']) && $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{modulename}{join}{SITE_NAME}';
+        $meta_title = isset($mod['site'][SITE_ID]['show_title']) && $mod['site'][SITE_ID]['show_title'] ? $mod['site'][SITE_ID]['show_title'] : '['.dr_lang('第%s页', '{page}').'{join}]{title}{join}{catpname}{join}{SITE_NAME}';
         $meta_title = $page > 1 ? str_replace(['[', ']'], '', $meta_title) : preg_replace('/\[.+\]/U', '', $meta_title);
 
         return $this->get_seo_value($data, [

@@ -81,6 +81,10 @@ class Form
 
     public function validation($data, $config, $fields = [], $old = []) {
 
+        if (!$data) {
+            $data = [];
+        }
+
         $attach = []; // 附件信息
 
         // 表单规则验证
