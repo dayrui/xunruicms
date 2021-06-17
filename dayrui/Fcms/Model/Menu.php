@@ -513,13 +513,13 @@ class Menu extends \Phpcmf\Model {
     }
 
     // 获取菜单
-    public function gets($table) {
+    public function gets($table, $where = '') {
 
         $menu = [];
-        $data = $this->db->table($table.'_menu')
-		->where('mark<>"cloud"')
-		->orderBy('displayorder ASC,id ASC')
-		->get()->getResultArray();
+        $db = $this->db->table($table.'_menu');
+		$where ? $db->where($where);
+		$db->orderBy('displayorder ASC,id ASC');
+		$data = $db->get()->getResultArray();
 
         if ($data) {
 
