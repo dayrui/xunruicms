@@ -146,12 +146,22 @@ class Cron extends \Phpcmf\Table
         if (is_file(WRITEPATH.'config/cron.php')) {
             require WRITEPATH.'config/cron.php';
         }
-
         $data = json_decode($json, true);
 
         if (IS_AJAX_POST) {
 
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post && is_array($post)) {
+                foreach ($post as $key => $t) {
+                    if (!$t || !$t['name']) {
+                        unset($post[$key]);
+                    }
+                    $post[$key]['name'] = dr_safe_filename($t['name']);
+                    $post[$key]['code'] = dr_safe_filename($t['code']);
+                }
+            } else {
+                $post = [];
+            }
 
             file_put_contents(WRITEPATH.'config/cron.php',
                 '<?php defined(\'FCPATH\') OR exit(\'No direct script access allowed\');'.PHP_EOL.' $json=\''.json_encode($post).'\';');
