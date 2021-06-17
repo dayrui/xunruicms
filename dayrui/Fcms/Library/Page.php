@@ -441,7 +441,7 @@ class Page {
         if ($this->first_link !== FALSE && ($this->cur_page > ($this->num_links + 1) || $this->compel_first_page))
         {
             // Take the general parameters, and squeeze this pagination-page attr in for JS frameworks.
-            $attributes = sprintf(' %s="%d"', $this->data_page_attr, 1);
+            $attributes = $this->data_page_attr ? sprintf(' %s="%d"', $this->data_page_attr, 1) : '';
             if ($this->first_anchor_class) {
                 $attributes.= ' class="'.$this->first_anchor_class.'"';
             } elseif ($this->anchor_class) {
@@ -457,7 +457,7 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
 
-            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            $attributes = !$this->data_page_attr ? '' : sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
             if ($this->prev_anchor_class) {
                 $attributes.= ' class="'.$this->prev_anchor_class.'"';
             } elseif ($this->anchor_class) {
@@ -486,7 +486,7 @@ class Page {
             {
                 $i = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
 
-                $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+                $attributes = !$this->data_page_attr ? '' : sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
                 if ($this->num_anchor_class) {
                     $attributes.= ' class="'.$this->num_anchor_class.'"';
                 } elseif ($this->anchor_class) {
@@ -520,7 +520,7 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
 
-            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            $attributes = !$this->data_page_attr ? '' : sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
             if ($this->next_anchor_class) {
                 $attributes.= ' class="'.$this->next_anchor_class.'"';
             } elseif ($this->anchor_class) {
@@ -536,7 +536,7 @@ class Page {
         {
             $i = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
 
-            $attributes = sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
+            $attributes = !$this->data_page_attr ? '' : sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
             if ($this->last_anchor_class) {
                 $attributes.= ' class="'.$this->last_anchor_class.'"';
             } elseif ($this->anchor_class) {

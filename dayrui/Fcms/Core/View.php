@@ -1449,7 +1449,7 @@ class View {
                 foreach ($array as $name) {
                     $name && $sql[] = '(`'.$table.'`.`title` LIKE "%'.dr_safe_replace($name).'%" OR `'.$table.'`.`keywords` LIKE "%'.dr_safe_replace($name).'%")';
                 }
-                $where[] = [
+                $sql && $where[] = [
                     'adj' => 'SQL',
                     'value' => '('.implode(' OR ', $sql).')'
                 ];
