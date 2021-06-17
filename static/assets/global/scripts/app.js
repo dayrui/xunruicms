@@ -18,17 +18,6 @@ var App = function() {
             isRTL = true;
         }
 
-        isIE8 = !!navigator.userAgent.match(/MSIE 8.0/);
-        isIE9 = !!navigator.userAgent.match(/MSIE 9.0/);
-        isIE10 = !!navigator.userAgent.match(/MSIE 10.0/);
-
-        if (isIE10) {
-            $('html').addClass('ie10'); // detect IE10 version
-        }
-
-        if (isIE10 || isIE9 || isIE8) {
-            $('html').addClass('ie'); // detect IE10 version
-        }
     };
 
     // 运行由设置的回调函数 App.addResponsiveHandler().
@@ -594,49 +583,7 @@ var Layout = function () {
     //此函数处理屏幕大小调整或移动设备旋转时的响应布局。
     //为边栏和内容设置适当的高度。内容和侧边栏高度必须始终同步。
     var handleSidebarAndContentHeight = function () {
-        var content = $('.page-content');
-        var sidebar = $('.page-content');
-        var body = $('body');
-        var height;
-
-        if (body.hasClass("page-footer-fixed") === true && body.hasClass("page-sidebar-fixed") === false) {
-            var available_height = App.getViewPort().height - $('.page-footer').outerHeight() - $('.page-header').outerHeight();
-            var sidebar_height = sidebar.outerHeight();
-            if (sidebar_height > available_height) {
-                available_height = sidebar_height + $('.page-footer').outerHeight();
-            }
-            if (content.height() < available_height) {
-                content.attr('style', 'min-height:' + available_height + 'px');
-            }
-        } else {
-            // 后台模式下
-            if (body.hasClass('page-sidebar-fixed')) {
-                height = _calculateFixedSidebarViewportHeight();
-                if (body.hasClass('page-footer-fixed') === false) {
-                    height = height - $('.page-footer').outerHeight();
-                }
-            } else {
-                var headerHeight = $('.page-header').outerHeight();
-                var footerHeight = $('.page-footer').outerHeight();
-
-                if (App.getViewPort().width < resBreakpointMd) {
-                    height = App.getViewPort().height;
-                    if (typeof headerHeight != "undefined"){
-                        height = height - headerHeight;
-                    }
-                    if (typeof footerHeight != "undefined"){
-                        height = height - footerHeight;
-                    }
-                } else {
-                    height = sidebar.height() + 20;
-                }
-
-                if ((height + headerHeight + footerHeight) <= App.getViewPort().height) {
-                    height = App.getViewPort().height - headerHeight - footerHeight;
-                }
-            }
-            content.attr('style', 'min-height:' + height + 'px');
-        }
+       
     };
 
 

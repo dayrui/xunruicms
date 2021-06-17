@@ -662,3 +662,8 @@ form .portlet.light .portlet-body {
     border-radius: .25rem;
     padding: 1.5rem;
 }
+
+.layui-layer-btn .layui-layer-btn0 {
+    border-color: #40aae3 !important;
+    background-color: #40aae3 !important;
+}
