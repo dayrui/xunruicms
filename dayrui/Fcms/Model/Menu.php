@@ -517,7 +517,7 @@ class Menu extends \Phpcmf\Model {
 
         $menu = [];
         $db = $this->db->table($table.'_menu');
-		$where ? $db->where($where);
+		$where && $db->where($where);
 		$db->orderBy('displayorder ASC,id ASC');
 		$data = $db->get()->getResultArray();
 
