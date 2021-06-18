@@ -6,7 +6,7 @@
 
 
 #### 运行环境
-PHP7.2以上（支持PHP8）
+PHP7.3以上（支持PHP8）
 MySQL5以上，推荐5.7及以上
 Apache、Nginx、IIS等Web服务器都可以
 
