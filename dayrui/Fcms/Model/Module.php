@@ -247,6 +247,9 @@ class Module extends \Phpcmf\Model
             \Phpcmf\Service::M('mform', 'mform')->link_install($module, $mpath, $dir, $table);
         }
 
+        // 模块安装时执行的联动
+        \Phpcmf\Hooks::trigger('module_install_data', [$module, $mpath, $dir, $table]);
+
         if (is_file($mpath.'Config/Install.php')) {
             require $mpath.'Config/Install.php';
         }
@@ -344,6 +347,9 @@ class Module extends \Phpcmf\Model
             if (dr_is_app('mform')) {
                 \Phpcmf\Service::M('mform', 'mform')->link_uninstall($table, $dir);
             }
+
+            // 模块卸载时执行的联动
+            \Phpcmf\Hooks::trigger('module_uninstall_data', [$module, $mpath, $dir, $table]);
 
             // 执行模块自己的卸载程序
             if (is_file($mpath.'Config/Uninstall.php')) {
