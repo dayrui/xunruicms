@@ -323,7 +323,7 @@ class File extends \Phpcmf\Common
             $this->_msg(0, dr_lang('此附件下载链接已经失效'));
         }
 
-        $id = intval($rt['id']);
+        $id = trim($rt['id']);
 
         // 下载文件钩子
         \Phpcmf\Hooks::trigger('down_file', $id);
