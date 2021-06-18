@@ -186,6 +186,7 @@ class Role extends \Phpcmf\Common
                     $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
                     $module_auth[$mdir]['auth'][$mdir.'/recycle/'] = dr_lang('回收站');
                     $module_auth[$mdir]['auth'][$mdir.'/time/'] = dr_lang('定时发布');
+                    $module_auth[$mdir]['auth'][$mdir.'/verify/'] = dr_lang('待审核');
                 } else {
                     // 自定义模块
                 }
