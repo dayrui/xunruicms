@@ -39,7 +39,6 @@
             <div class="col-md-12">
                 <label><button type="submit" class="btn green btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('error/del', ['time'=>$time])}', '{dr_lang('你确定要清空当天记录吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('清空')}</button></label>
-                <label><button type="button" onclick="dr_ajax_url('{dr_url('error/add', ['time'=>$time])}')" class="btn blue btn-sm"> <i class="fa fa-cloud"></i> {dr_lang('一键上报给官方')}</button></label>
             </div>
         </form>
     </div>
