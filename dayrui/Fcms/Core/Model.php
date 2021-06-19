@@ -13,6 +13,7 @@ class Model {
     public $key;
     public $field;
     public $table;
+    public $stable;
     public $prefix;
 
     public $uid;
@@ -39,6 +40,7 @@ class Model {
 
         isset($data['id']) && $this->id = $this->key = $data['id'];
         isset($data['table']) && $this->table = $data['table'];
+        isset($data['stable']) && $this->stable = $data['stable'];
         isset($data['field']) && $this->field = $data['field'];
         isset($data['date_field']) && $this->date_field = $data['date_field'];
 
@@ -789,6 +791,8 @@ class Model {
                 list($order_field, $b) = explode(' ', $t);
                 if ($this->is_field_exists($this->table, $order_field)) {
                     $order_arr[] = $order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
+                } elseif ($this->stable && $this->is_field_exists($this->stable, $order_field)) {
+                    $order_arr[] = $this->stable.'.'.$order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
                 }
             }
             if ($order_arr) {
@@ -892,7 +896,7 @@ class Model {
 
         $sql = str_replace('{dbprefix}', $this->prefix, $sql);
         $query = $this->db->query($sql);
-        if (!$query) {
+        if (!$query || !is_object($query)) {
             return [];
         }
 
