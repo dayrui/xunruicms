@@ -1,3 +1,7 @@
+/*
+* my.css 是用来自定义后台样式文件，可以由开发者随便修改，升级不会被覆盖
+*/
+
 body{background-color:#f5f6f8}
 .main-content {background: #f5f6f8}
 .index-content { background: #f5f6f8 }
