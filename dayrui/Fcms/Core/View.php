@@ -2072,9 +2072,8 @@ class View {
 
         !$url && $url = '此标签没有设置urlrule参数';
 
-        $url = dr_url_prefix($url);
-		$this->_page_urlrule = $url;
-        $config['base_url'] = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
+		$this->_page_urlrule = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', dr_url_prefix($url));
+        $config['base_url'] = $this->_page_urlrule;
         $config['first_url'] = $first_url ? dr_url_prefix($first_url) : '';
         $config['per_page'] = $pagesize;
         $config['page_name'] = $this->_page_value;
@@ -2641,7 +2640,7 @@ class View {
                 $debug.= '<p>当前页码：'.$page.'</p>';
                 $debug.= '<p>总页数量：'.$nums. ($nums == 1 ? '（数据量未达到分页数据，因此只有一页）' : '').'</p>';
                 $debug.= '<p>每页数量：'.$pagesize.'</p>';
-                $debug.= '<p>分页地址：'.str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d', '{page}'], '页码', $this->_page_urlrule).'</p>';
+                $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
             } else {
                 $debug.= '<p>分页功能：未开启</p>';
             }
@@ -2658,6 +2657,7 @@ class View {
                     'debug_'.$return => $debug,
                     'total_'.$return => $total,
                     'return_'.$return => $data,
+                    'pagerule_'.$return => $this->_page_urlrule,
                     'pagesize_'.$return => $pagesize,
                 ];
             } else {
@@ -2668,6 +2668,7 @@ class View {
                     'total' => $total,
                     'pages' => $pages,
                     'return' => $data,
+                    'pagerule' => $this->_page_urlrule,
                     'pagesize' => $pagesize,
                 ];
             }
