@@ -928,27 +928,42 @@ class View {
 
                 $show = isset($param['show']) ? 1 : 0; // 有show参数表示显示隐藏栏目
                 $return = [];
-                foreach ($module['category'] as $t) {
-                    if (!$t['show'] && !$show) {
-                        continue;
-                    } elseif (isset($param['pid']) && $t['pid'] != (int)$param['pid']) {
-                        continue;
-                    } elseif (isset($param['mid']) && $t['mid'] != $param['mid']) {
-                        continue;
-                    } elseif (isset($param['child']) && $t['child'] != (int)$param['child']) {
-                        continue;
-                    } elseif (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
-                        continue;
-                    } elseif (isset($system['more']) && !$system['more']) {
-                        unset($t['field'], $t['setting']);
+
+                if (isset($param['id']) && $param['id']) {
+                    $arr = explode(',', $param['id']);
+                    if ($arr) {
+                        $new = [];
+                        foreach ($arr as $t) {
+                            if ($t && isset($module['category'][$t]) && $module['category'][$t]) {
+                                $new[$t] = $module['category'][$t];
+                            }
+                        }
+                        $module['category'] = $new;
                     }
-                    if ($t['tid'] == 2) {
-                        // 外链栏目
-                    } else {
-                        $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
-                    }
-                    $return[] = $t;
                 }
+
+                if ($module['category']) {
+                    foreach ($module['category'] as $t) {
+                        if (!$t['show'] && !$show) {
+                            continue;
+                        } elseif (isset($param['pid']) && $t['pid'] != (int)$param['pid']) {
+                            continue;
+                        } elseif (isset($param['mid']) && $t['mid'] != $param['mid']) {
+                            continue;
+                        } elseif (isset($param['child']) && $t['child'] != (int)$param['child']) {
+                            continue;
+                        } elseif (isset($system['more']) && !$system['more']) {
+                            unset($t['field'], $t['setting']);
+                        }
+                        if ($t['tid'] == 2) {
+                            // 外链栏目
+                        } else {
+                            $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
+                        }
+                        $return[] = $t;
+                    }
+                }
+
 
                 // num参数
                 if ($system['num']) {
@@ -957,6 +972,26 @@ class View {
                     } elseif (strpos($system['num'], ',') !== false) {
                         list($a, $b) = explode(',', $system['num']);
                         $return = array_slice($return, max(0, $a - 1), $b);
+                    }
+                }
+
+                // order
+                if ($system['order']) {
+                    $arr = explode(',', $system['order']);
+                    foreach ($arr as $t) {
+                        $a = explode('_', $t);
+                        $b = strtolower(end($a));
+                        if (in_array($b, ['desc', 'asc', 'instr'])) {
+                            $a = str_replace('_'.$b, '', $t);
+                        } else {
+                            $a = $t;
+                            $b = 'desc';
+                        }
+                        if ($b == 'instr') {
+
+                        } else {
+                            $return = dr_array_sort($return, $a, $b);
+                        }
                     }
                 }
 

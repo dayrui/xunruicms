@@ -142,6 +142,11 @@ function dr_move_uploaded_file($tempfile, $fullname) {
 }
 
 // html实体字符转换
+function dr_html2code($value) {
+    return htmlspecialchars($value);
+}
+
+// html实体字符转换
 function dr_code2html($value, $fk = false, $flags = null) {
     return dr_html_code($value, $fk, $flags);
 }
@@ -3507,7 +3512,9 @@ function dr_array_sort($arr, $key, $type = 'asc') {
     }
 
     uasort($arr, function($a, $b) use ($key, $type) {
-        if ($a[$key] == $b[$key]) {
+        if (!isset($a[$key])) {
+            return 0;
+        } elseif ($a[$key] == $b[$key]) {
             return 0;
         }
         if ($type == 'asc') {
