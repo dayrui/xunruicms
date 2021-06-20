@@ -14,7 +14,7 @@ class Member extends \Phpcmf\Model
      * 由用户名获取uid
      */
     public function uid($name) {
-        if (dr_lang('游客') == $name) {
+        if (!$name || dr_lang('游客') == $name) {
             return 0;
         } elseif ($name == $this->member['username']) {
             return $this->member['uid'];
