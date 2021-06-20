@@ -443,7 +443,7 @@
                             'name' => dr_lang('资料'),
                             'icon' => 'fa fa-user',
                             'func' => 'dr_show_member',
-                            'diy_show_value' => 'member:username',
+                            'diy_show_value' => 'member:author',
                             'diy_insert_value' => 'member:uid',
                             'value'	=> \Phpcmf\Service::C()->member['uid']
                         ),

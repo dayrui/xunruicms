@@ -14,7 +14,9 @@ class Member extends \Phpcmf\Model
      * 由用户名获取uid
      */
     function uid($name) {
-        if ($name == $this->member['username']) {
+        if (dr_lang('游客') == $name) {
+            return 0;
+        } elseif ($name == $this->member['username']) {
             return $this->member['uid'];
         }
         $data = $this->db->table('member')->select('id')->where('username', dr_safe_replace($name))->get()->getRowArray();
@@ -26,6 +28,19 @@ class Member extends \Phpcmf\Model
      */
     function username($uid) {
         if ($uid == $this->member['uid']) {
+            return $this->member['username'];
+        }
+        $data = $this->db->table('member')->select('username')->where('id', intval($uid))->get()->getRowArray();
+        return $data['username'];
+    }
+
+    /**
+     * 后台账号字段获取用户名
+     */
+    function author($uid) {
+        if (!$uid) {
+            return dr_lang('游客');
+        } elseif ($uid == $this->member['uid']) {
             return $this->member['username'];
         }
         $data = $this->db->table('member')->select('username')->where('id', intval($uid))->get()->getRowArray();
@@ -191,6 +206,8 @@ class Member extends \Phpcmf\Model
 
         // 登录后的钩子
         \Phpcmf\Hooks::trigger('member_login_after', $data);
+
+        $this->clear_cache($data['id']);
     }
 
     /**
@@ -494,6 +511,8 @@ class Member extends \Phpcmf\Model
             $this->insert_group($uid, \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid']);
         }
 
+        \Phpcmf\Service::M('member')->clear_cache($uid);
+
         \Phpcmf\Hooks::trigger('member_del_group_after', $call);
 
         return true;
@@ -539,6 +558,7 @@ class Member extends \Phpcmf\Model
                 }
             }
         }
+        \Phpcmf\Service::M('member')->clear_cache($uid);
     }
 
     // 手动变更等级
@@ -553,6 +573,7 @@ class Member extends \Phpcmf\Model
         $call['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['name'];
         \Phpcmf\Service::L('Notice')->send_notice('member_edit_level', $call);
         \Phpcmf\Hooks::trigger('member_edit_level_after', $data, $old);
+        \Phpcmf\Service::M('member')->clear_cache($uid);
     }
 
     // 申请用户组
@@ -1201,6 +1222,8 @@ class Member extends \Phpcmf\Model
         // 钩子
         \Phpcmf\Hooks::trigger('member_edit_password_after', $member);
 
+        $this->clear_cache($id);
+
         return true;
     }
 
@@ -1433,6 +1456,8 @@ class Member extends \Phpcmf\Model
     // 删除会员后执行 sync是否删除相关数据表
     public function member_delete($id, $sync = 0) {
 
+        $this->clear_cache($id);
+
         // 删除会员的相关表
         $this->db->table('member_data')->where('id', $id)->delete();
         $this->db->table('member_group_index')->where('uid', $id)->delete();
@@ -1570,9 +1595,12 @@ class Member extends \Phpcmf\Model
     // 修改账号
     public function edit_username($uid, $username) {
 
+        $this->clear_cache($uid, $username);
+
         $this->table('member')->update($uid, [
             'username' => $username,
         ]);
+
         $this->db->table('member_paylog')->where('uid', $uid)->update([ 'username' => $username ]);
         $this->db->table('member_paylog')->where('touid', $uid)->update([ 'tousername' => $username ]);
         $this->db->table('member_group_verify')->where('uid', $uid)->update([ 'username' => $username ]);
@@ -1580,7 +1608,13 @@ class Member extends \Phpcmf\Model
         $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $uid)->update([ 'username' => $username ]);
 
         \Phpcmf\Service::L('cache')->set_data('member-info-'.$uid, '', 1);
+    }
 
+    // 清理指定用户缓存
+    public function clear_cache($uid, $username = '') {
+
+        \Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
+        $username && \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$username);
     }
 
     // 按用户uid查询表id集合
@@ -1599,6 +1633,63 @@ class Member extends \Phpcmf\Model
             foreach ($result as $t) {
                 $cache[$t['name']] = dr_string2array($t['value']);
             }
+        }
+
+        if (!isset($cache['list_field']) || !$cache['list_field']) {
+            $cache['list_field'] = array (
+                'username' =>
+                    array (
+                        'use' => '1',
+                        'name' => '账号',
+                        'width' => '110',
+                        'func' => 'author',
+                    ),
+                'group' =>
+                    array (
+                        'func' => 'group',
+                        'center' => '1',
+                    ),
+                'name' =>
+                    array (
+                        'use' => '1',
+                        'name' => '姓名',
+                        'width' => '120',
+                        'func' => '',
+                    ),
+                'money' =>
+                    array (
+                        'use' => '1',
+                        'name' => '余额',
+                        'width' => '120',
+                        'func' => 'money',
+                    ),
+                'score' =>
+                    array (
+                        'use' => '1',
+                        'name' => '虚拟币',
+                        'width' => '120',
+                        'func' => 'score',
+                    ),
+                'regip' =>
+                    array (
+                        'use' => '1',
+                        'name' => '注册IP',
+                        'width' => '140',
+                        'func' => 'ip',
+                    ),
+                'regtime' =>
+                    array (
+                        'use' => '1',
+                        'name' => '注册时间',
+                        'width' => '170',
+                        'func' => 'datetime',
+                    ),
+                'is_lock' =>
+                    array (
+                        'func' => 'save_select_value',
+                        'center' => '1',
+                    ),
+            );
         }
 
         // 字段归属

@@ -489,7 +489,7 @@ class Form
      */
     public function check_member($value) {
 
-        if (!$value) {
+        if (!$value || dr_lang('游客') == $value) {
             return dr_return_data(1);
         } elseif (!\Phpcmf\Service::M('member')->uid($value)) {
             return dr_return_data(0, dr_lang('账号【%s】不存在', $value));
