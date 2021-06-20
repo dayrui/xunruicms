@@ -13,7 +13,7 @@ class Member extends \Phpcmf\Model
     /**
      * 由用户名获取uid
      */
-    function uid($name) {
+    public function uid($name) {
         if (dr_lang('游客') == $name) {
             return 0;
         } elseif ($name == $this->member['username']) {
@@ -26,7 +26,7 @@ class Member extends \Phpcmf\Model
     /**
      * 由uid获取用户名
      */
-    function username($uid) {
+    public function username($uid) {
         if ($uid == $this->member['uid']) {
             return $this->member['username'];
         }
@@ -37,20 +37,17 @@ class Member extends \Phpcmf\Model
     /**
      * 后台账号字段获取用户名
      */
-    function author($uid) {
+    public function author($uid) {
         if (!$uid) {
             return dr_lang('游客');
-        } elseif ($uid == $this->member['uid']) {
-            return $this->member['username'];
         }
-        $data = $this->db->table('member')->select('username')->where('id', intval($uid))->get()->getRowArray();
-        return $data['username'];
+        return $this->username($uid);
     }
 
     /**
      * 由uid获取电话
      */
-    function phone($uid) {
+    public function phone($uid) {
         if ($uid == $this->member['uid']) {
             return $this->member['phone'];
         }
@@ -59,7 +56,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 用户基本信息
-    function member_info($uid) {
+    public function member_info($uid) {
 
         if ($uid == $this->member['uid']) {
             return $this->member;
