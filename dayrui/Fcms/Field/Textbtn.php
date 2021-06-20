@@ -111,6 +111,11 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 	 */
 	public function input($field, $value = null) {
 
+        // 字段禁止修改时就返回显示字符串
+        if ($this->_not_edit($field, $value)) {
+            return $this->show($field, $value);
+        }
+
         // 字段默认值
         $value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
@@ -124,11 +129,6 @@ class Textbtn extends \Phpcmf\Library\A_Field {
                 log_message('error', '扩展函数方法 '.$field['setting']['option']['diy_show_value'].' 不存在！');
             }
         }
-
-		// 字段禁止修改时就返回显示字符串
-		if ($this->_not_edit($field, $value)) {
-			return $this->show($field, $value);
-		}
 		
 		// 字段存储名称
 		$name = $field['fieldname'];
@@ -167,9 +167,33 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 			</div>
 		';
 
-
-
 		return $this->input_format($field['fieldname'], $text, $str.$tips);
 	}
-	
+
+    /**
+     * 字段表单显示
+     *
+     * @param	string	$field	字段数组
+     * @param	array	$value	值
+     * @return  string
+     */
+    public function show($field, $value = null) {
+
+        // 字段默认值
+        $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+        if (isset($field['setting']['option']['diy_show_value']) && $field['setting']['option']['diy_show_value']) {
+            // 扩展字段函数
+            list($a, $method) = explode(':', $field['setting']['option']['diy_show_value']);
+            $obj = \Phpcmf\Service::M($a);
+            if (method_exists($obj, $method)) {
+                $value = call_user_func([$obj, $method], $value);
+            } else {
+                log_message('error', '扩展函数方法 '.$field['setting']['option']['diy_show_value'].' 不存在！');
+            }
+        }
+
+        $str = '<div class="form-control-static"> '.htmlspecialchars_decode($value).' </div>';
+
+        return $this->input_format($field['fieldname'], $field['name'], $str);
+    }
 }
