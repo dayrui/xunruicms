@@ -64,13 +64,7 @@ class Image extends \Phpcmf\Library\A_Field {
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
 				<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 			</div>
-		</div><div class="form-group">
-                <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
-                <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][tips]" '.($option['tips'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
-                <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
-                </div>
-            </div>'];
+		</div>'];
     }
 
     /**

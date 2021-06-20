@@ -13,7 +13,7 @@ class Redirect extends \Phpcmf\Library\A_Field {
     public function __construct(...$params) {
         parent::__construct(...$params);
 		$this->fieldtype = TRUE;
-		$this->defaulttype = 'VARCHAR';
+		$this->defaulttype = 'TEXT';
     }
 	
 	/**

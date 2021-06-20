@@ -84,20 +84,23 @@ class Files extends \Phpcmf\Library\A_Field {
 					<span class="help-block">'.dr_lang('格式：jpg,gif,png,exe,html,php,rar,zip').'</span>
 				</div>
 			</div>
-			
-			'.$this->attachment($option).'',
-
-            '<div class="form-group">
+			<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('显示浏览附件').'</label>
                 <div class="col-md-9">
                 <input type="checkbox" name="data[setting][option][unused]" '.($option['unused'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('允许用户选取自己已经上传的附件').'</span>
                 </div>
             </div>
+			'.$this->attachment($option).'',
+
+            '
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][tips]" '.($option['tips'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('显示').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('关闭').' <span></span></label>
+                </div>
                 <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
                 </div>
             </div>'];
@@ -360,7 +363,7 @@ class Files extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>
 			';
-        if (!$field['setting']['option']['unused']) {
+        if (!$field['setting']['option']['is_ext_tips']) {
             $str.= '<p class="finecms-file-ts">'.$ts.'</p>';
         }
         $str.= '
