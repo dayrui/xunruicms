@@ -64,7 +64,15 @@ class Image extends \Phpcmf\Library\A_Field {
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
 				<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 			</div>
-		</div>'];
+		</div><div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
+                <div class="col-md-9">
+                   <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('显示').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('关闭').' <span></span></label>
+                </div><span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
+                </div>
+            </div>'];
     }
 
     /**
@@ -242,7 +250,7 @@ class Image extends \Phpcmf\Library\A_Field {
         $str = '<div class="dropzone2 dropzone-file-area dropzone-images-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
             </div>
 		';
-        if (!$field['setting']['option']['tips']) {
+        if (!$field['setting']['option']['is_ext_tips']) {
             $str.= '<div class="finecms-file-ts">'.$ts.'</div>';
         }
 
