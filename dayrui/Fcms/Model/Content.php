@@ -71,6 +71,8 @@ class Content extends \Phpcmf\Model {
         // 防止时间字段入库为空
         !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;
 
+        $data[1]['uid'] = intval($data[1]['uid']);
+
         // 昵称为空的情况下
         if (!$data[1]['author'] && $data[1]['uid']) {
             $user = $this->table('member')->get($data[1]['uid']);

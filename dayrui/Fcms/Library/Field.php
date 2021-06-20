@@ -226,6 +226,160 @@
         }
 
         /**
+         * 会员内置字段
+         */
+        public function member_list_field() {
+
+            return [
+                'id' => [
+                    'name' => dr_lang('Uid'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'id',
+                    'setting' => []
+                ],
+                'group' => [
+                    'name' => dr_lang('用户组'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'group',
+                    'setting' => []
+                ],
+                'username' => [
+                    'name' => dr_lang('账号'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'username',
+                    'setting' => []
+                ],
+                'name' => [
+                    'name' => dr_lang('姓名'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'name',
+                    'setting' => []
+                ],
+                'email' => [
+                    'name' => dr_lang('邮箱'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'email',
+                    'setting' => []
+                ],
+                'phone' => [
+                    'name' => dr_lang('手机'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'phone',
+                    'setting' => []
+                ],
+                'money' => [
+                    'name' => dr_lang('余额'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'money',
+                    'setting' => []
+                ],
+                'score' => [
+                    'name' => dr_lang('虚拟币'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'score',
+                    'setting' => []
+                ],
+                'experience' => [
+                    'name' => dr_lang('经验值'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'experience',
+                    'setting' => []
+                ],
+                'regip' => [
+                    'name' => dr_lang('注册IP'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'regip',
+                    'setting' => []
+                ],
+                'regtime' => [
+                    'name' => dr_lang('注册时间'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'regtime',
+                    'setting' => []
+                ],
+                'is_avatar' => [
+                    'name' => dr_lang('头像认证'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_avatar',
+                    'setting' => []
+                ],
+                'is_lock' => [
+                    'name' => dr_lang('账号锁定'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_lock',
+                    'setting' => []
+                ],
+                'is_auth' => [
+                    'name' => dr_lang('实名认证'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_auth',
+                    'setting' => []
+                ],
+                'is_verify' => [
+                    'name' => dr_lang('审核状态'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_verify',
+                    'setting' => []
+                ],
+                'is_mobile' => [
+                    'name' => dr_lang('手机认证'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_mobile',
+                    'setting' => []
+                ],
+                'is_email' => [
+                    'name' => dr_lang('邮件认证'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_email',
+                    'setting' => []
+                ],
+                'is_complete' => [
+                    'name' => dr_lang('资料完善'),
+                    'ismain' => 1,
+                    'ismember' => 1,
+                    'fieldtype' => 'Text',
+                    'fieldname' => 'is_complete',
+                    'setting' => []
+                ],
+
+            ];
+        }
+
+        /**
          * 系统内置字段
          */
         public function sys_field($field) {
@@ -295,7 +449,6 @@
                         ),
                         'validate' => array(
                             'check' => '_check_member',
-                            'required' => 1,
                         )
                     )
                 ),
