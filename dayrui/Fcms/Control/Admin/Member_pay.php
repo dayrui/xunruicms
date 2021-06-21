@@ -11,6 +11,9 @@ class Member_pay extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
+            if (!$post['uid']) {
+                $this->_json(0, dr_lang('账号不能为空'), ['field' => 'uid']);
+            }
             $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['uid'])->get()->getRowArray();
             if (!$user) {
                 $this->_json(0, dr_lang('账号[%s]不存在', $post['uid']), ['field' => 'uid']);

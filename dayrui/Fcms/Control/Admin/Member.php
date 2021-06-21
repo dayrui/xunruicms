@@ -74,8 +74,11 @@ class Member extends \Phpcmf\Table
         }
         $this->_init([
             'table' => 'member',
+            'stable' => 'member_data',
             'field' => $this->member_cache['field'],
-            'order_by' => 'id desc',
+            'join_list' => ['member_data', 'member.id=member_data.id', 'left'],
+            'order_by' => 'member.id desc',
+            'list_field' => $this->member_cache['list_field'],
         ]);
         $this->group = $this->member_cache['group'];
         \Phpcmf\Service::V()->assign([
@@ -89,6 +92,7 @@ class Member extends \Phpcmf\Table
             ),
             'group' => $this->group,
             'field' => $this->my_field,
+            'member_list_field' => dr_array22array(\Phpcmf\Service::L('Field')->member_list_field(), $this->member_cache['field']),
         ]);
     }
 
@@ -101,7 +105,7 @@ class Member extends \Phpcmf\Table
 
         if ($name && $value && isset($this->my_field[$name])) {
             if (isset($this->member_cache['field'][$name])) {
-                $where[] = 'id in (select id from `'.\Phpcmf\Service::M()->dbprefix('member_data').'` where `'.$name.'` LIKE "%'.$value.'%")';
+                $where[] = 'member_data.'.$name.' LIKE "%'.$value.'%"';
                 unset($this->init['field'][$name]);
             } else {
                 $where[] = '`'.$name.'` LIKE "%'.$value.'%"';
@@ -111,7 +115,7 @@ class Member extends \Phpcmf\Table
 
         $groupid = \Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
-            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $groupid).'))';
+            $where[] = 'member.id IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $groupid).'))';
             $p['groupid'] = $groupid;
         }
 
@@ -122,19 +126,17 @@ class Member extends \Phpcmf\Table
         ];
         $status = \Phpcmf\Service::L('input')->request('status');
         if ($status) {
-            $wh = [];
             foreach ($status as $v) {
                 if (isset($sname[$v])) {
-                    $wh[] = $v.'=1';
+                    $where[] = 'member_data.'.$v.' = 1';
                 }
             }
-            $wh && $where[] = '`id` IN (select id from `'.\Phpcmf\Service::M()->dbprefix('member_data').'` where '.implode(' or ', $wh).')';
             $p['status'] = $status;
         }
 
         // 不是超级管理员排除角色账号
         if (!dr_in_array(1, $this->admin['roleid'])) {
-            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
+            $where[] = 'member.id NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
         }
 
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
@@ -171,9 +173,6 @@ class Member extends \Phpcmf\Table
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
-
-            \Phpcmf\Service::L('cache')->del_data('member-info-'.$uid);
-            \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$name);
 
             $this->_json(1, dr_lang('操作成功'));
         }
@@ -279,6 +278,7 @@ class Member extends \Phpcmf\Table
                     $this->_json(0, dr_lang('头像存储失败'));
                 }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
+                \Phpcmf\Service::M('member')->clear_cache($uid);
                 $this->_json(1, dr_lang('上传成功'));
             } else {
                 $this->_json(0, dr_lang('头像内容不规范'));
@@ -489,6 +489,8 @@ class Member extends \Phpcmf\Table
             \Phpcmf\Service::M()->table(weixin_wxtable('user'))->where('uid', $uid)->delete();
         }
 
+        \Phpcmf\Service::M('member')->clear_cache($uid);
+
         $this->_json(1, dr_lang('操作成功'), [
             'url' => dr_url('member/edit', ['id'=> $uid, 'page'=>4])
         ]);
@@ -608,6 +610,51 @@ class Member extends \Phpcmf\Table
         $this->_msg(1, dr_lang('正在授权登录此用户...'), dr_url('api/alogin', ['id' => intval(\Phpcmf\Service::L('input')->get('id'))]), 0);
     }
 
+    // 重写存储值
+    protected function _Save_Value($id, $name, $value, $after = null, $before = null) {
+
+        \Phpcmf\Service::M('member')->clear_cache($id);
+
+        if ($name == 'username') {
+            if (!$value) {
+                $this->_json(0, dr_lang('新账号不能为空'));
+            } elseif ($this->member['username'] == $value) {
+                $this->_json(0, dr_lang('新账号不能和原始账号相同'));
+            } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $value)->countAllResults()) {
+                $this->_json(0, dr_lang('新账号%s已经注册', $value), ['field' => 'name']);
+            }
+            $rt = \Phpcmf\Service::L('form')->check_username($value);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['code'], ['field' => 'name']);
+            }
+            \Phpcmf\Service::M('member')->edit_username($id, $value);
+            $this->_json(1, dr_lang('操作成功'));
+        } elseif ($name == 'email' ) {
+            if (!\Phpcmf\Service::L('Form')->check_email($value)) {
+                $this->_json(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
+            } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'. $id)->where('email', $value)->countAllResults()) {
+                $this->_json(0, dr_lang('邮箱%s已经注册', $value), ['field' => 'email']);
+            }
+            \Phpcmf\Service::M()->db->table('member')->where('id', $id)->update(['email' => $value]);
+            $this->_json(1, dr_lang('操作成功'));
+        } elseif ($name == 'phone' ) {
+            if (!\Phpcmf\Service::L('Form')->check_phone($value)) {
+                $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+            } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'. $id)->where('phone', $value)->countAllResults()) {
+                $this->_json(0, dr_lang('手机号码%s已经注册', $value), ['field' => 'phone']);
+            }
+            \Phpcmf\Service::M()->db->table('member')->where('id', $id)->update(['phone' => $value]);
+            $this->_json(1, dr_lang('操作成功'));
+        } elseif ($name == 'money') {
+            $this->_json(0, dr_lang('金额不能变更'));
+        } elseif ($name == 'score') {
+            $this->_json(0, dr_lang('虚拟金币不能变更'));
+        }
+
+
+        parent::_Save_Value($id, $name, $value, $after, $before);
+    }
+
     /**
      * 获取内容
      * $id      内容id,新增为0
@@ -671,8 +718,7 @@ class Member extends \Phpcmf\Table
                     \Phpcmf\Service::M('member')->edit_password($member, $password);
                 }
 
-                \Phpcmf\Service::L('cache')->del_data('member-info-'.$id);
-                \Phpcmf\Service::L('cache')->del_data('member-info-name-'.$old['username']);
+                \Phpcmf\Service::M('member')->clear_cache($id, $old['username']);
 
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');

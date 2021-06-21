@@ -61,8 +61,7 @@ class Account extends \Phpcmf\Common
                 $attach
             );
             \Phpcmf\Hooks::trigger('member_edit_after', $data[1]);
-			\Phpcmf\Service::L('cache')->del_data('member-info-'.$this->uid);
-			\Phpcmf\Service::L('cache')->del_data('member-info-name-'.$this->member['username']);
+            \Phpcmf\Service::M('member')->clear_cache($this->uid);
             $this->_json(1, dr_lang('保存成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             exit;
         }
@@ -142,6 +141,7 @@ class Account extends \Phpcmf\Common
                 if (!$this->member['is_avatar']) {
                     \Phpcmf\Service::M('member')->do_avatar($this->member);
                 }
+                \Phpcmf\Service::M('member')->clear_cache($this->uid);
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
             } else {
                 $this->_json(0, dr_lang('头像内容不规范'));
@@ -236,6 +236,8 @@ class Account extends \Phpcmf\Common
 
             \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => 0]);
 
+            \Phpcmf\Service::M('member')->clear_cache($this->uid);
+
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -297,6 +299,8 @@ class Account extends \Phpcmf\Common
             !$this->member['is_email'] && \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_email' => 1]);
 
             \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['randcode' => 0]);
+
+            \Phpcmf\Service::M('member')->clear_cache($this->uid);
 
             $this->_json(1, dr_lang('操作成功'));
         }
@@ -414,7 +418,10 @@ class Account extends \Phpcmf\Common
         if (dr_is_app('weixin')) {
             \Phpcmf\Service::M()->db->table('weixin_user')->where('uid', $this->uid)->delete();
         }
-        $this->_json(1, dr_lang('操作成功'), ['url' =>\Phpcmf\Service::L('Router')->member_url('account/oauth')]);
+
+        \Phpcmf\Service::M('member')->clear_cache($this->uid);
+
+        $this->_json(1, dr_lang('操作成功'), ['url' => \Phpcmf\Service::L('Router')->member_url('account/oauth')]);
     }
 
     /**

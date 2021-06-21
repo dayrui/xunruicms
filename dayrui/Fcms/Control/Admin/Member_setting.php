@@ -22,7 +22,7 @@ class Member_setting extends \Phpcmf\Common
         }
 
         if (IS_AJAX_POST) {
-            $save = ['register', 'login', 'oauth', 'config'];
+            $save = ['register', 'login', 'oauth', 'config', 'list_field'];
             $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['register']['sms']) {
                 if (!dr_in_array('phone', $post['register']['field'])) {
@@ -41,6 +41,19 @@ class Member_setting extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'));
         }
 
+        if (!$data['list_field']) {
+            $data['list_field'] = $this->member_cache['list_field'];
+        }
+
+        // 主表字段
+        $field = \Phpcmf\Service::M()->db->table('field')
+            ->where('disabled', 0)
+            ->where('ismain', 1)
+            ->where('relatedname', 'member')
+            ->orderBy('displayorder ASC,id ASC')
+            ->get()->getResultArray();
+        $field = dr_list_field_value($data['list_field'], \Phpcmf\Service::L('Field')->member_list_field(), $field);
+
         \Phpcmf\Service::V()->assign([
             'data' => $data,
             'page' => $page,
@@ -51,6 +64,7 @@ class Member_setting extends \Phpcmf\Common
                     'help' => [1042],
                 ]
             ),
+            'field' => $field,
             'oauth' => dr_oauth_list(),
             'group' => \Phpcmf\Service::M()->table('member_group')->getAll(),
             'synurl' => \Phpcmf\Service::M('member')->get_sso_url(),

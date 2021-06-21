@@ -113,7 +113,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 					<div class="form-control-static">
 					    <p>'.dr_lang('列名称：是表格列的显示名称').'</p>
 					    <p>'.dr_lang('列宽度：是表格列的宽度，[整数]表示固定宽度；[整数%]表示百分比').'</p>
-					    <p>'.dr_lang('选择项：用于下拉选择框的选项，多个选项用半角,分开').'</p>
+					    <p>'.dr_lang('选择项：仅用于下拉选择框和复选框的选项，多个选项用半角,分开').'</p>
 					    <p>'.dr_lang('行名称：是表格每一行的显示名称，如果不填就按照默认行名称显示，如果默认行名称也没有填写就不显示行名').'</p>
 					    <span class="help-block"> <a href="javascript:dr_help(\'644\');"> '.dr_lang('了解此字段的使用方法').'</a> </span>
                     </div>
@@ -137,12 +137,15 @@ class Ftable extends \Phpcmf\Library\A_Field {
         ];
     }
 
+    // 属性类别
     protected function _field_type_select($id, $type) {
 
         $arr = [
             0 => dr_lang('不使用'),
             1 => dr_lang('文本框'),
-            2 => dr_lang('下拉选择框'),
+            2 => dr_lang('下拉框'),
+            4 => dr_lang('复选框'),
+            3 => dr_lang('图片'),
         ];
 
         $html = '<select class="form-control" name="data[setting][option][field]['.$id.'][type]">';
@@ -154,6 +157,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
         return $html;
     }
 
+    // 对应的html
     protected function _field_type_html($config, $cname, $value, $hang, $lie) {
 
         $html = '';
@@ -166,6 +170,26 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 $html.= '<option '.($value[$hang][$lie] == $name ? 'selected' : '').' value="'.$name.'">'.$name.'</option>';
             }
             $html.= '</select></label>';
+        } elseif ($config['type'] == 3) {
+            // 图片
+            if ($value[$hang][$lie]) {
+                $pp = dr_get_file((string)$value[$hang][$lie]);
+            }
+            $html = '<label><input class="form-control2" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
+            $html.= '<input class="form-control3" type="hidden" value="'.($value[$hang][$lie] ? $pp : '').'">';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this)" class="ftable-fileinput btn green btn-sm">上传</a>';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">预览</a>
+			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">删除</a> ';
+            $html.= '</label>';
+        } elseif ($config['type'] == 4) {
+            $html = '<div class="mt-checkbox-inline">';
+            $arr = explode(',', $config['option']);
+            foreach ($arr as $name) {
+                $s = is_array($value[$hang][$lie]) && in_array($name, $value[$hang][$lie]) ? ' checked' : '';
+                $kj = '<input type="checkbox" name="data['.$cname.']['.$hang.']['.$lie.'][]" value="'.$name.'" '.$s.' />';
+                $html.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.$name.' <span></span> </label>';
+            }
+            $html.= '</div>';
         }
 
         return $html;
@@ -201,8 +225,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
      * 字段入库值
      */
     public function insert_value($field) {
-        $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($data);
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
     }
 
     /**
@@ -226,7 +249,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
 
         // 字段提示信息
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
-
 
         // 字段默认值
         $value = dr_string2array($value);
@@ -326,9 +348,161 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 </script>';
             $str.= '</div>';
         }
-        $str.= '<script> $("#dr_'.$name.'_body").sortable();</script>';
+        $str.= '<script> $("#dr_'.$name.'_body").sortable();';
+
+        $p = dr_authcode([
+            'size' => 10,
+            'count' => 1,
+            'exts' => 'jpg,gif,png',
+            'attachment' => 0,
+            'image_reduce' => 0,
+        ], 'ENCODE');
+        $url =  '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&ct=0&one=1';
+
+        $str.="
+			function dr_ftable_mydelete(e){
+				var ob = $(e);
+				 ob.parent().find('.form-control2').val('0');
+				 ob.parent().find('.ftable-show').hide();
+				 ob.parent().find('.ftable-delete').hide();
+			}
+			
+			function dr_ftable_myshow(e){
+				var ob = $(e);
+				var url = ob.parent().find('.form-control3').val();
+				dr_preview_image(url);
+			}
+			function dr_ftable_myfileinput (e){
+				var ob = $(e);
+        var c = 1;
+        var url = '".$url."';
+        layer.open({
+            type: 2,
+            title: '<i class=\"fa fa-folder-open\"></i>',
+            fix:true,
+            scrollbar: false,
+            shadeClose: true,
+            shade: 0,
+            area: ['50%', '50%'],
+            btn: [ lang['ok'] ],
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                // 延迟加载
+                var loading = layer.load(2, {
+                    time: 10000000
+                });
+                $.ajax({type: \"POST\",dataType:\"json\", url: url, data: $(body).find('#myform').serialize(),
+                    success: function(json2) {
+                        layer.close(loading);
+                        if (json2.code == 1) {
+                            layer.close(index);
+								var v = json2.data.result[0];
+                                ob.parent().find('.form-control2').val(v.id);
+                                ob.parent().find('.form-control3').val(v.url);
+								 ob.parent().find('.ftable-show').show();
+								 ob.parent().find('.ftable-delete').show();
+                            dr_tips(1, json2.msg);
+                        } else {
+                            dr_tips(0, json2.msg);
+
+                        }
+                        return false;
+                    }
+                });
+
+                return false;
+            },
+            success: function(layero, index){
+                // 主要用于权限验证
+                var body = layer.getChildFrame('body', index);
+                var json2 = $(body).html();
+                if (json2.indexOf('\"code\":0') > 0 && jso2n.length < 150){
+                    var obj = JSON.parse(json2);
+                    layer.close(index);
+                    dr_tips(0, obj.msg);
+                }
+                if (json2.indexOf('\"code\":1') > 0 && json2.length < 150){
+                    var obj = JSON.parse(json2);
+                    layer.close(index);
+                    dr_tips(1, obj.msg);
+                }
+            },
+            content: url+'&is_ajax=1'
+        });
+    }
+			
+			
+		
+		</script>
+		";
 
         return $this->input_format($name, $text, $str.$tips);
+    }
+
+    /**
+     * 显示输出表格
+     */
+    public function show_table($field, $value, $class = '') {
+
+        // class属性
+        !$class && $class = 'table table-nomargin table-bordered table-striped table-bordered table-advance';
+
+        // 字段默认值
+        $value = dr_string2array($value);
+        // 表单宽度设置
+        $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
+
+        $str = '<table id="dr_table_'.$field['fieldname'].'" class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+        $str.= ' <thead><tr>';
+
+        if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
+            $str .= ' <th> ' . dr_lang($field['setting']['option']['first_cname']) . ' </th>';
+        }
+
+        if ($field['setting']['option']['field']) {
+            foreach ($field['setting']['option']['field'] as $t) {
+                if ($t['type']) {
+                    $style = $t['width'] ? 'style="width:'.$t['width'].(is_numeric($t['width']) ? 'px' : '').';"' : '';
+                    $str.= ' <th '.$style.'>'.dr_lang($t['name']).'</th>';
+                }
+            }
+        }
+
+        $str.= ' </tr></thead>';
+        $str.= ' <tbody>';
+
+        $i = 1;
+        foreach ($value as $ii => $val) {
+
+            $str.= ' <tr>';
+            if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
+                $hname = $field['setting']['option']['hang'][$i]['name'] ? $field['setting']['option']['hang'][$i]['name'] : '未命名';
+                $str .= ' <td> ' . $hname . ' </td>';
+            }
+
+            if ($field['setting']['option']['field']) {
+                foreach ($field['setting']['option']['field'] as $n => $t) {
+                    if ($t['type']) {
+                        $td = $val[$n];
+                        if ($td && $t['type'] == 3) {
+                            // 图片
+                            $td = '<img src="'.dr_get_file($td).'" class="ftable_img">';
+                        } elseif ($td && $t['type'] == 4) {
+                            // 复选
+                            $td = implode('、', $td);
+                        }
+                        $str.= ' <td>'.$td.'</td>';
+                    }
+                }
+            }
+            $i++;
+            $str.= ' </tr>';
+        }
+
+        $str.= ' </tbody>';
+        $str.= '</table>';
+
+        return $str;
     }
 
 }

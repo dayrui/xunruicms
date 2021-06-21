@@ -62,12 +62,10 @@
                     </label>
                 </th>
                 {/if}
-                <th style="text-align:center" width="70" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
-                <th width="200" class="{dr_sorting('username')}" name="username">{dr_lang('账号 / 邮箱')}</th>
-                <th width="130" class="{dr_sorting('name')} dr_username_phone" name="name">{dr_lang(MEMBER_CNAME.' / 手机')}</th>
-                <th width="140" class="{dr_sorting('money')}" name="money">{dr_lang('实际资金')}</th>
-                <th width="130" class="{dr_sorting('experience')}" name="score">{dr_lang('虚拟资产')}</th>
-                <th width="160" class="{dr_sorting('regtime')}" name="regtime">{dr_lang('注册时间')}</th>
+                <th style="text-align:center" width="60" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
+                {loop $list_field $i $t}
+                <th {if $t.width} width="{$t.width}"{/if} {if $t.center} style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
+                {/loop}
                 <th>{dr_lang('操作')}</th>
             </tr>
             </thead>
@@ -82,27 +80,10 @@
                     </label>
                 </td>
                 {/if}
-                <td style="text-align:center"> <a class="fc_member_show" href="javascript:;" uid="{$t.id}"><img class="img-circle" src="{dr_avatar($t.id)}" style="width:50px;height:50px"></a> </td>
-                <td class="member_info_p">
-                    <p>{Function_list::uid($t.id)}</p>
-                    <p>{$t.email}</p>
-                </td>
-                <td class="member_info_p dr_username_phone" name="username">
-                    {if $t.name}<p>{$t.name}</p>{/if}
-                    {if $t.phone}<p>{$t.phone}</p>{/if}
-                </td>
-                <td class="member_info_p">
-                    <p><a href="{php echo \Phpcmf\Service::M('auth')->_menu_link_url('member_paylog/index', 'member_paylog/index', ['field'=>'uid','keyword'=>$t.id])}">{dr_lang('余额')}: {$t.money}</a></p>
-                    <p>{dr_lang('消费')}: {$t.spend}</p>
-                </td>
-                <td class="member_info_p">
-                    <p><a href="{if dr_is_app('scorelog')}{php echo \Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$t.id]);}{else}javascript:;{/if}">{SITE_SCORE}: {$t.score}</a></p>
-                    <p><a href="{if dr_is_app('explog')}{php echo \Phpcmf\Service::M('auth')->_menu_link_url('explog/home/index', 'explog/home/index', ['field'=>'uid','keyword'=>$t.id]);}{else}javascript:;{/if}">{SITE_EXPERIENCE}: {$t.experience}</a></p>
-                </td>
-                <td class="member_info_p">
-                    <p>{dr_date($t.regtime, 'Y-m-d H:i:s', 'red')}</p>
-                    <p>{Function_list::ip($t.regip, 0, 0, 15)}</p>
-                </td>
+                <td style="text-align:center"> <a class="fc_member_show" href="javascript:;" uid="{$t.id}"><img class="img-circle" src="{dr_avatar($t.id)}" style="width:30px;height:30px"></a> </td>
+                {loop $list_field $i $tt}
+                <td {if $tt.center} style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $member_list_field[$i])}</td>
+                {/list}
                 <td>
                     <label><a href="javascript:dr_iframe_show('{dr_lang('登录记录')}', '{dr_url($uriprefix.'/login_index', ['id'=>$t.id])}', '80%')" class="btn btn-xs blue"> <i class="fa fa-calendar"></i> {dr_lang('记录')}</a></label>
                     {if $ci->_is_admin_auth('member/edit')}

@@ -42,7 +42,6 @@ class Function_list
 
     // 用于列表显示内容
     public function comment($value, $param = [], $data = []) {
-
         return $this->content($value, $param, $data);
     }
 
@@ -58,7 +57,6 @@ class Function_list
 
     // 用于列表显示联动菜单值
     public function linkage_address($value, $param = [], $data = []) {
-
         return dr_linkagepos('address', $value, '-');
     }
 
@@ -133,8 +131,8 @@ class Function_list
     }
 
     // 用于列表显示ip地址
-    public function ip($value, $param = [], $data = [], $len = 200) {
-        return dr_strcut(\Phpcmf\Service::L('ip')->address($value), $len);
+    public function ip($value, $param = [], $data = []) {
+        return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), 20).'</a>';
     }
 
     // url链接输出
@@ -173,9 +171,44 @@ class Function_list
         return dr_lang('无');
     }
 
+    // 用于列表显示用户组
+    public function group($value, $param = [], $data = []) {
+
+        $user = dr_member_info($data['id']);
+        if ($user && $user['group']) {
+            $i = 0;
+            $rt = '';
+            $color = ['blue', 'red', 'green', 'dark', 'yellow'];
+            foreach ($user['group'] as $t) {
+                $cs = isset($color[$i]) && $color[$i] ? $color[$i] : 'default';
+                $rt.= '<label class="btn btn-xs '.$cs.'">'.$t['group_name'].'</label>';
+                $i++;
+            }
+            return $rt;
+        }
+
+        return dr_lang('无');
+    }
+
     // 用于列表显示价格
     public function price($value, $param = [], $data = []) {
         return '<span style="color:#ef4c2f">￥'.number_format($value, 2).'</span>';
+    }
+
+    // 用于列表显示价格
+    public function money($value, $param = [], $data = [], $field = []) {
+        if (\Phpcmf\Service::C()->_is_admin_auth('member_paylog/index')) {
+            return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('member_paylog/index', 'member_paylog/index', ['field'=>'uid','keyword'=>$data['id']]).'" style="color:#ef4c2f">'.number_format($value, 2).'</a>';
+        }
+        return '<span style="color:#ef4c2f">'.number_format($value, 2).'</span>';
+    }
+
+    // 用于列表显示虚拟币
+    public function score($value, $param = [], $data = [], $field = []) {
+        if (dr_is_app('scorelog') && \Phpcmf\Service::C()->_is_admin_auth('scorelog/home/index')) {
+            return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$data['id']]). '" style="color:#2f5fef">' .intval($value).'</a>';
+        }
+        return '<span style="color:#2f5fef">'.intval($value).'</span>';
     }
 
     // 用于列表显示价格、库存
