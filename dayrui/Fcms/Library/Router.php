@@ -259,7 +259,7 @@ class Router
         $query && $uri = array_merge($uri, $query);
 
         // 未绑定域名的情况下
-        return IS_CLIENT ? CLIENT_URL : (WEB_DIR.'index.php?' . http_build_query($uri));
+        return (IS_CLIENT ? CLIENT_URL : (\Phpcmf\Service::IS_MOBILE_TPL() ? SITE_MURL : SITE_URL)).'index.php?' . http_build_query($uri);
     }
 
     /**
