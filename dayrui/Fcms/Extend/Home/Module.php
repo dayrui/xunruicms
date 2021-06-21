@@ -134,13 +134,13 @@ class Module extends \Phpcmf\Common
             dr_redirect(dr_url_prefix($category['url'], $this->module['dirname'], SITE_ID), 'refresh');exit;
         }
 
-        // 单页验证是否存在子栏目，是否将下级第一个单页作为当前页
-        if ($category['tid'] == 0 && $category['child'] && $category['setting']['getchild']) {
+        // 验证是否存在子栏目，是否将下级第一个栏目作为当前页
+        if ($category['tid'] != 2 && $category['child'] && $category['setting']['getchild']) {
             $temp = explode(',', $category['childids']);
             if ($temp) {
                 foreach ($temp as $i) {
                     if ($i != $catid && $this->module['category'][$i]['show']
-                        && $this->module['category'][$i]['tid'] == 0 && !$this->module['category'][$i]['getchild']) {
+                        && $this->module['category'][$i]['tid'] != 2 && !$this->module['category'][$i]['getchild']) {
                         $catid = $i;
                         $category = $this->module['category'][$i];
                         // 初始化模块

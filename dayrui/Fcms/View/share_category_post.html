@@ -122,11 +122,11 @@ function dr_tid(i) {
                                 <span class="help-block">{dr_lang('可跳转到指定地址（不允许发布内容）')}</span>
                             </div>
                         </div>
-                        <div class="form-group dr_tid_0">
+                        <div class="form-group dr_tid_0 dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('继承下级')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="system[setting][getchild]" value="1" {if $data['setting']['getchild']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('将下级第一个单页面数据作为当前的栏目，只对父级单网页有效')}</span>
+                                <span class="help-block">{dr_lang('将下级第一个栏目数据作为当前的栏目，不对外链类型的栏目有效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
