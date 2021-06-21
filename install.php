@@ -7,8 +7,8 @@
 header('Content-Type: text/html; charset=utf-8');
 
 // 判断环境
-if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-    echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
+if (version_compare(PHP_VERSION, '7.3.0') < 0) {
+    echo "<font color=red>PHP版本必须在7.3以上</font>";exit;
 }
 
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
