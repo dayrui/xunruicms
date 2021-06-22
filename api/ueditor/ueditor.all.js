@@ -22361,14 +22361,7 @@
 
         // 添加复制的flash按钮
         me.addListener('aftershowcontextmenu', function(type, menu) {
-            if (me.zeroclipboard) {
-                var items = menu.items;
-                for (var key in items) {
-                    if (items[key].className == 'edui-for-copy') {
-                        me.zeroclipboard.clip(items[key].getDom());
-                    }
-                }
-            }
+            
         });
 
     };
