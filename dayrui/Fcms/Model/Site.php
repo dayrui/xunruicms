@@ -331,7 +331,6 @@ class Site extends \Phpcmf\Model
                     $t['setting']['config']['SITE_DOMAIN'],
                     $t['setting']['config']['SITE_CLOSE']
                 );
-                $cache[$t['id']] = $t['setting'];
                 // 本站的全部域名归属
                 $site_domain[$t['domain']] = $t['id'];
                 $sso_domain[] = $t['domain'];
@@ -363,6 +362,12 @@ class Site extends \Phpcmf\Model
                     }
                 }
 
+                // 自定义站点字段
+                $field = \Phpcmf\Service::M('field')->get_mysite_field($t['id']);
+                if ($field && $t['setting']['param']) {
+                    $t['setting']['param'] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t['setting']['param'], 1);
+                }
+
                 // 删除首页静态文件
                 unlink($webpath[$t['id']]['site'].'index.html');
                 unlink($webpath[$t['id']]['site'].$mobile_dirname.'/index.html');
@@ -370,25 +375,8 @@ class Site extends \Phpcmf\Model
                 $module_cache_file[] = 'module-'.$t['id'].'-content.cache'; // 删除多余的模块缓存文件
                 $module_cache_file[] = 'module-'.$t['id'].'-share.cache'; // 删除多余的模块缓存文件
                 $module_cache_file[] = 'module-'.$t['id'].'.cache'; // 删除多余的模块缓存文件
+                $cache[$t['id']] = $t['setting'];
             }
-
-            /*
-            // 用户中心域名
-            $member = $this->db->table('member_setting')->where('name', 'domain')->get()->getRowArray();
-            $value = $member ? dr_string2array($member['value']) : [];
-            if ($value) {
-                foreach ($value as $i => $t) {
-                    if ($t['domain']) {
-                        $site_domain[$t['domain']] = $i;
-                        $app_domain[$t['domain']] = 'member';
-                    }
-                    if ($t['mobile_domain']) {
-                        $site_domain[$t['mobile_domain']] = $i;
-                        $app_domain[$t['mobile_domain']] = 'member';
-                        $client_domain[$t['domain']] = $t['mobile_domain'];
-                    }
-                }
-            }*/
 
             // 循环模块域名
             !$module && $module = $this->table('module')->getAll();

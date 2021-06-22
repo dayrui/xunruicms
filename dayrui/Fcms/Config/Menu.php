@@ -140,7 +140,12 @@ return [
                             'icon' => 'fa fa-cog',
                             'uri' => 'site_config/index',
                         ],
-						[
+                        [
+                            'name' => '网站信息',
+                            'icon' => 'fa fa-edit',
+                            'uri' => 'site_param/index',
+                        ],
+                        [
                             'name' => '终端设置',
                             'icon' => 'fa fa-cogs',
                             'uri' => 'site_client/index',

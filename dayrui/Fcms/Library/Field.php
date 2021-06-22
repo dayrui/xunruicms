@@ -760,30 +760,6 @@
                             // 不分页
                             $data[$n] = $value;
                         }
-
-                        /* 老版本吧的分页
-                    } elseif ($fields[$n]['fieldtype'] == 'Ueditor'
-                        && strpos($value, '<p class="pagebreak">') !== FALSE
-                        && preg_match_all('/<p class="pagebreak">(.*)<\/p>/Us', $value, $match)
-                        && preg_match('/(.*)<p class="pagebreak">/Us', $value, $frist)) {
-                        // 编辑器分页 新版
-                        $page = 1;
-                        $content = $title = [];
-                        $data['_'.$n] = $value;
-                        $content[$page]['title'] = dr_lang('第%s页', $page);
-                        $content[$page]['body'] = $frist[1];
-                        foreach ($match[0] as $i => $t) {
-                            $page ++;
-                            $value = str_replace($content[$page - 1]['body'].$t, '', $value);
-                            $body = preg_match('/(.*)<p class="pagebreak"/Us', $value, $match_body) ? $match_body[1] : $value;
-                            $title[$page] = trim($match[1][$i]);
-                            $content[$page]['title'] = trim($match[1][$i]) ? trim($match[1][$i]) : dr_lang('第%s页', $page);
-                            $content[$page]['body'] = $body;
-                        }
-                        $page = max(1, min($page, $curpage));
-                        $data[$n] = $content[$page]['body'];
-                        $data[$n.'_page'] = $content;
-                        $data[$n.'_title'] = $title[$page];*/
                     } elseif ($fields[$n]['fieldtype'] == 'Pays') {
                         $data[$n.'_sku'] = dr_string2array($data[$n.'_sku']);
                         $data[$n.'_quantity'] = intval($data[$n.'_quantity']);

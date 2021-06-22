@@ -35,8 +35,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
         $statusCode = $codes[0];
         $exitCode   = $codes[1];
 
-        ob_clean();
-
         // Log it
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))
         {
@@ -70,7 +68,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             }
         }
 
-    
         $this->render($exception, $statusCode);
 
         exit($exitCode);

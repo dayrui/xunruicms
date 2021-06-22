@@ -189,6 +189,31 @@ class Field extends \Phpcmf\Model
         return $value;
     }
 
+    // 获取网站信息的自定义字段
+    public function get_mysite_field($siteid = SITE_ID) {
+
+        $name = 'my-site-'.$siteid;
+        $value = \Phpcmf\Service::L('cache')->get_data($name);
+        if (!$value) {
+            $field = $this->db->table('field')
+                        ->where('disabled', 0)
+                        ->where('relatedid', $siteid)
+                        ->where('relatedname', 'site')
+                        ->orderBy('displayorder ASC,id ASC')
+                        ->get()
+                        ->getResultArray();
+            if ($field) {
+                foreach ($field as $t) {
+                    $t['setting'] = dr_string2array($t['setting']);
+                    $value[$t['fieldname']] = $t;
+                }
+            }
+            \Phpcmf\Service::L('cache')->set_data($name, $value);
+        }
+
+        return $value;
+    }
+
     // 删除字段
     public function delete_field($ids) {
 
@@ -753,6 +778,28 @@ class Field extends \Phpcmf\Model
         if ($rt) {
             return 1;
         }
+        return 0;
+    }
+
+    //--------------------------------------------------------------------
+
+
+    //--------------------------------------------------------------------
+
+    // 网站信息表
+    protected function _sql_site($sql, $ismain) {
+        return '';
+    }
+    // 网站信息表
+    protected function _field_site($name) {
+
+        if ($this->table('field')
+            ->where('fieldname', $name)
+            ->where('relatedid', $this->relatedid)
+            ->where('relatedname', $this->relatedname)->counts()) {
+            return 1;
+        }
+
         return 0;
     }
 

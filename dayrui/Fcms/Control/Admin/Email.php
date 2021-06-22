@@ -14,7 +14,7 @@ class Email extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'邮件服务器' => ['email/index', 'fa fa-envelope'],
-				'添加' => ['add:email/add', 'fa fa-plus'],
+				'添加' => ['add:email/add', 'fa fa-plus', '600px'],
                 'help' => [361],
 			]
 		));
@@ -93,12 +93,17 @@ class Email extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation($data);
+			if ($data['pass'] == '******') {
+			    unset($data['pass']);
+            }
 			\Phpcmf\Service::M()->table('mail_smtp')->update($id, $data);
 			\Phpcmf\Service::L('input')->system_log('修改邮件服务器: '.$data['name']);
 
             \Phpcmf\Service::M('cache')->sync_cache('email'); // 自动更新缓存
 			$this->_json(1, dr_lang('操作成功'));
 		}
+
+		$data['pass'] = '******';
 
 		\Phpcmf\Service::V()->assign([
 			'data' => $data,

@@ -696,6 +696,11 @@ class Field extends \Phpcmf\Common
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
                 break;
 
+            case 'site':
+                // 网站信息
+                \Phpcmf\Service::L('cache')->del_data('my-site-'.SITE_ID);
+                break;
+
             default:
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
                 break;
@@ -724,11 +729,19 @@ class Field extends \Phpcmf\Common
                 \Phpcmf\Service::M('Field')->data = $this->data;
                 break;
 
+            case 'site':
+                // 网站信息
+                $ismain = 1;
+                $this->name = '网站信息字段';
+                $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
+                \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
+                break;
+
             case 'tag':
                 // 网站tag
                 $ismain = 1;
                 $this->name = 'Tag字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'tag'; // 重要标识: 函数和识别码
                 break;
 
@@ -736,7 +749,7 @@ class Field extends \Phpcmf\Common
                 // 联动菜单
                 $ismain = 1;
                 $this->name = '联动菜单字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('linkage/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('linkage/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'linkage'; // 重要标识: 函数和识别码
                 break;
 
@@ -744,7 +757,7 @@ class Field extends \Phpcmf\Common
                 // 用户主表
                 $ismain = 1;
                 $this->name = '用户信息字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('member_field/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('member_field/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'member'; // 重要标识: 函数和识别码
                 break;
 

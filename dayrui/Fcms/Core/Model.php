@@ -672,7 +672,7 @@ class Model {
                     foreach ($ids as $i) {
                         $id[] = (int)$i;
                     }
-                    dr_count($id) == 1 ? $select->where($this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
+                    dr_count($id) == 1 ? $select->where($this->table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
                     $param['keyword'] = htmlspecialchars($param['keyword']);
                 } elseif ($param['field'] == 'uid') {
                     // 账户查询

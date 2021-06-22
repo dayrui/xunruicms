@@ -179,14 +179,21 @@ class Table extends \Phpcmf\Common
      * */
     protected function _Save_Value($id, $name, $value, $after = null, $before = null) {
 
-        if (!\Phpcmf\Service::M()->is_table_exists($this->init['table'])) {
+        $table = $this->init['table'];
+        if (!\Phpcmf\Service::M()->is_table_exists($table)) {
             $this->_json(0, dr_lang('数据表（%s）不存在', $this->init['table']));
-        } elseif (!\Phpcmf\Service::M()->is_field_exists($this->init['table'], $name)) {
-            $this->_json(0, dr_lang('数据表（%s）字段（%s）不存在', $this->init['table'], $name));
+        } elseif (!\Phpcmf\Service::M()->is_field_exists($table, $name)) {
+            if (isset($this->init['stable']) && $this->init['stable']
+                && \Phpcmf\Service::M()->is_table_exists($this->init['stable'])
+                && \Phpcmf\Service::M()->is_field_exists($this->init['stable'], $name)) {
+                $table = $this->init['stable'];
+            } else {
+                $this->_json(0, dr_lang('数据表（%s）字段（%s）不存在', $this->init['table'], $name));
+            }
         }
 
         // 查询数据
-        $row = \Phpcmf\Service::M()->init($this->init)->get($id);
+        $row = \Phpcmf\Service::M()->table($table)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('数据%s不存在', $id));
         } elseif ($row[$name] == $value) {
@@ -202,7 +209,7 @@ class Table extends \Phpcmf\Common
             $rt['data'] && $value = $rt['data'];
         }
 
-        $rt = \Phpcmf\Service::M()->init($this->init)->save($id, $name, $value, $this->edit_where);
+        $rt = \Phpcmf\Service::M()->table($table)->save($id, $name, $value, $this->edit_where);
         if (!$rt['code']) {
             $this->_json(0, $rt['msg']);
         }

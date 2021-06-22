@@ -241,6 +241,11 @@ function dr_site_info($name, $siteid = SITE_ID) {
     return \Phpcmf\Service::C()->get_cache('site', $siteid, 'config', $name);
 }
 
+// 站点自定义信息输出
+function dr_site_value($name, $siteid = SITE_ID) {
+    return \Phpcmf\Service::C()->get_cache('site', $siteid, 'param', $name);
+}
+
 // ftable字段输出
 function dr_get_ftable($id, $value, $class = '') {
 
@@ -249,58 +254,7 @@ function dr_get_ftable($id, $value, $class = '') {
         return 'Ftable字段没有得到缓存数据';
     }
 
-    // class属性
-    !$class && $class = 'table table-nomargin table-bordered table-striped table-bordered table-advance';
-
-    // 字段默认值
-    $value = dr_string2array($value);
-    // 表单宽度设置
-    $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
-
-    $str = '<table id="dr_table_'.$field['fieldname'].'" class="'.$class.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
-    $str.= ' <thead><tr>';
-
-    if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
-        $str .= ' <th> ' . dr_lang($field['setting']['option']['first_cname']) . ' </th>';
-    }
-
-    if ($field['setting']['option']['field']) {
-        foreach ($field['setting']['option']['field'] as $t) {
-            if ($t['type']) {
-                $style = $t['width'] ? 'style="width:'.$t['width'].(is_numeric($t['width']) ? 'px' : '').';"' : '';
-                $str.= ' <th '.$style.'>'.dr_lang($t['name']).'</th>';
-            }
-        }
-    }
-
-    $str.= ' </tr></thead>';
-    $str.= ' <tbody>';
-
-    $i = 1;
-    foreach ($value as $ii => $val) {
-
-        $str.= ' <tr>';
-        if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
-            $hname = $field['setting']['option']['hang'][$i]['name'] ? $field['setting']['option']['hang'][$i]['name'] : '未命名';
-            $str .= ' <td> ' . $hname . ' </td>';
-        }
-
-        if ($field['setting']['option']['field']) {
-            foreach ($field['setting']['option']['field'] as $n => $t) {
-                if ($t['type']) {
-                    $str.= ' <td>'.$val[$n].'</td>';
-                }
-            }
-        }
-        $i++;
-        $str.= ' </tr>';
-    }
-
-    $str.= ' </tbody>';
-    $str.= '</table>';
-
-    return $str;
-
+    return \Phpcmf\Service::L('Field')->get('ftable')->show_table($field, $value, $class);
 }
 
 // 判断搜索值是否是多重选择时的选中状态 1选中 0不选

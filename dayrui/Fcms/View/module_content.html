@@ -76,6 +76,7 @@
 
             <div class="tab-pane {if $page==2}active{/if}" id="tab_2">
 
+                <div class="table-scrollable">
                 <table style="margin-top: 30px;" class="table table-striped table-bordered table-hover table-checkable dataTable">
                     <thead>
                     <tr class="heading">
@@ -86,7 +87,7 @@
                     <tbody>
                     {loop $module $m}
                     <tr class="heading">
-                        <td width="180">
+                        <td>
                             <i class="{dr_icon($m['icon'])} font-dark"></i> {dr_lang($m['name'])}
                         </td>
                         <td>
@@ -102,6 +103,7 @@
                     {/loop}
                     </tbody>
                 </table>
+                </div>
 
             </div>
 
