@@ -79,7 +79,11 @@ class Module_category extends \Phpcmf\Common
         if ($module['share']) {
             $like[] = 'catmodule-share';
         }
-        $field = \Phpcmf\Service::M()->db->table('field')->where('disabled', 0)->whereIn('relatedname', $like)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+        $field = \Phpcmf\Service::M()->db->table('field')
+            ->where('ismain', 1)
+            ->where('disabled', 0)
+            ->whereIn('relatedname', $like)
+            ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
         if ($field) {
             foreach ($field as $f) {
                 /*
@@ -135,7 +139,7 @@ class Module_category extends \Phpcmf\Common
             ),
             'list' => $list,
         ]);
-        \Phpcmf\Service::V()->display('module_category_field.html');exit;
+        \Phpcmf\Service::V()->display('module_category_field.html');
     }
 
 }

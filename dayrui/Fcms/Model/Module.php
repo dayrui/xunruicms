@@ -336,13 +336,6 @@ class Module extends \Phpcmf\Model
                 }
                 $this->db->query('DROP TABLE IF EXISTS '.$table.'_data_'.$i);
             }
-            // 删除栏目模型子表
-            for ($i = 0; $i < 200; $i ++) {
-                if (!$this->db->query("SHOW TABLES LIKE '".$table.'_category_data_'.$i."'")->getRowArray()) {
-                    break;
-                }
-                $this->db->query('DROP TABLE IF EXISTS '.$table.'_category_data_'.$i);
-            }
 
             if (dr_is_app('mform')) {
                 \Phpcmf\Service::M('mform', 'mform')->link_uninstall($table, $dir);
@@ -428,7 +421,10 @@ class Module extends \Phpcmf\Model
      */
     public function _add_field($field, $ismain, $rid, $rname) {
 
-        if ($this->db->table('field')->where('fieldname', $field['fieldname'])->where('relatedid', $rid)->where('relatedname', $rname)->countAllResults()) {
+        if ($this->db->table('field')
+            ->where('fieldname', $field['fieldname'])
+            ->where('relatedid', $rid)
+            ->where('relatedname', $rname)->countAllResults()) {
             return;
         }
 
@@ -521,7 +517,10 @@ class Module extends \Phpcmf\Model
 		$CAT = $CAT_DIR = $fenzhan = $level = [];
         if ($category) {
             // 栏目的定义字段
-            $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', 'category-'.$cdir)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            $field = $this->db->table('field')
+                ->where('disabled', 0)
+                ->where('relatedname', 'category-'.$cdir)
+                ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
                     $f['setting'] = dr_string2array($f['setting']);
@@ -633,7 +632,12 @@ class Module extends \Phpcmf\Model
 
             // 模型字段查询
             $cat_data_field = [];
-            $field = $this->db->table('field')->where('disabled', 0)->whereIn('relatedname', $like)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            $field = $this->db->table('field')
+                ->where('ismain', 1)
+                ->where('disabled', 0)
+                ->whereIn('relatedname', $like)
+                ->orderBy('displayorder ASC, id ASC')
+                ->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
                     $f['setting'] = dr_string2array($f['setting']);

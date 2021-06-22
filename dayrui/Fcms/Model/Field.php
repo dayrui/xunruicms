@@ -122,10 +122,10 @@ class Field extends \Phpcmf\Model
                             if ($module == 'share') {
                                 if ($data['tid'] != 1) {
                                 } else {
-                                    $table = $field['ismain'] ? dr_module_table_prefix($data['mid']).'_category_data' :  dr_module_table_prefix($data['mid']).'_category_data_{tableid}';
+                                    $table = dr_module_table_prefix($data['mid']).'_category_data';
                                 }
                             } else {
-                                $table = $field['ismain'] ? dr_module_table_prefix($module).'_category_data' :  dr_module_table_prefix($module).'_category_data_{tableid}';
+                                $table = dr_module_table_prefix($module).'_category_data';
                             }
                         }
                     }
@@ -386,19 +386,9 @@ class Field extends \Phpcmf\Model
         if (!$this->db->tableExists($table)) {
             return;
         }
-        if ($ismain) {
-            // 更新主表 格式: 站点id_名称
-            $this->db->simpleQuery(str_replace('{tablename}', $table, $sql));
-            $this->_table_field[] = $table;
-        } else {
-            for ($i = 0; $i < 200; $i ++) {
-                if (!$this->db->query("SHOW TABLES LIKE '".$table.'_'.$i."'")->getRowArray()) {
-                    break;
-                }
-                $this->db->simpleQuery(str_replace('{tablename}', $table.'_'.$i, $sql)); //执行更新语句
-                $this->_table_field[] = $table.'_'.$i;
-            }
-        }
+        // 更新主表 格式: 站点id_名称
+        $this->db->simpleQuery(str_replace('{tablename}', $table, $sql));
+        $this->_table_field[] = $table;
     }
     // 字段是否存在
     protected function _field_category_data($name) {
@@ -416,11 +406,6 @@ class Field extends \Phpcmf\Model
         // 栏目模型主表
         $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']).'_category_data');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
-        if ($rt) {
-            return 1;
-        }
-        // 栏目模型附表
-        $rt = $this->_field_exitsts('id', $name, $table.'_0', SITE_ID);
         if ($rt) {
             return 1;
         }

@@ -834,6 +834,7 @@ class Field extends \Phpcmf\Common
 
             case 'catmodule':
                 // 识别栏目模型字段
+                $ismain = 1;
                 $issearch = 1;
                 $iscategory = 1;
                 $module = $a;

@@ -45,9 +45,6 @@ class Table extends \Phpcmf\Model
                     // 栏目模型主表
                     $table = $prefix.'_category_data';
                     $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                    // 栏目模型附表
-                    $table = $prefix.'_category_data_0';
-                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
                     // 模块点击量表
                     $table = $prefix.'_hits';
                     $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);

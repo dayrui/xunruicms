@@ -232,20 +232,18 @@ class Content extends \Phpcmf\Model {
 
         // 筛选出来栏目模型字段
         if (!$this->is_hcategory && $catfield = \Phpcmf\Service::C()->module['category_data_field']) {
-            foreach ($data as $main => $value) {
-                foreach ($value as $i => $t) {
-                    if (strpos($i, '_lng') || strpos($i, '_lat')) {
-                        $i = str_replace(array('_lng', '_lat'), '', $i);
-                        if (isset($catfield[$i]) && $catfield[$i]['ismain'] == $main && !isset($cdata[$main][$i.'_lng'])) {
-                            $cdata[$main][$i.'_lng'] = $data[$main][$i.'_lng'];
-                            $cdata[$main][$i.'_lat'] = $data[$main][$i.'_lat'];
-                            unset($data[$main][$i.'_lng'], $data[$main][$i.'_lat']);
-                        }
-                    } else {
-                        if (isset($catfield[$i]) && $catfield[$i]['ismain'] == $main) {
-                            $cdata[$main][$i] = $t;
-                            unset($data[$main][$i]);
-                        }
+            foreach ($data[1] as $i => $t) {
+                if (strpos($i, '_lng') || strpos($i, '_lat')) {
+                    $i = str_replace(array('_lng', '_lat'), '', $i);
+                    if (isset($catfield[$i]) && $catfield[$i]['ismain'] == 1 && !isset($cdata[$i.'_lng'])) {
+                        $cdata[$i.'_lng'] = $data[1][$i.'_lng'];
+                        $cdata[$i.'_lat'] = $data[1][$i.'_lat'];
+                        unset($data[1][$i.'_lng'], $data[1][$i.'_lat']);
+                    }
+                } else {
+                    if (isset($catfield[$i]) && $catfield[$i]['ismain'] == 1) {
+                        $cdata[$i] = $t;
+                        unset($data[1][$i]);
                     }
                 }
             }
@@ -307,22 +305,18 @@ class Content extends \Phpcmf\Model {
 
         // 存储栏目表
         if ($cdata) {
-            $cdata[0]['id'] = $cdata[1]['id'] = $cid = $data[1]['id'];
-            $cdata[0]['uid'] = $cdata[1]['uid'] = $data[1]['uid'];
-            $cdata[0]['catid'] = $cdata[1]['catid'] = $data[1]['catid'];
+            $cdata['id'] = $cid = $data[1]['id'];
+            $cdata['uid'] = $data[1]['uid'];
+            $cdata['catid'] = $data[1]['catid'];
             // 查询栏目数据表是否存在该数据
             $table = $this->mytable.'_category_data';
             $is_update = $this->db->table($table)->where('id', $cid)->countAllResults();
-            // 判断附表是否存在,不存在则创建
-            $this->is_data_table($table.'_', $tid);
             if ($is_update) {
                 // 更新
-                $this->table($table)->update($cid, $cdata[1]);
-                $this->table($table.'_'.$tid)->update($cid, $cdata[0]);
+                $this->table($table)->update($cid, $cdata);
             } else {
                 // 新增
-                $this->table($table)->replace($cdata[1]);
-                $this->db->table($table.'_'.$tid)->replace($cdata[0]);
+                $this->table($table)->replace($cdata);
             }
         }
 
@@ -435,8 +429,6 @@ class Content extends \Phpcmf\Model {
         $cache && $fields[1] = array_merge($fields[1], $cache);
         // 附表字段
         $fields[0] = \Phpcmf\Service::C()->get_cache('table-'.$this->siteid, $this->dbprefix($this->siteid.'_'.$this->dirname.'_data_0'));
-        $cache = \Phpcmf\Service::C()->get_cache('table-'.$this->siteid, $this->dbprefix($this->siteid.'_'.$this->dirname.'_category_data_0'));
-        $cache && $fields[0] = array_merge($fields[0], $cache);
 
         // 去重复
         $fields[0] = array_unique($fields[0]);
@@ -832,12 +824,8 @@ class Content extends \Phpcmf\Model {
         if (!$this->is_hcategory) {
             $tables[] = $table = $this->mytable.'_category_data';
             $cdata[$table] = $data = $this->table($table)->get($id);
-            // 栏目模型数据副表
             if ($data) {
                 $row = $row + $data;
-                $tables[] = $table = $this->mytable.'_category_data_'.$tableid;
-                $cdata[$table] = $data = $this->table($table)->get($id);
-                $data && $row = $row + $data;
             }
         }
 
@@ -932,7 +920,6 @@ class Content extends \Phpcmf\Model {
         }
     }
 
-
     // 删除数据,放入回收站
     public function delete_to_recycle($ids, $note = '无') {
 
@@ -989,12 +976,6 @@ class Content extends \Phpcmf\Model {
                 // 栏目模型数据
                 $table = $this->mytable.'_category_data';
                 $tables[$table] = $this->table($table)->get($id);
-
-                // 栏目模型数据副表
-                if ($tables[$table]) {
-                    $table = $this->mytable.'_category_data_'.$tableid;
-                    $tables[$table] = $this->table($table)->get($id);
-                }
             }
 
             // 删除表数据
@@ -1135,9 +1116,6 @@ class Content extends \Phpcmf\Model {
         }
         if (!$this->is_hcategory) {
             $this->table($this->mytable.'_category_data')->delete($cid);
-            if ($this->is_table_exists($this->mytable.'_category_data_'.$tid)) {
-                $this->table($this->mytable.'_category_data_'.$tid)->delete($cid);
-            }
         }
         // 模块表单
         if ($module['form']) {
@@ -1218,10 +1196,8 @@ class Content extends \Phpcmf\Model {
                 $this->table($this->mytable.'_index')->update($id, ['catid' => $catid]);
                 // 判断附表是否存在,不存在则创建
                 $this->is_data_table($this->mytable.'_data_', $t['tableid']);
-                $this->is_data_table($this->mytable.'_category_data_', $t['tableid']);
                 $this->db->table($this->mytable.'_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
                 $this->db->table($this->mytable.'_category_data')->where('id', $id)->update(['catid' => $catid]);
-                $this->db->table($this->mytable.'_category_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
 
                 // 变更栏目的一些联动操作
                 $this->_edit_category_id($t, $catid);
@@ -1249,7 +1225,6 @@ class Content extends \Phpcmf\Model {
                 $this->table($this->mytable.'_index')->update($id, ['catid' => $catid]);
                 $this->db->table($this->mytable.'_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
                 $this->db->table($this->mytable.'_category_data')->where('id', $id)->update(['catid' => $catid]);
-                $this->db->table($this->mytable.'_category_data_'.intval($t['tableid']))->where('id', $id)->update(['catid' => $catid]);
 
                 // 变更栏目的一些联动操作
                 $this->_edit_category_id($t, $catid);
