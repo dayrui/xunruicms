@@ -15127,7 +15127,9 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     color: #40aae2;
     text-align: right
 }
-
+.table-center , .table-center input {
+    text-align: center;
+}
 .page-404-full-page .page-404,.page-500-full-page .page-500 {
     margin-top: 70px
 }
