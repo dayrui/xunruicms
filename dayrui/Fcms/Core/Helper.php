@@ -1161,7 +1161,8 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
             return IS_DEV ? '自定义附件（'.$data['remote'].'）的配置已经不存在' : '';
         }
     } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
-        return dr_thumb($data['id'], $w, $h, 0, 'crop');
+        //return dr_thumb($data['id'], $w, $h, 0, 'crop');
+        return dr_get_file($data['id']);
     }
 
     return SYS_UPLOAD_URL.$data['attachment'];

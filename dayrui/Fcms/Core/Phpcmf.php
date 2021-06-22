@@ -546,14 +546,14 @@ abstract class Common extends \CodeIgniter\Controller
         return $info;
     }
 
-    // 初始化模块
-    public function _module_init($dirname = '', $siteid = SITE_ID) {
+    // 初始化模块 $rt 是否返回
+    public function _module_init($dirname = '', $siteid = SITE_ID, $rt = 0) {
 
         !$dirname && $dirname = APP_DIR;
 
         if ($this->is_module_init == $dirname.'-'.$siteid) {
             // 防止模块重复初始化
-            return;
+            return 1;
         }
 
         $this->is_module_init = $dirname.'-'.$siteid;
@@ -573,22 +573,39 @@ abstract class Common extends \CodeIgniter\Controller
             if (!$this->module) {
                 if (IS_ADMIN) {
                     if ($dirname == 'share') {
-                        $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+                        if ($rt) {
+                            return 0;
+                        } else {
+                            CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('系统未安装共享模块，无法使用栏目'));
+                            $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+                        }
                     } else {
-                        $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                        if ($rt) {
+                            return 0;
+                        } else {
+                            CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
+                            $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                        }
                     }
                 } else {
-                    $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
+                    if ($rt) {
+                        return 0;
+                    } else {
+                        CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
+                        $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
+                    }
                 }
-                return;
             }
         }
 
         // 无权限访问模块
         if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER
             && \Phpcmf\Service::M('member_auth')->module_auth($dirname, 'show', $this->member)) {
+            if ($rt) {
+                CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('您的用户组无权限访问模块'));
+                return 0;
+            }
             $this->_msg(0, dr_lang('您的用户组无权限访问模块'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
-            return;
         }
 
         // 初始化数据表
@@ -597,7 +614,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 共享模块时，单页界面时，排除
         if ($dirname == 'share') {
-           return;
+           return 0;
         }
 
         $this->module['comment'] = dr_is_app('comment') && \Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname, 'use') ? 1 : 0;
@@ -616,6 +633,8 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 初始化加载
         $this->init_file($dirname);
+
+        return 1;
     }
 
     /**

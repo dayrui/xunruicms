@@ -12,18 +12,22 @@ class Home extends \Phpcmf\Common
 	public function index() {
 
 	    if (IS_API === 'pay') {
-	        // 支付接口部分
+            // 支付接口部分
             $info = pathinfo($_SERVER['PHP_SELF']);
             $name = basename($info['dirname']);
             $path = trim($info['dirname'], '/');
             $file = str_replace('_url.php', '_api.php', $info['basename']);
-            $apifile = WEBPATH.$path.'/'.$file;
+            $apifile = WEBPATH . $path . '/' . $file;
             if (!is_file($apifile)) {
                 exit('支付接口文件不存在');
             }
             // 接口配置参数
             $config = $this->member_cache['payapi'][$name];
             require $apifile;
+        } elseif (IS_API === 'cron') {
+	        // 任务脚本
+            $cron = new \Phpcmf\Control\Api\Run();
+            $cron->index();
         } elseif (is_file(IS_API)) {
             // 自定义任意目录的api
             require IS_API;

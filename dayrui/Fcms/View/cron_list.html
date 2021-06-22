@@ -19,7 +19,6 @@
         });
     }
 </script>
-
 <div class="note note-danger">
     <p>
         {if $run_time}
@@ -28,6 +27,7 @@
         <font color="red">{dr_lang('当前服务器没有设置自动任务脚本')}</font>
         {/if}
     </p>
+    <p style="margin-top:5px;">{dr_lang('任务脚本地址')}：{ROOT_URL}api/cron.php</p>
 </div>
 <div class="right-card-box">
 
