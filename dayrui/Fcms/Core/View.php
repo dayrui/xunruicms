@@ -212,7 +212,6 @@ class View {
 
         // 生成静态时退出账号记录
         if (defined('SC_HTML_FILE')) {
-            $this->_options['uid'] = 0;
             $this->_options['member'] = [];
         }
 
