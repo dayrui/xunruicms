@@ -527,6 +527,10 @@ class Check extends \Phpcmf\Common
 						$rt[] = '网站目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
 				}
+
+                if (!dr_is_app('safe')) {
+                    $rt[] = '<font color="green">安装「系统安全加固」插件可以大大提高网站的安全等级';
+                }
 				
 				if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);
