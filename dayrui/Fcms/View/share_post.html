@@ -318,6 +318,21 @@
                         <div class="form-body">
                             {$sysfield}
 
+                            {if $is_flag}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('推荐位')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-checkbox-list">
+                                        {loop $is_flag $n $f}
+                                        <label class="mt-checkbox mt-checkbox-outline"> {dr_lang($f.name)}
+                                            <input type="checkbox" value="{$n}" name="flag[]" />
+                                            <span></span>
+                                        </label>
+                                        {/loop}
+                                    </div>
+                                </div>
+                            </div>
+                            {/if}
                             {if !$is_verify && $is_post_time}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('定时发布时间')}</label>
