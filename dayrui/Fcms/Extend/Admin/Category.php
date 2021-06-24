@@ -7,8 +7,10 @@
 
 // 模块栏目操作类 基于 Table
 class Category extends \Phpcmf\Table {
+
     public $module; // 模块信息
     public $is_scategory; // 选择栏目类型
+    protected $cat_config; // 栏目属性
     protected $_is_extend_var = 0; // 继承属性变量
 
     // 上级公共类
@@ -57,6 +59,34 @@ class Category extends \Phpcmf\Table {
         \Phpcmf\Service::M('category')->init($this->init); // 初始化内容模型
         $this->module['category'] = \Phpcmf\Service::M('category')->repair([], $dir);
 
+        $file = WRITEPATH.'config/category.php';
+        if (is_file($file)) {
+            $this->cat_config = require $file;
+            if (!isset($this->cat_config[$this->module['dirname']])) {
+                $this->cat_config = [
+                    $this->module['dirname'] => [
+                        'sys_field' => ['order','use','show', 'id','tid','mid','total','html'],
+                        'list_field' => [],
+                    ],
+                ];
+            }
+        } else {
+            $this->cat_config = [
+                $this->module['dirname'] => [
+                    'sys_field' => ['order','use','show', 'id','tid','mid','total','html'],
+                    'list_field' => [],
+                ],
+            ];
+        }
+
+        if (isset($this->cat_config[$this->module['dirname']]['zshow']) && $this->cat_config[$this->module['dirname']]['zshow']) {
+            define('SYS_CAT_ZSHOW', 1);
+        }
+
+        if (isset($this->cat_config[$this->module['dirname']]['rname']) && $this->cat_config[$this->module['dirname']]['rname']) {
+            define('SYS_CAT_RNAME', 1);
+        }
+
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'module' => $this->module,
@@ -65,6 +95,7 @@ class Category extends \Phpcmf\Table {
             'reply_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/index'),
             'field_url' => \Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$this->module['dirname']]),
             'post_all_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/all_add'),
+            'config_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/config_add'),
             'is_scategory' => $this->is_scategory,
         ]);
     }
@@ -183,42 +214,145 @@ class Category extends \Phpcmf\Table {
                 $t['type_html'] = '';
                 $t['is_page_html'] = '';
             }
+            if (isset($this->cat_config[$this->module['dirname']]['list_field']) && $this->cat_config[$this->module['dirname']]['list_field']) {
+                foreach ($this->cat_config[$this->module['dirname']]['list_field'] as $i => $tt) {
+                    if ($tt['use']) {
+                        $t[$i . '_html'] = dr_list_function($tt['func'], $t[$i], [], $t, $this->module['category_field'][$i]);
+                    }
+                }
+            }
             //$t['name'] = $this->module['category'][$t['id']]['total'];
             $tree[$t['id']] = $t;
         }
 
-        $str = "<tr class='\$class'>";
-        $str.= "<td class='myselect'>
+        $list = "<tr class='\$class'>";
+        $head = '<tr class="heading">';
+
+        $list.= "<td class='myselect'>
                     <label class='mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline'>
                         <input type='checkbox' class='checkboxes' name='ids[]' value='\$id' />
                         <span></span>
                     </label>
                 </td>";
-        $str.= "<td style='text-align:center'> <input type='text' onblur='dr_cat_ajax_save(this.value, \$id)' value='\$displayorder' class='displayorder form-control input-sm input-inline input-mini'> </td>";
-        $str.= "<td style='text-align:center'>\$is_used_html</td>";
-        $str.= "<td style='text-align:center'>\$is_show_html</td>";
-        $str.= "<td style='text-align:center'>\$id</td>";
-        $str.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent</td>";
-        if ($this->is_scategory) {
-            $str.= "<td style='text-align:center'>\$type_html</td>";
-        }
-        if ($this->module['share']) {
-            $str.= "<td style='text-align:center'>\$mid</td>";
-        }
-        $str.= "<td style='text-align:center' class='cat-total-\$id'> \$ctotal- </td>";
-        $str.= "<td style='text-align:center'>\$is_page_html</td>";
-        $str.= "<td>\$option</td>";
-        $str.= "</tr>";
+        $head.= '<th class="myselect">
+                        <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                            <span></span>
+                        </label>
+                    </th>';
 
+        if (dr_in_array('order', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="70" style="text-align:center"> '.dr_lang('排序').' </th>';
+            $list.= "<td style='text-align:center'> <input type='text' onblur='dr_cat_ajax_save(this.value, \$id)' value='\$displayorder' class='displayorder form-control input-sm input-inline input-mini'> </td>";
+        }
 
-        return \Phpcmf\Service::L('tree')->init($tree)->html_icon()->get_tree(0, $str);
+        if (dr_in_array('use', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('可用') . ' </th>';
+            $list .= "<td style='text-align:center'>\$is_used_html</td>";
+        }
+
+        if (dr_in_array('show', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('显示') . ' </th>';
+            $list .= "<td style='text-align:center'>\$is_show_html</td>";
+        }
+
+        if (dr_in_array('id', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="70" style="text-align:center"> Id </th>';
+            $list .= "<td style='text-align:center'>\$id</td>";
+        }
+
+        $head.= '<th> '.dr_lang('栏目').' </th>';
+        $list.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent</td>";
+
+        if ($this->is_scategory && dr_in_array('tid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="60" style="text-align:center"> '.dr_lang('类型').' </th>';
+            $list.= "<td style='text-align:center'>\$type_html</td>";
+        }
+        if ($this->module['share'] && dr_in_array('mid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="100" style="text-align:center"> '.dr_lang('模块').' </th>';
+            $list.= "<td style='text-align:center'>\$mid</td>";
+        }
+
+        if (dr_in_array('total', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="80" style="text-align:center"> ' . dr_lang('内容') . ' </th>';
+            $list .= "<td style='text-align:center' class='cat-total-\$id'> \$ctotal </td>";
+        }
+
+        if (dr_in_array('html', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="50" style="text-align:center"> ' . dr_lang('静态') . ' </th>';
+            $list.= "<td style='text-align:center'>\$is_page_html</td>";
+        }
+
+        if (isset($this->cat_config[$this->module['dirname']]['list_field']) && $this->cat_config[$this->module['dirname']]['list_field']) {
+            foreach ($this->cat_config[$this->module['dirname']]['list_field'] as $i => $t) {
+                if ($t['use']) {
+                    $head.= '<th '.($t['width'] ? ' width="'.$t['width'].'"' : '').' '.($t['center'] ? ' class=\"table-center\" style="text-align:center"' : '').'>'.dr_lang($t['name']).'</th>';
+                    $list.= '<td '.($t['center'] ? ' class=\"table-center\"' : '').'>$'.$i.'_html</td>';
+                }
+            }
+        }
+
+        $head.= '<th>'.dr_lang('操作').'</th>';
+        $list.= "<td>\$option</td>";
+
+        $head.= '</tr>';
+        $list.= "</tr>";
+
+        return [$head, \Phpcmf\Service::L('tree')->init($tree)->html_icon()->get_tree(0, $list)];
+    }
+
+    // 设置栏目属性
+    public function config_add() {
+
+        $sysfield = [
+            'order' => ['排序', '设置栏目的排列顺序'],
+            'use' => ['可用', '设置栏目是否可用的快捷开关'],
+            'show' => ['显示', '设置栏目是否用于循环显示'],
+            'id' => ['Id', '显示栏目的id号'],
+            'tid' => ['类型', '显示栏目的类型，有：单页、模块、外链'],
+            'mid' => ['模块', '显示所属模块的名称'],
+            'total' => ['内容数', '针对模块栏目的所属内容数量统计'],
+            'html' => ['静态', '设置栏目是否生成静态的开关'],
+        ];
+        if (!$this->is_scategory) {
+            unset($sysfield['tid']);
+        }
+        if (!$this->module['share']) {
+            unset($sysfield['mid']);
+        }
+
+        if (IS_POST) {
+            $this->cat_config[$this->module['dirname']] = \Phpcmf\Service::L('input')->post('data');
+            \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/category.php', '栏目配置文件', 32)->to_require($this->cat_config);
+            // 自动更新缓存
+            \Phpcmf\Service::M('cache')->sync_cache();
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        // 主表字段
+        $field = \Phpcmf\Service::M()->db->table('field')
+            ->where('disabled', 0)
+            ->where('relatedname', 'category-'.$this->module['dirname'])
+            ->orderBy('displayorder ASC,id ASC')
+            ->get()->getResultArray();
+        $field = dr_list_field_value($this->cat_config[$this->module['dirname']]['list_field'], [], $field);
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $this->cat_config[$this->module['dirname']],
+            'field' => $field,
+            'sysfield' => $sysfield,
+        ]);
+        \Phpcmf\Service::V()->display('share_category_config.html');exit;
     }
 
     // 后台查看列表
     protected function _Admin_List() {
 
+        list($a, $b) = $this->_get_tree_list($this->module['category']);
         \Phpcmf\Service::V()->assign([
-            'list' => $this->_get_tree_list($this->module['category']),
+            'list' => '你在My/View/share_category_list.html，目录中定义过栏目文件，需要删除此文件',
+            'cat_head' => $a,
+            'cat_list' => $b,
             'list_url' => dr_url(APP_DIR.'/category/index'),
             'list_name' => ' <i class="fa fa-reorder"></i>  '.dr_lang('栏目管理'),
             'move_select' => \Phpcmf\Service::L('tree')->select_category(
@@ -586,6 +720,7 @@ class Category extends \Phpcmf\Table {
         $this->_json(1, dr_lang('操作成功'));
     }
 
+    // 复制栏目规则
     public function copy_edit() {
 
         $at = \Phpcmf\Service::L('input')->get('at');

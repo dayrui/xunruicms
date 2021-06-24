@@ -19,9 +19,7 @@ class System extends \Phpcmf\Model
         'SYS_CRON_AUTH' => '自动任务权限IP地址',
         'SYS_SMS_IMG_CODE' => '发送短信验证码双重图形验证开关',
 
-        'SYS_CAT_RNAME' => '栏目目录允许重复',
         'SYS_PAGE_RNAME' => '自定义页面目录允许重复',
-        'SYS_CAT_ZSHOW' => '栏目折叠显示效果',
 
         'SYS_KEY' => '安全密匙',
         'SYS_CSRF'	=> '开启跨站验证',

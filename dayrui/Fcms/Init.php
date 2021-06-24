@@ -57,9 +57,7 @@ $system = [
     'SYS_CRON_AUTH' => '',
     'SYS_SMS_IMG_CODE' => 0,
 
-    'SYS_CAT_RNAME' => 0,
     'SYS_PAGE_RNAME' => 0,
-    'SYS_CAT_ZSHOW' => 0,
 
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,

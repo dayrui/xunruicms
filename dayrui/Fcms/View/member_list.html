@@ -64,7 +64,7 @@
                 {/if}
                 <th style="text-align:center" width="60" class="{dr_sorting('id')}" name="id">{dr_lang('头像')}</th>
                 {loop $list_field $i $t}
-                <th {if $t.width} width="{$t.width}"{/if} {if $t.center} class="table-center" style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
+                <th {if $t.width} width="{$t.width}"{/if} {if $t.center} style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
                 {/loop}
                 <th>{dr_lang('操作')}</th>
             </tr>

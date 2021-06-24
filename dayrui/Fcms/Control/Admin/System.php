@@ -24,9 +24,7 @@ class System extends \Phpcmf\Common
                 'SYS_CRON_AUTH' => dr_safe_replace($post['SYS_CRON_AUTH']),
                 'SYS_SMS_IMG_CODE' => intval($post['SYS_SMS_IMG_CODE']),
 
-                'SYS_CAT_RNAME' => (int)$post['SYS_CAT_RNAME'],
                 'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
-                'SYS_CAT_ZSHOW' => (int)$post['SYS_CAT_ZSHOW'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
 
                 'SYS_ADMIN_LOG' => intval($post['SYS_ADMIN_LOG']),

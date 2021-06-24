@@ -106,7 +106,7 @@
         });
     }
     $(function() {
-        {if SYS_CAT_ZSHOW}
+        {if defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW}
         $(".select-cat").click(function(){
             var action = $(this).attr("action");
             var childs = $(this).attr("childs");
@@ -209,6 +209,7 @@
 <div class="row my-content-top-tool">
     <div class="col-md-12 col-sm-12">
         <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
+        {if $ci->_is_admin_auth('')}<label style="margin-right:10px"><a href="{$config_url}" class="btn red"> <i class="fa fa-cog"></i> {dr_lang('属性设置')}</a></label>{/if}
         {if $ci->_is_admin_auth('field/index')}<label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义栏目字段')}</a></label>{/if}
         <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
         <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
@@ -225,31 +226,10 @@
         <div class="table-scrollable">
             <table class="table table-striped table-bordered table-hover table-checkable dataTable">
                 <thead>
-                <tr class="heading">
-                    <th class="myselect">
-                        <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                            <span></span>
-                        </label>
-                    </th>
-                    <th width="70" style="text-align:center"> {dr_lang('排序')} </th>
-                    <th width="50" style="text-align:center"> {dr_lang('可用')} </th>
-                    <th width="50" style="text-align:center"> {dr_lang('显示')} </th>
-                    <th width="70" style="text-align:center"> Id </th>
-                    <th> {dr_lang('栏目')} </th>
-                    {if $is_scategory}
-                    <th width="60" style="text-align:center"> {dr_lang('类型')} </th>
-                    {/if}
-                    {if $module.share}
-                    <th width="100" style="text-align:center"> {dr_lang('模块')} </th>
-                    {/if}
-                    <th width="80" style="text-align:center"> {dr_lang('内容')} </th>
-                    <th width="50" style="text-align:center"> {dr_lang('静态')} </th>
-                    <th>{dr_lang('操作')}</th>
-                </tr>
+                {$cat_head}
                 </thead>
                 <tbody>
-                {$list}
+                {$cat_list}
                 </tbody>
             </table>
         </div>

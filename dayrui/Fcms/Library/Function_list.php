@@ -18,8 +18,9 @@ class Function_list
     // 用于列表显示栏目
     public function catid($catid, $param = [], $data = []) {
 
-        $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value(MOD_DIR, $catid, 'url'), MOD_DIR).'" target="_blank';
-        $value = dr_cat_value(MOD_DIR, $catid, 'name');
+        $mid = defined('MOD_DIR') ? MOD_DIR : '';
+        $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
+        $value = dr_cat_value($mid, $catid, 'name');
 
         return '<a href="'.$url.'">'.dr_strcut($value, 10).'</a>';
     }
@@ -29,10 +30,11 @@ class Function_list
 
         $rt = [];
         $arr = dr_string2array($value);
+        $mid = defined('MOD_DIR') ? MOD_DIR : '';
         if ($arr) {
             foreach ($arr as $catid) {
-                $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value(MOD_DIR, $catid, 'url'), MOD_DIR).'" target="_blank';
-                $value = dr_cat_value(MOD_DIR, $catid, 'name');
+                $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
+                $value = dr_cat_value($mid, $catid, 'name');
                 $rt[] = '<a href="'.$url.'">'.dr_strcut($value, 10).'</a>';
             }
         }
@@ -48,11 +50,12 @@ class Function_list
     // 用于列表显示内容
     public function content($value, $param = [], $data = []) {
 
+        $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
         $title = dr_replace_emotion(dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']));
         !$title && $title = '...';
 
-        return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
+        return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
     }
 
     // 用于列表显示联动菜单值
@@ -77,11 +80,12 @@ class Function_list
     // 用于列表显示标题
     public function title($value, $param = [], $data = []) {
 
+        $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
         $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
         !$title && $title = '...';
 
-        return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], MOD_DIR).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
+        return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
     }
 
     // 用于列表显示时间日期格式
@@ -126,7 +130,8 @@ class Function_list
         if (!$cid) {
             return dr_lang('未关联');
         }
-        $this->cid_data[$cid] = isset($this->cid_data[$cid]) && $this->cid_data[$cid] ? $this->cid_data[$cid] : \Phpcmf\Service::M()->table_site(MOD_DIR)->get($cid);
+        $mid = defined('MOD_DIR') ? MOD_DIR : '';
+        $this->cid_data[$cid] = isset($this->cid_data[$cid]) && $this->cid_data[$cid] ? $this->cid_data[$cid] : \Phpcmf\Service::M()->table_site($mid)->get($cid);
         return $this->cid_data[$cid] ? $this->title($this->cid_data[$cid]['title'], $param, $this->cid_data[$cid]) : dr_lang('关联主题不存在');
     }
 

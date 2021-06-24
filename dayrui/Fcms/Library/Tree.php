@@ -455,7 +455,7 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $id == $sid ? 'selected' : '';
                 $class = 'dr_catid_'.$value['id'];
-                $parent = SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
+                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
                 extract($value);
 
