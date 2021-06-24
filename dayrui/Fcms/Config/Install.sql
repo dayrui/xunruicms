@@ -311,8 +311,10 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}site` (
   `domain` varchar(50) NOT NULL COMMENT '站点域名',
   `setting` text NOT NULL COMMENT '站点配置',
   `disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '禁用？',
+  `displayorder` smallint(5) DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `disabled` (`disabled`)
+  KEY `disabled` (`disabled`),
+  KEY `displayorder` (`displayorder`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='站点表';
 
 DROP TABLE IF EXISTS `{dbprefix}member`;

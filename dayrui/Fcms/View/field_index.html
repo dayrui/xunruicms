@@ -7,9 +7,10 @@
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
     <div class="table-scrollable">
-        <table class="table table-striped table-bordered fc-head-table  table-checkable">
+
+        <table class="table table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
-        <tr class="heading">
+            <tr class="heading">
             {if $ci->_is_admin_auth('del')}
             <th class="myselect">
                 <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">

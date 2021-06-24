@@ -93,7 +93,7 @@ class Cache extends \Phpcmf\Model
     // 更新缓存
     public function update_cache() {
 
-        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
+        $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
         $module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
 
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);

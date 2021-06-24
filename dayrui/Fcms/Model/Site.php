@@ -133,6 +133,7 @@ class Site extends \Phpcmf\Model
                 'webpath' => $data['webpath'],
             ]),
             'disabled' => 0,
+            'displayorder' => 0,
         ]);
 
         $siteid = $this->db->insertID();
@@ -278,7 +279,7 @@ class Site extends \Phpcmf\Model
     // 站点缓存缓存
     public function cache($siteid = null, $data = null, $module = null) {
 
-        !$data && $data = $this->table('site')->where('disabled', 0)->getAll();
+        !$data && $data = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
         $sso_domain = $client_name = $client_domain = $webpath = $app_domain = $site_domain = $config = $cache = [];
         if ($data) {
             $module_cache_file = []; // 删除多余的模块缓存文件

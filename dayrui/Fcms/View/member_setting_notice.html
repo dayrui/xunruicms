@@ -17,6 +17,33 @@
                 </div>
                 <div class="portlet-body form">
                     <div class="form-body">
+                        <div class="form-group hide">
+                            <label class="col-md-3 control-label">
+
+                            </label>
+                            <div class="col-md-8 ">
+
+                                <div class="mt-checkbox-inline">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox"  class="checkboxes groupmobile{md5($t.name)}" data-set=".groupmobile{md5($t.name)}"  /> {dr_lang('批量')}  <span></span>
+                                    </label>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox"  class="checkboxes groupemail{md5($t.name)}" data-set=".groupemail{md5($t.name)}"  /> {dr_lang('批量')}  <span></span>
+                                    </label>
+                                    {if dr_is_app('weixin')}
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox"  class="checkboxes groupweixin{md5($t.name)}" data-set=".groupweixin{md5($t.name)}"  /> {dr_lang('批量')}  <span></span>
+                                    </label>
+                                    {/if}
+                                    {if dr_is_app('notice')}
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox"  class="checkboxes groupnotice{md5($t.name)}" data-set=".groupnotice{md5($t.name)}"  /> {dr_lang('批量')}  <span></span>
+                                    </label>
+                                    {/if}
+                                </div>
+
+                            </div>
+                        </div>
                         {loop $t.value $name $v}
                         <div class="form-group">
                             <label class="col-md-3 control-label">
@@ -26,19 +53,19 @@
 
                                 <div class="mt-checkbox-inline">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        <input type="checkbox" name="data[{$name}][mobile]" value="1"  {if $value[$name]['mobile']}checked{/if}  /> {dr_lang('短信')} <span></span>
+                                        <input type="checkbox" class="checkboxes groupmobile{md5($t.name)}" name="data[{$name}][mobile]" value="1"  {if $value[$name]['mobile']}checked{/if}  /> {dr_lang('短信')} <span></span>
                                     </label>
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        <input type="checkbox" name="data[{$name}][email]" value="1"  {if $value[$name]['email']}checked{/if}  /> {dr_lang('邮件')} <span></span>
+                                        <input type="checkbox" class="checkboxes groupemail{md5($t.name)}" name="data[{$name}][email]" value="1"  {if $value[$name]['email']}checked{/if}  /> {dr_lang('邮件')} <span></span>
                                     </label>
                                     {if dr_is_app('weixin')}
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        <input type="checkbox" name="data[{$name}][weixin]" value="1"  {if $value[$name]['weixin']}checked{/if}  /> {dr_lang('微信')} <span></span>
+                                        <input type="checkbox" class="checkboxes groupweixin{md5($t.name)}" name="data[{$name}][weixin]" value="1"  {if $value[$name]['weixin']}checked{/if}  /> {dr_lang('微信')} <span></span>
                                     </label>
                                     {/if}
                                     {if dr_is_app('notice')}
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        <input type="checkbox" name="data[{$name}][notice]" value="1"  {if $value[$name]['notice']}checked{/if}  /> {dr_lang('消息')} <span></span>
+                                        <input type="checkbox" class="checkboxes groupnotice{md5($t.name)}" name="data[{$name}][notice]" value="1"  {if $value[$name]['notice']}checked{/if}  /> {dr_lang('消息')} <span></span>
                                     </label>
                                     {/if}
                                     <label class="mt-checkbox mt-checkbox-outline">
