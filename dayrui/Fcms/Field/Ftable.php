@@ -162,14 +162,14 @@ class Ftable extends \Phpcmf\Library\A_Field {
 
         $html = '';
         if ($config['type'] == 1) {
-            $html.= '<label><input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'"></label>';
+            $html.= '<input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
         } elseif ($config['type'] == 2) {
-            $html = '<label><select class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']">';
+            $html = '<select class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']">';
             $arr = explode(',', $config['option']);
             foreach ($arr as $name) {
                 $html.= '<option '.($value[$hang][$lie] == $name ? 'selected' : '').' value="'.$name.'">'.$name.'</option>';
             }
-            $html.= '</select></label>';
+            $html.= '</select>';
         } elseif ($config['type'] == 3) {
             // 图片
             if ($value[$hang][$lie]) {
