@@ -140,7 +140,8 @@ class Module extends \Phpcmf\Common
             if ($temp) {
                 foreach ($temp as $i) {
                     if ($i != $catid && $this->module['category'][$i]['show']
-                        && $this->module['category'][$i]['tid'] != 2 && !$this->module['category'][$i]['getchild']) {
+                        && $this->module['category'][$i]['tid'] != 2
+                        && !$this->module['category'][$i]['setting']['getchild']) {
                         $catid = $i;
                         $category = $this->module['category'][$i];
                         // 初始化模块
