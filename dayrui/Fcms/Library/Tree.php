@@ -250,7 +250,7 @@ class Tree {
         unset($this->data);
 
         if (!IS_DEV) {
-            \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
+            \Phpcmf\Service::L('cache')->set_data($name, $string, 3600);
         }
 
         return $string;
