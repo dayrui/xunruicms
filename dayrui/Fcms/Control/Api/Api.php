@@ -347,15 +347,6 @@ class Api extends \Phpcmf\Common
             'fieldname' => 'id',
         ];
 
-        if ($this->member && $this->member['adminid'] > 0) {
-            $module['field']['author'] = [
-                'name' => dr_lang('作者'),
-                'ismain' => 1,
-                'fieldtype' => 'Text',
-                'fieldname' => 'author',
-            ];
-        }
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -386,6 +377,13 @@ class Api extends \Phpcmf\Common
         $my = intval(\Phpcmf\Service::L('input')->get('my'));
         if ($my) {
             $where[] = 'uid = '.$this->uid;
+        } elseif ($this->member && $this->member['adminid'] > 0) {
+            $module['field']['uid'] = [
+                'name' => dr_lang('账号'),
+                'ismain' => 1,
+                'fieldtype' => 'Text',
+                'fieldname' => 'uid',
+            ];
         }
         if ($data['search']) {
             $catid = (int)$data['catid'];
@@ -403,6 +401,9 @@ class Api extends \Phpcmf\Common
                         $id[] = (int)$i;
                     }
                     $where[] = 'id in('.implode(',', $id).')';
+                } else if ($data['field'] == 'uid') {
+                    $uid = \Phpcmf\Service::M('member')->uid($data['keyword']);
+                    $where[] = 'uid = '.intval($uid);
                 } else {
                     // 其他模糊搜索
                     $where[] = $data['field'].' LIKE "%'.$data['keyword'].'%"';

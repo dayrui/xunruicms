@@ -22,7 +22,7 @@ return [
           `description` text COMMENT '描述',
           `hits` int(10) unsigned DEFAULT NULL COMMENT '浏览数',
           `uid` int(10) unsigned NOT NULL COMMENT '作者id',
-          `author` varchar(50) NOT NULL COMMENT '作者名称',
+          `author` varchar(50) NOT NULL COMMENT '来源',
           `status` tinyint(2) NOT NULL COMMENT '状态',
           `url` varchar(255) DEFAULT NULL COMMENT '地址',
           `link_id` int(10) NOT NULL DEFAULT '0' COMMENT '同步id',
@@ -200,7 +200,7 @@ return [
                                 ),
                         ),
                     'displayorder' => '0',
-                    'textname' => '作者',
+                    'textname' => '来源',
                 ),
         ),
         
