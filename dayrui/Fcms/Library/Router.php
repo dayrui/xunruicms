@@ -514,116 +514,11 @@ class Router
         return $prefix.$url;
     }
 
-    // 评论地址
-    public function comment_url($id, $moddir = '')
-    {
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $moddir && $dir = $moddir;
-
-        if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
-        }
-
-        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-
-        return dr_url_prefix($this->url_prefix('php', $module, [], SITE_FID) . 'c=comment&id=' . $id);
-    }
-
-    // 打赏
-    public function donation_url($id, $moddir = '')
-    {
-        if (!dr_is_app('shang')) {
-            return '没有安装【打赏】应用';
-        }
-
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $moddir && $dir = $moddir;
-
-        if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
-        }
-
-        return $this->url_prefix('php', [], [], SITE_FID) . 's=shang&mid='.$dir.'&id=' . $id;
-    }
-
-    // 模块表单内容地址
-    public function mform_show_url($form, $id, $moddir = '', $page = 0)
-    {
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $moddir && $dir = $moddir;
-
-        if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
-        }
-
-        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-
-        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=show&id=' . $id . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
-    }
-
-    // 模块表单提交地址
-    public function mform_post_url($form, $cid, $moddir = '')
-    {
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $moddir && $dir = $moddir;
-
-        if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
-        }
-
-        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-
-        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=post&cid=' . $cid;
-    }
-
-    // 模块表单列表地址
-    public function mform_list_url($form, $cid, $moddir = '', $page = 0)
-    {
-
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $moddir && $dir = $moddir;
-
-        if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
-        }
-
-        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-
-        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=index&cid=' . $cid . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
-    }
-
-    // 网站表单内容地址
-    public function form_show_url($form, $id, $page = 0)
-    {
-
-        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=show&id=' . $id . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
-    }
-
-    // 网站表单提交地址
-    public function form_post_url($form)
-    {
-
-        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=post';
-    }
-
-    // 网站表单列表地址
-    public function form_list_url($form, $page = 0)
-    {
-
-        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
-    }
-
     // 快捷登录地址
     public function oauth_url($name, $type, $gourl = '')
     {
         return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
     }
-
 
     // 地址前缀部分
     public function url_prefix($type, $mod = [], $cat = [], $fid = 0) {
@@ -1203,10 +1098,183 @@ class Router
      * @return	string
      */
     protected function _space($name) {
+
+        $str = '';
         $len = strlen($name) + 2;
         $cha = 60 - $len;
-        $str = '';
-        for ($i = 0; $i < $cha; $i ++) $str .= ' ';
+
+        for ($i = 0; $i < $cha; $i ++) {
+            $str .= ' ';
+        }
+
         return $str;
+    }
+
+
+    //////////////////////////////////////////////////
+
+
+    // 评论地址
+    public function comment_url($id, $mid = '') {
+
+        // 模块目录识别
+        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
+        $mid && $dir = $mid;
+
+        if (!dr_is_module($dir)) {
+            return '没有安装【'.$dir.'】模块';
+        }
+
+        $obj = \Phpcmf\Service::M('comment', 'comment');
+        if (method_exists($obj, 'comment_url')) {
+            return $obj->comment_url($id, $mid);
+        }
+
+        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
+
+        return dr_url_prefix($this->url_prefix('php', $module, [], SITE_FID) . 'c=comment&id=' . $id);
+    }
+
+    // 打赏
+    public function donation_url($id, $mid = '') {
+
+        if (!dr_is_app('shang')) {
+            return '没有安装【打赏】应用';
+        }
+
+        // 模块目录识别
+        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
+        $mid && $dir = $mid;
+
+        if (!dr_is_module($dir)) {
+            return '没有安装【'.$dir.'】模块';
+        }
+
+        $obj = \Phpcmf\Service::M('buy', 'shang');
+        if (method_exists($obj, 'donation_url')) {
+            return $obj->donation_url($id, $mid);
+        }
+
+        return $this->url_prefix('php', [], [], SITE_FID) . 's=shang&mid='.$dir.'&id=' . $id;
+    }
+
+    // 模块表单内容地址
+    public function mform_show_url($form, $id, $mid = '', $page = 0) {
+
+        if (!dr_is_app('mform')) {
+            return '没有安装【模块表单】应用';
+        }
+
+        // 模块目录识别
+        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
+        $mid && $dir = $mid;
+
+        if (!dr_is_module($dir)) {
+            return '没有安装【'.$dir.'】模块';
+        }
+
+        $obj = \Phpcmf\Service::M('mform', 'mform');
+        if (method_exists($obj, 'show_url')) {
+            return $obj->show_url($form, $id, $mid, $page);
+        }
+
+        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
+
+        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=show&id=' . $id . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
+    }
+
+    // 模块表单提交地址
+    public function mform_post_url($form, $cid, $mid = '') {
+
+        if (!dr_is_app('mform')) {
+            return '没有安装【模块表单】应用';
+        }
+
+        // 模块目录识别
+        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
+        $mid && $dir = $mid;
+
+        if (!dr_is_module($dir)) {
+            return '没有安装【'.$dir.'】模块';
+        }
+
+        $obj = \Phpcmf\Service::M('mform', 'mform');
+        if (method_exists($obj, 'post_url')) {
+            return $obj->post_url($form, $cid, $mid);
+        }
+
+        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
+
+        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=post&cid=' . $cid;
+    }
+
+    // 模块表单列表地址
+    public function mform_list_url($form, $cid, $mid = '', $page = 0) {
+
+        if (!dr_is_app('mform')) {
+            return '没有安装【模块表单】应用';
+        }
+
+        // 模块目录识别
+        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
+        $mid && $dir = $mid;
+
+        if (!dr_is_module($dir)) {
+            return '没有安装【'.$dir.'】模块';
+        }
+
+        $obj = \Phpcmf\Service::M('mform', 'mform');
+        if (method_exists($obj, 'list_url')) {
+            return $obj->list_url($form, $cid, $mid);
+        }
+
+        $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
+
+        return $this->url_prefix('php', $module, [], SITE_FID) . 'c=' . $form . '&m=index&cid=' . $cid . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
+    }
+
+    // 网站表单内容地址
+    public function form_show_url($form, $id, $page = 0) {
+
+        if (!dr_is_app('form')) {
+            return '没有安装【全局网站表单】应用';
+        }
+
+        $obj = \Phpcmf\Service::M('form', 'form');
+        if (method_exists($obj, 'show_url')) {
+            return $obj->show_url($form, $id, $page);
+        }
+
+        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=show&id=' . $id . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
+    }
+
+    // 网站表单提交地址
+    public function form_post_url($form) {
+
+        if (!dr_is_app('form')) {
+            return '没有安装【全局网站表单】应用';
+        }
+
+        $obj = \Phpcmf\Service::M('form', 'form');
+        if (method_exists($obj, 'show_url')) {
+            return $obj->post_url($form);
+        }
+
+        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . '&m=post';
+    }
+
+    // 网站表单列表地址
+    public function form_list_url($form, $page = 0) {
+
+        if (!dr_is_app('form')) {
+            return '没有安装【全局网站表单】应用';
+        }
+
+        $obj = \Phpcmf\Service::M('form', 'form');
+        if (method_exists($obj, 'show_url')) {
+            return $obj->list_url($form, $page);
+        }
+
+        return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
     }
 }
