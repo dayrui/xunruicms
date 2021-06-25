@@ -143,7 +143,7 @@ class Service
             $context['sql'] = \Phpcmf\Service::M()->get_sql_query();
             $context['url'] = FC_NOW_URL;
             $context['user'] = dr_safe_replace($_SERVER['HTTP_USER_AGENT']);
-            $context['referer'] = dr_safe_url($_SERVER['HTTP_REFERER']);
+            $context['referer'] = dr_safe_url($_SERVER['HTTP_REFERER'], true);
 
             return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
         }

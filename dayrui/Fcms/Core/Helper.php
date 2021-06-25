@@ -10,13 +10,18 @@
 /**
  * 安全url过滤
  */
-function dr_safe_url($url) {
+function dr_safe_url($url, $is_html = false) {
 
     if (!$url) {
         return '';
     }
 
-    return htmlspecialchars(\Phpcmf\Service::L('Security')->xss_clean($url, true));
+    $url = trim(\Phpcmf\Service::L('Security')->xss_clean($url, true));
+    if ($is_html) {
+        $url = htmlspecialchars($url);
+    }
+
+    return $url;
 }
 
 /**

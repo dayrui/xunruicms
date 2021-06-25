@@ -646,7 +646,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (isset($_GET['is_show_msg'])) {
             $url = '';
             if ($code) {
-                $url = dr_safe_url(urldecode($_GET['is_show_msg']));
+                $url = dr_safe_url(urldecode($_GET['is_show_msg']), true);
                 if (!$url) {
                     $url = isset($data['url']) ? $data['url'] : '';
                 }
@@ -717,8 +717,8 @@ abstract class Common extends \CodeIgniter\Controller
             $this->_json($code, $msg, $url);
         }
 
-        $url = dr_safe_url($url);
-        $backurl = $url ? $url : dr_safe_url($_SERVER['HTTP_REFERER']);
+        $url = dr_safe_url($url, true);
+        $backurl = $url ? $url : dr_safe_url($_SERVER['HTTP_REFERER'], true);
 
         if ($backurl) {
             strpos(dr_now_url(), $backurl) === 0 && $backurl = '';
@@ -760,10 +760,10 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         if (!$url) {
-            $backurl = dr_safe_url($_SERVER['HTTP_REFERER']);
+            $backurl = dr_safe_url($_SERVER['HTTP_REFERER'], true);
             (!$backurl || $backurl == dr_now_url() ) && $backurl = SITE_URL;
         } else {
-            $backurl = dr_safe_url($url);
+            $backurl = dr_safe_url($url, true);
         }
 
         // 加载初始化文件
