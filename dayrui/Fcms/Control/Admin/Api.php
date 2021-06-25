@@ -461,11 +461,12 @@ class Api extends \Phpcmf\Common
 		$dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
 		$prefix = dr_module_table_prefix($dir);
 		if (is_dir(APPSPATH.ucfirst($dir))) {
-			$t1 = \Phpcmf\Service::M()->db->table($prefix.'_index')->where('status=9')->where('DATEDIFF(from_unixtime(inputtime),now())=0')->countAllResults();
-			$t2 = \Phpcmf\Service::M()->db->table($prefix.'_index')->where('status=9')->countAllResults();
-			$t3 = \Phpcmf\Service::M()->db->table($prefix.'_verify')->where((\Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid.' OR ' : '').\Phpcmf\Service::M('auth')->get_admin_verify_status_list())->countAllResults();
-			$t4 = \Phpcmf\Service::M()->db->table($prefix.'_recycle')->countAllResults();
-			$t5 = \Phpcmf\Service::M()->db->table($prefix.'_time')->countAllResults();
+		    $where = \Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid : '';
+			$t1 = \Phpcmf\Service::M()->table($prefix.'_index')->where(($where ? $where.' AND ' : '').'status=9')->where('DATEDIFF(from_unixtime(inputtime),now())=0')->counts();
+			$t2 = \Phpcmf\Service::M()->table($prefix.'_index')->where(($where ? $where.' AND ' : '').'status=9')->counts();
+			$t3 = \Phpcmf\Service::M()->table($prefix.'_verify')->where(($where ? $where.' AND ' : '').\Phpcmf\Service::M('auth')->get_admin_verify_status_list())->counts();
+			$t4 = \Phpcmf\Service::M()->table($prefix.'_recycle')->where($where)->counts();
+			$t5 = \Phpcmf\Service::M()->table($prefix.'_time')->where($where)->counts();
 		}
 		echo '$("#'.$dir.'_today").html('.$t1.');';
 		echo '$("#'.$dir.'_all").html('.$t2.');';
