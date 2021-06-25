@@ -358,18 +358,30 @@ class Api extends \Phpcmf\Common
             }
             $builder = \Phpcmf\Service::M()->db->table($site.'_'.$dirname);
             $builder->whereIn('id', $id);
-            $list = $builder->orderBy('updatetime DESC')->get()->getResultArray();
-            if (!$list) {
+            $mylist = $builder->orderBy('updatetime DESC')->get()->getResultArray();
+            if (!$mylist) {
                 $this->_json(0, dr_lang('没有相关数据'));
             }
-            $rt = [];
-            foreach ($list as $t) {
-                $rt[] = [
-                    'id' => $t['id'],
-                    'value' => '<a href="'.$t['url'].'" tagreg="_blank">'.$t['title'].'</a>'
-                ];
+            $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
+            if (!$name) {
+                $this->_json(0, dr_lang('name参数不能为空'));
             }
-            $this->_json(1, dr_lang('操作成功'), ['result' => $rt]);
+
+            $mid = $dirname;
+            $ids = [];
+            foreach ($mylist as $t) {
+                $ids[] = $t['id'];
+            }
+
+            $file = \Phpcmf\Service::V()->code2php(
+                file_get_contents(is_file(MYPATH.'View/api_related_field.html') ? MYPATH.'View/api_related_field.html' : COREPATH.'View/api_related_field.html')
+            );
+            ob_start();
+            require $file;
+            $code = ob_get_clean();
+            $html = explode('<!--list-->', $code);
+
+            $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
         $data = $_GET;
@@ -482,7 +494,6 @@ class Api extends \Phpcmf\Common
             ),
         );
 
-
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -494,18 +505,29 @@ class Api extends \Phpcmf\Common
             }
             $builder = \Phpcmf\Service::M()->db->table('member');
             $builder->whereIn('id', $id);
-            $list = $builder->orderBy('id DESC')->get()->getResultArray();
-            if (!$list) {
+            $mylist = $builder->orderBy('id DESC')->get()->getResultArray();
+            if (!$mylist) {
                 $this->_json(0, dr_lang('没有相关数据'));
             }
-            $rt = [];
-            foreach ($list as $t) {
-                $rt[] = [
-                    'id' => $t['id'],
-                    'value' => '<img class="img-circle" src="'.dr_avatar($t['id']).'" style="width:30px;height:30px;margin-right:10px;"> '.$t['username'],
-                ];
+            $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('name'));
+            if (!$name) {
+                $this->_json(0, dr_lang('name参数不能为空'));
             }
-            $this->_json(1, dr_lang('操作成功'), ['result' => $rt]);
+
+            $ids = [];
+            foreach ($mylist as $t) {
+                $ids[] = $t['id'];
+            }
+
+            $file = \Phpcmf\Service::V()->code2php(
+                file_get_contents(is_file(MYPATH.'View/api_members_field.html') ? MYPATH.'View/api_members_field.html' : COREPATH.'View/api_members_field.html')
+            );
+            ob_start();
+            require $file;
+            $code = ob_get_clean();
+            $html = explode('<!--list-->', $code);
+
+            $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
         $data = $_GET;

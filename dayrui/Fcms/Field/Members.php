@@ -94,6 +94,8 @@ class Members extends \Phpcmf\Library\A_Field {
             return $this->show($field, $value);
         }
 
+        $is_show = 0;
+
         // 字段存储名称
         $name = $field['fieldname'];
 		// 字段提示信息
@@ -102,42 +104,25 @@ class Members extends \Phpcmf\Library\A_Field {
 		// 区域大小
         $area = \Phpcmf\Service::IS_MOBILE_USER() ? '["95%", "90%"]' : '["50%", "65%"]';
 
-		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
-
         // 选择数量限制
         $limit = intval($field['setting']['option']['limit']);
         !$limit && $limit = 99999;
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
-        $str = '';
-        $str.= '
-			<div class="scroller_'.$name.'_files">
-                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
-        <table class="table table-striped table-bordered fc-sku-table table-hover">
-        <thead>
-        <tr>
-            <th width="90" style="border-left-width: 1px!important;">Uid </th>
-            <th>'.dr_lang('用户').' </th>
-            <th width="50"> </th>
-        </tr>
-        </thead>
-        <tbody id="rmember_'.$name.'-sort-items" class="scroller_body">';
-
         $value = trim($value, ',');
+        $mylist = [];
         if ($value && is_string($value)) {
 			$db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $query = $db ? $db->getResultArray() : [];
-            if ($query) {
-                foreach ($query as $t) {
-                    $id = $t['id'];
-                    $value = '<a class="fc_member_show" href="javascript:;" uid="'.$t['id'].'"><img class="img-circle" src="'.dr_avatar($t['id']).'" style="width:30px;height:30px;margin-right:10px;"> '.$t['username'].'</a>';
-                    $str.= str_replace(array('{avatar}', '{id}', '{value}', '\\'), array(dr_avatar($t['id']), $id, $value, ''), $tpl);
-                }
-            }
-		}	
-		$str.= '</tbody>';
-		$str.= '</table></div></div>';
+            $mylist = $db ? $db->getResultArray() : [];
+		}
+
+        $file = \Phpcmf\Service::V()->code2php(
+            file_get_contents(is_file(MYPATH.'View/api_members_field.html') ? MYPATH.'View/api_members_field.html' : COREPATH.'View/api_members_field.html')
+        );
+        ob_start();
+        require $file;
+        $str = ob_get_clean();
 		$str.= '<p>';
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_rmember_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联用户').'</button>';
         $str.= '</p>';
@@ -153,7 +138,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?is_ajax=1&s=api&c=api&m=members&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
+		    var url = "/index.php?is_ajax=1&s=api&c=api&m=members&name='.$name.'&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',
@@ -179,11 +164,10 @@ class Members extends \Phpcmf\Library\A_Field {
                             layer.close(loading);
                             if (json.code == 1) {
                                 layer.close(index);
-                                var temp = \''.$tpl.'\';
-                                for(var i in json.data.result){
-                                    var v = json.data.result[i];
-                                    if (typeof v.id != "undefined") {
-                                        if($("#dr_items_'.$name.'_"+v.id).length>0) {
+                                for(var i in json.data.ids){
+                                    var vid = json.data.ids[i];
+                                    if (typeof vid != "undefined") {
+                                        if($("#dr_items_'.$name.'_"+vid).length>0) {
                                           dr_tips(0, "'.dr_lang('已经存在').'");
                                           return;
                                         }
@@ -191,12 +175,9 @@ class Members extends \Phpcmf\Library\A_Field {
                                             dr_tips(0, "'.dr_lang('关联数量超限').'");
                                             return;
                                         }
-                                        var tpl = temp;
-                                        tpl = tpl.replace(/\{id\}/g, v.id);
-                                        tpl = tpl.replace(/\{value\}/g, v.value);
-                                        $(\'#rmember_'.$name.'-sort-items\').append(tpl);
                                     }
                                 }
+                                $(\'#rmember_'.$name.'-sort-items\').append(json.data.html);
                                 dr_slimScroll_init(".scroller_'.$name.'_files", 300);
                                 dr_tips(1, json.msg);
                             } else {
@@ -228,30 +209,24 @@ class Members extends \Phpcmf\Library\A_Field {
      */
     public function show($field, $value = null) {
 
-        $str = '';
-        $str.= '
-        <table class="table table-striped table-bordered table-advance">
-        <thead>
-        <tr>
-            <th width="90" style="border-left-width: 2px!important;"> Uid </th>
-            <th>'.dr_lang('账号').' </th>
-        </tr>
-        </thead>
-        <tbody>';
-
         $value = @trim($value, ',');
+        $mylist = [];
+        $is_show = 1;
         if ($value && is_string($value)) {
             $db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $query = $db ? $db->getResultArray() : [];
-            if ($query) {
-                foreach ($query as $t) {
-                    $str .= '<tr><td>' . $t['id'] . '</td><td>' . $t['username'] . '</td></tr>';;
-                }
-            }
+            $mylist = $db ? $db->getResultArray() : [];
+
         }
-        $str.= '</tbody>';
-        $str.= '</table>';
+
+        $file = \Phpcmf\Service::V()->code2php(
+            file_get_contents(is_file(MYPATH.'View/api_members_field.html') ? MYPATH.'View/api_members_field.html' : COREPATH.'View/api_members_field.html')
+        );
+        ob_start();
+        require $file;
+        $str = ob_get_clean();
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }
+
+
 }

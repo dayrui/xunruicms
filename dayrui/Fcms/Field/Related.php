@@ -111,6 +111,8 @@ class Related extends \Phpcmf\Library\A_Field {
             return $this->show($field, $value);
         }
 
+        $is_show = 0;
+
         // 字段存储名称
         $name = $field['fieldname'];
 		// 字段提示信息
@@ -118,43 +120,29 @@ class Related extends \Phpcmf\Library\A_Field {
 		// 区域大小
         $area = \Phpcmf\Service::IS_MOBILE_USER() ? '["95%", "90%"]' : '["50%", "65%"]';
         // 模块名称
-		$module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
-		// 添加模板
-		$tpl = '<tr id="dr_items_'.$name.'_{id}"><td>{id}</td><td>{value}<input type="hidden" name="data['.$name.'][]" value="{id}"></td><td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$(\\\'#dr_items_'.$name.'_{id}\\\').remove()"><i class="fa fa-trash"></i></a></td></tr>';
-        // 字段显示名称
+		$module = $mid = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
+		// 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
         // 选择数量限制
         $limit = intval($field['setting']['option']['limit']);
         !$limit && $limit = 99999;
         // 输出信息
-        $str = '';
-        $str.= '	<div class="scroller_'.$name.'_files">
-                <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
-        
-        <table class="table table-striped table-bordered fc-sku-table table-hover">
-        <thead>
-        <tr>
-            <th width="90" style="border-left-width: 1px!important;">Id </th>
-            <th>'.($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题')).' </th>
-            <th width="50"> </th>
-        </tr>
-        </thead>
-        <tbody id="related_'.$name.'-sort-items" class="scroller_body">';
+        $cname = ($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题'));
 
         $value = trim($value, ',');
+        $mylist = [];
         if ($value && is_string($value)) {
-			$db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $query = $db ? $db->getResultArray() : [];
-            if ($query) {
-                foreach ($query as $t) {
-                    $id = $t['id'];
-                    $value = '<a href="'.$t['url'].'" target="_blank">'.$t['title'].'</a>';
-                    $str.= str_replace(array('{id}', '{value}', '\\'), array($id, $value, ''), $tpl);
-                }
-            }
-		}	
-		$str.= '</tbody>';
-		$str.= '</table></div></div>';
+			$db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+            $mylist = $db ? $db->getResultArray() : [];
+		}
+
+        $file = \Phpcmf\Service::V()->code2php(
+            file_get_contents(is_file(MYPATH.'View/api_related_field.html') ? MYPATH.'View/api_related_field.html' : COREPATH.'View/api_related_field.html')
+        );
+        ob_start();
+        require $file;
+        $str = ob_get_clean();
+
 		$str.= '<p>';
 		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_related_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联内容').'</button>';
         $str.= '</p>';
@@ -171,7 +159,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "'.WEB_DIR.'index.php?s=api&c=api&m=related&site='.SITE_ID.'&module='.$module.'&my='.intval($field['setting']['option']['my']).'.&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
+		    var url = "'.WEB_DIR.'index.php?s=api&c=api&m=related&name='.$name.'&site='.SITE_ID.'&module='.$module.'&my='.intval($field['setting']['option']['my']).'.&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-cog"></i> '.dr_lang('关联内容').'\',
@@ -197,11 +185,10 @@ class Related extends \Phpcmf\Library\A_Field {
                             layer.close(loading);
                             if (json.code == 1) {
                                 layer.close(index);
-                                var temp = \''.$tpl.'\';
-                                for(var i in json.data.result){
-                                    var v = json.data.result[i];
-                                    if (typeof v.id != "undefined") {
-                                        if($("#dr_items_'.$name.'_"+v.id).length>0) {
+                                for(var i in json.data.ids){
+                                    var vid = json.data.ids[i];
+                                    if (typeof vid != "undefined") {
+                                        if($("#dr_items_'.$name.'_"+vid).length>0) {
                                           dr_tips(0, "'.dr_lang('已经存在').'");
                                           return;
                                         }
@@ -209,12 +196,9 @@ class Related extends \Phpcmf\Library\A_Field {
                                             dr_tips(0, "'.dr_lang('关联数量超限').'");
                                             return;
                                         }
-                                        var tpl = temp;
-                                        tpl = tpl.replace(/\{id\}/g, v.id);
-                                        tpl = tpl.replace(/\{value\}/g, v.value);
-                                        $(\'#related_'.$name.'-sort-items\').append(tpl);
                                     }
                                 }
+                                 $(\'#related_'.$name.'-sort-items\').append(json.data.html);
                                 dr_slimScroll_init(".scroller_'.$name.'_files", 300);
                                 dr_tips(1, json.msg);
                             } else {
@@ -246,30 +230,23 @@ class Related extends \Phpcmf\Library\A_Field {
      */
     public function show($field, $value = null) {
 
-        $str = '';
-        $str.= '
-        <table class="table table-striped table-bordered table-advance">
-        <thead>
-        <tr>
-            <th width="90" style="border-left-width: 2px!important;"> Id </th>
-            <th>'.($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题')).' </th>
-        </tr>
-        </thead>
-        <tbody>';
 
+        $cname = ($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题'));
         $value = @trim($value, ',');
-        $module = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
+        $mylist = [];
+        $is_show = 1;
+        $module = $mid = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
         if ($value && is_string($value)) {
-            $db = \Phpcmf\Service::M()->db->query('select id,title,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $query = $db ? $db->getResultArray() : [];
-            if ($query) {
-                foreach ($query as $t) {
-                    $str .= '<tr><td>' . $t['id'] . '</td><td><a href="' . $t['url'] . '" target="_blank">' . $t['title'] . '</a></td></tr>';;
-                }
-            }
+            $db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+            $mylist = $db ? $db->getResultArray() : [];
         }
-        $str.= '</tbody>';
-        $str.= '</table>';
+
+        $file = \Phpcmf\Service::V()->code2php(
+            file_get_contents(is_file(MYPATH.'View/api_related_field.html') ? MYPATH.'View/api_related_field.html' : COREPATH.'View/api_related_field.html')
+        );
+        ob_start();
+        require $file;
+        $str = ob_get_clean();
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }

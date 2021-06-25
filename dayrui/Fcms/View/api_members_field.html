@@ -1,0 +1,30 @@
+<div class="scroller_{$name}_files">
+    <div class="scroller" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+        <table class="table table-striped table-bordered fc-sku-table table-hover">
+            <thead>
+            <tr>
+                <th width="90" style="border-left-width: 1px!important;">Uid </th>
+                <th>{dr_lang('用户')} </th>
+                {if !$is_show}
+                <th width="50"> </th>
+                {/if}
+            </tr>
+            </thead>
+            <tbody id="rmember_{$name}-sort-items" class="scroller_body">
+            <!--list-->
+            {loop $mylist $t}
+            <tr id="dr_items_{$name}_{$t.id}">
+                <td>{$t.id}</td>
+                <td><a class="fc_member_show" href="javascript:;" uid="{$t['id']}"><img class="img-circle" src="{dr_avatar($t['id'])}" style="width:30px;height:30px;margin-right:10px;">{$t['username']}</a>
+                    <input type="hidden" name="data[{$name}][]" value="{$t.id}">
+                </td>
+                {if !$is_show}
+                <td width="45"><a class="btn btn-xs red" href="javascript:;" onclick="$('#dr_items_{$name}_{$t.id}').remove()"><i class="fa fa-trash"></i></a></td>
+                {/if}
+            </tr>
+            {/loop}
+            <!--list-->
+            </tbody>
+        </table>
+    </div>
+</div>
