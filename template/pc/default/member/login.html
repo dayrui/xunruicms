@@ -70,15 +70,21 @@
                                             </div>
                                             <div class="login-options">
                                                 <ul class="login-oauth">
+                                                    {if isset($ci->member_cache['oauth']['qq']['id']) && $ci->member_cache['oauth']['qq']['id']}
                                                     <li>
                                                         <a href="{Router::oauth_url('qq', 'login')}"> <img src="{THEME_PATH}assets/oauth/qq.png"> </a>
                                                     </li>
+                                                    {/if}
+                                                    {if isset($ci->member_cache['oauth']['weibo']['id']) && $ci->member_cache['oauth']['weibo']['id']}
                                                     <li>
                                                         <a href="{Router::oauth_url('weibo', 'login')}"> <img src="{THEME_PATH}assets/oauth/weibo.png"> </a>
                                                     </li>
+                                                    {/if}
+                                                    {if isset($ci->member_cache['oauth']['weixin']['id']) && $ci->member_cache['oauth']['weixin']['id']}
                                                     <li>
                                                         <a href="{Router::oauth_url('weixin', 'login')}"> <img src="{THEME_PATH}assets/oauth/weixin.png"> </a>
                                                     </li>
+                                                    {/if}
                                                 </ul>
                                             </div>
                                             <div class="create-account">

@@ -1,5 +1,5 @@
 {template "head.html"}
-<body class="page-content-white">
+<body class="page-content-white {if isset($_GET['is_ajax']) && $_GET['is_ajax'] && !isset($_GET['is_menu'])} main-content2{/if}">
 <style>
     .main-content2 {background: #fff!important}
     .main-content2 .note.note-danger {background-color: #f5f6f8 !important}
