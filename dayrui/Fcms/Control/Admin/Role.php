@@ -11,6 +11,10 @@ class Role extends \Phpcmf\Common
 	
 	public function __construct(...$params) {
 		parent::__construct(...$params);
+        // 不是超级管理员
+        if (!dr_in_array(1, $this->admin['roleid'])) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'角色权限' => ['role/index', 'fa fa-users'],
@@ -141,10 +145,6 @@ class Role extends \Phpcmf\Common
 
 	// 角色组权限，超级管理员有权限
 	public function auth_edit() {
-
-	    if (!$this->_is_admin_auth()) {
-            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
-        }
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));
 		$data = \Phpcmf\Service::M('auth')->get_role($id);

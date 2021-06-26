@@ -13,6 +13,10 @@ class Root extends \Phpcmf\Table
     public function __construct(...$params)
     {
         parent::__construct(...$params);
+        // 不是超级管理员
+        if (!dr_in_array(1, $this->admin['roleid'])) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
@@ -26,10 +30,6 @@ class Root extends \Phpcmf\Table
         ]);
         $this->name = dr_lang('管理员');
         $this->role = \Phpcmf\Service::M('auth')->get_role_all();
-        // 不是超级管理员,排除超管角色
-        if (!dr_in_array(1, $this->admin['roleid'])) {
-            unset($this->role[1]);
-        }
     }
 
     public function index() {
@@ -44,10 +44,6 @@ class Root extends \Phpcmf\Table
         }
         if ($p['rid']) {
             $where[] = '`uid` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid='.$p['rid'].')';
-        }
-        // 不是超级管理员,排除超管账号
-        if (!dr_in_array(1, $this->admin['roleid'])) {
-            $where[] = '`uid` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)';
         }
 
         $this->_init([
