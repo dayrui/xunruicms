@@ -122,7 +122,7 @@ class Uploader
         }
 
         // 安全检测
-        $rt = \Phpcmf\Service::L('upload')->_safe_check(trim($this->getFileExt(), '.'), file_get_contents($file["tmp_name"]), 0);
+        $rt = \Phpcmf\Service::L('upload')->_safe_check(trim($this->getFileExt(), '.'), $file["tmp_name"], 0);
         if (!$rt['code']) {
             $this->stateInfo = $rt['msg'];
             return;

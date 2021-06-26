@@ -25,15 +25,21 @@ class Home extends \Phpcmf\Common
         if ($this->site_info[SITE_ID]['SITE_INDEX_HTML'] && !defined('SC_HTML_FILE')) {
             if (IS_CLIENT) {
                 // 自定义终端
-                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', IS_CLIENT.'/index.html'), $html);
+                $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', IS_CLIENT.'/index.html');
+                $rt = file_put_contents($file, $html);
+                !$rt && CI_DEBUG && log_message('error', '网站首页终端（'.IS_CLIENT.'）生成失败：'.$file);
             } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
-                    file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'), $html);
+                    $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
+                    $mobile = file_put_contents($mfile, $html);
+                    !$mobile && CI_DEBUG && log_message('error', '网站首页移动端生成失败：'.$mfile);
                 }
             } else {
                 // pc
-                file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html'), $html);
+                $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html');
+                $pc = file_put_contents($file, $html);
+                !$pc && CI_DEBUG && log_message('error', '网站首页PC端首页生成失败：'.$file);
             }
         }
 

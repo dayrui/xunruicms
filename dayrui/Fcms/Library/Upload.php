@@ -70,7 +70,7 @@ class Upload
 
         // 验证伪装图片
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $data = strtolower($data);
+            $data = is_file($data) ? file_get_contents($data) : strtolower($data);
             if (strlen($data) < 100) {
                 return dr_return_data(0, dr_lang('图片文件不规范'));
             } elseif (strpos($data, '<?php') !== false) {
@@ -104,12 +104,11 @@ class Upload
             return dr_return_data(0, $this->error['ERROR_TMPFILE']);
         }
 
-        $code = file_get_contents($file["tmp_name"]);
         $file_ext = $this->_file_ext($file['name']); // 扩展名
         $file_name = $this->_file_name($file['name']); // 文件实际名字
 
         // 安全验证
-        $rt = $this->_safe_check($file_ext, $code);
+        $rt = $this->_safe_check($file_ext, $file["tmp_name"]);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
@@ -169,7 +168,7 @@ class Upload
 
         $file_ext = $this->_file_ext($file['name']); // 扩展名
         // 安全验证
-        $rt = $this->_safe_check($file_ext, file_get_contents($file["tmp_name"]));
+        $rt = $this->_safe_check($file_ext, $file["tmp_name"]);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
