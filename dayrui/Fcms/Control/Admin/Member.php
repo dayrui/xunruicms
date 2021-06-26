@@ -136,7 +136,7 @@ class Member extends \Phpcmf\Table
 
         // 不是超级管理员排除角色账号
         if (!dr_in_array(1, $this->admin['roleid'])) {
-            $where[] = 'member.id NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
+            $where[] = 'member.id NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid<> '.$this->uid.')';
         }
 
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
@@ -155,6 +155,10 @@ class Member extends \Phpcmf\Table
         $member = dr_member_info($uid);
         if (!$member) {
             $this->_json(0, dr_lang('该用户不存在'));
+        }
+
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
         if (IS_POST) {
@@ -221,6 +225,10 @@ class Member extends \Phpcmf\Table
             $this->_json(0, dr_lang('该用户不存在'));
         }
 
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
             unlink($cache_path.$uid.'.jpg');
@@ -239,6 +247,10 @@ class Member extends \Phpcmf\Table
         $member = dr_member_info($uid);
         if (!$member) {
             $this->_json(0, dr_lang('该用户不存在'));
+        }
+
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
         if (IS_POST) {
