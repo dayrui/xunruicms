@@ -120,6 +120,7 @@ class Content extends \Phpcmf\Model {
                 $update = [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
+					'islock' => IS_ADMIN ? 1 : 0,
                     'content' => dr_array2string($value),
                     'backuid' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? $this->uid : 0,
                     'backinfo' => IS_ADMIN && !\Phpcmf\Service::M('auth')->is_post_user() ? dr_array2string([
@@ -174,6 +175,7 @@ class Content extends \Phpcmf\Model {
                     'uid' => (int)$data[1]['uid'],
                     'vid' => (int)$role['verify_id'],
                     'isnew' => $id ? 0 : 1,
+					'islock' => 0,
                     'catid' => (int)$data[1]['catid'],
                     'author' => $data[1]['author'],
                     'status' => (int)$data[1]['status'],

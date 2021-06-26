@@ -408,6 +408,9 @@ class Check extends \Phpcmf\Common
                             if (!\Phpcmf\Service::M()->db->fieldExists('vid', $table)) {
                                 \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `vid` INT(10) DEFAULT NULL');
                             }
+                            if (!\Phpcmf\Service::M()->db->fieldExists('islock', $table)) {
+                                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `islock` tinyint(1) DEFAULT NULL');
+                            }
                             // 点击时间
                             $table = $prefix.$siteid.'_'.$m['dirname'].'_hits';
                             foreach(['day_time', 'week_time', 'month_time', 'year_time'] as $a) {

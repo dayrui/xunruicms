@@ -30,6 +30,7 @@ return [
       `uid` mediumint(8) unsigned NOT NULL COMMENT '作者uid',
       `vid` tinyint(2) NOT NULL COMMENT '审核id号',
       `isnew` tinyint(1) unsigned NOT NULL COMMENT '是否新增',
+      `islock` tinyint(1) unsigned NOT NULL COMMENT '是否锁定',
       `author` varchar(50) NOT NULL COMMENT '作者',
       `catid` mediumint(8) unsigned NOT NULL COMMENT '栏目id',
       `status` tinyint(2) NOT NULL COMMENT '审核状态',

@@ -164,7 +164,7 @@ class Module extends \Phpcmf\Table
             $this->_msg(0, dr_lang('内容不存在'));
         } elseif ($this->uid != $data['uid']) {
             $this->_msg(0, dr_lang('无权限操作'));
-        } elseif (defined('IS_MODULE_VERIFY') && $data['status'] != 0) {
+        } elseif (defined('IS_MODULE_VERIFY') && $data['status'] != 0 && $data['islock']) {
             // 判断是否来至审核
             $this->_msg(0, dr_lang('正在审核之中'));
         }
@@ -408,6 +408,7 @@ class Module extends \Phpcmf\Table
                 return [];
             }
             $data = dr_string2array($row['content']);
+            $data['islock'] = $row['islock'];
             $data['backinfo'] = dr_string2array($row['backinfo']);
             !$this->is_get_catid && $this->is_get_catid = (int)$row['catid'];
             // 栏目验证码
@@ -505,7 +506,7 @@ class Module extends \Phpcmf\Table
                 function ($id, $data, $old) {
                     // 判断是否来至审核
                     if (defined('IS_MODULE_VERIFY')) {
-                        if ($old['status'] != 0) {
+                        if ($old['status'] != 0 && $old['islock']) {
                             return dr_return_data(0, dr_lang('内容正在审核之中，无法再次修改'));
                         }
                     }
