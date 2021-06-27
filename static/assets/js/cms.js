@@ -2,6 +2,18 @@
 if(typeof jQuery == 'undefined'){
     window.alert("没有引用jquery库");
 }
+
+// js语言函数
+function dr_lang(str) {
+
+    if (typeof lang[str] != "undefined" && lang[str]) {
+        return lang[str];
+    }
+
+    return str;
+}
+
+
 $(function(){
     if ($(document).width() < 600) {
         $('.hidden-mobile').hide();

@@ -1360,7 +1360,19 @@ function dr_bfb(title, myform, url) {
                 dr_tips(0, obj.msg);
             }
         },
-        content: url+'&'+$('#'+myform).serialize()
+        content: url+'&'+$('#'+myform).serialize(),
+        cancel: function(index, layero){
+            layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
+                {
+                    icon: 3,
+                    shade: 0,
+                    title: lang['ts'],
+                    btn: [lang['ok'], lang['esc']]
+                }, function(index){
+                    layer.closeAll();
+                });
+            return false;
+        }
     });
 }
 // 百分百提交再进度控制
@@ -1373,8 +1385,6 @@ function dr_bfb_submit(title, myform, url) {
         success: function(json) {
             layer.closeAll('loading');
             if (json.code == 1) {
-
-
                 layer.open({
                     type: 2,
                     title: title,
@@ -1393,7 +1403,19 @@ function dr_bfb_submit(title, myform, url) {
                             dr_tips(0, obj.msg);
                         }
                     },
-                    content: json.data.url
+                    content: json.data.url,
+                    cancel: function(index, layero){
+                        layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
+                            {
+                                icon: 3,
+                                shade: 0,
+                                title: dr_lang('ts'),
+                                btn: [dr_lang('ok'), dr_lang('esc')]
+                            }, function(index){
+                            layer.closeAll();
+                        });
+                        return false;
+                    }
                 });
 
             } else {
