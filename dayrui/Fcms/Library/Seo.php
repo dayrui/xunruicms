@@ -296,9 +296,9 @@ class Seo
             if (!$value || is_array($value)) {
                 continue;
             }
-            $seo[$key] = preg_replace_callback('#{([A-Z_]+)}#U', array($rep, 'php55_replace_var'), $value);
-            $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)}#U', array($rep, 'php55_replace_data'), $seo[$key]);
-            $seo[$key] = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', array($rep, 'php55_replace_function'), $seo[$key]);
+
+            $seo[$key] = $rep->replace($seo[$key]);
+
             $seo[$key] = str_replace(SITE_SEOJOIN.SITE_SEOJOIN, SITE_SEOJOIN, $seo[$key]);
             $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);

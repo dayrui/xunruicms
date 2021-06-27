@@ -503,8 +503,8 @@ class Router
 
         $rep = new \php5replace($data);
 
-        $url = preg_replace_callback("#{([a-z_0-9]+)}#Ui", [$rep, 'php55_replace_data'], $rule);
-        $url = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$rep, 'php55_replace_function'], $url);
+        $url = $rep->replace($rule);
+
         $url = ltrim(str_replace('//', '/', $url), '/');
 
         if (strpos($url, '?') !== false) {

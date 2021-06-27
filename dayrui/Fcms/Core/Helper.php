@@ -8,6 +8,13 @@
 
 
 /**
+ * 三元运算
+ */
+function dr_else_value($a, $b) {
+    return dr_strlen($a) ? $a : $b;
+}
+
+/**
  * 安全url过滤
  */
 function dr_safe_url($url, $is_html = false) {
@@ -3954,16 +3961,36 @@ class php5replace {
     function php55_replace_function($value) {
         if (function_exists($value[1])) {
             // 执行函数体
-            $param = $value[2] == '$data' ? $this->data : $value[2];
+            $param = '';
+            if ($value[2]) {
+                $p = $value[2] == '$data' ? $this->data : $value[2];
+                $param = is_array($p) ? ['data' => $p] : explode(',', $p);
+                foreach ($param as $i => $t) {
+                    if (strpos($t, '$') === 0) {
+                        $param[$i] = $this->data[substr($t, 1)];
+                    }
+                }
+            }
             return call_user_func_array(
                 $value[1],
-                is_array($param) ? ['data' => $param] : explode(',', $param)
+                $param
             );
         } else {
             return '函数['.$value[1].']未定义';
         }
 
         return $value[0];
+    }
+
+    // 替换全部
+    function replace($value) {
+
+        $value = preg_replace_callback('#{([A-Z_]+)}#U', [$this, 'php55_replace_var'], $value);
+        $value = preg_replace_callback('#{([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
+        $value = preg_replace_callback('#{\$([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
+        $value = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$this, 'php55_replace_function'], $value);
+
+        return $value;
     }
 
 }
