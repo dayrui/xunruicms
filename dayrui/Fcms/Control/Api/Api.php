@@ -163,7 +163,7 @@ class Api extends \Phpcmf\Common
         if (IS_API_HTTP) {
             \Phpcmf\Service::L('cache')->set_data('api-captcha-'.md5(IS_API_HTTP_CODE), $code, 300);
         } else {
-            $this->session()->set('captcha', $code);
+            \Phpcmf\Service::L('cache')->set_auth_data('web-captcha', $code, SITE_ID);
         }
 
         exit();

@@ -301,12 +301,12 @@ class Form
 	
 	// 获取已发短信验证码
 	public function get_mobile_code($phone) {
-		return \Phpcmf\Service::L('cache')->get_data('phone-code-'.$phone);
+		return \Phpcmf\Service::L('cache')->get_auth_data('phone-code-'.$phone, SITE_ID, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 300);
 	}
 	
 	// 储存已发短信验证码
 	public function set_mobile_code($phone, $code) {
-		return \Phpcmf\Service::L('cache')->set_data('phone-code-'.$phone, $code, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 300);
+		return \Phpcmf\Service::L('cache')->set_auth_data('phone-code-'.$phone, $code, SITE_ID);
 	}
 
     // 验证码类
@@ -322,9 +322,9 @@ class Form
             return false;
         }
 
-        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->get('captcha');
+        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::L('cache')->get_auth_data('web-captcha', SITE_ID, 300);
         if ($code && strtolower($data) == strtolower($code)) {
-            IS_API_HTTP ? \Phpcmf\Service::L('cache')->del_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->remove('captcha');
+            IS_API_HTTP ? \Phpcmf\Service::L('cache')->del_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::L('cache')->del_auth_data('web-captcha', SITE_ID);
             return true;
         }
 
@@ -341,7 +341,7 @@ class Form
             return false;
         }
 
-        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::C()->session()->get('captcha');
+        $code = IS_API_HTTP ? \Phpcmf\Service::L('cache')->get_data('api-captcha-'.md5(IS_API_HTTP_CODE)) : \Phpcmf\Service::L('cache')->get_auth_data('web-captcha', SITE_ID, 300);
         if ($code && strtolower($data) == strtolower($code)) {
             return true;
         }
