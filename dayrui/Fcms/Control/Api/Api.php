@@ -465,7 +465,7 @@ class Api extends \Phpcmf\Common
             'id' => array(
                 'ismain' => 1,
                 'name' => 'Uid',
-                'fieldname' => 'username',
+                'fieldname' => 'id',
                 'fieldtype' => 'Text',
             ),
             'username' => array(

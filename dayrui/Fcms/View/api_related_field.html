@@ -16,7 +16,7 @@
             <tr id="dr_items_{$name}_{$t.id}">
                 <td>{$t.id}</td>
                 <td>
-                    <a href="{dr_urlprefix($t.url)}" target="_blank">{$t.title}</a>
+                    <a href="{dr_url_prefix($t.url)}" target="_blank">{$t.title}</a>
                     <input type="hidden" name="data[{$name}][]" value="{$t.id}">
                 </td>
                 {if !$is_show}

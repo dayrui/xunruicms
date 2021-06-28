@@ -113,10 +113,13 @@ class Member extends \Phpcmf\Table
             $p[$name] = $value;
         }
 
-        $groupid = trim(\Phpcmf\Service::L('input')->request('groupid'));
+        $groupid = \Phpcmf\Service::L('input')->request('groupid');
         if ($groupid) {
-            $where[] = 'member.id IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $groupid).'))';
-            $p['groupid'] = $groupid;
+            $in = implode(',', $groupid);
+            if ($in) {
+                $where[] = 'member.id IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.$in.'))';
+                $p['groupid'] = $groupid;
+            }
         }
 
         $sname = [
