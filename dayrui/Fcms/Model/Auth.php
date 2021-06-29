@@ -25,6 +25,9 @@ class Auth extends \Phpcmf\Model {
         } elseif (\Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->counts()) {
             // 此账号属于管理账号，禁止操作
             return false;
+        } elseif ($this->is_post_user() && $uid != $this->uid) {
+            // 投稿者账号，不能操作其他人的
+            return false;
         }
 
         return true;

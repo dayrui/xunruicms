@@ -1139,6 +1139,14 @@ class Module extends \Phpcmf\Table {
         $did = intval(\Phpcmf\Service::L('input')->get('did'));
         $is_draft = intval(\Phpcmf\Service::L('input')->post('is_draft'));
 
+        if ($this->is_post_user) {
+            if ($old && $old['uid'] && $old['uid'] != $data[1]['uid']) {
+                return dr_return_data(0, dr_lang('归属账号无法更改'), ['field' => 'uid']);
+            } elseif ($data[1]['uid'] != $this->uid) {
+                return dr_return_data(0, dr_lang('归属账号无法更改'), ['field' => 'uid']);
+            }
+        }
+
         // 判断定时发布时间
         if (defined('IS_MODULE_TIME')) {
             $this->post_time = (int)strtotime(\Phpcmf\Service::L('input')->get('posttime'));

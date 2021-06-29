@@ -13,6 +13,10 @@ class Member extends \Phpcmf\Table
     public function __construct(...$params)
     {
         parent::__construct(...$params);
+        // 不是超级管理员排除角色账号
+        if (!dr_in_array(1, $this->admin['roleid']) && \Phpcmf\Service::M('auth')->is_post_user()) {
+            $this->_admin_msg(0, dr_lang('投稿者无权限操作'));
+        }
         // 支持附表存储
         $this->is_data = 0;
         // 模板前缀(避免混淆)
