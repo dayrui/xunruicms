@@ -151,17 +151,17 @@
                         <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs red"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
                         {/if}
 
+                        {loop $module.form $a}
+                        {if $ci->_is_admin_auth(APP_DIR.'/'.$a.table.'/index')}
+                        <label><a class="btn blue btn-xs" href="{dr_url(APP_DIR.'/'.$a.table.'/index', ['cid'=>$t.id])}"><i class="{dr_icon($a.setting.icon)}"></i> {dr_lang($a.name)} {if isset($t[$a.table.'_total'])} ({intval($t[$a.table.'_total'])}) {/if} </a></label>
+                        {/if}
+                        {/loop}
+
                         {loop $clink $a}
                         {if $a.model && $a.check && method_exists($a.model, $a.check) && call_user_func(array($a.model, $a.check), APP_DIR, $t) == 0}
                         {php continue;}
                         {/if}
                         <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
-                        {/loop}
-
-                        {loop $module.form $a}
-                        {if $ci->_is_admin_auth(APP_DIR.'/'.$a.table.'/index')}
-                        <label><a class="btn blue btn-xs" href="{dr_url(APP_DIR.'/'.$a.table.'/index', ['cid'=>$t.id])}"><i class="{dr_icon($a.setting.icon)}"></i> {dr_lang($a.name)} {if isset($t[$a.table.'_total'])} ({intval($t[$a.table.'_total'])}) {/if} </a></label>
-                        {/if}
                         {/loop}
 
                     </td>

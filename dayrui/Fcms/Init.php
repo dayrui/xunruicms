@@ -295,7 +295,6 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
             $_GET['s'] = '';
             $_GET['c'] = 'home';
             $_GET['m'] = 's404';
-            $_GET['is_404'] = '1';
             $_GET['uri'] = $uri;
         }
     }
