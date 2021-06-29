@@ -24706,6 +24706,10 @@
         var me = this;
 
         function getFileIcon(url){
+            var ipos = url.indexOf("?");
+            if (ipos > -1) {
+                url = url.substring(0, ipos);
+            }
             var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase(),
                 maps = {
                     "rar":"icon_rar.gif",
@@ -24755,9 +24759,10 @@
                             item = filelist[i];
                             icon = iconDir + getFileIcon(item.url);
                             title = item.title || item.url.substr(item.url.lastIndexOf('/') + 1);
+                            name = item.name || item.url.substr(item.url.lastIndexOf('/') + 1);
                             html += '<p style="line-height: 16px;">' +
                                 '<img style="vertical-align: middle; margin-right: 2px;" src="'+ icon + '" _src="' + icon + '" />' +
-                                '<a style="font-size:12px; color:#0066cc;" href="' + item.url +'" title="' + title + '">' + title + '</a>' +
+                                '<a style="font-size:12px; color:#0066cc;" href="' + item.url +'" title="' + title + '">' + name + '</a>' +
                                 '</p>';
                         }
                         me.execCommand('insertHtml', html);

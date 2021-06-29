@@ -399,7 +399,13 @@ class Uploader
      */
     public function getFileInfo()
     {
-        $title = strstr($this->oriName, '.', true);
+
+        if (isset($this->config['showFileExt']) && $this->config['showFileExt']) {
+            $title = $this->oriName;
+        } else {
+            $title = strstr($this->oriName, '.', true);
+        }
+
         if ($_GET['action'] == 'uploadimage' && in_array($this->fileType, ['.jpg', '.jpeg', '.gif', '.png'])) {
              // 图片属性
             if (isset($this->config['imageAltValue']) && $this->config['imageAltValue'] == 'name') {

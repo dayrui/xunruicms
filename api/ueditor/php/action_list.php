@@ -45,17 +45,21 @@ $data = \Phpcmf\Service::M()->db->table('attachment_data')
 $files = [];
 if ($data) {
     foreach ($data as $t) {
+        if (isset($CONFIG['showFileExt']) && $CONFIG['showFileExt']) {
+            $title = $t['filename'];
+        } else {
+            $title = strstr($t['filename'], '.', true);
+        }
+
         $name = '';
         if (isset($this->config['imageAltValue']) && $this->config['imageAltValue'] == 'name') {
-            $name = strstr($t['filename'], '.', true);
+            $name = $title;
         }
-        if (!$name) {
-            $name = UEDITOR_IMG_TITLE;
-        }
+
         $files[] = array(
             'url'=> dr_get_file_url($t),
-            'name'=> $name,
-            'original'=> $name,
+            'name'=> $title,
+            'original'=> !$name ? UEDITOR_IMG_TITLE : $name,
             'mtime'=> $t['inputtime']
         );
     }

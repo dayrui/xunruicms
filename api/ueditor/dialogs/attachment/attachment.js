@@ -554,6 +554,7 @@
                 data = this.fileList[i];
                 link = data.url;
                 list.push({
+                    name: data.name || link.substr(link.lastIndexOf('/') + 1),
                     title: data.original || link.substr(link.lastIndexOf('/') + 1),
                     url: prefix + link
                 });
@@ -699,6 +700,9 @@
                     if (list[i].original) {
                         item.setAttribute('data-title', list[i].original);
                     }
+                    if (list[i].name) {
+                        item.setAttribute('data-name', list[i].name);
+                    }
 
                     item.appendChild(preview);
                     item.appendChild(icon);
@@ -738,8 +742,10 @@
             for (i = 0; i < lis.length; i++) {
                 if (domUtils.hasClass(lis[i], 'selected')) {
                     var url = lis[i].getAttribute('data-url');
+                    var name = lis[i].getAttribute('data-name') || url.substr(url.lastIndexOf('/') + 1);
                     var title = lis[i].getAttribute('data-title') || url.substr(url.lastIndexOf('/') + 1);
                     list.push({
+                        name: name,
                         title: title,
                         url: url
                     });

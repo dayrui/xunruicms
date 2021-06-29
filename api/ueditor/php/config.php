@@ -59,6 +59,7 @@ return [
     "imageManagerAllowFiles" => [".png", ".jpg", ".jpeg", ".gif", ".bmp"], /* 列出的文件类型 */
 
     /* 列出目录下的文件 */
+    "showFileExt" => 1, //是否显示文件扩展名，1表示显示，0不显示
     "fileManagerActionName" => "listfile", /* 执行文件管理的action名称 */
     "fileManagerUrlPrefix" => "", /* 文件访问路径前缀 */
     "fileManagerListSize" => 20, /* 每次列出文件数量 */
