@@ -339,7 +339,7 @@ class Check extends \Phpcmf\Common
                         if (!\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
                             ->where('relatedid', $m['id'])->where('fieldname', 'author')->counts()) {
                             \Phpcmf\Service::M()->db->table('field')->insert(array(
-                                'name' => '来源',
+                                'name' => '笔名',
                                 'fieldname' => 'author',
                                 'fieldtype' => 'Text',
                                 'relatedid' => $m['id'],
