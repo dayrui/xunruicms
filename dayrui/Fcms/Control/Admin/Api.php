@@ -698,6 +698,15 @@ class Api extends \Phpcmf\Common
             }
         }
 
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($data['id'])) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
+        // 当不具备用户操作权限时，只能授权登录当前账号
+        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/index') && $uid != $this->uid) {
+            $this->_json(0, dr_lang('无权限操作其他账号'));
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'm' => $data,
 		]);

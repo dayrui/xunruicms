@@ -798,7 +798,7 @@ abstract class Common extends \CodeIgniter\Controller
 
         // 开启跳转404页面功能
         if (defined('SYS_GO_404') && SYS_GO_404) {
-            if (CMSURI && strpos(CMSURI, '404.html') === false) {
+            if (CMSURI && CMSURI != '404.html') {
                 dr_redirect('/404.html');
             } else {
                 $msg = dr_lang('你访问的页面不存在');
