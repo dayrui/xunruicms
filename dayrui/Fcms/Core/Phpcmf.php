@@ -922,8 +922,8 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 插件的clink值
      */
-    protected function _app_clink($type = '')
-    {
+    protected function _app_clink($type = '') {
+
         $data = [];
         if (!$type) {
             // 表示模块部分
@@ -973,6 +973,11 @@ abstract class Common extends \CodeIgniter\Controller
                         if (is_file($path.'Models/Auth'.$endfix.'.php')) {
                             $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
                             foreach ($_clink as $k => $v) {
+                                if (defined('IS_MODULE_VERIFY') && (!isset($v['is_verify']) || !$v['is_verify'])) {
+                                    // 审核界面
+                                    unset($_clink[$k]);
+                                    continue;
+                                }
                                 // 动态名称
                                 if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
                                     $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
