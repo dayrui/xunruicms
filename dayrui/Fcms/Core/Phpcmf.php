@@ -797,9 +797,13 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 开启跳转404页面功能
-        if (!IS_DEV && defined('SYS_GO_404') && SYS_GO_404) {
-            if (CMSURI && CMSURI != '404.html') {
-                dr_redirect('/404.html');
+        if (defined('SYS_GO_404') && SYS_GO_404) {
+            if (CMSURI != '404.html') {
+                if (IS_DEV) {
+                    $msg.= '（开发者模式下不跳转到404.html页面）';
+                } else {
+                    dr_redirect('/404.html');
+                }
             } else {
                 $msg = dr_lang('你访问的页面不存在');
             }
