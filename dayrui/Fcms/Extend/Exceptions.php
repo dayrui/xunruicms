@@ -41,7 +41,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             // 传入对象到日志中
             log_message('critical', $exception);
         }
-		
+
 		 // ajax 返回
         if (IS_AJAX || IS_API) {
 			$message = $exception->getMessage();

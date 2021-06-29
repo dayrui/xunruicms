@@ -166,6 +166,7 @@ function dr_show_error($msg) {
         $url = '<p>'.FC_NOW_URL.'</p>';
     } else {
         $url = '';
+        $msg = '您的系统遇到了故障，请联系管理员处理';
         http_response_code(404);
     }
 
