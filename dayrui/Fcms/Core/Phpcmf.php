@@ -796,6 +796,15 @@ abstract class Common extends \CodeIgniter\Controller
             http_response_code(404);
         }
 
+        // 开启跳转404页面功能
+        if (defined('SYS_GO_404') && SYS_GO_404) {
+            if (isset($_GET['is_404']) && $_GET['is_404']) {
+                dr_redirect('/404.html');
+            } else {
+                $msg = dr_lang('你访问的页面不存在');
+            }
+        }
+
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
             'meta_title' => dr_lang('你访问的页面不存在')

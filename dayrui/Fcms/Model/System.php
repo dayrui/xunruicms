@@ -18,6 +18,7 @@ class System extends \Phpcmf\Model
         'SYS_ADMIN_PAGESIZE' => '后台数据分页显示数量',
         'SYS_CRON_AUTH' => '自动任务权限IP地址',
         'SYS_SMS_IMG_CODE' => '发送短信验证码双重图形验证开关',
+        'SYS_GO_404' => '404页面跳转开关',
 
         'SYS_PAGE_RNAME' => '自定义页面目录允许重复',
 

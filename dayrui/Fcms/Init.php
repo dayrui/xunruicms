@@ -56,6 +56,7 @@ $system = [
     'SYS_ADMIN_PAGESIZE' => 10,
     'SYS_CRON_AUTH' => '',
     'SYS_SMS_IMG_CODE' => 0,
+    'SYS_GO_404' => 0,
 
     'SYS_PAGE_RNAME' => 0,
 
@@ -252,6 +253,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
     if (!IS_ADMIN && $uri && !defined('IS_API')) {
         // 自定义URL解析规则
         $routes = [];
+        $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.$uri; // 测试规则
         $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
         if (is_file(ROOTPATH.'config/rewrite.php')) {
             $my = require ROOTPATH.'config/rewrite.php';
@@ -293,6 +295,7 @@ if (PHP_SAPI === 'cli' || defined('STDIN')) {
             $_GET['s'] = '';
             $_GET['c'] = 'home';
             $_GET['m'] = 's404';
+            $_GET['is_404'] = '1';
             $_GET['uri'] = $uri;
         }
     }

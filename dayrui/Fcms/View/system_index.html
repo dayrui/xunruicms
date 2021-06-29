@@ -82,6 +82,13 @@
                                 <span class="help-block">{dr_lang('不进行主动检测系统框架的版本信息')}</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('跳转404页面')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_GO_404]" value="1" {if $data['SYS_GO_404']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启后，404页面时直接跳转到404.html，不在当前url中显示404页面')}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">

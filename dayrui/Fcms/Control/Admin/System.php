@@ -23,6 +23,7 @@ class System extends \Phpcmf\Common
                 'SYS_AUTO_FORM' => (int)$post['SYS_AUTO_FORM'],
                 'SYS_CRON_AUTH' => dr_safe_replace($post['SYS_CRON_AUTH']),
                 'SYS_SMS_IMG_CODE' => intval($post['SYS_SMS_IMG_CODE']),
+                'SYS_GO_404' => intval($post['SYS_GO_404']),
 
                 'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
@@ -45,7 +46,7 @@ class System extends \Phpcmf\Common
             }
 			\Phpcmf\Service::M('System')->save_config($data, $save);
 			\Phpcmf\Service::L('input')->system_log('设置系统配置参数');
-			exit($this->_json(1, dr_lang('操作成功')));
+			$this->_json(1, dr_lang('操作成功'));
 		}
 
 		$page = (int)\Phpcmf\Service::L('input')->get('page');
