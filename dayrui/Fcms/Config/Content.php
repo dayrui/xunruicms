@@ -192,7 +192,7 @@ return [
                                     'width' => 200,
                                     'fieldtype' => 'VARCHAR',
                                     'fieldlength' => '255',
-                                    'value' => '{username}'
+                                    'value' => '{name}'
                                 ),
                             'validate' =>
                                 array (

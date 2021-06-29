@@ -275,7 +275,7 @@ class Member extends \Phpcmf\Model
         $data['uid'] = $data['id'];
         $data['avatar'] = dr_avatar($data['id']);
         $data['adminid'] = (int)$data['is_admin'];
-        $data['tableid'] = (int)substr((string)$data['id'], -1, 1);
+        //$data['tableid'] = (int)substr((string)$data['id'], -1, 1);
 
         // 会员组信息
         $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());

@@ -1029,10 +1029,10 @@
          */
         public function member_field_select() {
             $str = '<select  class="form-control" onchange="$(\'#field_default_value\').val(\'{\'+this.value+\'}\')" name="_member_field"><option value=""> -- </option>';
-            $str.= '<option value="username"> '.dr_lang('会员名称').' </option>';
-            $str.= '<option value="email"> '.dr_lang('会员邮箱').' </option>';
-            $str.= '<option value="groupid"> '.dr_lang('会员组ID').' </option>';
-            $str.= '<option value="levelid"> '.dr_lang('会员等级ID').' </option>';
+            $str.= '<option value="username"> '.dr_lang('账号').' </option>';
+            $str.= '<option value="email"> '.dr_lang('邮箱').' </option>';
+            $str.= '<option value="groupid"> '.dr_lang('用户组ID').' </option>';
+            $str.= '<option value="levelid"> '.dr_lang('用户组等级ID').' </option>';
             $str.= '<option value="name"> '.dr_lang('姓名').' </option>';
             $str.= '<option value="phone"> '.dr_lang('电话').' </option>';
             // 这里要改的
@@ -1074,7 +1074,11 @@
          */
         public function get_default_value($value) {
             if (preg_match('/\{(\w+)\}/', $value, $match)) {
-                return isset(\Phpcmf\Service::C()->member[$match[1]]) ? \Phpcmf\Service::C()->member[$match[1]] : '';
+                $rt = isset(\Phpcmf\Service::C()->member[$match[1]]) ? \Phpcmf\Service::C()->member[$match[1]] : '';
+                if ($match[1] == 'name' && !$rt) {
+                    $rt = isset(\Phpcmf\Service::C()->member['username']) ? \Phpcmf\Service::C()->member['username'] : '';
+                }
+                return $rt;
             }
             return $value;
         }

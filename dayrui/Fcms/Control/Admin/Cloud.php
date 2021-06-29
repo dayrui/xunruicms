@@ -15,7 +15,8 @@ class Cloud extends \Phpcmf\Common
     {
         parent::__construct(...$params);
 
-        if (!$this->_is_admin_auth()) {
+        // 不是超级管理员
+        if (!dr_in_array(1, $this->admin['roleid'])) {
             $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
         }
 

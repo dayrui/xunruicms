@@ -356,7 +356,7 @@ class Check extends \Phpcmf\Common
                                         'width' => 200, // 表单宽度
                                         'fieldtype' => 'VARCHAR', // 字段类型
                                         'fieldlength' => '255', // 字段长度
-                                        'value' => '{username}'
+                                        'value' => '{name}'
                                     ),
                                     'validate' => array(
                                         'xss' => 1, // xss过滤
