@@ -111,6 +111,7 @@ class Input {
         $data = [
             'ip' => $this->ip_address(),
             'uid' => (int)\Phpcmf\Service::C()->admin['uid'],
+            'url' => dr_safe_url(FC_NOW_URL),
             'time' => SYS_TIME,
             'action' => addslashes(dr_safe_replace($action)),
             'username' => \Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录',

@@ -206,7 +206,7 @@ class Attachment extends \Phpcmf\Model {
     }
 
     // 开始删除文件
-    protected function _delete_file($index) {
+    public function _delete_file($index) {
 
         $table = $index['related'] ? 'attachment_data' : 'attachment_unused';
 
@@ -234,6 +234,8 @@ class Attachment extends \Phpcmf\Model {
             list($cache_path) = dr_thumb_path();
             dr_dir_delete($cache_path.md5($index['id']).'/', true);
         }
+
+        \Phpcmf\Service::L('input')->system_log('删除附件（#'.$index['id'].'）'.dr_get_file_url($info));
 
         // 删除缓存
         \Phpcmf\Service::L('cache')->del_file('attach-info-'.$index['id'], 'attach');

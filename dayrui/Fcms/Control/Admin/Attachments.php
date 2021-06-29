@@ -143,18 +143,10 @@ class Attachments extends \Phpcmf\Table
         }
 
         foreach ($data as $t) {
-
-            $rt = \Phpcmf\Service::M()->table('attachment')->delete($t['id']);
+            $rt = \Phpcmf\Service::M('attachment')->_delete_file($t);
             if (!$rt['code']) {
                 return dr_return_data(0, $rt['msg']);
             }
-
-            // 删除记录
-            \Phpcmf\Service::M()->table('attachment_'.$table)->delete($t['id']);
-
-            // 开始删除文件
-            $storage = new \Phpcmf\Library\Storage($this);
-            $storage->delete(\Phpcmf\Service::M('Attachment')->get_attach_info($t['remote']), $t['attachment']);
         }
 
         $this->_json(1, dr_lang('操作成功'));
