@@ -797,7 +797,7 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         // 开启跳转404页面功能
-        if (defined('SYS_GO_404') && SYS_GO_404) {
+        if (!IS_DEV && defined('SYS_GO_404') && SYS_GO_404) {
             if (CMSURI && CMSURI != '404.html') {
                 dr_redirect('/404.html');
             } else {
