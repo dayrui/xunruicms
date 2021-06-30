@@ -99,7 +99,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             dr_exit_msg(0, $message);
         }
 
-        $this->viewPath = is_file(MYPATH.'View/errors/production.php') ? MYPATH.'View/errors/' : COREPATH.'View/errors/';
+        $this->viewPath = is_file(MYPATH.'View/errors/html/production.php') ? MYPATH.'View/errors/' : COREPATH.'View/errors/';
 
         return parent::render($exception, $statusCode);
     }

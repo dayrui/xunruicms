@@ -622,9 +622,9 @@ class Model {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
             if (!$e) {
-                return '`'.$table.'`.`'.$name.'` > '.$s;
+                return '`'.$table.'`.`'.$name.'` > '.(int)$s;
             } else {
-                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.(int)$s.' AND '.(int)$e;
             }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
