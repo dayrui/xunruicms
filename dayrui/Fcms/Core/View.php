@@ -2234,7 +2234,8 @@ class View {
 
                     case 'BETWEEN':
                         BETWEEN:
-                        $string.= $join." ({$t['name']} BETWEEN ".str_replace(',', ' AND ', $t['value']).")";
+                        list($s, $e) = explode(',', $t['value']);
+                        $string.= $join." {$t['name']} BETWEEN ".(int)$s." AND ".(int)$e;
                         break;
 
                     case 'GT':
