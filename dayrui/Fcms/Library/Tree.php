@@ -331,10 +331,6 @@ class Tree {
                 } else {
                     $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
                 }
-                // 第一个可用子栏目
-                if ($first == 0 && !$t['html_disabled']) {
-                    $first = $t['id'];
-                }
                 if (isset($t['setting'])) {
                     unset($t['setting']);
                 }
@@ -345,12 +341,11 @@ class Tree {
         $string.= $this->icon()->_data($tree)->_category_tree_result(0, "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL);
         $string.= '</select>'.PHP_EOL;
 
-        if ($is_first && !$first) {
-            // 没有找到第一个子栏目时
+        if ($is_first) {
+            // 第一个子栏目
             $temp = str_replace("disabled value='", '', $string);
             $mark = "value='";
             $first = (int)substr($temp, strpos($temp, $mark) + strlen($mark));
-            //$first = $first2 ? $first2 : $first;
         }
 
         $data = $is_first ? [$string, $first] : $string;

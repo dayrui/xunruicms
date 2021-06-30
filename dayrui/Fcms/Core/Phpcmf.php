@@ -663,6 +663,10 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
+
+        // 返回的钩子
+        $rt = dr_return_data($code, $msg, $data);
+
         // 按格式返回数据
         if (isset($_GET['format']) && $_GET['format']) {
             switch ($_GET['format']) {
@@ -670,12 +674,15 @@ abstract class Common extends \CodeIgniter\Controller
                     $this->_jsonp(1, $msg, $data);exit;
                     break;
                 case 'text':
+                    \Phpcmf\Hooks::trigger('cms_end', $rt);
                     echo $msg;exit;
                     break;
             }
         }
 
-        echo dr_array2string(dr_return_data($code, $msg, $data));exit;
+        \Phpcmf\Hooks::trigger('cms_end', $rt);
+
+        echo dr_array2string($rt);exit;
     }
 
     /**
@@ -689,7 +696,10 @@ abstract class Common extends \CodeIgniter\Controller
         if (IS_API_HTTP) {
             $this->_json($code, $msg, $data);
         } else {
-            echo $callback.'('.dr_array2string(dr_return_data($code, $msg, $data)).')';exit;
+            // 返回的钩子
+            $rt = dr_return_data($code, $msg, $data);
+            \Phpcmf\Hooks::trigger('cms_end', $rt);
+            echo $callback.'('.dr_array2string($rt).')';exit;
         }
     }
 
@@ -770,7 +780,8 @@ abstract class Common extends \CodeIgniter\Controller
         // 加载初始化文件
         $this->_init_run();
 
-        \Phpcmf\Service::V()->assign([
+        // 返回的钩子
+        $rt = [
             'msg' => $msg,
             'url' => $url,
             'time' => $time,
@@ -778,7 +789,10 @@ abstract class Common extends \CodeIgniter\Controller
             'code' => $code,
             'backurl' => $backurl,
             'meta_title' => SITE_NAME
-        ]);
+        ];
+        \Phpcmf\Hooks::trigger('cms_end', $rt);
+
+        \Phpcmf\Service::V()->assign($rt);
         \Phpcmf\Service::V()->display('msg.html');
         !defined('SC_HTML_FILE') && exit();
     }
