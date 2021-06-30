@@ -14,12 +14,15 @@ class Member extends \Phpcmf\Model
      * 由用户名获取uid
      */
     public function uid($name) {
+
         if (!$name || dr_lang('游客') == $name) {
             return 0;
         } elseif ($name == $this->member['username']) {
             return $this->member['uid'];
         }
+
         $data = $this->db->table('member')->select('id')->where('username', dr_safe_replace($name))->get()->getRowArray();
+
         return intval($data['id']);
     }
 
@@ -27,10 +30,17 @@ class Member extends \Phpcmf\Model
      * 由uid获取用户名
      */
     public function username($uid) {
-        if ($uid == $this->member['uid']) {
+
+        $uid = intval($uid);
+
+        if (!$uid) {
+            return '';
+        } elseif ($uid == $this->member['uid']) {
             return $this->member['username'];
         }
-        $data = $this->db->table('member')->select('username')->where('id', intval($uid))->get()->getRowArray();
+
+        $data = $this->db->table('member')->select('username')->where('id', $uid)->get()->getRowArray();
+
         return $data['username'];
     }
 
@@ -38,9 +48,11 @@ class Member extends \Phpcmf\Model
      * 后台账号字段获取用户名
      */
     public function author($uid) {
+
         if (!$uid) {
             return dr_lang('游客');
         }
+
         return $this->username($uid);
     }
 
@@ -48,24 +60,34 @@ class Member extends \Phpcmf\Model
      * 由uid获取电话
      */
     public function phone($uid) {
-        if ($uid == $this->member['uid']) {
+
+        $uid = intval($uid);
+        if (!$uid) {
+            return '';
+        } elseif ($uid == $this->member['uid']) {
             return $this->member['phone'];
         }
-        $data = $this->db->table('member')->select('phone')->where('id', intval($uid))->get()->getRowArray();
+
+        $data = $this->db->table('member')->select('phone')->where('id', $uid)->get()->getRowArray();
+
         return $data['phone'];
     }
 
     // 用户基本信息
     public function member_info($uid) {
 
-        if ($uid == $this->member['uid']) {
+        $uid = intval($uid);
+        if (!$uid) {
+            return [];
+        } elseif ($uid == $this->member['uid']) {
             return $this->member;
         }
 
-        $data = $this->db->table('member')->where('id', intval($uid))->get()->getRowArray();
+        $data = $this->db->table('member')->where('id', $uid)->get()->getRowArray();
         if (!$data) {
             return [];
         }
+        
         $data['uid'] = $data['id'];
 
         return $data;
