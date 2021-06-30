@@ -522,6 +522,9 @@ class Model {
             list($s, $e) = explode(',', $value);
             $s = (int)strtotime($s);
             $e = (int)strtotime($e);
+            if ($s == $e && $s == 0) {
+                return '';
+            }
             if (!$e) {
                 return '`'.$table.'`.`'.$name.'` > '.$s;
             } else {
@@ -621,10 +624,15 @@ class Model {
         } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
+            $s = intval($s);
+            $e = intval($e);
+            if ($s == $e && $s == 0) {
+                return '';
+            }
             if (!$e) {
-                return '`'.$table.'`.`'.$name.'` > '.(int)$s;
+                return '`'.$table.'`.`'.$name.'` > '.$s;
             } else {
-                return '`'.$table.'`.`'.$name.'` BETWEEN '.(int)$s.' AND '.(int)$e;
+                return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
             }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;

@@ -142,8 +142,11 @@ class Search extends \Phpcmf\Model {
                     foreach ($cat_field as $name) {
                         if (isset($this->get[$name]) && strlen($this->get[$name])) {
                             $more = 1;
-                            $more_where[] = $this->_where($table_more, $name, $this->get[$name], $this->module['category_data_field'][$name]);
-                            $param_new[$name] = $this->get[$name];
+                            $r = $this->_where($table_more, $name, $this->get[$name], $this->module['category_data_field'][$name]);
+                            if ($r) {
+                                $more_where[] = $r;
+                                $param_new[$name] = $this->get[$name];
+                            }
                         }
                         /*
                         if (isset($_order_by[$name])) {
@@ -192,8 +195,11 @@ class Search extends \Phpcmf\Model {
                     continue;
                 }
                 if (isset($this->get[$name]) && strlen($this->get[$name])) {
-                    $where[$name] = $this->_where($table, $name, $this->get[$name], $field);
-                    $param_new[$name] = $this->get[$name];
+                    $r = $this->_where($table, $name, $this->get[$name], $field);
+                    if ($r) {
+                        $where[$name] = $r;
+                        $param_new[$name] = $this->get[$name];
+                    }
                 }
             }
 
@@ -205,8 +211,11 @@ class Search extends \Phpcmf\Model {
                         continue;
                     }
                     if (!isset($mod_field[$name]) && isset($this->get[$name]) && strlen($this->get[$name])) {
-                        $member_where[] = $this->_where($this->dbprefix('member_data'), $name, $this->get[$name], $field);
-                        $param_new[$name] = $this->get[$name];
+                        $r = $this->_where($this->dbprefix('member_data'), $name, $this->get[$name], $field);
+                        if ($r) {
+                            $member_where[] = $r;
+                            $param_new[$name] = $this->get[$name];
+                        }
                     }
                 }
             }
@@ -241,7 +250,6 @@ class Search extends \Phpcmf\Model {
             $param_new['keyword'] = $param['keyword'];
             $where = $this->mysearch($this->module, $where, $param_new);
             $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
-            unset($param_new);
 
             // 组合sql查询结果
             $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY NULL ";
@@ -251,7 +259,7 @@ class Search extends \Phpcmf\Model {
             $data = [
                 'id' => $id,
                 'catid' => intval($catid),
-                'params' => dr_array2string(['param' => $param, 'sql' => $sql]),
+                'params' => dr_array2string(['param' => $param_new, 'sql' => $sql]),
                 'keyword' => $param['keyword'] ? $param['keyword'] : '',
                 'contentid' => intval($ct['t']),
                 'inputtime' => SYS_TIME
