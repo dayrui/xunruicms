@@ -66,8 +66,8 @@ class Router
 
 
     // 获取返回时的URL
-    public function get_back($uri, $param = [], $remove_total = false)
-    {
+    public function get_back($uri, $param = [], $remove_total = false) {
+
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $value = \Phpcmf\Service::L('cache')->get_data($name);
         if ($value) {
@@ -82,8 +82,8 @@ class Router
     }
 
     // 设置返回时的URL, uri页面标识,param参数,nuri当前页优先
-    public function set_back($uri, $param = [], $nuri = '')
-    {
+    public function set_back($uri, $param = [], $nuri = '') {
+
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $param['page'] = $_GET['page'];
         \Phpcmf\Service::L('cache')->set_data(
@@ -91,6 +91,13 @@ class Router
             [$nuri ? $nuri : $uri, $param],
             3600
         );
+    }
+
+    // 清理返回url
+    public function clear_back($uri) {
+
+        $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
+        \Phpcmf\Service::L('cache')->del_data($name);
     }
 
     // 判断满足定向跳转的条件 page单页, indexc首页, indexm模块首页, category栏目页, show内容

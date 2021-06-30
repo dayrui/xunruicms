@@ -587,6 +587,9 @@ class Table extends \Phpcmf\Common
 
         // 写入日志
         \Phpcmf\Service::L('input')->system_log($this->name.'：删除('.implode(', ', $ids).')');
+
+        // 返回参数
+        \Phpcmf\Service::L('Router')->clear_back(\Phpcmf\Service::L('Router')->uri('index'));
         
         $this->_json(1, dr_lang('操作成功'));
     }
@@ -637,7 +640,7 @@ class Table extends \Phpcmf\Common
         $config = $this->_Page_Config();
 
         // 存储当前页URL
-       \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
+        \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
 
         $list_field = [];
         // 筛选出可用的字段
