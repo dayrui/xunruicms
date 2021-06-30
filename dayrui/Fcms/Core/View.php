@@ -2165,7 +2165,7 @@ class View {
                                 if ($value) {
                                     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
                                         // 兼容写法
-                                        $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString($value, true)."\\\"%\"";
+                                        $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true)."\\\"%\"";
                                     } else {
                                         // 高版本写法
                                         $vals[] = "({$t['name']}<>'' AND JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$'))";

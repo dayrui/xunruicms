@@ -76,9 +76,10 @@ abstract class Common extends \CodeIgniter\Controller
         if (!is_file(MYPATH.'Config/Version.php')) {
             $this->cmf_version = [
                 'id' => 10,
-                'name' => '迅睿CMS框架',
-                'version' => '开发版',
+                'name' => '迅睿CMS开源框架',
+                'version' => '4.5.2.Dev',
                 'downtime' => SYS_TIME,
+                'updatetime' => '--',
             ];
         } else {
             $this->cmf_version = require MYPATH.'Config/Version.php';

@@ -596,10 +596,10 @@ class Model {
                 if ($value) {
                     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
                         // 兼容写法
-                        $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString($value, true).'\"%"';
+                        $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString(dr_safe_replace($value), true).'\"%"';
                     } else {
                         // 高版本写法
-                        $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString($value, true)."\"', '$'))";
+                        $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($value), true)."\"', '$'))";
                     }
                 }
             }
