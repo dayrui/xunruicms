@@ -70,7 +70,7 @@ class Upload
 
         // 验证伪装图片
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
-            $data = is_file($data) ? file_get_contents($data) : strtolower($data);
+            $data = strlen($data) < 50 && @is_file($data) ? file_get_contents($data) : strtolower($data);
             if (strlen($data) < 100) {
                 return dr_return_data(0, dr_lang('图片文件不规范'));
             } elseif (strpos($data, '<?php') !== false) {
