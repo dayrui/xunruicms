@@ -100,6 +100,23 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
             dr_exit_msg(0, '控制器方法（'.$this->method.'）是系统保留关键词，不能被访问');
         }
     }
+
+    /**
+     * 404
+     */
+    protected function display404errors(\CodeIgniter\Exceptions\PageNotFoundException $e)
+    {
+        // 开启跳转404页面功能
+        if (defined('SYS_GO_404') && SYS_GO_404) {
+            if (IS_DEV) {
+
+            } else {
+                dr_redirect('/404.html');
+            }
+        }
+
+        parent::display404errors($e);
+    }
 }
 
 /**
