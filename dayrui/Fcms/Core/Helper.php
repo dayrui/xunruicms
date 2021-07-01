@@ -809,6 +809,7 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
                 $murl = $url_call_func($cat[$id]);
             } else {
                 $murl = dr_url_prefix($cat[$id]['url']);
+                //$murl = dr_url_prefix($cat[$id]['url'], MOD_DIR, SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL())
             }
             $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], [$murl, $cat[$id]['name']], $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
         }
@@ -3868,6 +3869,7 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == $my['id']) {
+                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
                 $related[$t['id']] = $t;
             }
         }
@@ -3878,6 +3880,7 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == $my['pid']) {
+                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
                 $related[$t['id']] = $t;
                 $parent = $my['child'] ? $my : $data[$t['pid']];
             }
@@ -3893,10 +3896,13 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == 0) {
+                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
                 $related[$t['id']] = $t;
             }
         }
     }
+
+    $parent['url'] = dr_url_prefix($parent['url'], MOD_DIR);
 
     return [$parent, $related];
 }
