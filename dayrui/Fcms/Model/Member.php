@@ -87,7 +87,7 @@ class Member extends \Phpcmf\Model
         if (!$data) {
             return [];
         }
-        
+
         $data['uid'] = $data['id'];
 
         return $data;

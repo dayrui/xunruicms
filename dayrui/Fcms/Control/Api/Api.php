@@ -20,7 +20,7 @@ class Api extends \Phpcmf\Common
         }
 
         $address = \Phpcmf\Service::L('ip')->address($value);
-        exit(dr_lang('IP归属地：%s', $address));
+        exit('<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_lang('IP归属地：%s', $address).'</a>');
     }
 
     /**
