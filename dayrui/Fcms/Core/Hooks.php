@@ -61,7 +61,7 @@ class Hooks extends \CodeIgniter\Events\Events
      * @param string $eventName
      * @param mixed  $arguments
      *
-     * @return boolean
+     * @return boolean | array
      */
     public static function trigger_callback($eventName, ...$arguments)
     {
@@ -73,10 +73,13 @@ class Hooks extends \CodeIgniter\Events\Events
 
         $listeners = static::listeners($eventName);
 
-        foreach ($listeners as $listener)
-        {
-            $start = microtime(true);
+        if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
+            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);
+        }
 
+        foreach ($listeners as $listener) {
+
+            $start = microtime(true);
             $rt = call_user_func($listener, ...$arguments);
 
             if (CI_DEBUG)
@@ -94,6 +97,51 @@ class Hooks extends \CodeIgniter\Events\Events
         }
 
         return false;
+    }
+
+    /**
+     * 运行不带返回参数的钩子点
+     *
+     * @param string $eventName
+     * @param mixed  $arguments
+     *
+     * @return boolean
+     */
+    public static function trigger($eventName, ...$arguments): bool
+    {
+        // Read in our Config/Events file so that we have them all!
+        if (! static::$initialized)
+        {
+            static::initialize();
+        }
+
+        $listeners = static::listeners($eventName);
+
+        if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
+            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);
+        }
+
+        foreach ($listeners as $listener) {
+
+            $start = microtime(true);
+            $result = static::$simulate === false ? call_user_func($listener, ...$arguments) : true;
+
+            if (CI_DEBUG)
+            {
+                static::$performanceLog[] = [
+                    'start' => $start,
+                    'end'   => microtime(true),
+                    'event' => strtolower($eventName),
+                ];
+            }
+
+            if ($result === false)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

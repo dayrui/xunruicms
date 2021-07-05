@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Error extends \Phpcmf\Common
-{
+class Error extends \Phpcmf\Common {
+
 	public function index() {
 
 		$time = (int)strtotime(\Phpcmf\Service::L('input')->get('time'));
@@ -31,11 +31,21 @@ class Error extends \Phpcmf\Common
             foreach ($data as $t) {
                 if ($t && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
                     $v = explode(' --> ', $t);
-                    $time2 = $v ? explode(' - ', $v[0]) : [1=>''];
+                    $time2 = $v ? explode(' - ', $v[0]) : [ 0 => '', 1 => '' ];
                     if ($time2[1]) {
                         $value = [
                             'time' => $time2[1] ? $time2[1] : '',
+                            'type' => '',
                         ];
+                        if ($time2[0] == 'DEBUG') {
+                            $value['type'] = '<span class="label label-success"> '.dr_lang('调试').' </span>';
+                        } elseif ($time2[0] == 'INFO') {
+                            $value['type'] = '<span class="label label-default"> '.dr_lang('信息').' </span>';
+                        } elseif ($time2[0] == 'WARNING') {
+                            $value['type'] = '<span class="label label-warning"> '.dr_lang('提醒').' </span>';
+                        } else {
+                            $value['type'] = '<span class="label label-danger"> '.dr_lang('错误').' </span>';
+                        }
                         if (strpos($v[1], '{br}')) {
                             // phpcmf模式
                             $vv = explode('{br}', $v[1]);
@@ -70,13 +80,13 @@ class Error extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign([
 		    'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '系统错误' => ['error/index', 'fa fa-shield'],
+                    '系统日志' => ['error/index', 'fa fa-shield'],
                 ]
             ),
 			'list' => $list,
 			'time' => $time,
 			'total' => $total,
-			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/index', ['time' => $time]), $total, 'admin')
+			'mypages' => \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/index', ['time' => $time]), $total, 'admin')
         ]);
 		\Phpcmf\Service::V()->display('error_log.html');
 	}

@@ -461,7 +461,9 @@ abstract class Common extends \CodeIgniter\Controller
         }
 
         $this->session = \Config\Services::session();
-        $this->session->start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            $this->session->start();
+        }
 
         return $this->session;
     }

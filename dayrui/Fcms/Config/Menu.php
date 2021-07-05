@@ -103,7 +103,7 @@ return [
                     'icon' => 'fa fa-calendar',
                     'link' => [
                         [
-                            'name' => '系统错误',
+                            'name' => '系统日志',
                             'icon' => 'fa fa-shield',
                             'uri' => 'error/index',
                         ],

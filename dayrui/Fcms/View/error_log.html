@@ -49,13 +49,15 @@
                 <thead>
                 <tr class="heading">
                     <th width="170">{dr_lang('时间')}</th>
-                    <th>{dr_lang('错误')}</th>
+                    <th width="80" style="text-align: center">{dr_lang('类型')}</th>
+                    <th>{dr_lang('日志')}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {loop $list $id $t}
                 <tr class="odd gradeX" id="dr_row_{$id}">
                     <td>{$t.time}</td>
+                    <td style="text-align: center">{$t.type}</td>
                     <td>
                         <a onclick="dr_show_file_code('{dr_lang('查看文件')}', '{dr_url('error/log_show', ['time'=>$time])}')">{dr_strcut($t.message, 80)}</a>
                     </td>
