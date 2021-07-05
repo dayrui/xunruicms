@@ -939,10 +939,10 @@ class Image
         if (!$is_test) {
             list($nw, $nh) = $this->image_info ? $this->image_info : getimagesize($this->source_image);
             if ($data['width'] && $data['width'] > $nw) {
-                CI_DEBUG && log_message('error', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_image']);
+                CI_DEBUG && log_message('debug', '系统要求宽度>'.$data['width'].'px才进行水印，当前图片宽度='.$nw.'，不满足水印条件：'.$data['source_image']);
                 return '';
             } elseif ($data['height'] && $data['height'] > $nh) {
-                CI_DEBUG && log_message('error', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_image']);
+                CI_DEBUG && log_message('debug', '系统要求高度>'.$data['width'].'px才进行水印，当前图片高度='.$nh.'，不满足水印条件：'.$data['source_image']);
                 return '';
             }
         }
@@ -1566,10 +1566,10 @@ class Image
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
-                CI_DEBUG && log_message('error', '图片[id#'.$img.']不存在，thumb函数无法调用');
+                CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg'])) {
-                CI_DEBUG && log_message('error', '图片[id#'.$img.']扩展名不符合条件，thumb函数无法调用');
+                CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         } else {
@@ -1590,12 +1590,12 @@ class Image
                 // 远程图片下载到本地进行缩略图处理
                 $data = dr_catcher_data($attach['url'], 10);
                 if (!$data) {
-                    CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
+                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
                     return $attach['url'];
                 }
                 $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
                 if (!file_put_contents($file, $data)) {
-                    CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
+                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
                     return $attach['url'];
                 }
             } else {
@@ -1615,7 +1615,7 @@ class Image
             }
         } elseif (!is_file($file)) {
             // 本地图片不存在
-            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，thumb函数无法调用');
+            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，thumb函数无法调用');
             return ROOT_THEME_PATH.'assets/images/nopic.gif';
         }
 
@@ -1625,7 +1625,7 @@ class Image
 
         $this->image_info = getimagesize($file);
         if ($this->memory_limit($this->image_info)) {
-            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
+            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
             return $attach['url']; // 原样输出
         }
 
@@ -1652,7 +1652,7 @@ class Image
         }
 
         if (!is_file($cache_path.$cache_file)) {
-            CI_DEBUG && log_message('error', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败['.$cache_file.']原样输出');
+            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败['.$cache_file.']原样输出');
             return $attach['url']; // 原样输出
         }
 
@@ -1664,7 +1664,7 @@ class Image
                 $data['dynamic_output'] = false;
                 $this->watermark($data);
             } else {
-                CI_DEBUG && log_message('error', '网站没有设置水印数据，thumb函数中的水印参数将无效');
+                CI_DEBUG && log_message('debug', '网站没有设置水印数据，thumb函数中的水印参数将无效');
             }
         }
 
@@ -1814,7 +1814,7 @@ class Image
                     break;
             }
         } else {
-            CI_DEBUG && log_message('error', '系统要求宽度>'.$cw.'px才进行压缩处理，当前图片宽度='.$width.'，不满足压缩条件：'.$imgsrc);
+            CI_DEBUG && log_message('debug', '系统要求宽度>'.$cw.'px才进行压缩处理，当前图片宽度='.$width.'，不满足压缩条件：'.$imgsrc);
         }
 
         return;

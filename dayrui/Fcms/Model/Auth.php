@@ -77,7 +77,7 @@ class Auth extends \Phpcmf\Model {
             return $file;
         }
 
-        CI_DEBUG && log_message('error', '自定义面板['.$table.']文件'.$file.'不存在');
+        CI_DEBUG && log_message('debug', '自定义面板['.$table.']文件'.$file.'不存在');
 
         return COREPATH.'View/main/none.html';
     }

@@ -923,7 +923,7 @@ class Pay extends \Phpcmf\Model
         list($app, $class) = explode('_', $name);
         $classFile = dr_get_app_dir($app).'Models/'.ucfirst($class).'.php';
         if (!is_file($classFile)) {
-            CI_DEBUG && log_message('error', '支付对象('.$name.')类文件（'.$classFile.'）不存在');
+            CI_DEBUG && log_message('debug', '支付对象('.$name.')类文件（'.$classFile.'）不存在');
             return;
         }
         return \Phpcmf\Service::M($class, $app);

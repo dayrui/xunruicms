@@ -353,7 +353,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                 if ($domain) {
                                     $file = dr_catcher_data($img, 8);
                                     if (!$file) {
-                                        CI_DEBUG && log_message('error', '服务器无法下载图片：'.$img);
+                                        CI_DEBUG && log_message('debug', '服务器无法下载图片：'.$img);
                                     } else {
                                         // 尝试找一找附件库
                                         $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
@@ -461,7 +461,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
         }
 
-        CI_DEBUG && log_message('error', '服务器无法获取远程图片的扩展名：'.dr_safe_replace($url));
+        CI_DEBUG && log_message('debug', '服务器无法获取远程图片的扩展名：'.dr_safe_replace($url));
 
         return '';
     }

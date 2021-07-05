@@ -579,7 +579,7 @@ abstract class Common extends \CodeIgniter\Controller
                         if ($rt) {
                             return 0;
                         } else {
-                            CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('系统未安装共享模块，无法使用栏目'));
+                            CI_DEBUG && log_message('debug', $dirname.' - '.dr_lang('系统未安装共享模块，无法使用栏目'));
                             $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
                         }
                     } else {
@@ -605,7 +605,7 @@ abstract class Common extends \CodeIgniter\Controller
         if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER
             && \Phpcmf\Service::M('member_auth')->module_auth($dirname, 'show', $this->member)) {
             if ($rt) {
-                CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('您的用户组无权限访问模块'));
+                CI_DEBUG && log_message('debug', $dirname.' - '.dr_lang('您的用户组无权限访问模块'));
                 return 0;
             }
             $this->_msg(0, dr_lang('您的用户组无权限访问模块'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
@@ -1021,7 +1021,7 @@ abstract class Common extends \CodeIgniter\Controller
                             }
                         } else {
                             $data = array_merge($data , $_clink) ;
-                            CI_DEBUG && log_message('error', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
+                            CI_DEBUG && log_message('debug', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
                         }
                     }
                 }
@@ -1136,7 +1136,7 @@ abstract class Common extends \CodeIgniter\Controller
                 if (IS_ADMIN) {
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
-                        CI_DEBUG && log_message('error', 'Cbottom（'.$t['name'].'）没有设置url参数');
+                        CI_DEBUG && log_message('debug', 'Cbottom（'.$t['name'].'）没有设置url参数');
                         continue;
                     } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
                         unset($data[$i]); // 无权限的不要
@@ -1146,7 +1146,7 @@ abstract class Common extends \CodeIgniter\Controller
                 } else {
                     if (!$t['murl']) {
                         unset($data[$i]); // 非后台必须验证murl
-                        CI_DEBUG && log_message('error', 'Cbottom（'.$t['name'].'）没有设置murl参数');
+                        CI_DEBUG && log_message('debug', 'Cbottom（'.$t['name'].'）没有设置murl参数');
                         continue;
                     }
                     $data[$i]['url'] = urldecode($data[$i]['murl']);
