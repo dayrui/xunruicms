@@ -1998,7 +1998,7 @@ textarea.form-control {
 }
 
 @media (min-width:768px) {
-    .form-inline .form-control-static,.form-inline .form-group {
+    .form-inline .form-group {
         display: inline-block
     }
 
@@ -3206,7 +3206,7 @@ tbody.collapse.in {
 }
 
 @media (min-width:768px) {
-    .navbar-form .form-control-static,.navbar-form .form-group {
+    .navbar-form .form-group {
         display: inline-block
     }
 
@@ -8220,7 +8220,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
     display: block
 }
 
-.form-control-static,.input-inline,.radio-list>label.radio-inline {
+.input-inline,.radio-list>label.radio-inline {
     display: inline-block
 }
 
@@ -8360,7 +8360,8 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 }
 
 .form-control-static {
-    margin: 0
+    margin: 0;
+    word-wrap: break-word;
 }
 
 .input-xsmall {
