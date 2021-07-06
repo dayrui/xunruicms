@@ -617,9 +617,12 @@ body{background-color:#f5f6f8}
 .font-green {
     color: #40aae3!important;
 }
+.page-bar .page-breadcrumb .default, .page-bar .page-breadcrumb .on {
+    color: #3ea9e2!important;
+}
 .note.note-danger {
     border-radius: 4px;
-    border-left: 4px solid #f0868e;
+    border-left: 4px solid #3ea9e2;
     background-color: #ffffff;
     color: #888;
 }
