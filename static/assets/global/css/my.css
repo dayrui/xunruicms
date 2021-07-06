@@ -2,6 +2,7 @@
 * my.css 是用来自定义后台样式文件，可以由开发者随便修改，升级不会被覆盖
 */
 
+
 body{background-color:#f5f6f8}
 .main-content {background: #f5f6f8}
 .index-content { background: #f5f6f8 }
@@ -9,7 +10,7 @@ body{background-color:#f5f6f8}
 .page-header.navbar {
     background-color:#40aae3
 }
-.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle>i {
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle i, .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle .top-txt-menu {
     color:#eef4f9
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle .badge.badge-default {
@@ -19,7 +20,10 @@ body{background-color:#f5f6f8}
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle:hover,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown.open .dropdown-toggle {
     background-color:#fff
 }
-.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle:hover>i,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown.open .dropdown-toggle>i {
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle:hover i,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown.open .dropdown-toggle i {
+    color:#000
+}
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle:hover .top-txt-menu,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown.open .dropdown-toggle .top-txt-menu {
     color:#000
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu {
@@ -66,7 +70,7 @@ body{background-color:#f5f6f8}
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-language>.dropdown-toggle>.langname,
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>.username,
-.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle>i {
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-user>.dropdown-toggle i {
     color:#fff
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-tasks .dropdown-menu .dropdown-menu-list .progress {
@@ -95,7 +99,7 @@ body{background-color:#f5f6f8}
     color:#e4eef6;
     border-bottom:1px solid #4689c3!important
 }
-.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu .dropdown-menu-list>li a>i,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu.dropdown-menu-default>li a>i {
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu .dropdown-menu-list>li a i,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu.dropdown-menu-default>li a i {
     color:#bed5ea
 }
 .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu .dropdown-menu-list>li a:hover,.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown-dark .dropdown-menu.dropdown-menu-default>li a:hover {
@@ -147,14 +151,14 @@ body{background-color:#f5f6f8}
 .page-header.navbar .hor-menu .navbar-nav>li.mega-menu-dropdown>.dropdown-menu .mega-menu-content .mega-menu-submenu li>h3,.page-header.navbar .hor-menu .navbar-nav>li>a {
     color:#000
 }
-.page-header.navbar .hor-menu .navbar-nav>li>a>i {
+.page-header.navbar .hor-menu .navbar-nav>li>a i {
     color:#90b8db
 }
 .page-header.navbar .hor-menu .navbar-nav>li.open>a,.page-header.navbar .hor-menu .navbar-nav>li:hover>a,.page-header.navbar .hor-menu .navbar-nav>li>a:hover {
     color:#c9ddee;
     background:#fff!important
 }
-.page-header.navbar .hor-menu .navbar-nav>li.open>a>i,.page-header.navbar .hor-menu .navbar-nav>li:hover>a>i,.page-header.navbar .hor-menu .navbar-nav>li>a:hover>i {
+.page-header.navbar .hor-menu .navbar-nav>li.open>a i,.page-header.navbar .hor-menu .navbar-nav>li:hover>a i,.page-header.navbar .hor-menu .navbar-nav>li>a:hover i {
     color:#a3c4e1
 }
 .page-header.navbar .hor-menu .navbar-nav>li.active>a,.page-header.navbar .hor-menu .navbar-nav>li.current>a {
