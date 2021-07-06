@@ -15,9 +15,8 @@
                 {loop $top $t}
                 <li id="dr_menu_top_{$t.id}" class="dropdown {if $t.id==$first}open{/if}">
                     <a class="dropdown-toggle popovers" href="javascript:Mlink('{$t.id}', '{$t.left_id}', '{$t.link_id}', '{$t.url}');">
-                        <i class="{$t.icon}"></i>
-                        <br>
-                        <i class="top-txt-menu">{dr_lang($t.name)}</i>
+                        <div class="menu-top-icon"><i class="{$t.icon}"></i></div>
+                        <div class="menu-top-name"><i class="top-txt-menu">{dr_lang($t.name)}</i></div>
                     </a>
                 </li>
                 {/loop}
@@ -45,10 +44,10 @@
                 {if count($ci->site_info) > 1}
                 <li class="dropdown dropdown-extended dropdown-tasks">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <i class="fa fa-share-alt"></i>
+                        <div class="menu-top-icon"><i class="fa fa-share-alt"></i>
                         <span class="badge badge-default"> {count($ci->site_info)} </span>
-                        <br>
-                        <i class="top-txt-menu">{dr_lang('多站')}</i>
+                        </div>
+                        <div class="top-txt-menu">{dr_lang('多站')}</div>
                     </a>
                     <ul class="dropdown-menu extended tasks">
                         <li>
@@ -71,15 +70,14 @@
                 {if $is_mobile}
                 <li class="dropdown">
                     <a href="javascript:;"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <i class="fa fa-wrench"></i>
-                        <br>
-                        <i class="top-txt-menu">{dr_lang('账号')}</i>
+                        <div class="menu-top-icon"> <i class="fa fa-wrench"></i> </div>
+                        <div class="menu-top-icon"><i class="top-txt-menu">{dr_lang('账号')}</i></div>
                     </a>
                     {else}
                 <li class="dropdown dropdown-user">
-                    <a style="margin-right: -10px;height: 70px;" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <a style="margin-right: -10px;" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <img alt="{$admin['username']}" class="img-circle" src="{dr_avatar($admin.uid)}" />
-                        <span style="padding-top: 10px;" class="username username-hide-on-mobile"> {dr_strcut($admin['username'], 8)} </span>
+                        <span class="username username-hide-on-mobile"> {dr_strcut($admin['username'], 8)} </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     {/if}
@@ -110,7 +108,7 @@
                 {if !$is_mobile}
                 <li class="dropdown dropdown-quick-sidebar-toggler">
                     <a href="javascript:;" class="dropdown-toggle">
-                        <i class="fa fa-angle-double-right" style="margin-top: 10px;"></i>
+                        <i class="fa fa-angle-double-right"></i>
                     </a>
                 </li>
                 {/if}
