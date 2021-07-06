@@ -12,21 +12,6 @@
         <label><a href="javascript:dr_add_main_table('{$table}');" class="btn btn-default">{$name}</a></label>
         {/loop}
     </div>
-    <style>
-        #sortable_portlets {
-            margin: 10px;
-        }
-        .sortable , .sortable2{
-            border: 2px dashed #e7ecf1;
-            min-height: 150px;
-            background: white;
-            margin: 10px 0;
-            padding: 0;
-        }
-        .sortable2 {
-            border: 2px dashed #e73d4a;
-        }
-    </style>
     <script type="text/javascript">
         function dr_add_main_table(name) {
             if ($("#table_"+name).length>0){
