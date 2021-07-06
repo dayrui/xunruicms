@@ -2,7 +2,6 @@
 * my.css 是用来自定义后台样式文件，可以由开发者随便修改，升级不会被覆盖
 */
 
-
 body{background-color:#f5f6f8}
 .main-content {background: #f5f6f8}
 .index-content { background: #f5f6f8 }
@@ -340,7 +339,7 @@ body{background-color:#f5f6f8}
 
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active>a {
     background:#21282e;
-    border-left:4px solid #22282e;
+    border-left:4px solid #40aae3;
     color:#f1f1f1
 }
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a:hover,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active>a:hover,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a:hover,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active>a:hover {
@@ -549,7 +548,8 @@ body{background-color:#f5f6f8}
 
 
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li:hover>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li:hover>a {
-    background:#40aae3
+    background:#40aae3;
+    border-left:4px solid #000000;
 }
 
 
