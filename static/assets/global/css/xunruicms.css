@@ -8359,6 +8359,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
 }
 
+
 .form-control-static {
     margin: 0;
     word-wrap: break-word;
@@ -12585,7 +12586,7 @@ code.form-control-static {
     padding: 19px 10px 10px
 }
 
-.page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle>i {
+.page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle i {
     font-size: 17px
 }
 
@@ -12822,6 +12823,7 @@ code.form-control-static {
 .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle>.username {
     display: inline-block;
     font-size: 13px;
+    margin-top: 10px;
     font-weight: 300
 }
 
@@ -12833,7 +12835,7 @@ code.form-control-static {
     display: inline-block
 }
 
-.page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle>i {
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle i {
     display: inline-block;
     margin: 0;
     font-size: 13px
@@ -14206,7 +14208,8 @@ code.form-control-static {
 }
 
 .page-header .top-menu .dropdown-quick-sidebar-toggler>.dropdown-toggle i {
-    top: 0
+    top: 0;
+    margin-top: 10px;
 }
 
 .page-portlet-fullscreen .page-quick-sidebar-toggler,.page-portlet-fullscreen .page-quick-sidebar-wrapper {
