@@ -3681,6 +3681,17 @@ function dr_http_prefix($url) {
     return (defined('SYS_HTTPS') && SYS_HTTPS ? 'https://' : 'http://').$url;
 }
 
+// 转换url
+function dr_to_url($url, $domian = '', $siteid = SITE_ID) {
+
+    $url = dr_url_prefix($url, '', $siteid, 1);
+    if ($domian) {
+        $url = str_replace(SITE_URL, dr_http_prefix($domian), $url);
+    }
+
+    return $url;
+}
+
 // 补全url
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
