@@ -514,7 +514,7 @@ class Module extends \Phpcmf\Model
         $category = \Phpcmf\Service::M('category')->init(['table' => $siteid.'_'.$cdir.'_category'])->repair($category, $cdir);
 
         // 栏目开始
-		$CAT = $CAT_DIR = $fenzhan = $level = [];
+		$CAT = $CAT_DIR = $level = [];
         if ($category) {
             // 栏目的定义字段
             $field = $this->db->table('field')
@@ -574,11 +574,11 @@ class Module extends \Phpcmf\Model
                 } else {
                     $c['pcatpost'] = 0;
                 }
-                $c['is_post'] = $c['pcatpost'] ? 1 : ($c['child'] ? 0 : 1); // 是否允许发布内容
                 $c['topid'] = isset($pid[1]) ? $pid[1] : $c['id'];
                 $c['domain'] = isset($c['domain']) ? $c['domain'] : $cache['domain'];
-                $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];
                 $c['catids'] = explode(',', $c['childids']);
+                $c['is_post'] = $c['pcatpost'] ? 1 : ($c['child'] ? 0 : 1); // 是否允许发布内容
+                $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];
                 if ($cache['share']) {
                     // 共享栏目时
                     //以本栏目为准
@@ -596,7 +596,6 @@ class Module extends \Phpcmf\Model
                 // 获取栏目url
                 $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
                 //$c['furl'] = $c['setting']['linkurl'] ? $c['setting']['linkurl'] : \Phpcmf\Service::L('router')->category_url($cache, $c, 0, '{fid}');
-                // 按分站生成url
                 // 统计栏目文章数量
                 if (in_array($c['tid'], [2, 0]) || $c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) {
                     $c['total'] = 0;
@@ -685,13 +684,14 @@ class Module extends \Phpcmf\Model
 
         // 重置缓存
         $this->cat_share_lock[$siteid] = 1;
+
         \Phpcmf\Service::L('cache')->set_file('module-'.$siteid, []);
         \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-share', []);
         \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-content', []);
 
         $all = $content = [];
         $module = $this->get_module_info($module);
-        $menu_model = \Phpcmf\Service::M('Menu');
+        $menu_model = \Phpcmf\Service::M('menu');
         if ($module) {
             foreach ($module as $mdir => $data) {
                 //unset($cache['config']);
@@ -711,7 +711,11 @@ class Module extends \Phpcmf\Model
                     $cache['murl'] = $data['site'][$siteid]['mobile_domain'] ? $cache['mobile_domain'] : $cache['url']; // 模块的URL地址
                     // 模块的自定义字段
                     $cache['field'] = [];
-                    $field = $this->db->table('field')->where('disabled', 0)->where('relatedid', intval($data['id']))->where('relatedname', 'module')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+                    $field = $this->db->table('field')
+                        ->where('disabled', 0)
+                        ->where('relatedid', intval($data['id']))
+                        ->where('relatedname', 'module')
+                        ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
                     if ($field) {
                         foreach ($field as $f) {
                             $f['setting'] = dr_string2array($f['setting']);

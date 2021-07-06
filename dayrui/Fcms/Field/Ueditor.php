@@ -14,7 +14,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->use_xss = 1; // 强制xss验证
+        //$this->use_xss = 1; // 强制xss验证
         $this->fieldtype = ['MEDIUMTEXT' => ''];
         $this->defaulttype = 'MEDIUMTEXT';
         $this->rid = md5(FC_NOW_URL.\Phpcmf\Service::L('input')->get_user_agent().\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::C()->uid);
