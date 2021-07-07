@@ -577,7 +577,7 @@ function dr_cat_value(...$get) {
         return '';
     }
 
-    if (is_numeric($get[0]) && MOD_DIR) {
+    if (is_numeric($get[0]) && defined('MOD_DIR') && MOD_DIR) {
         // 值是栏目id时，表示当前模块
         $name = 'module-'.SITE_ID.'-'.MOD_DIR;
     } else {
@@ -607,7 +607,7 @@ function dr_mod_value(...$get) {
         return '';
     }
 
-    if (is_numeric($get[0]) && MOD_DIR) {
+    if (is_numeric($get[0]) && defined('MOD_DIR') && MOD_DIR) {
         // 值是栏目id时，表示当前模块
         $name = 'module-'.SITE_ID.'-'.MOD_DIR;
     } else {
@@ -793,13 +793,14 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = []) {
  * @param   string  $html   格式替换
  * @return  string
  */
-function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = MOD_DIR, $url_call_func = '') {
+function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = 'MOD_DIR', $url_call_func = '') {
 
     if (!$catid) {
         return '';
     }
 
-    $cat = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.(!$dirname || $dirname == 'MOD_DIR' ? 'share' : $dirname), 'category');
+    $mid = $dirname == 'MOD_DIR' && defined('MOD_DIR') && MOD_DIR ? MOD_DIR : (!$dirname || $dirname == 'MOD_DIR' ? 'share' : $dirname);
+    $cat = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$mid, 'category');
     if (!isset($cat[$catid])) {
         return '';
     }
@@ -986,7 +987,7 @@ function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
 
 // 打赏支付
 function dr_donation($id, $title = '', $dir = null, $remove_div  = 1) {
-    !$dir && $dir = MOD_DIR;
+    !$dir && $dir = defined('MOD_DIR') ? MOD_DIR : 'share';
     return \Phpcmf\Service::M('Pay')->payform('my-shang_buy-'.$id.'_'.$dir.'-'.SITE_ID, 0, $title, '', $remove_div);
 }
 
@@ -2721,13 +2722,14 @@ function dr_ajax_template($id, $filename, $param_str = '') {
  * @return  string
  */
 if (!function_exists('dr_show_hits')) {
-    function dr_show_hits($id, $dom = "", $dir = MOD_DIR) {
+    function dr_show_hits($id, $dom = "", $dir = 'MOD_DIR') {
         $is = $dom;
         !$dom && $dom = "dr_show_hits_{$id}";
         $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
         if (defined('MODULE_MYSHOW')) {
             return $html;
         }
+        $dir = $dir == 'MOD_DIR' && defined('MOD_DIR') && MOD_DIR ? MOD_DIR : $dir;
         return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".WEB_DIR."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
@@ -3884,7 +3886,7 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == $my['id']) {
-                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
+                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
                 $related[$t['id']] = $t;
             }
         }
@@ -3895,7 +3897,7 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == $my['pid']) {
-                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
+                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
                 $related[$t['id']] = $t;
                 $parent = $my['child'] ? $my : $data[$t['pid']];
             }
@@ -3911,13 +3913,13 @@ function dr_related_cat($data, $catid) {
                 continue;
             }
             if ($t['pid'] == 0) {
-                $t['url'] = dr_url_prefix($t['url'], MOD_DIR);
+                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
                 $related[$t['id']] = $t;
             }
         }
     }
 
-    $parent['url'] = dr_url_prefix($parent['url'], MOD_DIR);
+    $parent['url'] = dr_url_prefix($parent['url'], defined('MOD_DIR') ? MOD_DIR : '');
 
     return [$parent, $related];
 }
@@ -4019,7 +4021,7 @@ class php5replace {
 // 模块首页地址
 function dr_module_url($dir) {
 
-    if ($dir == MOD_DIR) {
+    if (defined('MOD_DIR') && $dir == MOD_DIR) {
         return MODULE_URL;
     }
 
