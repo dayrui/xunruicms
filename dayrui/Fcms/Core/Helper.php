@@ -54,7 +54,11 @@ function dr_array_keys($array, $value = '', $strict = false) {
         return 0;
     }
 
-    return array_keys($array, $value, $strict);
+    if ($value) {
+        return array_keys($array, $value, $strict);
+    } else {
+        return array_keys($array);
+    }
 }
 /**
  * 判断存在于数组中
