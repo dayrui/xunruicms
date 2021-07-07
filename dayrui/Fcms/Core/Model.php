@@ -207,7 +207,7 @@ class Model {
         !$id && $id = intval($data[$this->key]);
 
         if (!$id) {
-            log_message('error', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
+            log_message('debug', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': 主键获取失败');
         }
 
@@ -230,7 +230,7 @@ class Model {
         !$id && $id = intval($data[$this->key]);
 
         if (!$id) {
-            log_message('error', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
+            log_message('debug', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': 主键获取失败');
         }
 
@@ -693,7 +693,7 @@ class Model {
                             $select->where($rt);
                         }
                     } else {
-                        CI_DEBUG && log_message('error', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
+                        CI_DEBUG && log_message('debug', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
                     }
                 } elseif ($field[$param['field']]['fieldtype'] == 'Linkage'
                     && $field[$param['field']]['setting']['option']['linkage']) {
@@ -772,7 +772,7 @@ class Model {
             $param = $this->_limit_page_where($select, $param);
             $query = $select->get();
             if (!$query) {
-                log_message('error', '数据查询失败：'.$this->table);
+                log_message('debug', '数据查询失败：'.$this->table);
                 $this->_clear();
                 return [[], $total, $param];
             }
@@ -815,7 +815,7 @@ class Model {
         }
         $query = $select->orderBy($order_str ? $order_str : 'id desc')->get();
         if (!$query) {
-            log_message('error', '数据查询失败：'.$this->table);
+            log_message('debug', '数据查询失败：'.$this->table);
             $this->_clear();
             return [[], $total, $param];
         }
