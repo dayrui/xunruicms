@@ -66,7 +66,7 @@ class Attachment extends \Phpcmf\Model {
                     // 更新主索引表
                     $this->table('attachment')->update($id, array(
                         'uid' => $t['uid'],
-                        'author' => $t['author'],
+                        'author' => '',
                         'tableid' => 0,
                         'related' => $related
                     ));
@@ -74,7 +74,7 @@ class Attachment extends \Phpcmf\Model {
                         'id' => $t['id'],
                         'uid' => $t['uid'],
                         'remote' => $t['remote'],
-                        'author' => $t['author'],
+                        'author' => '',
                         'related' => $related,
                         'fileext' => $t['fileext'],
                         'filesize' => $t['filesize'],
@@ -261,7 +261,7 @@ class Attachment extends \Phpcmf\Model {
         // 入库索引表
         $rt = $this->table('attachment')->replace([
             'uid' => (int)$this->member['id'],
-            'author' => $this->member['username'],
+            'author' => '',
             'siteid' => $this->siteid,
             'related' => $related,
             'tableid' => $tid,
@@ -281,7 +281,7 @@ class Attachment extends \Phpcmf\Model {
             $rt = $this->table('attachment_unused')->replace([
                 'id' => $id,
                 'uid' => (int)$this->member['id'],
-                'author' => $this->member['username'],
+                'author' => '',
                 'siteid' => $this->siteid,
                 'remote' => $data['remote'],
                 'fileext' => $data['ext'],
@@ -296,7 +296,7 @@ class Attachment extends \Phpcmf\Model {
             $rt = $this->table('attachment_data')->replace([
                 'id' => $id,
                 'uid' => (int)$this->member['id'],
-                'author' => $this->member['username'],
+                'author' => '',
                 'related' => $related,
                 'filename' => $data['name'],
                 'fileext' => $data['ext'],

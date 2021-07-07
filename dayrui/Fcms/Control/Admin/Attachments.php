@@ -27,11 +27,11 @@ class Attachments extends \Phpcmf\Table
     public function index() {
 
         $field = [
-            'author' => [
+            'uid' => [
                 'ismain' => 1,
                 'fieldtype' => 'Text',
-                'fieldname' => 'author',
-                'name' => dr_lang('账号'),
+                'fieldname' => 'uid',
+                'name' => '账号',
             ],
             'related' => [
                 'ismain' => 1,
@@ -50,12 +50,6 @@ class Attachments extends \Phpcmf\Table
                 'fieldtype' => 'Text',
                 'fieldname' => 'filename',
                 'name' => dr_lang('附件名称'),
-            ],
-            'uid' => [
-                'ismain' => 1,
-                'fieldtype' => 'Text',
-                'fieldname' => 'uid',
-                'name' => 'uid',
             ],
         ];
 

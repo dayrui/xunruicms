@@ -11998,6 +11998,7 @@ body .ui-tooltip {
 
 .bootstrap-tagsinput .tag {
     margin-right: 2px;
+    line-height: 30px;
     color: #fff
 }
 
@@ -14831,7 +14832,19 @@ code.form-control-static {
 .fc-cat-table td,.fc-cat-table th {
     text-align: center
 }
-
+#sortable_portlets {
+    margin: 10px;
+}
+.sortable , .sortable2{
+    border: 2px dashed #e7ecf1;
+    min-height: 150px;
+    background: white;
+    margin: 10px 0;
+    padding: 0;
+}
+.sortable2 {
+    border: 2px dashed #40aae3;
+}
 .fc-cat-table tr>td:first-child {
     text-align: left!important;
     max-width: auto!important;
