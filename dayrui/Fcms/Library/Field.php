@@ -930,6 +930,21 @@
         }
 
         /**
+         * 验证必填字段值
+         *
+         * @param	string	$field	字段类型
+         * @param	string	$value	字段值
+         * @return
+         */
+        public function check_required($field, $value) {
+            if (!is_array($value) && trim($value) == '') {
+                // 验证值为空
+                return dr_lang('%s不能为空', $field['name']);
+            }
+            return '';
+        }
+
+        /**
          * 验证加载js
          */
         public function is_load_js($name) {

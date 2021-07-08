@@ -56,6 +56,17 @@ class Linkage extends \Phpcmf\Library\A_Field {
                     <span class="help-block">'.dr_lang('将设计好的程序文件上传到./config/mylinkage/目录之下').'</span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('强制选择最终项').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][ck_child]" '.($option['ck_child'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][ck_child]" '.($option['ck_child'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                        </div>
+						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项').'</span>
+                    </div>
+                </div>
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('默认选择值').'</label>
 				<div class="col-md-9">
@@ -92,6 +103,36 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = (int)\Phpcmf\Service::L('Field')->post[$field['fieldname']];
 	}
 
+    /**
+     * 验证必填字段值
+     *
+     * @param	string	$field	字段类型
+     * @param	string	$value	字段值
+     * @return
+     */
+    public function check_required($field, $value) {
+
+        $value = intval($value);
+        if (!$value) {
+            // 验证值为空
+            return dr_lang('%s不能为空', $field['name']);
+        }
+
+        $code = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id', $value);
+        if (!$code) {
+            return dr_lang('选项无效');
+        }
+
+        $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'], $code);
+        if (!$linkage) {
+            return dr_lang('选项无效');
+        } elseif ($field['setting']['option']['ck_child'] && $linkage['child']) {
+            return dr_lang('需要选择下级选项');
+        }
+
+        return '';
+    }
+
 	/**
 	 * 字段表单输入
 	 *
@@ -126,6 +167,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
             }
             return $this->input_format($name, $text, '');
         }
+
 		$linkageid = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id');
 		$linkagelevel = (int)\Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-level');
 

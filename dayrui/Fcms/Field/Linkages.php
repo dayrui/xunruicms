@@ -45,6 +45,17 @@ class Linkages extends \Phpcmf\Library\A_Field {
 				<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
 				</div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('强制选择最终项').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][ck_child]" '.($option['ck_child'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                             &nbsp; &nbsp;
+                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][ck_child]" '.($option['ck_child'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                        </div>
+						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项').'</span>
+                    </div>
+                </div>
 				', '<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
@@ -85,6 +96,40 @@ class Linkages extends \Phpcmf\Library\A_Field {
         }
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($save);
 	}
+
+
+    /**
+     * 验证必填字段值
+     *
+     * @param	string	$field	字段类型
+     * @param	string	$value	字段值
+     * @return
+     */
+    public function check_required($field, $values) {
+
+        if (!$values) {
+            // 验证值为空
+            return dr_lang('%s不能为空', $field['name']);
+        }
+
+        foreach ($values as $value) {
+
+            $code = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id', $value);
+            if (!$code) {
+                return dr_lang('选项无效');
+            }
+
+            $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'], $code);
+            if (!$linkage) {
+                return dr_lang('选项无效');
+            } elseif ($field['setting']['option']['ck_child'] && $linkage['child']) {
+                return dr_lang('需要选择下级选项');
+            }
+        }
+
+
+        return '';
+    }
 
 	/**
 	 * 字段表单输入
@@ -166,7 +211,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
                         $str.= '<label style="padding-right:10px;"><select class="form-control finecms-selects-'.$name.'-'.$id.'" name="'.$name.'-'.$i.'-'.$id.'" id="'.$name.'-'.$i.'-'.$id.'" width="100" '.$style.'><option value=""> -- </option></select></label>';
                     }
                     $str.= '</span>';
-                    $str.= '<div class="form-control-static" id="dr_linkages_'.$name.'_cxselect_'.$id.'">'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkages_select_'.$name.'('.$id.')" style="color:blue">'.dr_lang('[重新选择]').'</a></div>';
+                    $str.= '<label class="form-control-static" id="dr_linkages_'.$name.'_cxselect_'.$id.'">'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkages_select_'.$name.'('.$id.')" style="color:blue">'.dr_lang('[重新选择]').'</a></label>';
                     $str.= '</div>';
                 }
             }
