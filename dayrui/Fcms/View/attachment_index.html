@@ -92,6 +92,22 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('全局存储策略')}</label>
+                            <div class="col-md-9">
+                                <label>
+                                    <select name="data[SYS_ATTACHMENT_SAVE_ID]" class="form-control">
+                                        <option value="0"> {dr_lang('按字段分别设置')} </option>
+                                        {loop $remote $t}
+                                        <option value="{$t.id}" {if $data['SYS_ATTACHMENT_SAVE_ID'] == $t.id} selected{/if}> {dr_lang($t.name)} </option>
+                                        {/loop}
+                                    </select>
+                                </label>
+
+                                <span class="help-block">{dr_lang('设置全局存储时，全站附件上传都会存储到此存储策略中；按字段设置时，需要手动为每个字段设置不同的存储策略')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('存储目录方式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">

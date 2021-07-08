@@ -327,6 +327,11 @@ class Attachment extends \Phpcmf\Model {
     // 附件存储信息
     public function get_attach_info($id = 0, $image_reduce = 0) {
 
+        // 全局存储
+        if ((!$id || $id == 'null') && SYS_ATTACHMENT_SAVE_ID) {
+            $id = SYS_ATTACHMENT_SAVE_ID;
+        }
+
         $remote = \Phpcmf\Service::C()->get_cache('attachment');
         if (isset($remote[$id]) && $remote[$id]) {
             $rt = $remote[$id];

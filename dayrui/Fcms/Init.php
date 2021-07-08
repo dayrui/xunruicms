@@ -71,6 +71,7 @@ $system = [
     'SYS_ATTACHMENT_PATH'   => '',
     'SYS_ATTACHMENT_SAVE_TYPE'  => '',
     'SYS_ATTACHMENT_SAVE_DIR'   => '',
+    'SYS_ATTACHMENT_SAVE_ID'   => '',
     'SYS_ATTACHMENT_URL'    => '',
     'SYS_AVATAR_PATH'   => '',
     'SYS_AVATAR_URL'    => '',
@@ -95,6 +96,8 @@ foreach ($system as $var => $value) {
 unset($my, $system);
 
 define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
+
+!defined('IS_FB_DEBUG') && define('IS_FB_DEBUG', CI_DEBUG ? 0 : 1);
 
 // 显示错误提示
 IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_DEPRECATED) : error_reporting(0);

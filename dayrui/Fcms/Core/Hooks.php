@@ -72,6 +72,9 @@ class Hooks extends \CodeIgniter\Events\Events
         }
 
         $listeners = static::listeners($eventName);
+        if (!$listeners) {
+            return false;
+        }
 
         if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
             log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);
@@ -116,6 +119,9 @@ class Hooks extends \CodeIgniter\Events\Events
         }
 
         $listeners = static::listeners($eventName);
+        if (!$listeners) {
+            return false;
+        }
 
         if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
             log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);

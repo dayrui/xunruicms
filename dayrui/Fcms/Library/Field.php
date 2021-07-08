@@ -1174,13 +1174,20 @@
         public function attachment($option) {
 
             $id = isset($option['attachment']) ? $option['attachment'] : 0;
+            $remote = \Phpcmf\Service::C()->get_cache('attachment');
 
             $html = '<label><select class="form-control" name="data[setting][option][attachment]">';
-            $html.= '<option value="0"> '.dr_lang('默认存储').' </option>';
+            if (SYS_ATTACHMENT_SAVE_ID && isset($remote[SYS_ATTACHMENT_SAVE_ID])) {
+                $html.= '<option value="0"> '.dr_lang($remote[SYS_ATTACHMENT_SAVE_ID]['name']).' </option>';
+            } else {
+                $html.= '<option value="0"> '.dr_lang('默认存储').' </option>';
+            }
 
-            $remote = \Phpcmf\Service::C()->get_cache('attachment');
             if ($remote) {
                 foreach ($remote as $i => $t) {
+                    if (SYS_ATTACHMENT_SAVE_ID && $t['id'] == SYS_ATTACHMENT_SAVE_ID) {
+                        continue;
+                    }
                     $html.= '<option value="'.$i.'" '.($i == $id ? 'selected' : '').'> '.dr_lang($t['name']).' </option>';
                 }
             }

@@ -40,7 +40,7 @@ class Logger extends BaseConfig
      *
      * @var integer|array
      */
-    public $threshold = IS_DEV ? [2, 3, 4, 6, 8] : [3, 4, 8];
+    public $threshold = IS_FB_DEBUG ? [3, 4] : [2, 3, 4, 6, 8];
 
     /**
      * --------------------------------------------------------------------------
