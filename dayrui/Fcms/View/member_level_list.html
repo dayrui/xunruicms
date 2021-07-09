@@ -20,6 +20,7 @@
                     </label>
                 </th>
                 {/if}
+                <th style="text-align:center" width="70" class="{dr_sorting('displayorder')}" name="displayorder">{dr_lang('排序')}</th>
                 <th width="50" class="{dr_sorting('id')}" name="id">Id</th>
                 <th width="150" class="{dr_sorting('name')}" name="name">{dr_lang('名称')}</th>
                 <th width="120" class="{dr_sorting('value')}" name="value">{dr_lang('升级要求')}</th>
@@ -42,6 +43,8 @@
                     </label>
                 </td>
                 {/if}
+                <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url($uriprefix.'/level_order_edit', ['id'=>$t.id, 'gid'=>$gid])}')" value="{intval($t.displayorder)}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+
                 <td>{$t.id}</td>
                 <td>{dr_lang($t.name)}</td>
                 <td>{$t.value} {$dwz}</td>

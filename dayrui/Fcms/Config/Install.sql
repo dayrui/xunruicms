@@ -394,10 +394,12 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_level` (
   `note` text NOT NULL COMMENT '备注',
   `apply` tinyint(1) unsigned NOT NULL COMMENT '是否允许升级',
   `setting` text NOT NULL COMMENT '等级配置',
+  `displayorder` smallint(5) NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`),
   KEY `value` (`value`),
   KEY `apply` (`apply`),
-  KEY `gid` (`gid`)
+  KEY `gid` (`gid`),
+  KEY `displayorder` (`displayorder`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='用户组级别表';
 
 DROP TABLE IF EXISTS `{dbprefix}member_group_index`;

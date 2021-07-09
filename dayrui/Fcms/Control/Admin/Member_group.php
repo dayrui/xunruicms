@@ -81,7 +81,7 @@ class Member_group extends \Phpcmf\Table
             'table' => 'member_level',
             'field' => $this->my_field,
             'sys_field' => [],
-            'order_by' => '`value` asc',
+            'order_by' => 'displayorder asc,id asc',
             'list_field' => [],
             'where_list' => 'gid='.$gid,
         ]);
@@ -241,6 +241,18 @@ class Member_group extends \Phpcmf\Table
         \Phpcmf\Service::V()->display($tpl);
     }
 
+    // 等级排序
+    public function level_order_edit() {
+        $this->_init_level(intval($_GET['gid']));
+        $this->_Display_Order(
+            intval(\Phpcmf\Service::L('input')->get('id')),
+            intval(\Phpcmf\Service::L('input')->get('value')),
+            function ($r) {
+                \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
+            }
+        );
+    }
+
     // 允许申请等级
     public function apply_level_edit() {
         $gid = intval($_GET['gid']);
@@ -278,7 +290,6 @@ class Member_group extends \Phpcmf\Table
             if ($this->type) {
                 $data['price'] = floatval($data['price']);
                 $data['days'] = intval($data['days']);
-                !$id && $data['displayorder'] = 0;
             } else {
                 $data['gid'] = (int)\Phpcmf\Service::L('input')->post('gid');
                 if (!$data['gid']) {
@@ -288,6 +299,7 @@ class Member_group extends \Phpcmf\Table
                 $data['value'] = intval($data['value']);
                 $data['apply'] = 1;
             }
+            !$id && $data['displayorder'] = 0;
             return dr_return_data(1, null, $data);
         }, function ($id, $data, $old) {
             \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存

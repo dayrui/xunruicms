@@ -1769,7 +1769,7 @@ class Member extends \Phpcmf\Model
         $group = $this->db->table('member_group')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
         if ($group) {
             foreach ($group as $t) {
-                $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('value ASC,id ASC')->get()->getResultArray();
+                $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
                 if ($level) {
                     foreach ($level as $lv) {
                         $lv['icon'] = dr_get_file($lv['stars']);

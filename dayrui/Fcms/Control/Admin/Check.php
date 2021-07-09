@@ -283,10 +283,13 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_level';
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
                 if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
                 }
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
+                if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
+                }
 
                 $table = $prefix.'admin_menu';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {

@@ -253,10 +253,10 @@ class Apply extends \Phpcmf\Common
 
         // 列出当前可用的升级级别
         $level = [];
-        $level2 = array_reverse($group['level']);
+        $level2 = $group['level'];
         foreach ($level2 as $i => $t) {
             if ($mylid == $t['id']) {
-                break;
+                continue;
             }
             $t['value2'] = $t['value'];
             $t['value'] = $t['value'] - $myvalue;
