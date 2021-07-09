@@ -232,7 +232,7 @@ class Image extends \Phpcmf\Library\A_Field {
                         $tpl.=        ' <img data-dz-thumbnail="" src="'.dr_get_file($id).'">';
                         $tpl.=     '</div>';
 
-                        $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div></div>';
+                        $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div><div class="dz-filename"><span data-dz-name="">'.$file['filename'].'</span></div></div>';
 
                         $tpl.=     '<a class="dz-remove" href="javascript:dr_delete_image_'.$name.'('.$id.');" title="'.dr_lang('删除图片').'">';
                         $tpl.=      '   <i class="fa fa-times-circle"></i>';
@@ -244,6 +244,7 @@ class Image extends \Phpcmf\Library\A_Field {
                 }
             }
         }
+        $tpl.= '<input class="dr_dropzone_'.$name.'_total" type="hidden" value="'.$i.'" />';
         $ts = dr_lang('每张图片最大%s，最多上传%s张图片', $size . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
@@ -272,7 +273,7 @@ $(function() {
     Dropzone.autoDiscover = false;
     $("#my-dropzone-'.$name.'").dropzone({ 
         addRemoveLinks:true,
-        maxFiles:'.$count.',
+        maxFiles:99999,
         maxFilesize: '.$size.',
         acceptedFiles: "image/*",
         dictMaxFilesExceeded: "'.dr_lang("最多只能上传%s张图片", $count).'",
@@ -283,12 +284,15 @@ $(function() {
         url: "'.$url.'",
         init: function() {
            this.on("addedfile", function(file) { 
-                var nums = $(".dr_dropzone_'.$name.'").length;
-                this.options.maxFiles = '.($count+1).' - nums;
+                var num = parseInt($(".dr_dropzone_'.$name.'_total").val());
+                alert(num);
+                this.options.maxFiles = '.$count.' - num;
             });
             this.on("success", function(file, res) {
                 var rt = JSON.parse(res);
                 if(rt.code){
+                     var num = parseInt($(".dr_dropzone_'.$name.'_total").val());
+                     $(".dr_dropzone_'.$name.'_total").val(num+1);
                     var input = \'<input class="dr_dropzone_'.$name.'" type="hidden" name="data['.$name.'][]" value="\'+rt.id+\'" />\';
                     $(file.previewElement).append(input);
                 }else{
@@ -303,6 +307,8 @@ $(function() {
     $("#my-dropzone-'.$name.'").append("'.addslashes($tpl).'");
 });
 function dr_delete_image_'.$name.'(e) {
+    var num = parseInt($(".dr_dropzone_'.$name.'_total").val());
+  $(".dr_dropzone_'.$name.'_total").val(num-1);
   $("#image-'.$name.'-"+e).remove();
 }
 </script>
