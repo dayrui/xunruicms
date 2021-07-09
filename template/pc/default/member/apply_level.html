@@ -28,6 +28,7 @@
                                     <label class="mt-radio mt-radio-line">
                                         <input type="radio" name="lid" value="{$t.id}" >
                                         {$t.name}
+                                        {if $group.setting.timetype}（{$t.setting.days} {dr_member_group_dtype($t.setting.dtype)}）{/if}
                                         {if $group['unit']}
                                         {intval($t.value)}{SITE_SCORE}
                                         {if $myvalue}

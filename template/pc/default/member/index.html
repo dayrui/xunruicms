@@ -108,7 +108,7 @@
                             <div class="danger"></div>&nbsp;&nbsp;{$t.name}
                         </td>
                         <td> 无 </td>
-                        <td> {if $t.days}{$t.days}{dr_member_group_dtype($t.setting.dtype)}{else}永久{/if} </td>
+                        <td> {if !$t.setting.timetype}{if $t.days}{$t.days}{dr_member_group_dtype($t.setting.dtype)}{else}永久{/if}{else}按需{/if} </td>
                         <td>
                             {php $sq=\Phpcmf\Service::M()->table('member_group_verify')->where('uid', $member.uid)->where('gid', $t.id)->getRow();}
                             {if $sq}

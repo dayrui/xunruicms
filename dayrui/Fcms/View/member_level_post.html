@@ -27,13 +27,7 @@
                             <span class="help-block">{dr_lang('给它一个描述名称')}</span>
                         </div>
                     </div>
-                    <div class="form-group" id="dr_row_stars">
-                        <label class="col-xs-2 control-label">{dr_lang('星星数量')}</label>
-                        <div class="col-xs-8">
-                            <label><input type="text" class="form-control" name="data[stars]" value="{intval($stars)}"></label>
-                            <span class="help-block">{dr_lang('星星数在达到4时，4个星星显示为1个月亮、4个月亮显示为1个太阳')}</span>
-                        </div>
-                    </div>
+                    {$myfield}
                     <div class="form-group" id="dr_row_value">
                         <label class="col-xs-2 control-label">{dr_lang('升级值要求')}</label>
                         <div class="col-xs-8">
@@ -42,6 +36,20 @@
                             <span class="help-block">{dr_lang('该等级需要的升级值，升级值越低越排在前面，0表示初始等级')}</span>
                         </div>
                     </div>
+                    {if $group.setting.timetype}
+                    <div class="form-group mytime time0">
+                        <label class="col-md-2 control-label ">{dr_lang('有效时长')}</label>
+                        <div class="col-md-9">
+                            <label><input type="text" class="form-control" name="setting[days]" value="{intval($setting.days)}"></label>
+                            <label><select name="setting[dtype]"  class="form-control">
+                                <option value="0" {if !$setting.dtype} selected {/if}> {dr_lang('天')} </option>
+                                <option value="1" {if 1 == $setting.dtype} selected {/if}> {dr_lang('月')} </option>
+                                <option value="2" {if 2 == $setting.dtype} selected {/if}> {dr_lang('年')} </option>
+                            </select></label>
+                            <span class="help-block"> {dr_lang('0或留空表示永久')} </span>
+                        </div>
+                    </div>
+                    {/if}
                     <div class="form-group" id="dr_row_note">
                         <label class="col-xs-2 control-label ">{dr_lang('备注说明')}</label>
                         <div class="col-xs-8">
@@ -55,7 +63,7 @@
     </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url('member_group/level_index', ['gid'=>$gid])}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{php echo $id ? dr_now_url() : dr_url('member_group/level_index', ['gid'=>$gid])}')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
         </div>
     </div>
 </form>

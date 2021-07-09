@@ -40,7 +40,7 @@
                             <label class="col-md-2 control-label ">{dr_lang('价格要求')}</label>
                             <div class="col-md-9">
                                 {if $is_level && !$setting['level']['auto']}
-                                <label><input type="hidden" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
+                                <label style="display: none"><input type="hidden" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
                                 <p class="form-control-static" style="color: #da3f3f"> {dr_lang('请在等级制度管理中设置对应的价格')} </p>
                                 {else}
                                 <label><input type="text" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
@@ -49,9 +49,28 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label ">{dr_lang('时长模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input onclick="dr_set_time(this.value)" name="setting[timetype]" type="radio" value="0" {if !$setting.timetype}checked{/if} /> {dr_lang('按组设置')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input onclick="dr_set_time(this.value)" name="setting[timetype]" type="radio" value="1" {if $setting.timetype}checked{/if} /> {dr_lang('按等级设置')} <span></span></label>
+                                </div>
+                                <span class="help-block"> {dr_lang('按等级设置时，每个等级分别设置有效期')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group mytime time1">
+                            <label class="col-md-2 control-label ">{dr_lang('时长叠加')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[timect]" type="radio" value="1" {if $setting.timect}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[timect]" type="radio" value="0" {if !$setting.timect}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block"> {dr_lang('叠加计算表示申请另外等级时有效期进行叠加计算，有效期不减少')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group mytime time0">
                             <label class="col-md-2 control-label ">{dr_lang('有效时长')}</label>
                             <div class="col-md-9">
-
                                 <label><input type="text" class="form-control" name="data[days]" value="{intval($days)}"></label>
                                 <label><select name="setting[dtype]"  class="form-control">
                                     <option value="0" {if !$setting.dtype} selected {/if}> {dr_lang('天')} </option>
@@ -61,6 +80,7 @@
                                 <span class="help-block"> {dr_lang('0或留空表示永久')} </span>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label ">{dr_lang('到期后转为')}</label>
                             <div class="col-md-9">
@@ -169,6 +189,7 @@
         $(".dr_sjms_1").hide();
         $(".dr_sjms_0").hide();
         dr_set_sjms("{intval($setting['level']['auto'])}");
+        dr_set_time("{intval($setting['timetype'])}");
     });
     function dr_field_show(n, u) {
         if (u) {
@@ -184,6 +205,15 @@
         } else {
             $(".dr_sjms_1").hide();
             $(".dr_sjms_0").show();
+        }
+    }
+    function dr_set_time(id) {
+        if (id == 1) {
+            $(".time1").show();
+            $(".time0").hide();
+        } else {
+            $(".time1").hide();
+            $(".time0").show();
         }
     }
 </script>

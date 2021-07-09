@@ -19,12 +19,14 @@
                                 <p class="form-control-static"> {$group.name} </p>
                             </div>
                         </div>
+                        {if !$group.setting.timetype}
                         <div class="form-group">
                             <label class="col-md-2 control-label"> 有效期 </label>
                             <div class="col-md-9">
                                 <p class="form-control-static"> {if $group.days}{$group.days}{dr_member_group_dtype($group.setting.dtype)}{else}永久{/if} </p>
                             </div>
                         </div>
+                        {/if}
                         {if $level}
                         <div class="form-group">
                             <label class="col-md-2 control-label"> 用户组级别 </label>
@@ -35,6 +37,7 @@
                                     <label class="mt-radio mt-radio-line">
                                         <input type="radio" name="lid" value="{$t.id}" >
                                         {$t.name}
+                                        {if $group.setting.timetype}（{$t.setting.days} {dr_member_group_dtype($t.setting.dtype)}）{/if}
                                         {if $group['unit']}
                                         {intval($t.value)}{SITE_SCORE}
                                         {else}
