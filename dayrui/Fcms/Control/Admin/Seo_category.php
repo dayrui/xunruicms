@@ -15,6 +15,7 @@ class Seo_category extends \Phpcmf\Common
             $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
         }
 
+        $page = \Phpcmf\Service::L('input')->get('page');
         $share = 0;
 
         // 设置url
@@ -38,6 +39,9 @@ class Seo_category extends \Phpcmf\Common
                 continue;
             }
             if (!isset($cache['site'][SITE_ID]['is_cat']) || !$cache['site'][SITE_ID]['is_cat']) {
+                if ($page && $page == $dir) {
+                    $this->_admin_msg(0, dr_lang('此模块没有开启按栏目分别设置SEO选项'));
+                }
                 unset($module[$dir]);
                 continue;
             }
@@ -60,7 +64,6 @@ class Seo_category extends \Phpcmf\Common
         }
 
         $one = reset($module);
-        $page = \Phpcmf\Service::L('input')->get('page');
         if (!$page) {
             $page = $one['dirname'];
         }

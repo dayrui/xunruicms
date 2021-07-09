@@ -82,10 +82,11 @@
                                 <label class="col-md-2 control-label">{dr_lang('按栏目设置SEO')}</label>
                                 <div class="col-md-9">
                                     <div class="mt-radio-inline">
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').show()" name="site[is_cat]" value="0" {if empty($site['is_cat'])}checked{/if} /> {dr_lang('全局设置')} <span></span></label>
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').hide()" name="site[is_cat]" value="1" {if $site['is_cat']}checked{/if} /> {dr_lang('分别设置')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').show();$('.cat_{$dir}_0').hide()" name="site[is_cat]" value="0" {if empty($site['is_cat'])}checked{/if} /> {dr_lang('全局设置')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').hide();$('.cat_{$dir}_0').show()" name="site[is_cat]" value="1" {if $site['is_cat']}checked{/if} /> {dr_lang('分别设置')} <span></span></label>
                                     </div>
-                                    <span class="help-block">{dr_lang('按栏目设置是为每一个栏目单独设置seo信息，否则就采用统一设置')}</span>
+
+                                    <span class="help-block cat_{$dir}_0" {if !$site['is_cat']}style="display:none"{/if}><a href="{dr_url('seo_category/index', ['page' => $data.share ? '' : $data.dirname])}">{dr_lang('按栏目设置是为每一个栏目单独设置seo信息，否则就采用统一设置')}</a></span>
                                 </div>
                             </div>
 
