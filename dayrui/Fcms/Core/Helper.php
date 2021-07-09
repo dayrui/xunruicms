@@ -3734,6 +3734,10 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
             } elseif ($siteid > 1 && \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL']) {
                 // 存在多站点时
                 $domain = $is_mobile ? \Phpcmf\Service::C()->site_info[$siteid]['SITE_MURL'] : \Phpcmf\Service::C()->site_info[$siteid]['SITE_URL'];
+                if (WEB_DIR && strpos($domain, WEB_DIR) !== false && strpos($url, WEB_DIR) !== false) {
+                    // 目录模式防止目录重复出现
+                    $url = str_replace(WEB_DIR, '/', $url);
+                }
             } else {
                 $domain = $is_mobile ? SITE_MURL : SITE_URL;
             }
