@@ -284,7 +284,7 @@ $(function() {
         init: function() {
            this.on("addedfile", function(file) { 
                 var nums = $(".dr_dropzone_'.$name.'").length;
-                this.options.maxFiles = '.$count.' - nums;
+                this.options.maxFiles = '.($count+1).' - nums;
             });
             this.on("success", function(file, res) {
                 var rt = JSON.parse(res);
