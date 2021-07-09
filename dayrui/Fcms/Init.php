@@ -57,6 +57,7 @@ $system = [
     'SYS_CRON_AUTH' => '',
     'SYS_SMS_IMG_CODE' => 0,
     'SYS_GO_404' => 0,
+    'SYS_301' => 0,
 
     'SYS_PAGE_RNAME' => 0,
 
@@ -86,6 +87,11 @@ if (is_file(WRITEPATH.'config/system.php')) {
     $my = require WRITEPATH.'config/system.php';
 } else {
     $my = [];
+}
+
+// 强制禁用301
+if (defined('IS_NOT_301') && IS_NOT_301) {
+    $my['SYS_301'] = 1;
 }
 
 foreach ($system as $var => $value) {

@@ -34,12 +34,6 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-md-2 control-label">'.dr_lang('按钮颜色').'</label>
-			<div class="col-md-9">
-				<label>'.$this->_color_select('color', $option['color']).'</label>
-			</div>
-		</div>
-		<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('图标样式').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][icon]" value="'.$option['icon'].'"></label>
@@ -50,7 +44,12 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 			<label class="col-md-2 control-label">'.dr_lang('图标名称').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][name]" value="'.$option['name'].'"></label>
-				
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-2 control-label">'.dr_lang('按钮颜色').'</label>
+			<div class="col-md-9">
+				<label>'.$this->_color_select('color', $option['color']).'</label>
 			</div>
 		</div>
 		<div class="form-group">
@@ -162,7 +161,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 		 <div class="input-group" '.$style.'>
 				'.$ipt.'
 				<span class="input-group-btn">
-					<a class="btn btn-success '.$color.'" href="javascript:'.$func.'(\''.$name.'\');" ><i class="'.dr_icon($field['setting']['option']['icon']).'" /></i> '.dr_lang($field['setting']['option']['name']).'</a>
+					<a class="btn btn-success " style="border-color:'.$color.';background-color:'.$color.'" href="javascript:'.$func.'(\''.$name.'\');" ><i class="'.dr_icon($field['setting']['option']['icon']).'" /></i> '.dr_lang($field['setting']['option']['name']).'</a>
 				</span>
 			</div>
 		';

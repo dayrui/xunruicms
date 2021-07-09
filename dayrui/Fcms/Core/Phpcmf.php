@@ -252,14 +252,14 @@ abstract class Common extends \CodeIgniter\Controller
                 // 这是移动端
                 if (isset($client[$domain])) {
                     // 表示这个域名属于电脑端,需要跳转到移动端
-                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix($domain), dr_http_prefix($client[$domain]), dr_now_url()), 1);
+                    \Phpcmf\Service::L('Router')->redirect(str_replace(dr_http_prefix($domain), dr_http_prefix($client[$domain]), dr_now_url()));
                 }
             } else {
                 // 这是电脑端
                 if (dr_in_array($domain, $client)) {
                     // 表示这个域名属于移动端,需要跳转到pc
                     $arr = array_flip($client);
-                    \Phpcmf\Service::L('Router')->is_redirect_url(str_replace(dr_http_prefix($domain), dr_http_prefix($arr[$domain]), dr_now_url()) , 1);
+                    \Phpcmf\Service::L('Router')->redirect(str_replace(dr_http_prefix($domain), dr_http_prefix($arr[$domain]), dr_now_url()));
                 }
             }
         }

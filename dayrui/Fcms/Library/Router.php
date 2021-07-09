@@ -95,22 +95,29 @@ class Router
 
     // 清理返回url
     public function clear_back($uri) {
-
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         \Phpcmf\Service::L('cache')->del_data($name);
     }
 
-    // 判断满足定向跳转的条件 page单页, indexc首页, indexm模块首页, category栏目页, show内容
-    public function is_redirect($type, $url)
-    {
-        return $this->is_redirect_url($url);
+    // 执行跳转动作
+    public function redirect($url) {
+        // 跳转
+        if ($url != dr_now_url()) {
+            if (IS_DEV) {
+                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
+            } else {
+                dr_redirect($url, 'location', '301');
+            }
+        }
     }
 
     // 判断满足定向跳转的条件
-    public function is_redirect_url($url, $is_mobile = 0)
-    {
+    public function is_redirect_url($url, $is_mobile = 0) {
+
         // 不调整的条件
         if (defined('IS_NOT_301') && IS_NOT_301) {
+            return;
+        } elseif (defined('SYS_301') && SYS_301) {
             return;
         } elseif (!$url || strpos($url, 'http') === FALSE) {
             return; // 为空时排除
@@ -128,14 +135,7 @@ class Router
             return; // 排除终端
         }
 
-        // 跳转
-        if ($url != dr_now_url()) {
-            if (IS_DEV) {
-                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
-            } else {
-                dr_redirect($url, 'location', '301');
-            }
-        }
+        $this->redirect($url);
     }
 
 
@@ -146,8 +146,7 @@ class Router
      * @param    array $query 相关参数
      * @return    string    项目入口文件.php?参数
      */
-    public function url($url, $query = [], $self = SELF)
-    {
+    public function url($url, $query = [], $self = SELF) {
 
         if (!$url) {
             return $self;

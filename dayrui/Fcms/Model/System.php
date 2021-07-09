@@ -7,8 +7,8 @@
 
 
 // 系统模型 - 后台
-class System extends \Phpcmf\Model
-{
+class System extends \Phpcmf\Model {
+
     public $config = [
 
         'SYS_DEBUG'	=> '调试器开关',
@@ -19,6 +19,7 @@ class System extends \Phpcmf\Model
         'SYS_CRON_AUTH' => '自动任务权限IP地址',
         'SYS_SMS_IMG_CODE' => '发送短信验证码双重图形验证开关',
         'SYS_GO_404' => '404页面跳转开关',
+        'SYS_301' => '内容地址唯一模式',
 
         'SYS_PAGE_RNAME' => '自定义页面目录允许重复',
 

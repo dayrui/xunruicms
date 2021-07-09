@@ -1063,14 +1063,33 @@
         // 颜色选取
         public function _color_select($name, $color) {
 
-            $select	= '<select class="form-control" name="data[setting][option]['.$name.']">';
-            $select.= '<option value="">-</option>';
-            foreach (['red', 'blue', 'green', 'default', 'yellow', 'dark'] as $t) {
-                $select.= "<option value=\"{$t}\" ".($color == $t ? "selected" : "").">{$t}</option>";
-            }
-            $select.= '</select>';
+            $str = '
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet" type="text/css" />
+        	<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.css" rel="stylesheet" type="text/css" />
+			';
+            $str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js?v='.CMF_UPDATE_TIME.'"></script>';
+            $str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js?v='.CMF_UPDATE_TIME.'"></script>';
+            $str.= '
+		    <input type="text" class="form-control color " data-control="brightness" name="data[setting][option]['.$name.']" id="dr_'.$name.'" value="'.$color.'" >';
+            $str.= '
+		<script type="text/javascript">
+		$(function(){
+			$("#dr_'.$name.'").minicolors({
+                control: $("#dr_'.$name.'").attr("data-control") || "hue",
+                defaultValue: $("#dr_'.$name.'").attr("data-defaultValue") || "",
+                inline: "true" === $("#dr_'.$name.'").attr("data-inline"),
+                letterCase: $("#dr_'.$name.'").attr("data-letterCase") || "lowercase",
+                opacity: $("#dr_'.$name.'").attr("data-opacity"),
+                position: $("#dr_'.$name.'").attr("data-position") || "bottom left",
+                change: function(t, o) {
+                    t && (o && (t += ", " + o), "object" == typeof console && console.log(t));
+                },
+                theme: "bootstrap"
+            });
+		});
+		</script>';
 
-            return $select;
+            return $str;
         }
 
         // 是否可以作为搜索字段
