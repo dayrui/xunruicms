@@ -3758,18 +3758,22 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 }
 
 // 计算用户组到期时间
-function dr_member_group_etime($days, $dtype) {
+function dr_member_group_etime($days, $dtype, $ntime = 0) {
 
     if (!$days) {
         return 0;
     }
 
+    if (!$ntime) {
+        $ntime = SYS_TIME;
+    }
+
     if ($dtype == 1) {
-        return strtotime('+'.$days.' month');
+        return strtotime('+'.$days.' month', $ntime);
     } elseif ($dtype == 2) {
-        return strtotime('+'.$days.' year');
+        return strtotime('+'.$days.' year', $ntime);
     } else {
-        return strtotime('+'.$days.' day');
+        return strtotime('+'.$days.' day', $ntime);
     }
 }
 

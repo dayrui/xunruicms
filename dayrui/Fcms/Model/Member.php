@@ -305,6 +305,7 @@ class Member extends \Phpcmf\Model
         if ($data2) {
             foreach ($data2 as $t) {
                 $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
+                $t['group_icon'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['icon'];
                 $t['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['name'];
                 $data['group'][$t['gid']] = $t;
                 $data['groupid'][$t['gid']] = $t['gid'];
@@ -545,7 +546,7 @@ class Member extends \Phpcmf\Model
             'gid' => $gid,
             'lid' => 0,
             'stime' => SYS_TIME,
-            'etime' => dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days'], \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['dtype']),
+            'etime' => \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timetype'] ? 0 : dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days'], \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['dtype']),
         ];
         $rt = $this->table('member_group_index')->insert($data);
         if (!$rt['code']) {
@@ -582,10 +583,24 @@ class Member extends \Phpcmf\Model
 
     // 手动变更等级
     public function update_level($uid, $gid, $lid) {
+
         $old = $data = $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->get()->getRowArray();
         $data['gid'] = $gid;
         $data['lid'] = $lid;
-        $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->update(['lid' => $lid]);
+
+        // 更新数据
+        $update = [
+            'lid' => $lid
+        ];
+        if (\Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timetype']) {
+            // 按等级计算时间
+            $update['etime'] = dr_member_group_etime(
+                \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['setting']['days'],
+                \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['setting']['dtype'],
+                \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timect'] ? $old['etime'] : 0
+            );
+        }
+        $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->update($update);
         // 挂钩点 用户组变更之后
         $call = $this->member_info($uid);
         $call['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['name'];
@@ -625,8 +640,8 @@ class Member extends \Phpcmf\Model
             return dr_return_data(1, dr_lang('等待管理员审核'));
         } else {
             // 直接开通
-            \Phpcmf\Service::M('member')->insert_group($member['uid'], $gid);
-            $lid && \Phpcmf\Service::M('member')->update_level($member['uid'], $gid, $lid);
+            $this->insert_group($member['uid'], $gid);
+            $lid && $this->update_level($member['uid'], $gid, $lid);
             $my_verify['content'] && \Phpcmf\Service::M()->table('member_data')->update($member['uid'], $my_verify['content']);
 
             return dr_return_data(1, dr_lang('开通成功'));
@@ -1757,6 +1772,8 @@ class Member extends \Phpcmf\Model
                 $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('value ASC,id ASC')->get()->getResultArray();
                 if ($level) {
                     foreach ($level as $lv) {
+                        $lv['icon'] = dr_get_file($lv['stars']);
+                        $lv['setting'] = dr_string2array($lv['setting']);
                         $cache['authid'][] = $t['id'].'-'.$lv['id'];
                         $t['level'][$lv['id']] = $lv;
                     }

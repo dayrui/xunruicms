@@ -282,6 +282,12 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
                 }
 
+                $table = $prefix.'member_level';
+                if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
+                }
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
+
                 $table = $prefix.'admin_menu';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');

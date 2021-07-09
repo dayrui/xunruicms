@@ -66,9 +66,20 @@ class Member_group extends \Phpcmf\Table
         // 表单显示名称
         $this->name = dr_lang('用户组等级');
         $this->tpl_prefix = 'member_level_';
+
+        $this->my_field = [
+            'stars' => [
+                'ismain' => 1,
+                'name' => '图标',
+                'fieldtype' => 'File',
+                'fieldname' => 'stars',
+                'setting' => ['option' => ['ext' => 'jpg,gif,png,jpeg', 'size' => 10, 'input' => 1]]
+            ]
+        ];
         // 初始化数据表
         $this->_init([
             'table' => 'member_level',
+            'field' => $this->my_field,
             'sys_field' => [],
             'order_by' => '`value` asc',
             'list_field' => [],
@@ -261,9 +272,10 @@ class Member_group extends \Phpcmf\Table
 
     // 保存
     protected function _Save($id = 0, $data = [], $old = [],  $func = null, $after = null) {
-        return parent::_Save($id, $data, $old, function($id, $data, $old){
+        return parent::_Save($id, $data, $old, function($id, $post, $old){
+            $data = \Phpcmf\Service::L('input')->post('data');
+            $data['setting'] = dr_array2string(\Phpcmf\Service::L('input')->post('setting'));
             if ($this->type) {
-                $data['setting'] = dr_array2string(\Phpcmf\Service::L('input')->post('setting'));
                 $data['price'] = floatval($data['price']);
                 $data['days'] = intval($data['days']);
                 !$id && $data['displayorder'] = 0;
@@ -272,7 +284,7 @@ class Member_group extends \Phpcmf\Table
                 if (!$data['gid']) {
                     dr_return_data(0, dr_lang('所属用户组id不存在'), $data);
                 }
-                $data['stars'] = intval($data['stars']);
+                $data['stars'] = $post[1]['stars'];
                 $data['value'] = intval($data['value']);
                 $data['apply'] = 1;
             }
@@ -288,9 +300,7 @@ class Member_group extends \Phpcmf\Table
      * */
     protected function _Data($id = 0) {
         $data = parent::_Data($id);
-        if ($this->type) {
-            $data['setting'] = dr_string2array($data['setting']);
-        }
+        $data['setting'] = dr_string2array($data['setting']);
         return $data;
     }
 
