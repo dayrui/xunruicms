@@ -89,7 +89,7 @@ class Site_param extends \Phpcmf\Common {
                 [
                     '网站信息' => ['site_param/index', 'fa fa-edit'],
                     '自定义字段' => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname' => 'site', 'rid' => SITE_ID]), 'fa fa-code'],
-                    'help' => [999],
+                    'help' => [1125],
                 ]
             ),
             'data' => $data['config'],

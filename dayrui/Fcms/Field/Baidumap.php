@@ -185,6 +185,19 @@ class Baidumap extends \Phpcmf\Library\A_Field {
             $this->set_load_js($field['filetype'], 1);
         }
 
+        // 获取当前坐标
+        $default = '';
+        if (!$value) {
+            $default = 'var geolocation = new BMap.Geolocation();
+           geolocation.getCurrentPosition(function(r){
+              if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                  baiduSearchAddress(mapObj_'.$name.', \''.$name.'\', \''.$level.'\', \'\'+r.point.lng+\',\'+r.point.lat+\'\');
+              } else {
+                 '.(CI_DEBUG ? 'alert(\'定位失败：\'+this.getStatus());' : '').'
+              }
+           },{enableHighAccuracy: true});';
+        }
+
         $str.= '
 		<input name="data['.$name.']" id="dr_'.$name.'" type="hidden" '.$attr.' '.$required.' value="'.$value.'">
 		
@@ -215,7 +228,8 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         var assets_path = \''.ROOT_THEME_PATH.'assets/\';
 		var mapObj_'.$name.' = new BMap.Map("baidumap_'.$name.'"); // 创建地图实例
 		$(function(){
-			dr_baidumap(mapObj_'.$name.', \''.$name.'\', \''.$city.'\', \''.$level.'\')
+			dr_baidumap(mapObj_'.$name.', \''.$name.'\', \''.$city.'\', \''.$level.'\');
+			'.$default.'
 		});
 		</script>
 		';
