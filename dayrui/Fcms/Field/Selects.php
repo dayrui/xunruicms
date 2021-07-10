@@ -99,8 +99,15 @@ class Selects extends \Phpcmf\Library\A_Field {
 		// 是否必填
 		$required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
-		// 字段默认值
-		$value = dr_string2array(strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']));
+        // 字段默认值
+        if ($value) {
+            $value = dr_string2array($value);
+        } elseif ($field['setting']['option']['value']) {
+            $value = $this->get_default_value($field['setting']['option']['value']);
+            $value = is_array($value) ? $value : explode('|', $value);
+        } else {
+            $value = null;
+        }
 
 		$str = '<label style="min-width: 200px"><select '.$required.' class="bs-select  form-control" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' '.$field['setting']['option']['css'].'" data-actions-box="true"  multiple="multiple" name="data['.$name.'][]" id="dr_'.$name.'" '.$attr.' >';
 
