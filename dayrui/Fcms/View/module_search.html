@@ -57,7 +57,7 @@
                                     <div class="col-md-9">
                                         <div class="mt-checkbox-inline">
                                             {loop $m.field $f}
-                                            <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if dr_in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} <span></span></label>
+                                            <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if dr_in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} （{$f.fieldname}）<span></span></label>
                                             {/loop}
                                         </div>
                                         <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>
@@ -117,7 +117,7 @@
                                         <label><select name="data[{$i}][param_join_field][{$c}]" class="form-control">
                                             <option value="">-</option>
                                             {loop $m.search_field $k $f}
-                                            <option value="{$k}" {if $k == $m['setting']['search']['param_join_field'][$c]} selected{/if}>{dr_lang($f)}</option>
+                                            <option value="{$k}" {if $k == $m['setting']['search']['param_join_field'][$c]} selected{/if}>{dr_lang($f)}（{$k}）</option>
                                             {/loop}
                                         </select></label>
                                         {php $c++;}
