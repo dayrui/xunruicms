@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Field extends \Phpcmf\Common
-{
+class Field extends \Phpcmf\Common {
+
 	public $name;
 	public $data;
 
@@ -608,7 +608,7 @@ class Field extends \Phpcmf\Common
                 }
             }
             if (!$save) {
-                $this->_json(0, dr_lang('没有可用的导出字段'));
+                $this->_json(0, dr_lang('没有可用的导入字段'));
             }
             // 入库操作
             foreach ($save as $data) {

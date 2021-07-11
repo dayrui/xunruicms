@@ -46,11 +46,11 @@ class Date extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<div class="mt-radio-inline">
 						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][is_left]" value="0" '.(!$option['is_left'] ? 'checked' : '').'> '.dr_lang('左侧图标').'
+							<input type="radio" name="data[setting][option][is_left]" value="1" '.($option['is_left'] ? 'checked' : '').'> '.dr_lang('左侧图标').'
 							<span></span>
 						</label>
 						<label class="mt-radio  mt-radio-outline">
-							<input type="radio" name="data[setting][option][is_left]" value="1" '.($option['is_left'] ? 'checked' : '').'> '.dr_lang('右侧图标').'
+							<input type="radio" name="data[setting][option][is_left]" value="0" '.(!$option['is_left'] ? 'checked' : '').'> '.dr_lang('右侧图标').'
 							<span></span>
 						</label>
 					</div>

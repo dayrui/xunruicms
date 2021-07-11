@@ -47,8 +47,12 @@ function drawPoints(mapObj, name, level){
 }
 
 // 搜索地址
-function baiduSearchAddress(mapObj, name, level){
-    var address = $('#baidu_address_'+name).val();
+function baiduSearchAddress(mapObj, name, level, point){
+    if (point) {
+        var address = point;
+    } else {
+        var address = $('#baidu_address_'+name).val();
+    }
     if ( address.indexOf(",") != -1 && address.indexOf(".") != -1) {
         // 表示坐标
         var data = address.split(',');
@@ -57,7 +61,7 @@ function baiduSearchAddress(mapObj, name, level){
         var zoom = 17;
         mapObj.centerAndZoom(new BMap.Point(lngX,latY),zoom);
         // 创建图标对象
-        var myIcon = new BMap.Icon(assets_path+'images/mak.png', new BMap.Size(27, 45));
+        //var myIcon = new BMap.Icon(assets_path+'images/mak.png', new BMap.Size(27, 45));
 
         // 创建标注对象并添加到地图
         var center = mapObj.getCenter();
