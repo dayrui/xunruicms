@@ -46,6 +46,16 @@
                         </div>
                         {/if}
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('更新时间字段勾选状态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][updatetime_select]" value="0" {if empty($data['setting']['updatetime_select'])}checked{/if} /> {dr_lang('默认不勾选')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][updatetime_select]" value="1" {if $data['setting']['updatetime_select']}checked{/if} /> {dr_lang('默认勾选')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台内容编辑时的更新时间字段，是否勾选"不更新"，不勾选时将自动更新为当前时间')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('提取内容描述字数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[setting][desc_limit]" value="{if $data['setting']['desc_limit']}{intval($data['setting']['desc_limit'])}{else}100{/if}" ></label>

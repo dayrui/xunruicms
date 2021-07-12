@@ -304,6 +304,7 @@ class Module extends \Phpcmf\Common
             'list' => $list,
             'catid' => $catid,
             'parent' => $parent,
+            'pageid' => max(1, $get['page']),
             'params' => $data['params'],
             'keyword' => $data['keyword'],
             'related' => $related,

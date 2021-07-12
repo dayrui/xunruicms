@@ -221,7 +221,9 @@ class Date extends \Phpcmf\Library\A_Field {
 			';
         }
 
-        APP_DIR && $name == 'updatetime' && $str.= '<label><input name="no_time" class="dr_no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
+        if (APP_DIR && \Phpcmf\Service::C()->module && $name == 'updatetime') {
+            $str.= '<label><input name="no_time" '.(isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'] ? ' checked' : '').' class="dr_no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
+        }
 
         $str.= $tips;
 
