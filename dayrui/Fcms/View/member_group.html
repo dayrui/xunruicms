@@ -122,24 +122,24 @@
                 <td>
                     <div class="form-date input-group">
                         <div class="input-group date field_date_s">
-                            <input name="data[{$t.gid}][stime]" type="text" style="width:170px;" value="{dr_date($t.stime, 'Y-m-d H:i')}"  class="form-control ">
                             <span class="input-group-btn">
                             <button class="btn default date-set" type="button">
                                 <i class="fa fa-calendar"></i>
                             </button>
                             </span>
+                            <input name="data[{$t.gid}][stime]" type="text" style="width:170px;" value="{dr_date($t.stime, 'Y-m-d H:i')}"  class="form-control ">
                         </div>
                     </div>
                 </td>
                 <td>
                     <div class="form-date input-group">
                         <div class="input-group date field_date_e">
-                            <input name="data[{$t.gid}][etime]" type="text" style="width:170px;" value="{php echo $t.etime ? dr_date($t.etime, 'Y-m-d H:i') : dr_lang('长期');}"  class="form-control ">
                             <span class="input-group-btn">
                             <button class="btn default date-set" type="button">
                                 <i class="fa fa-calendar"></i>
                             </button>
                             </span>
+                            <input name="data[{$t.gid}][etime]" type="text" style="width:170px;" value="{php echo $t.etime ? dr_date($t.etime, 'Y-m-d H:i') : dr_lang('长期');}"  class="form-control ">
                         </div>
                     </div>
                 </td>

@@ -923,7 +923,7 @@ class Image
             // 图片水印
             $config['wm_type'] = 'overlay';
             $config['wm_overlay_path'] = ROOTPATH.'config/watermark/'.$data['wm_overlay_path'];
-            //$config['wm_opacity'] = $data['wm_opacity'];
+            $config['wm_opacity'] = isset($data['wm_opacity']) && $data['wm_opacity'] ? min(100, max($data['wm_opacity'], 1)) : 100;
         }
 
         list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', $data['locate']);
