@@ -95,13 +95,18 @@ class Image extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
 
         $data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        if ($data && $field['setting']['option']['stslt']) {
-            $_field = \Phpcmf\Service::L('form')->fields;
-            if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
-                $one = array_key_first($data);
-                if ($data[$one]) {
-                    \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data[$one];
+        if ($data) {
+            if ($field['setting']['option']['stslt']) {
+                $_field = \Phpcmf\Service::L('form')->fields;
+                if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
+                    $one = array_key_first($data);
+                    if ($data[$one]) {
+                        \Phpcmf\Service::L('Field')->data[1]['thumb'] = $data[$one];
+                    }
                 }
+            }
+            if (count($data) > $field['setting']['option']['count']) {
+                $data = array_slice($data, 0, $field['setting']['option']['count']-2);
             }
         }
 
@@ -284,9 +289,11 @@ $(function() {
         url: "'.$url.'",
         init: function() {
            this.on("addedfile", function(file) { 
+                var activeFiles = this.getActiveFiles();
                 var num = parseInt($(".dr_dropzone_'.$name.'_total").val());
-                alert(num);
-                this.options.maxFiles = '.$count.' - num;
+                if (num+activeFiles.length+1 > '.$count.') {
+                    this.options.maxFiles = -1;
+                }
             });
             this.on("success", function(file, res) {
                 var rt = JSON.parse(res);
@@ -298,6 +305,7 @@ $(function() {
                 }else{
                     dr_tips(0, rt.msg);
                     file.previewElement.classList.remove("dz-success");
+                    file.previewElement.classList.add("dz-error");
                     file.previewElement.classList.add("dz-error");
                 }
                  
