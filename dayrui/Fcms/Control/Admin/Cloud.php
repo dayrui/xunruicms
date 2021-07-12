@@ -145,7 +145,6 @@ class Cloud extends \Phpcmf\Common
         }
 
         $data = [];
-        $error = [];
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
             if (is_file($path.'Config/App.php')) {
@@ -178,7 +177,6 @@ class Cloud extends \Phpcmf\Common
                     'help' => [574],
                 ]
             ),
-            'error' => $error,
         ]);
         \Phpcmf\Service::V()->display('cloud_app.html');
     }
