@@ -98,9 +98,6 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
                     && is_file(dr_get_app_dir($dir).'Config/Version.php')) {
                     $vsn = require dr_get_app_dir($dir).'Config/Version.php';
-                    if (!IS_DEV && $vsn['license'] != $this->cmf_license['license']) {
-                        continue;
-                    }
                     $vsn['id'] && $id[] = $vsn['id'];
                 }
             }
@@ -156,29 +153,18 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
-                    if (!IS_DEV && $vsn['license'] && strlen($vsn['license']) > 20 && $vsn['license'] != $this->cmf_license['license']) {
-                        $error[$key] = [
-                            'id' => $vsn['id'],
-                            'name' => $cfg['name'],
-                            'icon' => $cfg['icon'],
-                            'author' => $cfg['author'],
-                            'version' => $vsn['version'],
-                        ];
-                        continue;
-                    } else {
-                        $data[$key] = [
-                            'id' => $vsn['id'],
-                            'name' => $cfg['name'],
-                            'type' => $cfg['type'],
-                            'mtype' => $cfg['mtype'],
-                            'ftype' => $cfg['ftype'],
-                            'icon' => $cfg['icon'],
-                            'author' => $cfg['author'],
-                            'store' => $vsn['store'],
-                            'version' => $vsn['version'],
-                            'install' => is_file($path.'install.lock'),
-                        ];
-                    }
+                    $data[$key] = [
+                        'id' => $vsn['id'],
+                        'name' => $cfg['name'],
+                        'type' => $cfg['type'],
+                        'mtype' => $cfg['mtype'],
+                        'ftype' => $cfg['ftype'],
+                        'icon' => $cfg['icon'],
+                        'author' => $cfg['author'],
+                        'store' => $vsn['store'],
+                        'version' => $vsn['version'],
+                        'install' => is_file($path.'install.lock'),
+                    ];
                 }
             }
         }

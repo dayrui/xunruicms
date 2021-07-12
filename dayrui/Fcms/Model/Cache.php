@@ -122,12 +122,6 @@ class Cache extends \Phpcmf\Model
         $local = \Phpcmf\Service::Apps();
         $app_cache = [];
         foreach ($local as $dir => $path) {
-            if (is_file($path.'Config/Version.php')) {
-                $vsn = require $path.'Config/Version.php';
-                if (!IS_DEV && $cmf && strlen($vsn['license']) > 20 && $vsn['license'] != $cmf['license']) {
-                    continue;
-                }
-            }
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Cache.php')) {
                 $_cache = require $path.'Config/Cache.php';
