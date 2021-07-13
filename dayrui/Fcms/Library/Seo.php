@@ -99,7 +99,7 @@ class Seo
         if ($param) {
             $myfield = $mod['field'];
             if ($catid) {
-                $cat_field = $mod['category'][$catid]['field'];
+                $cat_field = $mod['category_data_field'];
                 $cat_field && $myfield = dr_array22array($myfield, $cat_field);
             }
 
