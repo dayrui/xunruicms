@@ -112,11 +112,6 @@ class Cache extends \Phpcmf\Model
             $_cache = require MYPATH.'/Config/Cache.php';
             $_cache && $cache = dr_array22array($cache, $_cache);
         }
-        if (is_file(MYPATH . 'Config/Li'.'ce'.'nse.php')) {
-            $cmf = require MYPATH . 'Config/Li'.'ce'.'nse.php';
-        } else {
-            $cmf = [];
-        }
 
         // 执行插件自己的缓存程序
         $local = \Phpcmf\Service::Apps();

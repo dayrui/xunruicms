@@ -239,11 +239,18 @@ class Api extends \Phpcmf\Common
             $select2.= '<option value="'.$i.'">'.$t.'</option>';
         }
 
-        $name = ['qq', 'weixin', 'weibo', 'wechat'];
-        foreach ($name as $key => $value) {
-            if (!isset($this->member_cache['oauth'][$value]['id'])
-                || !$this->member_cache['oauth'][$value]['id']) {
-                unset($name[$key]);
+        $name = dr_oauth_list();
+        if (dr_is_app('weixin')) {
+            $name['wechat'] = [];
+        }
+        $oauth = [];
+        if ($name) {
+            foreach ($name as $value => $t) {
+                if (!isset($this->member_cache['oauth'][$value]['id'])
+                    || !$this->member_cache['oauth'][$value]['id']) {
+                    continue;
+                }
+                $oauth[] = $value;
             }
         }
 
@@ -256,7 +263,7 @@ class Api extends \Phpcmf\Common
 			),
             'color' => $color,
             'target' => $target,
-            'oauth_data' => $name,
+            'oauth_data' => $oauth,
             'oauth_list' => \Phpcmf\Service::M('member')->oauth($this->uid),
             'select_color' => $select,
             'is_post_user' => \Phpcmf\Service::M('auth')->is_post_user(),
