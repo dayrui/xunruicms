@@ -22,6 +22,7 @@ class Site_config extends \Phpcmf\Common
             }
 
             // 防止参数丢失
+            $data['config']['SITE_NAME'] = $post['SITE_NAME'];
             $data['config']['SITE_CLOSE'] = $post['SITE_CLOSE'];
             $data['config']['SITE_INDEX_HTML'] = $post['SITE_INDEX_HTML'];
             $data['config']['SITE_CLOSE_MSG'] = $post['SITE_CLOSE_MSG'];
