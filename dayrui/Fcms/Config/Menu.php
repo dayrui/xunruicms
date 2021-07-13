@@ -561,7 +561,17 @@ return [
                 [
                     'name' => '网站设置',
                     'icon' => 'fa fa-cog',
-                    'uri' => 'site_config/index',
+                    'uri' => 'site_param/index',
+                ],
+                [
+                    'name' => '附件设置',
+                    'icon' => 'fa fa-folder',
+                    'uri' => 'attachment/index',
+                ],
+                [
+                    'name' => '图片设置',
+                    'icon' => 'fa fa-photo',
+                    'uri' => 'site_image/index',
                 ],
             ]
         ],
