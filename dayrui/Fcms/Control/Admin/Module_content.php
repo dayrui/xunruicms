@@ -29,8 +29,10 @@ class Module_content extends \Phpcmf\Common
                     'help' => [398],
                 ]
             ),
-            'module' => $module,
+            'table' => \Phpcmf\Service::L('input')->get('table'),
+            'field' => \Phpcmf\Service::L('input')->get('field'),
             'tables' => $bm,
+            'module' => $module,
             'sql_cache' => \Phpcmf\Service::L('File')->get_sql_cache(),
         ]);
 
@@ -66,9 +68,10 @@ class Module_content extends \Phpcmf\Common
         }
 
         $msg = '<select name="fd" class="form-control">';
+        $field = \Phpcmf\Service::L('input')->get('field');
         foreach ($fields as $t) {
             if ($t['Field'] != 'id') {
-                $msg.= '<option value="'.$t['Field'].'">'.$t['Field'].($t['Comment'] ? '（'.$t['Comment'].'）' : '').'</option>';
+                $msg.= '<option value="'.$t['Field'].'" '.($field && $field == $t['Field'] ? ' selected' : '').'>'.$t['Field'].($t['Comment'] ? '（'.$t['Comment'].'）' : '').'</option>';
             }
         }
         $msg.= '</select>';

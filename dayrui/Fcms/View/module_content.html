@@ -33,7 +33,7 @@
                                 <label><select name="bm" class="form-control" onchange="dr_fd(this.value)">
                                     <option value="0">{dr_lang('选择表')}</option>
                                     {loop $tables $t}
-                                    <option value="{$t.Name}">{$t.Name}{if $t.Comment}（{$t.Comment}）{/if}</option>
+                                    <option value="{$t.Name}" {if $t.Name == $table} selected{/if}>{$t.Name}{if $t.Comment}（{$t.Comment}）{/if}</option>
                                     {/loop}
                                 </select></label>
                             </div>
@@ -162,8 +162,11 @@
 
 
 <script>
+    {if $table}
+    dr_fd('{$table}');
+    {/if}
     function dr_fd(v) {
-        $.ajax({type: "get",dataType:"json", url: "{dr_url('module_content/field_index')}&table="+v,
+        $.ajax({type: "get",dataType:"json", url: "{dr_url('module_content/field_index')}&field={$field}&table="+v,
             success: function(json) {
                 if (json.code == 1) {
                     $('#dr_fd').html(json.msg);
