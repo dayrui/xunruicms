@@ -443,7 +443,7 @@ function dr_content_link($tags, $content, $num = 0, $blank = 1) {
 
 
 // 内容加内链
-function dr_neilian($content, $blank = 1, $num = 1) {
+function dr_neilian($content, $blank = 1, $num = 0) {
 
     if (!$content) {
         return '';

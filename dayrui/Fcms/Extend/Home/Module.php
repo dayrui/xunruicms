@@ -554,12 +554,26 @@ class Module extends \Phpcmf\Common
 
         // 处理关键字标签
         $data['tag'] = $data['keywords'];
+        $data['kws'] = [];
         $data['tags'] = [];
         if ($data['keywords']) {
             $tag = explode(',', $data['keywords']);
             foreach ($tag as $t) {
                 $t = trim($t);
-                $t && $data['tags'][$t] = $this->content_model->get_tag_url($t);
+                if ($t) {
+                    // 读缓存
+                    if (dr_is_app('tag')) {
+                        $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t);
+                        if ($file) {
+                            $url = file_get_contents($file);
+                            if ($url) {
+                                $data['tags'][$t] = $url;
+                            }
+                        }
+                    }
+                    $data['kws'][$t] = \Phpcmf\Service::L('router')->search_url([], 'keyword', $t, MOD_DIR);
+                }
+
             }
         }
 

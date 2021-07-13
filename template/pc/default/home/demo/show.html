@@ -64,11 +64,12 @@
                                 </div>
                                 {/if}
 
-                                <!--tag关键词写法-->
+                                <!--关键词搜索-->
                                 <div class="col-md-12">
                                     <div class="blog-single-foot fc-news-tag-list margin-top-20">
                                         <ul class="blog-post-tags">
-                                            {loop $tags $name $url}
+                                            <!--关键词搜索-->
+                                            {loop $kws $name $url}
                                             <li class="uppercase">
                                                 <a href="{$url}" target="_blank">{$name}</a>
                                             </li>
@@ -97,7 +98,7 @@
                                     <script>
                                         // 模块收藏
                                         function dr_app_favorite(id) {
-                                            $.get("{dr_url_prefix('index.php')}?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=favorite&id="+id, function(data){
+                                            $.get("/index.php?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=favorite&id="+id, function(data){
                                                 dr_cmf_tips(data.code, data.msg);
                                                 if (data.code) {
                                                     $('#module_favorite_'+id).html(data.data);
@@ -107,7 +108,7 @@
 
                                         // 模块支持反对
                                         function dr_app_digg(id, value) {
-                                            $.get("{dr_url_prefix('index.php')}?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=digg&id="+id+'&value='+value, function(data){
+                                            $.get("/index.php?is_ajax=1&s=api&app={MOD_DIR}&c=module&m=digg&id="+id+'&value='+value, function(data){
                                                 dr_cmf_tips(data.code, data.msg);
                                                 if (data.code) {
                                                     $('#module_digg_'+id+'_'+value).html(data.data);

@@ -12,7 +12,7 @@ class File extends \Phpcmf\Library\A_Field {
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-		$this->fieldtype = array('VARCHAR' => '255'); // TRUE表全部可用字段类型,自定义格式为 array('可用字段类型名称' => '默认长度', ... )
+        $this->fieldtype = TRUE;
 		$this->defaulttype = 'VARCHAR'; // 当用户没有选择字段类型时的缺省值
     }
 	
@@ -25,7 +25,7 @@ class File extends \Phpcmf\Library\A_Field {
 	public function option($option) {
 		
 
-		return [$this->_search_field().
+		return [$this->field_type($option['fieldtype'], $option['fieldlength']).$this->_search_field().
 			'
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
