@@ -37,6 +37,16 @@ return [
                             'icon' => 'fa fa-refresh',
                             'uri' => 'cache/index',
                         ],
+                        [
+                            'name' => '应用市场',
+                            'icon' => 'fa fa-puzzle-piece',
+                            'uri' => 'cloud/app',
+                        ],
+                        [
+                            'name' => '模板市场',
+                            'icon' => 'fa fa-html5',
+                            'uri' => 'cloud/template',
+                        ],
                     ]
                 ],
             ],

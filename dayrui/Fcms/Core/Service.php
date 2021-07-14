@@ -352,7 +352,7 @@ class Service
     // 错误输出
     private static function _error($msg) {
 
-        log_message('error', $msg);
+        log_message('error', $msg . '（'.FC_NOW_URL.'）');
 
         if (defined('IS_API_HTTP') && IS_API_HTTP) {
             \Phpcmf\Common::json(0, $msg); // api输出格式
