@@ -40,12 +40,12 @@ return [
                         [
                             'name' => '应用市场',
                             'icon' => 'fa fa-puzzle-piece',
-                            'uri' => 'cloud/app',
+                            'uri' => 'api/app',
                         ],
                         [
                             'name' => '模板市场',
                             'icon' => 'fa fa-html5',
-                            'uri' => 'cloud/template',
+                            'uri' => 'api/template',
                         ],
                     ]
                 ],

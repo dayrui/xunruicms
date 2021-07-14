@@ -129,6 +129,15 @@ class Api extends \Phpcmf\Common
         dr_redirect('index.php');
     }
 
+    // 应用市场
+    public function app() {
+        dr_redirect(dr_url('cloud/app'));
+    }
+
+    // 模板市场
+    public function template() {
+        dr_redirect(dr_url('cloud/template'));
+    }
 
     // 测试字段回调方法
     public function field_call() {
