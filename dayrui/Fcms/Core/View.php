@@ -207,7 +207,7 @@ class View {
 
         // 如果是来自api就不解析模板，直接输出变量
         if (IS_API_HTTP) {
-            \Phpcmf\Service::C()->_json(1, 'view', $this->_options);
+            \Phpcmf\Service::C()->_json(1, '当前是get请求方式，返回当前模板可用的变量', $this->_options);
         }
 
         // 生成静态时退出账号记录

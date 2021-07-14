@@ -102,7 +102,7 @@ foreach ($system as $var => $value) {
 unset($my, $system);
 
 define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
-
+!defined('SQGS') && define('SQGS', '迅睿CMS开源框架');
 !defined('IS_FB_DEBUG') && define('IS_FB_DEBUG', CI_DEBUG ? 0 : 1);
 
 // 显示错误提示
