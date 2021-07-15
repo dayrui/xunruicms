@@ -718,8 +718,8 @@ class Model {
                     $select->where($param['field'], intval($param['keyword']));
                 } elseif (isset($field[$param['field']]['isemoji']) && $field[$param['field']]['isemoji']) {
                     // 表情符号查询
-                    $key = $param['keyword'];
-                    $key2 = str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) );
+                    $key = addslashes($param['keyword']);
+                    $key2 = addslashes(str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) ));
                     // 搜索用户表
                     $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
                 } elseif (isset($field[$param['field']]['isint']) && $field[$param['field']]['isint']) {
