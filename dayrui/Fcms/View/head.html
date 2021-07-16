@@ -133,19 +133,6 @@
 
                 $("#right_page").attr('src', url);
                 $("#right_page").attr("url", url);
-
-                // 历史访问菜单
-                $.ajax({
-                    type: "GET",
-                    url: admin_file+"?c=api&m=history&n="+$('#dr_menu_link_'+link).find('.title').html()+"&v="+encodeURIComponent(url),
-                    dataType: "json",
-                    success: function (json) {
-                        if (json.code == 1) {
-                            $('#dr_history_usermenu').html(json.data);
-                        }
-                    }
-                });
-
             }
             function wSize(){
                 var str=getWindowSize();
