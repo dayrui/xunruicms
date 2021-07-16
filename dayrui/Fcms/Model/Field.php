@@ -274,8 +274,8 @@ class Field extends \Phpcmf\Model
         $data['issearch'] = (int)$data['issearch'];
         $data['ismember'] = (int)$data['ismember'];
         $data['disabled'] = (int)$data['disabled'];
-        $data['relatedid'] = $this->relatedid;
-        $data['relatedname'] = $this->relatedname;
+        $data['relatedid'] = (int)$this->relatedid;
+        $data['relatedname'] = (string)$this->relatedname;
         $data['displayorder'] = (int)$data['displayorder'];
 
         // 入库字段表

@@ -904,7 +904,13 @@
          * @return  void
          */
         public function insert_value($field) {
-            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
+            $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
+            if (is_array($value)) {
+                $value = dr_array2string($value);
+            } else {
+                $value = htmlspecialchars($value);
+            }
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value;
         }
 
         /**
