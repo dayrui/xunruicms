@@ -293,6 +293,22 @@
                                 <span class="help-block"><a href="javascript:dr_help(501);">{dr_lang('登录字段必须包含手机号码才能使用此功能')}</a></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('短信登录时自动注册')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[login][auto_reg]" value="1" {if $data['login']['auto_reg']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('当登录手机号没有注册时，系统将自动注册该手机号')}</span>
+                                {if $data['login']['auto_reg'] && !dr_in_array('phone', (array)$data.register.field)}
+                                <span class="help-block" style="color: red">{dr_lang('没有设置手机号为注册字段，本功能将无效')}</span>
+                                {/if}
+                                {if $data['login']['auto_reg'] && !$data['login']['sms']}
+                                <span class="help-block" style="color: red">{dr_lang('没有开启短信验证码登录开关，本功能将无效')}</span>
+                                {/if}
+                                {if $data['login']['auto_reg'] && !dr_in_array('phone', (array)$data.login.field)}
+                                <span class="help-block" style="color: red">{dr_lang('没有设置手机号为登录主字段，本功能将无效')}</span>
+                                {/if}
+                            </div>
+                        </div>
 
                     </div>
                 </div>

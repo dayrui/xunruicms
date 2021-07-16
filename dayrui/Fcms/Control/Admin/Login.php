@@ -165,7 +165,7 @@ class Login extends \Phpcmf\Common
 
         \Phpcmf\Service::M('auth')->login_session($member);
 
-        $this->_admin_msg(1, '授权登录成功', SELF);
+        $this->_admin_msg(1, '授权登录成功', SELF, 0);
     }
 
 	public function out() {

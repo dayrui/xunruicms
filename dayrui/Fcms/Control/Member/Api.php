@@ -368,7 +368,8 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('手机号码未填写'), ['field' => 'phone']);
         } elseif (!\Phpcmf\Service::L('Form')->check_phone($phone)) {
             $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
-        } elseif (!\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
+        } elseif ($this->member_cache['login']['is_auto']
+            && !\Phpcmf\Service::M()->db->table('member')->where('phone', $phone)->countAllResults()) {
             $this->_json(0, dr_lang('手机号码未注册'), ['field' => 'phone']);
         } elseif (\Phpcmf\Service::L('Form')->get_mobile_code($phone)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));// 验证操作间隔

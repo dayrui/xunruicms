@@ -884,16 +884,39 @@ class Member extends \Phpcmf\Model
 
         $data = $this->db->table('member')->where('phone', $phone)->get()->getRowArray();
         if (!$data) {
-            return dr_return_data(0, dr_lang('手机号码未注册'));
+            // 未注册
+            if (\Phpcmf\Service::C()->member_cache['login']['is_auto']) {
+                // 自动注册
+                $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
+                if (!$groupid) {
+                    return dr_return_data(0, dr_lang('无效的用户组'));
+                } elseif (!\Phpcmf\Service::C()->member_cache['group'][$groupid]['register']) {
+                    return dr_return_data(0, dr_lang('用户组[%s]不允许注册', \Phpcmf\Service::C()->member_cache['group'][$groupid]['name']));
+                }
+                $rt = $this->register($groupid, [
+                    'username' => '',
+                    'phone' => $phone,
+                    'email' => '',
+                    'password' => '',
+                    'name' => '',
+                ]);
+                if ($rt['code']) {
+                    $data = $rt['data'];
+                    $data['uid'] = $data['id'];
+                } else {
+                    return dr_return_data(0, $rt['msg'], ['field' => $rt['data']['field']]);
+                }
+            } else {
+                return dr_return_data(0, dr_lang('手机号码未注册'));
+            }
+        } else {
+            // 记录日志
+            $data['uid'] = $data['id'];
+            $this->_login_log($data);
         }
-
-        $data['uid'] = $data['id'];
 
         // 保存本地会话
         $this->save_cookie($data, $remember);
-
-        // 记录日志
-        $this->_login_log($data);
 
         return dr_return_data(1, 'ok', [
                 'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
