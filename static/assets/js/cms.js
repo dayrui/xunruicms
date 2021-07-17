@@ -819,7 +819,6 @@ function dr_ajax_member(url, form) {
                 // 发送同步登录信息
                 for ( var i = 0; i < oss_url.length; i++){
                     //alert(oss_url[i]);
-                   
 				   var result = fetchJsonp(oss_url[i], {
                       jsonpCallback: 'callback',
                       timeout: 3000
@@ -834,7 +833,12 @@ function dr_ajax_member(url, form) {
 				   
                 }
                 if (json.data.url) {
-                    window.location.href = json.data.url;
+                    if (oss_url.length > 2) {
+                        dr_cmf_tips(1, dr_lang('登录成功'), json.data.time);
+                        setTimeout('window.location.href="'+json.data.url+'"', 1000);
+                    } else {
+                        window.location.href = json.data.url;
+                    }
                 }
             } else {
                 dr_cmf_tips(0, json.msg, json.data.time);
