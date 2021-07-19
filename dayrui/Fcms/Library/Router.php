@@ -20,9 +20,8 @@ class Router
     {
 
         $routes = \Config\Services::router(null, null, true);
-
         // 获取路由信息
-        $this->class = strtolower(substr(strrchr($routes->controllerName(), '\\'), 1));
+        $this->class = strtolower(strpos($routes->controllerName(), '\\') !== false ? substr(strrchr($routes->controllerName(), '\\'), 1) : $routes->controllerName());
         $this->method = strtolower($routes->methodName());
     }
 
