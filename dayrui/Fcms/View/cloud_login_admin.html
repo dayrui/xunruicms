@@ -1,6 +1,6 @@
 {template "header.html"}
 
-<form class="login-form" action="" onsubmit="return dr_submit()" method="post" style="padding:50px 0">
+<form class="form-horizontal login-form" action="" onsubmit="return dr_submit()" method="post" style="padding:50px 0">
     {$form}
     <div class="row myfbody">
         <div class="col-md-3"></div>
@@ -9,7 +9,7 @@
             <div class="portlet light bordered" style="margin-top: 40px">
                 <div class="portlet-title">
                     <div class="caption">
-                        <span class="caption-subject font-green">{dr_lang('验证后台账号')}</span>
+                        <span class="caption-subject font-green"><b>{dr_lang('验证后台账号')}</b></span>
                     </div>
                 </div>
                 <div class="portlet-body form">
@@ -17,25 +17,24 @@
                     <div class="form-body">
 
                         <div class="form-group" id="dr_row_username">
-                            <label class="col-xs-3 control-label ">{dr_lang('后台账号')}</label>
-                            <div class="col-xs-7">
+                            <label class="col-md-3 control-label ">{dr_lang('后台账号')}</label>
+                            <div class="col-md-7">
                                 <input type="text" id="dr_username" class="form-control" name="data[username]">
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_password">
-                            <label class="col-xs-3 control-label ">{dr_lang('后台密码')}</label>
-                            <div class="col-xs-7">
+                            <label class="col-md-3 control-label ">{dr_lang('后台密码')}</label>
+                            <div class="col-md-7">
                                 <input type="password" id="dr_password" class="form-control" name="data[password]">
                             </div>
                         </div>
                         {if SYS_ADMIN_CODE}
                         <div class="form-group">
-                            <label class="col-xs-3 control-label ">{dr_lang('图片验证码')}</label>
-                            <div class="col-xs-7">
+                            <label class="col-md-3 control-label ">{dr_lang('图片验证码')}</label>
+                            <div class="col-md-7">
                                 <div class="input-group login-code">
                                     <div class="input-icon">
-                                        <i class="fa fa-code"></i>
-                                        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="code">
+                                        <input style="padding-left: 10px" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="code">
                                     </div>
                                     <div class="input-group-btn fc-code">
                                         {dr_code(120, 35)}
@@ -62,17 +61,18 @@
     </div>
 
 </form>
+<script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script type="text/javascript">
     var is_admin = 2;
     if (typeof parent.layer == 'function') {
         parent.layer.closeAll('loading');
     }
     function dr_submit() {
-        $('.alert-danger', $('.login-form')).hide();
+        $('.login-form .form-group').removeClass('has-error');
         // 这里进行md5加密存储
-        var pwd = $('#password').val();
+        var pwd = $('#dr_password').val();
         pwd = $.md5(pwd); // 进行md5加密
-        $('#password').val(pwd);
+        $('#dr_password').val(pwd);
         //var post_data = $(".login-form").serializeArray();
         //post_data+='&data[password]='+pwd;
         //post_data[5]['value'] = pwd;
@@ -83,8 +83,7 @@
                     window.location.href = json.data.url;
                 } else {
                     $('.fc-code img').click();
-                    $('.alert-danger span', $('.login-form')).html(json.msg);
-                    $('.alert-danger', $('.login-form')).show();
+                    dr_tips(0, json.msg);
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
