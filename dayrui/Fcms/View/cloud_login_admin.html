@@ -1,0 +1,117 @@
+{template "header.html"}
+
+<form class="login-form" action="" onsubmit="return dr_submit()" method="post" style="padding:50px 0">
+    {$form}
+    <div class="row myfbody">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+
+            <div class="portlet light bordered" style="margin-top: 40px">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-green">{dr_lang('验证后台账号')}</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div class="form-body">
+
+                        <div class="form-group" id="dr_row_username">
+                            <label class="col-xs-3 control-label ">{dr_lang('后台账号')}</label>
+                            <div class="col-xs-7">
+                                <input type="text" id="dr_username" class="form-control" name="data[username]">
+                            </div>
+                        </div>
+                        <div class="form-group" id="dr_row_password">
+                            <label class="col-xs-3 control-label ">{dr_lang('后台密码')}</label>
+                            <div class="col-xs-7">
+                                <input type="password" id="dr_password" class="form-control" name="data[password]">
+                            </div>
+                        </div>
+                        {if SYS_ADMIN_CODE}
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label ">{dr_lang('图片验证码')}</label>
+                            <div class="col-xs-7">
+                                <div class="input-group login-code">
+                                    <div class="input-icon">
+                                        <i class="fa fa-code"></i>
+                                        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="code">
+                                    </div>
+                                    <div class="input-group-btn fc-code">
+                                        {dr_code(120, 35)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group">
+
+                            <label class="col-xs-3 control-label "></label>
+                            <div class="col-xs-7">
+                            <button type="button" onclick="dr_submit()" class="btn red " style="margin-right: 20px;"> {dr_lang('验证后台账号')} </button>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</form>
+<script type="text/javascript">
+    var is_admin = 2;
+    if (typeof parent.layer == 'function') {
+        parent.layer.closeAll('loading');
+    }
+    function dr_submit() {
+        $('.alert-danger', $('.login-form')).hide();
+        // 这里进行md5加密存储
+        var pwd = $('#password').val();
+        pwd = $.md5(pwd); // 进行md5加密
+        $('#password').val(pwd);
+        //var post_data = $(".login-form").serializeArray();
+        //post_data+='&data[password]='+pwd;
+        //post_data[5]['value'] = pwd;
+        //console.log(post_data);
+        $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    window.location.href = json.data.url;
+                } else {
+                    $('.fc-code img').click();
+                    $('.alert-danger span', $('.login-form')).html(json.msg);
+                    $('.alert-danger', $('.login-form')).show();
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                $('.fc-code img').click();
+                var msg = HttpRequest.responseText;
+                if (!msg) {
+                    $('.alert-danger span', $('.login-form')).html("{dr_lang('系统错误')}");
+                    $('.alert-danger', $('.login-form')).show();
+                } else {
+                    $('.alert-danger span', $('.login-form')).html(msg);
+                    $('.alert-danger', $('.login-form')).show();
+                }
+            }
+        });
+        return false;
+    }
+    jQuery(document).ready(function() {
+
+        $('.login-form input').keypress(function (e) {
+            if (e.which == 13) {
+                dr_submit();
+                return false;
+            }
+        });
+
+    });
+</script>
+
+
+{template "footer.html"}

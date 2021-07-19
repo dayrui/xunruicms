@@ -138,7 +138,11 @@ class Login extends \Phpcmf\Common
 			'license' => $license,
             'login_url' => dr_rp(FC_NOW_URL, FC_NOW_HOST, '/'),
 		));
-		\Phpcmf\Service::V()->display('login.html');exit;
+        if (isset($_GET['is_cloud']) && $_GET['is_cloud']) {
+            \Phpcmf\Service::V()->display('cloud_login_admin.html');exit;
+        } else {
+            \Phpcmf\Service::V()->display('login.html');exit;
+        }
 	}
 
     // 子站客户端自动登录
