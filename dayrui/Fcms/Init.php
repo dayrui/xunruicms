@@ -3,6 +3,11 @@
  * {{www.xunruicms.com}}
  * {{迅睿内容管理框架系统}}
  * 本文件是框架系统文件，二次开发时不可以修改本文件
+ *
+ * (c) 四川迅睿云软件开发有限公司 <q@xunruicms.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  **/
 
 use CodeIgniter\Config\DotEnv;
@@ -247,11 +252,18 @@ if (is_cli()) {
     ) {
         $url.= 's';
     }
-    $url.= '://'.$_SERVER['HTTP_HOST'];
+	$host = strtolower($_SERVER['HTTP_HOST']);
+    if (strpos($host, ':') !== false) {
+        list($nhost, $port) = explode(':', $host);
+        if ($port == 80) {
+            $host = $nhost; // 排除80端口
+        }
+    }
+    $url.= '://'.$host;
     IS_ADMIN && define('ADMIN_URL', $url.'/'); // 优先定义后台域名
     define('FC_NOW_URL', $url.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
     define('FC_NOW_HOST', $url.'/'); // 域名部分
-    define('DOMAIN_NAME', strtolower($_SERVER['HTTP_HOST'])); // 当前域名
+    define('DOMAIN_NAME', $host); // 当前域名
     
     // 伪静态字符串
     $uu = isset($_SERVER['HTTP_X_REWRITE_URL']) || trim($_SERVER['REQUEST_URI'], '/') == SELF ? trim($_SERVER['HTTP_X_REWRITE_URL'], '/') : ($_SERVER['REQUEST_URI'] ? trim($_SERVER['REQUEST_URI'], '/') : NULL);
