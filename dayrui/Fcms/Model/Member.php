@@ -1629,7 +1629,7 @@ class Member extends \Phpcmf\Model
     }
 
     // 注册随机账号
-    protected function _register_rand_username($member) {
+    protected function _register_rand_username($member, $ct = 0) {
 
         if ($member['email']) {
             list($name) = explode('@', $member['email']);
@@ -1641,6 +1641,20 @@ class Member extends \Phpcmf\Model
             return '';
         }
 
+        // 重复名称加随机数
+        if ($ct && $ct < 5) {
+            $name.= $ct + rand(0, 999);
+            if ($ct > 5) {
+                $name.= rand(0, 999);
+            }
+        }
+
+        // 重复账号时
+        if ($this->db->table('member')->where('username', $name)->countAllResults()) {
+            $name = $this->_register_rand_username($member, $ct + 1);
+        }
+
+        // 最大位数
         if (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
             && mb_strlen($name) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
             $name = dr_strcut($name, \Phpcmf\Service::C()->member_cache['config']['userlenmax'], '');
