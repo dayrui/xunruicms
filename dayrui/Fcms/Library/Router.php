@@ -7,8 +7,7 @@
 
 // 路由及url处理类
 
-class Router
-{
+class Router {
 
     public $class;
     public $method;
@@ -16,8 +15,7 @@ class Router
     protected $_uri;
     protected $_temp;
 
-    public function __construct(...$params)
-    {
+    public function __construct(...$params) {
 
         $routes = \Config\Services::router(null, null, true);
         // 获取路由信息
@@ -26,15 +24,13 @@ class Router
     }
 
     // 获取用户中心,当前页面的URI
-    public function member_uri()
-    {
+    public function member_uri() {
         $u = (APP_DIR ? APP_DIR . '/' : '') . $this->class . '/';
         return [trim($u . $this->method, '/'), trim($u . 'index', '/')];
     }
 
     // 获取当前页面的URI
-    public function uri($m = '')
-    {
+    public function uri($m = '') {
         if (!$m && $this->_uri) {
             return $this->_uri;
         }
@@ -63,7 +59,6 @@ class Router
         exit;
     }
 
-
     // 获取返回时的URL
     public function get_back($uri, $param = [], $remove_total = false) {
 
@@ -77,6 +72,7 @@ class Router
         if ($remove_total && isset($param['total'])) {
             unset($param['total']);
         }
+
         return IS_ADMIN ? $this->url($uri, $param) : $this->member_url($uri, $param);
     }
 
@@ -136,7 +132,6 @@ class Router
 
         $this->redirect($url);
     }
-
 
     /**
      * url函数
@@ -227,8 +222,7 @@ class Router
      * @param    array $query 相关参数
      * @return    string    地址
      */
-    public function member_url($url = '', $query = [], $null = '')
-    {
+    public function member_url($url = '', $query = [], $null = '') {
 
         if (!$url || $url == 'home/index' || $url == '/') {
             return MEMBER_URL;
@@ -275,8 +269,7 @@ class Router
      * @param    intval $page
      * @return    string
      */
-    public function category_url($mod, $data, $page = 0, $fid = 0)
-    {
+    public function category_url($mod, $data, $page = 0, $fid = 0) {
 
         if (!$mod || !$data) {
             return '栏目URL参数不完整';
@@ -309,8 +302,7 @@ class Router
      * @param    mod $page
      * @return    string
      */
-    public function show_url($mod, $data, $page = 0)
-    {
+    public function show_url($mod, $data, $page = 0) {
 
         if (!$mod || !$data) {
             return '内容URL参数不完整';
@@ -347,8 +339,7 @@ class Router
      * @param	intval	$page
      * @return	string
      */
-    public function page_url($data, $page = 0)
-    {
+    public function page_url($data, $page = 0) {
 
         if (!$data) {
             return '自定义页面数据不存在';
@@ -370,13 +361,11 @@ class Router
 
         return $this->url_prefix('php') . 's=page&id=' . $data['id'] . ($page ? '&page=' . $page : '');
     }
-
-
+    
     /**
      * tag的url
      */
-    public function tag_url($name)
-    {
+    public function tag_url($name) {
 
         if (!$name) {
             return 'TagURL name参数为空';
@@ -424,8 +413,7 @@ class Router
     }
 
     // 模块URL
-    public function module_url($mod, $sid)
-    {
+    public function module_url($mod, $sid) {
 
         // 绑定域名的情况下
         if ($mod['site'][$sid]['domain']) {
@@ -497,9 +485,9 @@ class Router
                 log_message('error', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
             }
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
-            return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)));
+            return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)), $mod['dirname']);
         } else {
-            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&'));
+            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&'), $mod['dirname']);
         }
     }
 
@@ -520,8 +508,7 @@ class Router
     }
 
     // 快捷登录地址
-    public function oauth_url($name, $type, $gourl = '')
-    {
+    public function oauth_url($name, $type, $gourl = '') {
         return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
     }
 
@@ -529,7 +516,11 @@ class Router
     public function url_prefix($type, $mod = [], $cat = [], $fid = 0) {
 
         $dir = isset($mod['dirname']) ? $mod['dirname'] : '';
-        $domain = isset($mod['domain']) ? $mod['domain'] : '';
+        if (\Phpcmf\Service::IS_MOBILE_TPL()) {
+            $domain = isset($mod['domain_mobile']) ? $mod['domain_mobile'] : '';
+        } else {
+            $domain = isset($mod['domain']) ? $mod['domain'] : '';
+        }
 
         if ($cat) {
             $dir = isset($cat['mid']) ? $cat['mid'] : $dir;
@@ -559,8 +550,7 @@ class Router
     }
 
     // 分站url
-    public function furl($fid)
-    {
+    public function furl($fid) {
 
         if (!$fid) {
             return IS_CLIENT ? CLIENT_URL : SITE_URL;
@@ -576,8 +566,7 @@ class Router
     }
 
     // 去除url中的域名
-    public function remove_domain($url, $doamin = '')
-    {
+    public function remove_domain($url, $doamin = '') {
 
         if (!$this->_temp['domain']) {
             $site_domian = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
