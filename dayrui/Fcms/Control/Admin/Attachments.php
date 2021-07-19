@@ -51,6 +51,12 @@ class Attachments extends \Phpcmf\Table
                 'fieldname' => 'filename',
                 'name' => dr_lang('附件名称'),
             ],
+            'attachment' => [
+                'ismain' => 1,
+                'fieldtype' => 'Text',
+                'fieldname' => 'attachment',
+                'name' => dr_lang('附件路径'),
+            ],
         ];
 
         $remote = (int)$_GET['remote'];

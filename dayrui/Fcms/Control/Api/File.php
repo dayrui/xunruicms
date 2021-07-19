@@ -232,6 +232,7 @@ class File extends \Phpcmf\Common
         $sfield = [
             'id' => dr_lang('附件ID'),
             'filename' => dr_lang('附件名称'),
+            'attachment' => dr_lang('附件路径'),
         ];
 
         // 搜索附件
