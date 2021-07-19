@@ -41,7 +41,7 @@ class Login extends \Phpcmf\Common
                 if ($rt['code']) {
                     // 登录成功
                     $rt['data']['url'] = urldecode((string)\Phpcmf\Service::L('input')->xss_clean($_POST['back'] ? \Phpcmf\Service::L('input')->post('back') : MEMBER_URL, true));
-                    $this->_json(1, 'ok', $rt['data']);
+                    $this->_json(1, dr_lang('登录成功'), $rt['data']);
                 } else {
                     $this->_json(0, $rt['msg']);
                 }

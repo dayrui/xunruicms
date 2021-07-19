@@ -202,14 +202,23 @@ if (!function_exists('locale_set_default')) {
 }
 
 /*
- * 重新日志记录函数
+ * 重写日志记录函数
  */
 function log_message($level, $message, array $context = []) {
     return \Phpcmf\Service::Log($level, $message, $context);
 }
 
+/*
+ * 重写is_cli
+ */
+function is_cli(): bool {
+    if (stripos(PHP_SAPI, 'cli') !== false || defined('STDIN')) {
+        return true;
+    }
+    return false;
+}
 
-if (PHP_SAPI === 'cli' || defined('STDIN')) {
+if (is_cli()) {
     // CLI命令行模式
      define('ADMIN_URL', 'http://localhost/');
      define('FC_NOW_URL', 'http://localhost/');

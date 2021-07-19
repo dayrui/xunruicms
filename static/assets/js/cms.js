@@ -834,7 +834,7 @@ function dr_ajax_member(url, form) {
                 }
                 if (json.data.url) {
                     if (oss_url.length > 2) {
-                        dr_cmf_tips(1, dr_lang('登录成功'), json.data.time);
+                        dr_cmf_tips(1, json.msg, json.data.time);
                         setTimeout('window.location.href="'+json.data.url+'"', 1000);
                     } else {
                         window.location.href = json.data.url;

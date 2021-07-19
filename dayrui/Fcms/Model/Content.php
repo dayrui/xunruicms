@@ -1060,6 +1060,9 @@ class Content extends \Phpcmf\Model {
                 return NULL;
             }
             $cid = intval($row['cid']);
+            if (!$cid) {
+                return NULL;
+            }
             \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$cid);
             // 删除执行的方法
             $this->_delete_content($cid, $row);
@@ -1076,6 +1079,10 @@ class Content extends \Phpcmf\Model {
 
     // 删除全部内容数据
     public function delete_content($cid) {
+
+        if (!$cid) {
+            return;
+        }
 
         $module = \Phpcmf\Service::L('cache')->get('module-'.$this->siteid.'-'.$this->dirname);
 
