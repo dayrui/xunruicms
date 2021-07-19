@@ -393,9 +393,33 @@ function dr_get_files($value) {
     foreach ($arr as $i => $file) {
         if ($file) {
             $data[] = [
+                'url' => dr_get_file($file), // 对应文件的url
                 'file' => $file, // 对应文件或附件id
                 'title' => $value['title'][$i], // 对应标题
                 'description' => $value['description'][$i], // 对应描述
+            ];
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * 格式化图片专用数组
+ */
+function dr_get_image($value) {
+
+    $data = [];
+    $value = dr_string2array($value);
+    if (!$value) {
+        return $data;
+    }
+
+    foreach ($value as $i => $file) {
+        if ($file) {
+            $data[] = [
+                'id' => $file, // 对应文件或附件id
+                'file' => dr_get_file($file), // 对应文件的url
             ];
         }
     }

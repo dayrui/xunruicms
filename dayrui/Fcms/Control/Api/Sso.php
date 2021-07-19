@@ -6,11 +6,9 @@
  **/
 
 // 同步登陆接口
-class Sso extends \Phpcmf\Common
-{
+class Sso extends \Phpcmf\Common {
 
 	public function index() {
-
 
         switch (\Phpcmf\Service::L('input')->get('action')) {
 
@@ -76,8 +74,27 @@ class Sso extends \Phpcmf\Common
         }
 
         $this->_jsonp(1, 'ok');
-
 		exit;
 	}
+
+    public function login() {
+        $ci = new \Phpcmf\Control\Member\Login();
+        $ci->index();
+    }
+
+    public function sms() {
+        $ci = new \Phpcmf\Control\Member\Login();
+        $ci->sms();
+    }
+
+    public function oauth() {
+        $ci = new \Phpcmf\Control\Member\Login();
+        $ci->oauth();
+    }
+
+    public function register() {
+        $ci = new \Phpcmf\Control\Member\Register();
+        $ci->index();
+    }
 
 }

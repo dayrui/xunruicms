@@ -1,11 +1,9 @@
 {template "header.html"}
-
 <form class="form-horizontal login-form" action="" onsubmit="return dr_submit()" method="post" style="padding:50px 0">
     {$form}
     <div class="row myfbody">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-
             <div class="portlet light bordered" style="margin-top: 40px">
                 <div class="portlet-title">
                     <div class="caption">
@@ -13,9 +11,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-body">
-
                         <div class="form-group" id="dr_row_username">
                             <label class="col-md-3 control-label ">{dr_lang('后台账号')}</label>
                             <div class="col-md-7">
@@ -44,22 +40,16 @@
                         </div>
                         {/if}
                         <div class="form-group">
-
                             <label class="col-xs-3 control-label "></label>
                             <div class="col-xs-7">
                             <button type="button" onclick="dr_submit()" class="btn red " style="margin-right: 20px;"> {dr_lang('验证后台账号')} </button>
                         </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
-
 </form>
 <script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script type="text/javascript">
@@ -68,15 +58,10 @@
         parent.layer.closeAll('loading');
     }
     function dr_submit() {
-        $('.login-form .form-group').removeClass('has-error');
         // 这里进行md5加密存储
         var pwd = $('#dr_password').val();
         pwd = $.md5(pwd); // 进行md5加密
         $('#dr_password').val(pwd);
-        //var post_data = $(".login-form").serializeArray();
-        //post_data+='&data[password]='+pwd;
-        //post_data[5]['value'] = pwd;
-        //console.log(post_data);
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
             success: function(json) {
                 if (json.code == 1) {
@@ -88,29 +73,18 @@
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 $('.fc-code img').click();
-                var msg = HttpRequest.responseText;
-                if (!msg) {
-                    $('.alert-danger span', $('.login-form')).html("{dr_lang('系统错误')}");
-                    $('.alert-danger', $('.login-form')).show();
-                } else {
-                    $('.alert-danger span', $('.login-form')).html(msg);
-                    $('.alert-danger', $('.login-form')).show();
-                }
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
             }
         });
         return false;
     }
     jQuery(document).ready(function() {
-
         $('.login-form input').keypress(function (e) {
             if (e.which == 13) {
                 dr_submit();
                 return false;
             }
         });
-
     });
 </script>
-
-
 {template "footer.html"}

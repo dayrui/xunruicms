@@ -334,7 +334,7 @@ class Api extends \Phpcmf\Common
 
     // 加入历史菜单
 	public function history() {
-		$this->_json(0, dr_lang('加入失败'));
+		$this->_json(0, dr_lang('功能被弃用'));
 	}
 
 	// 执行更新缓存
