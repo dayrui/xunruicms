@@ -394,7 +394,7 @@ class Login extends \Phpcmf\Common
             \Phpcmf\Service::M('member')->edit_password($data, $post['password']);
             \Phpcmf\Service::M()->db->table('member')->where('id', $data['id'])->update(['randcode' => 0]);
 
-            $this->_json(1, dr_lang('修改成功'));
+            $this->_json(1, dr_lang('账号[%s]密码修改成功', $data['username']), $data);
         }
 
         \Phpcmf\Service::V()->assign([
