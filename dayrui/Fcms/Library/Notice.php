@@ -11,6 +11,22 @@
 
 class Notice {
 
+    // 获取一些默认参数
+    protected function _get_data($data, $param = []) {
+
+        // 当前的信息变量
+        $data['sys_app'] = defined('MOD_DIR') ? MOD_DIR : APP_DIR;
+        $data['sys_uri'] = \Phpcmf\Service::L('router')->uri();
+        $data['sys_time'] = SYS_TIME;
+        $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
+        // 自定义参数累加进去
+        if ($param) {
+            $data = array_merge($data, $param);
+        }
+
+        return $data;
+    }
+
     /**
      * 发送通知动作（按用户设置）
      *
@@ -22,15 +38,9 @@ class Notice {
         if (!\Phpcmf\Service::C()->member_cache['notice'][$name]) {
             return; // 没有配置通知
         }
-        // 当前的信息变量
-        $data['sys_app'] = defined('MOD_DIR') ? MOD_DIR : APP_DIR;
-        $data['sys_uri'] = \Phpcmf\Service::L('router')->uri();
-        $data['sys_time'] = SYS_TIME;
-        $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
-        // 自定义参数累加进去
-        if ($param) {
-            $data = array_merge($data, $param);
-        }
+
+        $data = $this->_get_data($data, $param);
+
         // 加入队列并执行
         $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'notice', [
             'name' => $name,
@@ -56,10 +66,9 @@ class Notice {
             return; // 没有配置通知
         }
 
-        $data['uid'] = $uid;
-        // 当前的信息变量
-        $data['sys_time'] = SYS_TIME;
-        $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
+        $data = $this->_get_data($data, [
+            'uid' => $uid
+        ]);
         // 加入队列并执行
         $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, 'notice', [
             'name' => $name,
@@ -90,25 +99,36 @@ class Notice {
 
         // 微信通知
         if ($value['config']['weixin']) {
-            $rt = $this->_get_tpl_content($siteid, $value['name'], 'weixin', $value['data']);
-            if (!$rt['code']) {
-                $error[] = $rt['msg'];
-                CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）执行失败：'.$rt['msg']);
+            $content = [];
+            if (isset($value['config']['weixin']['tpl_content']) && is_array($value['config']['weixin']['tpl_content'])) {
+                $content = $value['config']['weixin']['tpl_content'];
+                if (!$content) {
+                    $error[] = $debug = '自定义通知内容参数tpl_content不存在';
+                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
+                }
             } else {
-                $xml = $this->_xml_array($rt['msg']);
-                if (!$xml || !isset($xml['xml']) || !$xml['xml']) {
-                    $error[] = $debug = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
-                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）微信执行失败：'.$debug.'<br>'.$rt['msg']);
+                $rt = $this->_get_tpl_content($siteid, $value['name'], 'weixin', $value['data']);
+                if (!$rt['code']) {
+                    $error[] = $rt['msg'];
+                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）执行失败：'.$rt['msg']);
                 } else {
-                    $content = $xml['xml'];
-                    $rt = \Phpcmf\Service::M('member')->wexin_template($value['data']['uid'], $content['id'], $content['param'], $content['url']);
-                    if (!$rt['code']) {
-                        $error[] = $debug = '微信消息执行错误：'.$rt['msg'];
-                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
+                    $xml = $this->_xml_array($rt['msg']);
+                    if (!$xml || !isset($xml['xml']) || !$xml['xml']) {
+                        $error[] = $debug = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
+                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）微信执行失败：'.$debug.'<br>'.$rt['msg']);
                     } else {
-                        // 成功
-                        unset($value['config']['weixin']);
+                        $content = $xml['xml'];
                     }
+                }
+            }
+            if ($content) {
+                $rt = \Phpcmf\Service::M('member')->weixin_template($value['data']['uid'], $content['id'], $content['param'], $content['url']);
+                if (!$rt['code']) {
+                    $error[] = $debug = '微信消息执行错误：'.$rt['msg'];
+                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）微信执行失败：'.$debug);
+                } else {
+                    // 成功
+                    unset($value['config']['weixin']);
                 }
             }
         }
@@ -120,12 +140,23 @@ class Notice {
                 $error[] = $debug = '用户【'.$member['username'].'】phone参数为空，不能发送短信';
                 CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
             } else {
-                $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
-                if (!$rt['code']) {
-                    $error[] = $debug = $rt['msg'];
-                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
+                $content = [];
+                if (isset($value['config']['mobile']['tpl_content']) && ($value['config']['mobile']['tpl_content'])) {
+                    $content = $value['config']['mobile']['tpl_content'];
+                    if (!$content) {
+                        $error[] = $debug = '自定义通知内容参数tpl_content不存在';
+                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
+                    }
                 } else {
-                    $content = $rt['msg'];
+                    $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
+                    if (!$rt['code']) {
+                        $error[] = $debug = $rt['msg'];
+                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）短信执行失败：'.$debug);
+                    } else {
+                        $content = $rt['msg'];
+                    }
+                }
+                if ($content) {
                     $rt = \Phpcmf\Service::M('member')->sendsms_text($phone, $content);
                     if (!$rt['code']) {
                         $error[] = $debug = '短信通知执行错误：'.$rt['msg'];
@@ -140,16 +171,34 @@ class Notice {
 
         // 站内消息通知
         if ($value['config']['notice']) {
-            $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
-            if (!$rt['code']) {
-                $error[] = $debug = $rt['msg'];
-                CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）消息执行失败：'.$debug);
+            $content = [];
+            if (isset($value['config']['notice']['tpl_content']) && ($value['config']['notice']['tpl_content'])) {
+                $content = $value['config']['notice']['tpl_content'];
+                if (!$content) {
+                    $error[] = $debug = '自定义通知内容参数tpl_content不存在';
+                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）消息执行失败：'.$debug);
+                }
             } else {
-                $content = $rt['msg'];
-                \Phpcmf\Service::M('member')->notice($value['data']['uid'], max((int)$value['data']['type'], 1), $content, $value['data']['url'], $value['data']['mark']);
+                $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
+                if (!$rt['code']) {
+                    $error[] = $debug = $rt['msg'];
+                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）消息执行失败：'.$debug);
+                } else {
+                    $content = $rt['msg'];
+                }
+            }
+            if ($content) {
+                \Phpcmf\Service::M('member')->notice(
+                    $value['data']['uid'],
+                    max((int)$value['data']['type'], 1),
+                    $content,
+                    $value['data']['url'],
+                    $value['data']['mark']
+                );
                 // 成功
                 unset($value['config']['notice']);
             }
+
         }
 
         // 邮件通知
@@ -159,13 +208,24 @@ class Notice {
                 $error[] = $debug = '用户【'.$member['username'].'】的email参数为空，不能发送邮件';
                 CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
             } else {
-                $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
-                if (!$rt['code']) {
-                    $error[] = $debug = $rt['msg'];
-                    CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+                $title = '';
+                $content = [];
+                if (isset($value['config']['email']['tpl_content']) && ($value['config']['email']['tpl_content'])) {
+                    $content = $value['config']['email']['tpl_content'];
+                    if (!$content) {
+                        $error[] = $debug = '自定义通知内容参数tpl_content不存在';
+                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+                    }
                 } else {
-                    $title = '';
-                    $content = $rt['msg'];
+                    $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
+                    if (!$rt['code']) {
+                        $error[] = $debug = $rt['msg'];
+                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+                    } else {
+                        $content = $rt['msg'];
+                    }
+                }
+                if ($content) {
                     if (preg_match('/<title>(.+)<\/title>/U', $content, $mt)) {
                         $title = $mt[1];
                         $content = str_replace($mt[0], '', $content);
