@@ -111,7 +111,7 @@ class Router {
 
         // 不跳转的条件
         if (!dr_is_sys_301()) {
-            return;
+            return; // 系统关闭301
         } elseif (!$url || strpos($url, 'http') === FALSE) {
             return; // 为空时排除
         } elseif (IS_API || IS_API_HTTP) {
