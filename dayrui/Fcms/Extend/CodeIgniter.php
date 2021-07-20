@@ -52,6 +52,14 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     protected function bootstrapEnvironment() {
 
     }
+	
+	/**
+	 * CLI模式以GET方式运行
+	 */
+	protected function determinePath()
+	{
+		return "/";
+	}
 
     /**
      * 检测框架所需要的PHP扩展
