@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Min_menu extends \Phpcmf\Common
-{
+class Min_menu extends \Phpcmf\Common {
+
 	private $form; // 表单验证配置
 
 	public function __construct(...$params) {
@@ -64,60 +64,6 @@ class Min_menu extends \Phpcmf\Common
 		]);
 		\Phpcmf\Service::V()->display('min_menu_list.html');
 	}
-
-	public function site_add() {
-
-		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		if (!$ids) {
-		    $this->_json(0, dr_lang('你还没有选择呢'));
-        }
-
-		$sid = (int)\Phpcmf\Service::L('input')->post('siteid');
-		if (!$sid) {
-		    $this->_json(0, dr_lang('你还没有选择站点'));
-        }
-
-		$data = \Phpcmf\Service::M()->db->table('admin_min_menu')->whereIN('id', $ids)->get()->getResultArray();
-		if (!$data) {
-		    $this->_json(0, dr_lang('无可用菜单'));
-        }
-
-		foreach ($data as $t) {
-			$value = dr_string2array($t['site']);
-			$value[$sid] = $sid;
-			\Phpcmf\Service::M()->db->table('admin_min_menu')->where('id', $t['id'])->update([
-				'site' => dr_array2string($value)
-			]);
-		}
-
-        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		$this->_json(1, dr_lang('划分成功'));
-	}
-
-	public function site_del() {
-
-		$id = (int)\Phpcmf\Service::L('input')->get('id');
-		$data = \Phpcmf\Service::M('Menu')->getRowData('admin_min', $id);
-		if (!$data) {
-		    $this->_json(0, dr_lang('菜单不存在'));
-        }
-
-        $sid = (int)\Phpcmf\Service::L('input')->get('sid');
-		if (!$sid) {
-		    $this->_json(0, dr_lang('站点id不存在'));
-        }
-
-		$value = dr_string2array($data['site']);
-		unset($value[$sid]);
-
-		\Phpcmf\Service::M()->db->table('admin_min_menu')->where('id', $id)->update([
-			'site' => dr_array2string($value)
-		]);
-
-        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		$this->_json(1, dr_lang('删除成功'));
-	}
-
 
 	public function add() {
 
@@ -258,6 +204,11 @@ class Min_menu extends \Phpcmf\Common
             } elseif (!\Phpcmf\Service::M()->table('admin_menu')->where('mark', $data['mark'])->counts()) {
                 $this->_json(0, dr_lang('标识字符没有存在于完整菜单中'), ['field' => 'mark']);
             }
+        }
+
+        if ($data['uri'] && !\Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+            // 验证是否操作员完整菜单中
+            $this->_json(0, dr_lang('系统路径没有存在于完整菜单中'), ['field' => 'uri']);
         }
 
 		if ($data['mark']) {
