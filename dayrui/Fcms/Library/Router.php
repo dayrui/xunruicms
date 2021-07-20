@@ -361,7 +361,7 @@ class Router {
 
         return $this->url_prefix('php') . 's=page&id=' . $data['id'] . ($page ? '&page=' . $page : '');
     }
-    
+
     /**
      * tag的url
      */

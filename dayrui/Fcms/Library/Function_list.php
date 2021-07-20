@@ -137,7 +137,11 @@ class Function_list
 
     // 用于列表显示ip地址
     public function ip($value, $param = [], $data = []) {
-        return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), 20).'</a>';
+        if ($value) {
+            list($value) = explode('-', $value);
+            return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), 20).'</a>';
+        }
+        return dr_lang( '无');
     }
 
     // url链接输出

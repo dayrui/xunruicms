@@ -19,8 +19,14 @@ class Api extends \Phpcmf\Common
             exit(dr_lang('IP地址为空'));
         }
 
+        list($value, $port) = explode('-', $value);
         $address = \Phpcmf\Service::L('ip')->address($value);
-        exit('<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_lang('IP归属地：%s', $address).'</a>');
+        echo ('<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_lang('IP归属地：%s', $address).'</a>');
+        if ($port) {
+            echo '
+<br>'.dr_lang('源端口号：%s', (int)$port);
+        }
+        exit;
     }
 
     /**

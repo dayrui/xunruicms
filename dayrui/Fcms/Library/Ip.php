@@ -9,8 +9,7 @@
  * Ip 地址解析
  */
 
-class Ip
-{
+class Ip {
 
     private $file = WRITEPATH.'qqwry.dat';
     private $address;
@@ -19,6 +18,10 @@ class Ip
      * ip查询
      */
     public function set($ip) {
+
+        if (strpos($ip, '-') !== false) {
+            list($ip) = explode('-', $ip); // 排除源端口号
+        }
 
         $ip = dr_safe_replace($ip);
         $this->address = '';

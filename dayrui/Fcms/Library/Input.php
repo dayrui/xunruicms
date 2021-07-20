@@ -54,6 +54,11 @@ class Input {
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
     }
 
+    // inputip存储信息
+    public function ip_info() {
+        return $this->ip_address().'-'.(int)$_SERVER['REMOTE_PORT'];
+    }
+
     // 获取访客ip地址
     public function ip_address() {
 

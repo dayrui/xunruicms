@@ -7,8 +7,7 @@
 
 
 // 内容操作类
-class Table extends \Phpcmf\Common
-{
+class Table extends \Phpcmf\Common {
     
     public $dfield; // 自定义字段对象
     public $init; // 数据表初始化 [ fmode init方法参数 ]

@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member` (
   `spend` decimal(10,2) unsigned NOT NULL COMMENT '消费RMB总额',
   `score` int(10) unsigned NOT NULL COMMENT '虚拟币',
   `experience` int(10) unsigned NOT NULL COMMENT '经验值',
-  `regip` varchar(50) NOT NULL COMMENT '注册ip',
+  `regip` varchar(200) NOT NULL COMMENT '注册ip',
   `regtime` int(10) unsigned NOT NULL COMMENT '注册时间',
   `randcode` mediumint(6) unsigned NOT NULL COMMENT '随机验证码',
   PRIMARY KEY (`id`),

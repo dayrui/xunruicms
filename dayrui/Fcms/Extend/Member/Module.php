@@ -459,7 +459,7 @@ class Module extends \Phpcmf\Table
 
         // 第一次保存初始化信息
         if (!$id) {
-            $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_address();
+            $data[1]['inputip'] = \Phpcmf\Service::L('input')->ip_info();
             $data[1]['inputtime'] = SYS_TIME;
             $data[1]['displayorder'] = 0;
         }

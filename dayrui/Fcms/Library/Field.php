@@ -498,7 +498,7 @@
                             'name' => '查看',
                             'icon' => 'fa fa-arrow-right',
                             'func' => 'dr_show_ip',
-                            'value' => \Phpcmf\Service::L('input')->ip_address()
+                            'value' => \Phpcmf\Service::L('input')->ip_info()
                         )
                     )
                 ),

@@ -186,6 +186,9 @@ class Model {
             }
         }
 
+        // 分组
+        $this->param['group'] && $builder->groupBy($this->param['group']);
+
         $where && $builder->where($where);
 
         $this->_clear();
@@ -420,6 +423,9 @@ class Model {
 
         // 排序
         $this->param['order'] && $builder->orderBy($this->param['order']);
+
+        // 分组
+        $this->param['group'] && $builder->groupBy($this->param['group']);
 
         // 数量控制
         if ($this->param['limit']) {
@@ -902,6 +908,12 @@ class Model {
     // 排序
     public function order_by($value) {
         $this->param['order'] = $value;
+        return $this;
+    }
+
+    // 分组
+    public function group_by($value) {
+        $this->param['group'] = $value;
         return $this;
     }
 
