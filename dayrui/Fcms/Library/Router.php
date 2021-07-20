@@ -109,10 +109,8 @@ class Router {
     // 判断满足定向跳转的条件
     public function is_redirect_url($url, $is_mobile = 0) {
 
-        // 不调整的条件
-        if (defined('IS_NOT_301') && IS_NOT_301) {
-            return;
-        } elseif (defined('SYS_301') && SYS_301) {
+        // 不跳转的条件
+        if (!dr_is_sys_301()) {
             return;
         } elseif (!$url || strpos($url, 'http') === FALSE) {
             return; // 为空时排除

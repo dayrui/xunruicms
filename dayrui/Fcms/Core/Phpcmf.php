@@ -7,8 +7,7 @@
  **/
 
 // 公共类
-abstract class Common extends \CodeIgniter\Controller
-{
+abstract class Common extends \CodeIgniter\Controller {
 
     private static $instance;
 
@@ -64,7 +63,6 @@ abstract class Common extends \CodeIgniter\Controller
                 $this->site_info[$id]['SITE_IS_MOBILE'] = $t['SITE_MOBILE'] ? 1 : 0;
             }
         } else {
-            //!defined('IS_NOT_301') && define('IS_NOT_301', 1);
             $this->site_info[1] = [
                 'SITE_ID' => 1,
                 'SITE_URL' => dr_http_prefix(DOMAIN_NAME.'/'),

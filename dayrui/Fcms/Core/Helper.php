@@ -8,6 +8,20 @@
 
 
 /**
+ * 是否301跳转
+ */
+function dr_is_sys_301() {
+
+    if (defined('IS_NOT_301') && IS_NOT_301) {
+        return 0;
+    } elseif (defined('SYS_301') && SYS_301) {
+        return 0;
+    }
+
+    return 1;
+}
+
+/**
  * 三元运算
  */
 function dr_else_value($a, $b) {

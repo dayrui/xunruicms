@@ -28,7 +28,6 @@ class Service
         return class_exists('\Phpcmf\Common') ? \Phpcmf\Common::get_instance() : null;
     }
 
-
     // 获取应用自动加载
     public static function Auto($auto) {
 
