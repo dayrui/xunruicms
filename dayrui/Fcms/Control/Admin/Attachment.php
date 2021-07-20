@@ -39,19 +39,25 @@ class Attachment extends \Phpcmf\Common
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             $image = \Phpcmf\Service::L('input')->post('image');
-            \Phpcmf\Service::M('System')->save_config($data,
-                [
-                    'SYS_ATTACHMENT_SAFE' => (int)$post['SYS_ATTACHMENT_SAFE'],
-                    'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
-                    'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
-                    'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),
-                    'SYS_ATTACHMENT_SAVE_TYPE' => intval($post['SYS_ATTACHMENT_SAVE_TYPE']),
-                    'SYS_ATTACHMENT_SAVE_DIR' => addslashes($post['SYS_ATTACHMENT_SAVE_DIR']),
-                    'SYS_ATTACHMENT_SAVE_ID' => intval($post['SYS_ATTACHMENT_SAVE_ID']),
-                    'SYS_AVATAR_URL' => $image['avatar_url'],
-                    'SYS_AVATAR_PATH' => addslashes($image['avatar_path']),
-                ]
-            );
+            $save = [
+                'SYS_ATTACHMENT_SAFE' => (int)$post['SYS_ATTACHMENT_SAFE'],
+                'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
+                'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
+                'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),
+                'SYS_ATTACHMENT_SAVE_TYPE' => intval($post['SYS_ATTACHMENT_SAVE_TYPE']),
+                'SYS_ATTACHMENT_SAVE_DIR' => addslashes($post['SYS_ATTACHMENT_SAVE_DIR']),
+                'SYS_ATTACHMENT_SAVE_ID' => intval($post['SYS_ATTACHMENT_SAVE_ID']),
+                'SYS_AVATAR_URL' => $image['avatar_url'],
+                'SYS_AVATAR_PATH' => addslashes($image['avatar_path']),
+            ];
+            if ($image['cache_path']) {
+                if ($save['SYS_ATTACHMENT_PATH'] && $image['cache_path'] == $save['SYS_ATTACHMENT_PATH']) {
+                    $this->_json(0, dr_lang('附件上传目录不能与缩略图存储目录相同'));
+                } elseif ($save['SYS_AVATAR_PATH'] && $image['cache_path'] == $save['SYS_AVATAR_PATH']) {
+                    $this->_json(0, dr_lang('头像存储目录不能与缩略图存储目录相同'));
+                }
+            }
+            \Phpcmf\Service::M('System')->save_config($data, $save);
             unset($image['avatar_url'], $image['avatar_path']);
             \Phpcmf\Service::M('site')->config(SITE_ID, 'image', $image);
             \Phpcmf\Service::L('input')->system_log('设置附件参数');
