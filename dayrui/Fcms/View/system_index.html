@@ -107,6 +107,16 @@
                                 {/if}
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('允许后台登录选择模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="0" {if empty($data['SYS_ADMIN_MODE'])}checked{/if} /> {dr_lang('允许选择')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="1" {if $data['SYS_ADMIN_MODE']}checked{/if} /> {dr_lang('禁用选择')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台登录界面显示完整模式和简化模式的切换选项')}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
@@ -173,8 +183,8 @@
                             <label class="col-md-2 control-label">{dr_lang('自动任务权限')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio"><input name="test2" onclick="dr_cron_value(0)" type="radio" {if !$data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('任意服务器执行')} <span></span></label>
-                                    <label class="mt-radio"><input name="test2" onclick="dr_cron_value(1)" type="radio" {if $data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('限本服务器IP')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(0)" type="radio" {if !$data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('任意服务器执行')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(1)" type="radio" {if $data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('限本服务器IP')} <span></span></label>
                                 </div>
                                 <input type="hidden" id="dr_cron_sync" value="{$data['SYS_CRON_AUTH']}" />
                                 <label id="dr_cron_row" {if !$data['SYS_CRON_AUTH']}style="display:none"{/if}><input id="dr_cron" class="form-control input-large" type="text" name="data[SYS_CRON_AUTH]" value="{$data['SYS_CRON_AUTH']}" ></label>
@@ -185,8 +195,8 @@
                             <label class="col-md-2 control-label">{dr_lang('发送短信双重验证')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="0" {if !$data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('使用图形验证')} <span></span></label>
-                                    <label class="mt-radio"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="1" {if $data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('关闭图形验证')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="0" {if !$data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('使用图形验证')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="data[SYS_SMS_IMG_CODE]" type="radio" value="1" {if $data['SYS_SMS_IMG_CODE']}checked{/if} /> {dr_lang('关闭图形验证')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('在发送短信验证码时，加入图形验证进行双重验证，减少垃圾短信消耗')}</span>
                             </div>

@@ -342,6 +342,7 @@ Page Header
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle > .username {
     display: inline-block;
     font-size: 14px;
+    margin-top: 0px;
     font-weight: 400; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle > img {
     float: left;

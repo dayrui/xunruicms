@@ -69,6 +69,7 @@ $system = [
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,
     'SYS_HTTPS' => 0,
+    'SYS_ADMIN_MODE'  => 0,
     'SYS_ADMIN_LOGINS'  => 0,
     'SYS_ADMIN_LOGIN_TIME'  => 0,
     'SYS_ADMIN_OAUTH'    => 0,

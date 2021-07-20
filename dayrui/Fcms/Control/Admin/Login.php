@@ -13,9 +13,9 @@ class Login extends \Phpcmf\Common
 	    $url = '';
 	    if (isset($_GET['go']) && $_GET['go']) {
             $url = pathinfo(urldecode((string)\Phpcmf\Service::L('input')->get('go')));
-            $url = $url['basename'] ? $url['basename'] : '';
+            $url = $url['basename'] && $url['basename'] != SELF ? $url['basename'] : '';
+
         }
-	    !$url && $url = SELF.'?time='.SYS_TIME;
 
 		// 避免安装时的卡顿超时
 		if (is_file(WRITEPATH.'install.test')) {
@@ -63,6 +63,30 @@ class Login extends \Phpcmf\Common
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
 						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
 					}
+
+                    if (!$url) {
+                        $url = SELF.'?time='.SYS_TIME;
+                        if (isset($data['mode']) && $data['mode']) {
+                            // 模式选择
+                            $admin = \Phpcmf\Service::M()->table('admin')->where('uid', $login['code'])->getRow();
+                            $setting = (array)dr_string2array($admin['setting']);
+                            if ($data['mode'] == 2) {
+                                // 简化
+                                $setting['admin_min'] = 1;
+                                file_put_contents(WRITEPATH.'config/admin.mode', 1);
+                            } else {
+                                // 完整
+                                if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
+                                    $this->_json(0, dr_lang('此账号无法使用完整模式'));
+                                }
+                                $setting['admin_min'] = 0;
+                                @unlink(WRITEPATH.'config/admin.mode');
+                            }
+                            \Phpcmf\Service::M()->table('admin')->update($login['code'], [
+                                'setting' => dr_array2string($setting)
+                            ]);
+                        }
+                    }
                     $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url, true)]);
                 } else {
                     // 登录失败
@@ -132,7 +156,10 @@ class Login extends \Phpcmf\Common
             }
         }
 
+        $mode = is_file(WRITEPATH.'config/admin.mode') ? 2 : 1;
+
 		\Phpcmf\Service::V()->assign(array(
+		    'mode' => $mode,
 			'form' => dr_form_hidden(),
             'oauth' => $oauth,
 			'license' => $license,

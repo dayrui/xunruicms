@@ -56,6 +56,22 @@
         <div class="form-actions">
             <button type="button" onclick="dr_submit()" class="btn default btn-block"> {dr_lang('登录后台')} </button>
         </div>
+        {if !SYS_ADMIN_MODE}
+        <div class="form-group text-center">
+            <div class="input-icon">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio" name="data[mode]" value="1" {if $mode == 1}checked=""{/if}> {dr_lang('完整模式')}
+                        <span></span>
+                    </label>
+                    <label class="mt-radio">
+                        <input type="radio" name="data[mode]" value="2" {if $mode == 2}checked=""{/if}> {dr_lang('简化模式')}
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        {/if}
         {if SYS_ADMIN_OAUTH && $oauth}
         <div class="login-oauth">
             {loop $oauth $t}
@@ -86,12 +102,12 @@
         $('.alert-danger', $('.login-form')).hide();
         // 这里进行md5加密存储
         var pwd = $('#password').val();
-        pwd = $.md5(pwd); // 进行md5加密
-        $('#password').val(pwd);
-        //var post_data = $(".login-form").serializeArray();
-        //post_data+='&data[password]='+pwd;
-        //post_data[5]['value'] = pwd;
-        //console.log(post_data);
+        if (pwd.length == 32) {
+            // 已经加密过的
+        } else {
+            pwd = $.md5(pwd); // 进行md5加密
+            $('#password').val(pwd);
+        }
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
             success: function(json) {
                 if (json.code == 1) {

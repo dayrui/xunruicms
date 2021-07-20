@@ -29,6 +29,7 @@ class System extends \Phpcmf\Common
                 'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
 
+                'SYS_ADMIN_MODE' => intval($post['SYS_ADMIN_MODE']),
                 'SYS_ADMIN_LOG' => intval($post['SYS_ADMIN_LOG']),
                 'SYS_ADMIN_CODE' => intval($post['SYS_ADMIN_CODE']),
                 'SYS_ADMIN_LOGINS' => intval($post['SYS_ADMIN_LOGINS']),
