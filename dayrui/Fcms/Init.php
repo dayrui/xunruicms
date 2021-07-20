@@ -229,6 +229,7 @@ if (is_cli()) {
      define('FC_NOW_URL', 'http://localhost/');
      define('FC_NOW_HOST', 'http://localhost/');
      define('DOMAIN_NAME', 'http://localhost/');
+	 define('WEB_DIR', '/');
     if ($_SERVER["argv"]) {
         foreach ($_SERVER["argv"] as $val) {
             if (strpos($val, '=') !== false) {
