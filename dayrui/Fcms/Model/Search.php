@@ -50,6 +50,10 @@ class Search extends \Phpcmf\Model {
         $this->get = $get;
         $this->catid = $catid;
         $this->module = $module;
+
+        // 挂钩点 搜索之前对参数处理
+        \Phpcmf\Hooks::trigger('search_param', $get);
+
         return [$catid, $get];
     }
 

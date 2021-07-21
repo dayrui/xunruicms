@@ -9,8 +9,7 @@
  * seo输出
  */
 
-class Seo
-{
+class Seo {
 
     /**
      * 首页SEO信息
