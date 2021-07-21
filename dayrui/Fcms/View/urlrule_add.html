@@ -126,17 +126,6 @@
                 </div>
 
                 <!--Tag插件-->
-                <div class="form-group dr_type_4 dr_type">
-                    <label class="col-md-2 control-label">{dr_lang('Tag')}</label>
-                    <div class="col-md-7">
-                        <div class="input-group">
-                            <input type="text" name="value[4][tag]" value="{htmlspecialchars($value.tag)}" class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn blue" onclick="dr_url_module_tag()" type="button"><i class="fa fa-code"></i> {dr_lang('提示')}</button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
 
                 <!--共享模块-->
 
@@ -296,7 +285,7 @@
                         <label>
                             <input type="text" name="catjoin" value="{htmlspecialchars($value.catjoin)}" class="form-control">
                         </label>
-                        <span class="help-block"> {dr_lang('针对pdirname或者tag的连接符号，默认为"/"，如：china[连接符号]beijin')} </span>
+                        <span class="help-block"> {dr_lang('针对pdirname的连接符号，默认为"/"，如：china[连接符号]beijin')} </span>
                     </div>
                 </div>
             </div>

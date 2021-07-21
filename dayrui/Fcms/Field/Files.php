@@ -295,7 +295,12 @@ class Files extends \Phpcmf\Library\A_Field {
                 $description = $t['description'] ? htmlspecialchars($t['description']) : '';
                 if ($file) {
                     $disabled = 'readonly';
-                    $preview = dr_file_preview_html($file['url']);
+                    if (IS_ADMIN && in_array($file['fileext'], ['jpg', 'gif', 'png', 'jpeg'])
+                        && \Phpcmf\Service::C()->_is_admin_auth('attachments/edit')) {
+                        $preview = '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \''.SELF.'?c=attachments&m=image_edit&id='.$file['id'].'\', \'80%\');"><img src="'.$file['url'].'"></a>';
+                    } else {
+                        $preview = dr_file_preview_html($file['url']);
+                    }
                     $filepath = dr_strcut($file['attachment'], 30);
                     $upload = '<input type="file" name="file_data">';
                 } else {

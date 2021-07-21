@@ -371,17 +371,12 @@ class Router {
             return '关键词库应用没有安装';
         }
 
-        // PC端
-        $cfg = \Phpcmf\Service::M('app')->get_config('tag');
-        $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cfg['urlrule'], 'value');;
-        if ($rule && $rule['tag']) {
-            $data['tag'] = $name;
-            $data['tag'] = str_replace('/', $rule['catjoin'], $data['tag']);
-            $url = ltrim($rule['tag'], '/');
-            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', [], [], SITE_FID));
-        } else {
-            return $this->url_prefix('php', [], [], SITE_FID) . 's=tag&name=' . $name;
+        $obj = \Phpcmf\Service::M('tag', 'tag');
+        if (method_exists($obj, 'tag_url')) {
+            return $obj->tag_url($name);
         }
+
+        return '关键词库插件未升级';
     }
 
     // 缓存读取url

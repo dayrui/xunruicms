@@ -5,8 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-class Member extends \Phpcmf\Model
-{
+class Member extends \Phpcmf\Model {
 
     protected $sso_url;
 
@@ -635,7 +634,7 @@ class Member extends \Phpcmf\Model
                 return dr_return_data(0, $rt['msg']);
             }
             // 提醒
-            \Phpcmf\Service::M('member')->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member_apply/edit:id/'.$rt['code']);
+            $this->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member_apply/edit:id/'.$rt['code']);
             // 审核
             return dr_return_data(1, dr_lang('等待管理员审核'));
         } else {
@@ -683,6 +682,13 @@ class Member extends \Phpcmf\Model
      * )
      */
     public function admin_notice($site, $type, $member, $msg, $uri, $to = []) {
+
+        if (!$to || !is_array($to)) {
+            $to = [
+                'to_rid' => 0,
+                'to_uid' => 0,
+            ];
+        }
 
         $data = [
             'site' => (int)$site,

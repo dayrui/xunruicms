@@ -216,31 +216,31 @@ class Attachments extends \Phpcmf\Table
 
         $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
 
-        // 文件真实地址
-        if ($info['remote']) {
-            $remote = $this->get_cache('attachment', $info['remote']);
-            if (!$remote) {
-                // 远程地址无效
-                $this->_json(0, dr_lang('自定义附件（%s）的配置已经不存在', $info['remote']));
-            } else {
-                $info['file'] = $remote['value']['path'].$info['attachment'];
-                if (!is_file($info['file'])) {
-                    $this->_json(0, dr_lang('远程附件无法编辑'));
+        if (IS_POST) {
+
+            // 文件真实地址
+            if ($info['remote']) {
+                $remote = $this->get_cache('attachment', $info['remote']);
+                if (!$remote) {
+                    // 远程地址无效
+                    $this->_json(0, dr_lang('自定义附件（%s）的配置已经不存在', $info['remote']));
+                } else {
+                    $info['file'] = $remote['value']['path'].$info['attachment'];
+                    if (!is_file($info['file'])) {
+                        $this->_json(0, dr_lang('远程附件无法编辑'));
+                    }
                 }
             }
-        }
-
-        if (IS_POST) {
 
             $post = \Phpcmf\Service::L('input')->post('data');
             if (!$post['w']) {
                 $this->_json(0, dr_lang('图形宽度不规范'));
             }
             try {
-                $image = \Config\Services::image()
-                    ->withFile($info['file'])
-                    ->crop($post['w'], $post['h'], $post['x'], $post['y'])
-                    ->save($info['file']);
+                $image = \Config\Services::image();
+                $image->withFile($info['file']);
+                $image->crop($post['w'], $post['h'], $post['x'], $post['y']);
+                $image->save($info['file']);
             } catch (CodeIgniter\Images\ImageException $e) {
                 $this->_json(0, $e->getMessage());
             }

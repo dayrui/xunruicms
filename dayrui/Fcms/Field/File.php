@@ -223,7 +223,12 @@ class File extends \Phpcmf\Library\A_Field {
 		if ($value) {
 			$file = \Phpcmf\Service::C()->get_attachment($value);
 			if ($file) {
-				$preview = dr_file_preview_html($file['url']);
+                if (IS_ADMIN && in_array($file['fileext'], ['jpg', 'gif', 'png', 'jpeg'])
+                    && \Phpcmf\Service::C()->_is_admin_auth('attachments/edit')) {
+                    $preview = '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \''.SELF.'?c=attachments&m=image_edit&id='.$file['id'].'\', \'80%\');"><img src="'.$file['url'].'"></a>';
+                } else {
+                    $preview = dr_file_preview_html($file['url']);
+                }
 				$filepath = $file['attachment'];
 				$title = $file['filename'];
 				$upload = '';
@@ -273,7 +278,6 @@ class File extends \Phpcmf\Library\A_Field {
 						<i class="fa fa-trash"></i>
 						<span> '.dr_lang('删除').' </span>
 					</button>';
-
 
 		// 表单输出
 		$str = '
