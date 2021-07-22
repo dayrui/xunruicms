@@ -322,9 +322,8 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                             'url' => $img,
                                             'timeout' => 5,
                                             'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
                                             'file_ext' => $ext,
-                                            'image_reduce' => $field['setting']['option']['image_reduce'],
                                         ]);
                                         if ($rt['code']) {
                                             $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
@@ -365,10 +364,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                                                 'url' => $img,
                                                 'timeout' => 5,
                                                 'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment'])),
+                                                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
                                                 'file_ext' => $ext,
                                                 'file_content' => $file,
-                                                'image_reduce' => $field['setting']['option']['image_reduce'],
                                             ]);
                                             if ($rt['code']) {
                                                 $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);

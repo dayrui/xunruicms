@@ -4,6 +4,7 @@
 
     <div class="col-md-6 col-sm-6">
 
+        {if $ci->_is_admin_auth('')}
         <div class="portlet light bordered myportlet ">
             <div class="portlet-title tabbable-line">
                 <div class="caption">
@@ -50,26 +51,28 @@
                     </li>
                     {/if}
                 </ul>
+
+
+                <script>
+                    $(function () {
+                        $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
+                            success: function(json) {
+                                if (json.code) {
+                                    $('#dr_cmf_update').show();
+                                    $('#dr_cmf_update').html(json.msg);
+                                }
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
+        {/if}
         {template "main/couts.html"}
     </div>
 
     <div class="col-md-6 col-sm-6">
         {template "main/notice.html"}
     </div>
-
-    <script>
-        $(function () {
-            $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
-                success: function(json) {
-                    if (json.code) {
-                        $('#dr_cmf_update').show();
-                        $('#dr_cmf_update').html(json.msg);
-                    }
-                }
-            });
-        });
-    </script>
 </div>
 {template "footer.html"}

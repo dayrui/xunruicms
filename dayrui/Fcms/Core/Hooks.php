@@ -28,14 +28,6 @@ class Hooks extends \CodeIgniter\Events\Events
         require ROOTPATH.'config/hooks.php';
 
         self::on('pre_system', function () {
-            while (\ob_get_level() > 0)
-            {
-                \ob_end_flush();
-            }
-
-            \ob_start(function ($buffer) {
-                return $buffer;
-            });
 
             /*
              * --------------------------------------------------------------------
