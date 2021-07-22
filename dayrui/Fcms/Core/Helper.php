@@ -4035,15 +4035,12 @@ class php5replace {
                 $p = $value[2] == '$data' ? $this->data : $value[2];
                 $param = is_array($p) ? ['data' => $p] : explode(',', $p);
                 foreach ($param as $i => $t) {
-                    if (strpos($t, '$') === 0) {
+                    if (!is_array($t) && strpos($t, '$') === 0) {
                         $param[$i] = $this->data[substr($t, 1)];
                     }
                 }
             }
-            return call_user_func_array(
-                $value[1],
-                $param
-            );
+            return $param ? call_user_func_array($value[1], $param) : call_user_func($value[1]);
         } else {
             return '函数['.$value[1].']未定义';
         }
@@ -4054,10 +4051,10 @@ class php5replace {
     // 替换全部
     function replace($value) {
 
+        $value = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$this, 'php55_replace_function'], $value);
         $value = preg_replace_callback('#{([A-Z_]+)}#U', [$this, 'php55_replace_var'], $value);
         $value = preg_replace_callback('#{([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
         $value = preg_replace_callback('#{\$([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
-        $value = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$this, 'php55_replace_function'], $value);
 
         return $value;
     }

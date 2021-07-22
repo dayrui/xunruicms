@@ -296,8 +296,7 @@ class Seo {
                 continue;
             }
 
-            $seo[$key] = $rep->replace($seo[$key]);
-
+            $seo[$key] = $rep->replace($value);
             $seo[$key] = str_replace(SITE_SEOJOIN.SITE_SEOJOIN, SITE_SEOJOIN, $seo[$key]);
             $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);
