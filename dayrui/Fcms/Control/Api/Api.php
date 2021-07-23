@@ -168,11 +168,7 @@ class Api extends \Phpcmf\Common
             max(0, intval($_GET['width'])), max(0, intval($_GET['height']))
         );
 
-        if (IS_API_HTTP) {
-            \Phpcmf\Service::L('cache')->set_data('api-captcha-'.md5(IS_API_HTTP_CODE), $code, 300);
-        } else {
-            \Phpcmf\Service::L('cache')->set_auth_data('web-captcha', $code, SITE_ID);
-        }
+        \Phpcmf\Service::L('cache')->set_auth_data('web-captcha-'.USER_HTTP_CODE, $code, SITE_ID);
 
         exit();
     }

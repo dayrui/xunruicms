@@ -232,6 +232,13 @@ abstract class Common extends \CodeIgniter\Controller {
             }
         }
 
+        // 访客唯一标识
+        if (defined('IS_API_HTTP_CODE') && IS_API_HTTP_CODE) {
+            define('USER_HTTP_CODE', IS_API_HTTP_CODE);
+        } else {
+            define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_info().\Phpcmf\Service::L('input')->get_user_agent()));
+        }
+
         // 开启自动跳转手机端(api、admin、member不跳转)
         if (!IS_API // api不跳转
             && !IS_ADMIN // 后台不跳转
