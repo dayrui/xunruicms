@@ -517,9 +517,14 @@ class Module extends \Phpcmf\Model
 		$CAT = $CAT_DIR = $level = [];
         if ($category) {
             // 栏目的定义字段
+            $like = ['catmodule-'.$cdir];
+            if ($cache['share']) {
+                $like[] = 'catmodule-share';
+            }
+
             $field = $this->db->table('field')
                 ->where('disabled', 0)
-                ->where('relatedname', 'category-'.$cdir)
+                ->whereIn('relatedname', $like)
                 ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
