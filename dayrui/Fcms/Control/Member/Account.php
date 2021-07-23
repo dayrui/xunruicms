@@ -6,8 +6,7 @@
  **/
 
 // 账号信息
-class Account extends \Phpcmf\Common
-{
+class Account extends \Phpcmf\Common {
 
     /**
      * 修改资料
@@ -63,7 +62,6 @@ class Account extends \Phpcmf\Common
             \Phpcmf\Hooks::trigger('member_edit_after', $data[1]);
             \Phpcmf\Service::M('member')->clear_cache($this->uid);
             $this->_json(1, dr_lang('保存成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
-            exit;
         }
 
         \Phpcmf\Service::V()->assign([
@@ -243,7 +241,7 @@ class Account extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
-            'api_url' =>\Phpcmf\Service::L('Router')->member_url('account/mobile_code'),
+            'api_url' => \Phpcmf\Service::L('Router')->member_url('account/mobile_code'),
             'is_update' => $is_update,
             'is_mobile' => $is_mobile,
         ]);
@@ -307,7 +305,7 @@ class Account extends \Phpcmf\Common
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
-            'api_url' =>\Phpcmf\Service::L('Router')->member_url('account/email_code'),
+            'api_url' => \Phpcmf\Service::L('Router')->member_url('account/email_code'),
             'is_update' => $is_update,
             'is_email' => $is_email,
         ]);
@@ -350,7 +348,6 @@ class Account extends \Phpcmf\Common
         if (!$rt['code']) {
 			$this->_json(0, IS_DEV ? $rt['msg'] : dr_lang('发送失败'));
 		}
-		
 
 		\Phpcmf\Service::L('cache')->set_auth_data($name, $value);
 		
@@ -380,7 +377,7 @@ class Account extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-email-code-'.$this->uid;
-		if (\Phpcmf\Service::L('cache')->check_auth_data($name, 3600)) {
+		if (\Phpcmf\Service::L('cache')->check_auth_data($name, 300)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} elseif (!\Phpcmf\Service::L('Form')->check_email($value)) {
 			$this->_json(0, dr_lang('邮箱地址格式不正确'));
@@ -399,12 +396,10 @@ class Account extends \Phpcmf\Common
         $this->_json(1, dr_lang('验证码发送成功'));
     }
 
-
     /**
      * 登录记录
      */
     public function login() {
-
         \Phpcmf\Service::V()->display('account_login.html');
     }
 
