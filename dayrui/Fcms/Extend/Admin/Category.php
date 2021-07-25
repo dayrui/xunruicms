@@ -815,6 +815,11 @@ class Category extends \Phpcmf\Table {
         }
 
         $topid = (int)\Phpcmf\Service::L('input')->post('catid');
+		foreach ($ids as $id) {
+			if ($id == $topid) {
+				$this->_json(0, dr_lang('栏目上级不能为本身'));
+			}
+		}
 
         /*
         $mid = $topid ? '' : $category[$topid]['mid'];
