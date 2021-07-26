@@ -25,7 +25,7 @@
                 </div>
                 {$myfield}
                 <div class="form-group" id="dr_row_value">
-                    <label class="col-md-2 control-label">{dr_lang('充值金额')}</label>
+                    <label class="col-md-2 control-label">{dr_lang('处理金额')}</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control input-large" id="dr_value" name="data[value]"></label>
                         <span class="help-block"> {dr_lang('正数表示增加; 负数表示减少')} </span>
@@ -42,7 +42,7 @@
     </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('确定充值')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('确定充值')}</button>
         </div>
     </div>
 </form>

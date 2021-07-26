@@ -462,7 +462,7 @@ return [
                             'uri' => 'member_paylog/not_index',
                         ],
                         [
-                            'name' => '用户充值',
+                            'name' => '用户资金',
                             'icon' => 'fa fa-plus',
                             'uri' => 'member_pay/index',
                         ],

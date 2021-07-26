@@ -1,0 +1,40 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p>{dr_lang('金额为正数表示冻结; 负数表示解除冻结')}</p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="portlet bordered light myfbody">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-green "><i class="bi bi-dash-circle-fill"></i> {dr_lang('资金冻结')}</span>
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+
+                {$myfield}
+                <div class="form-group" id="dr_row_value">
+                    <label class="col-md-2 control-label">{dr_lang('处理金额')}</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control input-large" id="dr_value" name="data[value]"></label>
+                        <span class="help-block"> {dr_lang('金额为正数表示冻结; 负数表示解除冻结')} </span>
+                    </div>
+                </div>
+                <div class="form-group" id="dr_row_note">
+                    <label class="col-md-2 control-label">{dr_lang('备注说明')}</label>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="dr_note" name="data[note]" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('确定操作')}</button>
+        </div>
+    </div>
+</form>
+
+{template "footer.html"}
