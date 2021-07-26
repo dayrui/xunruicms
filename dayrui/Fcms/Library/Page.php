@@ -518,7 +518,7 @@ class Page {
         // Render the "next" link
         if ($this->next_link !== FALSE && ($this->cur_page < $num_pages || $this->compel_next_page))
         {
-            $i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
+            $i = ($this->use_page_numbers) ? min($num_pages, $this->cur_page + 1) : $this->cur_page * $this->per_page;
 
             $attributes = !$this->data_page_attr ? '' : sprintf(' %s="%d"', $this->data_page_attr, (int) $i);
             if ($this->next_anchor_class) {
