@@ -23,8 +23,8 @@
                     {loop $html.pay_type $name $t}
                     <label onclick="dr_select_paytype('{$name}')" class="btn btn-lg btn-default {if $name == $html.pay_default}active{/if}"> <input type="radio" class="toggle"> {$t['icon']} {$t['name']} </label>
                     {/loop}
-                    <input type="hidden" name="pay[type]" value="{$html.pay_default}" id="dr_payselect">
                 </div>
+                <input type="hidden" name="pay[type]" value="{$html.pay_default}" id="dr_payselect">
             </div>
         </div>
 
