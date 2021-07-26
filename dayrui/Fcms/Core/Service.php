@@ -147,6 +147,7 @@ class Service
             return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
         }
 
+        $message.= '---'.FC_NOW_URL;
         return \Config\Services::logger(true)->log($level, $message, $context);
     }
 

@@ -166,9 +166,7 @@ class Member_paylog extends \Phpcmf\Table
             // 增加到交易流水
             $rt =  \Phpcmf\Service::M('Pay')->add_paylog([
                 'uid' => $data['uid'],
-                'username' => $data['username'],
                 'touid' => 0,
-                'tousername' => '',
                 'mid' => 'system-recovery-'.$id,
                 'title' => dr_lang('系统回收'),
                 'value' => -$data['value'],

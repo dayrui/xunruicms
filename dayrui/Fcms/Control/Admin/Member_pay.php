@@ -135,7 +135,7 @@ class Member_pay extends \Phpcmf\Common {
                 $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                     'uid' => $user['id'],
                     'touid' => $user['id'],
-                    'mid' => 'system',
+                    'mid' => 'admin-freeze',
                     'title' => '后台解冻资金',
                     'value' => abs($post['value']),
                     'type' => 'system',
@@ -154,7 +154,7 @@ class Member_pay extends \Phpcmf\Common {
                 $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                     'uid' => $user['id'],
                     'touid' => $user['id'],
-                    'mid' => 'system',
+                    'mid' => 'admin-freeze',
                     'title' => '后台冻结资金',
                     'value' => -$post['value'],
                     'type' => 'system',

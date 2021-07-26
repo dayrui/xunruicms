@@ -435,17 +435,11 @@
                     'name' => dr_lang('账号'),
                     'ismain' => 1,
                     'ismember' => 1,
-                    'fieldtype' => 'Textbtn',
+                    'fieldtype' => 'Uid',
                     'fieldname' => 'uid',
                     'setting' => array(
                         'option' => array(
                             'width' => '100%',
-                            'name' => dr_lang('资料'),
-                            'icon' => 'fa fa-user',
-                            'func' => 'dr_show_member',
-                            'diy_show_value' => 'member:author',
-                            'diy_insert_value' => 'member:uid',
-                            'value'	=> \Phpcmf\Service::C()->member['uid']
                         ),
                         'validate' => array(
                             'check' => '_check_member',
@@ -595,8 +589,11 @@
                         $app = $this->app;
                         $fname = $name;
                     }
-                    if (!$app || !dr_is_app($app)) {
+                    if ($app && !dr_is_app($app)) {
                         log_message('error', '字段类别['.$name.']所属插件['.$app.']未安装');
+                        return;
+                    } elseif (!$app) {
+                        log_message('error', '字段类别['.$name.']不存在');
                         return;
                     }
                     $file = dr_get_app_dir($app).'Fields/'.ucfirst($fname).'.php';
