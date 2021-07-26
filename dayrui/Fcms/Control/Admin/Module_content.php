@@ -26,7 +26,7 @@ class Module_content extends \Phpcmf\Common
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '内容维护工具' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-wrench'],
-                    'help' => [398],
+                    'help' => [1142],
                 ]
             ),
             'table' => \Phpcmf\Service::L('input')->get('table'),
@@ -122,6 +122,80 @@ class Module_content extends \Phpcmf\Common
             }
 
             \Phpcmf\Service::M()->db->query('UPDATE `'.$table.'` SET '.$replace);
+            $count = \Phpcmf\Service::M()->db->affectedRows();
+        }
+
+        if ($count < 0) {
+            $this->_json(0, dr_lang('执行错误'));
+        }
+
+        $this->_json(1, dr_lang('本次替换%s条数据', $count));
+    }
+
+    // 内容批量修改
+    public function all_edit() {
+        $bm = \Phpcmf\Service::L('input')->post('bm');
+        if (!$bm) {
+            $this->_json(0, dr_lang('表名不能为空'));
+        }
+        $tables = [];
+        if (strpos($bm, '[tableid]')) {
+            for ($i = 0; $i < 200; $i ++) {
+                $table = str_replace('[tableid]', $i, $bm);
+                if (!\Phpcmf\Service::M()->db->query("SHOW TABLES LIKE '".$table."'")->getRowArray()) {
+                    break;
+                }
+                $tables[$table] = $this->_get_field($table);
+            }
+        } else {
+            $tables[$bm] = $this->_get_field($bm);
+        }
+
+        $t1 = \Phpcmf\Service::L('input')->post('t1');
+        $t2 = \Phpcmf\Service::L('input')->post('t2');
+        $ms = (int)\Phpcmf\Service::L('input')->post('ms');
+        $fd = dr_safe_replace(\Phpcmf\Service::L('input')->post('fd'));
+
+        if (!$fd) {
+            $this->_json(0, dr_lang('待修改字段必须填写'));
+        } elseif (!$tables) {
+            $this->_json(0, dr_lang('表名称必须填写'));
+        } elseif ($fd == 'id') {
+            $this->_json(0, dr_lang('ID主键不支持替换'));
+        }
+
+        $count = 0;
+
+        $where = '';
+        if ($t1) {
+            // 防范sql注入后期需要加强
+            foreach (['outfile', 'dumpfile', '.php', 'union', ';'] as $kw) {
+                if (strpos(strtolower($t1), $kw) !== false) {
+                    $this->_json(0, dr_lang('存在非法SQL关键词：%s', $kw));
+                }
+            }
+            $where = ' WHERE '.addslashes($t1);
+        }
+
+        if ($ms == 1) {
+            // 之前
+            $replace = '`'.$fd.'`=CONCAT(\''.addslashes($t2).'\', `'.$fd.'`)';
+        } elseif ($ms == 2) {
+            // 之后
+            $replace = '`'.$fd.'`=CONCAT(`'.$fd.'`, \''.addslashes($t2).'\')';
+        } else {
+            // 替换
+            $replace = '`'.$fd.'`=\''.addslashes($t2).'\'';
+        }
+
+
+        foreach ($tables as $table => $fields) {
+
+            if (!dr_in_array($fd, $fields)) {
+                $this->_json(0, dr_lang('表[%s]字段[%s]不存在', $table, $fd));
+            }
+
+            \Phpcmf\Service::M()->db->query('UPDATE `'.$table.'` SET '.$replace . $where);
             $count = \Phpcmf\Service::M()->db->affectedRows();
         }
 
