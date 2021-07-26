@@ -517,14 +517,9 @@ class Module extends \Phpcmf\Model
 		$CAT = $CAT_DIR = $level = [];
         if ($category) {
             // 栏目的定义字段
-            $like = ['catmodule-'.$cdir];
-            if ($cache['share']) {
-                $like[] = 'catmodule-share';
-            }
-
             $field = $this->db->table('field')
                 ->where('disabled', 0)
-                ->whereIn('relatedname', $like)
+                ->where('relatedname', 'category-'.$cdir)
                 ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
             if ($field) {
                 foreach ($field as $f) {
@@ -629,7 +624,7 @@ class Module extends \Phpcmf\Model
             }
 
             // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
-            $like = ['catmodule-'.$cache['dirname']];
+            $like = ['catmodule-'.$cdir];
             if ($cache['share']) {
                 $like[] = 'catmodule-share';
             }
