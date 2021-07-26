@@ -41,6 +41,15 @@ class Member_pay extends \Phpcmf\Common {
             } elseif (!$post['note']) {
                 $this->_json(0, dr_lang('备注说明未填写'), ['field' => 'note']);
             }
+            if ($post['type'] == 1) {
+                // 增加
+                $post['value'] = abs($post['value']);
+                $msg = '充值%s成功';
+            } else {
+                // 减少
+                $post['value'] = abs($post['value']) * -1;
+                $msg = '扣减%s成功';
+            }
             if ($post['unit'] == 1) {
                 // 虚拟金币
                 if ($user['score'] + $post['value'] < 0) {
@@ -51,7 +60,7 @@ class Member_pay extends \Phpcmf\Common {
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-                $this->_json(1, dr_lang('充值%s成功', SITE_SCORE.$post['value']));
+                $this->_json(1, dr_lang($msg, SITE_SCORE.$post['value']));
             } elseif ($post['unit'] == 3) {
                 // 升级值
                 if ($user['experience'] + $post['value'] < 0) {
@@ -62,7 +71,7 @@ class Member_pay extends \Phpcmf\Common {
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-                $this->_json(1, dr_lang('充值%s成功', SITE_EXPERIENCE.$post['value']));
+                $this->_json(1, dr_lang($msg, SITE_EXPERIENCE.$post['value']));
             } else {
                 // rmb
                 if ($user['money'] + $post['value'] < 0) {
@@ -102,7 +111,7 @@ class Member_pay extends \Phpcmf\Common {
                 \Phpcmf\Service::L('Notice')->send_notice('pay_admin', $call);
                 // 钩子
                 \Phpcmf\Hooks::trigger('pay_admin_after', $call);
-                $this->_json(1, dr_lang('充值%s成功', 'RMB'.$post['value']));
+                $this->_json(1, dr_lang($msg, 'RMB'.$post['value']));
             }
         }
 
@@ -119,34 +128,16 @@ class Member_pay extends \Phpcmf\Common {
             $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['uid'])->get()->getRowArray();
             if (!$user) {
                 $this->_json(0, dr_lang('账号[%s]不存在', $post['uid']), ['field' => 'uid']);
-            } elseif (!$post['value']) {
-                $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
             } elseif (!$post['note']) {
                 $this->_json(0, dr_lang('备注说明未填写'), ['field' => 'note']);
             }
 
-            if ($post['value'] < 0) {
-                // 解冻
-                if ($user['freeze'] - $post['value'] < 0) {
-                    $this->_json(0, dr_lang('账号可用冻结金额不足'), ['field' => 'value']);
-                }
-                \Phpcmf\Service::M('member')->cancel_freeze($user['id'], $post['value']);
-                // 增加到交易流水
-                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
-                    'uid' => $user['id'],
-                    'touid' => $user['id'],
-                    'mid' => 'admin-freeze',
-                    'title' => '后台解冻资金',
-                    'value' => abs($post['value']),
-                    'type' => 'system',
-                    'status' => 1,
-                    'result' => $post['note'],
-                    'paytime' => SYS_TIME,
-                    'inputtime' => SYS_TIME,
-                ]);
-            } else {
+            $post['value'] = abs($post['value']);
+            if ($post['type'] == 1) {
                 // 冻结
-                if ($user['money'] - $post['value'] < 0) {
+                if (!$post['value']) {
+                    $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
+                } elseif ($user['money'] - $post['value'] < 0) {
                     $this->_json(0, dr_lang('账号可用金额不足'), ['field' => 'value']);
                 }
                 \Phpcmf\Service::M('member')->add_freeze($user['id'], $post['value']);
@@ -163,7 +154,48 @@ class Member_pay extends \Phpcmf\Common {
                     'paytime' => SYS_TIME,
                     'inputtime' => SYS_TIME,
                 ]);
+                $msg = '冻结%s成功';
+            } elseif ($post['type'] == 0) {
+                // 解冻
+                if (!$post['value']) {
+                    $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
+                } elseif ($user['freeze'] - $post['value'] < 0) {
+                    $this->_json(0, dr_lang('账号可用冻结金额不足'), ['field' => 'value']);
+                }
+                \Phpcmf\Service::M('member')->cancel_freeze($user['id'], $post['value']);
+                // 增加到交易流水
+                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                    'uid' => $user['id'],
+                    'touid' => $user['id'],
+                    'mid' => 'admin-freeze',
+                    'title' => '后台解冻资金',
+                    'value' => abs($post['value']),
+                    'type' => 'system',
+                    'status' => 1,
+                    'result' => $post['note'],
+                    'paytime' => SYS_TIME,
+                    'inputtime' => SYS_TIME,
+                ]);
+                $msg = '解冻%s成功';
+            } else {
+                // 指定任意值
+                \Phpcmf\Service::M()->table('member')->update($user['id'], ['freeze' => $post['value'] ]);
+                // 增加到交易流水
+                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                    'uid' => $user['id'],
+                    'touid' => $user['id'],
+                    'mid' => 'admin-freeze',
+                    'title' => '后台设置指定冻结资金',
+                    'value' => abs($post['value']),
+                    'type' => 'system',
+                    'status' => 1,
+                    'result' => $post['note'],
+                    'paytime' => SYS_TIME,
+                    'inputtime' => SYS_TIME,
+                ]);
+                $msg = '设置指定冻结资金%s';
             }
+
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
@@ -180,7 +212,7 @@ class Member_pay extends \Phpcmf\Common {
             \Phpcmf\Service::L('Notice')->send_notice('pay_admin_freeze', $call);
             // 钩子
             \Phpcmf\Hooks::trigger('pay_admin_freeze', $call);
-            $this->_json(1, dr_lang($post['value'] > 0 ? '冻结%s成功' : '解冻%s成功', abs($post['value'])));
+            $this->_json(1, dr_lang($msg, abs($post['value'])));
 
         }
 

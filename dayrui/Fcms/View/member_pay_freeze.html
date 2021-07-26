@@ -1,6 +1,6 @@
 {template "header.html"}
 <div class="note note-danger">
-    <p>{dr_lang('金额为正数表示冻结; 负数表示解除冻结')}</p>
+    <p>{dr_lang('为指定账户进行冻结资金')}</p>
 </div>
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}
@@ -14,11 +14,23 @@
             <div class="form-body">
 
                 {$myfield}
+                <div class="form-group" id="dr_row_type">
+                    <label class="col-md-2 control-label">{dr_lang('处理方式')}</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input name="data[type]" onclick="$('.type_0').hide();$('.type_1').show();$('.type_2').hide();" checked type="radio"  value="1"  /> {dr_lang('冻结')} <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input name="data[type]" onclick="$('.type_0').show();$('.type_1').hide();$('.type_2').hide();" type="radio" value="0"  /> {dr_lang('解冻')} <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input name="data[type]" onclick="$('.type_0').hide();$('.type_1').hide();$('.type_2').show();" type="radio" value="2"  /> {dr_lang('指定值')} <span></span></label>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group" id="dr_row_value">
                     <label class="col-md-2 control-label">{dr_lang('处理金额')}</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control input-large" id="dr_value" name="data[value]"></label>
-                        <span class="help-block"> {dr_lang('金额为正数表示冻结; 负数表示解除冻结')} </span>
+                        <span class="help-block type_1"> {dr_lang('冻结余额增加，账户余额-处理金额＝账户实际金额')} </span>
+                        <span class="help-block type_0" style="display: none"> {dr_lang('冻结余额减少，账户余额+处理金额＝账户实际金额')} </span>
+                        <span class="help-block type_2" style="display: none"> {dr_lang('冻结余额设置为处理金额，账户实际金额不变')} </span>
                     </div>
                 </div>
                 <div class="form-group" id="dr_row_note">
@@ -32,7 +44,7 @@
     </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('确定操作')}</button>
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('确定操作')}</button>
         </div>
     </div>
 </form>
