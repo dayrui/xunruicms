@@ -5,8 +5,25 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Member_pay extends \Phpcmf\Common
-{
+class Member_pay extends \Phpcmf\Common {
+
+    public function __construct(...$params) {
+        parent::__construct(...$params);
+        $fdata = \Phpcmf\Service::L('Field')->sys_field(['uid']);
+        $fdata['uid']['name'] = dr_lang('用户账号');
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '用户充值' => ['member_pay/index', 'fa fa-rmb'],
+                    '资金冻结' => ['member_pay/freeze_index', 'bi bi-dash-circle-fill'],
+                    'help' => [ 600 ],
+                ]
+            ),
+            'myfield' => dr_rp(\Phpcmf\Service::L('Field')->toform(0, $fdata), 'width:100%;', 'width:300px;'),
+        ]);
+    }
+
     public function index() {
 
         if (IS_AJAX_POST) {
@@ -59,9 +76,7 @@ class Member_pay extends \Phpcmf\Common
                 // 增加到交易流水
                 $rt = \Phpcmf\Service::M('Pay')->add_paylog([
                     'uid' => $user['id'],
-                    'username' => $user['username'],
                     'touid' => $user['id'],
-                    'tousername' => $user['username'],
                     'mid' => 'system',
                     'title' => dr_lang('后台充值'),
                     'value' => $post['value'],
@@ -91,20 +106,85 @@ class Member_pay extends \Phpcmf\Common
             }
         }
 
-        $fdata = \Phpcmf\Service::L('Field')->sys_field(['uid']);
-        $fdata['uid']['name'] = dr_lang('充值账号');
-
-        \Phpcmf\Service::V()->assign([
-            'form' => dr_form_hidden(),
-            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-                [
-                    '用户充值' => ['member_pay/index', 'fa fa-rmb'],
-                    'help' => [ 600 ],
-                ]
-            ),
-            'myfield' => dr_rp(\Phpcmf\Service::L('Field')->toform(0, $fdata), 'width:100%;', 'width:300px;'),
-        ]);
         \Phpcmf\Service::V()->display('member_pay.html');
+    }
+
+    public function freeze_index() {
+
+        if (IS_AJAX_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if (!$post['uid']) {
+                $this->_json(0, dr_lang('账号不能为空'), ['field' => 'uid']);
+            }
+            $user = \Phpcmf\Service::M()->db->table('member')->where('username', $post['uid'])->get()->getRowArray();
+            if (!$user) {
+                $this->_json(0, dr_lang('账号[%s]不存在', $post['uid']), ['field' => 'uid']);
+            } elseif (!$post['value']) {
+                $this->_json(0, dr_lang('金额值未填写'), ['field' => 'value']);
+            } elseif (!$post['note']) {
+                $this->_json(0, dr_lang('备注说明未填写'), ['field' => 'note']);
+            }
+
+            if ($post['value'] < 0) {
+                // 解冻
+                if ($user['freeze'] - $post['value'] < 0) {
+                    $this->_json(0, dr_lang('账号可用冻结金额不足'), ['field' => 'value']);
+                }
+                \Phpcmf\Service::M('member')->cancel_freeze($user['id'], $post['value']);
+                // 增加到交易流水
+                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                    'uid' => $user['id'],
+                    'touid' => $user['id'],
+                    'mid' => 'system',
+                    'title' => '后台解冻资金',
+                    'value' => abs($post['value']),
+                    'type' => 'system',
+                    'status' => 1,
+                    'result' => $post['note'],
+                    'paytime' => SYS_TIME,
+                    'inputtime' => SYS_TIME,
+                ]);
+            } else {
+                // 冻结
+                if ($user['money'] - $post['value'] < 0) {
+                    $this->_json(0, dr_lang('账号可用金额不足'), ['field' => 'value']);
+                }
+                \Phpcmf\Service::M('member')->add_freeze($user['id'], $post['value']);
+                // 增加到交易流水
+                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                    'uid' => $user['id'],
+                    'touid' => $user['id'],
+                    'mid' => 'system',
+                    'title' => '后台冻结资金',
+                    'value' => -$post['value'],
+                    'type' => 'system',
+                    'status' => 1,
+                    'result' => $post['note'],
+                    'paytime' => SYS_TIME,
+                    'inputtime' => SYS_TIME,
+                ]);
+            }
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            $call = [
+                'uid' => $user['id'],
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'phone' => $user['phone'],
+                'value' => $post['value'],
+                'url' => \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id' => $rt['code']]),
+                'result' => $post['note'],
+            ];
+            // 通知
+            \Phpcmf\Service::L('Notice')->send_notice('pay_admin_freeze', $call);
+            // 钩子
+            \Phpcmf\Hooks::trigger('pay_admin_freeze', $call);
+            $this->_json(1, dr_lang($post['value'] > 0 ? '冻结%s成功' : '解冻%s成功', abs($post['value'])));
+
+        }
+
+        \Phpcmf\Service::V()->display('member_pay_freeze.html');
     }
 
 }

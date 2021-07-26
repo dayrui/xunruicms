@@ -688,7 +688,7 @@ class Model {
                     }
                     dr_count($id) == 1 ? $select->where($this->table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
                     $param['keyword'] = htmlspecialchars($param['keyword']);
-                } elseif ($param['field'] == 'uid') {
+                } elseif ($param['field'] == 'uid' || $field[$param['field']]['fieldtype'] == 'Uid') {
                     // 数字查询作为账号id
                     $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
                     if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {

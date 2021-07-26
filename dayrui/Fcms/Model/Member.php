@@ -1503,7 +1503,7 @@ class Member extends \Phpcmf\Model {
         return $rt;
     }
 
-    // 使用冻结资金
+    // 使用消费资金
     public function use_freeze($uid, $value) {
 
         $value = floatval(abs($value));

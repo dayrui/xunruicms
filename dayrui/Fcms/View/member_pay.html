@@ -14,18 +14,18 @@
             <div class="form-body">
 
                 <div class="form-group" id="dr_row_unit">
-                    <label class="col-md-2 control-label"><span class="required" aria-required="true"> * </span> {dr_lang('充值类型')}</label>
+                    <label class="col-md-2 control-label">{dr_lang('充值类型')}</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input name="data[unit]" checked type="radio" value="2"  /> {dr_lang('人民币')} <span></span></label>
                             {if dr_is_app('scorelog')}<label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="1" /> {SITE_SCORE} <span></span></label>{/if}
                             {if dr_is_app('explog')}<label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="3" /> {SITE_EXPERIENCE} <span></span></label>{/if}
-                            <label class="mt-radio mt-radio-outline"><input name="data[unit]" checked type="radio" value="2"  /> {dr_lang('人民币')} <span></span></label>
                         </div>
                     </div>
                 </div>
                 {$myfield}
                 <div class="form-group" id="dr_row_value">
-                    <label class="col-md-2 control-label"><span class="required" aria-required="true"> * </span> {dr_lang('充值金额')}</label>
+                    <label class="col-md-2 control-label">{dr_lang('充值金额')}</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control input-large" id="dr_value" name="data[value]"></label>
                         <span class="help-block"> {dr_lang('正数表示增加; 负数表示减少')} </span>

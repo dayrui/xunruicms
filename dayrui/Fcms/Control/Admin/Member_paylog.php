@@ -27,22 +27,11 @@ class Member_paylog extends \Phpcmf\Table
                     ),
                 )
             ),
-            'username' => array(
+            'touid' => array(
                 'ismain' => 1,
-                'name' => dr_lang('付款账户'),
-                'fieldname' => 'username',
-                'fieldtype' => 'Text',
-                'setting' => array(
-                    'option' => array(
-                        'width' => 200,
-                    ),
-                )
-            ),
-            'tousername' => array(
-                'ismain' => 1,
-                'name' => dr_lang('收款账户'),
-                'fieldname' => 'tousername',
-                'fieldtype' => 'Text',
+                'name' => dr_lang('收款人'),
+                'fieldname' => 'touid',
+                'fieldtype' => 'Uid',
                 'setting' => array(
                     'option' => array(
                         'width' => 200,
@@ -52,9 +41,9 @@ class Member_paylog extends \Phpcmf\Table
             'uid' => array(
                 'ismain' => 1,
                 'isint' => 1,
-                'name' => dr_lang('付款uid'),
+                'name' => dr_lang('付款人'),
                 'fieldname' => 'uid',
-                'fieldtype' => 'Text',
+                'fieldtype' => 'Uid',
                 'setting' => array(
                     'option' => array(
                         'width' => 200,

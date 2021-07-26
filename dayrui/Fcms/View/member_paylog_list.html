@@ -26,12 +26,12 @@
         <div class="col-md-12 col-sm-12">
             <label>
                 <select name="field" class="form-control">
+                    <option value="id"> {dr_lang('流水号')} </option>
                     {loop $field $t}
                     {if dr_is_admin_search_field($t)}
                     <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
                     {/if}
                     {/loop}
-                    <option value="id"> {dr_lang('流水号')} </option>
                 </select>
             </label>
             <label><i class="fa fa-caret-right"></i></label>

@@ -199,29 +199,48 @@ class Login extends \Phpcmf\Common
             // 没有绑定账号
             if ($this->member_cache['oauth']['login']) {
                 // 直接登录 就直接创建账号
-                if (IS_POST) {
-                    $groupid = (int)\Phpcmf\Service::L('input')->post('groupid');
-                    if (!$this->member_cache['group'][$groupid]['register']) {
-                        $this->_json(0, dr_lang('该用户组不允许注册'));
+                if ($this->member_cache['register']['group'] && dr_count($this->member_cache['register']['group']) > 1) {
+                    // 多个组需要选择
+                    if (IS_POST) {
+                        $groupid = (int)\Phpcmf\Service::L('input')->post('groupid');
+                        if (!$this->member_cache['group'][$groupid]['register']) {
+                            $this->_json(0, dr_lang('该用户组不允许注册'));
+                        }
+                        // 注册
+                        $rt = \Phpcmf\Service::M('member')->register_oauth($groupid, $oauth);
+                        if ($rt['code']) {
+                            // 登录成功
+                            $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
+                            // 删除认证缓存
+                            \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
+                            $this->_json(1, 'ok', $rt['data']);
+                        } else {
+                            $this->_json(0, $rt['msg']);
+                        }
                     }
-                    // 注册
-                    $rt = \Phpcmf\Service::M('member')->register_oauth($groupid, $oauth);
+                    \Phpcmf\Service::V()->assign([
+                        'form' => dr_form_hidden(),
+                        'meta_name' => dr_lang('授权登录'),
+                        'meta_title' => dr_lang('授权登录').SITE_SEOJOIN.SITE_NAME,
+                    ]);
+                    \Phpcmf\Service::V()->display('login_select.html');
+                } else {
+                    // 单个用户组组直接注册
+                    $rt = \Phpcmf\Service::M('member')->register_oauth(0, $oauth);
                     if ($rt['code']) {
                         // 登录成功
                         $rt['data']['url'] = \Phpcmf\Service::L('input')->xss_clean($goto_url);
                         // 删除认证缓存
                         \Phpcmf\Service::L('cache')->del_auth_data($auth_name);
-                        $this->_json(1, 'ok', $rt['data']);
+                        $sso = '';
+                        foreach ($rt['data']['sso'] as $url) {
+                            $sso.= '<script src="'.$url.'"></script>';
+                        }
+                        $this->_msg(1, dr_lang('登录成功').$sso, $goto_url);
                     } else {
-                        $this->_json(0, $rt['msg']);
+                        $this->_msg(0, $rt['msg']);
                     }
                 }
-                \Phpcmf\Service::V()->assign([
-                    'form' => dr_form_hidden(),
-                    'meta_name' => dr_lang('授权登录'),
-                    'meta_title' => dr_lang('授权登录').SITE_SEOJOIN.SITE_NAME,
-                ]);
-                \Phpcmf\Service::V()->display('login_select.html');
             } else {
                 // 绑定账号 绑定已有的账号或者注册新账号
                 $type = intval(\Phpcmf\Service::L('input')->get('type'));

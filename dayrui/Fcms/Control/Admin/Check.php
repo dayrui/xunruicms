@@ -245,6 +245,12 @@ class Check extends \Phpcmf\Common
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
                 }
+                if (!\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `username`');
+                }
+                if (!\Phpcmf\Service::M()->db->fieldExists('tousername', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `tousername`');
+                }
 
                 $table = $prefix.'member_group_verify';
                 if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
