@@ -29,7 +29,7 @@
                     {else}
                     <li>
                         <span>框架版本</span>
-                        <a target="_blank" href="https://www.xunruicms.com/">{$cmf_version}（未授权）</a>
+                        <a target="_blank" href="https://www.xunruicms.com/">{$cmf_version}</a>
                         <a id="dr_cmf_update" href="{dr_url('cloud/update')}" style="margin-left: 10px;display: none" class="badge badge-danger badge-roundless">  </a>
                     </li>
 
@@ -51,8 +51,6 @@
                     </li>
                     {/if}
                 </ul>
-
-
                 <script>
                     $(function () {
                         $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
