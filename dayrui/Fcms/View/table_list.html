@@ -1,22 +1,27 @@
 {template "header.html"}
 
+{if $is_time_where}
 {template "api_list_date_search.html"}
-
+{/if}
 
 <div class="right-card-box">
     <div class="row table-search-tool">
         <form action="{SELF}" method="get">
-            {dr_form_search_hidden(['field' => 'content'])}
-            {if $is_category_show}
+            {dr_form_search_hidden()}
             <div class="col-md-12 col-sm-12">
                 <label>
-                    {$category_select}
+                    <select name="field" class="form-control">
+                        <option value="id"> Id </option>
+                        {loop $field $t}
+                        <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                        {/loop}
+                    </select>
                 </label>
+                <label><i class="fa fa-caret-right"></i></label>
+                <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
             </div>
-            {/if}
-            <div class="col-md-12 col-sm-12">
-                <label><input type="text" class="form-control" placeholder="{dr_lang('全文搜索')}" value="{$param['keyword']}" name="keyword" /></label>
-            </div>
+
+            {if $is_time_where}
             <div class="col-md-12 col-sm-12">
                 <label>
                     <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
@@ -26,7 +31,7 @@
                     </div>
                 </label>
             </div>
-
+            {/if}
 
             <div class="col-md-12 col-sm-12">
                 <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
@@ -49,25 +54,16 @@
                         </label>
                     </th>
                     {/if}
-                    <th class="{dr_sorting('cid')}" name="cid">{dr_lang('主题')}</th>
-                    <th class="{dr_sorting('catid')}" name="cait" width="150">{dr_lang('栏目')}</th>
-                    <th class="{dr_sorting('inputtime')}" name="inputtime" width="160">{dr_lang('编辑时间')}</th>
+                    {loop $list_field $i $t}
+                    <th {if $t.width} width="{$t.width}"{/if} {if $t.center} style="text-align:center"{/if} class="{dr_sorting($i)}" name="{$i}">{dr_lang($t.name)}</th>
+                    {/loop}
                     <th>{dr_lang('操作')}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {loop $list $t}
-                <?php
-            $c=dr_string2array($t.content);
-            if ($t.cid) {
-                $url=dr_url(APP_DIR.'/home/edit',array('id'=>$t.cid, 'did'=>$t.id));
-                } else {
-                $url=dr_url(APP_DIR.'/home/add',array('did'=>$t.id));
-                }
-                $t['url'] = SITE_URL.'index.php?s='.APP_DIR.'&c=show&m=draft&id='.$t['id'];
-                ?>
                 <tr class="odd gradeX" id="dr_row_{$t.id}">
-                    {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                    {if $ci->_is_admin_auth('del')}
                     <td class="myselect">
                         <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                             <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
@@ -75,12 +71,13 @@
                         </label>
                     </td>
                     {/if}
-                    <td>{Function_list::title($c.title, null, $t)}</td>
-                    <td>{Function_list::catid($t.catid, null, $t)}</td>
-                    <td>{dr_date($t.inputtime)}</td>
+
+                    {loop $list_field $i $tt}
+                    <td {if $tt.center} class="table-center" style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
+                    {/list}
                     <td>
-                        {if $ci->_is_admin_auth('add')}
-                        <label><a href="{$url}" class="btn btn-xs blue"> <i class="fa fa-edit"></i> {dr_lang('发布')}</a></label>
+                        {if $ci->_is_admin_auth('edit')}
+                        <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs blue"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
                         {/if}
                     </td>
                 </tr>
@@ -96,7 +93,7 @@
                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
                     <span></span>
                 </label>
-                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
                 {/if}
             </div>
             <div class="col-md-7 fc-list-page">
@@ -104,6 +101,6 @@
             </div>
         </div>
     </form>
-
 </div>
+
 {template "footer.html"}
