@@ -60,10 +60,10 @@
                                 <script>
                                     // 这段js是用来执行搜索的
                                     function dr_module_search(name) {
-                                        var url="{Router::search_url($params, 'keyword', 'xunruicms')}";
+                                        var url="{Router::search_url($params, 'keyword', 'dayrui')}";
                                         var value = $("#"+name).val();
                                         if (value) {
-                                            location.href=url.replace('xunruicms', value);
+                                            location.href=url.replace('dayrui', value);
                                         } else {
                                             $("#"+name).focus()
                                             dr_tips(0, "输入关键字");
