@@ -288,7 +288,7 @@
                     'setting' => []
                 ],
                 'score' => [
-                    'name' => dr_lang('虚拟币'),
+                    'name' => dr_lang('积分'),
                     'ismain' => 1,
                     'ismember' => 1,
                     'fieldtype' => 'Text',

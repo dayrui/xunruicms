@@ -212,7 +212,7 @@ class Function_list
         return '<span style="color:#ef4c2f">'.number_format($value, 2).'</span>';
     }
 
-    // 用于列表显示虚拟币
+    // 用于列表显示积分
     public function score($value, $param = [], $data = [], $field = []) {
         if (dr_is_app('scorelog') && \Phpcmf\Service::C()->_is_admin_auth('scorelog/home/index')) {
             return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$data['id']]). '" style="color:#2f5fef">' .intval($value).'</a>';

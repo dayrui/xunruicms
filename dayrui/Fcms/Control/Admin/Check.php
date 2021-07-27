@@ -515,7 +515,7 @@ class Check extends \Phpcmf\Common
                     'form' => '全局网站表单',
                     'mform' => '模块内容表单',
                     'notice' => '站内消息',
-                    'scorelog' => '虚拟币系统',
+                    'scorelog' => '积分系统',
                     'explog' => '经验值系统',
                 ];
                 foreach ($table_app as $table => $name) {

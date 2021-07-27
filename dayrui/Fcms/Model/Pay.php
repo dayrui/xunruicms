@@ -589,7 +589,7 @@ class Pay extends \Phpcmf\Model
                     break;
 
                 case 'score':
-                    // 虚拟币充值
+                    // 积分充值
                     $value = abs($data['value']) * \Phpcmf\Service::C()->member_cache['pay']['convert'];
                     \Phpcmf\Service::M('member')->add_score($data['uid'], $value, dr_lang('在线充值'), $data['url']);
                     break;

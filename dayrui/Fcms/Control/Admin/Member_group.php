@@ -96,7 +96,7 @@ class Member_group extends \Phpcmf\Table
                 $dwz = SITE_EXPERIENCE;
             }
         } else {
-            // 手动模式，只有人民币和虚拟币
+            // 手动模式，只有人民币和积分
             if ($group['unit']) {
                 $dwz = SITE_SCORE;
             } else {

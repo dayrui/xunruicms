@@ -1743,7 +1743,7 @@ class Member extends \Phpcmf\Model {
                 'score' =>
                     array (
                         'use' => '1',
-                        'name' => '虚拟币',
+                        'name' => '积分',
                         'width' => '120',
                         'func' => 'score',
                     ),
