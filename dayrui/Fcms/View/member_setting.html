@@ -270,12 +270,6 @@
                 <div class="tab-pane {if $page==4}active{/if}" id="tab_4">
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('登录验证码')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[login][code]" value="1" {if $data['login']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录主字段')}</label>
                             <div class="col-md-9">
                                 <div class="mt-checkbox-inline">
@@ -286,6 +280,15 @@
                                 <span class="help-block">{dr_lang('可同时选择多个字段作为登录主字段')}</span>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('登录图片验证码')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[login][code]" value="1" {if $data['login']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('短信验证码登录')}</label>
                             <div class="col-md-9">
@@ -293,6 +296,7 @@
                                 <span class="help-block"><a href="javascript:dr_help(501);">{dr_lang('登录字段必须包含手机号码才能使用此功能')}</a></span>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('短信登录时自动注册')}</label>
                             <div class="col-md-9">
@@ -399,7 +403,7 @@
                                 <span class="help-block">{dr_lang('注册字段必须包含手机号码才能使用此功能，用于手机短信验证码')}</span>
                             </div>
                         </div>
-						 {if $data['register']['sms']}
+						 {if $data['register']['sms'] && !SYS_SMS_IMG_CODE}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册图片验证码')}</label>
                             <div class="col-md-9">
