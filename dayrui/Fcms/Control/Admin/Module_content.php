@@ -215,6 +215,7 @@ class Module_content extends \Phpcmf\Common
         $replace[0][] = '{dbprefix}';
         $replace[1][] = \Phpcmf\Service::M()->db->DBPrefix;
         $sql_data = explode(';SQL_FINECMS_EOL', trim(str_replace(array(PHP_EOL, chr(13), chr(10)), 'SQL_FINECMS_EOL', str_replace($replace[0], $replace[1], $sqls))));
+
         if ($sql_data) {
             foreach($sql_data as $query){
                 if (!$query) {
@@ -232,6 +233,9 @@ class Module_content extends \Phpcmf\Common
                 $ck = 0;
                 foreach (['select', 'create', 'drop', 'alter', 'insert', 'replace', 'update', 'delete'] as $key) {
                     if (strpos(strtolower($sql), $key) === 0) {
+                        if (!IS_DEV && in_array($key, ['create', 'drop', 'delete', 'alter'])) {
+                            $this->_json(0, dr_lang('为了安全起见，需要在开发者模式下才能运行%s语句', $key), -1);
+                        }
                         $ck = 1;
                         break;
                     }
