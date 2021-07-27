@@ -324,7 +324,7 @@ class File extends \Phpcmf\Common {
                     }
 
                     $preview = '<img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$fileext.'.png'.'">';
-                    in_array($fileext, ['jpg', 'gif', 'png', 'jpeg']) && $preview = '<a href="javascript:dr_preview_image(\''.\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/image_index', '/'), ['file'=>$file]).'\');">'.$preview.'</a>';
+                    dr_is_image($fileext) && $preview = '<a href="javascript:dr_preview_image(\''.\Phpcmf\Service::L('Router')->url(trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/image_index', '/'), ['file'=>$file]).'\');">'.$preview.'</a>';
 
                     // 文件上传模式
                     \Phpcmf\Service::V()->assign([

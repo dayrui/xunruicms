@@ -223,7 +223,7 @@ class File extends \Phpcmf\Library\A_Field {
 		if ($value) {
 			$file = \Phpcmf\Service::C()->get_attachment($value);
 			if ($file) {
-                if (IS_ADMIN && in_array($file['fileext'], ['jpg', 'gif', 'png', 'jpeg']) && \Phpcmf\Service::C()->_is_admin_auth()) {
+                if (IS_ADMIN && dr_is_image($file['fileext']) && \Phpcmf\Service::C()->_is_admin_auth()) {
                     $preview = '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \''.SELF.'?c=attachments&m=image_edit&id='.$file['id'].'\', \'80%\');"><img src="'.$file['url'].'"></a>';
                 } else {
                     $preview = dr_file_preview_html($file['url']);

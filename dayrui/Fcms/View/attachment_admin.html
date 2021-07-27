@@ -76,7 +76,7 @@
                 {loop $list $t}
                 <?php
 
-                if (in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg'])) {
+                if (dr_is_image($t.fileext)) {
                     $hs = 'dr_preview_image';
                 } elseif ($t.fileext == 'mp4') {
                     $hs = 'dr_preview_video';

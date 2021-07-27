@@ -417,7 +417,7 @@
                     'fieldname' => 'thumb',
                     'setting' => array(
                         'option' => array(
-                            'ext' => 'jpg,gif,png,jpeg',
+                            'ext' => 'jpg,gif,png,jpeg,webp',
                             'size' => 10,
                             'input' => 1,
                         )

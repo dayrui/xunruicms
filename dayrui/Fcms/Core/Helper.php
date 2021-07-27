@@ -1216,7 +1216,7 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
         } else {
             return IS_DEV ? '自定义附件（'.$data['remote'].'）的配置已经不存在' : '';
         }
-    } elseif ($w && $h && in_array($data['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+    } elseif ($w && $h && dr_is_image($data['fileext'])) {
         //return dr_thumb($data['id'], $w, $h, 0, 'crop');
         return dr_get_file($data['id']);
     }
@@ -1878,7 +1878,7 @@ function dr_file($url) {
 function dr_file_preview_html($value, $target = 0) {
 
     $ext = trim(strtolower(strrchr($value, '.')), '.');
-    if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg'])) {
+    if (dr_is_image($ext)) {
         $value = dr_file($value);
         $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_image(\''.$value.'\');';
         return '<a href="'.$url.'"><img src="'.$value.'"></a>';
@@ -1899,7 +1899,7 @@ function dr_file_preview_html($value, $target = 0) {
 
 // 用于附件列表查看时
 function dr_file_list_preview_html($t) {
-    if (in_array($t['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+    if (dr_is_image($t['fileext'])) {
         return '<a href="javascript:dr_preview_image(\''.dr_get_file_url($t).'\');"><img src="'.dr_get_file_url($t, 50, 50).'"></a>';
     } elseif ($t['fileext'] == 'mp4') {
         return '<a href="javascript:dr_preview_video(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
@@ -1910,9 +1910,16 @@ function dr_file_list_preview_html($t) {
     }
 }
 
-// 文件是否是图片
-function dr_is_image($value) {
-    return in_array(trim(strtolower(strrchr($value, '.')), '.'), ['jpg', 'gif', 'png', 'jpeg']);
+
+if (! function_exists('dr_is_image')) {
+    // 文件是否是图片
+    function dr_is_image($value)
+    {
+        return in_array(
+            strpos($value, '.') !== false ? trim(strtolower(strrchr($value, '.')), '.') : $value,
+            ['jpg', 'gif', 'png', 'jpeg', 'webp']
+        );
+    }
 }
 
 /**

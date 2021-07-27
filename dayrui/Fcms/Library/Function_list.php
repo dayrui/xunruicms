@@ -162,7 +162,7 @@ class Function_list
                 $value = $file['url'];
             }
             $ext = trim(strtolower(strrchr($value, '.')), '.');
-            if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg'])) {
+            if (dr_is_image($ext)) {
                 $url = 'javascript:dr_preview_image(\''.$value.'\');';
                 return '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
             } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {

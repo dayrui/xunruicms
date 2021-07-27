@@ -1083,7 +1083,7 @@ class Api extends \Phpcmf\Common {
             $info = \Phpcmf\Service::M()->table('attachment_unused')->get($id);
         }
 
-        if (!in_array($info['fileext'], ['jpg', 'gif', 'png', 'jpeg'])) {
+        if (!dr_is_image($info['fileext'])) {
             $this->_json(0, dr_lang('此文件不属于图片'));
         }
 
