@@ -51,7 +51,7 @@ class Member_pay extends \Phpcmf\Common {
                 $msg = '扣减%s成功';
             }
             if ($post['unit'] == 1) {
-                // 虚拟金币
+                // 积分
                 if ($user['score'] + $post['value'] < 0) {
                     $this->_json(0, dr_lang('账号%s不足', SITE_SCORE), ['field' => 'value']);
                 }

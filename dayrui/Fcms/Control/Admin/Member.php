@@ -667,7 +667,7 @@ class Member extends \Phpcmf\Table
         } elseif ($name == 'money') {
             $this->_json(0, dr_lang('金额不能变更'));
         } elseif ($name == 'score') {
-            $this->_json(0, dr_lang('虚拟金币不能变更'));
+            $this->_json(0, dr_lang('积分不能变更'));
         }
 
 
