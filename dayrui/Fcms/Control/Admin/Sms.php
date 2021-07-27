@@ -67,18 +67,23 @@ class Sms extends \Phpcmf\Common
 
 			$data = \Phpcmf\Service::L('input')->post('data');
 			if ($data['content'] && strlen($data['content']) < 10) {
-			    exit($this->_json(0, dr_lang('短信内容太短了')));
+			    $this->_json(0, dr_lang('短信内容太短了'));
+            } elseif (!$data['mobiles']) {
+                $this->_json(0, dr_lang('手机号码不能为空'));
             }
 
-			$mobile = trim(str_replace(',,', ',', str_replace(array(PHP_EOL, chr(13), chr(10)), ',', $data['mobiles'])), ',');
-			if (substr_count($mobile, ',') > 40) {
-			    exit($this->_json(0, dr_lang('群发一次不得超过40个，数量过多时请分批发送')));
+			$ok++;
+			$mobile = explode(',', trim(str_replace(',,', ',', str_replace(array(PHP_EOL, chr(13), chr(10)), ',', $data['mobiles'])), ','));
+			foreach ($mobile as $m) {
+                $rt = \Phpcmf\Service::M('member')->sendsms_text($m, $data['content']);
+                if ($rt['code']) {
+                    $ok ++;
+                }
             }
 			
 			\Phpcmf\Service::L('input')->system_log('发送系统短信'); // 记录日志
-			
-			$rt = \Phpcmf\Service::M('member')->sendsms_text($mobile, $data['content']);
-            exit($this->_json($rt['code'], $rt['msg']));
+
+            $this->_json(1, dr_lang('发送成功%s个手机', $ok));
 		}
 		
 		\Phpcmf\Service::V()->display('sms_add.html');

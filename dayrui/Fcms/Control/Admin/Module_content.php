@@ -234,7 +234,7 @@ class Module_content extends \Phpcmf\Common
                 foreach (['select', 'create', 'drop', 'alter', 'insert', 'replace', 'update', 'delete'] as $key) {
                     if (strpos(strtolower($sql), $key) === 0) {
                         if (!IS_DEV && in_array($key, ['create', 'drop', 'delete', 'alter'])) {
-                            $this->_json(0, dr_lang('为了安全起见，需要在开发者模式下才能运行%s语句', $key), -1);
+                            $this->_json(0, dr_lang('为了安全起见，在开发者模式下才能运行%s语句', $key), -1);
                         }
                         $ck = 1;
                         break;
