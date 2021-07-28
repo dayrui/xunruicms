@@ -135,7 +135,7 @@ class Register extends \Phpcmf\Common
         $is_img_code = $this->member_cache['register']['code'];
 
         // 当关闭图形验证码时，启用短信图形验证时，再次开启图形验证
-        if (!$this->member_cache['register']['code'] && $this->member_cache['register']['sms'] && defined('SYS_SMS_IMG_CODE') && SYS_SMS_IMG_CODE) {
+        if (!$this->member_cache['register']['code'] && $this->member_cache['register']['sms'] && !SYS_SMS_IMG_CODE) {
             $is_img_code = 1;
         }
         

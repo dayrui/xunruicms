@@ -65,11 +65,16 @@ class Login extends \Phpcmf\Common
         $url = dr_safe_url($_GET['back'] ? urldecode((string)\Phpcmf\Service::L('input')->get('back')) : $_SERVER['HTTP_REFERER']);
         strpos($url, 'login') !== false && $url = MEMBER_URL;
 
+        $is_img_code = $this->member_cache['login']['code'];
+        // 当关闭图形验证码时，启用短信图形验证时，再次开启图形验证
+        if (!$this->member_cache['login']['code'] && $this->member_cache['login']['sms'] && !SYS_SMS_IMG_CODE) {
+            $is_img_code = 1;
+        }
+
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             \Phpcmf\Hooks::trigger('member_login_before', $post);
-            if ($this->member_cache['login']['code']
-                && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
+            if ($is_img_code && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
                 $this->_json(0, dr_lang('图片验证码不正确'));
             } elseif (empty($post['phone'])) {
                 $this->_json(0, dr_lang('手机号码必须填写'));

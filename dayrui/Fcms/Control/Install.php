@@ -53,7 +53,9 @@ class Install extends \Phpcmf\Common {
 
     public function index() {
 
+        $data = [];
         $step = intval($_GET['step']);
+        $error = '';
 
         switch ($step) {
 
