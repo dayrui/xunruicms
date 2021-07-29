@@ -711,6 +711,7 @@ class View {
             'sbpage' => '', // 不按默认分页
             'module' => '', // 模块名称
             'urlrule' => '', // 自定义分页规则
+            'firsturl' => '', // 分页是第一页的固定地址
             'pagesize' => '', // 自定义分页数量
             'pagefile' => '', // 自定义分页配置文件
         ];
@@ -1163,7 +1164,7 @@ class View {
                                 return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                             }
                             $sql.= ' LIMIT '.intval($pagesize * ($page - 1)).','.$pagesize;
-                            $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                            $pages = $this->_new_pagination($system, $pagesize, $total);
                         }
                     }
 
@@ -1254,7 +1255,7 @@ class View {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
                         $sql_limit = 'LIMIT '.intval($pagesize * ($page - 1)).','.$pagesize;
-                        $pages = $this->_get_pagination($urlrule, $pagesize, $total, $system['pagefile']);
+                        $pages = $this->_new_pagination($system, $pagesize, $total);
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
@@ -1389,7 +1390,7 @@ class View {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
                         $sql_limit = ' LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
-                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile']);
+                        $pages = $this->_new_pagination($system, $pagesize, $total);
                     } elseif ($system['num']) {
                         $sql_limit = "LIMIT {$system['num']}";
                     }
@@ -1770,7 +1771,7 @@ class View {
                 if ($this->_return_sql) {
                     $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
-                    $first_url = '';
+                    $first_url = $system['firsturl'];
                     if ($system['page']) {
                         $page = $this->_get_page_id($system['page']);
                         if ($system['catid'] && is_numeric($system['catid'])) {
@@ -1812,7 +1813,8 @@ class View {
                             $total = min($total, $module['setting']['search']['max']);
                         }
 
-                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
+                        $system['firsturl'] = $first_url;
+                        $pages = $this->_new_pagination($system, $pagesize, $total);
                         $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
                     } elseif ($system['num']) {
                         $pages = '';
@@ -1956,7 +1958,6 @@ class View {
                 if ($this->_return_sql) {
                     $sql = "SELECT ".$this->_select_rt_name." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                 } else {
-                    $first_url = '';
                     if ($system['page']) {
                         // 统计数量
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
@@ -1970,7 +1971,7 @@ class View {
                         $page = $this->_get_page_id($system['page']);
                         $pagesize = (int)$system['pagesize'];
                         !$pagesize && $pagesize = 10;
-                        $pages = $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $first_url);
+                        $pages = $this->_new_pagination($system, $pagesize, $total);
                         $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
                     } elseif ($system['num']) {
                         $pages = '';
@@ -2082,6 +2083,13 @@ class View {
     // 设置分页参数
     public function set_page_config($config) {
         $this->_page_config = $config;
+    }
+
+    /**
+     * 新分页
+     */
+    public function _new_pagination($system, $pagesize, $total) {
+        return $this->_get_pagination($system['urlrule'], $pagesize, $total, $system['pagefile'], $system['firsturl']);
     }
 
     /**
