@@ -687,6 +687,7 @@ class View {
             'db' => '', // 数据源
             'app' => '', // 指定插件时
             'num' => '', // 显示数量
+            'limit' => '', // 显示数量
             'sum' => '', // 求和字段
             'form' => '', // 表单
             'page' => '', // 是否分页
@@ -795,6 +796,11 @@ class View {
             '',
             $system['order']
         );
+
+        // limit别名映射num
+        if (isset($system['limit']) && !isset($system['num'])) {
+            $system['num'] = $system['limit'];
+        }
 
         $action = $system['action'];
         // 当hits动作时，定位到moule动作

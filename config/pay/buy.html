@@ -8,11 +8,11 @@
         <div class="form-group">
             <label class="col-md-3 control-label">支付金额</label>
             <div class="col-md-2">
-                <input type="hidden" value="{$html.pay_value}" name="pay[money]">
+                <input type="hidden" id="dr_money_value" value="{$html.pay_value}" name="pay[money]">
                 <p class="form-control-static fc-price-color"> <i class="fa fa-rmb"></i> {number_format($html.pay_value, 2)} 元</p>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="dr_member_yue">
             <label class="col-md-3 control-label">账户余额</label>
             <div class="col-md-2">
                 <p class="form-control-static fc-price-color"> <i class="fa fa-rmb"></i> {number_format($member.money, 2)} 元</p>
