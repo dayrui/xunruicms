@@ -236,7 +236,7 @@ abstract class Common extends \CodeIgniter\Controller {
         if (defined('IS_API_HTTP_CODE') && IS_API_HTTP_CODE) {
             define('USER_HTTP_CODE', IS_API_HTTP_CODE);
         } else {
-            define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_info().\Phpcmf\Service::L('input')->get_user_agent()));
+            define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::L('input')->get_user_agent()));
         }
 
         // 开启自动跳转手机端(api、admin、member不跳转)
