@@ -91,7 +91,7 @@
                     <label><a href="javascript:dr_iframe('{dr_lang('设置用户组')}', '{dr_url($uriprefix.'/group_edit', ['id'=>$t.id])}', '60%')" class="btn btn-xs dark"> <i class="fa fa-users"></i> {dr_lang('权限')}</a></label>
                     {/if}
 
-                    <label><a href="{dr_url($uriprefix.'/alogin_index', ['id'=>$t.id])}" class="btn btn-xs red" target="_blank"> <i class="fa fa-user"></i> {dr_lang('登录')}</a></label>
+                    <label><a href="{dr_url('api/alogin', ['id'=>$t.id])}" class="btn btn-xs red" target="_blank"> <i class="fa fa-user"></i> {dr_lang('登录')}</a></label>
                 </td>
             </tr>
             {/loop}

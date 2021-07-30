@@ -72,6 +72,24 @@ class Min_menu extends \Phpcmf\Common {
 
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
+			if ($pid) {
+			    if (!$data['id']) {
+			        $this->_json(0, dr_lang('没有选择菜单'));
+                }
+                $menu = \Phpcmf\Service::M('Menu')->getRowData('admin', $data['id']);
+                if (!$menu) {
+                    $this->_json(0, dr_lang('所选菜单不存在'));
+                }
+                $data = [
+                    'pid' => $pid,
+                    'name' => $menu['name'],
+                    'mark' => $menu['mark'],
+                    'icon' => $menu['icon'],
+                    'uri' => $menu['uri'],
+                    'url' => $menu['url'],
+                    'displayorder' => $data['displayorder'],
+                ];
+            }
             $data = $this->_validation($data);
 			\Phpcmf\Service::L('input')->system_log('添加简化菜单: '.$data['name']);
             $rt = \Phpcmf\Service::M('Menu')->_add('admin_min', $pid, $data);
@@ -83,10 +101,31 @@ class Min_menu extends \Phpcmf\Common {
             }
 		}
 
+        $select = '<select class="form-control" name="data[id]">';
+        $select.= '<option value="0"> -- </option>';
+        $topdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
+        foreach ($topdata as $t) {
+            $select.= '<optgroup label="'.$t['name'].'">';
+            $leftdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid='.$t['id'])->order_by('displayorder ASC,id ASC')->getAll();
+            foreach ($leftdata as $c) {
+                $linkdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid='.$c['id'])->order_by('displayorder ASC,id ASC')->getAll();
+                $select.= '<optgroup label=" └ '.$c['name'].'">';
+                if ($linkdata) {
+                    foreach ($linkdata as $k) {
+                        $select.= '<option value="'.$k['id'].'">&nbsp;&nbsp;&nbsp;└ '.$k['name'].'</option>';
+                    }
+                }
+                $select.= '</optgroup>';
+            }
+            $select.= '</optgroup>';
+        }
+        $select.= '</select>';
+
 		\Phpcmf\Service::V()->assign([
 			'top' => $top,
 			'type' => $pid,
-			'form' => dr_form_hidden()
+			'form' => dr_form_hidden(),
+            'select' => $select
 		]);
 		\Phpcmf\Service::V()->display('min_menu_add.html');
 		exit;
@@ -123,7 +162,7 @@ class Min_menu extends \Phpcmf\Common {
 			'data' => $data,
 			'form' => dr_form_hidden(),
 		]);
-		\Phpcmf\Service::V()->display('min_menu_add.html');
+		\Phpcmf\Service::V()->display('min_menu_edit.html');
 		exit;
 	}
 
@@ -184,7 +223,7 @@ class Min_menu extends \Phpcmf\Common {
 	// 验证数据
 	private function _validation($data) {
 
-		if ($data['type'] != 3) {
+		if (!$data['pid']) {
 			// 非链接菜单时不录入url和uri
 			unset($this->form['url'], $this->form['uri']);
 		} else {

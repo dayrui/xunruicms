@@ -97,7 +97,7 @@
                         <div class="portlet-body search-container ">
                             <ul>
                                 <!--调用MOD_DIR模块的数据 id和total和order参数(本页面固有参数) page=1标示开启分页 urlrule分页地址规则 pagesize每页数量-->
-                                {search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=1 urlrule=$urlrule}
+                                {search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=10 urlrule=$urlrule}
                                 <li class="search-item clearfix">
                                     <a title="{$t.title}" href="{$t.url}">
                                         <img src="{dr_thumb($t.thumb, 100, 90)}" width="100" height="90" style="margin-top: 15px;">

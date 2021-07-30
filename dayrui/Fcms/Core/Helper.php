@@ -2770,12 +2770,16 @@ if (!function_exists('dr_show_hits')) {
     function dr_show_hits($id, $dom = "", $dir = 'MOD_DIR') {
         $is = $dom;
         !$dom && $dom = "dr_show_hits_{$id}";
-        $html = $is ? "" : "<span id=\"{$dom}\">0</span>";
+        $html = $is ? "" : "<span class=\"{$dom}\">0</span>";
         if (defined('MODULE_MYSHOW')) {
             return $html;
         }
         $dir = $dir == 'MOD_DIR' && defined('MOD_DIR') && MOD_DIR ? MOD_DIR : $dir;
-        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".WEB_DIR."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { $(\"#{$dom}\").html(data.msg); } else { dr_tips(0, data.msg); } } }); </script>";
+        $rt = "$(\".{$dom}\").html(data.msg);";
+        if ($is) {
+            $rt.= "$(\"#{$dom}\").html(data.msg);";
+        }
+        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".WEB_DIR."index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { ".$rt." } else { dr_tips(0, data.msg); } } }); </script>";
     }
 }
 
