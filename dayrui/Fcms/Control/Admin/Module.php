@@ -236,6 +236,17 @@ class Module extends \Phpcmf\Common {
             $this->_admin_msg(0, dr_lang('当前站点尚未安装'));
         }
 
+        // 主表字段
+        $field = \Phpcmf\Service::M()->db->table('field')
+            ->where('disabled', 0)
+            ->where('ismain', 1)
+            ->where('relatedname', 'module')
+            ->where('relatedid', $id)
+            ->orderBy('displayorder ASC,id ASC')
+            ->get()->getResultArray();
+        $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'uid', 'inputtime', 'updatetime', 'hits', 'displayorder']);
+        $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
+
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['setting']['list_field']) {
@@ -243,6 +254,18 @@ class Module extends \Phpcmf\Common {
                     if ($t['func']
                         && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
                         $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
+            if ($post['setting']['search_time'] && !isset($field[$post['setting']['search_time']])) {
+                $this->_json(0, dr_lang('后台列表时间搜索字段%s不存在', $post['setting']['search_time']));
+            }
+            if ($post['setting']['order']) {
+                $arr = explode(',', $post['setting']['order']);
+                foreach ($arr as $t) {
+                    list($a) = explode(' ', $t);
+                    if ($a && !isset($field[$a])) {
+                        $this->_json(0, dr_lang('后台列表的默认排序字段%s不存在', $a));
                     }
                 }
             }
@@ -255,17 +278,6 @@ class Module extends \Phpcmf\Common {
                 $this->_json(0, $rt['msg']);
             }
         }
-
-        // 主表字段
-        $field = \Phpcmf\Service::M()->db->table('field')
-            ->where('disabled', 0)
-            ->where('ismain', 1)
-            ->where('relatedname', 'module')
-            ->where('relatedid', $id)
-            ->orderBy('displayorder ASC,id ASC')
-            ->get()->getResultArray();
-        $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'uid', 'inputtime', 'updatetime', 'hits', 'displayorder']);
-        $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         $config = require dr_get_app_dir($data['dirname']).'Config/App.php';
