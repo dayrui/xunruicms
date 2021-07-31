@@ -15,7 +15,7 @@ class Apply extends \Phpcmf\Common
 
         $gid = intval(\Phpcmf\Service::L('input')->get('gid'));
         if ($this->member['groupid'][$gid]) {
-            exit($this->_msg(0, dr_lang('无需重复申请')));
+            $this->_msg(0, dr_lang('无需重复申请'));
         }
 
         $group = $this->member_cache['group'][$gid];

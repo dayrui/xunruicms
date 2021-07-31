@@ -10,6 +10,9 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('基本设置')} </a>
                 </li>
+                <li class="{if $page==2}active{/if}">
+                    <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-clock-o"></i> {dr_lang('有效期设置')} </a>
+                </li>
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-list-ol"></i> {dr_lang('等级升级规则')} </a>
                 </li>
@@ -18,36 +21,8 @@
         <div class="portlet-body">
             <div class="tab-content">
 
-                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                <div class="tab-pane {if $page==2}active{/if}" id="tab_2">
                     <div class="form-body">
-                        <div class="form-group" id="dr_row_name">
-                            <label class="col-md-2 control-label ">{dr_lang('名称')}</label>
-                            <div class="col-md-9">
-                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($name)}"></label>
-                                <span class="help-block"> {dr_lang('用户组的描述名称')} </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('付费方式')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    {if dr_is_app('scorelog')}<label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="1" {if $unit}checked{/if} /> {SITE_SCORE} <span></span></label> {/if}
-                                    <label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="0" {if !$unit}checked{/if} /> {dr_lang('人民币')} <span></span></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label ">{dr_lang('价格要求')}</label>
-                            <div class="col-md-9">
-                                {if $is_level && !$setting['level']['auto']}
-                                <label style="display: none"><input type="hidden" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
-                                <p class="form-control-static" style="color: #da3f3f"> {dr_lang('请在等级制度管理中设置对应的价格')} </p>
-                                {else}
-                                <label><input type="text" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
-                                <span class="help-block"> {dr_lang('0或者留空表示免费组')} </span>
-                                {/if}
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label ">{dr_lang('时长模式')}</label>
                             <div class="col-md-9">
@@ -80,8 +55,29 @@
                                 <span class="help-block"> {dr_lang('0或留空表示永久')} </span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('过期自动续费')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[timeout]" type="radio" value="1" {if $setting.timeout}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="setting[timeout]" type="radio" value="0" {if !$setting.timeout}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block"> {dr_lang('当用户组过期之后尝试自动扣款，扣款不成功时就关闭该组')} </span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
+                            <label class="col-md-2 control-label ">{dr_lang('到期后处理方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input onclick="dr_set_out(this.value)" name="setting[outtype]" type="radio" value="0" {if !$setting.outtype}checked{/if} /> {dr_lang('转为指定组')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input onclick="dr_set_out(this.value)" name="setting[outtype]" type="radio" value="2" {if $setting.outtype == 2}checked{/if} /> {dr_lang('跳转指定页面')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input onclick="dr_set_out(this.value)" name="setting[outtype]" type="radio" value="1" {if $setting.outtype == 1}checked{/if} /> {dr_lang('跳转续费页面')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group out0">
                             <label class="col-md-2 control-label ">{dr_lang('到期后转为')}</label>
                             <div class="col-md-9">
                                 <label><select name="setting[out_gid]" class="form-control">
@@ -95,16 +91,56 @@
                                 <span class="help-block"> {dr_lang('到期过后将转为指定组')} </span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('过期自动续费')}</label>
+
+                        <div class="form-group out1">
+                            <label class="col-md-2 control-label "></label>
                             <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[timeout]" type="radio" value="1" {if $setting.timeout}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input name="setting[timeout]" type="radio" value="0" {if !$setting.timeout}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                </div>
-                                <span class="help-block"> {dr_lang('当用户组过期之后尝试自动扣款，扣款不成功时就关闭该组')} </span>
+
+                                <span class="help-block"> {dr_lang('到期过后将强制跳转到用户组续费页面')} </span>
                             </div>
                         </div>
+
+                        <div class="form-group out2">
+                            <label class="col-md-2 control-label ">{dr_lang('跳转指定URL')}</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="setting[out_url]" value="{htmlspecialchars($setting.out_url)}">
+                                <span class="help-block"> {dr_lang('到期过后将强制跳转到指定的URL地址')} </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        <div class="form-group" id="dr_row_name">
+                            <label class="col-md-2 control-label ">{dr_lang('名称')}</label>
+                            <div class="col-md-9">
+                                <label><input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($name)}"></label>
+                                <span class="help-block"> {dr_lang('用户组的描述名称')} </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('付费方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    {if dr_is_app('scorelog')}<label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="1" {if $unit}checked{/if} /> {SITE_SCORE} <span></span></label> {/if}
+                                    <label class="mt-radio mt-radio-outline"><input name="data[unit]" type="radio" value="0" {if !$unit}checked{/if} /> {dr_lang('人民币')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label ">{dr_lang('价格要求')}</label>
+                            <div class="col-md-9">
+                                {if $is_level && !$setting['level']['auto']}
+                                <label style="display: none"><input type="hidden" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
+                                <p class="form-control-static" style="color: #da3f3f"> {dr_lang('请在等级制度管理中设置对应的价格')} </p>
+                                {else}
+                                <label><input type="text" class="form-control" name="data[price]" value="{htmlspecialchars($price)}"></label>
+                                <span class="help-block"> {dr_lang('0或者留空表示免费组')} </span>
+                                {/if}
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('允许注册')}</label>
                             <div class="col-md-9">
@@ -190,6 +226,7 @@
         $(".dr_sjms_0").hide();
         dr_set_sjms("{intval($setting['level']['auto'])}");
         dr_set_time("{intval($setting['timetype'])}");
+        dr_set_out("{intval($setting['outtype'])}");
     });
     function dr_field_show(n, u) {
         if (u) {
@@ -214,6 +251,21 @@
         } else {
             $(".time1").hide();
             $(".time0").show();
+        }
+    }
+    function dr_set_out(id) {
+        if (id == 1) {
+            $(".out1").show();
+            $(".out0").hide();
+            $(".out2").hide();
+        } else if (id == 2) {
+            $(".out2").show();
+            $(".out0").hide();
+            $(".out1").hide();
+        } else {
+            $(".out1").hide();
+            $(".out2").hide();
+            $(".out0").show();
         }
     }
 </script>

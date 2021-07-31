@@ -301,6 +301,7 @@ class Member extends \Phpcmf\Model {
         // 会员组信息
         $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
         $data['group'] = $data['groupid'] = $data['levelid'] = $data['authid'] = $data['group_name'] = [];
+        $data['group_timeout'] = 0;
         if ($data2) {
             foreach ($data2 as $t) {
                 $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
@@ -310,6 +311,9 @@ class Member extends \Phpcmf\Model {
                 $data['groupid'][$t['gid']] = $t['gid'];
                 $data['levelid'][$t['gid']] = $t['lid'];
                 $data['authid'][] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
+                if ($t['timeout']) {
+                    $data['group_timeout'] = $t['gid'];
+                }
             }
         }
 
@@ -380,10 +384,11 @@ class Member extends \Phpcmf\Model {
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 余额不足 删除
-                                if ($this->delete_group($uid, $group['gid'], 0)) {
+                                if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
                                     $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
                                 } else {
-                                    // false 情况下保留
+                                    // // 不主动删除用户组 情况下保留
+                                    $group['timeout'] = 1;
                                     $g[$group['gid']] = $group;
                                 }
                                 continue;
@@ -434,11 +439,12 @@ class Member extends \Phpcmf\Model {
                             // 收费组情况下
                             if ($member[$name] - $price < 0) {
                                 // 金币不足 删除
-                                if ($this->delete_group($uid, $group['gid'], 0)) {
+                                if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
                                     // 提醒通知
                                     $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
                                 } else {
                                     // false 情况下保留
+                                    $group['timeout'] = 1;
                                     $g[$group['gid']] = $group;
                                 }
                                 continue;
@@ -470,11 +476,12 @@ class Member extends \Phpcmf\Model {
                     }
                 } else {
                     // 未开通自动续费直接删除
-                    if ($this->delete_group($uid, $group['gid'], 0)) {
+                    if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
                         // 提醒通知
                         $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
                     } else {
                         // false 情况下保留
+                        $group['timeout'] = 1;
                         $g[$group['gid']] = $group;
                     }
                     continue;

@@ -862,8 +862,8 @@ abstract class Common extends \CodeIgniter\Controller {
     /**
      * 后台登录判断
      */
-    public function _member_option($call = 1)
-    {
+    public function _member_option($call = 1) {
+
         // 有用户组来获取最终的强制权限
         $this->member_cache['config']['complete'] = $this->member_cache['config']['mobile'] = $this->member_cache['config']['avatar'] = 0;
         // 强制完善资料
@@ -906,6 +906,31 @@ abstract class Common extends \CodeIgniter\Controller {
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制头像上传
             $this->_msg(0, dr_lang('账号必须上传头像'), dr_member_url('account/avatar'));
+        }
+
+        // 用户组是否过期
+        if ($this->member['group_timeout']) {
+            if (in_array(\Phpcmf\Service::L('Router')->class, ['pay', 'recharge', 'api', 'apply'])) {
+                return;
+            }
+            if ($this->member_cache['group'][$this->member['group_timeout']]['setting']['outtype'] == 2) {
+                // 跳转指定页面
+                $url = $this->member_cache['group'][$this->member['group_timeout']]['setting']['out_url'];
+                if (strpos(FC_NOW_URL, $url) !== false) {
+                    // 表示本身页面
+                    return;
+                }
+                $this->_msg(0,
+                    dr_lang('您的用户组（%s）已过期', $this->member_cache['group'][$this->member['group_timeout']]['name']),
+                    $url
+                );
+            } elseif ($this->member_cache['group'][$this->member['group_timeout']]['setting']['outtype'] == 1) {
+                // 跳转续费页面
+                $this->_msg(0,
+                    dr_lang('您的用户组（%s）已过期', $this->member_cache['group'][$this->member['group_timeout']]['name']),
+                    dr_member_url('apply/level', ['gid' => $this->member['group_timeout']])
+                );
+            }
         }
     }
 
