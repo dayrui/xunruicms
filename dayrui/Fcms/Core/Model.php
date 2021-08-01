@@ -13,7 +13,7 @@ class Model {
     public $key;
     public $field;
     public $table;
-    public $stable;
+    public $stable; // join关联表
     public $prefix;
 
     public $uid;
@@ -810,7 +810,12 @@ class Model {
             foreach ($arr as $t) {
                 list($order_field, $b) = explode(' ', $t);
                 if ($this->is_field_exists($this->table, $order_field)) {
-                    $order_arr[] = $order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
+                    if ($this->stable && $this->is_field_exists($this->stable, $order_field)) {
+                        // 两个表都有这个字段
+                        $order_arr[] = $this->table.'.'.$order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
+                    } else {
+                        $order_arr[] = $order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
+                    }
                 } elseif ($this->stable && $this->is_field_exists($this->stable, $order_field)) {
                     $order_arr[] = $this->stable.'.'.$order_field.' '.($b && $b=='asc' ? 'asc' : 'desc');
                 }
