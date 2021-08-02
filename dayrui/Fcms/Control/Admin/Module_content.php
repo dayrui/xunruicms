@@ -595,10 +595,10 @@ class Module_content extends \Phpcmf\Common
             $cat && $where[] = 'catid IN ('.implode(',', $cat).')';
         }
 
-        $author = \Phpcmf\Service::L('input')->get('author');
-        if ($author) {
-            $where[] = 'author="'.dr_safe_replace($author).'"';
-            $url.= '&author='.$author;
+        $username = \Phpcmf\Service::L('input')->get('username');
+        if ($username) {
+            $where[] = 'uid in (select id from '.\Phpcmf\Service::M()->dbprefix('member').' where username="'.dr_safe_replace($username).'")';
+            $url.= '&username='.$username;
         }
 
         $uid = (int)\Phpcmf\Service::L('input')->get('uid');
