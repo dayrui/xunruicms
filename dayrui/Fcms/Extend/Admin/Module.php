@@ -40,7 +40,7 @@ class Module extends \Phpcmf\Table {
             'table' => dr_module_table_prefix(APP_DIR),
             'field' => $this->module['field'],
             'sys_field' => ['inputtime', 'updatetime', 'inputip', 'displayorder', 'hits', 'uid'],
-            'date_field' => 'updatetime',
+            'date_field' => $this->module['setting']['search_time'] ? $this->module['setting']['search_time'] : 'updatetime',
             'show_field' => 'title',
             'where_list' => $this->where_list_sql,
             'order_by' => dr_safe_replace($this->module['setting']['order']),
