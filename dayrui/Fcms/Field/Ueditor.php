@@ -42,6 +42,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $option['autofloat'] = isset($option['autofloat']) ? $option['autofloat'] : 0;
         $option['autoheight'] = isset($option['autoheight']) ? $option['autoheight'] : 0;
         $option['fieldlength'] = isset($option['fieldlength']) ? $option['fieldlength'] : '';
+        $option['simpleupload'] = isset($option['simpleupload']) ? $option['simpleupload'] : 0;
         $option['watermark'] = isset($option['watermark']) ? $option['watermark'] : '';
         $option['show_bottom_boot'] = isset($option['show_bottom_boot']) ? $option['show_bottom_boot'] : '';
 
@@ -226,14 +227,25 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <textarea name="data[setting][option][tool3]" style="height:90px;" class="form-control">'.$option['tool3'].'</textarea>
                     <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
-                </div>'.$this->attachment($option).'
+                </div>
                 <div class="form-group">
-			<label class="col-md-2 control-label">'.dr_lang('图片补加后缀字符').' </label>
-			<div class="col-md-9">
-                <label><input type="text" class="form-control" value="'.$option['image_endstr'].'" name="data[setting][option][image_endstr]"></label>
-                <span class="help-block">'.dr_lang('上传图片后自动为图片补加指定的后缀字符串').'</span>
-			</div>
-		</div>
+                    <label class="col-md-2 control-label">'.dr_lang('是否取消单图上传按钮').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][simpleupload]" '.($option['simpleupload'] == 1 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio"  value="0" name="data[setting][option][simpleupload]" '.($option['simpleupload'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                        </div>
+						<span class="help-block">'.dr_lang('单图上传按钮对某些浏览器不被支持，兼容性较差').'</span>
+                    </div>
+                </div>
+                '.$this->attachment($option).'
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('图片补加后缀字符').' </label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" value="'.$option['image_endstr'].'" name="data[setting][option][image_endstr]"></label>
+                        <span class="help-block">'.dr_lang('上传图片后自动为图片补加指定的后缀字符串').'</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('默认存储值').'</label>
                     <div class="col-md-9">
@@ -597,14 +609,19 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 break;
         }
 
+        // 低版本浏览器关闭单图上传
         if (preg_match('/Chrome\/([0-9]+)\./iU', $_SERVER['HTTP_USER_AGENT'], $mt)) {
             $chrome = intval($mt[1]);
             if ($chrome && $chrome < 78) {
                 $tool = str_replace(['"simpleupload",', ',"simpleupload"',"'simpleupload',", ",'simpleupload'"], '', $tool);
             }
         }
+        // 后台设置的关闭单图上传
+        if (isset($field['setting']['option']['simpleupload']) && $field['setting']['option']['simpleupload']) {
+            $tool = str_replace(['"simpleupload",', ',"simpleupload"',"'simpleupload',", ",'simpleupload'"], '', $tool);
+        }
 
-        $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";
+            $str.= "<script class=\"dr_ueditor\" name=\"data[$name]\" type=\"text/plain\" id=\"dr_$name\">$value</script>";
         $js = \Phpcmf\Service::L('js_packer');
         $str.= $js->pack("
         <script type=\"text/javascript\">
