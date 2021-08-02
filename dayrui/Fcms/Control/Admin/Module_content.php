@@ -8,6 +8,14 @@
 class Module_content extends \Phpcmf\Common
 {
 
+    public function __construct(...$params) {
+        parent::__construct(...$params);
+        // 不是超级管理员
+        if (!dr_in_array(1, $this->admin['roleid'])) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
+    }
+
     public function index() {
 
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
@@ -608,6 +616,18 @@ class Module_content extends \Phpcmf\Common
                 $where[] = '`id` BETWEEN '.$id1.' AND '.$id2;
             }
             $url.= '&id1='.$id1.'&id2='.$id2;
+        }
+
+        $sql = \Phpcmf\Service::L('input')->get('sql', true);
+        if ($sql) {
+            // 防范sql注入后期需要加强
+            foreach (['outfile', 'dumpfile', '.php', 'union', ';'] as $kw) {
+                if (strpos(strtolower($sql), $kw) !== false) {
+                    $this->_html_msg(0, dr_lang('存在非法SQL关键词：%s', $kw));
+                }
+            }
+            $where[] = addslashes($sql);
+            $url.= '&sql='.$sql;
         }
 
         if (!$where) {

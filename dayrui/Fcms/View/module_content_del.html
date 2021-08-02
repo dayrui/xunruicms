@@ -1,6 +1,6 @@
 {template "header.html"}
 
-<form id="myform" class="form-horizontal" style="padding: 30px;">
+<form id="myform" class="form-horizontal" style="padding: 0 30px; margin-top: -20px">
     <div class="form-body">
         <div class="form-group">
             {$select}
@@ -32,6 +32,16 @@
                         <label><input type="text" name="id1" class="form-control"></label>
                         <label>{dr_lang('到')}</label>
                         <label><input type="text" name="id2" class="form-control"></label>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group" style="margin-bottom:5px">
+                        <label> {dr_lang('自定义条件')} </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="sql" class="form-control">
+                        <p style="padding-top:9px;" class="help-block"> {dr_lang('自定义条件SQL语句')} </p>
                     </div>
                 </div>
 
