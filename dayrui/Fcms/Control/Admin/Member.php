@@ -180,7 +180,7 @@ class Member extends \Phpcmf\Table
             }
             $rt = \Phpcmf\Service::L('form')->check_username($name);
             if (!$rt['code']) {
-                $this->_json(0, $rt['code'], ['field' => 'name']);
+                $this->_json(0, $rt['msg'], ['field' => 'name']);
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
