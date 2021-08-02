@@ -156,11 +156,19 @@ class Min_menu extends \Phpcmf\Common {
 			$this->_json(1, dr_lang('操作成功'));
 		}
 
+        $select = '<select class="form-control" name="data[pid]">';
+        $topdata = \Phpcmf\Service::M()->table('admin_min_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
+        foreach ($topdata as $t) {
+            $select.= '<option value="'.$t['id'].'" '.($data['pid'] == $t['id'] ? 'selected' : '').'>'.$t['name'].'</option>';
+        }
+        $select.= '</select>';
+
 		\Phpcmf\Service::V()->assign([
 			'top' => $top,
 			'type' => $data['pid'],
 			'data' => $data,
 			'form' => dr_form_hidden(),
+            'select' => $select
 		]);
 		\Phpcmf\Service::V()->display('min_menu_edit.html');
 		exit;
