@@ -361,11 +361,13 @@ class Upload
         !$name && $name = substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15);
 
         if (isset($config['save_file']) && $config['save_file']) {
+            // 指定存储名称
             $file_path = $config['save_file'];
             $config['save_file'] = dirname($file_path);
             $config['attachment']['value']['path'] = 'null';
         } else {
             if (isset($config['save_path']) && $config['save_path']) {
+                // 指定存储路径
                 $path = $config['save_path'];
                 $config['save_file'] = $path;
                 $config['attachment']['value']['path'] = 'null';

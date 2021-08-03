@@ -139,6 +139,9 @@ class Local {
     // 完整的文件路径
     protected $fullname;
 
+    // 是否指定路径
+    protected $is_diy_save_path = 0;
+
     // 初始化参数
     public function init($attachment, $filename) {
 
@@ -147,10 +150,12 @@ class Local {
             $attachment['value']['path'] = '';
             $this->filename = $filename;
             $this->filepath = dirname($filename);
+            $this->is_diy_save_path = 1;
         } else {
             $this->filename = trim($filename, DIRECTORY_SEPARATOR);
             $this->filepath = dirname($filename);
             $this->filepath == '.' && $this->filepath = '';
+            $this->is_diy_save_path = 0;
             if (is_dir(SYS_UPLOAD_PATH.$attachment['value']['path'])) {
                 // 相对路径
                 $attachment['value']['path'] = SYS_UPLOAD_PATH.$attachment['value']['path'];
@@ -185,7 +190,7 @@ class Local {
 
         // 上传成功
         return dr_return_data(1, 'ok', [
-            'url' => $this->attachment['url'].$this->filename,
+            'url' => $this->is_diy_save_path ? '指定存储路径时无法获取到访问URL地址' : $this->attachment['url'].$this->filename,
             'md5' => md5_file($this->fullname),
             'size' => $rt['msg'],
             'info' => $rt['data']
