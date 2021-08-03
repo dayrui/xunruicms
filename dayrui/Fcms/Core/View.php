@@ -129,8 +129,8 @@ class View {
     /**
      * 强制设置模块模板目录
      *
-     * @param	string	$dir	模板名称
-     * @param	string  $isweb  强制前台
+     * @param   string  $dir    模板名称
+     * @param   string  $isweb  强制前台
      */
     public function module($module, $isweb = 0) {
 
@@ -183,8 +183,8 @@ class View {
     /**
      * 输出模板
      *
-     * @param	string	$_name		模板文件名称（含扩展名）
-     * @param	string	$_dir		模块名称
+     * @param   string  $_name      模板文件名称（含扩展名）
+     * @param   string  $_dir       模块名称
      * @return  void
      */
     public function display($phpcmf_name, $phpcmf_dir = '') {
@@ -195,15 +195,15 @@ class View {
 
         $phpcmf_start = microtime(true);
 
-		// 定义当前模板的url地址
+        // 定义当前模板的url地址
         if (!isset($this->_options['my_web_url']) or !$this->_options['my_web_url']) {
             $this->_options['my_web_url'] = isset($this->_options['fix_html_now_url']) && $this->_options['fix_html_now_url'] ? $this->_options['fix_html_now_url'] : dr_now_url();
         }
-		
-		// 定义当前url参数值
-		if (!isset($this->_options['get'])) {
-			$this->_options['get'] = \Phpcmf\Service::L('input')->xss_clean($_GET);
-		}
+
+        // 定义当前url参数值
+        if (!isset($this->_options['get'])) {
+            $this->_options['get'] = \Phpcmf\Service::L('input')->xss_clean($_GET);
+        }
 
         // 如果是来自api就不解析模板，直接输出变量
         if (IS_API_HTTP) {
@@ -274,9 +274,9 @@ class View {
     /**
      * 设置模块/应用的模板目录
      *
-     * @param	string	$file		文件名
-     * @param	string	$dir		模块/应用名称
-     * @param	string	$include	是否使用的是include标签
+     * @param   string  $file       文件名
+     * @param   string  $dir        模块/应用名称
+     * @param   string  $include    是否使用的是include标签
      */
     public function get_file_name($file, $dir = null, $include = FALSE) {
 
@@ -410,8 +410,8 @@ class View {
     /**
      * 模板标签include/template
      *
-     * @param	string	$name	模板文件
-     * @param	string	$dir	应用、模块目录
+     * @param   string  $name   模板文件
+     * @param   string  $dir    应用、模块目录
      * @return  bool
      */
     public function _include($name, $dir = '') {
@@ -432,7 +432,7 @@ class View {
     /**
      * 模板标签load
      *
-     * @param	string	$file	模板文件
+     * @param   string  $file   模板文件
      * @return  bool
      */
     public function _load($file) {
@@ -450,7 +450,7 @@ class View {
     /**
      * 加载
      *
-     * @param	string
+     * @param   string
      * @return  string
      */
     public function load_view_file($name) {
@@ -507,8 +507,8 @@ class View {
     /**
      * 解析模板文件
      *
-     * @param	string
-     * @param	string
+     * @param   string
+     * @param   string
      * @return  string
      */
     public function handle_view_file($view_content) {
@@ -744,11 +744,11 @@ class View {
         }
 
         $sysadj = [
-			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
-			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON', 'WEEK',
-			'JSON', 'FIND'
-		];
+            'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW',
+            'GT', 'EGT', 'LT', 'ELT',
+            'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON', 'WEEK',
+            'JSON', 'FIND'
+        ];
         foreach ($params as $t) {
             $var = substr($t, 0, strpos($t, '='));
             $val = substr($t, strpos($t, '=') + 1);
@@ -1517,10 +1517,21 @@ class View {
                 } elseif (!$param['id']) {
                     return $this->_return($system['return'], 'id参数为空', '', 0);
                 }
-                
+
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
                     return $this->_return($system['return'], '模块('.$dirname.')未安装');
+                }
+
+                $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
+                // 没有表结构缓存时返回空
+                if (!$tableinfo) {
+                    return $this->_return($system['return'], '表结构缓存不存在');
+                }
+
+                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module['dirname'], $system['site'])); // 模块主表`
+                if (!isset($tableinfo[$table])) {
+                    return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
 
                 if ($where) {
@@ -1531,28 +1542,89 @@ class View {
                     }
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($dirname, $system['site'])); // 模块主表
                 $index = \Phpcmf\Service::L('cache')->get_data('module-search-'.$dirname.'-'.$param['id']);
                 if (!$index) {
                     $index = $this->_query('SELECT `params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system, 0);
                     if ($index) {
                         $p = dr_string2array($index['params']);
                         $index['sql'] = $p['sql'];
-                    };
+                        $index['where'] = $p['where'];
+                    } else {
+                        return $this->_return($system['return'], '没有搜索结果', '', 0);
+                    }
                 }
 
-				// 存在限制总数时
-                $where[] = [
-                    'adj' => 'SQL',
-                    'value' => '(`'.$table.'`.`id` IN('.($index['sql'] ? $index['sql'] : 0).'))'
-                ];
+                if (isset($index['where']) && $index['where']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => $index['where']
+                    ];
+                } elseif (isset($index['sql']) && $index['sql']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => '(`'.$table.'`.`id` IN('.$index['sql'].'))'
+                    ];
+                } else {
+                    return $this->_return($system['return'], '没有查询到内容', $index['sql'], 0);
+                }
 
                 unset($param['id']);
 
-                $system['sbpage'] = 1;
+                // 排序操作
+                if (!$system['order'] && isset($where['id']) && $where['id']['adj'] == 'IN' && $where['id']['value']) {
+                    // 按id序列来排序
+                    $system['order'] = strlen($where['id']['value']) < 10000 && $where['id']['value'] ? 'instr("'.$where['id']['value'].'", `'.$table.'`.`id`)' : 'NULL';
+                } else {
+                    // 默认排序参数
+                    !$system['order'] && ($system['order'] = $system['flag'] ? 'updatetime_desc' : ($action == 'hits' ? 'hits' : 'updatetime'));
+                }
 
-                // 跳转到module方法
-                goto module;
+                $fields = $module['field']; // 主表的字段
+                $system['order'] = $this->_set_orders_field_prefix($system['order'], [$table => $tableinfo[$table]]);
+                $sql_from = '`'.$table.'`';
+                $sql_where = $this->_get_where($where); // sql的where子句
+
+                // 分页处理
+                $page = $this->_get_page_id($system['page']);
+                $pagesize = (int)$system['pagesize'];
+                !$pagesize && $pagesize = 10;
+                if ($module['setting']['search']['max']) {
+                    $total = min($total, $module['setting']['search']['max']);
+                }
+                $system['firsturl'] = \Phpcmf\Service::L('Router')->search_url($index['params']);
+                $pages = $this->_new_pagination($system, $pagesize, $total);
+                $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
+
+                // 查询结果
+                $sql = "SELECT " .$this->_get_select_field($system['field'] ? $system['field'] : '*') . " FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . ($system['order'] == "null" || !$system['order'] ? "" : " ORDER BY {$system['order']}") . " $sql_limit";
+                $data = $this->_query($sql, $system);
+
+                // 缓存查询结果
+                if (is_array($data) && $data) {
+                    // 模块表的系统字段
+                    $fields['inputtime'] = ['fieldtype' => 'Date'];
+                    $fields['updatetime'] = ['fieldtype' => 'Date'];
+                    // 格式化显示自定义字段内容
+                    $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
+                    foreach ($data as $i => $t) {
+                        $t['url'] = dr_url_prefix($t['url'], $dirname, $system['site'], $this->_is_mobile);
+                        $data[$i] = $dfield->format_value($fields, $t, 1);
+                    }
+                }
+
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
+
+                return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
+
                 break;
 
             case 'module': // 模块数据
@@ -1565,7 +1637,7 @@ class View {
                 }
 
                 $tableinfo = \Phpcmf\Service::L('cache')->get('table-'.$system['site']);
-				
+
                 // 没有表结构缓存时返回空
                 if (!$tableinfo) {
                     return $this->_return($system['return'], '表结构缓存不存在');
@@ -1575,6 +1647,9 @@ class View {
                 if (!isset($tableinfo[$table])) {
                     return $this->_return($system['return'], '表（'.$table.'）结构缓存不存在');
                 }
+
+                // 加上状态判断
+                $where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
 
                 // 是否操作自定义where
                 if ($param['where']) {
@@ -1637,27 +1712,19 @@ class View {
                     unset($catids);
                 }
 
-				// 不是搜索标签就加上状态判断
-				if ($system['action'] != 'search') {
-					$where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
-					/*
-                    if (dr_is_app('fstatus') && isset($module['field']['fstatus']) && $module['field']['fstatus']['ismain']) {
-                        $where[] = ['adj' => '', 'name' => 'fstatus', 'value' => 1];
-                    }*/
-                    // 查找mwhere目录
-                    $mwhere = \Phpcmf\Service::Mwhere_Apps();
-                    if ($mwhere) {
-                        $mid = $dirname;
-                        $field = $tableinfo[$table];
-                        $siteid = $system['site'];
-                        foreach ($mwhere as $mapp) {
-                            $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
-                            if ($w) {
-                                $where[] = ['adj' => 'sql', 'value' => $w];
-                            }
+                // 查找mwhere目录
+                $mwhere = \Phpcmf\Service::Mwhere_Apps();
+                if ($mwhere) {
+                    $mid = $dirname;
+                    $field = $tableinfo[$table];
+                    $siteid = $system['site'];
+                    foreach ($mwhere as $mapp) {
+                        $w = require dr_get_app_dir($mapp).'Config/Mwhere.php';
+                        if ($w) {
+                            $where[] = ['adj' => 'sql', 'value' => $w];
                         }
                     }
-				}
+                }
 
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
                 $system['field'] = $this->_set_select_field_prefix($system['field'], $tableinfo[$table], $table); // 给显示字段加上表前缀
@@ -1799,20 +1866,14 @@ class View {
                         }
                         $pagesize = (int)$system['pagesize'];
                         !$pagesize && $pagesize = 10;
+                        // 数据量
+                        $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
+                        $row = $this->_query($sql, $system, FALSE);
+                        $total = (int)$row['c'];
+                        // 没有数据时返回空
                         if (!$total) {
-                            $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
-                            $row = $this->_query($sql, $system, FALSE);
-                            $total = (int)$row['c'];
-                            // 没有数据时返回空
-                            if (!$total) {
-                                return $this->_return($system['return'], '没有查询到内容', $sql, 0);
-                            }
+                            return $this->_return($system['return'], '没有查询到内容', $sql, 0);
                         }
-                        // 最大搜索量
-                        if ($system['action'] == 'search' && $module['setting']['search']['max']) {
-                            $total = min($total, $module['setting']['search']['max']);
-                        }
-
                         $system['firsturl'] = $first_url;
                         $pages = $this->_new_pagination($system, $pagesize, $total);
                         $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
@@ -2097,9 +2158,9 @@ class View {
      */
     public function _get_pagination($url, $pagesize, $total, $name = 'page', $first_url = '') {
 
-		$this->_page_used = 1;
-		if ($name == 'admin') {
-		    // 使用后台分页规则
+        $this->_page_used = 1;
+        if ($name == 'admin') {
+            // 使用后台分页规则
             $config = require CMSPATH.'Config/Apage.php';
         } else {
             // 这里要支持移动端分页条件
@@ -2120,7 +2181,7 @@ class View {
 
         !$url && $url = '此标签没有设置urlrule参数';
 
-		$this->_page_urlrule = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
+        $this->_page_urlrule = str_replace(['[page]', '%7Bpage%7D', '%5Bpage%5D', '%7bpage%7d', '%5bpage%5d'], '{page}', $url);
         $config['base_url'] = $this->_page_urlrule;
         $config['first_url'] = $first_url ? $first_url : '';
         $config['per_page'] = $pagesize;
@@ -2188,14 +2249,14 @@ class View {
                             }
                             $string.= $vals ? $join.' ('.implode(' OR ', $vals).')' : '';
                         }
-                        
+
                         break;
 
                     case 'FIND':
-						$v = dr_safe_replace($t['value']);
-						if (!is_numeric($v)) {
-							$v = "'".$v."'";
-						}
+                        $v = dr_safe_replace($t['value']);
+                        if (!is_numeric($v)) {
+                            $v = "'".$v."'";
+                        }
                         $string.= $join." FIND_IN_SET (".$v.", {$t['name']})";
                         break;
 
@@ -2851,9 +2912,9 @@ class View {
             return;
 
         $this->performanceData[] = [
-            'start'	 => $start,
-            'end'	 => $end,
-            'view'	 => $view
+            'start'  => $start,
+            'end'    => $end,
+            'view'   => $view
         ];
     }
 

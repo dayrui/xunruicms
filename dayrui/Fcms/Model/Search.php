@@ -253,17 +253,18 @@ class Search extends \Phpcmf\Model {
             $param_new['catid'] = $param['catid'];
             $param_new['keyword'] = $param['keyword'];
             $where = $this->mysearch($this->module, $where, $param_new);
-            $where = $where ? 'WHERE '.implode(' AND ', $where) : '';
+            $where = $where ? implode(' AND ', $where) : '';
+            $where_sql = $where ? 'WHERE '.$where : '';
 
             // 组合sql查询结果
-            $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where} ORDER BY NULL ";
+            $sql = "SELECT `{$table}`.`id` FROM `".$table."` {$where_sql} ORDER BY NULL ";
 
             // 统计搜索数量
-            $ct = $this->db->query("SELECT count(*) as t FROM `".$table."` {$where} ORDER BY NULL ")->getRowArray();
+            $ct = $this->db->query("SELECT count(*) as t FROM `".$table."` {$where_sql} ORDER BY NULL ")->getRowArray();
             $data = [
                 'id' => $id,
                 'catid' => intval($catid),
-                'params' => dr_array2string(['param' => $param_new, 'sql' => $sql]),
+                'params' => dr_array2string(['param' => $param_new, 'sql' => $sql, 'where' => $where]),
                 'keyword' => $param['keyword'] ? $param['keyword'] : '',
                 'contentid' => intval($ct['t']),
                 'inputtime' => SYS_TIME
@@ -277,6 +278,7 @@ class Search extends \Phpcmf\Model {
         // 格式化值
         $p = dr_string2array($data['params']);
         $data['sql'] = $p['sql'];
+        $data['where'] = $p['where'];
         $data['params'] = $p['param'];
         if (isset($param['catdir']) && $param['catdir'] && $catid) {
             # 目录栏目模式
