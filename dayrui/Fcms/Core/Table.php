@@ -305,9 +305,9 @@ class Table extends \Phpcmf\Common {
                 }
                 // 新增获取id
                 $_id = $rt['code'];
-                // 副表以5w数据量无限分表
+                // 副表据量无限分表
                 if ($this->is_data) {
-                    $tid = floor($_id / 50000);
+                    $tid = \Phpcmf\Service::M()->get_table_id($_id);
                     \Phpcmf\Service::M()->table($this->init['table'])->update($_id, ['tableid' => $tid], $this->edit_where);
                 }
             }

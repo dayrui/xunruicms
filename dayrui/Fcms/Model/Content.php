@@ -272,7 +272,7 @@ class Content extends \Phpcmf\Model {
                 $this->table($this->mytable.'_index')->delete($data[1]['id']);
                 return $rt;
             }
-            // 副表以5w数据量无限分表
+            // 副表数据量无限分表
             $tid = $this->_table_id($data[1]['id']);
             $this->table($this->mytable)->update($data[1]['id'], ['tableid' => $tid]);
         }
@@ -1498,9 +1498,9 @@ class Content extends \Phpcmf\Model {
 
     }
 
-    // 按5w分表
+    // 按附表分表
     public function _table_id($id) {
-        return floor($id / 50000);
+        return $this->get_table_id($id);
     }
 
 

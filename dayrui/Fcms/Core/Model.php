@@ -993,6 +993,11 @@ class Model {
         $this->param = [];
     }
 
+    // 附表分表规则
+    public function get_table_id($id) {
+        return floor($id / 100000);
+    }
+
     // 显示数据库错误
     private function _return_error($msg) {
         return IS_ADMIN || IS_DEV ? dr_return_data(0, $msg) : dr_return_data(0, dr_lang('系统错误'));
