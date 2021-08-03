@@ -10,6 +10,7 @@ class Module_search extends \Phpcmf\Common
 
     public function index() {
 
+        $mid = \Phpcmf\Service::L('input')->get('dir');
         $all = \Phpcmf\Service::M('Module')->get_module_info();
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
 
@@ -21,6 +22,10 @@ class Module_search extends \Phpcmf\Common
                     continue;
                 }
                 if (!$all[$dir]) {
+                    unset($module[$dir]);
+                    continue;
+                }
+                if ($mid && $mid != $dir) {
                     unset($module[$dir]);
                     continue;
                 }

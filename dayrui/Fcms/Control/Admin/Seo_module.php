@@ -9,12 +9,17 @@ class Seo_module extends \Phpcmf\Common {
 
     public function index() {
 
+        $mid = \Phpcmf\Service::L('input')->get('dir');
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
 
         // 设置url
         if ($module) {
             foreach ($module as $dir => $t) {
                 if ($t['hlist'] == 1) {
+                    unset($module[$dir]);
+                    continue;
+                }
+                if ($mid && $mid != $dir) {
                     unset($module[$dir]);
                     continue;
                 }
