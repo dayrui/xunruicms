@@ -73,6 +73,7 @@
         </div>
         {/if}
         {if SYS_ADMIN_OAUTH && $oauth}
+        <link href="{THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
         <div class="login-oauth">
             {loop $oauth $t}
             <a href="{$t.url}" class="tooltips" data-container="body" data-placement="top" data-original-title="{$t.title}"><i class="fa fa-{$t.name}"></i></a>

@@ -14,7 +14,6 @@ class Login extends \Phpcmf\Common
 	    if (isset($_GET['go']) && $_GET['go']) {
             $url = pathinfo(urldecode((string)\Phpcmf\Service::L('input')->get('go')));
             $url = $url['basename'] && $url['basename'] != SELF ? $url['basename'] : '';
-
         }
 
 		// 避免安装时的卡顿超时
@@ -119,7 +118,6 @@ class Login extends \Phpcmf\Common
             $license = require MYPATH.'Config/License.php';
         }
 
-        $url = ADMIN_URL.SELF.'?c=api&m=oauth&is_admin_call=1&name=';
         $name = dr_oauth_list();
         if (dr_is_app('weixin')) {
             $name['wechat'] = [];
@@ -127,6 +125,7 @@ class Login extends \Phpcmf\Common
 
         $oauth = [];
         if ($name) {
+            $ourl = ADMIN_URL.SELF.'?c=api&m=oauth&is_admin_call=1&name=';
             foreach ($name as $value => $t) {
                 if (!isset($this->member_cache['oauth'][$value]['id'])
                     || !$this->member_cache['oauth'][$value]['id']) {
@@ -137,20 +136,20 @@ class Login extends \Phpcmf\Common
                         dr_is_app('weixin') && $oauth['wechat'] = [
                             'title' => '微信公众号登录',
                             'name' => 'wechat',
-                            'url' => OAUTH_URL . 'index.php?s=weixin&c=member&m=login_url&back='.urlencode($url.'wechat'),
+                            'url' => OAUTH_URL.'index.php?s=weixin&c=member&m=login_url&back='.urlencode($ourl.'wechat'),
                         ];
                     } else {
                         $oauth[$value] = [
                             'title' => ($value == 'weixin' ? '微信扫码' : '微信公众号').'登录',
                             'name' => $value,
-                            'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
+                            'url' => OAUTH_URL.'index.php?s=api&c=oauth&m=index&name='.$value.'&type=login&back='.urlencode($ourl.$value),
                         ];
                     }
                 } else {
                     $oauth[$value] = [
                         'title' => $t['name'].'登录',
                         'name' => $value,
-                        'url' => OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $value . '&type=login&back='.urlencode($url.$value),
+                        'url' => OAUTH_URL.'index.php?s=api&c=oauth&m=index&name='.$value.'&type=login&back='.urlencode($ourl.$value),
                     ];
                 }
             }
@@ -158,13 +157,13 @@ class Login extends \Phpcmf\Common
 
         $mode = is_file(WRITEPATH.'config/admin.mode') ? 2 : 1;
 
-		\Phpcmf\Service::V()->assign(array(
+		\Phpcmf\Service::V()->assign([
 		    'mode' => $mode,
 			'form' => dr_form_hidden(),
             'oauth' => $oauth,
 			'license' => $license,
-            'login_url' => dr_rp(FC_NOW_URL, FC_NOW_HOST, '/'),
-		));
+            'login_url' => '/'.SELF.'?c=login&go='.urlencode($url),
+        ]);
         if (isset($_GET['is_cloud']) && $_GET['is_cloud']) {
             \Phpcmf\Service::V()->display('cloud_login_admin.html');exit;
         } else {
