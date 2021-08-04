@@ -388,9 +388,9 @@ class Api extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
-        $data = $_GET;
-        $where = [];
         $my = intval(\Phpcmf\Service::L('input')->get('my'));
+        $data = \Phpcmf\Service::L('input')->get('', true);
+        $where = [];
         if ($my) {
             $where[] = 'uid = '.$this->uid;
         } elseif ($this->member && $this->member['adminid'] > 0) {
@@ -534,11 +534,24 @@ class Api extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
-        $data = $_GET;
+        $data = \Phpcmf\Service::L('input')->get('', true);
         $where = [];
         if ($data['group']) {
+            // 指定用户组时
+            $ids = explode(',', (string)$data['group']);
+            if ($ids) {
+                $arr = [];
+                foreach ($ids as $gid) {
+                    $gid = intval($gid);
+                    if ($gid) {
+                        $arr[] = $gid;
+                    }
+                }
+                if ($arr) {
+                    $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in('.implode(',', $arr).'))';
+                }
+            }
             $group = [];
-            $where[] = '`id` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in('.$data['group'].'))';
         } else {
             $group = $this->member_cache['group'];
         }
