@@ -670,7 +670,6 @@ abstract class Common extends \CodeIgniter\Controller {
             }
         }
 
-
         // 返回的钩子
         $rt = dr_return_data($code, $msg, $data);
 

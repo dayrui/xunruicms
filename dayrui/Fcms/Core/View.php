@@ -215,7 +215,7 @@ class View {
             $this->_options['member'] = [];
         }
 
-        extract($this->_options, EXTR_OVERWRITE);
+        extract($this->_options, EXTR_SKIP);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
         $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
@@ -760,6 +760,9 @@ class View {
                 continue;
             }
             if (isset($system[$var])) { // 系统参数，只能出现一次，不能添加修饰符
+                if ($system[$var]) {
+                    continue; // 防止重复记录
+                }
                 $system[$var] = dr_safe_replace($val);
             } else {
                 if (preg_match('/^([A-Z_]+)(.+)/', $var, $match)) { // 筛选修饰符参数
@@ -852,8 +855,10 @@ class View {
 
                 if (!isset($param['name'])) {
                     return $this->_return($system['return'], 'name参数不存在');
+                } elseif (strpos($param['name'], 'my_') !== 0) {
+                    return $this->_return($system['return'], '自定义函数['.$param['name'].']必须以my_开头');
                 } elseif (!function_exists($param['name'])) {
-                    return $this->_return($system['return'], '函数['.$param['name'].']未定义');
+                    return $this->_return($system['return'], '自定义函数['.$param['name'].']未定义');
                 }
 
                 $name = 'function-'.md5(dr_array2string($param));
