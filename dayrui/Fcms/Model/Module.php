@@ -708,7 +708,7 @@ class Module extends \Phpcmf\Model
                     $cache['mobile_domain'] = $data['site'][$siteid]['mobile_domain'] ? dr_http_prefix($data['site'][$siteid]['mobile_domain'].'/') : '';
                     // 补全url
                     $cache['url'] = \Phpcmf\Service::L('router')->module_url($cache, $siteid); // 模块的URL地址
-                    $cache['murl'] = $data['site'][$siteid]['mobile_domain'] ? $cache['mobile_domain'] : $cache['url']; // 模块的URL地址
+                    $cache['murl'] = $data['site'][$siteid]['mobile_domain'] ? $cache['mobile_domain'] : dr_url_prefix($cache['url'], '', $siteid, 1); // 模块的URL地址
                     // 模块的自定义字段
                     $cache['field'] = [];
                     $field = $this->db->table('field')

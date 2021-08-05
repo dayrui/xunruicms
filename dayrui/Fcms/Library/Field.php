@@ -439,7 +439,7 @@
                     'fieldname' => 'uid',
                     'setting' => array(
                         'option' => array(
-                            'width' => '100%',
+                            'width' => '200px',
                         ),
                         'validate' => array(
                             'check' => '_check_member',
