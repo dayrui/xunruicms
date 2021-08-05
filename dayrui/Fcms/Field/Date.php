@@ -177,7 +177,7 @@ class Date extends \Phpcmf\Library\A_Field {
         }
 
         $value = $format ? dr_date($value, 'Y-m-d') : dr_date($value, 'Y-m-d H:i:s');
-        $shuru = '<input name="data['.$name.']" type="text" '.$style.' value="'.$value.'" '.$required.' class="form-control '.$field['setting']['option']['css'].'">';
+        $shuru = '<input id="dr_'.$name.'" name="data['.$name.']" type="text" '.$style.' value="'.$value.'" '.$required.' class="form-control '.$field['setting']['option']['css'].'">';
         $tubiao = '<span class="input-group-btn">
 					<button class="btn '.$color.' date-set" type="button">
 						<i class="fa fa-calendar"></i>
