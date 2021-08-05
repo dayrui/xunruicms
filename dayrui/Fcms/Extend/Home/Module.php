@@ -8,6 +8,7 @@
 // 用于前端模块内容显示
 class Module extends \Phpcmf\Common
 {
+
     public $module; // 模块信息
 
     // 模块首页

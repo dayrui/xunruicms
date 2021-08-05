@@ -248,6 +248,7 @@ class Module extends \Phpcmf\Common {
         $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
         if (IS_AJAX_POST) {
+            $this->init_file($data['dirname']);
             $post = \Phpcmf\Service::L('input')->post('data');
             if ($post['setting']['list_field']) {
                 foreach ($post['setting']['list_field'] as $t) {
