@@ -109,13 +109,12 @@
                                         <p class="search-desc">{$t.description}</p>
                                         <div class="search-post-foot">
                                             <ul class="search-post-tags">
-                                                {php $kw=@explode(',', $t.keywords);}
-                                                {loop $kw $a}
-                                                {if $a}
+                                                <!--关键词搜索列表-->
+                                                {php $kws=dr_get_content_kws($t.keywords);}
+                                                {loop $kws $name $url}
                                                 <li class="uppercase">
-                                                    <a href="{dr_get_tag_url($a, MOD_DIR)}" target="_blank">{$a}</a>
+                                                    <a href="{$url}" target="_blank">{$name}</a>
                                                 </li>
-                                                {/if}
                                                 {/loop}
                                             </ul>
                                             <div class="search-post-meta">

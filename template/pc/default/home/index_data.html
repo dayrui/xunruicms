@@ -11,15 +11,14 @@
             </h4>
             <p class="search-desc">{dr_strcut($t.description, 80)}</p>
             <div class="search-post-foot">
-                {php $kw=@explode(',', $t.keywords);}
-                {if $kw}
+                <!--关键词搜索列表-->
+                {php $kws=dr_get_content_kws($t.keywords);}
+                {if $kws}
                 <ul class="search-post-tags">
-                    {loop $kw $a}
-                    {if $a}
+                    {loop $kws $name $url}
                     <li class="uppercase">
-                        <a href="{dr_get_tag_url($a, 'news')}" target="_blank">{$a}</a>
+                        <a href="{$url}" target="_blank">{$name}</a>
                     </li>
-                    {/if}
                     {/loop}
                 </ul>
                 {/if}

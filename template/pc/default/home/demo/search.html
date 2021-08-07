@@ -336,7 +336,7 @@
                         <div class="portlet-body search-container ">
                             <ul>
                                 <!--调用MOD_DIR模块的数据 id和total和order参数(本页面固有参数) page=1标示开启分页 urlrule分页地址规则 pagesize每页数量-->
-                                {search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=5 urlrule=$urlrule}
+                                {search module=MOD_DIR id=$searchid total=$sototal order=$params.order catid=$catid page=1 pagesize=1 urlrule=$urlrule}
                                 <li class="search-item clearfix">
                                     <a title="{$t.title}" href="{$t.url}">
                                         <img src="{dr_thumb($t.thumb, 100, 90)}" width="100" height="90" style="margin-top: 15px;">
@@ -348,13 +348,12 @@
                                         <p class="search-desc">{$t.description}</p>
                                         <div class="search-post-foot">
                                             <ul class="search-post-tags">
-                                                {php $kw=@explode(',', $t.keywords);}
-                                                {loop $kw $a}
-                                                {if $a}
+                                                <!--关键词搜索列表-->
+                                                {php $kws=dr_get_content_kws($t.keywords);}
+                                                {loop $kws $name $url}
                                                 <li class="uppercase">
-                                                    <a href="{Router::tag_url($a)}" target="_blank">{$a}</a>
+                                                    <a href="{$url}" target="_blank">{$name}</a>
                                                 </li>
-                                                {/if}
                                                 {/loop}
                                             </ul>
                                             <div class="search-post-meta">
