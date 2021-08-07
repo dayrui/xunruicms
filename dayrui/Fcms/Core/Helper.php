@@ -321,6 +321,54 @@ function dr_get_double_search($param, $value) {
     return $arr ? @implode('|', $arr) : '';
 }
 
+// 获取内容的tags
+function dr_get_content_tags($value) {
+
+    if (is_array($value)) {
+        return $value;
+    }
+
+    $rt = [];
+    $tag = explode(',', $value);
+    foreach ($tag as $t) {
+        $t = trim($t);
+        if ($t) {
+            // 读缓存
+            if (dr_is_app('tag')) {
+                $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t);
+                if ($file) {
+                    $url = file_get_contents($file);
+                    if ($url) {
+                        $rt[$t] = $url;
+                    }
+                }
+            }
+        }
+    }
+
+    return $rt;
+}
+
+// 获取内容的搜索词
+function dr_get_content_kws($value, $mid = '') {
+
+    if (is_array($value)) {
+        return $value;
+    }
+
+    $rt = [];
+    $mid = $mid ? $mid : (defined('MOD_DIR') ? MOD_DIR : '');
+    $tag = explode(',', $value);
+    foreach ($tag as $t) {
+        $t = trim($t);
+        if ($t) {
+            $rt[$t] = \Phpcmf\Service::L('router')->search_url([], 'keyword', $t, $mid);
+        }
+    }
+
+    return $rt;
+}
+
 // 获取内容中的缩略图
 function dr_get_content_img($value, $num = 0) {
     return dr_get_content_url($value, 'src', 'gif|jpg|jpeg|png', $num);

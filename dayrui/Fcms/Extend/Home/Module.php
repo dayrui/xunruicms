@@ -130,6 +130,13 @@ class Module extends \Phpcmf\Common
         // 格式化栏目数据
         $category = $this->content_model->_call_category($category);
 
+        // 挂钩点 格式化栏目数据
+        /*
+        $rt = \Phpcmf\Hooks::trigger_callback('call_category_data', $category);
+        if ($rt && isset($rt['code']) && $rt['code']) {
+            $category = $rt['data'];
+        }*/
+
         // 判断是否外链
         if ($category['tid'] == 2) {
             dr_redirect(dr_url_prefix($category['url'], $this->module['dirname'], SITE_ID), 'refresh');exit;
