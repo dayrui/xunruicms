@@ -1093,10 +1093,11 @@ function dr_install_confirm(url) {
             icon: 3,
             shade: 0,
             title: lang['ts'],
-            btn: [lang['ok'], lang['esc']]
+            btn: [dr_lang('刷新后台'), dr_lang('直接进入')]
         }, function(index){
             layer.close(index);
-            parent.location.reload(true);
+            parent.location.href = admin_file+'?go='+encodeURIComponent(url);
+            //parent.location.reload(true);
         }, function(index){
             layer.close(index);
             if (url) {
@@ -1127,7 +1128,7 @@ function dr_install_app(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("dr_install_confirm()", 2000);
+                        setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
@@ -1162,7 +1163,7 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("dr_install_confirm('"+admin_file+"?c=module&m=index')", 2000);
+                        setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
                         //dr_install_confirm(admin_file+"?c=module&m=index")
                         //setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
@@ -1181,7 +1182,7 @@ function dr_install_module_select(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("dr_install_confirm('"+admin_file+"?c=module&m=index')", 2000);
+                        setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
                         //setTimeout("window.location.href = '"+admin_file+"?c=module&m=index'", 2000);
                     }
                 },
@@ -1211,7 +1212,7 @@ function dr_install_module(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("dr_install_confirm()", 2000);
+                        setTimeout("dr_install_confirm("+json.data.url+")", 2000);
                         //setTimeout("window.location.reload(true)", 2000)
                     }
                 },
