@@ -692,10 +692,10 @@ class Model {
                     // 数字查询作为账号id
                     $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
                     if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {
-                        $select->where('uid = '.intval($param['keyword']));
+                        $select->where('`'.$param['field'].'` = '.intval($param['keyword']));
                     } else {
                         // uid 非数字查询 账户查询
-                        $select->where('uid in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
+                        $select->where('`'.$param['field'].'` in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
                     }
                 } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
                     // 自定义的匹配模式
