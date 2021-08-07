@@ -76,13 +76,25 @@ class App extends \Phpcmf\Model
         }
 
         // 创建菜单
-        \Phpcmf\Service::M('Menu')->add_app($dir);
+        $first_uri = \Phpcmf\Service::M('Menu')->add_app($dir);
 
         // 写入锁定文件
         file_put_contents($path.'install.lock', SYS_TIME);
         unlink($path.'install.test');
 
-        return dr_return_data(1, dr_lang('安装成功'));
+        if (isset($config['uri']) && $config['uri']) {
+            $url = dr_url($config['uri']);
+        } elseif ($first_uri) {
+            $url = dr_url($first_uri);
+        } elseif (isset($config['ftype']) && $config['ftype'] == 'module') {
+            $url = dr_url('module/index');
+        } else {
+            $url = dr_url('cloud/local');
+        }
+
+        return dr_return_data(1, dr_lang('安装成功'), [
+            'url' => $url
+        ]);
     }
 
     // 卸载

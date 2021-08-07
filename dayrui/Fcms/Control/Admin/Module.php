@@ -51,9 +51,9 @@ class Module extends \Phpcmf\Common {
 
         $cfg['share'] = $type ? 0 : 1;
 
-        $rt = \Phpcmf\Service::M('Module')->install($dir, $cfg);
+        $rt = \Phpcmf\Service::M('module')->install($dir, $cfg);
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-        $this->_json($rt['code'], $rt['msg']);
+        $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
 
     // 卸载模块

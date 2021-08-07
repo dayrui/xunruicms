@@ -898,7 +898,7 @@ class Member extends \Phpcmf\Model {
         $data = $this->db->table('member')->where('phone', $phone)->get()->getRowArray();
         if (!$data) {
             // 未注册
-            if (\Phpcmf\Service::C()->member_cache['login']['is_auto']) {
+            if (\Phpcmf\Service::C()->member_cache['login']['auto_reg']) {
                 // 自动注册
                 $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
                 if (!$groupid) {

@@ -160,6 +160,24 @@ class Home extends \Phpcmf\Common
 			$my_menu = $menu;
 		}
 
+        // 默认的首页内容
+        $main_url = dr_url('home/main');
+        $main_link = '';
+        if (isset($_GET['go']) && $_GET['go']) {
+            $go = urldecode((string)\Phpcmf\Service::L('input')->get('go'));
+            $url = parse_url($go);
+            if (isset($url['query']) && $url['query']) {
+                parse_str($url['query'], $p);
+                $uri = trim($p['s'].'/'.$p['c'].'/'.$p['m'], '/');
+                $main_menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri', $uri);
+                if ($main_menu) {
+                    $first = $main_menu['tid'];
+                    $main_url = dr_url($uri);
+                    $main_link = 'Mlink('.$main_menu['tid'].', '.$main_menu['pid'].', '.$main_menu['id'].', \'\');';
+                }
+            }
+        }
+
         if ($my_menu) {
             // 加载全部插件的
             $local = \Phpcmf\Service::Apps();
@@ -252,7 +270,7 @@ class Home extends \Phpcmf\Common
                             unset($left['link'][$i]);
                             continue;
                         }
-                        $url = $link['url'] ? $link['url'] :\Phpcmf\Service::L('Router')->url($link['uri']);
+                        $url = $link['url'] ? $link['url'] : \Phpcmf\Service::L('Router')->url($link['uri']);
                         if (!$_link) {
                             // 第一个链接菜单时 指定class
                             $class = 'nav-item active open';
@@ -329,6 +347,8 @@ class Home extends \Phpcmf\Common
 				'light' => '#F9FAFD',
 				'light2' => '#F1F1F1',
 			],
+            'main_url' => $main_url,
+            'main_link' => $main_link,
             'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
 		\Phpcmf\Service::V()->display('index.html');exit;
@@ -464,6 +484,7 @@ class Home extends \Phpcmf\Common
             'is_min' => 1,
             'is_mode' => \Phpcmf\Service::M('auth')->is_admin_min_mode(),
             'is_index' => 1,
+            'main_url' => dr_url('home/main'),
             'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
         \Phpcmf\Service::V()->display('index_min.html');exit;

@@ -290,6 +290,7 @@ class Module extends \Phpcmf\Model
             }
         }
 
+        $module['url'] = dr_url('module/index');
         return dr_return_data(1, dr_lang('操作成功，请刷新后台页面'), $module);
     }
 

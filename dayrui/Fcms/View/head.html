@@ -87,6 +87,11 @@
             }
             function Mlink(top, left, link, url) {
 
+                if (url == '{dr_url('home/main')}') {
+                    // 直接跳转到首页
+                    window.location.href = admin_file;
+                    return;
+                }
                 // 延迟提示
                 /*
                 var admin_loading = layer.load(2, {
@@ -131,8 +136,10 @@
                 $('#dr_menu_left_'+left+' .arrow').addClass('open');
                 $('#dr_menu_left_'+left+' .sub-menu').show();
 
-                $("#right_page").attr('src', url);
-                $("#right_page").attr("url", url);
+                if (url) {
+                    $("#right_page").attr('src', url);
+                    $("#right_page").attr("url", url);
+                }
             }
             function wSize(){
                 var str=getWindowSize();
@@ -160,6 +167,8 @@
             }
 
             $(function(){
+                {if $main_link} {$main_link} {/if}
+
                 window.onresize=wSize;
                 wSize();
                 // 宽度小时

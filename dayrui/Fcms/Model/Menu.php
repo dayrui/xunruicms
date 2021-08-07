@@ -265,6 +265,7 @@ class Menu extends \Phpcmf\Model {
             return;
         }
 
+        $afirst = '';
         if ($menu['admin']) {
             // 后台菜单
             foreach ($menu['admin'] as $mark => $top) {
@@ -279,6 +280,9 @@ class Menu extends \Phpcmf\Model {
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $key => $link) {
+                                if (!$afirst && $link['uri']) {
+                                    $afirst = $link['uri']; // 第一个菜单
+                                }
                                 if ($this->counts('admin_menu', 'pid='.$left_id.' and `uri`="'.$link['uri'].'"')) {
                                     continue;
                                 }
@@ -318,6 +322,8 @@ class Menu extends \Phpcmf\Model {
 
             }
         }
+
+        return $afirst;
     }
 
     // 卸载app时的操作

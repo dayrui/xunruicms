@@ -203,7 +203,7 @@ class Cloud extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('');
-        $this->_json(1, dr_lang('安装成功，请刷新后台页面'));
+        $this->_json(1, dr_lang('安装成功，请刷新后台页面'), $rt['data']);
     }
 
     // 卸载程序
