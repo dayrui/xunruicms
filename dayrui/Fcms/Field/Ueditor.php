@@ -297,7 +297,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                         || strpos($img, '/api/umeditor/') !== false) {
                         continue;
                     }
-                    $ext = $this->_get_file_ext($img);
+                    $ext = $this->_get_image_ext($img);
                     if (!$ext) {
                         continue;
                     }
@@ -450,7 +450,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
     }
 
     // 获取远程附件扩展名
-    protected function _get_file_ext($url) {
+    protected function _get_image_ext($url) {
 
         if (strlen($url) > 300) {
             return '';
@@ -468,6 +468,15 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         foreach ($arr as $t) {
             if (stripos($url, $t) !== false) {
                 return $t;
+            }
+        }
+
+        $rt = getimagesize($url);
+        if ($rt && $rt['mime']) {
+            foreach ($arr as $t) {
+                if (stripos($rt['mime'], $t) !== false) {
+                    return $t;
+                }
             }
         }
 
