@@ -19,6 +19,9 @@ class Home extends \Phpcmf\Common
             $file = str_replace('_url.php', '_api.php', $info['basename']);
             $apifile = WEBPATH . $path . '/' . $file;
             if (!is_file($apifile)) {
+                if (IS_DEV) {
+                    exit('支付接口文件（'.$apifile.'）不存在');
+                }
                 exit('支付接口文件不存在');
             }
             // 接口配置参数
@@ -34,6 +37,9 @@ class Home extends \Phpcmf\Common
         } else {
             $myfile = MYPATH.'Api/'.ucfirst(IS_API).'.php';
             if (!is_file($myfile)) {
+                if (IS_DEV) {
+                    exit('Api接口文件（'.$myfile.'）不存在');
+                }
                 exit('api file is error');
             }
             require $myfile;
