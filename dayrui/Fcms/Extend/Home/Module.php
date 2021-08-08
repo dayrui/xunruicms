@@ -70,7 +70,7 @@ class Module extends \Phpcmf\Common
                     // 终端下不生成
                 } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                     // 移动端访问
-                    if ($this->module['url'] != $this->module['murl']) {
+                    if (SITE_IS_MOBILE || $this->module['mobile_domain']) {
                         file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], SITE_MOBILE_DIR.'/'.$file), $html);
                     }
                 } else {
@@ -885,8 +885,9 @@ class Module extends \Phpcmf\Common
         $this->_Index(1);
         $html = ob_get_clean();
         $pc = file_put_contents(dr_format_html_file($file, $root), $html, LOCK_EX);
+        $mobile = 0;
 
-        if ($this->module['url'] != $this->module['murl']) {
+        if (SITE_IS_MOBILE || $this->module['mobile_domain']) {
             ob_start();
             \Phpcmf\Service::V()->init('mobile');
             $this->_Index(1);
