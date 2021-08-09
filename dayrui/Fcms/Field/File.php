@@ -23,17 +23,20 @@ class File extends \Phpcmf\Library\A_Field {
 	 * @return  string
 	 */
 	public function option($option) {
-		
 
-		return [$this->field_type($option['fieldtype'], $option['fieldlength']).$this->_search_field().
-			'
-            <div class="form-group">
+        $mthumb = '';
+	    if (\Phpcmf\Service::M('field')->relatedname == 'module') {
+	        $mthumb = '<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
                 <div class="col-md-9">
                 <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的图片来填充（仅对模块字段有效）').'</span>
                 </div>
-            </div>
+            </div>';
+        }
+
+		return [$this->field_type($option['fieldtype'], $option['fieldlength']).$this->_search_field().
+			$mthumb.'
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
