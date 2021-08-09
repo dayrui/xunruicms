@@ -2,7 +2,7 @@
 
 
 <div class="text-center" id="dr_check_button">
-    <button type="button" id="dr_check_button_ing" disabled="disabled" class="btn green-meadow"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  准备中 </button>
+    <button type="button" id="dr_check_button_ing" disabled="disabled" class="btn blue"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  准备中 </button>
 </div>
 
 <div id="dr_check_result" class="margin-top-30" style="display: none">
@@ -36,7 +36,7 @@
         $('#dr_check_div').show();
         $('#dr_check_result').show();
         $('#dr_check_reing').remove();
-        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').addClass('blue');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
         $('#dr_check_html').append('<p class=""><label class="rleft">正在验证服务端授权信息</label></p>');
@@ -48,7 +48,7 @@
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                     $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                 } else {
@@ -73,7 +73,7 @@
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                     $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                     clearInterval(interval_id);
@@ -101,7 +101,7 @@
                     if (json.code == 0) {
                         $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                         $('#dr_check_button_ing').addClass('red');
-                        $('#dr_check_button_ing').removeClass('green-meadow');
+                        $('#dr_check_button_ing').removeClass('blue');
                         $('#dr_check_button').html('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                         clearInterval(interval_id);
                     } else {
@@ -134,7 +134,7 @@
         $('#dr_check_div').show();
         $('#dr_check_result').show();
         $('#dr_check_install').remove();
-        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').addClass('blue');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  文件复制中');
         $.ajax({
@@ -149,7 +149,7 @@
                     $('#dr_check_html').html('<p class="p_error">'+json.msg+'</p>');
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 复制失败');
                     $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_install" onclick="dr_install()" class="btn blue"> <i class="fa fa-cog"></i> 导入程序 </button>');
                 }
             },

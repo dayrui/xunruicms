@@ -2,7 +2,7 @@
 
 
 <div class="text-center" id="dr_check_button">
-    <button type="button" id="dr_check_button_ing" disabled="disabled" class="btn green-meadow"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  准备中 </button>
+    <button type="button" id="dr_check_button_ing" disabled="disabled" class="btn blue"> <img width="15" src="{THEME_PATH}assets/images/loading-2.gif">  准备中 </button>
 </div>
 
 <div id="dr_check_result" class="margin-top-30" style="display: none">
@@ -35,7 +35,7 @@
         $('#dr_check_div').show();
         $('#dr_check_result').show();
         $('#dr_check_reing').remove();
-        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').addClass('blue');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
         $('#dr_check_html').append('<p class=""><label class="rleft">正在备份本站文件</label></p>');
@@ -47,7 +47,7 @@
                 if (json.code == 0) {
 					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 备份失败');
 					$('#dr_check_button_ing').addClass('red');
-					$('#dr_check_button_ing').removeClass('green-meadow');
+					$('#dr_check_button_ing').removeClass('blue');
 					$('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_do_check()" class="btn green"> <i class="fa fa-refresh"></i> 忽略备份继续升级 </button>');
 					$('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
 					$('#dr_check_html').append('<p class=""><label class="rleft">建议手动备份本站全部文件，然后再点击上方的【继续升级】按钮</label></p>');
@@ -69,7 +69,7 @@
         $('#dr_check_div').show();
         $('#dr_check_result').show();
         $('#dr_check_reing').remove();
-        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').addClass('blue');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 准备中');
 		$('#dr_check_html').append('<p class=""><label class="rleft">正在验证版本信息</label></p>');
@@ -81,7 +81,7 @@
 				if (json.code == 0) {
 					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
 					$('#dr_check_button_ing').addClass('red');
-					$('#dr_check_button_ing').removeClass('green-meadow');
+					$('#dr_check_button_ing').removeClass('blue');
 					$('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
 					$('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
 				} else {
@@ -107,7 +107,7 @@
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                     $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                     $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                     clearInterval(interval_id);
@@ -136,7 +136,7 @@
                     if (json.code == 0) {
                         $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
                         $('#dr_check_button_ing').addClass('red');
-                        $('#dr_check_button_ing').removeClass('green-meadow');
+                        $('#dr_check_button_ing').removeClass('blue');
                         $('#dr_check_button').html('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
                         clearInterval(interval_id);
                     } else {
@@ -170,7 +170,7 @@
         $('#dr_check_div').show();
         $('#dr_check_result').show();
         $('#dr_check_reing').remove();
-        $('#dr_check_button_ing').addClass('green-meadow');
+        $('#dr_check_button_ing').addClass('blue');
         $('#dr_check_button_ing').removeClass('red');
         $('#dr_check_button_ing').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif"> 更新中');
         $('#dr_check_html').append('<p class=""><label class="rleft">正在更新本站程序文件</label></p>');
@@ -187,7 +187,7 @@
                 } else {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 升级失败');
                     $('#dr_check_button_ing').addClass('red');
-                    $('#dr_check_button_ing').removeClass('green-meadow');
+                    $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新升级 </button>');
                 }
 
