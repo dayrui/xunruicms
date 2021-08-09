@@ -1189,6 +1189,7 @@ class Category extends \Phpcmf\Table {
 
                 // 不出现在编辑器中的字段
                 $save['setting']['cat_field'] = $old['setting']['cat_field'];
+                $save['setting']['module_field'] = $old['setting']['module_field'];
                 if (isset($save['tid']) && $save['tid'] != 1) {
                     $save['setting']['notedit'] = 0;
                 }
