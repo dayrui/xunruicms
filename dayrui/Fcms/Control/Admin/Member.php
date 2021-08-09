@@ -175,7 +175,7 @@ class Member extends \Phpcmf\Table
                 $this->_json(0, dr_lang('新账号不能为空'));
             } elseif ($member['username'] == $name) {
                 $this->_json(0, dr_lang('新账号不能和原始账号相同'));
-            } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $name)->countAllResults()) {
+            } elseif (\Phpcmf\Service::M()->table('member')->where('username', $name)->counts()) {
                 $this->_json(0, dr_lang('新账号%s已经注册', $name), ['field' => 'name']);
             }
             $rt = \Phpcmf\Service::L('form')->check_username($name);

@@ -1685,11 +1685,7 @@ class Member extends \Phpcmf\Model {
             'username' => $username,
         ]);
 
-        $this->db->table('member_paylog')->where('uid', $uid)->update([ 'username' => $username ]);
-        $this->db->table('member_paylog')->where('touid', $uid)->update([ 'tousername' => $username ]);
         $this->db->table('member_group_verify')->where('uid', $uid)->update([ 'username' => $username ]);
-        $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $uid)->update([ 'username' => $username ]);
-        $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $uid)->update([ 'username' => $username ]);
 
         \Phpcmf\Service::L('cache')->set_data('member-info-'.$uid, '', 1);
     }
