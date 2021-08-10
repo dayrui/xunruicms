@@ -35,8 +35,8 @@ if (IS_ADMIN) {
 }
 
 
-isset($_GET['c']) && $_GET['c'] && is_string($_GET['c']) && $routes->setDefaultController(ucfirst($_GET['c']));
-isset($_GET['m']) && $_GET['m'] && is_string($_GET['m']) && $routes->setDefaultMethod($_GET['m']);
+isset($_GET['c']) && $_GET['c'] && is_string($_GET['c']) && $routes->setDefaultController(ucfirst(dr_safe_filename($_GET['c'])));
+isset($_GET['m']) && $_GET['m'] && is_string($_GET['m']) && $routes->setDefaultMethod(dr_safe_filename($_GET['m']));
 
 $routes->add('/', $routes->getDefaultController().'::'.$routes->getDefaultMethod());
 

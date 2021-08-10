@@ -487,7 +487,6 @@ class Check extends \Phpcmf\Common
                             // 替换搜索控制器
                             $code = file_get_contents($file);
                             if ($code && strpos($code, '_Admin_Recycle_Edit') === false) {
-                                var_dump($code);
                                 file_put_contents($file, str_replace(
                                     'public function index() {',
                                     ' public function edit() {
