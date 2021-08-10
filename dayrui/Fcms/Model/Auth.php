@@ -159,7 +159,7 @@ class Auth extends \Phpcmf\Model {
         \Phpcmf\Service::C()->session()->set('uid', $data['id']);
 
         \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], SITE_LOGIN_TIME);
-        \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].isset($data['login_attr']) ? $data['login_attr'] : ''), SITE_LOGIN_TIME);
+        \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].(isset($data['login_attr']) ? $data['login_attr'] : '')), SITE_LOGIN_TIME);
 
         // 管理员登录日志记录
         $this->_login_log($data['id']);
