@@ -81,7 +81,7 @@ class Model {
     public function db_source($name = '') {
         if ($name) {
             $this->db_temp = $this->db;
-            $this->db = \Config\Database::connect($name);
+            $this->db = \Config\Database::connect($name, false);
             $this->prefix = $this->db->DBPrefix;
         }
         return $this;

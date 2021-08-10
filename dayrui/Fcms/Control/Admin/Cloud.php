@@ -568,7 +568,7 @@ return [
 
         if ($dir == 'phpcmf') {
             // 主程序备份
-            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/cms/'.date('Y-m-d H:i:s').'.zip', rtrim(WEBPATH, '/'), [
+            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/cms/'.date('Y-m-d-H-i-s').'.zip', rtrim(WEBPATH, '/'), [
                 WEBPATH.'cache',
                 WEBPATH.'uploadfile',
                 WEBPATH.'.svn',
@@ -576,7 +576,7 @@ return [
             ]);
         } else {
             // 插件备份
-            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/'.$dir.'/'.date('Y-m-d H:i:s').'.zip', dr_get_app_dir($dir));
+            $rt = \Phpcmf\Service::L('file')->zip(WRITEPATH.'backups/update/'.$dir.'/'.date('Y-m-d-H-i-s').'.zip', dr_get_app_dir($dir));
         }
 
         if ($rt) {
