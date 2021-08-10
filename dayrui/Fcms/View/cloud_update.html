@@ -40,6 +40,9 @@
 					<a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
 					{/if}
 					</label>
+                    <label style="display: none" id="dr_duibi_{$dir}">
+					<a href="{dr_url('cloud/bf')}" class="btn red btn-xs"> <i class="fa fa-code"></i> {dr_lang('文件对比')}</a>
+					</label>
                     <label class="dr_check_version" id="dr_row_{$dir}"></label>
                 </td>
             </tr>
@@ -70,9 +73,12 @@
             dataType: "json",
             url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
             success: function(json) {
-                if (json.code) {
+                if (json.code == 1) {
                     $("#dr_row_{$dir}").html(json.msg);
                     $("#dr_update_{$dir}").show();
+                } else if (json.code == 2) {
+                    $("#dr_row_{$dir}").html(json.msg);
+                    $("#dr_duibi_{$dir}").show();
                 } else {
                     $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
                 }
