@@ -220,7 +220,7 @@ class Member extends \Phpcmf\Model {
         // 存储cookie
         $expire = $remember ? 8640000 : SITE_LOGIN_TIME;
         \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], $expire);
-        \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].isset($data['login_attr']) ? $data['login_attr'] : ''), $expire);
+        \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].(isset($data['login_attr']) ? $data['login_attr'] : '')), $expire);
 
         // 登录后的钩子
         \Phpcmf\Hooks::trigger('member_login_after', $data);
@@ -241,7 +241,7 @@ class Member extends \Phpcmf\Model {
             return 1;
         } elseif (!$cookie) {
             return 0;
-        } elseif (md5(SYS_KEY.$member['password'].isset($member['login_attr']) ? $member['login_attr'] : '') !== $cookie) {
+        } elseif (md5(SYS_KEY.$member['password'].(isset($member['login_attr']) ? $member['login_attr'] : '')) != $cookie) {
             return 0;
         }
 
