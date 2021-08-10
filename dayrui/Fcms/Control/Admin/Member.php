@@ -118,11 +118,17 @@ class Member extends \Phpcmf\Table
         }
 
         $groupid = \Phpcmf\Service::L('input')->request('groupid');
-        if ($groupid) {
-            $in = implode(',', $groupid);
+        if ($groupid && is_array($groupid)) {
+            $in = [];
+            foreach ($groupid as $gid) {
+                $gid = intval($gid);
+                if ($gid) {
+                    $in[] = $gid;
+                }
+            }
             if ($in) {
-                $where[] = 'member.id IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.$in.'))';
-                $p['groupid'] = $groupid;
+                $where[] = 'member.id IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('member_group_index').'` where gid in ('.implode(',', $in).'))';
+                $p['groupid'] = $in;
             }
         }
 

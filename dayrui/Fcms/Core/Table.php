@@ -13,6 +13,8 @@ class Table extends \Phpcmf\Common {
     public $init; // 数据表初始化 [ fmode init方法参数 ]
     public $is_get_catid; // 当期栏目id
 
+    protected $model; // 模型类
+    protected $db_source; // 数据源
     protected $field; // 自定义字段 [ 1 = [主表], 0 = [附表]]
     protected $sys_field; // 系统字段 [ 1 = [主表], 0 = [附表]]
     protected $form_rule; // 表单配置规则
@@ -50,6 +52,16 @@ class Table extends \Phpcmf\Common {
         $this->is_diy_where_list = 0;
         $this->admin_tpl_path = (APP_DIR ? APPPATH.'Views/' : COREPATH.'View/');
     }
+
+    // 数据库对象
+    private function _db() {
+
+        if ($this->db_source) {
+            return \Phpcmf\Service::M()->db_source($this->db_source);
+        }
+
+        return \Phpcmf\Service::M();
+    }
     
     // 数据表初始化
     protected function _init($data) {
@@ -59,6 +71,7 @@ class Table extends \Phpcmf\Common {
         $data['field'] = $this->sys_field && $this->field ? $this->field + $this->sys_field : ($this->field ? $this->field : $this->sys_field);
         $data['is_diy_where_list'] = $this->is_diy_where_list;
         $this->init = $data;
+        $this->db_source = isset($data['db']) ? $data['db'] : '';
         return $this;
     }
 
@@ -148,14 +161,14 @@ class Table extends \Phpcmf\Common {
             return [];
         }
 
-        $row = \Phpcmf\Service::M()->init($this->init)->get($id);
+        $row = $this->_db()->init($this->init)->get($id);
         if (!$row) {
             return [];
         }
 
         // 附表存储
         if ($this->is_data) {
-            $r = \Phpcmf\Service::M()->table($this->init['table'] . '_data_'.intval($row['tablieid']))->get($id);
+            $r = $this->_db()->table($this->init['table'] . '_data_'.intval($row['tablieid']))->get($id);
             $row = $r ? $r + $row : $row;
         }
 
@@ -179,12 +192,12 @@ class Table extends \Phpcmf\Common {
     protected function _Save_Value($id, $name, $value, $after = null, $before = null) {
 
         $table = $this->init['table'];
-        if (!\Phpcmf\Service::M()->is_table_exists($table)) {
+        if (!$this->_db()->is_table_exists($table)) {
             $this->_json(0, dr_lang('数据表（%s）不存在', $this->init['table']));
-        } elseif (!\Phpcmf\Service::M()->is_field_exists($table, $name)) {
+        } elseif (!$this->_db()->is_field_exists($table, $name)) {
             if (isset($this->init['stable']) && $this->init['stable']
-                && \Phpcmf\Service::M()->is_table_exists($this->init['stable'])
-                && \Phpcmf\Service::M()->is_field_exists($this->init['stable'], $name)) {
+                && $this->_db()->is_table_exists($this->init['stable'])
+                && $this->_db()->is_field_exists($this->init['stable'], $name)) {
                 $table = $this->init['stable'];
             } else {
                 $this->_json(0, dr_lang('数据表（%s）字段（%s）不存在', $this->init['table'], $name));
@@ -192,7 +205,7 @@ class Table extends \Phpcmf\Common {
         }
 
         // 查询数据
-        $row = \Phpcmf\Service::M()->table($table)->get($id);
+        $row = $this->_db()->table($table)->get($id);
         if (!$row) {
             $this->_json(0, dr_lang('数据%s不存在', $id));
         } elseif ($row[$name] == $value) {
@@ -208,7 +221,7 @@ class Table extends \Phpcmf\Common {
             $rt['data'] && $value = $rt['data'];
         }
 
-        $rt = \Phpcmf\Service::M()->table($table)->save($id, $name, $value, $this->edit_where);
+        $rt = $this->_db()->table($table)->save($id, $name, $value, $this->edit_where);
         if (!$rt['code']) {
             $this->_json(0, $rt['msg']);
         }
@@ -293,13 +306,13 @@ class Table extends \Phpcmf\Common {
             $main = isset($data[1]) ? $data[1] : $data;
             if ($id) {
                 // 更新数据
-                $rt = \Phpcmf\Service::M()->table($this->init['table'])->update($id, $main, $this->edit_where);
+                $rt = $this->_db()->table($this->init['table'])->update($id, $main, $this->edit_where);
                 if (!$rt['code']) {
                     return $rt;
                 }
             } else {
                 // 新增数据
-                $rt = \Phpcmf\Service::M()->table($this->init['table'])->replace($main);
+                $rt = $this->_db()->table($this->init['table'])->replace($main);
                 if (!$rt['code']) {
                     return $rt;
                 }
@@ -308,22 +321,22 @@ class Table extends \Phpcmf\Common {
                 // 副表据量无限分表
                 if ($this->is_data) {
                     $tid = \Phpcmf\Service::M()->get_table_id($_id);
-                    \Phpcmf\Service::M()->table($this->init['table'])->update($_id, ['tableid' => $tid], $this->edit_where);
+                    $this->_db()->table($this->init['table'])->update($_id, ['tableid' => $tid], $this->edit_where);
                 }
             }
             // 附表存储
             if ($this->is_data) {
                 // 判断附表是否存在,不存在则创建
-                \Phpcmf\Service::M()->is_data_table($this->init['table'].'_data_', $tid);
+                $this->_db()->is_data_table($this->init['table'].'_data_', $tid);
                 $table = $this->init['table'].'_data_'.$tid;
                 if ($id) {
                     if ($data[0]) {
-                        $rt = \Phpcmf\Service::M()->table($table)->update($id, $data[0], $this->edit_where);
+                        $rt = $this->_db()->table($table)->update($id, $data[0], $this->edit_where);
                         if ($rt['msg']) {
                             // 删除主表
-                            \Phpcmf\Service::M()->table($this->init['table'])->delete($id);
+                            $this->_db()->table($this->init['table'])->delete($id);
                             // 删除索引
-                            $this->is_module_index && \Phpcmf\Service::M()->table($this->init['table'].'_index')->delete($id);
+                            $this->is_module_index && $this->_db()->table($this->init['table'].'_index')->delete($id);
                             return $rt;
                         } 
                     } else {
@@ -331,12 +344,12 @@ class Table extends \Phpcmf\Common {
                     }
                 } else {
                     $data[0]['id'] = $_id; // 录入主表id
-                    $rt = \Phpcmf\Service::M()->table($table)->replace($data[0]);
+                    $rt = $this->_db()->table($table)->replace($data[0]);
                     if ($rt['msg']) {
                         // 删除主表
-                        \Phpcmf\Service::M()->table($this->init['table'])->delete($_id);
+                        $this->_db()->table($this->init['table'])->delete($_id);
                         // 删除索引
-                        $this->is_module_index && \Phpcmf\Service::M()->table($this->init['table'].'_index')->delete($_id);
+                        $this->is_module_index && $this->_db()->table($this->init['table'].'_index')->delete($_id);
                         return $rt;
                     }
                 }
@@ -547,7 +560,7 @@ class Table extends \Phpcmf\Common {
             $this->_json(0, dr_lang('所选数据不存在'));
         }
 
-        $rows = \Phpcmf\Service::M()->init($this->init)->where_in('id', $ids)->getAll();
+        $rows = $this->_db()->init($this->init)->where_in('id', $ids)->getAll();
         if (!$rows) {
             $this->_json(0, dr_lang('所选数据不存在'));
         }
@@ -565,13 +578,13 @@ class Table extends \Phpcmf\Common {
         $ids = [];
         foreach ($rows as $t) {
             $id = intval($t['id']);
-            $rt = \Phpcmf\Service::M()->init($this->init)->delete($id, $this->delete_where);
+            $rt = $this->_db()->init($this->init)->delete($id, $this->delete_where);
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
             if ($this->is_data) {
                 // 附表存储
-                $rt = \Phpcmf\Service::M()->init($this->init)->table($this->init['table'].'_data_'.intval($t['tableid']))->delete($id, $this->delete_where);
+                $rt = $this->_db()->init($this->init)->table($this->init['table'].'_data_'.intval($t['tableid']))->delete($id, $this->delete_where);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
@@ -620,9 +633,9 @@ class Table extends \Phpcmf\Common {
         }
 
         // 查询数据结果
-        list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size, $this->list_where);
+        list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
         $p && $param = $p + $param;
-        $sql = \Phpcmf\Service::M()->get_sql_query();
+        $sql = $this->_db()->get_sql_query();
 
         // 默认以显示字段为搜索字段
         if (!isset($param['field']) && $this->init['show_field']) {

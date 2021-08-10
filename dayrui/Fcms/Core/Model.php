@@ -15,6 +15,7 @@ class Model {
     public $table;
     public $stable; // join关联表
     public $prefix;
+    public $db_temp; // 备份默认数据库
 
     public $uid;
     public $admin;
@@ -76,6 +77,16 @@ class Model {
         return $this;
     }
 
+    // 设置数据源
+    public function db_source($name = '') {
+        if ($name) {
+            $this->db_temp = $this->db;
+            $this->db = \Config\Database::connect($name);
+            $this->prefix = $this->db->DBPrefix;
+        }
+        return $this;
+    }
+
     // 设置操作表
     public function table($name) {
         $this->table = $name;
@@ -98,10 +109,12 @@ class Model {
 
         if (!$this->db->simpleQuery($sql)) {
             $error = $this->db->error();
+            $this->_clear();
             log_message('error', $sql.': '.$error['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($error['message']);
         }
 
+        $this->_clear();
         return dr_return_data(1);
     }
 
@@ -116,28 +129,38 @@ class Model {
                 $sql['Create Table']
             ));
         }
+        $this->_clear();
     }
 
     // 表是否存在
     public function is_table_exists($table) {
 
         if (!$table) {
+            $this->_clear();
             return 0;
         }
 
         $table = strpos($table, $this->prefix) === 0 ? $table : $this->dbprefix($table);
-        return $this->db->tableExists($table) ? 1 : 0;
+        $rt = $this->db->tableExists($table) ? 1 : 0;
+
+        $this->_clear();
+
+        return $rt;
     }
 
     // 表字段是否存在
     public function is_field_exists($table, $name) {
 
         if (!$table || !$name) {
+            $this->_clear();
             return 0;
         }
 
         $table = strpos($table, $this->prefix) === 0 ? $table : $this->dbprefix($table);
-        return $this->db->fieldExists($name, $table) ? 1 : 0;
+        $rt = $this->db->fieldExists($name, $table) ? 1 : 0;
+        $this->_clear();
+
+        return $rt;
     }
 
     // 字段值是否存在
@@ -202,6 +225,7 @@ class Model {
         $this->db->table($this->table)->insert($data);
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             log_message('error', $this->table.': '.$rt['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': '.$rt['message']);
         }
@@ -210,6 +234,7 @@ class Model {
         !$id && $id = intval($data[$this->key]);
 
         if (!$id) {
+            $this->_clear();
             log_message('debug', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': 主键获取失败');
         }
@@ -225,6 +250,7 @@ class Model {
         $this->db->table($this->table)->replace($data);
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             log_message('error', $this->table.': '.$rt['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': '.$rt['message']);
         }
@@ -233,6 +259,7 @@ class Model {
         !$id && $id = intval($data[$this->key]);
 
         if (!$id) {
+            $this->_clear();
             log_message('debug', $this->table.': 主键获取失败<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': 主键获取失败');
         }
@@ -246,6 +273,7 @@ class Model {
     public function update($id, $data, $where = '') {
 
         if (!$data) {
+            $this->_clear();
             return $this->_return_error($this->table.': update() data值为空');
         }
 
@@ -257,6 +285,7 @@ class Model {
 
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             log_message('error', $this->table.': '.$rt['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': '.$rt['message']);
         }
@@ -296,6 +325,7 @@ class Model {
 
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             log_message('error', $this->table.': '.$rt['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': '.$rt['message']);
         }
@@ -341,6 +371,7 @@ class Model {
 
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             log_message('error', $this->table.': '.$rt['message'].'<br>'.FC_NOW_URL);
             return $this->_return_error($this->table.': '.$rt['message']);
         }
@@ -365,6 +396,7 @@ class Model {
 
         $rt = $this->db->error();
         if ($rt['code']) {
+            $this->_clear();
             return $this->_return_error($this->table.': '.$rt['message']);
         }
 
@@ -381,6 +413,7 @@ class Model {
 
         $query = $this->db->table($this->table)->where($this->key, (int)$id)->get();
         if (!$query) {
+            $this->_clear();
             return [];
         }
 
@@ -481,6 +514,7 @@ class Model {
         }
 
         if (!$builder) {
+            $this->_clear();
             return [];
         }
 
@@ -509,9 +543,11 @@ class Model {
             $value = $data[$name] ? 0 : 1;
             // 更新
             $this->db->table($this->table)->where('id', $id)->update([$name => $value]);
+            $this->_clear();
             return $value;
         }
 
+        $this->_clear();
         return -1;
     }
 
@@ -928,16 +964,21 @@ class Model {
         $sql = str_replace('{dbprefix}', $this->prefix, $sql);
         $query = $this->db->query($sql);
         if (!$query || !is_object($query)) {
+            $this->_clear();
             return [];
         }
 
-        return $more ? $query->getResultArray() : $query->getRowArray();
+        $rt = $more ? $query->getResultArray() : $query->getRowArray();
+        $this->_clear();
+
+        return $rt;
     }
 
     // 批量执行
     public function query_all($sql) {
 
         if (!$sql) {
+            $this->_clear();
             return '';
         }
 
@@ -958,10 +999,12 @@ class Model {
             }
             if (!$this->db->simpleQuery(dr_format_create_sql($ret))) {
                 $rt = $this->db->error();
+                $this->_clear();
                 return $ret.': '.$rt['message'];
             }
         }
 
+        $this->_clear();
         return '';
     }
 
@@ -976,14 +1019,19 @@ class Model {
 
         $my = $this->db->getLastQuery();
         if (!$my) {
+            $this->_clear();
             return '';
         }
 
         if ($my && !method_exists($my, 'getQuery')) {
+            $this->_clear();
             return '';
         }
 
-        return str_replace(PHP_EOL, ' ', $my->getQuery());
+        $rt = str_replace(PHP_EOL, ' ', $my->getQuery());
+        $this->_clear();
+
+        return $rt;
     }
 
     private function _clear() {
@@ -991,6 +1039,12 @@ class Model {
         $this->date_field = 'inputtime';
         $this->field = [];
         $this->param = [];
+        if ($this->db_temp) {
+            // 还原默认库
+            $this->db = $this->db_temp;
+            $this->prefix = $this->db_temp->DBPrefix;
+            $this->db_temp = NULL;
+        }
     }
 
     // 附表分表规则
