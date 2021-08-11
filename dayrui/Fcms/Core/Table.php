@@ -71,7 +71,7 @@ class Table extends \Phpcmf\Common {
         $data['field'] = $this->sys_field && $this->field ? $this->field + $this->sys_field : ($this->field ? $this->field : $this->sys_field);
         $data['is_diy_where_list'] = $this->is_diy_where_list;
         $this->init = $data;
-        $this->db_source = isset($data['db']) ? $data['db'] : '';
+        $this->db_source = isset($data['db_source']) ? $data['db_source'] : '';
         return $this;
     }
 

@@ -59,7 +59,7 @@ class Notice extends \Phpcmf\Common
 			'list' => $list,
 			'total' => $total,
 			'param' => $param,
-			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method), $total, 'admin')
+			'mypages' => \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method), $total, 'admin')
 		]);
 		\Phpcmf\Service::V()->display('notice_index.html');
 	}
@@ -79,7 +79,7 @@ class Notice extends \Phpcmf\Common
 			'list' => $list,
 			'total' => $total,
 			'param' => $param,
-			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method), $total, 'admin')
+			'mypages' => \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method), $total, 'admin')
 		]);
 		\Phpcmf\Service::V()->display('notice_index.html');
 	}
@@ -99,12 +99,10 @@ class Notice extends \Phpcmf\Common
 			'list' => $list,
 			'total' => $total,
 			'param' => $param,
-			'mypages'	=> \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, $param), $total, 'admin')
+			'mypages' => \Phpcmf\Service::L('input')->page(\Phpcmf\Service::L('Router')->url(\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, $param), $total, 'admin')
 		]);
 		\Phpcmf\Service::V()->display('notice_index.html');
 	}
-
-
 
 	public function del() {
 

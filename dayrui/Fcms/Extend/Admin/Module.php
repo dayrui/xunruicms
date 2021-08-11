@@ -555,7 +555,6 @@ class Module extends \Phpcmf\Table {
         }
 
         $this->_init([
-            'db' => SITE_ID,
             'table' => dr_module_table_prefix(APP_DIR).'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
