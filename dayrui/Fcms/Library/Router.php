@@ -386,14 +386,10 @@ class Router {
             return '/#无name参数';
         }
 
-        // 读缓存
-        $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$name);
-        if ($file) {
-            $url = file_get_contents($file);
+        $obj = \Phpcmf\Service::M('tag', 'tag');
+        if (method_exists($obj, 'get_tag_url')) {
+            $url = $obj->get_tag_url($name);
             if ($url) {
-                if (!dr_is_app('tag')) {
-                    return '关键词库应用没有安装';
-                }
                 return $url;
             }
         }

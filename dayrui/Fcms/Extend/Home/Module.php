@@ -570,9 +570,9 @@ class Module extends \Phpcmf\Common
                 if ($t) {
                     // 读缓存
                     if (dr_is_app('tag')) {
-                        $file = WRITEPATH.'tags/'.md5(SITE_ID.'-'.$t);
-                        if ($file) {
-                            $url = file_get_contents($file);
+                        $obj = \Phpcmf\Service::M('tag', 'tag');
+                        if (method_exists($obj, 'get_tag_url')) {
+                            $url = $obj->get_tag_url($t);
                             if ($url) {
                                 $data['tags'][$t] = $url;
                             }
