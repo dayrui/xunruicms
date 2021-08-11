@@ -583,6 +583,13 @@ return [
         if ($rt) {
             $this->_json(0, '本站：文件备份失败（'.$rt.'）');
         }
+
+        // 备份模板
+        \Phpcmf\Service::L('file')->zip(
+            WRITEPATH.'backups/update/template/'.date('Y-m-d-H-i-s').'.zip',
+            TPLPATH
+        );
+
         $this->_json(1, 'ok');
     }
 
@@ -594,7 +601,7 @@ return [
             $this->_json(0, '本站：没有选择任何升级程序');
         }
 
-        $surl = $this->service_url.'&action=update_file&php='.PHP_VERSION.'&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']);
+        $surl = $this->service_url.'&action=update_file&php='.PHP_VERSION.'&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']).'&is_update='.intval($_GET['is_update']);
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据', $surl);

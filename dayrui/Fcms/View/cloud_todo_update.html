@@ -76,7 +76,7 @@
 		$.ajax({
 			type: "GET",
 			dataType: "json",
-			url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}",
+			url: "{dr_url('cloud/update_file')}&id={$app_id}&ls={$ls}&is_update=1",
 			success: function (json) {
 				if (json.code == 0) {
 					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
@@ -102,7 +102,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_file_down')}&id={$app_id}&ls={$ls}",
+            url: "{dr_url('cloud/update_file_down')}&id={$app_id}&ls={$ls}&is_update=1",
             success: function (json) {
                 if (json.code == 0) {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 下载失败');
