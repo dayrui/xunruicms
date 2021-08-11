@@ -664,8 +664,8 @@ class Category extends \Phpcmf\Table {
                             $table = dr_module_table_prefix($t['mid']);
                             if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table))) {
                                 continue;
-                            } elseif (\Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
-                                return dr_return_data(0, dr_lang('目标栏目【%s】存在内容数据，无法删除', $t['name']));
+                            } elseif ($num = \Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
+                                return dr_return_data(0, dr_lang('目标栏目【%s】内容存在%s条数据，无法删除', $t['name'], $num));
                             }
                         }
                     }
@@ -674,8 +674,8 @@ class Category extends \Phpcmf\Table {
                         $table = dr_module_table_prefix($this->module['dirname']);
                         if (!\Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table))) {
                             continue;
-                        } elseif (\Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
-                            return dr_return_data(0, dr_lang('目标栏目【%s】存在内容数据，无法删除', $t['name']));
+                        } elseif ($num = \Phpcmf\Service::M()->table($table)->where('catid', $t['id'])->counts()) {
+                            return dr_return_data(0, dr_lang('目标栏目【%s】内容存在%s条数据，无法删除', $t['name'], $num));
                         }
                     }
                 }
@@ -861,23 +861,26 @@ class Category extends \Phpcmf\Table {
         }
 
         $at = \Phpcmf\Service::L('input')->get('at');
-
         if ($at == 'used') {
             // 可用状态
             $row['setting'] = dr_string2array($row['setting']);
             $row['setting']['disabled'] = $row['setting']['disabled'] ? 0 : 1;
 
             if ($row['setting']['disabled']) {
-                if ($this->module['share'] && $row['tid'] == 1 && dr_is_module($row['mid'])
-                    && \Phpcmf\Service::M()->table(dr_module_table_prefix($row['mid']))->where_in('catid', $row['childids'])->counts()) {
-                    $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
-                } elseif (!$this->module['share']
-                    && \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']))->where_in('catid', $row['childids'])->counts()) {
-                    $this->_json(0, dr_lang('当前栏目存在内容数据，无法禁用'));
+                $num = 0;
+                if ($this->module['share'] && $row['tid'] == 1 && dr_is_module($row['mid'])) {
+                    $num = \Phpcmf\Service::M()->table(dr_module_table_prefix($row['mid']))->where('catid in ('.($row['childids'] ? $row['childids'] : $id).')')->counts();
+                } elseif (!$this->module['share']) {
+                    $num = \Phpcmf\Service::M()->table(dr_module_table_prefix($this->module['dirname']))->where('catid in ('.($row['childids'] ? $row['childids'] : $id).')')->counts();
+                }
+                if ($num) {
+                    $this->_json(0, dr_lang('当前栏目内容存在%s条数据，无法禁用', $num));
                 }
             }
 
-            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['setting' => dr_array2string($row['setting'])]);
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, [
+                'setting' => dr_array2string($row['setting'])
+            ]);
 
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
