@@ -42,7 +42,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/update_backup')}&id={$app_id}&dir={$dir}",
+            url: "{dr_url('cloud/update_backup')}&id={$app_id}&dir={$dir}&is_bf={$is_bf}",
             success: function (json) {
                 if (json.code == 0) {
 					$('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 备份失败');
@@ -52,6 +52,7 @@
 					$('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
 					$('#dr_check_html').append('<p class=""><label class="rleft">建议手动备份本站全部文件，然后再点击上方的【继续升级】按钮</label></p>');
                 } else {
+                    $('#dr_check_html').append('<p class=""><label class="rleft">'+json.msg+'</label></p>');
 					dr_do_check();
 				}
             },
@@ -64,7 +65,7 @@
 	
 	// 验证版本开始下载
 	function dr_do_check() {
-        $('#dr_check_html').html("");
+       // $('#dr_check_html').html("");
         $('#dr_check_result').html($('#dr_check_ing').html());
         $('#dr_check_div').show();
         $('#dr_check_result').show();

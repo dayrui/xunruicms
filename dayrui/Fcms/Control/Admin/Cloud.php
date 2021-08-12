@@ -553,6 +553,7 @@ return [
         \Phpcmf\Service::V()->assign([
             'ls' => dr_safe_replace($_GET['ls']),
             'dir' => dr_safe_replace($_GET['dir']),
+            'is_bf' => intval($_GET['is_bf']),
             'app_id' => dr_safe_replace($_GET['id']),
         ]);
         \Phpcmf\Service::V()->display('cloud_todo_update.html');exit;
@@ -564,6 +565,11 @@ return [
         $dir = dr_safe_filename($_GET['dir']);
         if (!$dir) {
             $this->_json(0, '本站：没有选择任何升级程序');
+        }
+
+        $is_bf = intval($_GET['is_bf']);
+        if ($is_bf) {
+            $this->_json(1, '你选择不备份直接升级程序');
         }
 
         if ($dir == 'phpcmf') {
@@ -590,7 +596,7 @@ return [
             TPLPATH
         );
 
-        $this->_json(1, 'ok');
+        $this->_json(1, '本站文件备份完成');
     }
 
     // 服务器下载升级文件

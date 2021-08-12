@@ -97,79 +97,81 @@
     // ajax 批量操作确认
     function dr_update_cms(url, msg, remove) {
         layer.confirm(
-                msg,
-                {
-                    icon: 3,
-                    shade: 0,
-                    title: lang['ts'],
-                    btn: [lang['ok'], lang['esc']]
-                }, function(index){
-                    layer.close(index);
+        msg,
+        {
+            icon: 3,
+            shade: 0,
+            title: lang['ts'],
+            btn: ['直接升级','备份再升级', lang['esc']]
+        }, function(index, layero){
+            layer.close(index);
+            dr_todo_cms(url+'&is_bf=1');
+        }, function(index){
+            layer.close(index);
+            dr_todo_cms(url+'&is_bf=0');
+        });
+    }
 
-
-                    var login_url = '{dr_url("cloud/login")}';
-                    layer.open({
-                        type: 2,
-                        title: '登录官方云账号',
-                        fix:true,
-                        scrollbar: false,
-                        shadeClose: true,
-                        shade: 0,
-                        area: ['500px', '50%'],
-                        btn: [lang['ok'], lang['esc']],
-                        yes: function(index, layero){
-                            var body = layer.getChildFrame('body', index);
-                            $(body).find('.form-group').removeClass('has-error');
-                            // 延迟加载
-                            var loading = layer.load(2, {
-                                shade: [0.3,'#fff'], //0.1透明度的白色背景
-                                time: 100000000
-                            });
-                            $.ajax({type: "POST",dataType:"json", url: login_url, data: $(body).find('#myform').serialize(),
-                                success: function(json) {
-                                    layer.close(loading);
-                                    if (json.code == 1) {
-                                        layer.close(index);
-                                        var yz_url = url+'&'+$('#myform').serialize()+'&ls='+json.data;
-                                        // 验证成功
-                                        layer.open({
-                                            type: 2,
-                                            title: '升级程序',
-                                            scrollbar: false,
-                                            resize: true,
-                                            maxmin: true, //开启最大化最小化按钮
-                                            shade: 0,
-                                            area: ['80%', '80%'],
-                                            success: function(layero, index){
-                                                // 主要用于后台权限验证
-                                                var body = layer.getChildFrame('body', index);
-                                                var json = $(body).html();
-                                                if (json.indexOf('"code":0') > 0 && json.length < 150){
-                                                    var obj = JSON.parse(json);
-                                                    layer.closeAll(index);
-                                                    dr_tips(0, obj.msg);
-                                                }
-                                            },
-                                            content: yz_url
-                                        });
-                                    } else {
-                                        $(body).find('#dr_row_'+json.data.field).addClass('has-error');
-                                        dr_tips(0, json.msg);
-                                    }
-                                    return false;
-                                },
-                                error: function(HttpRequest, ajaxOptions, thrownError) {
-                                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
-                                }
-                            });
-                            return false;
-                        },
-                        content: login_url+'&is_ajax=1'
-                    });
-
-
-
+    function dr_todo_cms(url) {
+        var login_url = '{dr_url("cloud/login")}';
+        layer.open({
+            type: 2,
+            title: '登录官方云账号',
+            fix:true,
+            scrollbar: false,
+            shadeClose: true,
+            shade: 0,
+            area: ['500px', '260px'],
+            btn: [lang['ok'], lang['esc']],
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                $(body).find('.form-group').removeClass('has-error');
+                // 延迟加载
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 100000000
                 });
+                $.ajax({type: "POST",dataType:"json", url: login_url, data: $(body).find('#myform').serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code == 1) {
+                            layer.close(index);
+                            var yz_url = url+'&'+$('#myform').serialize()+'&ls='+json.data;
+                            // 验证成功
+                            layer.open({
+                                type: 2,
+                                title: '升级程序',
+                                scrollbar: false,
+                                resize: true,
+                                maxmin: true, //开启最大化最小化按钮
+                                shade: 0,
+                                area: ['80%', '80%'],
+                                success: function(layero, index){
+                                    // 主要用于后台权限验证
+                                    var body = layer.getChildFrame('body', index);
+                                    var json = $(body).html();
+                                    if (json.indexOf('"code":0') > 0 && json.length < 150){
+                                        var obj = JSON.parse(json);
+                                        layer.closeAll(index);
+                                        dr_tips(0, obj.msg);
+                                    }
+                                },
+                                content: yz_url
+                            });
+                        } else {
+                            $(body).find('#dr_row_'+json.data.field).addClass('has-error');
+                            dr_tips(0, json.msg);
+                        }
+                        return false;
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    }
+                });
+                return false;
+            },
+            content: login_url+'&is_ajax=1'
+        });
     }
 
     function dr_beifen_cms(url, msg, remove) {
