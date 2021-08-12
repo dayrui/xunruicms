@@ -837,6 +837,12 @@ class Model {
         $select	= $this->db->table($this->table);
         $this->param['select_list'] && $select->select($this->param['select_list']);
 
+        $where && $select->where($where);
+        $param = $this->_limit_page_where($select, $param);
+        if ($size > 0) {
+            $select->limit($size, intval($size * ($page - 1)));
+        }
+
         //分析参数合法性
         $order = urldecode($param['order']); // 获取的排序参数
         $order_str = dr_safe_replace($this->param['order_list']);
@@ -859,12 +865,6 @@ class Model {
             if ($order_arr) {
                 $order_str = implode(',', $order_arr);
             }
-        }
-
-        $where && $select->where($where);
-        $param = $this->_limit_page_where($select, $param);
-        if ($size > 0) {
-            $select->limit($size, intval($size * ($page - 1)));
         }
         $query = $select->orderBy($order_str ? $order_str : 'id desc')->get();
         if (!$query) {
