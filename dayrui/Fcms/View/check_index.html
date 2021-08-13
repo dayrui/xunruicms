@@ -4,56 +4,55 @@
 </div>
 
 <div class="right-card-box">
-<div class="table-scrollable">
+    <div class="table-scrollable">
 
-    <table class="table table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
-        <thead>
-        <tr class="heading">
-        <th width="55"> </th>
-        <th width="300"> {dr_lang('检查项目')} </th>
-        <th> {dr_lang('检查结果')} </th>
-    </tr>
-    </thead>
-    <tbody>
-    {loop $list $id $t}
-    <tr>
-        <td>
-            <span class="badge badge-success"> {$id} </span>
-        </td>
-        <td>
-            {$t}
-        </td>
-        <td id="dr_{$id}_result">
-            <img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>
-        </td>
-    </tr>
-    <script>
-        $(function () {
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                url: "{dr_url('check/do_index')}&id={$id}",
-                success: function (json) {
-                    $('#dr_{$id}_result').html(json.msg);
-                    if (json.code == 0) {
-                        $('#dr_{$id}_result').attr('style', 'color:red');
-                    } else {
-                        $('#dr_{$id}_result').attr('style', 'color:green');
-                    }
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    $('#dr_{$id}_result').attr('style', 'color:red');
-                    $('#dr_{$id}_result').html('系统异常，请检查错误日志');
-                }
-            });
-        });
-    </script>
-    {/loop}
-    </tbody>
-</table></div></div>
-
-
-
+        <table class="table table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
+            <thead>
+            <tr class="heading">
+                <th width="55"> </th>
+                <th width="300"> {dr_lang('检查项目')} </th>
+                <th> {dr_lang('检查结果')} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $list $id $t}
+            <tr>
+                <td>
+                    <span class="badge badge-success"> {$id} </span>
+                </td>
+                <td>
+                    {$t}
+                </td>
+                <td id="dr_{$id}_result">
+                    <img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>
+                </td>
+            </tr>
+            <script>
+                $(function () {
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: "{dr_url('check/do_index')}&id={$id}",
+                        success: function (json) {
+                            $('#dr_{$id}_result').html(json.msg);
+                            if (json.code == 0) {
+                                $('#dr_{$id}_result').attr('style', 'color:red');
+                            } else {
+                                $('#dr_{$id}_result').attr('style', 'color:green');
+                            }
+                        },
+                        error: function(HttpRequest, ajaxOptions, thrownError) {
+                            $('#dr_{$id}_result').attr('style', 'color:red');
+                            $('#dr_{$id}_result').html(HttpRequest.responseText);
+                        }
+                    });
+                });
+            </script>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 {template "footer.html"}
