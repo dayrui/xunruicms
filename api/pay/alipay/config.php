@@ -7,6 +7,6 @@
 return [
     
     'name' => '支付宝',
-    'icon' => '<i class="fab fa-alipay"></i>',
+    'icon' => '<i class="fa fa-credit-card"></i>',
     
 ];
