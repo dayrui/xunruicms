@@ -15,8 +15,14 @@ class Run extends \Phpcmf\Common
 	public function index() {
 
 	    // 验证运行权限
-        if (!is_cli()) {
-            if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
+        if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
+            if (is_cli()) {
+                // cli模式
+            } else {
+                // url模式
+                if (SYS_CRON_AUTH == 'cli') {
+                    exit('限制CLI模式执行');
+                }
                 $ip = \Phpcmf\Service::L('input')->ip_address();
                 if (!$ip) {
                     if (CI_DEBUG) {
@@ -29,11 +35,13 @@ class Run extends \Phpcmf\Common
                     if (CI_DEBUG) {
                         log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
                     }
-                    exit('无权限执行');
+                    exit('限制固定IP执行');
                     return;
                 }
             }
+
         }
+
 
         if (isset($_GET['is_ajax'])) {
             // 后台脚本自动任务时效验证

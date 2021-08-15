@@ -192,7 +192,7 @@
                                 </div>
                                 <input type="hidden" id="dr_cron_sync" value="{$data['SYS_CRON_AUTH']}" />
                                 <label id="dr_cron_row" {if $data['SYS_CRON_AUTH'] && $data['SYS_CRON_AUTH'] != 'cli'}{else}style="display:none"{/if}><input id="dr_cron" class="form-control input-large" type="text" name="data[SYS_CRON_AUTH]" value="{$data['SYS_CRON_AUTH']}" ></label>
-                                <span class="help-block">{dr_lang('填写本服务器的IP地址，限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
+                                <span class="help-block">{dr_lang('填写本服务器的IP地址或者CLI模式运行，可以限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
                             </div>
                         </div>
                         <div class="form-group">

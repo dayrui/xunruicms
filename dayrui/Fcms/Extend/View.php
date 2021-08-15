@@ -61,4 +61,34 @@ class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
     {
         return dr_count($this->viewer->get_view_files());
     }
+
+
+    public function setData($data = [], $context = null): RendererInterface
+    {
+
+        if (! empty($context))
+        {
+            foreach ($data as $key => &$value)
+            {
+                if (is_array($value))
+                {
+                    foreach ($value as &$obj)
+                    {
+                        $obj = $this->objectToArray($obj);
+                    }
+                }
+                else
+                {
+                    $value = $this->objectToArray($value);
+                }
+
+                $this->dataContexts[$key] = $context;
+            }
+        }
+
+        $this->tempData = $this->tempData ?? $this->data;
+        $this->tempData = array_merge($this->tempData, $data);
+
+        return $this;
+    }
 }
