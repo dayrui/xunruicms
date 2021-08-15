@@ -363,6 +363,10 @@ class Member extends \Phpcmf\Table
     public function edit() {
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        if (!$uid) {
+            $this->_admin_msg(0, dr_lang('用户uid不存在'));
+        }
+
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
         if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));

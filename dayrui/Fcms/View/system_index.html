@@ -187,10 +187,11 @@
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(0)" type="radio" {if !$data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('任意服务器执行')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(1)" type="radio" {if $data['SYS_CRON_AUTH']}checked{/if} /> {dr_lang('限本服务器IP')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(1)" type="radio" {if $data['SYS_CRON_AUTH'] && $data['SYS_CRON_AUTH'] != 'cli'}checked{/if} /> {dr_lang('限本服务器IP')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input name="test2" onclick="dr_cron_value(2)" type="radio" {if $data['SYS_CRON_AUTH'] == 'cli'}checked{/if} /> {dr_lang('CLI模式运行')} <span></span></label>
                                 </div>
                                 <input type="hidden" id="dr_cron_sync" value="{$data['SYS_CRON_AUTH']}" />
-                                <label id="dr_cron_row" {if !$data['SYS_CRON_AUTH']}style="display:none"{/if}><input id="dr_cron" class="form-control input-large" type="text" name="data[SYS_CRON_AUTH]" value="{$data['SYS_CRON_AUTH']}" ></label>
+                                <label id="dr_cron_row" {if $data['SYS_CRON_AUTH'] && $data['SYS_CRON_AUTH'] != 'cli'}{else}style="display:none"{/if}><input id="dr_cron" class="form-control input-large" type="text" name="data[SYS_CRON_AUTH]" value="{$data['SYS_CRON_AUTH']}" ></label>
                                 <span class="help-block">{dr_lang('填写本服务器的IP地址，限制任务脚本的执行权限，防止被其他人恶意执行')}</span>
                             </div>
                         </div>
@@ -245,6 +246,10 @@
         if (id == "1") {
             $("#dr_cron_row").show();
             $("#dr_cron").val($("#dr_cron_sync").val());
+        } else if (id == "2") {
+            $("#dr_cron_row").hide();
+            $("#dr_cron_sync").val('cli');
+            $("#dr_cron").val('cli');
         } else {
             $("#dr_cron_row").hide();
             $("#dr_cron_sync").val($("#dr_cron").val());

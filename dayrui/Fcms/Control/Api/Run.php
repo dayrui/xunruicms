@@ -15,19 +15,23 @@ class Run extends \Phpcmf\Common
 	public function index() {
 
 	    // 验证运行权限
-	    if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
-            $ip = \Phpcmf\Service::L('input')->ip_address();
-            if (!$ip) {
-                if (CI_DEBUG) {
-                    log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
+        if (!is_cli()) {
+            if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
+                $ip = \Phpcmf\Service::L('input')->ip_address();
+                if (!$ip) {
+                    if (CI_DEBUG) {
+                        log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
+                    }
+                    exit('无权限执行');
+                    return;
                 }
-                return;
-            }
-            if (SYS_CRON_AUTH != $ip) {
-                if (CI_DEBUG) {
-                    log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
+                if (SYS_CRON_AUTH != $ip) {
+                    if (CI_DEBUG) {
+                        log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
+                    }
+                    exit('无权限执行');
+                    return;
                 }
-                return;
             }
         }
 
@@ -136,7 +140,7 @@ class Run extends \Phpcmf\Common
         // 自动任务执行时间
         file_put_contents(WRITEPATH.'config/run_time.php', dr_date(SYS_TIME));
 		
-        exit('Run '.$i);
+        exit('任务执行成功：Run '.$i);
 	}
 
 

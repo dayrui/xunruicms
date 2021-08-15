@@ -105,8 +105,7 @@ class Category extends \Phpcmf\Model
 
         $childids = $catid;
 
-        if ($n > 100 || !is_array($this->categorys)
-            || !isset($this->categorys[$catid])) {
+        if ($n > 100 || !is_array($this->categorys) || !isset($this->categorys[$catid])) {
             return $childids;
         }
 

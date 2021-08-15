@@ -3795,6 +3795,24 @@ function dr_to_url($url, $domian = '', $siteid = SITE_ID) {
     return $url;
 }
 
+/**
+ * 获取对应的手机端地址
+ */
+function dr_mobile_url($url = SITE_MURL) {
+
+    $url = dr_url_prefix($url);
+    $arr = parse_url($url);
+    $host = $arr['host'];
+    $domain = require WRITEPATH.'config/domain_client.php';
+    if (!$domain) {
+        return IS_DEV ? '【开发者模式下】未找到域名的终端配置文件' : $url;
+    } elseif (!isset($domain[$host])) {
+        return IS_DEV ? '【开发者模式下】未找到PC域名['.$host.']所对应的移动端域名' : $url;
+    }
+
+    return dr_url_prefix(str_replace($host, $domain[$host], $url));
+}
+
 // 补全url
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
@@ -4140,23 +4158,6 @@ function dr_code2utf8($str) {
     }
 
     return $str;
-}
-
-/**
- * 获取对应的手机端地址
- */
-function dr_mobile_url($url = SITE_MURL) {
-
-    $a = parse_url($url);
-    $host = $a['host'];
-    $domain = require WRITEPATH.'config/domain_client.php';
-    if (!$domain) {
-        return IS_DEV ? '【开发者模式下】未找到域名的终端配置文件' : $url;
-    } elseif (!isset($domain[$host])) {
-        return IS_DEV ? '【开发者模式下】未找到PC域名['.$host.']所对应的移动端域名' : $url;
-    }
-
-    return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
 ////////////////////////////////////////////////////////////

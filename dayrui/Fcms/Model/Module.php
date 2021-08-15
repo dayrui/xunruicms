@@ -596,7 +596,6 @@ class Module extends \Phpcmf\Model
                 }
                 // 获取栏目url
                 $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
-                //$c['furl'] = $c['setting']['linkurl'] ? $c['setting']['linkurl'] : \Phpcmf\Service::L('router')->category_url($cache, $c, 0, '{fid}');
                 // 统计栏目文章数量
                 if (in_array($c['tid'], [2, 0]) || $c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) {
                     $c['total'] = 0;
