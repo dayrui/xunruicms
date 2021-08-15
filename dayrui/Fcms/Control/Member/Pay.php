@@ -5,39 +5,16 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Pay extends \Phpcmf\Common
+$file = dr_get_app_dir('pay').'Controllers/Member/Pay.php';
+if (is_file($file)) {
+    require_once $file;
+} else {
+    \dr_exit_msg(0, '没有安装「支付系统」插件');
+}
+
+// 付款
+class Pay extends \Phpcmf\Controllers\Member\Pay
 {
 
-    /**
-     * 提交支付账单
-     */
-    public function index() {
-
-        if (IS_POST) {
-            $pay = \Phpcmf\Service::L('input')->post('pay');
-            $pay['uid'] = $this->member['uid'];
-            $pay['username'] = $this->member['username'];
-            $money = floatval($pay['money']);
-            if (!$money) {
-                $this->_msg(0, dr_lang('金额(%s)不正确', $money));
-                exit;
-            }
-            $rt = \Phpcmf\Service::M('Pay')->post($pay);
-            if (!$rt['code']) {
-                $this->_msg(0, $rt['msg']);
-            }
-            $url = PAY_URL.'index.php?s=api&c=pay&id='.$rt['code'];
-            if (IS_API_HTTP || (\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
-                // 回调页面
-                $this->_json($rt['code'], $url, $rt['data']);
-            } else {
-                // 跳转到支付页面，必须跳转到统一的主域名中付款
-                dr_redirect($url, 'auto');
-            }
-            exit;
-        } else {
-            $this->_msg(0, dr_lang('POST请求错误'));
-        }
-    }
 
 }

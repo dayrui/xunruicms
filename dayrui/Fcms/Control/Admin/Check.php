@@ -508,12 +508,14 @@ class Check extends \Phpcmf\Common
                     'module_form' => 'mform',
                     'member_notice' => 'notice',
                     'member_scorelog' => 'scorelog',
+                    'member_paylog' => 'pay',
                     'member_explog' => 'explog',
                 ];
                 $app_name = [
                     'form' => '全局网站表单',
                     'mform' => '模块内容表单',
                     'notice' => '站内消息',
+                    'pay' => '支付系统',
                     'scorelog' => '积分系统',
                     'explog' => '经验值系统',
                 ];

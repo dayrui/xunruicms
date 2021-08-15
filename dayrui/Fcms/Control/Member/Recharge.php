@@ -5,19 +5,15 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Recharge extends \Phpcmf\Common
+$file = dr_get_app_dir('pay').'Controllers/Member/Recharge.php';
+if (is_file($file)) {
+    require_once $file;
+} else {
+    \dr_exit_msg(0, '没有安装「支付系统」插件');
+}
+
+class Recharge extends \Phpcmf\Controllers\Member\Recharge
 {
 
-    /**
-     * 在线充值
-     */
-    public function index() {
-        define('FC_PAY', 1);
-        $value = max(floatval(\Phpcmf\Service::L('input')->get('value')), floatval($this->member_cache['pay']['min']));
-        \Phpcmf\Service::V()->assign([
-            'payfield' => dr_payform('recharge', $value ? $value : '', '', '', 1),
-        ]);
-        \Phpcmf\Service::V()->display('recharge_index.html');
-    }
 
 }

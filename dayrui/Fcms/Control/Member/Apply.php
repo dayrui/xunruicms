@@ -118,8 +118,10 @@ class Apply extends \Phpcmf\Common
                             \Phpcmf\Service::M('member')->notice($this->uid, 2, $title);
                         } else {
                             // rmb
+                            if (!dr_is_app('pay')) {
+                                $this->_msg(0, '没有安装「支付系统」插件');exit;
+                            }
                             $price = (int)$group['level'][$lid]['value'];
-
                             // 支付方式
                             $pay_type = \Phpcmf\Service::L('input')->post('pay_type');
                             !$pay_type && $pay_type = 'finecms';
@@ -134,7 +136,7 @@ class Apply extends \Phpcmf\Common
                                 'money' => $price,
                                 'title' => $title
                             ];
-                            $rt = \Phpcmf\Service::M('Pay')->post($pay);
+                            $rt = \Phpcmf\Service::M('Pay', 'pay')->post($pay);
                             if (!$rt['code']) {
                                 $this->_msg(0, $rt['msg']);exit;
                             }
@@ -171,6 +173,9 @@ class Apply extends \Phpcmf\Common
                         \Phpcmf\Service::M('member')->notice($this->uid, 2, $title);
                     } else {
                         // rmb
+                        if (!dr_is_app('pay')) {
+                            $this->_msg(0, '没有安装「支付系统」插件');exit;
+                        }
                         $price = (int)$group['price'];
                         // 支付方式
                         $pay_type = \Phpcmf\Service::L('input')->post('pay_type');
@@ -186,7 +191,7 @@ class Apply extends \Phpcmf\Common
                             'money' => $price,
                             'title' => $title
                         ];
-                        $rt = \Phpcmf\Service::M('Pay')->post($pay);
+                        $rt = \Phpcmf\Service::M('Pay', 'pay')->post($pay);
                         if (!$rt['code']) {
                             $this->_msg(0, $rt['msg']);exit;
                         }
@@ -221,7 +226,7 @@ class Apply extends \Phpcmf\Common
             'group' => $group,
             'verify' => $verify,
             'myfield' => \Phpcmf\Service::L('Field')->toform($this->uid, $field, $verify ? dr_string2array($verify['content']) : $this->member),
-            'pay_type' => \Phpcmf\Service::M('pay')->get_pay_type(1),
+            'pay_type' => dr_is_app('pay') ? \Phpcmf\Service::M('pay', 'pay')->get_pay_type(1) : [],
             'meta_title' => dr_lang('申请用户组').SITE_SEOJOIN.dr_lang('用户中心')
         ]);
         \Phpcmf\Service::V()->display(is_file(dr_tpl_path(1).'apply_'.$gid.'.html') ? 'apply_'.$gid.'.html' : 'apply_index.html');
@@ -297,6 +302,9 @@ class Apply extends \Phpcmf\Common
                     \Phpcmf\Service::M('member')->notice($this->uid, 2, $title);
                 } else {
                     // rmb
+                    if (!dr_is_app('pay')) {
+                        $this->_msg(0, '没有安装「支付系统」插件');exit;
+                    }
                     // 支付方式
                     $pay_type = \Phpcmf\Service::L('input')->post('pay_type');
                     !$pay_type && $pay_type = 'finecms';
@@ -311,7 +319,7 @@ class Apply extends \Phpcmf\Common
                         'money' => $price,
                         'title' => $title
                     ];
-                    $rt = \Phpcmf\Service::M('Pay')->post($pay);
+                    $rt = \Phpcmf\Service::M('Pay', 'pay')->post($pay);
                     if (!$rt['code']) {
                         $this->_msg(0, $rt['msg']);
                         exit;
@@ -351,7 +359,7 @@ class Apply extends \Phpcmf\Common
             'level' => $level,
             'group' => $group,
             'myvalue' => $myvalue,
-            'pay_type' => \Phpcmf\Service::M('pay')->get_pay_type(1),
+            'pay_type' => dr_is_app('pay') ? \Phpcmf\Service::M('pay', 'pay')->get_pay_type(1) : [],
             'meta_title' => dr_lang('升级用户组级别').SITE_SEOJOIN.dr_lang('用户中心')
         ]);
         \Phpcmf\Service::V()->display('apply_level.html');

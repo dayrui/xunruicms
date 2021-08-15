@@ -202,16 +202,17 @@ class Member_apply extends \Phpcmf\Table
                 \Phpcmf\Service::M('member')->notice($t['uid'], 2, $notice);
             } else {
                 // rmb
-                $rt = \Phpcmf\Service::M('Pay')->add_money($t['uid'], $t['price']);
+                if (!dr_is_app('pay')) {
+                    $this->_msg(0, '没有安装「支付系统」插件');exit;
+                }
+                $rt = \Phpcmf\Service::M('Pay','pay')->add_money($t['uid'], $t['price']);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
                 // 增加到交易流水
-                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                $rt = \Phpcmf\Service::M('Pay','pay')->add_paylog([
                     'uid' => $t['uid'],
-                    'username' => $t['username'],
                     'touid' => 0,
-                    'tousername' => '',
                     'mid' => 'system',
                     'title' => $notice,
                     'value' => $t['price'],
@@ -226,7 +227,7 @@ class Member_apply extends \Phpcmf\Table
                     $t['uid'],
                     2,
                     $notice,
-                    \Phpcmf\Service::L('Router')->member_url('paylog/show', ['id'=>$rt['code']])
+                    \Phpcmf\Service::L('Router')->member_url('pay/paylog/show', ['id'=>$rt['code']])
                 );
             }
         }

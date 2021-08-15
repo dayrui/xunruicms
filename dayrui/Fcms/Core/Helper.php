@@ -1042,7 +1042,10 @@ function dr_page_catpos($id, $symbol = ' > ', $html = '') {
  * title    支付说明
  * */
 function dr_payform($mark, $value = 0, $title = '', $url = '',  $remove_div  = 1) {
-    return \Phpcmf\Service::M('Pay')->payform($mark, $value, $title, $url, $remove_div);
+    if (!dr_is_app('pay')) {
+        return '没有安装「支付系统」插件';
+    }
+    return \Phpcmf\Service::M('Pay', 'pay')->payform($mark, $value, $title, $url, $remove_div);
 }
 
 /**
@@ -1073,8 +1076,11 @@ function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
 
 // 打赏支付
 function dr_donation($id, $title = '', $dir = null, $remove_div  = 1) {
+    if (!dr_is_app('pay')) {
+        return '没有安装「支付系统」插件';
+    }
     !$dir && $dir = defined('MOD_DIR') ? MOD_DIR : 'share';
-    return \Phpcmf\Service::M('Pay')->payform('my-shang_buy-'.$id.'_'.$dir.'-'.SITE_ID, 0, $title, '', $remove_div);
+    return \Phpcmf\Service::M('Pay', 'pay')->payform('my-shang_buy-'.$id.'_'.$dir.'-'.SITE_ID, 0, $title, '', $remove_div);
 }
 
 // 是否存在收藏夹中 1收藏了 2没有收藏
@@ -1749,21 +1755,30 @@ function dr_pay_type_html($name) {
  * 付款名称
  */
 function dr_pay_name($name) {
-    return \Phpcmf\Service::M('Pay')->payname($name);
+    if (!dr_is_app('pay')) {
+        return '没有安装「支付系统」插件';
+    }
+    return \Phpcmf\Service::M('Pay', 'pay')->payname($name);
 }
 
 /**
  * 付款方式的名称
  */
 function dr_pay_type($name) {
-    return dr_clearhtml(\Phpcmf\Service::M('Pay')->paytype($name));
+    if (!dr_is_app('pay')) {
+        return '没有安装「支付系统」插件';
+    }
+    return dr_clearhtml(\Phpcmf\Service::M('Pay', 'pay')->paytype($name));
 }
 
 /**
  * 付款状态的名称
  */
 function dr_pay_status($data) {
-    return dr_clearhtml(\Phpcmf\Service::M('Pay')->paystatus($data));
+    if (!dr_is_app('pay')) {
+        return '没有安装「支付系统」插件';
+    }
+    return dr_clearhtml(\Phpcmf\Service::M('Pay', 'pay')->paystatus($data));
 }
 
 /**

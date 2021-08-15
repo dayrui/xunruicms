@@ -368,20 +368,22 @@ class Content extends \Phpcmf\Model {
                 if ($money) {
                     $rr = \Phpcmf\Service::M('member')->add_money($data[1]['uid'], $money);
                     if ($rr['code']) {
-                        \Phpcmf\Service::M('Pay')->add_paylog([
-                            'uid' => $member['id'],
-                            'username' => $member['username'],
-                            'touid' => 0,
-                            'tousername' => '',
-                            'mid' => 'system',
-                            'title' => dr_lang('%s内容《%s》发布', \Phpcmf\Service::C()->module['name'], $data[1]['title']),
-                            'value' => $money,
-                            'type' => 'finecms',
-                            'status' => 1,
-                            'result' => dr_url_prefix($data[1]['url'], $this->dirname, $this->siteid, ''),
-                            'paytime' => SYS_TIME,
-                            'inputtime' => SYS_TIME,
-                        ]);
+                        if (!dr_is_app('pay')) {
+                            log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：没有安装「支付系统」插件');
+                        } else {
+                            \Phpcmf\Service::M('Pay', 'pay')->add_paylog([
+                                'uid' => $member['id'],
+                                'touid' => 0,
+                                'mid' => 'system',
+                                'title' => dr_lang('%s内容《%s》发布', \Phpcmf\Service::C()->module['name'], $data[1]['title']),
+                                'value' => $money,
+                                'type' => 'finecms',
+                                'status' => 1,
+                                'result' => dr_url_prefix($data[1]['url'], $this->dirname, $this->siteid, ''),
+                                'paytime' => SYS_TIME,
+                                'inputtime' => SYS_TIME,
+                            ]);
+
                     } else {
                         log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：'.$rr['msg']);
                     }

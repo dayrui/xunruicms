@@ -200,6 +200,34 @@ function config ($name, $getShared = true) {
     return \CodeIgniter\Config\Config::get($name, $getShared);
 }
 
+/**
+ * 全局返回消息
+ */
+function dr_exit_msg($code, $msg, $data = []) {
+
+    ob_end_clean();
+
+    $rt = [
+        'code' => $code,
+        'msg' => $msg,
+        'data' => $data,
+    ];
+
+    if (isset($_GET['callback'])) {
+        // jsonp
+        header('HTTP/1.1 200 OK');
+        echo ($_GET['callback'] ? $_GET['callback'] : 'callback').'('.json_encode($rt, JSON_UNESCAPED_UNICODE).')';
+    } else if (($_GET['is_ajax'] || (defined('IS_API_HTTP') && IS_API_HTTP) || IS_AJAX)) {
+        // json
+        header('HTTP/1.1 200 OK');
+        echo json_encode($rt, JSON_UNESCAPED_UNICODE);
+    } else {
+        // html
+        dr_show_error($msg);
+    }
+    exit;
+}
+
 /*
  * 函数是否被启用
  */

@@ -394,33 +394,38 @@ class Member extends \Phpcmf\Model {
                                 continue;
                             }
                             $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
-                            // 自动续费
-                            $rt = $this->add_money($uid, -$price);
-                            if (!$rt['code']) {
+                            if (!dr_is_app('pay')) {
+                                log_message('error', '用户组自动续费失败：没有安装「支付系统」插件');
                                 continue;
+                            } else {
+                                // 自动续费
+                                $rt = $this->add_money($uid, -$price);
+                                if (!$rt['code']) {
+                                    continue;
+                                }
+                                // 增加到交易流水
+                                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
+                                    'uid' => $member['id'],
+                                    'username' => $member['username'],
+                                    'touid' => 0,
+                                    'tousername' => '',
+                                    'mid' => 'system',
+                                    'title' => dr_lang('用户组（%s）续费', $group_info['name']),
+                                    'value' => -$price,
+                                    'type' => 'finecms',
+                                    'status' => 1,
+                                    'result' => dr_lang('有效期至%s', $group['etime'] ? dr_date($group['etime']) : dr_lang('永久')),
+                                    'paytime' => SYS_TIME,
+                                    'inputtime' => SYS_TIME,
+                                ]);
+                                // 提醒通知
+                                $this->notice(
+                                    $uid,
+                                    2,
+                                    dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name']),
+                                    \Phpcmf\Service::L('router')->member_url('paylog/show', ['id'=>$rt['code']])
+                                );
                             }
-                            // 增加到交易流水
-                            $rt = \Phpcmf\Service::M('Pay')->add_paylog([
-                                'uid' => $member['id'],
-                                'username' => $member['username'],
-                                'touid' => 0,
-                                'tousername' => '',
-                                'mid' => 'system',
-                                'title' => dr_lang('用户组（%s）续费', $group_info['name']),
-                                'value' => -$price,
-                                'type' => 'finecms',
-                                'status' => 1,
-                                'result' => dr_lang('有效期至%s', $group['etime'] ? dr_date($group['etime']) : dr_lang('永久')),
-                                'paytime' => SYS_TIME,
-                                'inputtime' => SYS_TIME,
-                            ]);
-                            // 提醒通知
-                            $this->notice(
-                                $uid,
-                                2,
-                                dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name']),
-                                \Phpcmf\Service::L('router')->member_url('paylog/show', ['id'=>$rt['code']])
-                            );
                         } else {
                             // 免费组自己续费
                             // 提醒通知

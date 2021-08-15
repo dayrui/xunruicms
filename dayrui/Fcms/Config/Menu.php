@@ -246,22 +246,6 @@ return [
                         ],
                     ]
                 ],
-                'config-pay' => [
-                    'name' => '支付设置',
-                    'icon' => 'fa fa-rmb',
-                    'link' => [
-                        [
-                            'name' => '支付设置',
-                            'icon' => 'fa fa-cog',
-                            'uri' => 'member_payconfig/index',
-                        ],
-                        [
-                            'name' => '支付接口',
-                            'icon' => 'fa fa-code',
-                            'uri' => 'member_payapi/index',
-                        ],
-                    ],
-                ],
             ],
         ],
 
@@ -436,35 +420,6 @@ return [
                             'name' => '申请审核',
                             'icon' => 'fa fa-users',
                             'uri' => 'member_apply/index',
-                        ],
-                    ]
-                ],
-
-            ],
-        ],
-
-        'pay' => [
-            'name' => '财务',
-            'icon' => 'fa fa-rmb',
-            'left' => [
-                'pay-list' => [
-                    'name' => '财务管理',
-                    'icon' => 'fa fa-rmb',
-                    'link' => [
-                        [
-                            'name' => '已付流水',
-                            'icon' => 'fa fa-calendar-check-o',
-                            'uri' => 'member_paylog/index',
-                        ],
-                        [
-                            'name' => '未付流水',
-                            'icon' => 'fa fa-calendar-times-o',
-                            'uri' => 'member_paylog/not_index',
-                        ],
-                        [
-                            'name' => '用户资金',
-                            'icon' => 'fa fa-plus',
-                            'uri' => 'member_pay/index',
                         ],
                     ]
                 ],
@@ -724,23 +679,6 @@ return [
                     'name' => '登录记录',
                     'icon' => 'fa fa-calendar',
                     'uri' => 'account/login',
-                ],
-            ],
-        ],
-
-        'pay' => [
-            'name' => '财务管理',
-            'icon' => 'fa fa-rmb',
-            'link' => [
-                [
-                    'name' => '在线充值',
-                    'icon' => 'fa fa-rmb',
-                    'uri' => 'recharge/index',
-                ],
-                [
-                    'name' => '我的交易',
-                    'icon' => 'fa fa-calendar',
-                    'uri' => 'paylog/index',
                 ],
             ],
         ],

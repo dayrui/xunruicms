@@ -96,8 +96,11 @@ class Pay extends \Phpcmf\Library\A_Field  {
             // 付款金额
             $html['pay_value'] = $value ? $value : 0;
 
+            if (!dr_is_app('pay')) {
+                return '没有安装「支付系统」插件';
+            }
             // 付款方式
-            $html['pay_type'] = \Phpcmf\Service::M('pay')->get_pay_type(\Phpcmf\Service::C()->member && $field['setting']['option']['is_finecms']  && is_file(ROOTPATH.'api/pay/finecms/config.php'));
+            $html['pay_type'] = \Phpcmf\Service::M('pay', 'pay')->get_pay_type(\Phpcmf\Service::C()->member && $field['setting']['option']['is_finecms']  && is_file(ROOTPATH.'api/pay/finecms/config.php'));
 
             // 取默认第一个
             if ($html['pay_type']) {
@@ -112,7 +115,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
             }
             
             $member = \Phpcmf\Service::C()->member;
-            $pay_url = \Phpcmf\Service::L('router')->member_url('pay/index');
+            $pay_url = \Phpcmf\Service::L('router')->member_url('pay/pay/index');
 
             // 获取付款界面代码
             ob_start();
