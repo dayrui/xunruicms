@@ -249,10 +249,17 @@ class Service
      *
      * @var object
      */
-    public static function M( $name = '',  $namespace = '') {
+    public static function M($name = '',  $namespace = '') {
 
         if (!$name) {
             return static::model();
+        }
+
+        if (ucfirst($name) == 'Pay' && !$namespace) {
+            if (!dr_is_app('pay')) {
+                \dr_exit_msg(0, '没有安装「支付系统」插件');
+            }
+            $namespace = 'pay';
         }
 
         list($classFile, $extendFile, $appFile) = self::_get_class_file($name, $namespace, 'Model');
