@@ -255,7 +255,8 @@ class Service
             return static::model();
         }
 
-        if (ucfirst($name) == 'Pay' && !$namespace) {
+        $className = ucfirst($name);
+        if ($className == 'Pay' && !$namespace) {
             if (!dr_is_app('pay')) {
                 \dr_exit_msg(0, '没有安装「支付系统」插件');
             }
@@ -265,7 +266,6 @@ class Service
         list($classFile, $extendFile, $appFile) = self::_get_class_file($name, $namespace, 'Model');
 
         $_cname = md5($classFile.$extendFile.$appFile);
-        $className = ucfirst($name);
 
         if (!isset(static::$instances[$_cname]) or !is_object(static::$instances[$_cname])) {
             require_once $classFile;
