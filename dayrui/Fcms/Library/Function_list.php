@@ -206,8 +206,8 @@ class Function_list
 
     // 用于列表显示价格
     public function money($value, $param = [], $data = [], $field = []) {
-        if (\Phpcmf\Service::C()->_is_admin_auth('member_paylog/index')) {
-            return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('member_paylog/index', 'member_paylog/index', ['field'=>'uid','keyword'=>$data['id']]).'" style="color:#ef4c2f">'.number_format($value, 2).'</a>';
+        if (dr_is_app('pay') && \Phpcmf\Service::C()->_is_admin_auth('pay/paylog/index')) {
+            return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('pay/paylog/index', 'pay/paylog/index', ['field'=>'uid','keyword'=>$data['id']]).'" style="color:#ef4c2f">'.number_format($value, 2).'</a>';
         }
         return '<span style="color:#ef4c2f">'.number_format($value, 2).'</span>';
     }
