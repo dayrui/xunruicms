@@ -201,12 +201,26 @@ class Menu extends \Phpcmf\Model {
             // 合并顶级菜单
             if ($mk1 && isset($menu[$mk1])) {
                 // 它存在分组菜单时才合并
+                if (!isset($menu[$mk1]['name']) && $top['name']) {
+                    $menu[$mk1]['name'] = $top['name'];
+                }
+                if (!isset($menu[$mk1]['icon']) && $top['icon']) {
+                    $menu[$mk1]['icon'] = $top['icon'];
+                }
                 if ($top['left']) {
                     foreach ($top['left'] as $mk2 => $left) {
                         if ($mk2 && isset($menu[$mk1]['left'][$mk2])) {
+                            if (!isset($menu[$mk1]['left'][$mk2]['name']) && $left['name']) {
+                                $menu[$mk1]['left'][$mk2]['name'] = $left['name'];
+                            }
+                            if (!isset($menu[$mk1]['left'][$mk2]['icon']) && $left['icon']) {
+                                $menu[$mk1]['left'][$mk2]['icon'] = $left['icon'];
+                            }
                             foreach ($left['link'] as $link) {
                                 $menu[$mk1]['left'][$mk2]['link'][] = $link;
                             }
+                        } elseif ($mk2) {
+                            $menu[$mk1]['left'][$mk2] = $left;
                         } else {
                             $menu[$mk1]['left'][] = $left;
                         }
@@ -226,6 +240,12 @@ class Menu extends \Phpcmf\Model {
         foreach ($new as $mk1 => $top) {
             // 合并顶级菜单
             if ($mk1 && isset($menu[$mk1])) {
+                if (!isset($menu[$mk1]['name']) && $top['name']) {
+                    $menu[$mk1]['name'] = $top['name'];
+                }
+                if (!isset($menu[$mk1]['icon']) && $top['icon']) {
+                    $menu[$mk1]['icon'] = $top['icon'];
+                }
                 // 它存在下级菜单时才合并
                 if ($top['link']) {
                     foreach ($top['link'] as $left) {
