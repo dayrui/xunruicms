@@ -383,7 +383,7 @@ class Content extends \Phpcmf\Model {
                                 'paytime' => SYS_TIME,
                                 'inputtime' => SYS_TIME,
                             ]);
-
+                        }
                     } else {
                         log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：'.$rr['msg']);
                     }
