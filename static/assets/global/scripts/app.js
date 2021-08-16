@@ -1363,16 +1363,19 @@ function dr_bfb(title, myform, url) {
         },
         content: url+'&'+$('#'+myform).serialize(),
         cancel: function(index, layero){
-            layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
-                {
-                    icon: 3,
-                    shade: 0,
-                    title: lang['ts'],
-                    btn: [lang['ok'], lang['esc']]
-                }, function(index){
-                    layer.closeAll();
-                });
-            return false;
+            var body = layer.getChildFrame('body', index);
+            if ($(body).find('#dr_check_status').val() == "1") {
+                layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
+                    {
+                        icon: 3,
+                        shade: 0,
+                        title: lang['ts'],
+                        btn: [lang['ok'], lang['esc']]
+                    }, function(index){
+                        layer.closeAll();
+                    });
+                return false;
+            }
         }
     });
 }
@@ -1406,16 +1409,19 @@ function dr_bfb_submit(title, myform, url) {
                     },
                     content: json.data.url,
                     cancel: function(index, layero){
-                        layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
-                            {
-                                icon: 3,
-                                shade: 0,
-                                title: dr_lang('ts'),
-                                btn: [dr_lang('ok'), dr_lang('esc')]
-                            }, function(index){
-                            layer.closeAll();
-                        });
-                        return false;
+                        var body = layer.getChildFrame('body', index);
+                        if ($(body).find('#dr_check_status').val() == "1") {
+                            layer.confirm(dr_lang('关闭后将中断操作，是否确认关闭呢？'),
+                                {
+                                    icon: 3,
+                                    shade: 0,
+                                    title: dr_lang('ts'),
+                                    btn: [dr_lang('ok'), dr_lang('esc')]
+                                }, function (index) {
+                                    layer.closeAll();
+                                });
+                            return false;
+                        }
                     }
                 });
 
