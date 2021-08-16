@@ -13,7 +13,7 @@ if (is_file($file)) {
 }
 
 // 交易下单
-class Buy extends \Phpcmf\Controllers\Buy
+class Buy extends \Phpcmf\Controllers\Buy {
 
 
 }
