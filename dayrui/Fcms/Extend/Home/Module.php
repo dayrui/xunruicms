@@ -565,22 +565,26 @@ class Module extends \Phpcmf\Common
         $data['tags'] = [];
         if ($data['keywords']) {
             $tag = explode(',', $data['keywords']);
+            $obj = false;
+            if (dr_is_app('tag')) {
+                // 是否安装tag
+                $obj = \Phpcmf\Service::M('tag', 'tag');
+                if (!method_exists($obj, 'get_tag_url')) {
+                    $obj = false;
+                }
+            }
             foreach ($tag as $t) {
                 $t = trim($t);
                 if ($t) {
                     // 读缓存
-                    if (dr_is_app('tag')) {
-                        $obj = \Phpcmf\Service::M('tag', 'tag');
-                        if (method_exists($obj, 'get_tag_url')) {
-                            $url = $obj->get_tag_url($t);
-                            if ($url) {
-                                $data['tags'][$t] = $url;
-                            }
+                    if ($obj) {
+                        $url = $obj->get_tag_url($t);
+                        if ($url) {
+                            $data['tags'][$t] = $url;
                         }
                     }
                     $data['kws'][$t] = \Phpcmf\Service::L('router')->search_url([], 'keyword', $t, MOD_DIR);
                 }
-
             }
         }
 

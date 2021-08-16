@@ -24,7 +24,7 @@
     </div>
 </div>
 
-
+<input id="dr_check_status" type="hidden" value="1">
 
 <script>
     $(function () {
@@ -73,6 +73,7 @@
                     $('#dr_check_button').html('<i class="fa fa-times-circle"></i> {dr_lang("重新开始")}');
                 } else {
                     if (json.code == -1) {
+                        $('#dr_check_status').val('0');
                         $('#dr_check_button').attr('disabled', false);
                         $('#dr_check_button').html('<i class="fa fa-check-circle"></i> {dr_lang("生成完毕")}');
                     } else {
