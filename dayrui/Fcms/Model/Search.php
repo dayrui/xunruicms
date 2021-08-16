@@ -5,7 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-
 // 模块搜索类
 class Search extends \Phpcmf\Model {
 
@@ -74,7 +73,7 @@ class Search extends \Phpcmf\Model {
         unset($this->get['order'], $this->get['page']);
 
         // 查询缓存
-        $id = md5($table.dr_array2string($this->get));
+        $id = md5($table.dr_array2string($this->get).$catid);
         if (!IS_DEV && SYS_CACHE_SEARCH) {
             $data = $this->db->table($this->mytable.'_search')->where('id', $id)->get()->getRowArray();
             $time = SYS_CACHE_SEARCH * 3600;

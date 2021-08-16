@@ -153,27 +153,9 @@
                                 <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('登录失败次数')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" ></label>
-                                <span class="help-inline"> {dr_lang('后台登录失败N次后，系统将锁定登录，0表示不限制')} </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('登录失败时限')}</label>
-                            <div class="col-md-9">
-                                <div class="input-inline input-medium">
-                                    <div class="input-group">
-                                        <input type="text" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" class="form-control">
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <span class="help-inline"> {dr_lang('单位分钟，后台登录失败锁定后在x分钟内禁止登录')} </span>
-                            </div>
-                        </div>
+                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" >
+                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" >
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('安全密钥')}</label>
                             <div class="col-md-9">
