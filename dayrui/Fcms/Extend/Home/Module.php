@@ -131,11 +131,10 @@ class Module extends \Phpcmf\Common
         $category = $this->content_model->_call_category($category);
 
         // 挂钩点 格式化栏目数据
-        /*
-        $rt = \Phpcmf\Hooks::trigger_callback('call_category_data', $category);
+        $rt = \Phpcmf\Hooks::trigger_callback('module_category_data', $category);
         if ($rt && isset($rt['code']) && $rt['code']) {
             $category = $rt['data'];
-        }*/
+        }
 
         // 判断是否外链
         if ($category['tid'] == 2) {
@@ -392,7 +391,10 @@ class Module extends \Phpcmf\Common
         }
 
         // 挂钩点 内容读取之后
-        \Phpcmf\Hooks::trigger('module_show_read_data', $data);
+        $rt = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
+        if ($rt && isset($rt['code']) && $rt['code']) {
+            $data = $rt['data'];
+        }
 
         // 状态判断
         if ($data['status'] == 10 && !($this->uid == $data['uid'] || $this->member['is_admin'])) {

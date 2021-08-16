@@ -35,7 +35,7 @@ class Module_category extends \Phpcmf\Common
                 'name' => '共享',
                 'icon' => 'fa fa-share-alt',
                 'title' => '共享',
-                'url' =>\Phpcmf\Service::L('Router')->url('category/index'),
+                'url' => \Phpcmf\Service::L('Router')->url('category/index'),
                 'dirname' => 'share',
             ];
             $one = $tmp['share'];
