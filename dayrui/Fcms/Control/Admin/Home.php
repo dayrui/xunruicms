@@ -269,7 +269,7 @@ class Home extends \Phpcmf\Common
                             // oem版排除对比菜单
                             unset($left['link'][$i]);
                             continue;
-                        } elseif ($link['uri'] == 'member_oauth/index' && !$this->member_cache['oauth']) {
+                        } elseif ($link['uri'] == 'member_oauth/index' && dr_count($this->member_cache['oauth']) < 3) {
                             // 未配置授权账号排除
                             unset($left['link'][$i]);
                             continue;
