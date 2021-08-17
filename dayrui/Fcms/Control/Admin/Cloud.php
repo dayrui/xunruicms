@@ -816,7 +816,7 @@ return [
 
     public function bf_count() {
 
-        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&license='.$this->cmf_license['license'];
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&time='.strtotime($this->cmf_version['downtime']).'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据');
