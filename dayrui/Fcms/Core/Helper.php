@@ -2722,38 +2722,11 @@ function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS
 }
 
 /**
- * 腾讯地图调用
+ * 腾讯地图被弃用
  */
 function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $class = '') {
-
-    if (!$value) {
-        return '没有坐标值';
-    }
-
-    $ui = !$ui ? 'false' : 'true';
-    $id = 'dr_qq_map_'.rand(0, 99);
-    $width = $width ? $width : '100%';
-    list($lngX, $latY) = explode(',', $value);
-    $js = \Phpcmf\Service::V()->load_js('http://map.qq.com/api/js?v=2.exp');
-    return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . $width . 'px; height:' . $height . 'px; overflow:hidden"></div>
-    <script type="text/javascript">
-        var center = new qq.maps.LatLng('.$latY.','.$lngX.');
-        var map = new qq.maps.Map(document.getElementById(\''.$id.'\'),{
-            center: center,
-            disableDefaultUI: '.$ui.',
-            zoom: '.$zoom.'
-        });
-         var anchor = new qq.maps.Point(6, 6),
-            size = new qq.maps.Size(27, 45),
-            origin = new qq.maps.Point(0, 0),
-            icon = new qq.maps.MarkerImage(\'' . ROOT_THEME_PATH . 'assets/images/mak.png\', size, origin, anchor);
-        var marker = new qq.maps.Marker({
-            icon: icon,
-            map: map,
-            position:map.getCenter()});
-    </script>';
+    return dr_baidu_map($value, $zoom, $width, $height, '', $class);
 }
-
 
 
 /**
