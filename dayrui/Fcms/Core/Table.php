@@ -638,8 +638,8 @@ class Table extends \Phpcmf\Common {
         $sql = $this->_db()->get_sql_query();
 
         // 默认以显示字段为搜索字段
-        if (!isset($param['field']) && $this->init['show_field']) {
-            $param['field'] = $this->init['show_field'];
+        if (!isset($param['field']) && !$param['field']) {
+            $param['field'] = isset($this->init['search_first_field']) && $this->init['search_first_field'] ? $this->init['search_first_field'] : $this->init['show_field'];
         }
 
         // 分页URL格式

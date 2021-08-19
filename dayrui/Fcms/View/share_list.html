@@ -180,7 +180,7 @@
                         <ul class="dropdown-menu">
                             {loop $cbottom $a}
                             <li>
-                                <a href="{str_replace('{mid}', APP_DIR, urldecode($a.url))}"> <i class="{$a.icon}"></i> {dr_lang($a.name)} </a>
+                                <a href="{str_replace(['{mid}', '{catid}'], [APP_DIR, $param.catid], urldecode($a.url))}"> <i class="{$a.icon}"></i> {dr_lang($a.name)} </a>
                             </li>
                             {/loop}
                         </ul>

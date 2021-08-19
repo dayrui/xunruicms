@@ -7,6 +7,7 @@
 
 // 内容模块操作类 基于 Table
 class Module extends \Phpcmf\Table {
+
     protected $post_time; // 定时发布时间
     protected $module_menu; // 是否显示模块菜单
     protected $is_post_user; // 投稿者权限
@@ -45,6 +46,7 @@ class Module extends \Phpcmf\Table {
             'where_list' => $this->where_list_sql,
             'order_by' => dr_safe_replace($this->module['setting']['order']),
             'list_field' => $this->module['setting']['list_field'],
+            'search_first_field' => $this->module['setting']['search_first_field'] ? $this->module['setting']['search_first_field'] : 'title',
         ]);
         $this->content_model->init($this->init); // 初始化内容模型
         // 子管理员推荐位权限
@@ -161,7 +163,8 @@ class Module extends \Phpcmf\Table {
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/index'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => $catid])
             ),
-            'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add') : '',
+            'catid' => 0,
+            'category_field_url' => $this->module['category_data_field'] ? \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add') : '',
         ]);
         return \Phpcmf\Service::V()->display($tpl);
     }

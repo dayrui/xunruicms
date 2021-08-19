@@ -552,7 +552,7 @@ class Model {
     }
 
     // 条件组合
-    protected function _where($table, $name, $value, $field) {
+    protected function _where($table, $name, $value, $field, $is_like = false) {
 
         if (!$value && dr_strlen($value) == 0) {
             return ''; //空值
@@ -587,6 +587,12 @@ class Model {
             // 联动菜单字段
             $arr = explode('|', $value);
             $where = [];
+            if ($is_like && $value) {
+                $key = \Phpcmf\Service::C()->get_cache('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-key');
+                if ($key) {
+                    $where[] = '`'.$table.'`.`'.$name.'` in (select id from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%")';
+                }
+            }
             foreach ($arr as $value) {
                 $data = dr_linkage($field['setting']['option']['linkage'], $value);
                 if ($data) {
@@ -602,6 +608,15 @@ class Model {
             // 联动菜单多选字段
             $arr = explode('|', $value);
             $where = [];
+            if ($is_like && $value) {
+                $key = \Phpcmf\Service::C()->get_cache('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-key');
+                if ($key) {
+                    $row = $this->db->query('select * from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%"')->getRowArray();
+                    if ($row) {
+                        $arr[] = $row['cname'];
+                    }
+                }
+            }
             foreach ($arr as $value) {
                 $data = dr_linkage($field['setting']['option']['linkage'], $value);
                 if ($data) {
@@ -629,11 +644,29 @@ class Model {
                     }
                 }
             }
+            //if (dr_count($where) > 20) {
+                //$where = array_slice($where, 0, 20);
+            //}
             return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && ($field['fieldtype'] == 'Selects' || $field['fieldtype'] == 'Checkbox')) {
             // 复选字段
             $arr = explode('|', $value);
             $where = [];
+            if ($is_like && $value) {
+                $option = dr_format_option_array($field['setting']['option']['options']);
+                if ($option) {
+                    $new = [];
+                    foreach ($option as $k => $v) {
+                        if (strpos($v, $value) !== false) {
+                            $new[] = $k;
+                        }
+                    }
+                    if ($new) {
+                        $arr = $new;
+                    }
+                }
+            }
+
             foreach ($arr as $value) {
                 if ($value) {
                     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
@@ -651,6 +684,20 @@ class Model {
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
+            if ($is_like && $value) {
+                $option = dr_format_option_array($field['setting']['option']['options']);
+                if ($option) {
+                    $new = [];
+                    foreach ($option as $k => $v) {
+                        if (strpos($v, $value) !== false) {
+                            $new[] = $k;
+                        }
+                    }
+                    if ($new) {
+                        $arr = $new;
+                    }
+                }
+            }
             $where = [];
             foreach ($arr as $value) {
                 if (is_numeric($value)) {
@@ -660,9 +707,6 @@ class Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (strpos($value, '%') === 0 && strrchr($value, '%') === '%') {
-            // like 条件
-            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
         } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
@@ -678,6 +722,9 @@ class Model {
             }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
+        } elseif ($is_like || (strpos($value, '%') === 0 && strrchr($value, '%') === '%')) {
+            // like 条件
+            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
         } else {
             return '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
         }
@@ -743,18 +790,6 @@ class Model {
                     } else {
                         CI_DEBUG && log_message('debug', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
                     }
-                } elseif ($field[$param['field']]['fieldtype'] == 'Linkage'
-                    && $field[$param['field']]['setting']['option']['linkage']) {
-                    // 联动菜单搜索
-                    if (is_numeric($param['keyword'])) {
-                        // 联动菜单id查询
-                        $link = dr_linkage($field[$param['field']]['setting']['option']['linkage'], (int)$param['keyword'], 0, 'childids');
-                        $link && $select->where($param['field'].' IN ('.$link.')');
-                    } else {
-                        // 联动菜单名称查询
-                        $id = (int)\Phpcmf\Service::C()->get_cache('linkid-'.SITE_ID, $field[$param['field']]['setting']['option']['linkage']);
-                        $id && $select->where($param['field'].' IN (select id from `'.$this->dbprefix('linkage_data_'.$id).'` where `name` like "%'.$param['keyword'].'%")');
-                    }
                 } elseif (in_array($field[$param['field']]['fieldtype'], ['INT'])) {
                     // 数字类型
                     $select->where($param['field'], intval($param['keyword']));
@@ -771,7 +806,10 @@ class Model {
                     // 准确匹配模式
                     $select->where($param['field'], urldecode($param['keyword']));
                 } else {
-                    $select->like($param['field'], urldecode($param['keyword']));
+                    $where = $this->_where($this->dbprefix($this->table), $param['field'], $param['keyword'], $field[$param['field']], true);
+                    if ($where) {
+                        $select->where($where, null, false);
+                    }
                 }
             }
             // 时间搜索

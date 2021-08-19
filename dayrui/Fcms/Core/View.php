@@ -1121,13 +1121,16 @@ class View {
                                 );
                             }
                             $list && $return[] = array(
+                                'data' => $list,
                                 'name' => $t['name'],
                                 'field' => $t['fieldname'],
-                                'data' => $list,
+                                'displayorder' => $t['displayorder'],
                             );
                         }
                     }
                 }
+
+                $system['order'] && $return = dr_array_sort($return, 'displayorder');
 
                 return $this->_return($system['return'], $return, '');
                 break;
@@ -1249,7 +1252,6 @@ class View {
                 } else {
                     if ($system['page']) {
                         $page = $this->_get_page_id($system['page']);
-                        $urlrule = $system['urlrule'];
                         $pagesize = (int) $system['pagesize'];
                         $pagesize = $pagesize ? $pagesize : 10;
                         $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";

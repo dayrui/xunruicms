@@ -85,21 +85,36 @@
                 <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('后台列表的默认排序')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('列表默认排序')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-xlarge" type="text" name="data[setting][order]" value="{if $data['setting']['order']}{htmlspecialchars($data['setting']['order'])}{else}updatetime DESC{/if}" ></label>
                                 <span class="help-block">{dr_lang('排序格式符号MySQL的语法，例如：主表字段 desc')}</span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('后台列表时间搜索')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('列表时间搜索')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[setting][search_time]" value="{if $data['setting']['search_time']}{htmlspecialchars($data['setting']['search_time'])}{else}updatetime{/if}" ></label>
                                 <span class="help-block">{dr_lang('设置后台时间范围搜索字段，默认为更新时间字段：updatetime')}</span>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('后台列表显示字段')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('列表默认搜索字段')}</label>
+                            <div class="col-md-9">
+                                <label><select name="data[setting][search_first_field]" class="form-control">
+                                    {loop $field $t}
+                                    {if dr_is_admin_search_field($t)}
+                                    <option value="{$t.fieldname}" {if $data['setting']['search_first_field']==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
+                                    {/if}
+                                    {/loop}
+                                    <option value="id" {if $data['setting']['search_first_field']=='id'}selected{/if}> Id </option>
+                                </select></label>
+                                <span class="help-block">{dr_lang('设置后台列表的默认搜索字段，也就是第一个选中的字段')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('列表显示字段')}</label>
                             <div class="col-md-9">
 
 
