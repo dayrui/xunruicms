@@ -634,8 +634,18 @@ class View {
             $replace_array[] = "<?php } } ?>";
         }
 
-        $view_content = preg_replace($regex_array, $replace_array, $view_content);
+        // 注释内容
         $view_content = preg_replace('#{zhushi}(.+){/zhushi}#Us', '', $view_content);
+
+        // 保护代码
+        $this->_code = [];
+        $view_content = preg_replace_callback('#{code}(.+){/code}#Us', function ($match) {
+            $key = count($this->_code);
+            $this->_code[$key] = $match[1];
+            return '<!--phpcmf'.$key.'-->';
+        }, $view_content);
+
+        $view_content = preg_replace($regex_array, $replace_array, $view_content);
 
         $view_content = preg_replace_callback("/_get_var\('(.*)'\)/Ui", function ($match) {
             return "_get_var('".preg_replace('#\[\'(\w+)\'\]#Ui', '.\\1', $match[1])."')";
@@ -644,6 +654,13 @@ class View {
         $view_content = preg_replace_callback("/list_tag\(\"(.*)\"\)/Ui", function ($match) {
             return "list_tag(\"".preg_replace('#\[\'(\w+)\'\]#Ui', '[\\1]', $match[1])."\")";
         }, $view_content);
+
+        // 恢复代码
+        if ($this->_code) {
+            foreach ($this->_code as $key => $code) {
+                $view_content = str_replace('<!--phpcmf'.$key.'-->', $code, $view_content);
+            }
+        }
 
         return $view_content;
     }
