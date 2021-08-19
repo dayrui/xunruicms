@@ -635,6 +635,7 @@ class View {
         }
 
         $view_content = preg_replace($regex_array, $replace_array, $view_content);
+        $view_content = preg_replace('#{zhushi}(.+){/zhushi}#Us', '', $view_content);
 
         $view_content = preg_replace_callback("/_get_var\('(.*)'\)/Ui", function ($match) {
             return "_get_var('".preg_replace('#\[\'(\w+)\'\]#Ui', '.\\1', $match[1])."')";
