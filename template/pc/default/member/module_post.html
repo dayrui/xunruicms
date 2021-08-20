@@ -58,7 +58,7 @@
                                     <label class="col-md-2 control-label">{dr_lang('栏目')}</label>
                                     <div class="col-md-9">
 
-                                        {if $module['category'][$catid]['setting']['notedit']}
+                                        {if $catid && $module['category'][$catid]['setting']['notedit']}
                                         <label style="margin-top: 7px;">
                                             <span class="label label-sm label-success circle">{$module['category'][$catid]['name']}</span>
                                         </label>

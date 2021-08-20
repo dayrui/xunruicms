@@ -136,7 +136,7 @@ class Html extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'spage' => 1,
             'todo_url' => WEB_DIR.'index.php?'.($app ? 's='.$app.'&' : '').'c=html&m=show&catids='.$ids,
-            'count_url' =>\Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'), 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
+            'count_url' => \Phpcmf\Service::L('Router')->url('html/show_count_index', ['app' => $app, 'catids' => $ids, 'pagesize' => \Phpcmf\Service::L('input')->get('pagesize'), 'id_to' => \Phpcmf\Service::L('input')->get('id_to'), 'id_form' => \Phpcmf\Service::L('input')->get('id_form'), 'date_to' => \Phpcmf\Service::L('input')->get('date_to'), 'date_form' => \Phpcmf\Service::L('input')->get('date_form')]),
         ]);
         \Phpcmf\Service::V()->display('html_bfb.html');exit;
     }

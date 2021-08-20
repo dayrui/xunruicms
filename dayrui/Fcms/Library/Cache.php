@@ -14,8 +14,12 @@ class Cache {
 
     // 文件缓存目录
     private $file_dir;
+
     // 认证数据缓存目录
     private $auth_dir;
+
+    // 缓存临时数据
+    private $data = [];
 
     /**
      * 构造函数,初始化变量
@@ -77,8 +81,11 @@ class Cache {
         }
 
         $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
+        if (!isset($this->data[$cache_file])) {
+            $this->data[$cache_file] = is_file($cache_file) ? json_decode(file_get_contents($cache_file), true) : false;
+        }
 
-        return is_file($cache_file) ? json_decode(file_get_contents($cache_file), true) : false;
+        return $this->data[$cache_file];
     }
 
     /**
@@ -199,20 +206,20 @@ class Cache {
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
 
-        $time && self::init()->save(md5(SITE_ID.'-'.$name), $value, $time);
+        $time && self::init()->save(md5(SYS_KEY.SITE_ID.$name), $value, $time);
 
         return $value;
     }
 
     // 获取内容
     public function get_data($name) {
-        return self::init()->get(md5(SITE_ID.'-'.$name));
+        return self::init()->get(md5(SYS_KEY.SITE_ID.$name));
     }
 
     // 删除内容
     public function del_data($name) {
         function_exists('opcache_reset') && opcache_reset();
-        return self::init()->delete(md5(SITE_ID.'-'.$name));
+        return self::init()->delete(md5(SYS_KEY.SITE_ID.$name));
     }
 
     // 使用框架
@@ -225,16 +232,21 @@ class Cache {
 
         // 取第一个参数作为缓存变量名称
         $name = strtolower(array_shift($param));
-        $result = $this->get_data($name);
-        if (!$result) {
-            // 缓存不存在时重写缓存
-            $result = self::get_file($name);
-            // 任然不存在就表示没有数据
+        if (SYS_CACHE) {
+            $result = $this->get_data($name);
             if (!$result) {
-                return null;
+                // 缓存不存在时重写缓存
+                $result = self::get_file($name);
+                // 任然不存在就表示没有数据
+                if (!$result) {
+                    return null;
+                }
+                // 存储缓存
+                $this->set_data($name, $result, 3600);
             }
-            // 存储缓存
-            $this->set_data($name, $result, 3600);
+        } else {
+            // 读取配置文件
+            $result = self::get_file($name);
         }
 
         if (!$param) {
