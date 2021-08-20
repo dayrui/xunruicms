@@ -26,6 +26,17 @@ class Seo {
 
         !$seo['meta_title'] && $seo['meta_title'] = SITE_NAME;
 
+        if (strpos($seo['meta_title'], '{page}') !== false) {
+            $page = max(1, intval($_GET['page']));
+            if ($page > 1) {
+                $seo['meta_title'] = str_replace(array('[', ']'), '', $seo['meta_title']);
+                $seo['meta_title'] = str_replace('{join}', SITE_SEOJOIN, $seo['meta_title']);
+                $seo['meta_title'] = str_replace('{page}', $page, $seo['meta_title']);
+            } else {
+                $seo['meta_title'] = preg_replace('/\[.+\]/U', '', $seo['meta_title']);
+            }
+        }
+
         return $seo;
     }
 
@@ -46,6 +57,16 @@ class Seo {
         $seo['meta_description'] = $mod['site'][SITE_ID]['module_description'];
         $seo['meta_description'] = htmlspecialchars(dr_clearhtml($seo['meta_description']));
 
+        if (strpos($seo['meta_title'], '{page}') !== false) {
+            $page = max(1, intval($_GET['page']));
+            if ($page > 1) {
+                $seo['meta_title'] = str_replace(array('[', ']'), '', $seo['meta_title']);
+                $seo['meta_title'] = str_replace('{join}', SITE_SEOJOIN, $seo['meta_title']);
+                $seo['meta_title'] = str_replace('{page}', $page, $seo['meta_title']);
+            } else {
+                $seo['meta_title'] = preg_replace('/\[.+\]/U', '', $seo['meta_title']);
+            }
+        }
 
         if (!$seo['meta_keywords']) {
             // 留空时使用主站seo
