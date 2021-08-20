@@ -126,7 +126,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
             foreach ($options as $v => $n) {
 				$s = is_array($value) && in_array($v, $value) ? ' checked' : '';
 				$kj = '<input type="checkbox" name="data['.$name.'][]" value="'.$v.'" '.$s.' '.$attr.' />';
-				$str.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.$n.' <span></span> </label>';
+				$str.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.dr_lang($n).' <span></span> </label>';
 			}
 		}
 		
@@ -147,7 +147,7 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
         $options = dr_format_option_array($field['setting']['option']['options']);
         if ($options && $value) {
             foreach ($options as $v => $n) {
-                is_array($value) && in_array($v, $value) && $str.= '<label class="label label-default"> '.$n.' </label>&nbsp;&nbsp;&nbsp;';
+                is_array($value) && in_array($v, $value) && $str.= '<label class="label label-default"> '.dr_lang($n).' </label>&nbsp;&nbsp;&nbsp;';
             }
         }
 

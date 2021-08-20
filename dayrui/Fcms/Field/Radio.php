@@ -204,7 +204,7 @@ class Radio extends \Phpcmf\Library\A_Field {
 			foreach ($options as $v => $n) {
 				$s = $v == $value ? ' checked' : '';
 				$kj = '<input type="radio" name="data['.$name.']" value="'.$v.'" '.$s.' '.$field['setting']['validate']['formattr'].' />';
-				$str.= '<label class="mt-radio mt-radio-outline">'.$kj.' '.$n.' <span></span> </label>';
+				$str.= '<label class="mt-radio mt-radio-outline">'.$kj.' '.dr_lang($n).' <span></span> </label>';
 			}
 		}
 
@@ -222,7 +222,7 @@ class Radio extends \Phpcmf\Library\A_Field {
 
         $options = dr_format_option_array($field['setting']['option']['options']);
 
-        $str = '<div class="form-control-static"> '.(isset($options[$value]) ? $options[$value] : dr_lang('未选择')).' </div>';
+        $str = '<div class="form-control-static"> '.(isset($options[$value]) ? dr_lang($options[$value]) : dr_lang('未选择')).' </div>';
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }

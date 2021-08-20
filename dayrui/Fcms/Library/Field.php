@@ -1201,7 +1201,7 @@
                 $fomart = str_replace(['control-label col-md-2', 'col-md-9'], ['control-label col-md-12', 'col-md-12'], $fomart);
             }
 
-            return str_replace(['{name}', '{text}', '{value}'], [$name, $text, $value], $fomart);
+            return str_replace(['{name}', '{text}', '{value}'], [$name, dr_lang($text), $value], $fomart);
         }
 
         /**

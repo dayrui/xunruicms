@@ -94,7 +94,7 @@ class Select extends \Phpcmf\Library\A_Field {
 		$options = dr_format_option_array($field['setting']['option']['options']);
 		if ($options) {
             foreach ($options as $v => $n) {
-				$str.= '<option value="'.$v.'" '.($v == $value ? ' selected' : '').'>'.$n.'</option>';
+				$str.= '<option value="'.$v.'" '.($v == $value ? ' selected' : '').'>'.dr_lang($n).'</option>';
 			}
 		}
 
@@ -123,7 +123,7 @@ class Select extends \Phpcmf\Library\A_Field {
 
         $options = dr_format_option_array($field['setting']['option']['options']);
 
-        $str = '<div class="form-control-static"> '.(isset($options[$value]) ? $options[$value] : dr_lang('未选择')).' </div>';
+        $str = '<div class="form-control-static"> '.(isset($options[$value]) ? dr_lang($options[$value]) : dr_lang('未选择')).' </div>';
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }
