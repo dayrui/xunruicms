@@ -33,7 +33,11 @@
             layer.confirm('当前界面是电脑端界面，需要访问移动端网站吗？', {
                 btn: ['访问移动端','关闭'] //按钮
             }, function(){
+				{if SITE_IS_MOBILE}
                 window.location.href = '{dr_rp($my_web_url, SITE_URL, SITE_MURL)}';
+				{else}
+				alert('后台没有给移动端绑定域名');
+				{/if}
             }, function(){
                 return true;
             });
@@ -163,36 +167,7 @@
 
 
 
-                                <!--调用全部独立模块-->
-								{cache name=module-content return=m}
-                                {if !$m.share}
-                                <li class="menu-dropdown classic-menu-dropdown {if MOD_DIR==$m.dirname}active{/if}">
-                                    <a href="{dr_url_prefix($m.url)}">{$m.name}</a>
-                                    <ul class="dropdown-menu pull-left">
-                                        <!--第一层：调用独立模块下的顶级栏目-->
-                                        {category module=$m.dirname pid=0 return=t2}
-                                        <li class="{if $t2.child} dropdown-submenu{/if} {if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t2.catids)} active{/if}">
-                                            <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
-                                                {$t2.name}
-                                            </a>
-                                            {if $t2.child}
-                                            <ul class="dropdown-menu pull-left">
-                                                <!--第二层：调用第二级栏目-->
-                                                {category module=$m.dirname pid=$t2.id return=t3}
-                                                <li class="{if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t3.catids)} active{/if}">
-                                                    <a href="{$t3.url}" title="{$t3.name}">
-                                                        {$t3.name}
-                                                    </a>
-                                                </li>
-                                                {/category}
-                                            </ul>
-                                            {/if}
-                                        </li>
-                                        {/category}
-                                    </ul>
-                                </li>
-								{/if}
-								{/cache}
+                               
 
 
                             </ul>
