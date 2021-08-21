@@ -87,11 +87,6 @@ return [
                             'uri' => 'notice/index',
                         ],
                         [
-                            'name' => '文件检测',
-                            'icon' => 'fa fa-code',
-                            'uri' => 'check_bom/index',
-                        ],
-                        [
                             'name' => '系统体检',
                             'icon' => 'fa fa-wrench',
                             'uri' => 'check/index',
