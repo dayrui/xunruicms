@@ -42,11 +42,6 @@ return [
                             'icon' => 'fa fa-puzzle-piece',
                             'uri' => 'api/app',
                         ],
-                        [
-                            'name' => '模板市场',
-                            'icon' => 'fa fa-html5',
-                            'uri' => 'api/template',
-                        ],
                     ]
                 ],
             ],
@@ -90,11 +85,6 @@ return [
                             'name' => '系统提醒',
                             'icon' => 'fa fa-bell',
                             'uri' => 'notice/index',
-                        ],
-                        [
-                            'name' => '数据字典',
-                            'icon' => 'fa fa-database',
-                            'uri' => 'db/index',
                         ],
                         [
                             'name' => '文件检测',
