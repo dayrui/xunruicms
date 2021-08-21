@@ -301,11 +301,6 @@ return [
                             'icon' => 'fa fa-reorder',
                             'uri' => 'module_category/index',
                         ],
-                        [
-                            'name' => '静态生成',
-                            'icon' => 'fa fa-file-code-o',
-                            'uri' => 'html/index',
-                        ],
                     ]
                 ],
                 'content-verify' => [

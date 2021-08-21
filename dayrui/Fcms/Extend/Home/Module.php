@@ -84,8 +84,114 @@ class Module extends \Phpcmf\Common
         }
     }
 
+    // 模块搜索
+    protected function _Search($_catid = 0) {
+
+        if (IS_POST) {
+            $this->_json(0, '禁止提交，请检查提交地址是否有误');
+        }
+
+        // 模型类
+        $search = \Phpcmf\Service::M('Search', $this->module['dirname'])->init($this->module['dirname']);
+
+        // 搜索参数
+        list($catid, $get) = $search->get_param($this->module);
+        !$catid && $_catid && $catid = $_catid;
+        $catid = intval($catid);
+
+        // 非http请求之下
+        if (!IS_API_HTTP) {
+            if (!isset($this->module['setting']['search']['use']) || !$this->module['setting']['search']['use']) {
+                $this->_msg(0, dr_lang('此模块已经关闭了搜索功能'));
+            } elseif (\Phpcmf\Service::M('member_auth')->module_auth($this->module['dirname'], 'search', $this->member)) {
+                $this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
+            } elseif ($get['keyword'] && $this->module['setting']['search']['length'] && dr_strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
+                $this->_msg(0, dr_lang('关键字不得少于系统规定的长度'));
+            } elseif ($get['keyword'] && dr_strlen($get['keyword']) > 100) {
+                $this->_msg(0, dr_lang('关键字太长了'));
+            }
+        }
+
+        // 搜索数据
+        $data = $search->get_data();
+        if (isset($data['code']) && $data['code'] == 0 && $data['msg']) {
+            $this->_msg(0, $data['msg']);
+        }
+        unset($data['params']['page']);
+
+        // 格式化数据
+        $data = $this->content_model->_call_search($data);
+
+        // 获取同级栏目及父级栏目
+        list($parent, $related) = dr_related_cat(
+            !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
+            $catid
+        );
+
+        // 获取搜索总量
+        $sototal = intval($data['contentid']);
+
+        // 存储缓存以便标签中使用
+        if ($data['id'] && $sototal) {
+            \Phpcmf\Service::L('cache')->set_data('module-search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
+        }
+
+        $list = [];
+        // 移动端请求时
+        if (IS_API_HTTP && $data['id']) {
+            $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize')).' urlrule=test');
+            $list = $rt['return'];
+        }
+
+        // 栏目格式化
+        $cat = $catid && $this->module['category'][$catid] ? $this->module['category'][$catid] : [];
+        $top = $catid && $cat['topid'] ? $this->module['category'][$cat['topid']] : $cat;
+
+        // 分页地址
+        $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
+
+        // 识别自定义地址，301定向
+        if (dr_is_sys_301() && !IS_API_HTTP && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
+            $get['page'] > 1 && $data['params']['page'] = $get['page'];
+            dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
+        }
+
+        //$this->module['sototal'] = $sototal;
+        \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
+        \Phpcmf\Service::V()->assign([
+            'cat' => $cat,
+            'top' => $top,
+            'get' => $get,
+            'list' => $list,
+            'catid' => $catid,
+            'parent' => $parent,
+            'pageid' => max(1, $get['page']),
+            'params' => $data['params'],
+            'keyword' => $data['keyword'],
+            'related' => $related,
+            'urlrule' => $urlrule,
+            'sototal' => $sototal,
+            'searchid' => $data['id'],
+            'search_id' => $data['id'],
+            'search_sql' => $data['sql'],
+            'is_search_page' => 1,
+        ]);
+        \Phpcmf\Service::V()->module($this->module['dirname']);
+
+        // 挂钩点 搜索完成之后
+        \Phpcmf\Hooks::trigger('module_search_data', $data);
+
+        if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
+            $tpl = dr_safe_filename($_GET['ajax_page']);
+        } else {
+            $tpl = $catid && $this->module['category'][$catid]['setting']['template']['search'] ? $this->module['category'][$catid]['setting']['template']['search'] : 'search.html';
+        }
+
+        \Phpcmf\Service::V()->display($tpl);
+    }
+
     // 模块栏目页
-    protected function _Category($catid = 0, $catdir = null, $page = 1, $rt = 0) {
+    public function _Category($catid = 0, $catdir = null, $page = 1, $rt = 0) {
 
         if (IS_POST) {
             $this->_json(0, '禁止提交，请检查提交地址是否有误');
@@ -229,115 +335,9 @@ class Module extends \Phpcmf\Common
         }
     }
 
-    // 模块搜索
-    protected function _Search($_catid = 0) {
-
-        if (IS_POST) {
-            $this->_json(0, '禁止提交，请检查提交地址是否有误');
-        }
-
-        // 模型类
-        $search = \Phpcmf\Service::M('Search', $this->module['dirname'])->init($this->module['dirname']);
-
-        // 搜索参数
-        list($catid, $get) = $search->get_param($this->module);
-        !$catid && $_catid && $catid = $_catid;
-        $catid = intval($catid);
-
-        // 非http请求之下
-        if (!IS_API_HTTP) {
-            if (!isset($this->module['setting']['search']['use']) || !$this->module['setting']['search']['use']) {
-                $this->_msg(0, dr_lang('此模块已经关闭了搜索功能'));
-            } elseif (\Phpcmf\Service::M('member_auth')->module_auth($this->module['dirname'], 'search', $this->member)) {
-                $this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
-            } elseif ($get['keyword'] && $this->module['setting']['search']['length'] && dr_strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
-                $this->_msg(0, dr_lang('关键字不得少于系统规定的长度'));
-            } elseif ($get['keyword'] && dr_strlen($get['keyword']) > 100) {
-                $this->_msg(0, dr_lang('关键字太长了'));
-            }
-        }
-
-        // 搜索数据
-        $data = $search->get_data();
-        if (isset($data['code']) && $data['code'] == 0 && $data['msg']) {
-            $this->_msg(0, $data['msg']);
-        }
-        unset($data['params']['page']);
-
-        // 格式化数据
-        $data = $this->content_model->_call_search($data);
-
-        // 获取同级栏目及父级栏目
-        list($parent, $related) = dr_related_cat(
-            !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
-            $catid
-        );
-
-        // 获取搜索总量
-        $sototal = intval($data['contentid']);
-
-        // 存储缓存以便标签中使用
-        if ($data['id'] && $sototal) {
-            \Phpcmf\Service::L('cache')->set_data('module-search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
-        }
-
-        $list = [];
-        // 移动端请求时
-        if (IS_API_HTTP && $data['id']) {
-            $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize')).' urlrule=test');
-            $list = $rt['return'];
-        }
-
-        // 栏目格式化
-        $cat = $catid && $this->module['category'][$catid] ? $this->module['category'][$catid] : [];
-        $top = $catid && $cat['topid'] ? $this->module['category'][$cat['topid']] : $cat;
-
-        // 分页地址
-        $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
-
-        // 识别自定义地址，301定向
-        if (dr_is_sys_301() && !IS_API_HTTP && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
-            $get['page'] > 1 && $data['params']['page'] = $get['page'];
-            dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
-        }
-
-        //$this->module['sototal'] = $sototal;
-        \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
-        \Phpcmf\Service::V()->assign([
-            'cat' => $cat,
-            'top' => $top,
-            'get' => $get,
-            'list' => $list,
-            'catid' => $catid,
-            'parent' => $parent,
-            'pageid' => max(1, $get['page']),
-            'params' => $data['params'],
-            'keyword' => $data['keyword'],
-            'related' => $related,
-            'urlrule' => $urlrule,
-            'sototal' => $sototal,
-            'searchid' => $data['id'],
-            'search_id' => $data['id'],
-            'search_sql' => $data['sql'],
-            'is_search_page' => 1,
-        ]);
-        \Phpcmf\Service::V()->module($this->module['dirname']);
-
-        // 挂钩点 搜索完成之后
-        \Phpcmf\Hooks::trigger('module_search_data', $data);
-
-        if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
-            $tpl = dr_safe_filename($_GET['ajax_page']);
-        } else {
-            $tpl = $catid && $this->module['category'][$catid]['setting']['template']['search'] ? $this->module['category'][$catid]['setting']['template']['search'] : 'search.html';
-        }
-
-        \Phpcmf\Service::V()->display($tpl);
-    }
-
     // 模块内容页
     // $param 自定义字段检索
-    protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
+    public function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
 
         if (IS_POST) {
             $this->_json(0, '禁止提交，请检查提交地址是否有误');
@@ -627,425 +627,9 @@ class Module extends \Phpcmf\Common
         return $data;
     }
 
-
-
-    //==================生成静态部分 -  创建文件=========================
-
-
-    // 生成栏目静态页面
-    protected function _Create_Category_Html($catid, $page = 0) {
-
-        if (!$catid) {
-            return dr_return_data(0, '栏目id不存在');
-        } elseif (!$this->module) {
-            return dr_return_data(0, '模块未被初始化');
-        } elseif (IS_CLIENT) {
-            return dr_return_data(0, '终端域名下不能生成静态文件');
-        }
-
-        $cat = $this->module['category'][$catid];
-        if (!$cat) {
-            return dr_return_data(0, '模块['.$this->module['name'].']栏目#'.$catid.'不存在');
-        } elseif ($this->module['setting']['search']['catsync'] && $cat['tid'] == 1) {
-            return dr_return_data(0, '此模块开启了搜索集成栏目页，因此栏目无法生成静态');
-        } elseif ($this->module['setting']['html']) {
-            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
-        }
-
-        // 无权限访问栏目内容
-        /*
-        if ($this->member_cache['auth2'][SITE_ID][$this->module['dirname']]['category'][$catid]['show']) {
-            return dr_return_data(0, '请关闭栏目访问权限');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            return dr_return_data(0, '请关闭模块访问权限');
-        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            return dr_return_data(0, '请关闭站点访问权限');
-        }*/
-
-        $url = $page > 0 ?\Phpcmf\Service::L('Router')->category_url($this->module, $cat, $page) : $cat['url'];
-        $file = \Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
-
-        $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
-
-        $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
-        if (!$hfile) {
-            return dr_return_data(0, '地址【'.$cat['url'].'】不规范');
-        }
-
-        // 标识变量
-        !defined('SC_HTML_FILE') && define('SC_HTML_FILE', 1);
-
-        // 开启ob函数
-        ob_start();
-        // 生成静态路由纠正
-        \Phpcmf\Service::L('router')->class = 'category';
-        \Phpcmf\Service::L('router')->method = 'index';
-        $_GET['page'] = $page;
-        \Phpcmf\Service::V()->init('pc');
-        $this->_Category($catid, '', $page);
-        $html = ob_get_clean();
-
-        // 格式化生成文件
-        if (!file_put_contents($hfile, $html, LOCK_EX)) {
-            unlink($hfile);
-            return dr_return_data(0, '文件【'.$hfile.'】写入失败');
-        }
-
-        // 移动端生成
-        if (SITE_IS_MOBILE && SITE_IS_MOBILE_HTML) {
-            ob_start();
-            \Phpcmf\Service::V()->init('mobile');
-            $_GET['page'] = $page;
-            $this->_Category($catid, '', $page);
-            $html = ob_get_clean();
-            $hfile = dr_to_html_file($file, $root . SITE_MOBILE_DIR.'/');
-            $size = file_put_contents($hfile, $html, LOCK_EX);
-            if (!$size) {
-                unlink($hfile);
-                return dr_return_data(0, '无权限写入文件【' . $hfile . '】');
-            }
-        }
-
-        return dr_return_data(1, 'ok');
-    }
-
-    // 生成内容静态页面
-    protected function _Create_Show_Html($id, $page = 0) {
-
-        if (!$id) {
-            return dr_return_data(0, '内容id不存在');
-        } elseif (IS_CLIENT) {
-            return dr_return_data(0, '终端域名下不能生成静态文件');
-        }
-
-        // 标识变量
-        !defined('SC_HTML_FILE') && define('SC_HTML_FILE', 1);
-
-        // 开启ob函数
-        ob_start();
-        // 生成静态路由纠正
-        \Phpcmf\Service::L('router')->class = 'show';
-        \Phpcmf\Service::L('router')->method = 'index';
-        \Phpcmf\Service::V()->init('pc');
-        \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
-        $data = $this->_Show($id, '', $page);
-        $html = ob_get_clean();
-
-        // 无权限访问栏目内容
-        /*
-        if ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$data['catid']]['show']) {
-            return dr_return_data(0, '请关闭栏目访问权限');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            return dr_return_data(0, '请关闭模块访问权限');
-        } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            return dr_return_data(0, '请关闭站点访问权限');
-        } elseif ($this->module['setting']['html']) {
-            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
-        }*/
-
-        // 同步数据不执行生成
-        if ($data['link_id'] > 0) {
-            return dr_return_data(0, '同步数据不执行生成');
-        }
-
-        $url = $page > 0 ?\Phpcmf\Service::L('Router')->show_url($this->module, $data, $page) : $data['url'];
-        if (!$data) {
-            return dr_return_data(0, 'URL为空白不执行生成');
-        }
-        $file = \Phpcmf\Service::L('Router')->remove_domain($url); // 从地址中获取要生成的文件名
-
-        $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
-        $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
-
-        if (!$hfile) {
-            return dr_return_data(0, '地址【'.$data['url'].'】不规范');
-        }
-
-        if (!file_put_contents($hfile, $html, LOCK_EX)) {
-            unlink($hfile);
-            return dr_return_data(0, '文件【'.$hfile.'】写入失败');
-        }
-
-        // 移动端生成
-        if (SITE_IS_MOBILE && SITE_IS_MOBILE_HTML) {
-            ob_start();
-            \Phpcmf\Service::V()->init('mobile');
-            \Phpcmf\Service::V()->module($this->module['share'] ? 'share' : $this->module['dirname']);
-            $data = $this->_Show($id, '', $page);
-            $html = ob_get_clean();
-            $hfile = dr_to_html_file($file, $root.SITE_MOBILE_DIR.'/');
-            $size = file_put_contents($hfile, $html, LOCK_EX);
-            if (!$size) {
-                unlink($hfile);
-                return dr_return_data(0, '无权限写入文件【'.$hfile.'】');
-            }
-        }
-
-        // 生成分页的页面
-        if ($page == 0 && $data['content_page']) {
-            foreach ($data['content_page'] as $i => $t) {
-                if ($i > 1) {
-                    $this->_Create_Show_Html($id, $i);
-                }
-            }
-        }
-
-        return dr_return_data(1, 'ok');
-    }
-
-
-    //==================生成静态部分 - 单个文件生成（继承，用于增加修改时实时生成）=========================
-
-
-    // 生成栏目静态页
-    protected function _Category_Html_File() {
-
-        // 判断权限
-        if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
-        }
-
-        // 初始化模块
-
-        $this->_module_init(APP_DIR ? APP_DIR : 'share');
-
-        /*
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }*/
-
-        $this->_Create_Category_Html(intval(\Phpcmf\Service::L('input')->get('id')));
-        exit;
-
-    }
-
-    // 生成内容静态单页
-    protected function _Show_Html_File() {
-
-        // 判断权限
-        if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
-        }
-
-        // 初始化模块
-        $this->_module_init();
-
-        /*
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }*/
-
-        $this->_Create_Show_Html(intval(\Phpcmf\Service::L('input')->get('id')));
-        exit;
-    }
-
-
-    //==================生成静态部分 - 后台操作Ajax生成执行=========================
-
-
-    // 生成首页静态选项
-    protected function _Index_Html() {
-
-        // 判断权限
-        if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
-        }
-        /*
-        if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
-        } elseif ($this->member_cache['auth_module'][SITE_ID][APP_DIR]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
-        }*/
-
-        // 标识变量
-        !defined('SC_HTML_FILE') && define('SC_HTML_FILE', 1);
-        !$this->module && $this->_module_init();
-
-        if (!$this->module['setting']['module_index_html']) {
-            $this->_json(0, '当前模块未开启首页静态功能');
-        } elseif ($this->module['setting']['search']['indexsync']) {
-            $this->_json(0, '当前模块设置了集成搜索页，无法生成静态');
-        }
-
-        $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
-        if ($this->module['domain']) {
-            // 绑定域名时
-            $file = 'index.html';
-        } else {
-            $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
-            if (!$file) {
-                $this->_json(0, dr_lang('生成文件名不合法: %s', MODULE_URL));
-            }
-        }
-
-        // 生成静态文件
-        ob_start();
-        // 生成静态路由纠正
-        \Phpcmf\Service::L('router')->class = 'home';
-        \Phpcmf\Service::L('router')->method = 'index';
-        \Phpcmf\Service::V()->init('pc');
-        $this->_Index(1);
-        $html = ob_get_clean();
-        $pc = file_put_contents(dr_format_html_file($file, $root), $html, LOCK_EX);
-        $mobile = 0;
-
-        if (SITE_IS_MOBILE || $this->module['mobile_domain']) {
-            ob_start();
-            \Phpcmf\Service::V()->init('mobile');
-            $this->_Index(1);
-            $html = ob_get_clean();
-            $mfile = dr_format_html_file(SITE_MOBILE_DIR.'/' . $file, $root);
-            $mobile = file_put_contents($mfile, $html, LOCK_EX);
-            !$mobile && log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：'.$mfile);
-        } else {
-            log_message('error', '模块【'.MOD_DIR.'】移动端首页生成失败：移动端未绑定域名');
-        }
-
-        $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
-    }
-
-    // 生成内容静态选项
-    protected function _Show_Html() {
-
-        // 判断权限
-        if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
-        }
-
-        $page = max(1, intval($_GET['pp']));
-        $name2 = 'show-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->get_auth_data($name2);
-        if (!$pcount) {
-            $this->_json(0, '临时缓存数据不存在：'.$name2);
-        } elseif ($page > $pcount) {
-            // 完成
-            \Phpcmf\Service::L('cache')->del_auth_data($name2);
-            $this->_json(-1, '');
-        }
-
-        $name = 'show-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->get_auth_data($name);
-        if (!$cache) {
-            $this->_json(0, '临时缓存数据不存在：'.$name);
-        }
-
-        $html = '';
-        foreach ($cache as $t) {
-
-            // 初始化模块
-            if (!APP_DIR) {
-                if (!$t['is_module_dirname']) {
-                    $this->module = null;
-                } else {
-                    $this->is_module_init = false;
-                    $this->_module_init($t['is_module_dirname']);
-                }
-            } else {
-                $this->_module_init(APP_DIR);
-            }
-
-            $class = '';
-            if (!$this->module) {
-                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>模块".$t['mid']."未被初始化</a>";
-                $class = ' p_error';
-            } elseif (!$this->module['category'][$t['catid']]['setting']['html']) {
-                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>它是动态模式</a>";
-                $class = ' p_error';
-                /*
-            } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$t['id']]['show']) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                $class = ' p_error';*/
-            } else {
-                $rt = $this->_Create_Show_Html($t['id']);
-                \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
-                if ($rt['code']) {
-                    $ok = "<a class='ok' href='".dr_url_prefix($t['url'])."' target='_blank'>生成成功</a>";
-                } else {
-                    $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>".$rt['msg']."</a>";
-                    $class = ' p_error';
-                }
-            }
-
-            $html.= '<p class="todo_p '.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['title'].'</label><label class="rright">'.$ok.'</label></p>';
-
-        }
-
-        \Phpcmf\Service::L('cache')->clear($name);
-
-        $this->_json($page + 1, $html, ['pcount' => $pcount + 1]);
-    }
-
-    // 生成内容静态选项
-    protected function _Category_Html() {
-
-        // 判断权限
-        if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
-        }
-
-        $page = max(1, intval($_GET['pp']));
-        $name2 = 'category-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->get_auth_data($name2);
-        if (!$pcount) {
-            $this->_json(0, '临时缓存数据不存在：'.$name2);
-        } elseif ($page > $pcount) {
-            // 完成
-            \Phpcmf\Service::L('cache')->del_auth_data($name2);
-            $this->_json(-1, '');
-        }
-
-        $name = 'category-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->get_auth_data($name);
-        if (!$cache) {
-            $this->_json(0, '临时缓存数据不存在：'.$name);
-        }
-
-        if (APP_DIR) {
-            $this->_module_init(APP_DIR);
-        }
-
-        $html = '';
-        foreach ($cache as $t) {
-
-            // 初始化模块
-            if (!APP_DIR) {
-                $this->_module_init($t['mid'] ? $t['mid'] : 'share');
-            }
-
-            $class = '';
-            if (!$this->module) {
-                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>模块".$t['mid']."未被初始化</a>";
-                $class = ' p_error';
-            } elseif (!$t['html']) {
-                $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>它是动态模式</a>";
-                $class = ' p_error';
-                /*
-            } elseif ($this->member_cache['auth_module'][SITE_ID][($this->module['share'] ? 'share' : $this->module['dirname'])]['category'][$t['id']]['show']) {
-                $ok = "<a class='error' href='".$t['url']."' target='_blank'>设置的有访问权限</a>";
-                $class = ' p_error';*/
-            } else {
-                $rt = $this->_Create_Category_Html($t['id'], $t['page']);
-                \Phpcmf\Service::L('cache')->set_auth_data($name2.'-error', $page); // 设置断点
-                if ($rt['code']) {
-                    $ok = "<a class='ok' href='".dr_url_prefix($t['url'])."' target='_blank'>生成成功</a>";
-                } else {
-                    $ok = "<a class='error' href='".dr_url_prefix($t['url'])."' target='_blank'>".$rt['msg']."</a>";
-                    $class = ' p_error';
-                }
-
-            }
-            $html.= '<p class="todo_p '.$class.'"><label class="rleft">(#'.$t['id'].')'.$t['name'].'</label><label class="rright">'.$ok.'</label></p>';
-
-        }
-
-        \Phpcmf\Service::L('cache')->clear($name);
-
-        $this->_json($page + 1, $html, ['pcount' => $pcount + 1]);
-
+    // 前端模块回调处理类
+    protected function _Call_Show($data) {
+        return $data;
     }
 
     // 模块打赏
@@ -1054,9 +638,57 @@ class Module extends \Phpcmf\Common
         $this->goto_404_page('请升级打赏插件，此功能不再支持');
     }
 
-    // 前端模块回调处理类
-    protected function _Call_Show($data) {
-        return $data;
+
+    //==================生成静态部分 - 单个文件生成（继承，用于增加修改时实时生成）=========================
+
+
+    // 生成栏目静态页
+    protected function _Category_Html_File() {
+        if (dr_is_app('chtml')) {
+            \Phpcmf\Service::L('html', 'chtml')->_Category_Html_File($this, APP_DIR);
+        } else {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+    }
+
+    // 生成内容静态单页
+    protected function _Show_Html_File() {
+        if (dr_is_app('chtml')) {
+            \Phpcmf\Service::L('html', 'chtml')->_Show_Html_File($this, APP_DIR);
+        } else {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+    }
+
+
+    //==================生成静态部分 - 后台操作Ajax生成执行=========================
+
+
+    // 生成首页静态选项列表
+    protected function _Index_Html() {
+        if (dr_is_app('chtml')) {
+            \Phpcmf\Service::L('html', 'chtml')->_Index_Html($this);
+        } else {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+    }
+
+    // 生成内容静态选项列表
+    protected function _Show_Html() {
+        if (dr_is_app('chtml')) {
+            \Phpcmf\Service::L('html', 'chtml')->_Show_Html($this, APP_DIR);
+        } else {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+    }
+
+    // 生成内容静态选项列表
+    protected function _Category_Html() {
+        if (dr_is_app('chtml')) {
+            \Phpcmf\Service::L('html', 'chtml')->_Category_Html($this, APP_DIR);
+        } else {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
     }
 
 }

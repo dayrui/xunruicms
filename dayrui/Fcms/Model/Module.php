@@ -809,8 +809,10 @@ class Module extends \Phpcmf\Model
                     // 删除缓存
                     //\Phpcmf\Service::L('cache')->clear('module-'.$siteid.'-'.$mdir);
 
+                    echo 'module-'.$siteid.'-'.$mdir.PHP_EOL;
                     // 写入缓存
                     \Phpcmf\Service::L('cache')->set_file('module-'.$siteid.'-'.$mdir, $cache);
+                } else {
                 }
             }
         }
