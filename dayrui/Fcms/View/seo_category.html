@@ -108,7 +108,9 @@
                                     <th width="70" style="text-align:center"> Id </th>
                                     <th> {dr_lang('栏目')} </th>
                                     <th width="180"> {dr_lang('URL规则')} </th>
+                                    {if dr_is_app('chtml')}
                                     <th width="50" style="text-align:center"> {dr_lang('静态')} </th>
+                                    {/if}
                                     <th>{dr_lang('操作')}</th>
                                 </tr>
                                 </thead>

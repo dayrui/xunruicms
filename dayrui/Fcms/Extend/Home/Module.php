@@ -12,7 +12,7 @@ class Module extends \Phpcmf\Common
     public $module; // 模块信息
 
     // 模块首页
-    protected function _Index($html = 0) {
+    public function _Index($html = 0) {
 
         if (IS_POST) {
             $this->_json(0, '禁止提交，请检查提交地址是否有误');

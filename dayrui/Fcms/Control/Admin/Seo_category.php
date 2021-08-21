@@ -126,8 +126,10 @@ class Seo_category extends \Phpcmf\Common
             $t['option'] = '<a class="btn btn-xs green" href="javascript:edit_seo('.$t['id'].', \''.$t['name'].'\', \''.$dir.'\');"> <i class="fa fa-edit"></i> '.dr_lang('设置SEO').'</a>';
             $t['option'].= '<a class="btn btn-xs red" href="javascript:dr_iframe(\''.dr_lang('复制').'\', \''.dr_url(($dir == 'share' ? '' : $dir).'/category/copy_edit').'&at=seo&catid='.$t['id'].'\', \'\', \'500px\', \'nogo\');"> <i class="fa fa-copy"></i> '.dr_lang('同步到其他栏目').'</a>';
             // 判断是否生成静态
-            $is_html = intval($t['setting']['html']);
-            $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(($dir == 'share' ? '' : $dir).'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
+            if (dr_is_app('chtml')) {
+                $is_html = intval($t['setting']['html']);
+                $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(($dir == 'share' ? '' : $dir).'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
+            }
             if ($mod) {
                 $t['setting']['urlrule'] = isset($mod['site'][SITE_ID]['urlrule']) ? $mod['site'][SITE_ID]['urlrule'] : 0;
             }
@@ -140,7 +142,9 @@ class Seo_category extends \Phpcmf\Common
         $str.= "<td style='text-align:center'>\$id</td>";
         $str.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> </td>";
         $str.= "<td>\$html</td>";
-        $str.= "<td style='text-align:center'>\$is_page_html</td>";
+        if (dr_is_app('chtml')) {
+            $str .= "<td style='text-align:center'>\$is_page_html</td>";
+        }
         $str.= "<td>\$option</td>";
         $str.= "</tr>";
 

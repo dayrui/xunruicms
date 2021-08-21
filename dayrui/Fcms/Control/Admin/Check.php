@@ -525,6 +525,40 @@ class Check extends \Phpcmf\Common
                     }
                 }
 
+                // 判断静态生成插件
+                if (!dr_is_app('chtml')) {
+                    $module = \Phpcmf\Service::M()->table('module')->getAll();
+                    $is_html = 0;
+                    if ($module) {
+                        foreach ($module as $m) {
+                            $site = dr_string2array($m['site']);
+                            if ($site) {
+                                foreach ($site as $t) {
+                                    if ($t['html']) {
+                                        $is_html = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (!$is_html) {
+                            // 共享栏目
+                            $category = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category');
+                            if ($category) {
+                                foreach ($category as $t) {
+                                    if ($t['setting']['html']) {
+                                        $is_html = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ($is_html) {
+                        $error[] = '内容静态生成';
+                    }
+                }
+
                 if ($error) {
                     $this->halt('需要手动安装这些应用插件：'.implode('、', $error).'，<a href="javascript:dr_help(1104);">查看解决方案</a>', 0);
                 }

@@ -5,6 +5,7 @@
     <div class="form-body">
 
         {if $dirname == 'share'}
+        {if dr_is_app('chtml')}
         <div class="form-group">
             <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
             <div class="col-md-9">
@@ -12,6 +13,9 @@
                 <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
             </div>
         </div>
+        {else}
+        <input type="hidden" name="setting[html]" value="{intval($data['setting']['html'])}">
+        {/if}
         <div class="form-group">
             <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
             <div class="col-md-9">

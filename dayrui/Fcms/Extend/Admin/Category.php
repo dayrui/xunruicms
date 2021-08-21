@@ -278,7 +278,7 @@ class Category extends \Phpcmf\Table {
             $list .= "<td style='text-align:center' class='cat-total-\$id'> \$ctotal </td>";
         }
 
-        if (dr_in_array('html', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+        if (dr_is_app('chtml') && dr_in_array('html', $this->cat_config[$this->module['dirname']]['sys_field'])) {
             $head.= '<th width="50" style="text-align:center"> ' . dr_lang('静态') . ' </th>';
             $list.= "<td style='text-align:center'>\$is_page_html</td>";
         }
@@ -319,6 +319,9 @@ class Category extends \Phpcmf\Table {
         }
         if (!$this->module['share']) {
             unset($sysfield['mid']);
+        }
+        if (!dr_is_app('chtml')) {
+            unset($sysfield['html']);
         }
 
         if (IS_POST) {
@@ -901,6 +904,10 @@ class Category extends \Phpcmf\Table {
     // 后台批量保存是否生成静态的状态
     protected function _Admin_Html_Edit() {
 
+        if (!dr_is_app('chtml')) {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $row = \Phpcmf\Service::M('category')->init($this->init)->get($id);
         if (!$row) {
@@ -949,30 +956,38 @@ class Category extends \Phpcmf\Table {
     // 生成栏目静态
     public function scjt_edit() {
 
+        if (!dr_is_app('chtml')) {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
             $this->_json(0, dr_lang('没有选择任何栏目'));
         }
 
         if ($this->module['share']) {
-            $this->_json(1, dr_url('html/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/html/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
         } else {
-            $this->_json(1, dr_url('html/category_index', ['app' => APP_DIR, 'ids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/html/category_index', ['app' => APP_DIR, 'ids' => implode(',', $ids)]));
         }
     }
 
     // 生成内容静态
     public function scjt2_edit() {
 
+        if (!dr_is_app('chtml')) {
+            $this->_json(0, '没有安装官方版【静态生成】插件');
+        }
+
         $ids = \Phpcmf\Service::L('input')->get_post_ids();
         if (!$ids) {
             $this->_json(0, dr_lang('没有选择任何栏目'));
         }
 
         if ($this->module['share']) {
-            $this->_json(1, dr_url('html/show_index', ['app' => '', 'catids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/html/show_index', ['app' => '', 'catids' => implode(',', $ids)]));
         } else {
-            $this->_json(1, dr_url('html/show_index', ['app' => APP_DIR, 'catids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/html/show_index', ['app' => APP_DIR, 'catids' => implode(',', $ids)]));
         }
     }
 
