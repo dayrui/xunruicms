@@ -1152,4 +1152,58 @@ class Api extends \Phpcmf\Common {
     public function count_total() {
 
     }
+
+    // 更新url
+    public function update_url() {
+
+        $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
+        if (!$mid) {
+            $this->_html_msg(0, dr_lang('mid参数不能为空'));
+        }
+
+        $this->_module_init($mid);
+
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 500; // 每页处理的数量
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_index')->where('status', 9)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+
+            $url = dr_url('api/'.\Phpcmf\Service::L('Router')->method, ['mid' => $mid]);
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page='.($page+1));
+        }
+
+        $tpage = ceil($total / $psize); // 总页数
+
+        // 更新完成
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table($this->content_model->mytable)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        foreach ($data as $t) {
+            if ($t['link_id'] && $t['link_id'] >= 0) {
+                // 同步栏目的数据
+                $i = $t['id'];
+                $t = \Phpcmf\Service::M()->db->table($this->content_model->mytable)->where('id', (int)$t['link_id'])->get()->getRowArray();
+                if (!$t) {
+                    continue;
+                }
+                $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
+                $t['id'] = $i; // 替换成当前id
+            } else {
+                $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
+            }
+            $this->content_model->update_url($t, $url);
+        }
+
+        $this->_html_msg( 1, dr_lang('正在执行中【%s】...', "$tpage/$page"),
+            dr_url('api/'.\Phpcmf\Service::L('Router')->method, ['mid' => $mid,'total' => $total, 'page' => $page + 1])
+        );
+    }
 }

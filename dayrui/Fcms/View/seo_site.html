@@ -74,7 +74,7 @@
                             <label class="col-md-2 control-label">{dr_lang('批量更新内容URL')}</label>
                             <div class="col-md-9">
                                 {loop $module $m}
-                                <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量更新内容URL')}', '{dr_url('module_content/url_edit')}&mid={$m.dirname}')" class="btn default"> <i class="{dr_icon($m.icon)}"></i> {dr_lang($m.name)} </button></label>
+                                <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量更新内容URL')}', '{dr_url('api/update_url')}&mid={$m.dirname}')" class="btn default"> <i class="{dr_icon($m.icon)}"></i> {dr_lang($m.name)} </button></label>
                                 {/loop}
                             </div>
                         </div>
