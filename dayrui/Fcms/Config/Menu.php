@@ -306,11 +306,6 @@ return [
                             'icon' => 'fa fa-file-code-o',
                             'uri' => 'html/index',
                         ],
-                        [
-                            'name' => '内容维护',
-                            'icon' => 'fa fa-wrench',
-                            'uri' => 'module_content/index',
-                        ],
                     ]
                 ],
                 'content-verify' => [
