@@ -384,7 +384,6 @@ abstract class Common extends \CodeIgniter\Controller {
             }
 
             \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('Seo')->member(\Phpcmf\Service::L('cache')->get('menu-member')));
-            //\Phpcmf\Service::V()->assign([ ]);
         }
 
         // 初始化处理

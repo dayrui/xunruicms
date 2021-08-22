@@ -221,8 +221,8 @@ class Role extends \Phpcmf\Common
         }
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
-			\Phpcmf\Service::M('auth')->table('admin_role')->update($id, ['site' => dr_array2string($data)]);
+			$post = \Phpcmf\Service::L('input')->post('data');
+			\Phpcmf\Service::M('auth')->table('admin_role')->update($id, ['site' => dr_array2string($post)]);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
 			\Phpcmf\Service::L('input')->system_log('设置角色组('.$data['name'].')站点权限');
 			$this->_json(1, dr_lang('操作成功'));

@@ -229,6 +229,10 @@ class Auth extends \Phpcmf\Model {
         // 查询角色组
         $role_id = $this->_role($uid);
         if (!$role_id) {
+            // 注销账号
+            \Phpcmf\Service::C()->session()->remove('uid');
+            \Phpcmf\Service::C()->session()->remove('admin');
+            \Phpcmf\Service::C()->session()->remove('siteid');
             return dr_return_data(0, dr_lang('此账号不是管理员组成员'));
         }
 
@@ -251,6 +255,10 @@ class Auth extends \Phpcmf\Model {
 
         // 非创始人验证登录权限
         if ($verify && !isset($data['role'][1]) && !dr_in_array(SITE_ID, $data['site'])) {
+            // 注销账号
+            \Phpcmf\Service::C()->session()->remove('uid');
+            \Phpcmf\Service::C()->session()->remove('admin');
+            \Phpcmf\Service::C()->session()->remove('siteid');
             return dr_return_data(0, dr_lang('无权限登录此站点'));
         }
 
