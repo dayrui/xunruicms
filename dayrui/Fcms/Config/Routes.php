@@ -29,7 +29,7 @@ $routes->setAutoRoute(true);
 if (IS_ADMIN) {
     $routes->setDefaultNamespace('Phpcmf\\'.(APP_DIR ? 'Controllers' : 'Control').'\\Admin');
 } elseif (IS_MEMBER) {
-    $routes->setDefaultNamespace('Phpcmf\\'.(APP_DIR ? 'Controllers' : 'Control').'\\Member');
+    $routes->setDefaultNamespace('Phpcmf\\'.(APP_DIR == 'member' ? 'Controllers' : 'Controllers\\Member'));
 } elseif (IS_API) {
     $routes->setDefaultNamespace('Phpcmf\\'.(APP_DIR ? 'Controllers' : 'Control').'\\Api');
 }

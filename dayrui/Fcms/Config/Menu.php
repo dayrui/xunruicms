@@ -210,27 +210,6 @@ return [
                         ],
                     ]
                 ],
-                'config-member' => [
-                    'name' => '用户设置',
-                    'icon' => 'fa fa-user',
-                    'link' => [
-                        [
-                            'name' => '用户设置',
-                            'icon' => 'fa fa-cog',
-                            'uri' => 'member_setting/index',
-                        ],
-                        [
-                            'name' => '字段划分',
-                            'icon' => 'fa fa-code',
-                            'uri' => 'member_field/index',
-                        ],
-                        [
-                            'name' => '通知设置',
-                            'icon' => 'fa fa-volume-up',
-                            'uri' => 'member_setting_notice/index',
-                        ],
-                    ]
-                ],
             ],
         ],
 
@@ -261,27 +240,6 @@ return [
                             'name' => '角色账号',
                             'icon' => 'fa fa-user',
                             'uri' => 'root/index',
-                        ],
-                        [
-                            'name' => '审核流程',
-                            'icon' => 'fa fa-sort-numeric-asc',
-                            'uri' => 'verify/index',
-                        ],
-                    ]
-                ],
-                'auth-member' => [
-                    'name' => '用户权限',
-                    'icon' => 'fa fa-user',
-                    'link' => [
-                        [
-                            'name' => '用户菜单',
-                            'icon' => 'fa fa-list-alt',
-                            'uri' => 'member_menu/index',
-                        ],
-                        [
-                            'name' => '用户权限',
-                            'icon' => 'fa fa-user',
-                            'uri' => 'member_auth/index',
                         ],
                     ]
                 ],
@@ -354,51 +312,6 @@ return [
                     ],
                     'displayorder' => 99
                 ],
-            ],
-        ],
-
-        'member' => [
-            'name' => '用户',
-            'icon' => 'fa fa-user',
-            'left' => [
-                'member-list' => [
-                    'name' => '用户管理',
-                    'icon' => 'fa fa-user',
-                    'link' => [
-                        [
-                            'name' => '用户管理',
-                            'icon' => 'fa fa-user',
-                            'uri' => 'member/index',
-                        ],
-                        [
-                            'name' => '用户组管理',
-                            'icon' => 'fa fa-users',
-                            'uri' => 'member_group/index',
-                        ],
-                        [
-                            'name' => '授权账号管理',
-                            'icon' => 'fa fa-qq',
-                            'uri' => 'member_oauth/index',
-                        ],
-                    ]
-                ],
-                'member-verify' => [
-                    'name' => '审核管理',
-                    'icon' => 'fa fa-edit',
-                    'link' => [
-                        [
-                            'name' => '注册审核',
-                            'icon' => 'fa fa-edit',
-                            'uri' => 'member_verify/index',
-                        ],
-                        [
-                            'name' => '申请审核',
-                            'icon' => 'fa fa-users',
-                            'uri' => 'member_apply/index',
-                        ],
-                    ]
-                ],
-
             ],
         ],
 
@@ -562,39 +475,6 @@ return [
         ],
 
 
-        'member-list' => [
-            'name' => '用户管理',
-            'icon' => 'fa fa-user',
-            'link' => [
-                [
-                    'name' => '用户管理',
-                    'icon' => 'fa fa-user',
-                    'uri' => 'member/index',
-                ],
-                [
-                    'name' => '用户组管理',
-                    'icon' => 'fa fa-users',
-                    'uri' => 'member_group/index',
-                ],
-            ]
-        ],
-        'content-verify' => [
-            'name' => '内容审核',
-            'icon' => 'fa fa-edit',
-            'link' => [
-                [
-                    'name' => '注册审核',
-                    'icon' => 'fa fa-edit',
-                    'uri' => 'member_verify/index',
-                ],
-                [
-                    'name' => '申请审核',
-                    'icon' => 'fa fa-users',
-                    'uri' => 'member_apply/index',
-                ],
-            ]
-        ],
-
         'app-plugin' => [
             'name' => '应用插件',
             'icon' => 'fa fa-puzzle-piece',
@@ -614,58 +494,5 @@ return [
 
     ],
 
-    'member' => [
 
-        'user' => [
-            'name' => '账号管理',
-            'icon' => 'fa fa-user',
-            'link' => [
-                [
-                    'name' => '资料修改',
-                    'icon' => 'fa fa-cog',
-                    'uri' => 'account/index',
-                ],
-                [
-                    'name' => '头像设置',
-                    'icon' => 'fa fa-smile-o',
-                    'uri' => 'account/avatar',
-                ],
-                [
-                    'name' => '手机认证',
-                    'icon' => 'fa fa-mobile',
-                    'uri' => 'account/mobile',
-                ],
-                [
-                    'name' => '邮箱认证',
-                    'icon' => 'fa fa-envelope',
-                    'uri' => 'account/email',
-                ],
-                [
-                    'name' => '修改密码',
-                    'icon' => 'fa fa-expeditedssl',
-                    'uri' => 'account/password',
-                ],
-                [
-                    'name' => '账号绑定',
-                    'icon' => 'fa fa-qq',
-                    'uri' => 'account/oauth',
-                ],
-                [
-                    'name' => '登录记录',
-                    'icon' => 'fa fa-calendar',
-                    'uri' => 'account/login',
-                ],
-            ],
-        ],
-
-        'content-module' => [
-            'name' => '内容管理',
-            'icon' => 'fa fa-th-large',
-            'link' => [
-
-            ],
-        ],
-
-
-    ],
 ];

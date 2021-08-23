@@ -25,7 +25,7 @@ class Router {
 
     // 获取用户中心,当前页面的URI
     public function member_uri() {
-        $u = (APP_DIR ? APP_DIR . '/' : '') . $this->class . '/';
+        $u = (APP_DIR && APP_DIR != 'member' ? APP_DIR . '/' : '') . $this->class . '/';
         return [trim($u . $this->method, '/'), trim($u . 'index', '/')];
     }
 

@@ -386,8 +386,8 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
             define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
         } else {
             // 表示会员模块
-            define('APPPATH', COREPATH);
-            define('APP_DIR', ''); // 模块目录名称
+            define('APPPATH', dr_get_app_dir('member'));
+            define('APP_DIR', 'member'); // 模块目录名称
         }
         define('IS_MEMBER', TRUE);
     } elseif (dr_is_app_dir($dir)) {

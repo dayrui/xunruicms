@@ -16,6 +16,6 @@ return [
     'type' => 'app',
     'name' => '我的应用',
     'icon' => 'fa fa-user',
-    'author' => 'PHP7程序设计',
+    'author' => 'PHP程序设计',
 
 ];

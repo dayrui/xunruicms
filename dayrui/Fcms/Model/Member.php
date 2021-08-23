@@ -298,21 +298,24 @@ class Member extends \Phpcmf\Model {
         $data['adminid'] = (int)$data['is_admin'];
         //$data['tableid'] = (int)substr((string)$data['id'], -1, 1);
 
-        // 会员组信息
-        $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
         $data['group'] = $data['groupid'] = $data['levelid'] = $data['authid'] = $data['group_name'] = [];
         $data['group_timeout'] = 0;
-        if ($data2) {
-            foreach ($data2 as $t) {
-                $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
-                $t['group_icon'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['icon'];
-                $t['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['name'];
-                $data['group'][$t['gid']] = $t;
-                $data['groupid'][$t['gid']] = $t['gid'];
-                $data['levelid'][$t['gid']] = $t['lid'];
-                $data['authid'][] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
-                if ($t['timeout']) {
-                    $data['group_timeout'] = $t['gid'];
+
+        // 会员组信息
+        if (dr_is_app('member')) {
+            $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
+            if ($data2) {
+                foreach ($data2 as $t) {
+                    $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
+                    $t['group_icon'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['icon'];
+                    $t['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['name'];
+                    $data['group'][$t['gid']] = $t;
+                    $data['groupid'][$t['gid']] = $t['gid'];
+                    $data['levelid'][$t['gid']] = $t['lid'];
+                    $data['authid'][] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
+                    if ($t['timeout']) {
+                        $data['group_timeout'] = $t['gid'];
+                    }
                 }
             }
         }

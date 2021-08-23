@@ -757,7 +757,7 @@ class Field extends \Phpcmf\Common {
                 // 用户主表
                 $ismain = 1;
                 $this->name = '用户信息字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('member_field/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('member/field/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'member'; // 重要标识: 函数和识别码
                 break;
 

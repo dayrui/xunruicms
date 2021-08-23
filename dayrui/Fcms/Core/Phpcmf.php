@@ -361,29 +361,8 @@ abstract class Common extends \CodeIgniter\Controller {
             }
         }
 
-        if (IS_MEMBER) {
-            // 开启session
-            $this->session();
-            // 登录状态验证
-            if (!$this->member && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api', 'pay'])) {
-                if (APP_DIR && dr_is_module(APP_DIR)
-                    && \Phpcmf\Service::L('Router')->class == 'home' && \Phpcmf\Service::L('Router')->method == 'add') {
-                    // 游客发布权限
-                } else {
-                    // 会话超时，请重新登录
-                    if (IS_API_HTTP) {
-                        $this->_json(0, dr_lang('无法获取到登录用户信息'));
-                    } else {
-                        \Phpcmf\Service::L('Router')->go_member_login(dr_now_url());
-                    }
-                }
-            }
-            // 判断用户的权限
-            if ($this->member && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
-                $this->_member_option(0);
-            }
-
-            \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('Seo')->member(\Phpcmf\Service::L('cache')->get('menu-member')));
+        if (IS_MEMBER && dr_is_app('member')) {
+            \Phpcmf\Service::L('member', 'member')->init($this);
         }
 
         // 初始化处理
@@ -858,77 +837,11 @@ abstract class Common extends \CodeIgniter\Controller {
     }
 
     /**
-     * 后台登录判断
+     * 登录判断
      */
     public function _member_option($call = 1) {
-
-        // 有用户组来获取最终的强制权限
-        $this->member_cache['config']['complete'] = $this->member_cache['config']['mobile'] = $this->member_cache['config']['avatar'] = 0;
-        // 强制完善资料
-        if (!$this->member_cache['config']['complete']) {
-            $this->member_cache['config']['complete'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('complete', $this->member);
-        }
-        // 强制手机认证
-        if (!$this->member_cache['config']['mobile']) {
-            $this->member_cache['config']['mobile'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('mobile', $this->member);
-        }
-        // 强制email认证
-        if (!$this->member_cache['config']['email']) {
-            $this->member_cache['config']['email'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('email', $this->member);
-        }
-        // 强制头像上传
-        if (!$this->member_cache['config']['avatar']) {
-            $this->member_cache['config']['avatar'] = (int)\Phpcmf\Service::M('member_auth')->member_auth('avatar', $this->member);
-        }
-
-        if (!$this->member['is_verify']) {
-            // 审核提醒
-            $this->_msg(0, dr_lang('账号还没有通过审核'), dr_member_url('api/verify'));
-        } elseif ($this->member_cache['config']['complete']
-            && !$this->member['is_complete']
-            &&\Phpcmf\Service::L('Router')->class != 'account') {
-            // 强制完善资料
-            $this->_msg(0, dr_lang('账号必须完善资料'), dr_member_url('account/index'));
-        } elseif ($this->member_cache['config']['mobile']
-            && !$this->member['is_mobile']
-            &&\Phpcmf\Service::L('Router')->class != 'account') {
-            // 强制手机认证
-            $this->_msg(0, dr_lang('账号必须手机认证'), dr_member_url('account/mobile'));
-        } elseif ($this->member_cache['config']['email']
-            && !$this->member['is_email']
-            &&\Phpcmf\Service::L('Router')->class != 'account') {
-            // 强制邮箱认证
-            $this->_msg(0, dr_lang('账号必须邮箱认证'), dr_member_url('account/email'));
-        } elseif ($this->member_cache['config']['avatar']
-            && !$this->member['is_avatar']
-            &&\Phpcmf\Service::L('Router')->class != 'account') {
-            // 强制头像上传
-            $this->_msg(0, dr_lang('账号必须上传头像'), dr_member_url('account/avatar'));
-        }
-
-        // 用户组是否过期
-        if ($this->member['group_timeout']) {
-            if (in_array(\Phpcmf\Service::L('Router')->class, ['pay', 'recharge', 'api', 'apply'])) {
-                return;
-            }
-            if ($this->member_cache['group'][$this->member['group_timeout']]['setting']['outtype'] == 2) {
-                // 跳转指定页面
-                $url = $this->member_cache['group'][$this->member['group_timeout']]['setting']['out_url'];
-                if (strpos(FC_NOW_URL, $url) !== false) {
-                    // 表示本身页面
-                    return;
-                }
-                $this->_msg(0,
-                    dr_lang('您的用户组（%s）已过期', $this->member_cache['group'][$this->member['group_timeout']]['name']),
-                    $url
-                );
-            } elseif ($this->member_cache['group'][$this->member['group_timeout']]['setting']['outtype'] == 1) {
-                // 跳转续费页面
-                $this->_msg(0,
-                    dr_lang('您的用户组（%s）已过期', $this->member_cache['group'][$this->member['group_timeout']]['name']),
-                    dr_member_url('apply/level', ['gid' => $this->member['group_timeout']])
-                );
-            }
+        if (dr_is_app('member')) {
+            \Phpcmf\Service::L('member', 'member')->_member_option($this);
         }
     }
 
