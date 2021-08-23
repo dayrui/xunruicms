@@ -119,6 +119,9 @@ abstract class Common extends \CodeIgniter\Controller {
             date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
         }
 
+        // 是否使用用户系统
+        define('IS_USE_MEMBER', dr_is_app('member'));
+
         // 全局URL
         define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
@@ -361,7 +364,7 @@ abstract class Common extends \CodeIgniter\Controller {
             }
         }
 
-        if (IS_MEMBER && dr_is_app('member')) {
+        if (IS_MEMBER && IS_USE_MEMBER) {
             \Phpcmf\Service::L('member', 'member')->init($this);
         }
 
@@ -840,7 +843,7 @@ abstract class Common extends \CodeIgniter\Controller {
      * 登录判断
      */
     public function _member_option($call = 1) {
-        if (dr_is_app('member')) {
+        if (IS_USE_MEMBER) {
             \Phpcmf\Service::L('member', 'member')->_member_option($this);
         }
     }

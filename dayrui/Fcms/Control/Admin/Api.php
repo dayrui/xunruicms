@@ -272,7 +272,7 @@ class Api extends \Phpcmf\Common {
             'color' => $color,
             'target' => $target,
             'oauth_data' => $oauth,
-            'oauth_list' => \Phpcmf\Service::M('member')->oauth($this->uid),
+            'oauth_list' => IS_USE_MEMBER ? \Phpcmf\Service::M('member')->oauth($this->uid) : [],
             'select_color' => $select,
             'is_post_user' => \Phpcmf\Service::M('auth')->is_post_user(),
             'select_target' => $select2,
@@ -527,13 +527,17 @@ class Api extends \Phpcmf\Common {
      */
     public function alogin() {
 
+        if (!IS_USE_MEMBER) {
+            $this->_admin_msg(0, dr_lang('需要安裝官方版【用户系统】插件'));
+        }
+
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
             $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
         // 当不具备用户操作权限时，只能授权登录当前账号
-        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/index') && $uid != $this->uid) {
+        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/home/index') && $uid != $this->uid) {
             $this->_admin_msg(0, dr_lang('无权限操作其他账号'));
         }
 
@@ -683,7 +687,7 @@ class Api extends \Phpcmf\Common {
         }
 
         // 当不具备用户操作权限时，只能授权登录当前账号
-        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/index') && $uid != $this->uid) {
+        if (!\Phpcmf\Service::M('auth')->_is_admin_auth('member/home/index') && $uid != $this->uid) {
             $this->_json(0, dr_lang('无权限操作其他账号'));
         }
 

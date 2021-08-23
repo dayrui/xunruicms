@@ -82,7 +82,7 @@
                     </a>
                     {/if}
                     <ul class="dropdown-menu dropdown-menu-default">
-                        <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
+                        {if IS_USE_MEMBER}<li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>{/if}
                         <li><a href="{dr_url('api/my')}" target="right"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
                         <li><a href="{dr_url('api/admin_min')}"><i class="fa fa-retweet"></i> {dr_lang('简化模式')}</a></li>
                         <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>

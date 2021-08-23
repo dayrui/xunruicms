@@ -177,7 +177,7 @@ class Menu extends \Phpcmf\Model {
         }
 
         // 内容模块入库用户菜单
-        if ($config['system'] == 1 && dr_is_app('member')) {
+        if ($config['system'] == 1 && IS_USE_MEMBER) {
             $left = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();
             if ($left) {
                 // 查询模块菜单
@@ -319,7 +319,7 @@ class Menu extends \Phpcmf\Model {
             }
         }
 
-        if ($menu['member'] && dr_is_app('member')) {
+        if ($menu['member'] && IS_USE_MEMBER) {
             // 用户菜单
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
@@ -389,7 +389,7 @@ class Menu extends \Phpcmf\Model {
             }
         }
 
-        if ($menu['member'] && dr_is_app('member')) {
+        if ($menu['member'] && IS_USE_MEMBER) {
             // 用户菜单
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
@@ -431,11 +431,11 @@ class Menu extends \Phpcmf\Model {
 
 
         $this->db->table('admin_menu')->where('mark', 'app-'.$dir)->delete();
-        dr_is_app('member') && $this->db->table('member_menu')->where('mark', 'app-'.$dir)->delete();
+        IS_USE_MEMBER && $this->db->table('member_menu')->where('mark', 'app-'.$dir)->delete();
         $this->db->table('admin_min_menu')->where('mark', 'app-'.$dir)->delete();
 
         $this->db->table('admin_menu')->like('mark', 'app-'.$dir.'%')->delete();
-        dr_is_app('member') && $this->db->table('member_menu')->like('mark', 'app-'.$dir.'%')->delete();
+        IS_USE_MEMBER && $this->db->table('member_menu')->like('mark', 'app-'.$dir.'%')->delete();
         $this->db->table('admin_min_menu')->like('mark', 'app-'.$dir.'%')->delete();
     }
 
@@ -511,7 +511,7 @@ class Menu extends \Phpcmf\Model {
                 }
             }
 
-        } elseif (dr_is_app('member') && $table == 'member') {
+        } elseif (IS_USE_MEMBER && $table == 'member') {
             // 清空表
             $this->db->table('member_menu')->truncate();
             $this->db->table('member_menu')->emptyTable();
@@ -723,7 +723,7 @@ class Menu extends \Phpcmf\Model {
             $menu['admin'] = $list;
         }
         // member 菜单
-        if (dr_is_app('member')) {
+        if (IS_USE_MEMBER) {
             $data = $this->db->table('member_menu')->where('hidden', 0)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
             if ($data) {
                 $list = [

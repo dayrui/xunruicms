@@ -44,7 +44,8 @@
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
+                            {if IS_USE_MEMBER}
+                            <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>{/if}
                             <li><a href="{dr_url('api/my')}" target="right"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
                             {if !$is_mode}
                             <li><a href="{dr_url('api/admin_all')}"><i class="fa fa-retweet"></i> {dr_lang('完整模式')}</a></li>
@@ -61,9 +62,7 @@
                             <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                             {if $admin.adminid==1}
                             <li class="divider"> </li>
-                            <li><a href="{dr_url('error_php/index')}" target="right"><i class="fa fa-bug"></i> {dr_lang('PHP错误')}</a></li>
-                            <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('系统错误')}</a></li>
-                            <li><a href="{dr_url('content/index', ['p'=>1, 'page'=>1])}" target="right"><i class="fa fa-code"></i> {dr_lang('执行SQL')}</a></li>
+                            <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('错误日志')}</a></li>
                             {/if}
                             {if $is_search_help}
                             <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>

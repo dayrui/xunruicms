@@ -34,7 +34,7 @@
                     <th>{dr_lang('模块')}</th>
                     <th>{dr_lang('总数据')}</th>
                     <th>{dr_lang('今日')}</th>
-                    {if dr_is_app('member')}<th>{dr_lang('待审核')}</th>{/if}
+                    {if IS_USE_MEMBER}<th>{dr_lang('待审核')}</th>{/if}
                     <th>{dr_lang('待发布')}</th>
                     <th>{dr_lang('回收站')}</th>
                     <th>{dr_lang('操作')}</th>
@@ -46,7 +46,7 @@
                     <td>{$t.name}</td>
                     <td><a class="drlabel drlabel-success" href="{$t.all}" id="{$dir}_all"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td><a class="drlabel drlabel-success" href="{$t.today}" id="{$dir}_today"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
-                    {if dr_is_app('member')}<td><a class="drlabel drlabel-important" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>{/if}
+                    {if IS_USE_MEMBER}<td><a class="drlabel drlabel-important" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>{/if}
                     <td><a class="drlabel drlabel-important" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td><a class="drlabel drlabel-important" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td>
