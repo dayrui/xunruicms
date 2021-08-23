@@ -1228,7 +1228,7 @@ function dr_install_module(url) {
 
 
 // 推送模块数据
-function dr_module_send(title, url) {
+function dr_module_send(title, url, nogo = 0) {
     var width = '50%';
     var height = '60%';
     if (is_mobile_cms == 1) {
@@ -1255,7 +1255,11 @@ function dr_module_send(title, url) {
                     layer.close(loading);
                     if (json.code == 1) {
                         layer.close(index);
-                        setTimeout("window.location.reload(true)", 2000)
+                        if (nogo) {
+
+                        } else {
+                            setTimeout("window.location.reload(true)", 2000)
+                        }
                     } else {
                         $(body).find('#dr_row_'+json.data.field).addClass('has-error');
                     }

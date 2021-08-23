@@ -1713,31 +1713,39 @@ class Member extends \Phpcmf\Model {
     // 用户系统缓存
     public function cache($site = SITE_ID) {
 
-        $cache = [];
-        $is_member = dr_is_app('member');
+        $cache = [
+            'field' => [],
+            'authid' => [ 0 ],
+            'group' => [],
+            'config' => [],
+            'pay' => [],
+        ];
 
-        if ($is_member) {
-            // 审核流程
-            $data = $this->table('admin_verify')->getAll();
-            $verify = [];
-            if ($data) {
-                foreach ($data as $t) {
-                    $t['value'] = dr_string2array($t['verify']);
-                    unset($t['verify']);
-                    $verify[$t['id']] = $t;
-                }
-            }
-            \Phpcmf\Service::L('cache')->set_file('verify', $verify);
-
-            // 获取会员全部配置信息
-            $result = $this->db->table('member_setting')->get()->getResultArray();
-            if ($result) {
-                foreach ($result as $t) {
-                    $cache[$t['name']] = dr_string2array($t['value']);
-                }
-            }
+        if (!dr_is_app('member')) {
+            \Phpcmf\Service::L('cache')->set_file('member', $cache);
+            return $cache;
         }
 
+        // 审核流程
+        $data = $this->table('admin_verify')->getAll();
+        $verify = [];
+        if ($data) {
+            foreach ($data as $t) {
+                $t['value'] = dr_string2array($t['verify']);
+                unset($t['verify']);
+                $verify[$t['id']] = $t;
+            }
+        }
+        \Phpcmf\Service::L('cache')->set_file('verify', $verify);
+
+        // 获取会员全部配置信息
+        $cache = [];
+        $result = $this->db->table('member_setting')->get()->getResultArray();
+        if ($result) {
+            foreach ($result as $t) {
+                $cache[$t['name']] = dr_string2array($t['value']);
+            }
+        }
 
         if (!isset($cache['list_field']) || !$cache['list_field']) {
             $cache['list_field'] = array (
@@ -1831,35 +1839,30 @@ class Member extends \Phpcmf\Model {
         // 注册配置
         $cache['register']['notallow'] = explode(',', trim($cache['register']['notallow']));
 
-        // 用户组权限id
-        $cache['authid'] = [ 0 ];
-
         // 用户组
-        $cache['register']['group'] = $cache['group'] = [];
-        if ($is_member) {
-            $group = $this->db->table('member_group')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
-            if ($group) {
-                foreach ($group as $t) {
-                    $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
-                    if ($level) {
-                        foreach ($level as $lv) {
-                            $lv['icon'] = dr_get_file($lv['stars']);
-                            $lv['setting'] = dr_string2array($lv['setting']);
-                            $cache['authid'][] = $t['id'].'-'.$lv['id'];
-                            $t['level'][$lv['id']] = $lv;
-                        }
-                    } else {
-                        $cache['authid'][] = $t['id'];
+        $cache['register']['group'] = [];
+        $group = $this->db->table('member_group')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
+        if ($group) {
+            foreach ($group as $t) {
+                $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
+                if ($level) {
+                    foreach ($level as $lv) {
+                        $lv['icon'] = dr_get_file($lv['stars']);
+                        $lv['setting'] = dr_string2array($lv['setting']);
+                        $cache['authid'][] = $t['id'].'-'.$lv['id'];
+                        $t['level'][$lv['id']] = $lv;
                     }
-                    $t['setting'] = dr_string2array($t['setting']);
-                    // 用户组的可用字段
-                    $t['field'] = $group_field[$t['id']];
-                    // 当前用户组开启了注册时, 查询它可注册的字段
-                    $t['register'] && $t['field'] && $t['register_field'] = $register_field ? dr_array_intersect($t['field'], $register_field) : [];
-                    // 是否允许注册
-                    $t['register'] && $cache['register']['group'][] = $t['id'];
-                    $cache['group'][$t['id']] = $t;
+                } else {
+                    $cache['authid'][] = $t['id'];
                 }
+                $t['setting'] = dr_string2array($t['setting']);
+                // 用户组的可用字段
+                $t['field'] = $group_field[$t['id']];
+                // 当前用户组开启了注册时, 查询它可注册的字段
+                $t['register'] && $t['field'] && $t['register_field'] = $register_field ? dr_array_intersect($t['field'], $register_field) : [];
+                // 是否允许注册
+                $t['register'] && $cache['register']['group'][] = $t['id'];
+                $cache['group'][$t['id']] = $t;
             }
         }
 

@@ -48,27 +48,11 @@
 <body class="page-container-bg-solid">
 <div class="page-wrapper">
 
-    <div class="page-wrapper-row" style="height: 180px;">
+    <div class="page-wrapper-row">
         <div class="page-wrapper-top">
             <div class="page-header">
-                <div class="page-header-top-index">
-                    <div class="container">
-                        <div class="page-top-index-left">
-                            <a href="{SITE_URL}">网站首页</a> <span>|</span>
-                            <a href="{SITE_MURL}">手机网站</a> <span>|</span>
-                            <a href="{MEMBER_URL}">用户中心</a>
-                        </div>
-                        <div class="page-top-index-right">
-                            {if dr_is_module('store')}
-                            <a href="{WEB_DIR}index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
-                            <a href="{WEB_DIR}index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
-                            {/if}
-                            <a href="{MEMBER_URL}">用户中心</a>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="page-header-top">
+                <div class="page-header-top margin-top-40">
                     <div class="container">
 
                         <div class="page-logo">
@@ -81,7 +65,7 @@
                             {MODULE_NAME}
                             {/if}
                         </div>
-                        <div class="page-header-search">
+                        <div class="page-header-search margin-top-10">
                             <form class="search-form" action="{WEB_DIR}index.php" method="get">
                                 <input type="hidden" name="s" value="api">
                                 <input type="hidden" name="c" value="api">
@@ -118,14 +102,9 @@
                                 </script>
                             </form>
                         </div>
-                        <div class="page-header-member" id="dr_member_info">
-
-                        </div>
-                        <!-- 动态调用member.html模板的会员登录信息 -->
-                        {dr_ajax_template('dr_member_info', 'member.html')}
                     </div>
                 </div>
-                <div class="page-header-menu">
+                <div class="page-header-menu margin-top-10">
                     <div class="container">
                         <div class="hor-menu">
                             <ul class="nav navbar-nav">

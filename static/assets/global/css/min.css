@@ -794,8 +794,9 @@ Page sidebar
 .page-sidebar .page-sidebar-menu .sub-menu li,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li {
     background: none;
-    margin: 0px;
+    margin: 10px 0;
     padding: 0px;
+    height: 29px;
     margin-top: 1px !important;
     /* 2nd level sub menu */ }
 .page-sidebar .page-sidebar-menu .sub-menu li > a,

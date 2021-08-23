@@ -30,27 +30,11 @@
 <body class="page-container-bg-solid">
 <div class="page-wrapper">
 
-    <div class="page-wrapper-row" style="height: 180px;">
+    <div class="page-wrapper-row">
         <div class="page-wrapper-top">
             <div class="page-header">
-                <div class="page-header-top-index">
-                    <div class="container">
-                        <div class="page-top-index-left">
-                            <a href="{SITE_URL}">网站首页</a> <span>|</span>
-                            <a href="javascript:dr_pc_or_mobile('{$my_web_url}');">手机网站</a> <span>|</span>
-                            <a href="{MEMBER_URL}">用户中心</a>
-                        </div>
-                        <div class="page-top-index-right">
-                            {if dr_is_module('store')}
-                            <a href="/index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
-                            <a href="/index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
-                            {/if}
-                            <a href="{MEMBER_URL}">用户中心</a>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="page-header-top">
+                <div class="page-header-top margin-top-40">
                     <div class="container">
 
                         <div class="page-logo">
@@ -63,8 +47,8 @@
                             {MODULE_NAME}
                             {/if}
                         </div>
-                        <div class="page-header-search">
-                            <form class="search-form" action="/index.php" method="get">
+                        <div class="page-header-search margin-top-10">
+                            <form class="search-form" action="{WEB_DIR}index.php" method="get">
                                 <input type="hidden" name="s" value="api">
                                 <input type="hidden" name="c" value="api">
                                 <input type="hidden" name="m" value="search">
@@ -100,14 +84,9 @@
                                 </script>
                             </form>
                         </div>
-                        <div class="page-header-member" id="dr_member_info">
-
-                        </div>
-                        <!-- 动态调用member.html模板的会员登录信息 -->
-                        {dr_ajax_template('dr_member_info', 'member.html')}
                     </div>
                 </div>
-                <div class="page-header-menu">
+                <div class="page-header-menu margin-top-10">
                     <div class="container">
                         <div class="hor-menu">
                             <ul class="nav navbar-nav">
@@ -149,36 +128,7 @@
 
 
 
-                                <!--调用全部独立模块-->
-                                {cache name=module-content return=m}
-                                {if !$m.share}
-                                <li class="menu-dropdown classic-menu-dropdown {if MOD_DIR==$m.dirname}active{/if}">
-                                    <a href="{$m.url}">{$m.name}</a>
-                                    <ul class="dropdown-menu pull-left">
-                                        <!--第一层：调用独立模块下的顶级栏目-->
-                                        {category module=$m.dirname pid=0 return=t2}
-                                        <li class="{if $t2.child} dropdown-submenu{/if} {if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t2.catids)} active{/if}">
-                                            <a href="{$t2.url}" class="nav-link nav-toggle " title="{$t2.name}">
-                                                {$t2.name}
-                                            </a>
-                                            {if $t2.child}
-                                            <ul class="dropdown-menu pull-left">
-                                                <!--第二层：调用第二级栏目-->
-                                                {category module=$m.dirname pid=$t2.id return=t3}
-                                                <li class="{if MOD_DIR==$m.dirname && $catid && dr_in_array($catid, $t3.catids)} active{/if}">
-                                                    <a href="{$t3.url}" title="{$t3.name}">
-                                                        {$t3.name}
-                                                    </a>
-                                                </li>
-                                                {/category}
-                                            </ul>
-                                            {/if}
-                                        </li>
-                                        {/category}
-                                    </ul>
-                                </li>
-                                {/if}
-                                {/cache}
+
 
 
                             </ul>

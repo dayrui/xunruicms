@@ -11,17 +11,6 @@
             </h4>
             <p class="search-desc">{dr_strcut($t.description, 80)}</p>
             <div class="search-post-foot">
-                <!--关键词搜索列表-->
-                {php $kws=dr_get_content_kws($t.keywords);}
-                {if $kws}
-                <ul class="search-post-tags">
-                    {loop $kws $name $url}
-                    <li class="uppercase">
-                        <a href="{$url}" target="_blank">{$name}</a>
-                    </li>
-                    {/loop}
-                </ul>
-                {/if}
                 <div class="search-post-meta">
                     <i class="fa fa-calendar font-blue"></i>
                     <a href="javascript:;">{$t.updatetime}</a>
