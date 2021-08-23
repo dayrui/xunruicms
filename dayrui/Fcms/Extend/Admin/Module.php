@@ -219,6 +219,7 @@ class Module extends \Phpcmf\Table {
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
             if ($rt['code']) {
                 // 写入日志
+                \Phpcmf\Service::M('cache')->update_data_cache();
                 \Phpcmf\Service::L('input')->system_log($this->name.'：放入回收站id ('.implode(', ', $ids).')');
                 $this->_json(1, dr_lang('所选内容已被放入回收站中'));
             } else {
