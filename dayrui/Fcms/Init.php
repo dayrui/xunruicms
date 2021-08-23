@@ -384,7 +384,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     if (!IS_ADMIN && $dir == 'Member') {
         // 用户系统
         if (!IS_USE_MEMBER) {
-            dr_show_error(CI_DEBUG ? '应用程序('.IS_USE_MEMBER.')不存在' : '应用程序(member)不存在');
+            dr_show_error(CI_DEBUG ? '用户系统插件未安装' : '无权限使用用户系统');
         }
         if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
             // 模块应用
