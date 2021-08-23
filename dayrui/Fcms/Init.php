@@ -374,19 +374,25 @@ if (!IS_API && $_GET['s'] != 'api' && is_file(WRITEPATH.'config/domain_app.php')
     unset($domain);
 }
 
+// 是否使用用户系统
+define('IS_USE_MEMBER',  is_file(dr_get_app_dir('member').'/install.lock') ? dr_get_app_dir('member') : '');
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
     $dir = ucfirst($_GET['s']);
     if (!IS_ADMIN && $dir == 'Member') {
-        // 会员
+        // 用户系统
+        if (!IS_USE_MEMBER) {
+            dr_show_error(CI_DEBUG ? '应用程序('.IS_USE_MEMBER.')不存在' : '应用程序(member)不存在');
+        }
         if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
             // 模块应用
             define('APPPATH', dr_get_app_dir($_GET['app']));
             define('APP_DIR', strtolower($_GET['app'])); // 应用目录名称
         } else {
             // 表示会员模块
-            define('APPPATH', dr_get_app_dir('member'));
+            define('APPPATH', IS_USE_MEMBER);
             define('APP_DIR', 'member'); // 模块目录名称
         }
         define('IS_MEMBER', TRUE);
@@ -405,10 +411,6 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     !defined('APP_DIR') && define('APP_DIR', '');
     define('IS_MEMBER', FALSE);
 }
-
-
-// 是否使用用户系统
-define('IS_USE_MEMBER',  is_file(dr_get_app_dir($dir).'/install.lock') ? dr_get_app_dir($dir) : '');
 
 
 /******* CodeIgniter Bootstrap *******/
