@@ -22,7 +22,6 @@ class Login extends \Phpcmf\Common
             // 创建后台默认菜单
             \Phpcmf\Service::M('Menu')->init('admin');
             \Phpcmf\Service::M('Menu')->init('admin_min');
-            \Phpcmf\Service::M('Menu')->init('member');
             // 完成之后更新缓存
             \Phpcmf\Service::M('cache')->update_cache();
             unlink(WRITEPATH.'install.test');
