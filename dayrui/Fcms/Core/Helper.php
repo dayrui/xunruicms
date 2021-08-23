@@ -3607,7 +3607,7 @@ function dr_get_form_post_value($table) {
     $rt['form_table'] = $form['table'];
 
     // 是否有验证码
-    $rt['is_post_code'] = \Phpcmf\Service::M('member_auth')->form_auth($form['id'], 'code', \Phpcmf\Service::C()->member);
+    $rt['is_post_code'] = IS_USE_MEMBER ? \Phpcmf\Service::L('member_auth', 'member')->form_auth($form['id'], 'code', \Phpcmf\Service::C()->member) : 1;
 
     // 返回url
     $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());
@@ -3667,7 +3667,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
     $rt['form_table'] = $form['table'];
 
     // 是否有验证码
-    $rt['is_post_code'] = \Phpcmf\Service::M('member_auth')->mform_auth($mid, $form['id'], 'code', \Phpcmf\Service::C()->member);
+    $rt['is_post_code'] = IS_USE_MEMBER ? \Phpcmf\Service::L('member_auth', 'member')->mform_auth($mid, $form['id'], 'code', \Phpcmf\Service::C()->member) : 1;
 
     // 返回url
     $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());

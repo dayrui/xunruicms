@@ -190,7 +190,7 @@ class Member extends \Phpcmf\Model {
      */
     public function init_member($member) {
 
-        if (!$member) {
+        if (!$member || !IS_USE_MEMBER) {
             return;
         }
 
@@ -199,7 +199,7 @@ class Member extends \Phpcmf\Model {
 
         // 每日登录积分处理
         if (dr_is_app('explog')) {
-            $value = \Phpcmf\Service::M('member_auth')->member_auth('login_exp', $member);
+            $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('login_exp', $member);
             if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_experience_'.$member['id'])) {
                 $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_exp_'.date('Ymd', SYS_TIME), 1);
                 \Phpcmf\Service::L('input')->set_cookie('login_experience_'.$member['id'], 1, $time - SYS_TIME);
@@ -208,7 +208,7 @@ class Member extends \Phpcmf\Model {
 
         // 每日登录金币处理
         if (dr_is_app('scorelog')) {
-            $value = \Phpcmf\Service::M('member_auth')->member_auth('login_score', $member);
+            $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('login_score', $member);
             if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_score_'.$member['id'])) {
                 $this->add_score($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
                 \Phpcmf\Service::L('input')->set_cookie('login_score_'.$member['id'], 1, $time - SYS_TIME);
@@ -1671,17 +1671,17 @@ class Member extends \Phpcmf\Model {
     // 头像认证执行
     public function do_avatar($member) {
 
-        if ($member['is_avatar']) {
+        if ($member['is_avatar'] || !IS_USE_MEMBER) {
             return;
         }
 
         $this->db->table('member_data')->where('id', $member['id'])->update(['is_avatar' => 1]);
         // avatar_score
-        $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_score', $member);
+        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_score', $member);
         if ($value) {
             \Phpcmf\Service::M('member')->add_experience($member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
         }
-        $value = \Phpcmf\Service::M('member_auth')->member_auth('avatar_exp', $member);
+        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_exp', $member);
         if ($value) {
             $this->add_score($member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
         }

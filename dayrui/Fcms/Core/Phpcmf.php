@@ -373,7 +373,8 @@ abstract class Common extends \CodeIgniter\Controller {
 
         if (!IS_ADMIN && !IS_API  && !in_array(\Phpcmf\Service::L('Router')->class, ['register', 'login', 'api'])) {
             // 判断网站访问权限
-            if (!defined('SC_HTML_FILE') && !IS_MEMBER && \Phpcmf\Service::M('member_auth')->home_auth('show', $this->member)) {
+            if (!defined('SC_HTML_FILE') && !IS_MEMBER && IS_USE_MEMBER
+                && \Phpcmf\Service::L('member_auth', 'member')->home_auth('show', $this->member)) {
                 $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
             }
             // 账户被锁定
@@ -588,8 +589,8 @@ abstract class Common extends \CodeIgniter\Controller {
         }
 
         // 无权限访问模块
-        if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER
-            && \Phpcmf\Service::M('member_auth')->module_auth($dirname, 'show', $this->member)) {
+        if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER && IS_USE_MEMBER
+            && \Phpcmf\Service::L('member_auth', 'member')->module_auth($dirname, 'show', $this->member)) {
             if ($rt) {
                 CI_DEBUG && log_message('debug', $dirname.' - '.dr_lang('您的用户组无权限访问模块'));
                 return 0;

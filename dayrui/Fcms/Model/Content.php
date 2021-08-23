@@ -359,12 +359,12 @@ class Content extends \Phpcmf\Model {
         // 表示新发布
         if (!$id) {
             $member = dr_member_info($data[1]['uid']);
-            if ($member) {
+            if ($member && IS_USE_MEMBER) {
                 // 增减金币
-                $score = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', $member);
+                $score = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', $member);
                 $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
                 // 增减人民币
-                $money = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'money', $member);
+                $money = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'money', $member);
                 if ($money) {
                     $rr = \Phpcmf\Service::M('member')->add_money($data[1]['uid'], $money);
                     if ($rr['code']) {
@@ -389,7 +389,7 @@ class Content extends \Phpcmf\Model {
                     }
                 }
                 // 增减经验
-                $exp = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', $member);
+                $exp = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', $member);
                 $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
             }
         } else {
@@ -1449,11 +1449,11 @@ class Content extends \Phpcmf\Model {
     protected function _get_verify_roleid($catid, $status, $member) {
 
         $verify = \Phpcmf\Service::C()->get_cache('verify');
-        if (!$verify) {
+        if (!$verify || !IS_USE_MEMBER) {
             return ['to_uid' => 0, 'to_rid' => 0, 'verify_id' => 0];
         }
 
-        $auth = \Phpcmf\Service::M('member_auth')->category_auth(\Phpcmf\Service::C()->module, $catid, 'verify', $member);
+        $auth = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $catid, 'verify', $member);
         if ($auth) {
             $v = $verify[$auth];
             $status = max(1, $status);
