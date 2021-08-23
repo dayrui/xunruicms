@@ -100,6 +100,10 @@ class Member extends \Phpcmf\Model {
      */
     protected function _login_log($data, $type = '') {
 
+        if (!IS_USE_MEMBER) {
+            return;
+        }
+
         $ip = \Phpcmf\Service::L('input')->ip_address();
         if (!$ip || !$data['id']) {
             return;
@@ -1191,7 +1195,7 @@ class Member extends \Phpcmf\Model {
         }
 
         // 归属用户组
-        $this->insert_group($uid, $groupid, 0);
+        IS_USE_MEMBER && $this->insert_group($uid, $groupid, 0);
 
         // 组合字段信息
         $data = array_merge($member, $data);
