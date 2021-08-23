@@ -59,6 +59,8 @@ class File extends \Phpcmf\Common
             return;
         } elseif (IS_USE_MEMBER && !\Phpcmf\Service::L('member_auth', 'member')->member_auth('uploadfile', $this->member)) {
             $error = '您的用户组不允许上传文件';
+        } elseif (!IS_USE_MEMBER && (!defined('SYS_ATTACHMENT_GUEST') || !SYS_ATTACHMENT_GUEST)) {
+            return dr_return_data(0, dr_lang('游客不允许上传文件'));
         } elseif (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload($this->uid)) {
             $error = '用户存储空间已满';
         }

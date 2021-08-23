@@ -80,6 +80,16 @@
                             </div>
                         </div>
 
+                        {if !IS_USE_MEMBER}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('游客上传')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_ATTACHMENT_GUEST]" value="1" {if $data['SYS_ATTACHMENT_GUEST']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启游客上传附件的权限')}</span>
+                            </div>
+                        </div>
+                        {/if}
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('上传安全策略')}</label>
                             <div class="col-md-9">

@@ -28,6 +28,8 @@ class Attachment extends \Phpcmf\Model {
             return dr_return_data(1); // 管理员不验证
         } elseif (IS_USE_MEMBER && !\Phpcmf\Service::L('member_auth', 'member')->member_auth('uploadfile', $this->member)) {
             return dr_return_data(0, dr_lang('您的用户组不允许上传文件'));
+        } elseif (!IS_USE_MEMBER && (!defined('SYS_ATTACHMENT_GUEST') || !SYS_ATTACHMENT_GUEST)) {
+            return dr_return_data(0, dr_lang('游客不允许上传文件'));
         }
         
         return dr_return_data(1);
