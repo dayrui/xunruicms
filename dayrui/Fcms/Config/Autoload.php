@@ -34,13 +34,8 @@ class Autoload extends AutoloadConfig
             'Phpcmf\Field'                  => CMSPATH.'Field',
             'Phpcmf\ThirdParty'             => FCPATH.'ThirdParty',
             'Phpcmf\Admin'                  => CMSPATH.'Extend/Admin',
-            'Phpcmf\Home'                   => CMSPATH.'Extend/Home',
-            'Phpcmf\Member'                 => CMSPATH.'Extend/Member',
 
             'My\Field'                      => MYPATH.'Field',
-            'My\Admin'                      => MYPATH.'Extend/Admin',
-            'My\Home'                       => MYPATH.'Extend/Home',
-            'My\Member'                     => MYPATH.'Extend/Member',
             'My\Library'                	=> MYPATH.'Library',
             'My\Model'                	    => MYPATH.'Model',
 
@@ -53,8 +48,12 @@ class Autoload extends AutoloadConfig
 		    'Phpcmf\Model'                => CMSPATH.'Core/Model.php',
 		    'Phpcmf\View'                 => CMSPATH.'Core/View.php',
             'Phpcmf\App\Common'           => CMSPATH.'Core/Common.php',
-
+            'Phpcmf\Home\Module'          => CMSPATH.'Extend/Home/Module.php',
         ];
+
+		if (IS_USE_MEMBER) {
+		    $classmap['Phpcmf\Member\Module'] = IS_USE_MEMBER.'Extends/Module.php';
+        }
 
 		$this->psr4 = array_merge($this->psr4, $psr4);
 		$this->classmap = array_merge($this->classmap, $classmap);

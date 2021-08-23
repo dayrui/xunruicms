@@ -119,9 +119,6 @@ abstract class Common extends \CodeIgniter\Controller {
             date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
         }
 
-        // 是否使用用户系统
-        define('IS_USE_MEMBER', dr_is_app('member'));
-
         // 全局URL
         define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL

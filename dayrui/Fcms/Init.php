@@ -407,6 +407,10 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
 }
 
 
+// 是否使用用户系统
+define('IS_USE_MEMBER',  is_file(dr_get_app_dir($dir).'/install.lock') ? dr_get_app_dir($dir) : '');
+
+
 /******* CodeIgniter Bootstrap *******/
 
 // 定义常量
