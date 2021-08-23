@@ -99,7 +99,7 @@ class Cache extends \Phpcmf\Model
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
 
         // 全局缓存
-        foreach (['auth', 'email', 'urlrule', 'member', 'verify', 'attachment', 'system'] as $m) {
+        foreach (['auth', 'email', 'urlrule', 'member', 'attachment', 'system'] as $m) {
             \Phpcmf\Service::M($m)->cache();
         }
 
