@@ -1210,4 +1210,92 @@ class Api extends \Phpcmf\Common {
             dr_url('api/'.\Phpcmf\Service::L('Router')->method, ['mid' => $mid,'total' => $total, 'page' => $page + 1])
         );
     }
+
+    // 头像设置空
+    public function avatar_del() {
+
+        $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        $member = dr_member_info($uid);
+        if (!$member) {
+            $this->_json(0, dr_lang('该用户不存在'));
+        }
+
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
+        list($cache_path, $cache_url) = dr_avatar_path();
+        if (is_file($cache_path.$uid.'.jpg')) {
+            unlink($cache_path.$uid.'.jpg');
+            if (is_file($cache_path.$uid.'.jpg')) {
+                $this->_json(0, dr_lang('文件删除失败，请检查头像目录权限'));
+            }
+        }
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
+    // 头像设置
+    public function avatar_edit() {
+
+        $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        $member = dr_member_info($uid);
+        if (!$member) {
+            $this->_json(0, dr_lang('该用户不存在'));
+        }
+
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
+        if (IS_POST) {
+            $content = $_POST['file'];
+            // 普通文件上传
+            if (isset($_FILES['file'])) {
+                if (isset($_FILES["file"]["tmp_name"]) && $_FILES["file"]["tmp_name"]) {
+                    $content = \Phpcmf\Service::L('file')->base64_image($_FILES["file"]["tmp_name"]);
+                }
+            }
+            list($cache_path, $cache_url) = dr_avatar_path();
+            if (preg_match('/^(data:\s*image\/(\w+);base64,)/i', $content, $result)) {
+                $ext = strtolower($result[2]);
+                if (!in_array($ext, ['png', 'jpg', 'jpeg'])) {
+                    $this->_json(0, dr_lang('图片格式不正确'));
+                } elseif (!is_dir($cache_path)) {
+                    $this->_json(0, dr_lang('头像存储目录不存在'));
+                }
+                $content = base64_decode(str_replace($result[1], '', $content));
+                if (strlen($content) > 30000000) {
+                    $this->_json(0, dr_lang('图片太大了'));
+                }
+                $file = $cache_path.$uid.'.jpg';
+                $temp = dr_upload_temp_path().'member.'.$uid.'.jpg';
+                $size = file_put_contents($temp, $content);
+                if (!$size) {
+                    $this->_json(0, dr_lang('头像存储失败'));
+                } elseif (!is_file($temp)) {
+                    $this->_json(0, dr_lang('头像存储失败'));
+                } elseif (!getimagesize($temp)) {
+                    unlink($file);
+                    $this->_json(0, '文件不是规范的图片');
+                }
+                // 上传图片到服务器
+                copy($temp, $file);
+                if (!is_file($file)) {
+                    $this->_json(0, dr_lang('头像存储失败'));
+                }
+                \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
+                \Phpcmf\Service::M('member')->clear_cache($uid);
+                $this->_json(1, dr_lang('上传成功'));
+            } else {
+                $this->_json(0, dr_lang('头像内容不规范'));
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(['file' => '']),
+            'member' => $member,
+        ]);
+        \Phpcmf\Service::V()->display('api_avatar.html');exit;
+    }
 }
