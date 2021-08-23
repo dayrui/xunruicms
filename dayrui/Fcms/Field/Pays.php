@@ -276,6 +276,44 @@ class Pays extends \Phpcmf\Library\A_Field  {
     }
 
     /**
+     * 验证必填字段值
+     *
+     * @param	string	$field	字段类型
+     * @param	string	$value	字段值
+     * @return
+     */
+    public function check_required($field, $value) {
+
+        if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
+            $is_field_pay = 1;
+        } else {
+            $is_field_pay = (int)$_POST['is_field_pay'];
+        }
+
+        if ($is_field_pay) {
+            if (isset($field['setting']['option']['is_sku']) && $field['setting']['option']['is_sku']) {
+                $sku = $field['setting']['option']['sku'];
+                $sku['value'] = $_POST['data'][$field['fieldname'].'_sku']['value'];
+            } else {
+                $sku = $_POST['data'][$field['fieldname'].'_sku'];
+            }
+            if ($sku['value']) {
+                foreach ($sku['value'] as $v) {
+                    if (strlen($v['price']) == 0) {
+                        return dr_lang('%s不能为空', $field['name']);
+                    }
+                }
+            }
+        } else {
+            if (strlen($_POST[$field['fieldname']]['price']) == 0) {
+                return dr_lang('%s不能为空', $field['name']);
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * 字段值
      */
     public function get_value($name, $data) {
