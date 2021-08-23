@@ -3,7 +3,11 @@
 <div class="row">
     <div class="col-xs-3">
         <div class="text-center ">
+            {if IS_USE_MEMBER}
             <a href="{dr_url('api/alogin', ['id'=>$m.id])}" target="_blank"><img src="{$m.avatar}" style="border-radius:40%;height: 70px!important;"></a>
+            {else}
+            <img src="{$m.avatar}" style="border-radius:40%;height: 70px!important;">
+            {/if}
         </div>
         <div class="text-left fc-user-group">
             {loop $m.group $g}

@@ -12,6 +12,9 @@ class Module extends \Phpcmf\Table
     // 上级公共类
     public function __construct(...$params) {
         parent::__construct(...$params);
+        if (!IS_USE_MEMBER) {
+            $this->_admin_msg(0, dr_lang('需要安装【用户系统】插件'));
+        }
         $this->_Extend_Init();
     }
     

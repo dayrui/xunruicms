@@ -103,7 +103,7 @@ class Module extends \Phpcmf\Common
         if (!IS_API_HTTP) {
             if (!isset($this->module['setting']['search']['use']) || !$this->module['setting']['search']['use']) {
                 $this->_msg(0, dr_lang('此模块已经关闭了搜索功能'));
-            } elseif (\Phpcmf\Service::M('member_auth')->module_auth($this->module['dirname'], 'search', $this->member)) {
+            } elseif (IS_USE_MEMBER && \Phpcmf\Service::L('member_auth', 'member')->module_auth($this->module['dirname'], 'search', $this->member)) {
                 $this->_msg(0, dr_lang('您的用户组无权限搜索'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
             } elseif ($get['keyword'] && $this->module['setting']['search']['length'] && dr_strlen($get['keyword']) < (int)$this->module['setting']['search']['length']) {
                 $this->_msg(0, dr_lang('关键字不得少于系统规定的长度'));
@@ -277,15 +277,15 @@ class Module extends \Phpcmf\Common
         }
 
         // 无权限访问栏目
-        if (!defined('SC_HTML_FILE')) {
+        if (IS_USE_MEMBER && !defined('SC_HTML_FILE')) {
             if (($this->module['share']) && $category['tid'] == 0) {
                 // 识别栏目单网页
-                if (!\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+                if (!\Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $catid, 'show', $this->member)) {
                     $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
                     return;
                 }
             } else {
-                if (!\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+                if (!\Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $catid, 'show', $this->member)) {
                     $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
                     return;
                 }
@@ -412,7 +412,8 @@ class Module extends \Phpcmf\Common
             }
         } else {
             // 无权限访问栏目内容
-            if (!defined('SC_HTML_FILE') && !\Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'show', $this->member)) {
+            if (IS_USE_MEMBER && !defined('SC_HTML_FILE')
+                && !\Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $catid, 'show', $this->member)) {
                 $this->_msg(0, dr_lang('您的用户组无权限访问栏目'), $this->uid  ? '' : dr_member_url('login/index'));
                 return $data;
             }

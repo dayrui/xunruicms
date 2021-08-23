@@ -1103,12 +1103,12 @@ class Module extends \Phpcmf\Table {
         $data[1]['catid'] = $data[0]['catid'] = $catid;
 
         // 验证状态
-        if ($this->is_post_user) {
+        if ($this->is_post_user && IS_USE_MEMBER) {
             // 投稿者
             $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member) : $this->content_model->get_verify_status(
                 $id,
                 $this->member,
-                \Phpcmf\Service::M('member_auth')->category_auth($this->module, $catid, 'verify', $this->member)
+                \Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $catid, 'verify', $this->member)
             );
         } else {
             $data[1]['status'] = 9;
@@ -1182,12 +1182,12 @@ class Module extends \Phpcmf\Table {
                     // 发布之前判断
                     if ($old && defined('IS_MODULE_VERIFY')) {
                         // 是否来自审核
-                        if ($this->is_post_user) {
+                        if ($this->is_post_user && IS_USE_MEMBER) {
                             // 投稿者编辑
                             $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member) : $this->content_model->get_verify_status(
                                 $data[1]['id'],
                                 $this->member,
-                                \Phpcmf\Service::M('member_auth')->category_auth($this->module, $data[1]['catid'], 'verify', $this->member)
+                                \Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $data[1]['catid'], 'verify', $this->member)
                             );
                         } else {
                             if ($_POST['verify']['status']) {

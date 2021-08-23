@@ -456,6 +456,10 @@ class Api extends \Phpcmf\Common
      */
     public function members() {
 
+        if (!IS_USE_MEMBER) {
+            $this->_json(0, dr_lang('需要安装【用户系统】插件'));
+        }
+
         // 强制将模板设置为后台
         \Phpcmf\Service::V()->admin();
 

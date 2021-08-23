@@ -12,7 +12,7 @@ class Member_auth extends \Phpcmf\Model
 
     // 获取用户权限值
     public function member_auth($name, $member = []) {
-        return IS_USE_MEMBER ? \Phpcmf\Service::L('member_auth', 'member')->member_auth($name, $member) : 0;
+        return IS_USE_MEMBER ? \Phpcmf\Service::L('member_auth', 'member')->member_auth($name, $member) : 1;
     }
 
     // 获取应用插件权限值

@@ -257,6 +257,10 @@ class Member extends \Phpcmf\Model {
      */
     public function oauth($uid) {
 
+        if (!IS_USE_MEMBER) {
+            return [];
+        }
+
         $data = $this->db->table('member_oauth')->where('uid', $uid)->get()->getResultArray();
         if (!$data) {
             return [];
@@ -306,7 +310,7 @@ class Member extends \Phpcmf\Model {
         $data['group_timeout'] = 0;
 
         // 会员组信息
-        if (dr_is_app('member')) {
+        if (IS_USE_MEMBER) {
             $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
             if ($data2) {
                 foreach ($data2 as $t) {
@@ -330,7 +334,7 @@ class Member extends \Phpcmf\Model {
     // 获取authid
     public function authid($uid) {
 
-        if (!$uid) {
+        if (!$uid || !IS_USE_MEMBER) {
             return [0];
         } elseif ($uid == $this->uid) {
             return \Phpcmf\Service::C()->member['authid'];
@@ -353,7 +357,7 @@ class Member extends \Phpcmf\Model {
     public function update_group($member, $groups) {
 
         $g = [];
-        if (!$member || !$groups) {
+        if (!$member || !$groups || !IS_USE_MEMBER) {
             return $g;
         }
 
@@ -526,6 +530,11 @@ class Member extends \Phpcmf\Model {
     // 删除用户组 is_admin 是否是管理员删除，否则就是过期删除
     public function delete_group($uid, $gid, $is_admin = 1) {
 
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：delete_group');
+            return false;
+        }
+
         // 回调信息
         $call = $this->member_info($uid);
         $call['group'] = $this->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->getRow();
@@ -558,6 +567,11 @@ class Member extends \Phpcmf\Model {
 
     // 新增用户组
     public function insert_group($uid, $gid, $is_notice = 1) {
+
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：insert_group');
+            return false;
+        }
 
         $data = [
             'uid' => $uid,
@@ -602,6 +616,11 @@ class Member extends \Phpcmf\Model {
     // 手动变更等级
     public function update_level($uid, $gid, $lid) {
 
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：update_level');
+            return false;
+        }
+
         $old = $data = $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->get()->getRowArray();
         $data['gid'] = $gid;
         $data['lid'] = $lid;
@@ -630,6 +649,11 @@ class Member extends \Phpcmf\Model {
 
     // 申请用户组
     public function apply_group($verify_id, $member, $gid, $lid, $price, $my_verify) {
+
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：apply_group');
+            return false;
+        }
 
         $group = \Phpcmf\Service::C()->member_cache['group'][$gid];
 
@@ -749,7 +773,7 @@ class Member extends \Phpcmf\Model {
 
         $this->db->table('member_data')->where('id', $uid)->update(['is_verify' => 1]);
         // 后台提醒
-        $this->todo_admin_notice('member_verify/index:field/id/keyword/'.$uid, 0);
+        $this->todo_admin_notice('member/home/verify/index:field/id/keyword/'.$uid, 0);
         // 审核提醒
         // 注册审核后的通知
         \Phpcmf\Service::L('Notice')->send_notice('member_register_verify', $this->get_member($uid));
@@ -857,6 +881,12 @@ class Member extends \Phpcmf\Model {
      * @param   intval  $remember   是否记住密码
      */
     public function login($username, $password, $remember = 0) {
+
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：login');
+            return dr_return_data(0, dr_lang('没有权限'));
+            return false;
+        }
 
         if (!$username) {
             return dr_return_data(0, dr_lang('账号不能为空'));
@@ -1320,7 +1350,6 @@ class Member extends \Phpcmf\Model {
      * 短信发送验证码
      */
     public function sendsms_code($mobile, $code) {
-
         return $this->sendsms_text($mobile, $code, 'code');
     }
 
@@ -1537,6 +1566,11 @@ class Member extends \Phpcmf\Model {
 
     // 删除会员后执行 sync是否删除相关数据表
     public function member_delete($id, $sync = 0) {
+
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：member_delete');
+            return false;
+        }
 
         $this->clear_cache($id);
 

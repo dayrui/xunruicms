@@ -153,10 +153,10 @@ class Role extends \Phpcmf\Common
         }
 		
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
+			$post = \Phpcmf\Service::L('input')->post('data');
 			$module = \Phpcmf\Service::L('input')->post('module');
 			\Phpcmf\Service::M('auth')->table('admin_role')->update($id, [
-			    'system' => dr_array2string($data),
+			    'system' => dr_array2string($post),
 			    'module' => dr_array2string($module),
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('auth');
@@ -186,7 +186,7 @@ class Role extends \Phpcmf\Common
                     $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
                     $module_auth[$mdir]['auth'][$mdir.'/recycle/'] = dr_lang('回收站');
                     $module_auth[$mdir]['auth'][$mdir.'/time/'] = dr_lang('定时发布');
-                    $module_auth[$mdir]['auth'][$mdir.'/verify/'] = dr_lang('待审核');
+                    IS_USE_MEMBER && $module_auth[$mdir]['auth'][$mdir.'/verify/'] = dr_lang('待审核');
                 } else {
                     // 自定义模块
                 }

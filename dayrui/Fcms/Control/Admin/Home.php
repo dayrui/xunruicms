@@ -272,10 +272,6 @@ class Home extends \Phpcmf\Common
                             // oem版排除对比菜单
                             unset($left['link'][$i]);
                             continue;
-                        } elseif ($link['uri'] == 'member_oauth/index' && dr_count($this->member_cache['oauth']) < 3) {
-                            // 未配置授权账号排除
-                            unset($left['link'][$i]);
-                            continue;
                         }
                         $url = $link['url'] ? $link['url'] : \Phpcmf\Service::L('Router')->url($link['uri']);
                         if (!$_link) {

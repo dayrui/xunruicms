@@ -868,7 +868,7 @@ abstract class Common extends \CodeIgniter\Controller {
                 if ($t['mid'] != $module['dirname']) {
                     // 模块不符合 排除
                     unset($category[$id]);
-                } elseif (!\Phpcmf\Service::M('member_auth')->category_auth($module, $id, $name, $this->member)) {
+                } elseif (IS_USE_MEMBER && !\Phpcmf\Service::L('member_auth', 'member')->category_auth($module, $id, $name, $this->member)) {
                     // 用户的的权限判断
                     unset($category[$id]);
                 }
