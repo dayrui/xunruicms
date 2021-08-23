@@ -191,12 +191,14 @@ class Check extends \Phpcmf\Common
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
                     $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html';
-                } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
-                    $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html';
-                } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/msg.html')) {
-                    $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/msg.html';
                 }
-
+                if (IS_USE_MEMBER) {
+                    if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
+                        $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html';
+                    } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/msg.html')) {
+                        $rt[] = '用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/msg.html';
+                    }
+                }
                 // 必备模板检测
                 foreach (['msg.html', '404.html'] as $tt) {
                     if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/'.$tt)) {
@@ -211,10 +213,14 @@ class Check extends \Phpcmf\Common
                 // 移动端模板检测
                 if (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/home/index.html')) {
                     $this->halt('网站前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
-                } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/index.html')) {
-                    $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
-                } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/msg.html')) {
-                    $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/msg.html', 1);
+                }
+
+                if (IS_USE_MEMBER) {
+                    if (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/index.html')) {
+                        $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
+                    } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/msg.html')) {
+                        $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/msg.html', 1);
+                    }
                 }
 
                 break;
@@ -242,18 +248,20 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_paylog';
-                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
-                }
-                if (\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `username`');
-                }
-                if (\Phpcmf\Service::M()->db->fieldExists('tousername', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `tousername`');
+                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                    if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
+                    }
+                    if (\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `username`');
+                    }
+                    if (\Phpcmf\Service::M()->db->fieldExists('tousername', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `tousername`');
+                    }
                 }
 
                 $table = $prefix.'member_group_verify';
-                if (!\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
                 }
 
@@ -274,7 +282,7 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_oauth';
-                if (!\Phpcmf\Service::M()->db->fieldExists('unionid', $table)) {
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('unionid', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `unionid` VARCHAR(100) DEFAULT NULL');
                 }
 
@@ -284,17 +292,19 @@ class Check extends \Phpcmf\Common
                 }
 
                 $table = $prefix.'member_menu';
-                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
                 }
 
                 $table = $prefix.'member_level';
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
-                if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
-                }
-                if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
+                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
+                    if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
+                    }
+                    if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
+                    }
                 }
 
                 $table = $prefix.'admin_menu';
@@ -307,19 +317,22 @@ class Check extends \Phpcmf\Common
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT NOT NULL');
                 }
 
-                $table = $prefix.'admin_setting';
-                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                if (IS_USE_MEMBER) {
+                    $table = $prefix.'admin_setting';
+                    if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                        \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
                       `name` varchar(50) NOT NULL,
                       `value` mediumtext NOT NULL,
                       PRIMARY KEY (`name`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';'));
+                    } else {
+                        if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
+                            // 权限数据
+                            \Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
+                        }
+                    }
                 }
-				
-				// 权限数据
-				if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
-					\Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
-				}
+
 
                 $table = $prefix.'admin_min_menu';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {

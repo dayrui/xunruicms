@@ -353,4 +353,3 @@ REPLACE INTO `{dbprefix}admin_role` VALUES(2, '', '网站编辑员', '', '', '')
 REPLACE INTO `{dbprefix}linkage` VALUES(1, '中国地区', 0, 'address');
 REPLACE INTO `{dbprefix}linkage_data_1` VALUES(1, 1, 0, '0', '北京', 'bj', 0, 0, '1', 0);
 REPLACE INTO `{dbprefix}linkage_data_1` VALUES(2, 1, 0, '0', '成都', 'cd', 0, 0, '2', 0);
-
