@@ -1059,17 +1059,12 @@ class Member extends \Phpcmf\Model {
     // 直接登录模式 授权注册
     public function register_oauth($groupid, $oauth) {
 
-        $member = [
+        $rt = $this->register($groupid, [
             'username' => '',
             'name' => dr_clear_emoji($oauth['nickname']),
             'email' => '',
             'phone' => '',
-        ];
-
-        //$count = $this->db->table('member')->where('username', $member['username'])->countAllResults();
-        //$count && $member['username'].= '_'.$oauth['oauth'].'_'.rand(0, 9999);
-
-        $rt = $this->register($groupid, $member, null, $oauth);
+        ], null, $oauth);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
