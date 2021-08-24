@@ -1397,30 +1397,6 @@ class Member extends \Phpcmf\Model {
     }
 
     /**
-     * 获取微信 access token
-     */
-    public function _weixin_template_access_token() {
-
-        $cache_data = \Phpcmf\Service::L('cache')->init('file')->get('access_token');
-        if (isset($cache_data['time']) && $cache_data['access_token']) {
-            $access_token = $cache_data['access_token'];
-        } else {
-            $weixin = \Phpcmf\Service::C()->get_cache('weixin');
-            $result = wx_get_https_json_data('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$weixin['account']['appid'].'&secret='.$weixin['account']['appsecret']);
-            if (!$result['code']) {
-                return dr_return_data(0, 'AccessToken：'.$result['msg']);
-            }
-            $rt = \Phpcmf\Service::L('cache')->init('file')->save('access_token', $result['data'], 3600);
-            if (!$rt) {
-                return dr_return_data(0, 'AccessToken：/cache/temp/目录不可写，文件写入失败');
-            }
-            $access_token = $result['data']['access_token'];
-        }
-
-        return dr_return_data(1, 'ok', ['access_token' => $access_token]);
-    }
-
-    /**
      * 发送微信通知模板
      *
      * $uid 会员id
@@ -1434,26 +1410,12 @@ class Member extends \Phpcmf\Model {
     }
     public function wexin_template($uid, $id, $data, $url = '', $color = '') {
 
-        $oauth = $this->db->table('member_oauth')->where('uid', $uid)->where('oauth', 'wechat')->get()->getRowArray();
-        if (!$oauth) {
-            return dr_return_data(0, 'uid（'.$uid.'）未绑定账号');
+        if (dr_is_app('weixin')) {
+            \Phpcmf\Service::C()->init_file('weixin');
+            return \Phpcmf\Service::M('weixin', 'weixin')->send_template($uid, $id, $data, $url, $color);
+        } else {
+            return dr_return_data(0, '没有安装微信插件');
         }
-
-        $rt = $this->_weixin_template_access_token($id);
-        if (!$rt['code']) {
-            return dr_return_data(0, $rt['msg']);
-        }
-
-        $p = [
-            'touser' => $oauth['oid'],
-            'template_id' => $id,
-            'url' => $url,
-            'topcolor' => $color,
-            'data' => $data,
-        ];
-        $rt = wx_post_https_json_data('https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$rt['data']['access_token'], $p);
-
-        return $rt;
     }
 
     /**
