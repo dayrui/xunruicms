@@ -206,31 +206,34 @@ class Search extends \Phpcmf\Model {
                 }
             }
 
-            // 会员字段过滤
-            $member_where = [];
-            if (\Phpcmf\Service::C()->member_cache['field']) {
-                foreach (\Phpcmf\Service::C()->member_cache['field'] as $name => $field) {
-                    if (isset($field['ismain']) && !$field['ismain']) {
-                        continue;
-                    }
-                    if (!isset($mod_field[$name]) && isset($this->get[$name]) && strlen($this->get[$name])) {
-                        $r = $this->_where($this->dbprefix('member_data'), $name, $this->get[$name], $field);
-                        if ($r) {
-                            $member_where[] = $r;
-                            $param_new[$name] = $this->get[$name];
+            if (IS_USE_MEMBER) {
+                // 会员字段过滤
+                $member_where = [];
+                if (\Phpcmf\Service::C()->member_cache['field']) {
+                    foreach (\Phpcmf\Service::C()->member_cache['field'] as $name => $field) {
+                        if (isset($field['ismain']) && !$field['ismain']) {
+                            continue;
+                        }
+                        if (!isset($mod_field[$name]) && isset($this->get[$name]) && strlen($this->get[$name])) {
+                            $r = $this->_where($this->dbprefix('member_data'), $name, $this->get[$name], $field);
+                            if ($r) {
+                                $member_where[] = $r;
+                                $param_new[$name] = $this->get[$name];
+                            }
                         }
                     }
                 }
+                // 按会员组搜索时
+                if ($param['groupid'] != '') {
+                    $member_where[] = '`'.$this->dbprefix('member_data').'`.`id` IN (SELECT `uid` FROM `'.$this->dbprefix('member').'_group_index` WHERE gid='.intval($param['groupid']).')';
+                    $param_new['groupid'] = $this->get['groupid'];
+                }
+                // 组合会员字段
+                if ($member_where) {
+                    $where[] =  '`'.$table.'`.`uid` IN (select `id` from `'.$this->dbprefix('member_data').'` where '.implode(' AND ', $member_where).')';
+                }
             }
-            // 按会员组搜索时
-            if ($param['groupid'] != '') {
-                $member_where[] = '`'.$this->dbprefix('member_data').'`.`id` IN (SELECT `uid` FROM `'.$this->dbprefix('member').'_group_index` WHERE gid='.intval($param['groupid']).')';
-                $param_new['groupid'] = $this->get['groupid'];
-            }
-            // 组合会员字段
-            if ($member_where) {
-                $where[] =  '`'.$table.'`.`uid` IN (select `id` from `'.$this->dbprefix('member_data').'` where '.implode(' AND ', $member_where).')';
-            }
+
             // flag
             if (isset($param['flag']) && $param['flag']) {
                 $wh = [];

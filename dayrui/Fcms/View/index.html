@@ -186,15 +186,14 @@
             <div class="tab-content">
 
                 <div class="tab-pane active page-quick-sidebar-nav" id="quick_sidebar_tab_1">
-                    <h3 class="list-heading">{dr_lang('快捷链接')}</h3>
-                    <div data-handle-color="#637283">
+                    <div class="margin-top-20">
                         <div class="admin-usermenu" id="dr_admin_usermenu">
                             {loop $admin.usermenu $t}
                             <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} onclick="dr_hide_left_tab()" target="right" {/if} href="{$t.url}"> {$t.name} </a>
                             {/loop}
                         </div>
-                        <div class="theme-option">
-                            <button type="button" onclick="dr_add_menu()" class="btn blue-madison"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
+                        <div class="theme-option margin-top-20">
+                            <button type="button" onclick="dr_add_menu()" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
                         </div>
                     </div>
                 </div>
@@ -255,7 +254,6 @@
             }
         });
     }
-
 </script>
 </body>
 </html>
