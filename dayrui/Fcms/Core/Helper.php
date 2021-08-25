@@ -1569,10 +1569,14 @@ function dr_level_next_value($array, $id) {
  */
 function dr_html_auth($is = 0) {
 
+    if (is_cli()) {
+        return 1;
+    }
+
     $name = md5(\Phpcmf\Service::L('input')->ip_address());
     if ($is) {
         // 存储值
-        return Phpcmf\Service::L('cache')->set_auth_data($name, 1);
+        return \Phpcmf\Service::L('cache')->set_auth_data($name, 1);
     } else {
         // 读取判断
         $rt = \Phpcmf\Service::L('cache')->get_auth_data($name);
@@ -4044,6 +4048,10 @@ if (! function_exists('dr_clearhtml')) {
      * @return  string
      */
     function dr_clearhtml($str) {
+
+        if (is_array($str)) {
+            return '';
+        }
 
         $str = str_replace(
             array('&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'), array(' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'), $str

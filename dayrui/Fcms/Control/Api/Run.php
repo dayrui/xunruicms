@@ -137,7 +137,8 @@ class Run extends \Phpcmf\Common
         if ($local) {
             foreach ($local as $dir => $path) {
                 if (is_file($path.'Config/Cron.php')
-                    && is_file($path.'Config/App.php')) {
+                    && is_file($path.'Config/App.php')
+                    && is_file($path.'install.lock')) {
                     require $path.'Config/Cron.php';
                 }
             }
