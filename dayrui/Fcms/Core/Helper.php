@@ -1566,19 +1566,17 @@ function dr_level_next_value($array, $id) {
 
 /**
  * 静态生成时权限认证字符(加密)
+ * ip 运行者ip地址
  */
-function dr_html_auth($is = 0) {
+function dr_html_auth($ip = 0) {
 
-    if (is_cli()) {
-        return 1;
-    }
-
-    $name = md5(\Phpcmf\Service::L('input')->ip_address());
-    if ($is) {
+    if ($ip) {
         // 存储值
+        $name = strlen($ip) > 5 ? md5($ip) : md5(\Phpcmf\Service::L('input')->ip_address());
         return \Phpcmf\Service::L('cache')->set_auth_data($name, 1);
     } else {
         // 读取判断
+        $name = md5(\Phpcmf\Service::L('input')->ip_address());
         $rt = \Phpcmf\Service::L('cache')->get_auth_data($name);
         if ($rt) {
             return 1; // 有效
