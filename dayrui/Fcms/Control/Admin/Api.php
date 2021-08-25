@@ -824,7 +824,10 @@ class Api extends \Phpcmf\Common {
         if (is_dir($path)) {
             $this->_json(1, dr_lang('目录正常'));
         } else {
-            $this->_json(0, dr_lang('目录[%s]不存在', $path));
+            if (strpos($path, ROOTPATH) !== false) {
+                $this->_json(0, dr_lang('目录[%s]不存在', $path));
+            }
+            $this->_json(0, dr_lang('目录[%s]无法识别，请检查服务器的防跨站开关或者.user.ini权限文件', $path));
         }
     }
 
