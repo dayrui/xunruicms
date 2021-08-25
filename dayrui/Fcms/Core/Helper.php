@@ -1572,12 +1572,10 @@ function dr_html_auth($ip = 0) {
 
     if ($ip) {
         // 存储值
-        $name = strlen($ip) > 5 ? md5($ip) : md5(\Phpcmf\Service::L('input')->ip_address());
-        return \Phpcmf\Service::L('cache')->set_auth_data($name, 1);
+        return \Phpcmf\Service::L('cache')->set_auth_data(md5('html_auth'.(strlen($ip) > 5 ? $ip : \Phpcmf\Service::L('input')->ip_address())), 1);
     } else {
         // 读取判断
-        $name = md5(\Phpcmf\Service::L('input')->ip_address());
-        $rt = \Phpcmf\Service::L('cache')->get_auth_data($name);
+        $rt = \Phpcmf\Service::L('cache')->get_auth_data(md5('html_auth'.\Phpcmf\Service::L('input')->ip_address()));
         if ($rt) {
             return 1; // 有效
         } else {
