@@ -28,6 +28,7 @@ class Install extends \Phpcmf\Common {
         }
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
+        define('SITE_URL', '/');
         define('IS_API_HTTP', 0);
         define('SITE_TEMPLATE', 'default');
         define('THEME_PATH', '/static/');
