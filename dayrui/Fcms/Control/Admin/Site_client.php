@@ -14,13 +14,14 @@ class Site_client extends \Phpcmf\Common
 		    $post = \Phpcmf\Service::L('input')->post('data', true);
 		    if ($post) {
                 foreach ($post as $i => $t) {
+                    $i = intval($i);
                     if (isset($t['name'])) {
                         if (!preg_match('/^[a-z]+/i', $t['name'])) {
                             $this->_json(0, dr_lang('终端目录必须是英文字母'));
                         } elseif (!$t['name']) {
                             $this->_json(0, dr_lang('终端目录必须填写'));
                         }
-                        $save[$i]['name'] = $t['name'];
+                        $save[$i]['name'] = dr_safe_replace($t['name']);
                     } else {
                         if (!$t['domain']) {
                             $this->_json(0, dr_lang('域名必须填写'));
