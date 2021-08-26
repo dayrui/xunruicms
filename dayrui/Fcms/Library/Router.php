@@ -489,7 +489,7 @@ class Router {
 
         $url = ltrim(str_replace('//', '/', $url), '/');
 
-        if (strpos($url, '?') !== false) {
+        if (IS_DEV && strpos($url, '?') !== false) {
             return '自定义URL规则['.$rule.']不能包含问号?';
         }
 

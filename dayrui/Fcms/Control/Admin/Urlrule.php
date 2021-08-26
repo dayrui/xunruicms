@@ -82,7 +82,6 @@ class Urlrule extends \Phpcmf\Table
     // 伪静态
     public function rewrite_index() {
 
-
         $domain = [];
         list($module, $site) = \Phpcmf\Service::M('Site')->domain();
         $domain[$site['site_domain']] = dr_lang('本站电脑域名');
@@ -228,7 +227,6 @@ class Urlrule extends \Phpcmf\Table
         \Phpcmf\Service::M('cache')->sync_cache('urlrule');
         $this->_json(1, dr_lang('复制成功'));
     }
-
 
     // 保存
     protected function _Save($id = 0, $data = [], $old = [], $func = null, $func2 = null) {

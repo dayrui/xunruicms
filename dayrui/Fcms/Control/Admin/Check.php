@@ -527,7 +527,7 @@ class Check extends \Phpcmf\Common
                 $app_name = [
                     'form' => '全局网站表单',
                     'mform' => '模块内容表单',
-                    'notice' => '站内消息',
+                    'notice' => '提醒消息',
                     'pay' => '支付系统',
                     'scorelog' => '积分系统',
                     'explog' => '经验值系统',

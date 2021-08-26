@@ -16,6 +16,10 @@ class Cache extends \Phpcmf\Model
     // 清理缩略图
     public function update_thumb() {
         list($cache_path) = dr_thumb_path();
+        if (strpos(WEBPATH, $cache_path) !== false || is_file($cache_path.'index.php')) {
+            // 防止误删除
+            \Phpcmf\Service::C()->_json(0, dr_lang('缩略图目录异常，请手动清理：%s', $cache_path));
+        }
         dr_dir_delete($cache_path);
         dr_mkdirs($cache_path);
         \Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1);
