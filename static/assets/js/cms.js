@@ -1036,15 +1036,33 @@ function dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError) {
         if (!msg) {
             dr_cmf_tips(0, lang['error_admin']);
         } else {
-            layer.open({
-                type: 1,
-                title: lang['error_admin'],
-                fix:true,
-                shadeClose: true,
-                shade: 0,
-                area: ['50%', '50%'],
-                content: "<div style=\"padding:10px;\">"+msg+"</div>"
-            });
+            if (is_admin == '1') {
+                layer.open({
+                    type: 1,
+                    title: lang['error_admin'],
+                    fix:true,
+                    shadeClose: true,
+                    shade: 0,
+                    area: ['50%', '50%'],
+                    btn: [dr_lang('查看日志')],
+                    yes: function(index, layero) {
+                        layer.close(index);
+                        dr_iframe_show(dr_lang('错误日志'), admin_file+"?c=error&m=log_show");
+                    },
+                    content: "<div style=\"padding:10px;\">"+msg+"</div>"
+                });
+            } else {
+                layer.open({
+                    type: 1,
+                    title: lang['error_admin'],
+                    fix:true,
+                    shadeClose: true,
+                    shade: 0,
+                    area: ['50%', '50%'],
+                    content: "<div style=\"padding:10px;\">"+msg+"</div>"
+                });
+            }
+
         }
     } else {
         dr_cmf_tips(0, lang['error']);

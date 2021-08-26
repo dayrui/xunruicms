@@ -635,7 +635,7 @@ class View {
         }
 
         // 注释内容
-        $view_content = preg_replace('#{zhushi}(.+){/zhushi}#Us', '', $view_content);
+        $view_content = preg_replace('#{note}(.+){/note}#Us', '', $view_content);
 
         // 保护代码
         $this->_code = [];
@@ -778,7 +778,7 @@ class View {
                 continue;
             }
             if (isset($system[$var])) { // 系统参数，只能出现一次，不能添加修饰符
-                if ($system[$var]) {
+                if ($var != 'cache' && $system[$var]) {
                     continue; // 防止重复记录
                 }
                 $system[$var] = dr_safe_replace($val);
