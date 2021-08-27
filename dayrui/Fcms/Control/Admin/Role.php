@@ -183,6 +183,7 @@ class Role extends \Phpcmf\Common
                 ];
                 if ($config['system']) {
                     // 内容模块
+                    $module_auth[$mdir]['auth'][$mdir.'/home/'] = dr_lang('内容');
                     $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
                     $module_auth[$mdir]['auth'][$mdir.'/recycle/'] = dr_lang('回收站');
                     $module_auth[$mdir]['auth'][$mdir.'/time/'] = dr_lang('定时发布');

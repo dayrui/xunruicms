@@ -973,7 +973,7 @@ class Member extends \Phpcmf\Model {
         // 保存本地会话
         $this->save_cookie($data, $remember);
 
-        return dr_return_data(1, 'ok', [
+        return dr_return_data($data['id'], 'ok', [
                 'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
                 'member' => $this->get_member($data['id']),
                 'sso' => $this->sso($data, $remember)]
@@ -1029,7 +1029,7 @@ class Member extends \Phpcmf\Model {
         // 下载头像
         \Phpcmf\Service::L('thread')->cron(['action' => 'oauth_down_avatar', 'id' => $oauth['id'] ]);
 
-        return dr_return_data(1, 'ok', [
+        return dr_return_data($member['id'], 'ok', [
             'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
             'member' => $member,
             'sso' => $sso
@@ -1050,7 +1050,7 @@ class Member extends \Phpcmf\Model {
         // 记录日志
         $this->_login_log($member, $oauth['oauth']);
 
-        return dr_return_data(1, 'ok', [
+        return dr_return_data($member['id'], 'ok', [
             'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
             'member' => $member,
         ]);
@@ -1088,7 +1088,7 @@ class Member extends \Phpcmf\Model {
         $sso = $this->sso($data);
         $sso[] = \Phpcmf\Service::L('router')->member_url('api/avatar', ['id'=>$oauth['id']]);
 
-        return dr_return_data(1, 'ok', [
+        return dr_return_data($data['id'], 'ok', [
             'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
             'member' => $data,
             'sso' => $sso
@@ -1255,7 +1255,7 @@ class Member extends \Phpcmf\Model {
         // 记录日志
         $this->_login_log($data);
 
-        return dr_return_data(1, 'ok', $data);
+        return dr_return_data($data['id'], 'ok', $data);
     }
 
     /**
