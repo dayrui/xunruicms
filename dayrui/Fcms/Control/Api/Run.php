@@ -181,9 +181,10 @@ class Run extends \Phpcmf\Common
 				} elseif (!$oauth['uid']) {
 					exit('oauth没有绑定账号');
 				}
-				
+
+                list($cache_path) = dr_avatar_path();
                 foreach (['png', 'jpg', 'gif', 'jpeg'] as $ext) {
-                    if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.'.$ext)) {
+                    if (is_file($cache_path.$oauth['uid'].'.'.$ext)) {
                         \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
                         exit('头像已经存在');
                     }
@@ -191,10 +192,10 @@ class Run extends \Phpcmf\Common
 
                 $avatar = dr_catcher_data($oauth['avatar']);
                 if ($avatar) {
-                    file_put_contents(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg', $avatar);
+                    file_put_contents($cache_path.$oauth['uid'].'.jpg', $avatar);
                 }
 
-                if (is_file(ROOTPATH.'api/member/'.$oauth['uid'].'.jpg')) {
+                if (is_file($cache_path.$oauth['uid'].'.jpg')) {
                     \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
                 }
 
