@@ -531,11 +531,18 @@ class Check extends \Phpcmf\Common
                     'pay' => '支付系统',
                     'scorelog' => '积分系统',
                     'explog' => '经验值系统',
+                    'member' => '用户系统',
+                    'chtml' => '内容静态生成',
                 ];
                 foreach ($table_app as $table => $name) {
                     if (\Phpcmf\Service::M()->is_table_exists($table) && \Phpcmf\Service::M()->table($table)->counts() && !dr_is_app($name)) {
                         $error[] = $app_name[$name];
                     }
+                }
+
+                // 用户系统
+                if (\Phpcmf\Service::M()->table('member')->counts() > 3 && !dr_is_app('member')) {
+                    $error[] = $app_name['member'];
                 }
 
                 // 判断静态生成插件
@@ -568,7 +575,7 @@ class Check extends \Phpcmf\Common
                         }
                     }
                     if ($is_html) {
-                        $error[] = '内容静态生成';
+                        $error[] = $app_name['chtml'];
                     }
                 }
 
