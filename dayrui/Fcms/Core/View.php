@@ -831,8 +831,8 @@ class View {
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
         // 默认模块参数
         $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
-        // 开发者模式下和静态模式下关闭缓存
-        (IS_DEV || defined('SC_HTML_FILE')) && $system['cache'] = 0;
+        // 开发者模式下关闭缓存
+        IS_DEV && $system['cache'] = 0;
         // 格式化field
         $system['field'] && $system['field'] = urldecode($system['field']);
         // 分页页码变量
