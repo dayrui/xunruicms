@@ -81,19 +81,19 @@ class Pays extends \Phpcmf\Library\A_Field  {
 			</div>
 		</div>
 		<div class="form-group">
-            <label class="col-md-2 control-label">'.dr_lang('单一定价模式').'</label>
+            <label class="col-md-2 control-label">'.dr_lang('定价模式').'</label>
             <div class="col-md-9">
                 <div class="mt-radio-inline">
-                    <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][close_one]" '.(!$option['close_one'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][close_one]" '.(!$option['close_one'] ? 'checked' : '').' > '.dr_lang('单一定价+组合定价').' <span></span></label>
                  &nbsp; &nbsp;
-                    <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][close_one]" '.($option['close_one'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][close_one]" '.($option['close_one'] ? 'checked' : '').' > '.dr_lang('组合定价').' <span></span></label>
                    
                 </div>
-                <span class="help-block">'.dr_lang('开启后可以选择单一定价模式和组合定价模式两种方式').'</span>
+                <span class="help-block">'.dr_lang('可以选择单一定价+组合定价模式、组合定价模式两种方式').'</span>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 control-label">'.dr_lang('固定规格').'</label>
+            <label class="col-md-2 control-label">'.dr_lang('固定组合规格').'</label>
             <div class="col-md-9">
                 <div class="mt-radio-inline">
                     <label class="mt-radio mt-radio-outline"><input onclick="$(\'.gdggb\').show()" type="radio" value="1" name="data[setting][option][is_sku]" '.($option['is_sku'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
@@ -442,7 +442,15 @@ class Pays extends \Phpcmf\Library\A_Field  {
             // 是否单一模式
             if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
                 $is_field_pay = 1;
-                $sku_html = '<div id="dr_sku_result" style="display: none">'.$result.'</div>';
+                $sku_html = '<p style="margin-top: -10px">
+                    <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
+                    <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
+                </p>
+                <div class="portlet light bordered">
+                    <div id="dr_sku_result">
+                        '.$result.'
+                    </div>
+                </div>';
             } else {
                 $is_field_pay = $result && $ovalue ? 1 : 0;
                 $str.= '<div class="mt-radio-inline">

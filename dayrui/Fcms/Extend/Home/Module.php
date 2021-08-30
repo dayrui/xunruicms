@@ -237,9 +237,9 @@ class Module extends \Phpcmf\Common
         $category = $this->content_model->_call_category($category);
 
         // 挂钩点 格式化栏目数据
-        $rt = \Phpcmf\Hooks::trigger_callback('module_category_data', $category);
-        if ($rt && isset($rt['code']) && $rt['code']) {
-            $category = $rt['data'];
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_category_data', $category);
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $category = $rt2['data'];
         }
 
         // 判断是否外链
@@ -391,9 +391,9 @@ class Module extends \Phpcmf\Common
         }
 
         // 挂钩点 内容读取之后
-        $rt = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
-        if ($rt && isset($rt['code']) && $rt['code']) {
-            $data = $rt['data'];
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $data = $rt2['data'];
         }
 
         // 状态判断
