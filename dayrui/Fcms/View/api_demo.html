@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{dr_lang('预览网站')}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <script src="{THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <link href="{THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/xunruicms{if !IS_DEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">var admin_file = '{SELF}';var is_min = '{$is_min}'; var is_oemcms = '{IS_OEM_CMS}'; var is_mobile_cms = '{$is_mobile}'; var is_admin = '{if dr_in_array(1, $admin.roleid)}1{else}2{/if}';</script>
+    <script src="{LANG_PATH}lang.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/scripts/app{if !IS_DEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+
+    <style>
+        body {
+            min-height: 100%;
+            padding-top: 0;
+        }
+
+        .navbar-preview {
+            height: 50px;
+            padding-left: 0;
+            padding-right: 0;
+            margin-bottom: 0;
+            border-radius: 0;
+
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+
+            background: #3ea2ff;
+            background: linear-gradient(270deg, #9848ff, #3ea2ff) center / cover;
+            background-size: 800% 800%;
+            -webkit-animation: navbaranimation 30s ease infinite;
+            -moz-animation: navbaranimation 30s ease infinite;
+            animation: navbaranimation 30s ease infinite;
+        }
+
+        .navbar-preview a {
+            color: #fff;
+        }
+
+        .navbar-preview .col-xs-6 {
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .iframe-preview {
+            position: absolute;
+            height: calc(100% - 55px);
+            width: 100%;
+            border: none;
+            margin-top: 50px;
+        }
+
+        .iframe-preview-mobile {
+            width: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(0, 0, 0, .085);
+        }
+
+        .nav-link {
+            display: block;
+            padding: .5rem 1rem;
+        }
+
+        .nav-preview {
+            padding-left: 0;
+            margin: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .nav-preview li {
+            display: inline;
+        }
+
+        .nav-preview li > a, .nav-preview li > span {
+            display: inline-block;
+            padding: 0 14px;
+            font-size: 16px;
+        }
+
+        .nav-preview .popover-title {
+            padding: 5px 14px;
+            line-height: 28px;
+        }
+
+        @-webkit-keyframes navbaranimation {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @-moz-keyframes navbaranimation {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @keyframes navbaranimation {
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+{if $demo == 'pc'}
+<iframe class="iframe-preview " width="100%" src="{$url}"></iframe>
+{else}
+<iframe class="iframe-preview iframe-preview-mobile " width="100%" src="{$url}"></iframe>
+{/if}
+
+<nav class="navbar navbar-preview">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6 col-sm-4 text-left">
+
+            </div>
+            <div class="col-xs-6 col-sm-4 ">
+                <ul class="nav-preview" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link btn-desktop {if $demo=='pc'}active{/if}" href="javascript:" data-url="{SITE_URL}" data-toggle="tooltip" data-placement="left" title="PC端浏览" data-original-title="PC端浏览">
+                            <i class="fa fa-desktop"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-mobile {if $demo=='mobile'}active{/if}" href="javascript:" data-url="{SITE_MURL}" data-toggle="tooltip" data-placement="right" title="移动端预览" data-original-title="移动端预览">
+                            <i class="fa fa-mobile fa-2x" style="font-size:1.4em;"></i>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-xs-6 col-sm-4 text-right">
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    $(function () {
+        $(document).on('click', ".nav-link", function (e) {
+            $(".iframe-preview").toggleClass("iframe-preview-mobile", $(this).hasClass("btn-mobile"));
+            $(".nav-link").removeClass("active");
+            $(this).addClass("active");
+            $(".iframe-preview").attr('src', $(this).data('url'));
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

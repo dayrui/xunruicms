@@ -562,14 +562,22 @@ class Api extends \Phpcmf\Common {
     }
 
 	/**
-	 * 预览移动端网站
+	 * 预览网站
 	 */
-	public function mobile() {
+	public function demo() {
+
+	    $name = \Phpcmf\Service::L('input')->get('name');
+	    if ($name == 'pc') {
+	        $url = SITE_URL;
+        } else {
+	        $url = SITE_MURL;
+        }
 
         \Phpcmf\Service::V()->assign([
-            'url' => SITE_MURL,
+            'url' => $url,
+            'demo' => $name,
         ]);
-        \Phpcmf\Service::V()->display('api_mobile.html');exit;
+        \Phpcmf\Service::V()->display('api_demo.html');exit;
     }
 
 	/**
