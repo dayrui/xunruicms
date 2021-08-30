@@ -103,6 +103,13 @@
                     <div class="form-body">
 
                         <div class="form-group">
+                            <label class="col-xs-1 control-label ">{dr_lang('文件路径')}</label>
+                            <div class="col-xs-8">
+                                <p class="form-control-static">{dr_safe_replace_path($path)}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-xs-1 control-label ">{dr_lang('文件别名')}</label>
                             <div class="col-xs-3">
                                 <input type="text" class="form-control" id="cname" name="cname" value="{htmlspecialchars($cname)}">
