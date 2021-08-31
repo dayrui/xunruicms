@@ -74,7 +74,7 @@
 
                     {loop $list_field $i $tt}
                     <td {if $tt.center} class="table-center" style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
-                    {/list}
+                    {/loop}
                     <td>
                         {if $ci->_is_admin_auth('edit')}
                         <label><a href="{dr_url($uriprefix.'/edit', ['id'=>$t.id])}" class="btn btn-xs blue"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>

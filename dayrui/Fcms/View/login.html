@@ -8,12 +8,12 @@
     <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <link href="{THEME_PATH}assets/global/css/login.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
 </head>
-<body class=" login" style="padding-top: 50px !important;">
-<div class="logo">
-    <a href="{SITE_URL}"><img src="{THEME_PATH}assets/logo.png" /> </a>
-</div>
+<body class="login">
 <div class="content">
-    <form class="login-form" action="" onsubmit="return dr_submit()" method="post" style="padding:50px 0">
+    <div class="logo">
+        <a href="{SITE_URL}"><img src="{THEME_PATH}assets/logo.png" /> </a>
+    </div>
+    <form class="login-form" action="" onsubmit="return dr_submit()" method="post">
         {$form}
         <div class="alert alert-danger display-hide">
             <span>  </span>
