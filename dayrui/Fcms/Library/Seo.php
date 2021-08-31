@@ -212,8 +212,6 @@ class Seo {
                 $str[$f] = is_array($t) ? implode('|', $t) : $t;
             }
 
-            $seo['meta_keywords'].= implode(',', $str).',';
-
             // 避免重复keyword
             if (isset($str['keyword']) && strpos($meta_title, 'keyword') !== false) {
                 unset($str['keyword']);
@@ -232,7 +230,6 @@ class Seo {
             }
             $meta_title = str_replace($replace, $new, $meta_title);
         }
-
         return $this->get_seo_value($data, [
             'meta_title' => $meta_title,
             'param_value' => $seo['param_value'],
