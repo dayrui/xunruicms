@@ -47,7 +47,7 @@ class Autoload extends AutoloadConfig
 		    'Phpcmf\Table'                => CMSPATH.'Core/Table.php',
 		    'Phpcmf\Model'                => CMSPATH.'Core/Model.php',
 		    'Phpcmf\View'                 => CMSPATH.'Core/View.php',
-            'Phpcmf\App\Common'           => CMSPATH.'Core/Common.php',
+            'Phpcmf\Common'               => CMSPATH.'Core/Common.php',
             'Phpcmf\Home\Module'          => CMSPATH.'Extend/Home/Module.php',
         ];
 

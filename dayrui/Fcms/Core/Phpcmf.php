@@ -842,7 +842,7 @@ abstract class Common extends \CodeIgniter\Controller {
      */
     public function _member_option($call = 1) {
         if (IS_USE_MEMBER) {
-            \Phpcmf\Service::L('member', 'member')->_member_option($this);
+            \Phpcmf\Service::L('member', 'member')->member_option($this);
         }
     }
 
