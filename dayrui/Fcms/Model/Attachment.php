@@ -237,7 +237,11 @@ class Attachment extends \Phpcmf\Model {
             dr_dir_delete($cache_path.md5($index['id']).'/', true);
         }
 
-        \Phpcmf\Service::L('input')->system_log('删除附件（#'.$index['id'].'）'.dr_get_file_url($info));
+        // 删除附件进行记录
+        \Phpcmf\Service::L('input')->system_log('删除附件（#'.$index['id'].'-'.dr_now_url().'）'.var_export($info, true));
+        if (CI_DEBUG) {
+            log_message('debug', '删除附件（#'.$index['id'].'）'.dr_get_file_url($info));
+        }
 
         // 删除缓存
         \Phpcmf\Service::L('cache')->del_file('attach-info-'.$index['id'], 'attach');

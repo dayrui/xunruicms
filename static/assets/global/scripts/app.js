@@ -1228,7 +1228,7 @@ function dr_install_module(url) {
 
 
 // 推送模块数据
-function dr_module_send(title, url, nogo = 0) {
+function dr_module_send(title, url, nogo) {
     var width = '50%';
     var height = '60%';
     if (is_mobile_cms == 1) {
