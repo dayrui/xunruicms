@@ -541,7 +541,7 @@ class Check extends \Phpcmf\Common
                 }
 
                 // 用户系统
-                if (\Phpcmf\Service::M()->table('member')->counts() > 3 && !dr_is_app('member')) {
+                if (\Phpcmf\Service::M()->is_table_exists('member_menu') && !dr_is_app('member')) {
                     $error[] = $app_name['member'];
                 }
 
