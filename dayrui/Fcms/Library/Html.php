@@ -28,4 +28,13 @@ class Html
         return $webpath.$file;
     }
 
+    public function get_category_data($app, $cat, $maxsize) {
+        \Phpcmf\Service::C()->_json(0, '需要安装官方版【内容静态生成】插件');
+    }
+
+
+    public function get_show_data($app, $param) {
+        \Phpcmf\Service::C()->_json(0, '需要安装官方版【内容静态生成】插件');
+    }
+
 }
