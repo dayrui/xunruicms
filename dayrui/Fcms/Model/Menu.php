@@ -62,7 +62,7 @@ class Menu extends \Phpcmf\Model {
                 'displayorder' => (int)$data['displayorder'],
             ]);
         } elseif ($this->is_table_exists('member_menu')) {
-            // 重复判断
+            // 重复 判断
             if ($data['uri']  && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
