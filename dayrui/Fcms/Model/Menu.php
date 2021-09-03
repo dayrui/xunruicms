@@ -61,7 +61,7 @@ class Menu extends \Phpcmf\Model {
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
             ]);
-        } else {
+        } elseif ($this->is_table_exists('member_menu')) {
             // 重复判断
             if ($data['uri']  && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
@@ -105,7 +105,7 @@ class Menu extends \Phpcmf\Model {
             $this->db->table('admin_menu')->where('id', (int)$id)->update($data);
         } elseif ($table == 'admin_min') {
             $this->db->table('admin_min_menu')->where('id', (int)$id)->update($data);
-        } else {
+        } elseif ($this->is_table_exists('member_menu')) {
             $this->db->table('member_menu')->where('id', (int)$id)->update($data);
         }
 
