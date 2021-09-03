@@ -413,7 +413,9 @@ class Check extends \Phpcmf\Common
                             }
                             // 增加长度
                             $table = $prefix.$siteid.'_'.$m['dirname'];
-                            \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `inputip` `inputip` VARCHAR(100) NOT NULL COMMENT \'客户端ip信息\';');
+                            if (\Phpcmf\Service::M()->db->fieldExists('inputip', $table)) {
+                                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `inputip` `inputip` VARCHAR(100) NOT NULL COMMENT \'客户端ip信息\';');
+                            }
                             $table = $prefix.$siteid.'_'.$m['dirname'].'_recycle';
                             if (\Phpcmf\Service::M()->db->tableExists($table)) {
                                 // 创建字段 删除理由
