@@ -10513,6 +10513,7 @@ code.form-control-static {
 }
 
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle i {
+    color: #eef4f9;
     font-size: 17px
 }
 
