@@ -208,7 +208,7 @@ class Form
                                 }
                             }
                         } else {
-                            log_message('error', "校验方法 $method 不存在".FC_NOW_URL);
+                            log_message('error', "校验方法 $method 不存在");
                         }
                     } else {
                         // 函数格式
@@ -219,7 +219,7 @@ class Form
                                 return [[], ['name' => $name, 'error' => $rt['msg']]];
                             }
                         } else {
-                            log_message('error', "校验函数 $func 不存在！".FC_NOW_URL);
+                            log_message('error', "校验函数 $func 不存在！");
                         }
                     }
                 }
@@ -232,7 +232,7 @@ class Form
                             // 开始过滤
                             $post[$name] = call_user_func_array([$this, $method], [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤方法 $method 不存在！".FC_NOW_URL);
+                            log_message('error', "过滤方法 $method 不存在！");
                         }
                     } else {
                         // 函数格式
@@ -241,7 +241,7 @@ class Form
                             // 开始过滤
                             $post[$name] = call_user_func_array($func, [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤函数 $func 不存在！".FC_NOW_URL);
+                            log_message('error', "过滤函数 $func 不存在！");
                         }
                     }
                 }
@@ -258,10 +258,10 @@ class Form
                                 return [[], ['name' => $name, 'error' => dr_lang('%s已经存在', $field['name'])]];
                             }
                         } else {
-                            log_message('error', "字段唯一性验证失败：表".$table."中字段".$name."不存在！".FC_NOW_URL);
+                            log_message('error', "字段唯一性验证失败：表".$table."中字段".$name."不存在！");
                         }
                     } else {
-                        log_message('error', "字段唯一性验证失败：数据表不存在！".FC_NOW_URL);
+                        log_message('error', "字段唯一性验证失败：数据表不存在！");
                     }
                 }
             }

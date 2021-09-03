@@ -41,7 +41,7 @@
         <table class="table table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
             <tr class="heading">
-                {if $ci->_is_admin_auth('del')}
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
                 <th class="myselect">
                     <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                         <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
