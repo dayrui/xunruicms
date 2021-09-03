@@ -117,7 +117,7 @@ class Menu extends \Phpcmf\Model {
 
         $replace = '`icon`="'.$icon.'", `name`=REPLACE(`name`, \''.addslashes($old).'\', \''.addslashes($new).'\')';
 
-        $this->db->query('UPDATE `'.$this->dbprefix('member_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
+        $this->is_table_exists('member_menu') && $this->db->query('UPDATE `'.$this->dbprefix('member_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
 
         $this->db->query('UPDATE `'.$this->dbprefix('admin_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/home/index"');
         $this->db->query('UPDATE `'.$this->dbprefix('admin_menu').'` SET '.$replace.' WHERE uri="'.$mid.'/verify/index"');
@@ -177,7 +177,7 @@ class Menu extends \Phpcmf\Model {
         }
 
         // 内容模块入库用户菜单
-        if ($config['system'] == 1 && IS_USE_MEMBER) {
+        if ($config['system'] == 1 && $this->is_table_exists('member_menu')) {
             $left = $this->db->table('member_menu')->where('mark', 'content-module')->get()->getRowArray();
             if ($left) {
                 // 查询模块菜单
@@ -319,7 +319,7 @@ class Menu extends \Phpcmf\Model {
             }
         }
 
-        if ($menu['member'] && IS_USE_MEMBER) {
+        if ($menu['member'] && $this->is_table_exists('member_menu')) {
             // 用户菜单
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
@@ -389,7 +389,7 @@ class Menu extends \Phpcmf\Model {
             }
         }
 
-        if ($menu['member'] && IS_USE_MEMBER) {
+        if ($menu['member'] && $this->is_table_exists('member_menu')) {
             // 用户菜单
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
@@ -431,12 +431,15 @@ class Menu extends \Phpcmf\Model {
 
 
         $this->db->table('admin_menu')->where('mark', 'app-'.$dir)->delete();
-        IS_USE_MEMBER && $this->db->table('member_menu')->where('mark', 'app-'.$dir)->delete();
         $this->db->table('admin_min_menu')->where('mark', 'app-'.$dir)->delete();
 
         $this->db->table('admin_menu')->like('mark', 'app-'.$dir.'%')->delete();
-        IS_USE_MEMBER && $this->db->table('member_menu')->like('mark', 'app-'.$dir.'%')->delete();
         $this->db->table('admin_min_menu')->like('mark', 'app-'.$dir.'%')->delete();
+
+        if ($this->is_table_exists('member_menu')) {
+            $this->db->table('member_menu')->where('mark', 'app-'.$dir)->delete();
+            $this->db->table('member_menu')->like('mark', 'app-'.$dir.'%')->delete();
+        }
     }
 
     // 初始化菜单
@@ -511,7 +514,7 @@ class Menu extends \Phpcmf\Model {
                 }
             }
 
-        } elseif (IS_USE_MEMBER && $table == 'member') {
+        } elseif ($this->is_table_exists('member_menu') && $table == 'member') {
             // 清空表
             $this->db->table('member_menu')->truncate();
             $this->db->table('member_menu')->emptyTable();
@@ -723,7 +726,7 @@ class Menu extends \Phpcmf\Model {
             $menu['admin'] = $list;
         }
         // member 菜单
-        if (IS_USE_MEMBER) {
+        if ($this->is_table_exists('member_menu')) {
             $data = $this->db->table('member_menu')->where('hidden', 0)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
             if ($data) {
                 $list = [
