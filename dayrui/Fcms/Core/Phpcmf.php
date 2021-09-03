@@ -75,7 +75,7 @@ abstract class Common extends \CodeIgniter\Controller {
             $this->cmf_version = [
                 'id' => 10,
                 'name' => '迅睿CMS开源框架',
-                'version' => '4.5.2.Dev',
+                'version' => '4.5.3.Dev',
                 'downtime' => SYS_TIME,
                 'updatetime' => '--',
             ];
