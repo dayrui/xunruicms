@@ -139,7 +139,12 @@ class Module extends \Phpcmf\Common
         $list = [];
         // 移动端请求时
         if (IS_API_HTTP && $data['id']) {
-            $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname'].' id='.$data['id'].' total='.$sototal.' order='.$data['params']['order'].' catid='.$catid.' more=1 page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize')).' urlrule=test');
+            $rt = \Phpcmf\Service::V()->list_tag('search module='.$this->module['dirname']
+                .' id='.$data['id'].' total='.$sototal
+                .' order='.$data['params']['order'].' catid='.$catid
+                .(isset($_GET['more']) && $_GET['more'] ? ' more=1' : '')
+                .' page=1 pagesize='.intval(\Phpcmf\Service::L('input')->request('pagesize'))
+                .' urlrule=test');
             $list = $rt['return'];
         }
 
