@@ -1605,9 +1605,29 @@ class View {
                 }
 
                 $fields = $module['field']; // 主表的字段
-                $system['order'] = $this->_set_orders_field_prefix($system['order'], [$table => $tableinfo[$table]]);
+                $_order = [$table => $tableinfo[$table]];
                 $sql_from = '`'.$table.'`';
                 $sql_where = $this->_get_where($where); // sql的where子句
+
+                // 关联栏目模型表
+                if ($system['more'] && isset($module['category_data_field']) && $module['category_data_field']) {
+                    $table_more = $table.'_category_data'; // 栏目模型表
+                    $sql_from.= " LEFT JOIN $table_more ON `$table_more`.`id`=`$table`.`id`"; // sql的from子句
+                    $_order[$table_more] = $tableinfo[$table_more];
+                    if (!$system['field']) {
+                        $system['field'] = '`'.$table.'`.*';
+                        $fields_more = \Phpcmf\Service::M()->db->getFieldNames($table_more);
+                        if ($fields_more) {
+                            foreach ($fields_more as $f) {
+                                if (!in_array($f, ['id', 'catid', 'uid'])) {
+                                    $system['field'].= ',`'.$table_more.'`.`'.$f.'`';
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $system['order'] = $this->_set_orders_field_prefix($system['order'], $_order); // 给排序字段加上表前缀
 
                 // 分页处理
                 $page = $this->_get_page_id($system['page']);
