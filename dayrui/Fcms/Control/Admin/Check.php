@@ -316,20 +316,46 @@ class Check extends \Phpcmf\Common
                 if (!\Phpcmf\Service::M()->db->fieldExists('history', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT NOT NULL');
                 }
-
-                if (IS_USE_MEMBER) {
-                    $table = $prefix.'admin_setting';
-                    if (!\Phpcmf\Service::M()->db->tableExists($table)) {
-                        \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                $table = $prefix.'admin_setting';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
                       `name` varchar(50) NOT NULL,
                       `value` mediumtext NOT NULL,
                       PRIMARY KEY (`name`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';'));
+                }
+
+                if (IS_USE_MEMBER) {
+                    $table = $prefix.'member_setting';
+                    if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                        \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                          `name` varchar(50) NOT NULL,
+                          `value` mediumtext NOT NULL,
+                          PRIMARY KEY (`name`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT=\'用户属性参数表\';'));
                     } else {
-                        if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
-                            // 权限数据
-                            \Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
+                        if (\Phpcmf\Service::M()->db->fieldExists('id', $table)) {
+                            // 处理id字段
+                            $data = \Phpcmf\Service::M()->db->table('member_setting')->get()->getResultArray();
+                            \Phpcmf\Service::M()->query('DROP TABLE IF EXISTS `'.$table.'`;');
+                            \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                              `name` varchar(50) NOT NULL,
+                              `value` mediumtext NOT NULL,
+                              PRIMARY KEY (`name`)
+                            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT=\'用户属性参数表\';'));
+                            if ($data) {
+                                foreach ($data as $t) {
+                                    \Phpcmf\Service::M()->table('member_setting')->replace([
+                                        'name' => $t['name'],
+                                        'value' => $t['value'],
+                                    ]);
+                                }
+                            }
                         }
+                    }
+                    if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
+                        // 权限数据
+                        \Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
                     }
                 }
 
