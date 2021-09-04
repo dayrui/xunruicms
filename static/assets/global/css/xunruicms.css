@@ -10511,7 +10511,9 @@ code.form-control-static {
     height: 70px;
     padding: 19px 10px 10px
 }
-
+.page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle:hover i, .page-admin-all .page-header.navbar .top-menu .navbar-nav>li.dropdown.open .dropdown-toggle i {
+    color: #000;
+}
 .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle i {
     color: #eef4f9;
     font-size: 17px
