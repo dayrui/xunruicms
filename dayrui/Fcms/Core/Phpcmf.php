@@ -297,7 +297,7 @@ abstract class Common extends \CodeIgniter\Controller {
 
         // 站群系统接入
         if (is_file(ROOTPATH.'api/fclient/sync.php')) {
-            $sync = require ROOTPATH.'api/fclient/sync.php';
+            $sync = \Phpcmf\Service::R(ROOTPATH.'api/fclient/sync.php') ;
             if ($sync['status'] == 4) {
                 if ($sync['close_url']) {
                     dr_redirect($sync['close_url']);
