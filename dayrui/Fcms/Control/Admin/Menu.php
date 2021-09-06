@@ -34,7 +34,7 @@ class Menu extends \Phpcmf\Common
 					'empty' => dr_lang('菜单图标不能为空')
 				],
 				'filter' => [],
-				'length' => '30'
+				'length' => '100'
 			],
 			'uri' => [
 				'name' => '系统路径',
