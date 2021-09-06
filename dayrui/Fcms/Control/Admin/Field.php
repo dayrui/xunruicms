@@ -381,11 +381,11 @@ class Field extends \Phpcmf\Common {
                         if (in_array($t['id'], $cat['catid'])) {
                             // 表示选中的栏目了
                             $setting['module_field'][$data['fieldname']] = 1;
-                            \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
+                            \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                         } else {
                             if (isset($setting['module_field'][$data['fieldname']])) {
                                 unset($setting['module_field'][$data['fieldname']]);
-                                \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
+                                \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                             }
                         }
                     }

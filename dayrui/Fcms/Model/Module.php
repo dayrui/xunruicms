@@ -626,7 +626,7 @@ class Module extends \Phpcmf\Model
             }
 
             // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
-            $like = ['catmodule-'.$cdir];
+            $like = ['catmodule-'.$cache['dirname']];
             if ($cache['share']) {
                 $like[] = 'catmodule-share';
             }
