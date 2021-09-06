@@ -298,11 +298,15 @@ class Auth extends \Phpcmf\Model {
         return 0;
     }
 
-    // 获取全部角色组
-    public function get_role_all() {
+    // 获取角色组
+    public function get_role_all($rid = []) {
 
         $role = [];
-        $data = $this->table('admin_role')->order_by('id ASC')->getAll();
+        $table = $this->table('admin_role');
+        if ($rid) {
+            $table->where_in('id', $rid);
+        }
+        $data = $table->order_by('id ASC')->getAll();
         if ($data) {
             foreach ($data as $t) {
                 $t['site'] = dr_string2array($t['site']);

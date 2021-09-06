@@ -9,13 +9,24 @@
 class Root extends \Phpcmf\Table
 {
     public $role;
+    private $myrole;
+    private $mywhere;
 
     public function __construct(...$params)
     {
         parent::__construct(...$params);
-        // 不是超级管理员
         if (!dr_in_array(1, $this->admin['roleid'])) {
-            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+            // 不是超级管理员
+            if (dr_is_app('cqx')) {
+                $this->myrole = \Phpcmf\Service::M('content', 'cqx')->myrole();
+            } else {
+                $this->myrole = $this->admin['roleid'];
+            }
+            $this->role = \Phpcmf\Service::M('auth')->get_role_all($this->myrole);
+            $this->mywhere = '`uid` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid in ('.implode(',', $this->myrole).'))';
+        } else {
+            $this->role = \Phpcmf\Service::M('auth')->get_role_all();
+            $this->myrole = [];
         }
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
@@ -29,7 +40,6 @@ class Root extends \Phpcmf\Table
             ),
         ]);
         $this->name = dr_lang('管理员');
-        $this->role = \Phpcmf\Service::M('auth')->get_role_all();
     }
 
     public function index() {
@@ -41,6 +51,9 @@ class Root extends \Phpcmf\Table
         $where = [];
         if ($p['keyword']) {
             $where[] = '`username` LIKE "%'.$p['keyword'].'%"';
+        }
+        if ($this->myrole) {
+           $where[] = $this->mywhere;
         }
         if ($p['rid']) {
             $where[] = '`uid` IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid='.$p['rid'].')';
@@ -72,10 +85,14 @@ class Root extends \Phpcmf\Table
     public function login_index() {
 
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        $where = 'uid='.$uid;
+        if ($this->myrole) {
+            $where.= ' and '.$this->mywhere;
+        }
         $this->_init([
             'table' => 'admin_login',
             'order_by' => 'logintime desc',
-            'where_list' => 'uid='.$uid,
+            'where_list' => $where,
         ]);
         list($a, $data) = $this->_List(['uid' => $uid]);
 
@@ -103,6 +120,13 @@ class Root extends \Phpcmf\Table
                 $this->_json(0, dr_lang('账号不能为空'), ['field' => 'username']);
             } elseif (!$post['role']) {
                 $this->_json(0, dr_lang('至少要选择一个角色组'), ['field' => 'role']);
+            }
+            if ($this->myrole) {
+                foreach ($post['role'] as $t) {
+                    if (!in_array($t, $this->myrole)) {
+                        $this->_json(0, dr_lang('存在无权限操作的角色组'), ['field' => 'role']);
+                    }
+                }
             }
             $data = \Phpcmf\Service::M()->db->table('member')->where('username', $name)->get()->getRowArray();
             if (!$data) {
@@ -139,6 +163,7 @@ class Root extends \Phpcmf\Table
                 $this->_json(0, $rt['msg']);
             }
             if (dr_in_array(1, $post['role'])) {
+                // 超管模式
                 \Phpcmf\Service::M()->table('admin_role_index')->insert([
                     'uid' => $data['id'],
                     'roleid' => 1,
@@ -187,8 +212,12 @@ class Root extends \Phpcmf\Table
                 $this->_json(0, dr_lang('邮箱%s已经注册', $post['email']), ['field' => 'email']);
             } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'. $member['id'])->where('phone', $post['phone'])->countAllResults()) {
                 $this->_json(0, dr_lang('手机号码%s已经注册', $post['phone']), ['field' => 'phone']);
-            } elseif (!dr_in_array(1, $this->admin['roleid']) && dr_in_array(1, $post['role'])) {
-                $this->_admin_msg(0, dr_lang('无权限编辑')); // 不是超级管理员,排除超管账号
+            } elseif ($this->myrole) {
+                foreach ($post['role'] as $t) {
+                    if (!in_array($t, $this->myrole)) {
+                        $this->_json(0, dr_lang('存在无权限操作的角色组'), ['field' => 'role']);
+                    }
+                }
             }
             \Phpcmf\Service::M()->table('member')->update($member['id'], [
                 'phone' => $post['phone'],
@@ -246,9 +275,8 @@ class Root extends \Phpcmf\Table
         // 批量操作
         foreach ($ids as $u) {
             // 不是超级管理员,排除超管账号
-            if (!dr_in_array(1, $this->admin['roleid'])
-                && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $u)->where('roleid', 1)->counts()) {
-                continue;
+            if ($this->myrole && !\Phpcmf\Service::M()->table('admin_role_index')->where('uid', $u)->where($this->mywhere)->counts()) {
+                $this->_json(0, dr_lang('存在无权限操作的角色组'), ['field' => 'role']);
             }
             \Phpcmf\Service::M()->db->table('admin')->where('uid', $u)->delete();
             \Phpcmf\Service::M()->db->table('admin_login')->where('uid', $u)->delete();
