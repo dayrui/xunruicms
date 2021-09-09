@@ -159,8 +159,7 @@ class Cloud extends \Phpcmf\Common
                         'mtype' => $cfg['mtype'],
                         'ftype' => $cfg['ftype'],
                         'icon' => $cfg['icon'],
-                        'author' => $cfg['author'],
-                        'store' => $vsn['store'],
+                        'url' => $cfg['uri'] ? \Phpcmf\Service::M('auth')->_menu_link_url($cfg['uri'], '', [], true) : '',
                         'version' => $vsn['version'],
                         'install' => is_file($path.'install.lock'),
                     ];

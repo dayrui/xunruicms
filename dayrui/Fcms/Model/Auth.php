@@ -825,7 +825,7 @@ class Auth extends \Phpcmf\Model {
     }
 
     // 菜单点击url
-    public function _menu_link_url($select, $uri = '', $param = []) {
+    public function _menu_link_url($select, $uri = '', $param = [], $is_url = false) {
 
         if ($uri && !$this->_is_admin_auth($uri)) {
             // 没权限
@@ -836,10 +836,11 @@ class Auth extends \Phpcmf\Model {
         $menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri', $select);
         if ($menu) {
             return 'javascript:top.Mlink('.intval($menu['tid']).', '.intval($menu['pid']).', '.intval($menu['id']).', \''.\Phpcmf\Service::L('router')->url($uri, $param).'\');';
+        } elseif ($is_url) {
+            return dr_url($select);
         } else {
             return 'javascript:;';
         }
-
     }
 
     // 程序鉴权
