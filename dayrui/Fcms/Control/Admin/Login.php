@@ -85,7 +85,8 @@ class Login extends \Phpcmf\Common
                             ]);
                         }
                     }
-                    $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url, true)]);
+                    $url = dr_redirect_safe_check(\Phpcmf\Service::L('input')->xss_clean($url, true));
+                    $this->_json(1, 'ok', ['sync' => $sync, 'url' => $url]);
                 } else {
                     // 登录失败
                     if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
