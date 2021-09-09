@@ -635,7 +635,7 @@ abstract class Common extends \CodeIgniter\Controller {
             if ($code) {
                 $url = dr_safe_url(urldecode($_GET['is_show_msg']), true);
                 if (!$url) {
-                    $url = isset($data['url']) ? $data['url'] : '';
+                    $url = dr_redirect_safe_check(isset($data['url']) ? $data['url'] : '');
                 }
             }
             $this->_msg($code, $msg, $url);

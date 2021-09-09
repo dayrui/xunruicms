@@ -31,7 +31,7 @@ class Oauth extends \Phpcmf\Common
         $appkey = $this->member_cache['oauth'][$name]['value'];
         $callback_url = OAUTH_URL.'index.php?s=api&c=oauth&m=index&action=callback&name='.$name.'&type='.$type;
         if ($back) {
-            $callback_url.= '&back='.urlencode($back);
+            $callback_url.= '&back='.urlencode(dr_redirect_safe_check($back));
         }
 
         if (is_file(FCPATH.'ThirdParty/OAuth/'.ucfirst($name).'/Run.php')) {

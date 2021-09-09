@@ -152,6 +152,28 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
+                    $menu = [];
+                    $install = is_file($path.'install.lock');
+                    if ($install && is_file($path.'Config/Menu.php')) {
+                        //$cfg['uri'] ? \Phpcmf\Service::M('auth')->_menu_link_url($cfg['uri'], '', [], true) : ''
+                        $m = require $path.'Config/Menu.php';
+                        if ($m['admin']) {
+                            foreach ($m['admin'] as $m1) {
+                                if ($m1['left']) {
+                                    foreach ($m1['left'] as $m2) {
+                                        if ($m2['link']) {
+                                            foreach ($m2['link'] as $m3) {
+                                                $menu[] = [
+                                                    'name' => $m3['name'],
+                                                    'url' =>  \Phpcmf\Service::M('auth')->_menu_link_url($m3['uri'], '', [], true),
+                                                ];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     $data[$key] = [
                         'id' => $vsn['id'],
                         'name' => $cfg['name'],
@@ -159,9 +181,9 @@ class Cloud extends \Phpcmf\Common
                         'mtype' => $cfg['mtype'],
                         'ftype' => $cfg['ftype'],
                         'icon' => $cfg['icon'],
-                        'url' => $cfg['uri'] ? \Phpcmf\Service::M('auth')->_menu_link_url($cfg['uri'], '', [], true) : '',
+                        'menu' => $menu,
                         'version' => $vsn['version'],
-                        'install' => is_file($path.'install.lock'),
+                        'install' => $install,
                     ];
                 }
             }

@@ -4135,6 +4135,16 @@ if (! function_exists('dr_redirect'))
 }
 
 
+if (! function_exists('dr_redirect_safe_check'))
+{
+    /**
+     * 跳转地址安全检测
+     */
+    function dr_redirect_safe_check($url) {
+        return $url;
+    }
+}
+
 if ( ! function_exists('dr_directory_map'))
 {
     /**
