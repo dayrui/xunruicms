@@ -335,14 +335,6 @@
                     'fieldname' => 'is_lock',
                     'setting' => []
                 ],
-                'is_auth' => [
-                    'name' => dr_lang('实名认证'),
-                    'ismain' => 1,
-                    'ismember' => 1,
-                    'fieldtype' => 'Text',
-                    'fieldname' => 'is_auth',
-                    'setting' => []
-                ],
                 'is_verify' => [
                     'name' => dr_lang('审核状态'),
                     'ismain' => 1,

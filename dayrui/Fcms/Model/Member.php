@@ -1195,7 +1195,6 @@ class Member extends \Phpcmf\Model {
 
         // 附表信息
         $data['id'] = $member['uid'] = $uid = $rt['code'];
-        $data['is_auth'] = 0;
         $data['is_admin'] = 0;
         $data['is_avatar'] = 0;
         // 审核状态值

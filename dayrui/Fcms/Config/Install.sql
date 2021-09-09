@@ -339,7 +339,6 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_data` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `is_admin` tinyint(1) unsigned DEFAULT 0 COMMENT '是否是管理员',
   `is_lock` tinyint(1) unsigned DEFAULT 0 COMMENT '账号锁定标识',
-  `is_auth` tinyint(1) unsigned DEFAULT 0 COMMENT '实名认证标识',
   `is_verify` tinyint(1) unsigned DEFAULT 0 COMMENT '审核标识',
   `is_mobile` tinyint(1) unsigned DEFAULT 0 COMMENT '手机认证标识',
   `is_email` tinyint(1) unsigned DEFAULT 0 COMMENT '邮箱认证标识',

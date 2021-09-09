@@ -300,7 +300,6 @@ $db[\'default\']	= [
                                 'id' => $id,
                                 'is_lock' => 0,
                                 'is_admin' => 1,
-                                'is_auth' => 1,
                                 'is_verify' => 1,
                                 'is_mobile' => 1,
                                 'is_complete' => 1,
