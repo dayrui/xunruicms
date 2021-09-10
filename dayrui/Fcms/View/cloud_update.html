@@ -41,7 +41,7 @@
 					{/if}
 					</label>
                     <label style="display: none" id="dr_duibi_{$dir}">
-					<a href="{dr_url('cloud/bf')}" class="btn red btn-xs"> <i class="fa fa-code"></i> {dr_lang('文件对比')}</a>
+					<a href="{dr_url('cloud/bf')}" class="btn red btn-xs"> <i class="fa fa-code"></i> {dr_lang('文件对比升级')}</a>
 					{if IS_DEV}
 					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('更新前请做好系统备份，你确定要更新吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线更新')}</button>
 					{/if}
