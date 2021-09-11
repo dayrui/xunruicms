@@ -1267,33 +1267,20 @@ class Api extends \Phpcmf\Common {
                     $content = \Phpcmf\Service::L('file')->base64_image($_FILES["file"]["tmp_name"]);
                 }
             }
-            list($cache_path, $cache_url) = dr_avatar_path();
+            list($cache_path) = dr_avatar_path();
             if (preg_match('/^(data:\s*image\/(\w+);base64,)/i', $content, $result)) {
-                $ext = strtolower($result[2]);
-                if (!in_array($ext, ['png', 'jpg', 'jpeg'])) {
-                    $this->_json(0, dr_lang('图片格式不正确'));
-                } elseif (!is_dir($cache_path)) {
-                    $this->_json(0, dr_lang('头像存储目录不存在'));
-                }
                 $content = base64_decode(str_replace($result[1], '', $content));
                 if (strlen($content) > 30000000) {
                     $this->_json(0, dr_lang('图片太大了'));
                 }
-                $file = $cache_path.$uid.'.jpg';
-                $temp = dr_upload_temp_path().'member.'.$uid.'.jpg';
-                $size = file_put_contents($temp, $content);
-                if (!$size) {
-                    $this->_json(0, dr_lang('头像存储失败'));
-                } elseif (!is_file($temp)) {
-                    $this->_json(0, dr_lang('头像存储失败'));
-                } elseif (!getimagesize($temp)) {
-                    unlink($file);
-                    $this->_json(0, '文件不是规范的图片');
-                }
-                // 上传图片到服务器
-                copy($temp, $file);
-                if (!is_file($file)) {
-                    $this->_json(0, dr_lang('头像存储失败'));
+                $rt = \Phpcmf\Service::L('upload')->base64_image([
+                    'content' => $content,
+                    'ext' => 'jpg',
+                    'save_name' => $uid,
+                    'save_file' => $cache_path.$uid.'.jpg',
+                ]);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
                 }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 \Phpcmf\Service::M('member')->clear_cache($uid);
