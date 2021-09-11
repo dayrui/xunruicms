@@ -442,7 +442,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             // 是否单一模式
             if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
                 $is_field_pay = 1;
-                $sku_html = '<p style="margin-top: -10px">
+                $sku_html = '<p>
                     <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
                     <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
                 </p>

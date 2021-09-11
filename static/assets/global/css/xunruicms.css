@@ -11876,7 +11876,7 @@ code.form-control-static {
 
     .page-header.navbar .top-menu .navbar-nav>li.dropdown .dropdown-toggle {
         padding: 27px 6px 23px!important;
-        margin-top: 10px!important
+        margin-top: 0px!important
     }
 
     .page-header.navbar .top-menu .navbar-nav>li.dropdown-language .dropdown-toggle {
@@ -11909,11 +11909,6 @@ code.form-control-static {
         overflow-x: hidden
     }
 
-    .my-top-left .fc-mini-logo {
-        margin-top: 27px;
-        margin-left: 20px
-    }
-
     .page-bar .dropdown-menu,.page-bar .page-breadcrumb {
         float: right;
         right: 10px;
@@ -11935,7 +11930,7 @@ code.form-control-static {
     }
 
     .my-top-right {
-        margin-top: -80px!important
+        margin-top: -70px!important
     }
 
     .navbar-nav {

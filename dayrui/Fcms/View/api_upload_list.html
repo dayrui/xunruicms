@@ -8,17 +8,17 @@
             <ul class="nav nav-tabs" style="float:left;">
                 {if $unused}
                 <li id="tab_nav_0" class="{if $pp==0}active{/if}">
-                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未使用的附件')} </a>
+                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未使用')} </a>
                 </li>
                 {/if}
                 <li class="dev {if $pp==1}active{/if}">
-                    <a href="{$tab_url}&pp=1"><i class="fa fa-folder-open"></i> {dr_lang('已使用的附件')} </a>
+                    <a href="{$tab_url}&pp=1"><i class="fa fa-folder-open"></i> {dr_lang('已使用')} </a>
                 </li>
                 {if $field}
                 <link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
                 <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js" type="text/javascript"></script>
                 <li class="dev" id="fileupload">
-                    <a href="JavaScript:;" title="{$field.tips}" class="fileinput-button tooltips" data-container="body" data-placement="bottom" data-original-title="{$field.tips}"> <i class="fa fa-upload"></i> {dr_lang('上传新附件')}<input type="file" name="file_data"> </a>
+                    <a href="JavaScript:;" title="{$field.tips}" class="fileinput-button tooltips" data-container="body" data-placement="bottom" data-original-title="{$field.tips}"> <i class="fa fa-upload"></i> {dr_lang('上传')}<input type="file" name="file_data"> </a>
                 </li>
                 <script type="text/javascript">
                     $(function() {
