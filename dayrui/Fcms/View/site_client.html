@@ -24,6 +24,9 @@
                             </div>
                             <div class="col-md-7">
                                 <label><input class="form-control input-large" readonly type="text" value="{$pc_domain}"></label>
+                                {if SITE_ID == 1}
+                                <label><a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}', '450px', '400px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a></label>
+                                {/if}
                             </div>
                         </div>
                         <div class="form-group">
@@ -32,6 +35,10 @@
                             </div>
                             <div class="col-md-7">
                                 <label><input class="form-control input-large" readonly type="text" value="{$mobile_domain}"></label>
+                                {if SITE_ID == 1}
+                                <label><a class="btn red" href="{dr_url("site_mobile/index")}"><i class="fa fa-edit"></i> {dr_lang('变更')}</a></label>
+                                {/if}
+
                             </div>
                         </div>
                         <div class="form-group">
