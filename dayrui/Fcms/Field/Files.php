@@ -72,7 +72,7 @@ class Files extends \Phpcmf\Library\A_Field {
                 <label class="col-md-2 control-label">'.dr_lang('分段上传').'</label>
                 <div class="col-md-9">
                 <input type="checkbox" name="data[setting][option][chunk]" '.($option['chunk'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提示上传效率').'</span>
+                <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提升上传效率').'</span>
                 </div>
             </div>
 			<div class="form-group">
