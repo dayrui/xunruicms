@@ -185,7 +185,8 @@ class Site extends \Phpcmf\Model
             'domain' => strtolower($value),
             'setting' => dr_array2string($site),
         ]);
-
+        // 替换栏目编辑器域名
+        $this->db->query('UPDATE `'.$this->dbprefix('1_share_category').'` SET `content`=REPLACE(`content`, \''.$site['config']['SITE_DOMAIN'].'\', \''.$value.'\')');
     }
 
     // 设置域名
