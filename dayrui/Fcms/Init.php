@@ -53,7 +53,6 @@ define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time())
 
 // 系统变量
 $system = [
-
     'SYS_DEBUG' => 0,
     'SYS_ADMIN_CODE' => 0,
     'SYS_ADMIN_LOG' => 0,
@@ -63,9 +62,8 @@ $system = [
     'SYS_SMS_IMG_CODE' => 0,
     'SYS_GO_404' => 0,
     'SYS_301' => 0,
-
+    'SYS_NOT_UPDATE' => 0,
     'SYS_PAGE_RNAME' => 0,
-
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,
     'SYS_HTTPS' => 0,
@@ -73,7 +71,6 @@ $system = [
     'SYS_ADMIN_LOGINS'  => 0,
     'SYS_ADMIN_LOGIN_TIME'  => 0,
     'SYS_ADMIN_OAUTH'    => 0,
-
     'SYS_ATTACHMENT_DB'     => 1,
     'SYS_ATTACHMENT_GUEST'   => 0,
     'SYS_ATTACHMENT_PATH'   => '',
@@ -86,9 +83,7 @@ $system = [
     'SYS_BDMAP_API' => '',
     'SYS_API_CODE'  => '',
     'SYS_THEME_ROOT'    => '',
-
     'SYS_ATTACHMENT_SAFE'    => '',
-
 ];
 if (is_file(WRITEPATH.'config/system.php')) {
     $my = require WRITEPATH.'config/system.php';
