@@ -242,6 +242,7 @@ class Search extends \Phpcmf\Model {
                     $wh[] = intval($k);
                 }
                 $where[] =  '`'.$table.'`.`id` IN (select `id` from `'.$table.'_flag` where `flag` in ('.implode(',', $wh).'))';
+                $param_new['flag'] = $param['flag'];
             }
 
             // 筛选空值
@@ -252,8 +253,8 @@ class Search extends \Phpcmf\Model {
             }
 
             // 自定义组合查询
-            $param_new['catid'] = $param['catid'];
-            $param_new['keyword'] = $param['keyword'];
+            isset($param['catid']) && $param_new['catid'] = $param['catid'];
+            isset($param['keyword']) && $param_new['keyword'] = $param['keyword'];
             $where = $this->mysearch($this->module, $where, $param_new);
             $where = $where ? implode(' AND ', $where) : '';
             $where_sql = $where ? 'WHERE '.$where : '';
@@ -288,7 +289,7 @@ class Search extends \Phpcmf\Model {
         } elseif ($catid) {
             $data['params']['catid'] = $catid;
         }
-        $data['params']['order'] = $param['order']; // order 参数不变化
+        isset($param['order']) && $data['params']['order'] = $param['order']; // order 参数不变化
 
         return $data;
     }

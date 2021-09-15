@@ -161,7 +161,6 @@ class Module extends \Phpcmf\Common
             dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
         }
 
-        //$this->module['sototal'] = $sototal;
         \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
         \Phpcmf\Service::V()->assign([
             'cat' => $cat,

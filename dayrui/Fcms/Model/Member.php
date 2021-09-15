@@ -1539,7 +1539,7 @@ class Member extends \Phpcmf\Model {
         $this->db->table('admin_login')->where('uid', $id)->delete();
         $this->db->table('admin_role_index')->where('uid', $id)->delete();
         $this->db->table('member_group_verify')->where('uid', $id)->delete();
-        $this->db->table('member_paylog')->where('uid', $id)->delete();
+        $this->is_table_exists('member_paylog') && $this->db->table('member_paylog')->where('uid', $id)->delete();
         $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $id)->delete();
         $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $id)->delete();
         $this->is_table_exists('member_cashlog') && $this->db->table('member_cashlog')->where('uid', $id)->delete();

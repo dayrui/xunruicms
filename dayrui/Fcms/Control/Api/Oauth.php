@@ -37,11 +37,8 @@ class Oauth extends \Phpcmf\Common
         if (is_file(FCPATH.'ThirdParty/OAuth/'.ucfirst($name).'/Run.php')) {
             require FCPATH.'ThirdParty/OAuth/'.ucfirst($name).'/Run.php';
         } else {
-            $this->_msg(0, dr_lang('没有找到接入商（%s）执行程序', $name));
+            $this->_msg(0, IS_DEV ? dr_lang('没有找到接入商（%s）执行程序', $name) : dr_lang('没有找到接入商的执行程序'));
         }
-
     }
-
-
 
 }
