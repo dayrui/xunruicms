@@ -896,7 +896,7 @@ class Member extends \Phpcmf\Model {
         // 登录
         $data = $this->_find_member_info($username);
         if (!$data) {
-            return dr_return_data(0, dr_lang('用户[%s]不存在', $username));
+            return dr_return_data(0, dr_lang('用户不存在'));
         }
         // 密码验证
         $password2 = dr_safe_password($password);
@@ -1147,11 +1147,11 @@ class Member extends \Phpcmf\Model {
 
         // 验证唯一性
         if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('账号[%s]已经注册', $member['username']), ['field' => 'username']);
+            return dr_return_data(0, dr_lang('账号已经注册'), ['field' => 'username']);
         } elseif ($member['email'] && $this->db->table('member')->where('email', $member['email'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('邮箱[%s]已经注册', $member['email']), ['field' => 'email']);
+            return dr_return_data(0, dr_lang('邮箱已经注册'), ['field' => 'email']);
         } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('手机号码[%s]已经注册', $member['phone']), ['field' => 'phone']);
+            return dr_return_data(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
         }
 
         if ($member['username'] == 'guest') {
