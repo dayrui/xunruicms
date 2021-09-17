@@ -386,11 +386,13 @@ class Router {
             return '/#无name参数';
         }
 
-        $obj = \Phpcmf\Service::M('tag', 'tag');
-        if (method_exists($obj, 'get_tag_url')) {
-            $url = $obj->get_tag_url($name);
-            if ($url) {
-                return $url;
+        if (dr_is_app('tag')) {
+            $obj = \Phpcmf\Service::M('tag', 'tag');
+            if (method_exists($obj, 'get_tag_url')) {
+                $url = $obj->get_tag_url($name);
+                if ($url) {
+                    return $url;
+                }
             }
         }
 

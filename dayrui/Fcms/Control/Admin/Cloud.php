@@ -181,6 +181,7 @@ class Cloud extends \Phpcmf\Common
                         'mtype' => $cfg['mtype'],
                         'ftype' => $cfg['ftype'],
                         'icon' => $cfg['icon'],
+                        'author' => $cfg['author'],
                         'menu' => $menu,
                         'version' => $vsn['version'],
                         'install' => $install,
