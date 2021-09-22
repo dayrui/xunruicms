@@ -677,7 +677,7 @@ class Member extends \Phpcmf\Model {
                 return dr_return_data(0, $rt['msg']);
             }
             // 提醒
-            $this->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member_apply/edit:id/'.$rt['code']);
+            $this->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member/apply/edit:id/'.$rt['code']);
             // 审核
             return dr_return_data(1, dr_lang('等待管理员审核'));
         } else {
@@ -1239,7 +1239,7 @@ class Member extends \Phpcmf\Model {
                     break;
             }
             // 发送审核提醒
-            $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member_verify/index:field/id/keyword/'.$uid);
+            $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member/verify/index:field/id/keyword/'.$uid);
         }
 
         // 注册后的通知
@@ -1544,7 +1544,7 @@ class Member extends \Phpcmf\Model {
         $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $id)->delete();
         $this->is_table_exists('member_cashlog') && $this->db->table('member_cashlog')->where('uid', $id)->delete();
         $this->is_table_exists('member_notice') && $this->db->table('member_notice')->where('uid', $id)->delete();
-        $this->delete_admin_notice('member_verify/index:field/id/keyword/'.$id, 0);
+        $this->delete_admin_notice('member/verify/index:field/id/keyword/'.$id, 0);
 
         // 删除头像
         list($cache_path, $cache_url) = dr_avatar_path();
