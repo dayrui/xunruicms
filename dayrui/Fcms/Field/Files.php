@@ -273,16 +273,16 @@ class Files extends \Phpcmf\Library\A_Field {
 
         // 显示模板
         $tpl = '<tr class="template-download files_row">';
-        $tpl .= '<td style="text-align:center;width: 80px;">';
-        $tpl .= '<div class="files_row_preview preview">{preview}</div>';
-        $tpl .= '</td>';
-        $tpl .= '<td class="files_show_info">';
-        $tpl .= '<div class="row">';
-        $tpl .= '<div class="col-md-12 files_show_title_html">';
-        $tpl .= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
-        $tpl .= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
-        $tpl .= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
-        $tpl .= '</div>';
+        $tpl.= '<td style="text-align:center;width: 80px;">';
+        $tpl.= '<div class="files_row_preview preview">{preview}</div>';
+        $tpl.= '</td>';
+        $tpl.= '<td class="files_show_info">';
+        $tpl.= '<div class="row">';
+        $tpl.= '<div class="col-md-12 files_show_title_html">';
+        $tpl.= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+        $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
+        $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+        $tpl.= '</div>';
         if ($field['setting']['option']['desc']) {
             $tpl.= '<div class="col-md-12 files_show_description_html">';
             $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
@@ -293,7 +293,9 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $tpl.= '<td style="text-align:center;width: 80px;">';
         $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
-        $tpl.= '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
+
+        $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
+
         $tpl.= '</td>';
         $tpl.= '</tr>';
 
@@ -336,7 +338,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'url' =>  WEB_DIR.'index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'],
             'unused_url' => WEB_DIR.'index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'],
             'input_url' => WEB_DIR.'index.php?s=api&c=file&m=input_file_url&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'],
-            'tpl' => $tpl,
+            'tpl' => str_replace($js_rm, '', $tpl),
             'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["80%", "80%"],
             'url_area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["50%", "340px"],
             'count' => $count,
