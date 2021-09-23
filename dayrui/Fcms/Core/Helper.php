@@ -930,15 +930,10 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
     }
 
     $url = $url ? urldecode($url) : '';
-    $link = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code);
-    $cids = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code.'-id');
-    if (is_numeric($id)) {
-        // id 查询
-        $id = $cids[$id];
-        $data = $link[$id];
-    } else {
-        // 别名查询
-        $data = $link[$id];
+
+    $data = dr_linkage($code, $id, 0);
+    if (!$data) {
+        return '';
     }
 
     $name = [];
@@ -947,10 +942,11 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
 
     foreach ($array as $ii) {
         if ($ii) {
+            $data = dr_linkage($code, $ii, 0);
             if ($url) {
-                $name[] = ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url), $link[$cids[$ii]]['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $cids[$ii], $url)."\">{$link[$cids[$ii]]['name']}</a>");
+                $name[] = ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $data['id'], $url), $data['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $data['id'], $url)."\">{$data['name']}</a>");
             } else {
-                $name[] = $link[$cids[$ii]]['name'];
+                $name[] = $data['name'];
             }
         }
     }
@@ -973,16 +969,19 @@ function dr_linkage($code, $id, $level = 0, $name = '') {
         return false;
     }
 
-    $link = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code);
-    $cids = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code.'-id');
+    // id 查询
     if (is_numeric($id)) {
-        // id 查询
-        $id = $cids[$id];
-        $data = $link[$id];
-    } else {
-        // 别名查询
-        $data = $link[$id];
+        $id = dr_linkage_id($code, $id);
+        if (!$id) {
+            return false;
+        }
     }
+
+    $data = \Phpcmf\Service::L('cache')->get_file('data-'.$id, 'linkage/'.SITE_ID.'_'.$code.'/');
+    if (!$data) {
+        return false;
+    }
+
     $pids = explode(',', $data['pids']);
     if ($level == 0) {
         return $name ? $data[$name] : $data;
@@ -995,15 +994,93 @@ function dr_linkage($code, $id, $level = 0, $name = '') {
     $i = 1;
     foreach ($pids as $pid) {
         if ($pid) {
-            $pid = $cids[$pid]; // 把id转化成cname
             if ($i == $level) {
-                return $name ? $link[$pid][$name] : $link[$pid];
+                $link = dr_linkage($code, $pid, 0);
+                return $name ? $link[$name] : $link;
             }
             $i++;
         }
     }
 
     return $name ? $data[$name] : $data;
+}
+
+/**
+ * 联动菜单列表数据
+ *
+ * @param   string  $code   菜单代码
+ * @param   intval  $pid    菜单父级id或者别名
+ * @return  array
+ */
+function dr_linkage_list($code, $pid) {
+
+    if (!$code) {
+        return false;
+    }
+
+    if ($pid && !is_numeric($pid)) {
+        // 别名情况时获取id号
+        $pid = dr_linkage_cname($code, $pid);
+    }
+
+    return \Phpcmf\Service::L('cache')->get_file('list-'.$pid, 'linkage/'.SITE_ID.'_'.$code.'/');
+}
+
+/**
+ * 联动菜单的id号获取
+ *
+ * @param   string  $code   菜单代码
+ * @param   string  $cname  别名
+ * @return  array
+ */
+function dr_linkage_id($code, $cname) {
+
+    if (!$code || !$cname) {
+        return false;
+    }
+
+    $ids = \Phpcmf\Service::L('cache')->get_file('id', 'linkage/'.SITE_ID.'_'.$code.'/');
+    if (isset($ids[$cname]) && $ids[$cname]) {
+        return $ids[$cname];
+    }
+
+    return false;
+}
+
+/**
+ * 联动菜单的别名获取
+ *
+ * @param   string  $code   菜单代码
+ * @param   int     $id     id
+ * @return  array
+ */
+function dr_linkage_cname($code, $id) {
+
+    if (!$code || !$id) {
+        return 0;
+    }
+
+    $ids = array_flip(\Phpcmf\Service::L('cache')->get_file('id', 'linkage/'.SITE_ID.'_'.$code.'/'));
+    if (isset($ids[$id]) && $ids[$id]) {
+        return $ids[$id];
+    }
+
+    return 0;
+}
+
+/**
+ * 联动菜单的最大层级
+ *
+ * @param   string  $code   菜单代码
+ * @return  array
+ */
+function dr_linkage_level($code) {
+
+    if (!$code) {
+        return 0;
+    }
+
+    return (int)\Phpcmf\Service::L('cache')->get_file('level', 'linkage/'.SITE_ID.'_'.$code.'/');
 }
 
 /**

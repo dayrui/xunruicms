@@ -1032,35 +1032,27 @@ class View {
                 break;
 
             case 'linkage': // 联动菜单
-
-                $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.$system['site'].'-'.$param['code']);
-                if (!$linkage) {
-                    return $this->_return($system['return'], "联动菜单{$param['code']}不存在，请在后台更新缓存");
-                }
-
-                // 通过别名找id
-                $ids = array_flip(\Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id'));
-                if (isset($param['pid'])) {
-                    if (is_numeric($param['pid'])) {
-                        $pid = intval($param['pid']);
-                    } elseif (!$param['pid']) {
-                        $pid = 0;
-                    } else {
-                        $pid = isset($ids[$param['pid']]) ? $ids[$param['pid']] : 0;
-                        if (!$pid && is_numeric($param['pid'])
-                            && \Phpcmf\Service::C()->get_cache('linkage-'.$system['site'].'-'.$param['code'].'-id', $param['pid'])) {
-                            $pid = intval($param['pid']);
-                        }
+                if (isset($param['pid']) && $param['pid']) {
+                    $link = dr_linkage($param['code'],  $param['pid']);
+                    if (!$link) {
+                        return $this->_return($system['return'], "联动菜单{$param['code']}不存在，请在后台一键生成数据");
+                    }
+                    if (!$link['child']) {
+                        // 表示本身就是子菜单，我们需要调用父级作为同级显示
+                        $param['pid'] =  $link['pid'];
                     }
                 }
 
+                $linkage = dr_linkage_list($param['code'], isset($param['pid']) && $param['pid'] ? $param['pid'] : 0);
+                if (!$linkage) {
+                    return $this->_return($system['return'], "联动菜单{$param['code']}不存在，请在后台一键生成数据");
+                }
+
                 $i = 0;
-                $return = array();
+                $return = [];
                 foreach ($linkage as $t) {
                     if ($system['num'] && $i >= $system['num']) {
                         break;
-                    } elseif (isset($param['pid']) && $t['pid'] != $pid) {
-                        continue;
                     } elseif (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
                         continue;
                     } elseif (isset($param['ii']) && !dr_in_array($t['ii'], explode(',', $param['ii']))) {
@@ -1068,28 +1060,6 @@ class View {
                     }
                     $return[] = $t;
                     $i ++;
-                }
-
-                if (!$return && isset($param['pid'])) {
-                    $rpid = isset($param['fid']) ? (int)$ids[$param['fid']] : (int)$linkage[$param['pid']]['pid'];
-                    foreach ($linkage as $t) {
-                        if ($t['pid'] == $rpid) {
-                            if ($system['num'] && $i >= $system['num']) {
-                                break;
-                            }
-                            if (isset($param['id']) && !dr_in_array($t['id'], explode(',', $param['id']))) {
-                                continue;
-                            }
-                            if (isset($param['ii']) && !dr_in_array($t['ii'], explode(',', $param['ii']))) {
-                                continue;
-                            }
-                            $return[] = $t;
-                            $i ++;
-                        }
-                    }
-                    if (!$return) {
-                        return $this->_return($system['return'], '没有匹配到内容');
-                    }
                 }
 
                 $data = isset($param['call']) && $param['call'] ? array_reverse($return) : $return;

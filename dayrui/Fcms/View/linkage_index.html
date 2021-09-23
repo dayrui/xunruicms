@@ -21,6 +21,7 @@
                 <th width="150"> {dr_lang('名称')} </th>
                 <th width="120"> {dr_lang('别名')} </th>
                 <th width="120" style="text-align:center"> {dr_lang('类型')} </th>
+                <th width="120" style="text-align:center"> {dr_lang('数据')} </th>
                 <th> {dr_lang('操作')} </th>
             </tr>
             </thead>
@@ -43,6 +44,10 @@
                     {else}
                     <span class="label label-danger"> {dr_lang('全局共享')} </span>
                     {/if}
+                </td>
+                <td style="text-align:center">
+                    {php $tb='linkage_data_'.$t.id;}
+                    {count action=table table=$tb}
                 </td>
                 <td style="overflow:visible">
                     {if $ci->_is_admin_auth('edit')}<label><a href="javascript:dr_iframe('edit', '{dr_url('linkage/edit', ['id'=>$t.id])}', '500px','410px');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a></label>{/if}

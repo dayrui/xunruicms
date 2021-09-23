@@ -74,14 +74,14 @@ class Cache {
     /**
      * 获取一个已经缓存的变量
      */
-    public function get_file($key, $cache_dir = null) {
+    public function get_file($key, $cache_dir = null, $is_cache = true) {
 
         if (!$key) {
             return false;
         }
 
         $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
-        if (!isset($this->data[$cache_file])) {
+        if (!isset($this->data[$cache_file]) || !$is_cache) {
             $this->data[$cache_file] = is_file($cache_file) ? json_decode(file_get_contents($cache_file), true) : false;
         }
 

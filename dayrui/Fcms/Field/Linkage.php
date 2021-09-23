@@ -118,15 +118,10 @@ class Linkage extends \Phpcmf\Library\A_Field {
             return dr_lang('%s不能为空', $field['name']);
         }
 
-        $code = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id', $value);
-        if (!$code) {
+        $link = dr_linkage($field['setting']['option']['linkage'], $value);
+        if (!$link) {
             return dr_lang('选项无效');
-        }
-
-        $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'], $code);
-        if (!$linkage) {
-            return dr_lang('选项无效');
-        } elseif ($field['setting']['option']['ck_child'] && $linkage['child']) {
+        } elseif ($field['setting']['option']['ck_child'] && $link['child']) {
             return dr_lang('需要选择下级选项');
         }
 
@@ -160,19 +155,16 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		// 联动菜单缓存
-		$linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage']);
+		$linkage = dr_linkage_list($field['setting']['option']['linkage'], 0);
 		if (!$linkage) {
 		    if (CI_DEBUG) {
-		        return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据数据</div>');
+		        return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据</div>');
             }
             return $this->input_format($name, $text, '');
         }
 
-		$linkageid = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id');
-		$linkagelevel = (int)\Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-level');
-
 		// 最大几层
-		$linklevel = $linkagelevel + 1;
+        $linklevel = dr_linkage_level($field['setting']['option']['linkage']) + 1;
 
 		// 开始输出
 		$str = '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'">';
@@ -183,7 +175,8 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$level = 1;
 		$default = '';
 		if ($value) {
-			$pids = substr($linkage[$linkageid[$value]]['pids'], 2);
+            $link = dr_linkage($field['setting']['option']['linkage'], $value);
+			$pids = substr($link['pids'], 2);
 			$level = substr_count($pids, ',') + 1;
 			$default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
 		}

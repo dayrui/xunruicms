@@ -34,7 +34,7 @@ class Linkage extends \Phpcmf\Common
 	public function add() {
 
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', true);
+			$data = \Phpcmf\Service::L('input')->post('data');
 			$this->_validation(0, $data);
 			\Phpcmf\Service::L('input')->system_log('创建联动菜单('.$data['name'].')');
 			$rt = \Phpcmf\Service::M('Linkage')->create($data);
@@ -249,22 +249,12 @@ class Linkage extends \Phpcmf\Common
 		    $this->_admin_msg(0, dr_lang('联动菜单不存在'));
         }
 
-		if (\Phpcmf\Service::M('Linkage')->counts('linkage_data_'.$key) > 3000) {
-			$select = '<input type="text" class="form-control" name="pid" placeholder="'.dr_lang('输入所属Id号').'"> ';
-		} else {
-			$select = \Phpcmf\Service::L('Tree')->select_linkage(
-				\Phpcmf\Service::M('Linkage')->getList($link),
-				$pid,
-				'name="pid"',
-				dr_lang('顶级菜单')
-			);
-		}
+        $select = dr_fieldform('{"name":"pid","fieldname":"pid","ismain":"1","fieldtype":"Linkage","setting":{"option":{"linkage":"address","file":"","ck_child":"0","value":"","css":""},"validate":{"required":"0","pattern":"","errortips":"","check":"","filter":"","formattr":"","tips":""}},"ismember":"1"}', 0, 1, 1);
 
 		\Phpcmf\Service::V()->assign([
 			'key' => $key,
 			'pid' => $pid,
 			'list' => \Phpcmf\Service::M('Linkage')->getList($link, $pid),
-			'select' => $select,
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
@@ -274,6 +264,7 @@ class Linkage extends \Phpcmf\Common
                     'help' => [354],
                 ]
             ),
+            'select' => str_replace('data[pid]', 'pid', $select),
 		]);
 		\Phpcmf\Service::V()->display('linkage_list_index.html');
 	}
@@ -307,13 +298,10 @@ class Linkage extends \Phpcmf\Common
                 $select.= '<p class="form-control-static"> '.$top['name'].' </p>';
             }
         }
-
-        !$select && $select = \Phpcmf\Service::L('Tree')->select_linkage(
-            \Phpcmf\Service::M('Linkage')->getList($link),
-            $pid,
-            'name="data[pid]"',
-            dr_lang('顶级菜单')
-        );
+        if (!$select) {
+            $select = '<input type="hidden" name="data[pid]" value="0">';
+            $select.= '<p class="form-control-static"> '.dr_lang('顶级').' </p>';
+        }
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
@@ -384,18 +372,13 @@ class Linkage extends \Phpcmf\Common
 				$select.= '<p class="form-control-static"> '.$top['name'].' </p>';
 			}
 		}
-
-		!$select && $select = \Phpcmf\Service::L('Tree')->select_linkage(
-			\Phpcmf\Service::M('Linkage')->getList($link),
-			$pid,
-			'name="data[pid]"',
-			dr_lang('顶级菜单')
-		);
+        if (!$select) {
+            $select = '<input type="hidden" name="data[pid]" value="0">';
+            $select.= '<p class="form-control-static"> '.dr_lang('顶级').' </p>';
+        }
 
         \Phpcmf\Service::V()->assign([
             'form' => dr_form_hidden(),
-            'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, []),
-            'select' => $select,
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
@@ -405,6 +388,8 @@ class Linkage extends \Phpcmf\Common
                     'help' => [354],
                 ]
             ),
+            'select' => $select,
+            'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, []),
             'reply_url' => dr_url('linkage/list_index', ['key'=> $key, 'pid' => $pid]),
         ]);
         \Phpcmf\Service::V()->display('linkage_list_edit.html');
@@ -468,11 +453,22 @@ class Linkage extends \Phpcmf\Common
 			$this->_json(1, dr_lang('操作成功'));
 		}
 
+        $select = '';
+        if ($data['pid']) {
+            $top = \Phpcmf\Service::M('Linkage')->table('linkage_data_'.$key)->get($data['pid']);
+            if ($top) {
+                $select = '<input type="hidden" name="data[pid]" value="'.$data['pid'].'">';
+                $select.= '<p class="form-control-static"> '.$top['name'].' </p>';
+            }
+        }
+        if (!$select) {
+            $select = '<input type="hidden" name="data[pid]" value="0">';
+            $select.= '<p class="form-control-static"> '.dr_lang('顶级').' </p>';
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'form' => dr_form_hidden(),
 			'data' => $data,
-            'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, $data),
-			'select' => $this->_select($link, $data['pid']),
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
@@ -482,22 +478,62 @@ class Linkage extends \Phpcmf\Common
                     'help' => [354],
                 ]
             ),
+            'select' => $select,
+            'myfield' => \Phpcmf\Service::L('field')->toform($this->uid, $field, $data),
             'reply_url' => dr_url('linkage/list_index', ['key'=> $key, 'pid' => $data['pid']]),
 		]);
 		\Phpcmf\Service::V()->display('linkage_list_edit.html');
 		exit;
 	}
 
-	private function _select($link, $pid) {
 
-		if (\Phpcmf\Service::M('Linkage')->counts('linkage_data_'.$link['id']) > 3000) {
-			$select = '<input type="text" class="form-control" name="data[pid]" value="'.$pid.'"> ';
-			$select.= '<span class="help-block"> '.dr_lang('这是上级分类的Id号').' </span>';
-		} else {
-			$select = \Phpcmf\Service::L('Tree')->select_linkage(\Phpcmf\Service::M('Linkage')->getList($link), $pid, 'name="data[pid]"', dr_lang('顶级菜单'));
-		}
+    // 一键生成
+    public function cache_index() {
 
-		return $select;
-	}
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
+        $link = \Phpcmf\Service::M('Linkage')->table('linkage')->get($key);
+        if (!$link) {
+            $this->_html_msg(dr_lang('联动菜单不存在'));
+        }
 
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 10; // 每页处理的数量
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+
+        if (!$page) {
+            $path = WRITEPATH.'linkage/data_'.SITE_ID.'_'.$link['code'].'/';
+            dr_dir_delete($path);
+            \Phpcmf\Service::M('Linkage')->repair($link, SITE_ID); // 修复菜单
+            $pids = \Phpcmf\Service::M('Linkage')->get_child_pids();
+            $total = dr_count($pids);
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用数据'));
+            }
+            // 存储执行
+            \Phpcmf\Service::L('cache')->set_auth_data('linkage-cache-'.$key, array_chunk($pids, $psize), SITE_ID);
+            $this->_html_msg(1, dr_lang('正在执行中...'), dr_url('linkage/cache_index', ['key' => $key]).'&total='.$total.'&page='.($page+1));
+        }
+
+        $pids = \Phpcmf\Service::L('cache')->get_auth_data('linkage-cache-'.$key, SITE_ID);
+        if (!$pids) {
+            $this->_html_msg(0, dr_lang('临时数据读取失败'));
+        } elseif (!isset($pids[$page-1])) {
+            $this->_html_msg(0, dr_lang('更新完成'));
+        }
+
+        $tpage = ceil($total / $psize); // 总页数
+
+        // 更新完成
+        if ($page > $tpage) {
+            $this->_html_msg(1, dr_lang('更新完成'));
+        }
+        $field = \Phpcmf\Service::M('Linkage')->get_fields($key);
+        foreach ($pids[$page-1] as $pid) {
+            \Phpcmf\Service::M('linkage')->cache_list($link, $pid, $field);
+        }
+
+        $this->_html_msg( 1, dr_lang('正在执行中【%s】...', "$tpage/$page"),
+            dr_url('linkage/cache_index', ['key' => $key, 'total' => $total, 'page' => $page + 1])
+        );
+    }
 }

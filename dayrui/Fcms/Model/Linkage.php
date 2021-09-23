@@ -13,6 +13,7 @@ class Linkage extends \Phpcmf\Model
     protected $pids;
     protected $cache;
     protected $categorys;
+    protected $child_pids;
 
     // 创建菜单
     public function create($data) {
@@ -332,22 +333,31 @@ class Linkage extends \Phpcmf\Model
             $categorys[$t['id']] = $this->categorys[$t['id']] = $t;
         }
 
+        $this->child_pids = [0];
         foreach ($this->categorys as $catid => $cat) {
             $this->categorys[$catid]['pids'] = $this->get_pids($catid);
             $this->categorys[$catid]['childids'] = $this->get_childids($catid);
             $this->categorys[$catid]['child'] = is_numeric($this->categorys[$catid]['childids']) ? 0 : 1;
+            if ($this->categorys[$catid]['child']) {
+                $this->child_pids[] = $catid;
+            }
             // 当库中与实际不符合才更新数据表
-            ($categorys[$catid]['pids'] != $this->categorys[$catid]['pids']
+            if ($categorys[$catid]['pids'] != $this->categorys[$catid]['pids']
                 || $categorys[$catid]['childids'] != $this->categorys[$catid]['childids']
-                || $categorys[$catid]['child'] != $this->categorys[$catid]['child'])
-                && $this->table($table)->update($cat['id'], [
+                || $categorys[$catid]['child'] != $this->categorys[$catid]['child']) {
+                $this->table($table)->update($cat['id'], [
                     'pids' => $this->categorys[$catid]['pids'],
                     'child' => $this->categorys[$catid]['child'],
                     'childids' => $this->categorys[$catid]['childids']
                 ]);
+            }
         }
         
         return $this->categorys;
+    }
+
+    public function get_child_pids() {
+        return $this->child_pids;
     }
 
     // 自定义字段
@@ -374,41 +384,51 @@ class Linkage extends \Phpcmf\Model
     // 缓存
     public function cache($siteid = SITE_ID) {
 
-        // 删除全部缓存
-        $files = dr_file_map(WRITEPATH.'data/');
-        if ($files) {
-            foreach ($files as $file) {
-                if (strpos($file, 'linkage-'.$siteid) !== false) {
-                    unlink(WRITEPATH.'data/'.$file);
+
+    }
+
+    /**
+     * 分组缓存菜单数据
+     */
+    public function cache_list($link, $pid, $field) {
+
+        $path = WRITEPATH.'linkage/';
+        dr_mkdirs($path);
+
+        $data_path = 'linkage/'.SITE_ID.'_'.$link['code'].'/';
+        dr_mkdirs(WRITEPATH.$data_path);
+
+        // 格式返回数据
+        $lv = $data = [];
+        $cid = \Phpcmf\Service::L('cache')->get_file('id', $data_path, false);
+        !$cid && $cid = [];
+
+        // 执行程序
+        $key = (int)$link['id'];
+        $db = $this->db->table('linkage_data_'.$key);
+        $link['type'] == 1 && $db->where('site', SITE_ID); // 站点查询
+        $menu = $db->where('pid', (int)$pid)->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
+        if ($menu) {
+            foreach ($menu as $t) {
+                if ($t['hidden']) {
+                    continue;
                 }
+                $lv[] = substr_count($t['pids'], ',');
+                $t['ii'] = $t['id'];
+                $t['id'] = $t['cname'];
+                $cid[$t['ii']] = $t['id'];
+                $data[$t['cname']] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t);
+                \Phpcmf\Service::L('cache')->set_file('data-'.$t['cname'], $data[$t['cname']], $data_path);
             }
         }
 
-        // 生成新缓存
-        $linkage = $this->table('linkage')->getAll();
-        if ($linkage) {
-            foreach ($linkage as $link) {
-                $cid = $data = $lv = [];
-                $list = $this->repair($link, $siteid);
-                $field = $this->get_fields($link['id']);
-                if ($list) {
-                    foreach ($list as $t) {
-                        if ($t['hidden']) {
-                            continue;
-                        }
-                        $lv[] = substr_count($t['pids'], ',');
-                        $t['ii'] = $t['id'];
-                        $t['id'] = $t['cname'];
-                        $cid[$t['ii']] = $t['id'];
-                        $data[$t['cname']] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t);
-                    }
-                }
-                \Phpcmf\Service::L('cache')->set_file('linkage-'.$siteid.'-'.$link['code'], $data);
-                \Phpcmf\Service::L('cache')->set_file('linkage-'.$siteid.'-'.$link['code'].'-id', $cid);
-                \Phpcmf\Service::L('cache')->set_file('linkage-'.$siteid.'-'.$link['code'].'-key', $link['id']);
-                \Phpcmf\Service::L('cache')->set_file('linkage-'.$siteid.'-'.$link['code'].'-level', $lv ? max($lv) : 0);
-            }
-        }
+        \Phpcmf\Service::L('cache')->set_file('list-'.$pid, $data, $data_path);
+
+        \Phpcmf\Service::L('cache')->set_file('id', $cid, $data_path);
+        \Phpcmf\Service::L('cache')->set_file('key', $key, $data_path);
+
+        $level_data = (int)\Phpcmf\Service::L('cache')->get_file('level', $data_path, false);
+        \Phpcmf\Service::L('cache')->set_file('level', max($lv ? max($lv) : 0, $level_data), $data_path);
 
         return $data;
     }

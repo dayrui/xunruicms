@@ -114,15 +114,10 @@ class Linkages extends \Phpcmf\Library\A_Field {
 
         foreach ($values as $value) {
 
-            $code = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id', $value);
-            if (!$code) {
+            $link = dr_linkage($field['setting']['option']['linkage'], $value);
+            if (!$link) {
                 return dr_lang('选项无效');
-            }
-
-            $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'], $code);
-            if (!$linkage) {
-                return dr_lang('选项无效');
-            } elseif ($field['setting']['option']['ck_child'] && $linkage['child']) {
+            } elseif ($field['setting']['option']['ck_child'] && $link['child']) {
                 return dr_lang('需要选择下级选项');
             }
         }
@@ -155,17 +150,16 @@ class Linkages extends \Phpcmf\Library\A_Field {
 		$tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
 		// 联动菜单缓存
-		$linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage']);
+        $linkage = dr_linkage_list($field['setting']['option']['linkage'], 0);
         if (!$linkage) {
             if (CI_DEBUG) {
-                return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据数据</div>');
+                return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据</div>');
             }
             return $this->input_format($name, $text, '');
         }
-		$linkageid = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-id');
-		$linkagelevel = (int)\Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-level');
+
 		// 最大几层
-		$linklevel = $linkagelevel + 1;
+		$linklevel = dr_linkage_level($field['setting']['option']['linkage']) + 1;
 		// 开始输出
 		$str = '';
         if (!$this->is_load_js($field['filetype'])) {
@@ -177,7 +171,6 @@ class Linkages extends \Phpcmf\Library\A_Field {
         $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 		$str.= '<div class="dropzone-file-area" style="text-align:left" id="linkages-'.$name.'-sort-items" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
 		$level = 1;
-
 
         // 输出默认菜单
         $tpl = '<div class="linkages_'.$name.'_row" id="dr_linkages_'.$name.'_row_{id}">';
@@ -197,7 +190,8 @@ class Linkages extends \Phpcmf\Library\A_Field {
         if ($values) {
             foreach ($values as $id => $value) {
                 if ($value) {
-                    $pids = substr($linkage[$linkageid[$value]]['pids'], 2);
+                    $link = dr_linkage($field['setting']['option']['linkage'], $value);
+                    $pids = substr($link['pids'], 2);
                     $level = substr_count($pids, ',') + 1;
                     $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
 

@@ -108,9 +108,7 @@ class Cache extends \Phpcmf\Model
         }
 
         // 按站点更新的缓存
-        $cache = [
-            'linkage' => '',
-        ];
+        $cache = [];
 
         if (is_file(MYPATH.'/Config/Cache.php')) {
             $_cache = require MYPATH.'/Config/Cache.php';

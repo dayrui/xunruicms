@@ -202,7 +202,7 @@ class Api extends \Phpcmf\Common
 
         $pid = (int)\Phpcmf\Service::L('input')->get('parent_id');
         $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
-        $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code);
+        $linkage = dr_linkage_list($code, $pid);
 
         $json = [];
         $html = '';
@@ -220,8 +220,7 @@ class Api extends \Phpcmf\Common
             $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
             $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('file'));
             if ($name) {
-                $id = \Phpcmf\Service::L('cache')->get('linkage-'.SITE_ID.'-'.$code.'-id', $pid);
-                $data = $linkage[$id];
+                $data = dr_linkage($code, $pid);
                 $file = ROOTPATH.'config/mylinkage/'.$name;
                 $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
                 if (is_file($file)) {
