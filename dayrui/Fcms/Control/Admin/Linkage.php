@@ -249,7 +249,7 @@ class Linkage extends \Phpcmf\Common
 		    $this->_admin_msg(0, dr_lang('联动菜单不存在'));
         }
 
-        $select = dr_fieldform('{"name":"pid","fieldname":"pid","ismain":"1","fieldtype":"Linkage","setting":{"option":{"linkage":"address","file":"","ck_child":"0","value":"","css":""},"validate":{"required":"0","pattern":"","errortips":"","check":"","filter":"","formattr":"","tips":""}},"ismember":"1"}', 0, 1, 1);
+        $select = dr_fieldform('{"name":"pid","fieldname":"pid","ismain":"1","fieldtype":"Linkage","setting":{"option":{"linkage":"'.$link['code'].'","file":"","ck_child":"0","value":"","css":""},"validate":{"required":"0","pattern":"","errortips":"","check":"","filter":"","formattr":"","tips":""}},"ismember":"1"}', 0, 1, 1);
 
 		\Phpcmf\Service::V()->assign([
 			'key' => $key,
