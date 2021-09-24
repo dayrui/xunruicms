@@ -456,11 +456,12 @@ class Cache extends \Phpcmf\Model
             }
         }
 
+        // 为后台域名移动编辑器目录
         if (dr_is_app('safe')) {
             $safe = \Phpcmf\Service::M('app')->get_config('safe');
             if ($safe) {
-                foreach ($safe as $path) {
-                    if ($path && is_dir($path)) {
+                foreach ($safe as $key => $path) {
+                    if (is_string($path) && is_numeric($key) && is_dir($path)) {
                         $this->cp_ueditor_file($path.'/');
                     }
                 }
