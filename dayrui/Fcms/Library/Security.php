@@ -170,41 +170,10 @@ class Security {
             // 严格的过滤
             $this->naughty_tags = array_merge($this->naughty_tags, array('iframe', 'video', 'embed', 'style'));
             $this->evil_attributes = array_merge($this->evil_attributes, array('style'));
-            /*
-             * URL Decode
-             *
-             * Just in case stuff like this is submitted:
-             *
-             * <a href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">Google</a>
-             *
-             * Note: Use rawurldecode() so it does not remove plus signs
-             * */
-
-            if (stripos($str, '%') !== false)
-            {
-                do
-                {
-                    $oldstr = $str;
-                    $str = rawurldecode($str);
-                    $str = preg_replace_callback('#%(?:\s*[0-9a-f]){2,}#i', [$this, '_urldecodespaces'], $str);
-                }
-                while ($oldstr !== $str);
-                unset($oldstr);
-            }
-
-            /*
-             * Convert character entities to ASCII
-             *
-             * This permits our tests below to work reliably.
-             * We only convert entities that are within tags since
-             * these are the ones that will pose security problems.
-             */
-
             // 不进行二次编码的xss过滤
             $str = preg_replace_callback("/[^a-z0-9>]+[a-z0-9]+=([\'\"]).*?\\1/si", array($this, '_convert_attribute'), $str);
             $str = preg_replace_callback('/<\w+.*/si', array($this, '_decode_entity'), $str);
         }
-
 
 		// Remove Invisible Characters Again!
 		$str = remove_invisible_characters($str);
