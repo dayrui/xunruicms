@@ -72,6 +72,7 @@ class View {
         $this->_cache = WRITEPATH.'template/';
         $this->_tname = $this->_is_mobile ? 'mobile' : ($name ? $name : 'pc');
         $this->_aroot = $this->_froot = COREPATH.'View/';
+        $this->_mroot = $this->get_client_member_path($this->_tname);
         // 当前项目模板目录
         if (IS_ADMIN) {
             // 后台
@@ -80,7 +81,7 @@ class View {
             // 会员
             //$this->_is_mobile && !is_dir(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/') && $this->_tname = 'pc';
             $this->_root = $this->get_client_home_path($this->_tname);
-            $this->_dir = $this->_mroot = $this->get_client_member_path($this->_tname);
+            $this->_dir = $this->_mroot;
             // 当用户中心没有这个模板目录时我们就调用default的用户中心模板
             !is_dir($this->_mroot) && $this->_mroot = str_replace('/'.SITE_TEMPLATE.'/', '/default/', $this->_mroot);
             // 项目的会员中心
