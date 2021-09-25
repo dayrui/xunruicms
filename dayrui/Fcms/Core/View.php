@@ -1873,8 +1873,14 @@ class View {
                                 //  防止栏目生成第一页问题
                                 if ($system['action'] == 'module') {
                                     $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
+                                    if (!$this->_is_pc) {
+                                        $first_url = dr_url_prefix($first_url);
+                                    }
                                 }
                                 $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
+                                if (!$this->_is_pc) {
+                                    $system['urlrule'] = dr_url_prefix($system['urlrule']);
+                                }
                             }
                         }
                         if ($system['num']) {
