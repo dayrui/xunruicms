@@ -1874,12 +1874,12 @@ class View {
                                 if ($system['action'] == 'module') {
                                     $first_url = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']]);
                                     if (!$this->_is_pc) {
-                                        $first_url = dr_url_prefix($first_url);
+                                        $first_url = dr_url_prefix($first_url, $module['dirname']);
                                     }
                                 }
                                 $system['urlrule'] = \Phpcmf\Service::L('router')->category_url($module, $module['category'][$system['catid']], '{page}');
                                 if (!$this->_is_pc) {
-                                    $system['urlrule'] = dr_url_prefix($system['urlrule']);
+                                    $system['urlrule'] = dr_url_prefix($system['urlrule'], $module['dirname']);
                                 }
                             }
                         }
