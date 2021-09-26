@@ -13152,7 +13152,12 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     height: 80px;
 }
 
-
 .portlet-body .note.note-danger {
     background-color: #f1f4f7 !important;
+}
+.table-search-tool form .input-group-addon {
+    border-radius:0;
+}
+.btn-group-vertical>.btn-group:not(:first-child):not(:last-child)>.btn, .input-group .form-control:not(:first-child):not(:last-child), .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child) {
+    border-radius: 0;
 }
