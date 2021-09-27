@@ -952,7 +952,7 @@ class Member extends \Phpcmf\Model {
                     'username' => '',
                     'phone' => $phone,
                     'email' => '',
-                    'password' => '',
+                    'password' => SYS_KEY.'_login_sms',
                     'name' => '',
                 ]);
                 if ($rt['code']) {
@@ -1138,9 +1138,13 @@ class Member extends \Phpcmf\Model {
             }
             // 前端验证密码格式
             if (!IS_ADMIN) {
-                $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
-                if (!$rt['code']) {
-                    return $rt;
+                if ($member['password'] == SYS_KEY.'_login_sms') {
+                    $member['password'] = rand(0, 99999); // 表示短信直接注册
+                } else {
+                    $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
+                    if (!$rt['code']) {
+                        return $rt;
+                    }
                 }
             }
         }
