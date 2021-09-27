@@ -150,7 +150,7 @@ function dr_preview_image(file) {
     if (is_mobile_cms == 1) {
         width = height = '90%';
     }
-    layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'?'+Date.parse(new Date())+'"></a></p>', {
+    top.layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'?'+Date.parse(new Date())+'"></a></p>', {
         shade: 0,
         //scrollbar: false,
         shadeClose: true,
