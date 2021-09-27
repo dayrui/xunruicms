@@ -48,6 +48,9 @@ if (! extension_loaded('mbstring')) {
 if (! extension_loaded('xml')) {
     dr_echo_msg(0, 'PHP扩展库：xml未安装');
 }
+if (!function_exists('chmod')) {
+    dr_echo_msg(0, 'PHP函数chmod被禁用，需要开启');
+}
 
 if (is_file(WEBPATH.'config/database.php')) {
     require WEBPATH.'config/database.php';

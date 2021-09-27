@@ -32,6 +32,14 @@ foreach (array(
         exit('目录（'.$t.'）不可写');
     }
 }
+// 判断支持函数
+foreach (array(
+             'chmod',
+         ) as $t) {
+    if ($t && !function_exists($t)) {
+        exit('PHP自带的函数（'.$t.'）被服务器禁用了，需要开启');
+    }
+}
 
 header('Location: index.php?c=install');
 
