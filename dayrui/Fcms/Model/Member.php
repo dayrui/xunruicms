@@ -512,7 +512,19 @@ class Member extends \Phpcmf\Model {
                     if ($value >= $t['value']) {
                         if ($group['lid'] != $t['id']) {
                             // 开始变更等级
-                            $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update(array('lid' => $t['id']));
+                            // 更新数据
+                            $update = [
+                                'lid' => $t['id']
+                            ];
+                            if (\Phpcmf\Service::C()->member_cache['group'][$group['gid']]['setting']['timetype']) {
+                                // 按等级计算时间
+                                $update['etime'] = dr_member_group_etime(
+                                    \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level'][$t['id']]['setting']['days'],
+                                    \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level'][$t['id']]['setting']['dtype'],
+                                    0
+                                );
+                            }
+                            $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update($update);
                             /* 等级升级 */
                             $this->notice($uid, 2, dr_lang('您的用户组（%s）等级自动升级为（%s）', \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['name'], $t['name']));
                             $group['lid'] = $t['id'];
