@@ -316,6 +316,7 @@ class Form
 
         $data = \Phpcmf\Service::L('input')->post($id);
         if (!$data) {
+            IS_DEV && log_message('debug', '图片验证码验证失败：没有输入验证码');
             return false;
         }
 
@@ -324,6 +325,8 @@ class Form
             \Phpcmf\Service::L('cache')->del_auth_data('web-captcha', SITE_ID);
             return true;
         }
+
+        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）');
 
         return false;
     }
@@ -342,6 +345,8 @@ class Form
         if ($code && strtolower($data) == strtolower($code)) {
             return true;
         }
+        
+        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）');
 
         return false;
     }
