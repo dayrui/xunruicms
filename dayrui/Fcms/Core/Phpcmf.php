@@ -629,18 +629,6 @@ abstract class Common extends \CodeIgniter\Controller {
      */
     public function _json($code, $msg, $data = []){
 
-        // 强制显示提交信息而不采用ajax返回
-        if (isset($_GET['is_show_msg'])) {
-            $url = '';
-            if ($code) {
-                $url = dr_safe_url(urldecode($_GET['is_show_msg']), true);
-                if (!$url) {
-                    $url = dr_redirect_safe_check(isset($data['url']) ? $data['url'] : '');
-                }
-            }
-            $this->_msg($code, $msg, $url);
-        }
-
         // 如果是来自api判断回调
         if (IS_API_HTTP) {
             $call = \Phpcmf\Service::L('input')->request('api_call_function');
@@ -745,14 +733,10 @@ abstract class Common extends \CodeIgniter\Controller {
      */
     public function _msg($code, $msg, $url = '', $time = 3) {
 
-        if (isset($_GET['is_show_msg'])) {
-            // 强制显示提交信息而不采用ajax返回
-        } else {
-            if (\Phpcmf\Service::L('input')->get('callback')) {
-                $this->_jsonp($code, $msg, $url);
-            } elseif ((\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
-                $this->_json($code, $msg, $url);
-            }
+        if (\Phpcmf\Service::L('input')->get('callback')) {
+            $this->_jsonp($code, $msg, $url);
+        } elseif ((\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
+            $this->_json($code, $msg, $url);
         }
 
         if (!$url) {
