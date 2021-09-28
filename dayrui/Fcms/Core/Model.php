@@ -707,7 +707,7 @@ class Model {
                 }
             }
             return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (preg_match('/[0-9]+,[0-9]+/', $value)) {
+        } elseif (substr_count($value, ',') == 1 && preg_match('/[0-9]+,[0-9]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
             $s = intval($s);
