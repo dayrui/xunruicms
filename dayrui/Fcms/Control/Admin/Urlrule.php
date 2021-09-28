@@ -235,12 +235,13 @@ class Urlrule extends \Phpcmf\Table
             $type = (int)\Phpcmf\Service::L('input')->post('type');
             $value = \Phpcmf\Service::L('input')->post('value');
             if ($value[$type]) {
-                foreach ($value[$type] as $t) {
+                foreach ($value[$type] as $i => $t) {
                     if (strpos($t, '?') !== false) {
                         $this->_json(0, dr_lang('URL规则中不能包含%s号', '?'));
                     } elseif (strpos($t, '#') !== false) {
                         $this->_json(0, dr_lang('URL规则中不能包含%s号', '#'));
                     }
+                    $value[$type][$i] = trim($t);
                 }
             }
             $data[1]['type'] = $type;
