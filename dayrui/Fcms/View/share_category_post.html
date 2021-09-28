@@ -144,6 +144,7 @@ function dr_tid(i) {
                     <div class="form-body">
 
                         {if $module.share}
+                        {if dr_is_app('chtml')}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
                             <div class="col-md-9">
@@ -151,6 +152,7 @@ function dr_tid(i) {
                                 <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
                             </div>
                         </div>
+                        {/if}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('URL规则')}</label>
                             <div class="col-md-9">
