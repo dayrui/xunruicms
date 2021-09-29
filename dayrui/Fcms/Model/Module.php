@@ -503,7 +503,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 栏目缓存数据
-    protected function _get_category_cache($siteid, $cache) {
+    protected function _get_category_cache($siteid, $cache, $mdir) {
 
         if ($cache['share']) {
             $cdir = 'share';
@@ -626,7 +626,7 @@ class Module extends \Phpcmf\Model
             }
 
             // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
-            $like = ['catmodule-'.$cache['dirname']];
+            $like = ['catmodule-'.$mdir];
             if ($cache['share']) {
                 $like[] = 'catmodule-share';
             }
@@ -739,7 +739,7 @@ class Module extends \Phpcmf\Model
                         // 不使用栏目功能
                     } else {
                         // 如果是共享共享栏目就查询share表
-                        $cache = $this->_get_category_cache($siteid, $cache);
+                        $cache = $this->_get_category_cache($siteid, $cache, $mdir);
                     }
 
                     // 模块表单
