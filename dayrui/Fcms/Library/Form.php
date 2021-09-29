@@ -135,6 +135,8 @@ class Form
             }
         }
 
+        $notfields = [];
+
         // 自定义字段验证
         if ($fields) {
             $post = [];
@@ -150,15 +152,22 @@ class Form
                 // 非后台时
                 if (!IS_ADMIN) {
                     if (!$field['ismember']) {
+                        $notfields[] = $field['fieldname']; // 无权限排除的字段
                         unset($fields[$fid]);
                         continue; // 前端字段筛选
                     } elseif ($field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']] && !defined('IS_MODULE_VERIFY')) {
                         unset($fields[$fid]);
+                        $notfields[] = $field['fieldname']; // 无权限排除的字段
                         continue; // 前端禁止修改时
                     } elseif ($field['setting']['show_member'] && dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $field['setting']['show_member'])) {
                         unset($fields[$fid]);
+                        $notfields[] = $field['fieldname']; // 无权限排除的字段
                         continue; // 非后台时 判断用户权限
                     }
+                } elseif (IS_ADMIN && $field['setting']['show_admin'] && !dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])
+                    && dr_array_intersect(\Phpcmf\Service::C()->admin['roleid'], $field['setting']['show_admin'])) {
+                    $notfields[] = $field['fieldname']; // 无权限排除的字段
+                    continue; // 后台时 判断管理员权限
                 }
 
                 // 验证字段
@@ -293,7 +302,7 @@ class Form
             // 获取uid
         }
 
-        return [$data, [], $attach];
+        return [$data, [], $attach, $notfields];
     }
 	
 	// 获取已发短信验证码

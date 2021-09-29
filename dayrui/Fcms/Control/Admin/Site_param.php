@@ -20,6 +20,7 @@ class Site_param extends \Phpcmf\Common {
 
         $data = \Phpcmf\Service::M('Site')->config(SITE_ID);
         $field = \Phpcmf\Service::M('field')->get_mysite_field(SITE_ID);
+
         // 初始化自定义字段类
         \Phpcmf\Service::L('Field')->app('');
 
@@ -29,10 +30,16 @@ class Site_param extends \Phpcmf\Common {
 
             // param
             if ($field) {
-                list($save, $return, $attach) = \Phpcmf\Service::L('form')->validation($post, null, $field, $data['param']);
+                list($save, $return, $attach, $notfield) = \Phpcmf\Service::L('form')->validation($post, null, $field, $data['param']);
                 // 输出错误
                 if ($return) {
                     $this->_json(0, $return['error'], ['field' => $return['name']]);
+                }
+                if ($notfield) {
+                    // 保留无权限的字段值
+                    foreach ($notfield as $t) {
+                        $save[1][$t] = $data['param'][$t];
+                    }
                 }
                 $rt = \Phpcmf\Service::M('Site')->config(
                     SITE_ID,
