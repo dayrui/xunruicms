@@ -314,6 +314,7 @@ class Router {
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cat['setting']['urlrule'], 'value');
         if ($rule && $rule['show']) {
             // URL模式为自定义，且已经设置规则
+            $data['cat'] = $cat;
             $data['modname'] = $mod['dirname'];
             $cat['pdirname'] .= $cat['dirname'];
             $data['dirname'] = $cat['dirname'];
@@ -623,7 +624,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname.'</textarea>';
                         }
                     }
                 }
@@ -654,7 +655,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">   "'.$preg.'" => "'.$rule.'",  //'.$cname.'</textarea>';
                         }
                     }
                 }
@@ -683,7 +684,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -705,7 +706,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -725,7 +726,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -745,7 +746,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -763,7 +764,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -797,7 +798,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -824,7 +825,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -844,7 +845,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -862,7 +863,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -886,7 +887,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -904,7 +905,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -926,7 +927,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -961,7 +962,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }
@@ -988,7 +989,7 @@ class Router {
                             $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
                         } else {
                             $write[$preg] = $cname;
-                            $code.= '   "'.$preg.'" => "'.$rule.'",  //'.$cname.PHP_EOL;
+                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
                         }
                     }
                 }

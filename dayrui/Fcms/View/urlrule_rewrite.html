@@ -32,7 +32,7 @@
                 if (data.code) {
                     dr_tips(1, data.msg);
                     $('#dr_write').show();
-                    $('#dr_code').val(data.data.code);
+                    $('#dr_code').html(data.data.code);
                     $('#dr_error').html(data.data.error);
                 } else {
                     dr_tips(0, data.msg);
@@ -92,13 +92,21 @@
 		<p>一定一定一定不要全部复制到配置文件中，一定要逐条调试</p>
 		<p>规则的优先级别一定要根据正则表达式的优先级别来写，否则会出现指向错乱的情况</p>
 	</div>
-	
+
+    <div class="portlet-body">
+        <div id="dr_code"></div>
+    </div>
+
     <div class="portlet-body" id="dr_error" style="color: red">
 
     </div>
-    <div class="portlet-body">
-        <textarea class="form-control" id="dr_code" style="width:100%; height:500px;"></textarea>
-    </div>
 </div>
-
+<style>
+    #dr_code textarea{
+        margin: 5px 0;
+    }
+    #dr_code {
+        line-height: 30px;
+    }
+    </style>
 {template footer.html}
