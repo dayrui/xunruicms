@@ -248,9 +248,11 @@ class Min_menu extends \Phpcmf\Common {
 		if (!$data['pid']) {
 		    if (!$data['mark']) {
                 $this->_json(0, dr_lang('标识字符不能为空'), ['field' => 'mark']);
-            } elseif (!\Phpcmf\Service::M()->table('admin_menu')->where('mark', $data['mark'])->counts()) {
-                $this->_json(0, dr_lang('标识字符没有存在于完整菜单中'), ['field' => 'mark']);
             }
+            /*
+            elseif (!\Phpcmf\Service::M()->table('admin_menu')->where('mark', $data['mark'])->counts()) {
+                $this->_json(0, dr_lang('标识字符没有存在于完整菜单中'), ['field' => 'mark']);
+            }*/
         }
 
         if ($data['uri'] && !\Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
