@@ -8,7 +8,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 // 判断环境
 if (version_compare(PHP_VERSION, '7.3.0') < 0) {
-    echo "<font color=red>PHP版本必须在7.3以上</font>";exit;
+    exit("<font color=red>PHP版本建议在7.3及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 }
 
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
@@ -37,7 +37,7 @@ foreach (array(
              'chmod',
          ) as $t) {
     if ($t && !function_exists($t)) {
-        exit('PHP自带的函数（'.$t.'）被服务器禁用了，需要开启');
+        exit('PHP自带的函数（'.$t.'）被服务器禁用了，需要联系服务商开启');
     }
 }
 

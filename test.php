@@ -27,7 +27,7 @@ dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
 if (version_compare(PHP_VERSION, '7.3.0') < 0) {
-    exit("<font color=red>PHP版本必须在7.3及以上，当前".PHP_VERSION."</font>");
+    exit("<font color=red>PHP版本建议在7.3及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 } else {
     dr_echo_msg(1, 'PHP版本要求：7.3及以上，当前'.PHP_VERSION.'，<a style="color:blue;text-decoration:none;" href="'.SELF.'?phpinfo=true">查看环境</a>');
 }

@@ -39,7 +39,7 @@ if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
 	exit;
 }
 // 判断环境
-if (version_compare(PHP_VERSION, '7.3.0') < 0) {
+if (version_compare(PHP_VERSION, '7.2.0') < 0) {
     echo "<font color=red>PHP版本必须在7.3以上</font>";exit;
 }
 //=======结束，安装之后可以删除此段代码

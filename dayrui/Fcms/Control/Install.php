@@ -23,7 +23,7 @@ class Install extends \Phpcmf\Common {
         $this->lock = WRITEPATH.'install.lock';
         if (is_file($this->lock)) {
             exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');
-        } elseif (version_compare(PHP_VERSION, '7.3.0') < 0) {
+        } elseif (version_compare(PHP_VERSION, '7.2.0') < 0) {
             echo "<font color=red>PHP版本必须在7.3以上</font>";exit;
         }
         define('SITE_LANGUAGE', 'zh-cn');
