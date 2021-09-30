@@ -1647,6 +1647,14 @@ class View {
 
                 module:
 
+                // 通过栏目识别共享模块目录
+                if ((!$dirname || $dirname == 'share') && $system['catid']) {
+                    $cat = dr_share_cat_value($system['catid']);
+                    if ($cat && $cat['mid']) {
+                        $dirname = $cat['mid'];
+                    }
+                }
+
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
                     return $this->_return($system['return'], '模块('.$dirname.')未安装');
