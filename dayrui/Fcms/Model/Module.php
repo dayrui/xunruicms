@@ -507,10 +507,10 @@ class Module extends \Phpcmf\Model
 
         if ($cache['share']) {
             $cdir = 'share';
-            $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ? $this->cat_share[$siteid] : $this->db->table($siteid.'_share_category')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ? $this->cat_share[$siteid] : $this->db->table($siteid.'_share_category')->orderBy('displayorder ASC, id ASC')->limit(MAX_CATEGORY)->get()->getResultArray();
         } else {
             $cdir = $cache['dirname'];
-            $category = $this->db->table($siteid.'_'.$cdir.'_category')->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            $category = $this->db->table($siteid.'_'.$cdir.'_category')->orderBy('displayorder ASC, id ASC')->limit(MAX_CATEGORY)->get()->getResultArray();
         }
 
         // 修复优化栏目
