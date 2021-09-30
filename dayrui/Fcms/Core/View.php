@@ -1652,6 +1652,7 @@ class View {
                     $cat = dr_share_cat_value($system['catid']);
                     if ($cat && $cat['mid']) {
                         $dirname = $cat['mid'];
+                        unset($cat);
                     }
                 }
 
