@@ -193,7 +193,7 @@ class Category extends \Phpcmf\Table {
                             $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('列表').' </span>';
                         }
                         if ($module[$t['mid']]['name']) {
-                            $t['mid'] = $module[$t['mid']]['name'];
+                            $t['mid'] = $module[$t['mid']]['name'] . ' / '.$t['mid'];
                         } else {
                             $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
                         }
@@ -269,7 +269,7 @@ class Category extends \Phpcmf\Table {
             $list.= "<td style='text-align:center'>\$type_html</td>";
         }
         if ($this->module['share'] && dr_in_array('mid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head.= '<th width="100" style="text-align:center"> '.dr_lang('模块').' </th>';
+            $head.= '<th width="150" style="text-align:center"> '.dr_lang('模块 / 目录').' </th>';
             $list.= "<td style='text-align:center'>\$mid</td>";
         }
 
