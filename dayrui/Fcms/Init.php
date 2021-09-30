@@ -307,7 +307,7 @@ if (is_cli()) {
     define('CMSURI', $uri);
 
     // 根据自定义URL规则来识别路由
-    if (!IS_ADMIN && $uri && !defined('IS_API')) {
+    if (!IS_ADMIN && $uri && !defined('IS_API') && !defined('FIX_WEB_URL')) {
         // 自定义URL解析规则
         $routes = [];
         $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.$uri; // 测试规则
