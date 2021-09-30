@@ -168,7 +168,7 @@ class Table extends \Phpcmf\Common {
 
         // 附表存储
         if ($this->is_data) {
-            $r = $this->_db()->table($this->init['table'] . '_data_'.intval($row['tablieid']))->get($id);
+            $r = $this->_db()->table($this->init['table'] . '_data_'.intval($row['tableid']))->get($id);
             $row = $r ? $r + $row : $row;
         }
 
