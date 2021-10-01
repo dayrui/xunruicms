@@ -57,7 +57,7 @@ class Category extends \Phpcmf\Table {
         ]);
 
         \Phpcmf\Service::M('category')->init($this->init); // 初始化内容模型
-        $this->module['category'] = \Phpcmf\Service::M('category')->repair([], $dir);
+        //$this->module['category'] = \Phpcmf\Service::M('category')->get_data(0);
 
         $file = WRITEPATH.'config/category.php';
         if (is_file($file)) {
@@ -77,10 +77,6 @@ class Category extends \Phpcmf\Table {
                     'list_field' => [],
                 ],
             ];
-        }
-
-        if (isset($this->cat_config[$this->module['dirname']]['zshow']) && $this->cat_config[$this->module['dirname']]['zshow']) {
-            define('SYS_CAT_ZSHOW', 1);
         }
 
         if (isset($this->cat_config[$this->module['dirname']]['rname']) && $this->cat_config[$this->module['dirname']]['rname']) {
@@ -109,7 +105,75 @@ class Category extends \Phpcmf\Table {
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
         $is_cat_code = dr_is_app('mbdy') && isset($this->admin['role'][1]) && method_exists(\Phpcmf\Service::M('code', 'mbdy'), 'cat_code') ? 1 : 0;
 
-        $tree = [];
+        $list = "<tr class='\$class'>";
+        $head = '<tr class="heading">';
+
+        $list.= "<td class='myselect'>
+                    <label class='mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline'>
+                        <input type='checkbox' class='checkboxes' name='ids[]' value='\$id' />
+                        <span></span>
+                    </label>
+                </td>";
+        $head.= '<th class="myselect">
+                        <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                            <span></span>
+                        </label>
+                    </th>';
+
+        if (dr_in_array('order', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="70" style="text-align:center"> '.dr_lang('排序').' </th>';
+            $list.= "<td style='text-align:center'> <input type='text' onblur='dr_cat_ajax_save(this.value, \$id)' value='\$displayorder' class='displayorder form-control input-sm input-inline input-mini'> </td>";
+        }
+
+        if (dr_in_array('use', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('可用') . ' </th>';
+            $list .= "<td style='text-align:center'>\$is_used_html</td>";
+        }
+
+        if (dr_in_array('show', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('显示') . ' </th>';
+            $list .= "<td style='text-align:center'>\$is_show_html</td>";
+        }
+
+        if (dr_in_array('id', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head .= '<th width="70" style="text-align:center"> Id </th>';
+            $list .= "<td style='text-align:center'>\$id</td>";
+        }
+
+        $head.= '<th> '.dr_lang('栏目信息').' </th>';
+        $list.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent</td>";
+
+        if ($this->is_scategory && dr_in_array('tid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="60" style="text-align:center"> '.dr_lang('类型').' </th>';
+            $list.= "<td style='text-align:center'>\$type_html</td>";
+        }
+        if ($this->module['share'] && dr_in_array('mid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="150" style="text-align:center"> '.dr_lang('模块 / 目录').' </th>';
+            $list.= "<td style='text-align:center'>\$mid</td>";
+        }
+
+        if (dr_is_app('chtml') && dr_in_array('html', $this->cat_config[$this->module['dirname']]['sys_field'])) {
+            $head.= '<th width="50" style="text-align:center"> ' . dr_lang('静态') . ' </th>';
+            $list.= "<td style='text-align:center'>\$is_page_html</td>";
+        }
+
+        if (isset($this->cat_config[$this->module['dirname']]['list_field']) && $this->cat_config[$this->module['dirname']]['list_field']) {
+            foreach ($this->cat_config[$this->module['dirname']]['list_field'] as $i => $t) {
+                if ($t['use']) {
+                    $head.= '<th '.($t['width'] ? ' width="'.$t['width'].'"' : '').' '.($t['center'] ? ' class=\"table-center\" style="text-align:center"' : '').'>'.dr_lang($t['name']).'</th>';
+                    $list.= '<td '.($t['center'] ? ' class=\"table-center\"' : '').'>$'.$i.'_html</td>';
+                }
+            }
+        }
+
+        $head.= '<th>'.dr_lang('操作').'</th>';
+        $list.= "<td>\$option</td>";
+
+        $head.= '</tr>';
+        $list.= "</tr>";
+
+        $tree = '';
         foreach($data as $k => $t) {
             if ($cqx && $cqx->is_edit($t['id'])) {
                 unset($data[$k]);
@@ -172,7 +236,8 @@ class Category extends \Phpcmf\Table {
             $t['option'] = $option;
             // 判断显示和隐藏开关
             $t['is_show_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('前端循环调用不会显示，但可以正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['id'=>$t['id']]).'\', 0);" class="tooltips badge badge-'.(!$t['show'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['show'] ? 'times' : 'check').'"></i></a>';
-            $t['is_used_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('禁用状态下此栏目不能正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'used', 'id'=>$t['id']]).'\', 1);" class="tooltips badge badge-'.($t['setting']['disabled'] ? 'no' : 'yes').'"><i class="fa fa-'.($t['setting']['disabled'] ? 'times' : 'check').'"></i></a>';
+            $t['is_used_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('禁用状态下此栏目不能正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'used', 'id'=>$t['id']]).'\', 1);" class="tooltips badge badge-'.($t['disabled'] ? 'no' : 'yes').'"><i class="fa fa-'.($t['disabled'] ? 'times' : 'check').'"></i></a>';
+            //$t['is_ismain_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('主栏目具备权限控制和相关参数配置权限；当栏目过多时建议将第一级设置为主栏目，其余子栏目不设置').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'main', 'id'=>$t['id']]).'\', 0);" class="tooltips badge badge-'.(!$t['ismain'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['ismain'] ? 'times' : 'check').'"></i></a>';
             // 判断是否生成静态
             $is_html = intval($this->module['share'] ? $t['setting']['html'] : $this->module['html']);
             $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
@@ -181,32 +246,30 @@ class Category extends \Phpcmf\Table {
             //$purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
             //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
             // 是否缓存
-            if ($data[$t['id']]) {
-                //$t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
-                // 共享模块显示栏类别
-                if ($this->is_scategory) {
-                    // 栏目类型
-                    if ($t['tid'] == 1) {
-                        if ($t['child']) {
-                            $t['type_html'] = '<span class="badge badge-danger"> '.dr_lang('封面').' </span>';
-                        } else {
-                            $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('列表').' </span>';
-                        }
-                        if ($module[$t['mid']]['name']) {
-                            $t['mid'] = $module[$t['mid']]['name'] . ' / '.$t['mid'];
-                        } else {
-                            $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
-                        }
-                    } elseif ($t['tid'] == 2) {
-                        $t['mid'] = '';
-                        $t['type_html'] = '<span class="badge badge-warning"> '.dr_lang('外链').' </span>';
-                        $t['is_page_html'] = '';
+            //$t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
+            // 共享模块显示栏类别
+            if ($this->is_scategory) {
+                // 栏目类型
+                if ($t['tid'] == 1) {
+                    if ($t['child']) {
+                        $t['type_html'] = '<span class="badge badge-danger"> '.dr_lang('封面').' </span>';
                     } else {
-                        $t['mid'] = '';
-                        $t['type_html'] = '<span class="badge badge-info"> '.dr_lang('单页').' </span>';
+                        $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('列表').' </span>';
                     }
-                    //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
+                    if ($module[$t['mid']]['name']) {
+                        $t['mid'] = $module[$t['mid']]['name'] . ' / '.$t['mid'];
+                    } else {
+                        $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
+                    }
+                } elseif ($t['tid'] == 2) {
+                    $t['mid'] = '';
+                    $t['type_html'] = '<span class="badge badge-warning"> '.dr_lang('外链').' </span>';
+                    $t['is_page_html'] = '';
+                } else {
+                    $t['mid'] = '';
+                    $t['type_html'] = '<span class="badge badge-info"> '.dr_lang('单页').' </span>';
                 }
+                //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
             } else {
                 $t['url'] = 'javascript:;';
                 $t['tid'] = 0;
@@ -222,83 +285,38 @@ class Category extends \Phpcmf\Table {
                 }
             }
             //$t['name'] = $this->module['category'][$t['id']]['total'];
-            $tree[$t['id']] = $t;
-        }
+            if ($t['child']) {
+                $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data('.$t['id'].');" class="blue select-cat-'.$t['id'].'">[+]</a>&nbsp;';
+            } else {
+                $t['spacer'] = $this->_get_spacer($t['pids']);
+            }
 
-        $list = "<tr class='\$class'>";
-        $head = '<tr class="heading">';
-
-        $list.= "<td class='myselect'>
-                    <label class='mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline'>
-                        <input type='checkbox' class='checkboxes' name='ids[]' value='\$id' />
-                        <span></span>
-                    </label>
-                </td>";
-        $head.= '<th class="myselect">
-                        <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                            <span></span>
-                        </label>
-                    </th>';
-
-        if (dr_in_array('order', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head.= '<th width="70" style="text-align:center"> '.dr_lang('排序').' </th>';
-            $list.= "<td style='text-align:center'> <input type='text' onblur='dr_cat_ajax_save(this.value, \$id)' value='\$displayorder' class='displayorder form-control input-sm input-inline input-mini'> </td>";
-        }
-
-        if (dr_in_array('use', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('可用') . ' </th>';
-            $list .= "<td style='text-align:center'>\$is_used_html</td>";
-        }
-
-        if (dr_in_array('show', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head .= '<th width="50" style="text-align:center"> ' . dr_lang('显示') . ' </th>';
-            $list .= "<td style='text-align:center'>\$is_show_html</td>";
-        }
-
-        if (dr_in_array('id', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head .= '<th width="70" style="text-align:center"> Id </th>';
-            $list .= "<td style='text-align:center'>\$id</td>";
-        }
-
-        $head.= '<th> '.dr_lang('栏目').' </th>';
-        $list.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent</td>";
-
-        if ($this->is_scategory && dr_in_array('tid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head.= '<th width="60" style="text-align:center"> '.dr_lang('类型').' </th>';
-            $list.= "<td style='text-align:center'>\$type_html</td>";
-        }
-        if ($this->module['share'] && dr_in_array('mid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head.= '<th width="150" style="text-align:center"> '.dr_lang('模块 / 目录').' </th>';
-            $list.= "<td style='text-align:center'>\$mid</td>";
-        }
-
-        if (dr_in_array('total', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head .= '<th width="80" style="text-align:center"> ' . dr_lang('内容') . ' </th>';
-            $list .= "<td style='text-align:center' class='cat-total-\$id'> \$ctotal </td>";
-        }
-
-        if (dr_is_app('chtml') && dr_in_array('html', $this->cat_config[$this->module['dirname']]['sys_field'])) {
-            $head.= '<th width="50" style="text-align:center"> ' . dr_lang('静态') . ' </th>';
-            $list.= "<td style='text-align:center'>\$is_page_html</td>";
-        }
-
-        if (isset($this->cat_config[$this->module['dirname']]['list_field']) && $this->cat_config[$this->module['dirname']]['list_field']) {
-            foreach ($this->cat_config[$this->module['dirname']]['list_field'] as $i => $t) {
-                if ($t['use']) {
-                    $head.= '<th '.($t['width'] ? ' width="'.$t['width'].'"' : '').' '.($t['center'] ? ' class=\"table-center\" style="text-align:center"' : '').'>'.dr_lang($t['name']).'</th>';
-                    $list.= '<td '.($t['center'] ? ' class=\"table-center\"' : '').'>$'.$i.'_html</td>';
+            //$t['spacer'] = $num;
+            $t['class'] = 'dr_catid_'.$t['id']. ' dr_pid_'.$t['pid'];
+            $arr = explode(',', $t['pids']);
+            if ($arr) {
+                foreach ($arr as $a) {
+                    $t['class'].= ' dr_pid_'.$a;
                 }
             }
+            extract($t);
+            eval("\$nstr = \"$list\";");
+            $tree.= $nstr;
         }
 
-        $head.= '<th>'.dr_lang('操作').'</th>';
-        $list.= "<td>\$option</td>";
+        return [$head, $tree];
+    }
 
-        $head.= '</tr>';
-        $list.= "</tr>";
-
-        return [$head, \Phpcmf\Service::L('tree')->init($tree)->html_icon()->get_tree(0, $list)];
+    // 替换空格填充符号
+    private function _get_spacer($str) {
+        $rt = '';
+        $num = substr_count($str, ',') * 2;
+        if ($num) {
+            for ($i = 0; $i < $num; $i ++) {
+                $rt.= '&nbsp;&nbsp;&nbsp;';
+            }
+        }
+        return $rt;
     }
 
     // 设置栏目属性
@@ -308,10 +326,10 @@ class Category extends \Phpcmf\Table {
             'order' => ['排序', '设置栏目的排列顺序'],
             'use' => ['可用', '设置栏目是否可用的快捷开关'],
             'show' => ['显示', '设置栏目是否用于循环显示'],
+            //'ismain' => ['主栏目', '设置是否为主栏目的快捷开关'],
             'id' => ['Id', '显示栏目的id号'],
             'tid' => ['类型', '显示栏目的类型，有：单页、模块、外链'],
             'mid' => ['模块', '显示所属模块的名称'],
-            'total' => ['内容数', '针对模块栏目的所属内容数量统计'],
             'html' => ['静态', '设置栏目是否生成静态的开关'],
         ];
         if (!$this->is_scategory) {
@@ -348,10 +366,16 @@ class Category extends \Phpcmf\Table {
         \Phpcmf\Service::V()->display('share_category_config.html');exit;
     }
 
+    public function list_index() {
+        $pid = intval(\Phpcmf\Service::L('input')->get('pid'));
+        list($a, $b) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data($pid));
+        $this->_json(1, $b);
+    }
+
     // 后台查看列表
     protected function _Admin_List() {
 
-        list($a, $b) = $this->_get_tree_list($this->module['category']);
+        list($a, $b) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data(0));
         \Phpcmf\Service::V()->assign([
             'list' => '你在My/View/share_category_list.html，目录中定义过栏目文件，需要删除此文件',
             'cat_head' => $a,
@@ -505,8 +529,6 @@ class Category extends \Phpcmf\Table {
             $pid = intval($post['pid']);
             if ($pid && !$this->module['category'][$pid]) {
                 $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
-            } elseif (\Phpcmf\Service::M('Category')->check_counts(0, dr_count($list))) {
-                $this->_json(0, dr_lang('网站栏目数量已达到上限'));
             } elseif ($pid && $post['tid'] != 2 && $this->module['category'][$pid]['tid'] == 2) {
                 return dr_return_data(0, dr_lang('父级栏目是外部地址类型，下级栏目只能选择外部地址'));
             } elseif ($pid && $this->module['category'][$pid]['pcatpost'] == 0
@@ -532,6 +554,8 @@ class Category extends \Phpcmf\Table {
 
                 $data['pid'] = $pid;
                 $data['show'] = 1;
+                //$data['ismain'] = 0;
+                $data['disabled'] = 0;
                 $data['pids'] = '';
                 $data['thumb'] = '';
                 $data['pdirname'] = '';
@@ -866,10 +890,8 @@ class Category extends \Phpcmf\Table {
         $at = \Phpcmf\Service::L('input')->get('at');
         if ($at == 'used') {
             // 可用状态
-            $row['setting'] = dr_string2array($row['setting']);
-            $row['setting']['disabled'] = $row['setting']['disabled'] ? 0 : 1;
-
-            if ($row['setting']['disabled']) {
+            $v = $row['disabled'] ? 0 : 1;
+            if ($v) {
                 $num = 0;
                 if ($this->module['share'] && $row['tid'] == 1 && dr_is_module($row['mid'])) {
                     $num = \Phpcmf\Service::M()->table(dr_module_table_prefix($row['mid']))->where('catid in ('.($row['childids'] ? $row['childids'] : $id).')')->counts();
@@ -880,20 +902,24 @@ class Category extends \Phpcmf\Table {
                     $this->_json(0, dr_lang('当前栏目内容存在%s条数据，无法禁用', $num));
                 }
             }
-
-            \Phpcmf\Service::M('category')->init($this->init)->update($id, [
-                'setting' => dr_array2string($row['setting'])
-            ]);
-
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['disabled' => $v]);
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             \Phpcmf\Service::L('input')->system_log('修改栏目的可用状态: '. $id);
-            $this->_json(1, dr_lang($row['setting']['disabled'] ? '禁用状态' : '可用状态'), ['value' => $row['setting']['disabled'], 'share' => 0]);
+            $this->_json(1, dr_lang($v ? '禁用状态' : '可用状态'), ['value' => $v, 'share' => 0]);
+        } elseif ($at == 'main') {
+            // 显示状态
+            $v = $row['ismain'] ? 0 : 1;
+            \Phpcmf\Service::M('category')->init($this->init)->update($id, ['ismain' => $v]);
+
+            // 自动更新缓存
+            \Phpcmf\Service::M('cache')->sync_cache();
+            \Phpcmf\Service::L('input')->system_log('修改栏目的主栏目状态: '. $id);
+            $this->_json(1, dr_lang($v ? '主栏目状态' : '非主栏目状态'), ['value' => $v, 'share' => 0]);
         } else {
             // 显示状态
             $v = $row['show'] ? 0 : 1;
             \Phpcmf\Service::M('category')->init($this->init)->update($id, ['show' => $v]);
-
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();
             \Phpcmf\Service::L('input')->system_log('修改栏目的显示状态: '. $id);
@@ -1137,8 +1163,6 @@ class Category extends \Phpcmf\Table {
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
                 } elseif (\Phpcmf\Service::M('category')->check_dirname($id, $save['dirname'])) {
                     return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
-                } elseif (\Phpcmf\Service::M('category')->check_counts($id)) {
-                    return dr_return_data(0, dr_lang('网站栏目数量已达到上限'));
                 }
 
                 // 默认数据
@@ -1192,6 +1216,8 @@ class Category extends \Phpcmf\Table {
                 } else {
                     $pid = 0;
                 }
+
+                $data['disabled'] = 0;
 
                 if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {

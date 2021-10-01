@@ -502,19 +502,35 @@ class Module extends \Phpcmf\Model
         return $category;
     }
 
+    public function update_category_cache($siteid, $cdir) {
+
+        // 修复优化栏目
+        $category = \Phpcmf\Service::M()->db->table($siteid.'_'.$cdir.'_category')
+            ->where('disabled', 0)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+
+        $category = \Phpcmf\Service::M('category')->init(['table' => $siteid.'_'.$cdir.'_category'])->repair($category);
+        \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/category_'.$siteid.'_'.$cdir.'.php', '站点栏目配置文件', 32)->to_require($category);
+    }
+
     // 栏目缓存数据
     protected function _get_category_cache($siteid, $cache, $mdir) {
 
         if ($cache['share']) {
             $cdir = 'share';
-            $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ? $this->cat_share[$siteid] : $this->db->table($siteid.'_share_category')->orderBy('displayorder ASC, id ASC')->limit(MAX_CATEGORY)->get()->getResultArray();
+            if (\Phpcmf\Service::M()->table($siteid.'_'.$cdir.'_category')->counts() > MAX_CATEGORY) {
+                $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ? $this->cat_share[$siteid] : \Phpcmf\Service::R(WRITEPATH.'config/category_'.$siteid.'_'.$cdir.'.php');
+            } else {
+                $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ?
+                    $this->cat_share[$siteid] : $this->db->table($siteid.'_share_category')->where('disabled', 0)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            }
         } else {
             $cdir = $cache['dirname'];
-            $category = $this->db->table($siteid.'_'.$cdir.'_category')->orderBy('displayorder ASC, id ASC')->limit(MAX_CATEGORY)->get()->getResultArray();
+            if (\Phpcmf\Service::M()->table($siteid.'_'.$cdir.'_category')->counts() > MAX_CATEGORY) {
+                $category = \Phpcmf\Service::R(WRITEPATH . 'config/category_' . $siteid . '_' . $cdir . '.php');
+            } else {
+                $category = $this->db->table($siteid.'_'.$cdir.'_category')->where('disabled', 0)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+            }
         }
-
-        // 修复优化栏目
-        $category = \Phpcmf\Service::M('category')->init(['table' => $siteid.'_'.$cdir.'_category'])->repair($category, $cdir);
 
         // 栏目开始
 		$CAT = $CAT_DIR = $level = [];
@@ -564,11 +580,7 @@ class Module extends \Phpcmf\Model
                 ], 1, 0, 'category-'.$cdir);
             }
             foreach ($category as $i => $c) {
-                $c['setting'] = dr_string2array($c['setting']);
-                if (isset($c['setting']['disabled']) && $c['setting']['disabled']) {
-                    unset($category[$i]);
-                    continue;
-                }
+                $category[$i]['setting'] = $c['setting'] = dr_string2array($c['setting']);
                 $pid = explode(',', $c['pids']);
                 $level[] = substr_count($c['pids'], ',');
                 $c['mid'] = isset($c['mid']) ? $c['mid'] : $cache['dirname'];
@@ -599,11 +611,13 @@ class Module extends \Phpcmf\Model
                 // 获取栏目url
                 $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
                 // 统计栏目文章数量
+                $c['total'] = '此变量已废弃，请使用count标签查询';
+                /*
                 if (in_array($c['tid'], [2, 0]) || $c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) {
                     $c['total'] = 0;
                 } else {
                     $c['total'] = $this->db->table($siteid.'_'.$c['mid'].'_index')->where('status', 9)->where('catid', intval($c['id']))->countAllResults();
-                }
+                }*/
                 // 格式化栏目
                 $c['field'] = [];
                 $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
@@ -611,14 +625,15 @@ class Module extends \Phpcmf\Model
             }
             // 更新父栏目数量
             foreach ($category as $c) {
+                /*
                 if ($c['child']) {
                     $arr = explode(',', $c['childids']);
                     $CAT[$c['id']]['total'] = 0;
                     foreach ($arr as $i) {
                         $CAT[$c['id']]['total']+= $CAT[$i]['total'];
                     }
-                }
-                if ($c['setting']['module_field']) {
+                }*/
+                if ($c['ismain'] && $c['setting']['module_field']) {
                     foreach ($c['setting']['module_field'] as $_fname => $o) {
                         $CAT[$c['id']]['field'][] = $_fname;
                     }

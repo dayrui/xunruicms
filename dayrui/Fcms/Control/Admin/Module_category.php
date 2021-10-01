@@ -75,9 +75,11 @@ class Module_category extends \Phpcmf\Common
         $list = [];
 
         // 字段查询
+        $mid = $dir;
         $like = ['catmodule-'.$dir];
         if ($module['share']) {
             $like[] = 'catmodule-share';
+            $mid = 'share';
         }
         $field = \Phpcmf\Service::M()->db->table('field')
             ->where('ismain', 1)
@@ -130,6 +132,7 @@ class Module_category extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::V()->assign([
+            'mid' => $mid,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '模块【'.$module['name'].'】栏目模型字段' => ['url:'.\Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir'=>$dir]), 'fa fa-code', 'module_category/field_index'],

@@ -39,10 +39,6 @@ class Category extends \Phpcmf\Model
         if ($id) {
             return 0;
         }
-        $max = $this->table($this->tablename)->counts() + $fix;
-        if ($max > MAX_CATEGORY) {
-            return 1;
-        }
 
         return 0;
     }
@@ -221,12 +217,19 @@ class Category extends \Phpcmf\Model
     }
 
     /**
+     * 获取菜单数据
+     */
+    public function cat_data($pid) {
+        return $this->table($this->tablename)->where('pid', $pid)->order_by('displayorder ASC,id ASC')->getAll();
+    }
+
+    /**
      * 修复菜单数据
      */
     public function repair($_data = [], $dirname = '') {
 
-        $this->categorys = $categorys = [];
-        !$_data && $_data = $this->table($this->tablename)->order_by('displayorder ASC,id ASC')->getAll(MAX_CATEGORY);
+        $this->categorys = $this->categorys_dir = $categorys = [];
+        !$_data && $_data = $this->table($this->tablename)->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
         if (!$_data) {
             return;
         }
@@ -270,7 +273,7 @@ class Category extends \Phpcmf\Model
                 }
                 if (!$ispost) {
                     // ispost = 0 表示此栏目没有发布权限
-                    $is_cks = 1;
+                    //$is_cks = 1;
                     continue;
                 }
             }
@@ -279,6 +282,7 @@ class Category extends \Phpcmf\Model
             if ($dirname == 'share' && $this->categorys[$catid]['child']) {
                 $this->update_parent_mid($this->categorys, $catid);
             }
+            $this->categorys_dir[$t['dirname']] = $t['id'];
         }
 
         return $this->categorys;
@@ -287,8 +291,6 @@ class Category extends \Phpcmf\Model
     
     // 用于删除时获取的数据
     public function data_for_delete() {
-
-        $this->repair();
 
         $cache = [];
         // 全部栏目
@@ -305,8 +307,6 @@ class Category extends \Phpcmf\Model
 
     // 用于移动时获取的数据
     public function data_for_move() {
-
-        $this->repair();
 
         $cache = [];
         // 全部栏目
