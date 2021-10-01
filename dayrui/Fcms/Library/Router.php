@@ -493,7 +493,7 @@ class Router {
         $url = ltrim(str_replace('//', '/', $url), '/');
 
         if (IS_DEV && strpos($url, '?') !== false) {
-            return '自定义URL规则['.$rule.']不能包含问号?';
+            return $prefix.$url.'#开发者模式提醒：自定义URL规则['.$rule.']不建议包含问号?';
         }
 
         return $prefix.$url;
@@ -609,7 +609,7 @@ class Router {
             $value = dr_string2array($r['value']);
             if ($r['type'] == 1) {
                 // 独立模块
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
                 if ($value['module']) {
                     $rule = $value['module'];
                     $cname = "【".$r['name']."】模块首页（{$rule}）";
@@ -769,10 +769,10 @@ class Router {
                     }
                 }
 
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
             } elseif ($r['type'] == 3 ) {
                 // 共享栏目
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
                 if ($value['list_page']) {
                     $rule = $value['list_page'];
                     $cname = "【".$r['name']."】模块栏目列表(分页)（{$rule}）";
@@ -867,10 +867,10 @@ class Router {
                         }
                     }
                 }
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
             } elseif ($r['type'] == 2 ) {
                 // 共享模块
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
                 if ($value['search_page']) {
                     $rule = $value['search_page'];
                     $cname = "【".$r['name']."】模块搜索页(分页)（{$rule}）";
@@ -909,10 +909,10 @@ class Router {
                         }
                     }
                 }
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
             } elseif ($r['type'] == 4 ) {
                 // 关键词库插件
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
                 if ($value['tag']) {
                     $rule = $value['tag'];
                     $cname = "【".$r['name']."】TagURL（{$rule}）";
@@ -932,10 +932,10 @@ class Router {
                     }
                 }
 
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
             } elseif ($r['type'] == 0 ) {
                 // 自定义页面插件
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
                 if ($value['page_page']) {
                     $rule = $value['page_page'];
                     $cname = "【".$r['name']."】自定义页面(分页)（{$rule}）";
@@ -993,12 +993,12 @@ class Router {
                         }
                     }
                 }
-                $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL.PHP_EOL;
+                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
             }
         }
 
         return dr_return_data(1, dr_lang('生成成功'), [
-            'code' => $code,
+            'code' => nl2br($code),
             'error' => $error,
         ]);
     }

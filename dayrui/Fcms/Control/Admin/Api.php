@@ -7,6 +7,22 @@
 
 class Api extends \Phpcmf\Common {
 
+    // 更新栏目缓存配置
+    public function update_category_cache() {
+
+        $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
+        if (!$mid) {
+            $cdir = 'share';
+        } else {
+            $cdir = $mid;
+        }
+
+        \Phpcmf\Service::M('module')->update_category_cache(SITE_ID, $cdir);
+        \Phpcmf\Service::M('cache')->sync_cache();
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
     // 清理通知
     public function clear_notice() {
 

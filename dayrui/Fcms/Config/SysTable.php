@@ -86,6 +86,7 @@ return [
         `dirname` varchar(255) NOT NULL COMMENT '栏目目录',
         `pdirname` varchar(255) NOT NULL COMMENT '上级目录',
         `child` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否有下级',
+        `disabled` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否禁用',
         `childids` text NOT NULL COMMENT '下级所有id',
         `thumb` varchar(255) NOT NULL COMMENT '栏目图片',
         `show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
@@ -93,6 +94,7 @@ return [
         `displayorder` mediumint(8) NOT NULL DEFAULT '0',
         PRIMARY KEY (`id`),
         KEY `show` (`show`),
+        KEY `disabled` (`disabled`),
         KEY `module` (`pid`,`displayorder`,`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='栏目表';",
 

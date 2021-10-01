@@ -105,52 +105,32 @@
             }
         });
     }
+
+    function dr_tree_data(catid) {
+        var value = $(".select-cat-"+catid).html();
+        if (value == '[+]') {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "{dr_url($uriprefix.'/list_index')}&pid="+catid,
+                success: function(json) {
+                    if (json.code == 1) {
+                        $(".dr_catid_"+catid).after(json.msg);
+                        $(".select-cat-"+catid).html('[-]');
+                    } else {
+                        dr_cmf_tips(json.code, json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
+        } else {
+            $(".dr_pid_"+catid).remove();
+            $(".select-cat-"+catid).html('[+]');
+        }
+    }
     $(function() {
-        {if defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW}
-        $(".select-cat").click(function(){
-            var action = $(this).attr("action");
-            var childs = $(this).attr("childs");
-            var catid = $(this).attr("catid");
-            var catids= new Array(); //定义一数组
-            catids = childs.split(","); //字符分割
-            if (action == 'close') {
-                $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid, null,{path:"/",expires: -1});
-                $(this).attr("action", "open");
-                $(this).html("[-]");
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).show();
-                    }
-                }
-            } else {
-                // 关闭状态存储cookie
-                $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid, 1);
-                $(this).attr("action", "close");
-                $(this).html("[+]");
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).hide();
-                    }
-                }
-            }
-        });
-        $(".select-cat").each(function(){
-            var childs = $(this).attr("childs");
-            var catid = $(this).attr("catid");
-            var cache = $.cookie('dr_{SITE_ID}_{APP_DIR}_'+catid);
-            if (cache) {
-                $(this).attr("action", "close");
-                $(this).html("[+]");
-                var catids= new Array(); //定义一数组
-                catids = childs.split(","); //字符分割
-                for (i=0;i<catids.length ;i++ ) {
-                    if (catids[i] != catid) {
-                        $(".dr_catid_"+catids[i]).hide();
-                    }
-                }
-            }
-        });
-        {/if}
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -204,6 +184,22 @@
                 }
             });
         }
+    function dr_update_category_cache() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid={APP_DIR}",
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
 </script>
 
 <div class="row my-content-top-tool">
@@ -217,7 +213,7 @@
 </div>
 
 <div class="note note-danger">
-    <p><a href="javascript:dr_update_cache('module', 'module');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+    <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
 </div>
 
 <div class="right-card-box">

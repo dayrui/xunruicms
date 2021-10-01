@@ -432,6 +432,15 @@ class Check extends \Phpcmf\Common
                             \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `code` VARCHAR(100) NOT NULL');
                         }
                     }
+                    // 升级栏目表
+                    $table = $prefix.$siteid.'_share_category';
+                    if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                        // 创建字段 代码
+                        if (!\Phpcmf\Service::M()->db->fieldExists('disabled', $table)) {
+                            \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `disabled` tinyint(1) DEFAULT  \'0\'');
+                            \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0');
+                        }
+                    }
                     if ($module) {
                         foreach ($module as $m) {
                             if (!\Phpcmf\Service::M()->db->tableExists( $prefix.$siteid.'_'.$m['dirname'])) {
@@ -475,6 +484,14 @@ class Check extends \Phpcmf\Common
                             foreach(['day_time', 'week_time', 'month_time', 'year_time'] as $a) {
                                 if (!\Phpcmf\Service::M()->db->fieldExists($a, $table)) {
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `'.$a.'` INT(10) DEFAULT NULL');
+                                }
+                            }
+                            $table = $prefix.$siteid.'_'.$m['dirname'].'_category';
+                            if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                if (!\Phpcmf\Service::M()->db->fieldExists('disabled', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `disabled` tinyint(1) DEFAULT \'0\'');
+                                    \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0');
+
                                 }
                             }
                             // 栏目模型字段修正
@@ -672,15 +689,9 @@ class Check extends \Phpcmf\Common
                                         $r && $rt[] = $r;
                                     }
                                 }
-                                if (\Phpcmf\Service::M()->table($siteid.'_'.$m['dirname'].'_category')->counts() > MAX_CATEGORY) {
-                                    $rt[] = '<font color="red">模块【'.$m['name'].'/'.$m['dirname'].'】的栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>，<a href="javascript:dr_help(909);">查看解决方案</a>';
-                                }
                             }
                         }
                     }
-                }
-                if (\Phpcmf\Service::M()->table(SITE_ID.'_share_category')->counts() > MAX_CATEGORY) {
-                    $rt[] = '<font color="red">共享栏目数据量超过'.MAX_CATEGORY.'个，会影响加载速度，建议对其进行数据优化</font>，<a href="javascript:dr_help(909);">查看解决方案</a>';
                 }
                 if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);

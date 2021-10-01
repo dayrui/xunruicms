@@ -1,7 +1,27 @@
 {template "header.html"}
 
+<script>
+    function dr_update_category_cache() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid={$mid}",
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
+</script>
+
 <div class="note note-danger">
     <p>{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；若选择父栏目时，其子栏目不会继承该字段')}</p>
+    <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
 </div>
 
 <div class="right-card-box">
