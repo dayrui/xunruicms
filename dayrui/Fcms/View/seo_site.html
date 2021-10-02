@@ -54,14 +54,17 @@
 
                         <hr>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('一键设置URL规则')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('全局设置URL规则')}</label>
                             <div class="col-md-9">
                                 <label>
-                                    <select class="form-control" id="dr_sync_value">
-                                        <option value="0"> -- </option>
-                                        <option value="999"> {dr_lang('还原动态地址')} </option>
+                                    <select class="form-control" name="data[SITE_URLRULE]" id="dr_sync_value">
+                                        {if $data['SITE_URLRULE']}
+                                        <option value="0"> {dr_lang('还原动态地址')} </option>
+                                        {else}
+                                        <option value="0"> {dr_lang('动态地址')} </option>
+                                        {/if}
                                         {list action=cache name=urlrule return=u}
-                                        {if $u.type==3}<option value="{$u.id}" {if $u.id == $data['setting']['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                        {if $u.type==3}<option value="{$u.id}" {if $u.id == $data['SITE_URLRULE']}selected{/if}> {$u.name} </option>{/if}
                                         {/list}
                                     </select>
                                 </label>

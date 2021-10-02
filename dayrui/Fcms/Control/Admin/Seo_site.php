@@ -50,13 +50,6 @@ class Seo_site extends \Phpcmf\Common {
 	public function sync_index() {
 
         $value = intval(\Phpcmf\Service::L('input')->get('value'));
-        if (!$value) {
-            $this->_json(0, dr_lang('未选择URL规则'));
-        }
-
-        if ($value == 999) {
-            $value = 0;
-        }
 
         $category = \Phpcmf\Service::M()->table_site('share_category')->getAll();
         if (!$category) {

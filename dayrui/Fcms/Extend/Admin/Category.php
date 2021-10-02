@@ -593,6 +593,7 @@ class Category extends \Phpcmf\Table {
                     ],
                 ];
                 $data['setting']['getchild'] = 0;
+                $save['setting']['urlrule'] = (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_URLRULE');
                 $data['setting'] = dr_array2string($data['setting']);
 
                 $rt = \Phpcmf\Service::M('category')->insert($data);
@@ -1219,8 +1220,6 @@ class Category extends \Phpcmf\Table {
                     $pid = 0;
                 }
 
-                $data['disabled'] = 0;
-
                 if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {
                         $this->_json(0, dr_lang('父栏目不存在'));
@@ -1240,11 +1239,16 @@ class Category extends \Phpcmf\Table {
                     $save['setting']['notedit'] = 0;
                 }
 
+                if (!$old && (!isset($save['setting']['urlrule']) || !$save['setting']['urlrule'])) {
+                    $save['setting']['urlrule'] = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_URLRULE');
+                }
+
                 // 数组json化
                 $save['pids'] = '';
                 $save['setting'] = dr_array2string($save['setting']);
                 $save['pdirname'] = '';
                 $save['childids'] = '';
+                $save['disabled'] = 0;
 
                 return dr_return_data(1, '', [ 1 => $save]);
             }, function ($id, $data, $old) {
