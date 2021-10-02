@@ -152,7 +152,7 @@ class Module extends \Phpcmf\Table {
 
         \Phpcmf\Service::V()->assign([
             'did' => $did,
-            'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
+            'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
             'select' => $select,
             'draft_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add'),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
