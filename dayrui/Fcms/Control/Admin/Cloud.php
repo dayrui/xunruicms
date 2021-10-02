@@ -823,6 +823,8 @@ return [
 
         if ($this->cmf_license['oem']) {
             $this->_admin_msg(0, '无法使用此功能');
+        } elseif (strpos($this->cmf_version['version'], 'Dev')) {
+            $this->_admin_msg(0, '开发版（'.$this->cmf_version['version'].'）无法使用此功能');
         }
 
         \Phpcmf\Service::V()->assign([
