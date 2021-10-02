@@ -599,7 +599,7 @@ class Category extends \Phpcmf\Table {
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-                if ($cf) {
+                if (!$cf['code']) {
                     // 重复验证
                     \Phpcmf\Service::M('category')->update($rt['code'], [
                         'dirname' => $data['dirname'].$rt['code']
@@ -1161,8 +1161,10 @@ class Category extends \Phpcmf\Table {
                     return dr_return_data(0, dr_lang('栏目名称不能为空'), ['field' => 'name']);
                 } elseif (!$save['dirname']) {
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
-                } elseif (\Phpcmf\Service::M('category')->check_dirname($id, $save['dirname'])) {
-                    return dr_return_data(0, dr_lang('目录名称不可用'), ['field' => 'dirname']);
+                }
+                $rt = \Phpcmf\Service::M('category')->check_dirname($id, $save['dirname']);
+                if (!$rt['code']) {
+                    return dr_return_data(0, $rt['msg'], ['field' => 'dirname']);
                 }
 
                 // 默认数据

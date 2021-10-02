@@ -23,14 +23,16 @@ class Category extends \Phpcmf\Model
     public function check_dirname($id, $value) {
         
         if (!$value) {
-            return 1;
+            return dr_return_data(0, dr_lang('目录不能为空'));
         } elseif (!preg_match('/^[a-z0-9 \_\-]*$/i', $value)) {
-            return 1;
+            return dr_return_data(0, dr_lang('目录格式不能包含特殊符号或文字'));
         } elseif (defined('SYS_CAT_RNAME') && SYS_CAT_RNAME) {
-            return 0;
+            return dr_return_data(1);
+        } elseif ($this->table($this->tablename)->is_exists($id, 'dirname', $value)) {
+            return dr_return_data(0, dr_lang('目录不能重复（可以在栏目属性设置中关闭重复验证）'));
         }
-        
-        return $this->table($this->tablename)->is_exists($id, 'dirname', $value);
+
+        return dr_return_data(1);
     }
 
     // 检查栏目上限
