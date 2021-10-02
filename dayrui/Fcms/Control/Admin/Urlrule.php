@@ -14,10 +14,10 @@ class Urlrule extends \Phpcmf\Table
     {
         parent::__construct(...$params);
         $this->type = array(
-            0 => dr_lang('自定义页面'),
+            0 => dr_lang('自定义页面插件'),
             1 => dr_lang('独立模块'),
-            2 => dr_lang('共享模块'),
-            3 => dr_lang('共享栏目'),
+            2 => dr_lang('共享模块搜索'),
+            3 => dr_lang('共享栏目和内容页'),
             //5 => dr_lang('模块表单'),
         );
         if (!dr_is_app('page')) {
