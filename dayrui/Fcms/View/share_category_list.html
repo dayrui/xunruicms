@@ -117,6 +117,7 @@
                     if (json.code == 1) {
                         $(".dr_catid_"+catid).after(json.msg);
                         $(".select-cat-"+catid).html('[-]');
+                        $('.tooltips').tooltip();
                     } else {
                         dr_cmf_tips(json.code, json.msg);
                     }
@@ -130,60 +131,45 @@
             $(".select-cat-"+catid).html('[+]');
         }
     }
-    $(function() {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{dr_url('api/ctotal')}",
-                data: $("#myform").serialize(),
-                success: function(json) {
-                    if (json.code == 1) {
-                        eval(json.msg);
-                    }
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+
+    function dr_scjt() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{dr_url($uriprefix.'/scjt_edit')}",
+            data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    dr_bfb('{dr_lang('生成栏目')}', '', json.msg);
+                } else {
+                    dr_cmf_tips(json.code, json.msg);
                 }
-            });
+
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
         });
-        function dr_scjt() {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{dr_url($uriprefix.'/scjt_edit')}",
-                data: $("#myform").serialize(),
-                success: function(json) {
-                    if (json.code == 1) {
-                        dr_bfb('{dr_lang('生成栏目')}', '', json.msg);
-                    } else {
-                        dr_cmf_tips(json.code, json.msg);
-                    }
-
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+    }
+    function dr_scjt2() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{dr_url($uriprefix.'/scjt2_edit')}",
+            data: $("#myform").serialize(),
+            success: function(json) {
+                if (json.code == 1) {
+                    dr_bfb('{dr_lang('生成内容')}', '', json.msg);
+                } else {
+                    dr_cmf_tips(json.code, json.msg);
                 }
-            });
-        }
-        function dr_scjt2() {
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: "{dr_url($uriprefix.'/scjt2_edit')}",
-                data: $("#myform").serialize(),
-                success: function(json) {
-                    if (json.code == 1) {
-                        dr_bfb('{dr_lang('生成内容')}', '', json.msg);
-                    } else {
-                        dr_cmf_tips(json.code, json.msg);
-                    }
 
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
-                }
-            });
-        }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
     function dr_update_category_cache() {
         var index = layer.load(2, {
             shade: [0.3,'#fff'], //0.1透明度的白色背景
