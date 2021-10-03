@@ -252,9 +252,9 @@ class Category extends \Phpcmf\Table {
                 // 栏目类型
                 if ($t['tid'] == 1) {
                     if ($t['child']) {
-                        $t['type_html'] = '<span class="badge badge-danger"> '.dr_lang('封面').' </span>';
+                        $t['type_html'] = '<a class="tooltips badge badge-danger" data-container="body" data-placement="right" data-original-title="'.dr_lang('当栏目存在子栏目时我们称之为封面，这个属性无法变更').'"> '.dr_lang('封面').' </span>';
                     } else {
-                        $t['type_html'] = '<span class="badge badge-success"> '.dr_lang('列表').' </span>';
+                        $t['type_html'] = '<a class="tooltips badge badge-success" data-container="body" data-placement="right" data-original-title="'.dr_lang('最终的栏目我们称之为列表').'"> '.dr_lang('列表').' </a>';
                     }
                     if ($module[$t['mid']]['name']) {
                         $t['mid'] = $module[$t['mid']]['name'] . ' / '.$t['mid'];
@@ -263,11 +263,11 @@ class Category extends \Phpcmf\Table {
                     }
                 } elseif ($t['tid'] == 2) {
                     $t['mid'] = '';
-                    $t['type_html'] = '<span class="badge badge-warning"> '.dr_lang('外链').' </span>';
+                    $t['type_html'] = '<a class="tooltips badge badge-warning" data-container="body" data-placement="right" data-original-title="'.dr_lang('属于外部链接').'"> '.dr_lang('外链').' </a>';
                     $t['is_page_html'] = '';
                 } else {
                     $t['mid'] = '';
-                    $t['type_html'] = '<span class="badge badge-info"> '.dr_lang('单页').' </span>';
+                    $t['type_html'] = '<a class="tooltips badge badge-info" data-container="body" data-placement="right" data-original-title="'.dr_lang('不可发布内容的介绍性质页面，例如关于我们等页面').'"> '.dr_lang('单页').' </a>';
                 }
                 //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
             } else {

@@ -947,7 +947,7 @@ class View {
             case 'category': // 栏目
 
                 if (!$dirname) {
-                    return $this->_return($system['return'], 'module参数不能为空');
+                    $dirname = 'share';
                 }
 
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
