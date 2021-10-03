@@ -4126,8 +4126,10 @@ if (! function_exists('dr_clearhtml')) {
             return '';
         }
 
-        $str = str_replace(
-            array('&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'), array(' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'), $str
+        $str = dr_code2html($str);
+        $srt = str_replace(
+            ['&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'],
+            [' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'], $str
         );
 
         $str = preg_replace("/\<[a-z]+(.*)\>/iU", "", $str);
