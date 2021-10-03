@@ -1195,7 +1195,7 @@ class Api extends \Phpcmf\Common {
         $this->_module_init($mid);
 
         $page = (int)\Phpcmf\Service::L('input')->get('page');
-        $psize = 500; // 每页处理的数量
+        $psize = 100; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
 
         if (!$page) {
