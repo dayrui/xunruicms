@@ -228,8 +228,11 @@ class Seo_category extends \Phpcmf\Common
         if (IS_AJAX_POST) {
             $seo = \Phpcmf\Service::L('input')->post('seo');
             $set = \Phpcmf\Service::L('input')->post('setting');
+            if (!isset($data['setting']['seo']) || !$data['setting']['seo']) {
+                $data['setting']['seo'] = [];
+            }
             foreach (['list_title', 'list_keywords', 'list_description'] as $name) {
-                $data['setting']['seo'][$name] = $seo[$name];
+                $data['setting']['seo'][$name] = isset($seo[$name]) ? $seo[$name] : '';
             }
             $data['setting']['html'] = isset($set['html']) ? (int)$set['html'] : 0;
             $data['setting']['urlrule'] = isset($set['urlrule']) ? (int)$set['urlrule'] : 0;
