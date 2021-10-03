@@ -85,7 +85,11 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('模板路径')}</label>
                             <div class="col-md-9">
-                                <div class="form-control-static"><label>/{dr_lang('模板目录')}/mobile/{SITE_TEMPLATE}/</label></div>
+                                {if IS_DEV}
+                                <div class="form-control-static"><label>{TPLPATH}mobile/{SITE_TEMPLATE}/home/index.html</label></div>
+                                {else}
+                                <div class="form-control-static"><label>/{dr_lang('模板目录')}/mobile/{SITE_TEMPLATE}/home/index.html</label></div>
+                                {/if}
                             </div>
                         </div>
                         {if !$is_tpl}
