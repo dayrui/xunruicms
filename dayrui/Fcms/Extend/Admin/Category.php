@@ -401,9 +401,13 @@ class Category extends \Phpcmf\Table {
         $pid = intval(\Phpcmf\Service::L('input')->get('pid'));
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
+        $psize = (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'pagesize');
+        $msize = (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'mpagesize');
+
         // 默认数据
         $value = [
             'show' => 1,
+            'urlrule' => (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_URLRULE'),
             'setting' => [
                 'edit' => 1,
                 'disabled' => 0,
@@ -413,8 +417,8 @@ class Category extends \Phpcmf\Table {
                     'show' => 'show.html',
                     'category' => 'category.html',
                     'search' => 'search.html',
-                    'pagesize' => 10,
-                    'mpagesize' => 10,
+                    'pagesize' => $psize ? $psize : 20,
+                    'mpagesize' => $msize ? $msize : 20,
                 ],
                 'seo' => [
                     'list_title' => '[第{page}页{join}]{catpname}{join}{SITE_NAME}',
@@ -577,6 +581,8 @@ class Category extends \Phpcmf\Table {
                         }*/
                     }
                 }
+                $psize = (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'pagesize');
+                $msize = (int)\Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'mpagesize');
                 $data['setting'] = isset($this->module['category'][$pid]['setting']) ? $this->module['category'][$pid]['setting'] : [
                     'edit' => 1,
                     'disabled' => 0,
@@ -585,7 +591,8 @@ class Category extends \Phpcmf\Table {
                         'show' => 'show.html',
                         'category' => 'category.html',
                         'search' => 'search.html',
-                        'pagesize' => 20,
+                        'pagesize' => $psize ? $psize : 20,
+                        'mpagesize' => $msize ? $msize : 20,
                     ],
                     'seo' => [
                         'list_title' => '[第{page}页{join}]{name}{join}{SITE_NAME}',
