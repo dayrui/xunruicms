@@ -558,7 +558,7 @@ class Field extends \Phpcmf\Common {
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->table('field')->get($id);
         if (!$data) {
-            $this->_admin_msg(0, dr_lang('网站表单（%s）不存在', $id));
+            $this->_admin_msg(0, dr_lang('字段（%s）不存在', $id));
         }
 
         unset($data['id']);
@@ -569,6 +569,39 @@ class Field extends \Phpcmf\Common {
 
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
+        ]);
+        \Phpcmf\Service::V()->display('api_export_code.html');exit;
+    }
+
+    // 导出
+    public function export_all() {
+
+        $ids = \Phpcmf\Service::L('input')->get('ids');
+        if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        $rt = '';
+        foreach ($ids as $id) {
+
+            $id = intval($id);
+            $data = \Phpcmf\Service::M()->table('field')->get($id);
+            if (!$data) {
+                $this->_admin_msg(0, dr_lang('字段（%s）不存在', $id));
+            }
+
+            unset($data['id']);
+            unset($data['relatedid']);
+            unset($data['relatedname']);
+
+            $data['setting'] = dr_string2array($data['setting']);
+
+            $rt.= dr_array2string($data).PHP_EOL;
+        }
+
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $rt,
         ]);
         \Phpcmf\Service::V()->display('api_export_code.html');exit;
     }

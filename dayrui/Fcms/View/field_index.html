@@ -62,9 +62,8 @@
                 <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'disabled','id'=>$t.id])}', 1);" class="badge badge-{if $t.disabled}no{else}yes{/if}"><i class="fa fa-{if $t.disabled}times{else}check{/if}"></i></a>
             </td>
             <td>
-                {if $ci->_is_admin_auth('edit') }<a href="{dr_url('field/edit', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}
-
-                {if $ci->_is_admin_auth()}<label><a href="javascript:dr_iframe_show('{dr_lang('导出')}', '{dr_url('field/export', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}');" class="btn btn-xs red"> <i class="fa fa-sign-out"></i> {dr_lang('导出')} </a></label>{/if}
+                <a href="{dr_url('field/edit', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>
+                <label><a href="javascript:dr_iframe_show('{dr_lang('导出')}', '{dr_url('field/export', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}');" class="btn btn-xs red"> <i class="fa fa-sign-out"></i> {dr_lang('导出')} </a></label>
             </td>
         </tr>
         {/loop}
@@ -72,7 +71,6 @@
     </table>
     </div>
 
-    {if $ci->_is_admin_auth('del')}
     <table class="table table-footer table-checkable ">
         <tbody>
         <tr>
@@ -82,6 +80,7 @@
                     <span></span>
                 </label>
                 <button type="button" onclick="dr_ajax_option('{dr_url('field/del', ['rname' => $rname, 'rid' => $rid])}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+                <button type="button" onclick="javascript:dr_dcall();" class="btn blue btn-sm"> <i class="fa fa-sign-out"></i> {dr_lang('导出')}</button>
 
             </td>
             <td class="myright">
@@ -89,7 +88,11 @@
         </tr>
         </tbody>
     </table>
-    {/if}
 </form>
 </div>
+<script>
+    function dr_dcall() {
+        dr_iframe_show('{dr_lang('导出')}', '{dr_url('field/export_all', ['rname' => $rname, 'rid' => $rid, 'id'=>$t.id])}&ids='+$('#myform').serialize());
+    }
+</script>
 {template "footer.html"}
