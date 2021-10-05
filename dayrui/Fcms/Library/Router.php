@@ -541,7 +541,7 @@ class Router {
         return trim($url);
     }
 
-    // 分站url
+    // 废弃
     public function furl($fid) {
 
         if (!$fid) {
@@ -1017,7 +1017,7 @@ class Router {
             }
 
             $preg = preg_replace(
-                array(
+                [
                     '#\{id\}#U',
                     '#\{uid\}#U',
                     '#\{mid\}#U',
@@ -1038,8 +1038,8 @@ class Router {
 
                     '#\{.+}#U',
                     '#/#'
-                ),
-                array(
+                ],
+                [
                     '([0-9]+)',
                     '([0-9]+)',
                     '(\d+)',
@@ -1060,7 +1060,7 @@ class Router {
 
                     '(.+)',
                     '\/'
-                ),
+                ],
                 $rule
             );
 

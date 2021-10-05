@@ -14,6 +14,7 @@ class Model {
     public $field;
     public $table;
     public $stable; // join关联表
+    public $sfield; // join关联表的字段
     public $prefix;
     public $db_temp; // 备份默认数据库
 
@@ -42,6 +43,7 @@ class Model {
         isset($data['id']) && $this->id = $this->key = $data['id'];
         isset($data['table']) && $this->table = $data['table'];
         isset($data['stable']) && $this->stable = $data['stable'];
+        isset($data['sfield']) && $this->sfield = $data['sfield'];
         isset($data['field']) && $this->field = $data['field'];
         isset($data['date_field']) && $this->date_field = $data['date_field'];
 
@@ -730,6 +732,60 @@ class Model {
         }
     }
 
+    protected function _limit_where(&$select, $param, $field, $table) {
+
+        if ($param['field'] == $this->id) {
+            // 按id查询
+            $id = [];
+            $ids = explode(',', $param['keyword']);
+            foreach ($ids as $i) {
+                $id[] = (int)$i;
+            }
+            dr_count($id) == 1 ? $select->where($table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
+            $param['keyword'] = htmlspecialchars($param['keyword']);
+        } elseif ($param['field'] == 'uid' || $field[$param['field']]['fieldtype'] == 'Uid') {
+            // 数字查询作为账号id
+            $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
+            if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {
+                $select->where('`'.$param['field'].'` = '.intval($param['keyword']));
+            } else {
+                // uid 非数字查询 账户查询
+                $select->where('`'.$param['field'].'` in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
+            }
+        } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
+            // 自定义的匹配模式
+            if (function_exists($field[$param['field']]['myfunc'])) {
+                $rt = call_user_func_array($field[$param['field']]['myfunc'], [$param]);
+                if ($rt) {
+                    $select->where($rt);
+                }
+            } else {
+                CI_DEBUG && log_message('debug', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
+            }
+        } elseif (in_array($field[$param['field']]['fieldtype'], ['INT'])) {
+            // 数字类型
+            $select->where($param['field'], intval($param['keyword']));
+        } elseif (isset($field[$param['field']]['isemoji']) && $field[$param['field']]['isemoji']) {
+            // 表情符号查询
+            $key = addslashes($param['keyword']);
+            $key2 = addslashes(str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) ));
+            // 搜索用户表
+            $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
+        } elseif (isset($field[$param['field']]['isint']) && $field[$param['field']]['isint']) {
+            // 整数绝对匹配
+            $select->where($param['field'], intval($param['keyword']));
+        } elseif (isset($field[$param['field']]['iswhere']) && $field[$param['field']]['iswhere']) {
+            // 准确匹配模式
+            $select->where($param['field'], urldecode($param['keyword']));
+        } else {
+            $where = $this->_where($this->dbprefix($table), $param['field'], $param['keyword'], $field[$param['field']], true);
+            if ($where) {
+                $select->where($where, null, false);
+            }
+        }
+        return $select;
+    }
+
     /**
      * 条件查询
      *
@@ -761,54 +817,18 @@ class Model {
             $field = $this->field;
             $field[$this->id] = $this->id;
             // 关键字 + 自定义字段搜索
-            if (isset($param['keyword']) && $param['keyword'] != '' && isset($field[$param['field']])) {
-                if ($param['field'] == $this->id) {
-                    // 按id查询
-                    $id = [];
-                    $ids = explode(',', $param['keyword']);
-                    foreach ($ids as $i) {
-                        $id[] = (int)$i;
+            if (isset($param['keyword']) && $param['keyword'] != '') {
+                if (isset($this->init['is_swhere']) && $this->init['is_swhere']) {
+                    if (isset($this->sfield[$param['field']]) && $this->stable) {
+                        $select = $this->_limit_where($select, $param, $this->sfield, $this->stable);
+                    } elseif (isset($field[$param['field']])) {
+                        $select = $this->_limit_where($select, $param, $field, $this->table);
                     }
-                    dr_count($id) == 1 ? $select->where($this->table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
-                    $param['keyword'] = htmlspecialchars($param['keyword']);
-                } elseif ($param['field'] == 'uid' || $field[$param['field']]['fieldtype'] == 'Uid') {
-                    // 数字查询作为账号id
-                    $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
-                    if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {
-                        $select->where('`'.$param['field'].'` = '.intval($param['keyword']));
-                    } else {
-                        // uid 非数字查询 账户查询
-                        $select->where('`'.$param['field'].'` in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
-                    }
-                } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
-                    // 自定义的匹配模式
-                    if (function_exists($field[$param['field']]['myfunc'])) {
-                        $rt = call_user_func_array($field[$param['field']]['myfunc'], [$param]);
-                        if ($rt) {
-                            $select->where($rt);
-                        }
-                    } else {
-                        CI_DEBUG && log_message('debug', '字段myfunc参数中的函数（'.$field[$param['field']]['myfunc'].'）未定义');
-                    }
-                } elseif (in_array($field[$param['field']]['fieldtype'], ['INT'])) {
-                    // 数字类型
-                    $select->where($param['field'], intval($param['keyword']));
-                } elseif (isset($field[$param['field']]['isemoji']) && $field[$param['field']]['isemoji']) {
-                    // 表情符号查询
-                    $key = addslashes($param['keyword']);
-                    $key2 = addslashes(str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) ));
-                    // 搜索用户表
-                    $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
-                } elseif (isset($field[$param['field']]['isint']) && $field[$param['field']]['isint']) {
-                    // 整数绝对匹配
-                    $select->where($param['field'], intval($param['keyword']));
-                } elseif (isset($field[$param['field']]['iswhere']) && $field[$param['field']]['iswhere']) {
-                    // 准确匹配模式
-                    $select->where($param['field'], urldecode($param['keyword']));
                 } else {
-                    $where = $this->_where($this->dbprefix($this->table), $param['field'], $param['keyword'], $field[$param['field']], true);
-                    if ($where) {
-                        $select->where($where, null, false);
+                    if (isset($field[$param['field']])) {
+                        $select = $this->_limit_where($select, $param, $field, $this->table);
+                    } elseif (isset($this->sfield[$param['field']]) && $this->stable) {
+                        $select = $this->_limit_where($select, $param, $this->sfield, $this->stable);
                     }
                 }
             }
