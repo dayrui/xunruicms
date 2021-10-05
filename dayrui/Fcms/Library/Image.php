@@ -1568,7 +1568,7 @@ class Image
             if (!$attach) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
-            } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg'])) {
+            } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg', 'webp'])) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
