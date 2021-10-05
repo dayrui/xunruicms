@@ -113,7 +113,9 @@ class Upload
             return dr_return_data(0, $rt['msg']);
         }
 
-        if ($file['size'] > $config['file_size']) {
+        if (!$config['file_size']) {
+            return dr_return_data(0, dr_lang('系统没有设置可上传的文件大小'));
+        } elseif ($file['size'] > $config['file_size']) {
             // 文件大小限制
             return dr_return_data(0, $this->error['ERROR_SIZE_EXCEED']. ' '.($config['file_size']/1024/1024).'MB');
         } elseif ($config['file_exts'][0] != '*' && !in_array($file_ext, $config['file_exts'])) {
