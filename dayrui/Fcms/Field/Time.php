@@ -127,12 +127,12 @@ class Time extends \Phpcmf\Library\A_Field {
         $required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
         $str = '';
-        if (!$this->is_load_js($field['filetype'])) {
+        if (!$this->is_load_js($field['fieldtype'])) {
             $str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            $this->set_load_js($field['filetype'], 1);
+            $this->set_load_js($field['fieldtype'], 1);
         }
 
         // 字段默认值

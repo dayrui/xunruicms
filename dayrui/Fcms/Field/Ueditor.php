@@ -565,12 +565,12 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $str = '';
 
         // 防止重复加载JS
-        if (!$this->is_load_js($field['filetype'])) {
+        if (!$this->is_load_js($field['fieldtype'])) {
             $str.= '
             <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
             <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
-            $this->set_load_js($field['filetype'], 1);
+            $this->set_load_js($field['fieldtype'], 1);
         }
 
         $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏

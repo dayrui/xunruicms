@@ -102,7 +102,7 @@ class Select extends \Phpcmf\Library\A_Field {
 
 		if (isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search']) {
             // 防止重复加载JS
-            if (!$this->is_load_js($field['filetype'])) {
+            if (!$this->is_load_js($field['fieldtype'])) {
                 $str.= $this->get_select_search_code();
             }
         }

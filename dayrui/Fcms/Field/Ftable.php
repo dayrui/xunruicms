@@ -32,7 +32,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 					<label>'.$this->_field_type_select($i, $option['field'][$i]['type']).'</label>
 					<label><input type="text" placeholder="'.dr_lang('列名称').'" class="form-control" size="20" value="'.$option['field'][$i]['name'].'" name="data[setting][option][field]['.$i.'][name]"></label>
 					<label><input type="text" placeholder="'.dr_lang('列宽度').'" class="form-control" size="20" value="'.$option['field'][$i]['width'].'" name="data[setting][option][field]['.$i.'][width]"></label>
-					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('选择项').'" class="form-control" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]"></label>
+					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('下拉选择框和复选框的选项').'" class="form-control input-xlarge" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]"></label>
 				</div>
 			</div>';
         }
@@ -146,7 +146,10 @@ class Ftable extends \Phpcmf\Library\A_Field {
             2 => dr_lang('下拉框'),
             4 => dr_lang('复选框'),
             3 => dr_lang('图片'),
+            5 => dr_lang('日期'),
+            6 => dr_lang('日期时间'),
         ];
+
 
         $html = '<select class="form-control" name="data[setting][option][field]['.$id.'][type]">';
         foreach ($arr as $i => $name) {
@@ -181,6 +184,54 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">预览</a>
 			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">删除</a> ';
             $html.= '</label>';
+        } elseif ($config['type'] == 5) {
+            // 日期
+            $html.= '<div class="input-group date field_date_ftable_'.$cname.'">';
+            $html.= '<input class="form-control" type="text" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
+            $html.= '<span class="input-group-btn">
+					<button class="btn date-set" type="button">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>';
+            $html.= '</div>';
+                $html.= '
+                <script>
+                $(function(){
+                    $(".field_date_ftable_'.$cname.'").datepicker({
+                        isRTL: false,
+                        format: "yyyy-mm-dd",
+                        showMeridian: true,
+                        autoclose: true,
+                        pickerPosition: "bottom-right",
+                        todayBtn: "linked"
+                    });
+                });
+                </script>
+                ';
+        } elseif ($config['type'] == 6) {
+            // 日期时间
+            $html.= '<div class="input-group date field_datetime_ftable_'.$cname.'">';
+            $html.= '<input class="form-control" type="text" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
+            $html.= '<span class="input-group-btn">
+					<button class="btn date-set" type="button">
+						<i class="fa fa-calendar"></i>
+					</button>
+				</span>';
+            $html.= '</div>';
+                $html.= '
+                <script>
+                $(function(){
+                    $(".field_datetime_ftable_'.$cname.'").datetimepicker({
+                        isRTL: false,
+                        format: "yyyy-mm-dd hh:ii:ss",
+                        showMeridian: true,
+                        autoclose: true,
+                        pickerPosition: "bottom-right",
+                        todayBtn: "linked"
+                    });
+                });
+                </script>
+                ';
         } elseif ($config['type'] == 4) {
             $html = '<div class="mt-checkbox-inline">';
             $arr = explode(',', $config['option']);
@@ -252,6 +303,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
 
         // 字段默认值
         $value = dr_string2array($value);
+
+        $this->_load_date = $this->_load_datetime = 0;
 
         $str = '<div class="table-scrollable">';
         $str.= '<table class="table table-nomargin table-bordered table-striped table-bordered table-advance" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
@@ -325,6 +378,19 @@ class Ftable extends \Phpcmf\Library\A_Field {
         $str.= ' </tbody>';
         $str.= '</table>';
         $str.= '</div>';
+
+        if (!$this->is_load_js('Date')) {
+            $str.= '
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			
+        	<script src="'.ROOT_THEME_PATH.'assets/global/plugins/moment.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.finecms.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
+			';
+            $this->set_load_js('Date', 1);
+        }
         if ($field['setting']['option']['is_add']) {
             $str.= '<div class="table-add">';
             $str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_table_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加一行').'</button>';

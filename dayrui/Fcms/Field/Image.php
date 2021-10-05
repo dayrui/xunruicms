@@ -272,12 +272,12 @@ class Image extends \Phpcmf\Library\A_Field {
             $str.= '<div class="finecms-file-ts">'.$ts.'</div>';
         }
 
-        if (!$this->is_load_js($field['filetype'])) {
+        if (!$this->is_load_js($field['fieldtype'])) {
             $str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/dropzone/dropzone.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            $this->set_load_js($field['filetype'], 1);
+            $this->set_load_js($field['fieldtype'], 1);
         }
 
         $js = \Phpcmf\Service::L('js_packer');

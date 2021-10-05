@@ -151,13 +151,13 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 
 		$str = '';
 
-        if (!$this->is_load_js($field['filetype'])) {
+        if (!$this->is_load_js($field['fieldtype'])) {
 			$str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/fuelux/js/spinner.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            $this->set_load_js($field['filetype'], 1);
+            $this->set_load_js($field['fieldtype'], 1);
 		}
 
 		!$field['setting']['option']['max'] && $field['setting']['option']['max'] = 999999999999999;

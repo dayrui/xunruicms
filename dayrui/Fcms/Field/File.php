@@ -306,13 +306,13 @@ class File extends \Phpcmf\Library\A_Field {
         }
         $str.= '<div id="fileupload_'.$name.'_files" class="files">'.$val.'</div>';
 
-        if (!$this->is_load_js($field['filetype'])) {
-			$str.= '
+        if (!$this->is_load_js('File')) {
+            $str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-fileupload/js/jquery.fileupload.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';
-            $this->set_load_js($field['filetype'], 1);
-		}
+            $this->set_load_js('File', 1);
+        }
 
 		$str.= '<script type="text/javascript">
         $(function() {

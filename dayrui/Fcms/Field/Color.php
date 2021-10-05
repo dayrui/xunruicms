@@ -106,14 +106,14 @@ class Color extends \Phpcmf\Library\A_Field {
 		$str = '';
 
 		// 加载js
-		if (!$this->is_load_js($field['filetype'])) {
+		if (!$this->is_load_js($field['fieldtype'])) {
 			$str.= '
 			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet" type="text/css" />
         	<link href="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.css" rel="stylesheet" type="text/css" />
 			';
 			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js?v='.CMF_UPDATE_TIME.'"></script>';
 			$str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/global/plugins/jquery-minicolors/jquery.minicolors.min.js?v='.CMF_UPDATE_TIME.'"></script>';
-            $this->set_load_js($field['filetype'], 1);
+            $this->set_load_js($field['fieldtype'], 1);
 		}
 
         $default = '';
