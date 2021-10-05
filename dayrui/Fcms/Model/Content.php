@@ -74,12 +74,13 @@ class Content extends \Phpcmf\Model {
         $data[1]['uid'] = intval($data[1]['uid']);
 
         // 昵称为空的情况下
+        /*
         if (!$data[1]['author'] && $data[1]['uid']) {
             $user = $this->table('member')->get($data[1]['uid']);
             if ($user) {
                 $data[1]['author'] = $user['username'];
             }
-        }
+        }*/
 
         if (!$id) {
             // 新增
