@@ -491,7 +491,8 @@ class Category extends \Phpcmf\Table {
             $data = [];
         }
 
-        $html = '<ul class="dropdown-menu dr_select_tpl">';
+        $html = '';
+        $html.= '<ul class="dropdown-menu dr_select_tpl" style="max-height: 350px;overflow: scroll;">';
         $files = dr_file_map($path);
         if ($files) {
             foreach ($files as $file) {
@@ -508,12 +509,11 @@ class Category extends \Phpcmf\Table {
                 $html.= '<li class="divider"> </li>';
                 foreach ($files as $file) {
                     $key = md5(trim(str_replace(['/', '\\'], '*', str_replace($rpath, '', $path.$file)), '*'));
-                    $name = isset($data[$key]) && $data[$key] ? $data[$key].'（'.$file.'）' : $file;
+                    $name = isset($data[$key]) && $data[$key] ? $data[$key].'（'.$mid.'/'.$file.'）' : $mid.'/'.$file;
                     $html.= '<li><a href="javascript:dr_select_tpl(\''.$file.'\', \'{name}\');"> '.$name.' </a></li>';
                 }
             }
         }
-
         $html.= '</ul>';
 
         return $html;
