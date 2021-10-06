@@ -779,7 +779,10 @@ class Field extends \Phpcmf\Model
     }
     // 网站信息表
     protected function _field_site($name) {
-
+        // 保留字段
+        if (in_array($name, ['logo'])) {
+            return 1;
+        }
         if ($this->table('field')
             ->where('fieldname', $name)
             ->where('relatedid', $this->relatedid)
