@@ -722,11 +722,20 @@ class Model {
             } else {
                 return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
             }
+        } elseif ($is_like || strpos($value, '%') !== false || strpos($value, ' ') !== false) {
+            // like 条件
+            $arr = explode('%', str_replace(' ', '%', $value));
+            if (count($arr) == 1) {
+                return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
+            } else {
+                $wh = [];
+                foreach ($arr as $c) {
+                    $c && $wh[] = '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($c, true)).'%"';
+                }
+                return '('.implode(' OR ', $wh).')';
+            }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
-        } elseif ($is_like || (strpos($value, '%') === 0 && strrchr($value, '%') === '%')) {
-            // like 条件
-            return '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($value, true), '%').'%"';
         } else {
             return '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
         }
