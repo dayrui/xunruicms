@@ -3547,6 +3547,7 @@ function dr_get_form_post_value($table) {
         }
     }
 
+    $rt['form'] = $form;
     $rt['myfield'] = \Phpcmf\Service::L('Field')->toform(0, $my_field, []);
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
@@ -3607,6 +3608,7 @@ function dr_get_mform_post_value($mid, $table, $cid) {
         }
     }
 
+    $rt['form'] = $form;
     $rt['myfield'] = \Phpcmf\Service::L('Field')->toform(0, $my_field, []);
     $rt['sysfield'] = \Phpcmf\Service::L('Field')->toform(0, $sys_field, []);
     $rt['diyfield'] = \Phpcmf\Service::L('Field')->toform(0, $diy_field, []);
