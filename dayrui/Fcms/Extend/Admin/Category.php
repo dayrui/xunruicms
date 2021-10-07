@@ -799,10 +799,11 @@ class Category extends \Phpcmf\Table {
             \Phpcmf\Service::M('category')->init($this->init)->copy_value($at, $row['setting'], $t);
         }
 
-        $this->_html_msg( 1, dr_lang('正在执行中【%s】...', count($catids)."/$page"),
+        $this->_html_msg( 1, dr_lang('正在执行中【%s】...', count($catids).'/'.($page+1)),
             dr_url(APP_DIR.'/category/'.\Phpcmf\Service::L('Router')->method, ['at' => $at, 'catid' => $catid, 'page' => $page + 1])
         );
     }
+
     // 复制栏目规则
     public function copy_edit() {
 
@@ -823,7 +824,7 @@ class Category extends \Phpcmf\Table {
             \Phpcmf\Service::L('cache')->set_auth_data('copy_edit_'.APP_DIR.'_'.$catid, array_chunk($catids, 50));
 
             $this->_json(1, dr_lang('即将同步到%s个栏目', count($catids)), [
-                'jscode' => 'dr_iframe_show(\''.dr_lang('同步').'\', \''.dr_url(APP_DIR.'/category/copy_page_edit').'&at='.$at.'&catid='.$catid.'\')'
+                'jscode' => 'dr_iframe_show(\''.dr_lang('同步').'\', \''.dr_url(APP_DIR.'/category/copy_page_edit').'&at='.$at.'&catid='.$catid.'\', \'500px\', \'300px\')'
             ]);
         }
 

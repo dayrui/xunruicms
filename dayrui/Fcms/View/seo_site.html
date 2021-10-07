@@ -57,7 +57,7 @@
                             <label class="col-md-2 control-label">{dr_lang('批量更新内容URL')}</label>
                             <div class="col-md-9">
                                 {loop $module $m}
-                                <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量更新内容URL')}', '{dr_url('api/update_url')}&mid={$m.dirname}')" class="btn default"> <i class="{dr_icon($m.icon)}"></i> {dr_lang($m.name)} </button></label>
+                                <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量更新内容URL')}', '{dr_url('api/update_url')}&mid={$m.dirname}', '500px', '300px')" class="btn default"> <i class="{dr_icon($m.icon)}"></i> {dr_lang($m.name)} </button></label>
                                 {/loop}
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                     </select>
                                 </label>
                                 <label style="margin-left:20px;"><a href="{dr_url('urlrule/index', ['hide_menu' => 1])}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a> </label>
-                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=1&value='+$('#dr_sync_value').val())" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=1&value='+$('#dr_sync_value').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
                                 <span class="help-block">{dr_lang('设置共享栏目的默认URL规则')}</span>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 <label>
                                     <input class="form-control" type="text" value="{intval($data['list_pagesize'] ? $data['list_pagesize'] : 10)}" id="dr_sync_value2" name="data[list_pagesize]">
                                 </label>
-                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=2&value='+$('#dr_sync_value2').val())" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=2&value='+$('#dr_sync_value2').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
                                 <span class="help-block">{dr_lang('设置共享栏目的默认的电脑列表分页显示每页的信息数')}</span>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                                 <label>
                                     <input class="form-control" type="text" value="{intval($data['list_mpagesize'] ? $data['list_mpagesize'] : 10)}" id="dr_sync_value3" name="data[list_mpagesize]">
                                 </label>
-                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=3&value='+$('#dr_sync_value3').val())" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('seo_site/sync_index')}&ct=3&value='+$('#dr_sync_value3').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
                                 <span class="help-block">{dr_lang('设置共享栏目的默认的手机列表分页显示每页的信息数')}</span>
                             </div>
                         </div>
