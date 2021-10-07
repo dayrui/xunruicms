@@ -16,6 +16,7 @@ class Tree {
     protected $ret;
     protected $cache;
     protected $result;
+    protected $ismain = 0;
 
     // 初始化函数
     public function __construct() {
@@ -256,6 +257,11 @@ class Tree {
         return $string;
     }
 
+    public function ismain($v) {
+        $this->ismain = $v;
+        return $this;
+    }
+
     /**
      * 栏目选择
      *
@@ -275,7 +281,7 @@ class Tree {
         }
 
         if (!CI_DEBUG) {
-            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
+            $name = 'tree'.md5($this->ismain.dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
             $cache = \Phpcmf\Service::L('cache')->get_data($name);
             if ($cache) {
                 return $cache;
@@ -290,11 +296,10 @@ class Tree {
         $is_cks = 0;
         if (is_array($data)) {
             foreach($data as $t) {
-                // 外部链接不显示
-                /*
-                if ($is_push && $t['tid'] == 2) {
+                // 只显示主栏目
+                if ($this->ismain && !$t['ismain']) {
                     continue;
-                }*/
+                }
                 // 用于发布内容时【单页和外链】且为最终栏目时，不显示
                 if ($is_push && in_array($t['tid'], [2, 0]) && !$t['child']) {
                     $is_cks = 1;
@@ -357,6 +362,7 @@ class Tree {
             \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
         }
 
+        $this->ismain = 0;
         return $data;
     }
 

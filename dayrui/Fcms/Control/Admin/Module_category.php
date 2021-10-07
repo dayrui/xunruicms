@@ -27,12 +27,13 @@ class Module_category extends \Phpcmf\Common
                 unset($module[$dir]);
                 continue;
             }
-            $module[$dir]['url'] =\Phpcmf\Service::L('Router')->url($dir.'/category/index');
+            $module[$dir]['name'] = dr_lang('%s栏目', $t['name']);
+            $module[$dir]['url'] = \Phpcmf\Service::L('Router')->url($dir.'/category/index');
         }
 
         if ($share) {
             $tmp['share'] = [
-                'name' => '共享',
+                'name' => '共享栏目',
                 'icon' => 'fa fa-share-alt',
                 'title' => '共享',
                 'url' => \Phpcmf\Service::L('Router')->url('category/index'),
@@ -99,7 +100,7 @@ class Module_category extends \Phpcmf\Common
                         $catids[] = $t['id'];
                     }
                 }
-                $f['select'] = \Phpcmf\Service::L('Tree')->select_category(
+                $f['select'] = \Phpcmf\Service::L('Tree')->ismain(1)->select_category(
                     $module['category'],
                     $catids,
                     'name=\'data['.$f['fieldname'].'][]\' multiple="multiple" data-actions-box="true"',
@@ -115,16 +116,18 @@ class Module_category extends \Phpcmf\Common
             $post = \Phpcmf\Service::L('input')->post('data');
             $table = $module['share'] ? 'share_category' : $module['dirname'].'_category';
             foreach ($module['category'] as $t) {
-                $setting = dr_string2array($t['setting']);
-                $setting['module_field'] = [];
-                if ($post) {
-                    foreach ($post as $fname => $catids) {
-                        if (in_array($t['id'], $catids)) {
-                            $setting['module_field'][$fname] = 1;
+                if ($t['ismain']) {
+                    $setting = dr_string2array($t['setting']);
+                    $setting['module_field'] = [];
+                    if ($post) {
+                        foreach ($post as $fname => $catids) {
+                            if (in_array($t['id'], $catids)) {
+                                $setting['module_field'][$fname] = 1;
+                            }
                         }
                     }
+                    \Phpcmf\Service::M()->table_site($table)->update($t['id'], ['setting' => dr_array2string($setting)]);
                 }
-                \Phpcmf\Service::M()->table_site($table)->update($t['id'], ['setting' => dr_array2string($setting)]);
             }
             // 自动更新缓存
             \Phpcmf\Service::M('cache')->sync_cache();

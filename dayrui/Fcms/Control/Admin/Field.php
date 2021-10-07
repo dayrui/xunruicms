@@ -271,7 +271,7 @@ class Field extends \Phpcmf\Common {
 			}
 		}
 
-        in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data']) && \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->select_category(
+        in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data']) && \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->ismain(1)->select_category(
             $this->module['category'],
             0,
             'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
@@ -432,7 +432,7 @@ class Field extends \Phpcmf\Common {
             }
             \Phpcmf\Service::V()->assign([
                 'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('tree')->select_category(
+                'select_category' => \Phpcmf\Service::L('tree')->ismain(1)->select_category(
                     $this->module['category'],
                     $ids,
                     'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
@@ -454,7 +454,7 @@ class Field extends \Phpcmf\Common {
             }
             \Phpcmf\Service::V()->assign([
                 'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('tree')->select_category(
+                'select_category' => \Phpcmf\Service::L('tree')->ismain(1)->select_category(
                     $this->module['category'],
                     $ids,
                     'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',

@@ -46,6 +46,7 @@ class Seo_category extends \Phpcmf\Common
                 continue;
             }
 
+            $module[$dir]['name'] = dr_lang('%s栏目', $t['name']);
             $module[$dir]['list'] = $this->_get_tree_list($dir, $cache['category']);
             $module[$dir]['save_url'] = dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => $dir]);
         }
@@ -53,7 +54,7 @@ class Seo_category extends \Phpcmf\Common
         if ($share) {
             $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share');
             $tmp['share'] = [
-                'name' => '共享',
+                'name' => '共享栏目',
                 'icon' => 'fa fa-share-alt',
                 'title' => '共享',
                 'save_url' => dr_url(\Phpcmf\Service::L('Router')->class.'/edit', ['dir' => 'share']),

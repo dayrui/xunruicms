@@ -280,9 +280,24 @@ class Model {
         }
 
         $db = $this->db->table($this->table);
-        $db->where($this->key, (int)$id);
+        $id && $db->where($this->key, (int)$id);
 
         $where && $db->where($where, null, false);
+
+        // 条件
+        if ($this->param['where']) {
+            foreach ($this->param['where'] as $v) {
+                dr_count($v) == 2 ? $db->where($v[0], $v[1]) : $db->where($v, null, false);
+            }
+        }
+
+        // in条件
+        if ($this->param['where_in']) {
+            foreach ($this->param['where_in'] as $v) {
+                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v, null, false);
+            }
+        }
+
         $db->update($data);
 
         $rt = $this->db->error();

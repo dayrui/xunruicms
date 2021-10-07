@@ -81,12 +81,19 @@ class Table extends \Phpcmf\Common {
         $field = $this->sys_field ? dr_array22array($this->sys_field, $this->field) : $this->field;
 
         // 栏目模型字段
-        if ($this->is_category_data_field && $catid && $this->module['category'][$catid]['field']) {
-            foreach ($this->module['category'][$catid]['field'] as $f) {
-                if ($this->module['category_data_field'][$f]) {
-                    $field[$f] = $this->module['category_data_field'][$f];
+        if ($this->is_category_data_field && $catid) {
+            if (!$this->module['category'][$catid]['ismain']) {
+                // 非主栏目继承上级
+                $catid = \Phpcmf\Service::M('category')->get_ismain_id($this->module['category'], $catid);
+            }
+            if ($this->module['category'][$catid]['field']) {
+                foreach ($this->module['category'][$catid]['field'] as $f) {
+                    if ($this->module['category_data_field'][$f]) {
+                        $field[$f] = $this->module['category_data_field'][$f];
+                    }
                 }
             }
+
         }
 
         if ($field) {
@@ -114,10 +121,17 @@ class Table extends \Phpcmf\Common {
         $my_field = $sys_field = $diy_field = $cat_field = [];
 
         // 栏目模型字段
-        if ($this->is_category_data_field && $data['catid'] && $this->module['category'][$data['catid']]['field']) {
-            foreach ($this->module['category'][$data['catid']]['field'] as $f) {
-                if ($this->module['category_data_field'][$f]) {
-                    $field[$f] = $this->module['category_data_field'][$f];
+        if ($this->is_category_data_field && $data['catid']) {
+            $catid = $data['catid'];
+            if (!$this->module['category'][$data['catid']]['ismain']) {
+                // 非主栏目继承上级
+                $catid = \Phpcmf\Service::M('category')->get_ismain_id($this->module['category'], $catid);
+            }
+            if ($this->module['category'][$catid]['field']) {
+                foreach ($this->module['category'][$catid]['field'] as $f) {
+                    if ($this->module['category_data_field'][$f]) {
+                        $field[$f] = $this->module['category_data_field'][$f];
+                    }
                 }
             }
         }

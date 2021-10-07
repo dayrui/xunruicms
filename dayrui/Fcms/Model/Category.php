@@ -459,4 +459,20 @@ class Category extends \Phpcmf\Model
     public function get_tree_category($data) {
         return [];
     }
+
+    // 找到主栏目id
+    public function get_ismain_id($cats, $id) {
+        if ($cats[$id]['ismain']) {
+            return $id;
+        }
+        if ($cats[$id]['pids']) {
+            $arr = array_reverse(explode(',', $cats[$id]['pids']));
+            foreach ($arr as $t) {
+                if ($cats[$t]['ismain']) {
+                    return $t;
+                }
+            }
+        }
+        return 0;
+    }
 }

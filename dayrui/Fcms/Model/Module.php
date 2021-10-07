@@ -623,16 +623,8 @@ class Module extends \Phpcmf\Model
                 $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
                 $CAT_DIR[$c['dirname']] = $c['id'];
             }
-            // 更新父栏目数量
+            // 归类栏目模型字段
             foreach ($category as $c) {
-                /*
-                if ($c['child']) {
-                    $arr = explode(',', $c['childids']);
-                    $CAT[$c['id']]['total'] = 0;
-                    foreach ($arr as $i) {
-                        $CAT[$c['id']]['total']+= $CAT[$i]['total'];
-                    }
-                }*/
                 if ($c['ismain'] && $c['setting']['module_field']) {
                     foreach ($c['setting']['module_field'] as $_fname => $o) {
                         $CAT[$c['id']]['field'][] = $_fname;

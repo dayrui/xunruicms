@@ -242,9 +242,8 @@ class Table extends \Phpcmf\Model
           `pdirname` varchar(255) NOT NULL COMMENT '上级目录',
           `child` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否有下级',
           `disabled` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否禁用',
+          `ismain` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否主栏目',
           `childids` text NOT NULL COMMENT '下级所有id',
-          `domain` varchar(50) DEFAULT NULL COMMENT '绑定电脑域名',
-          `mobile_domain` varchar(50) DEFAULT NULL COMMENT '绑定手机域名',
           `thumb` varchar(255) NOT NULL COMMENT '栏目图片',
           `show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
           `content` mediumtext NOT NULL COMMENT '单页内容',
@@ -255,6 +254,7 @@ class Table extends \Phpcmf\Model
           KEY `tid` (`tid`),
           KEY `show` (`show`),
           KEY `disabled` (`disabled`),
+          KEY `ismain` (`ismain`),
           KEY `dirname` (`dirname`),
           KEY `module` (`pid`,`displayorder`,`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
