@@ -667,9 +667,13 @@ function dr_cat_value(...$get) {
         return '';
     }
 
-    if (is_numeric($get[0]) && defined('MOD_DIR') && MOD_DIR) {
+    if (is_numeric($get[0])) {
         // 值是栏目id时，表示当前模块
-        $name = 'module-'.SITE_ID.'-'.MOD_DIR;
+        if (defined('MOD_DIR') && MOD_DIR) {
+            $name = 'module-'.SITE_ID.'-'.MOD_DIR;
+        } else {
+            $name = 'module-'.SITE_ID.'-share';
+        }
     } else {
         // 指定模块
         $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
