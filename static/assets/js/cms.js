@@ -299,7 +299,10 @@ function dr_iframe(type, url, width, height, rt) {
                     layer.close(loading);
                     if (json.code) {
                         layer.close(index);
-                        if (json.data.tourl) {
+                        if (json.data.jscode) {
+                            eval(json.data.jscode);
+                            return;
+                        } else if (json.data.tourl) {
                             setTimeout("window.location.href = '"+json.data.tourl+"'", 2000);
                         } else {
                             if (rt == 'nogo') {
