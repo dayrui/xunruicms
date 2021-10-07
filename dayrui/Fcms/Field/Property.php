@@ -48,6 +48,7 @@ class Property extends \Phpcmf\Library\A_Field {
 		</div>';
         unset($option['name_value']);
         unset($option['value_value']);
+        $i = 0;
 		if ($option['default_value']) {
 			foreach ($option['default_value'] as $i => $t) {
 				$str.= '<div class="form-group dr_option" id="dr_option_'.$i.'" >';
@@ -65,12 +66,16 @@ class Property extends \Phpcmf\Library\A_Field {
 
 		$str.= '
 		<script type="text/javascript">
-		var id=$(".dr_option").length;
+		var id='.$i.';
 		function dr_add_option() {
 			id ++;
+            if ($("#dr_option_"+id).length>0) {
+			    dr_tips(0, \''.dr_lang("序列生成重复，请重新添加").'\');
+			    return;
+			}
 			var html = "";
 			html+= "<div class=\"form-group dr_option\" id=\"dr_option_"+id+"\" >";
-			html+= "<label class=\"col-md-2 control-label\">'.dr_lang('属性名称').'</label>";
+			html+= "<label class=\"col-md-2 control-label\">'.dr_lang('属性名称').' "+id+"</label>";
 			html+= "<div class=\"col-md-9\">";
 			html+= "<label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][name]\" value=\"\" class=\"form-control\" /></label>";
 			html+= "<label>&nbsp;&nbsp;'.dr_lang('类型').'：</label><label><select class=\"form-control\" name=\"data[setting][option][default_value]["+id+"][type]\">";
@@ -236,14 +241,20 @@ class Property extends \Phpcmf\Library\A_Field {
             $str.= $js->pack('<script type="text/javascript">
 		$("#property_'.$name.'-sort-items").sortable();
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
+		var id='.($i).';
 		function dr_add_property_'.$name.'() {
-			var id=($("#property_'.$name.'-sort-items tr").length + 1) * 10;
+			if ($("#dr_items_'.$name.'_"+id).length>0) {
+			    id++;
+			    dr_tips(0, \''.dr_lang("序列生成重复，请重新添加").'\');
+			    return;
+			}
 			var html = "<tr id=\"dr_items_'.$name.'_"+id+"\">";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][name]\"></td>";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][value]\"></td>";
 			html+= "<td><a class=\"btn btn-xs red\" href=\"javascript:;\" onclick=\"$(\'#dr_items_'.$name.'_"+id+"\').remove()\"> <i class=\"fa fa-trash\"></i> </a></td></tr>";
 			$("#property_'.$name.'-sort-items").append(html);
             dr_slimScroll_init(".scroller_'.$name.'_files", 300);
+			id++;
 		}
 		</script>', 0);
         }
