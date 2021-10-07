@@ -25,10 +25,6 @@
                         <i class="fa fa-fire font-blue"></i>
                         <a href="javascript:;">{dr_show_hits($id)}次</a>
                     </div>
-                    <div class="search-post-meta">
-                        <i class="fa fa-comments font-blue"></i>
-                        <a href="{Router::comment_url($id)}">{$comments}</a>
-                    </div>
                 </div>
                 <div class="portlet-body" style="height: auto;overflow: hidden;">
                     <div class="row">
@@ -38,7 +34,7 @@
                         <div class="col-md-12">
                             <div class="blog-single-foot fc-news-tag-list">
                                 <ul class="blog-post-tags">
-                                    {loop $tags $name $url}
+                                    {loop $kws $name $url}
                                     <li class="uppercase">
                                         <a href="{$url}">{$name}</a>
                                     </li>

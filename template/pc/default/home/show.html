@@ -50,12 +50,6 @@
                                         <i class="fa fa-eye font-blue"></i>
                                         <a href="javascript:;">{dr_show_hits($id)}次</a>
                                     </div>
-                                    {if dr_is_app('comment')}
-                                    <div class="search-post-meta">
-                                        <i class="fa fa-comments font-blue"></i>
-                                        <a href="{Router::comment_url($id)}">{intval($comments)}</a>
-                                    </div>
-                                    {/if}
                                 </div>
                                 <div class="portlet-body" style="height: auto;overflow: hidden;">
                                     <div class="row">
@@ -144,9 +138,8 @@
                                     <div class="todo-project-list">
                                         <ul class="nav nav-stacked">
                                             <!--循环输出当前栏目的同级栏目，定义返回值return=c-->
-                                            {php $a = array('badge-info', 'badge-success', 'badge-default', 'badge-danger');}
                                             {category module=MOD_DIR pid=$cat.pid return=c}
-                                            <li {if $c.id==$catid} class="active"{/if}><a href="{$c.url}"><span class="badge {$a[array_rand($a)]}"> {$c.total} </span>{$c.name}</a></li>
+                                            <li {if $c.id==$catid} class="active"{/if}><a href="{$c.url}">{$c.name}</a></li>
                                             {/category}
                                         </ul>
                                     </div>

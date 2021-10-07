@@ -10,7 +10,7 @@
         <p class="search-desc">{dr_strcut($t.description, 44)}</p>
     </div>
     <div class="search-post-foot">
-        <a href="{dr_cat_value('news',$t.catid, 'url')}"><i class="fa fa-list"></i> {dr_cat_value('news',$t.catid, 'name')}</a>
+        <a href="{dr_cat_value($t.catid, 'url')}"><i class="fa fa-list"></i> {dr_cat_value($t.catid, 'name')}</a>
         <a href="{$t.url}"><i class="fa fa-calendar"></i> {$t.updatetime}</a>
     </div>
 </li>
