@@ -827,7 +827,7 @@ class Content extends \Phpcmf\Model {
         $data && $row = $row + $data;
 
         // 栏目模型数据
-        if (!$this->is_hcategory) {
+        if (!$this->is_hcategory && \Phpcmf\Service::C()->module['category_data_field']) {
             $tables[] = $table = $this->mytable.'_category_data';
             $cdata[$table] = $data = $this->table($table)->get($id);
             if ($data) {

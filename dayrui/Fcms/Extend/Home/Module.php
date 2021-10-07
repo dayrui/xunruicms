@@ -10,6 +10,7 @@ class Module extends \Phpcmf\Common
 {
 
     public $module; // 模块信息
+    public $is_prev_next_page = 1; // 启用内容页上下页计算
 
     // 模块首页
     public function _Index($html = 0) {
@@ -122,6 +123,12 @@ class Module extends \Phpcmf\Common
         // 格式化数据
         $data = $this->content_model->_call_search($data);
 
+        // 挂钩点 搜索完成之后
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_search_data', $data);
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $data = $rt2['data'];
+        }
+
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
             !$this->module['share'] ? $this->module['category'] : \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category'),
@@ -181,9 +188,6 @@ class Module extends \Phpcmf\Common
             'is_search_page' => 1,
         ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
-
-        // 挂钩点 搜索完成之后
-        \Phpcmf\Hooks::trigger('module_search_data', $data);
 
         if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
             $tpl = dr_safe_filename($_GET['ajax_page']);
@@ -394,12 +398,6 @@ class Module extends \Phpcmf\Common
             }
         }
 
-        // 挂钩点 内容读取之后
-        $rt2 = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
-        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
-            $data = $rt2['data'];
-        }
-
         // 状态判断
         if ($data['status'] == 10 && !($this->uid == $data['uid'] || $this->member['is_admin'])) {
             $this->goto_404_page(dr_lang('内容被删除，暂时无法访问'));
@@ -566,6 +564,12 @@ class Module extends \Phpcmf\Common
     // 内容页面的字段格式化处理
     protected function _Show_Data($data, $page) {
 
+        // 挂钩点 内容读取之后
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $data = $rt2['data'];
+        }
+
         // 处理关键字标签
         $data['tag'] = $data['keywords'] = trim($data['keywords']);
         $data['kws'] = [];
@@ -595,27 +599,29 @@ class Module extends \Phpcmf\Common
             }
         }
 
-        // 关闭插件嵌入
-        $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
+        if ($this->is_prev_next_page) {
+            // 关闭插件嵌入
+            $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
 
-        // 上一篇文章
-        $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-        $builder->where('catid', (int)$data['catid'])->where('status', 9);
-        $is_fstatus && $builder->where('fstatus', 1);
-        $builder->where('id<', (int)$data['id'])->orderBy('id desc');
-        $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
-        if (isset($data['prev_page']['url']) && $data['prev_page']['url']) {
-            $data['prev_page']['url'] = dr_url_prefix($data['prev_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
-        }
+            // 上一篇文章
+            $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
+            $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
+            $builder->where('id<', (int)$data['id'])->orderBy('id desc');
+            $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
+            if (isset($data['prev_page']['url']) && $data['prev_page']['url']) {
+                $data['prev_page']['url'] = dr_url_prefix($data['prev_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
+            }
 
-        // 下一篇文章
-        $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-        $builder->where('catid', (int)$data['catid'])->where('status', 9);
-        $is_fstatus && $builder->where('fstatus', 1);
-        $builder->where('id>', (int)$data['id'])->orderBy('id asc');
-        $data['next_page'] = $builder->limit(1)->get()->getRowArray();
-        if (isset($data['next_page']['url']) && $data['next_page']['url']) {
-            $data['next_page']['url'] = dr_url_prefix($data['next_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
+            // 下一篇文章
+            $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
+            $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
+            $builder->where('id>', (int)$data['id'])->orderBy('id asc');
+            $data['next_page'] = $builder->limit(1)->get()->getRowArray();
+            if (isset($data['next_page']['url']) && $data['next_page']['url']) {
+                $data['next_page']['url'] = dr_url_prefix($data['next_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
+            }
         }
 
         // 格式化输出自定义字段
