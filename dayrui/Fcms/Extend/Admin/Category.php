@@ -184,12 +184,16 @@ class Category extends \Phpcmf\Table {
             $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
             $t['name'] = dr_strcut($t['name'], 30);
             $t['setting'] = dr_string2array($t['setting']);
+            $t['pcatpost'] = 0;
             if ($this->module['share']) {
                 // 共享栏目时
                 //以本栏目为准
                 $t['setting']['html'] = intval($t['setting']['html']);
                 $t['setting']['urlrule'] = intval($t['setting']['urlrule']);
-                $t['child'] = isset($module[$t['mid']]['pcatpost']) && $module[$t['mid']]['pcatpost'] ? 0 : $t['child'];
+                if ($t['child'] && isset($module[$t['mid']]['pcatpost']) && $module[$t['mid']]['pcatpost']) {
+                    // 允许父栏目
+                    $t['pcatpost'] = 1;
+                }
             } else {
                 // 独立模块栏目
                 //以站点为准
@@ -198,7 +202,10 @@ class Category extends \Phpcmf\Table {
                 }
                 $t['setting']['html'] = intval($this->module['html']);
                 $t['setting']['urlrule'] = isset($this->module['site'][SITE_ID]['urlrule']) ? intval($this->module['site'][SITE_ID]['urlrule']) : 0;
-                $t['child'] = isset($this->module['setting']['pcatpost']) && $this->module['setting']['pcatpost'] ? 0 : $t['child'];
+                if ($t['child'] && isset($this->module['setting']['pcatpost']) && $this->module['setting']['pcatpost']) {
+                    // 允许父栏目
+                    $t['pcatpost'] = 1;
+                }
             }
             $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($this->module, $t));
             if ($this->_is_admin_auth('add')) {
@@ -208,7 +215,7 @@ class Category extends \Phpcmf\Table {
             if ($this->_is_admin_auth('edit')) {
                 $option.= '<a class="btn btn-xs green" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id'])).'> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a>';
             }
-            if (($t['tid'] == 1 && !$t['child'] && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/add'))  {
+            if (($t['tid'] == 1 && ($t['pcatpost'] || !$t['child']) && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/add'))  {
                 $option.= '<a class="btn btn-xs dark" href='.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/add', array('catid' => $t['id'])).'> <i class="fa fa-plus"></i> '.dr_lang('发布').'</a>';
             }
             if (($t['tid'] == 1 && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/index'))  {
@@ -252,7 +259,7 @@ class Category extends \Phpcmf\Table {
                 // 栏目类型
                 if ($t['tid'] == 1) {
                     if ($t['child']) {
-                        $t['type_html'] = '<a class="tooltips badge badge-danger" data-container="body" data-placement="right" data-original-title="'.dr_lang('当栏目存在子栏目时我们称之为封面，这个属性无法变更').'"> '.dr_lang('封面').' </span>';
+                        $t['type_html'] = '<a class="tooltips badge badge-danger" data-container="body" data-placement="right" data-original-title="'.dr_lang('当栏目存在子栏目时我们称之为封面').'"> '.dr_lang('封面').' </span>';
                     } else {
                         $t['type_html'] = '<a class="tooltips badge badge-success" data-container="body" data-placement="right" data-original-title="'.dr_lang('最终的栏目我们称之为列表').'"> '.dr_lang('列表').' </a>';
                     }
@@ -285,13 +292,12 @@ class Category extends \Phpcmf\Table {
                 }
             }
             //$t['name'] = $this->module['category'][$t['id']]['total'];
-            if ($t['child']) {
+            if ($t['child'] || $t['pcatpost']) {
                 $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data('.$t['id'].');" class="blue select-cat-'.$t['id'].'">[+]</a>&nbsp;';
             } else {
                 $t['spacer'] = $this->_get_spacer($t['pids']);
             }
 
-            //$t['spacer'] = $num;
             $t['class'] = 'dr_catid_'.$t['id']. ' dr_pid_'.$t['pid'];
             $arr = explode(',', $t['pids']);
             if ($arr) {
