@@ -107,6 +107,10 @@
     }
 
     function dr_tree_data(catid) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 100000
+        });
         var value = $(".select-cat-"+catid).html();
         if (value == '[+]') {
             $.ajax({
@@ -114,6 +118,7 @@
                 dataType: "json",
                 url: "{dr_url($uriprefix.'/list_index')}&pid="+catid,
                 success: function(json) {
+                    layer.close(index);
                     if (json.code == 1) {
                         $(".dr_catid_"+catid).after(json.msg);
                         $(".select-cat-"+catid).html('[-]');
@@ -127,6 +132,7 @@
                 }
             });
         } else {
+            layer.close(index);
             $(".dr_pid_"+catid).remove();
             $(".select-cat-"+catid).html('[+]');
         }

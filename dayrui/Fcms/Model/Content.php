@@ -72,6 +72,7 @@ class Content extends \Phpcmf\Model {
         !$data[1]['updatetime'] && $data[1]['updatetime'] = SYS_TIME;
 
         $data[1]['uid'] = intval($data[1]['uid']);
+        $data[1]['author'] = (string)$data[1]['author'];
 
         // 昵称为空的情况下
         /*

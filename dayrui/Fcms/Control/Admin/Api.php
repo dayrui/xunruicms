@@ -475,6 +475,7 @@ class Api extends \Phpcmf\Common {
 	// 统计栏目
 	public function ctotal() {
 
+        return;// 废弃
         $rt = '';
 	    if (IS_POST) {
 	        $ids = \Phpcmf\Service::L('input')->post('cid');
@@ -1200,7 +1201,7 @@ class Api extends \Phpcmf\Common {
 
         if (!$page) {
             // 计算数量
-            $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_index')->where('status', 9)->countAllResults();
+            $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable)->countAllResults();
             if (!$total) {
                 $this->_html_msg(0, dr_lang('无可用内容更新'));
             }
@@ -1230,7 +1231,7 @@ class Api extends \Phpcmf\Common {
             } else {
                 $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
             }
-            $this->content_model->update_url($t, $url);
+            \Phpcmf\Service::M()->table($this->content_model->mytable)->update((int)$t['id'], ['url' => $url]);
         }
 
         $this->_html_msg( 1, dr_lang('正在执行中【%s】...', "$tpage/$page"),
