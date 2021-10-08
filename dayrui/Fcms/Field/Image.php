@@ -225,6 +225,7 @@ class Image extends \Phpcmf\Library\A_Field {
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
         $size = ($field['setting']['option']['size']);
+        !$size && $size = 0;
         $count = intval($field['setting']['option']['count']);
 
         $p = dr_authcode([

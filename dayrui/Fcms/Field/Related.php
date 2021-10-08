@@ -129,6 +129,18 @@ class Related extends \Phpcmf\Library\A_Field {
         // 输出信息
         $cname = ($field['setting']['option']['title'] ? $field['setting']['option']['title'] : dr_lang('主题'));
 
+        if (!$module) {
+            if (CI_DEBUG) {
+                return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">关联字段没有设置关联模块</div>');
+            }
+            return $this->input_format($name, $text, '');
+        } elseif (!dr_is_module($module)) {
+            if (CI_DEBUG) {
+                return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">关联字段设置的模块【'.$module.'】没有被安装</div>');
+            }
+            return $this->input_format($name, $text, '');
+        }
+
         $value = trim($value, ',');
         $mylist = [];
         if ($value && is_string($value)) {
@@ -236,7 +248,7 @@ class Related extends \Phpcmf\Library\A_Field {
         $mylist = [];
         $is_show = 1;
         $module = $mid = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
-        if ($value && is_string($value)) {
+        if ($value && is_string($value) && $module) {
             $db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
             $mylist = $db ? $db->getResultArray() : [];
         }

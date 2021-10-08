@@ -907,7 +907,7 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = '
             if ($url_call_func && function_exists($url_call_func)) {
                 $murl = $url_call_func($cat[$id]);
             } else {
-                $murl = dr_url_prefix($cat[$id]['url']);
+                $murl = dr_url_prefix($cat[$id]['url'], $mid);
                 //$murl = dr_url_prefix($cat[$id]['url'], MOD_DIR, SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL())
             }
             $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], [$murl, $cat[$id]['name']], $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
