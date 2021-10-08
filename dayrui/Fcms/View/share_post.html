@@ -531,7 +531,7 @@
                     <label><button type="button" onclick="auto_form_data_delete()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('删除历史缓存')}</button></label>
                     {/if}
                 {/if}
-                {if $id && !$is_verify && !$is_post_user}
+                {if $id && !$is_verify && !$is_post_user && IS_USE_MEMBER}
                 <label><button type="button" onclick="dr_ajax_tui_submit()" class="btn green"> <i class="fa fa-sign-out"></i> {dr_lang('退稿')}</button></label>
                 {/if}
             {else}
