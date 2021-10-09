@@ -328,20 +328,21 @@ $db[\'default\']	= [
 
                             // 写配置文件
                             $sys = [
-                                'SYS_DEBUG'                     => '1', //调试器开关
-                                'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
-                                'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
-                                'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
-                                'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
-                                'SYS_SMS_IMG_CODE'              => '0', //栏目目录允许重复
-                                'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
-                                'SYS_CRON_AUTH'                 => '0', //单页目录允许重复
-                                'SYS_CSRF'                      => '1', //跨站验证提交
+                                'SYS_DEBUG'                     => '1',
+                                'SYS_ADMIN_CODE'                => '0',
+                                'SYS_ADMIN_LOG'                 => '0',
+                                'SYS_AUTO_FORM'                 => '0',
+                                'SYS_ADMIN_PAGESIZE'            => '10',
+                                'SYS_SMS_IMG_CODE'              => '0',
+                                'SYS_PAGE_RNAME'                => '0',
+                                'SYS_CRON_AUTH'                 => '0',
+                                'SYS_CSRF'                      => '1',
+                                'SYS_301'                       => '1',
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
-                                'SYS_HTTPS'                     => $ssl, //https模式
-                                'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
-                                'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
-                                'SYS_ATTACHMENT_URL'            => '', //附件访问地址
+                                'SYS_HTTPS'                     => $ssl,
+                                'SYS_ATTACHMENT_DB'             => '',
+                                'SYS_ATTACHMENT_PATH'           => '',
+                                'SYS_ATTACHMENT_URL'            => '',
                             ];
                             if (is_file(MYPATH.'Config/License.php')) {
                                 $ls = require MYPATH.'Config/License.php';
