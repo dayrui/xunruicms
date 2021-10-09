@@ -127,7 +127,8 @@ class Uid extends \Phpcmf\Library\A_Field {
 		$color = $field['setting']['option']['color'] ? $field['setting']['option']['color'] : 'default';
 
 		$ipt = '<input class="form-control '.$field['setting']['option']['css'].'" type="text" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$required.' '.$attr.' />';
-		$str = '
+		if (IS_ADMIN) {
+            $str = '
 		 <div class="input-group" '.$style.'>
 				'.$ipt.'
 				<span class="input-group-btn">
@@ -135,6 +136,9 @@ class Uid extends \Phpcmf\Library\A_Field {
 				</span>
 			</div>
 		';
+        } else {
+            $str = $ipt;
+        }
 
 		return $this->input_format($field['fieldname'], $text, $str.$tips);
 	}
