@@ -242,6 +242,9 @@ class Field extends \Phpcmf\Common {
                                 } else {
                                     // 这种这些未选择的栏目属性
                                     $setting = dr_string2array($t['setting']);
+                                    if (!$setting['cat_field']) {
+                                        $setting['cat_field'] = [];
+                                    }
                                     $setting['cat_field'][$data['fieldname']] = 1;
                                     \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                                 }
@@ -358,6 +361,9 @@ class Field extends \Phpcmf\Common {
                             }
                         } else {
                             // 这种这些未选择的栏目属性
+                            if (!$setting['cat_field']) {
+                                $setting['cat_field'] = [];
+                            }
                             $setting['cat_field'][$data['fieldname']] = 1;
                             \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                         }
@@ -367,6 +373,9 @@ class Field extends \Phpcmf\Common {
                     foreach ($cats as $t) {
                         $setting = dr_string2array($t['setting']);
                         // 这种这些未选择的栏目属性
+                        if (!$setting['cat_field']) {
+                            $setting['cat_field'] = [];
+                        }
                         $setting['cat_field'][$data['fieldname']] = 1;
                         \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                     }
@@ -380,6 +389,9 @@ class Field extends \Phpcmf\Common {
                         $setting = dr_string2array($t['setting']);
                         if (in_array($t['id'], $cat['catid'])) {
                             // 表示选中的栏目了
+                            if (!$setting['module_field']) {
+                                $setting['module_field'] = [];
+                            }
                             $setting['module_field'][$data['fieldname']] = 1;
                             \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
                         } else {
