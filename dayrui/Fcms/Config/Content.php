@@ -23,7 +23,7 @@ return [
           `hits` int(10) unsigned DEFAULT NULL COMMENT '浏览数',
           `uid` int(10) unsigned NOT NULL COMMENT '作者id',
           `author` varchar(50) NOT NULL COMMENT '笔名',
-          `status` tinyint(2) NOT NULL COMMENT '状态',
+          `status` tinyint(2) NOT NULL COMMENT '状态(已废弃)',
           `url` varchar(255) DEFAULT NULL COMMENT '地址',
           `link_id` int(10) NOT NULL DEFAULT '0' COMMENT '同步id',
           `tableid` smallint(5) unsigned NOT NULL COMMENT '附表id',

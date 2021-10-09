@@ -398,11 +398,11 @@ class Module extends \Phpcmf\Common
             }
         }
 
-        // 状态判断
+        /*
         if ($data['status'] == 10 && !($this->uid == $data['uid'] || $this->member['is_admin'])) {
             $this->goto_404_page(dr_lang('内容被删除，暂时无法访问'));
             return $data;
-        }
+        }*/
 
         $catid = $data['catid'];
 
@@ -605,7 +605,7 @@ class Module extends \Phpcmf\Common
 
             // 上一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-            $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $builder->where('catid', (int)$data['catid']);//->where('status', 9)
             $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id<', (int)$data['id'])->orderBy('id desc');
             $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
@@ -615,7 +615,7 @@ class Module extends \Phpcmf\Common
 
             // 下一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
-            $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $builder->where('catid', (int)$data['catid']);//->where('status', 9)
             $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id>', (int)$data['id'])->orderBy('id asc');
             $data['next_page'] = $builder->limit(1)->get()->getRowArray();

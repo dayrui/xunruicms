@@ -106,7 +106,7 @@ class Search extends \Phpcmf\Model {
 
             // 默认搜索条件
             $where = [
-                'status' => '`'.$table.'`.`status` = 9'
+                //'status' => '`'.$table.'`.`status` = 9'
             ];
 
             // 栏目的字段
