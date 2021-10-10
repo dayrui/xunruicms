@@ -9,6 +9,8 @@
 
 return [
 
+	"index\.html" => "index.php?c=home&m=index",
+
     /***********************下面写你自己的URL解析规则********************/
 	
 
