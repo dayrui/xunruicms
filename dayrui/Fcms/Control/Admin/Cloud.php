@@ -163,10 +163,12 @@ class Cloud extends \Phpcmf\Common
                                     foreach ($m1['left'] as $m2) {
                                         if ($m2['link']) {
                                             foreach ($m2['link'] as $m3) {
-                                                $menu[] = [
-                                                    'name' => $m3['name'],
-                                                    'url' =>  \Phpcmf\Service::M('auth')->_menu_link_url($m3['uri'], '', [], true),
-                                                ];
+                                                if ($m3['uri']) {
+                                                    $menu[] = [
+                                                        'name' => $m3['name'],
+                                                        'url' =>  \Phpcmf\Service::M('auth')->_menu_link_url($m3['uri'], '', [], true),
+                                                    ];
+                                                }
                                             }
                                         }
                                     }
