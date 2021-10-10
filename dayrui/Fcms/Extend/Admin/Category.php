@@ -581,9 +581,7 @@ class Category extends \Phpcmf\Table {
                 if ($this->module['share']) {
                     $data['mid'] = $post['mid'];
                     $data['tid'] = (int)$post['tid'];
-                    $save['domain'] = '';
                     $data['content'] = '';
-                    $save['mobile_domain'] = '';
                     // 作为内容模块的栏目判断
                     if ($data['tid'] == 1 && !$data['mid']) {
                         $this->_json(0, dr_lang('必须选择一个模块'));
@@ -1260,8 +1258,6 @@ class Category extends \Phpcmf\Table {
                         // 更新上级相关mid
                         \Phpcmf\Service::M()->db->table($this->init['table'])->whereIn('id', $ids)->update(['mid' => $pmid]);
                     }*/
-                    $save['domain'] = '';
-                    $save['mobile_domain'] = '';
                 }
 
                 if ($save['pid'] && $id && $save['pid'] == $id) {
