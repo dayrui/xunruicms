@@ -2674,6 +2674,9 @@ class View {
 
         if (!$order) {
             return NULL;
+        } elseif (strtoupper($order) == 'FIXNULL') {
+            // NULL排序
+            return 'NULL';
         } elseif (in_array(strtoupper($order), ['RAND()', 'RAND'])) {
             // 随机排序
             return 'RAND()';

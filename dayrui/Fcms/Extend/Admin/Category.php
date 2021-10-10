@@ -82,6 +82,9 @@ class Category extends \Phpcmf\Table {
         if (isset($this->cat_config[$this->module['dirname']]['rname']) && $this->cat_config[$this->module['dirname']]['rname']) {
             define('SYS_CAT_RNAME', 1);
         }
+        if (isset($this->cat_config[$this->module['dirname']]['popen']) && $this->cat_config[$this->module['dirname']]['popen']) {
+            define('SYS_CAT_POPEN', 1);
+        }
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
@@ -179,6 +182,7 @@ class Category extends \Phpcmf\Table {
         $list.= "</tr>";
 
         $tree = '';
+        $pcats = [];
         foreach($data as $k => $t) {
             if ($cqx && $cqx->is_edit($t['id'])) {
                 unset($data[$k]);
@@ -298,6 +302,7 @@ class Category extends \Phpcmf\Table {
             }
             //$t['name'] = $this->module['category'][$t['id']]['total'];
             if ($t['child'] || $t['pcatpost']) {
+                $pcats[] = $t['id'];
                 $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data('.$t['id'].');" class="blue select-cat-'.$t['id'].'">[+]</a>&nbsp;';
             } else {
                 $t['spacer'] = $this->_get_spacer($t['pids']);
@@ -315,7 +320,7 @@ class Category extends \Phpcmf\Table {
             $tree.= $nstr;
         }
 
-        return [$head, $tree];
+        return [$head, $tree, $pcats];
     }
 
     // 替换空格填充符号
@@ -386,9 +391,10 @@ class Category extends \Phpcmf\Table {
     // 后台查看列表
     protected function _Admin_List() {
 
-        list($a, $b) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data(0));
+        list($a, $b, $pcats) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data(0));
         \Phpcmf\Service::V()->assign([
             'list' => '你在My/View/share_category_list.html，目录中定义过栏目文件，需要删除此文件',
+            'pcats' => $pcats,
             'cat_head' => $a,
             'cat_list' => $b,
             'list_url' => dr_url(APP_DIR.'/category/index'),
