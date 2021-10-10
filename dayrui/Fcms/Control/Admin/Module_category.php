@@ -10,6 +10,7 @@ class Module_category extends \Phpcmf\Common
 
     public function index() {
 
+        $mid = \Phpcmf\Service::L('input')->get('dir');
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
         if (!$module) {
             $this->_admin_msg(0, dr_lang('系统没有安装内容模块'), dr_url('module/index'));
@@ -24,6 +25,10 @@ class Module_category extends \Phpcmf\Common
                 unset($module[$dir]);
                 continue;
             } elseif ($t['system'] == 2) {
+                unset($module[$dir]);
+                continue;
+            }
+            if ($mid && $mid != $dir) {
                 unset($module[$dir]);
                 continue;
             }

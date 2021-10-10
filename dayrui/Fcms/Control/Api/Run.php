@@ -76,7 +76,7 @@ class Run extends \Phpcmf\Common
                             // 绑定域名时
                             $file = 'index.html';
                         } else {
-                            $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain(MODULE_URL), '/'); // 从地址中获取要生成的文件名;
+                            $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain($mod['url']), '/'); // 从地址中获取要生成的文件名;
                         }
                         if ($file) {
                             unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, $file));
