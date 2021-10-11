@@ -35,7 +35,6 @@ class Field extends \Phpcmf\Common {
 		$this->ftype = \Phpcmf\Service::L('Field')->app($this->namespace)->type(\Phpcmf\Service::M('Field')->func);
 
 		// 判断类别权限
-
 		\Phpcmf\Service::V()->assign([
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
 				[

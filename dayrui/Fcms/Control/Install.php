@@ -316,7 +316,7 @@ $db[\'default\']	= [
                                 'roleid' => 1,
                             ]);
                             // 创建站点
-                            \Phpcmf\Service::M('Site')->create([
+                            \Phpcmf\Service::M('site')->create([
                                 'name' => $data['name'],
                                 'domain' => DOMAIN_NAME,
                             ]);

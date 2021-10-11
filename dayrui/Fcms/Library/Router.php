@@ -287,9 +287,6 @@ class Router {
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $data['opdirname'] = $data['pid'] && isset($mod['category'][$data['pid']]) ? $mod['category'][$data['pid']]['dirname'] : '';
             $data['otdirname'] = $data['topid'] && isset($mod['category'][$data['topid']]) ? $mod['category'][$data['topid']]['dirname'] : '';
-            if ($data['id'] == 3) {
-                var_dump($data);
-            }
             $url = ltrim($page ? $rule['list_page'] : $rule['list'], '/');
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
         }

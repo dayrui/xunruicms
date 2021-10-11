@@ -1090,6 +1090,9 @@ class Api extends \Phpcmf\Common {
             $arr = explode(',', file_get_contents($path.'Files.txt'));
             if ($arr) {
                 foreach ($arr as $t) {
+                    if (!$t) {
+                        continue;
+                    }
                     if (IS_DEV) {
                         $t = str_replace(
                             [
