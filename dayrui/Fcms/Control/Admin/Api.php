@@ -1085,9 +1085,47 @@ class Api extends \Phpcmf\Common {
             $this->_json(1, dr_lang('操作成功'));
         }
 
+        $files = [];
+        if (is_file($path.'Files.txt')) {
+            $arr = explode(',', file_get_contents($path.'Files.txt'));
+            if ($arr) {
+                foreach ($arr as $t) {
+                    if (IS_DEV) {
+                        $t = str_replace(
+                            [
+                                'WRITEPATH/',
+                                'ROOTPATH/',
+                                'WEBPATH/',
+                                'APPSPATH/',
+                                'TPLPATH/',
+                                'FCPATH/',
+                                'COREPATH/',
+                                'MYPATH/',
+                                'CSSPATH/',
+                            ],
+                            [
+                                WRITEPATH,
+                                ROOTPATH,
+                                WEBPATH,
+                                APPSPATH,
+                                TPLPATH,
+                                FCPATH,
+                                COREPATH,
+                                MYPATH,
+                                ROOTPATH.'static/',
+                            ],
+                            $t
+                        );
+                    }
+                    $files[] = $t;
+                }
+            }
+        }
+
         \Phpcmf\Service::V()->assign([
             'dir' => $dir,
-            'path' => IS_DEV ? $path : dr_safe_replace_path($path)
+            'path' => IS_DEV ? $path : dr_safe_replace_path($path),
+            'files' => $files,
         ]);
         \Phpcmf\Service::V()->display('api_delete_app.html');exit;
     }

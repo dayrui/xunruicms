@@ -1,15 +1,16 @@
 {template "header.html"}
-<div class="note note-danger">
-    <p>{dr_lang('该程序核心目录位于：%s', $path)}</p>
-</div>
 
-
-<form class="form-horizontal" role="form" id="myform">
+<form class="form-horizontal" role="form" id="myform" style="margin-top: -20px">
     {dr_form_hidden()}
-
-<p>1、{dr_lang('本操作将删除以上目录中的文件')}</p>
+<p>1、{dr_lang('本操作将删除目录（%s）中的文件', $path)}</p>
 <p>2、{dr_lang('如果该应用在其他目录中存在的文件，需要手动删除')}</p>
-
+{if $files}
+    <div class="note note-danger">
+        {loop $files $t}
+        <p>{$t}</p>
+        {/loop}
+    </div>
+    {/if}
 </form>
 
 {template "footer.html"}

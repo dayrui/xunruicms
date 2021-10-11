@@ -1033,6 +1033,8 @@ class Router {
 
                     '#\{pdirname\}#Ui',
                     '#\{dirname\}#Ui',
+                    '#\{opdirname\}#Ui',
+                    '#\{otdirname\}#Ui',
                     '#\{modname\}#Ui',
                     '#\{name\}#Ui',
 
@@ -1054,6 +1056,8 @@ class Router {
                     '([0-9]+)',
 
                     '([\w\/]+)',
+                    '([A-za-z0-9 \-\_]+)',
+                    '([A-za-z0-9 \-\_]+)',
                     '([A-za-z0-9 \-\_]+)',
                     '([a-z]+)',
                     '([a-z]+)',
