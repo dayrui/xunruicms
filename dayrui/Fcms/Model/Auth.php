@@ -547,6 +547,8 @@ class Auth extends \Phpcmf\Model {
 
         if (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['uri'])) {
             return true;
+        } elseif (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['mark'])) {
+            return true;
         }
 
 
