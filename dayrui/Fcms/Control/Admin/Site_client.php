@@ -16,10 +16,12 @@ class Site_client extends \Phpcmf\Common
                 foreach ($post as $i => $t) {
                     $i = intval($i);
                     if (isset($t['name'])) {
-                        if (!preg_match('/^[a-z]+/i', $t['name'])) {
-                            $this->_json(0, dr_lang('终端目录必须是英文字母'));
-                        } elseif (!$t['name']) {
+                        if (!$t['name']) {
                             $this->_json(0, dr_lang('终端目录必须填写'));
+                        } elseif (!preg_match('/^[a-z]+/i', $t['name'])) {
+                            $this->_json(0, dr_lang('终端目录必须是英文字母'));
+                        } elseif (in_array($t['name'], [SITE_MOBILE_DIR, 'pc'])) {
+                            $this->_json(0, dr_lang('不能使用系统内置目录：%s', $t['name']));
                         }
                         $save[$i]['name'] = dr_safe_replace($t['name']);
                     } else {
