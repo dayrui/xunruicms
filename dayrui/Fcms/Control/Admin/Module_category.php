@@ -25,6 +25,11 @@ class Module_category extends \Phpcmf\Common
                 unset($module[$dir]);
                 continue;
             } elseif ($t['system'] == 2) {
+                // 自定义菜单的
+                unset($module[$dir]);
+                continue;
+            } elseif ($t['hcategory']) {
+                // 禁止使用栏目
                 unset($module[$dir]);
                 continue;
             }
