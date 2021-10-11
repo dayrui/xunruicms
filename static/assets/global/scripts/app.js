@@ -1617,6 +1617,35 @@ function dr_url_module_index() {
         btn: []
     });
 }
+function dr_url_module_show() {
+    layer.alert('<b>举例</b><hr>'+
+        '默认模块地址: <br>index.php?s=news&c=show&id=1<br>'+
+        '形如show/1.html <br>这种地址格式为: {modname}/{id}.html'+
+        '<br><br><b>通配符</b><hr>'+
+        '{id}   表示id<br>'+
+        '{y}   表示年<br>'+
+        '{m}   表示月<br>'+
+        '{d}   表示日<br>'+
+        '{page}   表示分页号<br>'+
+        '{dirname}   表示栏目目录名称<br>'+
+        '{pdirname}   包含父级子级层次的目录<br>'+
+        '{opdirname}   表示父级目录名称<br>'+
+        '{otdirname}   表示顶级目录名称<br>'+
+        '{modname}  表示模块目录<br>'+
+        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
+        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
+        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
+        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
+        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
+        '那么你就填写: {my_url($data)}<br>'+
+        ''+
+        '', {
+        shade: 0,
+        title: '',
+        area: ['50%', '50%'],
+        btn: []
+    });
+}
 function dr_url_module_list() {
     layer.alert('<b>举例</b><hr>'+
         '默认模块地址: <br>index.php?s=news&c=category&id=1<br>'+
@@ -1625,7 +1654,9 @@ function dr_url_module_list() {
         '{id}   表示栏目id<br>'+
         '{page}   表示分页号<br>'+
         '{dirname}   表示栏目目录名称<br>'+
-        '{pdirname}   包含父级层次的目录<br>'+
+        '{pdirname}   包含父级子级层次的目录<br>'+
+        '{opdirname}   表示父级目录名称<br>'+
+        '{otdirname}   表示顶级目录名称<br>'+
         '{modname}  表示模块目录（只能独立模块使用，共享模块不能使用）<br>'+
         '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
         '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
@@ -1705,33 +1736,6 @@ function dr_url_mform_post() {
         '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
         'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
         '那么你就填写: {my_url($data)}<br>'+
-        '', {
-        shade: 0,
-        title: '',
-        area: ['50%', '50%'],
-        btn: []
-    });
-}
-function dr_url_module_show() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=show&id=1<br>'+
-        '形如show/1.html <br>这种地址格式为: {modname}/{id}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{id}   表示id<br>'+
-        '{y}   表示年<br>'+
-        '{m}   表示月<br>'+
-        '{d}   表示日<br>'+
-        '{page}   表示分页号<br>'+
-        '{dirname}   表示栏目目录名称<br>'+
-        '{pdirname}   包含父级层次的目录<br>'+
-        '{modname}  表示模块目录<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
-        ''+
         '', {
         shade: 0,
         title: '',

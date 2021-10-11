@@ -579,6 +579,7 @@ class Module extends \Phpcmf\Model
                     ),
                 ], 1, 0, 'category-'.$cdir);
             }
+            $cache['category'] = $category;
             foreach ($category as $i => $c) {
                 $category[$i]['setting'] = $c['setting'] = dr_string2array($c['setting']);
                 $pid = explode(',', $c['pids']);
@@ -589,11 +590,9 @@ class Module extends \Phpcmf\Model
                 } else {
                     $c['pcatpost'] = 0;
                 }
-                $c['topid'] = isset($pid[1]) ? $pid[1] : $c['id'];
-                $c['domain'] = isset($c['domain']) ? $c['domain'] : $cache['domain'];
+                $cache['category'][$i]['topid'] = $c['topid'] = isset($pid[1]) ? $pid[1] : $c['id'];
                 $c['catids'] = explode(',', $c['childids']);
                 $c['is_post'] = $c['pcatpost'] ? 1 : ($c['child'] ? 0 : 1); // 是否允许发布内容
-                $c['mobile_domain'] = isset($c['mobile_domain']) ? $c['mobile_domain'] : $cache['mobile_domain'];
                 if ($cache['share']) {
                     // 共享栏目时
                     //以本栏目为准
