@@ -478,7 +478,7 @@ class Router {
             $data['modname'] = $mod['dirname'];
             $data['param'] = dr_search_rewrite_encode($params, $mod['setting']['search']);
             if ($params && !$data['param']) {
-                log_message('error', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
+                log_message('debug', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
             }
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
             return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)), $mod['dirname']);
@@ -497,7 +497,7 @@ class Router {
         $url = ltrim(str_replace('//', '/', $url), '/');
 
         if (IS_DEV && strpos($url, '?') !== false) {
-            return $prefix.$url.'#开发者模式提醒：自定义URL规则['.$rule.']不建议包含问号?';
+            log_message('debug', '开发者模式提醒：自定义URL规则['.$rule.']不建议包含问号?');
         }
 
         return $prefix.$url;

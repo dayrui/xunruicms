@@ -358,7 +358,7 @@ class Module extends \Phpcmf\Common
             $is_id = 0;
         }
 
-        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.($page > 1 ? $page : '');
+        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.$this->is_mobile.($page > 1 ? $page : '');
         $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             $data = $this->content_model->get_data($is_id ? $id : 0, 0, $param);
@@ -564,12 +564,6 @@ class Module extends \Phpcmf\Common
     // 内容页面的字段格式化处理
     protected function _Show_Data($data, $page) {
 
-        // 挂钩点 内容读取之后
-        $rt2 = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
-        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
-            $data = $rt2['data'];
-        }
-
         // 处理关键字标签
         $data['tag'] = $data['keywords'] = trim($data['keywords']);
         $data['kws'] = [];
@@ -599,6 +593,23 @@ class Module extends \Phpcmf\Common
             }
         }
 
+        // 格式化输出自定义字段
+        $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
+        $fields['inputtime'] = ['fieldtype' => 'Date'];
+        $fields['updatetime'] = ['fieldtype' => 'Date'];
+
+        // 格式化字段
+        $data = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($fields, $data, $page);
+
+        // 挂钩点 内容读取之后
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_show_data', $data);
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $data = $rt2['data'];
+        }
+
+        // 模块的回调处理
+        $data = $this->content_model->_call_show($data);
+
         if ($this->is_prev_next_page) {
             // 关闭插件嵌入
             $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
@@ -623,17 +634,6 @@ class Module extends \Phpcmf\Common
                 $data['next_page']['url'] = dr_url_prefix($data['next_page']['url'], $this->module['dirname'], SITE_ID, $this->is_mobile);
             }
         }
-
-        // 格式化输出自定义字段
-        $fields = $this->module['category_data_field'] ? array_merge($this->module['field'], $this->module['category_data_field']) : $this->module['field'];
-        $fields['inputtime'] = ['fieldtype' => 'Date'];
-        $fields['updatetime'] = ['fieldtype' => 'Date'];
-
-        // 格式化字段
-        $data = \Phpcmf\Service::L('Field')->app($this->module['dirname'])->format_value($fields, $data, $page);
-
-        // 模块的回调处理
-        $data = $this->content_model->_call_show($data);
 
         return $data;
     }
