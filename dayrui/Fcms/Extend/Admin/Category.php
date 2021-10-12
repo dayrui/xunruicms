@@ -1039,9 +1039,9 @@ class Category extends \Phpcmf\Table {
         }
 
         if ($this->module['share']) {
-            $this->_json(1, dr_url('chtml/html/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/cat/category_index', ['app' => '', 'ids' => implode(',', $ids)]));
         } else {
-            $this->_json(1, dr_url('chtml/html/category_index', ['app' => APP_DIR, 'ids' => implode(',', $ids)]));
+            $this->_json(1, dr_url('chtml/cat/category_index', ['app' => APP_DIR, 'ids' => implode(',', $ids)]));
         }
     }
 
