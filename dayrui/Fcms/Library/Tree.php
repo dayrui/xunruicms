@@ -314,12 +314,16 @@ class Tree {
                 // 栏目发布权限判断,主要筛选栏目下是否有空白选项
                 //unset($t['catids'][$t['id']]);
                 if ($is_push && $t['child'] == 1 && $t['catids']) {
-                    $ispost = 0;
-                    foreach ($t['catids'] as $i) {
-                        // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
-                        if (isset($data[$i]) && $data[$i]['child'] == 0) {
-                            $ispost = 1; // 可以发布 表示此栏目可用
-                            break;
+                    if ($t['is_post']) {
+                        $ispost = 1; // 允许发布的父栏目
+                    } else {
+                        $ispost = 0;
+                        foreach ($t['catids'] as $i) {
+                            // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
+                            if (isset($data[$i]) && $data[$i]['child'] == 0) {
+                                $ispost = 1; // 可以发布 表示此栏目可用
+                                break;
+                            }
                         }
                     }
                     if (!$ispost) {
