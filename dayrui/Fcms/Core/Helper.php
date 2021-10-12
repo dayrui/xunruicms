@@ -4066,6 +4066,8 @@ function dr_code2utf8($str) {
 
     if (function_exists('mb_convert_encoding')) {
         return mb_convert_encoding($str, 'UTF-8', 'GBK');
+    } elseif (function_exists('iconv')) {
+        return iconv('GBK', 'UTF-8', $str);;
     }
 
     return $str;

@@ -237,7 +237,7 @@ class Ip {
             $ipaddr = '';
         }
 
-        $name = iconv('GB2312', 'UTF-8', $ipaddr);
+        $name = dr_code2utf8($ipaddr);
         $arr = explode(' ', $name);
         return $arr[0] ? $arr[0] : $name;
     }

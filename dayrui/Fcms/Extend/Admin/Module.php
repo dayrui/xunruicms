@@ -609,7 +609,7 @@ class Module extends \Phpcmf\Table {
             $this->_admin_msg(0, dr_lang('审核内容不存在'));
         } elseif ($this->where_list_sql && $this->content_model->admin_is_edit($data)) {
             $this->_admin_msg(0, dr_lang('当前角色无权限管理此栏目'));
-        } elseif (!\Phpcmf\Service::M('auth')->get_admin_verify_status_edit($data['verify']['vid'], $data['status'])) {
+        } elseif (!$this->_get_verify_status_edit($data['verify']['vid'], $data['status'])) {
             $this->_admin_msg(0, dr_lang('当前角色无权限审核此内容'));
         }
 
@@ -1197,7 +1197,7 @@ class Module extends \Phpcmf\Table {
                                 $status = intval($old['status']);
                                 $data[1]['status'] = dr_count($step) - 1 <= $status ? 9 : $status + 1;
                                 // 再次验证审核级别
-                                if (!\Phpcmf\Service::M('auth')->get_admin_verify_status_edit($old['verify']['vid'], $data[1]['status'])) {
+                                if (!$this->_get_verify_status_edit($old['verify']['vid'], $data[1]['status'])) {
                                     $this->_json(0, dr_lang('当前角色无权限审核此内容'));
                                 }
                                 // 任务执行成功
@@ -1292,8 +1292,13 @@ class Module extends \Phpcmf\Table {
         }
     }
 
+    // 验证是否具有审核状态
+    protected function _get_verify_status_edit($vid, $status) {
+        return \Phpcmf\Service::M('auth')->get_admin_verify_status_edit($vid, $status);
+    }
+
     // 获取当前栏目的时候流程
-    private function _get_verify($vid) {
+    protected function _get_verify($vid) {
 
         $rt = [];
         $cache = $this->get_cache('verify');
