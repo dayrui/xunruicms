@@ -1255,7 +1255,7 @@ class Member extends \Phpcmf\Model {
                     break;
             }
             // 发送审核提醒
-            $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member/verify/index:field/id/keyword/'.$uid);
+            IS_USE_MEMBER && $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member/verify/index:field/id/keyword/'.$uid);
         }
 
         // 注册后的通知

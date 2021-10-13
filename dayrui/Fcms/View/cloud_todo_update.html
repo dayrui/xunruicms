@@ -139,6 +139,7 @@
                         $('#dr_check_button_ing').addClass('red');
                         $('#dr_check_button_ing').removeClass('blue');
                         $('#dr_check_button').html('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新下载 </button>');
+                        $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                         clearInterval(interval_id);
                     } else {
                         $('#dr_check_result .progress-bar-success').attr('style', 'width:'+json.code+'%');
@@ -190,6 +191,7 @@
                     $('#dr_check_button_ing').addClass('red');
                     $('#dr_check_button_ing').removeClass('blue');
                     $('#dr_check_button').append('<button type="button" id="dr_check_reing" onclick="dr_checking()" class="btn green"> <i class="fa fa-refresh"></i> 重新升级 </button>');
+                    $('#dr_check_html').append('<p class="p_error"><label class="rleft">'+json.msg+'</label></p>');
                 }
 
             },
