@@ -141,11 +141,6 @@ return [
                             'uri' => 'site_param/index',
                         ],
                         [
-                            'name' => '终端设置',
-                            'icon' => 'fa fa-cogs',
-                            'uri' => 'site_client/index',
-                        ],
-                        [
                             'name' => '手机设置',
                             'icon' => 'fa fa-mobile',
                             'uri' => 'site_mobile/index',
