@@ -267,8 +267,10 @@
                         {/loop}
                         {/if}
                         {/if}
-                        <label><a href="javascript:dr_iframe_show('{dr_lang('查看流程')}', '{dr_url('api/verify', ['id'=>$t.vid])}', '40%');" class="btn btn-xs blue"> <i class="fa fa-search"></i> {dr_lang('审核流程')}</a></label>
-                    </td>
+						{if IS_USE_MEMBER}
+                        <label><a href="javascript:dr_iframe_show('{dr_lang('查看流程')}', '{dr_url('member/api/verify', ['id'=>$t.vid])}', '40%');" class="btn btn-xs blue"> <i class="fa fa-search"></i> {dr_lang('审核流程')}</a></label>
+						{/if}
+					</td>
                 </tr>
                 {/loop}
                 </tbody>
@@ -283,7 +285,6 @@
                     <span></span>
                 </label>
                 {if $ci->_is_admin_auth('del')}
-                <!--只有超管才能删审核记录，为什么呢，是因为普通管理员没办法判断审核记录是否具有可删除的权限验证-->
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
                 {/if}
                 {if !$is_post_user}
