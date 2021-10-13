@@ -270,6 +270,18 @@ class Model {
 
         return dr_return_data($id);
     }
+	
+	// 批量更新
+	public function update_batch($data, $key = 'id') {
+		
+		if (!$this->table || !$data) {
+			return;
+		}
+		
+		$this->db->table($this->table)->updateBatch($data, $key ? $key : $this->key);
+		
+        $this->_clear();
+	}
 
     // 更新数据
     public function update($id, $data, $where = '') {

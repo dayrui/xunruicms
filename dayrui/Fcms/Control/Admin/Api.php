@@ -1217,7 +1217,7 @@ class Api extends \Phpcmf\Common {
         $this->_module_init($mid);
 
         $page = (int)\Phpcmf\Service::L('input')->get('page');
-        $psize = 100; // 每页处理的数量
+        $psize = 200; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
 
         if (!$page) {
@@ -1238,6 +1238,7 @@ class Api extends \Phpcmf\Common {
             $this->_html_msg(1, dr_lang('更新完成'));
         }
 
+		$update = [];
         $data = \Phpcmf\Service::M()->db->table($this->content_model->mytable)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         foreach ($data as $t) {
             if ($t['link_id'] && $t['link_id'] >= 0) {
@@ -1252,8 +1253,12 @@ class Api extends \Phpcmf\Common {
             } else {
                 $url = \Phpcmf\Service::L('Router')->show_url($this->module, $t);
             }
-            \Phpcmf\Service::M()->table($this->content_model->mytable)->update((int)$t['id'], ['url' => $url]);
+            $update[] = [
+                'id' => (int)$t['id'],
+                'url'=> $url,
+            ];
         }
+		$update && \Phpcmf\Service::M()->table($this->content_model->mytable)->update_batch($update);
 
         $this->_html_msg( 1, dr_lang('正在执行中【%s】...', "$tpage/$page"),
             dr_url('api/'.\Phpcmf\Service::L('Router')->method, ['mid' => $mid,'total' => $total, 'page' => $page + 1])
