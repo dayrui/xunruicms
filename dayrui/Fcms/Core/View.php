@@ -56,6 +56,7 @@ class View {
     private $_page_value = 0; // 页码变量
 
     private $_select_rt_name = '_XUN'.'RUI'.'CMS_RT_'; // select替换字符
+    private $_is_debug = 0; // 是否加载debug
 
     public $call_value; // 动态模板返回调用
 
@@ -219,6 +220,7 @@ class View {
         extract($this->_options, EXTR_SKIP);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
+        $this->_is_debug = 0;
         $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
 
         // 加载编译后的缓存文件
@@ -473,7 +475,9 @@ class View {
                 dr_mkdirs($path);
             }
             // 写入新文件
-            $content = $this->handle_view_file(file_get_contents($name));
+            $code = file_get_contents($name);
+            $content = $this->handle_view_file($code);
+            !$this->_is_debug && $this->_is_debug = strpos($code, '{$debug');
             if (file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
                 if (IS_DEV) {
                     $this->show_error('模板缓存文件 ('.$cache_file.') 创建失败，请将cache目录权限设为777');
@@ -2740,69 +2744,84 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0, $is_cache = 0) {
 
-        $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto; text-align: left">';
-
-        if ($this->_list_tag) {
-            $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
-        }
-
-        if ($this->_list_error) {
-            $debug.= '<p>错误提示：'.implode('、', $this->_list_error).'</p>';
-        }
-
-        if ($this->_is_list_search) {
-            if (!$this->_options['is_search_page']) {
-                $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
-            }
-            $debug.= '<p>搜索解析：'.$this->_options['search_sql'].'</p>';
-        } elseif ($this->_options['is_search_page'] && (strpos($this->_list_tag, 'page=1') || $this->_page_used)) {
-            $debug.= '<p>标签提醒：当前页面是搜索页面，只有search标签才适用于搜索页面，可能会引起本标签分页无效</p>';
-        }
-
-        if ($sql) {
-            $debug.= '<p>查询解析: '.$sql.'</p>';
-        }
-
-        $debug.= '<p>当前地址：'.FC_NOW_URL.'</p>';
-        $debug.= '<p>当前路由：'.\Phpcmf\Service::L('router')->uri().'</p>';
-
-        if ($data && !is_array($data)) {
-            $debug.= '<p>'.$data.'</p>';
-            $data = [];
-        }
-
         $this->pos_baidu = $this->pos_order = null;
-
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = $this->_get_page_id($this->_page_value);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-        $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
-        $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
-        $debug.= '<p>数据缓存：'.(SYS_CACHE ? ($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')) : '后台未开启缓存').'</p>';
 
+        if ($this->_is_debug) {
+            // 显示debug数据
+            $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto; text-align: left">';
+
+            if ($this->_list_tag) {
+                $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
+            }
+
+            if ($this->_list_error) {
+                $debug.= '<p>错误提示：'.implode('、', $this->_list_error).'</p>';
+            }
+
+            if (strpos($this->_list_tag, 'return=') !== false) {
+                $arr = explode('return=', $this->_list_tag);
+                if (strpos($arr[1], ' ') !== false) {
+                    $debug.= '<p>错误提示：return参数必须放在最后，且后面不能带有空格符号</p>';
+                }
+
+            }
+
+            if ($this->_is_list_search) {
+                if (!$this->_options['is_search_page']) {
+                    $debug.= '<p>使用范围：search标签只能用于搜索页面，当前页面不是搜索页面，可能会无效</p>';
+                }
+                $debug.= '<p>搜索解析：'.$this->_options['search_sql'].'</p>';
+            } elseif ($this->_options['is_search_page'] && (strpos($this->_list_tag, 'page=1') || $this->_page_used)) {
+                $debug.= '<p>标签提醒：当前页面是搜索页面，只有search标签才适用于搜索页面，可能会引起本标签分页无效</p>';
+            }
+
+            if ($sql) {
+                $debug.= '<p>查询解析: '.$sql.'</p>';
+            }
+
+            $debug.= '<p>当前地址：'.FC_NOW_URL.'</p>';
+            $debug.= '<p>当前路由：'.\Phpcmf\Service::L('router')->uri().'</p>';
+
+            if ($data && !is_array($data)) {
+                $debug.= '<p>'.$data.'</p>';
+                $data = [];
+            }
+
+            $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
+            $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
+            $debug.= '<p>数据缓存：'.(SYS_CACHE ? ($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')) : '后台未开启缓存').'</p>';
+        }
+
+        // 开始返回
         if ($this->_return_sql) {
-            $debug.= '<p>运算数量：'.intval($data[0]['ct']).'</p>';
-            $debug.= '<p>运算变量：'.($return ? '{$'.$return.'_'.$this->_return_sql.'} 不输出，需要手动调用变量':'自动输出').'</p>';
-            $debug.= '</pre>';
+            if ($this->_is_debug) {
+                $debug .= '<p>运算数量：' . intval($data[0]['ct']) . '</p>';
+                $debug .= '<p>运算变量：' . ($return ? '{$' . $return . '_' . $this->_return_sql . '} 不输出，需要手动调用变量' : '自动输出') . '</p>';
+                $debug .= '</pre>';
+            }
             return [
                 'debug_'.$this->_return_sql => $debug,
                 'return_'.$this->_return_sql => $data,
             ];
         } else {
-            $total && $debug.= '<p>总记录数：'.$total.'</p>';
-            if ($this->_page_used) {
-                $debug.= '<p>分页功能：已开启</p>';
-                $debug.= '<p>当前页码：'.$page.'</p>';
-                $debug.= '<p>总页数量：'.$nums. ($nums == 1 ? '（数据量未达到分页数据，因此只有一页）' : '').'</p>';
-                $debug.= '<p>每页数量：'.$pagesize.'</p>';
-                $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
-            } else {
-                $debug.= '<p>分页功能：未开启</p>';
+            if ($this->_is_debug) {
+                $total && $debug.= '<p>总记录数：'.$total.'</p>';
+                if ($this->_page_used) {
+                    $debug.= '<p>分页功能：已开启</p>';
+                    $debug.= '<p>当前页码：'.$page.'</p>';
+                    $debug.= '<p>总页数量：'.$nums. ($nums == 1 ? '（数据量未达到分页数据，因此只有一页）' : '').'</p>';
+                    $debug.= '<p>每页数量：'.$pagesize.'</p>';
+                    $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+                } else {
+                    $debug.= '<p>分页功能：未开启</p>';
+                }
+
+                isset($data[0]) && is_array($data[0]) && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
+                $debug.= '</pre>';
             }
-
-            isset($data[0]) && is_array($data[0]) && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
-            $debug.= '</pre>';
-
             // 返回数据格式
             if ($return) {
                 return [
