@@ -371,8 +371,8 @@ class Site extends \Phpcmf\Model
                 }
 
                 // 删除首页静态文件
-                unlink($webpath[$t['id']]['site'].'index.html');
-                unlink($webpath[$t['id']]['site'].$mobile_dirname.'/index.html');
+                //unlink($webpath[$t['id']]['site'].'index.html');
+                //unlink($webpath[$t['id']]['site'].$mobile_dirname.'/index.html');
 
                 $module_cache_file[] = 'module-'.$t['id'].'-content.cache'; // 删除多余的模块缓存文件
                 $module_cache_file[] = 'module-'.$t['id'].'-share.cache'; // 删除多余的模块缓存文件

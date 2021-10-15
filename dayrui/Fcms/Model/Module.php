@@ -94,6 +94,7 @@ class Module extends \Phpcmf\Model
     // 安装模块
     public function install($dir, $config = [], $is_app = 0, $is_share = 0) {
 
+        $dir = strtolower($dir);
         $mpath = dr_get_app_dir($dir);
         if (!$config) {
             if (!is_file($mpath.'Config/App.php')) {
