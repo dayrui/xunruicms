@@ -42,7 +42,7 @@ class Module extends \Phpcmf\Common
             // 模板变量
             \Phpcmf\Service::V()->assign([
                 'indexm' => 1,
-                'markid' => 'module-'.$this->module['dirname'],
+                'pageid' => max(1, max(1, (int)\Phpcmf\Service::L('input')->get('page'))),
                 'fix_html_now_url' => defined('IS_MOBILE') && IS_MOBILE ? $this->module['murl'] : $this->module['url'],
             ]);
             \Phpcmf\Service::V()->assign($this->content_model->_format_home_seo($this->module));
@@ -317,7 +317,6 @@ class Module extends \Phpcmf\Common
             'top' => $catid && $category['topid'] ? $this->module['category'][$category['topid']] : $category,
             'catid' => $catid,
             'params' => ['catid' => $catid],
-            'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
             'pageid' => max(1, $page),
             'parent' => $parent,
             'related' => $related,
@@ -450,7 +449,6 @@ class Module extends \Phpcmf\Common
             'pageid' => max(1, $page),
             'params' => ['catid' => $catid],
             'parent' => $parent,
-            'markid' => 'module-'.$this->module['dirname'].'-'.$catid,
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->show_url($this->module, $data, '[page]'),
             'fix_html_now_url' => defined('SC_HTML_FILE') ? dr_url_prefix(\Phpcmf\Service::L('Router')->show_url($this->module, $data, $page), $this->module['dirname'], SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL()) : '', // 修复静态下的当前url变量
@@ -549,10 +547,9 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign(\Phpcmf\Service::L('Seo')->show($this->module, $data, $page));
         \Phpcmf\Service::V()->assign([
             'cat' => $this->module['category'][$data['catid']],
-            'page' => $page,
+            'pageid' => max(1, $page),
             'params' => ['catid' => $data['catid']],
             'parent' => $parent,
-            'markid' => 'module-'.$this->module['dirname'].'-'.$data['catid'],
             'related' => $related,
             'urlrule' => \Phpcmf\Service::L('Router')->show_url($this->module, $data, '[page]'),
         ]);
