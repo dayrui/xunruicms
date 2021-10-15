@@ -144,8 +144,21 @@ class Related extends \Phpcmf\Library\A_Field {
         $value = trim($value, ',');
         $mylist = [];
         if ($value && is_string($value)) {
-			$db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $mylist = $db ? $db->getResultArray() : [];
+            $arr = explode(',', $value);
+            if ($arr) {
+                $value = '';
+                foreach ($arr as $a) {
+                    $a = intval($a);
+                    if ($a) {
+                        $value.= ','.$a;
+                    }
+                }
+                if ($value) {
+                    $value = trim($value, ',');
+                    $db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+                    $mylist = $db ? $db->getResultArray() : [];
+                }
+            }
 		}
 
         $file = \Phpcmf\Service::V()->code2php(
@@ -249,8 +262,21 @@ class Related extends \Phpcmf\Library\A_Field {
         $is_show = 1;
         $module = $mid = isset($field['setting']['option']['module']) ? $field['setting']['option']['module'] : '';
         if ($value && is_string($value) && $module) {
-            $db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $mylist = $db ? $db->getResultArray() : [];
+            $arr = explode(',', $value);
+            if ($arr) {
+                $value = '';
+                foreach ($arr as $a) {
+                    $a = intval($a);
+                    if ($a) {
+                        $value.= ','.$a;
+                    }
+                }
+                if ($value) {
+                    $value = trim($value, ',');
+                    $db = \Phpcmf\Service::M()->db->query('select id,title,catid,updatetime,uid,url from '.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($module)).' where id IN ('.$value.') order by instr("'.$value.'", id)');
+                    $mylist = $db ? $db->getResultArray() : [];
+                }
+            }
         }
 
         $file = \Phpcmf\Service::V()->code2php(

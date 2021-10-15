@@ -113,8 +113,21 @@ class Members extends \Phpcmf\Library\A_Field {
         $value = trim($value, ',');
         $mylist = [];
         if ($value && is_string($value)) {
-			$db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $mylist = $db ? $db->getResultArray() : [];
+            $arr = explode(',', $value);
+            if ($arr) {
+                $value = '';
+                foreach ($arr as $a) {
+                    $a = intval($a);
+                    if ($a) {
+                        $value .= ',' . $a;
+                    }
+                }
+                if ($value) {
+                    $value = trim($value, ',');
+                    $db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
+                    $mylist = $db ? $db->getResultArray() : [];
+                }
+            }
 		}
 
         $file = \Phpcmf\Service::V()->code2php(
@@ -213,9 +226,21 @@ class Members extends \Phpcmf\Library\A_Field {
         $mylist = [];
         $is_show = 1;
         if ($value && is_string($value)) {
-            $db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
-            $mylist = $db ? $db->getResultArray() : [];
-
+            $arr = explode(',', $value);
+            if ($arr) {
+                $value = '';
+                foreach ($arr as $a) {
+                    $a = intval($a);
+                    if ($a) {
+                        $value .= ',' . $a;
+                    }
+                }
+                if ($value) {
+                    $value = trim($value, ',');
+                    $db = \Phpcmf\Service::M()->db->query('select * from '.\Phpcmf\Service::M()->dbprefix('member').' where id IN ('.$value.') order by instr("'.$value.'", id)');
+                    $mylist = $db ? $db->getResultArray() : [];
+                }
+            }
         }
 
         $file = \Phpcmf\Service::V()->code2php(
