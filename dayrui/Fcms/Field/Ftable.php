@@ -126,13 +126,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
 					<span class="help-block">'.dr_lang('[整数]表示固定宽度；[整数%]表示百分比').'</span>
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-md-2 control-label">'.dr_lang('控件高度').'</label>
-				<div class="col-md-9">
-					<label><input type="text" class="form-control" size="10" name="data[setting][option][height]" value="'.$option['height'].'"></label>
-					<label>px</label>
-				</div>
 			</div>'
         ];
     }
@@ -306,8 +299,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
 
         $this->_load_date = $this->_load_datetime = 0;
 
-        $str = '<div class="table-scrollable">';
-        $str.= '<table class="table table-nomargin table-bordered table-striped table-bordered table-advance" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">';
+        $str = '<div class="table-scrollable" style="width:'.$width.(is_numeric($width) ? 'px !important' : '').';">';
+        $str.= '<table class="table table-nomargin table-bordered table-striped table-bordered table-advance" >';
         $str.= ' <thead><tr>';
         if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
             $str.= ' <th> '.dr_lang($field['setting']['option']['first_cname']).' </th>';
