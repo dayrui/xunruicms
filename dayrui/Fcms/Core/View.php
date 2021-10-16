@@ -712,6 +712,7 @@ class View {
             'app' => '', // 指定插件时
             'num' => '', // 显示数量
             'limit' => '', // 显示数量
+            'maxlimit' => '', // 显示数量
             'sum' => '', // 求和字段
             'form' => '', // 表单
             'page' => '', // 是否分页
@@ -1906,6 +1907,9 @@ class View {
                         $sql = "SELECT count(*) as c FROM $sql_from " . ($sql_where ? "WHERE $sql_where" : "") . " ORDER BY NULL";
                         $row = $this->_query($sql, $system, FALSE);
                         $total = (int)$row['c'];
+                        if ($system['maxlimit'] && $total > $system['maxlimit']) {
+                            $total = $system['maxlimit']; // 最大限制
+                        }
                         // 没有数据时返回空
                         if (!$total) {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
