@@ -1612,7 +1612,7 @@ class View {
                 if ($module['setting']['search']['max']) {
                     $total = min($total, $module['setting']['search']['max']);
                 }
-                $system['firsturl'] = \Phpcmf\Service::L('Router')->search_url($index['params']);
+                isset($index['params']) && $index['params'] && $system['firsturl'] = \Phpcmf\Service::L('Router')->search_url($index['params']);
                 $pages = $this->_new_pagination($system, $pagesize, $total);
                 $sql_limit = 'LIMIT ' . intval($pagesize * ($page - 1)) . ',' . $pagesize;
 

@@ -479,9 +479,10 @@ class Content extends \Phpcmf\Model {
             ]);
             // 生成权限文件
             if (\Phpcmf\Service::C()->module['category'][$data['catid']]['setting']['html']) {
-                dr_html_auth(1);
                 $rt['data'] = WEB_DIR.'index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code'];
-
+                $atcode = 'chtml_'.$this->siteid.'_'.$this->dirname.'_'.$rt['code'];
+                \Phpcmf\Service::L('cache')->set_auth_data($atcode, $rt['code'], $this->siteid);
+                dr_catcher_data(SITE_URL.'index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$rt['code'].'&atcode='.$atcode);
             }
         } else {
             $this->db->table($this->mytable.'_time')->where('id', $row['id'])->update(['result' => $rt['msg']]);

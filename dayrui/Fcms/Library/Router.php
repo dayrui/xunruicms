@@ -483,23 +483,18 @@ class Router {
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
             return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)), $mod['dirname']);
         } else {
-            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . http_build_query($params), '&'), $mod['dirname']);
+            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . ($params ? http_build_query($params) : ''), '&'), $mod['dirname']);
         }
     }
 
     // 伪静态替换
     public function get_url_value($data, $rule, $prefix) {
-
         $rep = new \php5replace($data);
-
         $url = $rep->replace($rule);
-
         $url = ltrim(str_replace('//', '/', $url), '/');
-
         if (IS_DEV && strpos($url, '?') !== false) {
             log_message('debug', '开发者模式提醒：自定义URL规则['.$rule.']不建议包含问号?');
         }
-
         return $prefix.$url;
     }
 
