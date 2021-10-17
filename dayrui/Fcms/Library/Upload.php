@@ -124,7 +124,7 @@ class Upload
         }
 
         // 保存目录名称
-        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $file);
+        list($file_path, $config, $diy) = $this->_rand_save_file_path($config, $file_ext, $file);
 
         // 开始上传存储文件
         $rt = $this->save_file('upload', $file["tmp_name"], $file_path, $config['attachment'], (int)$config['watermark']);
@@ -132,10 +132,11 @@ class Upload
             return dr_return_data(0, $rt['msg']);
         }
 
-        $url = $config['attachment']['url'].$file_path;
-
-        // 文件预览
-        $preview = dr_file_preview_html($url);
+        if ($diy) {
+            $url = '自定义存储地址不提供URL';
+        } else {
+            $url = $config['attachment']['url'].$file_path;
+        }
 
         return dr_return_data(1, 'ok', [
             'ext' => $file_ext,
@@ -147,7 +148,6 @@ class Upload
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
-            'preview' => $preview,
         ]);
     }
 
@@ -230,7 +230,7 @@ class Upload
         }
 
         // 保存目录名称
-        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $data);
+        list($file_path, $config, $diy) = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -239,10 +239,12 @@ class Upload
         }
 
         // 上传成功
-        $url = $config['attachment']['url'].$file_path;
+        if ($diy) {
+            $url = '自定义存储地址不提供URL';
+        } else {
+            $url = $config['attachment']['url'].$file_path;
+        }
 
-        // 文件预览
-        $preview = dr_file_preview_html($url);
         return dr_return_data(1, 'ok', [
             'ext' => $file_ext,
             'url' => $url,
@@ -253,7 +255,6 @@ class Upload
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
-            'preview' => $preview,
         ]);
     }
 
@@ -271,7 +272,7 @@ class Upload
         }
 
         // 保存目录名称
-        list($file_path, $config) = $this->_rand_save_file_path($config, $file_ext, $data);
+        list($file_path, $config, $diy) = $this->_rand_save_file_path($config, $file_ext, $data);
 
         // 开始上传存储文件
         $rt = $this->save_file('content', $data, $file_path, $config['attachment'], (int)$config['watermark']);
@@ -280,10 +281,12 @@ class Upload
         }
 
         // 上传成功
-        $url = $config['attachment']['url'].$file_path;
+        if ($diy) {
+            $url = '自定义存储地址不提供URL';
+        } else {
+            $url = $config['attachment']['url'].$file_path;
+        }
 
-        // 文件预览
-        $preview = dr_file_preview_html($url);
         return dr_return_data(1, 'ok', [
             'ext' => $file_ext,
             'url' => $url,
@@ -294,7 +297,6 @@ class Upload
             'name' => $file_name,
             'info' => $rt['data']['info'],
             'remote' => $config['attachment']['id'],
-            'preview' => $preview,
         ]);
     }
 
@@ -347,6 +349,7 @@ class Upload
      */
     protected function _rand_save_file_path($config, $file_ext, $file) {
 
+        $diy = 0;
         $name = '';
         if (isset($config['save_name']) && $config['save_name']) {
             if ($config['save_name'] == 'null') {
@@ -364,12 +367,14 @@ class Upload
 
         if (isset($config['save_file']) && $config['save_file']) {
             // 指定存储名称
+            $diy = 1;
             $file_path = $config['save_file'];
             $config['save_file'] = dirname($file_path);
             $config['attachment']['value']['path'] = 'null';
         } else {
             if (isset($config['save_path']) && $config['save_path']) {
                 // 指定存储路径
+                $diy = 1;
                 $path = $config['save_path'];
                 $config['save_file'] = $path;
                 $config['attachment']['value']['path'] = 'null';
@@ -394,6 +399,6 @@ class Upload
             $file_path = $path.$name.'.'.$file_ext;
         }
 
-        return [$file_path, $config];
+        return [$file_path, $config, $diy];
     }
 }

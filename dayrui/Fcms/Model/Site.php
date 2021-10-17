@@ -126,7 +126,7 @@ class Site extends \Phpcmf\Model
     // 新增
     public function create($data) {
 
-        $this->db->table('site')->replace([
+        $save = [
             'name' => $data['name'],
             'domain' => (string)$data['domain'],
             'setting' => dr_array2string([
@@ -134,7 +134,11 @@ class Site extends \Phpcmf\Model
             ]),
             'disabled' => 0,
             'displayorder' => 0,
-        ]);
+        ];
+        if (defined('IS_INSTALL')) {
+            $save['id'] = 1;
+        }
+        $this->db->table('site')->replace($save);
 
         $siteid = $this->db->insertID();
 

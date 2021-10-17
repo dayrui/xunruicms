@@ -109,9 +109,9 @@ class File extends \Phpcmf\Common
             ];
             exit(dr_array2string($data));
         } else {
+            $rt['data']['preview'] = dr_file_preview_html($rt['data']['url'], $data['code']);
             exit(dr_array2string(['code' => 1, 'msg' => dr_lang('上传成功'), 'id' => $data['code'], 'info' => $rt['data']]));
         }
-
     }
 
     /**
@@ -214,7 +214,7 @@ class File extends \Phpcmf\Common
                     'name' => $t['filename'],
                     'file' => $t['attachment'],
                     'url' => dr_get_file($t['id']),
-                    'preview' => dr_file_preview_html(dr_get_file_url($t)),
+                    'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
                     'upload' => '<input type="file" name="file_data"></button>',
                 ];
             }
@@ -444,5 +444,75 @@ class File extends \Phpcmf\Common
         }
     }
 
+    // 图片编辑
+    public function image_edit() {
 
+        if (!$this->uid) {
+            $this->_json(0, dr_lang('无权限修改'));
+        } elseif (!$this->member['is_admin']) {
+            $this->_json(0, dr_lang('无权限修改'));
+        }
+
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!$id) {
+            $this->_json(0, dr_lang('附件id不能为空'));
+        }
+
+        $data = \Phpcmf\Service::M()->table('attachment')->get($id);
+        if (!$data) {
+            $this->_json(0, dr_lang('附件%s不存在', $id));
+        }
+
+        if ($data['related']) {
+            $info = \Phpcmf\Service::M()->table('attachment_data')->get($id);
+        } else {
+            $info = \Phpcmf\Service::M()->table('attachment_unused')->get($id);
+        }
+
+        if (!dr_is_image($info['fileext'])) {
+            $this->_json(0, dr_lang('此文件不属于图片'));
+        }
+
+        $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
+
+        if (IS_POST) {
+
+            // 文件真实地址
+            if ($info['remote']) {
+                $remote = $this->get_cache('attachment', $info['remote']);
+                if (!$remote) {
+                    // 远程地址无效
+                    $this->_json(0, dr_lang('自定义附件（%s）的配置已经不存在', $info['remote']));
+                } else {
+                    $info['file'] = $remote['value']['path'].$info['attachment'];
+                    if (!is_file($info['file'])) {
+                        $this->_json(0, dr_lang('远程附件无法编辑'));
+                    }
+                }
+            }
+
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if (!$post['w']) {
+                $this->_json(0, dr_lang('图形宽度不规范'));
+            }
+            try {
+                $image = \Config\Services::image();
+                $image->withFile($info['file']);
+                $image->crop($post['w'], $post['h'], $post['x'], $post['y']);
+                $image->save($info['file']);
+            } catch (CodeIgniter\Images\ImageException $e) {
+                $this->_json(0, $e->getMessage());
+            }
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        $info['url'] = dr_get_file_url($info);
+
+        \Phpcmf\Service::V()->admin();
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'data' => $info,
+        ]);
+        \Phpcmf\Service::V()->display('attachment_image.html');exit;
+    }
 }

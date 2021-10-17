@@ -1859,25 +1859,25 @@ function dr_file($url) {
 /**
  * 根据文件扩展名获取文件预览信息
  */
-function dr_file_preview_html($value, $target = 0) {
+function dr_file_preview_html($value, $id = 0) {
 
     $ext = trim(strtolower(strrchr($value, '.')), '.');
     if (dr_is_image($ext)) {
         $value = dr_file($value);
-        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_image(\''.$value.'\');';
-        return '<a href="'.$url.'"><img src="'.$value.'"></a>';
+        if ($id && ((isset($_POST['is_admin']) && intval($_POST['is_admin']) == 1) || IS_ADMIN)) {
+            return '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \'index.php?s=api&c=file&m=image_edit&id='.$id.'\', \'80%\');"><img src="'.$value.'"></a>';
+        } else {
+            return '<a href="javascript:dr_preview_image(\''.$value.'\');"><img src="'.$value.'"></a>';
+        }
     } elseif ($ext == 'mp4') {
         $value = dr_file($value);
-        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_video(\''.$value.'\');';
-        return '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/mp4.png'.'"></a>';
+        return '<a href="javascript:dr_preview_video(\''.$value.'\')"><img src="'.ROOT_THEME_PATH.'assets/images/ext/mp4.png'.'"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
         $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
-        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.dr_file($value).'\');';
-        return '<a href="'.$url.'"><img src="'.$file.'"></a>';
+        return '<a href="javascript:dr_preview_url(\''.dr_file($value).'\');"><img src="'.$file.'"></a>';
     } else {
         $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
-        $url = $target ? $value.'" target="_blank' : 'javascript:dr_preview_url(\''.$value.'\');';
-        return '<a href="'.$url.'"><img src="'.$file.'"></a>';
+        return '<a href="javascript:dr_preview_url(\''.$value.'\');"><img src="'.$file.'"></a>';
     }
 }
 

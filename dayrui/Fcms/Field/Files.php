@@ -309,11 +309,7 @@ class Files extends \Phpcmf\Library\A_Field {
                 $description = $t['description'] ? htmlspecialchars($t['description']) : '';
                 if ($file) {
                     $disabled = 'readonly';
-                    if (IS_ADMIN && dr_is_image($file['fileext']) && \Phpcmf\Service::C()->_is_admin_auth()) {
-                        $preview = '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \''.SELF.'?c=api&m=image_edit&id='.$file['id'].'\', \'80%\');"><img src="'.$file['url'].'"></a>';
-                    } else {
-                        $preview = dr_file_preview_html($file['url']);
-                    }
+                    $preview = dr_file_preview_html($file['url'], $file['id']);
                     $filepath = dr_strcut($file['attachment'], 30);
                     $upload = '<input type="file" name="file_data">';
                 } else {
@@ -445,7 +441,7 @@ class Files extends \Phpcmf\Library\A_Field {
                 $file = \Phpcmf\Service::C()->get_attachment($id);
                 $description = $t['description'] ? $t['description'] : '';
                 if ($file) {
-                    $preview = dr_file_preview_html($file['url']);
+                    $preview = dr_file_preview_html($file['url'], $file['id']);
                     $filepath = $file['attachment'];
                     $upload = '';
                 } else {
