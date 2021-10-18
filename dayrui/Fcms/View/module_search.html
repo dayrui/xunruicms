@@ -89,6 +89,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('最大关键字长度')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][maxlength]" value="{if $m['setting']['search']['maxlength']}{$m['setting']['search']['maxlength']}{else}0{/if}" ></label>
+                                        <span class="help-block">{dr_lang('搜索关键字最大字符长度，一个汉字占两位，0表示不限制长度')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
                                     <label class="col-md-2 control-label">{dr_lang('搜索参数连接符号')}</label>
                                     <div class="col-md-9">
                                         <label><input class="form-control" type="text" name="data[{$i}][param_join]" value="{if $m['setting']['search']['param_join']}{$m['setting']['search']['param_join']}{else}-{/if}" ></label>
