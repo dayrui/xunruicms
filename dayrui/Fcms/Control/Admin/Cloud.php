@@ -258,7 +258,7 @@ class Cloud extends \Phpcmf\Common
             $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
             $json = dr_catcher_data($surl);
             if (!$json) {
-                $this->_json(0, '本站：没有从服务端获取到数据');
+                $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
             }
             exit($json);
         }
@@ -275,7 +275,7 @@ class Cloud extends \Phpcmf\Common
             $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
             $json = dr_catcher_data($surl);
             if (!$json) {
-                $this->_json(0, '本站：没有从服务端获取到数据');
+                $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
             }
             $rt = dr_string2array($json);
             if (!$rt) {
@@ -343,7 +343,7 @@ return [
         if (!is_file($file)) {
             $this->_json(0, '本站：文件还没有被下载');
         } elseif (!class_exists('ZipArchive')) {
-            $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能');
+            $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能，建议尝试离线方式');
         }
         if (!IS_DEV) {
             $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
@@ -565,7 +565,7 @@ return [
         $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION.'&get_http=1&time='.strtotime($this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '本站：没有从服务端获取到数据');
+            $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
         }
         $rt = json_decode($json, true);
         $this->_json($rt['code'], $rt['msg']);
@@ -634,7 +634,7 @@ return [
         $surl = $this->service_url.'&action=update_file&php='.PHP_VERSION.'&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']).'&is_update='.intval($_GET['is_update']);
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '本站：没有从服务端获取到数据', $surl);
+            $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式', $surl);
         }
 
         $data = dr_string2array($json);
@@ -664,7 +664,7 @@ return [
         } elseif (!$cache['size']) {
             $this->_json(0, '本站：关键数据不存在，请重试');
         } elseif (!function_exists('fsockopen')) {
-            $this->_json(0, '本站：PHP环境不支持fsockopen');
+            $this->_json(0, '本站：PHP环境不支持fsockopen，建议尝试离线方式');
         }
 
         // 执行下载文件
@@ -691,7 +691,7 @@ return [
             $this->_json(1, 'ok');
         } else {
             unlink($file);
-            $this->_json(0, '本站：fopen打开远程文件失败', $cache['url']);
+            $this->_json(0, '本站：fopen打开远程文件失败，建议尝试离线方式', $cache['url']);
         }
     }
 

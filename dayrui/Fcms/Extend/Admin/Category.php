@@ -301,6 +301,10 @@ class Category extends \Phpcmf\Table {
                 }
             }
             //$t['name'] = $this->module['category'][$t['id']]['total'];
+            if (!$t['child']) {
+                // 重复验证是否子栏目，避免被禁的栏目不显示的情况
+                $t['child'] = \Phpcmf\Service::M('category')->init($this->init)->where('pid', (int)$t['id'])->counts();
+            }
             if ($t['child'] || $t['pcatpost']) {
                 $pcats[] = $t['id'];
                 $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data('.$t['id'].');" class="blue select-cat-'.$t['id'].'">[+]</a>&nbsp;';
