@@ -116,17 +116,20 @@ class Urlrule extends \Phpcmf\Table
         if (strpos($server, 'apache') !== FALSE) {
             $name = 'Apache';
             $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录</b></font>';
-            $code = 'RewriteEngine On'.PHP_EOL.PHP_EOL;
+            $code = '';
 
             // 子目录
             $code.= '###当存在多个子目录格式的域名时，需要多写几组RewriteBase标签：RewriteBase /目录/ '.PHP_EOL;
             if (isset($site['mobile']['mode']) && $site['mobile']['mode'] && $site['mobile']['dirname']) {
+                $code.= 'RewriteEngine On'.PHP_EOL.PHP_EOL;
                 $code.= 'RewriteBase /'.$site['mobile']['dirname'].'/'.PHP_EOL
                     .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
                     .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
                     .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /'.$site['mobile']['dirname'].'/index.php [NC,L]'.PHP_EOL.PHP_EOL;
+                $code.= '####以上目录需要单独保持到/'.$site['mobile']['dirname'].'/.htaccess文件中';
             }
             // 主目录
+            $code.= 'RewriteEngine On'.PHP_EOL.PHP_EOL;
             $code.= 'RewriteBase '.$root.'/'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL

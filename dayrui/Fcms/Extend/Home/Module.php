@@ -111,7 +111,7 @@ class Module extends \Phpcmf\Common
                 $this->_msg(0, dr_lang('关键字不得少于系统规定的长度'));
             } elseif ($get['keyword'] && $this->module['setting']['search']['maxlength']
                 && dr_strlen($get['keyword']) > (int)$this->module['setting']['search']['maxlength']) {
-                $this->_msg(0, dr_lang('关键字不得大于于系统规定的长度'));
+                $this->_msg(0, dr_lang('关键字不得大于系统规定的长度'));
             }
         }
 
