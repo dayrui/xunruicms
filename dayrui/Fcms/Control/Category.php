@@ -39,24 +39,29 @@ class Category extends \Phpcmf\Home\Module
 			$id = intval($module['category_dir'][$dir]);
             $cat = $module['category'][$id];
 			if (!$cat) {
-				// 无法通过目录找到栏目时，尝试多及目录
-				foreach ($module['category'] as $t) {
-					if ($t['setting']['urlrule']) {
-						$rule = \Phpcmf\Service::L('cache')->get('urlrule', $t['setting']['urlrule']);
-						$rule['value']['catjoin'] = '/';
-						if ($rule['value']['catjoin'] && strpos($dir, $rule['value']['catjoin'])) {
-                            $dir = trim(strchr($dir, $rule['value']['catjoin']), $rule['value']['catjoin']);
-							if (isset($module['category_dir'][$dir])) {
-								$id = $module['category_dir'][$dir];
-                                $cat = $module['category'][$id];
-								break;
-							}
-						}
-					}
-				}
-				// 返回无法找到栏目
-				if (!$id) {
-				    $this->goto_404_page(dr_lang('栏目（%s）不存在', $dir));
+                if (isset($module['category_dir'][$dir])) {
+                    $id = (int)$module['category_dir'][$dir];
+                    $cat = $module['category'][$id];
+                } else {
+                    // 无法通过目录找到栏目时，尝试多及目录
+                    foreach ($module['category'] as $t) {
+                        if ($t['setting']['urlrule']) {
+                            $rule = \Phpcmf\Service::L('cache')->get('urlrule', $t['setting']['urlrule']);
+                            $rule['value']['catjoin'] = '/';
+                            if ($rule['value']['catjoin'] && strpos($dir, $rule['value']['catjoin'])) {
+                                $dir = trim(strchr($dir, $rule['value']['catjoin']), $rule['value']['catjoin']);
+                                if (isset($module['category_dir'][$dir])) {
+                                    $id = (int)$module['category_dir'][$dir];
+                                    $cat = $module['category'][$id];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // 返回无法找到栏目
+                    if (!$id) {
+                        $this->goto_404_page(dr_lang('栏目（%s）不存在', $dir));
+                    }
                 }
 			}
 		} else {

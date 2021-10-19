@@ -575,7 +575,7 @@ class Category extends \Phpcmf\Table {
                 }
                 $data['dirname'] = trim($dir);
                 !$data['dirname'] && $data['dirname'] = \Phpcmf\Service::L('pinyin')->result($data['name']);
-                $cf = \Phpcmf\Service::M('category')->check_dirname(0, $data['dirname']);
+                $cf = \Phpcmf\Service::M('category')->check_dirname(0, $pid, $data['dirname']);
 
                 $data['pid'] = $pid;
                 $data['show'] = 1;
@@ -1228,7 +1228,7 @@ class Category extends \Phpcmf\Table {
                 } elseif (!$save['dirname']) {
                     return dr_return_data(0, dr_lang('目录名称不能为空'), ['field' => 'dirname']);
                 }
-                $rt = \Phpcmf\Service::M('category')->check_dirname($id, $save['dirname']);
+                $rt = \Phpcmf\Service::M('category')->check_dirname($id, $save['pid'], $save['dirname']);
                 if (!$rt['code']) {
                     return dr_return_data(0, $rt['msg'], ['field' => 'dirname']);
                 }

@@ -626,6 +626,9 @@ class Module extends \Phpcmf\Model
                 // 格式化栏目
                 $c['field'] = [];
                 $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
+                if ($c['pid']) {
+                    $CAT_DIR[$c['pdirname'].$c['dirname']] = $c['id'];
+                }
                 $CAT_DIR[$c['dirname']] = $c['id'];
             }
             // 归类栏目模型字段

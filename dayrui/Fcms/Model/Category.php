@@ -20,7 +20,7 @@ class Category extends \Phpcmf\Model
     }
 
     // 检查目录是否可用
-    public function check_dirname($id, $value) {
+    public function check_dirname($id, $pid, $value) {
         
         if (!$value) {
             return dr_return_data(0, dr_lang('目录不能为空'));
@@ -28,8 +28,18 @@ class Category extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('目录格式不能包含特殊符号或文字'));
         } elseif (defined('SYS_CAT_RNAME') && SYS_CAT_RNAME) {
             return dr_return_data(1);
-        } elseif ($this->table($this->tablename)->is_exists($id, 'dirname', $value)) {
-            return dr_return_data(0, dr_lang('目录不能重复（可以在栏目属性设置中关闭重复验证）'));
+        } else {
+            if ($pid) {
+                $pcat = $this->table($this->tablename)->get($pid);
+                if ($pcat && $this->table($this->tablename)->where('id<>'.$id)
+                    ->where('pdirname', $pcat['dirname'].'/')
+                    ->where('dirname', $value)->counts()) {
+                    return dr_return_data(0, dr_lang('目录不能重复（可以在栏目属性设置中关闭重复验证）'));
+                }
+            } elseif ($this->table($this->tablename)->where('id<>'.$id)
+                ->where('pdirname=""')->where('dirname', $value)->counts()) {
+                return dr_return_data(0, dr_lang('目录不能重复（可以在栏目属性设置中关闭重复验证）'));
+            }
         }
 
         return dr_return_data(1);
