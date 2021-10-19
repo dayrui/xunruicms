@@ -124,10 +124,11 @@
                 </div>
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
-                        <div class="form-group">
+                        <div class="form-group" id="dr_row_https">
                             <label class="col-md-2 control-label">HTTPS</label>
                             <div class="col-md-9">
-                                <label><input type="checkbox" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small"></label>
+                                <input type="hidden" name="https_test" id="https_test" value="0">
+                                <label><input type="checkbox" id="dr_https" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small"></label>
                                 <label><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
                                 <span class="help-block">{dr_lang('全站采用https安全模式，开启之前需要测试是否支持https')}</span>
                             </div>
@@ -255,6 +256,7 @@
             success: function(json) {
                 layer.close(loading);
                 if (json.code == 1) {
+                    $('#https_test').val(1);
                     dr_cmf_tips(json.code, json.msg);
                 } else {
                     layer.open({

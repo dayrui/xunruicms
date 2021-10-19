@@ -43,6 +43,11 @@ class System extends \Phpcmf\Common
                 'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
                 'SYS_BDMAP_API' => $post['SYS_BDMAP_API'],
             ];
+            if ($save['SYS_HTTPS'] && $data['SYS_HTTPS'] != $save['SYS_HTTPS']
+                && !\Phpcmf\Service::L('input')->post('https_test')) {
+                // 表示开启https时需要点击测试按钮
+                $this->_json(0, dr_lang('开启HTTPS时需要点击旁边的测试按钮'), ['field' => 'https']);
+            }
             foreach ($data as $name => $value) {
                 strpos($name, 'SYS_CACHE') === 0 && $save[$name] = intval($post[$name]);
             }
