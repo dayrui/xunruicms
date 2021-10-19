@@ -511,6 +511,8 @@ class Module extends \Phpcmf\Model
 
         $category = \Phpcmf\Service::M('category')->init(['table' => $siteid.'_'.$cdir.'_category'])->repair($category);
         \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/category_'.$siteid.'_'.$cdir.'.php', '站点栏目配置文件', 32)->to_require($category);
+
+        return $category;
     }
 
     // 栏目缓存数据
@@ -521,15 +523,18 @@ class Module extends \Phpcmf\Model
             if (\Phpcmf\Service::M()->table($siteid.'_'.$cdir.'_category')->counts() > MAX_CATEGORY) {
                 $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ? $this->cat_share[$siteid] : \Phpcmf\Service::R(WRITEPATH.'config/category_'.$siteid.'_'.$cdir.'.php');
             } else {
-                $category = $this->cat_share[$siteid] = $this->cat_share[$siteid] ?
-                    $this->cat_share[$siteid] : $this->db->table($siteid.'_share_category')->where('disabled', 0)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+                if ($this->cat_share[$siteid]) {
+                    $category = $this->cat_share[$siteid];
+                } else {
+                    $category = $this->cat_share[$siteid] = $this->update_category_cache($siteid, $cdir);
+                }
             }
         } else {
             $cdir = $cache['dirname'];
             if (\Phpcmf\Service::M()->table($siteid.'_'.$cdir.'_category')->counts() > MAX_CATEGORY) {
                 $category = \Phpcmf\Service::R(WRITEPATH . 'config/category_' . $siteid . '_' . $cdir . '.php');
             } else {
-                $category = $this->db->table($siteid.'_'.$cdir.'_category')->where('disabled', 0)->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+                $category = $this->update_category_cache($siteid, $cdir);
             }
         }
 
