@@ -206,7 +206,7 @@ class Run extends \Phpcmf\Common
                 $id = intval(\Phpcmf\Service::L('input')->get('id'));
                 $rt = \Phpcmf\Service::M('cron')->do_cron_id($id);
                 if (!$rt['code']) {
-                    log_message('error', '任务执行失败（'.$rt['msg'].'）：'.$rt['data']['value']);
+                    log_message('debug', '任务执行失败（'.$rt['msg'].'）：'.$rt['data']['value']);
                     exit('任务执行失败（'.$rt['msg'].'）');
                 }
 

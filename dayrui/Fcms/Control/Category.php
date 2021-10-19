@@ -24,6 +24,12 @@ class Category extends \Phpcmf\Home\Module
             return;
         }
 
+        // 挂钩点
+        $rt2 = \Phpcmf\Hooks::trigger_callback('module_category_share');
+        if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+            $id = $rt2['data'];
+        }
+
 		if ($id) {
 			$cat = $module['category'][$id];
 			if (!$cat) {
