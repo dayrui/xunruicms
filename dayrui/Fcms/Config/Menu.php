@@ -203,6 +203,11 @@ return [
                             'icon' => 'fa fa-link',
                             'uri' => 'urlrule/index',
                         ],
+                        [
+                            'name' => '伪静态解析',
+                            'icon' => 'bi bi-code-square',
+                            'uri' => 'urlrule/rewrite_index',
+                        ],
                     ]
                 ],
             ],
