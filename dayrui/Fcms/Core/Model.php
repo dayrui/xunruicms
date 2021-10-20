@@ -273,7 +273,7 @@ class Model {
 	
 	// 批量更新
 	public function update_batch($data, $key = 'id') {
-		
+
 		if (!$this->table || !$data) {
 			return;
 		}

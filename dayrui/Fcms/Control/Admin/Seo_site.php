@@ -74,6 +74,7 @@ class Seo_site extends \Phpcmf\Common {
 
         $category = \Phpcmf\Service::M()->db->table(SITE_ID.'_share_category')->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
         if ($category) {
+            $update = [];
             foreach ($category as $data) {
                 $data['setting'] = dr_string2array($data['setting']);
                 if ($ct == 1) {
@@ -83,11 +84,12 @@ class Seo_site extends \Phpcmf\Common {
                 } elseif ($ct == 3) {
                     $data['setting']['template']['mpagesize'] = $value;
                 }
-
-                \Phpcmf\Service::M()->table_site('share_category')->update($data['id'], [
-                    'setting' => dr_array2string($data['setting']),
-                ]);
+                $update[] = [
+                    'id' => (int)$data['id'],
+                    'setting'=> dr_array2string($data['setting']),
+                ];
             }
+            $update && \Phpcmf\Service::M()->table_site('share_category')->update_batch($update);
         }
 
         $this->_html_msg(1, dr_lang('正在执行中【%s】...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
