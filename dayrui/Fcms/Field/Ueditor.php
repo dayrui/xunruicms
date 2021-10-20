@@ -568,7 +568,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         if (!$this->is_load_js($field['fieldtype'])) {
             $str.= '
             <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.config.js?v='.CMF_UPDATE_TIME.'"></script>
-            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
+            <script type="text/javascript" src="'.ROOT_URL.'api/ueditor/ueditor.'.(IS_XRDEV ? 'all' : 'all.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
             $this->set_load_js($field['fieldtype'], 1);
         }

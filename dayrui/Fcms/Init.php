@@ -31,6 +31,8 @@ define('COREPATH', CMSPATH);
 !defined('TPLPATH') && define('TPLPATH', ROOTPATH.'template/');
 // 是否可编辑后模板
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
+// 是否启用高级开发模式
+!defined('IS_XRDEV') && define('IS_XRDEV', 0);
 // 最大栏目数量限制category
 !defined('MAX_CATEGORY') && define('MAX_CATEGORY', 200);
 // 编辑器的图片的title和alt默认占位字符
@@ -140,7 +142,7 @@ foreach ([
 unset($cache);
 
 // 自定义开发目录分布
-if (is_file(MYPATH.'Dev.php')) {
+if (IS_XRDEV && is_file(MYPATH.'Dev.php')) {
     require MYPATH.'Dev.php';
 } else {
     // 判断是否是app目录
