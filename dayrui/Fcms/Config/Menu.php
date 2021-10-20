@@ -283,11 +283,6 @@ return [
                             'icon' => 'fa fa-mobile',
                             'uri' => 'tpl_mobile/index',
                         ],
-                        [
-                            'name' => '终端模板',
-                            'icon' => 'fa fa-cogs',
-                            'uri' => 'tpl_client/index',
-                        ],
                     ]
                 ],
                 'code-css' => [
