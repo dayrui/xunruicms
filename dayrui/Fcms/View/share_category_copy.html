@@ -3,9 +3,15 @@
 <form class="form-horizontal" role="form" id="myform">
     {$form}
     <div class="form-body">
-        <div class="form-group">
-            <div class="col-xs-12" id="multi-select">
-                {$select}
+        <div class="mt-radio-inline">
+            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="use" value="0" checked /> {dr_lang('全部栏目')}  <span></span></label>
+            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="use" value="1" /> {dr_lang('指定栏目')}  <span></span></label>
+        </div>
+        <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
+            <div class="form-group">
+                <div class="col-xs-12" id="multi-select">
+                    {$select}
+                </div>
             </div>
         </div>
         <div class="form-group">

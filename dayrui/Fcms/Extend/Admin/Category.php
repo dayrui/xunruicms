@@ -824,9 +824,20 @@ class Category extends \Phpcmf\Table {
 
         if (IS_AJAX_POST) {
 
-            $catids = \Phpcmf\Service::L('input')->post('catid');
-            if (!$catids) {
-                $this->_json(0, dr_lang('你还没有选择栏目呢'));
+            $use = \Phpcmf\Service::L('input')->post('use');
+            if (!$use) {
+                $catids = [];
+                foreach ($this->module['category'] as $t) {
+                    $catids[] = $t['id'];
+                }
+                if (!$catids) {
+                    $this->_json(0, dr_lang('没有可用的栏目'));
+                }
+            } else {
+                $catids = \Phpcmf\Service::L('input')->post('catid');
+                if (!$catids) {
+                    $this->_json(0, dr_lang('你还没有选择栏目呢'));
+                }
             }
 
             \Phpcmf\Service::L('cache')->set_auth_data('copy_edit_'.APP_DIR.'_'.$catid, array_chunk($catids, 50));
