@@ -73,6 +73,53 @@
             }
         });
     }
+    function dr_tree_data(mid, catid) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 100000
+        });
+        var value = $(".select-cat-"+mid+"-"+catid).html();
+        if (value == '[+]') {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "{dr_url('seo_category/list_index')}&pid="+catid+"&mid="+mid,
+                success: function(json) {
+                    layer.close(index);
+                    if (json.code == 1) {
+                        $(".dr_catid_"+mid+"_"+catid).after(json.msg);
+                        $(".select-cat-"+mid+"-"+catid).html('[-]');
+                        $('.tooltips').tooltip();
+                    } else {
+                        dr_cmf_tips(json.code, json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
+        } else {
+            layer.close(index);
+            $(".dr_pid_"+mid+"_"+catid).remove();
+            $(".select-cat-"+mid+"-"+catid).html('[+]');
+        }
+    }
+    function dr_update_category_cache(dir) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid="+dir,
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
 </script>
 <div class="form-horizontal">
     <div class="portlet bordered light ">
@@ -94,11 +141,7 @@
                     <form method="post" name="myform_{$dir}" id="myform_{$dir}">
                         {$form}
                         <div class="well well2">
-                            {if $dir == 'share'}
-                            {dr_lang('共享栏目的URL规则需要按栏目设定')}
-                            {else}
-                            {dr_lang('独立模块栏目的URL规则是统一模式， 全栏目的URL规则相同')}
-                            {/if}
+                            <a href="javascript:dr_update_category_cache('{$dir}');">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a>
                         </div>
                         <div class="table-scrollable">
 
