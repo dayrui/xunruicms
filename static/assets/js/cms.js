@@ -700,18 +700,22 @@ function dr_post_submit(url, form, time, go) {
 
     url = url.replace(/&page=\d+&page/g, '&page');
 
-    var loading = layer.load(2, {
-        shade: [0.3,'#fff'], //0.1透明度的白色背景
-        time: 100000000
-    });
-
     $("#"+form+' .form-group').removeClass('has-error');
     var cms_post_dofunc = "";
     for(var i = 0; i < cms_post_addfunc.length; i++) {
         var cms_post_dofunc = cms_post_addfunc[i];
-        cms_post_dofunc();
+        var rst = cms_post_dofunc();
+        if (rst) {
+            dr_cmf_tips(0, rst);
+            return;
+        }
     }
 
+
+    var loading = layer.load(2, {
+        shade: [0.3,'#fff'], //0.1透明度的白色背景
+        time: 100000000
+    });
     $.ajax({
         type: "POST",
         dataType: "json",
