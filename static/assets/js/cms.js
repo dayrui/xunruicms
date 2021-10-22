@@ -3,6 +3,7 @@ if(typeof jQuery == 'undefined'){
     window.alert("没有引用jquery库");
 }
 
+var cms_post_addfunc = new Array();
 // js语言函数
 function dr_lang(str) {
 
@@ -684,6 +685,10 @@ function dr_ajax_submit(url, form, time, go) {
     }
 }
 
+function dr_post_addfunc(func) {
+    cms_post_addfunc.push(func);
+}
+
 // 处理post提交
 function dr_post_submit(url, form, time, go) {
 
@@ -701,13 +706,11 @@ function dr_post_submit(url, form, time, go) {
     });
 
     $("#"+form+' .form-group').removeClass('has-error');
-
-    $('.dr_ueditor').each(function () {
-        var uev = $(this).attr('id');
-        if(UE.getEditor(uev).queryCommandState('source')!=0){
-            UE.getEditor(uev).execCommand('source');
-        }
-    });
+    var cms_post_dofunc = "";
+    for(var i = 0; i < cms_post_addfunc.length; i++) {
+        var cms_post_dofunc = cms_post_addfunc[i];
+        cms_post_dofunc();
+    }
 
     $.ajax({
         type: "POST",

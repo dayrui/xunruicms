@@ -293,8 +293,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
             if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
                 foreach ($imgs[3] as $img) {
-                    if (strpos($img, '/api/ueditor/') !== false
-                        || strpos($img, '/api/umeditor/') !== false) {
+                    if (strpos($img, '/api/ueditor/') !== false) {
                         continue;
                     }
                     $ext = $this->_get_image_ext($img);
@@ -656,7 +655,11 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     charset:\"utf-8\",
                 });
                 editor_{$name}.render(\"dr_$name\");
-                
+                dr_post_addfunc(function(){
+                    if(UE.getEditor(\"dr_$name\").queryCommandState('source')!=0){
+                        UE.getEditor(\"dr_$name\").execCommand('source');
+                    }
+                })
             });
         </script>
         ", 0);
