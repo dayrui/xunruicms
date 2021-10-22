@@ -601,6 +601,9 @@ class Model {
             } else {
                 return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
             }
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'File'
+            && $field['fieldname'] == 'thumb' && $value == 1) {
+            return '`'.$table.'`.`'.$name.'` <> ""';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
             // 百度地图
             list($a, $km) = explode('|', $value);

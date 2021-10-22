@@ -330,7 +330,41 @@ class Api extends \Phpcmf\Common {
 
     // 加入历史菜单
 	public function history() {
-		$this->_json(0, dr_lang('功能被弃用'));
+
+        $url = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('v')));
+        $name = urldecode(dr_safe_replace(\Phpcmf\Service::L('input')->get('n')));
+
+        // 替换URL
+        if ($this->admin) {
+            $menu = dr_string2array($this->admin['history']);
+            if (is_array($menu) && $menu) {
+                foreach ($menu as $t) {
+                    if ($t['url'] == $url) {
+                        $this->_json(0, dr_lang('%s已经存在', $name));
+                    }
+                }
+            } else {
+                $menu = [];
+            }
+            array_unshift($menu, [
+                'name' => $name,
+                'url' => trim($url),
+            ]);
+            $max = 30;
+            if (count($menu) > $max) {
+                $menu = array_slice($menu, 0, $max);
+            }
+            \Phpcmf\Service::M()->db->table('admin')->where('uid', $this->uid)->update([
+                'history' => dr_array2string($menu)
+            ]);
+            $html = '';
+            foreach ($menu as $t) {
+                $html.= '<a class="btn btn-default href="'.trim($t['url']).'" onclick="dr_hide_left_tab()" target="right"> '.$t['name'].' </a>';
+            }
+            $this->_json(1, dr_lang('操作成功'), $html);
+        }
+
+		$this->_json(0, dr_lang('加入失败'));
 	}
 
 	// 执行更新缓存

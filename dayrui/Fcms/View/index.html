@@ -146,25 +146,18 @@
                         </div>
                     </form>
                 </li>
-
                 {$string}
-
             </ul>
         </div>
     </div>
     <div class="page-content-wrapper">
         <div class="page-content index-content">
-
             <div class="page-toolbar fc-mb-left-menu">
-
             </div>
-
             <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" frameborder="false" scrolling="auto" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
-
         </div>
     </div>
 
-    <!-- BEGIN QUICK SIDEBAR -->
     {if !$is_mobile}
     <a href="javascript:;" class="page-quick-sidebar-toggler">
         <i class="fa fa-angle-double-left"></i>
@@ -177,10 +170,10 @@
                     <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> {dr_lang('快速导航')}</a>
                 </li>
                 <li>
-                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}{if $notice}&nbsp;<span class="badge badge-success">{dr_count($notice)}</span>{/if}</a>
+                    <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab"> {dr_lang('历史链接')}</a>
                 </li>
                 <li>
-                    <a href="{SITE_URL}" target="_blank" class="dropdown-toggle"> {dr_lang('访问前台')}</a>
+                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}{if $notice}&nbsp;<span class="badge badge-success">{dr_count($notice)}</span>{/if}</a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -221,6 +214,18 @@
                     {/if}
 
                 </div>
+                <div class="tab-pane  page-quick-sidebar-nav" id="quick_sidebar_tab_3">
+                    <div class="margin-top-20">
+                        <div class="admin-usermenu" id="dr_history_usermenu">
+                            {loop $admin.history $t}
+                            <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
+                            {/loop}
+                        </div>
+                        <div class="theme-option">
+                            <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -257,6 +262,30 @@
     if (self != top) {
         top.location.href = admin_file;
     }
+    // 删除历史菜单
+    function dr_clear_menu() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 5000
+        });
+        $.ajax({
+            type: "GET",
+            url: admin_file+"?c=api&m=clear_history",
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                dr_tips(json.code, json.msg);
+                if (json.code == 1) {
+                    $('#dr_history_usermenu').html('');
+                    $.removeCookie('admin_history_menu');
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
