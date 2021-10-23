@@ -19,6 +19,7 @@ class Api extends \Phpcmf\Common {
         if (\Phpcmf\Service::M()->table(SITE_ID.'_'.$cdir.'_category')->counts() > MAX_CATEGORY) {
             \Phpcmf\Service::M('module')->update_category_cache(SITE_ID, $cdir);
         }
+
         \Phpcmf\Service::M('cache')->sync_cache();
 
         $this->_json(1, dr_lang('操作成功'));
