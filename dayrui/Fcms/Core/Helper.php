@@ -3881,6 +3881,31 @@ function dr_member_sync_url($string) {
     return [];
 }
 
+// html文字提取 cn是否纯中文
+function dr_html2text($str, $cn = false) {
+
+    $str = dr_clearhtml($str);
+    if ($cn && preg_match_all('/[\x{4e00}-\x{9fff}]+/u', $str, $mt)) {
+        return join('', $mt[0]);
+    }
+
+    $text = "";
+    $start = 1;
+    for ($i=0;$i<strlen($str);$i++) {
+        if ($start==0 && $str[$i]==">") {
+            $start = 1;
+        } elseif($start==1) {
+            if ($str[$i]=="<") {
+                $start = 0;
+                $text.= " ";
+            } elseif(ord($str[$i])>31) {
+                $text.= $str[$i];
+            }
+        }
+    }
+
+    return $text;
+}
 
 // 检查目录权限
 function dr_check_put_path($dir) {
@@ -4135,7 +4160,7 @@ if (! function_exists('dr_clearhtml')) {
         }
 
         $str = dr_code2html($str);
-        $srt = str_replace(
+        $str = str_replace(
             ['&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'],
             [' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'], $str
         );
