@@ -419,6 +419,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
         $url =  '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&ct=0&one=1';
 
         $str.="
+            $(\"#dr_'.$name.'_body\").sortable();
 			function dr_ftable_mydelete(e){
 				var ob = $(e);
 				 ob.parent().find('.form-control2').val('0');
