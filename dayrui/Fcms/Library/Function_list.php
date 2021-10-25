@@ -149,9 +149,61 @@ class Function_list
         return '<a href="'.$value.'" target="_blank">'.$value.'</a>';
     }
 
+    // 用于列表显示图片专用
+    public function image($value, $param = [], $data = []) {
+
+        if ($value) {
+            $rt = [];
+            $arr = dr_get_files($value);
+            foreach ($arr as $t) {
+                $file = \Phpcmf\Service::C()->get_attachment($t);
+                if ($file) {
+                    $value = $file['url'];
+                } else {
+                    $value = $t;
+                }
+                $url = 'javascript:dr_preview_image(\''.$value.'\');';
+                $rt[] = '<a class="thumbnail" style="display: inherit;" href="'.$url.'"><img style="width:30px" src="'.dr_thumb($value).'"></a>';
+            }
+            return implode('', $rt);
+        }
+
+        return dr_lang('无');
+    }
+
     // 用于列表显示多文件
     public function files($value, $param = [], $data = []) {
-        return dr_lang($value ? '有' : '无');
+
+        if ($value) {
+            $rt = [];
+            $arr = dr_get_files($value);
+            foreach ($arr as $t) {
+                $file = \Phpcmf\Service::C()->get_attachment($t['file']);
+                if ($file) {
+                    $value = $file['url'];
+                } else {
+                    $value = $t;
+                }
+                $ext = trim(strtolower(strrchr($value, '.')), '.');
+                if (dr_is_image($ext)) {
+                    $url = 'javascript:dr_preview_image(\''.$value.'\');';
+                    $rt[] = '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
+                } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
+                    $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
+                    $url = 'javascript:dr_preview_url(\''.dr_file($value).'\');';
+                    $rt[] = '<a href="'.$url.'"><img src="'.$file.'"></a>';
+                } elseif (strpos($value, 'http://') === 0) {
+                    $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
+                    $url = 'javascript:dr_preview_url(\''.$value.'\');';
+                    $rt[] = '<a href="'.$url.'"><img src="'.$file.'"></a>';
+                } else {
+                    $rt[] = $value;
+                }
+            }
+            return implode('', $rt);
+        }
+
+        return dr_lang('无');
     }
 
     // 用于列表显示单文件
