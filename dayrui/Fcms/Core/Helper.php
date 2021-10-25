@@ -859,10 +859,35 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
 /**
  * 执行函数
  */
-function dr_list_function($func, $value, $param = [], $data = [], $field = []) {
+function dr_list_function($func, $value, $param = [], $data = [], $field = [], $name = '') {
 
     if (!$func) {
-        return $value;
+        $dfunc = [
+            'Uid' => 'uid',
+            'Files' => 'files',
+            'Image' => 'image',
+            'Ueditor' => 'content',
+            'Score' => 'score',
+            'Date' => 'datetime',
+            'Radio' => 'radio_name',
+            'Select' => 'select_name',
+            'Checkbox' => 'checkbox_name',
+            'Linkage' => 'linkage_name',
+            'Linkages' => 'linkages_name',
+        ];
+        $dname = [
+            'title' => 'title',
+            'catid' => 'catid',
+            'author' => 'author',
+            'displayorder' => 'save_text_value',
+        ];
+        if ($name && isset($dname[$name]) && $dname[$name]) {
+            $func = $dname[$name];
+        } elseif ($field['fieldtype'] && isset($dfunc[$field['fieldtype']]) && $dfunc[$field['fieldtype']]) {
+            $func = $dfunc[$field['fieldtype']];
+        } else {
+            return $value;
+        }
     }
 
     $obj = \Phpcmf\Service::L('Function_list');

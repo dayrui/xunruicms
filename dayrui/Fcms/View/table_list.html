@@ -73,7 +73,7 @@
                     {/if}
 
                     {loop $list_field $i $tt}
-                    <td {if $tt.center} class="table-center" style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
+                    <td {if $tt.center} class="table-center" style="text-align:center"{/if}>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i], $i)}</td>
                     {/loop}
                     <td>
                         {if $ci->_is_admin_auth('edit')}
