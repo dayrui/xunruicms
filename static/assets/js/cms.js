@@ -685,6 +685,7 @@ function dr_ajax_submit(url, form, time, go) {
     }
 }
 
+// 提交时追加执行函数
 function dr_post_addfunc(func) {
     cms_post_addfunc.push(func);
 }
