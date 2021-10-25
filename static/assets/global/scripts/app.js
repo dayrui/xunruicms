@@ -1568,7 +1568,8 @@ function dr_call_alert() {
         '函数需要开发者自己定义<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
-        '多文件: files （只显示有或无）<br>'+
+        '多文件: files<br>'+
+        '图片专用: image<br>'+
         '单文件: file<br>'+
         'uid会员: uid<br>'+
         '地区联动: linkage_address<br>'+

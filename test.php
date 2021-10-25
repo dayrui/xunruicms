@@ -70,7 +70,7 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
         if ($result = mysqli_query($mysqli, "SELECT id FROM ".$db['default']['DBPrefix']."member LIMIT 1")) {
             dr_echo_msg(1, 'MySQL数据连接正常');
         } else {
-            dr_echo_msg(0, '数据库（'.$db['default']['database'].'）查询异常：'.mysqli_error($mysqli));
+            dr_echo_msg(0, '数据库（'.$db['default']['database'].'）数据不完整，查询异常：'.mysqli_error($mysqli));
         }
     }
     if (strpos($db['default']['database'], '.') !== false) {
@@ -79,9 +79,9 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
     $version = mysqli_get_server_version($mysqli);
     if ($version) {
         if ($version > 50600) {
-            dr_echo_msg(1, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+            dr_echo_msg(1, 'MySQL版本建议：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
         } else {
-            dr_echo_msg(0, 'MySQL版本要求：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
+            dr_echo_msg(1, 'MySQL版本建议：5.6及以上，当前'.substr($version, 0, 1).'.'.substr($version, 2));
         }
     }
     $rs = mysqli_query($mysqli, 'show engines');
@@ -105,7 +105,7 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
 }
 
 if (!$version) {
-    dr_echo_msg(1, 'MySQL版本要求：5.6及以上');
+    dr_echo_msg(1, 'MySQL版本建议：5.6及以上');
 }
 
 $post = intval(@ini_get("post_max_size"));
