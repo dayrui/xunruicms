@@ -226,14 +226,14 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 </script>
                 ';
         } elseif ($config['type'] == 4) {
-            $html = '<div class="mt-checkbox-inline">';
+            $html = '<div class="table-scrollable" style="border: none; margin: 0!important"><div class="mt-checkbox-inline">';
             $arr = explode(',', $config['option']);
             foreach ($arr as $name) {
                 $s = is_array($value[$hang][$lie]) && in_array($name, $value[$hang][$lie]) ? ' checked' : '';
                 $kj = '<input type="checkbox" name="data['.$cname.']['.$hang.']['.$lie.'][]" value="'.$name.'" '.$s.' />';
                 $html.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.$name.' <span></span> </label>';
             }
-            $html.= '</div>';
+            $html.= '</div></div>';
         }
 
         return $html;
