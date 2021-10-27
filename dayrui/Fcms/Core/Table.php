@@ -54,7 +54,7 @@ class Table extends \Phpcmf\Common {
     }
 
     // 数据库对象
-    private function _db() {
+    protected function _db() {
 
         if ($this->db_source) {
             return \Phpcmf\Service::M()->db_source($this->db_source);
@@ -223,7 +223,7 @@ class Table extends \Phpcmf\Common {
         if (!$row) {
             $this->_json(0, dr_lang('数据%s不存在', $id));
         } elseif ($row[$name] == $value) {
-            $this->_json(1, dr_lang('操作成功'));
+            $this->_json(1, dr_lang('没有变化'));
         }
 
         // 存储之前

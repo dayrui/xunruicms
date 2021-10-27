@@ -635,7 +635,7 @@ class Model {
                     }
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+            return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkages') {
             // 联动菜单多选字段
             $arr = explode('|', $value);
@@ -679,7 +679,7 @@ class Model {
             //if (dr_count($where) > 20) {
                 //$where = array_slice($where, 0, 20);
             //}
-            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+            return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && ($field['fieldtype'] == 'Selects' || $field['fieldtype'] == 'Checkbox')) {
             // 复选字段
             $arr = explode('|', $value);
@@ -710,7 +710,7 @@ class Model {
                     }
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+            return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
             $where[] = ' FIND_IN_SET ('.intval($value).', '.`'.$table.'`.`'.$name.'`.')';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
@@ -738,7 +738,7 @@ class Model {
                     $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
                 }
             }
-            return $where ? '('.implode(' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+            return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (substr_count($value, ',') == 1 && preg_match('/[0-9]+,[0-9]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
@@ -762,7 +762,7 @@ class Model {
                 foreach ($arr as $c) {
                     $c && $wh[] = '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($c, true)).'%"';
                 }
-                return '('.implode(' OR ', $wh).')';
+                return '('.implode(strpos($value,  '%%') !== false ? ' AND ' : ' OR ', $wh).')';
             }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;

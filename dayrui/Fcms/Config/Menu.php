@@ -72,6 +72,11 @@ return [
                             'uri' => 'attachment/index',
                         ],
                         [
+                            'name' => '存储策略',
+                            'icon' => 'fa fa-cloud',
+                            'uri' => 'attachment/remote_index',
+                        ],
+                        [
                             'name' => '短信设置',
                             'icon' => 'fa fa-envelope',
                             'uri' => 'sms/index',

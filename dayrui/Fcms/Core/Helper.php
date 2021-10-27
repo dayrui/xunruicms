@@ -4214,7 +4214,7 @@ if (! function_exists('dr_get_description')) {
         if (!$limit) {
             $limit = isset(\Phpcmf\Service::C()->module['setting']['desc_limit']) && \Phpcmf\Service::C()->module['setting']['desc_limit'] ? \Phpcmf\Service::C()->module['setting']['desc_limit'] : 200;
         }
-        return trim(dr_strcut(dr_rp(dr_clearhtml($text), ['　', ' '], ''), $limit, ''));
+        return trim(dr_strcut(dr_rp(dr_clearhtml($text), '　', ''), $limit, ''));
     }
 }
 if (! function_exists('dr_get_keywords')) {

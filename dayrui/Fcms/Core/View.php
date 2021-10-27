@@ -56,7 +56,6 @@ class View {
     private $_page_value = 0; // 页码变量
 
     private $_select_rt_name = '_XUN'.'RUI'.'CMS_RT_'; // select替换字符
-    private $_is_debug = 0; // 是否加载debug
 
     public $call_value; // 动态模板返回调用
 
@@ -220,7 +219,6 @@ class View {
         extract($this->_options, EXTR_SKIP);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
-        $this->_is_debug = 0;
         $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
 
         // 加载编译后的缓存文件
@@ -475,9 +473,7 @@ class View {
                 dr_mkdirs($path);
             }
             // 写入新文件
-            $code = file_get_contents($name);
-            $content = $this->handle_view_file($code);
-            !$this->_is_debug && $this->_is_debug = strpos($code, '{$debug');
+            $content = $this->handle_view_file(file_get_contents($name));
             if (file_put_contents($cache_file, $content, LOCK_EX) === FALSE) {
                 if (IS_DEV) {
                     $this->show_error('模板缓存文件 ('.$cache_file.') 创建失败，请将cache目录权限设为777');
@@ -2753,7 +2749,7 @@ class View {
         $page = $this->_get_page_id($this->_page_value);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
 
-        if ($this->_is_debug) {
+        if (CI_DEBUG) {
             // 显示debug数据
             $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto; text-align: left">';
 
@@ -2801,7 +2797,7 @@ class View {
 
         // 开始返回
         if ($this->_return_sql) {
-            if ($this->_is_debug) {
+            if (CI_DEBUG) {
                 $debug .= '<p>运算数量：' . intval($data[0]['ct']) . '</p>';
                 $debug .= '<p>运算变量：' . ($return ? '{$' . $return . '_' . $this->_return_sql . '} 不输出，需要手动调用变量' : '自动输出') . '</p>';
                 $debug .= '</pre>';
@@ -2811,7 +2807,7 @@ class View {
                 'return_'.$this->_return_sql => $data,
             ];
         } else {
-            if ($this->_is_debug) {
+            if (CI_DEBUG) {
                 $total && $debug.= '<p>总记录数：'.$total.'</p>';
                 if ($this->_page_used) {
                     $debug.= '<p>分页功能：已开启</p>';
