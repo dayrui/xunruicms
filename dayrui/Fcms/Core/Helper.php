@@ -1890,7 +1890,7 @@ function dr_file_preview_html($value, $id = 0) {
     if (dr_is_image($ext)) {
         $value = dr_file($value);
         if ($id && ((isset($_POST['is_admin']) && intval($_POST['is_admin']) == 1) || IS_ADMIN)) {
-            return '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \'index.php?s=api&c=file&m=image_edit&id='.$id.'\', \'80%\');"><img src="'.$value.'"></a>';
+            return '<a href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \'index.php?s=api&c=file&m=image_edit&id='.$id.'\', \'80%\', 0, \'nogo\');"><img src="'.$value.'"></a>';
         } else {
             return '<a href="javascript:dr_preview_image(\''.$value.'\');"><img src="'.$value.'"></a>';
         }
@@ -2114,7 +2114,7 @@ function dr_return_data($code, $msg = '', $data = []) {
 function dr_form_hidden($data = []) {
 
     $form = '<input name="is_form" type="hidden" value="1">'.PHP_EOL;
-    $form.= '<input name="is_admin" type="hidden" value="'.(IS_ADMIN && \Phpcmf\Service::C()->admin['roleid'] && in_array(1, \Phpcmf\Service::C()->admin['roleid']) ? 1 : 0).'">'.PHP_EOL;
+    $form.= '<input name="is_admin" type="hidden" value="'.(\Phpcmf\Service::C()->member && \Phpcmf\Service::C()->member['is_admin'] ? 1 : 0).'">'.PHP_EOL;
     $form.= '<input name="is_tips" type="hidden" value="">'.PHP_EOL;
     $form.= '<input name="'.csrf_token().'" type="hidden" value="'.csrf_hash().'">'.PHP_EOL;
     if ($data) {
