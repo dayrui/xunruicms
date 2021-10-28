@@ -122,8 +122,10 @@ class Router {
             return; // 排除移动端,移动端不跳转开关
         } elseif (defined('SC_HTML_FILE')) {
             return; // 排除生成
-        } elseif (intval($_GET['page']) > 1) {
+        } elseif (isset($_GET['page']) && intval($_GET['page']) > 1) {
             return; // 排除分页
+        } elseif (isset($_GET['not301']) && intval($_GET['not301']) > 1) {
+            return; // 排除自定义参数
         } elseif (IS_CLIENT) {
             return; // 排除终端
         }
