@@ -272,7 +272,6 @@ class Api extends \Phpcmf\Common
         exit(json_encode(['option' => $option, 'style' => $style], JSON_UNESCAPED_UNICODE));
     }
 
-
     /**
      * 动态调用模板
      */

@@ -440,6 +440,7 @@ class Check extends \Phpcmf\Common
                             \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `disabled` tinyint(1) DEFAULT  \'0\'');
                             \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0');
                         }
+                        \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0 WHERE `disabled` IS NULL ');
                         if (!\Phpcmf\Service::M()->db->fieldExists('ismain', $table)) {
                             \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `ismain` tinyint(1) DEFAULT  \'0\'');
                             \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `ismain` = 1');
@@ -496,6 +497,7 @@ class Check extends \Phpcmf\Common
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `disabled` tinyint(1) DEFAULT \'0\'');
                                     \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0');
                                 }
+                                \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `disabled` = 0 WHERE `disabled` IS NULL ');
                                 if (!\Phpcmf\Service::M()->db->fieldExists('ismain', $table)) {
                                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `ismain` tinyint(1) DEFAULT \'0\'');
                                     \Phpcmf\Service::M()->query('UPDATE `'.$table.'` SET `ismain` = 1');
