@@ -24,6 +24,7 @@ foreach (array(
              WRITEPATH,
              WRITEPATH.'data/',
              WRITEPATH.'template/',
+             WRITEPATH.'file/',
              WRITEPATH.'session/',
              WEBPATH.'config/',
              WEBPATH.'uploadfile/',

@@ -761,6 +761,9 @@ class Field extends \Phpcmf\Model
     protected function _field_table($name) {
         // 主表
         $table = $this->dbprefix($this->data);
+        if (!$this->db->tableExists($table)) {
+            return;
+        }
         $rt = $this->_field_exitsts('id', $name, $table, $this->relatedid);
         if ($rt) {
             return 1;

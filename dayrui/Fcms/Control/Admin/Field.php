@@ -832,7 +832,7 @@ class Field extends \Phpcmf\Common {
             case 'table':
                 // 任意表
                 $ismain = 1;
-                $this->name = '数据表【'.\Phpcmf\Service::M()->dbprefix($a).'】';
+                $this->name = '数据标识【'.\Phpcmf\Service::M()->dbprefix($a).'】';
                 \Phpcmf\Service::M('Field')->data = $a;
                 \Phpcmf\Service::M('Field')->func = 'table'; // 重要标识: 函数和识别码
                 break;

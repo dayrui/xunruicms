@@ -474,8 +474,8 @@ class Api extends \Phpcmf\Common {
 		$prefix = dr_module_table_prefix($dir);
 		if (is_dir(APPSPATH.ucfirst($dir))) {
 		    $where = \Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid : '';
-			$t1 = \Phpcmf\Service::M()->table($prefix.'_index')->where(($where ? $where.' AND ' : '').'status=9')->where('DATEDIFF(from_unixtime(inputtime),now())=0')->counts();
-			$t2 = \Phpcmf\Service::M()->table($prefix.'_index')->where(($where ? $where.' AND ' : '').'status=9')->counts();
+			$t1 = \Phpcmf\Service::M()->table($prefix)->where($where)->where('DATEDIFF(from_unixtime(inputtime),now())=0')->counts();
+			$t2 = \Phpcmf\Service::M()->table($prefix)->where($where)->counts();
 			$t3 = \Phpcmf\Service::M()->table($prefix.'_verify')->where(($where ? $where.' AND ' : '').\Phpcmf\Service::M('auth')->get_admin_verify_status_list())->counts();
 			$t4 = \Phpcmf\Service::M()->table($prefix.'_recycle')->where($where)->counts();
 			$t5 = \Phpcmf\Service::M()->table($prefix.'_time')->where($where)->counts();
