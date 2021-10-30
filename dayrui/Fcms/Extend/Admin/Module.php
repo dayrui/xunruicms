@@ -1275,7 +1275,13 @@ class Module extends \Phpcmf\Table {
                 $html = WEB_DIR.'index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = WEB_DIR.'index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
-            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'htmllist' => $list]);
+            $this->_json(1, dr_lang('操作成功'), [
+                'id' => $data[1]['id'],
+                'url' => isset($_GET['is_self']) ? dr_url(MOD_DIR.'/home/edit', ['id' => $data[1]['id']]) : '',
+                'catid' => $data[1]['catid'],
+                'htmlfile' => $html,
+                'htmllist' => $list
+            ]);
         } else {
             if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
                 // 草稿
@@ -1288,7 +1294,10 @@ class Module extends \Phpcmf\Table {
                     'catid' => $data[1]['catid'],
                 ]);
             }
-            $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
+            $this->_json(1, dr_lang('操作成功'), [
+                'id' => $data[1]['id'],
+                'catid' => $data[1]['catid']
+            ]);
         }
     }
 
