@@ -12,6 +12,12 @@ define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 define('WEBPATH', dirname(__FILE__).'/');
 define('SYSTEMPATH', true);
 
+foreach ([' ', '[', ']'] as $t) {
+    if (strpos(WEBPATH, $t) !== false) {
+        exit('<font color=red>WEB目录'.WEBPATH.'不允许出现'.($t ? $t : '空格').'符号</font>');
+    }
+}
+
 if (isset($_GET['log']) && $_GET['log']) {
     if (!is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
         exit('今天没有错误日志记录');

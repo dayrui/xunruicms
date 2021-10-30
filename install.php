@@ -19,6 +19,12 @@ if ($pos !== false && $pos > 1) {
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 !defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
 
+foreach ([' ', '[', ']'] as $t) {
+    if (strpos(WEBPATH, $t) !== false) {
+        exit('<font color=red>WEB目录'.WEBPATH.'不允许出现'.($t ? $t : '空格').'符号</font>');
+    }
+}
+
 // 判断目录权限
 foreach (array(
              WRITEPATH,
