@@ -7014,7 +7014,7 @@
                 //编辑器不能为空内容
 
                 if (domUtils.isEmptyNode(me.body)) {
-                    me.body.innerHTML = '<p>' + (browser.ie ? '' : '<br/>') + '</p>';
+                    me.body.innerHTML = '';
                 }
                 //如果要求focus, 就把光标定位到内容开始
                 if (options.focus) {
@@ -7358,7 +7358,7 @@
                             domUtils.isCustomeNode(child)
                         )
                         && child === this.body.lastChild) {
-                        this.body.innerHTML = '<p>' + (browser.ie ? '&nbsp;' : '<br/>') + '</p>' + this.body.innerHTML;
+                        this.body.innerHTML = '' + this.body.innerHTML;
 
                     } else {
                         var p = me.document.createElement('p');
@@ -7813,7 +7813,7 @@
                 function clear() {
                     var me = this;
                     if (me.document.getElementById('initContent')) {
-                        me.body.innerHTML = '<p>' + (ie ? '' : '<br/>') + '</p>';
+                        me.body.innerHTML = '';
                         me.removeListener('firstBeforeExecCommand focus', clear);
                         setTimeout(function () {
                             me.focus();
@@ -10257,7 +10257,7 @@
                 }
                 range.txtToElmBoundary();
                 //结束边界可能放到了br的前边，要把br包含进来
-                // x[xxx]<br/>
+                // x[xxx]<br/>888
                 if(range.endContainer && range.endContainer.nodeType == 1){
                     tmpNode = range.endContainer.childNodes[range.endOffset];
                     if(tmpNode && domUtils.isBr(tmpNode)){
@@ -10269,7 +10269,7 @@
                     if(domUtils.isBoundaryNode(tmpNode,'firstChild') ){
                         tmpNode = range.endContainer;
                         if(range.endOffset == (tmpNode.nodeType == 3 ? tmpNode.nodeValue.length : tmpNode.childNodes.length) && domUtils.isBoundaryNode(tmpNode,'lastChild')){
-                            me.body.innerHTML = '<p>'+(browser.ie ? '' : '<br/>')+'</p>';
+                            me.body.innerHTML = '';
                             range.setStart(me.body.firstChild,0).collapse(true)
 
                         }
@@ -13312,7 +13312,7 @@
 
                         });
                     }
-                    me.execCommand('inserthtml','<pre id="coder"class="brush:'+lang+';toolbar:false">'+code+'</pre>',true);
+                    me.execCommand('inserthtml','<pre id="coder" class="brush:'+lang+';toolbar:false">'+code+'</pre>',true);
 
                     pre = me.document.getElementById('coder');
                     domUtils.removeAttributes(pre,'id');
@@ -13735,7 +13735,7 @@
                 me.body.innerHTML = "<br/>";
                 range.setStart(me.body,0).setCursor();
             }else{
-                me.body.innerHTML = "<p>"+(ie ? "" : "<br/>")+"</p>";
+                me.body.innerHTML = "";
                 range.setStart(me.body.firstChild,0).setCursor(false,true);
             }
             setTimeout(function(){
@@ -14583,7 +14583,7 @@
                     for (var i = 0, bi; bi = brs[i++];) {
                         var pN = bi.parentNode;
                         if (pN.tagName == 'DIV' && pN.childNodes.length == 1) {
-                            pN.innerHTML = '<p><br/></p>';
+                            pN.innerHTML = '';
                             domUtils.remove(pN);
                         }
                     }
@@ -15583,7 +15583,7 @@
 
                                     span = me.document.createElement('span');
                                     range.insertNode(span);
-                                    //判断pre是否是空的节点,如果是<p><br/></p>类型的空节点，干掉p标签防止它占位
+                                    //判断pre是否是空的节点,如果是<p><br/>888</p>类型的空节点，干掉p标签防止它占位
                                     if (domUtils.isEmptyBlock(pre)) {
                                         pre.innerHTML = '';
                                     }
@@ -16326,11 +16326,11 @@
                         //重置getContent，源码模式下取值也能是最新的数据
                         oldGetContent = me.getContent;
                         me.getContent = function (){
-                            return sourceEditor.getContent() || '<p>' + (browser.ie ? '' : '<br/>')+'</p>';
+                            return sourceEditor.getContent() || '';
                         };
                     } else {
                         me.iframe.style.cssText = bakCssText;
-                        var cont = sourceEditor.getContent() || '<p>' + (browser.ie ? '' : '<br/>')+'</p>';
+                        var cont = sourceEditor.getContent() || '';
                         //处理掉block节点前后的空格,有可能会误命中，暂时不考虑
                         cont = cont.replace(new RegExp('[\\r\\t\\n ]*<\/?(\\w+)\\s*(?:[^>]*)>','g'), function(a,b){
                             if(b && !dtd.$inlineWithA[b.toLowerCase()]){
@@ -16349,7 +16349,7 @@
                         var first = me.body.firstChild;
                         //trace:1106 都删除空了，下边会报错，所以补充一个p占位
                         if(!first){
-                            me.body.innerHTML = '<p>'+(browser.ie?'':'<br/>')+'</p>';
+                            me.body.innerHTML = '';
                             first = me.body.firstChild;
                         }
 
@@ -16641,7 +16641,7 @@
                 }
                 rng.txtToElmBoundary();
                 //结束边界可能放到了br的前边，要把br包含进来
-                // x[xxx]<br/>
+                // x[xxx]<br/>888
                 if(rng.endContainer && rng.endContainer.nodeType == 1){
                     tmpNode = rng.endContainer.childNodes[rng.endOffset];
                     if(tmpNode && domUtils.isBr(tmpNode)){
@@ -16654,7 +16654,7 @@
                         tmpNode = rng.endContainer;
                         if(rng.endOffset == (tmpNode.nodeType == 3 ? tmpNode.nodeValue.length : tmpNode.childNodes.length) && domUtils.isBoundaryNode(tmpNode,'lastChild')){
                             me.fireEvent('saveScene');
-                            me.body.innerHTML = '<p>'+(browser.ie ? '' : '<br/>')+'</p>';
+                            me.body.innerHTML = '';
                             rng.setStart(me.body.firstChild,0).setCursor(false,true);
                             me._selectionChange();
                             return;

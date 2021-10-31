@@ -44,6 +44,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $option['fieldlength'] = isset($option['fieldlength']) ? $option['fieldlength'] : '';
         $option['simpleupload'] = isset($option['simpleupload']) ? $option['simpleupload'] : 0;
         $option['watermark'] = isset($option['watermark']) ? $option['watermark'] : '';
+        $option['enter'] = isset($option['enter']) ? $option['enter'] : '';
         $option['show_bottom_boot'] = isset($option['show_bottom_boot']) ? $option['show_bottom_boot'] : '';
 
         $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') ? '<div class="form-group">
@@ -65,7 +66,19 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     </div>
                 </div>';
 
-        return [$this->_search_field().'<div class="form-group">
+        return [$this->_search_field().'
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('回车换行符号').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][enter]" '.($option['enter'] ? 'checked' : '').' > '.dr_lang('br标签').' <span></span></label>
+                            &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][enter]" '.(!$option['enter'] ? 'checked' : '').' > '.dr_lang('p标签').' <span></span></label>
+                        </div>
+						<span class="help-block">'.dr_lang('选择回车换行的符号，默认是p标签换行').'</span>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
@@ -653,6 +666,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     allowDivTransToP:".(!$field['setting']['option']['div2p'] ? 'true' : 'false').",
                     autoHeightEnabled:".($field['setting']['option']['autoheight'] ? 'true' : 'false').",
                     charset:\"utf-8\",
+                    ".($field['setting']['option']['enter'] ? 'enterTag : \'br\'' : '')."
                 });
                 editor_{$name}.render(\"dr_$name\");
                 dr_post_addfunc(function(){
