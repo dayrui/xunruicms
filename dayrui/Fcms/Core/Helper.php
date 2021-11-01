@@ -896,7 +896,7 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
     } elseif (function_exists($func)) {
         return call_user_func_array($func, [$value, $param, $data, $field]);
     } else {
-        log_message('error', '你没有定义字段列表回调函数：'.$func);
+        log_message('debug', '你没有定义字段列表回调函数：'.$func);
     }
 
     return $value;

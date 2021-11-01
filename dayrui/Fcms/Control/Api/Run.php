@@ -15,48 +15,49 @@ class Run extends \Phpcmf\Common
 	public function index() {
 
 	    // 验证运行权限
-        if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
-            if (is_cli()) {
-                // cli模式
+        if (!IS_DEV) {
+
+            if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
+                if (is_cli()) {
+                    // cli模式
+                } else {
+                    // url模式
+                    if (SYS_CRON_AUTH == 'cli') {
+                        exit('限制CLI模式执行');
+                    }
+                    $ip = \Phpcmf\Service::L('input')->ip_address();
+                    if (!$ip) {
+                        if (CI_DEBUG) {
+                            log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
+                        }
+                        exit('无权限执行');
+                        return;
+                    }
+                    if (SYS_CRON_AUTH != $ip) {
+                        if (CI_DEBUG) {
+                            log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
+                        }
+                        exit('限制固定IP执行');
+                        return;
+                    }
+                }
+            }
+            if (isset($_GET['is_ajax'])) {
+                // 后台脚本自动任务时效验证
+                if (\Phpcmf\Service::L('input')->get_cookie('admin_cron')) {
+                    exit('未到执行时间');
+                }
             } else {
-                // url模式
-                if (SYS_CRON_AUTH == 'cli') {
-                    exit('限制CLI模式执行');
+                // 服务器自动任务时效验证
+                if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
+                    exit('未到执行时间');
                 }
-                $ip = \Phpcmf\Service::L('input')->ip_address();
-                if (!$ip) {
-                    if (CI_DEBUG) {
-                        log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
-                    }
-                    exit('无权限执行');
-                    return;
-                }
-                if (SYS_CRON_AUTH != $ip) {
-                    if (CI_DEBUG) {
-                        log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
-                    }
-                    exit('限制固定IP执行');
-                    return;
+                // 自动任务锁定
+                if (!is_file(WRITEPATH.'config/run_lock.php')) {
+                    file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
                 }
             }
 
-        }
-
-
-        if (isset($_GET['is_ajax'])) {
-            // 后台脚本自动任务时效验证
-            if (\Phpcmf\Service::L('input')->get_cookie('admin_cron')) {
-                exit('未到执行时间');
-            }
-        } else {
-            // 服务器自动任务时效验证
-            if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
-                exit('未到执行时间');
-            }
-            // 自动任务锁定
-            if (!is_file(WRITEPATH.'config/run_lock.php')) {
-                file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
-            }
         }
 
         // 批量执行站点动作
