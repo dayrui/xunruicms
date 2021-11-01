@@ -472,11 +472,12 @@ class Api extends \Phpcmf\Common {
 		$t1 = $t2 = $t3 = $t4 = $t5 = 0;
 		$dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
 		$prefix = dr_module_table_prefix($dir);
-		if (is_dir(APPSPATH.ucfirst($dir))) {
-		    $where = \Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid : '';
+		if (is_dir(dr_get_app_dir($dir))) {
+            $this->_module_init($dir);
+		    $where = $this->content_model->get_admin_list_where();
 			$t1 = \Phpcmf\Service::M()->table($prefix)->where($where)->where('DATEDIFF(from_unixtime(inputtime),now())=0')->counts();
 			$t2 = \Phpcmf\Service::M()->table($prefix)->where($where)->counts();
-			$t3 = \Phpcmf\Service::M()->table($prefix.'_verify')->where(($where ? $where.' AND ' : '').\Phpcmf\Service::M('auth')->get_admin_verify_status_list())->counts();
+			$t3 = \Phpcmf\Service::M()->table($prefix.'_verify')->where($this->content_model->get_admin_list_verify_where($where))->counts();
 			$t4 = \Phpcmf\Service::M()->table($prefix.'_recycle')->where($where)->counts();
 			$t5 = \Phpcmf\Service::M()->table($prefix.'_time')->where($where)->counts();
 		}

@@ -1062,12 +1062,14 @@ class Content extends \Phpcmf\Model {
             $row = $this->table($this->mytable.'_recycle')->get($id);
             if (!$row) {
                 return NULL;
+            } elseif (\Phpcmf\Service::M('auth')->is_post_user() && $row['uid'] != $this->uid) {
+                return NULL;
             }
             $cid = intval($row['cid']);
             if (!$cid) {
                 return NULL;
             }
-            \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$cid);
+            \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$cid.'1');
             // 删除执行的方法
             $this->_delete_content($cid, $row);
             // 删除钩子
@@ -1509,6 +1511,12 @@ class Content extends \Phpcmf\Model {
 
 
     ////////////////////后台权限开放////////////////////
+
+    // 后台审核列表条件
+    public function get_admin_list_verify_where($where) {
+        return '(' . (\Phpcmf\Service::M('auth')->is_post_user() ? 'uid='.$this->uid.' OR ' : '')
+            . \Phpcmf\Service::M('auth')->get_admin_verify_status_list().')' . ($where ? ' AND '.$where : '');
+    }
 
     // 后台内容列表条件
     public function get_admin_list_where() {

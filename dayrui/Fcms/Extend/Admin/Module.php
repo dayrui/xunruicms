@@ -562,7 +562,7 @@ class Module extends \Phpcmf\Table {
             'table' => dr_module_table_prefix(APP_DIR).'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : ''). \Phpcmf\Service::M('auth')->get_admin_verify_status_list().')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => $this->content_model->get_admin_list_verify_where($this->where_list_sql),
         ]);
 
         list($tpl, $data) = $this->_List();
@@ -682,7 +682,7 @@ class Module extends \Phpcmf\Table {
             'table' => dr_module_table_prefix(APP_DIR).'_time',
             'order_by' => 'inputtime desc',
             'date_field' => 'inputtime',
-            'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
+            'where_list' => $this->where_list_sql,
         ]);
 
         list($tpl, $data) = $this->_List();
@@ -824,7 +824,7 @@ class Module extends \Phpcmf\Table {
             'table' => dr_module_table_prefix(APP_DIR).'_recycle',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
+            'where_list' => $this->where_list_sql,
         ]);
 
         list($tpl, $data) = $this->_List();
