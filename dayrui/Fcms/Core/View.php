@@ -70,7 +70,7 @@ class View {
 
         // 模板缓存目录
         $this->_cache = WRITEPATH.'template/';
-        $this->_tname = $this->_is_mobile ? 'mobile' : ($name ? $name : 'pc');
+        $this->_tname = $this->_is_mobile ? MOBILE_TPL_DIR : ($name ? $name : 'pc');
         $this->_aroot = $this->_froot = COREPATH.'View/';
         $this->_mroot = $this->get_client_member_path($this->_tname);
         // 当前项目模板目录
@@ -846,9 +846,9 @@ class View {
             $system['cache'] = 0;
         }
         if ($system['page'] || in_array(strtoupper($system['order']), ['RAND()', 'RAND'])) {
-            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_tname);
+            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_is_mobile);
         } else {
-            $cache_name = 'view-'.$this->_return_sql.md5($_params.$this->_tname);
+            $cache_name = 'view-'.$this->_return_sql.md5($_params.$this->_is_mobile);
         }
 
         if ($system['cache']) {

@@ -35,6 +35,8 @@ define('COREPATH', CMSPATH);
 !defined('IS_XRDEV') && define('IS_XRDEV', 0);
 // 最大栏目数量限制category
 !defined('MAX_CATEGORY') && define('MAX_CATEGORY', 200);
+// 定义移动端模板目录
+!defined('MOBILE_TPL_DIR') && define('MOBILE_TPL_DIR', 'mobile');
 // 编辑器的图片的title和alt默认占位字符
 !defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{xunruicms_img_title}');
 // tests

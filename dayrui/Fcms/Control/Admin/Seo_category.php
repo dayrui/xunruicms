@@ -93,23 +93,33 @@ class Seo_category extends \Phpcmf\Common
     // 选择规则
     private function _select_rule($dir, $rule, $t) {
 
-        $html = '<label>';
-        $html.= '<select class="form-control" onchange="dr_save_urlrule(\''.$dir.'\', \''.$t['id'].'\', this.value)">';
-        $html.= '<option value="0"> '.dr_lang('动态地址').' </option>';
-        if ($rule) {
-            foreach ($rule as $b) {
-                $select = isset($t['setting']['urlrule']) && $t['setting']['urlrule'] == $b['id'] ? 'selected' : '';
-                if ($dir == 'share') {
-                    if ($b['type'] == 3) {
+        if ($dir != 'share') {
+            if ($t['setting']['urlrule']
+                && isset($rule[$t['setting']['urlrule']])
+                && $rule[$t['setting']['urlrule']]) {
+                $html = '<label class="label label-success">'.dr_lang($rule[$t['setting']['urlrule']]['name']).'</label>';
+            } else {
+                $html = '<label class="label label-default">'.dr_lang('动态地址').'</label>';
+            }
+        } else {
+            $html = '<label>';
+            $html.= '<select class="form-control" onchange="dr_save_urlrule(\''.$dir.'\', \''.$t['id'].'\', this.value)">';
+            $html.= '<option value="0"> '.dr_lang('动态地址').' </option>';
+            if ($rule) {
+                foreach ($rule as $b) {
+                    $select = isset($t['setting']['urlrule']) && $t['setting']['urlrule'] == $b['id'] ? 'selected' : '';
+                    if ($dir == 'share') {
+                        if ($b['type'] == 3) {
+                            $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
+                        }
+                    } elseif ($b['type'] == 1) {
                         $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
                     }
-                } elseif ($b['type'] == 1) {
-                    $html.= '<option '.$select.' value="'.$b['id'].'"> '.dr_lang($b['name']).' </option>';
                 }
             }
+            $html.= '</select>';
+            $html.= '</label>';
         }
-        $html.= '</select>';
-        $html.= '</label>';
 
         return $html;
     }
@@ -126,7 +136,6 @@ class Seo_category extends \Phpcmf\Common
         }
         $str.= "<td>\$option</td>";
         $str.= "</tr>";
-
 
         $mod = [];
         $rule = $this->get_cache('urlrule');
@@ -157,7 +166,6 @@ class Seo_category extends \Phpcmf\Common
             $t['html'] = $this->_select_rule($dir, $rule, $t);
             $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($mod, $t));
 
-
             if ($t['child'] || $t['pcatpost']) {
                 $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data(\''.$dir.'\', '.$t['id'].');" class="blue select-cat-'.$dir.'-'.$t['id'].'">[+]</a>&nbsp;';
             } else {
@@ -184,154 +192,6 @@ class Seo_category extends \Phpcmf\Common
         $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
         $b = $this->_get_tree_list($mid, \Phpcmf\Service::M('category')->init(['table' => dr_module_table_prefix($mid).'_category'])->cat_data($pid));
         $this->_json(1, $b);
-    }
-
-    // 获取树形结构列表
-    protected function _get_tree_list22($dir, $data) {
-
-
-
-        $tree = '';
-        $pcats = [];
-        foreach($data as $k => $t) {
-
-            $option = '';
-            !$t['mid'] && $t['mid'] = APP_DIR;
-            $t['tid'] = isset($t['tid']) ? $t['tid'] : 1;
-            $t['name'] = dr_strcut($t['name'], 30);
-            $t['setting'] = dr_string2array($t['setting']);
-            $t['pcatpost'] = 0;
-            if ($this->module['share']) {
-                // 共享栏目时
-                //以本栏目为准
-                $t['setting']['html'] = intval($t['setting']['html']);
-                $t['setting']['urlrule'] = intval($t['setting']['urlrule']);
-                if ($t['child'] && isset($module[$t['mid']]['pcatpost']) && $module[$t['mid']]['pcatpost']) {
-                    // 允许父栏目
-                    $t['pcatpost'] = 1;
-                }
-            } else {
-                // 独立模块栏目
-                //以站点为准
-                if (!isset($t['tid'])) {
-                    $t['tid'] = $t['setting']['linkurl'] ? 2 : 1; // 判断栏目类型 2表示外链
-                }
-                $t['setting']['html'] = intval($this->module['html']);
-                $t['setting']['urlrule'] = isset($this->module['site'][SITE_ID]['urlrule']) ? intval($this->module['site'][SITE_ID]['urlrule']) : 0;
-                if ($t['child'] && isset($this->module['setting']['pcatpost']) && $this->module['setting']['pcatpost']) {
-                    // 允许父栏目
-                    $t['pcatpost'] = 1;
-                }
-            }
-            $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($this->module, $t));
-            if ($this->_is_admin_auth('add')) {
-                // 非外链添加子类 $t['tid'] != 2 &&
-                $option.= '<a class="btn btn-xs blue" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/add', array('pid' => $t['id'])).'> <i class="fa fa-plus"></i> '.dr_lang('子类').'</a>';
-            }
-            if ($this->_is_admin_auth('edit')) {
-                $option.= '<a class="btn btn-xs green" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id'])).'> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a>';
-            }
-            if (($t['tid'] == 1 && ($t['pcatpost'] || !$t['child']) && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/add'))  {
-                $option.= '<a class="btn btn-xs dark" href='.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/add', array('catid' => $t['id'])).'> <i class="fa fa-plus"></i> '.dr_lang('发布').'</a>';
-            }
-            if (($t['tid'] == 1 && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/index'))  {
-                $option.= '<a class="btn btn-xs blue" href='.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
-            }
-            if ($t['ismain'] && $this->_is_admin_auth('edit') && ($t['tid'] == 0 && $this->is_scategory)) {
-                if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
-                    // 当开启字段权限时不显示内容
-                } else {
-                    $option.= '<a class="btn btn-xs dark" href="'.dr_url(APP_DIR.'/category/edit', ['id' => $t['id'], 'page'=>1]).'"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
-                }
-            }
-            if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {
-                $option.= '<a class="btn btn-xs dark" href="javascript:dr_link_url('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑地址').'</a>';
-            }
-            // 只对超管有效
-            if ($t['ismain'] && isset($this->admin['role'][1])
-                && ((!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
-                $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
-            }
-            // 第三方插件接入
-            if ($is_cat_code) {
-                $option.= '<a class="btn btn-xs yellow" href="javascript:dr_iframe_show(\'show\', \''.dr_url('mbdy/category/cms', ['mid'=>APP_DIR, 'id'=>$t['id']]).'\');"> <i class="fa fa-code"></i> '.dr_lang('前端调用').'</a>';
-            }
-            $t['option'] = $option;
-            // 判断显示和隐藏开关
-            $t['is_show_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('前端循环调用不会显示，但可以正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['id'=>$t['id']]).'\', 0);" class="tooltips badge badge-'.(!$t['show'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['show'] ? 'times' : 'check').'"></i></a>';
-            $t['is_used_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('禁用状态下此栏目不能正常访问').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'used', 'id'=>$t['id']]).'\', 1);" class="tooltips badge badge-'.($t['disabled'] ? 'no' : 'yes').'"><i class="fa fa-'.($t['disabled'] ? 'times' : 'check').'"></i></a>';
-            $t['is_ismain_html'] = '<a data-container="body" data-placement="right" data-original-title="'.dr_lang('主栏目具备权限控制和相关参数配置权限；当栏目过多时建议将第一级设置为主栏目，其余子栏目不设置').'" href="javascript:;" onclick="dr_cat_ajax_show_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/show_edit', ['at'=> 'main', 'id'=>$t['id']]).'\', 0);" class="tooltips badge badge-'.(!$t['ismain'] ? 'no' : 'yes').'"><i class="fa fa-'.(!$t['ismain'] ? 'times' : 'check').'"></i></a>';
-            // 判断是否生成静态
-            $is_html = intval($this->module['share'] ? $t['setting']['html'] : $this->module['html']);
-            $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
-
-            $t['ctotal'] = "<input type='hidden' name='cid[]' value='".$t['id']."-".$t['mid']."' />";
-            //$purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
-            //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
-            // 是否缓存
-            //$t['url'] = dr_url_prefix($data[$t['id']]['url'], APP_DIR);
-            // 共享模块显示栏类别
-            if ($this->is_scategory) {
-                // 栏目类型
-                if ($t['tid'] == 1) {
-                    if ($t['child']) {
-                        $t['type_html'] = '<a class="tooltips badge badge-danger" data-container="body" data-placement="right" data-original-title="'.dr_lang('当栏目存在子栏目时我们称之为封面').'"> '.dr_lang('封面').' </span>';
-                    } else {
-                        $t['type_html'] = '<a class="tooltips badge badge-success" data-container="body" data-placement="right" data-original-title="'.dr_lang('最终的栏目我们称之为列表').'"> '.dr_lang('列表').' </a>';
-                    }
-                    if ($module[$t['mid']]['name']) {
-                        $t['mid'] = $module[$t['mid']]['name'] . ' / '.$t['mid'];
-                    } else {
-                        $t['mid'] = '<a onclick="dr_tips(0, \''.dr_lang('没有安装此模块（%s）', $t['mid']).'\')" class="label label-sm label-danger circle">'.dr_lang('未安装').'</a>';
-                    }
-                } elseif ($t['tid'] == 2) {
-                    $t['mid'] = '';
-                    $t['type_html'] = '<a class="tooltips badge badge-warning" data-container="body" data-placement="right" data-original-title="'.dr_lang('属于外部链接').'"> '.dr_lang('外链').' </a>';
-                    $t['is_page_html'] = '';
-                } else {
-                    $t['mid'] = '';
-                    $t['type_html'] = '<a class="tooltips badge badge-info" data-container="body" data-placement="right" data-original-title="'.dr_lang('不可发布内容的介绍性质页面，例如关于我们等页面').'"> '.dr_lang('单页').' </a>';
-                }
-                //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
-            } else {
-                $t['url'] = 'javascript:;';
-                $t['tid'] = 0;
-                $t['mid'] = '';
-                $t['type_html'] = '';
-                $t['is_page_html'] = '';
-            }
-            if (isset($this->cat_config[$this->module['dirname']]['list_field']) && $this->cat_config[$this->module['dirname']]['list_field']) {
-                foreach ($this->cat_config[$this->module['dirname']]['list_field'] as $i => $tt) {
-                    if ($tt['use']) {
-                        $t[$i . '_html'] = dr_list_function($tt['func'], $t[$i], [], $t, $this->module['category_field'][$i]);
-                    }
-                }
-            }
-            //$t['name'] = $this->module['category'][$t['id']]['total'];
-            if (!$t['child']) {
-                // 重复验证是否子栏目，避免被禁的栏目不显示的情况
-                $t['child'] = \Phpcmf\Service::M('category')->init($this->init)->where('pid', (int)$t['id'])->counts();
-            }
-            if ($t['child'] || $t['pcatpost']) {
-                $pcats[] = $t['id'];
-                $t['spacer'] = $this->_get_spacer($t['pids']).'<a href="javascript:dr_tree_data('.$t['id'].');" class="blue select-cat-'.$t['id'].'">[+]</a>&nbsp;';
-            } else {
-                $t['spacer'] = $this->_get_spacer($t['pids']);
-            }
-
-            $t['class'] = 'dr_catid_'.$t['id']. ' dr_pid_'.$t['pid'];
-            $arr = explode(',', $t['pids']);
-            if ($arr) {
-                foreach ($arr as $a) {
-                    $t['class'].= ' dr_pid_'.$a;
-                }
-            }
-            extract($t);
-            eval("\$nstr = \"$list\";");
-            $tree.= $nstr;
-        }
-
-        return [$head, $tree, $pcats];
     }
 
     // 替换空格填充符号
