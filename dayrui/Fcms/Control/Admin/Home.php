@@ -330,7 +330,9 @@ class Home extends \Phpcmf\Common
                 $menu_top[$tid] = $top;
             }
         }
-
+        if (!$menu_top && SITE_ID > 1) {
+            $this->_admin_msg(0, dr_lang('没有给当前站点分配管理菜单权限'));
+        }
         // 自定义后台菜单显示
         if (function_exists('dr_my_admin_menu')) {
             list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($menu, $string, $mstring, $menu_top, $first);
