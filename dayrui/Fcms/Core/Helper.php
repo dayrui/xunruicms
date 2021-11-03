@@ -1962,19 +1962,6 @@ function dr_get_page_pname($id, $symbol = '_', $page) {
 
 
 /**
- * 生成静态文件的错误信息
- */
-function dr_to_html_file_error($url, $file, $msg) {
-    $error = '**************************************************************************'.PHP_EOL;
-    $error.= $msg.''.PHP_EOL;
-    $url && $error.= '地址: '.$url.''.PHP_EOL;
-    $file && $error.= '文件: '.$file.''.PHP_EOL;
-    $error.= '**************************************************************************'.PHP_EOL.PHP_EOL;
-    file_put_contents(WRITEPATH.'html/error.log', $error, FILE_APPEND);
-}
-
-
-/**
  * 生成静态文件名
  */
 function dr_to_html_file($url, $root = WEBPATH) {
@@ -3002,6 +2989,12 @@ function dr_safe_password($string) {
     return trim($string);
 }
 
+/**
+ * 后台移除http和https协议
+ */
+function dr_rm_http($url) {
+    return IS_ADMIN ? str_replace(['http:', 'https:'], '', $url) : $url;
+}
 
 /**
  * 将路径进行安全转换变量模式
@@ -4040,6 +4033,20 @@ function dr_get_cat_pname($mod, $catid, $symbol = '_') {
     krsort($name);
 
     return implode($symbol, $name);
+}
+
+// 存储调试信息 file存储文件 data打印变量
+function dr_debug($file, $data) {
+    dr_mkdirs(WRITEPATH.'debuglog/');
+    $debug = debug_backtrace();
+    file_put_contents(WRITEPATH.'debuglog/'.dr_safe_filename($file).'.txt', var_export([
+        '时间' => dr_date(SYS_TIME, 'Y-m-d H:i:s'),
+        '终端' => $_SERVER['HTTP_USER_AGENT'],
+        '文件' => $debug[0]['file'],
+        '行号' => $debug[0]['line'],
+        '地址' => FC_NOW_URL,
+        '变量' => $data,
+    ], true).PHP_EOL.'=========================================================='.PHP_EOL, FILE_APPEND);
 }
 
 // 正则替换方法

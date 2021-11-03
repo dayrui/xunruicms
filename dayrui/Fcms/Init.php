@@ -416,6 +416,16 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
 
 /******* CodeIgniter Bootstrap *******/
 
+// 自定义函数库
+if (is_file(ROOTPATH.'config/custom.php')) {
+    require ROOTPATH.'config/custom.php';
+}
+if (is_file(MYPATH.'Helper.php')) {
+    require MYPATH.'Helper.php';
+}
+// 系统函数库
+require CMSPATH.'Core/Helper.php';
+
 // 定义常量
 require COREPATH.'Config/Constants.php';
 

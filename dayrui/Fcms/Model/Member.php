@@ -104,70 +104,7 @@ class Member extends \Phpcmf\Model {
             return;
         }
 
-        $ip = \Phpcmf\Service::L('input')->ip_address();
-        if (!$ip || !$data['id']) {
-            return;
-        }
-
-        $agent = \Phpcmf\Service::L('input')->get_user_agent();
-        if (strlen($agent) <= 5) {
-            return;
-        }
-
-        $log = [
-            'uid' => $data['id'],
-            'type' => $type,
-            'loginip' => $ip,
-            'logintime' => SYS_TIME,
-            'useragent' => substr($agent, 0, 255),
-        ];
-
-        // 会员部分只保留20条登录记录
-        $row = $this->db->table('member_login')->where('uid', $data['id'])->orderBy('logintime desc')->get()->getResultArray();
-        if (dr_count($row) > 20) {
-            $del = [];
-            foreach ($row as $i => $t) {
-                if ($i > 19) {
-                    $del[] = (int)$t['id'];
-                    unset($row[$i]);
-                }
-            }
-            if ($del) {
-                // 删除多余的记录
-                $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
-            }
-        }
-
-        // 登录后的通知
-        \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
-
-        // 登录后的钩子
-        $data['log'] = [
-            'now' => $log,
-            'before' => $row,
-        ];
-        \Phpcmf\Hooks::trigger('member_login_after', $data);
-
-        /*
-        $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
-        if (!$time || date('Ymd') != date('Ymd', $time)) {
-
-            \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
-        }*/
-
-        // 同一天Ip一致时只更新一次更新时间
-        if ($row = $this->db
-                        ->table('member_login')
-                        ->where('uid', $data['id'])
-                        ->where('loginip', $ip)
-                        ->where('DATEDIFF(from_unixtime(logintime),now())=0')
-                        ->get()
-                        ->getRowArray()) {
-                        $this->db->table('member_login')->where('id', $row['id'])->update($log);
-        } else {
-            $this->db->table('member_login')->insert($log);
-        }
-
+        \Phpcmf\Service::M('member', 'member')->_login_log($data, $type);
     }
 
     /**
@@ -194,26 +131,7 @@ class Member extends \Phpcmf\Model {
             return;
         }
 
-        // 明天凌晨时间戳
-        $time = strtotime(date('Y-m-d', strtotime('+1 day')));
-
-        // 每日登录积分处理
-        if (dr_is_app('explog')) {
-            $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('login_exp', $member);
-            if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_experience_'.$member['id'])) {
-                $this->add_experience($member['id'], $value, dr_lang('每日登陆'), '', 'login_exp_'.date('Ymd', SYS_TIME), 1);
-                \Phpcmf\Service::L('input')->set_cookie('login_experience_'.$member['id'], 1, $time - SYS_TIME);
-            }
-        }
-
-        // 每日登录金币处理
-        if (dr_is_app('scorelog')) {
-            $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('login_score', $member);
-            if ($value && !\Phpcmf\Service::L('input')->get_cookie('login_score_'.$member['id'])) {
-                $this->add_score($member['id'], $value, dr_lang('每日登陆'), '', 'login_score_'.date('Ymd', SYS_TIME), 1);
-                \Phpcmf\Service::L('input')->set_cookie('login_score_'.$member['id'], 1, $time - SYS_TIME);
-            }
-        }
+        \Phpcmf\Service::M('member', 'member')->init_member($member);
     }
 
     /**
@@ -261,17 +179,7 @@ class Member extends \Phpcmf\Model {
             return [];
         }
 
-        $data = $this->db->table('member_oauth')->where('uid', $uid)->get()->getResultArray();
-        if (!$data) {
-            return [];
-        }
-
-        $rt = [];
-        foreach ($data as $t) {
-            $rt[$t['oauth']] = $t;
-        }
-
-        return $rt;
+        return \Phpcmf\Service::M('member', 'member')->oauth($uid);
     }
 
     /**
@@ -311,21 +219,7 @@ class Member extends \Phpcmf\Model {
 
         // 会员组信息
         if (IS_USE_MEMBER) {
-            $data2 = $this->update_group($data, $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray());
-            if ($data2) {
-                foreach ($data2 as $t) {
-                    $data['group_name'][$t['gid']] = $t['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['name'];
-                    $t['group_icon'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['icon'];
-                    $t['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$t['gid']]['level'][$t['lid']]['name'];
-                    $data['group'][$t['gid']] = $t;
-                    $data['groupid'][$t['gid']] = $t['gid'];
-                    $data['levelid'][$t['gid']] = $t['lid'];
-                    $data['authid'][] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
-                    if ($t['timeout']) {
-                        $data['group_timeout'] = $t['gid'];
-                    }
-                }
-            }
+            $data = \Phpcmf\Service::M('member', 'member')->get_member_group($data);
         }
 
         return $data;
@@ -333,22 +227,9 @@ class Member extends \Phpcmf\Model {
 
     // 获取authid
     public function authid($uid) {
-
-        if (!$uid || !IS_USE_MEMBER) {
-            return [0];
-        } elseif ($uid == $this->uid) {
-            return \Phpcmf\Service::C()->member['authid'];
+        if (IS_USE_MEMBER) {
+            return \Phpcmf\Service::M('member', 'member')->authid($uid);
         }
-
-        $rt = [];
-        $data2 = $this->db->table('member_group_index')->where('uid', $uid)->get()->getResultArray();
-        if ($data2) {
-            foreach ($data2 as $t) {
-                $rt[] = $t['lid'] ? $t['gid'].'-'.$t['lid'] : $t['gid'];
-            }
-        }
-
-        return $rt;
     }
 
     // 更新用户组
@@ -357,183 +238,10 @@ class Member extends \Phpcmf\Model {
     public function update_group($member, $groups) {
 
         $g = [];
-        if (!$member || !$groups || !IS_USE_MEMBER) {
+        if (!$member || !$groups) {
             return $g;
-        }
-
-        $uid = (int)$member['id'];
-        foreach ($groups as $group) {
-            // 判断是否可用
-            if (!\Phpcmf\Service::C()->member_cache['group'][$group['gid']]) {
-                continue;
-            }
-            $group['gid'] = (int)$group['gid'];
-            // 判断等级是否有效
-            $levels = isset(\Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level']) ? \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level'] : [];
-            if ($levels) {
-                // bu存在
-                if ($group['lid'] && (!isset($levels[$group['lid']]) || !$levels[$group['lid']])) {
-                    $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update(['lid' => 0]);
-                    $group['lid'] = 0;
-                }
-            } elseif ($group['lid']) {
-                // 还原升级
-                $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update(['lid' => 0]);
-                $group['lid'] = 0;
-            }
-            $group_info = \Phpcmf\Service::C()->member_cache['group'][$group['gid']];
-            // 判断过期
-            $price = floatval($group_info['price']);
-            if ($group['etime'] && $group['etime'] - SYS_TIME < 0) {
-                // 过期了
-                if ($group_info['setting']['timeout']) {
-                    // 过期自动续费price
-                    $name = $group_info['unit'] ? 'score' : 'money';
-                    if ($name == 'money') {
-                        // 余额
-                        if ($price > 0) {
-                            // 收费组情况下
-                            if ($member[$name] - $price < 0) {
-                                // 余额不足 删除
-                                if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
-                                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
-                                } else {
-                                    // // 不主动删除用户组 情况下保留
-                                    $group['timeout'] = 1;
-                                    $g[$group['gid']] = $group;
-                                }
-                                continue;
-                            }
-                            $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
-                            if (!dr_is_app('pay')) {
-                                log_message('error', '用户组自动续费失败：没有安装「支付系统」插件');
-                                continue;
-                            } else {
-                                // 自动续费
-                                $rt = $this->add_money($uid, -$price);
-                                if (!$rt['code']) {
-                                    continue;
-                                }
-                                // 增加到交易流水
-                                $rt = \Phpcmf\Service::M('Pay')->add_paylog([
-                                    'uid' => $member['id'],
-                                    'username' => $member['username'],
-                                    'touid' => 0,
-                                    'tousername' => '',
-                                    'mid' => 'system',
-                                    'title' => dr_lang('用户组（%s）续费', $group_info['name']),
-                                    'value' => -$price,
-                                    'type' => 'finecms',
-                                    'status' => 1,
-                                    'result' => dr_lang('有效期至%s', $group['etime'] ? dr_date($group['etime']) : dr_lang('永久')),
-                                    'paytime' => SYS_TIME,
-                                    'inputtime' => SYS_TIME,
-                                ]);
-                                // 提醒通知
-                                $this->notice(
-                                    $uid,
-                                    2,
-                                    dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name']),
-                                    \Phpcmf\Service::L('router')->member_url('paylog/show', ['id'=>$rt['code']])
-                                );
-                            }
-                        } else {
-                            // 免费组自己续费
-                            // 提醒通知
-                            $this->notice(
-                                $uid,
-                                2,
-                                dr_lang('您的用户组（%s）已过期，自动免费续期成功', $group_info['name'])
-                            );
-                        }
-                        // 更新时间
-                        $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update(['etime' => $group['etime']]);
-                    } else {
-                        // 金币
-                        $price = (int)$price;
-                        if ($price > 0) {
-                            // 收费组情况下
-                            if ($member[$name] - $price < 0) {
-                                // 金币不足 删除
-                                if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
-                                    // 提醒通知
-                                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
-                                } else {
-                                    // false 情况下保留
-                                    $group['timeout'] = 1;
-                                    $g[$group['gid']] = $group;
-                                }
-                                continue;
-                            }
-                            // 自动续费
-                            $group['etime'] = dr_member_group_etime($group_info['days'], $group_info['setting']['dtype']);
-                            // 自动续费
-                            $rt = $this->add_score($uid, -$price, dr_lang('您的用户组（%s）自动续费', $group_info['name']));
-                            if (!$rt['code']) {
-                                continue;
-                            }
-                            // 提醒通知
-                            $this->notice(
-                                $uid,
-                                2,
-                                dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name'])
-                            );
-                        } else {
-                            // 免费组自己续费
-                            // 提醒通知
-                            $this->notice(
-                                $uid,
-                                2,
-                                dr_lang('您的用户组（%s）已过期，自动免费续期成功', $group_info['name'])
-                            );
-                        }
-                        // 更新时间
-                        $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update(['etime' => $group['etime']]);
-                    }
-                } else {
-                    // 未开通自动续费直接删除
-                    if (!$group_info['setting']['outtype'] && $this->delete_group($uid, $group['gid'], 0)) {
-                        // 提醒通知
-                        $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
-                    } else {
-                        // false 情况下保留
-                        $group['timeout'] = 1;
-                        $g[$group['gid']] = $group;
-                    }
-                    continue;
-                }
-            }
-            // 开启自动升级时需要判断等级
-            if ($levels
-                && \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['setting']['level']['auto']) {
-                $value = \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['setting']['level']['unit'] ? $member['spend'] : $member['experience'];
-                $level = array_reverse($levels); // 倒序判断
-                foreach ($level as $t) {
-                    if ($value >= $t['value']) {
-                        if ($group['lid'] != $t['id']) {
-                            // 开始变更等级
-                            // 更新数据
-                            $update = [
-                                'lid' => $t['id']
-                            ];
-                            if (\Phpcmf\Service::C()->member_cache['group'][$group['gid']]['setting']['timetype']) {
-                                // 按等级计算时间
-                                $update['etime'] = dr_member_group_etime(
-                                    \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level'][$t['id']]['setting']['days'],
-                                    \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['level'][$t['id']]['setting']['dtype'],
-                                    0
-                                );
-                            }
-                            $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $group['gid'])->update($update);
-                            /* 等级升级 */
-                            $this->notice($uid, 2, dr_lang('您的用户组（%s）等级自动升级为（%s）', \Phpcmf\Service::C()->member_cache['group'][$group['gid']]['name'], $t['name']));
-                            $group['lid'] = $t['id'];
-                        }
-                        break;
-                    }
-                }
-            }
-            $g[$group['gid']] = $group;
+        } elseif (IS_USE_MEMBER) {
+            return \Phpcmf\Service::M('member', 'member')->update_group($member, $groups);
         }
 
         return $g;
@@ -547,34 +255,7 @@ class Member extends \Phpcmf\Model {
             return false;
         }
 
-        // 回调信息
-        $call = $this->member_info($uid);
-        $call['group'] = $this->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->getRow();
-
-        $this->db->table('member_group_index')->where('gid', $gid)->where('uid', $uid)->delete();
-
-        // 管理员删除时提醒
-        if ($is_admin) {
-            $this->notice($uid, 2, dr_lang('您的用户组（%s）被取消', \Phpcmf\Service::C()->member_cache['group'][$gid]['name']));
-        }
-
-        // 判断微信标记组
-        if (dr_is_app('weixin')) {
-            \Phpcmf\Service::C()->init_file('weixin');
-            \Phpcmf\Service::M('user', 'weixin')->delete_member_group($uid, $gid);
-        }
-
-        // 过期后变更
-        if (!$is_admin && \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid']
-            && \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid'] != $gid) {
-            $this->insert_group($uid, \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['out_gid']);
-        }
-
-        \Phpcmf\Service::M('member')->clear_cache($uid);
-
-        \Phpcmf\Hooks::trigger('member_del_group_after', $call);
-
-        return true;
+        \Phpcmf\Service::M('member', 'member')->delete_group($uid, $gid, $is_admin);
     }
 
     // 新增用户组
@@ -585,44 +266,7 @@ class Member extends \Phpcmf\Model {
             return false;
         }
 
-        $data = [
-            'uid' => $uid,
-            'gid' => $gid,
-            'lid' => 0,
-            'stime' => SYS_TIME,
-            'etime' => \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timetype'] ? 0 : dr_member_group_etime(\Phpcmf\Service::C()->member_cache['group'][$gid]['days'], \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['dtype']),
-        ];
-        $rt = $this->table('member_group_index')->insert($data);
-        if (!$rt['code']) {
-            return;
-        }
-
-        $data['id'] = $rt['code'];
-
-        // 挂钩点 用户组变更之后
-        $call = $this->member_info($uid);
-        $call['group'] = $data;
-        $call['group_gid'] = $call['gid'] = $gid;
-        $call['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['name'];
-        $is_notice && \Phpcmf\Service::L('Notice')->send_notice('member_edit_group', $call);
-        \Phpcmf\Hooks::trigger('member_edit_group_after', $call);
-
-        // 判断微信标记组
-        if (dr_is_app('weixin')) {
-            \Phpcmf\Service::C()->init_file('weixin');
-            \Phpcmf\Service::M('user', 'weixin')->add_member_group($uid, $gid);
-        }
-
-        if (!\Phpcmf\Service::C()->member_cache['config']['groups']) {
-            // 没开启多个组时，关闭之前的用户组
-            $data2 =  $this->db->table('member_group_index')->where('uid', $uid)->where('gid<>' . $gid)->get()->getResultArray();
-            if ($data2) {
-                foreach ($data2 as $t) {
-                    $this->delete_group($uid, $t['gid'], 1);
-                }
-            }
-        }
-        \Phpcmf\Service::M('member')->clear_cache($uid);
+        return \Phpcmf\Service::M('member', 'member')->insert_group($uid, $gid, $is_notice);
     }
 
     // 手动变更等级
@@ -633,30 +277,7 @@ class Member extends \Phpcmf\Model {
             return false;
         }
 
-        $old = $data = $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->get()->getRowArray();
-        $data['gid'] = $gid;
-        $data['lid'] = $lid;
-
-        // 更新数据
-        $update = [
-            'lid' => $lid
-        ];
-        if (\Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timetype']) {
-            // 按等级计算时间
-            $update['etime'] = dr_member_group_etime(
-                \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['setting']['days'],
-                \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['setting']['dtype'],
-                \Phpcmf\Service::C()->member_cache['group'][$gid]['setting']['timect'] ? $old['etime'] : 0
-            );
-        }
-        $this->db->table('member_group_index')->where('uid', $uid)->where('gid', $gid)->update($update);
-        // 挂钩点 用户组变更之后
-        $call = $this->member_info($uid);
-        $call['group_name'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['name'];
-        $call['group_level'] = \Phpcmf\Service::C()->member_cache['group'][$gid]['level'][$lid]['name'];
-        \Phpcmf\Service::L('Notice')->send_notice('member_edit_level', $call);
-        \Phpcmf\Hooks::trigger('member_edit_level_after', $data, $old);
-        \Phpcmf\Service::M('member')->clear_cache($uid);
+        return \Phpcmf\Service::M('member', 'member')->update_level($uid, $gid, $lid);
     }
 
     // 申请用户组
@@ -667,40 +288,7 @@ class Member extends \Phpcmf\Model {
             return false;
         }
 
-        $group = \Phpcmf\Service::C()->member_cache['group'][$gid];
-
-        if ($group['setting']['verify']) {
-            $my_verify['uid'] = $member['uid'];
-            $my_verify['username'] = $member['username'];
-            $my_verify['gid'] = $gid;
-            $my_verify['price'] = $group['price'];
-            $my_verify['lid'] = $lid;
-            $my_verify['status'] = 0;
-            $my_verify['content'] = dr_array2string($my_verify['content']);
-            $my_verify['inputtime'] = SYS_TIME;
-            if ($verify_id) {
-                $rt = \Phpcmf\Service::M()->table('member_group_verify')->update($verify_id, $my_verify);
-            } else {
-                // 被拒再次提交不重复扣款
-                $my_verify['price'] = (float)$price;
-                $rt = \Phpcmf\Service::M()->table('member_group_verify')->insert($my_verify);
-            }
-            if (!$rt['code']) {
-                return dr_return_data(0, $rt['msg']);
-            }
-            // 提醒
-            $this->admin_notice(0, 'member', $member, dr_lang('用户组[%s]申请审核', $group['name']), 'member/apply/edit:id/'.$rt['code']);
-            // 审核
-            return dr_return_data(1, dr_lang('等待管理员审核'));
-        } else {
-            // 直接开通
-            $this->insert_group($member['uid'], $gid);
-            $lid && $this->update_level($member['uid'], $gid, $lid);
-            $my_verify['content'] && \Phpcmf\Service::M()->table('member_data')->update($member['uid'], $my_verify['content']);
-
-            return dr_return_data(1, dr_lang('开通成功'));
-        }
-
+        return \Phpcmf\Service::M('member', 'member')->apply_group($verify_id, $member, $gid, $lid, $price, $my_verify);
     }
 
     /**
@@ -783,12 +371,12 @@ class Member extends \Phpcmf\Model {
     // 审核用户
     public function verify_member($uid) {
 
-        $this->db->table('member_data')->where('id', $uid)->update(['is_verify' => 1]);
-        // 后台提醒
-        $this->todo_admin_notice('member/home/verify/index:field/id/keyword/'.$uid, 0);
-        // 审核提醒
-        // 注册审核后的通知
-        \Phpcmf\Service::L('Notice')->send_notice('member_register_verify', $this->get_member($uid));
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：verify_member');
+            return false;
+        }
+
+        return \Phpcmf\Service::M('member', 'member')->verify_member($uid);
     }
 
     // 获取本站通讯地址
@@ -897,99 +485,20 @@ class Member extends \Phpcmf\Model {
         if (!IS_USE_MEMBER) {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：login');
             return dr_return_data(0, dr_lang('没有权限'));
-            return false;
         }
 
-        if (!$username) {
-            return dr_return_data(0, dr_lang('账号不能为空'));
-        } elseif (!$password) {
-            return dr_return_data(0, dr_lang('密码不能为空'));
-        }
-        // 登录
-        $data = $this->_find_member_info($username);
-        if (!$data) {
-            return dr_return_data(0, dr_lang('用户不存在'));
-        }
-        // 密码验证
-        $password2 = dr_safe_password($password);
-        if (md5(md5($password2).$data['salt'].md5($password2)) != $data['password']) {
-            if (strlen($password2) == 32 && md5($password2.$data['salt'].$password2) == $data['password']) {
-                // 加密验证成功
-            } else {
-                \Phpcmf\Hooks::trigger('member_login_password_error', [
-                    'member' => $data,
-                    'password' => $password,
-                    'ip' => (string)\Phpcmf\Service::L('input')->ip_address(),
-                    'time' => SYS_TIME,
-                ]);
-                return dr_return_data(0, dr_lang('密码不正确'));
-            }
-        }
-
-        // 验证管理员登录
-        /*
-        $rt = $this->_is_admin_login_member($data['id']);
-        if (!$rt['code']) {
-            return $rt;
-        }*/
-
-        // 保存本地会话
-        $this->save_cookie($data, $remember);
-
-        // 记录日志
-        $this->_login_log($data);
-
-        return dr_return_data(1, 'ok', [
-            'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
-            'member' => $this->get_member($data['id']),
-            'sso' => $this->sso($data, $remember)]
-        );
+        return \Phpcmf\Service::M('member', 'member')->login($username, $password, $remember);
     }
 
     // 短信登录
     public function login_sms($phone, $remember) {
 
-        $data = $this->db->table('member')->where('phone', $phone)->get()->getRowArray();
-        if (!$data) {
-            // 未注册
-            if (\Phpcmf\Service::C()->member_cache['login']['auto_reg']) {
-                // 自动注册
-                $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
-                if (!$groupid) {
-                    return dr_return_data(0, dr_lang('无效的用户组'));
-                } elseif (!\Phpcmf\Service::C()->member_cache['group'][$groupid]['register']) {
-                    return dr_return_data(0, dr_lang('用户组[%s]不允许注册', \Phpcmf\Service::C()->member_cache['group'][$groupid]['name']));
-                }
-                $rt = $this->register($groupid, [
-                    'username' => '',
-                    'phone' => $phone,
-                    'email' => '',
-                    'password' => SYS_KEY.'_login_sms',
-                    'name' => '',
-                ]);
-                if ($rt['code']) {
-                    $data = $rt['data'];
-                    $data['uid'] = $data['id'];
-                } else {
-                    return dr_return_data(0, $rt['msg'], ['field' => $rt['data']['field']]);
-                }
-            } else {
-                return dr_return_data(0, dr_lang('手机号码未注册'));
-            }
-        } else {
-            // 记录日志
-            $data['uid'] = $data['id'];
-            $this->_login_log($data);
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：login_sms');
+            return dr_return_data(0, dr_lang('没有权限'));
         }
 
-        // 保存本地会话
-        $this->save_cookie($data, $remember);
-
-        return dr_return_data($data['id'], 'ok', [
-                'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
-                'member' => $this->get_member($data['id']),
-                'sso' => $this->sso($data, $remember)]
-        );
+        return \Phpcmf\Service::M('member', 'member')->login_sms($phone, $remember);
     }
 
     // 授权登录
@@ -1007,45 +516,12 @@ class Member extends \Phpcmf\Model {
     // 绑定注册模式 授权注册绑定
     public function register_oauth_bang($oauth, $groupid, $member, $data = []) {
 
-        if (!$oauth) {
-            return dr_return_data(0, dr_lang('OAuth数据不存在，请重试'));
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：register_oauth_bang');
+            return dr_return_data(0, dr_lang('没有权限'));
         }
 
-        $rt = $this->register($groupid, $member, $data, $oauth);
-        if (!$rt['code']) {
-            return dr_return_data(0, $rt['msg']);
-        }
-
-        $member = $rt['data'];
-
-        // 保存本地会话
-        $this->save_cookie($member);
-
-        // 记录日志
-        $this->_login_log($member, $oauth['oauth']);
-
-        // 更改状态
-        $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $member['id']]);
-
-        // 更新微信插件粉丝表
-        if (dr_is_app('weixin') && $oauth['oauth'] == 'wechat') {
-            $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
-                'uid' => $member['id'],
-                'username' => $member['username'],
-            ]);
-        }
-
-        // 同步登录
-        $sso = $this->sso($member);
-
-        // 下载头像
-        \Phpcmf\Service::L('thread')->cron(['action' => 'oauth_down_avatar', 'id' => $oauth['id'] ]);
-
-        return dr_return_data($member['id'], 'ok', [
-            'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
-            'member' => $member,
-            'sso' => $sso
-        ]);
+        return \Phpcmf\Service::M('member', 'member')->register_oauth_bang($oauth, $groupid, $member, $data);
     }
 
     // api直接按uid登录
@@ -1071,40 +547,12 @@ class Member extends \Phpcmf\Model {
     // 直接登录模式 授权注册
     public function register_oauth($groupid, $oauth) {
 
-        $rt = $this->register($groupid, [
-            'username' => '',
-            'name' => dr_clear_emoji($oauth['nickname']),
-            'email' => '',
-            'phone' => '',
-        ], null, $oauth);
-        if (!$rt['code']) {
-            return dr_return_data(0, $rt['msg']);
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：register_oauth_bang');
+            return dr_return_data(0, dr_lang('没有权限'));
         }
 
-        $data = $rt['data'];
-
-         // 保存本地会话
-        $this->save_cookie($data);
-
-        // 记录日志
-        $this->_login_log($data, $oauth['oauth']);
-
-        // 更改状态
-        $this->db->table('member_oauth')->where('id', $oauth['id'])->update(['uid' => $data['id']]);
-        dr_is_app('weixin') && $oauth['oauth'] == 'wechat' && $this->db->table('weixin_user')->where('openid', $oauth['oid'])->update([
-            'uid' => $data['id'],
-            'username' => $data['username'],
-        ]);
-
-        // 下载头像和同步登录
-        $sso = $this->sso($data);
-        $sso[] = \Phpcmf\Service::L('router')->member_url('api/avatar', ['id'=>$oauth['id']]);
-
-        return dr_return_data($data['id'], 'ok', [
-            'auth'=> md5($data['password'].$data['salt']), // API认证字符串,
-            'member' => $data,
-            'sso' => $sso
-        ]);
+        return \Phpcmf\Service::M('member', 'member')->register_oauth($groupid, $oauth);
     }
 
     /**
@@ -1278,48 +726,12 @@ class Member extends \Phpcmf\Model {
      */
     public function insert_oauth($uid, $type, $data, $state = '', $back = '') {
 
-        $row = $this->db->table('member_oauth')->where('oid', $data['oid'])->where('oauth', $data['oauth'])->get()->getRowArray();
-        if (!$row && $data['unionid']) {
-            // 没找到尝试 unionid
-            $row = $this->db->table('member_oauth')->where('unionid', $data['unionid'])->get()->getRowArray();
-            $ins = 1; // 新插入授权
-        } else {
-            $ins = 0;
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：insert_oauth');
+            return dr_return_data(0, dr_lang('没有权限'));
         }
 
-        // 授权更新
-        if (!$row || $ins) {
-            // 插入授权信息
-            $data['uid'] = (int)$uid;
-            $rt = $this->table('member_oauth')->insert($data);
-            if (!$rt['code']) {
-                return dr_return_data(0, $rt['msg']);
-            }
-            $id = $rt['code'];
-        } else {
-            // 更新授权信息
-            $uid && $data['uid'] = $uid;
-            $this->db->table('member_oauth')->where('id', $row['id'])->update($data);
-            $id = $row['id'];
-        }
-
-        // 绑定成功更新头像
-        if ($uid && $data['avatar']) {
-            list($cache_path) = dr_avatar_path();
-            if (!is_file($cache_path.$uid.'.jpg')) {
-                // 没有头像下载头像
-                $img = dr_catcher_data($data['avatar']);
-                if (strlen($img) > 20 && file_put_contents($cache_path.$uid.'.jpg', $img)) {
-                    // 头像状态认证
-                    $this->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
-                }
-            }
-        }
-
-        // 存储
-        \Phpcmf\Service::L('cache')->set_auth_data('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id);
-
-        return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
+        return \Phpcmf\Service::M('member', 'member')->insert_oauth($uid, $type, $data, $state, $back);
     }
 
     // 修改密码
@@ -1543,120 +955,17 @@ class Member extends \Phpcmf\Model {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：member_delete');
             return false;
         }
-
-        $this->clear_cache($id);
-
-        // 删除会员的相关表
-        $this->db->table('member_data')->where('id', $id)->delete();
-        $this->db->table('member_group_index')->where('uid', $id)->delete();
-        $this->db->table('member_login')->where('uid', $id)->delete();
-        $this->db->table('member_oauth')->where('uid', $id)->delete();
-        $this->db->table('admin')->where('uid', $id)->delete();
-        $this->db->table('admin_login')->where('uid', $id)->delete();
-        $this->db->table('admin_role_index')->where('uid', $id)->delete();
-        $this->db->table('member_group_verify')->where('uid', $id)->delete();
-        $this->is_table_exists('member_paylog') && $this->db->table('member_paylog')->where('uid', $id)->delete();
-        $this->is_table_exists('member_scorelog') && $this->db->table('member_scorelog')->where('uid', $id)->delete();
-        $this->is_table_exists('member_explog') && $this->db->table('member_explog')->where('uid', $id)->delete();
-        $this->is_table_exists('member_cashlog') && $this->db->table('member_cashlog')->where('uid', $id)->delete();
-        $this->is_table_exists('member_notice') && $this->db->table('member_notice')->where('uid', $id)->delete();
-        $this->delete_admin_notice('member/verify/index:field/id/keyword/'.$id, 0);
-
-        // 删除头像
-        list($cache_path, $cache_url) = dr_avatar_path();
-        if (is_file($cache_path.$id.'.jpg')) {
-            unlink($cache_url.$id.'.jpg');
-        }
-
-        // 删除微信uid
-        if (dr_is_app('weixin') && $this->is_table_exists('weixin_user')) {
-            $this->db->table('weixin_user')->where('uid', $id)->update([
-                'uid' => 0,
-                'username' => '',
-            ]);
-        }
-
-        if (!$sync) {
-            return ;
-        }
-
-        // 同步删除动作
-        \Phpcmf\Service::M('Sync')->delete_member($id);
-
-        // 按站点数据删除
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->uid_delete($id);
-        foreach ($this->site as $siteid) {
-            // 表单
-            $form = $this->is_table_exists($siteid.'_form') ? $this->init(['table' => $siteid.'_form'])->getAll() : [];
-            if ($form) {
-                foreach ($form as $t) {
-                    $table = $siteid.'_form_'.$t['table'];
-                    \Phpcmf\Service::M()->db->tableExists(\Phpcmf\Service::M()->dbprefix($table)) && $this->db->table($table)->where('uid', $id)->delete();
-                    for ($i = 0; $i < 200; $i ++) {
-                        if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table).'_data_'.$i."'")->getRowArray()) {
-                            break;
-                        }
-                        $this->db->table($table.'_data_'.$i)->where('uid', $id)->delete();
-                    }
-                }
-            }
-            // 模块
-            $module = $this->table('module')->getAll();
-            if ($module) {
-                foreach ($module as $m) {
-                    $mdir = $m['dirname'];
-                    $table = $siteid.'_'.$mdir;
-                    // 模块内容
-                    if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($table)."'")->getRowArray()) {
-                        break;
-                    }
-                    $mdb = \Phpcmf\Service::M('Content', $mdir);
-                    $mdb->_init($mdir, $siteid);
-                    // 查询删除内容
-                    $index = $this->table($table.'_index')->where('uid', $id)->getAll();
-                    if ($index) {
-                        foreach ($index as $t) {
-                            $mdb->delete_content($t['id']);
-                        }
-                    }
-                    $form = $this->is_table_exists('module_form') ? $this->db->table('module_form')->where('module', $mdir)->get()->getResultArray() : [];
-                    if ($form) {
-                        foreach ($form as $t) {
-                            $mytable = $table.'_form_'.$t['table'];
-                            if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($mytable)."'")->getRowArray()) {
-                                break;
-                            }
-                            $this->db->table($mytable)->where('uid', $id)->delete();
-                            for ($i = 0; $i < 200; $i ++) {
-                                if (!$this->db->query("SHOW TABLES LIKE '".$this->dbprefix($mytable).'_data_'.$i."'")->getRowArray()) {
-                                    break;
-                                }
-                                $this->db->table($mytable.'_data_'.$i)->where('uid', $id)->delete();
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        return \Phpcmf\Service::M('member', 'member')->member_delete($id, $sync);
     }
 
     // 头像认证执行
     public function do_avatar($member) {
 
-        if ($member['is_avatar'] || !IS_USE_MEMBER) {
-            return;
+        if (!IS_USE_MEMBER) {
+            log_message('debug', '没有安装【用户系统】插件，无法执行函数：do_avatar');
+            return false;
         }
-
-        $this->db->table('member_data')->where('id', $member['id'])->update(['is_avatar' => 1]);
-        // avatar_score
-        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_score', $member);
-        if ($value) {
-            \Phpcmf\Service::M('member')->add_experience($member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
-        }
-        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_exp', $member);
-        if ($value) {
-            $this->add_score($member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
-        }
+        return \Phpcmf\Service::M('member', 'member')->do_avatar($member);
     }
 
     // 注册随机账号
@@ -1668,8 +977,6 @@ class Member extends \Phpcmf\Model {
             $name = substr($member['phone'], 3);
         } elseif ($member['name']) {
             $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
-        } else {
-            return '';
         }
 
         // 重复名称加随机数

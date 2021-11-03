@@ -69,7 +69,7 @@ class Hooks extends \CodeIgniter\Events\Events
         }
 
         if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
-            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);
+            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次');
         }
 
         foreach ($listeners as $listener) {
@@ -116,7 +116,7 @@ class Hooks extends \CodeIgniter\Events\Events
         }
 
         if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
-            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次：'.FC_NOW_URL);
+            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次');
         }
 
         foreach ($listeners as $listener) {

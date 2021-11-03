@@ -123,9 +123,9 @@ abstract class Common extends \CodeIgniter\Controller {
         define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
         define('OAUTH_URL', PAY_URL); // 第三方登录URL
-        define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', dr_rm_http(ROOT_URL).'api/language/'.SITE_LANGUAGE.'/'); // 语言包
 
-        !defined('THEME_PATH') && define('THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
+        !defined('THEME_PATH') && define('THEME_PATH', dr_rm_http(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径
 
         if (strpos(SITE_THEME, '/') !== false) {

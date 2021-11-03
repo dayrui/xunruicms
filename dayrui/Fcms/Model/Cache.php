@@ -189,7 +189,6 @@ class Cache extends \Phpcmf\Model
 
         // 递归删除文件
         $path = [
-            WRITEPATH.'html',
             WRITEPATH.'file',
             WRITEPATH.'template',
             WRITEPATH.'debugbar',

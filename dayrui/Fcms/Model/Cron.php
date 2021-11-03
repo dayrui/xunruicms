@@ -98,17 +98,4 @@ class Cron extends \Phpcmf\Model {
 
     }
 
-    // 删除静态网页文件
-    public function clear_html_file($url, $time) {
-
-        $file = WRITEPATH.'html/'.md5($url).'.html';
-        if (!is_file($file)) {
-            return;
-        }
-
-        if (filemtime($file) + $time * 3600 < SYS_TIME) {
-            unlink($file);
-        }
-    }
-
 }
