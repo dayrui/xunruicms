@@ -2499,10 +2499,10 @@ function dr_authcode($string, $operation = 'DECODE') {
 
     if ($operation == 'DECODE') {
         // 解密
-        return \Phpcmf\Service::L('cache')->get_auth_data($string);
+        return \Phpcmf\Service::L('cache')->get_auth_data($string, 1);
     } else {
         // 加密
-        \Phpcmf\Service::L('cache')->set_auth_data(md5($string), $string);
+        \Phpcmf\Service::L('cache')->set_auth_data(md5($string), $string, 1);
         return md5($string);
     }
 }

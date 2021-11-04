@@ -131,6 +131,7 @@ class Member extends \Phpcmf\Model {
             return;
         }
 
+
         \Phpcmf\Service::M('member', 'member')->init_member($member);
     }
 
@@ -386,9 +387,7 @@ class Member extends \Phpcmf\Model {
             return $this->sso_url;
         }
 
-        $this->sso_url = [
-            '/'
-        ];
+        $this->sso_url = [];
 
         if (is_file(WRITEPATH.'config/domain_sso.php')) {
             $sso = require WRITEPATH.'config/domain_sso.php';
@@ -961,11 +960,20 @@ class Member extends \Phpcmf\Model {
     // 头像认证执行
     public function do_avatar($member) {
 
-        if (!IS_USE_MEMBER) {
-            log_message('debug', '没有安装【用户系统】插件，无法执行函数：do_avatar');
-            return false;
+        if ($member['is_avatar'] || !IS_USE_MEMBER) {
+            return;
         }
-        return \Phpcmf\Service::M('member', 'member')->do_avatar($member);
+
+        $this->db->table('member_data')->where('id', $member['id'])->update(['is_avatar' => 1]);
+        // avatar_score
+        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_score', $member);
+        if ($value) {
+            \Phpcmf\Service::M('member')->add_experience($member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
+        }
+        $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_exp', $member);
+        if ($value) {
+            $this->add_score($member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
+        }
     }
 
     // 注册随机账号
