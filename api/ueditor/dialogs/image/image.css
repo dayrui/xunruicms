@@ -179,7 +179,6 @@
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: url("./images/lock.gif") -13px -13px no-repeat;
     vertical-align: middle;
 }
 #remote #preview{

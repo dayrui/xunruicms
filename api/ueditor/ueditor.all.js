@@ -25195,6 +25195,9 @@
                     .replace(/%%/g, (this.uiName ? prefix : '') + ' ' + this.className)
                     .replace(/\$\$/g, this._globalKey));
             },
+            getUid:function () {
+                return this.id;
+            },
             renderHtml:function () {
                 return this.formatHtml(this.getHtmlTpl());
             },
@@ -28876,6 +28879,15 @@
                             if (!dialogs[dialogName]) {
                                 return;
                             }
+
+                            if (dialogName == 'insertimageDialog') {
+                                edustr = '$EDITORUI[\"'+popup.getUid()+'\"]._onImgEditButtonClick(\''+dialogName+'\')';
+                                //console.log(dialogs);
+                                //console.log(edustr);
+                                eval(edustr);
+                                return;
+                            }
+
                             str = '<nobr>' + editor.getLang("property") + ': '+
                                 '<span onclick=$$._onImgSetFloat("none") class="edui-clickable">' + editor.getLang("default") + '</span>&nbsp;&nbsp;' +
                                 '<span onclick=$$._onImgSetFloat("left") class="edui-clickable">' + editor.getLang("justifyleft") + '</span>&nbsp;&nbsp;' +
