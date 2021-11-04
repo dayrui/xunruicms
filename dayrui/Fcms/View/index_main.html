@@ -2,7 +2,7 @@
 
 {if $table_data}
 <div class="row mymain">
-    <div class="col-md-3 column sortable" id="3-1">
+    <div class="col-md-3 column sortable-ui" id="3-1">
         {loop $table_data $table $tid}
         {if $tid == '3-1'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -10,7 +10,7 @@
         {/if}
         {/loop}
     </div>
-    <div class="col-md-3 column sortable" id="3-2">
+    <div class="col-md-3 column sortable-ui" id="3-2">
         {loop $table_data $table $tid}
         {if $tid == '3-2'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -18,7 +18,7 @@
         {/if}
         {/loop}
     </div>
-    <div class="col-md-3 column sortable" id="3-3">
+    <div class="col-md-3 column sortable-ui" id="3-3">
         {loop $table_data $table $tid}
         {if $tid == '3-3'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -26,7 +26,7 @@
         {/if}
         {/loop}
     </div>
-    <div class="col-md-3 column sortable" id="3-4">
+    <div class="col-md-3 column sortable-ui" id="3-4">
         {loop $table_data $table $tid}
         {if $tid == '3-4'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -36,7 +36,7 @@
     </div>
 </div>
 <div class="row mymain">
-    <div class="col-md-4 column sortable" id="4-1">
+    <div class="col-md-4 column sortable-ui" id="4-1">
         {loop $table_data $table $tid}
         {if $tid == '4-1'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -45,7 +45,7 @@
         {/loop}
     </div>
 
-    <div class="col-md-4 column sortable" id="4-2">
+    <div class="col-md-4 column sortable-ui" id="4-2">
         {loop $table_data $table $tid}
         {if $tid == '4-2'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -54,7 +54,7 @@
         {/loop}
     </div>
 
-    <div class="col-md-4 column sortable" id="4-3">
+    <div class="col-md-4 column sortable-ui" id="4-3">
         {loop $table_data $table $tid}
         {if $tid == '4-3'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -65,7 +65,7 @@
 
 </div>
 <div class="row mymain">
-    <div class="col-md-6 column sortable" id="6-1">
+    <div class="col-md-6 column sortable-ui" id="6-1">
         {loop $table_data $table $tid}
         {if $tid == '6-1'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -73,7 +73,7 @@
         {/if}
         {/loop}
     </div>
-    <div class="col-md-6 column sortable" id="6-2">
+    <div class="col-md-6 column sortable-ui" id="6-2">
         {loop $table_data $table $tid}
         {if $tid == '6-2'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -83,7 +83,7 @@
     </div>
 </div>
 <div class="row mymain">
-    <div class="col-md-12 column sortable" id="12">
+    <div class="col-md-12 column sortable-ui" id="12">
         {loop $table_data $table $tid}
         {if $tid == '12'}
         {php $file = \Phpcmf\Service::M('auth')->get_main_table($table);}
@@ -95,7 +95,7 @@
 {/if}
 <script>
     $(function () {
-        $('.sortable').each(function () {
+        $('.sortable-ui').each(function () {
            var html = $(this).html();
            if (html.length < 20) {
                $(this).remove();

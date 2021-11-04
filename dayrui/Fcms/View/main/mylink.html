@@ -9,7 +9,8 @@
     <div class="portlet-body">
         <div class="admin-usermenu">
             {loop $admin.usermenu $t}
-            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
+            <label><a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {/if} href="{$t.url}"> {$t.name} </a>
+            </label>
             {/loop}
         </div>
     </div>
