@@ -78,22 +78,22 @@ class Sso extends \Phpcmf\Common {
 	}
 
     public function login() {
-        $ci = new \Phpcmf\Control\Member\Login();
+        $ci = new \Phpcmf\Controllers\Member\Login();
         $ci->index();
     }
 
     public function sms() {
-        $ci = new \Phpcmf\Control\Member\Login();
+        $ci = new \Phpcmf\Controllers\Member\Login();
         $ci->sms();
     }
 
     public function oauth() {
-        $ci = new \Phpcmf\Control\Member\Login();
+        $ci = new \Phpcmf\Controllers\Member\Login();
         $ci->oauth();
     }
 
     public function register() {
-        $ci = new \Phpcmf\Control\Member\Register();
+        $ci = new \Phpcmf\Controllers\Member\Register();
         $ci->index();
     }
 
