@@ -78,22 +78,38 @@ class Sso extends \Phpcmf\Common {
 	}
 
     public function login() {
-        $ci = new \Phpcmf\Controllers\Member\Login();
+        if (!IS_USE_MEMBER) {
+            $this->_json(0, '没有安装用户系统插件');
+        }
+        require IS_USE_MEMBER.'Controllers/Login.php';
+        $ci = new \Phpcmf\Controllers\Login();
         $ci->index();
     }
 
     public function sms() {
-        $ci = new \Phpcmf\Controllers\Member\Login();
+        if (!IS_USE_MEMBER) {
+            $this->_json(0, '没有安装用户系统插件');
+        }
+        require IS_USE_MEMBER.'Controllers/Login.php';
+        $ci = new \Phpcmf\Controllers\Login();
         $ci->sms();
     }
 
     public function oauth() {
-        $ci = new \Phpcmf\Controllers\Member\Login();
+        if (!IS_USE_MEMBER) {
+            $this->_json(0, '没有安装用户系统插件');
+        }
+        require IS_USE_MEMBER.'Controllers/Login.php';
+        $ci = new \Phpcmf\Controllers\Login();
         $ci->oauth();
     }
 
     public function register() {
-        $ci = new \Phpcmf\Controllers\Member\Register();
+        if (!IS_USE_MEMBER) {
+            $this->_json(0, '没有安装用户系统插件');
+        }
+        require IS_USE_MEMBER.'Controllers/Register.php';
+        $ci = new \Phpcmf\Controllers\Register();
         $ci->index();
     }
 
