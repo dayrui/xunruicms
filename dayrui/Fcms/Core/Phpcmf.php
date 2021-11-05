@@ -165,7 +165,7 @@ abstract class Common extends \CodeIgniter\Controller {
         $is_auto_mobile_page = 0;
         if (defined('IS_CLIENT')) {
             // 存在自定义终端
-            define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
+            !defined('CLIENT_URL') && define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
             \Phpcmf\Service::V()->init(defined('IS_CLIENT_TPL') && IS_CLIENT_TPL ? IS_CLIENT_TPL : IS_CLIENT);
         } elseif (defined('IS_MOBILE') || (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
             // 移动端模板 // 开启自动识别移动端

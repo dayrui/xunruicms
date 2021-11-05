@@ -352,7 +352,7 @@ class Site extends \Phpcmf\Model
                         $site_domain[$c['domain']] = $t['id'];
                         $_save[$c['name']] = $sso_domain[] = $c['domain'];
                     }
-                    $cache[$t['id']]['client'] = $_save;
+                    $cache[$t['id']]['client'] = $t['setting']['client'] = $_save;
                 }
 
                 // 网站路径
