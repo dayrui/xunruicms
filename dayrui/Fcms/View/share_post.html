@@ -472,11 +472,41 @@
                                 <label class="col-md-2 control-label">{dr_lang('操作状态')}</label>
                                 <div class="col-md-9">
                                     <div class="mt-radio-inline">
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="verify[status]" value="1" {if !$back_note} checked{/if} /> {dr_lang('通过')} <span></span></label>
-                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="verify[status]" value="0" {if $back_note} checked{/if} /> {dr_lang('拒绝')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide();$('.dr_verify_time').show()" name="verify[status]" value="1" {if !$back_note} checked{/if} /> {dr_lang('通过')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show();$('.dr_verify_time').hide()" name="verify[status]" value="0" {if $back_note} checked{/if} /> {dr_lang('拒绝')} <span></span></label>
                                     </div>
                                 </div>
                             </div>
+                            {if $verify_next == 9}
+                            <div class="form-group dr_verify_time">
+                                <label class="col-md-2 control-label">{dr_lang('发布时间')}</label>
+                                <div class="col-md-9">
+                                    <span class="form-date input-group">
+                                    <div class="input-group date field_date_inputtime">
+                                        <input id="verify_posttime" name="verify_posttime" type="text" style="width:160px;" placeholder="{dr_lang('立即发布')}"  required="required" class="form-control ">
+                                        <span class="input-group-btn">
+                                            <button class="btn default date-set" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <script>
+                                    $(function(){
+                                        $(".field_date_inputtime").datetimepicker({
+                                            isRTL: App.isRTL(),
+                                            format: "yyyy-mm-dd hh:ii:ss",
+                                            showMeridian: true,
+                                            autoclose: true,
+                                            pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
+                                            todayBtn: true
+                                        });
+                                    });
+                                    </script>
+                                </span>
+                                    <span class="help-block">{dr_lang('可设置定时发布，定时时间不能晚于当前时间')}</span>
+                                </div>
+                            </div>
+                            {/if}
                             <div class="form-group dr_close_msg" style="{if !$back_note} display:none{/if}">
                                 <label class="col-md-2 control-label">{dr_lang('拒绝理由')}</label>
                                 <div class="col-md-9">

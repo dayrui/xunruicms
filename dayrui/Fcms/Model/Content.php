@@ -102,11 +102,12 @@ class Content extends \Phpcmf\Model {
             )));
             $data[0]['id'] = $data[1]['id'] = $id;
             // 如果来自审核页面,且本次通过
-            if ( defined('IS_MODULE_VERIFY') && $data[1]['status'] == 9
+            if (defined('IS_MODULE_VERIFY') && $data[1]['status'] == 9
                && !$this->db->table($this->mytable)->where('id', $id)->countAllResults()) {
                 $id = 0;
             }
         }
+
 
         // 表示审核文章机制
         if ($data[1]['status'] >= 0 && $data[1]['status'] < 9) {
@@ -230,6 +231,20 @@ class Content extends \Phpcmf\Model {
                 $this->_call_verify($value, $verify);
             }
             return dr_return_data($verify['id'], 'ok', $verify);
+        } elseif (defined('IS_MODULE_VERIFY') && $data[1]['status'] == 9 &&
+            isset($_POST['verify_posttime']) && $_POST['verify_posttime'] ) {
+            // 审核完成进行定时发布的动作
+            $post_time = (int)strtotime(\Phpcmf\Service::L('input')->post('verify_posttime'));
+            if (SYS_TIME > $post_time) {
+                return dr_return_data(0, dr_lang('定时发布时间不正确'), $data);
+            }
+            // 保存定时发布数据
+            $rt = $this->save_post_time($id, $data, $post_time);
+            if ($rt['code']) {
+                $this->_verify_success($data, $old);
+                \Phpcmf\Service::C()->_json(1, dr_lang('操作成功，已设为定时发布'));
+            }
+            return $rt;
         }
 
         $cdata = [];
@@ -335,24 +350,7 @@ class Content extends \Phpcmf\Model {
         // 来源判断
         if (defined('IS_MODULE_VERIFY')) {
             // 如果来自审核页面,表示完成审核
-            // 通知用户
-            \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
-
-            $value = array_merge($data[1], $data[0]);
-            $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
-            $verify['status'] = 9;
-            $verify['content'] = dr_array2string($value);
-            $verify['backuid'] = IS_ADMIN ? $this->uid : 0;
-            $verify['backinfo'] = dr_array2string($old['verify']['backinfo']);
-
-            // 删除审核表
-            $this->table($this->mytable.'_verify')->delete($data[1]['id']);
-
-            // 挂钩点 模块内容审核处理之后
-            \Phpcmf\Hooks::trigger('module_verify_after', $verify);
-
-            // 执行审核后的回调
-            $this->_call_verify($value, $verify);
+            $this->_verify_success($data, $old);
         } elseif (defined('IS_MODULE_RECYCLE')) {
             // 如果来自回收站就删除回收站内容
             $this->db->table($this->mytable.'_recycle')->where('cid', $id)->delete();
@@ -489,6 +487,28 @@ class Content extends \Phpcmf\Model {
         }
 
         return $rt;
+    }
+
+    // 审核成功执行
+    protected function _verify_success($data, $old) {
+
+        // 通知用户
+        \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
+        $value = array_merge($data[1], $data[0]);
+        $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
+        $verify['status'] = 9;
+        $verify['content'] = dr_array2string($value);
+        $verify['backuid'] = IS_ADMIN ? $this->uid : 0;
+        $verify['backinfo'] = dr_array2string($old['verify']['backinfo']);
+
+        // 删除审核表
+        $this->table($this->mytable.'_verify')->delete($data[1]['id']);
+
+        // 挂钩点 模块内容审核处理之后
+        \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+
+        // 执行审核后的回调
+        $this->_call_verify($value, $verify);
     }
 
     // 验证栏目操作权限 后台
