@@ -256,7 +256,7 @@ class File extends \Phpcmf\Common
         $exts = dr_safe_replace($p['exts']);
         $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts();
 
-        $url = WEB_DIR.'index.php?is_ajax=1&s=api&c=file&m=input_file_list'
+        $url = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=input_file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
             .'&ct='.$ct
             .'&p='.\Phpcmf\Service::L('input')->get('p');
@@ -264,7 +264,7 @@ class File extends \Phpcmf\Common
 
         // 快捷上传字段参数
         $field = [
-            'url' => WEB_DIR.'index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
+            'url' => dr_web_prefix('index.php?s=api&c=file&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
             'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), ($p['size']).'MB'),
             'param' => $p,
             'back' => $url.'&pp=0',

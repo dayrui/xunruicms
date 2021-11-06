@@ -184,7 +184,7 @@ class Related extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "'.WEB_DIR.'index.php?s=api&c=api&m=related&name='.$name.'&site='.SITE_ID.'&module='.$module.'&my='.intval($field['setting']['option']['my']).'.&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
+		    var url = "'.dr_web_prefix('index.php?s=api&c=api&m=related&name=').$name.'&site='.SITE_ID.'&module='.$module.'&my='.intval($field['setting']['option']['my']).'.&pagesize='.intval($field['setting']['option']['pagesize']).'&is_ajax=1";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-cog"></i> '.dr_lang('关联内容').'\',

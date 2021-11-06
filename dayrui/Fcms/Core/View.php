@@ -360,8 +360,11 @@ class View {
             return TPLPATH.'pc/default/home/'.$file;
         }
 
-        if (IS_DEV) {
+        if (CI_DEBUG) {
             log_message('error', '模板文件['.$error.']不存在');
+            if ($file == 'msg.html' || $file == '404.html') {
+                return COREPATH.'View/api_msg.html';
+            }
         }
 
         $this->show_error('模板文件不存在', $error);

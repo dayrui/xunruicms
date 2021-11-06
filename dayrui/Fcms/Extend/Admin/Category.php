@@ -1102,7 +1102,7 @@ class Category extends \Phpcmf\Table {
                 if (!dr_html_auth(1)) {
                     $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
                 }
-                $list = WEB_DIR.'index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$id;
+                $list = dr_web_prefix('index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$id);
                 $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
             }
             $this->_json(1, dr_lang('操作成功'));
@@ -1336,7 +1336,7 @@ class Category extends \Phpcmf\Table {
                     if (!dr_html_auth(1)) {
                         $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
                     }
-                    $list = WEB_DIR.'index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id'];
+                    $list = dr_web_prefix('index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id']);
                     $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
                 }
             }

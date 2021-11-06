@@ -167,7 +167,7 @@ class Router {
             // 非后台统一index.php入口
             if ($self == '/index.php') {
                 // 表示相对路径
-                $self = WEB_DIR.'index.php';
+                $self = dr_web_prefix('index.php');
             } else {
                 if (defined('IS_CLIENT')) {
                     // 终端前缀
@@ -421,10 +421,10 @@ class Router {
         // 自定义规则的情况下
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value', 'module');
         if ($rule) {
-            return WEB_DIR . str_replace('{modname}', $mod['dirname'], $rule);
+            return dr_web_prefix(str_replace('{modname}', $mod['dirname'], $rule));
         }
 
-        return WEB_DIR.'index.php?s=' . $mod['dirname'];
+        return dr_web_prefix('index.php?s=' . $mod['dirname']);
     }
 
     /**

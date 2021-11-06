@@ -34,7 +34,7 @@ class Table extends \Phpcmf\Model
                         'table' => $table,
                         'name' => 'title',
                         'thumb' => 'thumb',
-                        'url' => WEB_DIR.'index.php?s='.$t['dirname'].'&c=show&id=',
+                        'url' => dr_web_prefix('index.php?s='.$t['dirname'].'&c=show&id='),
                         'username' => 'author',
                     ];
                     // 模块表
@@ -64,7 +64,7 @@ class Table extends \Phpcmf\Model
                                     'table' => $table,
                                     'name' => 'title',
                                     'thumb' => 'thumb',
-                                    'url' => WEB_DIR.'index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id=',
+                                    'url' => dr_web_prefix('index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id='),
                                     'username' => 'author',
                                 ];
                             }
@@ -88,7 +88,7 @@ class Table extends \Phpcmf\Model
                         'table' => $table,
                         'name' => 'title',
                         'thumb' => 'thumb',
-                        'url' => WEB_DIR.'index.php?s=form&c='.$t['table'].'&m=show&id=',
+                        'url' => dr_web_prefix('index.php?s=form&c='.$t['table'].'&m=show&id='),
                         'username' => 'author',
                     ];
                 }

@@ -178,7 +178,7 @@ class Api extends \Phpcmf\Common {
         }
 
         list($uri, $param) = explode(':', $data['uri']);
-        $url = ADMIN_URL.WEB_DIR.\Phpcmf\Service::L('Router')->url($uri);
+        $url = ADMIN_URL.dr_web_prefix(\Phpcmf\Service::L('Router')->url($uri));
         $param && $url.= '&'.http_build_query(dr_rewrite_decode($param, '/'));
 
         // 标记为已经查看
