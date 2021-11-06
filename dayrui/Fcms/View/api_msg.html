@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+</head>
+<body class="page-container-bg-solid" style=" background-color: #eef1f5;">
+<div class="page-content">
+
+                <div class="container" style="padding-top:110px">
+
+
+                            <div class="portlet light">
+                            <div class="portlet-body">
+                                <div class="row fc-msg-body">
+
+
+                                    <div class="col-md-12 text-center">
+
+                                        <div class="fc-msg-info">
+                                            <p class="fc-msg-title">{$msg}</p>
+
+                                            <p>
+                                                    系统检测到前端缺失{$this->_filename}模板，本页面是临时的显示模板。
+                                            </p>
+                                            <p class="fc-msg-url">
+                                                {if $url}
+                                                <a href="{$url}">如果您的浏览器没有自动跳转，请点击这里</a>
+                                                <meta http-equiv="refresh" content="{$time}; url={$url}">
+                                                {else}
+                                                <a href="{$backurl}" >[点击返回上一页]</a>
+                                                {/if}
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+
+            </div>
+</body>
+
+</html>
