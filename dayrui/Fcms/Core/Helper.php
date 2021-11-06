@@ -1303,6 +1303,7 @@ function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto',
     }
 
     $file = dr_file($img);
+    CI_DEBUG && log_message('debug', '图片['.$img.']不是数字id浩，dr_thumb函数无法进行缩略图处理');
 
     return $file ? $file : ROOT_THEME_PATH.'assets/images/nopic.gif';
 }

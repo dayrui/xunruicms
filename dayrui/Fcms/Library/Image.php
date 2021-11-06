@@ -1566,10 +1566,10 @@ class Image
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
-                CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，thumb函数无法调用');
+                CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，dr_thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg', 'webp'])) {
-                CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，thumb函数无法调用');
+                CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
         } else {
@@ -1590,12 +1590,12 @@ class Image
                 // 远程图片下载到本地进行缩略图处理
                 $data = dr_catcher_data($attach['url'], 10);
                 if (!$data) {
-                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，thumb函数无法调用');
+                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，dr_thumb函数无法调用');
                     return $attach['url'];
                 }
                 $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
                 if (!file_put_contents($file, $data)) {
-                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，thumb函数无法调用');
+                    CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，dr_thumb函数无法调用');
                     return $attach['url'];
                 }
             } else {
@@ -1615,7 +1615,7 @@ class Image
             }
         } elseif (!is_file($file)) {
             // 本地图片不存在
-            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，thumb函数无法调用');
+            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用');
             return ROOT_THEME_PATH.'assets/images/nopic.gif';
         }
 
@@ -1664,7 +1664,7 @@ class Image
                 $data['dynamic_output'] = false;
                 $this->watermark($data);
             } else {
-                CI_DEBUG && log_message('debug', '网站没有设置水印数据，thumb函数中的水印参数将无效');
+                CI_DEBUG && log_message('debug', '网站没有设置水印数据，dr_thumb函数中的水印参数将无效');
             }
         }
 
