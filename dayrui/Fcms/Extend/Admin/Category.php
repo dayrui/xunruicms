@@ -1338,11 +1338,11 @@ class Category extends \Phpcmf\Table {
                     }
                     $this->_json(1, dr_lang('操作成功'), [
                         'htmlfile' =>  dr_web_prefix('index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id']),
-                        'url' => isset($_GET['is_self']) ? dr_url(MOD_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
+                        'url' => isset($_GET['is_self']) ? dr_url(APP_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
                     ]);
                 }
                 $this->_json(1, dr_lang('操作成功'), [
-                    'url' => isset($_GET['is_self']) ? dr_url(MOD_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
+                    'url' => isset($_GET['is_self']) ? dr_url(APP_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
                 ]);
             }
         );
