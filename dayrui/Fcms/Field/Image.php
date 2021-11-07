@@ -226,7 +226,7 @@ class Image extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-        $url = dr_web_prefix('index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id']);
+        $url = WEB_DIR.'index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板
         $i = 0;
@@ -237,12 +237,16 @@ class Image extends \Phpcmf\Library\A_Field {
                 foreach ($value as $id) {
                     $file = \Phpcmf\Service::C()->get_attachment($id);
                     if ($file) {
+                        $editname = '';
+                        if ($file['uid'] == \Phpcmf\Service::C()->uid || IS_ADMIN) {
+                            $editname = ' onclick="dr_iframe(\''.dr_lang('修改名称').'\', \''.dr_web_prefix('index.php?s=api&c=file&m=name_edit&id='.$file['id']).'\', \'350px\', \'220px\');" title="'.dr_lang('修改名称').'"';
+                        }
                         $tpl.= '<div id="image-'.$name.'-'.$id.'" class="dz-preview dz-processing dz-success dz-complete dz-image-preview">';
                         $tpl.=     '<div class="dz-image">';
                         $tpl.=        ' <img data-dz-thumbnail="" src="'.dr_get_file($id).'">';
                         $tpl.=     '</div>';
 
-                        $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div><div class="dz-filename"><span data-dz-name="">'.$file['filename'].'</span></div></div>';
+                        $tpl.=    ' <div class="dz-details"><div class="dz-size" onclick="dr_preview_image(\''.$file['url'].'\');" title="'.dr_lang('放大图片').'"><span data-dz-size="">'.$this->_format_file_size($file['filesize']).'</span></div><div class="dz-filename" '.$editname.'><span data-dz-name="">'.$file['filename'].'</span></div></div>';
 
                         $tpl.=     '<a class="dz-remove" href="javascript:dr_delete_image_'.$name.'('.$id.');" title="'.dr_lang('删除图片').'">';
                         $tpl.=      '   <i class="fa fa-times-circle"></i>';

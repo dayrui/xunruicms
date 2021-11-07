@@ -191,47 +191,6 @@ class Attachments extends \Phpcmf\Table
         $this->_json(1, dr_lang('操作成功'));
     }
 
-    // 附件改名
-    public function name_edit() {
 
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
-        if (!$id) {
-            $this->_json(0, dr_lang('附件id不能为空'));
-        }
-
-        $data = \Phpcmf\Service::M()->table('attachment')->get($id);
-        if (!$data) {
-            $this->_json(0, dr_lang('附件%s不存在', $id));
-        }
-
-        if (IS_POST) {
-            $name = \Phpcmf\Service::L('input')->post('name');
-            if (!$name) {
-                $this->_json(0, dr_lang('附件名称不能为空'));
-            }
-            if ($data['related']) {
-                \Phpcmf\Service::M()->table('attachment_data')->update($id, [
-                    'filename' => $name,
-                ]);
-            } else {
-                \Phpcmf\Service::M()->table('attachment_unused')->update($id, [
-                    'filename' => $name,
-                ]);
-            }
-            $this->_json(1, dr_lang('操作成功'));
-        }
-
-        if ($data['related']) {
-            $data2 = \Phpcmf\Service::M()->table('attachment_data')->get($id);
-        } else {
-            $data2 = \Phpcmf\Service::M()->table('attachment_unused')->get($id);
-        }
-
-        \Phpcmf\Service::V()->assign([
-            'form' => dr_form_hidden(),
-            'name' => $data2['filename'],
-        ]);
-        \Phpcmf\Service::V()->display('attachment_edit.html');exit;
-    }
 
 }

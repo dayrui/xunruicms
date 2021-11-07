@@ -477,15 +477,17 @@ abstract class Common extends \CodeIgniter\Controller {
     /**
      * 附件信息
      */
-    public function get_attachment($id) {
+    public function get_attachment($id, $update = 0) {
 
         if (!$id) {
             return null;
         }
 
-        $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
-        if ($data) {
-            return $data;
+        if (!$update) {
+            $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
+            if ($data) {
+                return $data;
+            }
         }
 
         $id = (int)$id;
