@@ -332,7 +332,11 @@ class Module extends \Phpcmf\Common
             $tpl = !$category['setting']['template']['page'] ? 'page.html' : $category['setting']['template']['page'];
         } else {
             \Phpcmf\Service::V()->module($this->module['dirname']);
-            $tpl = $category['child'] ? $category['setting']['template']['category'] : $category['setting']['template']['list'];
+            if ($category['child']) {
+                $tpl = $category['setting']['template']['category'] ? $category['setting']['template']['category'] : 'category.html';
+            } else {
+                $tpl = $category['setting']['template']['list'] ? $category['setting']['template']['list'] : 'list.html';
+            }
         }
 
         // 输出方式
