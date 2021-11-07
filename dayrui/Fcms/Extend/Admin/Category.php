@@ -1336,9 +1336,14 @@ class Category extends \Phpcmf\Table {
                     if (!dr_html_auth(1)) {
                         $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
                     }
-                    $list = dr_web_prefix('index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id']);
-                    $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $list]);
+                    $this->_json(1, dr_lang('操作成功'), [
+                        'htmlfile' =>  dr_web_prefix('index.php?s='.APP_DIR.'&c=html&m=categoryfile&id='.$data[1]['id']),
+                        'url' => isset($_GET['is_self']) ? dr_url(MOD_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
+                    ]);
                 }
+                $this->_json(1, dr_lang('操作成功'), [
+                    'url' => isset($_GET['is_self']) ? dr_url(MOD_DIR.'/category/edit', ['id' => $data[1]['id']]) : '',
+                ]);
             }
         );
     }
