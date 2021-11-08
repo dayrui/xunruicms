@@ -167,15 +167,18 @@ abstract class Common extends \CodeIgniter\Controller {
             // 存在自定义终端
             !defined('CLIENT_URL') && define('CLIENT_URL', dr_http_prefix($this->get_cache('site', SITE_ID, 'client', IS_CLIENT)) . '/');
             \Phpcmf\Service::V()->init(defined('IS_CLIENT_TPL') && IS_CLIENT_TPL ? IS_CLIENT_TPL : IS_CLIENT);
+            define('CLIENT_NAME', IS_CLIENT);
         } elseif (defined('IS_MOBILE') || (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
             // 移动端模板 // 开启自动识别移动端
             \Phpcmf\Service::V()->init('mobile');
             $is_auto_mobile_page = 1;
             define('CLIENT_URL', SITE_MURL);
+            define('CLIENT_NAME', 'mobile');
         } else {
             // 默认情况下pc模板
             define('CLIENT_URL', SITE_URL);
             \Phpcmf\Service::V()->init('pc');
+            define('CLIENT_NAME', 'pc');
         }
         !defined('IS_CLIENT') && define('IS_CLIENT', '');
 

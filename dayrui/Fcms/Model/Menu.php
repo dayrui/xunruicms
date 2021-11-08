@@ -741,6 +741,7 @@ class Menu extends \Phpcmf\Model {
                         foreach ($data as $n) {
                             $n['site'] = dr_string2array($n['site']);
                             $n['group'] = dr_string2array($n['group']);
+                            $n['client'] = dr_string2array($n['client']);
                             if ($n['pid'] == $t['id']) {
                                 $list['url'][$t['id']]['link'][$n['id']] = $n;
                                 $n['uri'] && $list['uri'][$n['uri']] = [

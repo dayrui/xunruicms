@@ -626,6 +626,23 @@ function dr_lang(...$param) {
     return $param ? vsprintf($string, $param) : $string;
 }
 
+// 获取终端列表
+function dr_client_data() {
+
+    $rt = [
+        'pc' => 'PC端',
+        'mobile' => '移动端',
+    ];
+    if (is_file(WRITEPATH.'config/app_client.php')) {
+        $rt2 = \Phpcmf\Service::R(WRITEPATH.'config/app_client.php');
+        if ($rt2) {
+            $rt = $rt + $rt2;
+        }
+    }
+
+    return $rt;
+}
+
 // 判断用户中心菜单权限
 function dr_member_menu_show($t) {
 
@@ -644,11 +661,18 @@ function dr_member_menu_show($t) {
     // 判断站点显示权限
     $is_site = 0;
     if (!$t['site'] || ($t['site'] && dr_in_array(SITE_ID, $t['site']))) {
-        $is_site = 1; // 当前站可用
+        $is_site = 1; // 当前可用
+    }
+
+    // 判断终端显示权限
+    $is_client = 0;
+    if (!$t['client'] || ($t['client'] && dr_in_array(CLIENT_NAME, $t['client']))) {
+        $is_client = 1; // 当前可用
     }
 
     // 判断用户组显示权限
-    if ($is_site && (!$t['group'] || dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
+    if ($is_client && $is_site
+        && (!$t['group'] || dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
         return 1;
     }
 
