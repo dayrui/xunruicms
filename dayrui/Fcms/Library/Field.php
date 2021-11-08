@@ -631,6 +631,7 @@
                 return ['', ''];
             }
 
+            $obj->init($field);
             list($a, $b) = $obj->option($option, $field);
 
             if ($obj->is_validate) {
@@ -779,6 +780,7 @@
         public $id; // 当前数据id 存在id表示修改数据
         public $app; // 当前app目录，option可用
         public $close_xss; // 强制关闭xss
+        public $field; // 当前字段信息
         public $use_xss; // 强制开启xss
         public $is_edit = true; // 是否允许修改字段类别
         public $is_validate = true; // 是否允许字段验证
@@ -807,6 +809,13 @@
          */
         public function __construct(...$params) {
 
+        }
+
+        /**
+         * 设置字段信息
+         */
+        public function init($field) {
+            $this->field = $field;
         }
 
         /**

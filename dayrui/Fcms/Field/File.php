@@ -34,6 +34,9 @@ class File extends \Phpcmf\Library\A_Field {
                 </div>
             </div>';
         }
+        if ($this->field && $this->field['fieldname'] != 'thumb') {
+            $mthumb = '';
+        }
 
 		return [$this->field_type($option['fieldtype'], $option['fieldlength']).$this->_search_field().
 			$mthumb.'
