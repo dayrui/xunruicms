@@ -49,8 +49,8 @@
       forcestepdivisibility: 'round', // none | floor | round | ceil
       stepintervaldelay: 500,
       verticalbuttons: false,
-      verticalupclass: 'glyphicon glyphicon-chevron-up',
-      verticaldownclass: 'glyphicon glyphicon-chevron-down',
+      verticalupclass: 'fa fa-chevron-up',
+      verticaldownclass: 'fa fa-chevron-down',
       prefix: '',
       postfix: '',
       prefix_extraclass: '',
