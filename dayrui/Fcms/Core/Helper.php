@@ -51,7 +51,7 @@ function dr_safe_url($url, $is_html = false) {
 function dr_diff($str1, $str2) {
 
     if (is_array($str1) && is_array($str2)) {
-        return array_diff($str1, $str2);
+        return array_diff($str1, $str2) ? false : true;
     } elseif (dr_strlen($str1) != dr_strlen($str2)) {
         return false;
     }

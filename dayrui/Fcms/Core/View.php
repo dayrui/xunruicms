@@ -1587,6 +1587,7 @@ class View {
 
                 // 关联栏目模型表
                 if ($system['more'] && isset($module['category_data_field']) && $module['category_data_field']) {
+                    $fields = array_merge($fields, $module['category_data_field']);
                     $table_more = $table.'_category_data'; // 栏目模型表
                     $sql_from.= " LEFT JOIN $table_more ON `$table_more`.`id`=`$table`.`id`"; // sql的from子句
                     $_order[$table_more] = $tableinfo[$table_more];

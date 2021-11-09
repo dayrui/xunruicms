@@ -391,7 +391,6 @@ class Function_list
     // 实时存储选择值
     public function save_select_value($value, $param = [], $data = [], $field = []) {
 
-        //$oid = 'checkbox_'.$field['fieldname'].'_'.$data['id'];
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&name='.$field['fieldname'].'&id='.$data['id'].'&after='; //after是回调函数
 
@@ -430,21 +429,6 @@ class Function_list
 }</script> ';
             $this->select_js = 1;
         }
-        /*
-        $html = '<input type="checkbox" id="'.$oid.'" class="make-switch" data-size="small" data-on-color="success" '.($value ? 'checked' : '').' data-on-text="<i class=\'fa fa-check\'></i>" data-off-text="<i class=\'fa fa-times\'></i>">
-        <script>
-        $("#'.$oid.'").bootstrapSwitch({
-        onSwitchChange: function (event, state) {
-            if (state == true) {
-                // 选中
-                dr_ajax_save(1, \''.$url.'\', \''.$field['fieldname'].'\')
-            } else {
-                dr_ajax_save(0, \''.$url.'\', \''.$field['fieldname'].'\')
-            }
-        }
-    })
-        </script>
-        ';*/
 
         \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
 

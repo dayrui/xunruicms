@@ -146,7 +146,8 @@
                 btn: [lang['ok'], lang['esc']]
             }, function(index){
                 layer.close(index);
-                dr_file_delete(obj, id)
+                dr_file_delete(obj, id);
+                setTimeout("window.location.reload(true)", 2000);
             });
     }
 </script>
