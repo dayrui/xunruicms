@@ -954,6 +954,7 @@ class Member extends \Phpcmf\Model {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：member_delete');
             return false;
         }
+
         return \Phpcmf\Service::M('member', 'member')->member_delete($id, $sync);
     }
 
@@ -1038,160 +1039,17 @@ class Member extends \Phpcmf\Model {
     // 用户系统缓存
     public function cache($site = SITE_ID) {
 
-        $cache = [
-            'field' => [],
-            'authid' => [ 0 ],
-            'group' => [],
-            'config' => [],
-            'pay' => [],
-        ];
-
-        if (!dr_is_app('member')) {
-            \Phpcmf\Service::L('cache')->set_file('member', $cache);
-            return $cache;
+        if (!IS_USE_MEMBER) {
+            \Phpcmf\Service::L('cache')->set_file('member', [
+                'field' => [],
+                'authid' => [ 0 ],
+                'group' => [],
+                'config' => [],
+                'pay' => [],
+            ]);
+        } else {
+            \Phpcmf\Service::M('member', 'member')->member_cache();
         }
-
-        // 审核流程
-        $data = $this->table('admin_verify')->getAll();
-        $verify = [];
-        if ($data) {
-            foreach ($data as $t) {
-                $t['value'] = dr_string2array($t['verify']);
-                unset($t['verify']);
-                $verify[$t['id']] = $t;
-            }
-        }
-        \Phpcmf\Service::L('cache')->set_file('verify', $verify);
-
-        // 获取会员全部配置信息
-        $cache = [];
-        $result = $this->db->table('member_setting')->get()->getResultArray();
-        if ($result) {
-            foreach ($result as $t) {
-                $cache[$t['name']] = dr_string2array($t['value']);
-            }
-        }
-
-        if (!isset($cache['list_field']) || !$cache['list_field']) {
-            $cache['list_field'] = array (
-                'username' =>
-                    array (
-                        'use' => '1',
-                        'name' => '账号',
-                        'width' => '110',
-                        'func' => 'author',
-                    ),
-                'group' =>
-                    array (
-                        'func' => 'group',
-                        'center' => '1',
-                    ),
-                'name' =>
-                    array (
-                        'use' => '1',
-                        'name' => '姓名',
-                        'width' => '120',
-                        'func' => '',
-                    ),
-                'money' =>
-                    array (
-                        'use' => '1',
-                        'name' => '余额',
-                        'width' => '120',
-                        'func' => 'money',
-                    ),
-                'score' =>
-                    array (
-                        'use' => '1',
-                        'name' => '积分',
-                        'width' => '120',
-                        'func' => 'score',
-                    ),
-                'regip' =>
-                    array (
-                        'use' => '1',
-                        'name' => '注册IP',
-                        'width' => '140',
-                        'func' => 'ip',
-                    ),
-                'regtime' =>
-                    array (
-                        'use' => '1',
-                        'name' => '注册时间',
-                        'width' => '170',
-                        'func' => 'datetime',
-                    ),
-                'is_lock' =>
-                    array (
-                        'func' => 'save_select_value',
-                        'center' => '1',
-                    ),
-            );
-        }
-
-        // 字段归属
-        $cache['myfield'] = $cache['field'];
-
-        // 自定义字段
-        $register_field = $group_field = $cache['field'] = [];
-        $field = $this->db->table('field')->where('disabled', 0)->where('relatedname', 'member')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
-        if ($field) {
-            foreach ($field as $f) {
-                $f['setting'] = dr_string2array($f['setting']);
-                $cache['field'][$f['fieldname']] = $f;
-                // 归类用户组字段
-                if ($cache['myfield'][$f['id']]) {
-                    foreach ($cache['myfield'][$f['id']] as $gid) {
-                        $group_field[$gid][] = $f['fieldname'];
-                    }
-                }
-                // 归类可用注册的字段
-                if ($cache['register_field'][$f['id']]) {
-                    $register_field[] = $f['fieldname'];
-                }
-            }
-        }
-
-        // 支付接口
-        if ($cache['payapi']) {
-            foreach ($cache['payapi'] as $i => $t) {
-                if (!$t['use']) {
-                    unset($cache['payapi'][$i]);
-                }
-            }
-        }
-
-        // 注册配置
-        $cache['register']['notallow'] = explode(',', trim($cache['register']['notallow']));
-
-        // 用户组
-        $cache['register']['group'] = [];
-        $group = $this->db->table('member_group')->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
-        if ($group) {
-            foreach ($group as $t) {
-                $level = $this->db->table('member_level')->where('gid', $t['id'])->orderBy('displayorder ASC,id ASC')->get()->getResultArray();
-                if ($level) {
-                    foreach ($level as $lv) {
-                        $lv['icon'] = dr_get_file($lv['stars']);
-                        $lv['setting'] = dr_string2array($lv['setting']);
-                        $cache['authid'][] = $t['id'].'-'.$lv['id'];
-                        $t['level'][$lv['id']] = $lv;
-                    }
-                } else {
-                    $cache['authid'][] = $t['id'];
-                }
-                $t['setting'] = dr_string2array($t['setting']);
-                // 用户组的可用字段
-                $t['field'] = $group_field[$t['id']];
-                // 当前用户组开启了注册时, 查询它可注册的字段
-                $t['register'] && $t['field'] && $t['register_field'] = $register_field ? dr_array_intersect($t['field'], $register_field) : [];
-                // 是否允许注册
-                $t['register'] && $cache['register']['group'][] = $t['id'];
-                $cache['group'][$t['id']] = $t;
-            }
-        }
-
-        \Phpcmf\Service::L('cache')->set_file('member', $cache);
     }
 
 }
