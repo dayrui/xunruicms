@@ -39,7 +39,7 @@
                             <label class="col-md-2 control-label">{dr_lang('字段名称')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text"  name="data[fieldname]" value="{htmlspecialchars($data.fieldname)}" {if $data.id}disabled{/if} id="dr_fieldname" /></label>
-                                <span class="help-block" id="dr_fieldname_tips">{dr_lang('只能由字母+数字组成')}</span>
+                                <span class="help-block" id="dr_fieldname_tips">{dr_lang('只能由小写字母、数字、下划线组成')}</span>
                             </div>
                         </div>
                         {if $ismain}

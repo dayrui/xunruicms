@@ -223,10 +223,12 @@ class Files extends \Phpcmf\Library\A_Field {
 
         // 当无旧数据且有新数据表示增加新附件
         if ($data['file'] && !$_data['file']) {
+
             return [$data['file'], []];
         }
 
         // 剩下的情况就是删除旧文件增加新文件
+
 
         // 新旧附件的交集，表示固定的
         $intersect = array_intersect($data['file'], $_data['file']);
