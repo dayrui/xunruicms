@@ -164,7 +164,7 @@ class Service
             if (isset(static::$require[$_cname])) {
                 return static::$require[$_cname];
             } elseif (!is_file($file)) {
-                CI_DEBUG && log_message('debug', '引用文件不存在：'.$file);
+                //CI_DEBUG && log_message('debug', '引用文件不存在：'.$file);
                 return false;
             }
         }

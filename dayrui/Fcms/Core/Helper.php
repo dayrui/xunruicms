@@ -633,11 +633,9 @@ function dr_client_data() {
         'pc' => 'PC端',
         'mobile' => '移动端',
     ];
-    if (is_file(WRITEPATH.'config/app_client.php')) {
-        $rt2 = \Phpcmf\Service::R(WRITEPATH.'config/app_client.php');
-        if ($rt2) {
-            $rt = $rt + $rt2;
-        }
+    $rt2 = \Phpcmf\Service::R(WRITEPATH.'config/app_client.php');
+    if ($rt2) {
+        $rt = $rt + $rt2;
     }
 
     return $rt;
