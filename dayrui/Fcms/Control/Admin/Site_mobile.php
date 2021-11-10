@@ -11,10 +11,15 @@ class Site_mobile extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
 		    $post = \Phpcmf\Service::L('input')->post('data');
-            if ($post['domain'] && !\Phpcmf\Service::L('Form')->check_domain($post['domain'])) {
-                $this->_json(0, dr_lang('域名（%s）格式不正确', $post['domain']));
-            } elseif ($post['domain'] && $this->site_info[SITE_ID]['SITE_DOMAIN'] == $post['domain']) {
-                $this->_json(0, dr_lang('手机域名不能与电脑相同'));
+            if (!$post['mode']) {
+                if (!\Phpcmf\Service::L('Form')->check_domain($post['domain'])) {
+                    $this->_json(0, dr_lang('域名（%s）格式不正确', $post['domain']));
+                } elseif ($this->site_info[SITE_ID]['SITE_DOMAIN'] == $post['domain']) {
+                    $this->_json(0, dr_lang('手机域名不能与电脑相同'));
+                }
+            }
+            if ($post['mode'] == -1) {
+                $post['dirname'] = $post['domain'] = '';
             }
 			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
             if (!is_array($rt)) {
@@ -28,8 +33,11 @@ class Site_mobile extends \Phpcmf\Common
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));
 		$data = \Phpcmf\Service::M('Site')->config(SITE_ID);
 
-		if (!isset($data['mobile']['dirname']) || !$data['mobile']['dirname']) {
+        if (!isset($data['mobile']['dirname']) || !$data['mobile']['dirname']) {
             $data['mobile']['dirname'] = 'mobile';
+        }
+        if (!isset($data['mobile']['mode']) || (!$data['mobile']['mode'] && !$data['mobile']['domain'])) {
+            $data['mobile']['mode'] = -1;
         }
 
 		\Phpcmf\Service::V()->assign([

@@ -211,7 +211,7 @@ class Site extends \Phpcmf\Model
         $data['site_domain'] = strtolower($site['config']['SITE_DOMAIN']);
 
         // 识别手机域名
-        if (isset($site['mobile']['mode']) && $site['mobile']['mode']) {
+        if (isset($site['mobile']['mode']) && $site['mobile']['mode'] != -1) {
             $data['mobile_domain'] = $site['config']['SITE_DOMAIN'].'/'.trim($site['mobile']['dirname'] ? $site['mobile']['dirname'] : 'mobile');
         } else {
             $data['mobile_domain'] = $site['mobile']['domain'];
@@ -297,7 +297,7 @@ class Site extends \Phpcmf\Model
                 $mobile_dirname = 'mobile';
 
                 // 识别手机域名
-                if (isset($t['setting']['mobile']['mode']) && $t['setting']['mobile']['mode']) {
+                if (isset($t['setting']['mobile']['mode']) && $t['setting']['mobile']['mode'] != -1) {
                     $mobile_dirname = trim($t['setting']['mobile']['dirname'] ? $t['setting']['mobile']['dirname'] : 'mobile');
                     $mobile_domain = $t['domain'].'/'.$mobile_dirname;
                 } else {
