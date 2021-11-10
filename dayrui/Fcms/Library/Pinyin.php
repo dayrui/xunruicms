@@ -535,17 +535,20 @@ class Pinyin
      * @param string $s
      * @param bool $quanpin
      * @param bool $daxie
+     * @param bool $biaodian
      * @return string
      */
-    public function result($s, $quanpin = true, $daxie = false) {
+    public function result($s, $quanpin = true, $daxie = false, $biaodian = false) {
 
         $s = preg_replace("/\s/is", "_", $s);
-        $s = preg_replace("/(|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\+|\=|\{|\}|\[|\]|\||\\|\:|\;|\"|\'|\<|\,|\>|\.|\?|\/)/is", "", $s);
-        $py = '';
+        if (!$biaodian) {
+            $s = preg_replace("/(|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\+|\=|\{|\}|\[|\]|\||\\|\:|\;|\"|\'|\<|\,|\>|\.|\?|\/)/is", "", $s);
+        }
 
         // 加入这一句，自动识别UTF-8
         strlen("拼音") > 4 && $s = iconv('UTF-8', 'GBK', $s);
 
+        $py = '';
         if ($quanpin) {
             // 全拼
             for ($i = 0; $i < strlen($s); $i++) {

@@ -340,19 +340,27 @@ class Category extends \Phpcmf\Model
             return;
         }
 
-        $row['setting'] = dr_string2array($row['setting']);
-        if ($at == 'tpl') {
-            $row['setting']['template'] = $setting['template'];
-        } elseif ($at == 'seo') {
-            $row['setting']['seo'] = $setting['seo'];
-            $row['setting']['html'] = $setting['html'];
-            $row['setting']['urlrule'] = $setting['urlrule'];
-        } else {
-            $row['setting'][$at] = $setting[$at];
+        $save = $row['setting'] = dr_string2array($row['setting']);
+        $arr = explode(',', $at);
+        foreach ($arr as $at) {
+            if ($at == 'tpl') {
+                $save['template'] = $setting['template'];
+                $save['template']['pagesize'] = $row['setting']['template']['pagesize'];
+                $save['template']['mpagesize'] = $row['setting']['template']['mpagesize'];
+            } elseif ($at == 'url') {
+                $save['urlrule'] = $setting['urlrule'];
+            } elseif ($at == 'html') {
+                $save['html'] = $setting['html'];
+            } elseif ($at == 'seo') {
+                $save['seo'] = $setting['seo'];
+            } elseif ($at == 'size') {
+                $save['template']['pagesize'] = $setting['template']['pagesize'];
+                $save['template']['mpagesize'] = $setting['template']['mpagesize'];
+            }
         }
 
         $this->table($this->tablename)->update($id, [
-            'setting' => dr_array2string($row['setting']),
+            'setting' => dr_array2string($save),
         ]);
     }
 

@@ -815,7 +815,6 @@ class Category extends \Phpcmf\Table {
     // 复制栏目规则
     public function copy_edit() {
 
-        $at = \Phpcmf\Service::L('input')->get('at');
         $catid = (int)\Phpcmf\Service::L('input')->get('catid');
         $row = \Phpcmf\Service::M('category')->init($this->init)->get($catid);
         if (!$row) {
@@ -824,6 +823,10 @@ class Category extends \Phpcmf\Table {
 
         if (IS_AJAX_POST) {
 
+            $at = \Phpcmf\Service::L('input')->post('at');
+            if (!$at) {
+                $this->_json(0, dr_lang('没有选择同步数据项'));
+            }
             $use = \Phpcmf\Service::L('input')->post('use');
             if (!$use) {
                 $catids = [];
@@ -843,11 +846,21 @@ class Category extends \Phpcmf\Table {
             \Phpcmf\Service::L('cache')->set_auth_data('copy_edit_'.APP_DIR.'_'.$catid, array_chunk($catids, 50));
 
             $this->_json(1, dr_lang('即将同步到%s个栏目', count($catids)), [
-                'jscode' => 'dr_iframe_show(\''.dr_lang('同步').'\', \''.dr_url(APP_DIR.'/category/copy_page_edit').'&at='.$at.'&catid='.$catid.'\', \'500px\', \'300px\')'
+                'jscode' => 'dr_iframe_show(\''.dr_lang('同步').'\', \''.dr_url(APP_DIR.'/category/copy_page_edit').'&at='.implode(',', $at).'&catid='.$catid.'\', \'500px\', \'300px\')'
             ]);
+        }
+        $option = [
+            'seo' => 'SEO设置',
+            'url' => 'url规则',
+            'tpl' => '模板文件',
+            'size' => '分页数据',
+        ];
+        if (dr_is_app('chtml') && !APP_DIR) {
+            $option['html'] = '静态开关';
         }
 
         \Phpcmf\Service::V()->assign([
+            'at' => \Phpcmf\Service::L('input')->get('at'),
             'form' =>  dr_form_hidden(),
             'select' => \Phpcmf\Service::L('tree')->select_category(
                 $this->module['category'],
@@ -857,6 +870,7 @@ class Category extends \Phpcmf\Table {
                 0,
                 0
             ),
+            'option' => $option,
         ]);
         \Phpcmf\Service::V()->display('share_category_copy.html');exit;
     }
