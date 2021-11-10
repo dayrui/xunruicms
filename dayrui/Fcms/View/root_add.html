@@ -16,10 +16,12 @@
             <div class="form-body">
 
                 {if $edit}
-                <div class="form-group">
+                <div class="form-group" id="dr_row_username">
                     <label class="col-md-2 control-label ">{dr_lang('账号')}</label>
                     <div class="col-md-9">
-                        <p class="form-control-static"> {$data.username} </p>
+                        <label>
+                            <input type="text" name="data[username]" value="{$data.username}" class="form-control input-large">
+                        </label>
                     </div>
                 </div>
                 {else}

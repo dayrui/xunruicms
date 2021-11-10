@@ -219,11 +219,29 @@ class Root extends \Phpcmf\Table
                     }
                 }
             }
-            \Phpcmf\Service::M()->table('member')->update($member['id'], [
-                'phone' => $post['phone'],
-                'email' => $post['email'],
-                'name' => $post['name'],
-            ]);
+            if ($post['username'] != $member['username']) {
+                // 改账号时
+                $rs = \Phpcmf\Service::L('Form')->check_username($post['username']);
+                if (!$rs['code']) {
+                    $this->_json(0, $rs['msg'], ['field' => 'username']);
+                } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $post['username'])->countAllResults()) {
+                    $this->_json(0, dr_lang('账号%s已经注册', $post['username']), ['field' => 'username']);
+                }
+                \Phpcmf\Service::M()->table('member')->update($member['id'], [
+                    'username' => $post['username'],
+                    'phone' => $post['phone'],
+                    'email' => $post['email'],
+                    'name' => $post['name'],
+                ]);
+                \Phpcmf\Service::M('member')->clear_cache($member['id'], $member['username']);
+            } else {
+                \Phpcmf\Service::M()->table('member')->update($member['id'], [
+                    'phone' => $post['phone'],
+                    'email' => $post['email'],
+                    'name' => $post['name'],
+                ]);
+            }
+
             $post['password'] && \Phpcmf\Service::M('member')->edit_password($member, $post['password']);
             if ($id > 1) {
                 \Phpcmf\Service::M()->db->table('admin_role_index')->where('uid', $member['id'])->delete();
