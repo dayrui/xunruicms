@@ -503,6 +503,7 @@ class File extends \Phpcmf\Common
             } catch (CodeIgniter\Images\ImageException $e) {
                 $this->_json(0, $e->getMessage());
             }
+            \Phpcmf\Service::M('attachment')->clear_data($info);
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -549,7 +550,7 @@ class File extends \Phpcmf\Common
                     'filename' => $name,
                 ]);
             }
-            $this->get_attachment($id, true);
+            \Phpcmf\Service::M('attachment')->clear_data($info);
             $this->_json(1, dr_lang('操作成功'));
         }
 

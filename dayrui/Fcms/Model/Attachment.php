@@ -231,11 +231,8 @@ class Attachment extends \Phpcmf\Model {
         $storage = new \Phpcmf\Library\Storage(\Phpcmf\Service::C());
         $storage->delete($this->get_attach_info($info['remote']), $info['attachment']);
 
-        // 删除缩略图的缓存
-        if (in_array($info['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
-            list($cache_path) = dr_thumb_path();
-            dr_dir_delete($cache_path.md5($index['id']).'/', true);
-        }
+        // 删除缓存
+        $this->clear_data($index);
 
         // 删除附件进行记录
         \Phpcmf\Service::L('input')->system_log('删除附件（#'.$index['id'].'-'.dr_now_url().'）'.var_export($info, true));
@@ -243,10 +240,19 @@ class Attachment extends \Phpcmf\Model {
             log_message('debug', '删除附件（#'.$index['id'].'）'.dr_get_file_url($info));
         }
 
-        // 删除缓存
+        return dr_return_data(1, dr_lang('删除成功'));
+    }
+
+    // 删除附件缓存
+    public function clear_data($index) {
+
         \Phpcmf\Service::L('cache')->del_file('attach-info-'.$index['id'], 'attach');
 
-        return dr_return_data(1, dr_lang('删除成功'));
+        // 删除缩略图的缓存
+        if (in_array($index['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
+            list($cache_path) = dr_thumb_path();
+            dr_dir_delete($cache_path.md5($index['id']).'/', true);
+        }
     }
     
     // 附件归档存储
