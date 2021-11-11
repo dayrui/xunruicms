@@ -384,7 +384,6 @@ class Linkage extends \Phpcmf\Model
     // 缓存
     public function cache($siteid = SITE_ID) {
 
-
     }
 
     /**

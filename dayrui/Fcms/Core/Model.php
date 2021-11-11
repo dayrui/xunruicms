@@ -581,7 +581,7 @@ class Model {
     }
 
     // 条件组合
-    protected function _where($table, $name, $value, $field, $is_like = false) {
+    public function _where($table, $name, $value, $field, $is_like = false) {
 
         if (!$value && dr_strlen($value) == 0) {
             return ''; //空值
@@ -620,7 +620,7 @@ class Model {
             $arr = explode('|', $value);
             $where = [];
             if ($is_like && $value) {
-                $key = \Phpcmf\Service::C()->get_cache('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-key');
+                $key = \Phpcmf\Service::L('cache')->get_file('key', 'linkage/'.SITE_ID.'_'.$field['setting']['option']['linkage'].'/');
                 if ($key) {
                     $where[] = '`'.$table.'`.`'.$name.'` in (select id from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%")';
                 }
@@ -641,7 +641,7 @@ class Model {
             $arr = explode('|', $value);
             $where = [];
             if ($is_like && $value) {
-                $key = \Phpcmf\Service::C()->get_cache('linkage-'.SITE_ID.'-'.$field['setting']['option']['linkage'].'-key');
+                $key = \Phpcmf\Service::L('cache')->get_file('key', 'linkage/'.SITE_ID.'_'.$field['setting']['option']['linkage'].'/');
                 if ($key) {
                     $row = $this->db->query('select * from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%"')->getRowArray();
                     if ($row) {
