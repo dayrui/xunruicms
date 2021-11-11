@@ -1300,13 +1300,13 @@ function dr_thumb_path() {
 }
 
 // 缩略图
-function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto', $webimg = 0) {
+function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
     if (!$img) {
         return ROOT_THEME_PATH.'assets/images/nopic.gif';
-    }
-
-    if (is_numeric($img) || $webimg) {
+    } elseif (!$width || !$height) {
+        return dr_get_file($img);
+    } elseif (is_numeric($img) || $webimg) {
 
         list($cache_path, $cache_url) = dr_thumb_path();
 
@@ -1325,7 +1325,7 @@ function dr_thumb($img, $width = 200, $height = 200, $water = 0, $mode = 'auto',
     }
 
     $file = dr_file($img);
-    CI_DEBUG && log_message('debug', '图片['.$img.']不是数字id浩，dr_thumb函数无法进行缩略图处理');
+    CI_DEBUG && log_message('debug', '图片['.$img.']不是数字id号，dr_thumb函数无法进行缩略图处理');
 
     return $file ? $file : ROOT_THEME_PATH.'assets/images/nopic.gif';
 }

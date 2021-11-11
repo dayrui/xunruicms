@@ -32,7 +32,7 @@ class Http
         $rt = [];
         if ($data['list']) {
             foreach ($data['list'] as $t) {
-                $t['thumb'] = dr_thumb($t['thumb'], 200, 200);
+                $t['thumb'] = dr_thumb($t['thumb']);
                 $t['inputtime'] = dr_date($t['inputtime']);
                 $rt[] = $t;
             }
@@ -61,7 +61,7 @@ class Http
         $rt = [];
         if ($data['list']) {
             foreach ($data['list'] as $t) {
-                $t['thumb'] = dr_thumb($t['thumb'], 200, 200);
+                $t['thumb'] = dr_thumb($t['thumb']);
                 $rt[] = $t;
             }
         }
@@ -78,7 +78,7 @@ class Http
             return [
                 'id' => $data['id'],
                 'title' => $data['title'],
-                'thumb' => dr_thumb($data['thumb'], 200, 200),
+                'thumb' => dr_thumb($data['thumb']),
                 'content' => $data['content'],
             ];
         }

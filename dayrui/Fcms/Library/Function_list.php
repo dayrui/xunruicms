@@ -163,7 +163,7 @@ class Function_list
                     $value = $t;
                 }
                 $url = 'javascript:dr_preview_image(\''.$value.'\');';
-                $rt[] = '<a class="thumbnail" style="display: inherit;" href="'.$url.'"><img style="width:30px" src="'.dr_thumb($value).'"></a>';
+                $rt[] = '<a class="thumbnail" style="display: inherit;" href="'.$url.'"><img style="width:30px" src="'.dr_thumb($value, 100, 100).'"></a>';
             }
             return implode('', $rt);
         }
