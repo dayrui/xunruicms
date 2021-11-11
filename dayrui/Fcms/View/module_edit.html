@@ -56,6 +56,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容发布界面右侧字段')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="0" {if empty($data['setting']['right_field'])}checked{/if} /> {dr_lang('都显示')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="1" {if $data['setting']['right_field']==1}checked{/if} /> {dr_lang('仅超管显示')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="2" {if $data['setting']['right_field']==2}checked{/if} /> {dr_lang('都不显示')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('内容发布界面右侧字段是一些内置的系统字段，例如发布时间、更新时间、客户端、用户信息等')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('提取内容描述字数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[setting][desc_limit]" value="{if $data['setting']['desc_limit']}{intval($data['setting']['desc_limit'])}{else}100{/if}" ></label>

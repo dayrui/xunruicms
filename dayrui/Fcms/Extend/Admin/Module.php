@@ -62,6 +62,14 @@ class Module extends \Phpcmf\Table {
                 }
             }
         }
+        $is_right_field = 1;
+        if (isset($this->module['setting']['right_field']) && $this->module['setting']['right_field']) {
+            if ($this->module['setting']['right_field'] == 2) {
+                $is_right_field = 0;
+            } elseif (!dr_in_array(1, $this->admin['roleid'])) {
+                $is_right_field = 0;
+            }
+        }
         // 写入模板
         \Phpcmf\Service::V()->assign([
             'field' => $this->init['field'],
@@ -69,6 +77,7 @@ class Module extends \Phpcmf\Table {
             'post_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])]),
             'is_post_user' => $this->is_post_user,
             'is_hcategory' => $this->is_hcategory,
+            'is_right_field' => $is_right_field,
             'is_category_show' => $this->is_hcategory ? 0 : (dr_count($this->module['category']) == 1 ? 0 : 1),
         ]);
     }

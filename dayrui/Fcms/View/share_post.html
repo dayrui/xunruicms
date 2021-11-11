@@ -229,7 +229,7 @@
     {$form}
     <div class="myfbody">
         <div class="row ">
-            <div class="{if $is_mobile}col-md-12{else}col-md-9{/if}">
+            <div class="{if !$is_right_field || $is_mobile}col-md-12{else}col-md-9{/if}">
 
                 <div class="portlet light bordered">
                     <div class="portlet-title">
@@ -312,12 +312,11 @@
                 {/if}
 
             </div>
-            <div class="{if $is_mobile}col-md-12{else}col-md-3{/if} my-sysfield">
+            <div class="{if !$is_right_field || $is_mobile}col-md-12{else}col-md-3{/if} my-sysfield" {if !$is_right_field} style="display: none"{/if}>
                 <div class="portlet light bordered">
                     <div class="portlet-body">
                         <div class="form-body">
                             {$sysfield}
-
                             {if $is_flag}
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('推荐位')}</label>
