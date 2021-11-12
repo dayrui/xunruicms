@@ -1564,29 +1564,7 @@ function dr_submit_sql_todo(myform, url) {
 }
 
 function dr_call_alert() {
-    layer.alert('回调是用于在列表显示时对其值进行格式化，'+
-        '函数需要开发者自己定义<br><br>'+
-        '标题: title<br>'+
-        '评论: comment<br>'+
-        '多文件: files<br>'+
-        '图片专用: image<br>'+
-        '单文件: file<br>'+
-        'uid会员: uid<br>'+
-        '地区联动: linkage_address<br>'+
-        '地区联动名称: linkage_name<br>'+
-        '单选字段名称: radio_name<br>'+
-        '下拉字段名称: select_name<br>'+
-        '复选框字段名称: checkbox_name<br>'+
-        '栏目: catid<br>'+
-        'URL地址: url<br>'+
-        '实时存储字段值: save_text_value<br>'+
-        '时间: datetime<br>会员信息: author', {
-        title: '回调参数',
-        shade: 0,
-        btn: ['访问手册']
-    }, function(index, layero){
-        dr_help(463);
-    });
+    dr_help(463);
 
 }
 function dr_seo_rule() {
@@ -1674,76 +1652,6 @@ function dr_url_module_list() {
     });
 }
 
-function dr_url_mform_list() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=xxxxx&cid=1<br>'+
-        '形如news/xxxxx/1-list.html <br>这种地址格式为: {modname}/{form}/{cid}-list.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{page}   表示分页号<br>'+
-        '{cid}   表示对应模块内容的id<br>'+
-        '{form}   表示表单的别名<br>'+
-        '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
-        '', {
-        shade: 0,
-        title: '',
-        area: ['50%', '50%'],
-        btn: []
-    });
-}
-function dr_url_mform_show() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=xxxxx&m=show&cid=1<br>'+
-        '形如news/xxxxx/1-show.html <br>这种地址格式为: {modname}/{form}/{cid}-show.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{id}   表示表单内容id<br>'+
-        '{page}   表示分页号<br>'+
-        '{cid}   表示对应模块内容的id<br>'+
-        '{form}   表示表单的别名<br>'+
-        '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
-        '', {
-        shade: 0,
-        title: '',
-        area: ['50%', '50%'],
-        btn: []
-    });
-}
-function dr_url_mform_post() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=xxxxx&m=post&cid=1<br>'+
-        '形如news/xxxxx/1-post.html <br>这种地址格式为: {modname}/{form}/{cid}-post.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{page}   表示分页号<br>'+
-        '{cid}   表示对应模块内容的id<br>'+
-        '{form}   表示表单的别名<br>'+
-        '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
-        '', {
-        shade: 0,
-        title: '',
-        area: ['50%', '50%'],
-        btn: []
-    });
-}
 function dr_url_page() {
     layer.alert('<b>举例</b><hr>'+
         '默认模块地址: <br>index.php?s=page&id=1<br>'+
@@ -1793,20 +1701,6 @@ function dr_url_module_search() {
         '形如news/search.html 这种地址格式为: {modname}/search.html'+
         '<br><br><br><b>通配符</b><hr>'+
         '{modname}	表示当前模块目录<br>'+
-        ''+
-        '', {
-        shade: 0,
-        area: ['50%', '50%'],
-        title: '',
-        btn: []
-    });
-}
-function dr_url_fanzhan() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: index.php?fid=分站别名<br>'+
-        '形如/beijin.html 这种地址格式为: index.php?fid=beijin'+
-        '<br><br><br><b>通配符</b><hr>'+
-        '{fid}	表示当前分站别名<br>'+
         ''+
         '', {
         shade: 0,
