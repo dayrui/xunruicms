@@ -60,7 +60,7 @@ class Notice {
      * $name    动作名称
      * $data    传入参数
      */
-    public function send_notice_user($name, $uid, $data, $config) {
+    public function send_notice_user($name, $uid, $data, $config, $is_send = 0) {
 
         if (!$config) {
             return; // 没有配置通知
@@ -78,8 +78,12 @@ class Notice {
         if (!$rt['code']) {
             log_message('error', '通知任务注册失败：'.$rt['msg']);
         }
+        // 立即发送
+        if ($is_send) {
+            \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
+        }
 
-        return;
+        return $rt;
     }
 
     // 来至队列中执行

@@ -26,7 +26,7 @@ class System extends \Phpcmf\Common
                 'SYS_GO_404' => intval($post['SYS_GO_404']),
                 'SYS_301' => intval($post['SYS_301']),
 
-                'SYS_PAGE_RNAME' => (int)$post['SYS_PAGE_RNAME'],
+                'SYS_URL_PREG' => (int)$post['SYS_URL_PREG'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
 
                 'SYS_ADMIN_MODE' => intval($post['SYS_ADMIN_MODE']),

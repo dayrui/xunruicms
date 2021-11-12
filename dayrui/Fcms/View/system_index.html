@@ -10,6 +10,9 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('系统参数')} </a>
                 </li>
+                <li class="{if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-link"></i> {dr_lang('地址设置')} </a>
+                </li>
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-expeditedssl"></i> {dr_lang('安全设置')} </a>
                 </li>
@@ -50,15 +53,6 @@
                                 <span class="help-block">{dr_lang('发布内容临时存储，再次发布时自动填充')}</span>
                             </div>
                         </div>
-                        {if dr_is_app('page')}
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('自定义页面目录允许重复')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_PAGE_RNAME]" value="1" {if $data['SYS_PAGE_RNAME']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('[自定义页面插件]开启之后请不要使用目录作为伪静态关键字')}</span>
-                            </div>
-                        </div>
-                        {/if}
                         {if dr_is_app('sites')}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('系统风格目录的作用域')}</label>
@@ -76,13 +70,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('跳转404页面')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_GO_404]" value="1" {if $data['SYS_GO_404']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('开启后，404页面时直接跳转到404.html，不在当前url中显示404页面')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('自动检测程序版本')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
@@ -90,6 +77,29 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_NOT_UPDATE]" value="1" {if $data['SYS_NOT_UPDATE']}checked{/if} /> {dr_lang('禁止检测')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('不进行主动检测系统框架的版本信息')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('允许后台登录选择模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="0" {if empty($data['SYS_ADMIN_MODE'])}checked{/if} /> {dr_lang('允许选择')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="1" {if $data['SYS_ADMIN_MODE']}checked{/if} /> {dr_lang('禁用选择')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台登录界面显示完整模式和简化模式的切换选项')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('跳转404页面')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_GO_404]" value="1" {if $data['SYS_GO_404']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('开启后，404页面时直接跳转到404.html，不在当前url中显示404页面')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,17 +121,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('允许后台登录选择模式')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('伪静态地址匹配规则')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="0" {if empty($data['SYS_ADMIN_MODE'])}checked{/if} /> {dr_lang('允许选择')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="1" {if $data['SYS_ADMIN_MODE']}checked{/if} /> {dr_lang('禁用选择')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_URL_PREG]" value="0" {if empty($data['SYS_URL_PREG'])}checked{/if} /> {dr_lang('精确匹配')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_URL_PREG]" value="1" {if $data['SYS_URL_PREG']}checked{/if} /> {dr_lang('模糊匹配')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('在后台登录界面显示完整模式和简化模式的切换选项')}</span>
+                                <span class="help-block">{dr_lang('例如地址是abc.html，在地址后面加任意参数时，精确匹配模式下会404，模糊匹配模式下会正常识别')}</span>
+
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
                         <div class="form-group" id="dr_row_https">

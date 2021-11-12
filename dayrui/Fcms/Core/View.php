@@ -2788,7 +2788,7 @@ class View {
 
             $debug.= '<p>当前路由：'.\Phpcmf\Service::L('router')->uri().'</p>';
             CMSURI && $debug.= '<p>当前地址：'.CMSURI.'</p>';
-            $debug.= '<p>动态地址：'.SELF.http_build_query($_GET).'</p>';
+            $debug.= '<p>动态地址：'.SELF.'?'.http_build_query($_GET).'</p>';
 
             if ($data && !is_array($data)) {
                 $debug.= '<p>'.$data.'</p>';
