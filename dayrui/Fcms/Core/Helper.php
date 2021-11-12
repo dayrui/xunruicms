@@ -445,10 +445,10 @@ function dr_sec2time($times){
 /**
  * 格式化多文件数组
  */
-function dr_get_files($value) {
+function dr_get_files($value, $limit = '') {
 
     $data = [];
-    $value = dr_string2array($value);
+    $value = dr_string2array($value, $limit);
     if (!$value) {
         return $data;
     } elseif (!isset($value['file']) && !isset($value['id'])) {
@@ -3048,11 +3048,18 @@ function dr_safe_replace_path($path) {
  * 字符截取
  *
  * @param   string  $str
- * @param   intval  $length
+ * @param   string  $limit
  * @param   string  $dot
  * @return  string
  */
-function dr_strcut($string, $length = 100, $dot = '...') {
+function dr_strcut($string, $limit = '100', $dot = '...') {
+
+    $a = 0;
+    if (strpos($limit, ',')) {
+        list($a, $length) = explode(',', $limit);
+    } else {
+        $length = $limit;
+    }
 
     $length = (int)$length;
     if (!$string || strlen($string) <= $length || !$length) {
@@ -3060,7 +3067,7 @@ function dr_strcut($string, $length = 100, $dot = '...') {
     }
 
     if (function_exists('mb_substr')) {
-        $strcut = mb_substr($string, 0, $length);
+        $strcut = mb_substr($string, $a, $length);
     } else {
         $n = $tn = $noc = 0;
         $string = str_replace(['&amp;', '&quot;', '&lt;', '&gt;'], ['&', '"', '<', '>'], $string);
@@ -3230,25 +3237,53 @@ function dr_object2array($obj) {
 }
 
 /**
+ * 数组截取
+ */
+function dr_arraycut($arr, $limit) {
+
+    if (!$arr) {
+        return [];
+    } elseif (!is_array($arr)) {
+        return [];
+    }
+
+    if (strpos($limit, ',')) {
+        list($a, $b) = explode(',', $limit);
+    } else {
+        $a = 0;
+        $b = $limit;
+    }
+
+    return array_slice($arr, $a, $b);
+}
+
+/**
  * 将字符串转换为数组
  *
  * @param   string  $data   字符串
  * @return  array
  */
-function dr_string2array($data) {
+function dr_string2array($data, $limit = '') {
 
-    if (is_array($data)) {
-        return $data;
-    } elseif (!$data) {
+    if (!$data) {
         return [];
+    } elseif (is_array($data)) {
+        $rt = $data;
+    } else {
+        $rt = json_decode($data, true);
+        if (!$rt) {
+            $rt = unserialize(stripslashes($data));
+        }
     }
 
-    $rt = json_decode($data, true);
-    if ($rt) {
+    if (is_array($rt)) {
+        if ($limit) {
+            return dr_arraycut($rt, $limit);
+        }
         return $rt;
     }
 
-    return unserialize(stripslashes($data));
+    return [];
 }
 
 /**

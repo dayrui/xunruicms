@@ -678,7 +678,12 @@ class Field extends \Phpcmf\Model
     protected function _field_module($name) {
         // 保留字段
         if (in_array($name, [
-            'tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old', 'mid', 'groupid', 'related', 'kws', 'cat', 'top', 'more'
+            'cat', 'category',
+            'top', 'content_page',
+            'pageid', 'params', 'page', 'pages',
+            'parent', 'urlrule', 'member',
+            'tags', 'tag', 'prev_page',
+            'next_page', 'fstatus', 'old', 'mid', 'groupid', 'related', 'kws', 'more'
         ])) {
             return 1;
         }

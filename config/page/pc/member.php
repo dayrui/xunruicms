@@ -42,7 +42,7 @@ return array(
 	
 	// 是否显示数字链接
 	'display_pages' => TRUE,
-    // 显示的分页数字个数
+    // 显示的分页左右两边数字个数
     'num_links' => 4,
 	
 	// 区域标签
