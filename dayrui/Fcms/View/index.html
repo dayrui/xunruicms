@@ -66,7 +66,7 @@
                     </a>
                     <ul class="dropdown-menu extended tasks">
                         <li>
-                            <ul class="dropdown-menu-list scroller" style="height:400px;" data-handle-color="#637283">
+                            <ul class="dropdown-menu-list scroller" style="height:400px;overflow: scroll;" data-handle-color="#637283">
                                 {loop $ci->site_info $i $t}
                                 {if \Phpcmf\Service::M('auth')->_check_site($i)}
                                 <li>

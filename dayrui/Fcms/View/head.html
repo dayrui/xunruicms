@@ -93,7 +93,7 @@
                     // 存在
                     $('#right_page_'+cmd).show();
                 } else {
-                    var html = '<iframe class="myiframe" name="right" id="right_page_'+cmd+'" src="'+url+'" url="'+url+'" style="height:'+$('#right_page').height()+'px" width="100%" height="auto" allowtransparency="true"></iframe>';
+                    var html = '<iframe class="myiframe" name="right" id="right_page_'+cmd+'" src="'+url+'" url="'+url+'" style="border:none; margin-bottom:0px;height:'+$('#right_page').height()+'px" width="100%" height="auto" allowtransparency="true"></iframe>';
                     $("#myiframe").append(html);
                 }
                 if (name && $('#dr_go_url_'+cmd).length == 0) {
@@ -180,7 +180,7 @@
                 strs=str.toString().split(","); //字符分割
                 var heights = strs[0]-70,Body = $('body');
                 $('#right_page').height(heights);
-                $('#dr_go_url .dropdown-menu').attr('style', 'max-height:'+heights+'px');
+                $('#dr_go_url .dropdown-menu').attr('style', 'max-height:'+(heights-50)+'px;overflow-y: scroll;');
             }
             if(!Array.prototype.map)
                 Array.prototype.map = function(fn,scope) {

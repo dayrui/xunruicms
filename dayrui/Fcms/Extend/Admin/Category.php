@@ -513,7 +513,7 @@ class Category extends \Phpcmf\Table {
         }
 
         $html = '';
-        $html.= '<ul class="dropdown-menu dr_select_tpl" style="max-height: 350px;overflow: scroll;">';
+        $html.= '<ul class="dropdown-menu dr_select_tpl" style="max-height: 350px;overflow-y: scroll;">';
         $files = dr_file_map($path);
         if ($files) {
             foreach ($files as $file) {
