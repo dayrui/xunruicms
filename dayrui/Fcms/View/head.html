@@ -102,22 +102,10 @@
                 }
             }
             function Mlink(top, left, link, url) {
-
-                if (url == '{dr_url('home/main')}') {
-                    // 直接跳转到首页
-                    window.location.href = admin_file;
-                    return;
-                }
-                // 延迟提示
-                /*
-                var admin_loading = layer.load(2, {
-                    time: 1000
-                });*/
                 $('.tooltip').hide();
                 {if $is_min}
                 {if $is_mobile}$('.page-header .responsive-toggler').click();{/if}
                 $(".nav-item").removeClass("active open");
-
                 {else}
                 $('.dr_menu_item').hide();
                 $('.dr_menu_'+top).show();
