@@ -41,6 +41,21 @@
                 </li>
                 {$mstring}
                 {/if}
+                <li class="dropdown dropdown-extended dropdown-tasks" style="display: none" id="dr_go_url">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <div class="menu-top-icon"><i class="bi bi-exclude"></i>
+                        </div>
+                        <div class="top-txt-menu">{dr_lang('切换')}</div>
+                    </a>
+                    <ul class="dropdown-menu extended tasks">
+                        <li>
+                            <ul class="dropdown-menu-list scroller" data-handle-color="#637283">
+
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
                 {if count($ci->site_info) > 1}
                 <li class="dropdown dropdown-extended dropdown-tasks">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -67,6 +82,7 @@
                     </ul>
                 </li>
                 {/if}
+
                 {if $is_mobile}
                 <li class="dropdown">
                     <a href="javascript:;"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -83,21 +99,21 @@
                     {/if}
                     <ul class="dropdown-menu dropdown-menu-default">
                         {if IS_USE_MEMBER}<li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>{/if}
-                        <li><a href="{dr_url('api/my')}" target="right"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
+                        <li><a href="javascript:dr_go_url('{dr_url('api/my')}');"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
                         <li><a href="{dr_url('api/admin_min')}"><i class="fa fa-retweet"></i> {dr_lang('简化模式')}</a></li>
                         <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>
                         <li class="divider"> </li>
                         {if $ci->_is_admin_auth('cache/index')}
-                        <li><a href="{dr_url('cache/index')}" target="right"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
+                        <li><a href="javascript:dr_go_url('{dr_url('cache/index')}');"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
                         {/if}
                         {if $ci->_is_admin_auth('check/index')}
-                        <li><a href="{dr_url('check/index')}" target="right"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
+                        <li><a href="javascript:dr_go_url('{dr_url('check/index')}');"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
                         {/if}
-                        <li><a href="javascript:dr_update_cache_all();" target="right"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
-                        <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
+                        <li><a href="javascript:dr_update_cache_all();"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
+                        <li><a href="javascript:dr_update_cache_data();"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                         {if $admin.adminid==1}
                         <li class="divider"> </li>
-                        <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('系统日志')}</a></li>
+                        <li><a href="javascript:dr_go_url('{dr_url('error/index')}');"><i class="fa fa-shield"></i> {dr_lang('系统日志')}</a></li>
                         {/if}
                         {if $is_search_help}
                         <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>
@@ -154,7 +170,9 @@
         <div class="page-content index-content">
             <div class="page-toolbar fc-mb-left-menu">
             </div>
-            <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" frameborder="false" scrolling="auto" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
+            <div id="myiframe" cid="right_page">
+                <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
+            </div>
         </div>
     </div>
 
@@ -182,7 +200,7 @@
                     <div class="margin-top-20">
                         <div class="admin-usermenu" id="dr_admin_usermenu">
                             {loop $admin.usermenu $t}
-                            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} target="_blank" {else} onclick="dr_hide_left_tab()" target="right" {/if} href="{$t.url}"> {$t.name} </a>
+                            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} href="{$t.url}" target="_blank" {else} onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{$t.url}')" {/if}> {$t.name} </a>
                             {/loop}
                         </div>
                         <div class="theme-option margin-top-20">
@@ -198,10 +216,10 @@
                             <div class="col1" style="padding-top: 2px;padding-left: 3px;">
                                 <div class="cont">
                                     <div class="cont-col1 user-avatar">
-                                        <a target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
+                                        <a  onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{dr_url('api/notice', array('id' => $t.id))}');"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
                                     </div>
                                     <div class="cont-col2">
-                                        <div class="desc"><a style="color: #c1cbd0" target="right" onclick="dr_hide_left_tab()" href="{dr_url('api/notice', array('id' => $t.id))}">{$t.msg}</a></div>
+                                        <div class="desc"><a style="color: #c1cbd0"  onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{dr_url('api/notice', array('id' => $t.id))}');">{$t.msg}</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +236,7 @@
                     <div class="margin-top-20">
                         <div class="admin-usermenu" id="dr_history_usermenu">
                             {loop $admin.history $t}
-                            <a class="btn btn-default" target="right" onclick="dr_hide_left_tab()" href="{trim($t.url)}"> {$t.name} </a>
+                            <a class="btn btn-default" onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{trim($t.url)}');"> {$t.name} </a>
                             {/loop}
                         </div>
                         <div class="theme-option">

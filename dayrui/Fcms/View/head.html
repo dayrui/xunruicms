@@ -16,6 +16,7 @@
     <script src="{LANG_PATH}lang.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/global/scripts/app{if !IS_XRDEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/js/my.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script type="text/javascript">
@@ -84,6 +85,22 @@
                     window.location.href='{dr_url("sites/api/login_select")}&id='+id
                 }
             }
+            function dr_go_url(url, name) {
+                var cmd = $.md5(url);
+                $('#myiframe iframe').hide();
+                $('#myiframe').attr("cid", 'right_page_'+cmd);
+                if ($('#right_page_'+cmd).length > 0) {
+                    // 存在
+                    $('#right_page_'+cmd).show();
+                } else {
+                    var html = '<iframe class="myiframe" name="right" id="right_page_'+cmd+'" src="'+url+'" url="'+url+'" style="height:'+$('#right_page').height()+'px" width="100%" height="auto" allowtransparency="true"></iframe>';
+                    $("#myiframe").append(html);
+                }
+                if (name && $('#dr_go_url_'+cmd).length == 0) {
+                    $('#dr_go_url').show();
+                    $('#dr_go_url .dropdown-menu').append('<li id="dr_go_url_'+cmd+'"><a href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a></li>');
+                }
+            }
             function Mlink(top, left, link, url) {
 
                 if (url == '{dr_url('home/main')}') {
@@ -100,9 +117,7 @@
                 {if $is_min}
                 {if $is_mobile}$('.page-header .responsive-toggler').click();{/if}
                 $(".nav-item").removeClass("active open");
-                    var admin_loading = layer.load(2, {
-                        time: 1000
-                    });
+
                 {else}
                 $('.dr_menu_item').hide();
                 $('.dr_menu_'+top).show();
@@ -136,9 +151,9 @@
                 $('#dr_menu_left_'+left+' .sub-menu').show();
 
                 if (url) {
-                    $("#right_page").attr('src', url);
-                    $("#right_page").attr("url", url);
+                    dr_go_url(url, $('#dr_menu_link_'+link).find('.title').attr('title'));
                 }
+
                 // 历史访问菜单
                 var ht = $.cookie('admin_history_menu');
                 if (ht == undefined) {
@@ -165,6 +180,7 @@
                 strs=str.toString().split(","); //字符分割
                 var heights = strs[0]-70,Body = $('body');
                 $('#right_page').height(heights);
+                $('#dr_go_url .dropdown-menu').attr('style', 'max-height:'+heights+'px');
             }
             if(!Array.prototype.map)
                 Array.prototype.map = function(fn,scope) {

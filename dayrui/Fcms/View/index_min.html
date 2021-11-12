@@ -13,6 +13,19 @@
         <div class="page-top">
             <div class="top-menu">
                 <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-extended dropdown-tasks" style="display: none" id="dr_go_url">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="bi bi-exclude"></i>
+                        </a>
+                        <ul class="dropdown-menu extended tasks">
+                            <li>
+                                <ul class="dropdown-menu-list scroller" data-handle-color="#637283">
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                     {if count($ci->site_info) > 1}
                     <li class="dropdown dropdown-extended dropdown-tasks">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
@@ -44,25 +57,24 @@
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
-                            {if IS_USE_MEMBER}
-                            <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>{/if}
-                            <li><a href="{dr_url('api/my')}" target="right"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
+                            {if IS_USE_MEMBER}<li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>{/if}
+                            <li><a href="javascript:dr_go_url('{dr_url('api/my')}');"><i class="fa fa-edit"></i> {dr_lang('修改资料')} </a></li>
                             {if !$is_mode}
                             <li><a href="{dr_url('api/admin_all')}"><i class="fa fa-retweet"></i> {dr_lang('完整模式')}</a></li>
                             {/if}
                             <li><a href="javascript:;" onClick="dr_logout('{dr_url('login/out')}');"><i class="fa fa-user-times"></i> {dr_lang('退出系统')}</a></li>
                             <li class="divider"> </li>
                             {if $ci->_is_admin_auth('cache/index')}
-                            <li><a href="{dr_url('cache/index')}" target="right"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
+                            <li><a href="javascript:dr_go_url('{dr_url('cache/index')}');"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
                             {/if}
                             {if $ci->_is_admin_auth('check/index')}
-                            <li><a href="{dr_url('check/index')}" target="right"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
+                            <li><a href="javascript:dr_go_url('{dr_url('check/index')}');"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
                             {/if}
-                            <li><a href="javascript:dr_update_cache_all();" target="right"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
-                            <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
+                            <li><a href="javascript:dr_update_cache_all();"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
+                            <li><a href="javascript:dr_update_cache_data();"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                             {if $admin.adminid==1}
                             <li class="divider"> </li>
-                            <li><a href="{dr_url('error/index')}" target="right"><i class="fa fa-shield"></i> {dr_lang('错误日志')}</a></li>
+                            <li><a href="javascript:dr_go_url('{dr_url('error/index')}');"><i class="fa fa-shield"></i> {dr_lang('系统日志')}</a></li>
                             {/if}
                             {if $is_search_help}
                             <li><a href="http://help.xunruicms.com" target="_blank"><i class="fa fa-book"></i> {dr_lang('帮助手册')}</a></li>
@@ -84,10 +96,10 @@
                 {$string}
                 {if $is_mobile}
                 {if $ci->_is_admin_auth('cache/index')}
-                <li><a href="{dr_url('cache/index')}" target="right"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
+                <li><a href="javascript:dr_go_url('{dr_url('cache/index')}');"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
                 {/if}
-                <li><a href="javascript:dr_update_cache_all();" target="right"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
-                <li><a href="javascript:dr_update_cache_data();" target="right"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
+                <li><a href="javascript:dr_update_cache_all();"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
+                <li><a href="javascript:dr_update_cache_data();"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                 <li><a href="{dr_url('api/alogin', ['id'=>$admin.uid])}" target="_blank"><i class="fa fa-user"></i> {dr_lang('用户中心')} </a></li>
                 {if !$is_mode}
                 <li><a href="{dr_url('api/admin_all')}"><i class="fa fa-retweet"></i> {dr_lang('完整模式')}</a></li>
@@ -100,9 +112,9 @@
     </div>
     <div class="page-content-wrapper">
         <div class="page-content page-content-min">
-
-            <iframe class="myiframe" name="right" id="right_page" src="{dr_url('home/main')}&cache={SYS_TIME}" url="{dr_url('home/main')}&cache={SYS_TIME}" frameborder="false" scrolling="auto" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
-
+            <div id="myiframe" cid="right_page">
+                <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
+            </div>
         </div>
     </div>
 </div>
