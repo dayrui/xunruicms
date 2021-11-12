@@ -16,9 +16,12 @@
     <script src="{LANG_PATH}lang.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/global/scripts/app{if !IS_XRDEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-    <script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    {if $is_index}
+    <script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    {else}
     <script src="{THEME_PATH}assets/js/my.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    {/if}
     <script type="text/javascript">
         function dr_update_cache_all() {
             var index = layer.load(2, {
@@ -102,6 +105,11 @@
                 }
             }
             function Mlink(top, left, link, url) {
+                if (url == '{dr_url('home/main')}') {
+                    // 直接跳转到首页
+                    window.location.href = admin_file;
+                    return;
+                }
                 $('.tooltip').hide();
                 {if $is_min}
                 {if $is_mobile}$('.page-header .responsive-toggler').click();{/if}

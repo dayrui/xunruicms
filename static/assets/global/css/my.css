@@ -678,3 +678,17 @@ form .portlet.light .portlet-body {
     border-color: #40aae3 !important;
     background-color: #40aae3 !important;
 }
+
+@media (max-width:480px) {
+    .myfooter .form-actions {
+        background-color: #ffffff !important;
+        border-top: 1px solid #ffffff;
+    }
+    .myfooter .btn,.myfooter label {
+        width: 100%;
+    }
+    .note.note-danger {
+        border-left: 2px solid #3ea9e2;
+        border-radius: 0
+    }
+}

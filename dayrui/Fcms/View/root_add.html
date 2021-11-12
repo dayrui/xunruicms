@@ -4,7 +4,8 @@
 </div>
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {dr_form_hidden()}
-    <div class="portlet bordered light myfbody">
+    <div class="myfbody">
+    <div class="portlet bordered light ">
         <div class="portlet-title">
             <div class="caption">
                 <span class="caption-subject font-green-sharp">
@@ -84,12 +85,12 @@
             </div>
         </div>
     </div>
-
+    </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button>
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$post_url}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button>
-            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button>
+            <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa fa-save"></i> {dr_lang('保存内容')}</button></label>
+                <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$post_url}')" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('保存再添加')}</button></label>
+                <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000', '{$reply_url}')" class="btn yellow"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button></label>
         </div>
     </div>
 </form>

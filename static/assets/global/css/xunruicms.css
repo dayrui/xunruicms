@@ -11579,7 +11579,7 @@ code.form-control-static {
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
     -o-border-radius: 4px;
-    border-radius: 4px
+    border-radius: 4px;
 }
 
 .page-bar:after,.page-bar:before {
@@ -11643,9 +11643,12 @@ code.form-control-static {
 
 .page-container-bg-solid .page-bar,.page-content-white .page-bar {
     background-color: #fff;
-    position: relative;
     padding: 0 20px;
-    margin: -25px -20px 0
+    margin: -25px 0px 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .page-container-bg-solid .page-bar .page-breadcrumb,.page-content-white .page-bar .page-breadcrumb {
@@ -11749,7 +11752,9 @@ code.form-control-static {
 }
 
 
-
+.page-body {
+    margin-top: 20px;
+}
 
 .page-sidebar-fixed .page-footer {
     margin-left: 158px;
@@ -11942,8 +11947,18 @@ code.form-control-static {
 
     .page-header.navbar .top-menu .navbar-nav>li.dropdown {
         padding: 0!important;
-        height: 70px!important;
+        height: 68px!important;
         margin-right: 10px
+    }
+    .page-content-wrapper .page-content {
+        padding: 25px 0 0 0
+    }
+    .main-content2 {
+        padding-left: 10px!important;
+        padding-right: 10px!important;
+    }
+    .page-content-white {
+        overflow-x: hidden;
     }
 
     .page-sidebar-menu {
@@ -13135,16 +13150,21 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     .myfbody {
         margin-bottom: 0
     }
-
     .myfooter {
         position: initial;
-        margin: 0!important
+        margin: 20px 0 0 0!important
     }
-
+    .portlet {
+        margin-bottom: 0;
+    }
+    .myfooter label {
+        margin-bottom: 0;
+    }
     .myfooter .btn {
         padding: 5px;
         line-height: 0;
-        font-size: 10px
+        font-size: 10px;
+        margin-bottom: 5px;
     }
 }
 .files .color-view img {
