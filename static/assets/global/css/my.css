@@ -683,12 +683,13 @@ form .portlet.light .portlet-body {
     .myfooter .form-actions {
         background-color: #ffffff !important;
         border-top: 1px solid #ffffff;
+        border-radius: 4px;
     }
     .myfooter .btn,.myfooter label {
         width: 100%;
     }
     .note.note-danger {
         border-left: 2px solid #3ea9e2;
-        border-radius: 0
+
     }
 }

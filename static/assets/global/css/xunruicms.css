@@ -11872,7 +11872,10 @@ code.form-control-static {
     .page-header-fixed.page-header-fixed-mobile .page-header.navbar {
         height: 100px
     }
-
+    .module-content {
+        margin-top: -40px;
+        margin-left: -20px
+    }
     .page-header.navbar .top-menu {
         display: block;
         clear: both
@@ -11951,7 +11954,7 @@ code.form-control-static {
         margin-right: 10px
     }
     .page-content-wrapper .page-content {
-        padding: 25px 0 0 0
+        padding: 25px 5px 0 5px;
     }
     .main-content2 {
         padding-left: 10px!important;
@@ -12705,7 +12708,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 }
 
 .module-content {
-    margin-top: -20px;
+    margin-top: -40px;
     margin-left: -20px
 }
 
