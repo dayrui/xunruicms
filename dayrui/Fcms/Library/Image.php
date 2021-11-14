@@ -909,6 +909,12 @@ class Image
     public function watermark($data = [], $is_test = 0)
     {
 
+        if (!in_array(str_replace('.', '', trim(strtolower(strrchr($data['source_image'], '.')), '.')), [
+            'jpg', 'jpeg', 'png', 'webp'
+        ])) {
+            return false;
+        }
+
         $config = [];
         $config['source_image'] = $data['source_image'];
         $config['dynamic_output'] = $data['dynamic_output'];
@@ -928,9 +934,9 @@ class Image
 
         list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', $data['locate']);
 
-        $config['wm_padding'] = $data['wm_padding'];
-        $config['wm_hor_offset'] = $data['wm_hor_offset'];
-        $config['wm_vrt_offset'] = $data['wm_vrt_offset'];
+        $config['wm_padding'] = (int)$data['wm_padding'];
+        $config['wm_hor_offset'] = (int)$data['wm_hor_offset'];
+        $config['wm_vrt_offset'] = (int)$data['wm_vrt_offset'];
         $this->initialize($config);
 
         $this->source_image = $config['source_image'];
@@ -1568,7 +1574,7 @@ class Image
             if (!$attach) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，dr_thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
-            } elseif (!in_array($attach['fileext'], ['gif', 'png', 'jpeg', 'jpg', 'webp'])) {
+            } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'webp'])) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用');
                 return ROOT_THEME_PATH.'assets/images/nopic.gif';
             }
