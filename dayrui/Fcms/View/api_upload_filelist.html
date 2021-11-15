@@ -1,0 +1,18 @@
+<div class="table-scrollable">
+    <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+        {loop $list $t}
+        <tr class="odd gradeX" id="dr_row_{$t.id}">
+            <td class="myselect">
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" {if !$t.file} disabled {/if} class="checkboxes" name="ids2[]" value="{$t.file}" />
+                    <span></span>
+                </label>
+            </td>
+            <td>
+                {$t.icon} &nbsp;{$t.name}
+            </td>
+
+        </tr>
+        {/loop}
+    </table>
+</div>

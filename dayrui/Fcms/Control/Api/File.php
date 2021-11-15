@@ -200,24 +200,40 @@ class File extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $p = (int)\Phpcmf\Service::L('input')->post('is_page');
-            $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids1' : 'ids0');
+            $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids'.$p : 'ids0');
             if (!$ids) {
                 $this->_json(0, dr_lang('没有选择文件'));
             } elseif (dr_count($ids) > $ct - $c) {
                 $this->_json(0, dr_lang('只能选择%s个文件，当前已选择%s个', $ct - $c, dr_count($ids)));
             }
             $list = [];
-            $temp = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused')->where('uid', $this->uid)->where_in('id', $ids)->getAll();
-            foreach ($temp as $t) {
-                $list[] = [
-                    'id' => $t['id'],
-                    'name' => $t['filename'],
-                    'file' => $t['attachment'],
-                    'url' => dr_get_file($t['id']),
-                    'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
-                    'upload' => '<input type="file" name="file_data"></button>',
-                ];
+            if ($p == 2) {
+                $ids = \Phpcmf\Service::L('input')->post('ids2');
+                foreach ($ids as $t) {
+                    $file = trim(str_replace('..', '', $t));
+                    $list[] = [
+                        'id' => 0,
+                        'name' => basename($t),
+                        'file' => $file,
+                        'url' => dr_get_file($file),
+                        'preview' => dr_file_preview_html($file, 0),
+                        'upload' => '<input type="file" name="file_data"></button>',
+                    ];
+                }
+            } else {
+                $temp = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused')->where('uid', $this->uid)->where_in('id', $ids)->getAll();
+                foreach ($temp as $t) {
+                    $list[] = [
+                        'id' => $t['id'],
+                        'name' => $t['filename'],
+                        'file' => $t['attachment'],
+                        'url' => dr_get_file($t['id']),
+                        'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
+                        'upload' => '<input type="file" name="file_data"></button>',
+                    ];
+                }
             }
+
 
             $data = [
                 'count' => dr_count($ids),
@@ -262,6 +278,10 @@ class File extends \Phpcmf\Common
             .'&p='.\Phpcmf\Service::L('input')->get('p');
         $pp = $unused ? intval($_GET['pp']) : 1;
 
+        $listurl = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=file_list')
+            .'&fid='.\Phpcmf\Service::L('input')->get('fid')
+            .'&p='.\Phpcmf\Service::L('input')->get('p');
+
         // 快捷上传字段参数
         $field = [
             'url' => dr_web_prefix('index.php?s=api&c=file&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
@@ -277,7 +297,7 @@ class File extends \Phpcmf\Common
             'list' => $list,
             'page' => intval($_GET['page']),
             'field' => $field,
-            'psize' => 18,
+            'psize' => 24,
             'param' => [
                 'used' => $unused,
                 'name' => $name,
@@ -288,9 +308,88 @@ class File extends \Phpcmf\Common
             'urlrule' => $url.'&page=[page]'.'&pp='.$pp,
             'tab_url' => $url,
             'fileext' => $exts,
+            'listurl' => $listurl,
             'search_url' => $url.'&pp='.$pp,
         ]);
         \Phpcmf\Service::V()->display('api_upload_list.html');
+    }
+
+    /**
+     * 浏览文件
+     */
+    public function file_list() {
+
+        if (!$this->uid) {
+            $this->_json(0, dr_lang('游客无法浏览文件'));
+        }
+
+        $p = $this->_get_upload_params();
+        $dir = trim(str_replace('..', '', str_replace(
+            [".//.", '\\', ' ', '<', '>', "{", '}', '..', "//"],
+            '',
+            \Phpcmf\Service::L('input')->get('dir')
+        )), '/');
+        $exts = explode(',', strtolower(str_replace('，', ',', $p['exts'])));
+
+        $list = $this->_map_file_list($dir, $exts);
+
+        \Phpcmf\Service::V()->admin();
+        \Phpcmf\Service::V()->assign([
+            'list' => $list,
+        ]);
+        \Phpcmf\Service::V()->display('api_upload_filelist.html');
+    }
+    /**
+     * 目录扫描
+     */
+    private function _map_file_list($dir, $exts) {
+
+        $file_data = $dir_data = [];
+        if ($dir) {
+            $arr = explode(DIRECTORY_SEPARATOR, $dir);
+            array_pop($arr);
+            $pdir = $arr ? implode('/', $arr) : '';
+            $dir_data = [
+                [
+                    'file' => 0,
+                    'icon' => '<i class="fa fa-folder"></i>',
+                    'name' => '<a href="javascript:dr_filelist(\''.$pdir.'\');">..</a>',
+                ]
+            ];
+        }
+
+        $root_path = SYS_UPLOAD_PATH;
+        $source_dir	= dr_rp($root_path.($dir ? $dir : trim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR), ['//', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR], ['/', DIRECTORY_SEPARATOR]);
+
+        if ($fp = @opendir($source_dir)) {
+            while (FALSE !== ($file = readdir($fp))) {
+                if (in_array($file, ['.', '..', '.DS_Store', 'config.ini', 'thumb.jpg'])) {
+                    continue;
+                } elseif (strtolower(strrchr($file, '.')) == '.php') {
+                    continue;
+                }
+                if (is_dir($source_dir.'/'.$file)) {
+                    $dir_data[] = [
+                        'file' => 0,
+                        'icon' => '<i class="fa fa-folder"></i>',
+                        'name' => '<a href="javascript:dr_filelist(\''.$dir.'/'.$file.'\');">'.$file.'</a>',
+                    ];
+                } else {
+                    $ext = trim(strtolower(strrchr($file, '.')), '.');
+                    if (!in_array($ext, $exts)) {
+                        continue;
+                    }
+                    $file_data[] = [
+                        'file' => $dir.'/'.$file,
+                        'icon' => '<i class="fa fa-file-text"></i>',
+                        'name' => '<a href="javascript:dr_preview_image(\''.SYS_UPLOAD_URL.$dir.'/'.$file.'\');">'.$file.'</a>',
+                    ];
+                }
+            }
+            closedir($fp);
+        }
+
+        return $file_data ? array_merge($dir_data, $file_data) : $dir_data;
     }
 
     /**

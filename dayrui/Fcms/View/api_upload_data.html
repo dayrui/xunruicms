@@ -1,0 +1,8 @@
+<div class="col-md-2 col-sm-2 col-xs-6" onclick="dr_select_ids({$tid}, {$t.id})">
+    <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
+        <div class="color-view bg-default bg-font-default div_ids{$tid} div_ids{$tid}_{$t.id}">
+            {dr_file_list_preview_html($t)}
+        </div>
+        <input type="hidden" class="select_ids{$tid}_{$t.id}" name="ids{$tid}[]" value="" />
+    </div>
+</div>

@@ -15,9 +15,16 @@
                     <ul class="page-breadcrumb">
                         {$menu}
                     </ul>
+                    {if $menu_toolbar}
+                    <div class="page-toolbar">
+                        {$menu_toolbar}
+                    </div>
+                    {/if}
                 </div>
+                <div class="page-body" style="padding-top:20px;">
+                {else}
+                <div class="page-body">
                 {/if}
-                <div class="page-body" style="padding-top:17px;margin-bottom:30px;">
             {else}
-                <div class="page-body" style="padding-top:0px;margin-bottom:30px;">
+                <div class="page-body">
             {/if}

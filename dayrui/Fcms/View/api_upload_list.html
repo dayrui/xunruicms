@@ -12,8 +12,13 @@
                 </li>
                 {/if}
                 <li class="dev {if $pp==1}active{/if}">
-                    <a href="{$tab_url}&pp=1"><i class="fa fa-folder-open"></i> {dr_lang('已使用')} </a>
+                    <a href="{$tab_url}&pp=1"><i class="bi bi-folder-check"></i> {dr_lang('已使用')} </a>
                 </li>
+                {if $member.is_admin}
+                <li class="dev {if $pp==2}active{/if}">
+                    <a href="{$tab_url}&pp=2"><i class="fa fa-folder-open"></i> {dr_lang('浏览')} </a>
+                </li>
+                {/if}
                 {if $field}
                 <link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
                 <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js" type="text/javascript"></script>
@@ -63,24 +68,27 @@
             {if $unused && $pp==0}
             <div role="presentation" class="table table-fc-upload table-striped clearfix">
                 <div class="files row">
+                    {php $tid=0;}
                     {table table=attachment_unused where=$list.unused IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
-                    <div class="col-md-2 col-sm-2 col-xs-6">
-                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
-                            <div class="color-view bg-default bg-font-default bold uppercase">
-                                {dr_file_list_preview_html($t)}
-                            </div>
-                            <div class="color-info bg-white c-font-14 sbold">
-                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                    <input type="checkbox" class="checkboxes" name="ids0[]" value="{$t.id}" />
-                                    <span style="top:4px;"></span>
-                                </label>
-                                <label><button onclick="dr_file_delete_tips(this, '{$t.id}')" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>
-                            </div>
-                        </div>
-                    </div>
+                    {template "api_upload_data.html"}
                     {/table}
                 </div>
             </div>
+            {else if $pp==2 && $member.is_admin}
+            <div role="presentation" class="table table-fc-filelist table-striped clearfix">
+
+            </div>
+            <script>
+                function dr_filelist(dir) {
+                    $.get('{$listurl}&dir='+dir, function (text){
+                        $('.table-fc-filelist').html(text);
+                    }, 'text');
+                }
+                function dr_file_select(file) {
+
+                }
+                dr_filelist('');
+            </script>
             {else}
             <div class="row">
                 <div class="col-md-12 text-center margin-bottom-20">
@@ -98,20 +106,9 @@
             <div role="presentation" class="table table-fc-upload table-striped clearfix">
 
                 <div class="files row">
+                    {php $tid=1;}
                     {table table=attachment_data where=$list.used IN_fileext=$fileext order=id_desc pagefile=admin page=1 pagesize=$psize urlrule=$urlrule}
-                    <div class="col-md-2 col-sm-2 col-xs-6">
-                        <div class="color-demo tooltips" data-original-title="{$t.filename}&nbsp;&nbsp;{dr_format_file_size($t.filesize)}">
-                            <div class="color-view bg-default bg-font-default bold uppercase">
-                                {dr_file_list_preview_html($t)}
-                            </div>
-                            <div class="color-info bg-white c-font-14 sbold">
-                                <label class="mt-table mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline" style="padding-left:15px">
-                                    <input type="checkbox" class="checkboxes" name="ids1[]" value="{$t.id}" />
-                                    <span></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    {template "api_upload_data.html"}
                     {/table}
                 </div>
             </div>
@@ -149,6 +146,17 @@
                 dr_file_delete(obj, id);
                 setTimeout("window.location.reload(true)", 2000);
             });
+    }
+    function dr_select_ids(tid, id) {
+        var obj = $('.div_ids'+tid+'_'+id);
+        var select = $('.select_ids'+tid+'_'+id);
+        if (obj.hasClass('on-view')) {
+            obj.removeClass('on-view');
+            select.val('');
+        } else {
+            obj.addClass('on-view');
+            select.val(id);
+        }
     }
 </script>
 
