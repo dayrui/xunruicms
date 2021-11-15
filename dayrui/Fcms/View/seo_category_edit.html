@@ -9,7 +9,10 @@
         <div class="form-group">
             <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
             <div class="col-md-9">
-                <input type="checkbox" name="setting[html]" value="1" {if $data['setting']['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="setting[html]" value="1" {if $data['setting']['html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="setting[html]" value="0" {if empty($data['setting']['html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                </div>
                 <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
             </div>
         </div>

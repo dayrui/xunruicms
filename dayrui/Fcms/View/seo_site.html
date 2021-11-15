@@ -29,7 +29,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('网站首页静态')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="SITE_INDEX_HTML" value="1" {if $SITE_INDEX_HTML}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="SITE_INDEX_HTML" value="1" {if $SITE_INDEX_HTML}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="SITE_INDEX_HTML" value="0" {if empty($SITE_INDEX_HTML)}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('开启之后首页将会自动生成静态文件')}</span>
                             </div>
                         </div>

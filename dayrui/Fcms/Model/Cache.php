@@ -250,6 +250,8 @@ class Cache extends \Phpcmf\Model
             unlink(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html'));
         }
 
+        @unlink(WRITEPATH.'config/run_lock.php');
+
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
     }

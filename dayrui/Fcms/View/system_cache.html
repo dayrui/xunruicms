@@ -23,7 +23,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('缓存开关')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_CACHE]" value="1" {if $data['SYS_CACHE']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE]" value="1" {if $data['SYS_CACHE']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE]" value="0" {if empty($data['SYS_CACHE'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('推荐开启缓存功能，可以大大提高系统运行效率')}</span>
                             </div>
                         </div>

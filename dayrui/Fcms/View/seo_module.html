@@ -44,8 +44,11 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('模块首页静态')}</label>
                                 <div class="col-md-9">
-                                    <input type="checkbox" name="module_index_html" value="1" {if $data['setting']['module_index_html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                    <span class="help-block">{dr_lang('模块的首页将会自动生成静态文件')}</span>
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="module_index_html" value="1" {if $data['setting']['module_index_html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="module_index_html" value="0" {if empty($data['setting']['module_index_html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    </div>
+                                     <span class="help-block">{dr_lang('模块的首页将会自动生成静态文件')}</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -75,7 +78,10 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('模块栏目和内容静态')}</label>
                                 <div class="col-md-9">
-                                    <input type="checkbox" name="site[html]" value="1" {if $site['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="site[html]" value="1" {if $site['html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="site[html]" value="0" {if empty($site['html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    </div>
                                     <span class="help-block">{dr_lang('模块栏目、模块内容页面静态功能开关')}</span>
                                 </div>
                             </div>

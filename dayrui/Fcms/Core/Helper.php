@@ -3283,7 +3283,7 @@ function dr_string2array($data, $limit = '') {
         return $rt;
     }
 
-    return [];
+    return $data; // 不能保证是数组就原样输出文字
 }
 
 /**

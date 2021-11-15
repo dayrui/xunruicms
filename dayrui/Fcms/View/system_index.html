@@ -32,10 +32,16 @@
                             <label class="col-md-2 control-label">{dr_lang('调试器')}</label>
                             <div class="col-md-9">
                                 {if IS_DEV}
-                                <input type="checkbox" name="data[SYS_DEBUG]" value="1" checked disabled data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_DEBUG]" value="1" checked disabled} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_DEBUG]" value="0"  disabled /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('你已经在index.php中开启了开发者模式，调试器已被强制开启')}</span>
                                 {else}
-                                <input type="checkbox" name="data[SYS_DEBUG]" value="1" {if $data['SYS_DEBUG']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_DEBUG]" value="1" {if $data['SYS_DEBUG']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_DEBUG]" value="0" {if empty($data['SYS_DEBUG'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('用于后台启用DebugBar工具查看程序和SQL执行详情')}</span>
                                 {/if}
                             </div>
@@ -43,14 +49,20 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('操作日志')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_ADMIN_LOG]" value="1" {if $data['SYS_ADMIN_LOG']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_LOG]" value="1" {if $data['SYS_ADMIN_LOG']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_LOG]" value="0" {if empty($data['SYS_ADMIN_LOG'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('多用户操作后台建议打开日志功能')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('内容临时存储')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_AUTO_FORM]" value="1" {if $data['SYS_AUTO_FORM']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_AUTO_FORM]" value="1" {if $data['SYS_AUTO_FORM']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_AUTO_FORM]" value="0" {if empty($data['SYS_AUTO_FORM'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('发布内容临时存储，再次发布时自动填充')}</span>
                             </div>
                         </div>
@@ -58,7 +70,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('系统风格目录的作用域')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_THEME_ROOT]" value="1" {if $data['SYS_THEME_ROOT']}checked{/if} data-on-text="{dr_lang('相对')}" data-off-text="{dr_lang('绝对')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT]" value="1" {if $data['SYS_THEME_ROOT']}checked{/if} /> {dr_lang('相对')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT]" value="0" {if empty($data['SYS_THEME_ROOT'])}checked{/if} /> {dr_lang('绝对')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('选择绝对模式时，多站点和THEME_PATH变量在引用风格时，路径为主站URL')}</span>
                             </div>
                         </div>
@@ -99,7 +114,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('跳转404页面')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_GO_404]" value="1" {if $data['SYS_GO_404']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_GO_404]" value="1" {if $data['SYS_GO_404']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_GO_404]" value="0" {if empty($data['SYS_GO_404'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('开启后，404页面时直接跳转到404.html，不在当前url中显示404页面')}</span>
                             </div>
                         </div>
@@ -140,30 +158,42 @@
                         <div class="form-group" id="dr_row_https">
                             <label class="col-md-2 control-label">HTTPS</label>
                             <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="0" {if empty($data['SYS_HTTPS'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
+                                </div>
                                 <input type="hidden" name="https_test" id="https_test" value="0">
-                                <label><input type="checkbox" id="dr_https" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small"></label>
-                                <label><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
                                 <span class="help-block">{dr_lang('全站采用https安全模式，开启之前需要测试是否支持https')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('跨站验证')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="0" {if empty($data['SYS_CSRF'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('开启跨站验证后将禁止外部站点向本站提交数据')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录验证码')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_ADMIN_CODE]" value="1" {if $data['SYS_ADMIN_CODE']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_CODE]" value="1" {if $data['SYS_ADMIN_CODE']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_CODE]" value="0" {if empty($data['SYS_ADMIN_CODE'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('登录后台的验证码开关')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('快捷方式登录')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_ADMIN_OAUTH]" value="1" {if $data['SYS_ADMIN_OAUTH']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_OAUTH]" value="1" {if $data['SYS_ADMIN_OAUTH']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_OAUTH]" value="0" {if empty($data['SYS_ADMIN_OAUTH'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
                             </div>
                         </div>
@@ -211,7 +241,10 @@
 						<div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('验证图片验证码')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[SYS_API_CODE]" value="1" {if $data['SYS_API_CODE']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('禁用')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_API_CODE]" value="1" {if $data['SYS_API_CODE']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_API_CODE]" value="0" {if empty($data['SYS_API_CODE'])}checked{/if} /> {dr_lang('禁用')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('通过API插件提交数据、发送短信验证码时，禁用后不进行图片验证码的验证操作')}</span>
                             </div>
                         </div>

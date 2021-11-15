@@ -25,7 +25,10 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][module_index_html]" value="1" {if $data['setting']['module_index_html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][module_index_html]" value="1" {if $data['setting']['module_index_html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][module_index_html]" value="0" {if empty($data['setting']['module_index_html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('开启之后当前模块的首页将会自动生成静态文件')}</span>
                             </div>
                         </div>
@@ -34,14 +37,20 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('同步其他栏目')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][sync_category]" value="1" {if $data['setting']['sync_category']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][sync_category]" value="1" {if $data['setting']['sync_category']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][sync_category]" value="0" {if empty($data['setting']['sync_category'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('将内容同步发布到其他的栏目之中')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('父栏目发布权限')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][pcatpost]" value="1" {if $data['setting']['pcatpost']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][pcatpost]" value="1" {if $data['setting']['pcatpost']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][pcatpost]" value="0" {if empty($data['setting']['pcatpost'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('允许父栏目（即封面栏目）可投稿，栏目封面模板可支持分页功能')}</span>
                             </div>
                         </div>

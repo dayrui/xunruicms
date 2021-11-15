@@ -130,14 +130,20 @@ function dr_tid(i) {
                         <div class="form-group dr_tid_0 dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('继承下级')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="system[setting][getchild]" value="1" {if $data['setting']['getchild']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][getchild]" value="1" {if $data['setting']['getchild']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][getchild]" value="0" {if empty($data['setting']['getchild'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('将下级第一个栏目数据作为当前的栏目，不对外链类型的栏目有效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('禁止修改')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="system[setting][notedit]" value="1" {if $data['setting']['notedit']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][notedit]" value="1" {if $data['setting']['notedit']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][notedit]" value="0" {if empty($data['setting']['notedit'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('内容发布之后将禁止修改栏目')}</span>
                             </div>
                         </div>
@@ -152,7 +158,10 @@ function dr_tid(i) {
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="system[setting][html]" value="1" {if $data['setting']['html']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][html]" value="1" {if $data['setting']['html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="system[setting][html]" value="0" {if empty($data['setting']['html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('开启生成静态时必须给它配置URL规则')}</span>
                             </div>
                         </div>

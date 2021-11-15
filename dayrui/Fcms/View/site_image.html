@@ -31,7 +31,10 @@
 						<div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('压缩图片开关')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="image[used]" value="1" {if $image['used']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[used]" value="1" {if $image['used']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[SYS_DusedEBUG]" value="0" {if empty($image['used'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('将大尺寸的图片压缩小')}</span>
                             </div>
                         </div>

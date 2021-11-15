@@ -281,7 +281,21 @@ class Router {
 
         // 获取自定义URL
         $rule = isset($data['setting']['urlrule']) ? \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value') : 0;
-        if ($rule && $rule['list']) {
+        if ($page) {
+            if (isset($data['myurl_page']) && $data['myurl_page']) {
+                $url = ltrim($data['myurl_page'], '/');
+            } elseif ($rule && $rule['list_page']) {
+                $url = ltrim($rule['list_page'], '/');
+            }
+        } else {
+            if (isset($data['myurl']) && $data['myurl']) {
+                $url = ltrim($data['myurl'], '/');
+            } elseif ($rule && $rule['list']) {
+                $url = ltrim($rule['list'], '/');
+            }
+        }
+
+        if ($url) {
             // URL模式为自定义，且已经设置规则
             $data['fid'] = $fid;
             $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
@@ -289,7 +303,6 @@ class Router {
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
             $data['opdirname'] = $data['pid'] && isset($mod['category'][$data['pid']]) ? $mod['category'][$data['pid']]['dirname'] : '';
             $data['otdirname'] = $data['topid'] && isset($mod['category'][$data['topid']]) ? $mod['category'][$data['topid']]['dirname'] : '';
-            $url = ltrim($page ? $rule['list_page'] : $rule['list'], '/');
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
         }
 
@@ -316,7 +329,21 @@ class Router {
         $page == 1 && $page = 0;
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cat['setting']['urlrule'], 'value');
-        if ($rule && $rule['show']) {
+        if ($page) {
+            if (isset($data['myurl_page']) && $data['myurl_page']) {
+                $url = ltrim($data['myurl_page'], '/');
+            } elseif ($rule && $rule['show_page']) {
+                $url = ltrim($rule['show_page'], '/');
+            }
+        } else {
+            if (isset($data['myurl']) && $data['myurl']) {
+                $url = ltrim($data['myurl'], '/');
+            } elseif ($rule && $rule['show_page']) {
+                $url = ltrim($rule['show'], '/');
+            }
+        }
+
+        if ($url) {
             // URL模式为自定义，且已经设置规则
             $data['cat'] = $cat;
             $data['modname'] = $mod['dirname'];
@@ -330,7 +357,7 @@ class Router {
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
             $data['opdirname'] = $cat['pid'] && isset($mod['category'][$cat['pid']]) ? $mod['category'][$cat['pid']]['dirname'] : '';
             $data['otdirname'] = $cat['topid'] && isset($mod['category'][$cat['topid']]) ? $mod['category'][$cat['topid']]['dirname'] : '';
-            $url = ltrim($page ? $rule['show_page'] : $rule['show'], '/');
+
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
         }
 

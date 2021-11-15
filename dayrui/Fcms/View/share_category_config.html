@@ -25,14 +25,21 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('默认展开顶级栏目下层')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[popen]" value="1" {if $data['popen']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[popen]" value="1" {if $data['popen']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[popen]" value="0" {if empty($data['popen'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+
                                 <span class="help-block">{dr_lang('进入栏目管理时默认展开顶级栏目的下级子栏目')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('栏目目录允许重复')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[rname]" value="1" {if $data['rname']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[rname]" value="1" {if $data['rname']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[rname]" value="0" {if empty($data['rname'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
                                 <span class="help-block">{dr_lang('栏目开启之后请不要使用目录作为伪静态关键字，否则需要使用生成真静态功能')}</span>
                             </div>
                         </div>
