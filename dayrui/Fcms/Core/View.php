@@ -842,7 +842,7 @@ class View {
         // 分页页码变量
         $this->_page_value = $system['page'];
         // 开发者模式下关闭缓存
-        (IS_DEV || $this->_page_value) && $system['cache'] = 0;
+        IS_DEV && $system['cache'] = 0;
 
         // 判断关闭缓存时
         if (!SYS_CACHE) {
