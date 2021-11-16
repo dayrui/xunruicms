@@ -755,7 +755,19 @@ function dr_post_submit(url, form, time, go) {
                     setTimeout("window.location.href = '"+gourl+"'", time);
                 }
             } else {
-                dr_cmf_tips(0, json.msg, json.data.time);
+                if (json.data.button) {
+                    layer.alert(json.msg, {
+                        shade: 0,
+                        shade: 0,
+                        title: "",
+                        btn: [json.data.button.name],
+                        icon: 2
+                    }, function(){
+                        window.open(json.data.button.url, '_blank').location;
+                    })
+                } else {
+                    dr_cmf_tips(0, json.msg, json.data.time);
+                }
                 $('.fc-code img').click();
                 if (json.data.field) {
                     $('#dr_row_'+json.data.field).addClass('has-error');
