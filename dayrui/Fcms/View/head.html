@@ -5,22 +5,22 @@
     <title>{if $meta_title}{$meta_title}{else}{SITE_NAME} - {dr_lang('后台管理平台')}{/if}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <script src="{THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-    <link href="{THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/global/css/xunruicms{if !IS_XRDEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <script src="{$THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <link href="{$THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{$THEME_PATH}assets/global/css/xunruicms{if !IS_XRDEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     {if $is_min}
-    <link href="{THEME_PATH}assets/global/css/min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{$THEME_PATH}assets/global/css/min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     {/if}
-    <link href="{php echo defined('MYCSS_FILE') ? MYCSS_FILE : THEME_PATH.'assets/global/css/my.css';}?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{php echo defined('MYCSS_FILE') ? MYCSS_FILE : $THEME_PATH.'assets/global/css/my.css';}?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">var admin_file = '{SELF}';var is_min = '{$is_min}'; var is_oemcms = '{IS_OEM_CMS}'; var is_mobile_cms = '{$is_mobile}'; var is_admin = '{if dr_in_array(1, $admin.roleid)}1{else}2{/if}';</script>
-    <script src="{LANG_PATH}lang.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-    <script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-    <script src="{THEME_PATH}assets/global/scripts/app{if !IS_XRDEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-    <script src="{THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$LANG_PATH}lang.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/global/scripts/app{if !IS_XRDEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {if $is_index}
-    <script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {else}
-    <script src="{THEME_PATH}assets/js/my.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/js/my.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {/if}
     <script type="text/javascript">
         function dr_update_cache_all() {

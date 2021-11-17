@@ -5,13 +5,13 @@
     <title>{dr_lang('%s - 后台管理平台', SITE_NAME)}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link href="{THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
-    <link href="{THEME_PATH}assets/global/css/login.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{$THEME_PATH}assets/global/css/xunruicms.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{$THEME_PATH}assets/global/css/login.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
 </head>
 <body class="login">
 <div class="content">
     <div class="logo">
-        <a href="{SITE_URL}"><img src="{THEME_PATH}assets/logo.png" /> </a>
+        <a href="{SITE_URL}"><img src="{$THEME_PATH}assets/logo.png" /> </a>
     </div>
     <form class="login-form" action="" onsubmit="return dr_submit()" method="post">
         {$form}
@@ -73,7 +73,7 @@
         </div>
         {/if}
         {if SYS_ADMIN_OAUTH && $oauth}
-        <link href="{THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+        <link href="{$THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
         <div class="login-oauth">
             {loop $oauth $t}
             <a href="{$t.url}" class="tooltips" data-container="body" data-placement="top" data-original-title="{$t.title}"><i class="fa fa-{$t.name}"></i></a>
@@ -89,11 +89,11 @@
 {else}
 <div class="copyright"> <a style="color: #fff" href="https://www.xunruicms.com" target="_blank">迅睿CMS建站框架</a> </div>
 {/if}
-<script src="{THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-<script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-<script src="{THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-<script src="{THEME_PATH}assets/global/plugins/backstretch/jquery.backstretch.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-<script src="{THEME_PATH}assets/global/scripts/app.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/plugins/backstretch/jquery.backstretch.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/scripts/app.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script type="text/javascript">
     var is_admin = 2;
     if (typeof parent.layer == 'function') {
@@ -133,10 +133,10 @@
         });
         return false;
     }
-    <?php $bg = array('"'.THEME_PATH.'assets/global/login/1.jpg"',
-            '"'.THEME_PATH.'assets/global/login/2.jpg"',
-            '"'.THEME_PATH.'assets/global/login/3.jpg"',
-            '"'.THEME_PATH.'assets/global/login/4.jpg"');
+    <?php $bg = array('"'.$THEME_PATH.'assets/global/login/1.jpg"',
+            '"'.$THEME_PATH.'assets/global/login/2.jpg"',
+            '"'.$THEME_PATH.'assets/global/login/3.jpg"',
+            '"'.$THEME_PATH.'assets/global/login/4.jpg"');
     shuffle($bg);
     ?>
     jQuery(document).ready(function() {

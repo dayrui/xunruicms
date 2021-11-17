@@ -123,9 +123,9 @@ abstract class Common extends \CodeIgniter\Controller {
         define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
         define('OAUTH_URL', PAY_URL); // 第三方登录URL
-        define('LANG_PATH', dr_rm_http(ROOT_URL).'api/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
 
-        !defined('THEME_PATH') && define('THEME_PATH', dr_rm_http(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
+        !defined('THEME_PATH') && define('THEME_PATH', trim(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径
 
         if (strpos(SITE_THEME, '/') !== false) {
@@ -134,7 +134,7 @@ abstract class Common extends \CodeIgniter\Controller {
             define('MOBILE_THEME_PATH', SITE_THEME); // 移动端站点风格
         } else {
             // 本地资源
-            define('HOME_THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
+            define('HOME_THEME_PATH', trim(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
             if (!defined('IS_MOBILE') && (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.SITE_MOBILE_DIR.'/static/'.SITE_THEME.'/'); // 移动端站点风格

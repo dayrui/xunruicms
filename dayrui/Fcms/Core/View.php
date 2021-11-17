@@ -246,6 +246,14 @@ class View {
         !defined('IS_MOBILE_USER') && define('IS_MOBILE_USER', \Phpcmf\Service::IS_MOBILE_USER());
         !defined('IS_COMMENT') && define('IS_COMMENT', dr_is_app('comment'));
 
+        $THEME_PATH = THEME_PATH;
+        $LANG_PATH = LANG_PATH;
+
+        if (isset($_SERVER['SCRIPT_FILENAME']) && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/logo.png')) {
+            $THEME_PATH = '/static/';
+            $LANG_PATH = '/api/language/'.SITE_LANGUAGE.'/';
+        }
+
         $_temp_file = $this->load_view_file($_view_file);
 
         // 挂钩点 模板加载之后

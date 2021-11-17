@@ -2534,6 +2534,9 @@ function dr_authcode($string, $operation = 'DECODE') {
  * 当前URL
  */
 function dr_now_url() {
+    if (IS_ADMIN) {
+        return str_replace(FC_NOW_HOST, '/', FC_NOW_URL);
+    }
     return FC_NOW_URL;
 }
 
