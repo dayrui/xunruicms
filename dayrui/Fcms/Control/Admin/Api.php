@@ -576,7 +576,7 @@ class Api extends \Phpcmf\Common {
         }
 
         $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['id']);
-        \Phpcmf\Service::L('cache')->set_data('admin_login_member', $uid.'-'.$this->admin['id'], 30);
+        \Phpcmf\Service::L('cache')->set_data('admin_login_member', $admin, 30);
         $this->session()->set('admin_login_member_code', $uid.$this->admin['id'].$this->admin['password']);
 
         $sso = '';
