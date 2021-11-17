@@ -185,8 +185,9 @@ class Site extends \Phpcmf\Model
     public function edit_domain($value) {
 
         $site = $this->config(1);
+        $value = trim(strtolower($value), '/');
         $this->db->table('site')->where('id', 1)->update([
-            'domain' => strtolower($value),
+            'domain' => $value,
             'setting' => dr_array2string($site),
         ]);
         // 替换栏目编辑器域名
@@ -199,10 +200,9 @@ class Site extends \Phpcmf\Model
         $data = [];
         $site = $this->config(SITE_ID);
         if ($value) {
-
             $site['webpath'] = $value['webpath'];
             $this->db->table('site')->where('id', SITE_ID)->update([
-                'domain' => strtolower($value['site_domain'] ? $value['site_domain'] : $site['domain']),
+                'domain' => trim(strtolower($value['site_domain'] ? $value['site_domain'] : $site['domain']), '/'),
                 'setting' => dr_array2string($site),
             ]);
         }

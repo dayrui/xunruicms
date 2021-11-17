@@ -338,7 +338,7 @@ class Router {
         } else {
             if (isset($data['myurl']) && $data['myurl']) {
                 $url = ltrim($data['myurl'], '/');
-            } elseif ($rule && $rule['show_page']) {
+            } elseif ($rule && $rule['show']) {
                 $url = ltrim($rule['show'], '/');
             }
         }

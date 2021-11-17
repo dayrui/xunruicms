@@ -881,7 +881,8 @@ class Model {
             }
             // 栏目查询
             if (isset($param['catid']) && $param['catid']) {
-                $cat = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.MOD_DIR, 'category', $param['catid']);
+                $mid = defined('MOD_DIR') ? MOD_DIR : (APP_DIR ? APP_DIR : 'share');
+                $cat = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$mid, 'category', $param['catid']);
                 $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
             }
             // 其他自定义字段查询

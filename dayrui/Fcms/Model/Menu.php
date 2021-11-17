@@ -737,6 +737,7 @@ class Menu extends \Phpcmf\Model {
                     if ($t['pid'] == 0) {
                         $t['site'] = dr_string2array($t['site']);
                         $t['group'] = dr_string2array($t['group']);
+                        $t['client'] = dr_string2array($t['client']);
                         $list['url'][$t['id']] = $t;
                         foreach ($data as $n) {
                             $n['site'] = dr_string2array($n['site']);
