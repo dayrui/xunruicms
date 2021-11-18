@@ -249,7 +249,7 @@ class View {
         $THEME_PATH = THEME_PATH;
         $LANG_PATH = LANG_PATH;
 
-        if (isset($_SERVER['SCRIPT_FILENAME']) && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/logo.png')) {
+        if (isset($_SERVER['SCRIPT_FILENAME']) && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/xunruicms.min.css')) {
             $THEME_PATH = '/static/';
             $LANG_PATH = '/api/language/'.SITE_LANGUAGE.'/';
         }
