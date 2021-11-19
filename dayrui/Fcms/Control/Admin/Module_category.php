@@ -148,6 +148,7 @@ class Module_category extends \Phpcmf\Common
             'mid' => $mid,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
+                    '内容模块' => ['module/index', 'fa fa-cogs'],
                     '模块【'.$module['name'].'】栏目模型字段' => ['url:'.\Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir'=>$dir]), 'fa fa-code', 'module_category/field_index'],
                     '自定义字段' => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname'=>'catmodule-'.$dir, 'rid'=>0]), 'fa fa-code', 'field/add'],
                     'help' => [798],
