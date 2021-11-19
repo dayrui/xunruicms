@@ -1,5 +1,9 @@
 {template "header.html"}
-
+<style>
+    body {
+        overflow: hidden
+    }
+</style>
 <form class="form-horizontal" method="post" role="form" id="myform">
     {$form}
     <div class="form-body">
@@ -23,8 +27,6 @@
             <div class="col-xs-12">
                 <p class="form-control-static"> {dr_lang('例如：www.test.com，不能包含/符号')} </p>
                 <p class="form-control-static"> {dr_lang('域名变更需要提前把新域名绑定到本站')} </p>
-                <p class="form-control-static"> {dr_lang('变更修改之后需要更新缓存生效')} </p>
-                <p class="form-control-static" style="color: red"> {dr_lang('编辑器中的旧域名需要手动替换新域名')} </p>
             </div>
         </div>
         {/if}

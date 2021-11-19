@@ -91,7 +91,11 @@ class Site_domain extends \Phpcmf\Common
 
             \Phpcmf\Service::M('Site')->edit_domain($domain);
             \Phpcmf\Service::L('input')->system_log('变更网站主域名');
-            $this->_json(1, dr_lang('操作成功，请域名解析到本站IP'));
+            \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+
+            $this->_json(1, dr_lang('操作成功，请更新全站缓存'), [
+                'tourl' => dr_url('cache/index')
+            ]);
         }
 
         \Phpcmf\Service::V()->assign([
