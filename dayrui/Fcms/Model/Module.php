@@ -614,9 +614,15 @@ class Module extends \Phpcmf\Model
                     $c['setting']['urlrule'] = intval($cache['site'][$siteid]['urlrule']);
                 }
                 // 获取栏目url
-                $c['url'] = $c['tid'] == 2 && $c['setting']['linkurl'] ? dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0) : \Phpcmf\Service::L('router')->category_url($cache, $c);
+                if ($c['tid'] == 2 && $c['setting']['linkurl']) {
+                    $c['url'] = dr_url_prefix($c['setting']['linkurl'], '', $siteid, 0);
+                    $c['murl'] = dr_url_prefix($c['setting']['linkurl'], '', $siteid, 1);
+                } else {
+                    $c['url'] = \Phpcmf\Service::L('router')->category_url($cache, $c);
+                    $c['murl'] = dr_url_prefix($c['url'], '', $siteid, 1);
+                }
                 // 统计栏目文章数量
-                $c['total'] = '此变量已废弃，请使用count标签查询';
+                $c['total'] = '请使用count标签查询';
                 /*
                 if (in_array($c['tid'], [2, 0]) || $c['child'] || !$c['mid'] || !$this->db->tableExists($this->dbprefix($siteid.'_'.$c['mid'].'_index'))) {
                     $c['total'] = 0;

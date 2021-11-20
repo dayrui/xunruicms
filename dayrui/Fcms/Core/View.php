@@ -1672,6 +1672,9 @@ class View {
 
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
+                    if (strpos($system['module'], ',')) {
+                        goto modules;
+                    }
                     return $this->_return($system['return'], '模块('.$dirname.')未安装');
                 }
 
@@ -1965,14 +1968,16 @@ class View {
 
             case 'modules': // 多模块合并查询
 
+                modules:
+
                 $modules = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-content');
                 if (!$modules) {
                     return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块');
                 }
 
                 $module_all = explode(',', $system['module']);
-                if (dr_count($module_all) < 2) {
-                    return $this->_return($system['return'], 'module参数有误('.$system['module'].')：至少两个模块以上');
+                if (dr_count($module_all) == 1) {
+                    goto module;
                 }
 
                 if (!$system['field']) {
