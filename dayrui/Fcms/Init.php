@@ -77,6 +77,7 @@ $system = [
     'SYS_ADMIN_OAUTH'    => 0,
     'SYS_ATTACHMENT_DB'     => 1,
     'SYS_ATTACHMENT_GUEST'   => 0,
+    'SYS_ATTACHMENT_CF'   => 0,
     'SYS_ATTACHMENT_PATH'   => '',
     'SYS_ATTACHMENT_SAVE_TYPE'  => '',
     'SYS_ATTACHMENT_SAVE_DIR'   => '',

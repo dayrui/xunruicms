@@ -94,11 +94,30 @@ class File extends \Phpcmf\Common
         if (!$rt['code']) {
             exit(dr_array2string($rt));
         }
+        $data = [];
+        if (defined('SYS_ATTACHMENT_CF') && SYS_ATTACHMENT_CF && $rt['data']['md5']) {
+            $att = \Phpcmf\Service::M()->table('attachment')
+                ->where('uid', $this->uid)
+                ->where('filemd5', $rt['data']['md5'])
+                ->where('fileext', $rt['data']['ext'])
+                ->where('filesize', $rt['data']['size'])
+                ->getRow();
+            if ($att) {
+                $data = dr_return_data($att['id'], 'ok');
+                // 删除现有附件
+                // 开始删除文件
+                $storage = new \Phpcmf\Library\Storage($this);
+                $storage->delete(\Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment']), $rt['data']['file']);
+                $rt['data'] = $this->get_attachment($att['id']);
+            }
+        }
 
         // 附件归档
-        $data = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
-        if (!$data['code']) {
-            exit(dr_array2string($data));
+        if (!$data) {
+            $data = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
+            if (!$data['code']) {
+                exit(dr_array2string($data));
+            }
         }
 
         // 上传成功

@@ -42,6 +42,7 @@ class Attachment extends \Phpcmf\Common
             $save = [
                 'SYS_ATTACHMENT_SAFE' => (int)$post['SYS_ATTACHMENT_SAFE'],
                 'SYS_ATTACHMENT_GUEST' => (int)$post['SYS_ATTACHMENT_GUEST'],
+                'SYS_ATTACHMENT_CF' => (int)$post['SYS_ATTACHMENT_CF'],
                 'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
                 'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],
                 'SYS_ATTACHMENT_PATH' => addslashes($post['SYS_ATTACHMENT_PATH']),
