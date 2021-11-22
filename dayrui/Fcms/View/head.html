@@ -89,6 +89,11 @@
                 }
             }
             function dr_go_url(url, name) {
+
+                {if !IS_ADMIN_CACHE}
+                $("#right_page").attr('src', url);
+                $("#right_page").attr("url", url);
+                {else}
                 var cmd = $.md5(url);
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
@@ -103,6 +108,7 @@
                     $('#dr_go_url').show();
                     $('#dr_go_url .dropdown-menu').append('<li id="dr_go_url_'+cmd+'"><a href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a></li>');
                 }
+                {/if}
             }
             function Mlink(top, left, link, url) {
                 if (url == '{dr_url('home/main')}') {
