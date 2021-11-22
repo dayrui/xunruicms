@@ -41,20 +41,6 @@
                 </li>
                 {$mstring}
                 {/if}
-                <li class="dropdown dropdown-extended dropdown-tasks" style="display: none" id="dr_go_url">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <div class="menu-top-icon"><i class="bi bi-exclude"></i>
-                        </div>
-                        <div class="top-txt-menu">{dr_lang('切换')}</div>
-                    </a>
-                    <ul class="dropdown-menu extended tasks">
-                        <li>
-                            <ul class="dropdown-menu-list scroller" data-handle-color="#637283">
-
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
 
                 {if count($ci->site_info) > 1}
                 <li class="dropdown dropdown-extended dropdown-tasks">
@@ -167,7 +153,7 @@
     </div>
     <div class="page-content-wrapper">
         <div class="page-content index-content">
-            <div class="page-toolbar fc-mb-left-menu">
+            <div class="page-toolbar fc-mb-left-menu" id="dr_go_url">
             </div>
             <div id="myiframe" cid="right_page">
                 <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>

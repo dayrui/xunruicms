@@ -29,7 +29,7 @@ class Text extends \Phpcmf\Library\A_Field {
             $mcf = '<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('验证重复').'</label>
 			<div class="col-md-9">
-				<input type="checkbox" name="data[setting][option][unique]" '.($option['unique'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+				<input type="checkbox" name="data[setting][option][unique]" '.($option['unique'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 				<span class="help-block">'.dr_lang('开启将会判断此字段的唯一性（本字段只对内容模块主表有效）').'</span>
 			</div>
 		</div>';

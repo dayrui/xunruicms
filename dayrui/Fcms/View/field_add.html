@@ -83,14 +83,14 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('XSS过滤')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][validate][xss]" value="1" {if $data['setting']['validate']['xss']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-off-color="danger" data-on-color="success" class="make-switch" data-size="small">
+                                <input type="checkbox" name="data[setting][validate][xss]" value="1" {if $data['setting']['validate']['xss']}checked{/if} data-on-text="{dr_lang('已开启')}" data-off-text="{dr_lang('已关闭')}" data-off-color="danger" data-on-color="success" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('非法字符会被安全替换掉')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('前端禁止修改')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][validate][isedit]" value="1" {if $data['setting']['validate']['isedit']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <input type="checkbox" name="data[setting][validate][isedit]" value="1" {if $data['setting']['validate']['isedit']}checked{/if} data-on-text="{dr_lang('已开启')}" data-off-text="{dr_lang('已关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('前端用户提交之后将不能修改字段值，后台任然可以修改值')}</span>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('禁止使用')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[disabled]" value="1" {if $data['disabled']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <input type="checkbox" name="data[disabled]" value="1" {if $data['disabled']}checked{/if} data-on-text="{dr_lang('已禁止')}" data-off-text="{dr_lang('已开放')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                              </div>
                         </div>
                         <div class="form-group">
@@ -233,8 +233,8 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('前端显示')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[ismember]" value="1" {if $data['ismember']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('前端发布内容时，如果想前端表单或者会员中心不显示那么请选择“否”，否则选“是”')}</span>
+                                <input type="checkbox" name="data[ismember]" value="1" {if $data['ismember']}checked{/if} data-on-text="{dr_lang('已显示')}" data-off-text="{dr_lang('已隐藏')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('前端发布内容时，前端表单或者会员中心控制是否显示它')}</span>
                             </div>
                         </div>
 
@@ -280,7 +280,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('category_search_field标签')}</label>
                             <div class="col-md-9">
-                                <input type="checkbox" name="data[issearch]" value="1" {if $data['issearch']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <input type="checkbox" name="data[issearch]" value="1" {if $data['issearch']}checked{/if} data-on-text="{dr_lang('已开启')}" data-off-text="{dr_lang('已关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                 <span class="help-block">{dr_lang('只针对栏目模型字段搜索时，category_search_field标签使用，只支持Select、Radio、Checkbox')}</span>
                             </div>
                         </div>

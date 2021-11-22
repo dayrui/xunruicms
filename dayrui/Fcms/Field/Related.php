@@ -44,7 +44,7 @@ class Related extends \Phpcmf\Library\A_Field {
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('显示归属内容').'</label>
                     <div class="col-md-9">
-                        <input type="checkbox" name="data[setting][option][my]" '.($option['my'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                        <input type="checkbox" name="data[setting][option][my]" '.($option['my'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                         <span class="help-block">'.dr_lang('开启之后只显示当前登录的用户自己所发布的内容').'</span>
                     </div>
                 </div>

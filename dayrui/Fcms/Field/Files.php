@@ -31,7 +31,7 @@ class Files extends \Phpcmf\Library\A_Field {
             $mthumb = '<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的图片来填充（仅对模块字段有效）').'</span>
                 </div>
             </div>';
@@ -41,7 +41,7 @@ class Files extends \Phpcmf\Library\A_Field {
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('首图作为缩略图').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <input type="checkbox" name="data[setting][option][stslt]" '.($option['stslt'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('当缩略图字段为空时，用本字段的首张图片来填充（仅对模块字段有效）').'</span>
                 </div>
             </div>
@@ -49,14 +49,14 @@ class Files extends \Phpcmf\Library\A_Field {
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('手动输入').'</label>
                 <div class="col-md-9">
-                    <input type="checkbox" name="data[setting][option][input]" '.($option['input'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                    <input type="checkbox" name="data[setting][option][input]" '.($option['input'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                     <span class="help-block">'.dr_lang('开启将会出现手动输入文件地址按钮').'</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('描述文本').'</label>
                 <div class="col-md-9">
-                    <input type="checkbox" name="data[setting][option][desc]" '.($option['desc'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                    <input type="checkbox" name="data[setting][option][desc]" '.($option['desc'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                     <span class="help-block">'.dr_lang('开启将会出现多行文本输入框').'</span>
                 </div>
             </div>
@@ -71,14 +71,14 @@ class Files extends \Phpcmf\Library\A_Field {
 			<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('分段上传').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][chunk]" '.($option['chunk'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <input type="checkbox" name="data[setting][option][chunk]" '.($option['chunk'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('当文件太大时可以采取分段上传，可以提升上传效率').'</span>
                 </div>
             </div>
 			<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('滚动显示').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][scroller]" '.($option['scroller'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <input type="checkbox" name="data[setting][option][scroller]" '.($option['scroller'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('当文件文件上传太多时，已上传文件列表可以以固定高度来下来滚动显示').'</span>
                 </div>
             </div>
@@ -99,7 +99,7 @@ class Files extends \Phpcmf\Library\A_Field {
 			<div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('显示浏览附件').'</label>
                 <div class="col-md-9">
-                <input type="checkbox" name="data[setting][option][unused]" '.($option['unused'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('开启').'" data-on-text="'.dr_lang('关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
+                <input type="checkbox" name="data[setting][option][unused]" '.($option['unused'] ? 'checked' : '').' value="1" data-off-text="'.dr_lang('已开启').'" data-on-text="'.dr_lang('已关闭').'" data-off-color="success" data-on-color="danger" class="make-switch" data-size="small">
                 <span class="help-block">'.dr_lang('允许用户选取自己已经上传的附件').'</span>
                 </div>
             </div>
@@ -110,8 +110,8 @@ class Files extends \Phpcmf\Library\A_Field {
                 <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
                 <div class="col-md-9">
                 <div class="mt-radio-inline">
-                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('显示').' <span></span></label>
-                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('关闭').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('已显示').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('已关闭').' <span></span></label>
                 </div>
                 <span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
                 </div>

@@ -105,8 +105,9 @@
                     $("#myiframe").append(html);
                 }
                 if (name && $('#dr_go_url_'+cmd).length == 0) {
-                    $('#dr_go_url').show();
-                    $('#dr_go_url .dropdown-menu').append('<li id="dr_go_url_'+cmd+'"><a href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a></li>');
+                    var wh = parseInt($("#myiframe").width())/1.5;
+                    $('#dr_go_url').attr('style', 'width:'+wh+'px');
+                    $('#dr_go_url').prepend('<a id="dr_go_url_'+cmd+'" class="btn btn-sm btn-outline" href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a>');
                 }
                 {/if}
             }
@@ -152,7 +153,7 @@
                 $('#dr_menu_left_'+left+' .sub-menu').show();
 
                 if (url) {
-                    dr_go_url(url, $('#dr_menu_link_'+link).find('.title').attr('title'));
+                    dr_go_url(url, $('#dr_menu_link_'+link).find('.title').html());
                 }
 
                 // 历史访问菜单

@@ -37,7 +37,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
 	    <div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('余额付款').'</label>
 			<div class="col-md-9">
-			<input type="checkbox" name="data[setting][option][is_finecms]" '.($option['is_finecms'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('开启').'" data-off-text="'.dr_lang('关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+			<input type="checkbox" name="data[setting][option][is_finecms]" '.($option['is_finecms'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 			</div>
 		</div>
 	    ';
