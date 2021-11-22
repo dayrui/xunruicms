@@ -158,7 +158,7 @@
                         <div class="form-group" id="dr_row_https">
                             <label class="col-md-2 control-label">HTTPS</label>
                             <div class="col-md-9">
-                                <div class="mt-radio-inline">
+                                <div class="mt-radio-inline" style="margin-top:-3px">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} /> {dr_lang('开启')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="0" {if empty($data['SYS_HTTPS'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>

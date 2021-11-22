@@ -796,7 +796,7 @@ class Check extends \Phpcmf\Common
                         $this->_json(0,'服务器无法识别HTTPS证书，<a href="javascript:dr_help(751);">查看解决方案</a>');
                     }
                 } else {
-                    $this->_json(0,'系统没有开启HTTPS服务');
+                    $this->_json(0,'系统没有开启HTTPS服务，<a href="javascript:dr_help(668);">查看解决方案</a>');
                 }
 
                 break;
