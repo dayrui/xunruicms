@@ -1506,7 +1506,7 @@ class View {
                     unset($where['tag']);
                 }
                 // 跳转到module方法
-                if (strpos($system['module'], ',')) {
+                if (strpos($system['module'], ',') || $system['module'] == 'all') {
                     if ($system['field'] && strpos($system['field'], 'keywords') === false) {
                         $system['field'].= ',keywords';
                     }
@@ -1677,7 +1677,7 @@ class View {
 
                 $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$dirname);
                 if (!$module) {
-                    if (strpos($system['module'], ',')) {
+                    if (strpos($system['module'], ',') || $system['module'] == 'all') {
                         goto modules;
                     }
                     return $this->_return($system['return'], '模块('.$dirname.')未安装');
@@ -1980,9 +1980,18 @@ class View {
                     return $this->_return($system['return'], '站点('.$system['site'].')没有安装内容模块');
                 }
 
-                $module_all = explode(',', $system['module']);
-                if (dr_count($module_all) == 1) {
-                    goto module;
+                if ($system['module'] == 'all') {
+                    $system['module'] = '';
+                    foreach ($modules as $t) {
+                        $system['module'].= $t['dirname'].',';
+                        $module_all[] = $t['dirname'];
+                    }
+                    $system['module'] = trim($system['module'], ',');
+                } else {
+                    $module_all = explode(',', $system['module']);
+                    if (dr_count($module_all) == 1) {
+                        goto module;
+                    }
                 }
 
                 if (!$system['field']) {

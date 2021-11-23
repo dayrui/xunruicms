@@ -53,7 +53,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
                              &nbsp; &nbsp;
                              <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][ck_child]" '.($option['ck_child'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项').'</span>
+						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项，需要启用必须验证才会生效').'</span>
                     </div>
                 </div>
 				', '<div class="form-group">
@@ -94,6 +94,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
         if ($field['setting']['option']['limit'] && dr_count($save) > $field['setting']['option']['limit']) {
             $save = array_slice($save, 0, $field['setting']['option']['limit']);
         }
+
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_array2string($save);
 	}
 
@@ -121,7 +122,6 @@ class Linkages extends \Phpcmf\Library\A_Field {
                 return dr_lang('需要选择下级选项');
             }
         }
-
 
         return '';
     }

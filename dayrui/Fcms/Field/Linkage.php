@@ -64,7 +64,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
                              &nbsp; &nbsp;
                              <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][ck_child]" '.($option['ck_child'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
                         </div>
-						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项').'</span>
+						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项，需要启用必须验证才会生效').'</span>
                     </div>
                 </div>
 			<div class="form-group">
