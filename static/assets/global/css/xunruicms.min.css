@@ -12,18 +12,21 @@
 .fc-mb-left-menu {
     position: absolute;
     right: 0;
-    padding: 5px 20px;
+    padding: 0 20px;
     overflow: hidden;
-    height: 40px;
+    height: 50px;
     text-align: right;
 }
 .fc-mb-left-menu a {
-    margin: 0 3px 10px 3px;
-    border-color: #888888;
-    color: #888888;
+    height: 42px;
+    line-height: 42px;
+    padding: 10px 15px;
+    border-right: 1px solid rgba(0,0,0,0.02);
+    color: #888;
+    overflow: hidden;
 }
 .fc-mb-left-menu a:active,.fc-mb-left-menu a:active:focus,.fc-mb-left-menu a:active:hover,.fc-mb-left-menu a:focus,.fc-mb-left-menu a:hover {
-    border-color: #3fa8e1;
-    color: #FFF;
-    background-color: #3fa8e1
+    background: #f1f4f6;
+    color: #3ea9e2;
+    text-decoration:none;
 }

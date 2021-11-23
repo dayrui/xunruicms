@@ -107,7 +107,7 @@
                 if (name && $('#dr_go_url_'+cmd).length == 0) {
                     var wh = parseInt($("#myiframe").width())/1.5;
                     $('#dr_go_url').attr('style', 'width:'+wh+'px');
-                    $('#dr_go_url').prepend('<a id="dr_go_url_'+cmd+'" class="btn btn-sm btn-outline" href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a>');
+                    $('#dr_go_url').prepend('<a id="dr_go_url_'+cmd+'" href="javascript:;" ondblclick="$(\'#dr_go_url_'+cmd+'\').remove();" onclick="dr_go_url(\''+url+'\')">'+name+'</a>');
                 }
                 {/if}
             }
