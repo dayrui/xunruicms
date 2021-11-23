@@ -101,7 +101,7 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][validate][required]" value="0" {if $data['setting']['validate']['required']==0}checked{/if} onclick="set_required(0)" /> {dr_lang('不验证')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][validate][required]" value="1" {if $data['setting']['validate']['required']==1}checked{/if} onclick="set_required(1)" /> {dr_lang('验证')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('对提交内容进行必填验证，超管进行验证')}</span>
+                                <span class="help-block">{dr_lang('对提交内容进行必填验证（超管不进行验证）')}</span>
                             </div>
                         </div>
                         <div id="required" class="dr_is_validate" style="display:none">
