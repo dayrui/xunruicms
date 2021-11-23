@@ -1492,12 +1492,10 @@ class View {
                     return $this->_return($system['return'], '没有传入tag参数的内容'); // 没有查询到内容
                 }
 
-                $table = \Phpcmf\Service::M()->dbprefix(dr_module_table_prefix($dirname, $system['site'])); // 模块主表
-
                 $sql = [];
                 $array = explode(',', $param['tag']);
                 foreach ($array as $name) {
-                    $name && $sql[] = '(`'.$table.'`.`title` LIKE "%'.dr_safe_replace($name).'%" OR `'.$table.'`.`keywords` LIKE "%'.dr_safe_replace($name).'%")';
+                    $name && $sql[] = '(`title` LIKE "%'.dr_safe_replace($name).'%" OR `keywords` LIKE "%'.dr_safe_replace($name).'%")';
                 }
                 $sql && $where[] = [
                     'adj' => 'SQL',
@@ -1508,7 +1506,14 @@ class View {
                     unset($where['tag']);
                 }
                 // 跳转到module方法
-                goto module;
+                if (strpos($system['module'], ',')) {
+                    if ($system['field'] && strpos($system['field'], 'keywords') === false) {
+                        $system['field'].= ',keywords';
+                    }
+                    goto modules;
+                } else {
+                    goto module;
+                }
                 break;
 
             case 'search': // 模块的搜索

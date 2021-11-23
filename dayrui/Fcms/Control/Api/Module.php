@@ -45,7 +45,7 @@ class Module extends \Phpcmf\Common
             $this->_jsonp(0, dr_lang('阅读统计: id参数不完整'));
         }
 
-        $rt = $this->content_model->update_hits($id);
+        $rt = $this->content_model->update_hits($id, (int)\Phpcmf\Service::L('input')->get('gx'));
 
         $this->_jsonp($rt['code'], $rt['msg'], $rt['data']);
     }
