@@ -24,6 +24,10 @@
     {/if}
     <script type="text/javascript">
         function dr_update_cache_all() {
+            {if $is_min && $is_mobile}
+                $('.page-header .responsive-toggler').click();
+                $(".nav-item").removeClass("active open");
+            {/if}
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
                 time: 10000
@@ -40,6 +44,10 @@
             });
         }
         function dr_update_cache_data() {
+            {if $is_min && $is_mobile}
+            $('.page-header .responsive-toggler').click();
+            $(".nav-item").removeClass("active open");
+            {/if}
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
                 time: 10000
@@ -89,7 +97,13 @@
                 }
             }
             function dr_go_url(url, name) {
-
+                {if $is_min && $is_mobile}
+                 if (name == 'null') {
+                     $('.page-header .responsive-toggler').click();
+                     $(".nav-item").removeClass("active open");
+                     name = '';
+                 }
+               {/if}
                 {if !IS_ADMIN_CACHE}
                 $("#right_page").attr('src', url);
                 $("#right_page").attr("url", url);

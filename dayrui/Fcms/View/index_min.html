@@ -85,7 +85,7 @@
                 {$string}
                 {if $is_mobile}
                 {if $ci->_is_admin_auth('cache/index')}
-                <li><a href="javascript:dr_go_url('{dr_url('cache/index')}');"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
+                <li><a href="javascript:dr_go_url('{dr_url('cache/index')}', 'null');"><i class="fa fa-cogs"></i> {dr_lang('系统更新')}</a></li>
                 {/if}
                 <li><a href="javascript:dr_update_cache_all();"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
                 <li><a href="javascript:dr_update_cache_data();"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
