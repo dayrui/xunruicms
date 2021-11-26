@@ -54,7 +54,7 @@
                     <label><a href="{dr_url('linkage/list_index', ['key'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-table"></i> {dr_lang('数据管理')} </a></label>
                     <label><a href="javascript:dr_iframe_show('{dr_lang('一键生成')}', '{dr_url('linkage/cache_index', ['key'=>$t.id])}', '500px', '300px');" class="btn btn-xs yellow"> <i class="fa fa-refresh"></i> {dr_lang('一键生成')}</a></label>
                     {if $ci->_is_admin_auth()}
-                    <label><a href="{dr_url('field/index', ['rname'=>'linkage', 'rid'=>$t.id])}" class="btn btn-xs blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')} </a></label>
+                    <label><a href="javascript:dr_iframe_show('{dr_lang('自定义字段')}','{dr_url('field/index', ['rname'=>'linkage', 'rid'=>$t.id])}&is_menu=1', '80%', '90%');" class="btn btn-xs blue"> <i class="fa fa-code"></i> {dr_lang('自定义字段')} </a></label>
                     {loop $dt_data $i $n}
                     <label>
                         <a class="btn btn-xs red" href="javascript:dr_load_ajax('{dr_lang('操作将会现有的数据覆盖掉，您确定吗？')}', '{dr_url('linkage/import', ['code'=> $i, 'id'=>$t.id])}');" > <i class="fa fa-sign-in"></i> {dr_lang($n)}</a>

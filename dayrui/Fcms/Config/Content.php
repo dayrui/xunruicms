@@ -221,6 +221,8 @@ return [
                             'option' =>
                                 array (
                                     'mode' => 1,
+                                    'show_bottom_boot' => 1,
+                                    'div2p' => 1,
                                     'width' => '100%',
                                     'height' => 400,
                                 ),

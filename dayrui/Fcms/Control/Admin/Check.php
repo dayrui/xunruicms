@@ -173,6 +173,21 @@ class Check extends \Phpcmf\Common
 
                 $rt = [];
 
+                // 语言文件
+                $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
+                if ($lang && strlen($lang) < 10) {
+                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
+                } elseif ($lang && strpos($lang, 'finecms_datepicker_lang') === false) {
+                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
+                }
+
+                $lang = dr_catcher_data(LANG_PATH.'ueditor.js', 5);
+                if ($lang && strlen($lang) < 10) {
+                    $rt[] = '百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js';
+                } elseif ($lang && strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
+                    $rt[] = '百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js';
+                }
+
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
                     $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html';

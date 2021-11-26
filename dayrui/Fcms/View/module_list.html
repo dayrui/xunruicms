@@ -47,7 +47,7 @@
                         {if dr_is_app('mform')}<label><a href="{dr_url('mform/module/index')}" class="btn btn-xs blue"> <i class="fa fa-list"></i> {dr_lang('模块表单')} </a></label>{/if}
                         {/if}
                         {if $ci->_is_admin_auth()}
-                        <label><a href="{dr_url('field/index', ['rname'=>'module', 'rid'=>$t.id])}" class="btn btn-xs green"> <i class="fa fa-code"></i> {dr_lang('模块内容字段')} </a></label>
+                        <label><a href="javascript:dr_iframe_show('{dr_lang('模块内容字段')}','{dr_url('field/index', ['rname'=>'module', 'rid'=>$t.id])}&is_menu=1', '80%', '90%');" class="btn btn-xs green"> <i class="fa fa-code"></i> {dr_lang('模块内容字段')} </a></label>
                         <label><a href="{dr_url('module_category/field_index', ['dir'=>$t.dirname])}" class="btn btn-xs dark"> <i class="fa fa-reorder"></i> {dr_lang('栏目模型字段')} </a></label>
                         <label><a href="javascript:dr_load_ajax('{dr_lang('确定将此模块从当前站点中删除吗？')}', '{dr_url('module/uninstall', ['dir'=>$t.dirname])}', 1);" class="btn btn-xs red"> <i class="fa fa-trash"></i> {dr_lang('卸载')} </a></label>
                         {/if}

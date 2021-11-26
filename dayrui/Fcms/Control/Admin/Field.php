@@ -768,7 +768,7 @@ class Field extends \Phpcmf\Common {
 					$this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
 				} 
                 $this->name = '网站表单【'.$this->data['name'].'】字段';
-                $this->backurl = dr_url('form/form/index'); // 返回uri地址
+                $this->backurl = ''; // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
                 break;
@@ -793,7 +793,7 @@ class Field extends \Phpcmf\Common {
                 // 联动菜单
                 $ismain = 1;
                 $this->name = '联动菜单字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('linkage/index'); // 返回uri地址
+                $this->backurl = ''; // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'linkage'; // 重要标识: 函数和识别码
                 break;
 
@@ -809,7 +809,7 @@ class Field extends \Phpcmf\Common {
                 // 导航链接
                 $ismain = 1;
                 $this->name = '自定义链接字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'navigator'; // 重要标识: 函数和识别码
                 break;
 
@@ -817,7 +817,7 @@ class Field extends \Phpcmf\Common {
                 // 订单插件
                 $ismain = 1;
                 $this->name = '订单应用';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('order/field/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('order/field/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'order'; // 重要标识: 函数和识别码
                 break;
 
@@ -825,7 +825,7 @@ class Field extends \Phpcmf\Common {
                 // 网站单页
                 $ismain = 1;
                 $this->name = '自定义页面字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url('page/home/index'); // 返回uri地址
+                $this->backurl = \Phpcmf\Service::L('Router')->url('page/home/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'page'; // 重要标识: 函数和识别码
                 break;
 
@@ -843,7 +843,7 @@ class Field extends \Phpcmf\Common {
                 if (!$this->data) {
 					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
 				}
-                $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
+                $this->backurl = ''; // 返回uri地址
                 $this->name = '模块【'.$this->data['dirname'].'】字段';
                 \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
@@ -856,7 +856,7 @@ class Field extends \Phpcmf\Common {
                 if (!$this->data) {
 					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
 				} 
-                $this->backurl =\Phpcmf\Service::L('Router')->url('mform/module/index', ['dir' => $a]); // 返回uri地址
+                $this->backurl = ''; // 返回uri地址
                 $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
                 \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
@@ -867,7 +867,7 @@ class Field extends \Phpcmf\Common {
                 // 栏目自定义字段
                 $ismain = 1;
                 $this->name = '栏目自定义字段';
-                $this->backurl =\Phpcmf\Service::L('Router')->url(($a == 'share' ? '' : $a).'/category/index'); // 返回uri地址
+                $this->backurl = ''; // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'category'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $a;
                 $this->module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$a);
@@ -930,7 +930,7 @@ class Field extends \Phpcmf\Common {
                     }
                     $this->name = '模块【' . $cache['name'] . '】评论字段';
                     $this->data = $cache['dirname'];
-                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/module/index'); // 返回uri地址
+                    $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $cache['dirname'];
                     $this->namespace = $cache['dirname'];
@@ -949,7 +949,7 @@ class Field extends \Phpcmf\Common {
                     }
                     $this->name = '模块【'.$cache['name'].'】表单【'.$cache['form'][$fid]['name'].'】评论字段';
                     $this->data = $cache['dirname'].'_form_'.$cache['form'][$fid]['table'];
-                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/mform/index'); // 返回uri地址
+                    $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
                     $this->namespace = $cache['dirname'];
@@ -966,7 +966,7 @@ class Field extends \Phpcmf\Common {
                     }
                     $this->name = '表单【'.$cache['name'].'】评论字段';
                     $this->data = 'form_'.$cache['table'];
-                    $this->backurl = \Phpcmf\Service::L('Router')->url('comment/form/index'); // 返回uri地址
+                    $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
                 }
