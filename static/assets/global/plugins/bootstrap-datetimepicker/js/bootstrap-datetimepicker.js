@@ -1217,7 +1217,7 @@
 	};
 	$.fn.datetimepicker.Constructor = Datetimepicker;
 	var dates = $.fn.datetimepicker.dates = {
-		en: finecms_datetimepicker_lang
+		en: finecms_datepicker_lang
 	};
 
 	var DPGlobal = {
