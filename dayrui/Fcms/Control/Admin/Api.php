@@ -547,12 +547,10 @@ class Api extends \Phpcmf\Common {
 			'port' => $data['port'],
 			'from' => $data['user']
 		]);
-
 		if ($dmail->send($this->member['email'], 'test', 'test for '.SITE_NAME)) {
-
 			$this->_json(1, dr_lang('已发送至邮箱：%s，并不代表已发送成功', $this->member['email']));
 		} else {
-			$this->_json(0, $dmail->error());
+			$this->_json(0, 'Error:'. $dmail->error());
 		}
 	}
 

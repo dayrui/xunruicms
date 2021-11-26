@@ -92,14 +92,14 @@ class Email
         stream_set_blocking($fp, true);
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != '220') {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "连接失败 - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "连接失败", $lastmessage);
             return FALSE;
         }
 
         fputs($fp, "EHLO phpcmf\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "EHLO - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "EHLO", $lastmessage);
             return FALSE;
         }
 
@@ -108,7 +108,7 @@ class Email
             fputs($fp, "STARTTLS phpcmf\r\n");
             $lastmessage = fgets($fp, 512);
             if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
-                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "STARTTLS - $lastmessage");
+                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "STARTTLS", $lastmessage);
                 return FALSE;
             }
         }
@@ -127,19 +127,19 @@ class Email
         fputs($fp, "AUTH LOGIN\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 334) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "认证登录失败 - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "认证登录失败", $lastmessage);
             return FALSE;
         }
         fputs($fp, base64_encode($cfg['auth_username']) . "\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 334) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "账号验证失败 - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "账号验证失败", $lastmessage);
             return FALSE;
         }
         fputs($fp, base64_encode($cfg['auth_password']) . "\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 235) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "密码验证失败 - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "密码验证失败", $lastmessage);
             return FALSE;
         }
 
@@ -151,7 +151,7 @@ class Email
             fputs($fp, "MAIL FROM: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $email_from).">\r\n");
             $lastmessage = fgets($fp, 512);
             if(substr($lastmessage, 0, 3) != 250) {
-                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "MAIL FROM - $lastmessage");
+                $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "MAIL FROM", $lastmessage);
                 return FALSE;
             }
         }
@@ -161,13 +161,13 @@ class Email
         if(substr($lastmessage, 0, 3) != 250) {
             fputs($fp, "RCPT TO: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $toemail).">\r\n");
             $lastmessage = fgets($fp, 512);
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "RCPT TO - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "RCPT TO", $lastmessage);
             return FALSE;
         }
         fputs($fp, "DATA\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 354) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "DATA - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "DATA", $lastmessage);
             return FALSE;
         }
         $headers .= 'Message-ID: <'.gmdate('YmdHs').'.'.substr(md5($email_message.microtime()), 0, 6).rand(100000, 999999).'@'.$_SERVER['HTTP_HOST'].">{$maildelimiter}";
@@ -180,7 +180,7 @@ class Email
         fputs($fp, "$email_message\r\n.\r\n");
         $lastmessage = fgets($fp, 512);
         if(substr($lastmessage, 0, 3) != 250) {
-            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "END - $lastmessage");
+            $this->runlog($cfg['server'].' - '.$cfg['auth_username'].' - '.$toemail, "END", $lastmessage);
             return FALSE;
         }
         fputs($fp, "QUIT\r\n");
@@ -191,11 +191,14 @@ class Email
         return $this->error;
     }
 
-    protected function runlog($server, $msg) {
+    protected function runlog($server, $name, $msg) {
         if ($this->is_gb2312($msg) && function_exists('iconv')) {
-            $msg = iconv('GB2312', 'UTF-8', $msg);
+            $new = iconv('GB2312', 'UTF-8', $msg);
+            if ($new) {
+                $msg = $new;
+            }
         }
-        $this->error = $msg;
+        $this->error = $name.'-'.$msg;
         @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
     }
 
