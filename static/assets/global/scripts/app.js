@@ -1067,7 +1067,7 @@ function dr_admin_menu_ajax(url, not_sx) {
             // }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1102,7 +1102,7 @@ function dr_load_ajax(msg, url, go) {
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
         });
@@ -1162,7 +1162,7 @@ function dr_install_app(url) {
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
                 }
             });
         }, function(index){
@@ -1199,7 +1199,7 @@ function dr_install_module_select(url) {
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
                 }
             });
         }, function(index){
@@ -1217,7 +1217,7 @@ function dr_install_module_select(url) {
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
                 }
             });
         }
@@ -1247,7 +1247,7 @@ function dr_install_module(url) {
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
                 }
             });
         }, function(index){
@@ -1297,7 +1297,7 @@ function dr_module_send(title, url, nogo) {
                     return false;
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
                 }
             });
             return false;
@@ -1336,7 +1336,7 @@ function dr_module_send_ajax(url) {
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1366,7 +1366,7 @@ function dr_ajax_open_close(e, url, fan) {
             dr_tips(json.code, json.msg);
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1465,7 +1465,7 @@ function dr_bfb_submit(title, myform, url) {
             return false;
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1565,7 +1565,7 @@ function dr_submit_post_todo(myform, url) {
             return false;
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1588,7 +1588,7 @@ function dr_submit_sql_todo(myform, url) {
             return false;
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError, this);
         }
     });
 }
@@ -1800,13 +1800,13 @@ function dr_test_html_dir(id) {
             dr_tips(json.code, json.msg);
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
 
 function dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError) {
-    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+    dr_ajax_alert_error(HttpRequest, this, thrownError);
 }
 
 /*!

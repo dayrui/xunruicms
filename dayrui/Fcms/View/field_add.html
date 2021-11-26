@@ -333,7 +333,7 @@
                 App.init();
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
     });
@@ -360,7 +360,7 @@
                             layer.close(index);
                         },
                         error: function(HttpRequest, ajaxOptions, thrownError) {
-                            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                            dr_ajax_alert_error(HttpRequest, this, thrownError);
                         }
                     });
                 });
@@ -376,7 +376,7 @@
                 App.init();
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
         {/if}
@@ -395,7 +395,7 @@
                 dr_tips(json.code, json.msg);
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
     }

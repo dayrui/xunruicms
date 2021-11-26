@@ -592,6 +592,7 @@ class Module extends \Phpcmf\Model
                 $level[] = substr_count($c['pids'], ',');
                 $c['mid'] = isset($c['mid']) ? $c['mid'] : $cache['dirname'];
                 if (isset($cache['setting']['pcatpost']) && $cache['setting']['pcatpost']) {
+                    // 允许父栏目发布
                     $c['pcatpost'] = 1;
                 } else {
                     $c['pcatpost'] = 0;

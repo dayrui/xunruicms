@@ -57,7 +57,7 @@
 				}
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
 
@@ -90,7 +90,7 @@
 				}
 			},
 			error: function(HttpRequest, ajaxOptions, thrownError) {
-				dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+				dr_ajax_alert_error(HttpRequest, this, thrownError);
 			}
 		});
 	}
@@ -117,7 +117,7 @@
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
         // 检测下载结果
@@ -159,7 +159,7 @@
                     }
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
 
@@ -196,7 +196,7 @@
 
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
             }
         });
     }

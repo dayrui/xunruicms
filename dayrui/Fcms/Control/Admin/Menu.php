@@ -65,8 +65,7 @@ class Menu extends \Phpcmf\Common
 		]);
 		\Phpcmf\Service::V()->display('menu_index.html');
 	}
-	
-	
+
 	public function add() {
 
 		$pid = intval(\Phpcmf\Service::L('input')->get('pid'));
@@ -207,7 +206,6 @@ class Menu extends \Phpcmf\Common
 		\Phpcmf\Service::L('input')->system_log('批量删除后台菜单: '. implode(',', $ids));
 		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
-	
 
 	// 初始化
 	public function init() {

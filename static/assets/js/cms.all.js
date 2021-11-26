@@ -339,7 +339,7 @@ function dr_iframe(type, url, width, height, rt) {
                     return false;
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
             return false;
@@ -459,7 +459,7 @@ function dr_ajax_confirm_url(url, msg, tourl) {
                     dr_cmf_tips(json.code, json.msg);
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
         });
@@ -490,7 +490,7 @@ function dr_ajax_url(url) {
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
@@ -513,7 +513,7 @@ function dr_ajaxp_url(url) {
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
@@ -592,7 +592,7 @@ function dr_ajax_option(url, msg, remove) {
                     dr_cmf_tips(json.code, json.msg, json.data.time);
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
         });
@@ -630,7 +630,7 @@ function dr_ajax_option_url(url, msg, tourl) {
                     dr_cmf_tips(json.code, json.msg, json.data.time);
                 },
                 error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
                 }
             });
         });
@@ -776,7 +776,7 @@ function dr_post_submit(url, form, time, go) {
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
@@ -803,7 +803,7 @@ function dr_loginout(msg) {
             setTimeout('window.location.href="'+json.data.url+'"', 2000);
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
@@ -872,7 +872,7 @@ function dr_ajax_member(url, form) {
             }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
-            dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
     });
 }
@@ -1050,46 +1050,45 @@ function d_isdomain(name) {
     }
 };
 
-function dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError) {
+function dr_ajax_alert_error(HttpRequest, ajax, thrownError) {
     layer.closeAll('loading');
     if (typeof is_admin != "undefined" && is_admin) {
         var msg = HttpRequest.responseText;
-        //console.log(HttpRequest, ajaxOptions, thrownError);
+        var html = '请求状态：'+HttpRequest.status+'<br>';
+        html+= '请求方式：'+ajax.type+'<br>';
+        html+= '请求地址：'+ajax.url+'<br>';
         if (!msg) {
-            dr_cmf_tips(0, dr_lang('系统崩溃，请检查错误日志'));
+            msg = thrownError;
+        }
+        if (is_admin == '1') {
+            layer.open({
+                type: 1,
+                title: dr_lang('系统崩溃，请检查错误日志'),
+                fix:true,
+                shadeClose: true,
+                shade: 0,
+                area: ['50%', '50%'],
+                btn: [dr_lang('查看日志')],
+                yes: function(index, layero) {
+                    layer.close(index);
+                    dr_iframe_show(dr_lang('错误日志'), admin_file+"?c=error&m=log_show");
+                },
+                content: "<div style=\"padding:10px;border-bottom: 1px solid #eee;\">"+html+"</div><div style=\"padding:10px;\">"+msg+"</div>"
+            });
         } else {
-            if (is_admin == '1') {
-                layer.open({
-                    type: 1,
-                    title: dr_lang('系统崩溃，请检查错误日志'),
-                    fix:true,
-                    shadeClose: true,
-                    shade: 0,
-                    area: ['50%', '50%'],
-                    btn: [dr_lang('查看日志')],
-                    yes: function(index, layero) {
-                        layer.close(index);
-                        dr_iframe_show(dr_lang('错误日志'), admin_file+"?c=error&m=log_show");
-                    },
-                    content: "<div style=\"padding:10px;\">"+msg+"</div>"
-                });
-            } else {
-                layer.open({
-                    type: 1,
-                    title: dr_lang('系统崩溃，请检查错误日志'),
-                    fix:true,
-                    shadeClose: true,
-                    shade: 0,
-                    area: ['50%', '50%'],
-                    content: "<div style=\"padding:10px;\">"+msg+"</div>"
-                });
-            }
-
+            layer.open({
+                type: 1,
+                title: dr_lang('系统崩溃，请检查错误日志'),
+                fix:true,
+                shadeClose: true,
+                shade: 0,
+                area: ['50%', '50%'],
+                content: "<div style=\"padding:10px;border-bottom: 1px solid #eee;\">"+html+"</div><div style=\"padding:10px;\">"+msg+"</div>"
+            });
         }
     } else {
         dr_cmf_tips(0, dr_lang('系统错误'));
     }
-
 }
 
 // 初始化滚动区域

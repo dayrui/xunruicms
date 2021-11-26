@@ -48,7 +48,7 @@
 						}
 					},
 					error: function(HttpRequest, ajaxOptions, thrownError) {
-						dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError);
+						dr_ajax_alert_error(HttpRequest, this, thrownError);;
                         $('#dr_check_html').append("<p style='color:red'>出现故障："+HttpRequest.responseText+"</p>");
 					}
 				});

@@ -168,7 +168,7 @@
                         return false;
                     },
                     error: function(HttpRequest, ajaxOptions, thrownError) {
-                        dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                        dr_ajax_alert_error(HttpRequest, this, thrownError);
                     }
                 });
                 return false;
