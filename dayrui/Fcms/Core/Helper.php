@@ -2650,7 +2650,7 @@ function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS
 
     $js = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
 
-    return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . $width . 'px; height:' . $height . 'px; overflow:hidden"></div>
+    return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . (strpos($width, '%') ? $width : $width. 'px').'; height:' . (strpos($height, '%') ? $height : $height. 'px') . '; overflow:hidden"></div>
     <script type="text/javascript">
     var mapObj=null;
     lngX = "' . $lngX . '";
