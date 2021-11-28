@@ -13177,18 +13177,33 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     height: 50px;
     text-align: right;
 }
-.fc-mb-left-menu a {
-    height: 42px;
-    line-height: 42px;
-    padding: 10px 15px;
+.fc-mb-left-menu span {
+    height: 43px;
+    line-height: 43px;
+    padding: 10px 10px 10px 15px;
     border-right: 1px solid rgba(0,0,0,0.02);
     color: #888;
     overflow: hidden;
 }
-.fc-mb-left-menu a:active,.fc-mb-left-menu a:active:focus,.fc-mb-left-menu a:active:hover,.fc-mb-left-menu a:focus,.fc-mb-left-menu a:hover {
+.fc-mb-left-menu a {
+    color: #888;
+    text-decoration:none;
+}
+.fc-mb-left-menu .active,.fc-mb-left-menu span:active,.fc-mb-left-menu span:active:focus,.fc-mb-left-menu span:active:hover,.fc-mb-left-menu span:focus,.fc-mb-left-menu span:hover {
     background: #f1f4f6;
+}
+.fc-mb-left-menu .active a {
+    color: #3ea9e2;
+}
+.fc-mb-left-menu a:active,.fc-mb-left-menu a:active:focus,.fc-mb-left-menu a:active:hover,.fc-mb-left-menu a:focus,.fc-mb-left-menu a:hover {
     color: #3ea9e2;
     text-decoration:none;
+}
+.fc-mb-left-menu .close-tab {
+    font-size: 8px;
+    cursor: pointer;
+    color: #999;
+    margin-left: 5px;
 }
 
 
