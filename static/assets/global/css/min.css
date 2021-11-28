@@ -2466,3 +2466,37 @@ New Profile Page
         background: #26344b !important;
     }
 }
+
+.fc-mb-left-menu {
+    position: inherit;
+    right: inherit;
+    padding: 0;
+    overflow: hidden;
+    height: 70px;
+    text-align: left;
+}
+.fc-mb-left-menu li {
+    height: 73px;
+    line-height: 73px;
+    padding: 0px 10px 0px 15px;
+    border-right: 1px solid rgba(0,0,0,0.02);
+    color: #888;
+    overflow: hidden;
+    float: left;
+}
+.fc-mb-left-menu a {
+    color: #888;
+    text-decoration:none;
+}
+.fc-mb-left-menu .active,.fc-mb-left-menu li:active,.fc-mb-left-menu li:active:focus,.fc-mb-left-menu li:active:hover,.fc-mb-left-menu li:focus,.fc-mb-left-menu li:hover {
+    background: #f1f4f6;
+}
+.fc-mb-left-menu .active a {
+    color: #3ea9e2;
+}
+.fc-mb-left-menu .close-tab {
+    font-size: 8px;
+    cursor: pointer;
+    color: #999;
+    margin-left: 5px;
+}

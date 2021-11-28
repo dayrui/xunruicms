@@ -9,7 +9,7 @@
     <link href="{$THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <link href="{$THEME_PATH}assets/global/css/xunruicms{if !IS_XRDEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     {if $is_min}
-    <link href="{$THEME_PATH}assets/global/css/min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{$THEME_PATH}assets/global/css/min{if !IS_XRDEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     {/if}
     <link href="{php echo defined('MYCSS_FILE') ? MYCSS_FILE : $THEME_PATH.'assets/global/css/my.css';}?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">var admin_file = '{SELF}';var is_min = '{$is_min}'; var is_oemcms = '{IS_OEM_CMS}'; var is_mobile_cms = '{$is_mobile}'; var is_admin = '{if dr_in_array(1, $admin.roleid)}1{else}2{/if}';</script>
@@ -111,7 +111,7 @@
                 var cmd = $.md5(url);
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
-                $('#dr_go_url span').removeClass('active');
+                $('#dr_go_url li').removeClass('active');
                 if ($('#right_page_'+cmd).length > 0) {
                     // 存在
                     $('#right_page_'+cmd).show();
@@ -123,7 +123,7 @@
                 if (name && $('#dr_go_url_'+cmd).length == 0) {
                     var wh = parseInt($("#myiframe").width())/1.5;
                     $('#dr_go_url').attr('style', 'width:'+wh+'px');
-                    $('#dr_go_url').prepend('<span id="dr_go_url_'+cmd+'" class="active"><a href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a><i onclick="$(\'#dr_go_url_'+cmd+'\').remove();" class="close-tab fa fa-remove"></i></span>');
+                    $('#dr_go_url').prepend('<li id="dr_go_url_'+cmd+'" class="active"><a href="javascript:;" onclick="dr_go_url(\''+url+'\')">'+name+'</a><i onclick="$(\'#dr_go_url_'+cmd+'\').remove();" class="close-tab fa fa-remove"></i></li>');
                 }
                 {/if}
             }
@@ -169,7 +169,7 @@
                 $('#dr_menu_left_'+left+' .sub-menu').show();
 
                 if (url) {
-                    dr_go_url(url, $('#dr_menu_link_'+link).find('.title').html());
+                    dr_go_url(url, $('#dr_menu_link_'+link).html());
                 }
 
                 // 历史访问菜单
