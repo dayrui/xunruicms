@@ -3787,6 +3787,7 @@ function dr_to_url($url, $domian = '', $siteid = SITE_ID) {
 
 /**
  * 获取对应的手机端地址
+ * $url 任意域名
  */
 function dr_mobile_url($url = SITE_MURL) {
 
@@ -3803,7 +3804,13 @@ function dr_mobile_url($url = SITE_MURL) {
     return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
-// 补全url
+/**
+ * 补全url
+ * @param $url
+ * @param string $domain   指定域名或者模块目录
+ * @param int|string $siteid    站点ID
+ * @param string $is_mobile  是否指定为移动端
+ */
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
     if ($url && strpos($url, 'http') === 0) {
@@ -3866,7 +3873,10 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
     return $url;
 }
 
-// 补全相对路径
+/**
+ * 补全相对路径
+ * @param $url
+ */
 function dr_web_prefix($url) {
     if ($url && strpos($url, 'http') === 0) {
         return $url;
@@ -3875,7 +3885,12 @@ function dr_web_prefix($url) {
     }
 }
 
-// 计算用户组到期时间
+/**
+ * 计算用户组到期时间
+ * @param $days  天数
+ * @param $dtype  到期换算单位
+ * @param $ntime  时间基数，默认为当前时间
+ */
 function dr_member_group_etime($days, $dtype, $ntime = 0) {
 
     if (!$days) {
@@ -3895,7 +3910,10 @@ function dr_member_group_etime($days, $dtype, $ntime = 0) {
     }
 }
 
-// 用户组到期时间单位
+/**
+ * 用户组到期时间单位
+ * @param $dtype  到期换算单位
+ */
 function dr_member_group_dtype($dtype) {
 
     if ($dtype == 1) {
@@ -3907,7 +3925,10 @@ function dr_member_group_dtype($dtype) {
     }
 }
 
-// 处理带Emoji的数据，HTML转为emoji码
+/**
+ * 处理带Emoji的数据，HTML转为emoji码
+ * @param $msg  转换字符串
+ */
 function dr_html2emoji($msg){
 
     if (substr($msg, 0, 1) == '"' && substr($msg, -1, 1) == '"') {
@@ -3923,7 +3944,11 @@ function dr_html2emoji($msg){
     }
 }
 
-// 处理带Emoji的数据，写入数据库前的emoji转为HTML
+/**
+ * 处理带Emoji的数据，写入数据库前的emoji转为HTML
+ * @param type $msg
+ * @return type
+ */
 function dr_emoji2html($msg) {
     return $msg; // utf8mb4模式下原样输出
 }
@@ -3937,7 +3962,12 @@ function dr_clear_emoji($str){
     return dr_clear_empty(dr_html2emoji(preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '';}, $str)));
 }
 
-// 判断是否支持回复
+/**
+ * 判断是否支持回复
+ * $reply   评论模式
+ * $member   当前用户数组
+ * $cuid   评论主题作者uid
+ */
 function dr_comment_is_reply($reply, $member, $cuid) {
 
     if ($reply == 1) {
@@ -3959,7 +3989,10 @@ function dr_comment_is_reply($reply, $member, $cuid) {
     }
 }
 
-// 将同步代码转为数组
+/**
+ * 将同步代码转为数组
+ * string 同步代码字符串
+ */
 function dr_member_sync_url($string) {
 
     if (preg_match_all('/src="(.+)"/iU', $string, $match)) {
@@ -3969,7 +4002,11 @@ function dr_member_sync_url($string) {
     return [];
 }
 
-// html文字提取 cn是否纯中文
+/**
+ * 将html转化为纯文字
+ * html 文字提取
+ * cn 是否纯中文
+ */
 function dr_html2text($str, $cn = false) {
 
     $str = dr_clearhtml($str);
@@ -3995,7 +4032,10 @@ function dr_html2text($str, $cn = false) {
     return $text;
 }
 
-// 检查目录权限
+/**
+ * 检查目录权限
+ * $dir 目录地址
+ */
 function dr_check_put_path($dir) {
 
     if (!$dir) {
@@ -4015,6 +4055,8 @@ function dr_check_put_path($dir) {
 
 /**
  * 栏目下级或者同级栏目
+ * $data 整个栏目数组
+ * $catid 当前栏目id
  */
 function dr_related_cat($data, $catid) {
 
@@ -4077,7 +4119,6 @@ function dr_related_cat($data, $catid) {
  * @param   array   $mod
  * @param   array   $cat
  * @param   string  $symbol
- * @return  string
  */
 function dr_get_cat_pname($mod, $catid, $symbol = '_') {
 
@@ -4105,7 +4146,11 @@ function dr_get_cat_pname($mod, $catid, $symbol = '_') {
     return implode($symbol, $name);
 }
 
-// 存储调试信息 file存储文件 data打印变量
+/**
+ * 存储调试信息
+ * file 存储文件
+ * data 打印变量
+ */
 function dr_debug($file, $data) {
     dr_mkdirs(WRITEPATH.'debuglog/');
     $debug = debug_backtrace();
@@ -4176,7 +4221,10 @@ class php5replace {
 
 }
 
-// 模块首页地址
+/**
+ * 模块首页地址
+ * $dir 模块目录
+ */
 function dr_module_url($dir) {
 
     if (defined('MOD_DIR') && $dir == MOD_DIR) {
@@ -4188,6 +4236,7 @@ function dr_module_url($dir) {
 
 /**
  * 转为utf8编码格式
+ * $str 来源字符串
  */
 function dr_code2utf8($str) {
 

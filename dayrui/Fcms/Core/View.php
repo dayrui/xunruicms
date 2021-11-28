@@ -1994,10 +1994,15 @@ class View {
                     }
                 }
 
+                if ($this->_return_sql) {
+                    $system['field'].= ',id,'.$system['sum'];
+                }
+
                 if (!$system['field']) {
                     return $this->_return($system['return'], '必须传入field参数来指定显示字段');
                 }
 
+                $system['field'] = trim($system['field'], ',');
                 $field = explode(',', $system['field']);
 
                 // 是否操作自定义where
@@ -2308,20 +2313,27 @@ class View {
                         if ($t['value'] == '') {
                             $string.= $join." ".$t['name']." = ''";
                         } else {
-                            $arr = explode('|', $t['value']);
+                            $or_and = strpos($t['value'], ',');
+                            if ($or_and) {
+                                $arr = explode(',', $t['value']);
+                            } elseif (strpos($t['value'], '|')) {
+                                $arr = explode('|', $t['value']);
+                            }
                             $vals = [];
-                            foreach ($arr as $value) {
-                                if ($value) {
-                                    if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                                        // 兼容写法
-                                        $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true)."\\\"%\"";
-                                    } else {
-                                        // 高版本写法
-                                        $vals[] = "({$t['name']}<>'' AND JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$'))";
+                            if ($arr) {
+                                foreach ($arr as $value) {
+                                    if ($value) {
+                                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                                            // 兼容写法
+                                            $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true)."\\\"%\"";
+                                        } else {
+                                            // 高版本写法
+                                            $vals[] = "JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
+                                        }
                                     }
                                 }
                             }
-                            $string.= $vals ? $join.' ('.implode(' OR ', $vals).')' : '';
+                            $string.= $vals ? $join.$t['name'].'<>\'\' AND  ('.implode($or_and ? ' AND ' : ' OR ', $vals).')' : '';
                         }
 
                         break;
@@ -2335,11 +2347,20 @@ class View {
                         break;
 
                     case 'LIKE':
+                        $vals = [];
                         $value = dr_safe_replace($t['value']);
-                        if (strpos($value, '%') === false && strpos($value, '_') === false) {
-                            $value = '%'.$value.'%'; // 当like没有任何匹配符时采用首尾%查询
+                        if ($value) {
+                           $arr = explode('|', $t['value']);
+                           foreach ($arr as $value) {
+                               if ($value) {
+                                   if (strpos($value, '%') === false && strpos($value, '_') === false) {
+                                       $value = '%'.$value.'%'; // 当like没有任何匹配符时采用首尾%查询
+                                   }
+                                   $vals[]= "{$t['name']} LIKE \"".$value."\"";
+                               }
+                           }
                         }
-                        $string.= $join." {$t['name']} LIKE \"".$value."\"";
+                        $string.= $vals ? $join.' ('.implode(' OR ', $vals).')' : '';
                         break;
 
                     case 'IN':
