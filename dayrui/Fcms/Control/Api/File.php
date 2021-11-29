@@ -508,15 +508,6 @@ class File extends \Phpcmf\Common
         require ROOTPATH.'api/ueditor/php/controller.php';exit;
     }
 
-
-    /**
-     * 百度编辑器处理接口
-     */
-    public function umeditor() {
-        require ROOTPATH.'api/umeditor/php/imageUp.php';exit;
-    }
-
-
     /**
      * base64图片上传
      */
@@ -592,6 +583,10 @@ class File extends \Phpcmf\Common
         }
 
         $info['file'] = SYS_UPLOAD_PATH.$info['attachment'];
+        $info['url'] = dr_get_file_url($info);
+
+        // 修改图片的钩子
+        \Phpcmf\Hooks::trigger('image_edit', $info);
 
         if (IS_POST) {
 
@@ -624,8 +619,6 @@ class File extends \Phpcmf\Common
             \Phpcmf\Service::M('attachment')->clear_data($info);
             $this->_json(1, dr_lang('操作成功'));
         }
-
-        $info['url'] = dr_get_file_url($info);
 
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([

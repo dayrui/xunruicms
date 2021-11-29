@@ -13072,6 +13072,15 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     text-align: center
 }
 
+.files_row .mpreview a {
+    color: #bac3d0;
+}
+.files_row .mpreview{
+    width: 80px;
+    margin-top: 3px;
+    text-align: center
+}
+
 .table-finecms-upload .files_row_preview {
     overflow: inherit
 }
