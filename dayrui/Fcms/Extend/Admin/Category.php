@@ -239,7 +239,7 @@ class Category extends \Phpcmf\Table {
                 if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
                     // 当开启字段权限时不显示内容
                 } else {
-                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_iframe_show(\''.$t['name'].'\', \''.dr_url(APP_DIR.'/category/edit', ['id' => $t['id'], 'page'=>1, 'isedit'=>1]).'\')"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_iframe_show(\''.$t['name'].'\', \''.dr_url(APP_DIR.'/category/edit', ['id' => $t['id'], 'page'=>1, 'isedit'=>1]).'\', \'80%\', \'80%\')"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
                 }
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {

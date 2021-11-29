@@ -13184,8 +13184,9 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     right: 0;
     padding: 0 20px;
     overflow: hidden;
-    height: 50px;
+    height: 42px;
     text-align: right;
+    background: #fff;
 }
 .fc-mb-left-menu li {
     height: 43px;
