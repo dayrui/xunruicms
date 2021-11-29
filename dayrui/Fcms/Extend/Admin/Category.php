@@ -88,13 +88,18 @@ class Category extends \Phpcmf\Table {
 
         // 写入模板
         \Phpcmf\Service::V()->assign([
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '栏目管理' => [APP_DIR.'/category/index', 'fa fa-reorder'],
+                    '添加' => [APP_DIR.'/category/add', 'fa fa-plus'],
+                    '批量添加' => [APP_DIR.'/category/all_add', 'fa fa-plus'],
+                    '属性设置' => [APP_DIR.'/category/config_add', 'fa fa-cog'],
+                    '自定义字段' => ['show:field/index{rname:category-'.$this->module['dirname'].'}', 'fa fa-code', '80%', '90%'],
+                ]
+            ),
             'module' => $this->module,
             'is_seo' => ($this->module['share'] ? 1 : (isset($this->module['site'][SITE_ID]['is_cat']) && $this->module['site'][SITE_ID]['is_cat'])),
-            'post_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/add'),
             'reply_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/index'),
-            'field_url' => \Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$this->module['dirname']]),
-            'post_all_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/all_add'),
-            'config_url' => \Phpcmf\Service::L('router')->url(APP_DIR.'/category/config_add'),
             'is_scategory' => $this->is_scategory,
         ]);
     }

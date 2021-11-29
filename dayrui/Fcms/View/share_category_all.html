@@ -1,15 +1,27 @@
 {template "header.html"}
 
-<div class="row my-content-top-tool">
-    <div class="col-md-12 col-sm-12">
+<script>
+    function dr_update_category_cache() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid={APP_DIR}",
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
+</script>
 
-        <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
-        {if $ci->_is_admin_auth('field/index')}<label style="margin-right:10px"><a href="{$field_url}" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义栏目字段')}</a></label>{/if}
-        <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
-        <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
-    </div>
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
 </div>
-
 
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}

@@ -199,21 +199,12 @@
     {/if}
 </script>
 
-
-<div class="note note-danger my-content-top-tool">
+<div class="note note-danger">
     <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
 </div>
 
 <div class="right-card-box">
-    <div class="row margin-bottom-10 margin-top-10">
-        <div class="col-md-12 col-sm-12">
-            <label style="margin-right:10px"><a href="{$list_url}" class="btn green"> {$list_name}</a></label>
-            {if $ci->_is_admin_auth('')}<label style="margin-right:10px"><a href="{$config_url}" class="btn red"> <i class="fa fa-cog"></i> {dr_lang('属性设置')}</a></label>{/if}
-            {if $ci->_is_admin_auth('field/index')}<label style="margin-right:10px"><a href="javascript:dr_iframe_show('{dr_lang('自定义栏目字段')}','{$field_url}&is_menu=1', '80%', '90%');" class="btn blue"> <i class="fa fa-code"></i> {dr_lang('自定义栏目字段')}</a></label>{/if}
-            <label style="margin-right:10px"><a href="{$post_url}" class="btn red"> <i class="fa fa-plus"></i> {dr_lang('添加栏目')}</a></label>
-            <label><a href="{$post_all_url}" class="btn blue"> <i class="fa fa-plus"></i> {dr_lang('批量添加')}</a></label>
-        </div>
-    </div>
+
     <form class="form-horizontal" role="form" id="myform">
         {dr_form_hidden()}
         <div class="table-scrollable">

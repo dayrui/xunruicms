@@ -1,11 +1,15 @@
 {template "header.html"}
 
-<div class="module-content" style="margin-top:-30px">
+<div class="module-content" style="margin-top:-20px">
     
     <iframe class="myiframe" name="contentright" id="module-content-right" src="{$url}&cache={SYS_TIME}" url="{$url}&cache={SYS_TIME}" frameborder="false" scrolling="auto" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
 
 </div>
-
+<style>
+    .page-content-wrapper .page-content {
+        padding: 25px 0px 10px 20px;
+    }
+</style>
 <script type="text/javascript">
 
     function McLink(dir, url) {
@@ -57,6 +61,7 @@
     }
     $(function(){
         wSize();
+        top.$('#dr_go_url').hide();
         document.documentElement.style.overflowY = 'hidden'
     });
 </script>
