@@ -540,51 +540,60 @@ class Module extends \Phpcmf\Model
 
         // 栏目开始
 		$CAT = $CAT_DIR = $level = [];
-        if ($category) {
-            // 栏目的定义字段
-            $field = $this->db->table('field')
-                ->where('disabled', 0)
-                ->where('relatedname', 'category-'.$cdir)
-                ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
-            if ($field) {
-                foreach ($field as $f) {
-                    $f['setting'] = dr_string2array($f['setting']);
-                    $cache['category_field'][$f['fieldname']] = $f;
-                }
+
+        // 栏目的定义字段
+        $field = $this->db->table('field')
+            ->where('disabled', 0)
+            ->where('relatedname', 'category-'.$cdir)
+            ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+        if ($field) {
+            foreach ($field as $f) {
+                $f['setting'] = dr_string2array($f['setting']);
+                $cache['category_field'][$f['fieldname']] = $f;
             }
-            if (!isset($cache['category_field']['thumb'])) {
-                $this->_add_field([
-                    'name' => dr_lang('缩略图'),
-                    'ismain' => 1,
-                    'ismember' => 1,
-                    'fieldtype' => 'File',
-                    'fieldname' => 'thumb',
-                    'setting' => array(
-                        'option' => array(
-                            'ext' => 'jpg,gif,png,jpeg',
-                            'size' => 10,
-                            'input' => 1,
-                            'attachment' => 0,
-                        )
+        }
+        if (!isset($cache['category_field']['thumb'])) {
+            $this->_add_field([
+                'name' => dr_lang('缩略图'),
+                'ismain' => 1,
+                'ismember' => 1,
+                'fieldtype' => 'File',
+                'fieldname' => 'thumb',
+                'setting' => array(
+                    'option' => array(
+                        'ext' => 'jpg,gif,png,jpeg',
+                        'size' => 10,
+                        'input' => 1,
+                        'attachment' => 0,
                     )
-                ], 1, 0, 'category-'.$cdir);
-            }
-            if ($cache['share'] && !isset($cache['category_field']['content'])) {
-                $this->_add_field([
-                    'name' => dr_lang('栏目内容'),
-                    'ismain' => 1,
-                    'fieldtype' => 'Ueditor',
-                    'fieldname' => 'content',
-                    'setting' => array(
-                        'option' => array(
+                )
+            ], 1, 0, 'category-'.$cdir);
+        }
+        if ($cache['share'] && !isset($cache['category_field']['content'])) {
+            $this->_add_field([
+                'name' => dr_lang('栏目内容'),
+                'ismain' => 1,
+                'fieldtype' => 'Ueditor',
+                'fieldname' => 'content',
+                'setting' => array(
+                    'option' =>
+                        array (
                             'mode' => 1,
-                            'height' => 300,
+                            'show_bottom_boot' => 1,
+                            'div2p' => 1,
                             'width' => '100%',
-                            'attachment' => 0,
-                        )
-                    ),
-                ], 1, 0, 'category-'.$cdir);
-            }
+                            'height' => 400,
+                        ),
+                    'validate' =>
+                        array (
+                            'xss' => 1,
+                            'required' => 1,
+                        ),
+                ),
+            ], 1, 0, 'category-'.$cdir);
+        }
+        // 栏目字段
+        if ($category) {
             $cache['category'] = $category;
             foreach ($category as $i => $c) {
                 $category[$i]['setting'] = $c['setting'] = dr_string2array($c['setting']);
