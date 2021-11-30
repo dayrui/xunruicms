@@ -94,7 +94,7 @@ class Category extends \Phpcmf\Table {
                     '添加' => [APP_DIR.'/category/add', 'fa fa-plus'],
                     '批量添加' => [APP_DIR.'/category/all_add', 'fa fa-plus'],
                     '属性设置' => [APP_DIR.'/category/config_add', 'fa fa-cog'],
-                    '自定义字段' => ['show:field/index{rname:category-'.$this->module['dirname'].'}', 'fa fa-code', '80%', '90%'],
+                    '自定义字段' => ['show:field/index{&is_menu=1&rname=category-'.$this->module['dirname'].'}', 'fa fa-code', '80%', '90%'],
                 ]
             ),
             'module' => $this->module,
