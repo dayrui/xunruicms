@@ -439,9 +439,17 @@ class File extends \Phpcmf\Common
         }
 
         // 读取附件信息
-        $rt = \Phpcmf\Service::L('cache')->get_auth_data('down-file-'.\Phpcmf\Service::L('input')->get('id'));
-        if (!$rt) {
-            $this->_msg(0, dr_lang('此附件下载链接已经失效'));
+        $id = \Phpcmf\Service::L('input')->get('id');
+        if (is_numeric($id)) {
+            $rt = [
+                'id' => $id,
+                'name' => dr_safe_replace(\Phpcmf\Service::L('input')->get('name')),
+            ];
+        } else {
+            $rt = \Phpcmf\Service::L('cache')->get_auth_data('down-file-'.$id);
+            if (!$rt) {
+                $this->_msg(0, dr_lang('此附件下载链接已经失效'));
+            }
         }
 
         $id = trim($rt['id']);
