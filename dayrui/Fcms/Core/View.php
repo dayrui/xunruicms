@@ -34,8 +34,8 @@ class View {
     private $_view_time; // 模板的运行时间
     private $_view_files; // 模板的引用文件
 
+    private $pos_map; // 地图定位坐标
     private $pos_order; // 是否包含有地图定位的排序
-    private $pos_baidu; // 百度地图定位坐标
 
     private $action; // 指定action
 
@@ -2287,14 +2287,14 @@ class View {
                 switch ($t['adj']) {
 
                     case 'MAP':
-                        // 百度地图
+                        // 地图
                         if ($t['value'] == '') {
                             $string.= $join." ".$t['name']." = ''";
                         } else {
                             list($a, $km) = explode('|', $t['value']);
                             list($lng, $lat) = explode(',', $a);
                             if ($lat && $lng) {
-                                $this->pos_baidu = [
+                                $this->pos_map = [
                                     'lng' => $lng,
                                     'lat' => $lat,
                                     'km' => $km,
@@ -2696,7 +2696,7 @@ class View {
         }
 
         // 定位范围搜索
-        $this->pos_order && ($this->pos_baidu ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_baidu['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_baidu['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_baidu['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
+        $this->pos_order && ($this->pos_map ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_map['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_map['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_map['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
 
         return $field;
     }
@@ -2770,7 +2770,7 @@ class View {
                             $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
                         }
                     } elseif (dr_in_array($a.'_lat', $field) && dr_in_array($a.'_lng', $field)) {
-                        if ($this->pos_baidu) {
+                        if ($this->pos_map) {
                             $my[$i] = $a.'_map ASC';
                             $this->pos_order = $a;
                         } else {
@@ -2796,7 +2796,7 @@ class View {
     // list 返回
     public function _return($return, $data = [], $sql = '', $total = 0, $pages = '', $pagesize = 0, $is_cache = 0) {
 
-        $this->pos_baidu = $this->pos_order = null;
+        $this->pos_map = $this->pos_order = null;
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = $this->_get_page_id($this->_page_value);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;

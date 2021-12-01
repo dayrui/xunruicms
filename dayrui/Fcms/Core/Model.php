@@ -604,8 +604,8 @@ class Model {
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'File'
             && $field['fieldname'] == 'thumb' && $value == 1) {
             return '`'.$table.'`.`'.$name.'` <> ""';
-        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Baidumap') {
-            // 百度地图
+        } elseif (isset($field['fieldtype']) && strpos($field['fieldtype'], 'map') !== false) {
+            // 地图
             list($a, $km) = explode('|', $value);
             list($lng, $lat) = explode(',', $a);
             if ($lat && $lng) {

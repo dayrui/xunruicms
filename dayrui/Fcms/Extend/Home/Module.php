@@ -413,9 +413,9 @@ class Module extends \Phpcmf\Common
 
         if ($this->is_hcategory) {
             $parent = $related = [];
-            $rt = $this->content_model->_hcategory_member_show_auth();
-            if (!$rt['code']) {
-                $this->_msg(0, $rt['msg'], $rt['data']);
+            $rt2 = $this->content_model->_hcategory_member_show_auth();
+            if (!$rt2['code']) {
+                $this->_msg(0, $rt2['msg'], $rt2['data']);
             }
         } else {
             // 无权限访问栏目内容

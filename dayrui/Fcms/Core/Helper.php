@@ -2596,94 +2596,14 @@ function dr_member_order($url) {
     return $url;
 }
 
-/**
- * 百度地图定位浏览器坐标
- */
-function dr_baidu_position_js($ak = SYS_BDMAP_API) {
-    $code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-    $code.= '<script type="text/javascript">';
-    $code.= '// 百度地图定位坐标
-   var geolocation = new BMap.Geolocation();
-   geolocation.getCurrentPosition(function(r){
-      if(this.getStatus() == BMAP_STATUS_SUCCESS){
-         $.ajax({type: "GET", url: "/index.php?s=api&c=api&m=baidu_position&value="+r.point.lng+\',\'+r.point.lat, dataType:"jsonp"});
-      } else {
-         alert(\'定位失败：\'+this.getStatus());
-      }
-   },{enableHighAccuracy: true});';
-    $code.= '</script>';
-    return $code;
-}
-
-/**
- * 百度地图定位浏览器坐标并设置为隐藏表单域
- */
-function dr_baidu_map_form_hidden($field, $ak = SYS_BDMAP_API) {
-    $code = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-    $code.= '<input type="hidden" id="dr_'.$field.'" name="data['.$field.']" value=""><script type="text/javascript">';
-    $code.= '<script type="text/javascript">';
-    $code.= '// 百度地图定位坐标
-   var geolocation = new BMap.Geolocation();
-   geolocation.getCurrentPosition(function(r){
-      if(this.getStatus() == BMAP_STATUS_SUCCESS){
-         $("#dr_'.$field.'").val(r.point.lng+\',\'+r.point.lat);
-         $.ajax({type: "GET", url: "/index.php?s=api&c=api&m=baidu_position&value="+r.point.lng+\',\'+r.point.lat, dataType:"jsonp"});
-      } else {
-         alert(\'定位失败：\'+this.getStatus());
-      }
-   },{enableHighAccuracy: true});';
-    $code.= '</script>';
-    return $code;
-}
-
-
-/**
- * 百度地图JS
- */
-function dr_baidu_map_js($ak = SYS_BDMAP_API) {
-    return \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-}
 
 /**
  * 百度地图调用
  */
-function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = SYS_BDMAP_API, $class= '', $tips = '') {
-
-    if (!$value) {
-        return '没有坐标值';
+if (!function_exists('dr_baidu_map')) {
+    function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = '', $class= '', $tips = '') {
+        return '不支持百度地图功能';
     }
-
-    $id = 'dr_map_'.rand(0, 99);
-    !$ak && $ak = SYS_BDMAP_API;
-    $width = $width ? $width : '100%';
-    list($lngX, $latY) = explode(',', $value);
-
-    $js = \Phpcmf\Service::V()->load_js((strpos(FC_NOW_URL, 'https') === 0 ? 'https' : 'http').'://api.map.baidu.com/api?v=2.0&ak='.$ak);
-
-    return $js.'<div class="'.$class.'" id="' . $id . '" style="width:' . (strpos($width, '%') ? $width : $width. 'px').'; height:' . (strpos($height, '%') ? $height : $height. 'px') . '; overflow:hidden"></div>
-    <script type="text/javascript">
-    var mapObj=null;
-    lngX = "' . $lngX . '";
-    latY = "' . $latY . '";
-    zoom = "' . $zoom . '";     
-    var mapObj = new BMap.Map("'.$id.'");
-    var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
-    mapObj.addControl(ctrl_nav);
-    mapObj.enableDragging();
-    mapObj.enableScrollWheelZoom();
-    mapObj.enableDoubleClickZoom();
-    mapObj.enableKeyboard();//启用键盘上下左右键移动地图
-    mapObj.centerAndZoom(new BMap.Point(lngX,latY),zoom);
-    drawPoints();
-    function drawPoints(){
-        var myIcon = new BMap.Icon("' . ROOT_THEME_PATH . 'assets/images/mak.png", new BMap.Size(27, 45));
-        var center = mapObj.getCenter();
-        var point = new BMap.Point(lngX,latY);
-        var marker = new BMap.Marker(point, {icon: myIcon});
-        mapObj.addOverlay(marker);
-        '.($tips ? 'mapObj.openInfoWindow(new BMap.InfoWindow("'.str_replace('"', '\'', $tips).'",{offset:new BMap.Size(0,-17)}),point);' : '').'
-    }
-    </script>';
 }
 
 /**

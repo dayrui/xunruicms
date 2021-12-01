@@ -31,10 +31,6 @@ return [
         'name' => '百度编辑器',
     ],
     [
-        'id' => 'Baidumap',
-        'name' => '百度地图',
-    ],
-    [
         'id' => 'Radio',
         'name' => '单选按钮',
     ],

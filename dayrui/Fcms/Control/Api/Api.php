@@ -32,12 +32,12 @@ class Api extends \Phpcmf\Common
     /**
      * 保存浏览器定位坐标
      */
-    public function baidu_position() {
+    public function map_position() {
 
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
-        $cookie = \Phpcmf\Service::L('input')->get_cookie('baidu_position');
+        $cookie = \Phpcmf\Service::L('input')->get_cookie('map_position');
         if ($cookie != $value) {
-            \Phpcmf\Service::L('input')->set_cookie('baidu_position', $value, 10000);
+            \Phpcmf\Service::L('input')->set_cookie('map_position', $value, 10000);
             exit('ok');
         }
 

@@ -85,7 +85,6 @@ $system = [
     'SYS_ATTACHMENT_URL'    => '',
     'SYS_AVATAR_PATH'   => '',
     'SYS_AVATAR_URL'    => '',
-    'SYS_BDMAP_API' => '',
     'SYS_API_CODE'  => '',
     'SYS_THEME_ROOT'    => '',
     'SYS_ATTACHMENT_SAFE'    => '',
