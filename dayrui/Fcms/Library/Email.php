@@ -191,14 +191,17 @@ class Email
         return $this->error;
     }
 
-    protected function runlog($server, $name, $msg) {
-        if ($this->is_gb2312($msg) && function_exists('iconv')) {
+    protected function runlog($server, $name, $msg = '') {
+
+        if ($msg && $this->is_gb2312($msg) && function_exists('iconv')) {
             $new = iconv('GB2312', 'UTF-8', $msg);
             if ($new) {
                 $msg = $new;
             }
         }
+
         $this->error = $name.'-'.$msg;
+        
         @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
     }
 
