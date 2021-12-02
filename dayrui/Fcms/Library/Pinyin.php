@@ -541,8 +541,8 @@ class Pinyin
     public function result($s, $quanpin = true, $daxie = false, $biaodian = false) {
 
         $s = preg_replace("/\s/is", "_", $s);
-        if (!$biaodian) {
-            $s = preg_replace("/(|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\+|\=|\{|\}|\[|\]|\||\\|\:|\;|\"|\'|\<|\,|\>|\.|\?|\/)/is", "", $s);
+        if (!$biaodian && preg_match_all('/[\x{4e00}-\x{9fff}]+/u', $s, $mt)) {
+            $s = join('', $mt[0]);
         }
 
         // 加入这一句，自动识别UTF-8

@@ -2598,23 +2598,6 @@ function dr_member_order($url) {
 
 
 /**
- * 百度地图调用
- */
-if (!function_exists('dr_baidu_map')) {
-    function dr_baidu_map($value, $zoom = 15, $width = 600, $height = 400, $ak = '', $class= '', $tips = '') {
-        return '不支持百度地图功能';
-    }
-}
-
-/**
- * 腾讯地图被弃用
- */
-function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $class = '') {
-    return dr_baidu_map($value, $zoom, $width, $height, '', $class);
-}
-
-
-/**
  * 显示星星
  *
  * @param   intval  $num

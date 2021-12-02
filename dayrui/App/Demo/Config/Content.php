@@ -30,8 +30,6 @@ return array (
   `fkbd_total` int(10) unsigned DEFAULT \'0\' COMMENT \'表单反馈表单统计\',
   `wbsj` varchar(255) DEFAULT NULL,
   `dxwb` text,
-  `baiduditu_lng` decimal(9,6) DEFAULT NULL,
-  `baiduditu_lat` decimal(9,6) DEFAULT NULL,
   `danxuananniu` varchar(255) DEFAULT NULL,
   `fuxuankuang` varchar(255) DEFAULT NULL,
   `rqsjgs` int(10) unsigned DEFAULT NULL,
@@ -789,40 +787,6 @@ return array (
                                     'is_right' => '0',
                                 ),
                             'displayorder' => '3',
-                        ),
-                    21 =>
-                        array (
-                            'name' => '百度地图',
-                            'fieldname' => 'baiduditu',
-                            'fieldtype' => 'Baidumap',
-                            'isedit' => '1',
-                            'ismain' => '1',
-                            'issystem' => '0',
-                            'ismember' => '1',
-                            'issearch' => '0',
-                            'disabled' => '0',
-                            'setting' =>
-                                array (
-                                    'option' =>
-                                        array (
-                                            'level' => '15',
-                                            'width' => '',
-                                            'height' => '',
-                                            'css' => '',
-                                        ),
-                                    'validate' =>
-                                        array (
-                                            'required' => '0',
-                                            'pattern' => '',
-                                            'errortips' => '',
-                                            'check' => '',
-                                            'filter' => '',
-                                            'formattr' => '',
-                                            'tips' => '',
-                                        ),
-                                    'is_right' => '0',
-                                ),
-                            'displayorder' => '4',
                         ),
                     22 =>
                         array (
