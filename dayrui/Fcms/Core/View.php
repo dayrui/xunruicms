@@ -1843,16 +1843,16 @@ class View {
                 if ($system['flag']) {
                     if ($system['show_flag']) {
                         $sql_from.= ' LEFT JOIN `'.$table.'_flag'.'` ON `'.$table.'`.`id`=`'.$table.'_flag`.`id`';
-                        $sql_where = ($sql_where ? $sql_where.' AND' : '').' `'.$table.'_flag`.'.(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
+                        $sql_where = ($sql_where ? $sql_where.' AND' : '').' `'.$table.'_flag`.'.(strpos($system['flag'], ',') ? '`flag` IN ('.$this->_get_where_in($system['flag']).')' : '`flag`='.(int)$system['flag']);
                     } else {
-                        $flag = "select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag']);
+                        $flag = "select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$this->_get_where_in($system['flag']).')' : '`flag`='.(int)$system['flag']);
                         $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` IN (".$flag.")";
                         unset($flag);
                     }
                 }
                 // 排除推荐位
                 if ($system['not_flag']) {
-                    $flag = "select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$system['not_flag'].')' : '`flag`='.(int)$system['not_flag']);
+                    $flag = "select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$this->_get_where_in($system['not_flag']).')' : '`flag`='.(int)$system['not_flag']);
                     $sql_where = ($sql_where ? $sql_where.' AND' : '')." `$table`.`id` NOT IN (".$flag.")";
                     unset($flag);
                 }
@@ -2032,11 +2032,11 @@ class View {
                     ];
                     // 推荐位调用
                     if ($system['flag']) {
-                        $mywhere[] = "`$table`.`id` IN (".("select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$system['flag'].')' : '`flag`='.(int)$system['flag'])).")";
+                        $mywhere[] = "`$table`.`id` IN (".("select `id` from `{$table}_flag` where ".(strpos($system['flag'], ',') ? '`flag` IN ('.$this->_get_where_in($system['flag']).')' : '`flag`='.(int)$system['flag'])).")";
                     }
                     // 排除推荐位
                     if ($system['not_flag']) {
-                        $mywhere[] = "`$table`.`id` NOT IN (".("select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$system['not_flag'].')' : '`flag`='.(int)$system['not_flag'])).")";
+                        $mywhere[] = "`$table`.`id` NOT IN (".("select `id` from `{$table}_flag` where ".(strpos($system['not_flag'], ',') ? '`flag` IN ('.$this->_get_where_in($system['not_flag']).')' : '`flag`='.(int)$system['not_flag'])).")";
                     }
                     $module = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$m);
                     $fields = $module['field'];
@@ -2270,6 +2270,20 @@ class View {
         $config['query_string_segment'] = 'page';
 
         return \Phpcmf\Service::L('Page')->initialize($config)->create_links();
+    }
+    
+    private function _get_where_in($str) {
+        
+        if (!$str) {
+            return 0;
+        }
+        
+        $arr = explode(',', $str);
+        foreach ($arr as $i => $t) {
+            $arr[$i] = intval($t);
+        }
+        
+        return implode(',', $arr);
     }
 
     // 条件子句格式化
