@@ -160,8 +160,8 @@ class Seo_category extends \Phpcmf\Common
                 $is_html = intval($t['setting']['html']);
                 $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(($dir == 'share' ? '' : $dir).'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
             }
-            if ($mod) {
-                $t['setting']['urlrule'] = isset($mod['site'][SITE_ID]['urlrule']) ? $mod['site'][SITE_ID]['urlrule'] : 0;
+            if ($mod && isset($mod['site'][SITE_ID]['urlrule'])) {
+                $t['setting']['urlrule'] = $mod['site'][SITE_ID]['urlrule'];
             }
             $t['html'] = $this->_select_rule($dir, $rule, $t);
             $t['url'] = $t['tid'] == 2 && $t['setting']['linkurl'] ? dr_url_prefix($t['setting']['linkurl']) : dr_url_prefix(\Phpcmf\Service::L('router')->category_url($mod, $t));
