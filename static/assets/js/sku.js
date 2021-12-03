@@ -118,7 +118,6 @@ var step = {
                 //var skuValue = SKUObj.find("li").eq(index).html();
             }
 
-
 		});
 
         //console.log(arrayTile);
@@ -164,7 +163,18 @@ var step = {
 						if (ovalue == undefined) {
 							ovalue = '';
 						}
-						var td = $("<td ><input type=\"text\" name=\"data["+field_name+"][value]["+oname+"]["+sku_field_id[key]+"]\"  value=\""+ovalue+"\" class=\"input-sm form-control\"></td>");
+						if (sku_field_id[key] == 'image') {
+							// 图片模式
+							var oimg = '';
+							var is_show_img = 'display:none';
+							if (ovalue) {
+								oimg = arrayValue[oname+"_"+sku_field_id[key]+"_url"]
+								is_show_img = 'display:block';
+							}
+							var td = $("<td ><label><input class=\"form-control2\" type=\"hidden\" name=\"data["+field_name+"][value]["+oname+"]["+sku_field_id[key]+"]\" value=\""+ovalue+"\" ><input class=\"form-control3\" type=\"hidden\" value=\""+oimg+"\" ><a href=\"javascript:;\" onclick=\"dr_ftable_myfileinput(this, '"+sku_image_url+"')\" class=\"ftable-fileinput pull-left btn green btn-sm\">上传</a><a href=\"javascript:;\" onclick=\"dr_ftable_myshow(this)\" style=\""+is_show_img+"\" class=\"ftable-show pull-left btn blue btn-sm\">预览</a><a href=\"javascript:;\" onclick=\"dr_ftable_mydelete(this)\" style=\""+is_show_img+"\" class=\"ftable-delete pull-left btn red btn-sm\">删除</a> </label></td>");
+						} else {
+							var td = $("<td ><input type=\"text\" name=\"data["+field_name+"][value]["+oname+"]["+sku_field_id[key]+"]\"  value=\""+ovalue+"\" class=\"input-sm form-control\"></td>");
+						}
 						td.appendTo(tr);
 					}
 				});

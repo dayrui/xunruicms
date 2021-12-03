@@ -156,6 +156,13 @@ class Ftable extends \Phpcmf\Library\A_Field {
     // 对应的html
     protected function _field_type_html($config, $cname, $value, $hang, $lie) {
 
+        $url ='/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
+                'size' => 10,
+                'count' => 1,
+                'exts' => 'jpg,gif,png',
+                'attachment' => 0,
+                'image_reduce' => 0,
+            ], 'ENCODE').'&ct=0&one=1';
         $html = '';
         if ($config['type'] == 1) {
             $html.= '<input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
@@ -173,7 +180,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
             $html = '<label><input class="form-control2" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<input class="form-control3" type="hidden" value="'.($value[$hang][$lie] ? $pp : '').'">';
-            $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this)" class="ftable-fileinput btn green btn-sm">上传</a>';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this, \''.$url.'\')" class="ftable-fileinput btn green btn-sm">上传</a>';
             $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">预览</a>
 			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">删除</a> ';
             $html.= '</label>';
@@ -409,90 +416,10 @@ class Ftable extends \Phpcmf\Library\A_Field {
         }
         $str.= '<script> $("#dr_'.$name.'_body").sortable();';
 
-        $p = dr_authcode([
-            'size' => 10,
-            'count' => 1,
-            'exts' => 'jpg,gif,png',
-            'attachment' => 0,
-            'image_reduce' => 0,
-        ], 'ENCODE');
-        $url =  '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.$p.'&ct=0&one=1';
+
 
         $str.="
             $(\"#dr_".$name."_body\").sortable();
-			function dr_ftable_mydelete(e){
-				var ob = $(e);
-				 ob.parent().find('.form-control2').val('0');
-				 ob.parent().find('.ftable-show').hide();
-				 ob.parent().find('.ftable-delete').hide();
-			}
-			
-			function dr_ftable_myshow(e){
-				var ob = $(e);
-				var url = ob.parent().find('.form-control3').val();
-				dr_preview_image(url);
-			}
-			function dr_ftable_myfileinput (e){
-				var ob = $(e);
-        var c = 1;
-        var url = '".$url."';
-        layer.open({
-            type: 2,
-            title: '<i class=\"fa fa-folder-open\"></i>',
-            fix:true,
-            scrollbar: false,
-            shadeClose: true,
-            shade: 0,
-            area: ['50%', '50%'],
-            btn: [ lang['ok'] ],
-            yes: function(index, layero){
-                var body = layer.getChildFrame('body', index);
-                // 延迟加载
-                var loading = layer.load(2, {
-                    time: 10000000
-                });
-                $.ajax({type: \"POST\",dataType:\"json\", url: url, data: $(body).find('#myform').serialize(),
-                    success: function(json2) {
-                        layer.close(loading);
-                        if (json2.code == 1) {
-                            layer.close(index);
-								var v = json2.data.result[0];
-                                ob.parent().find('.form-control2').val(v.id);
-                                ob.parent().find('.form-control3').val(v.url);
-								 ob.parent().find('.ftable-show').show();
-								 ob.parent().find('.ftable-delete').show();
-                            dr_tips(1, json2.msg);
-                        } else {
-                            dr_tips(0, json2.msg);
-
-                        }
-                        return false;
-                    }
-                });
-
-                return false;
-            },
-            success: function(layero, index){
-                // 主要用于权限验证
-                var body = layer.getChildFrame('body', index);
-                var json2 = $(body).html();
-                if (json2.indexOf('\"code\":0') > 0 && jso2n.length < 150){
-                    var obj = JSON.parse(json2);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
-                if (json2.indexOf('\"code\":1') > 0 && json2.length < 150){
-                    var obj = JSON.parse(json2);
-                    layer.close(index);
-                    dr_tips(1, obj.msg);
-                }
-            },
-            content: url+'&is_ajax=1'
-        });
-    }
-			
-			
-		
 		</script>
 		";
 

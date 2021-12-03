@@ -8,6 +8,7 @@
 class Pays extends \Phpcmf\Library\A_Field  {
 
     protected $showfield = [
+        'image' => '图片',
         'price' => '价格',
         'quantity' => '数量',
         'sn' => '编码',
@@ -39,7 +40,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
         $param_html = '';
         foreach ($myfield as $id => $t) {
             $param_html.= '<p style="margin-bottom:10px">';
-            $param_html.= '<input type="checkbox" name="data[setting][option][field][]" '.(dr_in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+            $param_html.= '<input type="checkbox" name="data[setting][option][field][]" '.(dr_in_array($id, $option['field']) ? 'checked' : '').' value="'.$id.'" data-on-text="'.dr_lang('%s已显示', dr_lang($t)).'" data-off-text="'.dr_lang('%s已禁用', dr_lang($t)).'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
 		';
             $param_html.= '</p>';
         }
@@ -386,21 +387,34 @@ class Pays extends \Phpcmf\Library\A_Field  {
 
             $tpl_value = $this->_get_tpl_value('data['.$field['fieldname'].'_sku]');
 
+            $image_url ='/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
+                'size' => 10,
+                'count' => 1,
+                'exts' => 'jpg,gif,png',
+                'attachment' => 0,
+                'image_reduce' => 0,
+            ], 'ENCODE').'&ct=0&one=1';
             // 显示字段
-            $pay_html = '';
+            $pay_html = ''; // 单一模式下的输出
             $myfield = $this->_get_myfield($field);
             $sku_field_name = '';
             $sku_field_id = [];
             foreach ($myfield as $ff => $name) {
-                $pay_html.= '<div class="form-group">
+                if ($ff == 'image') {
+
+                } else {
+                    $pay_html.= '<div class="form-group">
                             <label class="col-md-2 control-label">'.$name.'</label>
                             <div class="col-md-7">
                                 <input type="text" name="'.$field['fieldname'].'['.$ff.']" value="'.$value[$ff].'" class="form-control input-inline input-medium">
                             </div>
                         </div>';
+                }
+
                 $sku_field_name.= '<th>'.$name.'</th>';
                 $sku_field_id[] = $ff;
             }
+
 
             if (isset($field['setting']['option']['is_sku']) && $field['setting']['option']['is_sku']) {
                 $value['sku']['name'] = $field['setting']['option']['sku']['name'];
@@ -433,6 +447,9 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 foreach ($value['sku']['value'] as $ii => $t) {
                     foreach ($sku_field_id as $if) {
                         $ovalue[$ii.'_'.$if] = $t[$if];
+                        if ($if == 'image') {
+                            $ovalue[$ii.'_'.$if.'_url'] = dr_get_file($t[$if]);
+                        }
                     }
                 }
             }
@@ -494,6 +511,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 var tpl_value = "'.$this->_js_var($tpl_value).'";
                 var field_name = "'.$field['fieldname'].'_sku";
                 var sku_field_name = "'.$this->_js_var($sku_field_name).'";
+                var sku_image_url = "'.$image_url.'";
                 var sku_field_id = '.dr_array2string($sku_field_id).';
                 arrayValue = '.($ovalue ? dr_array2string($ovalue) : 'new Array()').';
                 </script>
@@ -613,11 +631,14 @@ class Pays extends \Phpcmf\Library\A_Field  {
             }
         }
 
-        $ovalue = [];
+        $ovalue = $oimg = [];
         if (isset($value['sku']['value']) && $value['sku']['value']) {
             foreach ($value['sku']['value'] as $ii => $t) {
                 foreach ($sku_field_id as $if) {
                     $ovalue[$ii.'_'.$if] = $t[$if];
+                    if ($if == 'image') {
+                        $ovalue[$ii.'_'.$if.'_url'] = dr_get_file($t[$if]);
+                    }
                 }
             }
         }

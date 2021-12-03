@@ -120,6 +120,77 @@ function dr_is_mobile() {
 	 }
 }
 
+function dr_ftable_mydelete(e){
+    var ob = $(e);
+    ob.parent().find('.form-control2').val('0');
+    ob.parent().find('.ftable-show').hide();
+    ob.parent().find('.ftable-delete').hide();
+}
+
+function dr_ftable_myshow(e){
+    var ob = $(e);
+    var url = ob.parent().find('.form-control3').val();
+    dr_preview_image(url);
+}
+
+function dr_ftable_myfileinput (e, url){
+    var ob = $(e);
+    var c = 1;
+    layer.open({
+        type: 2,
+        title: '<i class=\"fa fa-folder-open\"></i>',
+        fix:true,
+        scrollbar: false,
+        shadeClose: true,
+        shade: 0,
+        area: ['50%', '50%'],
+        btn: [ dr_lang('确定') ],
+        yes: function(index, layero){
+            var body = layer.getChildFrame('body', index);
+            // 延迟加载
+            var loading = layer.load(2, {
+                time: 10000000
+            });
+            $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
+            success: function(json2) {
+                layer.close(loading);
+                if (json2.code == 1) {
+                    layer.close(index);
+                    var v = json2.data.result[0];
+                    ob.parent().find('.form-control2').val(v.id);
+                    ob.parent().find('.form-control3').val(v.url);
+                    ob.parent().find('.ftable-show').show();
+                    ob.parent().find('.ftable-delete').show();
+                    dr_tips(1, json2.msg);
+                } else {
+                    dr_tips(0, json2.msg);
+
+                }
+                return false;
+            }
+        });
+
+            return false;
+        },
+        success: function(layero, index){
+            // 主要用于权限验证
+            var body = layer.getChildFrame('body', index);
+            var json2 = $(body).html();
+            if (json2.indexOf('\"code\":0') > 0 && jso2n.length < 150){
+                var obj = JSON.parse(json2);
+                layer.close(index);
+                dr_tips(0, obj.msg);
+            }
+            if (json2.indexOf('\"code\":1') > 0 && json2.length < 150){
+                var obj = JSON.parse(json2);
+                layer.close(index);
+                dr_tips(1, obj.msg);
+            }
+        },
+        content: url+'&is_ajax=1'
+    });
+}
+
 // 显示视频
 function dr_preview_video(file) {
 

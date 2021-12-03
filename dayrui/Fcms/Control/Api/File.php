@@ -561,7 +561,9 @@ class File extends \Phpcmf\Common
         }
     }
 
-    // 图片编辑
+    /**
+     * 图片编辑
+     */
     public function image_edit() {
 
         if (!$this->uid) {
@@ -636,7 +638,9 @@ class File extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('attachment_image.html');exit;
     }
 
-    // 附件改名
+    /**
+     * 附件改名
+     */
     public function name_edit() {
 
         if (!$this->uid) {
@@ -686,4 +690,5 @@ class File extends \Phpcmf\Common
         ]);
         \Phpcmf\Service::V()->display('attachment_edit.html');exit;
     }
+
 }
