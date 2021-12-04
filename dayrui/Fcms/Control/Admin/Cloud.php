@@ -461,7 +461,11 @@ return [
         } elseif ($is_tpl) {
             $msg = '模板导入完成</p><p style="margin-top:20px;"><a href="javascript:dr_load_ajax(\''.dr_lang('确定安装此模板到当前站点吗？').'\', \''.dr_url('cloud/install_tpl', ['id' => $id, 'dir'=>$is_tpl]).'\', 0);">立即安装模板</a>';
         } else {
-            $msg = '程序导入完成<br>请按本商品的使用教程来操作';
+            if ($this->cmf_license['oem']) {
+                $msg = '程序导入完成';
+            } else {
+                $msg = '程序导入完成<br><a href="https://www.xunruicms.com/api/shop-doc.php?id='.$id.'" target="_blank">请按本商品的使用教程来操作</a>';
+            }
         }
 
         $this->_json(1, $msg);
