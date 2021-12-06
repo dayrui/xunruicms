@@ -251,7 +251,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 						<span class="help-block">'.dr_lang('单图上传按钮对某些浏览器不被支持，兼容性较差').'</span>
                     </div>
                 </div>
-                '.$this->attachment($option).'
+                '.$this->attachment($option, 0).'
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片补加后缀字符').' </label>
                     <div class="col-md-9">
