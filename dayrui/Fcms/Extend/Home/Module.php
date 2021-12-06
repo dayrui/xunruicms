@@ -193,6 +193,8 @@ class Module extends \Phpcmf\Common
 
         if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
             $tpl = dr_safe_filename($_GET['ajax_page']);
+        } elseif (isset($get['ajax_page']) && $get['ajax_page']) {
+            $tpl = dr_safe_filename($get['ajax_page']);
         } else {
             $tpl = $catid && $this->module['category'][$catid]['setting']['template']['search'] ? $this->module['category'][$catid]['setting']['template']['search'] : 'search.html';
         }
