@@ -86,6 +86,7 @@ class Form
         }
 
         // 初始化信息
+        \Phpcmf\Service::L('Field')->old = $old;
         \Phpcmf\Service::L('Field')->data = [];
 
         $attach = []; // 附件信息
@@ -149,6 +150,7 @@ class Form
                     unset($fields[$fid]);
                     continue; // 对象不存在
                 }
+                $obj->init($field);;
                 // 非后台时
                 if (!IS_ADMIN) {
                     if (!$field['ismember']) {

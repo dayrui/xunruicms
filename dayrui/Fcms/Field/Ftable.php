@@ -280,6 +280,90 @@ class Ftable extends \Phpcmf\Library\A_Field {
     }
 
     /**
+     * 获取附件id
+     */
+    public function get_attach_id($value) {
+
+        if (!$this->field) {
+            return NULL;
+        } elseif (!isset($this->field['setting']['option']['field'])) {
+            return NULL;
+        }
+
+        $data = [];
+        $value = dr_string2array($value);
+
+        if ($value) {
+            foreach ($value as $tt) {
+                foreach ($this->field['setting']['option']['field'] as $lie => $t) {
+                    if ($t['type'] == 3 && isset($tt[$lie]) && $tt[$lie]) {
+                        $data[] = (int)$tt[$lie];
+                    }
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * 附件处理
+     */
+    public function attach($data, $_data) {
+
+        if (!$this->field) {
+            return NULL;
+        }
+
+        $data = $this->get_attach_id($data);
+        $_data = $this->get_attach_id($_data);
+
+        if (!isset($_data)) {
+            $_data = [];
+        }
+
+        if (!isset($data)) {
+            $data = [];
+        }
+
+        // 新旧数据都无附件就跳出
+        if (!$data && !$_data) {
+            return NULL;
+        }
+
+        // 新旧数据都一样时表示没做改变就跳出
+        if (dr_diff($data, $_data)) {
+            return NULL;
+        }
+
+        // 当无新数据且有旧数据表示删除旧附件
+        if (!$data && $_data) {
+            return [
+                [],
+                $_data
+            ];
+        }
+
+        // 当无旧数据且有新数据表示增加新附件
+        if ($data && !$_data) {
+            return [
+                $data,
+                []
+            ];
+        }
+
+        // 剩下的情况就是删除旧文件增加新文件
+
+        // 新旧附件的交集，表示固定的
+        $intersect = array_intersect($data, $_data);
+
+        return [
+            array_diff($data, $intersect), // 固有的与新文件中的差集表示新增的附件
+            array_diff($_data, $intersect), // 固有的与旧文件中的差集表示待删除的附件
+        ];
+    }
+
+    /**
      * 字段表单输入
      */
     public function input($field, $value = '') {

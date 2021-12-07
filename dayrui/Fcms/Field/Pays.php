@@ -276,6 +276,97 @@ class Pays extends \Phpcmf\Library\A_Field  {
         }
     }
 
+
+
+
+    /**
+     * 获取附件id
+     */
+    public function get_attach_id($value) {
+
+        if (!$this->field) {
+            return NULL;
+        } elseif (!dr_in_array('image', $this->field['setting']['option']['field'])) {
+            return NULL;
+        }
+
+        $data = [];
+        $value = dr_string2array($value);
+
+        if ($value) {
+            foreach ($value as $tt) {
+                if (isset($tt['image']) && $tt['image']) {
+                    $data[] = intval($tt['image']);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * 附件处理
+     */
+    public function attach($data, $_data) {
+
+        if (!$this->field) {
+            return NULL;
+        }
+
+        $data = isset($_POST['data'][$this->field['fieldname'].'_sku']['value']) ? $_POST['data'][$this->field['fieldname'].'_sku']['value'] : [];
+        if (isset(\Phpcmf\Service::L('Field')->old[$this->field['fieldname'].'_sku'])) {
+            $old = dr_string2array(\Phpcmf\Service::L('Field')->old[$this->field['fieldname'].'_sku']);
+            $_data = isset($old['value']) ? $old['value'] : [];
+        }
+
+        $data = $this->get_attach_id($data);
+        $_data = $this->get_attach_id($_data);
+
+        if (!isset($_data)) {
+            $_data = [];
+        }
+
+        if (!isset($data)) {
+            $data = [];
+        }
+
+        // 新旧数据都无附件就跳出
+        if (!$data && !$_data) {
+            return NULL;
+        }
+
+        // 新旧数据都一样时表示没做改变就跳出
+        if (dr_diff($data, $_data)) {
+            return NULL;
+        }
+
+        // 当无新数据且有旧数据表示删除旧附件
+        if (!$data && $_data) {
+            return [
+                [],
+                $_data
+            ];
+        }
+
+        // 当无旧数据且有新数据表示增加新附件
+        if ($data && !$_data) {
+            return [
+                $data,
+                []
+            ];
+        }
+
+        // 剩下的情况就是删除旧文件增加新文件
+
+        // 新旧附件的交集，表示固定的
+        $intersect = array_intersect($data, $_data);
+
+        return [
+            array_diff($data, $intersect), // 固有的与新文件中的差集表示新增的附件
+            array_diff($_data, $intersect), // 固有的与旧文件中的差集表示待删除的附件
+        ];
+    }
+
     /**
      * 验证必填字段值
      *
