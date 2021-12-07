@@ -1151,7 +1151,7 @@ function dr_install_app(url) {
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
+                time: 50000
             });
             $.ajax({type: "GET",dataType:"json", url: url,
                 success: function(json) {
@@ -1186,7 +1186,7 @@ function dr_install_module_select(url) {
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
+                time: 50000
             });
             $.ajax({type: "GET",dataType:"json", url: url+'&type=1',
                 success: function(json) {
@@ -1205,7 +1205,7 @@ function dr_install_module_select(url) {
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
+                time: 50000
             });
             $.ajax({type: "GET",dataType:"json", url: url+'&type=0',
                 success: function(json) {
@@ -1235,7 +1235,7 @@ function dr_install_module(url) {
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
+                time: 50000
             });
             $.ajax({type: "GET",dataType:"json", url: url,
                 success: function(json) {
