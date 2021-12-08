@@ -155,8 +155,6 @@
         initContainer: function () {
             this.dom = {
                 'url': $G('url'),
-                'width': $G('width'),
-                'height': $G('height'),
                 'border': $G('border'),
                 'vhSpace': $G('vhSpace'),
                 'title': $G('title'),
@@ -176,24 +174,7 @@
             domUtils.on($G("border"), 'keyup', updatePreview);
             domUtils.on($G("title"), 'keyup', updatePreview);
 
-            domUtils.on($G("width"), 'keyup', function(){
-                updatePreview();
-                if(locker.checked) {
-                    var proportion =locker.getAttribute('data-proportion');
-                    $G('height').value = Math.round(this.value / proportion);
-                } else {
-                    _this.updateLocker();
-                }
-            });
-            domUtils.on($G("height"), 'keyup', function(){
-                updatePreview();
-                if(locker.checked) {
-                    var proportion =locker.getAttribute('data-proportion');
-                    $G('width').value = Math.round(this.value * proportion);
-                } else {
-                    _this.updateLocker();
-                }
-            });
+           
             domUtils.on($G("lock"), 'change', function(){
                 var proportion = parseInt($G("width").value) /parseInt($G("height").value);
                 locker.setAttribute('data-proportion', proportion);
@@ -228,8 +209,7 @@
             if (src !== $G("url").value) $G("url").value = src;
             if(src) {
                 /* 设置表单内容 */
-                $G("width").value = img.width || '';
-                $G("height").value = img.height || '';
+
                 $G("border").value = img.getAttribute("border") || '0';
                 $G("vhSpace").value = img.getAttribute("vspace") || '0';
                 $G("title").value = img.title || img.alt || '';
@@ -272,8 +252,6 @@
                 return [{
                     src: data['url'],
                     _src: data['url'],
-                    width: data['width'] || '',
-                    height: data['height'] || '',
                     border: data['border'] || '',
                     floatStyle: data['align'] || '',
                     vspace: data['vhSpace'] || '',
