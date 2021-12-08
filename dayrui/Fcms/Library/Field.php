@@ -12,6 +12,7 @@
     class Field {
 
         public $post; // 当前post值
+        public $old; // 修改时的老数据
         public $data; // 格式化后的post值
         public $value; // 默认值
         public $fields; // 可用字段
