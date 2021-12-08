@@ -24,6 +24,18 @@ class Seo {
             'meta_description' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'seo', 'SITE_DESCRIPTION')
         ];
 
+        if (IS_CLIENT) {
+            // 终端模式下
+            $cdata = \Phpcmf\Service::R(WRITEPATH.'config/app_client_seo.php');
+            if ($cdata && isset($cdata[IS_CLIENT]) && $cdata[IS_CLIENT]) {
+                $seo = [
+                    'meta_title' => $cdata[IS_CLIENT]['SITE_TITLE'],
+                    'meta_keywords' => $cdata[IS_CLIENT]['SITE_KEYWORDS'],
+                    'meta_description' => $cdata[IS_CLIENT]['SITE_DESCRIPTION']
+                ];
+            }
+        }
+
         !$seo['meta_title'] && $seo['meta_title'] = SITE_NAME;
 
         if (strpos($seo['meta_title'], '{page}') !== false) {
