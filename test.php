@@ -18,9 +18,13 @@ if ($pos !== false && $pos > 1) {
     echo "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html";exit;
 }
 
+if (preg_match('/[\x{4e00}-\x{9fff}]+/u', WEBPATH)) {
+    exit('<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>');
+}
+
 foreach ([' ', '[', ']'] as $t) {
     if (strpos(WEBPATH, $t) !== false) {
-        exit('<font color=red>WEB目录'.WEBPATH.'不允许出现'.($t ? $t : '空格').'符号</font>');
+        exit('<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>');
     }
 }
 
