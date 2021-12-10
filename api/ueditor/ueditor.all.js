@@ -17502,7 +17502,7 @@
                 }
                 if(toolbarBox.style.position != 'fixed'){
                     toolbarBox.style.position = 'fixed';
-                    toolbarBox.style.top = topOffset +"px";
+                    toolbarBox.style.top = "40px";
                     ((origalFloat == 'absolute' || origalFloat == 'relative') && parseFloat(origalLeft)) && (toolbarBox.style.left = toobarBoxPos.x + 'px');
                 }
             }
