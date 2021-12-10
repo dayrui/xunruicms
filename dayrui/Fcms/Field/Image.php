@@ -72,8 +72,8 @@ class Image extends \Phpcmf\Library\A_Field {
                 <label class="col-md-2 control-label">'.dr_lang('提示扩展名显示').'</label>
                 <div class="col-md-9">
                    <div class="mt-radio-inline">
-                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('显示').' <span></span></label>
-                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('关闭').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="0" '.(!$option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('已显示').' <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio"  name="data[setting][option][is_ext_tips]" value="1" '.($option['is_ext_tips'] ? 'checked' : '').' /> '.dr_lang('已关闭').' <span></span></label>
                 </div><span class="help-block">'.dr_lang('提示字段上传的扩展名和大小限制的文本信息').'</span>
                 </div>
             </div>'];
