@@ -200,7 +200,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool]" style="height:90px;" class="form-control">'.$option['tool'].'</textarea>
-                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -219,7 +219,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool2]" style="height:90px;" class="form-control">'.$option['tool2'].'</textarea>
-                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -238,7 +238,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('工具栏').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][tool3]" style="height:90px;" class="form-control">'.$option['tool3'].'</textarea>
-                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'fullscreen\', \'source\', \'|\', \'undo\', \'redo\'').'</span>
+                    <span class="help-block">'.dr_lang('必须严格按照Ueditor工具栏格式\'source\', \'|\', \'undo\', \'redo\'').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -585,7 +585,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             $this->set_load_js($field['fieldtype'], 1);
         }
 
-        $tool = IS_ADMIN ? "'fullscreen', 'source', '|', " : ''; // 后台引用时显示html工具栏
+        $tool = IS_ADMIN ? "'source', '|', " : ''; // 后台引用时显示html工具栏
 
         // 编辑器模式
         if (\Phpcmf\Service::IS_MOBILE_USER()) {
