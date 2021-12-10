@@ -221,7 +221,7 @@ class Member extends \Phpcmf\Model {
         // 会员组信息
         if (IS_USE_MEMBER) {
             if (!is_file(IS_USE_MEMBER.'Models/Member.php')) {
-                exit('需要离线下载【用户系统】插件，然后手动覆盖到本站~');
+                exit('需要离线下载【用户系统】插件，然后手动覆盖到本站：https://www.xunruicms.com/doc/1220.html');
             }
             $data = \Phpcmf\Service::M('member', 'member')->get_member_group($data);
         }
