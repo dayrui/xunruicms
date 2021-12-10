@@ -226,6 +226,11 @@ class Member extends \Phpcmf\Model {
         return $data;
     }
 
+    // 兼容错误
+    public function get_member_group($data) {
+        return $data;
+    }
+
     // 获取authid
     public function authid($uid) {
         if (IS_USE_MEMBER) {
