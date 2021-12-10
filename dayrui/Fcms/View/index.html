@@ -211,53 +211,8 @@
     function dr_hide_left_tab() {
         $(".page-quick-sidebar-toggler").click();
     }
-    // 添加快捷菜单
-    function dr_add_menu() {
-        var index = layer.load(2, {
-            shade: [0.3,'#fff'], //0.1透明度的白色背景
-            time: 5000
-        });
-        $.ajax({
-            type: "GET",
-            url: admin_file+"?c=api&m=menu&v="+encodeURIComponent($("#myiframe .active").attr("url")),
-            dataType: "json",
-            success: function (json) {
-                layer.close(index);
-                dr_tips(json.code, json.msg);
-                if (json.code == 1) {
-                    parent.$('#dr_admin_usermenu').html(json.data);
-                }
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
-            }
-        });
-    }
     if (self != top) {
         top.location.href = admin_file;
-    }
-    // 删除历史菜单
-    function dr_clear_menu() {
-        var index = layer.load(2, {
-            shade: [0.3,'#fff'], //0.1透明度的白色背景
-            time: 5000
-        });
-        $.ajax({
-            type: "GET",
-            url: admin_file+"?c=api&m=clear_history",
-            dataType: "json",
-            success: function (json) {
-                layer.close(index);
-                dr_tips(json.code, json.msg);
-                if (json.code == 1) {
-                    $('#dr_history_usermenu').html('');
-                    $.removeCookie('admin_history_menu');
-                }
-            },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
-            }
-        });
     }
 
 </script>
