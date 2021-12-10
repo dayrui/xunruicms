@@ -3192,14 +3192,11 @@ function dr_string2array($data, $limit = '') {
         }
     }
 
-    if (is_array($rt)) {
-        if ($limit) {
-            return dr_arraycut($rt, $limit);
-        }
-        return $rt;
+    if (is_array($rt) && $limit) {
+        return dr_arraycut($rt, $limit);
     }
 
-    return $data; // 不能保证是数组就原样输出文字
+    return $rt;
 }
 
 /**
