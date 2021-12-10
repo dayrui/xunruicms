@@ -26,10 +26,17 @@
                             <label class="col-md-2 control-label">{dr_lang('访问模式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_0').hide();$('.dr_mode_1').hide()" name="data[mode]" value="-1" {if $data['mode']==-1}checked{/if} /> {dr_lang('关闭手机端')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_0').show();$('.dr_mode_1').hide()" name="data[mode]" value="0" {if empty($data['mode'])}checked{/if} /> {dr_lang('域名模式')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_1').show();$('.dr_mode_0').hide()" name="data[mode]" value="1" {if $data['mode']==1}checked{/if} /> {dr_lang('目录模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_2').show();$('.dr_mode_0').hide();$('.dr_mode_1').hide()" name="data[mode]" value="-1" {if $data['mode']==-1}checked{/if} /> {dr_lang('自适应模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_2').hide();$('.dr_mode_0').show();$('.dr_mode_1').hide()" name="data[mode]" value="0" {if empty($data['mode'])}checked{/if} /> {dr_lang('域名模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_mode_2').hide();$('.dr_mode_1').show();$('.dr_mode_0').hide()" name="data[mode]" value="1" {if $data['mode']==1}checked{/if} /> {dr_lang('目录模式')} <span></span></label>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_2" style="{if $data['mode'] == -1}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('自适应')}</label>
+                            <div class="col-md-9">
+                                <div class="form-control-static"><label>{dr_lang('自适应模式表示无手机域名或者关闭手机模式')}</label></div>
                             </div>
                         </div>
 
