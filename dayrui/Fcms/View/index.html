@@ -108,7 +108,7 @@
                 {if !$is_mobile}
                 <li class="dropdown dropdown-quick-sidebar-toggler">
                     <a href="javascript:;" class="dropdown-toggle">
-                        <i class="fa fa-angle-double-right"></i>
+                        <i class="fa fa-bell-o"></i>
                     </a>
                 </li>
                 {/if}
@@ -156,7 +156,7 @@
             <ul class="page-toolbar fc-mb-left-menu" id="dr_go_url">
             </ul>
             <div id="myiframe" cid="right_page">
-                <iframe class="myiframe" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
+                <iframe class="myiframe active" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
             </div>
         </div>
     </div>
@@ -170,30 +170,12 @@
             <?php $notice = \Phpcmf\Service::M('auth')->admin_notice(10, true);?>
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> {dr_lang('快速导航')}</a>
-                </li>
-                <li>
-                    <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab"> {dr_lang('历史链接')}</a>
-                </li>
-                <li>
-                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}{if $notice}&nbsp;<span class="badge badge-success">{dr_count($notice)}</span>{/if}</a>
+                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}</a>
                 </li>
             </ul>
             <div class="tab-content">
 
-                <div class="tab-pane active page-quick-sidebar-nav" id="quick_sidebar_tab_1">
-                    <div class="margin-top-20">
-                        <div class="admin-usermenu" id="dr_admin_usermenu">
-                            {loop $admin.usermenu $t}
-                            <a class="btn {if $t.color && $t.color!='default'}{$t.color}{else}btn-default{/if}" {if $t.target} href="{$t.url}" target="_blank" {else} onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{$t.url}')" {/if}> {$t.name} </a>
-                            {/loop}
-                        </div>
-                        <div class="theme-option margin-top-20">
-                            <button type="button" onclick="dr_add_menu()" class="btn green"> <i class="fa fa-plus"></i> {dr_lang('将此页面加入到快捷菜单')} </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
+                <div class="tab-pane active page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
                     {if $notice}
                     <ul class="feeds list-items">
                         {loop $notice $t}
@@ -217,18 +199,7 @@
                     {/if}
 
                 </div>
-                <div class="tab-pane  page-quick-sidebar-nav" id="quick_sidebar_tab_3">
-                    <div class="margin-top-20">
-                        <div class="admin-usermenu" id="dr_history_usermenu">
-                            {loop $admin.history $t}
-                            <a class="btn btn-default" onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{trim($t.url)}');"> {$t.name} </a>
-                            {/loop}
-                        </div>
-                        <div class="theme-option">
-                            <button type="button" onclick="dr_clear_menu()" class="btn red"> <i class="fa fa-trash"></i> {dr_lang('清空历史访问记录')} </button>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -248,7 +219,7 @@
         });
         $.ajax({
             type: "GET",
-            url: admin_file+"?c=api&m=menu&v="+encodeURIComponent($("#right_page").attr("url")),
+            url: admin_file+"?c=api&m=menu&v="+encodeURIComponent($("#myiframe .active").attr("url")),
             dataType: "json",
             success: function (json) {
                 layer.close(index);
