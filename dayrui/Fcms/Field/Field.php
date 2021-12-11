@@ -31,6 +31,10 @@ return [
         'name' => '百度编辑器',
     ],
     [
+        'id' => 'Editor',
+        'name' => '编辑器',
+    ],
+    [
         'id' => 'Radio',
         'name' => '单选按钮',
     ],
