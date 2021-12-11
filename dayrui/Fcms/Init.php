@@ -337,8 +337,8 @@ if (is_cli()) {
         // 正则匹配路由规则
         $is_404 = 1;
         foreach ($routes as $key => $val) {
-            $rewrite = $match = [];
-            if ($key == $uri || preg_match('/^'.$key.''.(defined('SYS_URL_PREG') && SYS_URL_PREG ? '' : '$').'/U', $uri, $match)) {
+            $rewrite = $match = []; //(defined('SYS_URL_PREG') && SYS_URL_PREG ? '' : '$')
+            if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
                 unset($match[0]);
                 // 开始匹配
                 $is_404 = 0;
