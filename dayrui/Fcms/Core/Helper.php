@@ -252,7 +252,7 @@ function dr_is_admin_search_field($t) {
         return 0;
     } elseif (in_array($t['fieldtype'], [
         'Uid', 'Text', 'Textarea', 'Textbtn',
-        'Ueditor', 'Select', 'Radio', 'Checkbox', 'Selects',
+        'Ueditor', 'Select', 'Radio', 'Checkbox', 'Selects', 'Editor',
         'Linkage', 'Linkages'
     ])) {
         return 1;
@@ -889,6 +889,7 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
             'Files' => 'files',
             'Image' => 'image',
             'Ueditor' => 'content',
+            'Editor' => 'content',
             'Score' => 'score',
             'Date' => 'datetime',
             'Radio' => 'radio_name',
