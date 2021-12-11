@@ -1216,6 +1216,8 @@
 	$.fn.datetimepicker.defaults = {
 	};
 	$.fn.datetimepicker.Constructor = Datetimepicker;
+	finecms_datepicker_lang['suffix'] = [];
+	finecms_datepicker_lang['meridiem'] = [];
 	var dates = $.fn.datetimepicker.dates = {
 		en: finecms_datepicker_lang
 	};

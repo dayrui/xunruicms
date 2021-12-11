@@ -528,7 +528,7 @@ class File extends \Phpcmf\Common
         $content = $_POST['file'];
         if (preg_match('/^(data:\s*image\/(\w+);base64,)/i', $content, $result)) {
             $ext = strtolower($result[2]);
-            if (!in_array($ext, ['png', 'jpg', 'jpeg'])) {
+            if (!in_array($ext, ['png', 'jpg', 'jpeg', 'gif', 'webp'])) {
                 $this->_json(0, dr_lang('图片格式不正确'));
             }
             $content = base64_decode(str_replace($result[1], '', $content));
