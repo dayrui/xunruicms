@@ -474,6 +474,10 @@ class Cache extends \Phpcmf\Model
     public function cp_ueditor_file($path) {
 
         $npath = $path.'api/ueditor/';
+        if (!is_file($npath.'ueditor.config.js')) {
+            return;
+        }
+
         dr_mkdirs($npath);
 
         \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/dialogs/', ROOTPATH.'api/ueditor/dialogs/', $npath.'dialogs/');

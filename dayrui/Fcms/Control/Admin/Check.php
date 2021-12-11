@@ -138,10 +138,6 @@ class Check extends \Phpcmf\Common
                     }
                 }
 
-                if (!is_dir(WEBPATH.'api/ueditor/')) {
-                    $this->halt('百度编辑器目录不存在：'.(IS_DEV ? WEBPATH : '/').'api/ueditor/', 0);
-                }
-
                 break;
 
             case '04':

@@ -27,10 +27,6 @@ return [
         'name' => '多行文本',
     ],
     [
-        'id' => 'Ueditor',
-        'name' => '百度编辑器',
-    ],
-    [
         'id' => 'Editor',
         'name' => '编辑器',
     ],
