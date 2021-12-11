@@ -769,6 +769,8 @@ class Auth extends \Phpcmf\Model {
         $menu = '';
         $menu.= '<li class="dropdown"> <a href="'.$list_url.'" class="{ON}">'.$list_name.'</a> '.$module_menu.' <i class="fa fa-circle"></i> </li>';
 
+        $this->_is_admin_auth($module['dirname'].'/category/index') && $menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/category/index').'"> <i class="fa fa-reorder"></i> '.dr_lang('栏目管理').' </a> <i class="fa fa-circle"></i> </li>';
+
         // 非内容页面就显示返回链接
         if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
             && $this->_is_admin_auth($module['dirname'].'/home/index') ) {
@@ -778,7 +780,6 @@ class Auth extends \Phpcmf\Model {
         // 发布和编辑权限
         $this->_is_admin_auth($module['dirname'].'/home/add') && $post_url && $menu.= '<li> <a href="'.$post_url.'" class="'.(\Phpcmf\Service::L('router')->method == 'add' ? 'on' : '').'"> <i class="fa fa-plus"></i> '.(isset($module['post_name']) && $module['post_name'] ? dr_lang($module['post_name']) : dr_lang('发布')).'</a> <i class="fa fa-circle"></i> </li>';
         \Phpcmf\Service::L('router')->method == 'edit' && $menu.= '<li> <a href="'.dr_now_url().'" class="on"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a> <i class="fa fa-circle"></i> </li>';
-
 
         // 选中判断
         strpos($menu, 'class="on"') === false && $menu = str_replace('{ON}', 'on', $menu);

@@ -260,9 +260,9 @@ return [
                     'icon' => 'fa fa-th-large',
                     'link' => [
                         [
-                            'name' => '栏目管理',
+                            'name' => '共享栏目',
                             'icon' => 'fa fa-reorder',
-                            'uri' => 'module_category/index',
+                            'uri' => 'category/index',
                         ],
                     ]
                 ],
