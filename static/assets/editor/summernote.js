@@ -83,6 +83,7 @@ if(typeof editor_lang == 'undefined'){
     options: {
       help: '浏览图片目录',
       llvideo: '浏览视频目录',
+      attach: '附件上传',
       fullscreen: '全屏',
       codeview: '源代码'
     },
@@ -7850,6 +7851,13 @@ var Buttons_Buttons = /*#__PURE__*/function () {
           click: _this2.context.createInvokeHandler('llvideoDialog.show')
         }).render();
       });
+      this.context.memo('button.attach', function () {
+        return _this2.button({
+          contents: _this2.ui.icon(_this2.options.icons.attach),
+          tooltip: _this2.lang.options.attach,
+          click: _this2.context.createInvokeHandler('attachDialog.show')
+        }).render();
+      });
     }
     /**
      * image: [
@@ -9288,6 +9296,120 @@ var VideoDialog_VideoDialog = /*#__PURE__*/function () {
         }();
 
 
+// CONCATENATED MODULE: ./src/js/base/module/AttachDialog.js
+        function AttachDialog_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+        function AttachDialog_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+        function AttachDialog_createClass(Constructor, protoProps, staticProps) { if (protoProps) AttachDialog_defineProperties(Constructor.prototype, protoProps); if (staticProps) AttachDialog_defineProperties(Constructor, staticProps); return Constructor; }
+
+        var AttachDialog_AttachDialog = /*#__PURE__*/function () {
+          function AttachDialog(context) {
+            AttachDialog_classCallCheck(this, AttachDialog);
+
+            this.context = context;
+            this.ui = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summernote.ui;
+            this.$body = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()(document.body);
+            this.$editor = context.layoutInfo.editor;
+            this.options = context.options;
+            this.lang = this.options.langInfo;
+          }
+
+          AttachDialog_createClass(AttachDialog, [{
+            key: "initialize",
+            value: function initialize() {
+
+            }
+          }, {
+            key: "destroy",
+            value: function destroy() {
+
+            }
+          }, {
+            key: "createShortcutList",
+            value: function createShortcutList() {
+
+            }
+            /**
+             * show help dialog
+             *
+             * @return {Promise}
+             */
+
+          }, {
+            key: "showAttachDialog",
+            value: function showAttachDialog() {
+
+            }
+          }, {
+            key: "show",
+            value: function show() {
+              var _this = this;
+
+              var url = _this.options.attachUrl+"&ct=0&rand=" + Math.random();
+              layer.open({
+                type: 2,
+                title: '<i class="fa fa-folder-open"></i>',
+                fix:true,
+                scrollbar: false,
+                shadeClose: true,
+                shade: 0,
+                area: [_this.options.isMobileWidth, '80%'],
+                btn: [ dr_lang('确定') ],
+                yes: function(index, layero){
+                  var body = layer.getChildFrame('body', index);
+                  // 延迟加载
+                  var loading = layer.load(2, {
+                    time: 10000000
+                  });
+                  $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
+                    success: function(json2) {
+                      layer.close(loading);
+                      if (json2.code == 1) {
+                        layer.close(index);
+                        for(var i in json2.data.result) {
+                          var v = json2.data.result[i];
+                          if (v.id == undefined || v.id == 'undefined') {
+                            continue;
+                          }
+                          var html = '<a xunruicmsattachid="'+v.id+'" href="'+v.url+'" target="_blank">'+v.name+'</a>\n\t';
+                          _this.context.invoke('editor.pasteHTML', html);
+                        }
+                        dr_tips(1, json2.msg);
+                      } else {
+                        dr_tips(0, json2.msg);
+
+                      }
+                      return false;
+                    }
+                  });
+
+                  return false;
+                },
+                success: function(layero, index){
+                  // 主要用于权限验证
+                  var body = layer.getChildFrame('body', index);
+                  var json2 = $(body).html();
+                  if (json2.indexOf('"code":0') > 0 && json2.length < 150){
+                    var obj = JSON.parse(json2);
+                    layer.close(index);
+                    dr_tips(0, obj.msg);
+                  }
+                  if (json2.indexOf('"code":1') > 0 && json2.length < 150){
+                    var obj = JSON.parse(json2);
+                    layer.close(index);
+                    dr_tips(1, obj.msg);
+                  }
+                },
+                content: url+'&is_ajax=1'
+              });
+            }
+          }]);
+
+          return AttachDialog;
+        }();
+
+
 // CONCATENATED MODULE: ./src/js/base/module/HelpDialog.js
 function HelpDialog_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9927,6 +10049,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       'videoDialog': VideoDialog_VideoDialog,
       'helpDialog': HelpDialog_HelpDialog, //改为浏览图片
       'llvideoDialog': LlvideoDialog_LlvideoDialog, // 浏览视频
+      'attachDialog':AttachDialog_AttachDialog, // 附件
       'airPopover': AirPopover_AirPopover
     },
     buttons: {},
@@ -9945,8 +10068,10 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['table', ['table']],
-      ['insert', ['link', 'picture', 'help']],
-      ['insert2', ['video', 'llvideo']],
+      ['link', ['link']],
+      ['attach', ['attach']],
+      ['picture', ['picture', 'help']],
+      ['video', ['video', 'llvideo']],
       ['view', ['codeview'] ]
     ],
     // popover
@@ -10151,6 +10276,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       'trash': 'fa fa-trash',
       'underline': 'fa fa-underline',
       'llvideo': 'bi bi-camera-reels-fill',
+      'attach': 'fa fa-folder-o',
       'undo': 'fa fa-undo',
       'unorderedlist': 'fa fa-list',
       'video': 'bi bi-camera-video-fill'

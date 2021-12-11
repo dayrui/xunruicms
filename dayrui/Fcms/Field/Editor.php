@@ -27,6 +27,18 @@ class Editor extends \Phpcmf\Library\A_Field {
      */
     public function option($option) {
 
+        if (!isset($option['attach_size']) || !$option['attach_size']) {
+            $option['attach_size'] = 200;
+        }
+        if (!isset($option['attach_ext']) || !$option['attach_ext']) {
+            $option['attach_ext'] = 'zip,rar,txt,doc';
+        }
+        if (!isset($option['video_ext']) || !$option['video_ext']) {
+            $option['video_ext'] = 'mp4';
+        }
+        if (!isset($option['video_size']) || !$option['video_size']) {
+            $option['video_size'] = 500;
+        }
 
         $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') ? '<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片水印').'</label>
@@ -48,20 +60,6 @@ class Editor extends \Phpcmf\Library\A_Field {
                 </div>';
 
         return [$this->_search_field().'
-                
-                <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
-                    <div class="col-md-9">
-                        <div class="mt-radio-inline">
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').' <span></span></label>
-                            &nbsp; &nbsp;
-                            <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').' <span></span></label>
-                        </div>
-						<span class="help-block">'.dr_lang('自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”').'</span>
-                    </div>
-                </div>
-				'.$wm.
-            '
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('底部工具栏').'</label>
                     <div class="col-md-9">
@@ -102,8 +100,18 @@ class Editor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>
-            
-                
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').' <span></span></label>
+                            &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').' <span></span></label>
+                        </div>
+						<span class="help-block">'.dr_lang('自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”').'</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片title').'</label>
                     <div class="col-md-9">
@@ -125,8 +133,41 @@ class Editor extends \Phpcmf\Library\A_Field {
 						<span class="help-block">'.dr_lang('将模块内容的标题作为图片alt字符').'</span>
                     </div>
                 </div>
+				'.$wm.
+            '
                 
-                
+            <hr>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('附件上传大小').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][attach_size]" value="'.$option['attach_size'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于附件上传的最大允许上传的大小，单位MB').'</span>
+                    </div>
+                </div>
+            
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('附件上传扩展名').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][attach_ext]" value="'.$option['attach_ext'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于附件上传的扩展名，格式：rar,zip').'</span>
+                    </div>
+                </div>
+            <hr>
+             <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('视频上传扩展名').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][attach_ext]" value="'.$option['video_ext'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于视频上传的扩展名格式，格式：mp4,mov').'</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('视频上传大小').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][video_size]" value="'.$option['video_size'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于视频上传的最大允许上传的大小，单位MB').'</span>
+                    </div>
+                </div>
+                <hr>
                 '.$this->attachment($option, 0).'
                 
                 <div class="form-group">
@@ -339,7 +380,10 @@ class Editor extends \Phpcmf\Library\A_Field {
         // 替换分页
         $value = str_replace('_ueditor_page_break_tag_', '<hr class="pagebreak">', $value);
         $value = str_replace(' style=""', '', $value);
-
+        if (isset($field['setting']['validate']['xss']) && $field['setting']['validate']['xss']) {
+            // 开启xss
+            $value = \Phpcmf\Service::L('Security')->xss_clean($value);
+        }
         // 入库操作
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
     }
@@ -472,12 +516,15 @@ class Editor extends \Phpcmf\Library\A_Field {
             ';
             $this->set_load_js($field['fieldtype'], 1);
         }
+        if (!isset($field['setting']['option']['attach_size']) || !$field['setting']['option']['attach_size']) {
+            $option['attach_size'] = 200;
+        }
+
         $p = dr_authcode([
-            'size' => 1024,
+            'size' => (!isset($field['setting']['option']['video_size']) || !$field['setting']['option']['video_size']) ? 500 : $field['setting']['option']['video_size'],
+            'exts' => (!isset($field['setting']['option']['video_ext']) || !$field['setting']['option']['video_ext']) ? 'mp4' : $field['setting']['option']['video_ext'],
             'count' => 100,
-            'exts' => 'mp4,mov',
             'attachment' => $field['setting']['option']['attachment'],
-            'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
         $p2 = dr_authcode([
             'size' => 10,
@@ -485,6 +532,12 @@ class Editor extends \Phpcmf\Library\A_Field {
             'exts' => 'jpg,gif,png,webp,jpeg',
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
+        ], 'ENCODE');
+        $p3 = dr_authcode([
+            'size' => (!isset($field['setting']['option']['attach_size']) || !$field['setting']['option']['attach_size']) ? 200 : $field['setting']['option']['attach_size'],
+            'exts' => (!isset($field['setting']['option']['attach_ext']) || !$field['setting']['option']['attach_ext']) ? 'zip,rar,txt,doc' : $field['setting']['option']['attach_ext'],
+            'count' => 100,
+            'attachment' => $field['setting']['option']['attachment'],
         ], 'ENCODE');
         $str.= "<textarea class=\"dr_ueditor\" name=\"data[$name]\" id=\"dr_$name\">$value</textarea>";
         $str.= \Phpcmf\Service::L('js_packer')->pack("
@@ -494,6 +547,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                 isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
                 llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p)."',
                 llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p2)."',
+                attachUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p3)."',
                 isImageTitle:'".($field['setting']['option']['imgtitle'] ? UEDITOR_IMG_TITLE : '')."',
                 isImageAlt:'".($field['setting']['option']['imgalt'] ? UEDITOR_IMG_TITLE : '')."',
                 height:'".$height."',
