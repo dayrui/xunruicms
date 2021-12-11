@@ -769,7 +769,10 @@ class Auth extends \Phpcmf\Model {
         $menu = '';
         $menu.= '<li class="dropdown"> <a href="'.$list_url.'" class="{ON}">'.$list_name.'</a> '.$module_menu.' <i class="fa fa-circle"></i> </li>';
 
-        $this->_is_admin_auth($module['dirname'].'/category/index') && $menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/category/index').'"> <i class="fa fa-reorder"></i> '.dr_lang('栏目管理').' </a> <i class="fa fa-circle"></i> </li>';
+        // 独立模块显示其栏目
+        if (!$module['share'] && $this->_is_admin_auth($module['dirname'].'/category/index')) {
+            $menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/category/index').'"> <i class="fa fa-reorder"></i> '.dr_lang('栏目管理').'</a> <i class="fa fa-circle"></i> </li>';
+        }
 
         // 非内容页面就显示返回链接
         if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
