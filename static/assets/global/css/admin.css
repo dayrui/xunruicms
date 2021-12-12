@@ -13237,3 +13237,8 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
         display: none;
     }
 }
+@media (min-width: 992px) {
+    .files .col-md-2 {
+        width: 11% !important;
+    }
+}
