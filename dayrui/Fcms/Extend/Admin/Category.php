@@ -296,7 +296,7 @@ class Category extends \Phpcmf\Table {
                 }
                 //!$t['mid'] && $t['mid'] = '<span class="label label-sm label-danger circle">'.dr_lang('无').'</span>';
             } else {
-                $t['url'] = 'javascript:;';
+                //$t['url'] = 'javascript:;';
                 $t['tid'] = 0;
                 $t['mid'] = '';
                 $t['type_html'] = '';
