@@ -15,7 +15,7 @@ class Run extends \Phpcmf\Common
 	public function index() {
 
 	    // 验证运行权限
-        if (!IS_DEV) {
+        if (1) {
 
             if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
                 if (is_cli()) {
@@ -42,22 +42,27 @@ class Run extends \Phpcmf\Common
                     }
                 }
             }
+
+            $run_time = 0;// 上次执行的时间
+            if (is_file(WRITEPATH.'config/cron_run_time.php')) {
+                $run_time = file_get_contents(WRITEPATH.'config/cron_run_time.php');
+                if ($run_time && SYS_TIME - $run_time < 100) {
+                    exit('未到执行时间');
+                }
+            }
+            // 写入新的时间
+            file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
+
             if (isset($_GET['is_ajax'])) {
-                // 后台脚本自动任务时效验证
-                if (\Phpcmf\Service::L('input')->get_cookie('admin_cron')) {
-                    exit('未到执行时间');
-                }
+                // 后台脚本自动任务时
+
             } else {
-                // 服务器自动任务时效验证
-                if (\Phpcmf\Service::L('input')->get_cookie('cron')) {
-                    exit('未到执行时间');
-                }
+                // 服务器自动任务时
                 // 自动任务锁定
                 if (!is_file(WRITEPATH.'config/run_lock.php')) {
                     file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
                 }
             }
-
         }
 
         // 批量执行站点动作
@@ -105,10 +110,10 @@ class Run extends \Phpcmf\Common
         $i = \Phpcmf\Service::M('cron')->run_cron(intval($_GET['num']));
 
         // 最少100秒调用本程序
-        \Phpcmf\Service::L('input')->set_cookie('cron', 1, 100);
+        //\Phpcmf\Service::L('input')->set_cookie('cron', 1, 100);
 
         // 定义后台执行任务的时效
-        \Phpcmf\Service::L('input')->set_cookie('admin_cron', 1, 600);
+        //\Phpcmf\Service::L('input')->set_cookie('admin_cron', 1, 600);
 
         // 任务计划
         \Phpcmf\Hooks::trigger('cron');

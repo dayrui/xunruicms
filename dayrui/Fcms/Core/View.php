@@ -857,7 +857,7 @@ class View {
             $system['cache'] = 0;
         }
         if ($system['page'] || in_array(strtoupper($system['order']), ['RAND()', 'RAND'])) {
-            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_is_mobile);
+            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_get_page_id($system['page']).$this->_is_mobile);
         } else {
             $cache_name = 'view-'.$this->_return_sql.md5($_params.$this->_is_mobile);
         }
