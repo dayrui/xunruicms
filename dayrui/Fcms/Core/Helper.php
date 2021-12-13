@@ -1918,7 +1918,7 @@ function dr_file_preview_html($value, $id = 0) {
     if (dr_is_image($ext)) {
         $value = dr_file($value);
         if ($id && ((isset($_POST['is_admin']) && intval($_POST['is_admin']) == 1) || IS_ADMIN)) {
-            return '<a href="javascript:dr_preview_image(\''.$value.'\');"><img src="'.$value.'"></a>
+            return '<a href="javascript:dr_preview_image(\''.$value.'\');"><img src="'.$value.'?r='.SYS_TIME.'"></a>
             </div>
             <div class="mpreview">
             <a title="'.dr_lang('剪辑图片').'" href="javascript:dr_iframe(\''.dr_lang('剪辑').'\', \'index.php?s=api&c=file&m=image_edit&id='.$id.'\', \'80%\', 0, \'nogo\');"><i class="fa fa-edit"></i></a>
