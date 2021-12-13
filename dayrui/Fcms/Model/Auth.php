@@ -663,12 +663,12 @@ class Auth extends \Phpcmf\Model {
                 $w = isset($t[2]) ? $t[2] : '';
                 $h = isset($t[3]) ? $t[3] : '';
                 $uri = substr($uri, 4);
-                $url = 'javascript:dr_iframe(\''.dr_lang($name).'\', \'' . \Phpcmf\Service::L('router')->url($uri, $p) . '\', \'' . $w . '\',\'' . $h . '\');';
+                $url = 'javascript:top.dr_iframe(\''.dr_lang($name).'\', \'' . \Phpcmf\Service::L('router')->url($uri, $p) . '\', \'' . $w . '\',\'' . $h . '\');';
             }elseif (strpos($uri, 'show:') === 0) {
                 $w = isset($t[2]) ? $t[2] : '';
                 $h = isset($t[3]) ? $t[3] : '';
                 $uri = substr($uri, 5);
-                $url = 'javascript:dr_iframe_show(\''.$name.'\', \'' . \Phpcmf\Service::L('router')->url($uri, $p) . '\', \'' . $w . '\',\'' . $h . '\');';
+                $url = 'javascript:top.dr_iframe_show(\''.$name.'\', \'' . \Phpcmf\Service::L('router')->url($uri, $p) . '\', \'' . $w . '\',\'' . $h . '\');';
             } elseif (in_array($name, ['help', 'ba'])) {
                 if (CI_DEBUG && !IS_OEM_CMS) {
                     $t[1] = 'fa fa-question-circle';
