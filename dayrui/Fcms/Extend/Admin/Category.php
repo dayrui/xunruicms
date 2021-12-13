@@ -234,10 +234,10 @@ class Category extends \Phpcmf\Table {
                 $option.= '<a class="btn btn-xs green" href='.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id'])).'> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a>';
             }
             if (($t['tid'] == 1 && ($t['pcatpost'] || !$t['child']) && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/add'))  {
-                $option.= '<a class="btn btn-xs dark" href="javascript:dr_iframe_show(\''.dr_lang('发布').'\', \''.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/add', array('catid' => $t['id'], 'is_menu'=>1)).'\', \'80%\', \'80%\');"> <i class="fa fa-plus"></i> '.dr_lang('发布').'</a>';
+                $option.= '<a class="btn btn-xs dark" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/add', array('catid' => $t['id'])).'"> <i class="fa fa-plus"></i> '.dr_lang('发布').'</a>';
             }
             if (($t['tid'] == 1 && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/index'))  {
-                $option.= '<a class="btn btn-xs blue" href="javascript:dr_iframe_show(\''.dr_lang('管理').'\', \''.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'\', \'80%\', \'80%\');"> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
+                $option.= '<a class="btn btn-xs blue" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'"> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
             }
             if ($t['ismain'] && $this->_is_admin_auth('edit') && ($t['tid'] !=2 && $this->is_scategory)) {
                 if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
