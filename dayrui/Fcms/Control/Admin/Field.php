@@ -304,6 +304,11 @@ class Field extends \Phpcmf\Common {
 
 		$data['setting'] = dr_string2array($data['setting']);
 
+        // 加载系统编辑器
+        if ($data['fieldtype'] == 'Ueditor' && !is_file(CMSPATH.'Field/Ueditor.php')) {
+            $data['fieldtype'] = 'Editor';
+        }
+
         // 验证字段对象的有效性
         $obj = \Phpcmf\Service::L('Field')->get($data['fieldtype']);
         if ($obj) {
