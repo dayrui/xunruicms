@@ -176,7 +176,7 @@ class File extends \Phpcmf\Common
                     'id' => $att['code'],
                     'name' => htmlspecialchars($post['name']),
                     'file' => htmlspecialchars($rt['data']['file']),
-                    'preview' => $rt['data']['preview'],
+                    'preview' => dr_file_preview_html($rt['data']['url'], $att['code']),
                     'upload' => '<input type="file" name="file_data"></button>',
                 ];
             } else {
