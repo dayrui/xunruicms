@@ -38,19 +38,21 @@
                         <a target="_blank" href="https://www.xunruicms.com/" style="margin-right: 10px;">www.xunruicms.com</a>
                     </li>
                     {/if}
-                </ul>
-                <script>
-                    $(function () {
-                        $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/version_cmf')}",
-                            success: function(json) {
-                                if (json.code) {
-                                    $('#dr_cmf_update').show();
-                                    $('#dr_cmf_update').html(json.msg);
+                    {if !defined('SYS_NOT_UPDATE') || !SYS_NOT_UPDATE}
+                    <script>
+                        $(function () {
+                            $.ajax({type: "GET",dataType:"json", url: "{dr_url('cloud/check_version')}&id=cms-1&isindex=1",
+                                success: function(json) {
+                                    if (json.code) {
+                                        $('#dr_cmf_update').show();
+                                        $('#dr_cmf_update').html(json.msg);
+                                    }
                                 }
-                            }
+                            });
                         });
-                    });
-                </script>
+                    </script>
+                    {/if}
+                </ul>
             </div>
         </div>
         {/if}

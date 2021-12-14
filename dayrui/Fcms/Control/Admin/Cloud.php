@@ -572,7 +572,7 @@ return [
             $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
         }
         $rt = json_decode($json, true);
-        $this->_json($rt['code'], $rt['msg']);
+        $this->_json($rt['code'], isset($_GET['isindex']) ? dr_clearhtml($rt['msg']) : $rt['msg']);
     }
 
     // 执行更新程序的界面
