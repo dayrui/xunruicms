@@ -2729,6 +2729,9 @@ function dr_catcher_data($url, $timeout = 0) {
         } elseif ($errno == 35) {
             // 当服务器不支持时改为普通获取方式
         } else {
+            if (CI_DEBUG && $code) {
+                log_message('error', '获取远程数据失败['.$url.']http状态：'.$code);
+            }
             return '';
         }
     }

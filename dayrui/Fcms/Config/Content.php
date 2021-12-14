@@ -208,7 +208,7 @@ return [
             0 =>
                 array (
                     'fieldname' => 'content',
-                    'fieldtype' => 'Ueditor',
+                    'fieldtype' => 'Editor',
                     'relatedname' => 'module',
                     'isedit' => '1',
                     'ismain' => '0',

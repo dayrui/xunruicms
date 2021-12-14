@@ -210,7 +210,6 @@ class Upload
         } else {
             $data = dr_catcher_data($config['url'], (int)$config['timeout']);
             if (!$data) {
-                log_message('error', '服务器无法下载文件：'.$config['url']);
                 return dr_return_data(0, dr_lang('文件下载失败'));
             }
         }
@@ -225,7 +224,7 @@ class Upload
 
         $file_name = $this->_file_name($config['url']); // 文件实际名字
         if (!$file_ext) {
-            log_message('error', '无法获取文件扩展名：'.$config['url']);
+            CI_DEBUG && log_message('error', '无法获取文件扩展名：'.$config['url']);
             return dr_return_data(0, dr_lang('无法获取文件扩展名'));
         }
 
