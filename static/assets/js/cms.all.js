@@ -219,7 +219,7 @@ function dr_preview_image(file) {
     var height = '300px';
 
     if (is_mobile_cms == 1) {
-        width = height = '90%';
+        width = height = '80%';
     }
     top.layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'?'+Date.parse(new Date())+'"></a></p>', {
         shade: 0,
