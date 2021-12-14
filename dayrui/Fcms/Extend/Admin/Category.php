@@ -239,11 +239,12 @@ class Category extends \Phpcmf\Table {
             if (($t['tid'] == 1 && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/index'))  {
                 $option.= '<a class="btn btn-xs blue" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'"> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
             }
-            if ( $this->_is_admin_auth('edit') && ($t['tid'] !=2 && $this->is_scategory)) {
+            if ($this->_is_admin_auth('edit') && dr_count($this->module['category_field'])
+                && ($t['tid'] !=2 && $this->is_scategory)) {
                 if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
                     // 当开启字段权限时不显示内容
                 } else {
-                    $option.= '<a class="btn btn-xs dark" href="'.dr_url(APP_DIR.'/category/edit', ['id' => $t['id'], 'page'=>1]).'"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_content_url('.$t['id'].')"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
                 }
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {

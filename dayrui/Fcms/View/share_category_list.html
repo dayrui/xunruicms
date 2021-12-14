@@ -3,6 +3,9 @@
     function dr_link_url(id) {
         dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑地址')}','{dr_url(APP_DIR.'/category/link_edit')}&id='+id, '50%', '30%');
     }
+    function dr_content_url(id) {
+        dr_iframe('<i class="fa fa-edit"></i> {dr_lang('编辑内容')}','{dr_url(APP_DIR.'/category/edit')}&isedit=1&page=1&id='+id, '80%', '90%');
+    }
     function dr_cat_field(id) {
         dr_iframe('<i class="fa fa-edit"></i> {dr_lang('设置栏目自定义字段权限')}','{dr_url(APP_DIR.'/category/field_edit')}&id='+id, '50%', '70%', 'nogo');
     }
