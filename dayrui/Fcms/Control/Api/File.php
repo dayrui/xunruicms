@@ -217,6 +217,9 @@ class File extends \Phpcmf\Common
         $c = (int)\Phpcmf\Service::L('input')->get('ct'); // 当已有数量
         $ct = max(1, (int)$p['count']); // 可上传数量
 
+        // 判断管理员
+        $is_admin = $this->member['is_admin'] && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $this->uid)->where('roleid', 1)->counts();
+
         if (IS_AJAX_POST) {
             $p = (int)\Phpcmf\Service::L('input')->post('is_page');
             $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids'.$p : 'ids0');
@@ -240,7 +243,9 @@ class File extends \Phpcmf\Common
                     ];
                 }
             } else {
-                $temp = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused')->where('uid', $this->uid)->where_in('id', $ids)->getAll();
+                $db = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused');
+                !$is_admin && $db->where('uid', $this->uid);
+                $temp = $db->where_in('id', $ids)->getAll();
                 foreach ($temp as $t) {
                     $list[] = [
                         'id' => $t['id'],
@@ -277,7 +282,7 @@ class File extends \Phpcmf\Common
         $value = dr_safe_replace(\Phpcmf\Service::L('input')->get('value'));
         if ($name && isset($sfield[$name]) && $value) {
             $where = [];
-            !$this->member['is_admin'] && $where[] = 'uid = '.$this->uid;
+            !$is_admin && $where[] = 'uid = '.$this->uid;
             if ($name == 'id') {
                 $where[] = 'id='.intval($value);
             } else {
@@ -285,11 +290,12 @@ class File extends \Phpcmf\Common
             }
             $list['used'] = urlencode(implode(' AND ', $where));
         } else {
-            $list['used'] = urlencode('uid='.$this->uid);
+            !$is_admin && $list['used'] = urlencode('uid='.$this->uid);
         }
 
         $exts = dr_safe_replace($p['exts']);
-        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts();
+        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))
+            ->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts();
 
         $url = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=input_file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
