@@ -478,9 +478,14 @@ class Content extends \Phpcmf\Model {
             // 生成权限文件
             if (\Phpcmf\Service::C()->module['category'][$data['catid']]['setting']['html']) {
                 $rt['data'] = dr_web_prefix('index.php?'.($this->is_share ? '' : 's='.$this->dirname.'&').'c=html&m=showfile&id='.$rt['code']);
+                // 生成内容
                 $atcode = 'chtml_'.$this->siteid.'_'.$this->dirname.'_'.$rt['code'];
                 \Phpcmf\Service::L('cache')->set_auth_data($atcode, $rt['code'], $this->siteid);
                 dr_catcher_data(SITE_URL.'index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$rt['code'].'&atcode='.$atcode);
+                // 生成列表
+                $atcode = 'chtml_cat_'.$this->siteid.'_'.$this->dirname.'_'.$data['catid'];
+                \Phpcmf\Service::L('cache')->set_auth_data($atcode, $data['catid'], $this->siteid);
+                dr_catcher_data(SITE_URL.'index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data['catid'].'&atcode='.$atcode);
             }
         } else {
             $this->db->table($this->mytable.'_time')->where('id', $row['id'])->update(['result' => $rt['msg']]);
