@@ -159,7 +159,7 @@ class Category extends \Phpcmf\Table {
         }
 
         $head.= '<th> '.dr_lang('栏目信息').' </th>';
-        $list.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent</td>";
+        $list.= "<td>\$spacer<a target='_blank' href='\$url'>\$name</a> \$parent \$ctotal</td>";
 
         if ($this->is_scategory && dr_in_array('tid', $this->cat_config[$this->module['dirname']]['sys_field'])) {
             $head.= '<th width="60" style="text-align:center"> '.dr_lang('类型').' </th>';
@@ -191,7 +191,7 @@ class Category extends \Phpcmf\Table {
         $list.= "</tr>";
 
         $tree = '';
-        $pcats = [];
+        $tcats = $pcats = [];
         foreach($data as $k => $t) {
             if ($cqx && $cqx->is_edit($t['id'])) {
                 unset($data[$k]);
@@ -236,8 +236,13 @@ class Category extends \Phpcmf\Table {
             if (($t['tid'] == 1 && ($t['pcatpost'] || !$t['child']) && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/add'))  {
                 $option.= '<a class="btn btn-xs dark" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/add', array('catid' => $t['id'])).'"> <i class="fa fa-plus"></i> '.dr_lang('发布').'</a>';
             }
-            if (($t['tid'] == 1 && $t['mid']) && $this->_is_admin_auth($t['mid'].'/home/index'))  {
-                $option.= '<a class="btn btn-xs blue" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'"> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
+            $t['ctotal'] = '';
+            if (($t['tid'] == 1 && $t['mid']) )  {
+                if ($this->_is_admin_auth($t['mid'].'/home/index')) {
+                    $option.= '<a class="btn btn-xs blue" href="'.\Phpcmf\Service::L('Router')->url($t['mid'].'/home/index', array('catid' => $t['id'])).'"> <i class="fa fa-th-large"></i> '.dr_lang('管理').'</a>';
+                }
+                $t['ctotal'] = '<span class="cat-total-'.$t['id'].' dr_total"></span>';
+                $tcats[] = $t['id'].'-'.$t['mid'];
             }
             if ($this->_is_admin_auth('edit') && dr_count($this->module['category_field'])
                 && ($t['tid'] !=2 && $this->is_scategory)) {
@@ -268,7 +273,6 @@ class Category extends \Phpcmf\Table {
             $is_html = intval($this->module['share'] ? $t['setting']['html'] : $this->module['html']);
             $t['is_page_html'] = '<a href="javascript:;" onclick="dr_cat_ajax_open_close(this, \''.\Phpcmf\Service::L('Router')->url(APP_DIR.'/category/html_edit', ['id'=>$t['id']]).'\', 0);" class="dr_is_page_html badge badge-'.(!$is_html ? 'no' : 'yes').'"><i class="fa fa-'.(!$is_html ? 'times' : 'check').'"></i></a>';
 
-            $t['ctotal'] = "<input type='hidden' name='cid[]' value='".$t['id']."-".$t['mid']."' />";
             //$purl = $this->module['share'] ? ($t['tid'] == 1 ? dr_url($t['mid'].'/home/index', ['catid'=>$t['id']]) : \Phpcmf\Service::L('Router')->url(APP_DIR.'/category/edit', array('id' => $t['id']))) : dr_url(APP_DIR.'/home/index', ['catid'=>$t['id']]);
             //$t['total'] = '<a href="'.$purl.'">'.intval($data[$t['id']]['total']).'</a>';
             // 是否缓存
@@ -334,7 +338,7 @@ class Category extends \Phpcmf\Table {
             $tree.= $nstr;
         }
 
-        return [$head, $tree, $pcats];
+        return [$head, $tree, $pcats, $tcats];
     }
 
     // 替换空格填充符号
@@ -398,17 +402,18 @@ class Category extends \Phpcmf\Table {
 
     public function list_index() {
         $pid = intval(\Phpcmf\Service::L('input')->get('pid'));
-        list($a, $b) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data($pid));
-        $this->_json(1, $b);
+        list($a, $b, $pcats, $tcats) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data($pid));
+        $this->_json(1, $b, json_encode($tcats));
     }
 
     // 后台查看列表
     protected function _Admin_List() {
 
-        list($a, $b, $pcats) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data(0));
+        list($a, $b, $pcats, $tcats) = $this->_get_tree_list(\Phpcmf\Service::M('category')->cat_data(0));
         \Phpcmf\Service::V()->assign([
             'list' => '你在My/View/share_category_list.html，目录中定义过栏目文件，需要删除此文件',
             'pcats' => $pcats,
+            'tcats' => $tcats,
             'cat_head' => $a,
             'cat_list' => $b,
             'list_url' => dr_url(APP_DIR.'/category/index'),

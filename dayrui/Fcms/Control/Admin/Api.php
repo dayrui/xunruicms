@@ -492,17 +492,23 @@ class Api extends \Phpcmf\Common {
 	// 统计栏目
 	public function ctotal() {
 
-        return;// 废弃
         $rt = '';
 	    if (IS_POST) {
-	        $ids = \Phpcmf\Service::L('input')->post('cid');
+	        $ids = dr_string2array(\Phpcmf\Service::L('input')->post('cid'));
 	        if ($ids) {
 	            foreach ($ids as $t) {
                     list($id, $mid) = explode('-', $t);
                     if ($id && $mid && dr_is_module($mid) ) {
-                        $num = \Phpcmf\Service::M()->table(dr_module_table_prefix($mid).'_index')->where('catid', $id)->where('status=9')->counts();
+                        $db = \Phpcmf\Service::M()->table(dr_module_table_prefix($mid).'_index');
+                        $mod = $this->get_cache('module-'.SITE_ID.'-'.$mid);
+                        if ($mod['category'][$id]['childids']) {
+                            $db->where('catid in ('.$mod['category'][$id]['childids'].')');
+                        } else {
+                            $db->where('catid', $id);
+                        }
+                        $num = $db->where('status=9')->counts();
                         if ($num) {
-                            $rt.= '$(".cat-total-'.$id.'").html("'.$num.'");';
+                            $rt.= '$(".cat-total-'.$id.'").html("'.dr_lang('（%s）', $num).'");';
                         }
                     }
                 }

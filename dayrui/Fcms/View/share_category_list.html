@@ -122,6 +122,22 @@
                 success: function(json) {
                     layer.close(index);
                     if (json.code == 1) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: "{dr_url('api/ctotal')}",
+                            data: {
+                                'cid': json.data
+                            },
+                            success: function(json2) {
+                                if (json2.code == 1) {
+                                    eval(json2.msg);
+                                }
+                            },
+                            error: function(HttpRequest, ajaxOptions, thrownError) {
+                                dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                            }
+                        });
                         $(".dr_catid_"+catid).after(json.msg);
                         $(".select-cat-"+catid).html('[-]');
                         $('.tooltips').tooltip();
@@ -193,15 +209,30 @@
             }
         });
     }
-    {if defined('SYS_CAT_POPEN') && SYS_CAT_POPEN}
     $(function() {
+        {if defined('SYS_CAT_POPEN') && SYS_CAT_POPEN}
         {loop $pcats $ii}
         dr_tree_data({$ii});
         {/loop}
+        {/if}
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "{dr_url('api/ctotal')}",
+                data: {json_encode(['cid'=>$tcats])},
+                success: function(json) {
+                    if (json.code == 1) {
+                        eval(json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError)
+                }
+            });
     });
-    {/if}
-</script>
 
+</script>
+<style>.dr_total{ font-size: 10px; color:#ccc} </style>
 <div class="note note-danger">
     <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
 </div>
