@@ -159,7 +159,12 @@ class Module extends \Phpcmf\Common
 
         // 栏目格式化
         $cat = $catid && $this->module['category'][$catid] ? $this->module['category'][$catid] : [];
-        $top = $catid && $cat['topid'] ? $this->module['category'][$cat['topid']] : $cat;
+        $cat['url'] = dr_url_prefix($cat['url'], MOD_DIR);
+        $top = $cat;
+        if ($catid && $cat['topid']) {
+            $top = $this->module['category'][$cat['topid']];
+            $cat['url'] = dr_url_prefix($cat['url'], MOD_DIR);
+        }
 
         // 分页地址
         $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
@@ -304,8 +309,15 @@ class Module extends \Phpcmf\Common
             }
         }
 
+        $category['url'] = dr_url_prefix($category['url'], MOD_DIR);
+        $top = $category;
+        if ($catid && $category['topid']) {
+            $top = $this->module['category'][$category['topid']];
+            $top['url'] = dr_url_prefix($top['url'], $this->module['dirname']);
+        }
+
         // 判断内容唯一性
-        !$rt && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($category['url'], $this->module['dirname']));
+        !$rt && \Phpcmf\Service::L('Router')->is_redirect_url($category['url']);
 
         // 获取同级栏目及父级栏目
         list($parent, $related) = dr_related_cat(
@@ -318,7 +330,7 @@ class Module extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign(array(
             'id' => $catid,
             'cat' => $category,
-            'top' => $catid && $category['topid'] ? $this->module['category'][$category['topid']] : $category,
+            'top' => $top,
             'catid' => $catid,
             'params' => ['catid' => $catid],
             'pageid' => max(1, $page),
@@ -448,12 +460,20 @@ class Module extends \Phpcmf\Common
         // 判断内容唯一性
         !$rt && \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix($data['url'], $this->module['dirname']));
 
+        $cat = $this->module['category'][$catid];
+        $cat['url'] = dr_url_prefix($cat['url'], $this->module['dirname']);
+        $top = $cat;
+        if ($catid && $cat['topid']) {
+            $top = $this->module['category'][$cat['topid']];
+            $top['url'] = dr_url_prefix($top['url'], $this->module['dirname']);
+        }
+
         // 传入模板
         \Phpcmf\Service::V()->assign($data);
         \Phpcmf\Service::V()->assign($this->content_model->_format_show_seo($this->module, $data, $page));
         \Phpcmf\Service::V()->assign([
-            'cat' => $this->module['category'][$catid],
-            'top' => $this->module['category'][$catid]['topid'] ? $this->module['category'][$this->module['category'][$catid]['topid']] : $this->module['category'][$catid],
+            'cat' => $cat,
+            'top' => $top,
             'pageid' => max(1, $page),
             'params' => ['catid' => $catid],
             'parent' => $parent,
