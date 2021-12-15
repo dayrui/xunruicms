@@ -309,7 +309,7 @@ class Module extends \Phpcmf\Common
             }
         }
 
-        $category['url'] = dr_url_prefix($category['url'], MOD_DIR);
+        $category['url'] = dr_url_prefix($category['url'], $this->module['dirname']);
         $top = $category;
         if ($catid && $category['topid']) {
             $top = $this->module['category'][$category['topid']];
