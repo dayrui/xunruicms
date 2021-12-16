@@ -41,7 +41,7 @@
                     {if !defined('SYS_NOT_UPDATE') || !SYS_NOT_UPDATE}
                     <script>
                         $(function () {
-                            $.ajax({type: "GET",dataType:"json", url: "{dr_url('cloud/check_version')}&id=cms-1&isindex=1",
+                            $.ajax({type: "GET",dataType:"json", url: "{dr_url('cloud/check_version')}&id=cms-1&isindex=1&version={CMF_VERSION}",
                                 success: function(json) {
                                     if (json.code) {
                                         $('#dr_cmf_update').show();
