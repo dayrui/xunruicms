@@ -334,14 +334,14 @@ class Router {
         if ($page) {
             if (isset($data['myurl_page']) && $data['myurl_page']) {
                 $url = ltrim($data['myurl_page'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
+                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
             } elseif ($rule && $rule['show_page']) {
                 $url = ltrim($rule['show_page'], '/');
             }
         } else {
             if (isset($data['myurl']) && $data['myurl']) {
                 $url = ltrim($data['myurl'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
+                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
             } elseif ($rule && $rule['show']) {
                 $url = ltrim($rule['show'], '/');
             }
