@@ -482,8 +482,10 @@ class Auth extends \Phpcmf\Model {
         if (!$member || $uid != $member['uid']) {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
-                if (dr_in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help', 'login'])) {
+                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help', 'login'])) {
                     return FALSE; // 跳过的控制器
+                } elseif (\Phpcmf\Service::L('router')->method == 'my') {
+                    dr_redirect(ADMIN_URL . \Phpcmf\Service::L('router')->url('login/index', array('go' => urlencode(dr_now_url()))));
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
             } elseif (\Phpcmf\Service::L('router')->class == 'cloud') {
