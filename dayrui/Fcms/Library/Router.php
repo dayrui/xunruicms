@@ -361,7 +361,6 @@ class Router {
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
             $data['opdirname'] = $cat['pid'] && isset($mod['category'][$cat['pid']]) ? $mod['category'][$cat['pid']]['dirname'] : '';
             $data['otdirname'] = $cat['topid'] && isset($mod['category'][$cat['topid']]) ? $mod['category'][$cat['topid']]['dirname'] : '';
-
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
         }
 
