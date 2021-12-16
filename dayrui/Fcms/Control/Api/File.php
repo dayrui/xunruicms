@@ -679,7 +679,7 @@ class File extends \Phpcmf\Common
                     'filename' => $name,
                 ]);
             }
-            \Phpcmf\Service::M('attachment')->clear_data($info);
+            \Phpcmf\Service::M('attachment')->clear_data($data);
             $this->_json(1, dr_lang('操作成功'));
         }
 

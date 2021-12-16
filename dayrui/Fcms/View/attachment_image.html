@@ -5,11 +5,18 @@
 
 <script src="{THEME_PATH}assets/global/plugins/cropper/js/cropper.js" type="text/javascript"></script>
 <script src="{THEME_PATH}assets/global/plugins/cropper/js/main.js" type="text/javascript"></script>
-
-
+<script type="text/javascript">
+    $(function (){
+        var img = $('#image');
+        var realWidth;//真实的宽度
+        var realHeight;//真实的高度
+        $("<img/>").attr("src", $(img).attr("src")).load(function() {
+            $('#image_cc').html(this.width+'X'+this.height);
+        });
+    });
+</script>
 <form class="form-horizontal" method="post" style="margin-top: -20px;" role="form" id="myform">
     {$form}
-
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center margin-bottom-20">
@@ -23,12 +30,12 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <!-- <h3>Preview:</h3> -->
                 <div class="docs-preview clearfix">
                     <div class="img-preview preview-lg"></div>
+                    <div class="margin-top-10 margin-bottom-10 text-center">
+                        {dr_lang('图片实际尺寸：')}<span id="image_cc"></span>
+                    </div>
                 </div>
-
-                <!-- <h3>Data:</h3> -->
                 <div class="docs-data">
                     <div class="input-group input-group-sm">
                         <label class="input-group-addon" for="dataX">X</label>
@@ -133,15 +140,9 @@
 
                     </div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
-
-
-
 </form>
 
 {template "footer.html"}
