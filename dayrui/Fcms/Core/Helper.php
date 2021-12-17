@@ -682,40 +682,6 @@ function dr_navigator_id($type, $markid) {
     return (int)\Phpcmf\Service::L('cache')->get('navigator-'.SITE_ID.'-url', $type, $markid);
 }
 
-// 获取栏目数据及自定义字段
-function dr_cat_value(...$get) {
-
-    if (empty($get)) {
-        return '';
-    }
-
-    if (is_numeric($get[0])) {
-        // 值是栏目id时，表示当前模块
-        if (defined('MOD_DIR') && MOD_DIR) {
-            $name = 'module-'.SITE_ID.'-'.MOD_DIR;
-        } else {
-            $name = 'module-'.SITE_ID.'-share';
-        }
-    } else {
-        // 指定模块
-        $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
-        unset($get[0]);
-    }
-
-    $i = 0;
-    $param = [];
-    foreach ($get as $t) {
-        if ($i == 0) {
-            $param[] = $name;
-            $param[] = 'category';
-        }
-        $param[] = $t;
-        $i = 1;
-    }
-
-    return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
-}
-
 // 获取模块数据及自定义字段
 function dr_mod_value(...$get) {
 
@@ -760,6 +726,48 @@ function dr_page_value($id, $field, $site = SITE_ID) {
     return \Phpcmf\Service::C()->get_cache('page-'.$site, 'data', $id, $field);
 }
 
+// 获取栏目数据及自定义字段
+function dr_cat_value(...$get) {
+
+    if (empty($get)) {
+        return '';
+    }
+
+    $mid = '';
+    if (is_numeric($get[0])) {
+        // 值是栏目id时，表示当前模块
+        if (defined('MOD_DIR') && MOD_DIR) {
+            $mid = MOD_DIR;
+            $name = 'module-'.SITE_ID.'-'.MOD_DIR;
+        } else {
+            $name = 'module-'.SITE_ID.'-share';
+        }
+    } else {
+        // 指定模块
+        $mid = $get[0];
+        $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
+        unset($get[0]);
+    }
+
+    $i = 0;
+    $param = [];
+    foreach ($get as $t) {
+        if ($i == 0) {
+            $param[] = $name;
+            $param[] = 'category';
+        }
+        $param[] = $t;
+        $i = 1;
+    }
+
+    $rt = call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
+    if (end($param) == 'url' && $rt) {
+        $rt = dr_url_prefix($rt, $mid);
+    }
+
+    return $rt;
+}
+
 // 获取共享栏目数据及自定义字段
 function dr_share_cat_value($id, $field='') {
 
@@ -779,7 +787,9 @@ function dr_share_cat_value($id, $field='') {
         $i = 1;
     }
 
-    return call_user_func_array(array(\Phpcmf\Service::C(), 'get_cache'), $param);
+    $rt = call_user_func_array(array(\Phpcmf\Service::C(), 'get_cache'), $param);
+
+    return $field == 'url' && $rt ? dr_url_prefix($rt) : $rt;
 }
 
 // 获取域名部分
