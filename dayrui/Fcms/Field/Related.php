@@ -90,8 +90,14 @@ class Related extends \Phpcmf\Library\A_Field {
 	public function insert_value($field) {
 		
 		$data = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        $value = !$data ? '' : implode(',', $data);
-		
+        $limit = intval($field['setting']['option']['limit']);
+        if ($limit && $data && count($data) > $limit) {
+            // 超限了
+            $value = implode(',', dr_arraycut($data, $limit));
+        } else {
+            $value = !$data ? '' : implode(',', $data);
+        }
+
 		\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value;
 	}
 	
@@ -210,6 +216,10 @@ class Related extends \Phpcmf\Library\A_Field {
                             layer.close(loading);
                             if (json.code == 1) {
                                 layer.close(index);
+                                if (len + json.data.ids.length > '.$limit.') {
+                                    dr_tips(0, "'.dr_lang('关联数量超限').'");
+                                    return;
+                                }
                                 for(var i in json.data.ids){
                                     var vid = json.data.ids[i];
                                     if (typeof vid != "undefined") {
