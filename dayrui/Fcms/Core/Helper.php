@@ -164,7 +164,7 @@ function dr_move_uploaded_file($tempfile, $fullname) {
                 unlink($temp_file);
                 return false;
             }*/
-            return file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND);
+            echo file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND);exit;
         }
     } else {
         return move_uploaded_file($tempfile, $fullname);

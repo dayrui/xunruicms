@@ -187,7 +187,6 @@ class Local {
         if (!$rt['code']) {
             return $rt;
         }
-
         // 上传成功
         return dr_return_data(1, 'ok', [
             'url' => $this->is_diy_save_path ? '指定存储路径时无法获取到访问URL地址' : $this->attachment['url'].$this->filename,
