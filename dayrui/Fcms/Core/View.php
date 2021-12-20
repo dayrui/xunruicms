@@ -995,6 +995,8 @@ class View {
                             continue;
                         } elseif (isset($param['child']) && $t['child'] != (int)$param['child']) {
                             continue;
+                        } elseif (isset($param['ismain']) && $t['ismain'] != (int)$param['ismain']) {
+                            continue;
                         } elseif (isset($system['more']) && !$system['more']) {
                             unset($t['field'], $t['setting']);
                         }
@@ -1006,7 +1008,6 @@ class View {
                         $return[] = $t;
                     }
                 }
-
 
                 // num参数
                 if ($system['num']) {
@@ -2332,6 +2333,8 @@ class View {
                                 $arr = explode(',', $t['value']);
                             } elseif (strpos($t['value'], '|')) {
                                 $arr = explode('|', $t['value']);
+                            } else {
+                                $arr = [$t['value']];
                             }
                             $vals = [];
                             if ($arr) {
@@ -2386,7 +2389,6 @@ class View {
                             } else {
                                 $str.= ','.$a;
                             }
-
                         }
                         $string.= $join." {$t['name']} IN (".trim($str, ',').")";
                         break;
