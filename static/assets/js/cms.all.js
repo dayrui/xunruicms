@@ -351,7 +351,7 @@ function dr_iframe(type, url, width, height, rt) {
         title: title,
         fix:true,
         scrollbar: false,
-        maxmin: true,
+        maxmin: false,
         resize: true,
         shadeClose: true,
         shade: 0,
