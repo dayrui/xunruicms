@@ -159,7 +159,7 @@ class Module extends \Phpcmf\Common
 
         // 栏目格式化
         $cat = $catid && $this->module['category'][$catid] ? $this->module['category'][$catid] : [];
-        $cat['url'] = dr_url_prefix($cat['url'], MOD_DIR);
+        $cat && $cat['url'] = dr_url_prefix($cat['url'], MOD_DIR);
         $top = $cat;
         if ($catid && $cat['topid']) {
             $top = $this->module['category'][$cat['topid']];
