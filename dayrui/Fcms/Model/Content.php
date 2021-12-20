@@ -903,7 +903,7 @@ class Content extends \Phpcmf\Model {
         }
         if (isset($data[1]['keywords']) && $data[1]['keywords']) {
 			// 不要自动获取关键词，容易卡顿，引起发布延迟
-            $data[1]['keywords'] = trim(str_replace('"', '', $data[1]['keywords']));
+            $data[1]['keywords'] = implode(',', array_unique(explode(',', trim(str_replace('"', '', $data[1]['keywords'])))));
         }
 
         return $data;
