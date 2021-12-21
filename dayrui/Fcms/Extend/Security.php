@@ -22,7 +22,7 @@ class Security extends \CodeIgniter\Security\Security
      * @return $this|false
      * @throws \Exception
      */
-    public function CSRFVerify(RequestInterface $request)
+    public function verify(RequestInterface $request)
     {
 
         if (defined('SYS_CSRF') && !SYS_CSRF) {
@@ -37,34 +37,58 @@ class Security extends \CodeIgniter\Security\Security
             return $this;
         }
 
-        // If it's not a POST request we will set the CSRF cookie
-        if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST')
-        {
-            return $this->CSRFSetCookie($request);
+        // Protects POST, PUT, DELETE, PATCH
+        $method           = strtoupper($request->getMethod());
+        $methodsToProtect = ['POST', 'PUT', 'DELETE', 'PATCH'];
+        if (! in_array($method, $methodsToProtect, true)) {
+            return $this;
         }
 
-        // Do the tokens exist in both the _POST and _COOKIE arrays?
-        if (! isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]
-        ) // Do the tokens match?
-        {
-            //CI_DEBUG && log_message('error', '跨站验证禁止此操作：'.FC_NOW_URL);
-            dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');;
+        // Does the token exist in POST, HEADER or optionally php:://input - json data.
+        if ($request->hasHeader($this->headerName) && ! empty($request->header($this->headerName)->getValue())) {
+            $tokenName = $request->header($this->headerName)->getValue();
+        } else {
+            $json = json_decode($request->getBody());
+
+            if (! empty($request->getBody()) && ! empty($json) && json_last_error() === JSON_ERROR_NONE) {
+                $tokenName = $json->{$this->tokenName} ?? null;
+            } else {
+                $tokenName = null;
+            }
         }
 
-        // We kill this since we're done and we don't want to pollute the _POST array
-        unset($_POST[$this->CSRFTokenName]);
+        $token =  $request->getPost($this->tokenName) ?? $tokenName;
 
-        // Regenerate on every submission?
-        if ($this->CSRFRegenerate)
-        {
-            // Nothing should last forever
-            unset($_COOKIE[$this->CSRFCookieName]);
+        // Do the tokens match?
+        if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
+            dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');
         }
 
-        $this->CSRFSetHash();
-        $this->CSRFSetCookie($request);
+        $json = json_decode($request->getBody());
 
-        log_message('info', 'CSRF token verified');
+        if (isset($_POST[$this->tokenName])) {
+            // We kill this since we're done and we don't want to pollute the POST array.
+            unset($_POST[$this->tokenName]);
+            $request->setGlobal('post', $_POST);
+        } elseif (isset($json->{$this->tokenName})) {
+            // We kill this since we're done and we don't want to pollute the JSON data.
+            unset($json->{$this->tokenName});
+            $request->setBody(json_encode($json));
+        }
+
+        if ($this->regenerate) {
+            $this->hash = null;
+            if ($this->csrfProtection === self::CSRF_PROTECTION_COOKIE) {
+                unset($_COOKIE[$this->cookieName]);
+            } else {
+                // Session based CSRF protection
+                Services::session()->remove($this->tokenName);
+            }
+        }
+
+        $this->generateHash();
+
+        log_message('info', 'CSRF token verified.');
 
         return $this;
     }
