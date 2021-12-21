@@ -168,13 +168,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('跨站验证')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('CSRF跨站验证')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF'] == 1}checked{/if} /> {dr_lang('严格')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="2" {if $data['SYS_CSRF'] == 2}checked{/if} /> {dr_lang('宽松')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="0" {if empty($data['SYS_CSRF'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('开启跨站验证后将禁止外部站点向本站提交数据')}</span>
+                                <span class="help-block">{dr_lang('严格模式指每次提交都进行验证；宽松模式指一定时间内不进行重复验证')}</span>
                             </div>
                         </div>
                         <div class="form-group">

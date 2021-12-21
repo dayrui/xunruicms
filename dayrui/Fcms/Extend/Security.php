@@ -64,6 +64,11 @@ class Security extends \CodeIgniter\Security\Security
             dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');
         }
 
+        // 宽松验证模式时
+        if (defined('SYS_CSRF') && SYS_CSRF == 2) {
+            return $this;
+        }
+
         $json = json_decode($request->getBody());
 
         if (isset($_POST[$this->tokenName])) {
