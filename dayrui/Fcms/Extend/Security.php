@@ -33,7 +33,7 @@ class Security extends \CodeIgniter\Security\Security
             return $this;
         } elseif (APP_DIR == 'weixin') {
             return $this;
-        } elseif (defined('IS_INSTALL')) {
+        } elseif (defined('IS_INSTALL') || defined('IS_NOT_CSRF')) {
             return $this;
         }
 
