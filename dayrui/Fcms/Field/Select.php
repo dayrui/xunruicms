@@ -88,7 +88,7 @@ class Select extends \Phpcmf\Library\A_Field {
 		// 字段默认值
 		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
-		$str = '<label><select '.$required.' class="'.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? 'bs-select' : '').' form-control" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' '.$field['setting']['option']['css'].'" name="data['.$name.']" id="dr_'.$name.'" '.$attr.' >';
+		$str = '<label><select '.$required.' class="'.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? 'bs-select' : '').' form-control '.$field['setting']['option']['css'].'" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' name="data['.$name.']" id="dr_'.$name.'" '.$attr.' >';
 
 		// 表单选项
 		$options = dr_format_option_array($field['setting']['option']['options']);

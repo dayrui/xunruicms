@@ -109,7 +109,7 @@ class Selects extends \Phpcmf\Library\A_Field {
             $value = null;
         }
 
-		$str = '<label style="min-width: 200px"><select '.$required.' class="bs-select  form-control" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' '.$field['setting']['option']['css'].'" data-actions-box="true"  multiple="multiple" name="data['.$name.'][]" id="dr_'.$name.'" '.$attr.' >';
+		$str = '<label style="min-width: 200px"><select '.$required.' class="bs-select  form-control '.$field['setting']['option']['css'].'" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' data-actions-box="true"  multiple="multiple" name="data['.$name.'][]" id="dr_'.$name.'" '.$attr.' >';
 
 		// 表单选项
 		$options = dr_format_option_array($field['setting']['option']['options']);
