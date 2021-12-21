@@ -155,29 +155,6 @@
 
                 <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
-                        <div class="form-group" id="dr_row_https">
-                            <label class="col-md-2 control-label">HTTPS</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline" style="margin-top:-3px">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="0" {if empty($data['SYS_HTTPS'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
-                                </div>
-                                <input type="hidden" name="https_test" id="https_test" value="0">
-                                <span class="help-block">{dr_lang('全站采用https安全模式，开启之前需要测试是否支持https')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('CSRF跨站验证')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF'] == 1}checked{/if} /> {dr_lang('严格')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="2" {if $data['SYS_CSRF'] == 2}checked{/if} /> {dr_lang('宽松')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="0" {if empty($data['SYS_CSRF'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('严格模式指每次提交都进行验证；宽松模式指一定时间内不进行重复验证')}</span>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录验证码')}</label>
                             <div class="col-md-9">
@@ -198,6 +175,30 @@
                                 <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
                             </div>
                         </div>
+                        <div class="form-group" id="dr_row_https">
+                            <label class="col-md-2 control-label">{dr_lang('HTTPS安全协议')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline" style="margin-top:-3px">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_HTTPS]" value="0" {if empty($data['SYS_HTTPS'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><a class="btn btn-sm blue" href="javascript:dr_test_https();"> {dr_lang('测试')} </a></label>
+                                </div>
+                                <input type="hidden" name="https_test" id="https_test" value="0">
+                                <span class="help-block">{dr_lang('全站采用https安全模式，开启之前需要测试是否支持https')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('CSRF跨站验证')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="1" {if $data['SYS_CSRF'] == 1}checked{/if} /> {dr_lang('严格模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="2" {if $data['SYS_CSRF'] == 2}checked{/if} /> {dr_lang('宽松模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF]" value="0" {if empty($data['SYS_CSRF'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('严格模式指每次提交都进行验证；宽松模式指一定时间内不进行重复验证')}</span>
+                            </div>
+                        </div>
+
                         <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" >
                         <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" >
 
