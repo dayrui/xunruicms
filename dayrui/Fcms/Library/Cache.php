@@ -206,24 +206,41 @@ class Cache {
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();
 
-        $time && self::init()->save(md5(SYS_KEY.SITE_ID.$name), $value, $time);
+        $time && self::init()->save(dr_safe_filename(SITE_ID.'-'.$name), $value, $time);
 
         return $value;
     }
 
     // 获取内容
     public function get_data($name) {
-        return self::init()->get(md5(SYS_KEY.SITE_ID.$name));
+        return self::init()->get(dr_safe_filename(SITE_ID.'-'.$name));
     }
 
     // 删除内容
     public function del_data($name) {
         function_exists('opcache_reset') && opcache_reset();
-        return self::init()->delete(md5(SYS_KEY.SITE_ID.$name));
+        return self::init()->delete(dr_safe_filename(SITE_ID.'-'.$name));
     }
 
     // 删除缓存
     public function clear($name) {
+
+        if (!$name) {
+            return;
+        }
+
+        // 文件缓存，清理相关文件
+        if (!SYS_CACHE_TYPE && is_dir(WRITEPATH.'file/')) {
+            if ($fp = opendir(WRITEPATH.'file/')) {
+                while (FALSE !== ($file = readdir($fp))) {
+                    if (strpos($file, $name) !== false) {
+                        @unlink(WRITEPATH.'file/'.$file);
+                    }
+                }
+                closedir($fp);
+            }
+        }
+
         $this->del_data($name);
     }
 

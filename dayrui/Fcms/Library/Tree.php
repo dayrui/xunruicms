@@ -280,7 +280,7 @@ class Tree {
             $str = str_replace('style', '_style', $str);
         }
 
-        if (!CI_DEBUG) {
+        if (!IS_DEV) {
             $name = 'tree'.md5($this->ismain.dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
             $cache = \Phpcmf\Service::L('cache')->get_data($name);
             if ($cache) {
