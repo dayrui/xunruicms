@@ -37,6 +37,12 @@ class Security extends \CodeIgniter\Security\Security
             return $this;
         }
 
+        // 过滤白名单内的控制器
+        if (in_array(\Phpcmf\Service::L('router')->uri(), \Phpcmf\Service::Filters())) {
+            return $this;
+        }
+
+
         // Protects POST, PUT, DELETE, PATCH
         $method           = strtoupper($request->getMethod());
         $methodsToProtect = ['POST', 'PUT', 'DELETE', 'PATCH'];

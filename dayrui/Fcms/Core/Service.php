@@ -18,6 +18,11 @@ class Service
     static private $require;
     static private $apps;
     static private $mwhere_apps = [];
+    static private $filters = [
+        'home' => [],
+        'member' => [],
+        'admin' => [],
+    ];
 
     /**
      * 控制器对象实例
@@ -50,6 +55,15 @@ class Service
                 // 判断是否存在自定义where
                 if (is_file($path.'Config/Mwhere.php')) {
                     \Phpcmf\Service::Set_Mwhere_App($dir);
+                }
+                // 判断是否存在CSRF白名单
+                if (is_file($path.'Config/Filters.php')) {
+                    $Filters = require $path.'Config/Filters.php';
+                    if ($Filters) {
+                        $Filters['home'] && static::$filters['home'] = array_merge(static::$filters['home'], $Filters['home']);
+                        $Filters['member'] && static::$filters['member'] = array_merge(static::$filters['member'], $Filters['member']);
+                        $Filters['admin'] && static::$filters['admin'] = array_merge(static::$filters['admin'], $Filters['admin']);
+                    }
                 }
             }
         }
@@ -96,6 +110,24 @@ class Service
     // 读取mwhere插件名称列表
     public static function Mwhere_Apps() {
         return static::$mwhere_apps;
+    }
+
+    // 读取Filters白名单
+    public static function Filters($type = 'auto') {
+
+        if ($type == 'auto') {
+            if (IS_ADMIN) {
+                $type = 'admin';
+            } elseif (IS_MEMBER) {
+                $type = 'member';
+            } else {
+                $type = 'home';
+            }
+        } elseif ($type == '') {
+            return static::$filters;
+        }
+
+        return isset(static::$filters[$type]) ? static::$filters[$type] : [];
     }
 
     // 是否是电脑端模板
