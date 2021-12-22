@@ -126,7 +126,7 @@ class Cache {
 
         dr_mkdirs($this->auth_dir);
 
-        file_put_contents($this->auth_dir.md5($siteid.$name), is_array($value) ? dr_array2string($value) : $value, LOCK_EX);
+        file_put_contents($this->auth_dir.dr_safe_filename($siteid.$name), is_array($value) ? dr_array2string($value) : $value, LOCK_EX);
 
         return $value;
     }
@@ -134,7 +134,7 @@ class Cache {
     // 获取内容
     public function get_auth_data($name, $siteid = SITE_ID, $time = 0) {
 
-        $code_file = $this->auth_dir.md5($siteid.$name);
+        $code_file = $this->auth_dir.dr_safe_filename($siteid.$name);
         if (is_file($code_file)) {
             if ($time) {
                 $ft = filemtime($code_file);
@@ -163,7 +163,7 @@ class Cache {
     // 删除内容
     public function del_auth_data($name, $siteid = SITE_ID) {
 
-        $code_file = $this->auth_dir.md5($siteid.$name);
+        $code_file = $this->auth_dir.dr_safe_filename($siteid.$name);
         if (!is_file($code_file)) {
             return;
         }
@@ -177,7 +177,7 @@ class Cache {
     // 验证内容
     public function check_auth_data($name, $time = 3600, $siteid = SITE_ID) {
 
-        $code_file = $this->auth_dir.md5($siteid.$name);
+        $code_file = $this->auth_dir.dr_safe_filename($siteid.$name);
         if (is_file($code_file)) {
             if (SYS_TIME - filemtime($code_file) > $time) {
                 return '';

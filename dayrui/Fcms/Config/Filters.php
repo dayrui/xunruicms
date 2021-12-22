@@ -68,12 +68,9 @@ class Filters extends BaseConfig
     public function __construct()
     {
         parent::__construct();
-        if (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index'])) {
-            // 后台登录关闭
-            $this->methods['post'] = [];
-        } elseif (defined('SYS_CSRF') && SYS_CSRF) {
+        if (defined('SYS_CSRF') && SYS_CSRF) {
             $this->methods['post'] = ['csrf'];
-        } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['member/register/index', 'member/login/index'])) {
+        } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index', 'member/register/index', 'member/login/index'])) {
             // 登录和注册强制跨站验证
             $this->methods['post'] = ['csrf'];
         }
