@@ -94,8 +94,22 @@ class Router {
         \Phpcmf\Service::L('cache')->del_data($name);
     }
 
+    // 自动识别的跳转动作
+    public function auto_redirect($url) {
+
+        if (isset($_GET['page']) && intval($_GET['page']) > 1) {
+            return; // 排除分页
+        } elseif (isset($_GET['not301']) && intval($_GET['not301']) > 1) {
+            return; // 排除自定义参数
+        }
+
+        // 跳转
+        $this->redirect($url);
+    }
+
     // 执行跳转动作
     public function redirect($url) {
+
         // 跳转
         if ($url != dr_now_url()) {
             if (IS_DEV) {
