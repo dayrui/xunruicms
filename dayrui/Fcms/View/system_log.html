@@ -40,7 +40,7 @@
                 <td>{dr_date($t['time'], 'Y-m-d H:i:s', 'red')}</td>
                 <td>{Function_list::ip($t.ip)}</td>
                 <td>{Function_list::author($t.username)}</td>
-                <td><a href="javascript:;" onclick="dr_show_info('{str_replace([PHP_EOL, chr(13), chr(10)], '<br>', $t.action)}<br><br>{htmlspecialchars($t.url)}')">{$t.action}</td></td>
+                <td><a href="javascript:;" onclick="dr_show_info('{str_replace([PHP_EOL, chr(13), chr(10)], '<br>', $t.action)}<br><br>{htmlspecialchars((string)$t.url)}')">{$t.action}</td></td>
             </tr>
             {/loop}
             </tbody>

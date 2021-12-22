@@ -152,7 +152,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
 		// 字段默认值
-		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		// 联动菜单缓存
 		$linkage = dr_linkage_list($field['setting']['option']['linkage'], 0);

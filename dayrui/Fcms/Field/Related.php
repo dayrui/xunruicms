@@ -147,7 +147,7 @@ class Related extends \Phpcmf\Library\A_Field {
             return $this->input_format($name, $text, '');
         }
 
-        $value = trim($value, ',');
+        $value = $value ? trim($value, ',') : '';
         $mylist = [];
         if ($value && is_string($value)) {
             $arr = explode(',', $value);

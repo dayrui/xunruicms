@@ -942,7 +942,7 @@ class Model {
         }
 
         //分析参数合法性
-        $order = urldecode($param['order']); // 获取的排序参数
+        $order = isset($param['order']) && $param['order'] ? urldecode($param['order']) : ''; // 获取的排序参数
         $order_str = dr_safe_replace($this->param['order_list']);
         if ($order) {
             $arr = explode(',', $order);

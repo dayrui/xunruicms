@@ -110,7 +110,7 @@ class Members extends \Phpcmf\Library\A_Field {
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').dr_lang($field['name']);
 
-        $value = trim($value, ',');
+        $value = $value ? trim($value, ',') : '';
         $mylist = [];
         if ($value && is_string($value)) {
             $arr = explode(',', $value);

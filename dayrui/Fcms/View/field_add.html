@@ -32,14 +32,14 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('显示名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[name]" value="{htmlspecialchars($data.name)}" id="dr_name" onblur="d_topinyin('fieldname','name');" /></label>
+                                <label><input class="form-control" type="text" name="data[name]" value="{htmlspecialchars((string)$data.name)}" id="dr_name" onblur="d_topinyin('fieldname','name');" /></label>
                                 <span class="help-block" id="dr_name_tips">{dr_lang('为字段取个名字')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('字段名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text"  name="data[fieldname]" value="{htmlspecialchars($data.fieldname)}" {if $data.id}disabled{/if} id="dr_fieldname" /></label>
+                                <label><input class="form-control" type="text"  name="data[fieldname]" value="{htmlspecialchars((string)$data.fieldname)}" {if $data.id}disabled{/if} id="dr_fieldname" /></label>
                                 <span class="help-block" id="dr_fieldname_tips">{dr_lang('只能由小写字母、数字、下划线组成')}</span>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">{dr_lang('验证提示')}</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="text" name="data[setting][validate][errortips]" value="{htmlspecialchars($data['setting']['validate']['errortips'])}" id="dr_errortips" />
+                                    <input class="form-control" type="text" name="data[setting][validate][errortips]" value="{htmlspecialchars((string)$data['setting']['validate']['errortips'])}" id="dr_errortips" />
                                     <span class="help-block">{dr_lang('当字段校验未通过时的提示信息，如“标题必须在80字以内”等等')}</span>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('校验函数/方法')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large"type="text" name="data[setting][validate][check]" value="{htmlspecialchars($data['setting']['validate']['check'])}" id="dr_check"> </label>
+                                <label><input class="form-control input-large"type="text" name="data[setting][validate][check]" value="{htmlspecialchars((string)$data['setting']['validate']['check'])}" id="dr_check"> </label>
                                 <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_check');"> {dr_lang('检测')} </a></label>
                                 <span class="help-block"> <a href="javascript:dr_help('601');"> {dr_lang('此功能需要有PHP编程经验，了解函数的定义')}</a> </span>
                             </div>
@@ -137,7 +137,7 @@
                             <label class="col-md-2 control-label">{dr_lang('过滤函数/方法')}</label>
                             <div class="col-md-9">
 
-                                <label><input class="form-control input-large"type="text" name="data[setting][validate][filter]" value="{htmlspecialchars($data['setting']['validate']['filter'])}" id="dr_filter"> </label>
+                                <label><input class="form-control input-large"type="text" name="data[setting][validate][filter]" value="{htmlspecialchars((string)$data['setting']['validate']['filter'])}" id="dr_filter"> </label>
                                 <label><a class="btn btn-sm blue" href="javascript:dr_test_call('dr_filter');"> {dr_lang('检测')} </a></label>
                                 <span class="help-block"> <a href="javascript:dr_help('602');"> {dr_lang('此功能需要有PHP编程经验，了解函数的定义')}</a> </span>
                             </div>
@@ -153,7 +153,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('字段提示信息')}</label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="data[setting][validate][tips]" value="{htmlspecialchars($data['setting']['validate']['tips'])}" />
+                                <input class="form-control" type="text" name="data[setting][validate][tips]" value="{htmlspecialchars((string)$data['setting']['validate']['tips'])}" />
                                 <span class="help-block">{dr_lang('对字段简短的提示，来说明这个字段是用来干什么的')}</span>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('Css样式表')}</label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="data[setting][option][css]" value="{htmlspecialchars($data['setting']['option']['css'])}" />
+                                <input class="form-control" type="text" name="data[setting][option][css]" value="{htmlspecialchars((string)$data['setting']['option']['css'])}" />
                                 <span class="help-block">{dr_lang('[不建议使用] Text类型字段可用，对字段进行样式控制，使用开发者自定义的css样式')}</span>
                             </div>
                         </div>

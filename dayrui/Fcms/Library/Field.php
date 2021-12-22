@@ -1120,13 +1120,15 @@
          * @return  string
          */
         public function get_default_value($value) {
-            if (preg_match('/\{(\w+)\}/', $value, $match)) {
+
+            if ($value && preg_match('/\{(\w+)\}/', $value, $match)) {
                 $rt = isset(\Phpcmf\Service::C()->member[$match[1]]) ? \Phpcmf\Service::C()->member[$match[1]] : '';
                 if ($match[1] == 'name' && !$rt) {
                     $rt = isset(\Phpcmf\Service::C()->member['username']) ? \Phpcmf\Service::C()->member['username'] : '';
                 }
                 return $rt;
             }
+
             return $value;
         }
 

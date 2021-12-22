@@ -88,7 +88,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('网站名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars($data['SITE_NAME'])}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
                             </div>
                         </div>
 
@@ -172,7 +172,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('时间格式')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{htmlspecialchars($data['SITE_TIME_FORMAT'])}"></label>
+                                <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{htmlspecialchars((string)$data['SITE_TIME_FORMAT'])}"></label>
                                 <span class="help-block">{dr_lang('网站时间显示格式与date函数一致，默认Y-m-d H:i:s')}</span>
                             </div>
                         </div>

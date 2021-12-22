@@ -45,7 +45,7 @@
                             <div class="col-md-9">
 
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars($data['domain'])}" class="form-control input-large">
+                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars((string)$data['domain'])}" class="form-control input-large">
                                     <span class="input-group-btn">
                                         <a class="btn green" href="javascript:dr_test_domain('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试域名')}</a>
                                     </span>
@@ -60,7 +60,7 @@
                             <div class="col-md-9">
 
                                 <div class="input-group" style="width:250px;">
-                                    <input type="text" id="dr_dirname" type="text" name="data[dirname]" value="{htmlspecialchars($data['dirname'])}" class="form-control">
+                                    <input type="text" id="dr_dirname" type="text" name="data[dirname]" value="{htmlspecialchars((string)$data['dirname'])}" class="form-control">
                                     <span class="input-group-btn">
                                         <a class="btn green" href="javascript:dr_test_dir('dr_dirname');"><i class="fa fa-send"></i> {dr_lang('生成目录')}</a>
                                     </span>

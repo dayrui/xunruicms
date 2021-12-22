@@ -86,7 +86,7 @@
                         <div class="form-group dr_sy dr_sy_1">
                             <label class="col-md-2 control-label">{dr_lang('水印文字')}</label>
                             <div class="col-md-5">
-                                <input name="data[wm_text]" value="{htmlspecialchars($data['wm_text'])}" type="text" class="form-control">
+                                <input name="data[wm_text]" value="{htmlspecialchars((string)$data['wm_text'])}" type="text" class="form-control">
                                 <span class="help-block">{dr_lang('如果为中文，先要水印目录中添加中文字体')}</span>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                         <div class="form-group dr_sy dr_sy_1">
                             <label class="col-md-2 control-label">{dr_lang('水印文字颜色')}</label>
                             <div class="col-md-9" style="padding-top: 2px;">
-                                <label><input type="hidden" id="hue-demo" data-control="hue" class="form-control demo" name="data[wm_font_color]" value="{htmlspecialchars($data['wm_font_color'])}"></label>
+                                <label><input type="hidden" id="hue-demo" data-control="hue" class="form-control demo" name="data[wm_font_color]" value="{htmlspecialchars((string)$data['wm_font_color'])}"></label>
                             </div>
                         </div>
 

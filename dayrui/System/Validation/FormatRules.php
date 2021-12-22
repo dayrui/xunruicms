@@ -250,6 +250,8 @@ class FormatRules
             return false;
         }
 
+        !$which && $which = 0;
+
         switch (strtolower($which)) {
             case 'ipv4':
                 $which = FILTER_FLAG_IPV4;
@@ -260,10 +262,9 @@ class FormatRules
                 break;
 
             default:
-                $which = null;
+                $which = 0;
                 break;
         }
-
         return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which) || (! ctype_print($ip) && (bool) filter_var(inet_ntop($ip), FILTER_VALIDATE_IP, $which));
     }
 

@@ -120,21 +120,21 @@ function dr_tid(i) {
                         <div class="form-group " id="dr_row_name">
                             <label class="col-md-2 control-label">{dr_lang('栏目名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="system[name]" value="{htmlspecialchars($data.name)}" id="dr_name" onblur="d_topinyin('dirname','name', 1);"></label>
+                                <label><input class="form-control input-large" type="text" name="system[name]" value="{htmlspecialchars((string)$data.name)}" id="dr_name" onblur="d_topinyin('dirname','name', 1);"></label>
                                 <span class="help-block" id="dr_name_tips">{dr_lang('栏目的一个显示名称')}</span>
                             </div>
                         </div>
                         <div class="form-group " id="dr_row_dirname">
                             <label class="col-md-2 control-label">{dr_lang('目录名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="system[dirname]" id="dr_dirname" value="{htmlspecialchars($data.dirname)}"></label>
+                                <label><input class="form-control input-large" type="text" name="system[dirname]" id="dr_dirname" value="{htmlspecialchars((string)$data.dirname)}"></label>
                                 <span class="help-block" id="dr_dirname_tips">{dr_lang('栏目目录确保唯一，用于url填充或者生成目录')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_2 " style="display: none">
                             <label class="col-md-2 control-label">{dr_lang('外链地址')}</label>
                             <div class="col-md-9">
-                                <input class="form-control" type="text" name="system[setting][linkurl]" value="{htmlspecialchars($data['setting']['linkurl'])}">
+                                <input class="form-control" type="text" name="system[setting][linkurl]" value="{htmlspecialchars((string)$data['setting']['linkurl'])}">
                                 <span class="help-block">{dr_lang('可跳转到指定地址（不允许发布内容）')}</span>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ function dr_tid(i) {
                             <div class="col-md-9">
 
                                 <div class="input-group  input-large">
-                                    <input class="form-control dr_page_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['page'])}" name="system[setting][template][page]">
+                                    <input class="form-control dr_page_tpl" type="text" value="{htmlspecialchars((string)$data['setting']['template']['page'])}" name="system[setting][template][page]">
                                     <div class="input-group-btn">
                                         <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
                                             <i class="fa fa-angle-down"></i>
@@ -265,7 +265,7 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('内容列表页模板')}</label>
                             <div class="col-md-9">
                                 <div class="input-group  input-large">
-                                    <input class="form-control dr_list_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['list'])}" name="system[setting][template][list]">
+                                    <input class="form-control dr_list_tpl" type="text" value="{htmlspecialchars((string)$data['setting']['template']['list'])}" name="system[setting][template][list]">
                                     <div class="input-group-btn">
                                         <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
                                             <i class="fa fa-angle-down"></i>
@@ -281,7 +281,7 @@ function dr_tid(i) {
                             <div class="col-md-9">
 
                                 <div class="input-group  input-large">
-                                    <input class="form-control dr_category_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['category'])}" name="system[setting][template][category]">
+                                    <input class="form-control dr_category_tpl" type="text" value="{htmlspecialchars((string)$data['setting']['template']['category'])}" name="system[setting][template][category]">
                                     <div class="input-group-btn">
                                         <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
                                             <i class="fa fa-angle-down"></i>
@@ -312,7 +312,7 @@ function dr_tid(i) {
                             <div class="col-md-9">
 
                                 <div class="input-group  input-large">
-                                    <input class="form-control dr_show_tpl" type="text" value="{htmlspecialchars($data['setting']['template']['show'])}" name="system[setting][template][show]">
+                                    <input class="form-control dr_show_tpl" type="text" value="{htmlspecialchars((string)$data['setting']['template']['show'])}" name="system[setting][template][show]">
                                     <div class="input-group-btn">
                                         <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown">{dr_lang('选择')}
                                             <i class="fa fa-angle-down"></i>

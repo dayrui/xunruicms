@@ -209,7 +209,7 @@ class Form
                     }
                 }
                 // 编辑器长度判断
-                if (stripos($fields['fieldtype'], 'editor') !== false && strlen($data[$name]) > 16000000) {
+                if (stripos($field['fieldtype'], 'editor') !== false && dr_strlen($data[$name]) > 16000000) {
                     return [[], ['name' => $name, 'error' => dr_lang('%s长度超限', $field['name'])]];
                 }
                 // 函数/方法校验

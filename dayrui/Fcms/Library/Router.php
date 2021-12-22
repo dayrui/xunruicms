@@ -495,14 +495,14 @@ class Router {
         if ($name) {
             if (is_array($name)) {
                 foreach ($name as $i => $_name) {
-                    if (isset($value[$i]) && strlen($value[$i])) {
+                    if (isset($value[$i]) && $value[$i] && strlen($value[$i])) {
                         $params[$_name] = $value[$i];
                     } else {
                         unset($params[$_name]);
                     }
                 }
             } else {
-                if (strlen($value)) {
+                if ($value && strlen($value)) {
                     $params[$name] = $value;
                 } else {
                     unset($params[$name]);

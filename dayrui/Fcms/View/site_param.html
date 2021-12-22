@@ -32,13 +32,13 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('网站名称')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars($data['SITE_NAME'])}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
                              </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('ICP备案信息')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{htmlspecialchars($data['SITE_ICP'])}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{htmlspecialchars((string)$data['SITE_ICP'])}"></label>
                              </div>
                         </div>
 

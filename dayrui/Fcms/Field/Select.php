@@ -86,7 +86,7 @@ class Select extends \Phpcmf\Library\A_Field {
 		$required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
 		// 字段默认值
-		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$str = '<label><select '.$required.' class="'.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? 'bs-select' : '').' form-control '.$field['setting']['option']['css'].'" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : '').' name="data['.$name.']" id="dr_'.$name.'" '.$attr.' >';
 

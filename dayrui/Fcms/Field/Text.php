@@ -127,7 +127,7 @@ class Text extends \Phpcmf\Library\A_Field {
 		$type = $field['setting']['option']['ispwd'] ? 'password' : 'text';
 		
 		// 字段默认值
-		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$str = '<input class="form-control '.($field['setting']['validate']['required'] ? 'dr_required' : '').' '.$field['setting']['option']['css'].'" type="'.$type.'" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$style.' '.$required.' '.$attr.' />';
 		

@@ -19,8 +19,8 @@
             {loop $flag $i $t}
             <tr class="odd gradeX">
                 <td>{$i}</td>
-                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{htmlspecialchars($t['name'])}" placeholder="{dr_lang('推荐位名称')}"></td>
-                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{htmlspecialchars($t['icon'])}" placeholder="{dr_lang('fa fa-user')}" />
+                <td><input class="form-control" name="flag[{$i}][name]" type="text" value="{htmlspecialchars((string)$t['name'])}" placeholder="{dr_lang('推荐位名称')}"></td>
+                <td><input class="form-control" type="text" name="flag[{$i}][icon]" value="{htmlspecialchars((string)$t['icon'])}" placeholder="{dr_lang('fa fa-user')}" />
                 </td>
                 <td style="overflow: inherit;">
                     <label style="min-width: 200px">

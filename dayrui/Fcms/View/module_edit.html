@@ -108,14 +108,14 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('列表默认排序')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-xlarge" type="text" name="data[setting][order]" value="{if $data['setting']['order']}{htmlspecialchars($data['setting']['order'])}{else}updatetime DESC{/if}" ></label>
+                                <label><input class="form-control input-xlarge" type="text" name="data[setting][order]" value="{if $data['setting']['order']}{htmlspecialchars((string)$data['setting']['order'])}{else}updatetime DESC{/if}" ></label>
                                 <span class="help-block">{dr_lang('排序格式符号MySQL的语法，例如：主表字段 desc')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('列表时间搜索')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control" type="text" name="data[setting][search_time]" value="{if $data['setting']['search_time']}{htmlspecialchars($data['setting']['search_time'])}{else}updatetime{/if}" ></label>
+                                <label><input class="form-control" type="text" name="data[setting][search_time]" value="{if $data['setting']['search_time']}{htmlspecialchars((string)$data['setting']['search_time'])}{else}updatetime{/if}" ></label>
                                 <span class="help-block">{dr_lang('设置后台时间范围搜索字段，默认为更新时间字段：updatetime')}</span>
                             </div>
                         </div>
@@ -165,14 +165,14 @@
                                             </td>
                                             <td>{dr_lang($t.name)} ({$t.fieldname})</td>
                                             <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['setting']['list_field'][$t.fieldname]['name']) : $t.name}" /></td>
-                                            <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{htmlspecialchars($data['setting']['list_field'][$t.fieldname]['width'])}" /></td>
+                                            <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{htmlspecialchars((string)$data['setting']['list_field'][$t.fieldname]['width'])}" /></td>
                                             <td><input type="checkbox" name="data[setting][list_field][{$t.fieldname}][center]" {if $data['setting']['list_field'][$t.fieldname]['center']} checked{/if} value="1"  data-on-text="{dr_lang('居中')}" data-off-text="{dr_lang('默认')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
                                             </td>
                                             <td> <div class="input-group" style="width:250px">
                                         <span class="input-group-btn">
                                             <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
                                         </span>
-                                                <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{htmlspecialchars($data['setting']['list_field'][$t.fieldname]['func'])}" />
+                                                <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{htmlspecialchars((string)$data['setting']['list_field'][$t.fieldname]['func'])}" />
                                             </div></td>
                                         </tr>
                                         {/if}

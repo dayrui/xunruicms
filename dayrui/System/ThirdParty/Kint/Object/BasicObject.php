@@ -131,7 +131,7 @@ class BasicObject
             $out .= ' static';
         }
 
-        if (\strlen($out)) {
+        if ($out && \strlen($out)) {
             return \ltrim($out);
         }
     }

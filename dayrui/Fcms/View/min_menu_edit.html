@@ -14,20 +14,20 @@
         <div class="form-group" id="dr_row_name">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单名称')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars($data.name)}">
+                <input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars((string)$data.name)}">
             </div>
         </div>
         <div class="form-group" id="dr_row_mark" {if $type} style="display: none"{/if}>
             <label class="col-xs-3 control-label ajax_name">{dr_lang('标识字符')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_mark" name="data[mark]" value="{htmlspecialchars($data.mark)}">
+                <input type="text" class="form-control" id="dr_mark" name="data[mark]" value="{htmlspecialchars((string)$data.mark)}">
             </div>
         </div>
         <div class="form-group" id="dr_row_icon">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('菜单图标')}</label>
             <div class="col-xs-8">
                 <div class="input-group">
-                    <input class="form-control" id="dr_icon" type="text" name="data[icon]" value="{htmlspecialchars($data.icon)}" />
+                    <input class="form-control" id="dr_icon" type="text" name="data[icon]" value="{htmlspecialchars((string)$data.icon)}" />
                     <span class="input-group-btn">
                         <a class="btn btn-success" href="{dr_url('api/icon')}" target="_blank"><i class="fa fa-arrow-right fa-fw" /></i> {dr_lang('查看')}</a>
                     </span>
@@ -38,14 +38,14 @@
         <div class="form-group" id="dr_row_uri">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('系统路径')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_uri" name="data[uri]" value="{htmlspecialchars($data.uri)}">
+                <input type="text" class="form-control" id="dr_uri" name="data[uri]" value="{htmlspecialchars((string)$data.uri)}">
                 <span class="help-block">{dr_lang('格式为：模块目录名/控制器名/方法名，（不支持其他参数）；如果不填写将不会对权限就行验证')}</span>
             </div>
         </div>
         <div class="form-group" id="dr_row_url">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('实际地址')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{htmlspecialchars($data.url)}">
+                <input type="text" class="form-control" id="dr_url" name="data[url]" value="{htmlspecialchars((string)$data.url)}">
                 <span class="help-block">{dr_lang('如果不填写此地址时，会根据系统路径来生成地址')}</span>
             </div>
         </div>

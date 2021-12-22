@@ -85,9 +85,7 @@ class Pay extends \Phpcmf\Library\A_Field  {
             // 当字段必填时，加入html5验证标签
             $required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
             // 字段默认值
-            $value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
-            // 字段默认值
-            $value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+            $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
             $ipt = '<input class="form-control '.$field['setting']['option']['css'].'" type="text" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$required.' '.$attr.' />';
 
             return $this->input_format($field['fieldname'], $text, $ipt.$tips);

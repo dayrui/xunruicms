@@ -86,7 +86,7 @@ class Redirect extends \Phpcmf\Library\A_Field {
 		$tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
         // 字段默认值
-		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		// 当字段必填时，加入html5验证标签
         isset($field['setting']['validate']['required']) && $field['setting']['validate']['required'] == 1 && $attr.= ' required="required"';

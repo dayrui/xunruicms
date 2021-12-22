@@ -29,7 +29,7 @@
                             <label class="col-md-2 control-label">{dr_lang('本站电脑域名')}</label>
                             <div class="col-md-4">
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars($data['site_domain'])}" class="form-control input-large">
+                                    <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars((string)$data['site_domain'])}" class="form-control input-large">
                                     <span class="input-group-btn">
                                         {if SITE_ID == 1}
                                         <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}', '450px', '400px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
@@ -46,7 +46,7 @@
                             <label class="col-md-2 control-label">{dr_lang('本站手机域名')}</label>
                             <div class="col-md-9">
                                 <div class="input-group" style="width: 300px;">
-                                <input class="form-control input-large" readonly type="text"  value="{htmlspecialchars($data['mobile_domain'])}"></label>
+                                <input class="form-control input-large" readonly type="text"  value="{htmlspecialchars((string)$data['mobile_domain'])}"></label>
                                 <span class="input-group-btn">
                                         <a class="btn red" href="{dr_url("site_mobile/index")}"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
 
@@ -62,7 +62,7 @@
                             <label class="col-md-2 control-label">{dr_lang('本站Web目录')}</label>
                             <div class="col-md-9">
                                 <div class="input-group">
-                                    <input type="text" name="data[webpath]" id="dr_html_dir" value="{htmlspecialchars($data['webpath'])}" class="form-control">
+                                    <input type="text" name="data[webpath]" id="dr_html_dir" value="{htmlspecialchars((string)$data['webpath'])}" class="form-control">
                                     <span class="input-group-btn">
                                         <button class="btn blue" onclick="dr_test_html_dir('dr_html_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                     </span>
@@ -87,7 +87,7 @@
                                 <span class="help-block" style="color:#ed6b75;margin-top:7px;">{$t.error}</span>
                                 {else}
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" name="data[module_{$dir}]" value="{htmlspecialchars($data['module_'.$dir])}" class="form-control">
+                                    <input type="text" name="data[module_{$dir}]" value="{htmlspecialchars((string)$data['module_'.$dir])}" class="form-control">
                                     <span class="input-group-btn">
                                         <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
                                     </span>
@@ -102,7 +102,7 @@
                                 <span class="help-block" style="color:#ed6b75;margin-top:7px;">{$t.error}</span>
                                 {else}
                                 <div class="input-group" style="width: 300px;">
-                                    <input type="text" name="data[module_mobile_{$dir}]" value="{htmlspecialchars($data['module_mobile_'.$dir])}" class="form-control">
+                                    <input type="text" name="data[module_mobile_{$dir}]" value="{htmlspecialchars((string)$data['module_mobile_'.$dir])}" class="form-control">
                                     <span class="input-group-btn">
                                         <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
                                     </span>
@@ -118,7 +118,7 @@
                                 <span class="help-block" style="color:#ed6b75;margin-top:7px;">{$t.error}</span>
                                 {else}
                                 <div class="input-group">
-                                    <input type="text" name="data[webpath_{$dir}]" id="dr_html_dir_{$dir}" value="{htmlspecialchars($data['webpath_'.$dir])}" class="form-control">
+                                    <input type="text" name="data[webpath_{$dir}]" id="dr_html_dir_{$dir}" value="{htmlspecialchars((string)$data['webpath_'.$dir])}" class="form-control">
                                     <span class="input-group-btn">
                                         <button class="btn blue" onclick="dr_test_html_dir('dr_html_dir_{$dir}')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                     </span>

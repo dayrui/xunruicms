@@ -177,10 +177,10 @@ function dr_html2code($value) {
 }
 
 // html实体字符转换
-function dr_code2html($value, $fk = false, $flags = null) {
+function dr_code2html($value, $fk = false, $flags = '') {
     return dr_html_code($value, $fk, $flags);
 }
-function dr_html_code($value, $fk = false, $flags = null) {
+function dr_html_code($value, $fk = false, $flags = '') {
 
     !$flags && $flags = ENT_QUOTES | ENT_HTML401 | ENT_HTML5;
 
@@ -613,7 +613,7 @@ function dr_cms_domain_name($url) {
 function dr_lang(...$param) {
 
     if (empty($param)) {
-        return null;
+        return '';
     }
 
     // 取第一个作为语言名称
@@ -773,7 +773,7 @@ function dr_share_cat_value($id, $field='') {
 
     $get = func_get_args();
     if (empty($get)) {
-        return NULL;
+        return '';
     }
 
     $i = 0;
@@ -1218,7 +1218,7 @@ function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
 }
 
 // 打赏支付
-function dr_donation($id, $title = '', $dir = null, $remove_div  = 1) {
+function dr_donation($id, $title = '', $dir = '', $remove_div  = 1) {
     if (!dr_is_app('pay')) {
         return '没有安装「支付系统」插件';
     }
@@ -1435,18 +1435,18 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
 function dr_field_options($id) {
 
     if (!$id) {
-        return NULL;
+        return '';
     }
 
     $data = \Phpcmf\Service::L('cache')->get_data('field-info-'.$id);
     if (!$data) {
         $field = \Phpcmf\Service::C()->get_cache('table-field', $id);
         if (!$field) {
-            return NULL;
+            return '';
         }
         $data = dr_format_option_array($field['setting']['option']['options']);
         if (!$data) {
-            return NULL;
+            return '';
         }
         // 存储缓存
         \Phpcmf\Service::L('cache')->set_data('field-info-'.$id, $data, 10000);
@@ -1909,7 +1909,7 @@ function dr_icon($value) {
 function dr_file($url) {
 
     if (!$url || dr_strlen($url) == 1) {
-        return NULL;
+        return '';
     } elseif (substr($url, 0, 7) == 'http://' || substr($url, 0, 8) == 'https://') {
         return $url;
     } elseif (substr($url, 0, 1) == '/') {
@@ -2056,7 +2056,7 @@ function dr_format_option_array($value) {
  * @param   string  $username
  * @return  intval
  */
-function dr_field_input($name, $type, $option, $value = NULL, $id = 0) {
+function dr_field_input($name, $type, $option, $value = '', $id = 0) {
     return '';
 }
 
@@ -2904,7 +2904,7 @@ function dr_safe_keyword($s) {
 /**
  * 安全过滤函数
  */
-function dr_safe_replace($string, $diy = null) {
+function dr_safe_replace($string, $diy = []) {
 
     $replace = ['%20', '%27', '%2527', '*', "'", '"', ';', '<', '>', "{", '}'];
     $diy && is_array($diy) && $replace = dr_array2array($replace, $diy);
@@ -3132,7 +3132,7 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
  * @param   string  $color  当天显示颜色
  * @return  string
  */
-function dr_date($time = NULL, $format = SITE_TIME_FORMAT, $color = NULL) {
+function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
 
     $time = (int)$time;
     if (!$time) {
@@ -3735,6 +3735,8 @@ function dr_mobile_url($url = SITE_MURL) {
  */
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
+    !$url && $url = '';
+
     if ($url && strpos($url, 'http') === 0) {
         // 本身就是绝对域名
     } else {
@@ -3856,7 +3858,7 @@ function dr_html2emoji($msg){
     if (substr($msg, 0, 1) == '"' && substr($msg, -1, 1) == '"') {
 
         $txt = json_decode(str_replace('|', '\\', $msg));
-        if ($txt !== null) {
+        if ($txt !== NULL) {
             $msg = $txt;
         }
 
@@ -4305,7 +4307,7 @@ if (! function_exists('dr_redirect'))
     /**
      * 跳转地址
      */
-    function dr_redirect($url = '', $method = 'auto', $code = NULL) {
+    function dr_redirect($url = '', $method = 'auto', $code = 0) {
 
         switch ($method) {
             case 'refresh':

@@ -23,28 +23,28 @@
         <div class="form-group smtp" id="dr_row_host">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('服务器')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_host" name="data[host]" value="{htmlspecialchars($data.host)}">
+                <input type="text" class="form-control" id="dr_host" name="data[host]" value="{htmlspecialchars((string)$data.host)}">
                 <span class="help-block">{dr_lang('由邮件运营商提供，若使用ssl协议请使用ssl://开头，例如：ssl://smtp.exmail.qq.com')}</span>
             </div>
         </div>
         <div class="form-group smtp" id="dr_row_port">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('端口号')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_port" name="data[port]" value="{htmlspecialchars($data.port)}">
+                <input type="text" class="form-control" id="dr_port" name="data[port]" value="{htmlspecialchars((string)$data.port)}">
                 <span class="help-block">{dr_lang('普通协议一般是25，ssl协议一般是465')}</span>
             </div>
         </div>
         <div class="form-group" id="dr_row_user">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('邮箱账号')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_user" name="data[user]" value="{htmlspecialchars($data.user)}">
+                <input type="text" class="form-control" id="dr_user" name="data[user]" value="{htmlspecialchars((string)$data.user)}">
                 <span class="help-block">{dr_lang('登录邮件系统的账号名称')}</span>
             </div>
         </div>
         <div class="form-group smtp" id="dr_row_pass">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('邮箱密码')}</label>
             <div class="col-xs-8">
-                <input type="text" class="form-control" id="dr_pass" name="data[pass]" value="{htmlspecialchars($data.pass)}">
+                <input type="text" class="form-control" id="dr_pass" name="data[pass]" value="{htmlspecialchars((string)$data.pass)}">
                 <span class="help-block">{dr_lang('登录邮件系统的账号密码')}</span>
             </div>
         </div>

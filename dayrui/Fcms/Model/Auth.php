@@ -701,7 +701,7 @@ class Auth extends \Phpcmf\Model {
             $class = '';
             $_i == 1 && $class = ' {ONE}'; // 第一个菜单标识
             // 选中当前菜单
-            if (trim($uri, '/') == $_uri) {
+            if ($uri && trim($uri, '/') == $_uri) {
                 $class .= ' ' . $on;
                 $_select = 1;
             }
