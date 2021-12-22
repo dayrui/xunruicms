@@ -14,6 +14,7 @@ use CodeIgniter\HTTP\RequestInterface;
 
 class Security extends \CodeIgniter\Security\Security
 {
+
     /**
      * CSRF Verify
      *
@@ -40,7 +41,6 @@ class Security extends \CodeIgniter\Security\Security
             return $this;
         }
 
-
         // Protects POST, PUT, DELETE, PATCH
         $method           = strtoupper($request->getMethod());
         $methodsToProtect = ['POST', 'PUT', 'DELETE', 'PATCH'];
@@ -53,7 +53,6 @@ class Security extends \CodeIgniter\Security\Security
             $tokenName = $request->header($this->headerName)->getValue();
         } else {
             $json = json_decode($request->getBody());
-
             if (! empty($request->getBody()) && ! empty($json) && json_last_error() === JSON_ERROR_NONE) {
                 $tokenName = $json->{$this->tokenName} ?? null;
             } else {
@@ -68,36 +67,13 @@ class Security extends \CodeIgniter\Security\Security
             dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');
         }
 
-        // 宽松验证模式时
-        if (defined('SYS_CSRF') && SYS_CSRF == 2) {
-            return $this;
-        }
-
-        $json = json_decode($request->getBody());
-
         if (isset($_POST[$this->tokenName])) {
             // We kill this since we're done and we don't want to pollute the POST array.
             unset($_POST[$this->tokenName]);
             $request->setGlobal('post', $_POST);
-        } elseif (isset($json->{$this->tokenName})) {
-            // We kill this since we're done and we don't want to pollute the JSON data.
-            unset($json->{$this->tokenName});
-            $request->setBody(json_encode($json));
-        }
-
-        if ($this->regenerate) {
-            $this->hash = null;
-            if ($this->csrfProtection === self::CSRF_PROTECTION_COOKIE) {
-                unset($_COOKIE[$this->cookieName]);
-            } else {
-                // Session based CSRF protection
-                Services::session()->remove($this->tokenName);
-            }
         }
 
         $this->generateHash();
-
-        log_message('info', 'CSRF token verified.');
 
         return $this;
     }

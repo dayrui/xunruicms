@@ -1589,7 +1589,7 @@ function dr_zhe_price($value, $zhe) {
  * 获取价格值
  */
 function dr_price_value($value, $num = 2) {
-    return number_format($value, $num);
+    return $value ? number_format($value, (int)$num) : 0;
 }
 
 /**
