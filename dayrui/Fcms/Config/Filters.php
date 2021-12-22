@@ -51,7 +51,7 @@ class Filters extends BaseConfig
      * @var array
      */
     public $methods = [
-        'post' => ['csrf']
+        'post' => []
     ];
 
     /**
@@ -64,4 +64,15 @@ class Filters extends BaseConfig
      * @var array
      */
     public $filters = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (defined('SYS_CSRF') && SYS_CSRF) {
+            $this->methods['post'] = ['csrf'];
+        } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index', 'register/index'])) {
+            // 登录和注册强制跨站验证
+            $this->methods['post'] = ['csrf'];
+        }
+    }
 }

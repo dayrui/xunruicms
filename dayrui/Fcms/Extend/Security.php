@@ -25,9 +25,7 @@ class Security extends \CodeIgniter\Security\Security
     public function verify(RequestInterface $request)
     {
 
-        if (defined('SYS_CSRF') && !SYS_CSRF) {
-            return $this;
-        } elseif (defined('IS_API') && IS_API) {
+        if (defined('IS_API') && IS_API) {
             return $this;
         } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
             return $this;
