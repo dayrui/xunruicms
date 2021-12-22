@@ -1026,7 +1026,7 @@ class Content extends \Phpcmf\Model {
             }
 
             \Phpcmf\Service::M('member')->delete_admin_notice($this->dirname.'/verify/edit:id/'.$id, $this->siteid);
-            \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$id);
+            \Phpcmf\Service::L('cache')->clear('module_'.$this->dirname.'_show_id_'.$id);
 
             // 放入回收站
             $rt = $this->table($this->mytable.'_recycle')->insert([
@@ -1094,7 +1094,7 @@ class Content extends \Phpcmf\Model {
             if (!$cid) {
                 return NULL;
             }
-            \Phpcmf\Service::L('cache')->init()->delete('module_'.$this->dirname.'_show_id_'.$cid.'1');
+            \Phpcmf\Service::L('cache')->clear('module_'.$this->dirname.'_show_id_'.$cid);
             // 删除执行的方法
             $this->_delete_content($cid, $row);
             // 删除钩子

@@ -377,7 +377,7 @@ class Module extends \Phpcmf\Common
             $is_id = 0;
         }
 
-        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.$this->is_mobile.($page > 1 ? $page : '');
+        $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.($this->is_mobile ? '_m' : '').($page > 1 ? '_p'.$page : '');
         $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             $data = $this->content_model->get_data($is_id ? $id : 0, 0, $param);
