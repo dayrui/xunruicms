@@ -127,7 +127,8 @@
                             dataType: "json",
                             url: "{dr_url('api/ctotal')}",
                             data: {
-                                'cid': json.data
+                                'cid': json.data,
+                                {csrf_token()}: "{csrf_hash()}",
                             },
                             success: function(json2) {
                                 if (json2.code == 1) {
@@ -219,7 +220,7 @@
                 type: "POST",
                 dataType: "json",
                 url: "{dr_url('api/ctotal')}",
-                data: {json_encode(['cid'=>$tcats])},
+                data: {json_encode(['cid'=>$tcats, csrf_token() => csrf_hash()])},
                 success: function(json) {
                     if (json.code == 1) {
                         eval(json.msg);
