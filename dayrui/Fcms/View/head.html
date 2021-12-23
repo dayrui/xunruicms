@@ -104,7 +104,7 @@
                      name = '';
                  }
                {/if}
-                {if !IS_ADMIN_CACHE}
+                {if SYS_NOT_ADMIN_CACHE}
                 $("#right_page").attr('src', url);
                 $("#right_page").attr("url", url);
                 {else}

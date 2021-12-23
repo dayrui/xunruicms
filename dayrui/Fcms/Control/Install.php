@@ -334,6 +334,7 @@ $db[\'default\']	= [
                                 'SYS_AUTO_FORM'                 => '0',
                                 'SYS_ADMIN_PAGESIZE'            => '10',
                                 'SYS_SMS_IMG_CODE'              => '0',
+                                'SYS_NOT_ADMIN_CACHE'           => '0',
                                 'SYS_URL_PREG'                  => '1',
                                 'SYS_CRON_AUTH'                 => '0',
                                 'SYS_CSRF'                      => '0',

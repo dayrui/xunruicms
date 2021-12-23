@@ -28,6 +28,7 @@ class System extends \Phpcmf\Common
 
                 'SYS_URL_PREG' => (int)$post['SYS_URL_PREG'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
+                'SYS_NOT_ADMIN_CACHE' => (int)$post['SYS_NOT_ADMIN_CACHE'],
 
                 'SYS_ADMIN_MODE' => intval($post['SYS_ADMIN_MODE']),
                 'SYS_ADMIN_LOG' => intval($post['SYS_ADMIN_LOG']),

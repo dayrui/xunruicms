@@ -71,6 +71,7 @@ $system = [
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,
     'SYS_HTTPS' => 0,
+    'SYS_NOT_ADMIN_CACHE' => 0,
     'SYS_ADMIN_MODE'  => 0,
     'SYS_ADMIN_LOGINS'  => 0,
     'SYS_ADMIN_LOGIN_TIME'  => 0,
@@ -107,7 +108,6 @@ foreach ($system as $var => $value) {
 }
 unset($my, $system);
 
-!defined('IS_ADMIN_CACHE') && define('IS_ADMIN_CACHE', '1');
 !defined('SQGS') && define('SQGS', '迅睿CMS开源框架');
 !defined('CI_DEBUG') && define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
 !defined('IS_FB_DEBUG') && define('IS_FB_DEBUG', CI_DEBUG ? 0 : 1);
