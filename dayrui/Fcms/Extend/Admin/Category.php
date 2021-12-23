@@ -1181,25 +1181,35 @@ class Category extends \Phpcmf\Table {
                 $row['setting'] = dr_string2array($row['setting']);
                 if (isset($catids[0]) && $catids[0] == 0) {
                     // 全部栏目
-                    foreach ($this->module['category'] as $id => $t) {
+                    foreach ($this->module['category'] as $cid => $t) {
                         if ($t['ismain']) {
                             $c ++;
-                            \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                            \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $cid);
                         }
                     }
                 } else {
                     // 指定栏目
-                    foreach ($catids as $id) {
-                        if ($this->module['category'][$id]['ismain']) {
+                    foreach ($catids as $cid) {
+                        if ($this->module['category'][$cid]['ismain']) {
                             $c++;
-                            \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                            \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $cid);
                         }
                     }
+                    if (!in_array($id, $catids)) {
+                        \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                        $c++;
+                    }
                 }
+                // 自动更新缓存
+                \Phpcmf\Service::M('cache')->sync_cache();
+                $this->_json(1, dr_lang('共设置%s个栏目', $c));
+            } else {
+                // 没有选择表示自己
+                \Phpcmf\Service::M('category')->init($this->init)->copy_value('cat_field', $row['setting'], $id);
+                // 自动更新缓存
+                \Phpcmf\Service::M('cache')->sync_cache();
+                $this->_json(1, dr_lang('操作成功'));
             }
-            // 自动更新缓存
-            \Phpcmf\Service::M('cache')->sync_cache();
-            $this->_json(1, dr_lang('共设置%s个栏目', $c));
         }
 
         \Phpcmf\Service::V()->assign([

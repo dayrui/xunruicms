@@ -49,8 +49,10 @@ class Login extends \Phpcmf\Common
 				$this->_json(0, dr_lang('账号或密码必须填写'));
 			} else {
 				$login = \Phpcmf\Service::M('auth')->login($data['username'], $data['password']);
-                $this->admin['uid'] = 0;
-                $this->admin['username'] = $data['username'];
+                if (isset($this->admin) && is_array($this->admin)) {
+                    $this->admin['uid'] = 0;
+                    $this->admin['username'] = $data['username'];
+                }
                 if ($login['code']) {
                     // 登录成功
                     $sync = [];
