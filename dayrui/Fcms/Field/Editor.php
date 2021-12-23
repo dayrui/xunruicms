@@ -202,7 +202,7 @@ class Editor extends \Phpcmf\Library\A_Field {
      */
     public function insert_value($field) {
 
-        $value = str_replace(['style=""', '<p><br></p>'], '', $_POST['data'][$field['fieldname']]);
+        $value = (string)str_replace(['style=""', '<p><br></p>'], '', $_POST['data'][$field['fieldname']]);
         $value = preg_replace("/xunruicmsattachid=\"([0-9]+)\"/U", '', $value);
         // 第一张作为缩略图
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']]) && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
@@ -350,7 +350,6 @@ class Editor extends \Phpcmf\Library\A_Field {
                     }
                 }
             }
-
         }
 
         // 去除站外链接
