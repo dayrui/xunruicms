@@ -13180,7 +13180,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .fc-mb-left-menu {
     position: absolute;
     right: 0;
-    padding: 0 20px;
+    padding: 0 10px;
     overflow: hidden;
     height: 42px;
     text-align: right;
@@ -13193,6 +13193,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     color: #888;
     overflow: hidden;
     float: right;
+    cursor: pointer;
 }
 .fc-mb-left-menu a {
     color: #888;
