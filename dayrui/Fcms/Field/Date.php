@@ -167,10 +167,17 @@ class Date extends \Phpcmf\Library\A_Field {
             $this->set_load_js($field['fieldtype'], 1);
         }
 
+        $updatetime_select = 0;
         // 字段默认值
         !$value && $value = $this->get_default_value($field['setting']['option']['value']);
-        if ($value == 'SYS_TIME' || (APP_DIR && $name == 'updatetime')) {
-            $value = SYS_TIME;
+        if ($value == 'SYS_TIME') {
+        } elseif (APP_DIR && $name == 'updatetime' && \Phpcmf\Service::C()->module) {
+            $updatetime_select = isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'];
+            if ($updatetime_select) {
+                // 勾选不更新时
+            } else {
+                $value = SYS_TIME;
+            }
         } elseif (strpos($value, '-') === 0) {
         } elseif (strpos($value, '-') !== false) {
             $value = strtotime($value);
@@ -222,7 +229,7 @@ class Date extends \Phpcmf\Library\A_Field {
         }
 
         if (APP_DIR && \Phpcmf\Service::C()->module && $name == 'updatetime') {
-            $str.= '<label><input name="no_time" '.(isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'] ? ' checked' : '').' class="dr_no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
+            $str.= '<label><input name="no_time" '.($updatetime_select ? ' checked' : '').' class="dr_no_time" type="checkbox" value="1" /> '.dr_lang('不更新').'</label>';
         }
 
         $str.= $tips;
