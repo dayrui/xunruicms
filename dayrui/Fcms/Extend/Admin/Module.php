@@ -202,6 +202,7 @@ class Module extends \Phpcmf\Table {
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
                 '', 1, 1
             ),
+            'web_url' => $data['url'] ? dr_url_prefix($data['url'], APP_DIR) : '',
             'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
@@ -645,6 +646,7 @@ class Module extends \Phpcmf\Table {
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
                 '', 1, 1
             ),
+            'web_url' => dr_url_prefix('index.php?s='.APP_DIR.'&c=show&m=verify&id='.$id, APP_DIR),
             'is_verify' => 1,
             'back_note' => \Phpcmf\Service::L('input')->get('note'),
             'verify_msg' => $verify_msg,
@@ -806,6 +808,7 @@ class Module extends \Phpcmf\Table {
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
                 '', 1, 1
             ),
+            'web_url' => dr_url_prefix('index.php?s='.APP_DIR.'&c=show&m=time&id='.$id, APP_DIR),
             'is_post_time' => 1,
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
@@ -903,7 +906,7 @@ class Module extends \Phpcmf\Table {
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
             ),
             'catid' => $data['catid'],
-            'select' => '<label style="padding-top: 9px">'.$this->module['category'][$data['catid']]['name'].'</label>',
+            'web_url' => dr_url_prefix('index.php?s='.APP_DIR.'&c=show&m=recycle&id='.$id, APP_DIR),
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
 
@@ -955,6 +958,7 @@ class Module extends \Phpcmf\Table {
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
                 '', 1, 1
             ),
+            'web_url' => dr_url_prefix('index.php?s='.APP_DIR.'&c=show&m=recycle&id='.$id, APP_DIR),
             'is_recycle' => 1,
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('post'));
