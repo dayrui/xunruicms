@@ -56,14 +56,11 @@ class Login extends \Phpcmf\Common
                 if ($login['code']) {
                     // 登录成功
                     $sync = [];
-                    // 写入日志
-                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
 					if ($sn) {
 						// 解除禁止登陆
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
 						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
 					}
-
                     if (!$url) {
                         $url = SELF.'?time='.SYS_TIME;
                         if (isset($data['mode']) && $data['mode']) {
@@ -88,6 +85,9 @@ class Login extends \Phpcmf\Common
                         }
                     }
                     $url = dr_redirect_safe_check(\Phpcmf\Service::L('input')->xss_clean($url, true));
+                    // 写入日志
+                    $this->admin = $login['data'];
+                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
                     $this->_json(1, 'ok', ['sync' => $sync, 'url' => $url]);
                 } else {
                     // 登录失败

@@ -92,8 +92,10 @@ class Content extends \Phpcmf\Model {
                 return dr_return_data(0, dr_lang('内容索引id生成失败'));
             }
             $data[0]['id'] = $data[1]['id'] = $nid;
+            $is_add = 1;
         } else {
             // 更新
+            $is_add = 0;
             $this->index($id, array( 1 => array(
                 'uid' => $data[1]['uid'],
                 'catid' => $data[1]['catid'],
@@ -107,7 +109,6 @@ class Content extends \Phpcmf\Model {
                 $id = 0;
             }
         }
-
 
         // 表示审核文章机制
         if ($data[1]['status'] >= 0 && $data[1]['status'] < 9) {
@@ -213,6 +214,7 @@ class Content extends \Phpcmf\Model {
 						dr_lang('《%s》审核被拒绝', $data[1]['title']),
 						\Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
 					);
+
 				} else {
 					// 通知管理员
 					\Phpcmf\Service::M('member')->admin_notice(
@@ -223,7 +225,6 @@ class Content extends \Phpcmf\Model {
                         $role
 					);
 				}
-
                 // 挂钩点 模块内容审核处理之后
                 $verify['old'] = $old;
                 \Phpcmf\Hooks::trigger('module_verify_after', $verify);
@@ -357,40 +358,14 @@ class Content extends \Phpcmf\Model {
         }
 
         // 表示新发布
-        if (!$id) {
+        if ($is_add) {
             $member = dr_member_info($data[1]['uid']);
             if ($member && IS_USE_MEMBER) {
-                // 增减金币
-                $score = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'score', $member);
-                $score && \Phpcmf\Service::M('member')->add_score($data[1]['uid'], $score, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
-                // 增减人民币
-                $money = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'money', $member);
-                if ($money) {
-                    $rr = \Phpcmf\Service::M('member')->add_money($data[1]['uid'], $money);
-                    if ($rr['code']) {
-                        if (!dr_is_app('pay')) {
-                            log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：没有安装「支付系统」插件');
-                        } else {
-                            \Phpcmf\Service::M('Pay', 'pay')->add_paylog([
-                                'uid' => $member['id'],
-                                'touid' => 0,
-                                'mid' => 'system',
-                                'title' => dr_lang('%s内容《%s》发布', \Phpcmf\Service::C()->module['name'], $data[1]['title']),
-                                'value' => $money,
-                                'type' => 'finecms',
-                                'status' => 1,
-                                'result' => dr_url_prefix($data[1]['url'], $this->dirname, $this->siteid, ''),
-                                'paytime' => SYS_TIME,
-                                'inputtime' => SYS_TIME,
-                            ]);
-                        }
-                    } else {
-                        log_message('error', '模块【'.\Phpcmf\Service::C()->module['name'].'】发布内容（'.$data[1]['id'].'）扣减人民币失败：'.$rr['msg']);
-                    }
+                // 发布内容之后
+                $mob = \Phpcmf\Service::M('member', 'member');
+                if (method_exists($mob, 'module_content_after')) {
+                    $mob->module_content_after(\Phpcmf\Service::C()->module, $data, $member);
                 }
-                // 增减经验
-                $exp = \Phpcmf\Service::L('member_auth', 'member')->category_auth(\Phpcmf\Service::C()->module, $data[1]['catid'], 'exp', $member);
-                $exp && \Phpcmf\Service::M('member')->add_experience($data[1]['uid'], $exp, dr_lang('%s内容发布', \Phpcmf\Service::C()->module['name']), $data[1]['url']);
             }
         } else {
             // 修改内容

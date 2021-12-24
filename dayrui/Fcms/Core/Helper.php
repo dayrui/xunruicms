@@ -184,6 +184,10 @@ function dr_code2html($value, $fk = false, $flags = '') {
 }
 function dr_html_code($value, $fk = false, $flags = '') {
 
+    if (!$value) {
+        return '';
+    }
+
     !$flags && $flags = ENT_QUOTES | ENT_HTML401 | ENT_HTML5;
 
     if ($fk) {
@@ -197,6 +201,7 @@ function dr_html_code($value, $fk = false, $flags = '') {
 
 // 快捷登录接入商信息列表
 function dr_oauth_list() {
+
     $data = [];
     $path = FCPATH.'ThirdParty/OAuth/';
     $local = dr_dir_map($path, 1);
@@ -207,6 +212,7 @@ function dr_oauth_list() {
             }
         }
     }
+
     return $data;
 }
 

@@ -149,7 +149,7 @@ class Auth extends \Phpcmf\Model {
         // 登录后的钩子
         \Phpcmf\Hooks::trigger('admin_login_after', $data);
 
-        return dr_return_data($uid);
+        return dr_return_data($uid, 'login', $data);
     }
 
     // 存储会话
