@@ -513,6 +513,7 @@ class File extends \Phpcmf\Common
             }
             dr_redirect($info);
         }
+        
         exit;
     }
 
