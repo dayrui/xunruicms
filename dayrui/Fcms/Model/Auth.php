@@ -263,7 +263,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         $data['adminid'] = $data['roleid'][1] ? 1 : 9;
-        $data['id'] = $data['uid'] = $uid;
+        $data['uid'] = $uid;
         $data['email'] = $member['email'];
         $data['phone'] = $member['phone'];
         $data['username'] = $member['username'];

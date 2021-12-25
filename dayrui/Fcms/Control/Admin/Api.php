@@ -225,10 +225,10 @@ class Api extends \Phpcmf\Common {
                 \Phpcmf\Service::M('member')->edit_password($this->member, $password);
             }
 
-			\Phpcmf\Service::M()->db->table('admin')->where('uid', $this->admin['id'])->update([
+			\Phpcmf\Service::M()->db->table('admin')->where('id', $this->admin['id'])->update([
 				'usermenu' => dr_array2string($menu)
             ]);
-			\Phpcmf\Service::M()->db->table('member_data')->where('id', $this->admin['id'])->update([
+			\Phpcmf\Service::M()->db->table('member_data')->where('id', $this->admin['uid'])->update([
 				'is_admin' => 1
             ]);
 
@@ -579,7 +579,7 @@ class Api extends \Phpcmf\Common {
             $this->_admin_msg(0, dr_lang('无权限操作其他账号'));
         }
 
-        $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['id']);
+        $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['uid']);
         \Phpcmf\Service::L('cache')->set_data('admin_login_member', $admin, 30);
         $this->session()->set('admin_login_member_code', $uid.$this->admin['id'].$this->admin['password']);
 
