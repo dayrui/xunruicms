@@ -201,7 +201,7 @@ class Module extends \Phpcmf\Common
         if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
             $tpl = dr_safe_filename($_GET['ajax_page']);
             if (!is_file(\Phpcmf\Service::V()->get_dir().$tpl)) {
-                CI_DEBUG && log_message('debug', '搜索模板参数ajax_page值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
+                log_message('debug', '搜索模板参数ajax_page值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
                 $tpl = ''; // 自定义模板不存在
             }
         } elseif (isset($this->module['setting']['search']['tpl_field'])
@@ -211,7 +211,7 @@ class Module extends \Phpcmf\Common
         ) {
             $tpl = dr_safe_filename('search_'.$get[$this->module['setting']['search']['tpl_field']].'.html');
             if (!is_file(\Phpcmf\Service::V()->get_dir().$tpl)) {
-                CI_DEBUG && log_message('debug', '搜索模板字段'.$this->module['setting']['search']['tpl_field'].'参数值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
+                log_message('debug', '搜索模板字段'.$this->module['setting']['search']['tpl_field'].'参数值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
                 $tpl = ''; // 自定义模板不存在
             }
         }
