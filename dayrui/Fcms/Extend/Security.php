@@ -52,7 +52,8 @@ class Security extends \CodeIgniter\Security\Security
         if ($request->hasHeader($this->headerName) && ! empty($request->header($this->headerName)->getValue())) {
             $tokenName = $request->header($this->headerName)->getValue();
         } else {
-            $json = json_decode($request->getBody());
+            $code = $request->getBody();
+            $json = json_decode($code ? $code : '');
             if (! empty($request->getBody()) && ! empty($json) && json_last_error() === JSON_ERROR_NONE) {
                 $tokenName = $json->{$this->tokenName} ?? null;
             } else {

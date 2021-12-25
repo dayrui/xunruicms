@@ -130,7 +130,8 @@ function dr_strlen($string) {
 function dr_move_uploaded_file($tempfile, $fullname) {
 
     $contentType = $_SERVER['CONTENT_TYPE'] ?? getenv('CONTENT_TYPE');
-    if (strpos($contentType, 'multipart') !== false && strpos($_SERVER['HTTP_CONTENT_RANGE'], 'bytes') === 0) {
+    if ($contentType && $_SERVER['HTTP_CONTENT_RANGE']
+        && strpos($contentType, 'multipart') !== false && strpos($_SERVER['HTTP_CONTENT_RANGE'], 'bytes') === 0) {
 
         // 命名一个新名称
         $value = str_replace('bytes ', '', $_SERVER['HTTP_CONTENT_RANGE']);

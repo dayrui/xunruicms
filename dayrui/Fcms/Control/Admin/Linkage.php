@@ -75,83 +75,162 @@ class Linkage extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('linkage_add.html');exit;
 	}
 
+	public function export_down() {
+
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
+        $path = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'/';
+        $file = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'.zip';
+
+        if (!is_dir($path)) {
+            $this->_html_msg(0, dr_lang('导出文件目录不存在'));
+        }
+
+        // 压缩文件夹
+        $rt = \Phpcmf\Service::L('file')->zip($file, $path);
+        if ($rt) {
+            $this->_html_msg(0, '目录压缩失败（'.$rt.'）');
+        }
+
+        set_time_limit(0);
+        $handle = fopen($file,"rb");
+        if (FALSE === $handle) {
+            $this->_html_msg(0, dr_lang('文件已经损坏'));
+        }
+
+        $filesize = filesize($file);
+        $link = \Phpcmf\Service::M()->table('linkage')->get($key);
+        header('Content-Type: application/octet-stream');
+        header("Accept-Ranges:bytes");
+        header("Accept-Length:".$filesize);
+        header("Content-Disposition: attachment; filename=".urlencode($link['name'].'.zip'));
+
+        while (!feof($handle)) {
+            $contents = fread($handle, 4096);
+            echo $contents;
+            ob_flush();  //把数据从PHP的缓冲中释放出来
+            flush();      //把被释放出来的数据发送到浏览器
+        }
+
+        fclose($handle);
+        exit;
+    }
+
 	public function export() {
-		
+
 		$key = (int)\Phpcmf\Service::L('input')->get('key');
-        $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
-        if (!$nums) {
-            $this->_json(0, dr_lang('数据为空，无法导出'));
-        } elseif ($nums > 10000) {
-            $this->_json(0, dr_lang('数据超过1万，无法导出'));
-        }
-        $rows = \Phpcmf\Service::M()->table('linkage_data_'.$key)->getAll();
-        \Phpcmf\Service::V()->assign([
-            'data' => dr_array2string($rows),
-        ]);
-        \Phpcmf\Service::V()->display('api_export_code.html');exit;
-        //
-		$code = (int)\Phpcmf\Service::L('input')->get('code');
-		if (!is_file(APPPATH.'Config/Linkage/'.$code.'.php')) {
-		    $this->_json(0, dr_lang('数据文件不存在无法导入'));
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
+        $psize = 500;
+        $path = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'/';
+
+        if (!$page) {
+            $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
+            if (!$nums) {
+                $this->_json(0, dr_lang('数据为空，无法导出'));
+            }
+            $tpage = ceil($nums / $psize); // 总页数
+            if (is_dir($path)) {
+                dr_dir_delete($path);
+            }
+            dr_mkdirs($path);
+            $this->_html_msg(1, dr_lang('正在准备导出数据'), dr_url('linkage/export', ['key'=>$key, 'page' => 1, 'tpage' => $tpage]));
         }
 
-		// 清空数据
-        $count = 0;
-		$table = 'linkage_data_'.$id;
-		\Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
+        $data = \Phpcmf\Service::M()->db->table('linkage_data_'.$key)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        if (!$data) {
+            $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
+            $this->_html_msg(1, dr_lang('导出完毕，共计%s条数据', $nums), dr_url('linkage/export_down', ['key'=>$key]), dr_lang('请关闭本窗口'));
+        }
 
-		// 开始导入
-		$data = require APPPATH.'Config/Linkage/'.$code.'.php';
-		foreach ($data as $t) {
+        $rt = file_put_contents($path.$page.'.json', dr_array2string($data));
+        if (!$rt) {
+            $this->_html_msg(0, '文件写入失败');
+        }
+
+        $this->_html_msg(1, dr_lang('正在整理数据【%s】...', "$tpage/$page"),  dr_url('linkage/export', ['key'=>$key, 'page' => ($page+1), 'tpage' => $tpage]));
+
+	}
+
+    public function import_add() {
+
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
+
+        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.zip';
+        $path = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'/';
+        if (!is_file($file)) {
+            $this->_html_msg(0, dr_lang('导入文件不存在'));
+        }
+
+        $table = 'linkage_data_'.$key;
+
+        if (!$page) {
+            // 解压
+            if (!\Phpcmf\Service::L('file')->unzip($file, $path)) {
+                $this->_html_msg(0, '文件解压失败');
+            }
+            $files = dr_file_map($path);
+            \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
+            $this->_html_msg(1, dr_lang('正在准备导入数据'), dr_url('linkage/import_add', ['key'=>$key, 'page' => 1, 'tpage' => dr_count($files)]));
+        }
+
+        if (!is_file($path.$page.'.json')) {
+            $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
+            \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+            $this->_html_msg(1, dr_lang('导入完毕，共计%s条数据', $nums), '', dr_lang('请关闭本窗口'));
+        }
+
+        // 开始导入
+        $data = dr_string2array(file_get_contents($path.$page.'.json'));
+        if (!is_array($data)) {
+            $this->_html_msg(0, dr_lang('导入信息验证失败'));
+        }
+        foreach ($data as $t) {
             if (is_numeric($t['cname'])) {
                 $t['cname'] = 'a'.$t['cname'];
             }
-			$rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
-			if ($rt['code']) {
-				$count++;
-			}
-		}
+            $rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
+            if ($rt['code']) {
+                $count++;
+            }
+        }
 
-        \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-		$this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
-	}
+        $this->_html_msg(1, dr_lang('正在导入数据【%s】...', "$tpage/$page"),  dr_url('linkage/import_add', ['key'=>$key, 'page' => ($page+1), 'tpage' => $tpage]));
+
+    }
 
     public function import() {
 
-        if (IS_AJAX_POST) {
-            $key = (int)\Phpcmf\Service::L('input')->get('key');
-            $data = \Phpcmf\Service::L('input')->post('code');
-            $data = dr_string2array($data);
-            if (!is_array($data)) {
-                $this->_json(0, dr_lang('导入信息验证失败'));
-            }
-
-            // 清空数据
-            $count = 0;
-            $table = 'linkage_data_'.$key;
-            \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
-
-            // 开始导入
-            foreach ($data as $t) {
-                if (is_numeric($t['cname'])) {
-                    $t['cname'] = 'a'.$t['cname'];
-                }
-                $rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
-                if ($rt['code']) {
-                    $count++;
-                }
-            }
-
-            \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-            $this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
-        }
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
 
         \Phpcmf\Service::V()->assign([
-            'data' => '',
-            'form' => dr_form_hidden()
+            'add_url' => dr_url('linkage/import_add', ['key' => $key]),
+            'upload_url' => dr_url('linkage/import_upload', ['key' => $key]),
         ]);
-        \Phpcmf\Service::V()->display('api_export_code.html');
+        \Phpcmf\Service::V()->display('linkage_import.html');
         exit;
+    }
+
+    // 上传处理
+    function import_upload() {
+
+        $key = (int)\Phpcmf\Service::L('input')->get('key');
+        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.zip';
+        $rt = \Phpcmf\Service::L('upload')->upload_file([
+            'save_file' => $file, // 上传的固定文件路径
+            'form_name' => 'file_data', // 固定格式
+            'file_exts' => ['zip'], // 上传的扩展名
+            'file_size' => 100 * 1024 * 1024, // 上传的大小限制
+            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info('null'), // 固定文件时必须这样写
+        ]);
+        if (!$rt['code']) {
+            // 失败了
+            exit(dr_array2string($rt));
+        }
+
+        // 上传成功了
+        exit(dr_array2string($rt));
     }
 
 	public function del() {

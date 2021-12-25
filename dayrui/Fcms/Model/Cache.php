@@ -206,12 +206,6 @@ class Cache extends \Phpcmf\Model
 </body>
 </html>
 ';
-
-        // 开发者模式下不删除temp目录
-        if (!IS_DEV) {
-            $path[] = WRITEPATH.'temp';
-        }
-
         // 开始删除目录数据
         foreach ($path as $p) {
             dr_dir_delete($p);
@@ -225,6 +219,7 @@ class Cache extends \Phpcmf\Model
             WRITEPATH.'debugbar',
             WRITEPATH.'session',
             WRITEPATH.'thread',
+            WRITEPATH.'temp',
         ];
         foreach ($path as $p) {
             if ($fp = opendir($p)) {
