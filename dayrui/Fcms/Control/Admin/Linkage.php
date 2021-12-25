@@ -13,11 +13,6 @@ class Linkage extends \Phpcmf\Common
 
 		\Phpcmf\Service::V()->assign([
 			'list' => \Phpcmf\Service::M('Linkage')->table('linkage')->getAll(),
-			'dt_data' => [
-                1 => '导入省级',
-                2 => '导入省市',
-                3 => '导入省市县',
-            ],
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '联动菜单' => ['linkage/index', 'fa fa-columns'],
@@ -80,9 +75,21 @@ class Linkage extends \Phpcmf\Common
 		\Phpcmf\Service::V()->display('linkage_add.html');exit;
 	}
 
-	public function import() {
+	public function export() {
 		
-		$id = (int)\Phpcmf\Service::L('input')->get('id');
+		$key = (int)\Phpcmf\Service::L('input')->get('key');
+        $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
+        if (!$nums) {
+            $this->_json(0, dr_lang('数据为空，无法导出'));
+        } elseif ($nums > 10000) {
+            $this->_json(0, dr_lang('数据超过1万，无法导出'));
+        }
+        $rows = \Phpcmf\Service::M()->table('linkage_data_'.$key)->getAll();
+        \Phpcmf\Service::V()->assign([
+            'data' => dr_array2string($rows),
+        ]);
+        \Phpcmf\Service::V()->display('api_export_code.html');exit;
+        //
 		$code = (int)\Phpcmf\Service::L('input')->get('code');
 		if (!is_file(APPPATH.'Config/Linkage/'.$code.'.php')) {
 		    $this->_json(0, dr_lang('数据文件不存在无法导入'));
@@ -108,6 +115,44 @@ class Linkage extends \Phpcmf\Common
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 		$this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
 	}
+
+    public function import() {
+
+        if (IS_AJAX_POST) {
+            $key = (int)\Phpcmf\Service::L('input')->get('key');
+            $data = \Phpcmf\Service::L('input')->post('code');
+            $data = dr_string2array($data);
+            if (!is_array($data)) {
+                $this->_json(0, dr_lang('导入信息验证失败'));
+            }
+
+            // 清空数据
+            $count = 0;
+            $table = 'linkage_data_'.$key;
+            \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
+
+            // 开始导入
+            foreach ($data as $t) {
+                if (is_numeric($t['cname'])) {
+                    $t['cname'] = 'a'.$t['cname'];
+                }
+                $rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
+                if ($rt['code']) {
+                    $count++;
+                }
+            }
+
+            \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+            $this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => '',
+            'form' => dr_form_hidden()
+        ]);
+        \Phpcmf\Service::V()->display('api_export_code.html');
+        exit;
+    }
 
 	public function del() {
 
