@@ -301,7 +301,8 @@ class File extends \Phpcmf\Common
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
             .'&ct='.$ct
             .'&p='.\Phpcmf\Service::L('input')->get('p');
-        $pp = $unused ? intval($_GET['pp']) : 1;
+        $pp = intval($_GET['pp']);
+        $pp = $unused ? $pp : ($pp == 2 ? 2 : 1);
 
         $listurl = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
