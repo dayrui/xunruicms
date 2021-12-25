@@ -153,8 +153,10 @@
     </div>
     <div class="page-content-wrapper">
         <div class="page-content index-content">
+            {if !SYS_NOT_ADMIN_CACHE}
             <ul class="page-toolbar fc-mb-left-menu" id="dr_go_url">
             </ul>
+            {/if}
             <div id="myiframe" cid="right_page">
                 <iframe class="myiframe active" name="right" id="right_page" src="{$main_url}" url="{$main_url}" style="border:none; margin-bottom:0px;" width="100%" height="auto" allowtransparency="true"></iframe>
             </div>
