@@ -105,6 +105,9 @@ class Module_search extends \Phpcmf\Common
                 ]);
             }
 
+            // 自动更新缓存
+            \Phpcmf\Service::M('cache')->sync_cache();
+
             $this->_json(1, dr_lang('操作成功'), [
                 'url' => dr_url(\Phpcmf\Service::L('Router')->class.'/index', ['page' => $dir])
             ]);

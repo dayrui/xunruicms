@@ -170,7 +170,8 @@ class Module extends \Phpcmf\Common
         $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
 
         // 识别自定义地址，301定向
-        if (dr_is_sys_301() && !IS_API_HTTP && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
+        if (dr_is_sys_301() && !IS_API_HTTP && !isset($_GET['ajax_page'])
+            && strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
             $get['page'] > 1 && $data['params']['page'] = $get['page'];
             dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
         }
@@ -196,11 +197,25 @@ class Module extends \Phpcmf\Common
         ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
 
+        $tpl = '';
         if (isset($_GET['ajax_page']) && $_GET['ajax_page']) {
             $tpl = dr_safe_filename($_GET['ajax_page']);
-        } elseif (isset($get['ajax_page']) && $get['ajax_page']) {
-            $tpl = dr_safe_filename($get['ajax_page']);
-        } else {
+            if (!is_file(\Phpcmf\Service::V()->get_dir().$tpl)) {
+                CI_DEBUG && log_message('debug', '搜索模板参数ajax_page值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
+                $tpl = ''; // 自定义模板不存在
+            }
+        } elseif (isset($this->module['setting']['search']['tpl_field'])
+            && $this->module['setting']['search']['tpl_field']
+            && isset($get[$this->module['setting']['search']['tpl_field']])
+            && $get[$this->module['setting']['search']['tpl_field']]
+        ) {
+            $tpl = dr_safe_filename('search_'.$get[$this->module['setting']['search']['tpl_field']].'.html');
+            if (!is_file(\Phpcmf\Service::V()->get_dir().$tpl)) {
+                CI_DEBUG && log_message('debug', '搜索模板字段'.$this->module['setting']['search']['tpl_field'].'参数值对应的模板（'.\Phpcmf\Service::V()->get_dir().$tpl.'）不存在，将加载默认的搜索模板');
+                $tpl = ''; // 自定义模板不存在
+            }
+        }
+        if (!$tpl) {
             $tpl = $catid && $this->module['category'][$catid]['setting']['template']['search'] ? $this->module['category'][$catid]['setting']['template']['search'] : 'search.html';
         }
 

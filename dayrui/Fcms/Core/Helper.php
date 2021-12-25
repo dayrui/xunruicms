@@ -721,6 +721,11 @@ function dr_mod_value(...$get) {
 
 // 格式化编辑器内容数据
 function dr_ueditor_html($value, $title = '') {
+
+    if (!$value) {
+        return '';
+    }
+
     return UEDITOR_IMG_TITLE ? str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value)) : htmlspecialchars_decode($value);
 }
 
