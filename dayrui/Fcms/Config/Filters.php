@@ -69,10 +69,24 @@ class Filters extends BaseConfig
     {
         parent::__construct();
         if (defined('SYS_CSRF') && SYS_CSRF) {
-            $this->methods['post'] = ['csrf'];
-        } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index', 'member/register/index', 'member/login/index'])) {
+            if (SYS_CSRF == 1) {
+                $this->methods['post'] = ['csrf'];
+            } elseif (SYS_CSRF == 2 && !IS_ADMIN) {
+                $this->methods['post'] = ['csrf'];
+            }
+        }
+
+        if (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index', 'member/register/index', 'member/login/index'])) {
             // 登录和注册强制跨站验证
             $this->methods['post'] = ['csrf'];
+        } elseif (defined('IS_API') && IS_API) {
+            $this->methods['post'] = [];
+        } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
+            $this->methods['post'] = [];
+        } elseif (APP_DIR == 'weixin') {
+            $this->methods['post'] = [];
+        } elseif (defined('IS_INSTALL') || defined('IS_NOT_CSRF')) {
+            $this->methods['post'] = [];
         }
     }
 }

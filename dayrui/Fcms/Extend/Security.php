@@ -26,16 +26,6 @@ class Security extends \CodeIgniter\Security\Security
     public function verify(RequestInterface $request)
     {
 
-        if (defined('IS_API') && IS_API) {
-            return $this;
-        } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
-            return $this;
-        } elseif (APP_DIR == 'weixin') {
-            return $this;
-        } elseif (defined('IS_INSTALL') || defined('IS_NOT_CSRF')) {
-            return $this;
-        }
-
         // 过滤白名单内的控制器
         if (in_array(\Phpcmf\Service::L('router')->uri(), \Phpcmf\Service::Filters())) {
             return $this;
