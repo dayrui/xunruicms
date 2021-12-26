@@ -38,7 +38,7 @@ define('COREPATH', CMSPATH);
 // 定义移动端模板目录
 !defined('MOBILE_TPL_DIR') && define('MOBILE_TPL_DIR', 'mobile');
 // 编辑器的图片的title和alt默认占位字符
-!defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{xunruicms_img_title}');
+!defined('UEDITOR_IMG_TITLE') && define('UEDITOR_IMG_TITLE', '{cms_img_title}');
 // tests
 define('TESTPATH', WRITEPATH.'tests/');
 // temp目录

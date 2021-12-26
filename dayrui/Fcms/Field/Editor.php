@@ -116,8 +116,9 @@ class Editor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('图片title').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][imgtitle]" '.($option['imgtitle'] ? 'checked' : '').' > '.dr_lang('内容标题').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][imgtitle]" '.($option['imgtitle'] >0 ? 'checked' : '').' > '.dr_lang('内容标题').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][imgtitle]" '.(!$option['imgtitle'] ? 'checked' : '').' > '.dr_lang('图片名称').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="-1" name="data[setting][option][imgtitle]" '.($option['imgtitle'] < 0 ? 'checked' : '').' > '.dr_lang('不显示').' <span></span></label>
                         </div>
 						<span class="help-block">'.dr_lang('将模块内容的标题作为图片title字符').'</span>
                     </div>
@@ -127,8 +128,9 @@ class Editor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('图片alt').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][imgalt]" '.($option['imgalt'] ? 'checked' : '').' > '.dr_lang('内容标题').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][imgalt]" '.($option['imgalt'] >0 ? 'checked' : '').' > '.dr_lang('内容标题').' <span></span></label>
                             <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][imgalt]" '.(!$option['imgalt'] ? 'checked' : '').' > '.dr_lang('图片名称').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="-1" name="data[setting][option][imgalt]" '.($option['imgalt'] < 0 ? 'checked' : '').' > '.dr_lang('不显示').' <span></span></label>
                         </div>
 						<span class="help-block">'.dr_lang('将模块内容的标题作为图片alt字符').'</span>
                     </div>
@@ -203,7 +205,7 @@ class Editor extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
 
         $value = (string)str_replace(['style=""', '<p><br></p>'], '', $_POST['data'][$field['fieldname']]);
-        $value = preg_replace("/xunruicmsattachid=\"([0-9]+)\"/U", '', $value);
+        $value = preg_replace("/cmsattachid=\"([0-9]+)\"/U", '', $value);
         // 第一张作为缩略图
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']]) && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
 
@@ -437,7 +439,7 @@ class Editor extends \Phpcmf\Library\A_Field {
 
         $add = \Phpcmf\Service::M('Attachment')->get_ueditor_aid($this->rid, true);
         if (isset($_POST['data'][$this->field['fieldname']]) && $_POST['data'][$this->field['fieldname']]
-            && preg_match_all("/<([a-z]+) xunruicmsattachid=\"([0-9]+)\"/Ui", $_POST['data'][$this->field['fieldname']], $att)) {
+            && preg_match_all("/<([a-z]+) cmsattachid=\"([0-9]+)\"/Ui", $_POST['data'][$this->field['fieldname']], $att)) {
             if ($add && is_array($add)) {
                 $add = array_merge($add, $att[2]);
             } else {
@@ -539,6 +541,21 @@ class Editor extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
         ], 'ENCODE');
         $str.= "<textarea class=\"dr_ueditor\" name=\"data[$name]\" id=\"dr_$name\">$value</textarea>";
+
+        if ($field['setting']['option']['imgtitle'] > 0) {
+            $title = UEDITOR_IMG_TITLE;
+        } elseif ($field['setting']['option']['imgtitle'] < 0) {
+            $title = 'none';
+        } else {
+            $title = '';
+        }
+        if ($field['setting']['option']['imgalt'] > 0) {
+            $alt = UEDITOR_IMG_TITLE;
+        } elseif ($field['setting']['option']['imgalt'] < 0) {
+            $alt = 'none';
+        } else {
+            $alt = '';
+        }
         $str.= \Phpcmf\Service::L('js_packer')->pack("
         <script type=\"text/javascript\">
             $(function(){
@@ -547,8 +564,8 @@ class Editor extends \Phpcmf\Library\A_Field {
                 llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p)."',
                 llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p2)."',
                 attachUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&p=' . $p3)."',
-                isImageTitle:'".($field['setting']['option']['imgtitle'] ? UEDITOR_IMG_TITLE : '')."',
-                isImageAlt:'".($field['setting']['option']['imgalt'] ? UEDITOR_IMG_TITLE : '')."',
+                isImageTitle:'".$title."',
+                isImageAlt:'".$alt."',
                 height:'".$height."',
                 width:'".$width."'});
             });

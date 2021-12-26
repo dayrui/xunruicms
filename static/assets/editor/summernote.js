@@ -5935,14 +5935,18 @@ var Editor_Editor = /*#__PURE__*/function () {
         if (typeof param === 'function') {
           param($image);
         } else {
-          if (_this3.options.isImageTitle) {
-            $image.attr('title', _this3.options.isImageTitle);
+          if (_this3.options.isImageTitle == 'none') {
+
+          } else if (_this3.options.isImageTitle) {
+              $image.attr('title', _this3.options.isImageTitle);
           } else {
             if (typeof param === 'string' && param) {
               $image.attr('title', param);
             }
           }
-          if (_this3.options.isImageAlt) {
+          if (_this3.options.isImageAlt == 'none') {
+
+          } else if (_this3.options.isImageAlt) {
             $image.attr('alt', _this3.options.isImageAlt);
           } else {
             if (typeof param === 'string' && param) {
@@ -9258,7 +9262,7 @@ var VideoDialog_VideoDialog = /*#__PURE__*/function () {
                           if (v.id == undefined || v.id == 'undefined') {
                             continue;
                           }
-                          var html = '<video xunruicmsattachid="'+v.id+'" controls="" src="'+v.url+'" width="640" height="360" class="note-video-clip"></video>\n\t';
+                          var html = '<video cmsattachid="'+v.id+'" controls="" src="'+v.url+'" width="640" height="360" class="note-video-clip"></video>\n\t';
                           _this.context.invoke('editor.pasteHTML', html);
                         }
                         dr_tips(1, json2.msg);
@@ -9372,7 +9376,7 @@ var VideoDialog_VideoDialog = /*#__PURE__*/function () {
                           if (v.id == undefined || v.id == 'undefined') {
                             continue;
                           }
-                          var html = '<a xunruicmsattachid="'+v.id+'" href="'+v.url+'" target="_blank">'+v.name+'</a>\n\t';
+                          var html = '<a cmsattachid="'+v.id+'" href="'+v.url+'" target="_blank">'+v.name+'</a>\n\t';
                           _this.context.invoke('editor.pasteHTML', html);
                         }
                         dr_tips(1, json2.msg);
@@ -9486,15 +9490,19 @@ var HelpDialog_HelpDialog = /*#__PURE__*/function () {
                   if (v.id == undefined || v.id == 'undefined') {
                     continue;
                   }
-                  var html = '<img xunruicmsattachid="'+v.id+'"';
-                  if (_this.options.isImageTitle) {
+                  var html = '<img cmsattachid="'+v.id+'"';
+                  if (_this.options.isImageTitle == 'none') {
+
+                  } else if (_this.options.isImageTitle) {
                     html+= ' title="'+_this.options.isImageTitle+'"';
                   } else {
                     if (v.name) {
                       html+= ' title="'+v.name+'"';
                     }
                   }
-                  if (_this.options.isImageAlt) {
+                  if (_this.options.isImageAlt == 'none') {
+
+                  } else if (_this.options.isImageAlt) {
                     html+= ' alt="'+_this.options.isImageTitle+'"';
                   } else {
                     if (v.name) {
