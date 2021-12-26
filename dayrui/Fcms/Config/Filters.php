@@ -69,9 +69,9 @@ class Filters extends BaseConfig
     {
         parent::__construct();
         if (defined('SYS_CSRF') && SYS_CSRF) {
-            if (SYS_CSRF == 1) {
+            if (SYS_CSRF == 2) {
                 $this->methods['post'] = ['csrf'];
-            } elseif (SYS_CSRF == 2 && !IS_ADMIN) {
+            } elseif (SYS_CSRF == 1 && !IS_ADMIN) {
                 $this->methods['post'] = ['csrf'];
             }
         }
