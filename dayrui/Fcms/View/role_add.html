@@ -24,9 +24,26 @@
                     </label>
                 </div>
                 <p class="help-block">{dr_lang('管理者：可管理全部用户的投稿内容')}</p>
-                <p class="help-block">{dr_lang('投稿者：只能管理自己的投稿内容，自己投稿会进入审核流程')}</p>
+                <p class="help-block">{dr_lang('投稿者：只能管理自己的投稿内容')}</p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-xs-3 control-label ajax_name">{dr_lang('投稿者审核')}</label>
+            <div class="col-xs-8">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio">
+                        <input type="radio" name="data[application][verify]" value="1" {if $data['application']['verify']} checked{/if} > {dr_lang('启用审核')}
+                        <span></span>
+                    </label>
+                    <label class="mt-radio">
+                        <input type="radio" name="data[application][verify]" value="0" {if !$data['application']['verify']} checked{/if}> {dr_lang('关闭审核')}
+                        <span></span>
+                    </label>
+                </div>
+                <p class="help-block">{dr_lang('发布或修改模块内容时需要通过管理员审核')}</p>
+            </div>
+        </div>
+
         {else}
         <input type="hidden" name="data[application][tid]" value="0" />
         {/if}

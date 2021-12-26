@@ -1117,13 +1117,9 @@ class Module extends \Phpcmf\Table {
         $data[1]['catid'] = $data[0]['catid'] = $catid;
 
         // 验证状态
-        if ($this->is_post_user && IS_USE_MEMBER) {
+        if ($this->is_post_user) {
             // 投稿者
-            $data[1]['status'] = $this->is_hcategory ? $this->content_model->_hcategory_member_post_status($this->member) : $this->content_model->get_verify_status(
-                $id,
-                $this->member,
-                \Phpcmf\Service::L('member_auth', 'member')->category_auth($this->module, $catid, 'verify', $this->member)
-            );
+            $data[1]['status'] = \Phpcmf\Service::M('auth')->is_post_user_status() ? 1 : 9;
         } else {
             $data[1]['status'] = 9;
         }

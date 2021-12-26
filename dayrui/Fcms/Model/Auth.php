@@ -402,6 +402,26 @@ class Auth extends \Phpcmf\Model {
         return $this->_is_post_user;
     }
 
+    // 投稿员是否审核
+    public function is_post_user_status() {
+
+        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            return 0;
+        }
+
+        $auth = \Phpcmf\Service::C()->get_cache('auth');
+        foreach (\Phpcmf\Service::C()->admin['roleid'] as $aid) {
+            if (isset($auth[$aid]['application']['tid']) && $auth[$aid]['application']['tid']) {
+                if (isset($auth[$aid]['application']['verify']) && $auth[$aid]['application']['verify']) {
+                    return 1;
+                }
+                return 0;
+            }
+        }
+
+        return 0;
+    }
+
     // 后台内容审核权限编辑时的验证
     public function get_admin_verify_status_edit($vid, $status) {
 
