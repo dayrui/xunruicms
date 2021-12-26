@@ -225,8 +225,7 @@ class Date extends \Phpcmf\Library\A_Field {
 					todayBtn: "linked"
 				});
 			});
-			</script>
-			';
+			</script>';
         }
 
         if (APP_DIR && \Phpcmf\Service::C()->module && $name == 'updatetime') {
