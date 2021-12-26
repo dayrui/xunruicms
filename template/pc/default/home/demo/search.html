@@ -196,7 +196,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-2 control-label">组合购买价格自定义</label>
                                     <div class="col-md-9">
-                                        {php $zhxgm = explode(',', $params.zhxgm);}
+                                        {php $zhxgm = explode(',', (string)$params.zhxgm);}
                                         <label><input type="text" class="form-control" value="{$zhxgm[0]}" id="zhxgm_min"></label>
                                         <label>到</label>
                                         <label><input type="text" class="form-control" value="{$zhxgm[1]}" id="zhxgm_max"></label>
@@ -224,7 +224,7 @@
                                                 }
                                             });
                                         </script>
-                                        {php $updatetime = explode(',', $params.updatetime);}
+                                        {php $updatetime = explode(',', (string)$params.updatetime);}
                                         <label><div class="input-group  date-picker input-daterange" data-date="" data-date-format="yyyy/mm/dd">
                                             <input type="text" class="form-control" value="{$updatetime[0]}" id="updatetime_min">
                                             <span class="input-group-addon"> {dr_lang('到')} </span>
