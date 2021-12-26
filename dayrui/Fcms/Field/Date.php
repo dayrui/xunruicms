@@ -170,14 +170,15 @@ class Date extends \Phpcmf\Library\A_Field {
         $updatetime_select = 0;
         // 字段默认值
         !$value && $value = $this->get_default_value($field['setting']['option']['value']);
-        if ($value == 'SYS_TIME') {
-        } elseif (APP_DIR && $name == 'updatetime' && \Phpcmf\Service::C()->module) {
+        if (APP_DIR && $name == 'updatetime' && \Phpcmf\Service::C()->module) {
             $updatetime_select = isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'];
             if ($updatetime_select) {
                 // 勾选不更新时
             } else {
                 $value = SYS_TIME;
             }
+        } elseif ($value == 'SYS_TIME') {
+            $value = SYS_TIME;
         } elseif (strpos($value, '-') === 0) {
         } elseif (strpos($value, '-') !== false) {
             $value = strtotime($value);
