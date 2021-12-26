@@ -12,6 +12,7 @@ class Auth extends \Phpcmf\Model {
     protected $_auth_uri = '';
     protected $_is_post_user = -1;
     protected $_is_admin_min_mode = -1;
+    protected $_is_post_user_status = -1;
 
     // 验证操作其他用户身份权限
     public function cleck_edit_member($uid) {
@@ -405,6 +406,10 @@ class Auth extends \Phpcmf\Model {
     // 投稿员是否审核
     public function is_post_user_status() {
 
+        if ($this->_is_post_user_status >= 0) {
+            return $this->_is_post_user_status;
+        }
+
         if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             return 0;
         }
@@ -413,12 +418,15 @@ class Auth extends \Phpcmf\Model {
         foreach (\Phpcmf\Service::C()->admin['roleid'] as $aid) {
             if (isset($auth[$aid]['application']['tid']) && $auth[$aid]['application']['tid']) {
                 if (isset($auth[$aid]['application']['verify']) && $auth[$aid]['application']['verify']) {
+                    $this->_is_post_user_status = 1;
                     return 1;
                 }
+                $this->_is_post_user_status = 0;
                 return 0;
             }
         }
 
+        $this->_is_post_user_status = 0;
         return 0;
     }
 
