@@ -73,13 +73,13 @@ class Filters extends BaseConfig
                 $this->methods['post'] = ['csrf'];
             } elseif (SYS_CSRF == 1 && !IS_ADMIN) {
                 $this->methods['post'] = ['csrf'];
+            } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index'])) {
+                // 后台登录强制跨站验证
+                $this->methods['post'] = ['csrf'];
             }
         }
 
-        if (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index', 'member/register/index', 'member/login/index'])) {
-            // 登录和注册强制跨站验证
-            $this->methods['post'] = ['csrf'];
-        } elseif (defined('IS_API') && IS_API) {
+        if (defined('IS_API') && IS_API) {
             $this->methods['post'] = [];
         } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
             $this->methods['post'] = [];
