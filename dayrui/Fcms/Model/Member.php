@@ -651,8 +651,12 @@ class Member extends \Phpcmf\Model {
 
         // 再次判断没有账号，随机一个默认登录账号
         if (!$member['username']) {
-            $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix']
-            .intval($rt['code']+date('Ymd'))));
+            $member['username'] = '';
+            if (isset(\Phpcmf\Service::C()->member_cache['register']['unprefix']) && \Phpcmf\Service::C()->member_cache['register']['unprefix']) {
+                $member['username'] = strtolower(trim((string)\Phpcmf\Service::C()->member_cache['register']['unprefix']));
+            }
+            $member['username'].= intval($rt['code']+date('Ymd'));
+
             // 更新操作
             $this->table('member')->update($rt['code'], [
                 'username' => $member['username']
@@ -1006,8 +1010,14 @@ class Member extends \Phpcmf\Model {
 
         // 最大位数
         if (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
-            && mb_strlen($name) > \Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
-            $name = dr_strcut($name, \Phpcmf\Service::C()->member_cache['config']['userlenmax'], '');
+            && mb_strlen($name) > (int)\Phpcmf\Service::C()->member_cache['config']['userlenmax']) {
+            $name = dr_strcut($name, (int)\Phpcmf\Service::C()->member_cache['config']['userlenmax'], '');
+        }
+
+        // 增加用户名前缀
+        if ($name && isset(\Phpcmf\Service::C()->member_cache['register']['unprefix'])
+            && \Phpcmf\Service::C()->member_cache['register']['unprefix']) {
+            $name = strtolower(trim((string)\Phpcmf\Service::C()->member_cache['register']['unprefix'])).$name;
         }
 
         return $name;
