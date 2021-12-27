@@ -62,7 +62,7 @@ class Router {
     // 获取返回时的URL
     public function get_back($uri, $param = [], $remove_total = false) {
 
-        $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
+        $name = md5((string)$_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $value = \Phpcmf\Service::L('cache')->get_data($name);
         if ($value) {
             $uri = $value[0];
@@ -79,7 +79,7 @@ class Router {
     // 设置返回时的URL, uri页面标识,param参数,nuri当前页优先
     public function set_back($uri, $param = [], $nuri = '') {
 
-        $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
+        $name = md5((string)$_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $param['page'] = $_GET['page'];
         \Phpcmf\Service::L('cache')->set_data(
             $name,
@@ -90,7 +90,7 @@ class Router {
 
     // 清理返回url
     public function clear_back($uri) {
-        $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
+        $name = md5((string)$_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         \Phpcmf\Service::L('cache')->del_data($name);
     }
 

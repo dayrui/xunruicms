@@ -226,7 +226,7 @@ if (!function_exists('dr_is_mobile')) {
                 'ipad',
             ];
             // 从HTTP_USER_AGENT中查找关键字
-            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))){
+            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower((string)$_SERVER['HTTP_USER_AGENT']))){
                 return false;
             }
         }
@@ -237,7 +237,7 @@ if (!function_exists('dr_is_mobile')) {
             // 判断手机发送的客户端标志,兼容性有待提高
             $clientkeywords=['nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','xiaomi','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile'];
             // 从HTTP_USER_AGENT中查找手机浏览器的关键字
-            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))){
+            if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower((string)$_SERVER['HTTP_USER_AGENT']))){
                 return true;
             }
         }
@@ -1283,7 +1283,7 @@ function dr_block($id, $type = 0, $site = 0) {
 
 // 是否是微信公众号
 function dr_is_weixin_app() {
-    return strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger');
+    return strpos((string)$_SERVER['HTTP_USER_AGENT'], 'MicroMessenger');
 }
 
 /**
@@ -4094,7 +4094,7 @@ function dr_debug($file, $data) {
     $debug = debug_backtrace();
     file_put_contents(WRITEPATH.'debuglog/'.dr_safe_filename($file).'.txt', var_export([
         '时间' => dr_date(SYS_TIME, 'Y-m-d H:i:s'),
-        '终端' => $_SERVER['HTTP_USER_AGENT'],
+        '终端' => (string)$_SERVER['HTTP_USER_AGENT'],
         '文件' => $debug[0]['file'],
         '行号' => $debug[0]['line'],
         '地址' => FC_NOW_URL,
