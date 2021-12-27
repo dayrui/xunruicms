@@ -249,16 +249,16 @@ class Category extends \Phpcmf\Table {
                 if ($t['setting']['cat_field'] && isset($t['setting']['cat_field']['content'])) {
                     // 当开启字段权限时不显示内容
                 } else {
-                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_content_url('.$t['id'].')"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
+                    $option.= '<a class="btn btn-xs dark" href="javascript:dr_content_url('.$t['id'].', \''.$t['name'].'\')"> <i class="fa fa-edit"></i> '.dr_lang('编辑内容').'</a>';
                 }
             }
             if ($this->_is_admin_auth('edit') && ($t['tid'] == 2 && $this->is_scategory)) {
-                $option.= '<a class="btn btn-xs dark" href="javascript:dr_link_url('.$t['id'].');"> <i class="fa fa-edit"></i> '.dr_lang('编辑地址').'</a>';
+                $option.= '<a class="btn btn-xs dark" href="javascript:dr_link_url('.$t['id'].', \''.$t['name'].'\');"> <i class="fa fa-edit"></i> '.dr_lang('编辑地址').'</a>';
             }
             // 只对超管有效
             if ($t['ismain'] && isset($this->admin['role'][1])
                 && ((!$this->module['share'] && dr_count($this->module['category_field']) > 1) || ($this->module['share'] && dr_count($this->module['category_field']) > 2))) {
-                $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
+                $option.= '<a class="btn btn-xs red" href="javascript:dr_cat_field('.$t['id'].', \''.$t['name'].'\');"> <i class="fa fa-code"></i> '.dr_lang('字段权限').'</a>';
             }
             // 第三方插件接入
             if ($is_cat_code) {
