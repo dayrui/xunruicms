@@ -247,7 +247,7 @@ class Table extends \Phpcmf\Model
           `thumb` varchar(255) NOT NULL COMMENT '栏目图片',
           `show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
           `content` mediumtext NOT NULL COMMENT '单页内容',
-          `setting` text NOT NULL COMMENT '属性配置',
+          `setting` mediumtext NOT NULL COMMENT '属性配置',
           `displayorder` smallint(5) NOT NULL DEFAULT '0',
           PRIMARY KEY (`id`),
           KEY `mid` (`mid`),

@@ -91,7 +91,7 @@ return [
         `childids` text NOT NULL COMMENT '下级所有id',
         `thumb` varchar(255) NOT NULL COMMENT '栏目图片',
         `show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
-        `setting` text NOT NULL COMMENT '属性配置',
+        `setting` mediumtext NOT NULL COMMENT '属性配置',
         `displayorder` mediumint(8) NOT NULL DEFAULT '0',
         PRIMARY KEY (`id`),
         KEY `show` (`show`),
