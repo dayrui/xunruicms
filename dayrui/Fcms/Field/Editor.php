@@ -374,7 +374,7 @@ class Editor extends \Phpcmf\Library\A_Field {
 
         // 提取描述信息
         if (isset($_POST['data']['description']) && isset($_POST['is_auto_description_'.$field['fieldname']])
-            && !\Phpcmf\Service::L('Field')->data[1]['description'] && $_POST['is_auto_description_'.$field['fieldname']]) {
+            && $_POST['is_auto_description_'.$field['fieldname']]) {
             \Phpcmf\Service::L('Field')->data[1]['description'] = $_POST['data']['description'] = dr_get_description($value);
         }
 

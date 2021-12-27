@@ -869,13 +869,6 @@ class Content extends \Phpcmf\Model {
         isset($data[1]['uid']) && $data[0]['uid'] = (int)$data[1]['uid'];
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
 
-        if (!$data[1]['description']) {
-            if (isset($data[0]['content']) && $data[0]['content']) {
-                $data[1]['description'] = dr_get_description($data[0]['content']);
-            } elseif (isset($data[1]['content']) && $data[1]['content']) {
-                $data[1]['description'] = dr_get_description($data[1]['content']);
-            }
-        }
         if (isset($data[1]['keywords']) && $data[1]['keywords']) {
 			// 不要自动获取关键词，容易卡顿，引起发布延迟
             $data[1]['keywords'] = implode(',', array_unique(explode(',', trim(str_replace('"', '', $data[1]['keywords'])))));
