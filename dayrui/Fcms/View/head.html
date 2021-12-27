@@ -112,7 +112,7 @@
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
                 $('#dr_go_url li').removeClass('active');
-                $('#dr_tab_close').remove();
+
                 if ($('#right_page_'+cmd).length > 0) {
                     // 存在
                     $('#right_page_'+cmd).show();
@@ -123,6 +123,7 @@
                         $('#right_page_'+cmd).attr('src', url);
                     }
                 } else {
+                    $('#dr_tab_close').remove();
                     var html = '<iframe class="myiframe" name="right" id="right_page_'+cmd+'" src="'+url+'" url="'+url+'" style="border:none; margin-bottom:0px;height:'+$('#right_page').height()+'px" width="100%" height="auto" allowtransparency="true"></iframe>';
                     $("#myiframe").append(html);
                 }
