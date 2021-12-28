@@ -3897,6 +3897,9 @@ function dr_emoji2html($msg) {
  * @return type
  */
 function dr_clear_emoji($str){
+    if (!$str) {
+        return '';
+    }
     return dr_clear_empty(dr_html2emoji(preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '';}, $str)));
 }
 
