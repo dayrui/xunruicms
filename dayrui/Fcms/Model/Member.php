@@ -995,6 +995,10 @@ class Member extends \Phpcmf\Model {
             $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
         }
 
+        if (!$name) {
+            return '';
+        }
+
         // 重复名称加随机数
         if ($ct && $ct < 5) {
             $name.= $ct + rand(0, 999);
