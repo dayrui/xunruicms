@@ -32,14 +32,15 @@ class Notice extends \Phpcmf\Common
 				'fieldtype' => 'Text',
 			]
 		];
+        $menu = [
+            '处理记录' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-bell-slash'],
+            '待处理' => [\Phpcmf\Service::L('Router')->class.'/my_index', 'fa fa-bell-o'],
+        ];
+        if (dr_in_array(1, $this->admin['roleid'])) {
+            $menu['全部'] = [\Phpcmf\Service::L('Router')->class.'/all_index', 'fa fa-bell'];
+        }
 		\Phpcmf\Service::V()->assign([
-			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-				[
-					'处理记录' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-bell-slash'],
-					'待处理' => [\Phpcmf\Service::L('Router')->class.'/my_index', 'fa fa-bell-o'],
-					'全部' => [\Phpcmf\Service::L('Router')->class.'/all_index', 'fa fa-bell'],
-				]
-			),
+			'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
 			'field' => $this->field,
 		]);
 	}
@@ -86,6 +87,10 @@ class Notice extends \Phpcmf\Common
 
 	// 全部
 	public function all_index() {
+
+        if (!dr_in_array(1, $this->admin['roleid'])) {
+            $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));
+        }
 
 		list($list, $total, $param) = \Phpcmf\Service::M()->init([
 			'table' => 'admin_notice',
