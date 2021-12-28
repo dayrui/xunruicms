@@ -57,7 +57,7 @@ class Site_config extends \Phpcmf\Common
                 ]
             ),
 			'theme' => dr_get_theme(),
-			'is_theme' => strpos($data['config']['SITE_THEME'], '/') !== false ? 1 : 0,
+			'is_theme' => dr_strpos($data['config']['SITE_THEME'], '/') !== false ? 1 : 0,
 			'template_path' => dr_dir_map(TPLPATH.'pc/', 1),
 		]);
 		\Phpcmf\Service::V()->display('site_config.html');

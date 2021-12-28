@@ -51,7 +51,7 @@
                             <div class="col-md-9">
                                 <div class="btn-group fc-3x3" data-toggle="buttons">
                                     {loop $locate $i $t}
-                                    <label class="btn btn-default  {if $data.locate == $i} active{/if}  {if strpos($i, 'bottom')!==false} btn2{/if}">
+                                    <label class="btn btn-default  {if $data.locate == $i} active{/if}  {if dr_strpos($i, 'bottom')!==false} btn2{/if}">
                                         <input type="radio" name="data[locate]" {if $data.locate == $i}checked{/if} value="{$i}" class="toggle"> {dr_lang($t)}
                                     </label>
                                     {/loop}

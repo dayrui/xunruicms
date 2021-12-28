@@ -229,7 +229,7 @@
 <div id="dr_web" style="display: none">
     <label class="col-md-2 control-label">{dr_lang('远程资源')}</label>
     <div class="col-md-9">
-        <input class="form-control  input-xlarge" type="text" placeholder="http://" name="site[theme]" value="{php echo strpos($site['theme'], 'http') === 0 ? $site['theme'] : '';}">
+        <input class="form-control  input-xlarge" type="text" placeholder="http://" name="site[theme]" value="{php echo dr_strpos($site['theme'], 'http') === 0 ? $site['theme'] : '';}">
         <span class="help-block">{dr_lang('网站将调用此地址的css,js,图片等静态资源')}</span>
     </div>
 </div>

@@ -125,6 +125,20 @@ function dr_strlen($string) {
 }
 
 /**
+ * 字符是否包含
+ */
+function dr_strpos($string, $key) {
+    return strpos((string)$string, $key)
+}
+
+/**
+ * 字符是否包含
+ */
+function dr_stripos($string, $key) {
+    return stripos((string)$string, $key)
+}
+
+/**
  * 上传移动文件
  */
 function dr_move_uploaded_file($tempfile, $fullname) {
