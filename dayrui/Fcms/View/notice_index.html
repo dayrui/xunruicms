@@ -84,7 +84,7 @@
                 <span class="label label-sm label-success">{dr_lang('系统')}</span>
                 {/if}
             </td>
-            <td style="text-align:center">{if $t.status ==0}
+            <td style="text-align:center" title="{$t.uri}">{if $t.status ==0}
                 <span class="label label-sm label-danger">{dr_lang('未处理')}</span>
                 {else if $t.status ==1}
                 <span class="label label-sm label-warning">{dr_lang('已查看')}</span>

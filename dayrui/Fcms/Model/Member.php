@@ -540,7 +540,7 @@ class Member extends \Phpcmf\Model {
         // 记录日志
         $this->_login_log($member, $oauth['oauth']);
 
-        return dr_return_data($member['id'], 'ok', [
+        return dr_return_data($member['id'], dr_lang('登录成功'), [
             'auth'=> md5($member['password'].$member['salt']), // API认证字符串,
             'member' => $member,
         ]);
@@ -724,7 +724,7 @@ class Member extends \Phpcmf\Model {
         // 记录日志
         $this->_login_log($data);
 
-        return dr_return_data($data['id'], 'ok', $data);
+        return dr_return_data($data['id'], dr_lang('注册成功'), $data);
     }
 
     /**
