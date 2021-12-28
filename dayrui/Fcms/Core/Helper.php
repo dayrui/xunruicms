@@ -128,14 +128,14 @@ function dr_strlen($string) {
  * 字符是否包含
  */
 function dr_strpos($string, $key) {
-    return strpos((string)$string, $key)
+    return strpos((string)$string, $key);
 }
 
 /**
  * 字符是否包含
  */
 function dr_stripos($string, $key) {
-    return stripos((string)$string, $key)
+    return stripos((string)$string, $key);
 }
 
 /**
