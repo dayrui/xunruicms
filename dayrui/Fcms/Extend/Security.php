@@ -76,7 +76,7 @@ class Security extends \CodeIgniter\Security\Security
     {
         if ($this->hash === null) {
             $name = 'csrf_hash_'.md5(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : '');
-            $hash = \Phpcmf\Service::L('cache')->get_auth_data($name, 1, 600);
+            $hash = \Phpcmf\Service::L('cache')->get_auth_data($name, 1, 1800);
             if ($hash) {
                 return $this->hash = $hash;
             }
