@@ -115,7 +115,7 @@ abstract class Common extends \CodeIgniter\Controller {
         !defined('ADMIN_URL') && define('ADMIN_URL', dr_http_prefix(DOMAIN_NAME.'/'));
 
         // 设置时区
-        if (strlen($this->site_info[SITE_ID]['SITE_TIMEZONE']) > 0) {
+        if (dr_strlen($this->site_info[SITE_ID]['SITE_TIMEZONE']) > 0) {
             date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
         }
 
