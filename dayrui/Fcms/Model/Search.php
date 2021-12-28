@@ -254,6 +254,7 @@ class Search extends \Phpcmf\Model {
 
             // 自定义组合查询
             isset($param['catid']) && $param_new['catid'] = $param['catid'];
+            isset($param['catdir']) && $param_new['catdir'] = $param['catdir'];
             isset($param['keyword']) && $param_new['keyword'] = $param['keyword'];
             $where = $this->mysearch($this->module, $where, $param_new);
             $where = $where ? implode(' AND ', $where) : '';
