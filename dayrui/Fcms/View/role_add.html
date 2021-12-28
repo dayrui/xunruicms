@@ -9,17 +9,17 @@
                 <input type="text" class="form-control" id="dr_name" name="data[name]" value="{htmlspecialchars((string)$data.name)}">
             </div>
         </div>
-        {if IS_USE_MEMBER && $id > 1}
+        {if $id > 1}
         <div class="form-group">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('身份')}</label>
             <div class="col-xs-8">
                 <div class="mt-radio-inline">
-                    <label class="mt-radio">
-                        <input type="radio" name="data[application][tid]" value="0" {if !$data['application']['tid']} checked{/if} > {dr_lang('管理者')}
+                    <label class="mt-radio mt-radio-outline">
+                        <input onclick="$('.dr_tgz').hide()" type="radio" name="data[application][tid]" value="0" {if !$data['application']['tid']} checked{/if} > {dr_lang('管理者')}
                         <span></span>
                     </label>
-                    <label class="mt-radio">
-                        <input type="radio" name="data[application][tid]" value="1" {if $data['application']['tid']} checked{/if}> {dr_lang('投稿者')}
+                    <label class="mt-radio mt-radio-outline">
+                        <input onclick="$('.dr_tgz').show()" type="radio" name="data[application][tid]" value="1" {if $data['application']['tid']} checked{/if}> {dr_lang('投稿者')}
                         <span></span>
                     </label>
                 </div>
@@ -27,15 +27,15 @@
                 <p class="help-block">{dr_lang('投稿者：只能管理自己的投稿内容')}</p>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group dr_tgz" style="{if !$data['application']['tid']} display:none{/if}">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('投稿者审核')}</label>
             <div class="col-xs-8">
                 <div class="mt-radio-inline">
-                    <label class="mt-radio">
+                    <label class="mt-radio mt-radio-outline">
                         <input type="radio" name="data[application][verify]" value="1" {if $data['application']['verify']} checked{/if} > {dr_lang('启用审核')}
                         <span></span>
                     </label>
-                    <label class="mt-radio">
+                    <label class="mt-radio mt-radio-outline">
                         <input type="radio" name="data[application][verify]" value="0" {if !$data['application']['verify']} checked{/if}> {dr_lang('关闭审核')}
                         <span></span>
                     </label>
@@ -51,12 +51,12 @@
             <label class="col-xs-3 control-label ajax_name">{dr_lang('模式')}</label>
             <div class="col-xs-8">
                 <div class="mt-radio-inline">
-                    <label class="mt-radio">
+                    <label class="mt-radio mt-radio-outline">
                         <input type="radio" name="data[application][mode]" value="0" {if !$data['application']['mode']} checked{/if} > {dr_lang('允许使用简化模式')}
                         <span></span>
                     </label>
                     {if $id != 1}
-                    <label class="mt-radio">
+                    <label class="mt-radio mt-radio-outline">
                         <input type="radio" name="data[application][mode]" value="1" {if $data['application']['mode']} checked{/if}> {dr_lang('强制使用简化模式')}
                         <span></span>
                     </label>
