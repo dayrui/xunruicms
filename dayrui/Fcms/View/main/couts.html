@@ -12,19 +12,22 @@
 		$mtotal = [];
 		$module = $ci->get_cache('module-'.SITE_ID.'-content');
         if ($module) {
-        foreach ($module as $dir => $t) {
-        // 判断权限
-        $mtotal[$dir] = [
-        'name' => dr_lang($t['name']),
-        'today' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
-        'all' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
-        'verify' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/verify/index', $dir.'/verify/index'),
-        'recycle' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/recycle/index'),
-        'timing' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/time/index'),
-        'post' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/add'),
-        'list' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
-        ];
-        }
+            foreach ($module as $dir => $t) {
+                // 判断权限
+                if (!$ci->_is_admin_auth($dir.'/home/index')) {
+                    continue;
+                }
+                $mtotal[$dir] = [
+                    'name' => dr_lang($t['name']),
+                    'today' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
+                    'all' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
+                    'verify' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/verify/index', $dir.'/verify/index'),
+                    'recycle' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/recycle/index'),
+                    'timing' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/time/index'),
+                    'post' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/add'),
+                    'list' => \Phpcmf\Service::M('auth')->_menu_link_url($dir.'/home/index', $dir.'/home/index'),
+                ];
+            }
         }
         ?>
         <div class="table-scrollable">
