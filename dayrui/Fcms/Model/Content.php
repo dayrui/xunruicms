@@ -727,7 +727,7 @@ class Content extends \Phpcmf\Model {
         $this->table($this->mytable.'_draft')->delete($id, 'uid='.$this->uid);
         // 删附件
         SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->id_delete(
-            $this->uid,
+            $this->member,
             [$id],
             $this->dbprefix($this->mytable.'_draft-'.$id)
         );

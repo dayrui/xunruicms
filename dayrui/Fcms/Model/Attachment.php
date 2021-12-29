@@ -195,6 +195,15 @@ class Attachment extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('必须登录之后才能删除文件'));
         } elseif (!$id) {
             return dr_return_data(0, dr_lang('文件id不存在'));
+        } elseif (!isset($member['id'])) {
+            return dr_return_data(0, dr_lang('必须登录之后才能删除文件'));
+        }
+
+        if (is_numeric($member)) {
+            $member = $this->table('member')->get($member);
+            if (!$member) {
+                return dr_return_data(0, dr_lang('必须登录之后才能删除文件'));
+            }
         }
 
         $index = $this->table('attachment')->get($id);

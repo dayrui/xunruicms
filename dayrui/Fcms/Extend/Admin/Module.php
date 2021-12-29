@@ -870,7 +870,7 @@ class Module extends \Phpcmf\Table {
 
         // 删除附件
         SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
-            $this->member['id'],
+            $this->member,
             $ids,
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
         );
