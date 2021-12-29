@@ -65,7 +65,7 @@ class Security extends \CodeIgniter\Security\Security
 
         // Do the tokens match?
         if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
-            log_message('error', '跨站验证');
+            CI_DEBUG && log_message('debug', '跨站验证');
             dr_exit_msg(0, '跨站验证失败，禁止此操作', 'CSRFVerify');
         }
 
