@@ -55,7 +55,7 @@ class Security extends \CodeIgniter\Security\Security
 
         // Do the tokens match?
         if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
-            dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');
+            dr_exit_msg(0, '跨站验证失败，禁止此操作', 'CSRFVerify');
         }
 
         if (isset($_POST[$this->tokenName])) {
@@ -63,6 +63,13 @@ class Security extends \CodeIgniter\Security\Security
             unset($_POST[$this->tokenName]);
             $request->setGlobal('post', $_POST);
         }
+
+        // 提交成功重置token
+        $this->hash = null;
+        \Phpcmf\Service::L('cache')->del_auth_data(
+            'csrf_hash_'.md5(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : ''),
+            1
+        );
 
         $this->generateHash();
 
