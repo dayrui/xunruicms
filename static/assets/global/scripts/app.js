@@ -1283,6 +1283,11 @@ function dr_module_send(title, url, nogo) {
             $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
                 success: function(json) {
                     layer.close(loading);
+                    // token 更新
+                    if (json.token) {
+                        var token = json.token;
+                        $(body).find("#myform input[name='"+token.name+"']").val(token.value);
+                    }
                     if (json.code == 1) {
                         layer.close(index);
                         if (nogo) {
@@ -1422,6 +1427,11 @@ function dr_bfb_submit(title, myform, url) {
     $.ajax({type: "POST",dataType:"json", url: url, data: $('#'+myform).serialize(),
         success: function(json) {
             layer.closeAll('loading');
+            // token 更新
+            if (json.token) {
+                var token = json.token;
+                $("#"+myform+" input[name='"+token.name+"']").val(token.value);
+            }
             if (json.code == 1) {
                 layer.open({
                     type: 2,
@@ -1557,6 +1567,11 @@ function dr_submit_post_todo(myform, url) {
     $.ajax({type: "POST",dataType:"json", url: url, data: $('#'+myform).serialize(),
         success: function(json) {
             layer.close(loading);
+            // token 更新
+            if (json.token) {
+                var token = json.token;
+                $("#"+myform+" input[name='"+token.name+"']").val(token.value);
+            }
             if (json.code == 1) {
                 dr_tips(1, json.msg);
             } else {
@@ -1580,6 +1595,11 @@ function dr_submit_sql_todo(myform, url) {
     $.ajax({type: "POST",dataType:"json", url: url, data: $('#'+myform).serialize(),
         success: function(json) {
             layer.close(loading);
+            // token 更新
+            if (json.token) {
+                var token = json.token;
+                $("#"+myform+" input[name='"+token.name+"']").val(token.value);
+            }
             if (json.code == 1) {
                 $("#sql_result").html('<pre>'+json.msg+'</pre>');
             } else {

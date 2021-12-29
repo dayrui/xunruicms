@@ -84,40 +84,40 @@ function dr_get_web_dir() {
 
 // 是否有隐藏区域
 function dr_isEllipsis(dom) {
-	var checkDom = dom.cloneNode(), parent, flag;
-	checkDom.style.width = dom.offsetWidth + 'px';
-	checkDom.style.height = dom.offsetHeight + 'px';
-	checkDom.style.overflow = 'auto';
-	checkDom.style.position = 'absolute';
-	checkDom.style.zIndex = -1;
-	checkDom.style.opacity = 0;
-	checkDom.style.whiteSpace = "nowrap";
-	checkDom.innerHTML = dom.innerHTML;
+    var checkDom = dom.cloneNode(), parent, flag;
+    checkDom.style.width = dom.offsetWidth + 'px';
+    checkDom.style.height = dom.offsetHeight + 'px';
+    checkDom.style.overflow = 'auto';
+    checkDom.style.position = 'absolute';
+    checkDom.style.zIndex = -1;
+    checkDom.style.opacity = 0;
+    checkDom.style.whiteSpace = "nowrap";
+    checkDom.innerHTML = dom.innerHTML;
 
-	parent = dom.parentNode;
-	parent.appendChild(checkDom);
-	flag = checkDom.scrollWidth > checkDom.offsetWidth;
-	parent.removeChild(checkDom);
-	return flag;
+    parent = dom.parentNode;
+    parent.appendChild(checkDom);
+    flag = checkDom.scrollWidth > checkDom.offsetWidth;
+    parent.removeChild(checkDom);
+    return flag;
 };
 
 // 判断当前终端是否是移动设备
 function dr_is_mobile() {
-	var ua = navigator.userAgent,
-	 isWindowsPhone = /(?:Windows Phone)/.test(ua),
-	 isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
-	 isAndroid = /(?:Android)/.test(ua),
-	 isFireFox = /(?:Firefox)/.test(ua),
-	 isChrome = /(?:Chrome|CriOS)/.test(ua),
-	 isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
-	 isPhone = /(?:iPhone)/.test(ua) && !isTablet,
-	 isPc = !isPhone && !isAndroid && !isSymbian;
-	 if (isPc) {
-		// pc
-		return false;
-	 } else {
-		return true;
-	 }
+    var ua = navigator.userAgent,
+        isWindowsPhone = /(?:Windows Phone)/.test(ua),
+        isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+        isAndroid = /(?:Android)/.test(ua),
+        isFireFox = /(?:Firefox)/.test(ua),
+        isChrome = /(?:Chrome|CriOS)/.test(ua),
+        isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+        isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+        isPc = !isPhone && !isAndroid && !isSymbian;
+    if (isPc) {
+        // pc
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function dr_ftable_mydelete(e){
@@ -152,23 +152,28 @@ function dr_ftable_myfileinput (e, url){
                 time: 10000000
             });
             $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
-            success: function(json2) {
-                layer.close(loading);
-                if (json2.code == 1) {
-                    layer.close(index);
-                    var v = json2.data.result[0];
-                    ob.parent().find('.form-control2').val(v.id);
-                    ob.parent().find('.form-control3').val(v.url);
-                    ob.parent().find('.ftable-show').show();
-                    ob.parent().find('.ftable-delete').show();
-                    dr_tips(1, json2.msg);
-                } else {
-                    dr_tips(0, json2.msg);
+                success: function(json2) {
+                    layer.close(loading);
+                    // token 更新
+                    if (json2.token) {
+                        var token = json2.token;
+                        $(body).find("#myform input[name='"+token.name+"']").val(token.value);
+                    }
+                    if (json2.code == 1) {
+                        layer.close(index);
+                        var v = json2.data.result[0];
+                        ob.parent().find('.form-control2').val(v.id);
+                        ob.parent().find('.form-control3').val(v.url);
+                        ob.parent().find('.ftable-show').show();
+                        ob.parent().find('.ftable-delete').show();
+                        dr_tips(1, json2.msg);
+                    } else {
+                        dr_tips(0, json2.msg);
 
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
             return false;
         },
@@ -342,8 +347,8 @@ function dr_iframe(type, url, width, height, rt) {
     }
 
     if (is_mobile_cms == 1) {
-       width = '95%';
-       height = '90%';
+        width = '95%';
+        height = '90%';
     }
 
     layer.open({
@@ -368,6 +373,11 @@ function dr_iframe(type, url, width, height, rt) {
             $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
                 success: function(json) {
                     layer.close(loading);
+                    // token 更新
+                    if (json.token) {
+                        var token = json.token;
+                        $(body).find("#myform input[name='"+token.name+"']").val(token.value);
+                    }
                     if (json.code) {
                         layer.close(index);
                         if (json.data.jscode) {
@@ -548,13 +558,13 @@ function dr_ajax_url(url) {
         dataType: "json",
         success: function (json) {
             layer.close(index);
-			if (json.code == 0) {
+            if (json.code == 0) {
                 $('.fc-code img').click();
                 if (json.data.field) {
                     $('#dr_row_'+json.data.field).addClass('has-error');
                     $('#dr_'+json.data.field).focus();
                 }
-			}
+            }
             dr_cmf_tips(json.code, json.msg, json.data.time);
             if (json.data.url) {
                 setTimeout("window.location.href = '"+json.data.url+"'", 2000);
@@ -633,6 +643,11 @@ function dr_ajax_option(url, msg, remove) {
                 data: $("#myform").serialize(),
                 success: function(json) {
                     layer.close(loading);
+                    // token 更新
+                    if (json.token) {
+                        var token = json.token;
+                        $("#myform input[name='"+token.name+"']").val(token.value);
+                    }
                     if (json.code) {
                         if (remove) {
                             // 批量移出去
@@ -691,6 +706,11 @@ function dr_ajax_option_url(url, msg, tourl) {
                 data: $("#myform").serialize(),
                 success: function(json) {
                     layer.close(loading);
+                    // token 更新
+                    if (json.token) {
+                        var token = json.token;
+                        $("#myform input[name='"+token.name+"']").val(token.value);
+                    }
                     if (json.code) {
                         if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
@@ -741,15 +761,15 @@ function dr_ajax_submit(url, form, time, go) {
             tips = '有必填字段未填写，确认提交吗？';
         }
         layer.confirm(
-        tips,
-        {
-            icon: 3,
-            shade: 0,
-            title: dr_lang('提示'),
-            btn: [dr_lang('确定'), dr_lang('取消')]
-        }, function(index){
-            dr_post_submit(url, form, time, go);
-        });
+            tips,
+            {
+                icon: 3,
+                shade: 0,
+                title: dr_lang('提示'),
+                btn: [dr_lang('确定'), dr_lang('取消')]
+            }, function(index){
+                dr_post_submit(url, form, time, go);
+            });
     } else {
         dr_post_submit(url, form, time, go);
     }
@@ -864,16 +884,16 @@ function dr_loginout(msg) {
             // 发送同步登录信息
             for ( var i = 0; i < oss_url.length; i++){
                 var result = fetchJsonp(oss_url[i], {
-				  jsonpCallback: 'callback',
-				  timeout: 3000
-				})
-				result.then(function(response) {
-				  return response.json()
-				}).then(function(json) {
-					console.log(JSON.stringify(json));
-				})['catch'](function(ex) {
-				  console.log('failed:' + ex);
-				});
+                    jsonpCallback: 'callback',
+                    timeout: 3000
+                })
+                result.then(function(response) {
+                    return response.json()
+                }).then(function(json) {
+                    console.log(JSON.stringify(json));
+                })['catch'](function(ex) {
+                    console.log('failed:' + ex);
+                });
             }
             dr_cmf_tips(1, json.msg, json.data.time);
             setTimeout('window.location.href="'+json.data.url+'"', 2000);
@@ -922,16 +942,16 @@ function dr_ajax_member(url, form) {
                 // 发送同步登录信息
                 for ( var i = 0; i < oss_url.length; i++){
                     //alert(oss_url[i]);
-				   var result = fetchJsonp(oss_url[i], {
-                      jsonpCallback: 'callback',
-                      timeout: 3000
+                    var result = fetchJsonp(oss_url[i], {
+                        jsonpCallback: 'callback',
+                        timeout: 3000
                     })
                     result.then(function(response) {
-                      return response.json()
+                        return response.json()
                     }).then(function(json) {
                         console.log(JSON.stringify(json));
                     })['catch'](function(ex) {
-                      console.log('failed:' + ex);
+                        console.log('failed:' + ex);
                     });
 
                 }
@@ -980,12 +1000,12 @@ function dr_file_remove(e) {
 // 删除文件
 function dr_file_delete(e, id) {
     $.get("/index.php?s=api&c=file&m=file_delete&id=" + id + "&rand=" + Math.random(),
-    function(data) {
-        top.dr_cmf_tips(data.code, data.msg);
-        if (data.code) {
-            $(e).parents(".files_row").remove();
-        }
-    }, 'json');
+        function(data) {
+            top.dr_cmf_tips(data.code, data.msg);
+            if (data.code) {
+                $(e).parents(".files_row").remove();
+            }
+        }, 'json');
 }
 
 // 多文件上传修改文件
@@ -1068,11 +1088,11 @@ function check_title(t) {
     var val = $("#dr_title").val();
     var mod = $("#dr_module").val();
     $.get(dr_get_web_dir()+"index.php?s=api&c=api&m=checktitle&title=" + val + "&module=" + mod + "&id=" + id+'&is_ajax=1',
-    function(data) {
-        if (data) {
-            dr_cmf_tips(0, data);
-        }
-    });
+        function(data) {
+            if (data) {
+                dr_cmf_tips(0, data);
+            }
+        });
 }
 function get_keywords(to) {
     var title = $("#dr_title").val();
@@ -1247,102 +1267,102 @@ function dr_slimScroll_init(div, ht) {
 
 // fetchJsonp
 (function (global, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['exports', 'module'], factory);
-  } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
-    factory(exports, module);
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory(mod.exports, mod);
-    global.fetchJsonp = mod.exports;
-  }
-})(this, function (exports, module) {
-  'use strict';
-
-  var defaultOptions = {
-    timeout: 5000,
-    jsonpCallback: 'callback',
-    jsonpCallbackFunction: null
-  };
-
-  function generateCallbackFunction() {
-    return 'jsonp_' + Date.now() + '_' + Math.ceil(Math.random() * 100000);
-  }
-
-  function clearFunction(functionName) {
-    try {
-      delete window[functionName];
-    } catch (e) {
-      window[functionName] = undefined;
-    }
-  }
-
-  function removeScript(scriptId) {
-    var script = document.getElementById(scriptId);
-    if (script) {
-      document.getElementsByTagName('head')[0].removeChild(script);
-    }
-  }
-
-  function fetchJsonp(_url) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-    var url = _url;
-    var timeout = options.timeout || defaultOptions.timeout;
-    var jsonpCallback = options.jsonpCallback || defaultOptions.jsonpCallback;
-
-    var timeoutId = undefined;
-
-    return new Promise(function (resolve, reject) {
-      var callbackFunction = options.jsonpCallbackFunction || generateCallbackFunction();
-      var scriptId = jsonpCallback + '_' + callbackFunction;
-
-      window[callbackFunction] = function (response) {
-        resolve({
-          ok: true,
-          json: function json() {
-            return Promise.resolve(response);
-          }
-        });
-
-        if (timeoutId) clearTimeout(timeoutId);
-
-        removeScript(scriptId);
-
-        clearFunction(callbackFunction);
-      };
-
-      url += url.indexOf('?') === -1 ? '?' : '&';
-
-      var jsonpScript = document.createElement('script');
-      jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
-      if (options.charset) {
-        jsonpScript.setAttribute('charset', options.charset);
-      }
-      jsonpScript.id = scriptId;
-      document.getElementsByTagName('head')[0].appendChild(jsonpScript);
-
-      timeoutId = setTimeout(function () {
-        reject(new Error('JSONP request to ' + _url + ' timed out'));
-
-        clearFunction(callbackFunction);
-        removeScript(scriptId);
-        window[callbackFunction] = function () {
-          clearFunction(callbackFunction);
+    if (typeof define === 'function' && define.amd) {
+        define(['exports', 'module'], factory);
+    } else if (typeof exports !== 'undefined' && typeof module !== 'undefined') {
+        factory(exports, module);
+    } else {
+        var mod = {
+            exports: {}
         };
-      }, timeout);
+        factory(mod.exports, mod);
+        global.fetchJsonp = mod.exports;
+    }
+})(this, function (exports, module) {
+    'use strict';
 
-      jsonpScript.onerror = function () {
-        reject(new Error('JSONP request to ' + _url + ' failed'));
+    var defaultOptions = {
+        timeout: 5000,
+        jsonpCallback: 'callback',
+        jsonpCallbackFunction: null
+    };
 
-        clearFunction(callbackFunction);
-        removeScript(scriptId);
-        if (timeoutId) clearTimeout(timeoutId);
-      };
-    });
-  }
+    function generateCallbackFunction() {
+        return 'jsonp_' + Date.now() + '_' + Math.ceil(Math.random() * 100000);
+    }
 
-  module.exports = fetchJsonp;
+    function clearFunction(functionName) {
+        try {
+            delete window[functionName];
+        } catch (e) {
+            window[functionName] = undefined;
+        }
+    }
+
+    function removeScript(scriptId) {
+        var script = document.getElementById(scriptId);
+        if (script) {
+            document.getElementsByTagName('head')[0].removeChild(script);
+        }
+    }
+
+    function fetchJsonp(_url) {
+        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+        var url = _url;
+        var timeout = options.timeout || defaultOptions.timeout;
+        var jsonpCallback = options.jsonpCallback || defaultOptions.jsonpCallback;
+
+        var timeoutId = undefined;
+
+        return new Promise(function (resolve, reject) {
+            var callbackFunction = options.jsonpCallbackFunction || generateCallbackFunction();
+            var scriptId = jsonpCallback + '_' + callbackFunction;
+
+            window[callbackFunction] = function (response) {
+                resolve({
+                    ok: true,
+                    json: function json() {
+                        return Promise.resolve(response);
+                    }
+                });
+
+                if (timeoutId) clearTimeout(timeoutId);
+
+                removeScript(scriptId);
+
+                clearFunction(callbackFunction);
+            };
+
+            url += url.indexOf('?') === -1 ? '?' : '&';
+
+            var jsonpScript = document.createElement('script');
+            jsonpScript.setAttribute('src', '' + url + jsonpCallback + '=' + callbackFunction);
+            if (options.charset) {
+                jsonpScript.setAttribute('charset', options.charset);
+            }
+            jsonpScript.id = scriptId;
+            document.getElementsByTagName('head')[0].appendChild(jsonpScript);
+
+            timeoutId = setTimeout(function () {
+                reject(new Error('JSONP request to ' + _url + ' timed out'));
+
+                clearFunction(callbackFunction);
+                removeScript(scriptId);
+                window[callbackFunction] = function () {
+                    clearFunction(callbackFunction);
+                };
+            }, timeout);
+
+            jsonpScript.onerror = function () {
+                reject(new Error('JSONP request to ' + _url + ' failed'));
+
+                clearFunction(callbackFunction);
+                removeScript(scriptId);
+                if (timeoutId) clearTimeout(timeoutId);
+            };
+        });
+    }
+
+    module.exports = fetchJsonp;
 });
