@@ -578,7 +578,7 @@ class Member extends \Phpcmf\Model {
         }
 
         // 验证格式
-        if (dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
+        if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
             $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
             if (!$rt['code']) {
                 return $rt;

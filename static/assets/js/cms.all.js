@@ -794,6 +794,11 @@ function dr_post_submit(url, form, time, go) {
         data: $("#"+form).serialize(),
         success: function(json) {
             layer.close(loading);
+            // token 更新
+            if (json.token) {
+                var token = json.token;
+                $("#"+form+" input[name='"+token.name+"']").val(token.value);
+            }
             if (json.code) {
                 dr_cmf_tips(1, json.msg, json.data.time);
                 if (json.data.htmlfile) {
@@ -907,6 +912,11 @@ function dr_ajax_member(url, form) {
         data: $("#"+form).serialize(),
         success: function(json) {
             layer.close(loading);
+            // token 更新
+            if (json.token) {
+                var token = json.token;
+                $("#"+form+" input[name='"+token.name+"']").val(token.value);
+            }
             if (json.code) {
                 var oss_url = json.data.sso;
                 // 发送同步登录信息

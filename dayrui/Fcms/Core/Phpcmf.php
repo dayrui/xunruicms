@@ -654,7 +654,12 @@ abstract class Common extends \CodeIgniter\Controller {
         // 返回的钩子
         $rt = dr_return_data($code, $msg, $data);
 
-        $code && \Config\Services::security()->removeHash();
+        if (SYS_CSRF && IS_POST) {
+            $rt['token'] = [
+                'name' => csrf_token(),
+                'value' => csrf_hash()
+            ];
+        }
 
         // 按格式返回数据
         if (isset($_GET['format']) && $_GET['format']) {
@@ -681,8 +686,6 @@ abstract class Common extends \CodeIgniter\Controller {
 
         $callback = dr_safe_replace(\Phpcmf\Service::L('input')->get('callback'));
         !$callback && $callback = 'callback';
-
-        $code && \Config\Services::security()->removeHash();
 
         if (IS_API_HTTP) {
             $this->_json($code, $msg, $data);
@@ -770,8 +773,6 @@ abstract class Common extends \CodeIgniter\Controller {
 
         // 加载初始化文件
         $this->_init_run();
-
-        $code && \Config\Services::security()->removeHash();
 
         // 返回的钩子
         $rt = [

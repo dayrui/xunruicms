@@ -217,7 +217,7 @@ function config ($name, $getShared = true) {
 /**
  * 全局返回消息
  */
-function dr_exit_msg($code, $msg, $data = []) {
+function dr_exit_msg($code, $msg, $data = [], $token = []) {
 
     ob_end_clean();
 
@@ -225,6 +225,7 @@ function dr_exit_msg($code, $msg, $data = []) {
         'code' => $code,
         'msg' => $msg,
         'data' => $data,
+        'token' => $token,
     ];
 
     if (isset($_GET['callback'])) {
