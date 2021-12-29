@@ -11,9 +11,19 @@
  */
 
 use CodeIgniter\HTTP\RequestInterface;
+use Config\App;
 
 class Security extends \CodeIgniter\Security\Security
 {
+
+    // 存储变量名称
+    public $sname;
+
+    public function __construct($config)
+    {
+        parent::__construct($config);
+        $this->sname = 'csrf_hash_'.md5(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : '');
+    }
 
     /**
      * CSRF Verify
@@ -55,6 +65,7 @@ class Security extends \CodeIgniter\Security\Security
 
         // Do the tokens match?
         if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
+            log_message('error', '跨站验证');
             dr_exit_msg(0, '跨站验证失败，禁止此操作', 'CSRFVerify');
         }
 
@@ -64,16 +75,18 @@ class Security extends \CodeIgniter\Security\Security
             $request->setGlobal('post', $_POST);
         }
 
-        // 提交成功重置token
-        $this->hash = null;
-        \Phpcmf\Service::L('cache')->del_auth_data(
-            'csrf_hash_'.md5(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : ''),
-            1
-        );
-
         $this->generateHash();
 
         return $this;
+    }
+
+    /**
+     * Remove CSRF Hash.
+     */
+    public function removeHash() {
+        // 提交成功重置token
+        $this->hash = null;
+        \Phpcmf\Service::L('cache')->del_auth_data($this->sname, 1);
     }
 
     /**
@@ -82,13 +95,12 @@ class Security extends \CodeIgniter\Security\Security
     protected function generateHash(): string
     {
         if ($this->hash === null) {
-            $name = 'csrf_hash_'.md5(isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] ? $_SERVER['HTTP_USER_AGENT'] : '');
-            $hash = \Phpcmf\Service::L('cache')->get_auth_data($name, 1, 1800);
+            $hash = \Phpcmf\Service::L('cache')->get_auth_data($this->sname, 1, 1800);
             if ($hash) {
                 return $this->hash = $hash;
             }
             $this->hash = bin2hex(random_bytes(16));
-            \Phpcmf\Service::L('cache')->set_auth_data($name, $this->hash, 1);
+            \Phpcmf\Service::L('cache')->set_auth_data($this->sname, $this->hash, 1);
         }
 
         return $this->hash;

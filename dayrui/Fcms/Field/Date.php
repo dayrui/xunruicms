@@ -174,6 +174,7 @@ class Date extends \Phpcmf\Library\A_Field {
             $updatetime_select = isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'];
             if ($updatetime_select) {
                 // 勾选不更新时
+                !$value || $value == 'SYS_TIME' && $value = SYS_TIME;
             } else {
                 $value = SYS_TIME;
             }
