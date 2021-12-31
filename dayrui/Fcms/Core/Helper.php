@@ -4024,7 +4024,7 @@ function dr_related_cat($data, $catid) {
 
     if ($my['child']) {
         // 当存在子栏目时就显示下级子栏目
-        $parent = $my;
+        $parent = $my['pid'] ? $data[$my['pid']] : $my;
         foreach ($data as $t) {
             if (!$t['show']) {
                 continue;
@@ -4043,7 +4043,7 @@ function dr_related_cat($data, $catid) {
             if ($t['pid'] == $my['pid']) {
                 $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
                 $related[$t['id']] = $t;
-                $parent = $my['child'] ? $my : $data[$t['pid']];
+                $parent = $data[$t['pid']];
             }
         }
     } else {
@@ -4063,7 +4063,7 @@ function dr_related_cat($data, $catid) {
         }
     }
 
-    $parent['url'] = dr_url_prefix($parent['url'], defined('MOD_DIR') ? MOD_DIR : '');
+    $parent && $parent['url'] = dr_url_prefix($parent['url'], defined('MOD_DIR') ? MOD_DIR : '');
 
     return [$parent, $related];
 }
