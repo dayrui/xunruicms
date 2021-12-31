@@ -439,7 +439,7 @@ function dr_iframe(type, url, width, height, rt) {
     });
 }
 // ajax 显示内容
-function dr_iframe_show(type, url, width, height) {
+function dr_iframe_show(type, url, width, height, is_close ) {
 
     var title = '';
     if (type == 'show') {
@@ -481,6 +481,10 @@ function dr_iframe_show(type, url, width, height) {
                 var obj = JSON.parse(json);
                 layer.close(index);
                 dr_cmf_tips(0, obj.msg);
+            }
+        },end: function(){
+            if (is_close == "load") {
+                window.location.reload(true)
             }
         },
         content: url+'&is_ajax=1'
@@ -531,7 +535,10 @@ function dr_ajax_confirm_url(url, msg, tourl) {
                 success: function(json) {
                     layer.close(loading);
                     if (json.code) {
-                        if (json.data.url) {
+                        if (json.data.jscode) {
+                            eval(json.data.jscode);
+                            return;
+                        } else if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
                         } else if (tourl) {
                             setTimeout("window.location.href = '"+tourl+"'", 2000);
@@ -669,7 +676,10 @@ function dr_ajax_option(url, msg, remove) {
                                 error: function(){ }
                             });
                         }
-                        if (json.data.url) {
+                        if (json.data.jscode) {
+                            eval(json.data.jscode);
+                            return;
+                        } else if (json.data.url) {
                             setTimeout("window.location.href = '"+json.data.url+"'", 2000);
                         } else {
                             setTimeout("window.location.reload(true)", 3000)

@@ -858,6 +858,51 @@ class Module extends \Phpcmf\Table {
         \Phpcmf\Service::V()->display($this->_tpl_filename('list_recycle'));
     }
 
+    // 后台回收站清空
+    public function recycle_del() {
+
+        $psize = 20;
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        if (!$page) {
+            $nums = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_recycle')->where($this->where_list_sql)->counts();
+            if (!$nums) {
+                $this->_json(0, dr_lang('数据为空'));
+            }
+            $tpage = ceil($nums / $psize); // 总页数
+            $this->_json(1, dr_lang('即将执行清空回收站命令'), [
+                'jscode' => 'dr_iframe_show(\''.dr_lang('同清空回收站步').'\', \''.dr_url(APP_DIR.'/recycle/recycle_del').'&page=1&total='.$nums.'&tpage='.$tpage.'\', \'500px\', \'300px\', \'load\')'
+            ]);
+        }
+
+        $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
+        $total = (int)\Phpcmf\Service::L('input')->get('total');
+
+        $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix(APP_DIR).'_recycle');
+        $this->where_list_sql && $db->where($this->where_list_sql);
+        $data = $db->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        if (!$data) {
+            // 写入日志
+            \Phpcmf\Service::L('input')->system_log($this->name.'：清空回收站');
+            $this->_html_msg(1, dr_lang('共删除%s条数据', $total));
+        }
+
+        $ids = [];
+        foreach ($data as $t) {
+            $ids[] = $t['id'];
+        }
+        $this->content_model->delete_for_recycle($ids);
+        // 删除附件
+        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
+            $this->member,
+            $ids,
+            \Phpcmf\Service::M()->dbprefix($this->init['table'])
+        );
+
+        $this->_html_msg( 1, dr_lang('正在执行中【%s】...', $tpage.'/'.($page+1)),
+            dr_url(APP_DIR.'/recycle/recycle_del', ['total' => $total, 'tpage' => $tpage, 'page' => $page + 1])
+        );
+    }
+
     // 后台回收站删除内容
     protected function _Admin_Recycle_Del() {
 

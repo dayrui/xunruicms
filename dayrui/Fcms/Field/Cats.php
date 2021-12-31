@@ -58,7 +58,7 @@ class Cats extends \Phpcmf\Field\Cat {
 
 		// 开始输出
 		$str = '';
-        $str.= '<label style="min-width: 200px">'.\Phpcmf\Service::L('Tree')->select_category(
+        $str.= '<label style="min-width: 200px">'.\Phpcmf\Service::L('Tree')->cache(0)->select_category(
                 \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$field['setting']['option']['module'], 'category'),
                 dr_string2array($value),
                 ' name=\'data['.$field['fieldname'].'][]\'  multiple="multiple" data-actions-box="true" '.(isset($field['setting']['option']['is_search']) && $field['setting']['option']['is_search'] ? ' data-live-search="true" ' : ''),

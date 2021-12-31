@@ -14,7 +14,7 @@ class Tree {
     protected $nbsp_str;
     protected $deep = 1;
     protected $ret;
-    protected $cache;
+    protected $cache = 1;
     protected $result;
     protected $ismain = 0;
 
@@ -88,13 +88,19 @@ class Tree {
         return $this;
     }
 
+    // 设置缓存
+    public function cache($is) {
+        $this->cache = $is;
+        return $this;
+    }
+
     /**
      * 得到子级数组
      * @param int
      * @return array
      */
     protected function get_child($k_id) {
-        
+
         $arrays = [];
 
         /*
@@ -124,7 +130,7 @@ class Tree {
         }
 
         $this->deep++;
-        
+
         return $arrays;
     }
 
@@ -132,14 +138,14 @@ class Tree {
      * 得到树型数组
      */
     public function create($k_id = 0, $adds = '') {
-        
+
         if ($this->deep > 5000) {
             return; // 防止死循环
         }
 
         $child = $this->get_child($k_id); // 获取子数据
         $number = 1;
-        
+
         if (is_array($child)) {
             $total = dr_count($child);
             foreach($child as $id => $a) {
@@ -151,7 +157,7 @@ class Tree {
                 $number++;
             }
         }
-        
+
         $this->deep = 1;
     }
 
@@ -208,7 +214,7 @@ class Tree {
                 extract($a);
 
                 eval("\$this->ret.= \"$str\";");
-                
+
                 $number++;
 
                 // 如果有下级菜单就递归
@@ -280,7 +286,7 @@ class Tree {
             $str = str_replace('style', '_style', $str);
         }
 
-        if (!IS_DEV) {
+        if (!IS_DEV && $this->cache) {
             $name = 'tree'.md5($this->ismain.dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
             $cache = \Phpcmf\Service::L('cache')->get_data($name);
             if ($cache) {
@@ -362,7 +368,7 @@ class Tree {
         unset($this->ret);
         unset($this->data);
 
-        if (!IS_DEV) {
+        if (!IS_DEV && $this->cache) {
             \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
         }
 
@@ -499,7 +505,7 @@ class Tree {
                     $j.= $this->icon[1];
                     $k = $adds ? $this->icon[0] : '';
                 }
-                
+
                 $value['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
 
                 $this->result[$id] = $value;
@@ -507,7 +513,7 @@ class Tree {
                 $number++;
             }
         }
-        
+
         return $this->result;
     }
 

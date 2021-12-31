@@ -6,7 +6,7 @@
  **/
 
 class Catids extends \Phpcmf\Library\A_Field {
-	
+
 	/**
      * 构造函数
      */
@@ -15,7 +15,7 @@ class Catids extends \Phpcmf\Library\A_Field {
         $this->fieldtype = ['TEXT' => ''];
         $this->defaulttype = 'TEXT';
     }
-	
+
 	/**
 	 * 字段相关属性参数
 	 *
@@ -39,7 +39,7 @@ class Catids extends \Phpcmf\Library\A_Field {
 		</div>'];
 	}
 
-	
+
 	/**
 	 * 字段输出
 	 */
@@ -99,7 +99,7 @@ class Catids extends \Phpcmf\Library\A_Field {
 
 		// 开始输出
 		$str = '';
-        $str.= '<label style="min-width: 200px">'.\Phpcmf\Service::L('Tree')->select_category(
+        $str.= '<label style="min-width: 200px">'.\Phpcmf\Service::L('Tree')->cache(0)->select_category(
                 \Phpcmf\Service::C()->module['category'],
                 dr_string2array($value),
                 ' name=\'data['.$field['fieldname'].'][]\'  multiple="multiple" data-actions-box="true"',
