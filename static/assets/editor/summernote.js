@@ -3843,6 +3843,7 @@ var Style_Style = /*#__PURE__*/function () {
       var fontSize = $node[0].style.fontSize || styleInfo['font-size'];
       styleInfo['font-size'] = parseInt(fontSize, 10);
       styleInfo['font-size-unit'] = fontSize.match(/[a-z%]+$/);
+      styleInfo['font-family'] = styleInfo['font-family'].replace(/"/g,'');
       return styleInfo;
     }
     /**
@@ -3962,6 +3963,9 @@ var Style_Style = /*#__PURE__*/function () {
       styleInfo.anchor = rng.isOnAnchor() && dom.ancestor(rng.sc, dom.isAnchor);
       styleInfo.ancestors = dom.listAncestor(rng.sc, dom.isEditable);
       styleInfo.range = rng;
+
+      styleInfo['font-family'] = styleInfo['font-family'].replace(/"/g,'');
+
       return styleInfo;
     }
   }]);
@@ -10072,7 +10076,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
     toolbar: [
         ['style', ['style']],
       ['font', ['bold', 'underline', 'clear']],
-      ['fontname', ['fontname']],
+      ['fontname', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['table', ['table']],
