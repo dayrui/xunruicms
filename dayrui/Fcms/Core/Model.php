@@ -689,7 +689,7 @@ class Model {
                 if ($option) {
                     $new = [];
                     foreach ($option as $k => $v) {
-                        if (strpos($v, $value) !== false) {
+                        if (strpos($v, (string)$value) !== false) {
                             $new[] = $k;
                         }
                     }
@@ -762,7 +762,7 @@ class Model {
                 foreach ($arr as $c) {
                     $c && $wh[] = '`'.$table.'`.`'.$name.'` LIKE "%'.trim($this->db->escapeString($c, true)).'%"';
                 }
-                return '('.implode(strpos($value,  '%%') !== false ? ' AND ' : ' OR ', $wh).')';
+                return $wh ? ('('.implode(strpos($value,  '%%') !== false ? ' AND ' : ' OR ', $wh).')') : '';
             }
         } elseif (is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
