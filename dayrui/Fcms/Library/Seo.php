@@ -330,7 +330,7 @@ class Seo {
             $seo[$key] = str_replace(SITE_SEOJOIN.SITE_SEOJOIN, SITE_SEOJOIN, $seo[$key]);
             $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);
-            $seo[$key] = str_replace([',,', '%'], ',', $seo[$key]);
+            $seo[$key] = str_replace([',,'], ',', $seo[$key]);
             $seo[$key] = trim($seo[$key], SITE_SEOJOIN);
             $seo[$key] = trim($seo[$key], ',');
         }
