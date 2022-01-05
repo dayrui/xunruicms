@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="robots" content="noindex">
 
-	<title><?= htmlspecialchars($title, ENT_SUBSTITUTE, 'UTF-8') ?></title>
+	<title><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8') ?></title>
 	<style type="text/css">
 		<?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'debug.css')) ?>
 	</style>
@@ -19,7 +19,7 @@
 	<!-- Header -->
 	<div class="header">
 		<div class="container">
-			<h1><?= htmlspecialchars($title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
+			<h1><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
 			<p>
 				<?= $exception->getMessage() ?>
 				<a href="https://www.baidu.com/s?ie=UTF-8&wd=迅睿CMS框架%20<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
@@ -147,10 +147,10 @@
 						<tbody>
 						<?php foreach ($GLOBALS[$var] as $key => $value) : ?>
 							<tr>
-								<td><?= htmlspecialchars($key, ENT_IGNORE, 'UTF-8') ?></td>
+								<td><?= htmlspecialchars((string)$key, ENT_IGNORE, 'UTF-8') ?></td>
 								<td>
 									<?php if (is_string($value)) : ?>
-										<?= htmlspecialchars($value, ENT_SUBSTITUTE, 'UTF-8') ?>
+										<?= htmlspecialchars((string)$value, ENT_SUBSTITUTE, 'UTF-8') ?>
 									<?php else: ?>
 										<?= '<pre>'.print_r($value, true) ?>
 									<?php endif; ?>
@@ -177,10 +177,10 @@
 						<tbody>
 						<?php foreach ($constants['user'] as $key => $value) : ?>
 							<tr>
-								<td><?= htmlspecialchars($key, ENT_IGNORE, 'UTF-8') ?></td>
+								<td><?= htmlspecialchars((string)$key, ENT_IGNORE, 'UTF-8') ?></td>
 								<td>
 									<?php if (!is_array($value) && ! is_object($value)) : ?>
-										<?= htmlspecialchars($value, ENT_SUBSTITUTE, 'UTF-8') ?>
+										<?= htmlspecialchars((string)$value, ENT_SUBSTITUTE, 'UTF-8') ?>
 									<?php else: ?>
 										<?= '<pre>'.print_r($value, true) ?>
 									<?php endif; ?>
@@ -249,10 +249,10 @@
 						<tbody>
 						<?php foreach ($GLOBALS[$var] as $key => $value) : ?>
 							<tr>
-								<td><?= htmlspecialchars($key, ENT_IGNORE, 'UTF-8') ?></td>
+								<td><?= htmlspecialchars((string)$key, ENT_IGNORE, 'UTF-8') ?></td>
 								<td>
 									<?php if (!is_array($value) && ! is_object($value) && $value) : ?>
-										<?= htmlspecialchars($value, ENT_SUBSTITUTE, 'UTF-8') ?>
+										<?= htmlspecialchars((string)$value, ENT_SUBSTITUTE, 'UTF-8') ?>
 									<?php else: ?>
 										<?= '<pre>'.print_r($value, true) ?>
 									<?php endif; ?>
