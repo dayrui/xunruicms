@@ -15,8 +15,7 @@ class Run extends \Phpcmf\Common
 	public function index() {
 
 	    // 验证运行权限
-        if (1) {
-
+        if (!IS_DEV) {
             if (defined('SYS_CRON_AUTH') && SYS_CRON_AUTH) {
                 if (is_cli()) {
                     // cli模式
@@ -42,7 +41,6 @@ class Run extends \Phpcmf\Common
                     }
                 }
             }
-
             $run_time = 0;// 上次执行的时间
             if (is_file(WRITEPATH.'config/cron_run_time.php')) {
                 $run_time = file_get_contents(WRITEPATH.'config/cron_run_time.php');
