@@ -233,11 +233,12 @@ class File extends \Phpcmf\Common
                 $ids = \Phpcmf\Service::L('input')->post('ids2');
                 foreach ($ids as $t) {
                     $file = trim(str_replace('..', '', $t));
+                    $url = dr_get_file($file);
                     $list[] = [
-                        'id' => 0,
+                        'id' => $url,
                         'name' => basename($t),
-                        'file' => $file,
-                        'url' => dr_get_file($file),
+                        'file' => $url,
+                        'url' => $url,
                         'preview' => dr_file_preview_html($file, 0),
                         'upload' => '<input type="file" name="file_data"></button>',
                     ];
