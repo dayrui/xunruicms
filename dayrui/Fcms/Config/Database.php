@@ -59,6 +59,10 @@ class Database extends Config
     {
         parent::__construct();
 
+        if (!is_file(ROOTPATH.'config/database.php')) {
+            return $this;
+        }
+
         $db = [];
         require ROOTPATH.'config/database.php';
 

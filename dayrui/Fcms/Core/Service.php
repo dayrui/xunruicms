@@ -19,7 +19,7 @@ class Service
     static private $apps;
     static private $mwhere_apps = [];
     static private $filters = [
-        'home' => [],
+        'home' => ['install/index'],
         'member' => [],
         'admin' => [],
     ];

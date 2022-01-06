@@ -144,7 +144,7 @@ class Config
      * 格式化值
      */
     private function _format_value($value) {
-        return is_numeric($value) && strlen($value) <= 10 ? $value : '\''.str_replace(['\'', '\\'], '', $value).'\'';
+        return is_numeric($value) && strlen($value) <= 10 ? $value : '\''.str_replace(['\'', '\\'], '', (string)$value).'\'';
     }
 
     /**
@@ -154,7 +154,7 @@ class Config
         return str_replace(
             ['..', '\\', '<', '>', "{", '}', ';', '[', ']', '\'', '"', '*', '?'],
             '',
-            $name
+            (string)$name
         );
     }
 }
