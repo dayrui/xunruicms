@@ -861,8 +861,8 @@ class Module extends \Phpcmf\Table {
     // 后台回收站清空
     public function recycle_del() {
 
-        $psize = 20;
         $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 20;
         if (!$page) {
             $nums = \Phpcmf\Service::M()->table(dr_module_table_prefix(APP_DIR).'_recycle')->where($this->where_list_sql)->counts();
             if (!$nums) {
@@ -870,7 +870,7 @@ class Module extends \Phpcmf\Table {
             }
             $tpage = ceil($nums / $psize); // 总页数
             $this->_json(1, dr_lang('即将执行清空回收站命令'), [
-                'jscode' => 'dr_iframe_show(\''.dr_lang('同清空回收站步').'\', \''.dr_url(APP_DIR.'/recycle/recycle_del').'&page=1&total='.$nums.'&tpage='.$tpage.'\', \'500px\', \'300px\', \'load\')'
+                'jscode' => 'dr_iframe_show(\''.dr_lang('清空回收站').'\', \''.dr_url(APP_DIR.'/recycle/recycle_del').'&page=1&total='.$nums.'&tpage='.$tpage.'\', \'500px\', \'300px\', \'load\')'
             ]);
         }
 
@@ -879,7 +879,7 @@ class Module extends \Phpcmf\Table {
 
         $db = \Phpcmf\Service::M()->db->table(dr_module_table_prefix(APP_DIR).'_recycle');
         $this->where_list_sql && $db->where($this->where_list_sql);
-        $data = $db->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
+        $data = $db->limit($psize)->orderBy('id DESC')->get()->getResultArray();
         if (!$data) {
             // 写入日志
             \Phpcmf\Service::L('input')->system_log($this->name.'：清空回收站');
