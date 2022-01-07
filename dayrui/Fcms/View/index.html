@@ -153,7 +153,7 @@
     </div>
     <div class="page-content-wrapper">
         <div class="page-content index-content">
-            {if !SYS_NOT_ADMIN_CACHE}
+            {if !SYS_NOT_ADMIN_CACHE && !$is_mobile}
             <ul class="page-toolbar fc-mb-left-menu" id="dr_go_url">
             </ul>
             {/if}
@@ -206,7 +206,6 @@
         </div>
     </div>
     {/if}
-
 </div>
 <script>
     // 关闭栏
