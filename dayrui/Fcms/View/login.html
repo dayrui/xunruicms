@@ -112,6 +112,11 @@
         }
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
             success: function(json) {
+                // token 更新
+                if (json.token) {
+                    var token = json.token;
+                    $(".login-form input[name='"+token.name+"']").val(token.value);
+                }
                 if (json.code == 1) {
                     window.location.href = json.data.url;
                 } else {
