@@ -25,6 +25,7 @@ class System extends \Phpcmf\Model {
 
         'SYS_KEY' => '安全密匙',
         'SYS_CSRF'	=> '开启跨站验证',
+        'SYS_CSRF_TIME'	=> '跨站验证有效期',
         'SYS_HTTPS'	=> 'https模式',
         'SYS_NOT_ADMIN_CACHE'	=> '禁用后台tab切换效果',
         'SYS_ADMIN_MODE'	=> '禁用后台登录进行模式选择',

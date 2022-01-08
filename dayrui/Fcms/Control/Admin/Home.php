@@ -229,9 +229,6 @@ class Home extends \Phpcmf\Common
                     } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $left['site'])) {
                         unset($top['left'][$if]);
                         continue; // 没有划分本站点就不显示
-                    } elseif ($left['mark'] == 'content-verify' && !IS_USE_MEMBER) {
-                        unset($top['left'][$if]);
-                        continue; // 没有安装用户系统就不显示
                     }
                     // 链接菜单开始
                     $link_string = '';

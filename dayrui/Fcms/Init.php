@@ -70,6 +70,7 @@ $system = [
     'SYS_URL_PREG' => 0,
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,
+    'SYS_CSRF_TIME'  => 0,
     'SYS_HTTPS' => 0,
     'SYS_NOT_ADMIN_CACHE' => 0,
     'SYS_ADMIN_MODE'  => 0,

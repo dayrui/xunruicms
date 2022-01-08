@@ -41,6 +41,7 @@ class System extends \Phpcmf\Common
                 'SYS_KEY' => dr_safe_filename($post['SYS_KEY'] == '************' ? $data['SYS_KEY'] : $post['SYS_KEY']),
                 'SYS_HTTPS' => (int)$post['SYS_HTTPS'],
                 'SYS_CSRF' => (int)$post['SYS_CSRF'],
+                'SYS_CSRF_TIME' => (int)$post['SYS_CSRF_TIME'],
                 'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
             ];
             if ($save['SYS_HTTPS'] && $data['SYS_HTTPS'] != $save['SYS_HTTPS']
