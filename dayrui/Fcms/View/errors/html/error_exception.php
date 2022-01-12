@@ -198,34 +198,34 @@
 
 				<table>
 					<tbody>
-						<tr>
-							<td style="width: 10em">Path</td>
-							<td><?= $request->uri ?></td>
-						</tr>
-						<tr>
-							<td>HTTP Method</td>
-							<td><?= $request->getMethod(true) ?></td>
-						</tr>
-						<tr>
-							<td>IP Address</td>
-							<td><?= $request->getIPAddress() ?></td>
-						</tr>
-						<tr>
-							<td style="width: 10em">Is AJAX Request?</td>
-							<td><?= $request->isAJAX() ? 'yes' : 'no' ?></td>
-						</tr>
-						<tr>
-							<td>Is CLI Request?</td>
-							<td><?= $request->isCLI() ? 'yes' : 'no' ?></td>
-						</tr>
-						<tr>
-							<td>Is Secure Request?</td>
-							<td><?= $request->isSecure() ? 'yes' : 'no' ?></td>
-						</tr>
-						<tr>
-							<td>User Agent</td>
-							<td><?= $request->getUserAgent()->getAgentString() ?></td>
-						</tr>
+                    <tr>
+                        <td style="width: 10em">Path</td>
+                        <td><?= esc($request->getUri()) ?></td>
+                    </tr>
+                    <tr>
+                        <td>HTTP Method</td>
+                        <td><?= esc($request->getMethod(true)) ?></td>
+                    </tr>
+                    <tr>
+                        <td>IP Address</td>
+                        <td><?= esc($request->getIPAddress()) ?></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 10em">Is AJAX Request?</td>
+                        <td><?= $request->isAJAX() ? 'yes' : 'no' ?></td>
+                    </tr>
+                    <tr>
+                        <td>Is CLI Request?</td>
+                        <td><?= $request->isCLI() ? 'yes' : 'no' ?></td>
+                    </tr>
+                    <tr>
+                        <td>Is Secure Request?</td>
+                        <td><?= $request->isSecure() ? 'yes' : 'no' ?></td>
+                    </tr>
+                    <tr>
+                        <td>User Agent</td>
+                        <td><?= esc($request->getUserAgent()->getAgentString()) ?></td>
+                    </tr>
 
 					</tbody>
 				</table>

@@ -31,6 +31,17 @@ class Security extends BaseConfig
 	 */
 	public $tokenName = 'csrf_test_name';
 
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Token Randomization
+     * --------------------------------------------------------------------------
+     *
+     * Randomize the CSRF Token for added security.
+     *
+     * @var bool
+     */
+    public $tokenRandomize = false;
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * CSRF Header Name

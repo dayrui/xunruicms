@@ -44,7 +44,7 @@ define('TESTPATH', WRITEPATH.'tests/');
 // temp目录
 define('TEMPPATH', CMSPATH.'Temp/');
 // COMPOSER文件
-define('COMPOSER_PATH', is_file(FCPATH . 'Vendor/autoload.php') ? FCPATH . 'Vendor/autoload.php' : FCPATH . 'vendor/autoload.php');
+!defined('COMPOSER_PATH') && define('COMPOSER_PATH', is_file(FCPATH . 'Vendor/autoload.php') ? FCPATH . 'Vendor/autoload.php' : FCPATH . 'vendor/autoload.php');
 
 // 是否来自ajax提交
 define('IS_AJAX', (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'));

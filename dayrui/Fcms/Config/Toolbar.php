@@ -87,4 +87,16 @@ class Toolbar extends BaseConfig
      * @var integer
      */
     public $maxQueries = 100;
+
+    /**
+     * --------------------------------------------------------------------------
+     * Collect Var Data
+     * --------------------------------------------------------------------------
+     *
+     * If set to false var data from the views will not be colleted. Usefull to
+     * avoid high memory usage when there are lots of data passed to the view.
+     *
+     * @var bool
+     */
+    public $collectVarData = true;
 }

@@ -9,6 +9,8 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
+use CodeIgniter\Filters\InvalidChars;
+use CodeIgniter\Filters\SecureHeaders;
 
 class Filters extends BaseConfig
 {
@@ -19,9 +21,11 @@ class Filters extends BaseConfig
      * @var array
      */
     public $aliases = [
-        'csrf'     => CSRF::class,
-        'toolbar'  => DebugToolbar::class,
-        'honeypot' => Honeypot::class,
+        'csrf'          => CSRF::class,
+        'toolbar'       => DebugToolbar::class,
+        'honeypot'      => Honeypot::class,
+        'invalidchars'  => InvalidChars::class,
+        'secureheaders' => SecureHeaders::class,
     ];
 
     /**
@@ -73,9 +77,10 @@ class Filters extends BaseConfig
                 $this->methods['post'] = ['csrf'];
             } elseif (SYS_CSRF == 1 && !IS_ADMIN) {
                 $this->methods['post'] = ['csrf'];
-            } elseif (in_array(\Phpcmf\Service::L('router')->uri(), ['login/index'])) {
-                // 后台登录强制跨站验证
-                $this->methods['post'] = ['csrf'];
+            }
+            // 后台登录关闭跨站验证
+            if (IS_ADMIN && in_array(\Phpcmf\Service::L('router')->uri(), ['login/index'])) {
+                $this->methods['post'] = [];
             }
         }
 

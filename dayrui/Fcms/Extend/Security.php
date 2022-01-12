@@ -16,9 +16,6 @@ use Config\App;
 class Security extends \CodeIgniter\Security\Security
 {
 
-    // 存储变量名称
-    public $sname;
-
     /**
      * CSRF Verify
      *
@@ -36,7 +33,7 @@ class Security extends \CodeIgniter\Security\Security
         }
 
         // Protects POST, PUT, DELETE, PATCH
-        $method           = strtoupper($request->getMethod());
+        $method = strtoupper($request->getMethod());
         $methodsToProtect = ['POST', 'PUT', 'DELETE', 'PATCH'];
         if (! in_array($method, $methodsToProtect, true)) {
             return $this;
