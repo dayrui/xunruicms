@@ -245,6 +245,16 @@ function dr_exit_msg($code, $msg, $data = [], $token = []) {
 }
 
 /*
+ * 伪静态中获取uri
+ */
+if (!function_exists('dr_get_rewrite_uri')) {
+    function dr_get_rewrite_uri($uu) {
+        // 以index.php或者?开头的uri不做处理
+        return strpos($uu, SELF) === 0 || strpos($uu, '?') === 0 ? '' : $uu;
+    }
+}
+
+/*
  * 函数是否被启用
  */
 if (!function_exists('locale_set_default')) {
@@ -320,18 +330,15 @@ if (is_cli()) {
         define('WEB_DIR', '/');
     }
 
-    // 以index.php或者?开头的uri不做处理
-    $uri = strpos($uu, SELF) === 0 || strpos($uu, '?') === 0 ? '' : $uu;
-
     // 当前URI
-    define('CMSURI', $uri);
+    define('CMSURI', dr_get_rewrite_uri($uu));
 
     // 根据自定义URL规则来识别路由
-    if (!IS_ADMIN && $uri && !defined('IS_API') && !defined('FIX_WEB_URL')) {
+    if (!IS_ADMIN && CMSURI && !defined('IS_API') && !defined('FIX_WEB_URL')) {
         // 自定义URL解析规则
         $routes = [];
         $routes['index\.html(.*)'] = 'index.php?c=home&m=index';
-        $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.$uri;
+        $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.CMSURI;
         $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test';
         if (is_file(ROOTPATH.'config/rewrite.php')) {
             $my = require ROOTPATH.'config/rewrite.php';
@@ -341,7 +348,7 @@ if (is_cli()) {
         $is_404 = 1;
         foreach ($routes as $key => $val) {
             $rewrite = $match = []; //(defined('SYS_URL_PREG') && SYS_URL_PREG ? '' : '$')
-            if ($key == $uri || preg_match('/^'.$key.'$/U', $uri, $match)) {
+            if ($key == CMSURI || preg_match('/^'.$key.'$/U', CMSURI, $match)) {
                 unset($match[0]);
                 // 开始匹配
                 $is_404 = 0;
@@ -373,7 +380,7 @@ if (is_cli()) {
             $_GET['s'] = '';
             $_GET['c'] = 'home';
             $_GET['m'] = 's404';
-            $_GET['uri'] = $uri;
+            $_GET['uri'] = CMSURI;
         }
     }
 }

@@ -435,5 +435,8 @@ class Function_list
         return $html;
     }
 
-
+    // text
+    public function text($value, $param = [], $data = [], $field = []) {
+        return dr_clearhtml($value);
+    }
 }

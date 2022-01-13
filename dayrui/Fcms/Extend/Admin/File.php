@@ -7,6 +7,7 @@
 
 // 文件操作控制器
 class File extends \Phpcmf\Common {
+
     protected $dir;
     protected $root_path;
     protected $not_root_path;
@@ -515,7 +516,9 @@ class File extends \Phpcmf\Common {
         return [$source_dir, $dir_data && $file_data ? array_merge($dir_data, $file_data) : $dir_data];
     }
 
-    // 存储文件别名
+    /**
+     * 存储文件别名
+     */
     protected function _save_name_ini($file, $value) {
 
         list($dir, $path) = $this->_get_one_dirname($file);
@@ -531,7 +534,9 @@ class File extends \Phpcmf\Common {
         \Phpcmf\Service::L('input')->system_log('修改文件别名['.$file.']：'.$value);
     }
 
-    // 获取单个文件别名
+    /**
+     * 获取单个文件别名
+     */
     protected function _get_name_ini($file) {
 
         list($dir, $path, $lsname) = $this->_get_one_dirname($file);
@@ -542,7 +547,9 @@ class File extends \Phpcmf\Common {
         return isset($data[$id]) ? (string)$data[$id] : $lsname;
     }
 
-    // 获取第一个目录名称
+    /**
+     * 获取第一个目录名称
+     */
     protected function _get_one_dirname($path) {
 
         $dir = trim(str_replace(['/', '\\'], '*', str_replace($this->root_path, '', $path)), '*');
@@ -555,7 +562,9 @@ class File extends \Phpcmf\Common {
         return [$dir, $dir, $dir];
     }
 
-    // 格式化内容
+    /**
+     * 格式化内容
+     */
     protected function _get_code($code, $ext) {
 
         if ($ext == 'js') {
