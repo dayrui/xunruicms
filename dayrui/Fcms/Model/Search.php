@@ -290,7 +290,7 @@ class Search extends \Phpcmf\Model {
         } elseif ($catid) {
             $data['params']['catid'] = $catid;
         }
-        isset($param['order']) && $data['params']['order'] = $param['order']; // order 参数不变化
+        isset($param['order']) && $data['params']['order'] = dr_safe_filename($param['order']); // order 参数不变化
 
         return $data;
     }
