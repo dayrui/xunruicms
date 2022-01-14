@@ -356,7 +356,7 @@ class Editor extends \Phpcmf\Library\A_Field {
 
         // 去除站外链接
         if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']]
-            && preg_match_all("/<a(.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
+            && preg_match_all("/<a (.*)href=(.+)>(.*)<\/a>/Ui", $value, $arrs)) {
             $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
             foreach ($arrs[2] as $i => $a) {
                 if (strpos($a, ' ') !== false) {

@@ -150,16 +150,33 @@ class File extends \Phpcmf\Common
             if ($post['down']) {
                 if (strpos($post['url'], 'http') !== 0 ) {
                     $this->_json(0, dr_lang('下载文件地址必须是https或者http开头'));
-                } elseif (strpos($post['url'], '?') !== false) {
-                    $this->_json(0, dr_lang('下载文件地址中不能包含？号'));
-                } elseif (strpos($post['url'], '#') !== false) {
-                    $this->_json(0, dr_lang('下载文件地址中不能包含#号'));
+                }
+                // 获取扩展名
+                $ext = str_replace('.', '', trim(strtolower(strrchr($post['url'], '.')), '.'));
+                if (strlen($ext) > 6) {
+                    foreach (['jpg', 'jpeg', 'png', 'gif', 'webp'] as $i) {
+                        if (strpos($post['url'], $i) !== false) {
+                            $ext = $i;
+                            break;
+                        }
+                    }
+                    if (strlen($ext) > 6) {
+                        $ext2 = str_replace('#', '', trim(strtolower(strrchr($post['url'], '#')), '#'));
+                        if ($ext2) {
+                            $ext = $ext2;
+                            $post['url'] = substr($post['url'], 0, strlen($post['url'])-strlen($ext2)-1);
+                        }
+                    }
+                    if (strlen($ext) > 6 || !$ext) {
+                        $this->_json(0, dr_lang('无法获取到文件扩展名，请在URL后方加入扩展名字符串，例如：#jpg'));
+                    }
                 }
                 // 验证上传权限
                 $this->_check_upload_auth();
                 // 下载远程文件
                 $rt = \Phpcmf\Service::L('upload')->down_file([
                     'url' => $post['url'],
+                    'file_ext' => $ext,
                     'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
                 ]);
                 if (!$rt['code']) {
@@ -174,7 +191,7 @@ class File extends \Phpcmf\Common
 
                 $data = [
                     'id' => $att['code'],
-                    'name' => htmlspecialchars($post['name']),
+                    'name' => htmlspecialchars((string)$post['name']),
                     'file' => htmlspecialchars($rt['data']['file']),
                     'preview' => dr_file_preview_html($rt['data']['url'], $att['code']),
                     'upload' => '<input type="file" name="file_data"></button>',
