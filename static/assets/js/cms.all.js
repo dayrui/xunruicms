@@ -887,7 +887,7 @@ function dr_post_submit(url, form, time, go) {
     });
 }
 // 退出登录
-function dr_loginout(msg) {
+function dr_loginout(url) {
     $.ajax({type: "GET",dataType:"json", url: dr_get_web_dir()+'index.php?s=api&c=api&m=loginout',
         success: function(json) {
             var oss_url = json.data.sso;
@@ -900,13 +900,15 @@ function dr_loginout(msg) {
                 result.then(function(response) {
                     return response.json()
                 }).then(function(json) {
-                    console.log(JSON.stringify(json));
                 })['catch'](function(ex) {
-                    console.log('failed:' + ex);
                 });
             }
             dr_cmf_tips(1, json.msg, json.data.time);
-            setTimeout('window.location.href="'+json.data.url+'"', 2000);
+            if (url && url != '退出成功') {
+                setTimeout("window.location.href = '"+tourl+"'", 2000);
+            } else {
+                setTimeout('window.location.href="'+json.data.url+'"', 2000);
+            }
         },
         error: function(HttpRequest, ajaxOptions, thrownError) {
             dr_ajax_alert_error(HttpRequest, this, thrownError);
@@ -959,9 +961,7 @@ function dr_ajax_member(url, form) {
                     result.then(function(response) {
                         return response.json()
                     }).then(function(json) {
-                        console.log(JSON.stringify(json));
                     })['catch'](function(ex) {
-                        console.log('failed:' + ex);
                     });
 
                 }
