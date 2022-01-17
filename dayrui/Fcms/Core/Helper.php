@@ -3012,15 +3012,19 @@ function dr_safe_replace_path($path) {
  */
 function dr_strcut($string, $limit = '100', $dot = '...') {
 
-    $a = 0;
-    if (strpos($limit, ',')) {
-        list($a, $length) = explode(',', $limit);
-    } else {
-        $length = $limit;
+    if (!$string) {
+        return '';
     }
 
-    $length = (int)$length;
-    if (!$string || strlen($string) <= $length || !$length) {
+    $a = 0;
+    if ($limit && strpos((string)$limit, ',')) {
+        list($a, $length) = explode(',', $limit);
+        $length = (int)$length;
+    } else {
+        $length = (int)$limit;
+    }
+
+    if (strlen($string) <= $length || !$length) {
         return $string;
     }
 
@@ -3205,6 +3209,7 @@ function dr_arraycut($arr, $limit) {
         return [];
     }
 
+    $limit = (string)$limit;
     if (strpos($limit, ',')) {
         list($a, $b) = explode(',', $limit);
     } else {
@@ -3286,7 +3291,7 @@ function dr_format_file_size($fileSize, $round = 2) {
 
     $i = 0;
     $inv = 1 / 1024;
-    $unit = array(' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB');
+    $unit = [' Bytes', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
 
     while ($fileSize >= 1024 && $i < 8) {
         $fileSize *= $inv;
@@ -3308,7 +3313,7 @@ function dr_format_file_size($fileSize, $round = 2) {
  */
 function dr_keyword_highlight($string, $keyword, $rule = '') {
 
-    if (!$keyword) {
+    if (!$keyword || !$string) {
         return $string;
     }
 
@@ -3366,10 +3371,10 @@ function dr_qrcode_url($text, $uid = 0, $level = 'L', $size = 5) {
 // 过滤非法字段
 function dr_get_order_string($str, $order) {
 
-    if (substr_count($str, ' ') >= 2
-        || strpos($str, '(') !== FALSE
-        || strpos($str, 'undefined') === 0
-        || strpos($str, ')') !== FALSE ) {
+    if ($str && (substr_count($str, ' ') >= 2
+            || strpos($str, '(') !== FALSE
+            || strpos($str, 'undefined') === 0
+            || strpos($str, ')') !== FALSE )) {
         return $order;
     }
 

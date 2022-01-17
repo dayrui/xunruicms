@@ -80,6 +80,11 @@ class Install extends \Phpcmf\Common {
                 // 目录权限检查
                 $dir = [
                     WRITEPATH,
+                    WRITEPATH.'data/',
+                    WRITEPATH.'file/',
+                    WRITEPATH.'config/',
+                    WRITEPATH.'session/',
+                    WRITEPATH.'template/',
                     WEBPATH.'config/',
                     WEBPATH.'uploadfile/',
                 ];

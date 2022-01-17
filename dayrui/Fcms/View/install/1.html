@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">目录权限</label>
+                    <label class="control-label col-md-3">目录读写权限</label>
                     <div class="col-md-9" style="margin-top:-1px;">
                         {loop $path $name $code}
                         <p style="margin:10px 0;{if !$code}color:red{/if}"> {if !$code}[错误]{else}[正确]{/if}&nbsp;&nbsp;{$name} </p>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">环境检测</label>
+                    <label class="control-label col-md-3">PHP环境检测</label>
                     <div class="col-md-9" style="margin-top:-1px;">
                         {loop $php $t}
                         {if !$t.code}
