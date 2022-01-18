@@ -191,10 +191,12 @@ class Linkages extends \Phpcmf\Library\A_Field {
             foreach ($values as $id => $value) {
                 if ($value) {
                     $link = dr_linkage($field['setting']['option']['linkage'], $value);
-                    $pids = substr($link['pids'], 2);
+                    if (!$link) {
+                        continue;
+                    }
+                    $pids = substr((string)$link['pids'], 2);
                     $level = substr_count($pids, ',') + 1;
                     $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
-
                     $str.= '<div class="linkages_'.$name.'_row" id="dr_linkages_'.$name.'_row_'.$id.'">';
                     $str.= '<label style="margin-right: 10px;"><a class="btn btn-sm " href="javascript:;" onclick="$(\'#dr_linkages_'.$name.'_row_'.$id.'\').remove()"> <i class="fa fa-close"></i> </a></label>';
                     $str.= '<input type="hidden" name="data['.$name.']['.$id.']" id="dr_'.$name.'_'.$id.'" value="'.$value.'" />';

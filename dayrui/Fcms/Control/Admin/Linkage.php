@@ -625,7 +625,7 @@ class Linkage extends \Phpcmf\Common
         $total = (int)\Phpcmf\Service::L('input')->get('total');
 
         if (!$page) {
-            $path = WRITEPATH.'linkage/data_'.SITE_ID.'_'.$link['code'].'/';
+            $path = WRITEPATH.'linkage/'.SITE_ID.'_'.$link['code'].'/';
             dr_dir_delete($path);
             \Phpcmf\Service::M('Linkage')->repair($link, SITE_ID); // 修复菜单
             $pids = \Phpcmf\Service::M('Linkage')->get_child_pids();
