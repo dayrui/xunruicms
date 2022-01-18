@@ -145,6 +145,8 @@ class Linkage extends \Phpcmf\Model
                 $cname = $py->result($t);
                 if (is_numeric($cname)) {
                     $cname = 'a'.$cname;
+                } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $cname)) {
+                    $cname = dr_safe_filename($cname);
                 }
                 $cf = $this->db->table('linkage_data_'.$key)->where('cname', $cname)->countAllResults();
                 $rt = $this->table('linkage_data_'.$key)->insert(array(
@@ -182,6 +184,8 @@ class Linkage extends \Phpcmf\Model
             }
             if (is_numeric($data['cname'])) {
                 $data['cname'] = 'a'.$data['cname'];
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['cname'])) {
+                $data['cname'] = dr_safe_filename($data['cname']);
             }
             if ($this->db->table('linkage_data_'.$key)->where('cname', $data['cname'])->countAllResults()) {
                 return dr_return_data(0, dr_lang('别名已经存在'));
