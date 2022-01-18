@@ -93,7 +93,9 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
             dr_echo_msg(0, '数据库（'.$db['default']['database'].'）数据不完整，查询异常：'.mysqli_error($mysqli));
         }
     }
-    if (strpos($db['default']['database'], '.') !== false) {
+    if (is_numeric(substr($db['default']['database'], 0, 1))) {
+        dr_echo_msg(0,  '数据库名称（'.$db['default']['database'].'）不规范，不能是数字开头');
+    } elseif (strpos($db['default']['database'], '.') !== false) {
         dr_echo_msg(0,  '数据库名称（'.$db['default']['database'].'）不规范，不能存在.号');
     }
     $version = mysqli_get_server_version($mysqli);
