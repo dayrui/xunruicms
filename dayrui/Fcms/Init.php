@@ -331,7 +331,8 @@ if (is_cli()) {
     }
 
     // 当前URI
-    define('CMSURI', dr_get_rewrite_uri($uu));
+    $uri = dr_get_rewrite_uri($uu);
+    define('CMSURI', $uri);
 
     // 根据自定义URL规则来识别路由
     if (!IS_ADMIN && CMSURI && !defined('IS_API') && !defined('FIX_WEB_URL')) {

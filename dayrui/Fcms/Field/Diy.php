@@ -82,6 +82,11 @@ class Diy extends \Phpcmf\Library\A_Field {
      * @return  string
      */
     public function output($value) {
+
+        if (!$value) {
+            return $value;
+        }
+
         return strpos($value, '["') === 0 || strpos($value, '{"') === 0 ? dr_string2array($value) : $value;
     }
 

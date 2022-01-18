@@ -116,7 +116,7 @@ class Property extends \Phpcmf\Library\A_Field {
 	 */
 	public function insert_value($field) {
 
-        $data = array();
+        $data = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
         if ($value) {
             $i = 1;
@@ -182,7 +182,7 @@ class Property extends \Phpcmf\Library\A_Field {
 				switch ($t['type']) {
 					case 1:
 						$v = $value[$i]['value'] ? $value[$i]['value'] : $t['value'];
-						$str.= '<input type="text" class="form-control input-sm" value="'.$v.'" name="data['.$name.']['.$i.'][value]" />';
+						$str.= '<input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$v).'" name="data['.$name.']['.$i.'][value]" />';
 						break;
 					case 2:
 						$v = explode(',', $t['value']);
@@ -219,9 +219,9 @@ class Property extends \Phpcmf\Library\A_Field {
 		if ($value && !$field['setting']['option']['is_hang']) {
 			foreach ($value as $t) {
                 $str.= '<tr id="dr_items_'.$name.'_'.$i.'">';
-                $str.= '<td><input type="text" class="form-control input-sm" value="'.$t['name'].'" name="data['.$name.']['.$i.'][name]"></td>';
+                $str.= '<td><input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$t['name']).'" name="data['.$name.']['.$i.'][name]"></td>';
                 $str.= '<td>';
-                $str.= '<input type="text" class="form-control input-sm" value="'.$t['value'].'" name="data['.$name.']['.$i.'][value]" />';
+                $str.= '<input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$t['value']).'" name="data['.$name.']['.$i.'][value]" />';
                 $str.= '</td>';
                 $str.= '<td><a class="btn btn-xs red" href="javascript:;" onclick="$(\'#dr_items_'.$name.'_'.$i.'\').remove()"> <i class="fa fa-trash"></i> </a>';
                 $str.= '</td>';

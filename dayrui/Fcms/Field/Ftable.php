@@ -165,7 +165,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             ], 'ENCODE').'&ct=0&one=1';
         $html = '';
         if ($config['type'] == 1) {
-            $html.= '<input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
+            $html.= '<input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.htmlspecialchars((string)$value[$hang][$lie]).'">';
         } elseif ($config['type'] == 2) {
             $html = '<select class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']">';
             $arr = explode(',', $config['option']);
