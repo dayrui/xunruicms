@@ -189,6 +189,8 @@ class Linkage extends \Phpcmf\Common
         foreach ($data as $t) {
             if (is_numeric($t['cname'])) {
                 $t['cname'] = 'a'.$t['cname'];
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $t['cname'])) {
+                $t['cname'] = dr_safe_filename($t['cname']);
             }
             $rt = \Phpcmf\Service::M('Linkage')->table($table)->insert($t);
             if ($rt['code']) {
@@ -456,6 +458,8 @@ class Linkage extends \Phpcmf\Common
                 $this->_json(0, dr_lang('别名不能为空'));
             } elseif (is_numeric($post['cname'])) {
                 $this->_json(0, dr_lang('别名不能是数字'));
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $post['cname'])) {
+                $this->_json(0, dr_lang('别名名称不规范'));
             } elseif (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('cname', $post['cname'])->countAllResults()) {
                 $this->_json(0, dr_lang('别名已经存在'));
             }
@@ -546,6 +550,8 @@ class Linkage extends \Phpcmf\Common
 				$this->_json(0, dr_lang('别名不能为空'));
 			} elseif (is_numeric($post['cname'])) {
 				$this->_json(0, dr_lang('别名不能是数字'));
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $post['cname'])) {
+                $this->_json(0, dr_lang('别名名称不规范'));
 			} else if (\Phpcmf\Service::M()->db->table('linkage_data_'.$key)->where('id<>', $id)->where('cname', $post['cname'])->countAllResults()) {
 				$this->_json(0, dr_lang('别名已经存在'));
 			}
