@@ -859,7 +859,7 @@
             // 字段默认值
             $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
-            $str = '<div class="form-control-static"> '.htmlspecialchars_decode($value).' </div>';
+            $str = '<div class="form-control-static"> '.htmlspecialchars_decode((string)$value).' </div>';
 
             return $this->input_format($field['fieldname'], $field['name'], $str);
         }

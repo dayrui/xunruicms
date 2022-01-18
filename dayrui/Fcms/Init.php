@@ -317,7 +317,7 @@ if (is_cli()) {
     }
     $url.= '://'.$host;
     IS_ADMIN && define('ADMIN_URL', $url.'/'); // 优先定义后台域名
-    define('FC_NOW_URL', $url.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF']));
+    define('FC_NOW_URL', $url.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] ? $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'] : $_SERVER['PHP_SELF'])));
     define('FC_NOW_HOST', $url.'/'); // 域名部分
     define('DOMAIN_NAME', $host); // 当前域名
     

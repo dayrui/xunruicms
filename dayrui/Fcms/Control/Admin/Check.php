@@ -42,6 +42,7 @@ class Check extends \Phpcmf\Common
                     '系统体检' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-wrench'],
                     '系统更新' => ['cache/index', 'fa fa-refresh'],
                     'PHP环境' => [\Phpcmf\Service::L('Router')->class.'/php_index', 'fa fa-code'],
+                    'SERVER变量' => [\Phpcmf\Service::L('Router')->class.'/server_index', 'fa fa-cog'],
                 ]
             ),
             'list' => $this->_list,
@@ -913,6 +914,10 @@ class Check extends \Phpcmf\Common
         phpinfo();
     }
 
+    public function server_index() {
+        echo '<pre style="background: #f1f5f8;padding: 10px">';
+        print_r($_SERVER);
+    }
 
     private function halt($msg, $code) {
         $this->_json($code, $msg);
