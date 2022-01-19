@@ -275,7 +275,7 @@ class Menu extends \Phpcmf\Common
             $this->_json(0, $return['error'], ['field' => $return['name']]);
         }
 
-        $data['uri'] = strtolower($data['uri']);
+        $data['uri'] = strtolower((string)$data['uri']);
         return $data;
 	}
 

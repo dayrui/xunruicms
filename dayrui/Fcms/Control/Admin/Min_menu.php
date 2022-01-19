@@ -156,12 +156,17 @@ class Min_menu extends \Phpcmf\Common {
 			$this->_json(1, dr_lang('操作成功'));
 		}
 
-        $select = '<select class="form-control" name="data[pid]">';
-        $topdata = \Phpcmf\Service::M()->table('admin_min_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
-        foreach ($topdata as $t) {
-            $select.= '<option value="'.$t['id'].'" '.($data['pid'] == $t['id'] ? 'selected' : '').'>'.$t['name'].'</option>';
+        if ($data['pid']) {
+            $select = '<select class="form-control" name="data[pid]">';
+            $topdata = \Phpcmf\Service::M()->table('admin_min_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
+            foreach ($topdata as $t) {
+                $select.= '<option value="'.$t['id'].'" '.($data['pid'] == $t['id'] ? 'selected' : '').'>'.$t['name'].'</option>';
+            }
+            $select.= '</select>';
+        } else {
+            $select = '<input type="hidden" value="0" name="data[pid]" /><div class="form-control-static"><label>'.dr_lang('顶级').'</label></div>';
         }
-        $select.= '</select>';
+
 
 		\Phpcmf\Service::V()->assign([
 			'top' => $top,
@@ -272,7 +277,7 @@ class Min_menu extends \Phpcmf\Common {
             $this->_json(0, $return['error'], ['field' => $return['name']]);
         }
 
-        $data['uri'] = strtolower($data['uri']);
+        $data['uri'] = strtolower((string)$data['uri']);
         return $data;
 	}
 

@@ -108,12 +108,12 @@ class Form
                                 }
                                 break;
                             case 'table':
-                                if (!(preg_match('/^[a-z]+[0-9]+/i', $data[$name]) || preg_match('/[a-z]+/i', $data[$name]))) {
+                                if (!(preg_match('/^[a-z]+[0-9]+/i', (string)$data[$name]) || preg_match('/[a-z]+/i', (string)$data[$name]))) {
                                     return [[], ['name' => $name, 'error' => $error]];
                                 }
                                 break;
                             case 'pinyin':
-                                if (!preg_match('/[a-z0-9]+/i', $data[$name])) {
+                                if (!preg_match('/[a-z0-9]+/i', (string)$data[$name])) {
                                     return [[], ['name' => $name, 'error' => $error]];
                                 }
                                 break;
@@ -125,7 +125,7 @@ class Form
                     foreach ($t['filter'] as $value) {
                         switch ($value) {
                             case 'url':
-                                $data[$name] = strpos($data[$name], 'http://') === 0 ? $data[$name] : 'http://'.$data[$name];
+                                $data[$name] && $data[$name] = strpos($data[$name], 'http://') === 0 ? $data[$name] : 'http://'.$data[$name];
                                 break;
                             case 'intval':
                                 $data[$name] = intval($data[$name]);
