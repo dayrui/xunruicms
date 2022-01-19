@@ -22,11 +22,11 @@ class Menu extends \Phpcmf\Model {
 
         if ($table == 'admin') {
             // 重复判断
-            if ($data['uri'] && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+            if ($data['uri'] && $this->table('admin_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
-            } elseif ($mark && \Phpcmf\Service::M()->table('admin_menu')->where('mark', $mark)->counts()) {
-                return $is_return ? 0 : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
+            } elseif ($mark && $r = $this->table('admin_menu')->where('mark', $mark)->getRow()) {
+                return $is_return ? $r['id'] : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
             }
             $this->db->table('admin_menu')->replace([
                 'pid' => $pid,
@@ -41,14 +41,14 @@ class Menu extends \Phpcmf\Model {
             ]);
         } elseif ($table == 'admin_min') {
             // 重复判断
-            if ($data['uri'] && \Phpcmf\Service::M()->table('admin_min_menu')->where('uri', $data['uri'])->counts()) {
+            if ($data['uri'] && $this->table('admin_min_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
-            } elseif ($data['uri'] && !\Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+            } elseif ($data['uri'] && !$this->table('admin_menu')->where('uri', $data['uri'])->counts()) {
                 // 判断完整菜单表
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径没有存在于完整菜单中'), ['field' => 'uri']);
-            } elseif ($mark && \Phpcmf\Service::M()->table('admin_min_menu')->where('mark', $mark)->counts()) {
-                return $is_return ? 0 : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
+            } elseif ($mark && $r = $this->table('admin_min_menu')->where('mark', $mark)->counts()) {
+                return $is_return ? $r['id'] : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
             }
             $this->db->table('admin_min_menu')->replace([
                 'pid' => $pid,
@@ -63,11 +63,11 @@ class Menu extends \Phpcmf\Model {
             ]);
         } elseif ($this->is_table_exists('member_menu')) {
             // 重复 判断
-            if ($data['uri']  && \Phpcmf\Service::M()->table('member_menu')->where('uri', $data['uri'])->counts()) {
+            if ($data['uri']  && $this->table('member_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 return $is_return ? 0 : dr_return_data(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
-            } elseif ($mark && \Phpcmf\Service::M()->table('member_menu')->where('mark', $mark)->counts()) {
-                return $is_return ? 0 : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
+            } elseif ($mark && $r = $this->table('member_menu')->where('mark', $mark)->counts()) {
+                return $is_return ? $r['id'] : dr_return_data(0, dr_lang('标识字符已经存在'), ['field' => 'uri']);
             }
             $group = [];
             if ($data['group']) {
@@ -291,12 +291,14 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['admin'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $top['name'] ? $this->_add('admin', 0, $top, $mark, true) : $this->_get_id_for_mark('admin', $mark);
+                $top_id = $top['name'] ? $this->_add('admin', 0, $top, $mark, true) : 0;
+                !$top_id && $top_id = $this->_get_id_for_mark('admin', $mark);
                 // 插入分组菜单
                 if ($top_id && $top['left']) {
                     foreach ($top['left'] as $mark2 => $left) {
                         $mark2 = strlen($mark2) > 2 ? $mark2 : '';
-                        $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2, true) : $this->_get_id_for_mark('admin', $mark2);
+                        $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2, true) : 0;
+                        !$left_id && $left_id = $this->_get_id_for_mark('admin', $mark2);
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $key => $link) {
@@ -324,7 +326,8 @@ class Menu extends \Phpcmf\Model {
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
                 $mark = strlen($mark) > 2 ? $mark : '';
-                $top_id = $top['name'] ? $this->_add('member', 0, $top, $mark, true) : $this->_get_id_for_mark('member', $mark);
+                $top_id = $top['name'] ? $this->_add('member', 0, $top, $mark, true) : 0;
+                !$top_id && $top_id = $this->_get_id_for_mark('member', $mark);
                 // 插入链接菜单
                 if ($top_id && $top['link']) {
                     foreach ($top['link'] as $mark2 => $link) {
@@ -340,6 +343,28 @@ class Menu extends \Phpcmf\Model {
                     }
                 }
 
+            }
+        }
+
+        if ($menu['admin_min']) {
+            foreach ($menu['admin_min'] as $mark => $top) {
+                $mark = strlen($mark) > 2 ? $mark : '';
+                $top_id = $top['name'] ? $this->_add('admin_min', 0, $top, $mark, true) : 0;
+                !$top_id && $top_id = $this->_get_id_for_mark('admin_min', $mark);
+                // 插入链接菜单
+                if ($top_id && $top['link']) {
+                    foreach ($top['link'] as $mark2 => $link) {
+                        if ($this->counts('admin_min_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
+                            continue;
+                        }
+                        $id = $this->_add('admin_min', $top_id, $link, $link['mark'], 1);
+                        if (!$link['mark']) {
+                            $this->_edit('admin_min_menu', $id, [
+                                'mark' => 'app-'.$dir.'-'.$id,
+                            ]);
+                        }
+                    }
+                }
             }
         }
 
