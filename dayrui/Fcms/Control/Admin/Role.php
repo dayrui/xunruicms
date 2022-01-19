@@ -182,6 +182,9 @@ class Role extends \Phpcmf\Common
                     'name' => dr_lang($config['name']),
                     'auth' => [],
                 ];
+                if (!$t['share']) {
+                    $module_auth[$mdir]['auth'][$mdir.'/category/'] = dr_lang('栏目');
+                }
                 if ($config['system']) {
                     // 内容模块
                     $module_auth[$mdir]['auth'][$mdir.'/home/'] = dr_lang('内容');
