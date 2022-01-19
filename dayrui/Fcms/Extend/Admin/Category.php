@@ -342,7 +342,7 @@ class Category extends \Phpcmf\Table {
     }
 
     // 替换空格填充符号
-    private function _get_spacer($str) {
+    protected function _get_spacer($str) {
         $rt = '';
         $num = substr_count($str, ',') * 2;
         if ($num) {
