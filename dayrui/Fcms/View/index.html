@@ -215,7 +215,7 @@
     if (self != top) {
         top.location.href = admin_file;
     }
-    var url = '{FC_NOW_URL}';
+    var url = '{dr_url_prefix('/')}';
     var p = url.split('/');
     var ptl = document.location.protocol;
     if ((p[0] == 'http:' || p[0] == 'https:') && ptl != p[0]) {
