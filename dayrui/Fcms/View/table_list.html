@@ -87,7 +87,7 @@
         </div>
 
         <div class="row fc-list-footer table-checkable ">
-            <div class="col-md-5 fc-list-select">
+            <div class="col-md-4 fc-list-select">
                 {if $ci->_is_admin_auth('del')}
                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
@@ -96,7 +96,7 @@
                 <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
                 {/if}
             </div>
-            <div class="col-md-7 fc-list-page">
+            <div class="col-md-8 fc-list-page">
                 {$mypages}
             </div>
         </div>
