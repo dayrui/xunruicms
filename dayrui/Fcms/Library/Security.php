@@ -248,27 +248,33 @@ class Security {
 		 * ... however, remove_invisible_characters() above already strips the
 		 * hex-encoded ones, so we'll skip them below.
 		 */
+        $original2 = $str;
 		do
 		{
 			$original = $str;
 
-			if (preg_match('/<a/i', $str))
+			if ($str && preg_match('/<a/i', $str))
 			{
 				$str = preg_replace_callback('#<a(?:rea)?[^a-z0-9>]+([^>]*?)(?:>|$)#si', array($this, '_js_link_removal'), $str);
 			}
 
-			if (preg_match('/<img/i', $str))
+            /* 会影响编辑器base64格式图片本地化
+			if ($str && preg_match('/<img/i', $str))
 			{
 				$str = preg_replace_callback('#<img[^a-z0-9]+([^>]*?)(?:\s?/?>|$)#si', array($this, '_js_img_removal'), $str);
-			}
+			}*/
 
-			if (preg_match('/script|xss/i', $str))
+			if ($str && preg_match('/script|xss/i', $str))
 			{
 				$str = preg_replace('#</*(?:script|xss).*?>#si', '[xss_clean]', $str);
 			}
 		}
 		while ($original !== $str);
 		unset($original);
+
+        if (!$str) {
+            return $str;
+        }
 
 		/*
 		 * Sanitize naughty HTML elements
