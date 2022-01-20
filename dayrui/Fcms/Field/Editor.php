@@ -158,7 +158,7 @@ class Editor extends \Phpcmf\Library\A_Field {
              <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('视频上传扩展名').'</label>
                     <div class="col-md-9">
-                        <label><input type="text" class="form-control" name="data[setting][option][attach_ext]" value="'.$option['video_ext'].'"></label>
+                        <label><input type="text" class="form-control" name="data[setting][option][video_ext]" value="'.$option['video_ext'].'"></label>
                         <span class="help-block">'.dr_lang('填写用于视频上传的扩展名格式，格式：mp4,mov').'</span>
                     </div>
                 </div>
