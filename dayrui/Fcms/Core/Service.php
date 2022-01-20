@@ -394,7 +394,7 @@ class Service
         log_message('error', $msg . '（'.FC_NOW_URL.'）');
 
         if (defined('IS_API_HTTP') && IS_API_HTTP) {
-            \Phpcmf\Common::json(0, $msg); // api输出格式
+            \Phpcmf\Service::C()->_json(0, $msg); // api输出格式
         } else {
             // 报系统故障
             dr_show_error($msg);

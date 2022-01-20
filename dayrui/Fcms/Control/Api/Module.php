@@ -73,7 +73,7 @@ class Module extends \Phpcmf\Common
             $this->_json(0, dr_lang('应用[模块内容收藏]未安装'));
         }
 
-        $rt = \Phpcmf\Service::M('is_favorite', 'favorite')->run($this->tablename, $this->dirname);
+        $rt = \Phpcmf\Service::M('op', 'favorite')->is_favorite($this->tablename, $this->dirname);
 
         $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
