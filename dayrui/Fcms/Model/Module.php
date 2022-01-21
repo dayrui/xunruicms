@@ -516,7 +516,7 @@ class Module extends \Phpcmf\Model
     }
 
     // 栏目缓存数据
-    protected function _get_category_cache($siteid, $cache, $mdir) {
+    protected function _get_category_cache($siteid, $cache, $mdir, $is_seo = 0) {
 
         if ($cache['share']) {
             $cdir = 'share';
@@ -595,6 +595,7 @@ class Module extends \Phpcmf\Model
         // 栏目字段
         if ($category) {
             $cache['category'] = $category;
+
             foreach ($category as $i => $c) {
                 $category[$i]['setting'] = $c['setting'] = dr_string2array($c['setting']);
                 $pid = explode(',', $c['pids']);
@@ -637,6 +638,9 @@ class Module extends \Phpcmf\Model
                 } else {
                     $c['total'] = $this->db->table($siteid.'_'.$c['mid'].'_index')->where('status', 9)->where('catid', intval($c['id']))->countAllResults();
                 }*/
+                if ($is_seo) {
+                    $c['setting']['seo'] = [];
+                }
                 // 格式化栏目
                 $c['field'] = [];
                 $CAT[$c['id']] = \Phpcmf\Service::L('Field')->app($cdir)->format_value($cache['category_field'], $c, 1);
@@ -768,7 +772,12 @@ class Module extends \Phpcmf\Model
                         // 不使用栏目功能
                     } else {
                         // 如果是共享共享栏目就查询share表
-                        $cache = $this->_get_category_cache($siteid, $cache, $mdir);
+                        if (!$data['share'] && (!isset($data['site'][$siteid]['is_cat']) || !$data['site'][$siteid]['is_cat'])) {
+                            // 独立模块统一规则模式
+                            $cache = $this->_get_category_cache($siteid, $cache, $mdir, 1);
+                        } else {
+                            $cache = $this->_get_category_cache($siteid, $cache, $mdir, 0);
+                        }
                     }
 
                     // 模块表单
