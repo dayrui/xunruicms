@@ -1000,7 +1000,14 @@ class Model {
             return $this;
         }
 
-        $this->param['where'][] = strlen($value) ? [$name, $value] : $name;
+        if (is_array($name)) {
+            foreach ($name as $f => $v) {
+                $this->param['where'][] = !is_numeric($f) ? [$f, $v] : $v;
+            }
+        } else {
+            $this->param['where'][] = strlen($value) ? [$name, $value] : $name;
+        }
+
         return $this;
     }
 
