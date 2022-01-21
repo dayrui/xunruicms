@@ -1509,6 +1509,7 @@ class View {
                 // 跳转到module方法
                 if (strpos($system['module'], ',') || $system['module'] == 'all') {
                     if ($system['field'] && strpos($system['field'], 'keywords') === false) {
+                        $system['field'] = trim($system['field'], ',');
                         $system['field'].= ',keywords';
                     }
                     goto modules;
@@ -2001,6 +2002,14 @@ class View {
 
                 if (!$system['field']) {
                     return $this->_return($system['return'], '必须传入field参数来指定显示字段');
+                }
+
+                if ($system['more']) {
+                    $this->_list_error[] = '多模块查询时more参数将会无效';
+                }
+
+                if ($system['join']) {
+                    $this->_list_error[] = '多模块查询时join参数将会无效';
                 }
 
                 $system['field'] = trim($system['field'], ',');
