@@ -163,7 +163,7 @@ class Module extends \Phpcmf\Table {
             'did' => $did,
             'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
             'select' => $select,
-            'draft_url' =>\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add'),
+            'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add'),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'is_flag' => $this->module['setting']['flag'],
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(

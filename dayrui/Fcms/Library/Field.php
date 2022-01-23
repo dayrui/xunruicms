@@ -128,27 +128,21 @@
                 if (is_object($obj)) {
                     $obj->remove_div = 0;
                     // 百度地图特殊字段
-                    switch ($t['fieldtype']) {
-
-                        case 'Baidumap':
-                            $value = ($data[$t['fieldname'].'_lng'] && $data[$t['fieldname'].'_lat'] ? $data[$t['fieldname'].'_lng'].','.$data[$t['fieldname'].'_lat'] : $data[$t['fieldname']]);
-                            break;
-
-                        case 'Pays':
-                            $value = [
-                                'price' => $data[$t['fieldname']],
-                                'sku' => dr_string2array($data[$t['fieldname'].'_sku']),
-                                'sn' => $data[$t['fieldname'].'_sn'],
-                                'quantity' => $data[$t['fieldname'].'_quantity'],
-                            ];
-                            foreach ($t['setting']['option']['field'] as $ff ) {
-                                $field[$ff]['fieldtype'] == 'Paystext' && $value[$ff] = (string)$data[$ff];
-                            }
-                            break;
-
-                        default:
-                            $value = $data[$t['fieldname']];
-                            break;
+                    if ($t['fieldtype'] == 'Pays') {
+                        $value = [
+                            'price' => $data[$t['fieldname']],
+                            'sku' => dr_string2array($data[$t['fieldname'].'_sku']),
+                            'sn' => $data[$t['fieldname'].'_sn'],
+                            'quantity' => $data[$t['fieldname'].'_quantity'],
+                        ];
+                        foreach ($t['setting']['option']['field'] as $ff ) {
+                            $field[$ff]['fieldtype'] == 'Paystext' && $value[$ff] = (string)$data[$ff];
+                        }
+                    } elseif (strpos($t['fieldtype'], 'map') !== false
+                        && isset($data[$t['fieldname'].'_lng']) && isset($data[$t['fieldname'].'_lat'])) {
+                        $value = ($data[$t['fieldname'].'_lng'] && $data[$t['fieldname'].'_lat'] ? $data[$t['fieldname'].'_lng'].','.$data[$t['fieldname'].'_lat'] : $data[$t['fieldname']]);
+                    } else {
+                        $value = $data[$t['fieldname']];
                     }
                     if (isset($group[$t['fieldname']])) {
                         // 属于分组字段,重新获取字段表单
