@@ -341,29 +341,54 @@
         {if $id}
         var ftype = '{$data.fieldtype}';
         if (ftype != type) {
-            layer.confirm(
-                '{dr_lang('变更字段类别可能会影响已有的数据，你确定吗？')}',
-                {
-                    icon: 3,
-                    shade: 0,
-                    title: lang['ts'],
-                    btn: [lang['ok'], lang['esc']]
-                }, function(index){
-                    $("#dr_loading").show();
-                    $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
-                        data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
-                        success: function(data) {
-                            $('#dr_css').html(data.style);
-                            $('#dr_option').html(data.option);
-                            $("#dr_loading").hide();
-                            App.init();
-                            layer.close(index);
-                        },
-                        error: function(HttpRequest, ajaxOptions, thrownError) {
-                            dr_ajax_alert_error(HttpRequest, this, thrownError);
-                        }
-                    });
-                });
+            $.ajax({type: "GET",dataType:"json", url: '{dr_url("field/type_edit")}&my='+ftype+'&to='+type,
+                success: function(json) {
+                    if (json.code==1) {
+                        $("#dr_loading").show();
+                        $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+                            data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
+                            success: function(data) {
+                                $('#dr_css').html(data.style);
+                                $('#dr_option').html(data.option);
+                                $("#dr_loading").hide();
+                                App.init();
+                                layer.close(index);
+                            },
+                            error: function(HttpRequest, ajaxOptions, thrownError) {
+                                dr_ajax_alert_error(HttpRequest, this, thrownError);
+                            }
+                        });
+                    } else {
+                        layer.confirm(
+                            json.msg,
+                            {
+                                icon: 3,
+                                shade: 0,
+                                title: lang['ts'],
+                                btn: [lang['ok'], lang['esc']]
+                            }, function(index) {
+                                $("#dr_loading").show();
+                                $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+                                    data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
+                                    success: function(data) {
+                                        $('#dr_css').html(data.style);
+                                        $('#dr_option').html(data.option);
+                                        $("#dr_loading").hide();
+                                        App.init();
+                                        layer.close(index);
+                                    },
+                                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                                        dr_ajax_alert_error(HttpRequest, this, thrownError);
+                                    }
+                                });
+                            });
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
+                }
+            });
+
         }
         {else}
         $("#dr_loading").show();

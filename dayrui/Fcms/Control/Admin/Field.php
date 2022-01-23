@@ -492,6 +492,44 @@ class Field extends \Phpcmf\Common {
 		\Phpcmf\Service::V()->display('field_add.html');
 	}
 
+    public function type_edit() {
+
+        $my = dr_safe_filename(\Phpcmf\Service::L('input')->get('my'));
+        $to = dr_safe_filename(\Phpcmf\Service::L('input')->get('to'));
+
+        $int = ['Cat', 'Date', 'Linkage', 'Touchspin', 'Uid'];
+        $text = ['Catids', 'Files', 'Ftable', 'Image', 'Property', 'Redirect', 'Textarea', 'Editor'];
+        $json = ['Checkbox', 'Linkage', 'Members', 'Related', 'Selects'];
+        $char = ['Color', 'File', 'Text', 'Textbtn', 'Time', 'Select', 'Radio'];
+
+        if (in_array($my, $int)) {
+            if (in_array($to, $int)) {
+                $this->_json(1, '同一类型');
+            }
+            $this->_json(0, '当前字段是数字类型，变更后可能会导致无法正常存储，建议手动去数据库修改其字段数据类型，确定继续变更吗？');
+        } elseif (in_array($my, $text)) {
+            if (in_array($to, $text)) {
+                $this->_json(1, '同一类型');
+            } elseif (stripos($to, 'editor') !== false) {
+                $this->_json(1, '同一类型');
+            }
+            $this->_json(0, '当前字段是TEXT类型，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？');
+        } elseif (in_array($my, $json)) {
+            if (in_array($to, $json)) {
+                $this->_json(1, '同一类型');
+            }
+            $this->_json(0, '当前字段存储的数据是JSON格式，变更后可能无法正常筛选数据，确定继续变更吗？');
+        } elseif (in_array($my, $char)) {
+            if (in_array($to, $char)) {
+                $this->_json(1, '同一类型');
+            }
+            $this->_json(0, '当前字段存储的数据是CHAR格式，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？');
+        } elseif (stripos($my, 'editor') !== false && stripos($to, 'editor') !== false) {
+            $this->_json(1, '同一类型');
+        } else {
+            $this->_json(0, '变更字段类别可能会影响已有的数据，你确定吗？');
+        }
+    }
 
 	/**
 	 * 通用操作
