@@ -1162,12 +1162,12 @@ class View {
 
                     // 统计标签
                     if ($this->_return_sql) {
-                        $sql = preg_replace('/select .* from /iUs', 'SELECT '.$this->_select_rt_name.' FROM ', $sql);
+                        $sql = preg_replace('/select .* from /iUs', 'SELECT '.$this->_select_rt_name.' FROM ', $sql, 1);
                     } else {
                         // 如存在分页条件才进行分页查询
                         if ($system['page']) {
                             $page = $this->_get_page_id($system['page']);
-                            $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql), $system, FALSE);
+                            $row = $this->_query(preg_replace('/select .* from /iUs', 'SELECT count(*) as c FROM ', $sql, 1), $system, FALSE);
                             $total = (int)$row['c'];
                             $pagesize = $system['pagesize'] ? $system['pagesize'] : 10;
                             // 没有数据时返回空
