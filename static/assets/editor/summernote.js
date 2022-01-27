@@ -10271,7 +10271,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       'link': 'fa fa-link',
       'unlink': 'fa fa-chain-broken',
       'magic': 'fa fa-magic',
-      'menuCheck': 'fa fa-menu-check',
+      'menuCheck': 'fa fa-check',
       'minus': 'fa fa-minus',
       'orderedlist': 'fa fa-list-ol',
       'pencil': 'fa fa-pencil',
