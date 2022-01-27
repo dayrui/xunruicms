@@ -39,8 +39,8 @@ if(typeof editor_lang == 'undefined'){
       video: '视频',
       videoLink: '视频链接',
       insert: '插入视频',
-      url: '视频地址',
-      providers: ''
+      url: '视频URL地址',
+      providers: '支持以mp4结尾的视频地址、腾讯视频播放地址'
     },
     link: {
       link: '链接',
