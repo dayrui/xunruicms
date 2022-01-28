@@ -1343,7 +1343,7 @@ class Module extends \Phpcmf\Table {
             } elseif ($this->is_post_user) {
                 // 投稿者
                 $this->_json(1, dr_lang('操作成功，等待管理员审核'), [
-                    'url' => dr_url(MOD_DIR.'/verify/index'),
+                    'url' => dr_url($this->_is_admin_auth(MOD_DIR.'/verify/index') ? MOD_DIR.'/verify/index' : MOD_DIR.'/home/index'),
                     'id' => $data[1]['id'],
                     'catid' => $data[1]['catid'],
                 ]);

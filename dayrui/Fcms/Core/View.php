@@ -2886,7 +2886,7 @@ class View {
             ];
         } else {
             if (CI_DEBUG) {
-                $total && $debug.= '<p>总记录数：'.$total.'</p>';
+                $debug.= '<p>总记录数：'.$total.'</p>';
                 if ($this->_page_used) {
                     $debug.= '<p>分页功能：已开启</p>';
                     $debug.= '<p>当前页码：'.$page.'</p>';
