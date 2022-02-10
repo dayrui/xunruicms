@@ -65,6 +65,7 @@
                 $url=dr_url(APP_DIR.'/home/add',array('did'=>$t.id));
                 }
                 $t['url'] = SITE_URL.'index.php?s='.APP_DIR.'&c=show&m=draft&id='.$t['id'];
+                $t['url'] = ADMIN_URL.(dr_url('api/slogin', ['url' => urlencode($t['url'])]));
                 ?>
                 <tr class="odd gradeX" id="dr_row_{$t.id}">
                     {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}

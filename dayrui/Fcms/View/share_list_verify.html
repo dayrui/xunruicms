@@ -225,6 +225,7 @@
                 <?php
                 $c=dr_string2array($t.content);
                 $t['url'] = SITE_URL.'index.php?s='.APP_DIR.'&c=show&m=verify&id='.$t['id'];
+                $t['url'] = ADMIN_URL.(dr_url('api/slogin', ['url' => urlencode($t['url'])]));
                 ?>
                 <tr class="odd gradeX" id="dr_row_{$t.id}">
                     {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}

@@ -714,6 +714,8 @@ class View {
     // list 标签解析
     public function list_tag($_params) {
 
+        $param = $where = [];
+
         $system = [
             'db' => '', // 数据源
             'app' => '', // 指定插件时
@@ -747,8 +749,9 @@ class View {
             'pagesize' => '', // 自定义分页数量
             'pagefile' => '', // 自定义分页配置文件
         ];
-
-        $param = $where = [];
+        if (!$system['pagefile'] && $this->_is_admin) {
+            $system['pagefile'] = 'admin';
+        }
 
         $_params = trim($_params);
         $this->_list_tag = '{list '.$_params.'}';

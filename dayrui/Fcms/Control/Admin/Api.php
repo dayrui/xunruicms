@@ -600,6 +600,27 @@ class Api extends \Phpcmf\Common {
         $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, dr_url_prefix(dr_member_url('api/alogin', ['url' => $url])), 0);exit;
     }
 
+    /**
+     * 后台发送登录数据
+     */
+    public function slogin() {
+
+        $url = \Phpcmf\Service::M('member')->sso($this->member);
+        $sso = '';
+        foreach ($url as $u) {
+            $sso.= '<script src="'.$u.'"></script>';
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'menu' => '',
+        ]);
+
+        $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
+        !$url && $url = SITE_URL;
+
+        $this->_msg(1, dr_lang('正在授权登录...').$sso,$url, 0);exit;
+    }
+
 	/**
 	 * 预览网站
 	 */
