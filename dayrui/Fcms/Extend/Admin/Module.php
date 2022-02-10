@@ -108,12 +108,19 @@ class Module extends \Phpcmf\Table {
             ),
             'clink' => $this->_app_clink(),
             'cbottom' => $this->_app_cbottom(),
-            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+            'move_select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['param']['catid'],
                 'name="catid"',
                 '--',
                 1, 1
+            ),
+            'category_select' => \Phpcmf\Service::L('Tree')->select_category(
+                $this->module['category'],
+                $data['param']['catid'],
+                'name="catid"',
+                '--',
+                0, 1
             ),
         ]);
         return \Phpcmf\Service::V()->display($tpl);
