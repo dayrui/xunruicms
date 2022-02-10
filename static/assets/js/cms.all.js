@@ -122,15 +122,31 @@ function dr_is_mobile() {
 
 function dr_ftable_mydelete(e){
     var ob = $(e);
-    ob.parent().find('.form-control2').val('0');
+    ob.parent().find('.form-control-link').val('0');
+    ob.parent().find('.form-control-preview').val('');
     ob.parent().find('.ftable-show').hide();
     ob.parent().find('.ftable-delete').hide();
 }
 
 function dr_ftable_myshow(e){
     var ob = $(e);
-    var url = ob.parent().find('.form-control3').val();
-    dr_preview_image(url);
+    var url = ob.parent().find('.form-control-link').val();
+    var preview = ob.parent().find('.form-control-preview').val();
+
+    var width = '400px';
+    var height = '300px';
+
+    if (is_mobile_cms == 1) {
+        width = height = '80%';
+    }
+    top.layer.alert('<p style="text-align: center"><a href="'+url+'" target="_blank">'+url+'</a></p><p style="text-align: center"><a href="'+url+'" target="_blank"><img style="max-width:100%" src="'+preview+'?'+Date.parse(new Date())+'"></a></p>', {
+        shade: 0,
+        //scrollbar: false,
+        shadeClose: true,
+        title: '',
+        area: [width, width],
+        btn: []
+    });
 }
 
 function dr_ftable_myfileinput (e, url){
@@ -163,7 +179,8 @@ function dr_ftable_myfileinput (e, url){
                         layer.close(index);
                         var v = json2.data.result[0];
                         ob.parent().find('.form-control2').val(v.id);
-                        ob.parent().find('.form-control3').val(v.url);
+                        ob.parent().find('.form-control-link').val(v.url);
+                        ob.parent().find('.form-control-preview').val(v.exturl);
                         ob.parent().find('.ftable-show').show();
                         ob.parent().find('.ftable-delete').show();
                         dr_tips(1, json2.msg);

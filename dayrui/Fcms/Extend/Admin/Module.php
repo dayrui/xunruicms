@@ -890,13 +890,8 @@ class Module extends \Phpcmf\Table {
         foreach ($data as $t) {
             $ids[] = $t['id'];
         }
+
         $this->content_model->delete_for_recycle($ids);
-        // 删除附件
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
-            $this->member,
-            $ids,
-            \Phpcmf\Service::M()->dbprefix($this->init['table'])
-        );
 
         $this->_html_msg( 1, dr_lang('正在执行中【%s】...', $tpage.'/'.($page+1)),
             dr_url(APP_DIR.'/recycle/recycle_del', ['total' => $total, 'tpage' => $tpage, 'page' => $page + 1])
@@ -912,13 +907,6 @@ class Module extends \Phpcmf\Table {
         }
 
         $rt = $this->content_model->delete_for_recycle($ids);
-
-        // 删除附件
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
-            $this->member,
-            $ids,
-            \Phpcmf\Service::M()->dbprefix($this->init['table'])
-        );
 
         // 写入日志
         \Phpcmf\Service::L('input')->system_log($this->name.'：删除回收站id ('.implode(', ', $ids).')');

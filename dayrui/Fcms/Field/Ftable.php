@@ -32,7 +32,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 					<label>'.$this->_field_type_select($i, $option['field'][$i]['type']).'</label>
 					<label><input type="text" placeholder="'.dr_lang('列名称').'" class="form-control" size="20" value="'.$option['field'][$i]['name'].'" name="data[setting][option][field]['.$i.'][name]"></label>
 					<label><input type="text" placeholder="'.dr_lang('列宽度').'" class="form-control" size="20" value="'.$option['field'][$i]['width'].'" name="data[setting][option][field]['.$i.'][width]"></label>
-					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('下拉选择框和复选框的选项').'" class="form-control input-xlarge" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]"></label>
+					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('例如：选择框或复选框的选项、日期格式值、文件扩展名等').'" class="form-control input-xlarge" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]"></label>
 				</div>
 			</div>';
         }
@@ -138,11 +138,10 @@ class Ftable extends \Phpcmf\Library\A_Field {
             1 => dr_lang('文本框'),
             2 => dr_lang('下拉框'),
             4 => dr_lang('复选框'),
-            3 => dr_lang('图片'),
+            3 => dr_lang('文件'),
             5 => dr_lang('日期'),
             6 => dr_lang('日期时间'),
         ];
-
 
         $html = '<select class="form-control" name="data[setting][option][field]['.$id.'][type]">';
         foreach ($arr as $i => $name) {
@@ -156,13 +155,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
     // 对应的html
     protected function _field_type_html($config, $cname, $value, $hang, $lie) {
 
-        $url ='/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
-                'size' => 10,
-                'count' => 1,
-                'exts' => 'jpg,gif,png',
-                'attachment' => 0,
-                'image_reduce' => 0,
-            ], 'ENCODE').'&ct=0&one=1';
         $html = '';
         if ($config['type'] == 1) {
             $html.= '<input type="text" class="form-control" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.htmlspecialchars((string)$value[$hang][$lie]).'">';
@@ -174,12 +166,30 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
             $html.= '</select>';
         } elseif ($config['type'] == 3) {
-            // 图片
+            // 文件
+            $link = '';
+            $preview = ROOT_THEME_PATH.'assets/images/ext/url.png';
             if ($value[$hang][$lie]) {
-                $pp = dr_get_file((string)$value[$hang][$lie]);
+                $file = \Phpcmf\Service::C()->get_attachment((string)$value[$hang][$lie]);
+                if ($file) {
+                    $link = $file['url'];
+                    if (dr_is_image($file['fileext'])) {
+                        $preview = $link;
+                    } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$file['fileext'].'.png')) {
+                        $preview = ROOT_THEME_PATH.'assets/images/ext/'.$file['fileext'].'.png';
+                    }
+                }
             }
+            $url = '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
+                'size' => 10,
+                'count' => 1,
+                'exts' => $config['option'] ? $config['option'] : 'jpg,gif,png,jpeg',
+                'attachment' => 0,
+                'image_reduce' => 0,
+            ], 'ENCODE').'&ct=0&one=1';
             $html = '<label><input class="form-control2" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
-            $html.= '<input class="form-control3" type="hidden" value="'.($value[$hang][$lie] ? $pp : '').'">';
+            $html.= '<input class="form-control-link" type="hidden" value="'.$link.'">';
+            $html.= '<input class="form-control-preview" type="hidden" value="'.$preview.'">';
             $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this, \''.$url.'\')" class="ftable-fileinput btn green btn-sm">上传</a>';
             $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">预览</a>
 			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">删除</a> ';

@@ -251,11 +251,13 @@ class File extends \Phpcmf\Common
                 foreach ($ids as $t) {
                     $file = trim(str_replace('..', '', $t));
                     $url = dr_get_file($file);
+                    $ext = trim(strtolower(strrchr($file, '.')), '.');
                     $list[] = [
                         'id' => $url,
                         'name' => basename($t),
                         'file' => $url,
                         'url' => $url,
+                        'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png' : '',
                         'preview' => dr_file_preview_html($file, 0),
                         'upload' => '<input type="file" name="file_data"></button>',
                     ];
@@ -270,12 +272,12 @@ class File extends \Phpcmf\Common
                         'name' => $t['filename'],
                         'file' => $t['attachment'],
                         'url' => dr_get_file($t['id']),
+                        'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png' : '',
                         'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
                         'upload' => '<input type="file" name="file_data"></button>',
                     ];
                 }
             }
-
 
             $data = [
                 'count' => dr_count($ids),
