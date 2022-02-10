@@ -2586,7 +2586,7 @@ function dr_now_url() {
     if (IS_ADMIN) {
         return str_replace(FC_NOW_HOST, '/', FC_NOW_URL);
     }
-    return FC_NOW_URL;
+    return \Phpcmf\Service::L('input')->xss_clean(FC_NOW_URL);
 }
 
 /**
