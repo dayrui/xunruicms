@@ -847,7 +847,7 @@ class View {
         // 默认站点参数
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
         // 默认模块参数
-        $system['module'] = $dirname = $system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname'];
+        $system['module'] = $dirname = strtolower($system['module'] ? $system['module'] : \Phpcmf\Service::C()->module['dirname']);
         // 格式化field
         $system['field'] && $system['field'] = urldecode($system['field']);
         // 分页页码变量
@@ -1511,10 +1511,13 @@ class View {
                 }
                 // 跳转到module方法
                 if (strpos($system['module'], ',') || $system['module'] == 'all') {
-                    if ($system['field'] && strpos($system['field'], 'keywords') === false) {
+                    if (!$system['field']) {
+                        $system['field'] = 'id,title,url,keywords';
+                    } elseif (strpos($system['field'], 'keywords') === false) {
                         $system['field'] = trim($system['field'], ',');
                         $system['field'].= ',keywords';
                     }
+
                     goto modules;
                 } else {
                     goto module;
