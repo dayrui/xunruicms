@@ -4,7 +4,7 @@
  * 子站入口
  */
 
-define('SITE_ID', '{SITE_ID}');
+!defined('SITE_ID') && define('SITE_ID', '{SITE_ID}');
 define('WEBPATH', dirname(__FILE__).'/');
 !defined('FIX_WEB_DIR') && define('FIX_WEB_DIR', '{FIX_WEB_DIR}');
 

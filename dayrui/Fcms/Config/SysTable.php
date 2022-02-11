@@ -134,7 +134,6 @@ return [
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='搜索表';
     ",
 
-
     '_recycle' => "CREATE TABLE IF NOT EXISTS `{tablename}` (
       `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
       `cid` int(10) unsigned NOT NULL COMMENT '内容id',
