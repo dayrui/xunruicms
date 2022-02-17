@@ -978,6 +978,9 @@ class Image
         // Create two image resources
         $wm_img  = $this->image_create_gd($this->wm_overlay_path, $wm_img_type);
         $src_img = $this->image_create_gd($this->full_src_path);
+        if (!$src_img) {
+            return FALSE;
+        }
         // Reverse the offset if necessary
         // When the image is positioned at the bottom
         // we don't want the vertical offset to push it
