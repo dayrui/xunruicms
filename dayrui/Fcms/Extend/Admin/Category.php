@@ -1333,7 +1333,11 @@ class Category extends \Phpcmf\Table {
                     $pid = 0;
                 }
 
-                $save['ismain'] = 1;
+                if ($old) {
+                    $save['ismain'] = $old['ismain'];
+                } else {
+                    $save['ismain'] = 1;
+                }
                 if ($pid) {
                     if (!$this->module['category'][$save['pid']]) {
                         $this->_json(0, dr_lang('父栏目不存在'));

@@ -296,7 +296,7 @@ class Seo {
         $cat = $mod['category'][$data['catid']];
         $data['page'] = $page;
         $data['name'] = $data['catname'] = $cat['name'];
-        $data['title'] = dr_clearhtml($data['title']);
+        //$data['title'] = dr_clearhtml($data['title']);
         $data['catname'] = $cat['name'];
         $data['catpname'] = dr_get_cat_pname($mod, $data['catid'], SITE_SEOJOIN);
         $data['modulename'] = $data['modname'] = dr_lang($mod['name']);
@@ -328,7 +328,7 @@ class Seo {
 
             $seo[$key] = $rep->replace($value);
             $seo[$key] = str_replace(SITE_SEOJOIN.SITE_SEOJOIN, SITE_SEOJOIN, $seo[$key]);
-            $seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
+            //$seo[$key] = htmlspecialchars(dr_clearhtml($seo[$key]));
             $seo[$key] = str_replace('"', '', $seo[$key]);
             $seo[$key] = str_replace([',,'], ',', $seo[$key]);
             $seo[$key] = trim($seo[$key], SITE_SEOJOIN);

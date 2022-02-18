@@ -284,7 +284,7 @@ class Security {
 		 *
 		 * So this: <blink>
 		 * Becomes: &lt;blink&gt;
-		 */
+
 		$pattern = '#'
 			.'<((?<slash>/*\s*)((?<tagName>[a-z0-9]+)(?=[^a-z0-9]|$)|.+)' // tag start and name, followed by a non-tag character
 			.'[^\s\042\047a-z0-9>/=]*' // a valid attribute character immediately after the tag would count as a separator
@@ -307,7 +307,7 @@ class Security {
 			$str = preg_replace_callback($pattern, array($this, '_sanitize_naughty_html'), $str);
 		}
 		while ($old_str !== $str);
-		unset($old_str);
+		unset($old_str);*/
 
 		/*
 		 * Sanitize naughty scripting elements
