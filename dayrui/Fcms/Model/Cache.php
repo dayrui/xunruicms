@@ -359,7 +359,7 @@ class Cache extends \Phpcmf\Model
                      'mobile/api.php',
                      'mobile/index.php',
                  ] as $file) {
-            if (is_file(TEMPPATH.''.$name.'/'.$file)) {
+            if (is_file(TEMPPATH.$name.'/'.$file)) {
                 if ($file == 'admin.php') {
                     $dst = $path.(SELF == 'index.php' ? 'admin.php' : SELF);
                 } else {
