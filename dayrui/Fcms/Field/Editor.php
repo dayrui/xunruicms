@@ -39,6 +39,12 @@ class Editor extends \Phpcmf\Library\A_Field {
         if (!isset($option['video_size']) || !$option['video_size']) {
             $option['video_size'] = 500;
         }
+        if (!isset($option['image_ext']) || !$option['image_ext']) {
+            $option['image_ext'] = 'jpg,gif,png,webp,jpeg';
+        }
+        if (!isset($option['image_size']) || !$option['image_size']) {
+            $option['image_size'] = 10;
+        }
 
         $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') ? '<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片水印').'</label>
@@ -137,7 +143,20 @@ class Editor extends \Phpcmf\Library\A_Field {
                 </div>
 				'.$wm.
             '
-                
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('图片上传扩展名').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][image_ext]" value="'.$option['image_ext'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于图片上传的扩展名格式，格式：jpg,gif,png,webp,jpeg').'</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('图片上传大小').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][image_size]" value="'.$option['image_size'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于图片上传的最大允许上传的大小，单位MB').'</span>
+                    </div>
+                </div>
             <hr>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('附件上传大小').'</label>
@@ -528,9 +547,9 @@ class Editor extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
         ], 'ENCODE');
         $p2 = dr_authcode([
-            'size' => 10,
+            'size' => (!isset($field['setting']['option']['image_size']) || !$field['setting']['option']['image_size']) ? 10 : $field['setting']['option']['image_size'],
+            'exts' => (!isset($field['setting']['option']['image_ext']) || !$field['setting']['option']['image_ext']) ? 'jpg,gif,png,webp,jpeg' : $field['setting']['option']['image_ext'],
             'count' => 100,
-            'exts' => 'jpg,gif,png,webp,jpeg',
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
