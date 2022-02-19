@@ -646,8 +646,19 @@ class Table extends \Phpcmf\Common {
             $size = $this->list_pagesize;
         }
 
+        // 按ajax分页
+        if (isset($_GET['is_ajax']) && $_GET['is_ajax'] && $_GET['pagesize']) {
+            $size = intval($_GET['pagesize']);
+        }
+
         // 查询数据结果
         list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
+
+        // 按ajax返回
+        if (isset($_GET['is_ajax']) && $_GET['is_ajax']) {
+            $this->_json(1, $total, $list);
+        }
+
         $p && $param = $p + $param;
         $sql = $this->_db()->get_sql_query();
 
