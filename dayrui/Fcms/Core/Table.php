@@ -754,7 +754,7 @@ class Table extends \Phpcmf\Common {
         }
 
         $data['mytable'] = $this->mytable ? $this->mytable : [
-            'foot_tpl' => $this->_is_admin_auth('del') ? '<label><button type="button" onclick="dr_table_select_all(this)" class="btn btn-sm blue"> <i class="bi bi-check-square"></i> '.dr_lang('全选/取消').'</button></label>
+            'foot_tpl' => $this->_is_admin_auth('del') ? '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>
         <button type="button" onclick="dr_table_option(\''.dr_url($uriprefix.'/del').'\', \''.dr_lang('你确定要删除它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button>' : '',
             'link_tpl' => $this->_is_admin_auth('edit') ? '<label><a href="'.dr_url($uriprefix.'/edit').'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>' : '',
             'link_var' => 'html = html.replace(/\{id\}/g, row.id);',

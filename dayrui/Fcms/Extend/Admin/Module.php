@@ -1097,7 +1097,20 @@ class Module extends \Phpcmf\Table {
 
         list($tpl, $data) = $this->_List();
 
-        \Phpcmf\Service::V()->assign([
+        $this->mytable = [
+            'foot_tpl' => '',
+            'link_tpl' => '',
+            'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
+        ];
+        if ($this->_is_admin_auth('del')) {
+            $this->mytable['foot_tpl'].= '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>';
+            $this->mytable['foot_tpl'].= '<label><button type="button" onclick="dr_table_option(\''.dr_now_url().'\', \''.dr_lang('你确定要移除推荐位吗？').'\')" class="btn red btn-sm"> <i class="fa fa-close"></i> '.dr_lang('移除').'</button></label>';
+        }
+        if ($this->_is_admin_auth('edit')) {
+            $this->mytable['link_tpl'] .= '<label><a href="' . dr_url(APP_DIR . '/' . \Phpcmf\Service::L('Router')->class . '/edit') . '&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> ' . dr_lang('修改') . '</a></label>';
+        }
+
+            \Phpcmf\Service::V()->assign([
             'p' => ['flag' => $flag],
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
@@ -1108,16 +1121,11 @@ class Module extends \Phpcmf\Table {
             'category_select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['param']['catid'],
-                'name="catid"', '--'
+                'name="catid"',
+                '--',
+                0, 1
             ),
-            'move_select' => \Phpcmf\Service::L('Tree')->select_category(
-                $this->module['category'],
-                $data['param']['catid'],
-                'name="catid"', '--', 1, 1
-            ),
-            'clink' => $this->_app_clink(),
-            'cbottom' => $this->_app_cbottom(),
-            'is_flag' => 1,
+            'mytable' => $this->mytable,
         ]);
         \Phpcmf\Service::V()->display($this->_tpl_filename('list'));
     }

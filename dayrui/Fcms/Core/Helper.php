@@ -4263,7 +4263,7 @@ if (! function_exists('dr_clearhtml')) {
      */
     function dr_clearhtml($str) {
 
-        if (is_array($str)) {
+        if (is_array($str) || !$str) {
             return '';
         }
 
