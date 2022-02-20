@@ -87,7 +87,82 @@ class Module extends \Phpcmf\Table {
     // 后台查看列表
     protected function _Admin_List() {
 
+        $this->is_ajax_list = true;
         list($tpl, $data) = $this->_List([]);
+
+        $this->mytable = [
+            'foot_tpl' => '',
+            'link_tpl' => '',
+            'link_var' => 'html = html.replace(/\{id\}/g, row.id);
+            html = html.replace(/\{cid\}/g, row.id);
+            html = html.replace(/\{mid\}/g, "'.APP_DIR.'");',
+        ];
+        if ($this->_is_admin_auth('del') || $this->_is_admin_auth('edit')) {
+            $this->mytable['foot_tpl'].= '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>';
+        }
+        if ($this->_is_admin_auth('del')) {
+            $this->mytable['foot_tpl'].= '<label><button type="button" onclick="dr_module_delete()" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button></label>';
+        }
+        if ($this->_is_admin_auth('edit')) {
+            $this->mytable['link_tpl'].= '<label><a href="'.dr_url(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>';
+            if ($this->module['form']) {
+                foreach ($this->module['form'] as $a) {
+                    if ($this->_is_admin_auth(APP_DIR.'/'.$a['table'].'/index')) {
+                        $this->mytable['link_tpl'].= '<label><a class="btn blue btn-xs" href="'.dr_url(APP_DIR.'/'.$a['table'].'/index').'&cid={cid}"><i class="'.dr_icon($a['setting']['icon']).'"></i> '.dr_lang($a['name']);
+                        if (\Phpcmf\Service::M()->is_field_exists($this->init['table'], $a['table'].'_total')) {
+                            $this->mytable['link_tpl'].= '（{'.$a['table'].'_total}）';
+                            $this->mytable['link_var'].= 'html = html.replace(/\{'.$a['table'].'_total\}/g, row.'.$a['table'].'_total);';
+                        }
+                        $this->mytable['link_tpl'].= '</a></label>';
+                    }
+                }
+            }
+            $clink = $this->_app_clink();
+            if ($clink) {
+                foreach ($clink as $a) {
+                    if ($a['model'] && $a['check']
+                        && method_exists($a['model'], $a['check']) && call_user_func(array($a['model'], $a['check']), APP_DIR, []) == 0) {
+                        continue;
+                    }
+                    $this->mytable['link_tpl'].= ' <label><a class="btn '.$a['color'].' btn-xs" href="'.$a['url'].'"><i class="'.$a['icon'].'"></i> '.dr_lang($a['name']);
+                    if ($a['field'] && \Phpcmf\Service::M()->is_field_exists($this->init['table'], $a['field'])) {
+                        $this->mytable['link_tpl'].= '（{'.$a['field'].'}）';
+                        $this->mytable['link_var'].= 'html = html.replace(/\{'.$a['field'].'\}/g, row.'.$a['field'].');';
+                    }
+                    $this->mytable['link_tpl'].= '</a></label>';
+                }
+            }
+            if (\Phpcmf\Service::V()->get_value('is_category_show')) {
+                $this->mytable['foot_tpl'].= '<label>'.\Phpcmf\Service::L('Tree')->select_category(
+                        $this->module['category'],
+                        $data['param']['catid'],
+                        'name="catid"',
+                        '--',
+                        1, 1
+                    ).'</label>
+                <label><button type="button" onclick="dr_ajax_option(\''.dr_url(APP_DIR.'/home/move_edit').'\', \''.dr_lang('你确定要更改栏目吗？').'\', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> '.dr_lang('更改').'</button></label>';
+            }
+            $this->mytable['foot_tpl'].= '<label>
+                    <div class="btn-group dropup">
+                        <a class="btn  blue btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false" href="javascript:;"> '.dr_lang('批量').'
+                            <i class="fa fa-angle-up"></i>
+                        </a>
+                        <ul class="dropdown-menu">';
+            $cbottom = $this->_app_cbottom();
+            if ($cbottom) {
+                foreach ($cbottom as $a) {
+                    $this->mytable['foot_tpl'].= '<li>
+                                <a href="'.str_replace(['{mid}', '{catid}'], [APP_DIR, $data['param']['catid']], urldecode($a['url'])).'"> <i class="'.$a['icon'].'"></i> '.dr_lang($a['name']).' </a>
+                            </li>';
+                }
+            }
+            $this->mytable['foot_tpl'].= '
+                           
+                        </ul>
+                    </div>
+                </label>';
+        }
+
         if (dr_is_app('fstatus') && $this->module['field']['fstatus']) {
             $list_field = \Phpcmf\Service::V()->get_value('list_field');
             $list_field['fstatus'] = [
@@ -106,15 +181,7 @@ class Module extends \Phpcmf\Table {
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/index'),
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => intval($_GET['catid'])])
             ),
-            'clink' => $this->_app_clink(),
-            'cbottom' => $this->_app_cbottom(),
-            'move_select' => \Phpcmf\Service::L('Tree')->select_category(
-                $this->module['category'],
-                $data['param']['catid'],
-                'name="catid"',
-                '--',
-                1, 1
-            ),
+            'mytable' => $this->mytable,
             'category_select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['param']['catid'],

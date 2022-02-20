@@ -915,7 +915,7 @@ jQuery(document).ready(function() {
     $('.onloading').click(function(){
         var index = layer.load(2, { time: 5000 });
     });
-    $('.fc_member_show').click(function(){
+    $(document).on('click', '.fc_member_show', function() {
         var uid = $(this).attr("uid");
         var name = $(this).attr("member");
         var url = admin_file+"?c=api&m=member&name="+name+"&uid="+uid;
@@ -946,7 +946,7 @@ jQuery(document).ready(function() {
     });
 
     // 当存在隐藏时单击显示区域
-    $(".table td,.table th").click(function(){
+    $(document).on('click', '.table td,.table th', function() {
         var td = $(this);
         if (dr_isEllipsis(td[0]) == true) {
             var text = td.html();

@@ -12019,14 +12019,14 @@ code.form-control-static {
 #sortable_portlets {
     margin: 10px;
 }
-.sortable , .sortable2{
+#sortable_portlets .sortable , #sortable_portlets .sortable2{
     border: 2px dashed #e7ecf1;
     min-height: 150px;
     background: white;
     margin: 10px 0;
     padding: 0;
 }
-.sortable2 {
+#sortable_portlets .sortable2 {
     border: 2px dashed #40aae3;
 }
 .fc-cat-table tr>td:first-child {

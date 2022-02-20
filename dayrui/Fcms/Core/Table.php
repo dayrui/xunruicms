@@ -40,6 +40,8 @@ class Table extends \Phpcmf\Common {
     protected $admin_tpl_path; // 后台模板指定目录
     protected $fix_admin_tpl_path; // 修正值的后台模板指定目录
 
+    protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
+
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->is_data = 0;
@@ -646,38 +648,31 @@ class Table extends \Phpcmf\Common {
             $size = $this->list_pagesize;
         }
 
-        // 按ajax分页
-        if (isset($_GET['is_ajax']) && $_GET['is_ajax'] && $_GET['pagesize']) {
-            $size = intval($_GET['pagesize']);
-        }
-
-        // 查询数据结果
-        list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
-
         // 按ajax返回
         if (isset($_GET['is_ajax']) && $_GET['is_ajax']) {
+            // 按ajax分页
+            if (isset($_GET['pagesize']) && $_GET['pagesize']) {
+                $size = intval($_GET['pagesize']);
+            }
+            // 查询数据结果
+            list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
+            // 格式化字段
+            if ($this->init['list_field'] && $list) {
+                $field = $this->_field_save(0);
+                foreach ($list as $k => $v) {
+                    foreach ($this->init['list_field'] as $i => $t) {
+                        if ($t['use']) {
+                            $list[$k][$i] = dr_list_function($t['func'], $v[$i], $param, $v, $field[$i], $i);
+                        }
+                    }
+                }
+            }
+            // 存储当前页URL
+            unset($param['is_ajax']);
+            \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
             $this->_json(1, $total, $list);
         }
 
-        $p && $param = $p + $param;
-        $sql = $this->_db()->get_sql_query();
-
-        // 默认以显示字段为搜索字段
-        if (!isset($param['field']) && !$param['field']) {
-            $param['field'] = isset($this->init['search_first_field']) && $this->init['search_first_field'] ? $this->init['search_first_field'] : $this->init['show_field'];
-        }
-
-        // 分页URL格式
-        $this->url_params && $param = dr_array22array($param, $this->url_params);
-        $uri = \Phpcmf\Service::L('Router')->uri();
-        $url = IS_ADMIN ? \Phpcmf\Service::L('Router')->url($uri, $param) : \Phpcmf\Service::L('Router')->member_url($uri, $param);
-        $url = $url.'&page={page}';
-
-        // 分页输出样式
-        $config = $this->_Page_Config();
-
-        // 存储当前页URL
-        \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
 
         $list_field = [];
         // 筛选出可用的字段
@@ -686,7 +681,9 @@ class Table extends \Phpcmf\Common {
                 $t['use'] && $list_field[$i] = $t;
             }
         }
-        
+
+        $uriprefix = trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/');
+
         // 默认显示字段
         !$list_field && $this->init['show_field'] && $list_field = [
             $this->init['show_field'] => [
@@ -696,23 +693,71 @@ class Table extends \Phpcmf\Common {
             ],
         ];
 
-        // 查询表名称
-        $list_table = \Phpcmf\Service::M()->dbprefix($this->init['table']);
-        if (isset($this->init['join_list'][0]) && $this->init['join_list'][0]) {
-            $list_table.= ','.\Phpcmf\Service::M()->dbprefix($this->init['join_list'][0]);
+        if ($this->is_ajax_list && !CI_DEBUG) {
+
+            $param = \Phpcmf\Service::L('input')->get();
+            unset($param['s'], $param['c'], $param['m'], $param['d'], $param['page']);
+
+            // 默认以显示字段为搜索字段
+            if (!isset($param['field']) && !$param['field']) {
+                $param['field'] = isset($this->init['search_first_field']) && $this->init['search_first_field'] ? $this->init['search_first_field'] : $this->init['show_field'];
+            }
+
+            // 返回数据
+            $data = [
+                'param' => $param,
+                'my_file' => $this->_tpl_filename('table'),
+                'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'), // uri前缀部分
+                'list_field' => $list_field, // 列表显示的可用字段
+            ];
+        } else {
+            // 查询数据结果
+            list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
+            $p && $param = $p + $param;
+            $sql = $this->_db()->get_sql_query();
+
+            // 默认以显示字段为搜索字段
+            if (!isset($param['field']) && !$param['field']) {
+                $param['field'] = isset($this->init['search_first_field']) && $this->init['search_first_field'] ? $this->init['search_first_field'] : $this->init['show_field'];
+            }
+            // 分页URL格式
+            $this->url_params && $param = dr_array22array($param, $this->url_params);
+            $uri = \Phpcmf\Service::L('Router')->uri();
+            $url = IS_ADMIN ? \Phpcmf\Service::L('Router')->url($uri, $param) : \Phpcmf\Service::L('Router')->member_url($uri, $param);
+            $url = $url.'&page={page}';
+
+            // 分页输出样式
+            $config = $this->_Page_Config();
+
+            // 存储当前页URL
+            \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
+
+            // 查询表名称
+            $list_table = \Phpcmf\Service::M()->dbprefix($this->init['table']);
+            if (isset($this->init['join_list'][0]) && $this->init['join_list'][0]) {
+                $list_table.= ','.\Phpcmf\Service::M()->dbprefix($this->init['join_list'][0]);
+            }
+
+            // 返回数据
+            $data = [
+                'list' => $list,
+                'total' => $total,
+                'param' => $param,
+                'mypages' => \Phpcmf\Service::L('input')->table_page($url, $total, $config, $size),
+                'my_file' => $this->_tpl_filename('table'),
+                'pagesize' => $size,
+                'uriprefix' => $uriprefix, // uri前缀部分
+                'list_field' => $list_field, // 列表显示的可用字段
+                'list_query' => urlencode(dr_authcode($sql, 'ENCODE')), // 查询列表的sql语句
+                'list_table' => $list_table, // 查询列表的数据表名称
+            ];
         }
 
-        // 返回数据
-        $data = [
-            'list' => $list,
-            'total' => $total,
-            'param' => $param,
-            'mypages' => \Phpcmf\Service::L('input')->table_page($url, $total, $config, $size),
-            'my_file' => $this->_tpl_filename('table'),
-            'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'), // uri前缀部分
-            'list_field' => $list_field, // 列表显示的可用字段
-            'list_query' => urlencode(dr_authcode($sql, 'ENCODE')), // 查询列表的sql语句
-            'list_table' => $list_table, // 查询列表的数据表名称
+        $data['mytable'] = $this->mytable ? $this->mytable : [
+            'foot_tpl' => $this->_is_admin_auth('del') ? '<label><button type="button" onclick="dr_table_select_all(this)" class="btn btn-sm blue"> <i class="bi bi-check-square"></i> '.dr_lang('全选/取消').'</button></label>
+        <button type="button" onclick="dr_table_option(\''.dr_url($uriprefix.'/del').'\', \''.dr_lang('你确定要删除它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button>' : '',
+            'link_tpl' => $this->_is_admin_auth('edit') ? '<label><a href="'.dr_url($uriprefix.'/edit').'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>' : '',
+            'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
         ];
 
         \Phpcmf\Service::V()->assign($data);
