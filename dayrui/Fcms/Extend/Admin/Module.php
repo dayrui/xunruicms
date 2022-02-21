@@ -1095,6 +1095,7 @@ class Module extends \Phpcmf\Table {
             'where_list' => 'id IN (select id from `'.\Phpcmf\Service::M()->dbprefix(dr_module_table_prefix(APP_DIR).'_flag').'` where flag='.$flag.')'.($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
+        $this->is_ajax_list = true;
         list($tpl, $data) = $this->_List();
 
         $this->mytable = [
