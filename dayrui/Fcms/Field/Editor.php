@@ -523,7 +523,7 @@ class Editor extends \Phpcmf\Library\A_Field {
         $tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
         // 字段默认值
-        $value = htmlspecialchars_decode((string)($value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value'])));
+        $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
         // 输出
         $str = '';

@@ -759,6 +759,7 @@ class Table extends \Phpcmf\Common {
             'link_tpl' => $this->_is_admin_auth('edit') ? '<label><a href="'.dr_url($uriprefix.'/edit').'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>' : '',
             'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
         ];
+        $data['mytable_name'] = $this->name ? $this->name : 'mytable';
 
         \Phpcmf\Service::V()->assign($data);
 

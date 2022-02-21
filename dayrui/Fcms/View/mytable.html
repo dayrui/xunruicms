@@ -1,10 +1,11 @@
-<script src="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
-<link href="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table.min.css"  rel="stylesheet" type="text/css" />
+
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
-    <table id="mytable"></table>
+    <table id="mytable" data-show-export="true"></table>
 </form>
 <script type="text/javascript">
+    var table_name = '{$mytable_name}';
+    var table_ignoreColumn = {php echo dr_count($list_field)+1;};
     var page_id = {max(1,intval($_GET['page']))};
     var post_token = {{csrf_token()}: "{csrf_hash()}"};
     var mytable = {json_encode($mytable)};
@@ -43,7 +44,11 @@
             visible: true
         });
     }
-    // 实例化table
+</script>
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-table/tableExport{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table.min.css"  rel="stylesheet" type="text/css" />
+<script type="text/javascript">
     $(function (){
         $('#mytable').bootstrapTable({
             url : "{dr_now_url()}&is_ajax=1",
@@ -78,6 +83,7 @@
             pagination: true,
             paginationShowPageGo: true,
             showFooter:true ,
+
             onPostBody:function () {
                 //合并页脚
                 if (mytable.foot_tpl) {
@@ -103,5 +109,6 @@
                 return temp;
             }
         });
+
     });
 </script>
