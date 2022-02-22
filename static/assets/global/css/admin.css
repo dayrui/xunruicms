@@ -12700,7 +12700,12 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 }
 
 .table-search-tool {
-    margin-bottom: 10px
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.bootstrap-table .table-search-tool {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .list-field-cog {
