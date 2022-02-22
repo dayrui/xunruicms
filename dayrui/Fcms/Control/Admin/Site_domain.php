@@ -41,7 +41,7 @@ class Site_domain extends \Phpcmf\Common
             }
             \Phpcmf\Service::M('Site')->domain($post);
             \Phpcmf\Service::M('cache')->sync_cache('');
-            \Phpcmf\Service::L('input')->system_log('设置网站域名参数');
+            \Phpcmf\Service::L('input')->system_log('设置域名参数');
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -81,7 +81,7 @@ class Site_domain extends \Phpcmf\Common
         if (IS_POST) {
 
             if ($is_fclient) {
-                $this->_json(0, dr_lang('当前网站不能修改主域名'));
+                $this->_json(0, dr_lang('当前项目不能修改主域名'));
             }
 
             $domain = trim(\Phpcmf\Service::L('input')->post('domain'));
@@ -90,7 +90,7 @@ class Site_domain extends \Phpcmf\Common
             }
 
             \Phpcmf\Service::M('Site')->edit_domain($domain);
-            \Phpcmf\Service::L('input')->system_log('变更网站主域名');
+            \Phpcmf\Service::L('input')->system_log('变更项目主域名');
             \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
 
             $this->_json(1, dr_lang('操作成功，请更新全站缓存'), [

@@ -9,7 +9,7 @@
     <div class="form-body">
 
         {if $is_fclient}
-        {dr_lang('当前站点不能修改主域名，请到[%s]网站上修改主域名再进行数据通信操作', $fcname)}
+        {dr_lang('当前项目不能修改主域名，请到[%s]上修改主域名再进行数据通信操作', $fcname)}
         {else}
         <div class="form-group">
             <div class="col-xs-12">
@@ -26,7 +26,7 @@
         <div class="form-group">
             <div class="col-xs-12">
                 <p class="form-control-static"> {dr_lang('例如：www.test.com，不能包含/符号')} </p>
-                <p class="form-control-static"> {dr_lang('域名变更需要提前把新域名绑定到本站')} </p>
+                <p class="form-control-static"> {dr_lang('域名变更需要提前把新域名绑定到本项目')} </p>
             </div>
         </div>
         {/if}

@@ -124,7 +124,7 @@ class Install extends \Phpcmf\Common {
 
                     $data = $_POST['data'];
                     if (empty($data['name'])) {
-                        $this->_json(0, '网站名称不能为空');
+                        $this->_json(0, '项目名称不能为空');
                     } elseif (empty($data['username'])) {
                         $this->_json(0, '创始人账号不能为空');
                     } elseif (empty($data['password'])) {

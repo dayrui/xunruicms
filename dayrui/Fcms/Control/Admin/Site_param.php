@@ -47,7 +47,7 @@ class Site_param extends \Phpcmf\Common {
                     $save[1]
                 );
                 if (!is_array($rt)) {
-                    $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+                    $this->_json(0, dr_lang('项目信息(#%s)不存在', SITE_ID));
                 }
                 // 附件归档
                 if (SYS_ATTACHMENT_DB) {
@@ -82,7 +82,7 @@ class Site_param extends \Phpcmf\Common {
                 $attach && \Phpcmf\Service::M('Attachment')->handle($this->member['id'], \Phpcmf\Service::M()->dbprefix('site'), $attach);
             }
 
-			\Phpcmf\Service::L('input')->system_log('设置网站自定义参数');
+			\Phpcmf\Service::L('input')->system_log('设置项目自定义参数');
             \Phpcmf\Service::M('cache')->sync_cache('');
             $this->_json(1, dr_lang('操作成功'));
 		}
@@ -94,7 +94,7 @@ class Site_param extends \Phpcmf\Common {
 			'form' => dr_form_hidden(['page' => $page]),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '网站信息' => ['site_param/index', 'fa fa-edit'],
+                    '项目信息' => ['site_param/index', 'fa fa-edit'],
                     '自定义字段' => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname' => 'site', 'rid' => SITE_ID]), 'fa fa-code'],
                     'help' => [1125],
                 ]

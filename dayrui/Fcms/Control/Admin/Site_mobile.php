@@ -23,9 +23,9 @@ class Site_mobile extends \Phpcmf\Common
             }
 			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
             if (!is_array($rt)) {
-                $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+                $this->_json(0, dr_lang('项目信息(#%s)不存在', SITE_ID));
             }
-			\Phpcmf\Service::L('input')->system_log('设置手机网站参数');
+			\Phpcmf\Service::L('input')->system_log('设置手机项目参数');
             \Phpcmf\Service::M('cache')->sync_cache('');
 			$this->_json(1, dr_lang('操作成功'));
 		}
@@ -46,7 +46,7 @@ class Site_mobile extends \Phpcmf\Common
 			'form' => dr_form_hidden(['page' => $page]),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '手机网站' => ['site_mobile/index', 'fa fa-mobile'],
+                    '手机项目' => ['site_mobile/index', 'fa fa-mobile'],
                     'help' => [506],
                 ]
             ),

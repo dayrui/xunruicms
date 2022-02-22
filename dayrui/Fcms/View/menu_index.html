@@ -25,7 +25,7 @@
                     <th width="100">
                         {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>0])}', '600px', '500px');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
                     </th>
-                    <th> {dr_lang('站点划分')} </th>
+                    <th> {dr_lang('项目权限')} </th>
                     {else}
                     <th>
                         {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>0])}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
@@ -81,7 +81,7 @@
                 <button type="button" onclick="dr_ajax_option('{dr_url('menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
                 {/if}
                 {if $ci->_is_admin_auth('edit') && dr_count($ci->site_info) > 1}
-                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分站点权限')}</button></label>
+                <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分项目权限')}</button></label>
                 <label style="min-width: 200px;">
                     <select name="siteid[]" class="bs-select form-control"  multiple="multiple"  data-actions-box="true">
                         {loop $ci->site_info $sid $t}

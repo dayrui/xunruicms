@@ -223,14 +223,14 @@
             <option{if $t==$site['theme']} selected=""{/if} value="{$t}">{$t}</option>
             {/loop}
         </select></label>
-        <span class="help-block">{dr_lang('位于网站主站根目录下：/static/风格名称/')}</span>
+        <span class="help-block">{dr_lang('位于项目主站根目录下：/static/风格名称/')}</span>
     </div>
 </div>
 <div id="dr_web" style="display: none">
     <label class="col-md-2 control-label">{dr_lang('远程资源')}</label>
     <div class="col-md-9">
         <input class="form-control  input-xlarge" type="text" placeholder="http://" name="site[theme]" value="{php echo dr_strpos($site['theme'], 'http') === 0 ? $site['theme'] : '';}">
-        <span class="help-block">{dr_lang('网站将调用此地址的css,js,图片等静态资源')}</span>
+        <span class="help-block">{dr_lang('项目将调用此地址的css,js,图片等静态资源')}</span>
     </div>
 </div>
 {template "footer.html"}

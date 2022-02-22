@@ -808,9 +808,9 @@ class Field extends \Phpcmf\Common {
                 list($a, $siteid) = explode('-', $this->relatedname);
                 $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
                 if (!$this->data) {
-					$this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
+					$this->_admin_msg(0, dr_lang('表单【%s】不存在', $this->relatedid));
 				} 
-                $this->name = '网站表单【'.$this->data['name'].'】字段';
+                $this->name = '表单【'.$this->data['name'].'】字段';
                 $this->backurl = ''; // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
@@ -819,7 +819,7 @@ class Field extends \Phpcmf\Common {
             case 'site':
                 // 网站信息
                 $ismain = 1;
-                $this->name = '网站信息字段';
+                $this->name = '项目信息字段';
                 $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
                 break;

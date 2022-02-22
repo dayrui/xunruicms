@@ -32,15 +32,15 @@
             <div class="col-xs-9">
                 <div class="mt-radio-inline">
                     <label class="mt-radio">
-                        <input type="radio" name="data[type]"  value="0"  {if !$data['type']} checked{/if}> {dr_lang('全局共享')}
+                        <input type="radio" name="data[type]"  value="0"  {if !$data['type']} checked{/if}> {dr_lang('共享')}
                         <span></span>
                     </label>
                     <label class="mt-radio">
-                        <input type="radio" name="data[type]"  value="1"  {if $data['type']} checked{/if}> {dr_lang('站点独立')}
+                        <input type="radio" name="data[type]"  value="1"  {if $data['type']} checked{/if}> {dr_lang('独立')}
                         <span></span>
                     </label>
                 </div>
-                <span class="help-block"> {dr_lang('站点独立是指各个站点的联动菜单数据分开录入')} </span>
+                <span class="help-block"> {dr_lang('独立是指各个项目的联动菜单数据分开录入')} </span>
             </div>
         </div>
     </div>

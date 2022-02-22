@@ -132,16 +132,16 @@ return [
             'icon' => 'fa fa-cogs',
             'left' => [
                 'config-web' => [
-                    'name' => '网站设置',
+                    'name' => '项目设置',
                     'icon' => 'fa fa-cog',
                     'link' => [
                         [
-                            'name' => '网站设置',
+                            'name' => '项目设置',
                             'icon' => 'fa fa-cog',
                             'uri' => 'site_config/index',
                         ],
                         [
-                            'name' => '网站信息',
+                            'name' => '项目信息',
                             'icon' => 'fa fa-edit',
                             'uri' => 'site_param/index',
                         ],
@@ -305,7 +305,7 @@ return [
                             'uri' => 'system_theme/index',
                         ],
                         [
-                            'name' => '网站风格',
+                            'name' => '项目风格',
                             'icon' => 'fa fa-photo',
                             'uri' => 'theme/index',
                         ],
@@ -354,11 +354,11 @@ return [
             'displayorder' => 99,
             'left' => [
                 'cloud-dayrui' => [
-                    'name' => '网站管理',
+                    'name' => '项目管理',
                     'icon' => 'fa fa-cloud',
                     'link' => [
                         [
-                            'name' => '我的网站',
+                            'name' => '我的项目',
                             'icon' => 'fa fa-cog',
                             'uri' => 'cloud/index',
                         ],
@@ -412,7 +412,7 @@ return [
                     'uri' => 'api/my',
                 ],
                 [
-                    'name' => '网站设置',
+                    'name' => '项目设置',
                     'icon' => 'fa fa-cog',
                     'uri' => 'site_param/index',
                 ],

@@ -23,7 +23,7 @@ class Site_image extends \Phpcmf\Common
                 \Phpcmf\Service::L('input')->post('image')
             );*/
             \Phpcmf\Service::M('cache')->sync_cache('');
-            \Phpcmf\Service::L('input')->system_log('设置网站图片参数');
+            \Phpcmf\Service::L('input')->system_log('设置项目图片参数');
             $this->_json(1, dr_lang('操作成功'));
         }
 

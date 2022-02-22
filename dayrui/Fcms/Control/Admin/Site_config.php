@@ -34,10 +34,10 @@ class Site_config extends \Phpcmf\Common
 
             $rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $data['config']);
 			if (!is_array($rt)) {
-			    $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+			    $this->_json(0, dr_lang('项目信息(#%s)不存在', SITE_ID));
             }
 
-			\Phpcmf\Service::L('input')->system_log('设置网站参数');
+			\Phpcmf\Service::L('input')->system_log('设置项目参数');
 
             \Phpcmf\Service::M('cache')->sync_cache('');
             $this->_json(1, dr_lang('操作成功'));
@@ -52,7 +52,7 @@ class Site_config extends \Phpcmf\Common
 			'lang' => dr_dir_map(ROOTPATH.'api/language/', 1),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '网站设置' => ['site_config/index', 'fa fa-cog'],
+                    '项目设置' => ['site_config/index', 'fa fa-cog'],
                     'help' => [505],
                 ]
             ),

@@ -61,7 +61,7 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->display('cloud_online.html');exit;
     }
 
-    // 我的网站
+    // 我的
     public function index() {
 
         $domain = dr_get_domain_name(ROOT_URL);
@@ -73,7 +73,7 @@ class Cloud extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '我的网站' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-cog'],
+                    '我的项目' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-cog'],
                 ]
             ),
             'domain' => $domain,

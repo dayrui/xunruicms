@@ -9,7 +9,7 @@
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
                 <li class="{if $page==0}active{/if}">
-                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('本站域名')} </a>
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('项目域名')} </a>
                 </li>
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-table"></i> {dr_lang('模块域名')} </a>
@@ -26,7 +26,7 @@
                     <div class="form-body">
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('本站电脑域名')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('电脑域名')}</label>
                             <div class="col-md-4">
                                 <div class="input-group" style="width: 300px;">
                                     <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars((string)$data['site_domain'])}" class="form-control input-large">
@@ -38,12 +38,12 @@
                                         {/if}
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('本站的域名，通常www.xxx.com')}</span>
+                                <span class="help-block">{dr_lang('域名格式：www.xxx.com')}</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('本站手机域名')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
                             <div class="col-md-9">
                                 <div class="input-group" style="width: 300px;">
                                 <input class="form-control input-large" readonly type="text"  value="{htmlspecialchars((string)$data['mobile_domain'])}"></label>
@@ -59,7 +59,7 @@
 
                         {if SITE_ID > 1}
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('本站Web目录')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('Web目录')}</label>
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="text" name="data[webpath]" id="dr_html_dir" value="{htmlspecialchars((string)$data['webpath'])}" class="form-control">
@@ -67,7 +67,7 @@
                                         <button class="btn blue" onclick="dr_test_html_dir('dr_html_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('本站的网站目录，必须填写一个有效的目录，并设置可写权限')}</span>
+                                <span class="help-block">{dr_lang('本项目的目录，必须填写一个有效的目录，并设置可写权限')}</span>
                             </div>
                         </div>
                         {/if}
@@ -107,7 +107,7 @@
                                         <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('如果本站绑定了手机域名，这里必须要绑定域名')}</span>
+                                <span class="help-block">{dr_lang('如果绑定了手机域名，这里必须要绑定域名')}</span>
                                 {/if}
                             </div>
                         </div>

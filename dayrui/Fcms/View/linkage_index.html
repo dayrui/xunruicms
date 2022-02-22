@@ -1,6 +1,6 @@
 {template "header.html"}
 <div class="note note-danger">
-    <p>{dr_lang('联动菜单可以作为地区、行业、类型等，也可以按站点来设置联动菜单值')}</p>
+    <p>{dr_lang('联动菜单可以作为地区、行业、类型等，也可以按项目来设置联动菜单值')}</p>
 </div>
 
 <div class="right-card-box">
@@ -40,9 +40,9 @@
                 <td>{$t.code}</td>
                 <td style="text-align:center">
                     {if $t.type}
-                    <span class="label label-success"> {dr_lang('站点独立')} </span>
+                    <span class="label label-success"> {dr_lang('独立')} </span>
                     {else}
-                    <span class="label label-danger"> {dr_lang('全局共享')} </span>
+                    <span class="label label-danger"> {dr_lang('共享')} </span>
                     {/if}
                 </td>
                 <td style="text-align:center">

@@ -18,10 +18,10 @@ class Sync extends \Phpcmf\Model
     public function __construct(...$params) {
         parent::__construct(...$params);
 
-        $local = dr_dir_map(APPSPATH, 1);
-        foreach ($local as $dir) {
-            if (is_file(APPSPATH.$dir.'/Config/Sync.php')) {
-                $sync = require APPSPATH.$dir.'/Config/Sync.php';
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as  $dir => $path) {
+            if (is_file($path.'Config/Sync.php')) {
+                $sync = require $path.'Config/Sync.php';
                 foreach ($sync as $tid => $t) {
                     if ($t) {
                         if (!$this->sync[$tid][$dir]) {

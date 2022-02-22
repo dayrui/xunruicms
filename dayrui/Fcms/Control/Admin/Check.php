@@ -19,7 +19,7 @@ class Check extends \Phpcmf\Common
         '06' => '模板完整性检测',
         '07' => '数据库表结构检测',
         '08' => '程序兼容性检测',
-        '09' => '网站安全性检测',
+        '09' => '项目安全性检测',
         '10' => '数据负载优化检测',
         '11' => '域名绑定检测',
         '12' => 'HTTPS检测',
@@ -173,14 +173,14 @@ class Check extends \Phpcmf\Common
                 // 语言文件
                 $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
                 if ($lang && strlen($lang) < 10) {
-                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
+                    $rt[] = '语言JS文件异常：'.LANG_PATH.'lang.js';
                 } elseif ($lang && strpos($lang, 'finecms_datepicker_lang') === false) {
-                    $rt[] = '网站语言JS文件异常：'.LANG_PATH.'lang.js';
+                    $rt[] = '语言JS文件异常：'.LANG_PATH.'lang.js';
                 }
 
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
-                    $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html';
+                    $rt[] = '前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html';
                 }
                 if (IS_USE_MEMBER) {
                     if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
@@ -192,7 +192,7 @@ class Check extends \Phpcmf\Common
                 // 必备模板检测
                 foreach (['msg.html', '404.html'] as $tt) {
                     if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/'.$tt)) {
-                        $rt[] = '网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/'.$tt;
+                        $rt[] = '前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/'.$tt;
                     }
                 }
 
@@ -202,7 +202,7 @@ class Check extends \Phpcmf\Common
 
                 // 移动端模板检测
                 if (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/home/index.html')) {
-                    $this->halt('网站前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
+                    $this->halt('前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
                 }
 
                 if (IS_USE_MEMBER) {
@@ -654,12 +654,12 @@ class Check extends \Phpcmf\Common
 				foreach ($dir as $p) {
 					$code = dr_catcher_data(ROOT_URL.$p.'/api.php', 5);
 					if (strpos($code, 'phpcmf') !== false) {
-						$rt[] = '网站目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
+						$rt[] = '目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
 				}
 
                 if (!dr_is_app('safe')) {
-                    $rt[] = '<font color="green">安装「系统安全加固」插件可以大大提高网站的安全等级';
+                    $rt[] = '<font color="green">安装「系统安全加固」插件可以大大提高安全等级';
                 }
 				
 				if ($rt) {
@@ -876,7 +876,7 @@ class Check extends \Phpcmf\Common
 
                 // 单独域名判断
                 if (!$this->site_info[SITE_ID]['SITE_IS_MOBILE']) {
-                    $this->_json(1,'当前网站没有绑定移动端域名');
+                    $this->_json(1,'当前项目没有绑定移动端域名');
                 }
 
                 $this->_json(1, '完成');
@@ -885,7 +885,7 @@ class Check extends \Phpcmf\Common
             case '15':
                 // 服务器环境
                 if (is_file(ROOTPATH.'test.php')) {
-                    $this->_json(0,'当网站正式上线后，根目录的test.php建议删除');
+                    $this->_json(0,'当项目正式上线后，根目录的test.php建议删除');
                 }
 
                 $this->_json(1, '完成');
@@ -898,7 +898,7 @@ class Check extends \Phpcmf\Common
                     $this->_json(1, '最近执行时间：'.$time);
                 }
 
-                $this->_json(0, '网站没有配置自动任务功能，无法自动清理缓存和更新缓存，<a href="javascript:dr_help(353);">查看解决方案</a>');
+                $this->_json(0, '没有配置自动任务功能，无法自动清理缓存和更新缓存，<a href="javascript:dr_help(353);">查看解决方案</a>');
                 break;
 
             case '99':

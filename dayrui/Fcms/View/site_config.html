@@ -25,14 +25,14 @@
             <option{if $t==$data['SITE_THEME']} selected=""{/if} value="{$t}">{$t}</option>
             {/loop}
         </select></label>
-        <span class="help-block">{dr_lang('位于网站主站根目录下：/static/风格名称/')}</span>
+        <span class="help-block">{dr_lang('位于项目主站根目录下：/static/风格名称/')}</span>
     </div>
 </div>
 <div id="dr_web" style="display: none">
     <label class="col-md-2 control-label">{dr_lang('远程资源')}</label>
     <div class="col-md-9">
         <input class="form-control  input-xlarge" type="text" placeholder="http://" name="data[SITE_THEME2]" value="{php echo $data['SITE_THEME'];}">
-        <span class="help-block">{dr_lang('网站将调用此地址的css,js,图片等静态资源')}</span>
+        <span class="help-block">{dr_lang('项目将调用此地址的css,js,图片等静态资源')}</span>
     </div>
 </div>
 <div class="note note-danger">
@@ -45,10 +45,10 @@
         <div class="portlet-title tabbable-line">
             <ul class="nav nav-tabs" style="float:left;">
                 <li class="{if $page==0}active{/if}">
-                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-globe"></i> {dr_lang('网站设置')} </a>
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-globe"></i> {dr_lang('项目设置')} </a>
                 </li>
                 <li class="">
-                    <a href="{dr_url("api/demo", ['name'=>'pc'])}" target="_blank"> <i class="fa fa-desktop"></i> {dr_lang('预览网站')} </a>
+                    <a href="{dr_url("api/demo", ['name'=>'pc'])}" target="_blank"> <i class="fa fa-desktop"></i> {dr_lang('预览项目')} </a>
                 </li>
             </ul>
         </div>
@@ -69,13 +69,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('网站状态')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('系统状态')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').hide()" name="data[SITE_CLOSE]" value="0" {if empty($data['SITE_CLOSE'])}checked{/if} /> {dr_lang('开启')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_close_msg').show()" name="data[SITE_CLOSE]" value="1" {if $data['SITE_CLOSE']}checked{/if} /> {dr_lang('关闭')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('当关闭网站时，除管理员之外的用户将无法访问（静态页面除外）')}</span>
+                                <span class="help-block">{dr_lang('当关闭项目时，除管理员之外的用户将无法访问（静态页面除外）')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_close_msg">
@@ -86,14 +86,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('网站名称')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('项目名称')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('网站语言')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('项目语言')}</label>
                             <div class="col-md-9">
                                 <label><select class="form-control" name="data[SITE_LANGUAGE]">
                                     <option value="zh-cn"> -- </option>
@@ -101,7 +101,7 @@
                                     <option{if $t==$data['SITE_LANGUAGE']} selected=""{/if} value="{$t}">{$t}</option>
                                     {/loop}
                                 </select></label>
-                                <span class="help-block">{dr_lang('为站点设置不同的语言包')}</span>
+                                <span class="help-block">{dr_lang('为项目设置不同的语言包')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -109,7 +109,7 @@
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_theme(1)" name="theme" value="1" {if $is_theme}checked{/if} /> {dr_lang('远程地址')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_theme(0)" name="theme" value="0" {if !$is_theme}checked{/if} /> {dr_lang('本站资源')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_theme(0)" name="theme" value="0" {if !$is_theme}checked{/if} /> {dr_lang('本项目资源')} <span></span></label>
                                 </div>
                             </div>
                         </div>
@@ -125,11 +125,11 @@
                                     <option{if $t==$data['SITE_TEMPLATE']} selected=""{/if} value="{$t}">{$t}</option>
                                     {/loop}
                                 </select></label>
-                                <span class="help-block">{dr_lang('存放网站模板html文件的目录')}</span>
+                                <span class="help-block">{dr_lang('存放项目模板html文件的目录')}</span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('网站时区')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('项目时区')}</label>
                             <div class="col-md-9">
                                 <label><select class="form-control" name="data[SITE_TIMEZONE]">
                                     <option value=""> -- </option>
@@ -173,7 +173,7 @@
                             <label class="col-md-2 control-label">{dr_lang('时间格式')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[SITE_TIME_FORMAT]" value="{htmlspecialchars((string)$data['SITE_TIME_FORMAT'])}"></label>
-                                <span class="help-block">{dr_lang('网站时间显示格式与date函数一致，默认Y-m-d H:i:s')}</span>
+                                <span class="help-block">{dr_lang('项目时间显示格式与date函数一致，默认Y-m-d H:i:s')}</span>
                             </div>
                         </div>
 

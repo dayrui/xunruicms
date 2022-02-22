@@ -909,7 +909,7 @@
             if (is_array($value)) {
                 $value = dr_array2string($value);
             } else {
-                $value = htmlspecialchars($value);
+                $value = htmlspecialchars((string)$value);
             }
             \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value;
         }

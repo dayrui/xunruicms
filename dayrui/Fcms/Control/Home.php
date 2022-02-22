@@ -27,19 +27,19 @@ class Home extends \Phpcmf\Common
                 // 自定义终端
                 $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', IS_CLIENT.'/index.html');
                 $rt = file_put_contents($file, $html);
-                !$rt && CI_DEBUG && log_message('error', '网站首页终端（'.IS_CLIENT.'）生成失败：'.$file);
+                !$rt && CI_DEBUG && log_message('error', '项目首页终端（'.IS_CLIENT.'）生成失败：'.$file);
             } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
                 if (SITE_MURL != SITE_URL) {
                     $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
                     $mobile = file_put_contents($mfile, $html);
-                    !$mobile && CI_DEBUG && log_message('error', '网站首页移动端生成失败：'.$mfile);
+                    !$mobile && CI_DEBUG && log_message('error', '项目首页移动端生成失败：'.$mfile);
                 }
             } else {
                 // pc
                 $file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html');
                 $pc = file_put_contents($file, $html);
-                !$pc && CI_DEBUG && log_message('error', '网站首页PC端首页生成失败：'.$file);
+                !$pc && CI_DEBUG && log_message('error', '项目首页PC端首页生成失败：'.$file);
             }
         }
 
@@ -96,7 +96,7 @@ class Home extends \Phpcmf\Common
 		$html = ob_get_clean();
 		$file = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'index.html');
 		$pc = file_put_contents($file, $html, LOCK_EX);
-        !$pc && CI_DEBUG && log_message('error', '网站首页PC端首页生成失败：'.$file);
+        !$pc && CI_DEBUG && log_message('error', '项目首页PC端首页生成失败：'.$file);
 
         if (SITE_MURL != SITE_URL) {
             // 开启ob函数
@@ -110,9 +110,9 @@ class Home extends \Phpcmf\Common
             $html = ob_get_clean();
             $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
             $mobile = file_put_contents($mfile, $html, LOCK_EX);
-            !$mobile && CI_DEBUG && log_message('error', '网站首页移动端生成失败：'.$mfile);
+            !$mobile && CI_DEBUG && log_message('error', '项目首页移动端生成失败：'.$mfile);
         } else {
-            CI_DEBUG && log_message('error', '网站首页移动端生成失败：移动端未绑定域名');
+            CI_DEBUG && log_message('error', '项目首页移动端生成失败：移动端未绑定域名');
         }
 
 		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));

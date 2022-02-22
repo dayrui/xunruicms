@@ -622,7 +622,7 @@ class Api extends \Phpcmf\Common {
     }
 
 	/**
-	 * 预览网站
+	 * 预览
 	 */
 	public function demo() {
 
@@ -780,7 +780,7 @@ class Api extends \Phpcmf\Common {
 		
         $path = dr_get_dir_path($v);
 		if (is_file($path.SELF)) {
-			$this->_json(0, dr_lang('目录不能是网站根目录'));
+			$this->_json(0, dr_lang('目录不能是项目根目录'));
 		} elseif (is_dir($path)) {
             $this->_json(1, dr_lang('目录正常'));
         } else {
