@@ -356,6 +356,8 @@ class Category extends \Phpcmf\Model
             } elseif ($at == 'size') {
                 $save['template']['pagesize'] = $setting['template']['pagesize'];
                 $save['template']['mpagesize'] = $setting['template']['mpagesize'];
+            } elseif ($at == 'cat_field') {
+                $save['cat_field'] = $setting['cat_field'];
             }
         }
 

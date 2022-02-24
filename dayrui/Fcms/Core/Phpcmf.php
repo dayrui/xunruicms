@@ -938,14 +938,14 @@ abstract class Common extends \CodeIgniter\Controller {
         }
 
         // 加载全部插件的
-        $local = \Phpcmf\Service::Apps();
+        $local = \Phpcmf\Service::Apps(true);
         foreach ($local as $dir => $path) {
             // 排除模块自身
             if (strtolower($dir) == APP_DIR) {
                 continue;
             }
             // 判断插件目录
-            if (is_file($path.'install.lock') && is_file($path.'Config/Clink'.$endfix.'.php') && is_file($path.'Config/App.php')) {
+            if (is_file($path.'Config/Clink'.$endfix.'.php') && is_file($path.'Config/App.php')) {
                 $cfg = require $path.'Config/App.php';
                 if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                     // 表示插件非模块

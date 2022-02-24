@@ -72,7 +72,7 @@ class Service
     }
 
     // 获取应用目录
-    public static function Apps() {
+    public static function Apps($is_install = 0) {
 
         if (isset(static::$apps) && static::$apps) {
             return static::$apps;
@@ -88,6 +88,9 @@ class Service
                 if ($file === '.' OR $file === '..'
                     OR $file[0] === '.'
                     OR !is_dir($source_dir.$file)) {
+                    continue;
+                }
+                if ($is_install && !is_file($source_dir.$file . '/install.lock')) {
                     continue;
                 }
                 if (is_dir($source_dir.$file)) {

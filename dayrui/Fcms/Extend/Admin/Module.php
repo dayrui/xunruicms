@@ -142,25 +142,25 @@ class Module extends \Phpcmf\Table {
                     ).'</label>
                 <label><button type="button" onclick="dr_ajax_option(\''.dr_url(APP_DIR.'/home/move_edit').'\', \''.dr_lang('你确定要更改栏目吗？').'\', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> '.dr_lang('更改').'</button></label>';
             }
-            $this->mytable['foot_tpl'].= '<label>
+            $cbottom = $this->_app_cbottom();
+            if ($cbottom) {
+                $this->mytable['foot_tpl'].= '<label>
                     <div class="btn-group dropup">
                         <a class="btn  blue btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false" href="javascript:;"> '.dr_lang('批量').'
                             <i class="fa fa-angle-up"></i>
                         </a>
                         <ul class="dropdown-menu">';
-            $cbottom = $this->_app_cbottom();
-            if ($cbottom) {
                 foreach ($cbottom as $a) {
                     $this->mytable['foot_tpl'].= '<li>
                                 <a href="'.str_replace(['{mid}', '{catid}'], [APP_DIR, $data['param']['catid']], urldecode($a['url'])).'"> <i class="'.$a['icon'].'"></i> '.dr_lang($a['name']).' </a>
                             </li>';
                 }
-            }
-            $this->mytable['foot_tpl'].= '
+                $this->mytable['foot_tpl'].= '
                            
                         </ul>
                     </div>
                 </label>';
+            }
         }
 
         if (dr_is_app('fstatus') && $this->module['field']['fstatus']) {

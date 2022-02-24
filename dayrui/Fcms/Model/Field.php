@@ -331,6 +331,18 @@ class Field extends \Phpcmf\Model
 
     }
 
+    /**
+     * 判断表字段否存在
+     */
+    protected function _field_exitsts($id, $name, $table, $siteid = 0) {
+
+        if (!$table)	{
+            return 0;
+        }
+
+        return $this->db->fieldExists($name, $table);
+    }
+
     //--------------------------------------------------------------------
     
     /**
@@ -346,8 +358,15 @@ class Field extends \Phpcmf\Model
             return null;
         }
 
-        return call_user_func_array(array($this, '_sql_'.$this->func), array($sql, $ismain));
-        
+        if (method_exists($this, '_sql_'.$this->func)) {
+            return call_user_func_array(array($this, '_sql_'.$this->func), array($sql, $ismain));
+        } elseif (function_exists('myfield_sql_'.$this->func)) {
+            $rt = call_user_func_array('myfield_sql_'.$this->func, array($sql, $ismain, $this->data));
+            if ($rt) {
+                $this->_table_field = array_merge($this->_table_field, $rt);
+            }
+        }
+
     }
     
     /**
@@ -363,19 +382,13 @@ class Field extends \Phpcmf\Model
             return 1;
         }
 
-        return call_user_func_array(array($this, '_field_'.$this->func), array($name));
-    }
-
-    /**
-     * 判断表字段否存在
-     */
-    protected function _field_exitsts($id, $name, $table, $siteid = 0) {
-
-        if (!$table)	{
-            return 0;
+        if (method_exists($this, '_field_'.$this->func)) {
+            return call_user_func_array(array($this, '_field_'.$this->func), array($name));
+        } elseif (function_exists('myfield_field_'.$this->func)) {
+            return call_user_func_array('myfield_field_'.$this->func, array($name, $this->data));
         }
 
-        return $this->db->fieldExists($name, $table);
+        return 1;
     }
 
     //--------------------------------------------------------------------

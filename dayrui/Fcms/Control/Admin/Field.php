@@ -797,6 +797,15 @@ class Field extends \Phpcmf\Common {
 	// 初始化设置
 	private function _set_init() {
 
+        $local = \Phpcmf\Service::Apps(true);
+        if ($local) {
+            foreach ($local as $dir => $path) {
+                if (is_file($path.'Config/Myfield.php')) {
+                    require $path.'Config/Myfield.php';
+                }
+            }
+        }
+
         $ismain = $issearch = $iscategory = 0;
 
         list($case_name, $a) = explode('-', $this->relatedname);
@@ -1012,6 +1021,24 @@ class Field extends \Phpcmf\Common {
                     $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
+                } elseif (function_exists('myfield_info_'.$case_name)) {
+                    // 其他自定义
+                    $rt = call_user_func_array('myfield_info_'.$case_name, array(
+                        $this->relatedname,
+                        $this->relatedid
+                    ));
+                    if (is_array($rt)) {
+                        list(
+                            $ismain,
+                            $this->name,
+                            $this->data,
+                            \Phpcmf\Service::M('Field')->func,
+                            $this->backurl
+                            ) = $rt;
+                        \Phpcmf\Service::M('Field')->data = $this->data;
+                    } else {
+                        $this->_admin_msg(0, $rt);
+                    }
                 }
                 break;
         }

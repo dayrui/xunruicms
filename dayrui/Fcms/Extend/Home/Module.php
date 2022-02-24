@@ -605,7 +605,7 @@ class Module extends \Phpcmf\Common
     protected function _Show_Data($data, $page) {
 
         // 处理关键字标签
-        $data['tag'] = $data['keywords'] = trim($data['keywords']);
+        $data['tag'] = $data['keywords'] = isset($data['keywords']) && $data['keywords'] ? trim((string)$data['keywords']) : '';
         $data['kws'] = [];
         $data['tags'] = [];
         if ($data['keywords']) {
