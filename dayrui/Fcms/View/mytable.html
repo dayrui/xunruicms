@@ -48,6 +48,12 @@
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-table/tableExport{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
 <link href="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table.min.css"  rel="stylesheet" type="text/css" />
+{if is_file(ROOTPATH.'api/pdfmake/pdfmake.min.js')}
+<script type="text/javascript" src="{ROOT_URL}api/pdfmake/pdfmake.min.js"></script>
+<script type="text/javascript" src="{ROOT_URL}api/pdfmake/gbsn00lp_fonts.js"></script>
+<script type="text/javascript" src="{ROOT_URL}api/pdfmake/FileSaver.min.js"></script>
+{/if}
+
 <script type="text/javascript">
     $(function (){
         $('#mytable').bootstrapTable({
@@ -83,7 +89,7 @@
             pagination: true,
             paginationShowPageGo: true,
             showFooter:true ,
-
+            exportTypes:['csv', 'txt', 'doc', 'excel'{if is_file(ROOTPATH.'api/pdfmake/pdfmake.min.js')}, 'pdf'{/if}],
             onPostBody:function () {
                 //合并页脚
                 if (mytable.foot_tpl) {

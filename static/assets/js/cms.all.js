@@ -452,7 +452,7 @@ function dr_iframe(type, url, width, height, rt) {
                 dr_cmf_tips(0, obj.msg);
             }
         },
-        content: url+'&is_ajax=1'
+        content: url+'&is_iframe=1'
     });
 }
 // ajax 显示内容
@@ -504,7 +504,7 @@ function dr_iframe_show(type, url, width, height, is_close ) {
                 window.location.reload(true)
             }
         },
-        content: url+'&is_ajax=1'
+        content: url+'&is_iframe=1'
     });
 }
 

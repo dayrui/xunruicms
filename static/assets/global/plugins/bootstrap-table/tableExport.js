@@ -108,10 +108,10 @@
       onTableExportEnd: null,           // function() - called when export ends
       outputMode: 'file',               // 'file', 'string', 'base64' or 'window' (experimental)
       pdfmake: {
-        enabled: false,                 // true: Use pdfmake as pdf producer instead of jspdf and jspdf-autotable
+        enabled: true,                 // true: Use pdfmake as pdf producer instead of jspdf and jspdf-autotable
         docDefinition: {
           pageSize: 'A4',               // 4A0,2A0,A{0-10},B{0-10},C{0-10},RA{0-4},SRA{0-4},EXECUTIVE,FOLIO,LEGAL,LETTER,TABLOID
-          pageOrientation: 'portrait',  // 'portrait' or 'landscape'
+          pageOrientation: 'landscape',  // 'portrait' or 'landscape'
           styles: {
             header: {
               background: '#34495E',
