@@ -907,7 +907,7 @@ function dr_show_member(name) {
                 dr_tips(0, obj.msg);
             }
         },
-        content: url+'&is_ajax=1'
+        content: url+'&is_iframe=1'
     });
 }
 
@@ -941,7 +941,7 @@ jQuery(document).ready(function() {
                     dr_tips(0, obj.msg);
                 }
             },
-            content: url+'&is_ajax=1'
+            content: url+'&is_iframe=1'
         });
     });
 
@@ -1322,7 +1322,7 @@ function dr_module_send(title, url, nogo) {
                 dr_tips(1, obj.msg);
             }
         },
-        content: url+'&is_ajax=1'
+        content: url+'&is_iframe=1'
     });
 }
 // 批量模块数据 ajax

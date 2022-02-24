@@ -209,7 +209,7 @@ function dr_ftable_myfileinput (e, url){
                 dr_tips(1, obj.msg);
             }
         },
-        content: url+'&is_ajax=1'
+        content: url+'&is_iframe=1'
     });
 }
 

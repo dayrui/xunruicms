@@ -105,8 +105,18 @@
                     $('.fixed-table-body table tfoot').remove();
                 }
             },
+            onLoadSuccess: function onLoadSuccess(data) {
+                if (mytable.foot_tpl) {
+                    var td_size = $('.fixed-table-body table tbody tr').length;
+                    var dp_size = $('.fixed-table-body table tfoot .dropdown-menu li').length;
+                    if (dp_size > td_size) {
+                        $('.fixed-table-body table tfoot .dropdown-menu').attr("style", "max-height: "+(40*td_size)+"px;overflow-y: scroll;");
+                    }
+                }
+                return false;
+            },
             columns: field_columns,
-                queryParams: function queryParams(params) {
+            queryParams: function queryParams(params) {
                 var temp = {
                     page : params.pageNumber,
                     pagesize : params.pageSize,
