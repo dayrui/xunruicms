@@ -703,10 +703,13 @@ class Table extends \Phpcmf\Common {
             if (!isset($param['field']) && !$param['field']) {
                 $param['field'] = isset($this->init['search_first_field']) && $this->init['search_first_field'] ? $this->init['search_first_field'] : $this->init['show_field'];
             }
+            if ($param['keyword']) {
+                $param['keyword'] = htmlspecialchars($param['keyword']);
+            }
 
             // 返回数据
             $data = [
-                'param' => $param,
+                'param' => dr_htmlspecialchars($param),
                 'my_file' => $this->_tpl_filename('table'),
                 'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'), // uri前缀部分
                 'list_field' => $list_field, // 列表显示的可用字段
@@ -743,7 +746,7 @@ class Table extends \Phpcmf\Common {
             $data = [
                 'list' => $list,
                 'total' => $total,
-                'param' => $param,
+                'param' => dr_htmlspecialchars($param),
                 'mypages' => \Phpcmf\Service::L('input')->table_page($url, $total, $config, $size),
                 'my_file' => $this->_tpl_filename('table'),
                 'uriprefix' => $uriprefix, // uri前缀部分

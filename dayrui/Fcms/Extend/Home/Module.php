@@ -185,7 +185,7 @@ class Module extends \Phpcmf\Common
             'catid' => $catid,
             'parent' => $parent,
             'pageid' => max(1, $get['page']),
-            'params' => $data['params'],
+            'params' => dr_htmlspecialchars($data['params']),
             'keyword' => $data['keyword'],
             'related' => $related,
             'urlrule' => $urlrule,

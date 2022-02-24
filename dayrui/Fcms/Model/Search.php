@@ -42,9 +42,6 @@ class Search extends \Phpcmf\Model {
             $catid = (int)$get['catid'];
             isset($get['catid']) && $get['catid'] = $catid;
         }
-        if (isset($get['keyword'])) {
-            $get['keyword'] = dr_safe_replace($get['keyword']);
-        }
 
         $this->get = $get;
         $this->catid = $catid;
@@ -180,7 +177,7 @@ class Search extends \Phpcmf\Model {
             if ($param['keyword'] != '') {
                 $temp = [];
                 $sfield = explode(',', $this->module['setting']['search']['field'] ? $this->module['setting']['search']['field'] : 'title,keywords');
-                $search_keyword = dr_safe_keyword($param['keyword']);
+                $search_keyword = htmlspecialchars($param['keyword']);
                 if ($sfield) {
                     foreach ($sfield as $t) {
                         if ($t && dr_in_array($t, $field)) {

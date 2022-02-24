@@ -815,9 +815,9 @@ class Model {
             $select->where($param['field'], intval($param['keyword']));
         } elseif (isset($field[$param['field']]['iswhere']) && $field[$param['field']]['iswhere']) {
             // 准确匹配模式
-            $select->where($param['field'], urldecode($param['keyword']));
+            $select->where($param['field'], htmlspecialchars($param['keyword']));
         } else {
-            $where = $this->_where($this->dbprefix($table), $param['field'], $param['keyword'], $field[$param['field']], true);
+            $where = $this->_where($this->dbprefix($table), $param['field'], htmlspecialchars($param['keyword']), $field[$param['field']], true);
             if ($where) {
                 $select->where($where, null, false);
             }
