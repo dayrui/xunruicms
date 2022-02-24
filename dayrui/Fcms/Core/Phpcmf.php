@@ -90,6 +90,9 @@ abstract class Common extends \CodeIgniter\Controller {
 
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
+        if (!isset($this->site_info[SITE_ID]) || !$this->site_info[SITE_ID]) {
+            $this->_admin_msg(0, '项目【'.SITE_ID.'】不存在，请更新SITE_ID');
+        }
 
         // 站点共享变量
         define('SITE_URL', $this->site_info[SITE_ID]['SITE_URL']);
@@ -105,7 +108,7 @@ abstract class Common extends \CodeIgniter\Controller {
         define('SITE_SEOJOIN', dr_strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
         define('SITE_REWRITE', (int)$this->site_info[SITE_ID]['SITE_REWRITE']);
         define('SITE_TEMPLATE', dr_strlen($this->site_info[SITE_ID]['SITE_TEMPLATE']) ? $this->site_info[SITE_ID]['SITE_TEMPLATE'] : 'default');
-        define('SITE_LANGUAGE', dr_strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
+        define('SITE_LANGUAGE', dr_strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) && is_file(ROOTPATH.'api/language/'.$this->site_info[SITE_ID]['SITE_LANGUAGE'].'/lang.php') ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
         define('SITE_TIME_FORMAT', dr_strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
         // 客户端识别
