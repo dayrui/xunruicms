@@ -66,6 +66,16 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('Merge分组字段摆放')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][merge]" value="0" {if empty($data['setting']['merge'])}checked{/if} /> {dr_lang('同页方式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][merge]" value="1" {if $data['setting']['merge']}checked{/if} /> {dr_lang('Tab页方式')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台编辑界面中，多行分组字段Merge的展示方式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('内容发布界面右侧字段')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">

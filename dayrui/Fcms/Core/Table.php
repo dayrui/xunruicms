@@ -489,6 +489,7 @@ class Table extends \Phpcmf\Common {
         $data['sysfield'] = \Phpcmf\Service::L('Field')->toform($id, $sys_field, $mydata);
         $data['diyfield'] = \Phpcmf\Service::L('Field')->toform($id, $diy_field, $mydata);
         $data['catfield'] = \Phpcmf\Service::L('Field')->toform($id, $cat_field, $mydata);
+        $data['mymerge'] = \Phpcmf\Service::L('Field')->merge;
 
         // 动态实时存储表单值
         if (defined('SYS_AUTO_FORM') && SYS_AUTO_FORM && !$id && $this->auto_save) {

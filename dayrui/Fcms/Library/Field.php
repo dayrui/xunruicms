@@ -16,6 +16,7 @@
         public $data; // 格式化后的post值
         public $value; // 默认值
         public $fields; // 可用字段
+        public $merge; // 可用merge字段
 
         private $is_hide_merge_group = 0;
         private $app;
@@ -29,6 +30,7 @@
          */
         public function app($name = '') {
             $this->app = $name;
+            $this->merge = [];
             return $this;
         }
 
@@ -101,6 +103,9 @@
                         && preg_match_all('/\{(.+)\}/U', $t['setting']['option']['value'], $value)) {
                         foreach ($value[1] as $v) {
                             $merge[$v] = $t['fieldname'];
+                            if (!in_array($t['fieldname'], $this->merge)) {
+                                $this->merge[] = $t['fieldname'];
+                            }
                         }
                     }
                 }

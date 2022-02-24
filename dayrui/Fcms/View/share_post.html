@@ -1,6 +1,6 @@
 {template "header.html"}
 
-<script>
+<script type="text/javascript">
     {if $is_verify}
     $(function () {
         $('#dr_row_hits').hide();
@@ -228,10 +228,41 @@
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}
     <div class="myfbody">
-        <div class="row ">
-            <div class="{if !$is_right_field || $is_mobile}col-md-12{else}col-md-9{/if}">
+        {if $mymerge && $ci->module['setting']['merge']}
+        <div class="tabbable-line margin-bottom-20">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a toid="dr_default" data-toggle="tab">{dr_lang('基本内容')}</a>
+                </li>
+                {loop $mymerge $t}
+                <li>
+                    <a toid="dr_{$t}" data-toggle="tab">{$field[$t]['name']}</a>
+                </li>
+                {/loop}
+                {if $diyfield}
+                <li>
+                    <a toid="dr_orther" data-toggle="tab">{dr_lang('其他内容')}</a>
+                </li>
+                {/if}
+            </ul>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('.myfield-main .portlet').hide();
+                $('#dr_default').show();
+                $('.nav-tabs a').click(function () {
+                    var tid = $(this).attr('toid');
+                    $('.myfield-main .portlet').hide();
+                    $('#'+tid).show();
 
-                <div class="portlet light bordered">
+                });
+            });
+        </script>
+        {/if}
+        <div class="row ">
+            <div class="myfield-main {if !$is_right_field || $is_mobile}col-md-12{else}col-md-9{/if}">
+
+                <div class="portlet light bordered" id="dr_default">
                     <div class="portlet-title">
                         <div class="caption">
                             <span class="caption-subject font-green sbold ">{dr_lang('基本内容')}</span>
@@ -297,7 +328,7 @@
                 </div>
 
                 {if $diyfield}
-                <div class="portlet light bordered">
+                <div class="portlet light bordered" id="dr_orther">
                     <div class="portlet-title">
                         <div class="caption">
                             <span class="caption-subject font-green sbold ">{dr_lang('其他内容')}</span>
