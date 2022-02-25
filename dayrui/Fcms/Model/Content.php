@@ -501,21 +501,23 @@ class Content extends \Phpcmf\Model {
         return 1;
     }
 
-    // 删除推荐位
-    public function delete_flag($id, $flag) {
-        if (is_array($flag)) {
-            $this->db->table($this->mytable.'_flag')->where('id', $id)->whereIn('flag', $flag)->delete();
-        } else {
-            $this->db->table($this->mytable.'_flag')->where('id', $id)->where('flag', (int)$flag)->delete();
-        }
-    }
-
     // 查询id
     public function find_id($field, $value) {
 
         $row = $this->db->table($this->mytable)->select('id')->where($field, $value)->get()->getRowArray();
 
         return $row ? intval($row['id']) : 0;
+    }
+
+    // 删除推荐位
+    public function delete_flag($id, $flag) {
+        if (is_array($flag)) {
+            $this->db->table($this->mytable.'_flag')->where('id', $id)->whereIn('flag', $flag)->delete();
+        } elseif ($flag == 'all') {
+            $this->db->table($this->mytable.'_flag')->where('id', $id)->delete();
+        } else {
+            $this->db->table($this->mytable.'_flag')->where('id', $id)->where('flag', (int)$flag)->delete();
+        }
     }
 
     // 新增推荐位

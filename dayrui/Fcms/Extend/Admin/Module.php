@@ -230,10 +230,6 @@ class Module extends \Phpcmf\Table {
         \Phpcmf\Service::V()->assign([
             'did' => $did,
             'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
-            'select' => $select,
-            'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add'),
-            'draft_list' => $this->content_model->get_draft_list('cid='.$id),
-            'is_flag' => $this->module['setting']['flag'],
             'menu' => \Phpcmf\Service::M('auth')->_module_menu(
                 $this->module,
                 ' <i class="'.dr_icon($this->module['icon']).'"></i>  '.dr_lang('%s管理', $this->module['cname']),
@@ -241,6 +237,10 @@ class Module extends \Phpcmf\Table {
                 \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => $catid])
             ),
             'catid' => 0,
+            'select' => $select,
+            'is_flag' => $this->module['setting']['flag'],
+            'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add'),
+            'draft_list' => $this->content_model->get_draft_list('cid='.$id),
             'category_field_url' => $this->module['category_data_field'] ? \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add') : '',
         ]);
         return \Phpcmf\Service::V()->display($tpl);
@@ -264,6 +264,13 @@ class Module extends \Phpcmf\Table {
         \Phpcmf\Service::V()->assign([
             'did' => $did,
             'form' => dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
+            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
+                $this->module,
+                ' <i class="'.dr_icon($this->module['icon']).'"></i>  '.dr_lang('%s管理', $this->module['cname']),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/index'),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => $data['catid']])
+            ),
+            'is_flag' => $this->module['setting']['flag'],
             'select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['catid'],
@@ -273,12 +280,6 @@ class Module extends \Phpcmf\Table {
             'web_url' => $data['url'] ? dr_url_prefix($data['url'], APP_DIR) : '',
             'draft_url' => \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]),
             'draft_list' => $this->content_model->get_draft_list('cid='.$id),
-            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
-                $this->module,
-                ' <i class="'.dr_icon($this->module['icon']).'"></i>  '.dr_lang('%s管理', $this->module['cname']),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/index'),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add', ['catid' => $data['catid']])
-            ),
             'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]) : ''
         ]);
         return \Phpcmf\Service::V()->display($tpl);
@@ -1209,7 +1210,7 @@ class Module extends \Phpcmf\Table {
         $this->is_get_catid = $catid ? $catid : $row['catid'];
 
         // 推荐位
-        //$row['myflag'] = $id ? $this->content_model->get_flag($id) : [];
+        $row['my_flag'] = $id ? $this->content_model->get_flag($id) : [];
 
         return $row;
     }
@@ -1358,8 +1359,10 @@ class Module extends \Phpcmf\Table {
 
                         // 同步发送到其他栏目
                         $this->content_model->sync_cat(\Phpcmf\Service::L('input')->post('sync_cat'), $data);
-
                         // 处理推荐位
+                        if ($old['my_flag']) {
+                            $this->content_model->delete_flag($id, 'all');
+                        }
                         $myflag = \Phpcmf\Service::L('input')->post('flag');
                         if ($myflag) {
                             foreach ($myflag as $i) {

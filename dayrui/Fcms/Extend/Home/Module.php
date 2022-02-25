@@ -186,7 +186,7 @@ class Module extends \Phpcmf\Common
             'parent' => $parent,
             'pageid' => max(1, $get['page']),
             'params' => dr_htmlspecialchars($data['params']),
-            'keyword' => $data['keyword'],
+            'keyword' => dr_htmlspecialchars($data['keyword']),
             'related' => $related,
             'urlrule' => $urlrule,
             'sototal' => $sototal,
