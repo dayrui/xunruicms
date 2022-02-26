@@ -210,6 +210,7 @@ class Api extends \Phpcmf\Common
             if ($v['pid'] == $pid) {
                 $json[] = [
                     'region_id' => $v['ii'],
+                    'region_code' => $v['id'],
                     'region_name' => $v['name']
                 ];
             }
