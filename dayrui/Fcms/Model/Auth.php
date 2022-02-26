@@ -804,6 +804,8 @@ class Auth extends \Phpcmf\Model {
             $menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/category/index').'"> <i class="fa fa-reorder"></i> '.dr_lang('栏目管理').'</a> <i class="fa fa-circle"></i> </li>';
         }
 
+        $menu.= '<li><a href="javascript:dr_iframe_show(\''.dr_lang('批量更新内容URL').'\', \''.dr_url('api/update_url', ['mid' => $module['dirname']]).'\', \'500px\', \'300px\')""> <i class="fa fa-refresh"></i> '.dr_lang('更新URL').'</a> <i class="fa fa-circle"></i> </li>';
+
         // 非内容页面就显示返回链接
         if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
             && $this->_is_admin_auth($module['dirname'].'/home/index') ) {
