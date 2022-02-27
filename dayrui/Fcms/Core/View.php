@@ -54,6 +54,7 @@ class View {
     private $_list_error = []; // 循环标签遇到的错误
     private $_is_list_search = 0; // 搜索标签
     private $_page_value = 0; // 页码变量
+    private $_sum_field; // 求和时的字段
 
     private $_select_rt_name = '_XUN'.'RUI'.'CMS_RT_'; // select替换字符
 
@@ -632,8 +633,8 @@ class View {
             $regex_array[] = '#{'.$name.'\s+(.+?)return=([\w]+)}#i';// 去掉\s，win平台
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             // 替换直接变量输出
-            $replace_array[] = "<?php \$return_".$name."_\\2 = [];\$list_return_".$name."_\\2 = \$this->list_tag(\"".$name." \\1 return=\\2\"); if (\$list_return_".$name."_\\2) { extract(\$list_return_".$name."_\\2, EXTR_OVERWRITE); }  \$\\2_".$name."=intval(\$return_".$name."[0]['ct']);  ?>";
-            $replace_array[] = "<?php \$return_".$name." = [];\$list_return_".$name." = \$this->list_tag(\"".$name." \\1\"); if (\$list_return_".$name.") { extract(\$list_return_".$name.", EXTR_OVERWRITE); }  echo intval(\$return_".$name."[0]['ct']);   ?>";
+            $replace_array[] = "<?php \$return_".$name."_\\2 = [];\$list_return_".$name."_\\2 = \$this->list_tag(\"".$name." \\1 return=\\2\"); if (\$list_return_".$name."_\\2 && is_array(\$list_return_".$name."_\\2)) { extract(\$list_return_".$name."_\\2, EXTR_OVERWRITE); }  \$\\2_".$name."=intval(\$return_".$name."[0]['ct']);  ?>";
+            $replace_array[] = "<?php \$return_".$name." = [];\$list_return_".$name." = \$this->list_tag(\"".$name." \\1\"); if (\$list_return_".$name." && is_array(\$list_return_".$name.")) { extract(\$list_return_".$name.", EXTR_OVERWRITE); }  echo intval(\$return_".$name."[0]['ct']);   ?>";
         }
 
         // list标签别名
@@ -643,8 +644,8 @@ class View {
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             $regex_array[] = '#{\s?\/'.$name.'\s?}#i';
             // 替换直接变量输出
-            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2)) { \$key_\\2=-1;  foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
-            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2 && is_array(\$list_return_\\2)) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2)) { \$key_\\2=-1;  foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return && is_array(\$list_return)) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
             $replace_array[] = "<?php } } ?>";
         }
 
@@ -842,6 +843,11 @@ class View {
             $system['num'] = $system['limit'];
         }
 
+        // 开发模式下显示求和字段
+        if (CI_DEBUG) {
+            $this->_sum_field = $system['sum'];
+        }
+
         $action = $system['action'];
         // 当hits动作时，定位到moule动作
         $system['action'] == 'hits' && $system['action'] = 'module';
@@ -853,20 +859,14 @@ class View {
         $system['field'] && $system['field'] = urldecode($system['field']);
         // 分页页码变量
         $this->_page_value = $system['page'];
-        // 开发者模式下关闭缓存
-        IS_DEV && $system['cache'] = 0;
 
-        // 判断关闭缓存时
-        if (!SYS_CACHE) {
-            $system['cache'] = 0;
-        }
         if ($system['page'] || in_array(strtoupper($system['order']), ['RAND()', 'RAND'])) {
             $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_get_page_id($system['page']).$this->_is_mobile);
         } else {
             $cache_name = 'view-'.$this->_return_sql.md5($_params.$this->_is_mobile);
         }
 
-        if ($system['cache']) {
+        if (!CI_DEBUG && SYS_CACHE && $system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
                 $this->_page_used = $cache_data['page_used'];
@@ -2863,6 +2863,17 @@ class View {
             }
 
             if ($sql) {
+                // 运算替换
+                if ($this->_return_sql && strpos($sql, $this->_select_rt_name) !== false) {
+                    switch ($this->_return_sql) {
+                        case 'count':
+                            $sql = str_replace($this->_select_rt_name, 'count(*) as ct', $sql);
+                            break;
+                        case 'sum':
+                            $sql = str_replace($this->_select_rt_name, 'sum('.$this->_sum_field.') as ct', $sql);
+                            break;
+                    }
+                }
                 $debug.= '<p>查询解析: '.$sql.'</p>';
             }
 
@@ -2876,8 +2887,6 @@ class View {
             }
 
             $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
-            $debug.= '<p>开发模式：'.(IS_DEV ? '已开启' : '已关闭').'</p>';
-            $debug.= '<p>数据缓存：'.(SYS_CACHE ? ($is_cache ? '已开启，'.$is_cache.'秒' : (IS_DEV ? '开发者模式下缓存无效' : '未设置')) : '后台未开启缓存').'</p>';
         }
 
         // 开始返回

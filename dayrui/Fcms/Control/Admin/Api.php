@@ -1229,6 +1229,7 @@ class Api extends \Phpcmf\Common {
 
         // 更新完成
         if ($page > $tpage) {
+            \Phpcmf\Service::M('cache')->update_data_cache();
             $this->_html_msg(1, dr_lang('更新完成'));
         }
 
