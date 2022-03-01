@@ -1,72 +1,322 @@
-{template "header.html"}
-<header class="hui-header">
-    <a id="hui-member" href="{SITE_MURL}"><i class="fa fa-home"></i></a>
-    <h1>首页</h1>
-    <a id="hui-search" href="javascript:dr_m_top_search();"><i class="fa fa-search"></i></a>
-</header>
-<div class="category-nav">
-    <ul>
-        <!--调用共享栏目-->
-        <!--第一层：调用pid=0表示顶级-->
-        {category module=share pid=0}
-        <li class="{if IS_SHARE && $catid && dr_in_array($catid, $t.catids)} active{/if}">
-            <a href="{$t.url}" title="{$t.name}">{$t.name}</a>
-        </li>
-        {/category}
-    </ul>
-    <a class="category-more" href="javascript:dr_m_top_category();"><i class="fa fa-angle-down"></i></a>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{$meta_title}</title>
+    <meta content="{$meta_keywords}" name="keywords" />
+    <meta content="{$meta_description}" name="description" />
+    <meta name="description" content="The small framework with powerful features">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<div class="hui-index-header-line"></div>
+    <style>
+        * {
+            transition: background-color 300ms ease, color 300ms ease;
+        }
+        *:focus {
+            background-color: #3fa9e2;
+            outline: none;
+        }
+        html, body {
+            color: rgba(33, 37, 41, 1);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        header {
+            background-color: rgba(247, 248, 249, 1);
+            padding: .4rem 0 0;
+        }
+        .copyrights a {
+            color:#999;
+            text-decoration: none;
+        }
+        .menu {
+            padding: .4rem 2rem;
+        }
+        header ul {
+            border-bottom: 1px solid rgba(242, 242, 242, 1);
+            list-style-type: none;
+            margin: 0;
+            overflow: hidden;
+            padding: 0;
+            text-align: right;
+        }
+        header li {
+            display: inline-block;
+        }
+        header li a {
+            border-radius: 5px;
+            color: rgba(0, 0, 0, .5);
+            display: block;
+            height: 44px;
+            text-decoration: none;
+        }
+        header li.menu-item a {
+            border-radius: 5px;
+            margin: 5px 0;
+            height: 38px;
+            line-height: 36px;
+            padding: .4rem .65rem;
+            text-align: center;
+        }
+        header li.menu-item a:hover,
+        header li.menu-item .on,
+        header li.menu-item a:focus {
+            background-color: #3fa9e2;
+            color: #fff;
+        }
+        header .logo {
+            float: left;
+            height: 44px;
+            padding: .4rem .5rem;
+        }
+        header .menu-toggle {
+            display: none;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        header .menu-toggle button {
+            background-color: #3fa9e2;
+            border: none;
+            border-radius: 3px;
+            color: rgba(255, 255, 255, 1);
+            cursor: pointer;
+            font: inherit;
+            font-size: 1.3rem;
+            height: 36px;
+            padding: 0;
+            margin: 11px 0;
+            overflow: visible;
+            width: 40px;
+        }
+        header .menu-toggle button:hover,
+        header .menu-toggle button:focus {
+            background-color: #3fa9e2;
+            color: rgba(255, 255, 255, .8);
+        }
+        header .heroe {
+            margin: 0 auto;
+            max-width: 1100px;
+            padding: 1rem 1.75rem 1.75rem 1.75rem;
+        }
+        header .heroe h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+        }
+        header .heroe h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        section {
+            margin: 0 auto;
+            max-width: 1100px;
+            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
+        }
+        section h1 {
+            margin-bottom: 2.5rem;
+        }
+        section h2 {
+            font-size: 120%;
+            line-height: 2.5rem;
+            padding-top: 1.5rem;
+        }
+        section pre {
+            background-color: rgba(247, 248, 249, 1);
+            border: 1px solid rgba(242, 242, 242, 1);
+            display: block;
+            font-size: .9rem;
+            margin: 2rem 0;
+            padding: 1rem 1.5rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        section code {
+            display: block;
+        }
+        section a {
+            color: #3fa9e2;
+        }
+        section svg {
+            margin-bottom: -5px;
+            margin-right: 5px;
+            width: 25px;
+        }
+        .further {
+            background-color: rgba(247, 248, 249, 1);
+            border-bottom: 1px solid rgba(242, 242, 242, 1);
+            border-top: 1px solid rgba(242, 242, 242, 1);
+        }
+        .further h2:first-of-type {
+            padding-top: 0;
+        }
+        footer {
+            background-color: #3fa9e2;
+            text-align: center;
+        }
+        footer .environment {
+            color: rgba(255, 255, 255, 1);
+            padding: 2rem 1.75rem;
+        }
+        footer .copyrights {
+            background-color: rgba(62, 62, 62, 1);
+            color: rgba(200, 200, 200, 1);
+            padding: .25rem 1.75rem;
+        }
+        @media (max-width: 629px) {
+            header ul {
+                padding: 0;
+            }
+            header .menu-toggle {
+                padding: 0 1rem;
+            }
+            header .menu-item {
+                background-color: rgba(244, 245, 246, 1);
+                border-top: 1px solid rgba(242, 242, 242, 1);
+                margin: 0 15px;
+                width: calc(100% - 30px);
+            }
+            header .menu-toggle {
+                display: block;
+            }
+            header .hidden {
+                display: none;
+            }
+            header li.menu-item a {
+                background-color: rgba(221, 72, 20, .1);
+            }
+            header li.menu-item a:hover,
+            header li.menu-item a:focus {
+                background-color: #3fa9e2;
+                color: #666;
+            }
+        }
+    </style>
+</head>
+<body>
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <!-- 幻灯图片 -->
-    <div class="carousel-inner">
-		<!-- 调用news模块的前5张图片 -->
-		{module module=news thumb=1 num=5}
-		<div class="item {if $key==0}active{/if}">
-			<a href="{$t.url}" target="_blank"><img src="{dr_get_file($t.thumb)}" style="width:360px;height:245px" /></a>
-		</div>
-		{/module}
-	</div>
-	<ol class="carousel-indicators">
-		<!-- 重复读取上面循环的变量，避免重复查询第二次 -->
-		{loop $return $key $t}
-		<li data-target="#myCarousel" data-slide-to="{$key}" class="active"></li>
-		{/loop}
-	</ol>
-</div>
+<header>
 
-<div class="page-content">
+    <div class="menu">
+        <ul>
+            <li class="logo"><a href="{SITE_URL}"><img height="44" src="{SITE_LOGO}" alt="{SITE_NAME}"></a>
+            </li>
+            <li class="menu-toggle">
+                <button onclick="toggleMenu();">&#9776;</button>
+            </li>
+            <li class="menu-item hidden "><a class="on" href="{SITE_URL}">项目主页</a></li>
+            <li class="menu-item hidden"><a href="https://www.xunruicms.com/doc/" target="_blank">帮助文档</a>
+            </li>
+            <li class="menu-item hidden"><a href="https://www.xunruicms.com/wenda/" target="_blank">技术论坛</a></li>
+            <li class="menu-item hidden"><a href="https://www.xunruicms.com/update/" target="_blank">更新日志</a>
+            </li>
+        </ul>
+    </div>
 
-    <div class="search-page search-content-1">
+    <div class="heroe">
 
-        <div class="search-container">
-            <ul class="search-container">
-                <!--分页显示列表数据-->
-                {module module=news order=updatetime num=10}
-                <li class="search-item clearfix">
-                    <a title="{$t.title}" href="{$t.url}">
-                        <img src="{dr_thumb($t.thumb, 100, 90)}" width="100" height="90" style="margin-top: 15px;">
-                    </a>
-                    <div class="search-content text-left">
-                        <h4 class="search-title">
-                            <a title="{$t.title}" href="{$t.url}">{dr_strcut($t.title, 20)}</a>
-                        </h4>
-                        <p class="search-desc">{dr_strcut($t.description, 44)}</p>
-                    </div>
-                    <div class="search-post-foot">
-                        <a href="{dr_cat_value('news',$t.catid, 'url')}"><i class="fa fa-list"></i> {dr_cat_value('news',$t.catid, 'name')}</a>
-                        <a href="{$t.url}"><i class="fa fa-calendar"></i> {$t.updatetime}</a>
-                    </div>
-                </li>
-                {/module}
-            </ul>
+        <h1> 欢迎使用迅睿CMS开源框架 V <?= CMF_VERSION ?></h1>
 
-        </div>
+        <h2>PHP8高性能·简单易用的免费开源框架</h2>
 
     </div>
 
+</header>
+
+<!-- CONTENT -->
+
+<section>
+
+    <h1>关于本页面</h1>
+
+    <p>本页面是XunRuiCMS项目首页展示页面</p>
+
+    <p>本页面的对应模板视图文件位于：</p>
+
+    <pre><code>xunruicms/template/pc/default/home/index.html</code></pre>
+
+    <p>对应的业务逻辑控制器文件位于：</p>
+
+    <pre><code>xunruicms/dayrui/Fcms/Control/Home.php</code></pre>
+
+</section>
+
+<div class="further">
+
+    <section>
+
+        <h1>了解迅睿CMS开源框架</h1>
+
+        <h2>
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect x='32' y='96' width='64' height='368' rx='16' ry='16' style='fill:none;stroke:#000;stroke-linejoin:round;stroke-width:32px'/><line x1='112' y1='224' x2='240' y2='224' style='fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px'/><line x1='112' y1='400' x2='240' y2='400' style='fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px'/><rect x='112' y='160' width='128' height='304' rx='16' ry='16' style='fill:none;stroke:#000;stroke-linejoin:round;stroke-width:32px'/><rect x='256' y='48' width='96' height='416' rx='16' ry='16' style='fill:none;stroke:#000;stroke-linejoin:round;stroke-width:32px'/><path d='M422.46,96.11l-40.4,4.25c-11.12,1.17-19.18,11.57-17.93,23.1l34.92,321.59c1.26,11.53,11.37,20,22.49,18.84l40.4-4.25c11.12-1.17,19.18-11.57,17.93-23.1L445,115C443.69,103.42,433.58,94.94,422.46,96.11Z' style='fill:none;stroke:#000;stroke-linejoin:round;stroke-width:32px'/></svg>
+            学习
+        </h2>
+
+        <p>用户指南包含简介、教程、一些"操作方法"指南，以及构成框架的组件的参考文档， <a href="https://www.xunruicms.com/doc/"
+                                        target="_blank">查看用户指南</a> !</p>
+
+        <h2>
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M431,320.6c-1-3.6,1.2-8.6,3.3-12.2a33.68,33.68,0,0,1,2.1-3.1A162,162,0,0,0,464,215c.3-92.2-77.5-167-173.7-167C206.4,48,136.4,105.1,120,180.9a160.7,160.7,0,0,0-3.7,34.2c0,92.3,74.8,169.1,171,169.1,15.3,0,35.9-4.6,47.2-7.7s22.5-7.2,25.4-8.3a26.44,26.44,0,0,1,9.3-1.7,26,26,0,0,1,10.1,2L436,388.6a13.52,13.52,0,0,0,3.9,1,8,8,0,0,0,8-8,12.85,12.85,0,0,0-.5-2.7Z' style='fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px'/><path d='M66.46,232a146.23,146.23,0,0,0,6.39,152.67c2.31,3.49,3.61,6.19,3.21,8s-11.93,61.87-11.93,61.87a8,8,0,0,0,2.71,7.68A8.17,8.17,0,0,0,72,464a7.26,7.26,0,0,0,2.91-.6l56.21-22a15.7,15.7,0,0,1,12,.2c18.94,7.38,39.88,12,60.83,12A159.21,159.21,0,0,0,284,432.11' style='fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px'/></svg>
+            论坛
+        </h2>
+
+
+        <p>技术论坛提供开发和使用问题交流，官方团队会对每一个帖子耐心指导， <a href="https://www.xunruicms.com/wenda/"
+                                                     target="_blank">访问论坛</a> !</p>
+
+        <h2>
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><line x1='176' y1='48' x2='336' y2='48' style='fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px'/><line x1='118' y1='304' x2='394' y2='304' style='fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px'/><path d='M208,48v93.48a64.09,64.09,0,0,1-9.88,34.18L73.21,373.49C48.4,412.78,76.63,464,123.08,464H388.92c46.45,0,74.68-51.22,49.87-90.51L313.87,175.66A64.09,64.09,0,0,1,304,141.48V48' style='fill:none;stroke:#000;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px'/></svg>
+            贡献
+        </h2>
+
+        <p>我们一直在坚持不懈地努力，并坚持开源和免费提供使用，帮助开发人员更加方便的进行WEB应用的快速开发，
+            <a href="https://www.xunruicms.com/juan/" target="_blank">捐赠我们</a> ^_^</p>
+
+    </section>
+
 </div>
 
-{template "footer.html"}
+<!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
+
+<footer>
+    <div class="environment">
+
+        <p>页面加载时间： {elapsed_time} 秒</p>
+
+        <p>
+            PHP: <?= PHP_VERSION ?> &nbsp;&nbsp;
+            MySql: <?= \Phpcmf\Service::M()->db->getVersion(); ?> &nbsp;&nbsp;
+            XunRuiCMS: <?= CMF_VERSION ?> &nbsp;&nbsp;
+            CodeIgniter: <?= CodeIgniter\CodeIgniter::CI_VERSION ?>
+        </p>
+
+    </div>
+
+    <div class="copyrights">
+
+        <p><a href="https://gitee.com/dayrui/xunruicms/blob/master/LICENSE" target="_blank">&copy; <?= date('Y') ?> XunRuiCMS基于MIT开源协议发布，免费且不限制商业使用</a></p>
+
+    </div>
+
+</footer>
+
+<!-- SCRIPTS -->
+
+<script>
+    function toggleMenu() {
+        var menuItems = document.getElementsByClassName('menu-item');
+        for (var i = 0; i < menuItems.length; i++) {
+            var menuItem = menuItems[i];
+            menuItem.classList.toggle("hidden");
+        }
+    }
+</script>
+
+<!-- -->
+
+</body>
+</html>
