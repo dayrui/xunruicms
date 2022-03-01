@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Role extends \Phpcmf\Common
-{
+class Role extends \Phpcmf\Common {
+
 	private $form; // 表单验证配置
 	
 	public function __construct(...$params) {
@@ -168,44 +168,7 @@ class Role extends \Phpcmf\Common
 		#print_r($this->_M('Menu')->gets('admin'));
 
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));
-        $module = \Phpcmf\Service::M()->db->table('module')->get()->getResultArray();
-        $module_auth = [];
-        if ($module) {
-            foreach ($module as $t) {
-                $mdir = $t['dirname'];
-                $path = dr_get_app_dir($mdir);
-                if (!is_file($path.'Config/App.php')) {
-                    continue;
-                }
-                $config = require $path.'Config/App.php';
-                $module_auth[$mdir] = [
-                    'name' => dr_lang($config['name']),
-                    'auth' => [],
-                ];
-                if (!$t['share']) {
-                    $module_auth[$mdir]['auth'][$mdir.'/category/'] = dr_lang('栏目');
-                }
-                if ($config['system']) {
-                    // 内容模块
-                    $module_auth[$mdir]['auth'][$mdir.'/home/'] = dr_lang('内容');
-                    $module_auth[$mdir]['auth'][$mdir.'/draft/'] = dr_lang('草稿箱');
-                    $module_auth[$mdir]['auth'][$mdir.'/recycle/'] = dr_lang('回收站');
-                    $module_auth[$mdir]['auth'][$mdir.'/time/'] = dr_lang('定时发布');
-                    $module_auth[$mdir]['auth'][$mdir.'/verify/'] = dr_lang('待审核');
-                } else {
-                    // 自定义模块
-                }
-                if (dr_is_app('comment')) {
-                    $module_auth[$mdir]['auth'][$mdir.'/comment/'] = dr_lang('内容评论');
-                }
-                $mform = \Phpcmf\Service::M()->is_table_exists('module_form') ? \Phpcmf\Service::M()->db->table('module_form')->where('module', $mdir)->get()->getResultArray() : [];
-                if ($mform) {
-                    foreach ($mform as $c) {
-                        $module_auth[$mdir]['auth'][$mdir.'/'.$c['table'].'/'] = dr_lang($c['name']);
-                    }
-                }
-            }
-        }
+        $module_auth = IS_USE_MODULE ? \Phpcmf\Service::M('module', 'module')->module_auth() : [];
 
 		\Phpcmf\Service::V()->assign([
 			'data' => $data,
