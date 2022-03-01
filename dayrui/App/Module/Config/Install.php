@@ -1,7 +1,9 @@
 <?php
-$this->db->simpleQuery("DROP TABLE IF EXISTS `".\Phpcmf\Service::M()->dbprefix(SITE_ID.'_share_category')."`");
-$this->db->simpleQuery(dr_format_create_sql("
-        CREATE TABLE IF NOT EXISTS `".\Phpcmf\Service::M()->dbprefix(SITE_ID.'_share_category')."` (
+
+foreach ($this->site as $siteid) {
+    $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_category')."`");
+    $this->db->simpleQuery(dr_format_create_sql("
+        CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_category')."` (
           `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
           `tid` tinyint(1) NOT NULL COMMENT '栏目类型，0单页，1模块，2外链',
           `pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '上级id',
@@ -29,3 +31,4 @@ $this->db->simpleQuery(dr_format_create_sql("
           KEY `module` (`pid`,`displayorder`,`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
         "));
+}
