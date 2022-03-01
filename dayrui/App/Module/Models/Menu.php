@@ -43,7 +43,7 @@ class Menu extends \Phpcmf\Model {
                         'icon' => $menu && $menu['icon'] ? $menu['icon'] : dr_icon($config['icon']),
                         'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
                     ];
-                    $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
+                    $menu ? \Phpcmf\Service::M('menu')->_edit($table, $menu['id'], $save) : \Phpcmf\Service::M('menu')->_add($table, $left['id'], $save);
                 }
                 // 入库后台审核菜单
                 $left = $this->db->table($table.'_menu')->where('mark', 'content-verify')->get()->getRowArray();
@@ -58,7 +58,7 @@ class Menu extends \Phpcmf\Model {
                             'icon' => $menu && $menu['icon'] ? $menu['icon'] : dr_icon($config['icon']),
                             'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
                         ];
-                        $menu ? $this->_edit($table, $menu['id'], $save) : $this->_add($table, $left['id'], $save);
+                        $menu ? \Phpcmf\Service::M('menu')->_edit($table, $menu['id'], $save) : \Phpcmf\Service::M('menu')->_add($table, $left['id'], $save);
                     }
                     // 表单入库
                     if ($form && dr_is_app('mform')) {
@@ -81,7 +81,7 @@ class Menu extends \Phpcmf\Model {
                     'icon' => $menu && $menu['icon'] ? $menu['icon'] : dr_icon($config['icon']),
                     'displayorder' => $menu ? intval($menu['displayorder']) : '-1',
                 ];
-                $menu ? $this->_edit('member', $menu['id'], $save) : $this->_add('member', $left['id'], $save);
+                $menu ? \Phpcmf\Service::M('menu')->_edit('member', $menu['id'], $save) : \Phpcmf\Service::M('menu')->_add('member', $left['id'], $save);
             }
         }
     }

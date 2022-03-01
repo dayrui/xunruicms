@@ -1,4 +1,4 @@
-<?php namespace Phpcmf\Model;
+<?php namespace Phpcmf\Model\Module;
 /**
  * {{www.xunruicms.com}}
  * {{迅睿内容管理框架系统}}

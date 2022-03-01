@@ -31,4 +31,14 @@ foreach ($this->site as $siteid) {
           KEY `module` (`pid`,`displayorder`,`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块栏目表';
         "));
+
+    $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_index')."`");
+    $this->db->simpleQuery(dr_format_create_sql("
+        CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_index')."` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `mid` varchar(20) NOT NULL COMMENT '模块目录',
+          PRIMARY KEY (`id`),
+          KEY `mid` (`mid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块内容索引表';
+        "));
 }
