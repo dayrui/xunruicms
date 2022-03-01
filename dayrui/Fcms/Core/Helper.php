@@ -314,88 +314,6 @@ function dr_get_ftable($id, $value, $class = '') {
     return \Phpcmf\Service::L('Field')->get('ftable')->show_table($field, $value, $class);
 }
 
-// 判断搜索值是否是多重选择时的选中状态 1选中 0不选
-function dr_is_double_search($param, $value) {
-
-    if (!$param) {
-        return 0;
-    }
-
-    $arr = explode('|', $param);
-    if (in_array($value, $arr)) {
-        return 1;
-    }
-
-    return 0;
-}
-
-// 获取多重选择是的参数值
-function dr_get_double_search($param, $value) {
-
-    if (!$param) {
-        return $value;
-    }
-
-    $arr = explode('|', $param);
-    if (in_array($value, $arr)) {
-        // 如果存在，那么久移除他
-        $arr = array_merge(array_diff($arr, array($value)));
-    } else {
-        // 没有就加上
-        $arr[] = $value;
-    }
-
-    return $arr ? @implode('|', $arr) : '';
-}
-
-// 获取内容的tags
-function dr_get_content_tags($value) {
-
-    if (is_array($value)) {
-        return $value;
-    }
-
-    $rt = [];
-    $tag = explode(',', $value);
-    foreach ($tag as $t) {
-        $t = trim($t);
-        if ($t) {
-            // 读缓存
-            if (dr_is_app('tag')) {
-                $obj = \Phpcmf\Service::M('tag', 'tag');
-                if (method_exists($obj, 'get_tag_url')) {
-                    $url = $obj->get_tag_url($t);
-                    if ($url) {
-                        $rt[$t] = $url;
-                    }
-                }
-            }
-        }
-    }
-
-    return $rt;
-}
-
-// 获取内容的搜索词
-function dr_get_content_kws($value, $mid = '') {
-
-    if (is_array($value)) {
-        return $value;
-    }
-
-    $rt = [];
-    $mid = $mid ? $mid : (defined('MOD_DIR') ? MOD_DIR : '');
-    $tag = explode(',', $value);
-    foreach ($tag as $t) {
-        $t = trim($t);
-        if ($t) {
-            $rt[$t] = \Phpcmf\Service::L('router')->search_url([], 'keyword', $t, $mid);
-        }
-    }
-
-    return $rt;
-}
-
 // 获取内容中的缩略图
 function dr_get_content_img($value, $num = 0) {
     return dr_get_content_url($value, 'src', 'gif|jpg|jpeg|png', $num);
@@ -527,49 +445,6 @@ function dr_upload_temp_path() {
     }
 
     return WRITEPATH.'temp/';
-}
-
-/**
- * 内容文章显示内链
- */
-function dr_content_link($tags, $content, $num = 0, $blank = 1) {
-
-    if (!$tags || !$content) {
-        return $content;
-    } elseif (!is_array($tags)) {
-        return $content;
-    }
-
-    foreach ($tags as $name => $url) {
-        if ($name && $url) {
-            $content = @preg_replace(
-                '\'(?!((<.*?)|(<a.*?)|(<strong.*?)))('.str_replace(["'", '-'], ["\'", '\-'], preg_quote($name)).')(?!(([^<>]*?)>)|([^>]*?</a>)|([^>]*?</strong>))\'si',
-                '<a href="'.$url.'"'.($blank ? ' target="_blank"' : '').'>'.$name.'</a>',
-                $content,
-                $num ? $num : -1
-            );
-        }
-    }
-
-    return $content;
-}
-
-
-// 内容加内链
-function dr_neilian($content, $blank = 1, $num = 0) {
-
-    if (!$content) {
-        return '';
-    }
-
-    if (dr_is_app('tag')) {
-        $obj = \Phpcmf\Service::M('tag', 'tag');
-        if (method_exists($obj, 'neilian')) {
-            return $obj->neilian($content, $blank, $num);
-        }
-    }
-
-    return $content;
 }
 
 // 星级显示
@@ -705,35 +580,6 @@ function dr_navigator_id($type, $markid) {
     return (int)\Phpcmf\Service::L('cache')->get('navigator-'.SITE_ID.'-url', $type, $markid);
 }
 
-// 获取模块数据及自定义字段
-function dr_mod_value(...$get) {
-
-    if (empty($get)) {
-        return '';
-    }
-
-    if (is_numeric($get[0]) && defined('MOD_DIR') && MOD_DIR) {
-        // 值是栏目id时，表示当前模块
-        $name = 'module-'.SITE_ID.'-'.MOD_DIR;
-    } else {
-        // 指定模块
-        $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
-        unset($get[0]);
-    }
-
-    $i = 0;
-    $param = [];
-    foreach ($get as $t) {
-        if ($i == 0) {
-            $param[] = $name;
-        }
-        $param[] = $t;
-        $i = 1;
-    }
-
-    return call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
-}
-
 // 格式化编辑器内容数据
 function dr_ueditor_html($value, $title = '') {
 
@@ -742,82 +588,6 @@ function dr_ueditor_html($value, $title = '') {
     }
 
     return UEDITOR_IMG_TITLE ? str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value)) : htmlspecialchars_decode($value);
-}
-
-// 获取栏目数据及自定义字段
-function dr_page_value($id, $field, $site = SITE_ID) {
-
-    if (empty($id)) {
-        return '';
-    }
-
-    return \Phpcmf\Service::C()->get_cache('page-'.$site, 'data', $id, $field);
-}
-
-// 获取栏目数据及自定义字段
-function dr_cat_value(...$get) {
-
-    if (empty($get)) {
-        return '';
-    }
-
-    $mid = '';
-    if (is_numeric($get[0])) {
-        // 值是栏目id时，表示当前模块
-        if (defined('MOD_DIR') && MOD_DIR) {
-            $mid = MOD_DIR;
-            $name = 'module-'.SITE_ID.'-'.MOD_DIR;
-        } else {
-            $name = 'module-'.SITE_ID.'-share';
-        }
-    } else {
-        // 指定模块
-        $mid = $get[0];
-        $name = strpos($get[0], '-') ? 'module-'.$get[0] : 'module-'.SITE_ID.'-'.$get[0];
-        unset($get[0]);
-    }
-
-    $i = 0;
-    $param = [];
-    foreach ($get as $t) {
-        if ($i == 0) {
-            $param[] = $name;
-            $param[] = 'category';
-        }
-        $param[] = $t;
-        $i = 1;
-    }
-
-    $rt = call_user_func_array([\Phpcmf\Service::C(), 'get_cache'], $param);
-    if (end($param) == 'url' && $rt) {
-        $rt = dr_url_prefix($rt, $mid);
-    }
-
-    return $rt;
-}
-
-// 获取共享栏目数据及自定义字段
-function dr_share_cat_value($id, $field='') {
-
-    $get = func_get_args();
-    if (empty($get)) {
-        return '';
-    }
-
-    $i = 0;
-    $param = [];
-    foreach ($get as $t) {
-        if ($i == 0) {
-            $param[] = 'module-'.SITE_ID.'-share';
-            $param[] = 'category';
-        }
-        $param[] = $t;
-        $i = 1;
-    }
-
-    $rt = call_user_func_array(array(\Phpcmf\Service::C(), 'get_cache'), $param);
-
-    return $field == 'url' && $rt ? dr_url_prefix($rt) : $rt;
 }
 
 // 获取域名部分
@@ -961,46 +731,6 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
     }
 
     return $value;
-}
-
-
-/**
- * 模块栏目面包屑导航
- *
- * @param   intval  $catid  栏目id
- * @param   string  $symbol 面包屑间隔符号
- * @param   string  $url    是否显示URL
- * @param   string  $html   格式替换
- * @return  string
- */
-function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = 'MOD_DIR', $url_call_func = '') {
-
-    if (!$catid) {
-        return '';
-    }
-
-    $mid = $dirname == 'MOD_DIR' && defined('MOD_DIR') && MOD_DIR ? MOD_DIR : (!$dirname || $dirname == 'MOD_DIR' ? 'share' : $dirname);
-    $cat = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$mid, 'category');
-    if (!isset($cat[$catid])) {
-        return '';
-    }
-
-    $name = [];
-    $array = explode(',', $cat[$catid]['pids']);
-    $array[] = $catid;
-    foreach ($array as $id) {
-        if ($id && $cat[$id]) {
-            if ($url_call_func && function_exists($url_call_func)) {
-                $murl = $url_call_func($cat[$id]);
-            } else {
-                $murl = dr_url_prefix($cat[$id]['url'], $mid);
-                //$murl = dr_url_prefix($cat[$id]['url'], MOD_DIR, SITE_ID, \Phpcmf\Service::IS_MOBILE_TPL())
-            }
-            $name[] = $url ? ($html ? str_replace(['[url]', '[name]'], [$murl, $cat[$id]['name']], $html): "<a href=\"{$murl}\">{$cat[$id]['name']}</a>") : $cat[$id]['name'];
-        }
-    }
-
-    return implode($symbol, array_unique($name));
 }
 
 /**
@@ -1211,29 +941,6 @@ function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
         $f->set_load_js($field['fieldtype'], 0);
     }
     return $f->input($field, $value);
-}
-
-// 打赏支付
-function dr_donation($id, $title = '', $dir = '', $remove_div  = 1) {
-    if (!dr_is_app('pay')) {
-        return '没有安装「支付系统」插件';
-    }
-    !$dir && $dir = defined('MOD_DIR') ? MOD_DIR : 'share';
-    return \Phpcmf\Service::M('Pay', 'pay')->payform('my-shang_buy-'.$id.'_'.$dir.'-'.SITE_ID, 0, $title, '', $remove_div);
-}
-
-// 是否存在收藏夹中 1收藏了 2没有收藏
-function dr_is_favorite($dir, $id, $uid = 0) {
-
-    !$uid && $uid = \Phpcmf\Service::C()->uid;
-
-    if (!$uid) {
-        return 0;
-    } elseif (!$dir) {
-        return 0;
-    }
-
-    return \Phpcmf\Service::M()->db->table(dr_module_table_prefix($dir).'_favorite')->where('uid', $uid)->where('cid', $id)->countAllResults();
 }
 
 // 获取字段表单框
@@ -1486,7 +1193,7 @@ function dr_notice_info() {
 }
 
 // 提醒说明更新
-function ​dr_notice_update($id, $name = '', $icon = '') {
+function dr_notice_update($id, $name = '', $icon = '') {
 
     if (!$id) {
         return;
@@ -2217,137 +1924,6 @@ function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
 }
 
 
-
-// 替换互动表情内容
-function dr_replace_emotion($content) {
-
-    $content = htmlspecialchars_decode($content);
-
-    // 替换表情
-    if (preg_match_all('/\[([a-z0-9]+)\]/Ui', $content, $match)) {
-        foreach ($match[1] as $t) {
-            if (in_array($t, array (
-                0 => 'dangao',
-                1 => 'qiu',
-                2 => 'fadou',
-                3 => 'tiaopi',
-                4 => 'fadai',
-                5 => 'xinsui',
-                6 => 'ruo',
-                7 => 'jingkong',
-                8 => 'quantou',
-                9 => 'gangga',
-                10 => 'da',
-                11 => 'touxiao',
-                12 => 'ciya',
-                13 => 'liulei',
-                14 => 'fendou',
-                15 => 'kiss',
-                16 => 'aoman',
-                17 => 'kulou',
-                18 => 'yueliang',
-                19 => 'lenghan',
-                20 => 'kun',
-                21 => 'meng',
-                22 => 'shenma',
-                23 => 'peifu',
-                24 => 'qinqin',
-                25 => 'nanguo',
-                26 => 'hufen',
-                27 => 'shuai',
-                28 => 'jingya',
-                29 => 'cahan',
-                30 => 'shengli',
-                31 => 'qioudale',
-                32 => 'cheer',
-                33 => 'ketou',
-                34 => 'shandian',
-                35 => 'haqian',
-                36 => 'jidong',
-                37 => 'zaijian',
-                38 => 'kafei',
-                39 => 'love',
-                40 => 'pizui',
-                41 => 'huitou',
-                42 => 'tiao',
-                43 => 'liwu',
-                44 => 'zhutou',
-                45 => 'e',
-                46 => 'qiang',
-                47 => 'youtaiji',
-                48 => 'zuohengheng',
-                49 => 'huaixiao',
-                50 => 'gouyin',
-                51 => 'keai',
-                52 => 'tiaosheng',
-                53 => 'daku',
-                54 => 'weiqu',
-                55 => 'lanqiu',
-                56 => 'zhemo',
-                57 => 'xia',
-                58 => 'fan',
-                59 => 'yun',
-                60 => 'youhengheng',
-                61 => 'chong',
-                62 => 'pijiu',
-                63 => 'dajiao',
-                64 => 'dao',
-                65 => 'diaoxie',
-                66 => 'liuhan',
-                67 => 'haha',
-                68 => 'xu',
-                69 => 'zhuakuang',
-                70 => 'zhuanquan',
-                71 => 'no',
-                72 => 'ok',
-                73 => 'feiwen',
-                74 => 'taiyang',
-                75 => 'woshou',
-                76 => 'zuqiu',
-                77 => 'xigua',
-                78 => 'hua',
-                79 => 'tu',
-                80 => 'tiaowu',
-                81 => 'ma',
-                82 => 'baiyan',
-                83 => 'zhadan',
-                84 => 'weixiao',
-                85 => 'wen',
-                86 => 'dabing',
-                87 => 'xianwen',
-                88 => 'shuijiao',
-                89 => 'yongbao',
-                90 => 'kelian',
-                91 => 'pingpang',
-                92 => 'danu',
-                93 => 'geili',
-                94 => 'wabi',
-                95 => 'kuaikule',
-                96 => 'zuotaiji',
-                97 => 'tuzi',
-                98 => 'bishi',
-                99 => 'caidao',
-                100 => 'dabian',
-                101 => 'fanu',
-                102 => 'guzhang',
-                103 => 'se',
-                104 => 'chajin',
-                105 => 'bizui',
-                106 => 'deyi',
-                107 => 'ku',
-                108 => 'huishou',
-                109 => 'yinxian',
-                110 => 'haixiu',
-            ))) {
-                $content = str_replace('['.$t.']', '<img src="'.ROOT_THEME_PATH.'assets/comment/emotions/'.$t.'.gif" />', $content);
-            }
-
-        }
-    }
-
-    return $content;
-}
-
 /**
  * 基于本地存储的加解密算法
  */
@@ -2455,28 +2031,6 @@ function dr_ajax_template($id, $filename, $param_str = '') {
 }
 
 
-/**
- * 模块内容阅读量显示js
- *
- * @param   intval  $id
- * @return  string
- */
-if (!function_exists('dr_show_hits')) {
-    function dr_show_hits($id, $dom = "", $dir = 'MOD_DIR') {
-        $is = $dom;
-        !$dom && $dom = "dr_show_hits_{$id}";
-        $html = $is ? "" : "<span class=\"{$dom}\">0</span>";
-        if (defined('MODULE_MYSHOW')) {
-            return $html;
-        }
-        $dir = $dir == 'MOD_DIR' && defined('MOD_DIR') && MOD_DIR ? MOD_DIR : $dir;
-        $rt = "$(\".{$dom}\").html(data.msg);";
-        if ($is) {
-            $rt.= "$(\"#{$dom}\").html(data.msg);";
-        }
-        return $html."<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".dr_web_prefix("index.php?s=api&c=module&siteid=".SITE_ID."&app=".$dir)."&m=hits&id={$id}\", dataType: \"jsonp\", success: function(data){ if (data.code) { ".$rt." } else { dr_tips(0, data.msg); } } }); </script>";
-    }
-}
 
 /**
  * 调用远程数据
@@ -3710,99 +3264,6 @@ function dr_check_put_path($dir) {
 }
 
 /**
- * 栏目下级或者同级栏目
- * $data 整个栏目数组
- * $catid 当前栏目id
- */
-function dr_related_cat($data, $catid) {
-
-    if (!$data) {
-        return [[], []];
-    }
-
-    $my = $data[$catid];
-    $related = $parent = [];
-
-    if ($my['child']) {
-        // 当存在子栏目时就显示下级子栏目
-        $parent = $my['pid'] ? $data[$my['pid']] : $my;
-        foreach ($data as $t) {
-            if (!$t['show']) {
-                continue;
-            }
-            if ($t['pid'] == $my['id']) {
-                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
-                $related[$t['id']] = $t;
-            }
-        }
-    } elseif ($my['pid']) {
-        // 当属于子栏目时就显示同级别栏目
-        foreach ($data as $t) {
-            if (!$t['show']) {
-                continue;
-            }
-            if ($t['pid'] == $my['pid']) {
-                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
-                $related[$t['id']] = $t;
-                $parent = $data[$t['pid']];
-            }
-        }
-    } else {
-        // 显示顶级栏目
-        if (!$data) {
-            return [[], []];
-        }
-        $parent = $my;
-        foreach ($data as $t) {
-            if (!$t['show']) {
-                continue;
-            }
-            if ($t['pid'] == 0) {
-                $t['url'] = dr_url_prefix($t['url'], defined('MOD_DIR') ? MOD_DIR : '');
-                $related[$t['id']] = $t;
-            }
-        }
-    }
-
-    $parent && $parent['url'] = dr_url_prefix($parent['url'], defined('MOD_DIR') ? MOD_DIR : '');
-
-    return [$parent, $related];
-}
-
-/**
- * 模块栏目层次关系
- *
- * @param   array   $mod
- * @param   array   $cat
- * @param   string  $symbol
- */
-function dr_get_cat_pname($mod, $catid, $symbol = '_') {
-
-    $cat = $mod['category'][$catid];
-
-    if (!$cat['pids']) {
-        return $cat['name'];
-    }
-
-    $name = [];
-    $array = explode(',', $cat['pids']);
-
-    foreach ($array as $id) {
-        if ($id && $mod['category'][$id]) {
-            $name[] = $mod['category'][$id]['name'];
-        }
-    }
-
-    $name[] = $cat['name'];
-
-    $name = array_unique($name);
-
-    krsort($name);
-
-    return implode($symbol, $name);
-}
-
-/**
  * 存储调试信息
  * file 存储文件
  * data 打印变量
@@ -3877,18 +3338,6 @@ class php5replace {
 
 }
 
-/**
- * 模块首页地址
- * $dir 模块目录
- */
-function dr_module_url($dir) {
-
-    if (defined('MOD_DIR') && $dir == MOD_DIR) {
-        return MODULE_URL;
-    }
-
-    return \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$dir, 'url');
-}
 
 /**
  * 转为utf8编码格式

@@ -82,6 +82,7 @@ return [
         'content' => [
             'name' => '内容',
             'icon' => 'fa fa-th-large',
+            'displayorder' => '-1',
             'left' => [
                 'content-module' => [
                     'name' => '内容管理',

@@ -17,6 +17,7 @@ return [
         'home' => [
             'name' => '首页',
             'icon' => 'fa fa-home',
+            'displayorder' => '-2',
             'left' => [
                 'home-my' => [
                     'name' => '我的面板',
@@ -47,10 +48,10 @@ return [
             ],
         ],
 
-
         'system' => [
             'name' => '系统',
             'icon' => 'fa fa-globe',
+            'displayorder' => '-2',
             'left' => [
                 'system-wh' => [
                     'name' => '系统维护',
@@ -130,6 +131,7 @@ return [
         'config' => [
             'name' => '设置',
             'icon' => 'fa fa-cogs',
+            'displayorder' => '-2',
             'left' => [
                 'config-web' => [
                     'name' => '项目设置',
