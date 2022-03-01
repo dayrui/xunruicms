@@ -190,6 +190,7 @@ class Module extends \Phpcmf\Table {
                 '--',
                 0, 1
             ),
+            'cbottom' => $cbottom,
         ]);
         return \Phpcmf\Service::V()->display($tpl);
     }
