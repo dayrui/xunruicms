@@ -391,7 +391,6 @@ class Attachment extends \Phpcmf\Model {
         return $data;
     }
 
-
     // 远程附件缓存
     public function cache($site = SITE_ID) {
 
@@ -408,4 +407,5 @@ class Attachment extends \Phpcmf\Model {
 
         \Phpcmf\Service::L('cache')->set_file('attachment', $cache);
     }
+
 }

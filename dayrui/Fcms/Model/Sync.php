@@ -7,8 +7,7 @@
 
 
 // 同步删除
-class Sync extends \Phpcmf\Model
-{
+class Sync extends \Phpcmf\Model {
 
     protected $sync = [
         'delete_member' => [],
@@ -77,7 +76,5 @@ class Sync extends \Phpcmf\Model
         }
 
     }
-
-
 
 }

@@ -6,8 +6,7 @@
  **/
 
 // 用于前端模块内容显示
-class Module extends \Phpcmf\Common
-{
+class Module extends \Phpcmf\Common {
 
     public $module; // 模块信息
     public $is_prev_next_page = 1; // 启用内容页上下页计算

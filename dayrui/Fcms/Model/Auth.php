@@ -927,4 +927,5 @@ class Auth extends \Phpcmf\Model {
         \Phpcmf\Service::L('cache')->set_file('auth', $cache);
 
     }
+
 }

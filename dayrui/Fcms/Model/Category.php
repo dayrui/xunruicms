@@ -7,8 +7,8 @@
 
 // 栏目模型类
 
-class Category extends \Phpcmf\Model
-{
+class Category extends \Phpcmf\Model {
+
     protected $tablename;
     protected $categorys;
 
@@ -300,7 +300,6 @@ class Category extends \Phpcmf\Model
         return $this->categorys;
     }
 
-    
     // 用于删除时获取的数据
     public function data_for_delete() {
 
@@ -315,7 +314,6 @@ class Category extends \Phpcmf\Model
         
         return $cache;
     }
-
 
     // 用于移动时获取的数据
     public function data_for_move() {
@@ -495,4 +493,5 @@ class Category extends \Phpcmf\Model
         }
         return 0;
     }
+
 }

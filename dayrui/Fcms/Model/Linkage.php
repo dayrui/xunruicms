@@ -7,8 +7,7 @@
 
 // 模型类
 
-class Linkage extends \Phpcmf\Model
-{
+class Linkage extends \Phpcmf\Model {
 
     protected $pids;
     protected $cache;
@@ -62,7 +61,6 @@ class Linkage extends \Phpcmf\Model
         return dr_return_data($id);
     }
 
-
     // 批量删除
     public function delete_all($ids, $where = '') {
 
@@ -105,7 +103,6 @@ class Linkage extends \Phpcmf\Model
 
     // 批量移动分类
     public function edit_pid_all($key, $pid, $ids) {
-
 
         foreach ($ids as $id) {
             $row = $this->table('linkage_data_'.$key)->get(intval($id));
@@ -384,7 +381,6 @@ class Linkage extends \Phpcmf\Model
         return $rt;
     }
 
-
     // 缓存
     public function cache($siteid = SITE_ID) {
 
@@ -435,4 +431,5 @@ class Linkage extends \Phpcmf\Model
 
         return $data;
     }
+
 }

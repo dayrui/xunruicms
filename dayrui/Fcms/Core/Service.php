@@ -7,8 +7,7 @@
 
 use \Phpcmf\View;
 
-class Service
-{
+class Service {
 
     static private $instances = [];
     static private $help = [];

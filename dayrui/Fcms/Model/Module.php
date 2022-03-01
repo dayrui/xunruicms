@@ -6,8 +6,7 @@
  **/
 
 
-class Module extends \Phpcmf\Model
-{
+class Module extends \Phpcmf\Model {
 
     protected $cat_share;
     protected $cat_share_lock;
@@ -63,7 +62,6 @@ class Module extends \Phpcmf\Model
         // 更新表
         return $this->table('module')->update(intval($data['id']), $update);
     }
-
 
     // 获取归属于本模块的栏目关系
     protected function _get_my_category($mdir, $CAT) {
@@ -862,4 +860,5 @@ class Module extends \Phpcmf\Model
 
         return;
     }
+
 }

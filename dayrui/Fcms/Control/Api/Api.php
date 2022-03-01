@@ -97,9 +97,9 @@ class Api extends \Phpcmf\Common
         } elseif (!dr_is_module($dir)) {
             $this->goto_404_page(dr_lang('模块[%s]未安装', $dir));
         }
-        $keyword = dr_safe_replace(\Phpcmf\Service::L('input')->get('keyword'));
+
         // 跳转url
-        dr_redirect(\Phpcmf\Service::L('Router')->search_url([], 'keyword', $keyword, $dir));
+        dr_redirect(\Phpcmf\Service::L('Router')->search_url([], 'keyword', dr_safe_replace(\Phpcmf\Service::L('input')->get('keyword')), $dir));
     }
 
     /**
@@ -193,7 +193,6 @@ class Api extends \Phpcmf\Common
 
         exit($py);
     }
-
 
     /**
      * 联动菜单调用

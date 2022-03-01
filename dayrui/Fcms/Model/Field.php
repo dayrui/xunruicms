@@ -6,8 +6,7 @@
  **/
 
 // 字段操作表
-class Field extends \Phpcmf\Model
-{
+class Field extends \Phpcmf\Model {
 
     public $data;
     public $func;

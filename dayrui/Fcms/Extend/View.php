@@ -10,8 +10,7 @@
  * Debug工具栏模板类
  */
 
-class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views
-{
+class View extends \CodeIgniter\Debug\Toolbar\Collectors\Views {
 
     /**
      * 把CI模板类改成PHPCMF模板类用于debug.

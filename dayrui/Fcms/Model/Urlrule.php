@@ -7,9 +7,7 @@
 
 // 模型类
 
-class Urlrule extends \Phpcmf\Model
-{
-
+class Urlrule extends \Phpcmf\Model {
 
     // 缓存
     public function cache($site = SITE_ID) {
@@ -24,6 +22,7 @@ class Urlrule extends \Phpcmf\Model
         }
 
         \Phpcmf\Service::L('cache')->set_file('urlrule', $cache);
+
         return;
     }
     

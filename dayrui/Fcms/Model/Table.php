@@ -7,8 +7,7 @@
 
 
 // 数据表
-class Table extends \Phpcmf\Model
-{
+class Table extends \Phpcmf\Model {
 
     // 表结构缓存
     public function cache($siteid = SITE_ID, $module = null) {
@@ -127,9 +126,9 @@ class Table extends \Phpcmf\Model
 
     // 获取字段结构
     public function get_field($table) {
-
         return $this->db->getFieldNames($this->dbprefix($table));
     }
+
     // 获取缓存的字段结构
     public function get_cache_field($table) {
 
@@ -178,7 +177,6 @@ class Table extends \Phpcmf\Model
         return dr_return_data(1, '', [$count, $todo]);
     }
 
-
     // 网站表单--------------------------------------------------------------------
 
     // 创建
@@ -193,7 +191,6 @@ class Table extends \Phpcmf\Model
         if (dr_is_app('form')) {
             \Phpcmf\Service::M('form', 'form')->delete_form_table($data);
         }
-
     }
 
     // 模块表单--------------------------------------------------------------------
@@ -212,9 +209,9 @@ class Table extends \Phpcmf\Model
         }
     }
 
-    // 站点--------------------------------------------------------------------
+    // 项目--------------------------------------------------------------------
 
-    // 创建站点
+    // 创建项目
     public function create_site($siteid) {
 
         // 创建数据表

@@ -8,8 +8,7 @@
 /**
  * 考虑兼容继承Events
  */
-class Hooks extends \CodeIgniter\Events\Events
-{
+class Hooks extends \CodeIgniter\Events\Events {
 
     protected static $initialized_hook = false;
 

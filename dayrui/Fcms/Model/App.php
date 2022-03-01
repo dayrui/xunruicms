@@ -6,8 +6,8 @@
  **/
 
 // 程序插件管理
-class App extends \Phpcmf\Model
-{
+class App extends \Phpcmf\Model {
+
     public $cfg_cache;
 
     // 是否是系统保留的app目录

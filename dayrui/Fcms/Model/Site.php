@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
  **/
 
-class Site extends \Phpcmf\Model
-{
+class Site extends \Phpcmf\Model {
+
     // 设置风格
     public function set_theme($name, $siteid) {
 
@@ -284,7 +284,6 @@ class Site extends \Phpcmf\Model
         return [$my, $data];
     }
 
-
     // 站点缓存缓存
     public function cache($siteid = null, $data = null, $module = null) {
 
@@ -449,4 +448,5 @@ class Site extends \Phpcmf\Model
         \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/domain_client.php', '客户端域名配置文件', 32)->to_require_one($client_domain);
         \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/webpath.php', '入口文件目录配置文件', 32)->to_require($webpath);
     }
+
 }

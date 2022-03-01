@@ -7,8 +7,8 @@
 
 
 // 系统缓存
-class Cache extends \Phpcmf\Model
-{
+class Cache extends \Phpcmf\Model {
+
     protected $site_cache;
     protected $module_cache;
     protected $is_sync_cache;

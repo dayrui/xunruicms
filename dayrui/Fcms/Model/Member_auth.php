@@ -7,8 +7,7 @@
 
 
 // 用户权限处理
-class Member_auth extends \Phpcmf\Model
-{
+class Member_auth extends \Phpcmf\Model {
 
     // 获取用户权限值
     public function member_auth($name, $member = []) {

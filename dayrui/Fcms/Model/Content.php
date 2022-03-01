@@ -888,12 +888,6 @@ class Content extends \Phpcmf\Model {
         $this->db->table($this->mytable)->where('link_id', (int)$id)->update($data[1]);
     }
 
-    // 同步到微博
-    public function sync_weibo($data) {
-
-
-    }
-
     // 同步到其他栏目
     public function sync_cat($catid, $data) {
 
@@ -1277,7 +1271,6 @@ class Content extends \Phpcmf\Model {
     // 变更作者的一些联动操作
     protected function _edit_author_id($t) {
 
-
         $id = intval($t['id']);
         $uid = intval($t['uid']);
 
@@ -1292,7 +1285,6 @@ class Content extends \Phpcmf\Model {
     protected function _edit_author_row($row) {
 
     }
-
 
     // 用于表单和评论的公共方法==========================================
 
@@ -1504,7 +1496,6 @@ class Content extends \Phpcmf\Model {
         return $this->get_table_id($id);
     }
 
-
     ////////////////////后台权限开放////////////////////
 
     // 后台审核列表条件
@@ -1617,9 +1608,7 @@ class Content extends \Phpcmf\Model {
         return [$myfield, $param];
     }
 
-
     ////////////////////禁用栏目时，二次开发调用////////////////////
-
 
     // 禁用栏目时，用户保存内容之前的权限验证
     public function _hcategory_member_save_before($data) {
@@ -1665,4 +1654,5 @@ class Content extends \Phpcmf\Model {
     public function _hcategory_member_show_auth() {
         return dr_return_data(1, 'ok');
     }
+
 }

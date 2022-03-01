@@ -11,8 +11,7 @@ use Throwable;
  * 继承异常类，用于Services.php
  */
 
-class Exceptions extends \CodeIgniter\Debug\Exceptions
-{
+class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
     /**
      * 排除部分错误提示

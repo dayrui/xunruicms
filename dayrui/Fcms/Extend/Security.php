@@ -13,8 +13,7 @@
 use CodeIgniter\HTTP\RequestInterface;
 use Config\App;
 
-class Security extends \CodeIgniter\Security\Security
-{
+class Security extends \CodeIgniter\Security\Security {
 
     /**
      * CSRF Verify

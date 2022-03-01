@@ -9,8 +9,8 @@
  * 继承主类，用于init.php
  */
 
-class CodeIgniter extends \CodeIgniter\CodeIgniter
-{
+class CodeIgniter extends \CodeIgniter\CodeIgniter {
+
     /**
      * 初始化程序
      */
