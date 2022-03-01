@@ -1,0 +1,9 @@
+{template "header.html"}
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {dr_form_hidden()}
+
+    <input class="form-control" type="text" name="url" value="{htmlspecialchars((string)$myurl)}">
+</form>
+
+{template "footer.html"}

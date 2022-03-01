@@ -1,0 +1,187 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+
+<div class="form-horizontal">
+    <div class="portlet bordered light ">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $module $dir $t}
+                <li class="{if $page == $dir}active{/if}">
+                    <a href="#tab_{$dir}" data-toggle="tab" onclick="$('#dr_page').val('{$dir}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <input type="hidden" id="dr_page" value="{$page}">
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                {loop $module $dir $m}
+                {php $i=$dir;}
+                <div class="tab-pane {if $page==$dir}active{/if}" id="tab_{$dir}">
+                    <form method="post" name="myform_{$dir}" id="myform_{$dir}">
+                        {$form}
+                        <div class="tab-pane {if $i == $page}active{/if}" id="tab_{$i}">
+                            <div class="form-body">
+
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" style="padding-top: 10px;">{dr_lang('搜索功能')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][use]" value="1" {if $m['setting']['search']['use']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][use]" value="0" {if empty($m['setting']['search']['use'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                        </div>
+
+                                        <span class="help-block">{dr_lang('选择关闭将不能进行内容搜索')}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('集成栏目页')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][catsync]" value="1" {if $m['setting']['search']['catsync']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][catsync]" value="0" {if empty($m['setting']['search']['catsync'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                        </div>
+                                        <span class="help-block">{dr_lang('访问栏目页会定向到搜索页面，使栏目模板无效')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('集成模块首页')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][indexsync]" value="1" {if $m['setting']['search']['indexsync']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][indexsync]" value="0" {if empty($m['setting']['search']['indexsync'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                        </div>
+                                       <span class="help-block">{dr_lang('访问模块首页会定向到搜索页面，使模块首页模板无效')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('关键词匹配字段')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-checkbox-inline">
+                                            {loop $m.field $f}
+                                            <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if dr_in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {dr_lang($f.name)} （{$f.fieldname}）<span></span></label>
+                                            {/loop}
+                                        </div>
+                                        <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">{dr_lang('关键词匹配方式')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][complete]" value="1" {if $m['setting']['search']['complete']}checked{/if} /> {dr_lang('完整匹配')} <span></span></label>
+                                            <label class="mt-radio mt-radio-outline"><input type="radio" name="data[{$i}][complete]" value="0" {if !$m['setting']['search']['complete']}checked{/if} /> {dr_lang('模糊匹配')} <span></span></label>
+                                        </div>
+                                        <span class="help-block">{dr_lang('完整匹配是关键词绝对相同才视为匹配；模糊匹配是关键词包含其中才视为匹配')}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('最大搜索结果数量')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][max]" value="{if $m['setting']['search']['max']}{$m['setting']['search']['max']}{else}0{/if}" ></label>
+                                        <span class="help-block">{dr_lang('搜索结果最大数据量限制，0表示不限制结果数量')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('最小关键字长度')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][length]" value="{if $m['setting']['search']['length']}{$m['setting']['search']['length']}{else}0{/if}" ></label>
+                                        <span class="help-block">{dr_lang('搜索关键字最小字符长度，一个汉字占两位，0表示不限制长度')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('最大关键字长度')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][maxlength]" value="{if $m['setting']['search']['maxlength']}{$m['setting']['search']['maxlength']}{else}0{/if}" ></label>
+                                        <span class="help-block">{dr_lang('搜索关键字最大字符长度，一个汉字占两位，0表示不限制长度')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('搜索参数连接符号')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][param_join]" value="{if $m['setting']['search']['param_join']}{$m['setting']['search']['param_join']}{else}-{/if}" ></label>
+                                        <span class="help-block">{dr_lang('用于伪静态时搜索参数的连接，默认-，例如: 字段1-值-字段2-值')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('搜索参数字符串规则')}</label>
+                                    <div class="col-md-9">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio mt-radio-outline"><input onclick="$('.param_rule_{$i}_0').hide();$('.param_rule_{$i}_1').show()" type="radio" name="data[{$i}][param_rule]" value="1" {if $m['setting']['search']['param_rule']}checked{/if} /> {dr_lang('固定匹配')} <span></span></label>
+                                            <label class="mt-radio mt-radio-outline"><input onclick="$('.param_rule_{$i}_0').show();$('.param_rule_{$i}_1').hide()" type="radio" name="data[{$i}][param_rule]" value="0" {if !$m['setting']['search']['param_rule']}checked{/if} /> {dr_lang('自由组合')} <span></span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search param_rule_{$i}_0" style="display: none;">
+                                    <label class="col-md-2 control-label">{dr_lang('自由组合字段映射关系')}</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" rows="7" name="data[{$i}][param_field]">{$m['setting']['search']['param_field']}</textarea>
+                                        <span class="help-block">{dr_lang('字段映射是指伪静态时将搜索字段重新命名，字段全称|缩写字母，例如keyword|k: 意思是把k作为keyword，多个字段映射回车符号分隔')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search param_rule_{$i}_1" style="display: none;">
+                                    <label class="col-md-2 control-label">{dr_lang('固定匹配字段参数设置')}</label>
+                                    <div class="col-md-9">
+                                        {php $c=0;}
+                                        {loop $m.search_field $k1 $f1}
+                                        <label><select name="data[{$i}][param_join_field][{$c}]" class="form-control">
+                                            <option value="">-</option>
+                                            {loop $m.search_field $k $f}
+                                            <option value="{$k}" {if $k == $m['setting']['search']['param_join_field'][$c]} selected{/if}>{dr_lang($f)}（{$k}）</option>
+                                            {/loop}
+                                        </select></label>
+                                        {php $c++;}
+                                        {/loop}
+                                        <span class="help-block">{dr_lang('由一组固定的字符串参数作为搜索变量，例如：栏目id-城市-分类-搜索词-排序-分页.html')}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group dr_search param_rule_{$i}_1" style="display: none;">
+                                    <label class="col-md-2 control-label">{dr_lang('匹配字段默认填充值')}</label>
+                                    <div class="col-md-9">
+                                        <label><input class="form-control" type="text" name="data[{$i}][param_join_default_value]" value="{if $m['setting']['search']['param_join_default_value']}{$m['setting']['search']['param_join_default_value']}{else}0{/if}" ></label>
+                                        <span class="help-block">{dr_lang('搜索变量为空时的填充值，例如：0-0-0-搜索词-排序-分页.html')}</span>
+                                    </div>
+                                </div>
+                                <script>
+                                    $('.param_rule_{$i}_{intval($m['setting']['search']['param_rule'])}').show();
+                                </script>
+
+                                <div class="form-group dr_search">
+                                    <label class="col-md-2 control-label">{dr_lang('按字段参数值指定模板')}</label>
+                                    <div class="col-md-9">
+                                        <label><select name="data[{$i}][tpl_field]" class="form-control">
+                                            <option value="">{dr_lang('默认模板')}</option>
+                                            {loop $m.search_field $k $f}
+                                            <option value="{$k}" {if $k == $m['setting']['search']['tpl_field']} selected{/if}>{dr_lang($f)}（{$k}）</option>
+                                            {/loop}
+                                        </select></label>
+                                        <span class="help-block">{dr_lang('用于按字段参数值显示不同的搜索模板文件，模板命名格式为：%s', $i.'/search_字段参数值.html')}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">&nbsp;</label>
+                            <div class="col-md-9">
+                                <button type="button" onclick="dr_ajax_submit('{$m.save_url}', 'myform_{$dir}', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存当前模块')}</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                {/loop}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{template "footer.html"}

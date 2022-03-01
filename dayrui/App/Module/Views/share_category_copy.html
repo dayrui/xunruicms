@@ -1,0 +1,35 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="mt-checkbox-list">
+            {loop $option $n $t}
+            <label class="mt-checkbox mt-checkbox-outline">
+                <input type="checkbox" name="at[]" {if $at == $n} checked{/if} value="{$n}"> {dr_lang($t)}
+                <span></span>
+            </label>
+            {/loop}
+        </div>
+        <div class="mt-radio-inline">
+            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').hide()" name="use" value="0" checked /> {dr_lang('全部栏目')}  <span></span></label>
+            <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('#dr_cat').show()" name="use" value="1" /> {dr_lang('指定栏目')}  <span></span></label>
+        </div>
+        <div style="{if $cat_show}display: block{else}display: none{/if}" id="dr_cat">
+            <div class="form-group">
+                <div class="col-xs-12" id="multi-select">
+                    {$select}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                {dr_lang('可以将本栏目的配置信息复制到其他栏目中去')}
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
+{template "footer.html"}

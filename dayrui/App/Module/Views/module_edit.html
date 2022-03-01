@@ -1,0 +1,246 @@
+{template "header.html"}
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache('module', 'module');">{dr_lang('更改数据之后需要更新缓存之后才能生效')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody">
+    <div class="portlet bordered light ">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('模块设置')} </a>
+                </li>
+                <li class="{if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-table"></i> {dr_lang('后台列表显示字段')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+                        {if !$data.share}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][module_index_html]" value="1" {if $data['setting']['module_index_html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][module_index_html]" value="0" {if empty($data['setting']['module_index_html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('开启之后当前模块的首页将会自动生成静态文件')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        {if !$is_hcategory}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('同步其他栏目')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][sync_category]" value="1" {if $data['setting']['sync_category']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][sync_category]" value="0" {if empty($data['setting']['sync_category'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('将内容同步发布到其他的栏目之中')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('父栏目发布权限')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][pcatpost]" value="1" {if $data['setting']['pcatpost']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][pcatpost]" value="0" {if empty($data['setting']['pcatpost'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('允许父栏目（即封面栏目）可投稿，栏目封面模板可支持分页功能')}</span>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('更新时间字段勾选状态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][updatetime_select]" value="0" {if empty($data['setting']['updatetime_select'])}checked{/if} /> {dr_lang('默认不勾选')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][updatetime_select]" value="1" {if $data['setting']['updatetime_select']}checked{/if} /> {dr_lang('默认勾选')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台内容编辑时的更新时间字段，是否勾选"不更新"，不勾选时将自动更新为当前时间')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('Merge分组字段摆放')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][merge]" value="0" {if empty($data['setting']['merge'])}checked{/if} /> {dr_lang('同页方式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][merge]" value="1" {if $data['setting']['merge']}checked{/if} /> {dr_lang('Tab页方式')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('在后台编辑界面中，多行分组字段Merge的展示方式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('内容发布界面右侧字段')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="0" {if empty($data['setting']['right_field'])}checked{/if} /> {dr_lang('都显示')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="1" {if $data['setting']['right_field']==1}checked{/if} /> {dr_lang('仅超管显示')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[setting][right_field]" value="2" {if $data['setting']['right_field']==2}checked{/if} /> {dr_lang('都不显示')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('内容发布界面右侧字段是一些内置的系统字段，例如发布时间、更新时间、客户端、用户信息等')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('提取内容描述字数')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[setting][desc_limit]" value="{if $data['setting']['desc_limit']}{intval($data['setting']['desc_limit'])}{else}100{/if}" ></label>
+                                <span class="help-block">{dr_lang('在内容中提取描述信息的最大字数限制')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('拒绝审核理由')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:150px; width:100%;" name="data[setting][verify_msg]">{$data['setting']['verify_msg']}</textarea>
+                                <span class="help-block">{dr_lang('用于后台审核内容时，可选择常用的拒绝审核理由，一行一个')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('删除内容理由')}</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" style="height:150px; width:100%;" name="data[setting][delete_msg]">{$data['setting']['delete_msg']}</textarea>
+                                <span class="help-block">{dr_lang('用于后台删除内容时，可选择常用的理由，一行一个')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('列表默认排序')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-xlarge" type="text" name="data[setting][order]" value="{if $data['setting']['order']}{htmlspecialchars((string)$data['setting']['order'])}{else}updatetime DESC{/if}" ></label>
+                                <span class="help-block">{dr_lang('排序格式符号MySQL的语法，例如：主表字段 desc')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('列表时间搜索')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[setting][search_time]" value="{if $data['setting']['search_time']}{htmlspecialchars((string)$data['setting']['search_time'])}{else}updatetime{/if}" ></label>
+                                <span class="help-block">{dr_lang('设置后台时间范围搜索字段，默认为更新时间字段：updatetime')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('列表默认搜索字段')}</label>
+                            <div class="col-md-9">
+                                <label><select name="data[setting][search_first_field]" class="form-control">
+                                    {loop $field $t}
+                                    {if dr_is_admin_search_field($t)}
+                                    <option value="{$t.fieldname}" {if $data['setting']['search_first_field']==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
+                                    {/if}
+                                    {/loop}
+                                    <option value="id" {if $data['setting']['search_first_field']=='id'}selected{/if}> Id </option>
+                                </select></label>
+                                <span class="help-block">{dr_lang('设置后台列表的默认搜索字段，也就是第一个选中的字段')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('列表显示字段')}</label>
+                            <div class="col-md-9">
+
+
+                                <div class="table-scrollable">
+                                    <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                                        <thead>
+                                        <tr class="heading">
+                                            <th class="myselect">
+                                                {dr_lang('显示')}
+                                            </th>
+                                            <th width="180"> {dr_lang('字段')} </th>
+                                            <th width="150"> {dr_lang('名称')} </th>
+                                            <th width="100"> {dr_lang('宽度')} </th>
+                                            <th width="140"> {dr_lang('对齐方式')} </th>
+                                            <th> {dr_lang('回调方法')} </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="field-sort-items">
+                                        {loop $field $n $t}
+                                        {if $t.fieldname && ((dr_is_app('fstatus') && $t.fieldname != 'fstatus') || !dr_is_app('fstatus'))}
+                                        <tr class="odd gradeX">
+                                            <td class="myselect">
+                                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                                    <input type="checkbox" class="checkboxes" name="data[setting][list_field][{$t.fieldname}][use]" value="1" {if $data['setting']['list_field'][$t.fieldname]['use']} checked{/if} />
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                            <td>{dr_lang($t.name)} ({$t.fieldname})</td>
+                                            <td><input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][name]" value="{php echo $data['setting']['list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['setting']['list_field'][$t.fieldname]['name']) : $t.name}" /></td>
+                                            <td> <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][width]" value="{htmlspecialchars((string)$data['setting']['list_field'][$t.fieldname]['width'])}" /></td>
+                                            <td><input type="checkbox" name="data[setting][list_field][{$t.fieldname}][center]" {if $data['setting']['list_field'][$t.fieldname]['center']} checked{/if} value="1"  data-on-text="{dr_lang('居中')}" data-off-text="{dr_lang('默认')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                            </td>
+                                            <td> <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
+                                        </span>
+                                                <input class="form-control" type="text" name="data[setting][list_field][{$t.fieldname}][func]" value="{htmlspecialchars((string)$data['setting']['list_field'][$t.fieldname]['func'])}" />
+                                            </div></td>
+                                        </tr>
+                                        {/if}
+                                        {/loop}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <span class="help-block">{dr_lang('拖动字段可以进行顺序排列')}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <label> <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button></label>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function() {
+        dr_theme({$is_theme});
+        $(".field-sort-items").sortable();
+    });
+    function dr_theme(id) {
+        if (id == 1) {
+            $("#dr_theme_html").html($("#dr_web").html());
+        } else {
+            $("#dr_theme_html").html($("#dr_local").html());
+        }
+    }
+</script>
+<div id="dr_local" style="display: none">
+    <label class="col-md-2 control-label">{dr_lang('主题风格')}</label>
+    <div class="col-md-9">
+        <label><select class="form-control" name="site[theme]">
+            <option value="default"> -- </option>
+            {loop $theme $t}
+            <option{if $t==$site['theme']} selected=""{/if} value="{$t}">{$t}</option>
+            {/loop}
+        </select></label>
+        <span class="help-block">{dr_lang('位于项目主站根目录下：/static/风格名称/')}</span>
+    </div>
+</div>
+<div id="dr_web" style="display: none">
+    <label class="col-md-2 control-label">{dr_lang('远程资源')}</label>
+    <div class="col-md-9">
+        <input class="form-control  input-xlarge" type="text" placeholder="http://" name="site[theme]" value="{php echo dr_strpos($site['theme'], 'http') === 0 ? $site['theme'] : '';}">
+        <span class="help-block">{dr_lang('项目将调用此地址的css,js,图片等静态资源')}</span>
+    </div>
+</div>
+{template "footer.html"}

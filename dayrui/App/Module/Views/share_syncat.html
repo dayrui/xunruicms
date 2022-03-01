@@ -1,0 +1,20 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-xs-12" id="multi-select">
+                {$select}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                {dr_lang('同步发布的内容都会继承主内容，删除时会同步删除')}
+            </div>
+        </div>
+
+    </div>
+</form>
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
+{template "footer.html"}

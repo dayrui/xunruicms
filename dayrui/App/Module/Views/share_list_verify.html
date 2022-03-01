@@ -1,0 +1,301 @@
+{template "header.html"}
+
+{template "api_list_date_search.html"}
+
+<div id="dr_cyshly" style="display: none">
+    <label style="width:320px; margin-bottom: 20px"><select class="form-control" onchange="javascript:$('#dr_verify_msg').val(this.value)">
+        <option value=""> -- </option>
+        {loop $verify_msg $t}
+        <option value="{$t}">{$t}</option>
+        {/loop}
+    </select></label>
+</div>
+
+<script type="text/javascript">
+
+    // ajax 批量操作确认
+    function dr_ajax_option_verify(url, msg) {
+        layer.confirm(
+            msg,
+            {
+                icon: 3,
+                shade: 0,
+                title: lang['ts'],
+                btn: [lang['ok'], lang['esc']]
+            }, function(index){
+                layer.close(index);
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 100000000
+                });
+
+                if (is_mobile_cms == 1) {
+                    width = height = '90%';
+                }
+                url+= '&is_all=1&'+$("#myform").serialize();
+                layer.open({
+                    type: 2,
+                    title: "{dr_lang('批量审核')}",
+                    shadeClose: true,
+                    shade: 0,
+                    area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+                    btn: [lang['ok'], lang['esc']],
+                    yes: function(index, layero){
+                        layer.close(loading);
+                        var body = layer.getChildFrame('body', index);
+                        $(body).find('.form-group').removeClass('has-error');
+                        // 延迟加载
+                        var loading = layer.load(2, {
+                            shade: [0.3,'#fff'], //0.1透明度的白色背景
+                            time: 5000
+                        });
+                        $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
+                            success: function(json) {
+                                layer.close(loading);
+                                if (json.code == 1) {
+                                    layer.close(index);
+                                    setTimeout("window.location.reload(true)", 2000)
+                                } else {
+                                    $(body).find('#dr_row_'+json.data.field).addClass('has-error');
+                                }
+                                dr_tips(json.code, json.msg);
+                                return false;
+                            },
+                            error: function(HttpRequest, ajaxOptions, thrownError) {
+                                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+                            }
+                        });
+                        return false;
+                    },
+                    success: function(layero, index){
+                        // 主要用于后台权限验证
+                        layer.close(loading);
+                        var body = layer.getChildFrame('body', index);
+                        var json = $(body).html();
+                        if (json.indexOf('"code":0') > 0 && json.length < 150){
+                            var obj = JSON.parse(json);
+                            layer.close(index);
+                            dr_tips(0, obj.msg);
+                        }
+                        if (json.indexOf('"code":1') > 0 && json.length < 150){
+                            var obj = JSON.parse(json);
+                            layer.close(index);
+                            dr_tips(1, obj.msg);
+                        }
+                    },
+                    content: url+'&is_ajax=1'
+                });
+            });
+    }
+    function dr_ajax_option_verify_back(url) {
+
+        var msg = "<div style='width: 500px;'><p>{dr_lang('拒绝理由')}：</p><p><textarea id=\"dr_verify_msg\" class=\"form-control\" style=\"width:320px;height:100px\"></textarea></p>"+$('#dr_cyshly').html()+"</div>";
+        layer.confirm(
+            msg,
+            {
+                shade: 0,
+                title: "{dr_lang('拒绝')}",
+                btn: [lang['ok'], lang['esc']]
+            }, function(index){
+                var note = $("#dr_verify_msg").val();
+                if (note == null || note == undefined) {
+                    dr_tips(0, "{dr_lang('拒绝理由未填写')}");
+                    return;
+                }
+                    layer.close(index);
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 100000000
+                });
+
+
+                url+= '&is_all=1&at=0&note='+note+'&'+$("#myform").serialize();
+                layer.open({
+                    type: 2,
+                    title: "{dr_lang('批量审核')}",
+                    shadeClose: true,
+                    shade: 0,
+                    area: [{php echo \Phpcmf\Service::IS_PC_USER() ? '\'50%\', \'60%\'' : '"95%", "90%"'}],
+                    btn: [lang['ok'], lang['esc']],
+                    yes: function(index, layero){
+                        layer.close(loading);
+                        var body = layer.getChildFrame('body', index);
+                        $(body).find('.form-group').removeClass('has-error');
+                        // 延迟加载
+                        var loading = layer.load(2, {
+                            shade: [0.3,'#fff'], //0.1透明度的白色背景
+                            time: 5000
+                        });
+                        $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
+                            success: function(json) {
+                                layer.close(loading);
+                                if (json.code == 1) {
+                                    layer.close(index);
+                                    setTimeout("window.location.reload(true)", 2000)
+                                } else {
+                                    $(body).find('#dr_row_'+json.data.field).addClass('has-error');
+                                }
+                                dr_tips(json.code, json.msg);
+                                return false;
+                            },
+                            error: function(HttpRequest, ajaxOptions, thrownError) {
+                                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+                            }
+                        });
+                        return false;
+                    },
+                    success: function(layero, index){
+                        // 主要用于后台权限验证
+                        layer.close(loading);
+                        var body = layer.getChildFrame('body', index);
+                        var json = $(body).html();
+                        if (json.indexOf('"code":0') > 0 && json.length < 150){
+                            var obj = JSON.parse(json);
+                            layer.close(index);
+                            dr_tips(0, obj.msg);
+                        }
+                        if (json.indexOf('"code":1') > 0 && json.length < 150){
+                            var obj = JSON.parse(json);
+                            layer.close(index);
+                            dr_tips(1, obj.msg);
+                        }
+                    },
+                    content: url+'&is_ajax=1'
+                });
+            });
+    }
+</script>
+
+
+<div class="right-card-box">
+    <div class="row table-search-tool">
+        <form action="{SELF}" method="get">
+            {dr_form_search_hidden(['field' => 'content'])}
+            {if $is_category_show}
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    {$category_select}
+                </label>
+            </div>
+            {/if}
+            <div class="col-md-12 col-sm-12">
+                <label><input type="text" class="form-control" placeholder="{dr_lang('全文搜索')}" value="{$param['keyword']}" name="keyword" /></label>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" value="{$param.date_form}" name="date_form">
+                        <span class="input-group-addon"> {dr_lang('到')} </span>
+                        <input type="text" class="form-control" value="{$param.date_to}" name="date_to">
+                    </div>
+                </label>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+            </div>
+        </form>
+    </div>
+
+
+    <form class="form-horizontal" role="form" id="myform">
+        {dr_form_hidden()}
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                <thead>
+                <tr class="heading">
+                    {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                    <th class="myselect">
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                            <span></span>
+                        </label>
+                    </th>
+                    {/if}
+                    <th style="text-align:center" class="{dr_sorting('isnew')}" name="isnew" width="70">{dr_lang('类型')}</th>
+                    <th class="{dr_sorting('cid')}" name="cid">{dr_lang('主题')}</th>
+                    {if $is_category_show}<th class="{dr_sorting('catid')}" name="catid" width="120">{dr_lang('栏目')}</th>{/if}
+                    <th class="{dr_sorting('status')}" name="status" width="90" style="text-align:center">{dr_lang('状态')}</th>
+                    <th class="{dr_sorting('uid')}" name="uid" width="150">{dr_lang('账号')}</th>
+                    <th class="{dr_sorting('inputtime')}" name="inputtime" width="160">{dr_lang('提交时间')}</th>
+                    <th>{dr_lang('操作')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loop $list $t}
+                <?php
+                $c=dr_string2array($t.content);
+                $t['url'] = SITE_URL.'index.php?s='.APP_DIR.'&c=show&m=verify&id='.$t['id'];
+                $t['url'] = ADMIN_URL.(dr_url('api/slogin', ['url' => urlencode($t['url'])]));
+                ?>
+                <tr class="odd gradeX" id="dr_row_{$t.id}">
+                    {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                    <td class="myselect">
+                        <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                            <span></span>
+                        </label>
+                    </td>
+                    {/if}
+                    <td style="text-align:center">
+                        {if $t.isnew}
+                        <span class="label label-success"> {dr_lang('新增')} </span>
+                        {else}
+                        <span class="label label-danger"> {dr_lang('修改')} </span>
+                        {/if}
+                    </td>
+                    <td>{Function_list::title($c.title, null, $t)}</td>
+                    {if $is_category_show}<td>{Function_list::catid($t.catid, null, $t)}</td>{/if}
+                    <td style="text-align:center">
+                        {if $t.status}
+                        <span class="label label-warning"> {dr_lang('%s审中', $t.status)} </span>
+                        {else}
+                        <span class="label label-danger"> {dr_lang('被退稿')} </span>
+                        {/if}
+                    </td>
+                    <td>{Function_list::uid($t.uid, null, $t)}</td>
+                    <td>{dr_date($t.inputtime)}</td>
+                    <td>
+                        {if $is_post_user}
+                        <label><a href="{$t.url}" class="btn btn-xs blue" target="_blank"> <i class="fa fa-send"></i> {dr_lang('查看')}</a></label>
+                        {if $ci->_is_admin_auth('edit') && $t.uid == $member.uid && $t.status == 0}
+                        <label><a href="{dr_url($uriprefix.'/edit', ['id' => $t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')}</a></label>
+                        {/if}
+                        {else}
+                        {if $ci->_is_admin_auth('edit')}
+                        <label><a href="{dr_url($uriprefix.'/edit', ['id' => $t.id])}" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('处理')}</a></label>
+                        {loop $clink $a}
+                        <label><a class="btn {if $a.color}{$a.color}{/if} btn-xs" href="{str_replace(array('{mid}', '{id}', '{cid}'), array(APP_DIR, $t.id, $t.id), $a.url)}"><i class="{$a.icon}"></i> {dr_lang($a.name)} {if $a.field} ({intval($t[$a['field']])}){/if} </a></label>
+                        {/loop}
+                        {/if}
+                        {/if}
+					</td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row fc-list-footer table-checkable ">
+            <div class="col-md-5 fc-list-select">
+                {if $ci->_is_admin_auth('del') || $ci->_is_admin_auth('edit')}
+                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                    <span></span>
+                </label>
+                {if $ci->_is_admin_auth('del')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+                {/if}
+                {if !$is_post_user}
+                <label><button type="button" onclick="dr_ajax_option_verify('{dr_url($uriprefix.'/index')}&at=1', '{dr_lang('你确定要批量通过它们吗？')}')" class="btn green btn-sm"> <i class="fa fa-check-circle"></i> {dr_lang('通过')}</button></label>
+                <label><button type="button" onclick="dr_ajax_option_verify_back('{dr_url($uriprefix.'/index')}&at=0')" class="btn blue btn-sm"> <i class="fa fa-times-circle"></i> {dr_lang('拒绝')}</button></label>
+                {/if}
+                {/if}
+            </div>
+            <div class="col-md-7 fc-list-page">
+                {$mypages}
+            </div>
+        </div>
+    </form>
+</div>
+
+{template "footer.html"}

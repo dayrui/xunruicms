@@ -1,0 +1,253 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('为模块设置页面的SEO规则')}</a></p>
+</div>
+
+<div class="form-horizontal">
+    <div class="portlet bordered light ">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $module $dir $t}
+                <li class="{if $page == $dir}active{/if}">
+                    <a href="#tab_{$dir}" data-toggle="tab" onclick="$('#dr_page').val('{$dir}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <input type="hidden" id="dr_page" value="{$page}">
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                {loop $module $dir $data}
+                {php $site=$data.site;}
+                <div class="tab-pane {if $page==$dir}active{/if}" id="tab_{$dir}">
+                    <form method="post" name="myform_{$dir}" id="myform_{$dir}">
+                        {$form}
+                        <div class="form-body">
+                            {if !$data.share}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块URL规则')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <select class="form-control" name="site[urlrule]">
+                                            <option value="0"> {dr_lang('动态地址')} </option>
+                                            {list action=cache name=urlrule return=u}
+                                            {if $u.type==1}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                            {/list}
+                                        </select>
+                                    </label>
+                                    <label>&nbsp;&nbsp;<a href="{dr_url('module/urlrule/index')}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a></label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块首页静态')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="module_index_html" value="1" {if $data['setting']['module_index_html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="module_index_html" value="0" {if empty($data['setting']['module_index_html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    </div>
+                                     <span class="help-block">{dr_lang('模块的首页将会自动生成静态文件')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块首页SEO标题')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[module_title]">{$site['module_title']}</textarea>
+                                    <span class="help-block">{dr_lang('首页标题仅支持分页的通配符：[第{page}页{join}]')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块首页SEO关键字')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[module_keywords]">{$site['module_keywords']}</textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块首页SEO描述信息')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3" name="site[module_description]">{$site['module_description']}</textarea>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            {if dr_is_app('chtml')}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('模块栏目和内容静态')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="site[html]" value="1" {if $site['html']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="site[html]" value="0" {if empty($site['html'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    </div>
+                                    <span class="help-block">{dr_lang('模块栏目、模块内容页面静态功能开关')}</span>
+                                </div>
+                            </div>
+                            {else}
+                            <input type="hidden" name="site[html]" value="{intval($site['html'])}">
+                            {/if}
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('按栏目设置SEO')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').show();$('.cat_{$dir}_0').hide()" name="site[is_cat]" value="0" {if empty($site['is_cat'])}checked{/if} /> {dr_lang('全局设置')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.cat_{$dir}').hide();$('.cat_{$dir}_0').show()" name="site[is_cat]" value="1" {if $site['is_cat']}checked{/if} /> {dr_lang('分别设置')} <span></span></label>
+                                    </div>
+
+                                    <span class="help-block cat_{$dir}_0" {if !$site['is_cat']}style="display:none"{/if}><a href="{dr_url('seo_category/index', ['page' => $data.share ? '' : $data.dirname])}">{dr_lang('按栏目设置是为每一个栏目单独设置seo信息，否则就采用统一设置')}</a></span>
+                                </div>
+                            </div>
+
+                            <?php !$site['list_title'] && $site['list_title'] = '[第{page}页{join}]{catpname}{join}{'.'SITE_NAME}';?>
+                            <div class="form-group cat_{$dir}" {if $site['is_cat']}style="display:none"{/if}>
+                                <label class="col-md-2 control-label">{dr_lang('模块栏目SEO标题')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[list_title]">{$site['list_title']}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group cat_{$dir}" {if $site['is_cat']}style="display:none"{/if}>
+                                <label class="col-md-2 control-label">{dr_lang('模块栏目SEO关键字')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[list_keywords]">{$site['list_keywords']}</textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group cat_{$dir}" {if $site['is_cat']}style="display:none"{/if}>
+                                <label class="col-md-2 control-label">{dr_lang('模块栏目SEO描述信息')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3" name="site[list_description]">{$site['list_description']}</textarea>
+                                </div>
+                            </div>
+
+                            <hr>
+                            {else}
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('搜索URL规则')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <select class="form-control" name="site[urlrule]">
+                                            <option value="0"> {dr_lang('动态地址')} </option>
+                                            {list action=cache name=urlrule return=u}
+                                            {if $u.type==2}<option value="{$u.id}" {if $u.id==$site['urlrule']}selected{/if}> {$u.name} </option>{/if}
+                                            {/list}
+                                        </select>
+                                    </label>
+                                    <label>&nbsp;&nbsp;<a href="{dr_url('module/urlrule/index')}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a></label>
+                                </div>
+                            </div>
+                            <hr>
+
+                            {/if}
+
+                            <?php !$site['show_title'] && $site['show_title'] = '[第{page}页{join}]{title}{join}{catpname}{join}{'.'SITE_NAME}';?>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('内容页SEO标题')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[show_title]">{$site['show_title']}</textarea>
+                                    <span class="help-block">
+                                    <button class="btn btn-xs green" onclick="dr_seo_title_rule()" type="button"><i class="fa fa-code"></i> {dr_lang('可用通配符标签')}</button>
+
+                                </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('内容页SEO关键字')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[show_keywords]">{$site['show_keywords']}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('内容页SEO描述信息')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" rows="3" name="site[show_description]">{$site['show_description']}</textarea>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <?php !$site['search_title'] && $site['search_title'] = '[第{page}页{join}][{keyword}{join}][{param}{join}]{'.'SITE_NAME}';?>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('搜索页SEO标题')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[search_title]">{$site['search_title']}</textarea>
+                                    <span class="help-block">
+                                    <button class="btn btn-xs green" onclick="dr_seo_search_rule()" type="button"><i class="fa fa-code"></i> {dr_lang('可用通配符标签')}</button>
+
+                                </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('搜索页SEO关键字')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="site[search_keywords]">{$site['search_keywords']}</textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('搜索页SEO描述信息')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:90px" name="site[search_description]">{$site['search_description']}</textarea>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">&nbsp;</label>
+                                <div class="col-md-9">
+                                    <label><button type="button" onclick="dr_ajax_submit('{$data.save_url}', 'myform_{$dir}', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存当前模块')}</button></label>
+                                    <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量操作')}', '{dr_url('api/update_url')}&mid={$dir}', '500px', '300px')" class="btn blue"> <i class="fa fa-refresh"></i> {dr_lang('更新内容URL地址')} </button></label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                {/loop}
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function dr_seo_title_rule() {
+        layer.alert('{join}	SEO连接符号，默认“_”<br>'+
+            '[{page}]	分页页码<br>'+
+            '{catname}	当前栏目名称<br>'+
+            '{catpname}	当前栏目带层次的栏目名称<br>'+
+            '支持“模块内容主表表”任何字段，格式：{字段名}，<br>如：{title}表示标题<br>'+
+            '{keywords}	内容关键词<br>'+
+            '{description}	内容描述信息<br>'+
+            '{主表自定义字段英文}	主表自定义字段值<br>'+
+            '支持项目系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示项目名称<br>'+
+            ''+
+            '', {
+            shade: 0,
+            title: '',
+            btn: []
+        });
+    }
+    function dr_seo_search_rule() {
+        layer.alert('{join}	SEO连接符号，默认“_”<br>'+
+            '[{page}]	分页页码<br>'+
+            '{modulename}	当前模块的名称<br>'+
+            '{catname}	当前栏目名称<br>'+
+            '{catpname}	当前栏目带层次的栏目名称<br>'+
+            '{keyword}	搜索时的关键字<br>'+
+            '{param}	搜索时的参数列表<br>'+
+            '支持项目系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示项目名称<br>'+
+            ''+
+            '', {
+            shade: 0,
+            title: '',
+            btn: []
+        });
+    }
+</script>
+{template "footer.html"}

@@ -1,0 +1,65 @@
+{template "header.html"}
+
+<script>
+    function dr_update_category_cache() {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid={$mid}",
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
+</script>
+
+<div class="note note-danger">
+    <p>{dr_lang('栏目模型字段需要划分到具体的某一个栏目上；当栏目是主栏目时，其下级的子栏目会继承该字段')}</p>
+    <p><a href="javascript:dr_update_category_cache();">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a></p>
+</div>
+
+<div class="right-card-box">
+    <form class="form-horizontal" role="form" id="myform">
+        {dr_form_hidden()}
+        <div class="portlet bordered light myfbody">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="caption-subject font-green "><i class="fa fa-code"></i> {dr_lang('字段划分')}</span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+
+                    {loop $list $t}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{$t.name} / {$t.fieldname}</label>
+                        <div class="col-md-9" id="multi-select" >
+                            {$t.select}
+                        </div>
+                    </div>
+                    {/loop}
+
+                </div>
+
+                {if !$list}
+                <div class="alert"> {dr_lang('你没有创建自定义栏目模型字段')} </div>
+                {/if}
+            </div>
+        </div>
+        <div class="portlet-body form myfooter">
+            <div class="form-actions text-center">
+                <button type="button" onclick="dr_ajax_submit('{dr_now_url()}', 'myform', '2000')" class="btn green"> <i class="fa save"></i> {dr_lang('保存')} </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
+
+{template "footer.html"}

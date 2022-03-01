@@ -1,0 +1,179 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('按模块分别设置栏目的SEO规则')}</a></p>
+</div>
+<script>
+    function edit_seo(id, name, dir) {
+        dr_iframe('<i class="fa fa-internet-explorer"></i> '+name,'{dr_url('module/seo_category/edit')}&dir='+dir+'&id='+id, '70%', '70%', 'nogo');
+    }
+    function dr_save_urlrule(dir, id, value) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: '{dr_url('module/seo_category/rule_edit')}&dir='+dir+'&value='+value+'&id='+id,
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                if (json.code == 1) {
+                    dr_tips(1, json.msg);
+                } else {
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, this, thrownError);;
+            }
+        });
+    }
+    // ajax关闭或启用
+    function dr_cat_ajax_open_close(e, url, fan) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000
+        });
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            dataType: "json",
+            success: function (json) {
+                layer.close(index);
+                if (json.code == 1) {
+                    if (json.data.share == 1) {
+                        if (json.data.value == fan) {
+                            $(e).attr('class', 'badge badge-no');
+                            $(e).html('<i class="fa fa-times"></i>');
+                        } else {
+                            $(e).attr('class', 'badge badge-yes');
+                            $(e).html('<i class="fa fa-check"></i>');
+                        }
+                    } else {
+                        // 独立模块 dr_is_page_html
+                        var obj = $('.dr_is_page_html');
+                        if (json.data.value == fan) {
+                            obj.attr('class', 'dr_is_page_html badge badge-no');
+                            obj.html('<i class="fa fa-times"></i>');
+                        } else {
+                            obj.attr('class', 'dr_is_page_html badge badge-yes');
+                            obj.html('<i class="fa fa-check"></i>');
+                        }
+                    }
+                    dr_tips(1, json.msg);
+                } else {
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, this, thrownError);;
+            }
+        });
+    }
+    function dr_tree_data(mid, catid) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 100000
+        });
+        var value = $(".select-cat-"+mid+"-"+catid).html();
+        if (value == '[+]') {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "{dr_url('module/seo_category/list_index')}&pid="+catid+"&mid="+mid,
+                success: function(json) {
+                    layer.close(index);
+                    if (json.code == 1) {
+                        $(".dr_catid_"+mid+"_"+catid).after(json.msg);
+                        $(".select-cat-"+mid+"-"+catid).html('[-]');
+                        $('.tooltips').tooltip();
+                    } else {
+                        dr_cmf_tips(json.code, json.msg);
+                    }
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, this, thrownError);
+                }
+            });
+        } else {
+            layer.close(index);
+            $(".dr_pid_"+mid+"_"+catid).remove();
+            $(".select-cat-"+mid+"-"+catid).html('[+]');
+        }
+    }
+    function dr_update_category_cache(dir) {
+        var index = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 10000000
+        });
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid="+dir,
+            success: function(json) {
+                layer.close(index);
+                dr_cmf_tips(json.code, json.msg);
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                layer.closeAll('loading');
+                dr_tips(0, "{dr_lang('更新失败，请检查错误日志')}");
+            }
+        });
+    }
+</script>
+<div class="form-horizontal">
+    <div class="portlet bordered light ">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                {loop $module $dir $t}
+                <li class="{if $page == $dir}active{/if}">
+                    <a href="#tab_{$dir}" data-toggle="tab" onclick="$('#dr_page').val('{$dir}')"> <i class="{dr_icon($t.icon)}"></i> {$t.name} </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <input type="hidden" id="dr_page" value="{$page}">
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                {loop $module $dir $data}
+                <div class="tab-pane {if $page==$dir}active{/if}" id="tab_{$dir}">
+                    <form method="post" name="myform_{$dir}" id="myform_{$dir}">
+                        {$form}
+                        <div class="well well2">
+                            <a href="javascript:dr_update_category_cache('{$dir}');">{dr_lang('变更栏目属性之后，需要一键更新栏目配置信息')}</a>
+                        </div>
+                        <div class="table-scrollable">
+
+                            <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                                <thead>
+                                <tr class="heading">
+                                    <th width="70" style="text-align:center"> Id </th>
+                                    <th> {dr_lang('栏目')} </th>
+                                    <th width="180"> {dr_lang('URL规则')} </th>
+                                    {if dr_is_app('chtml')}
+                                    <th width="50" style="text-align:center"> {dr_lang('静态')} </th>
+                                    {/if}
+                                    <th>{dr_lang('操作')}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {$data.list}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                {/loop}
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{template "footer.html"}

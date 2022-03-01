@@ -1,0 +1,122 @@
+{template "header.html"}
+
+<div class="note note-danger">
+    <p><a href="javascript:dr_update_cache();">{dr_lang('设置全站SEO规则')}</a></p>
+</div>
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody">
+        <div class="portlet bordered light ">
+            <div class="portlet-title tabbable-line">
+                <ul class="nav nav-tabs" style="float:left;">
+                    <li class="active">
+                        <a href="#" data-toggle="tab" > <i class="fa fa-internet-explorer"></i> {$site_name} </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="portlet-body">
+                <div class="tab-content">
+
+                    <div class="tab-pane  active">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('SEO连接符')}</label>
+                                <div class="col-md-9">
+                                    <label><input class="form-control" type="text" name="data[SITE_SEOJOIN]" value="{php echo $data['SITE_SEOJOIN'] ? htmlspecialchars($data['SITE_SEOJOIN']) : '_';}"></label>
+                                    <span class="help-block">{dr_lang('默认为"_"，如：文章标题[连接符]栏目名称[连接符]模块名称')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('网站首页静态')}</label>
+                                <div class="col-md-9">
+                                    <div class="mt-radio-inline">
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="SITE_INDEX_HTML" value="1" {if $SITE_INDEX_HTML}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                        <label class="mt-radio mt-radio-outline"><input type="radio" name="SITE_INDEX_HTML" value="0" {if empty($SITE_INDEX_HTML)}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    </div>
+                                    <span class="help-block">{dr_lang('开启之后首页将会自动生成静态文件')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('网站首页SEO标题')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="data[SITE_TITLE]">{$data['SITE_TITLE']}</textarea>
+                                    <span class="help-block">{dr_lang('首页标题仅支持分页的通配符：[第{page}页{join}]')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('网站首页SEO关键字')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:70px" name="data[SITE_KEYWORDS]">{$data['SITE_KEYWORDS']}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('网站首页SEO描述信息')}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control " style="height:90px" name="data[SITE_DESCRIPTION]">{$data['SITE_DESCRIPTION']}</textarea>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('批量更新内容URL')}</label>
+                                <div class="col-md-9">
+                                    {loop $module $m}
+                                    <label><button type="button" onclick="dr_iframe_show('{dr_lang('批量更新内容URL')}', '{dr_url('api/update_url')}&mid={$m.dirname}', '500px', '300px')" class="btn default"> <i class="{dr_icon($m.icon)}"></i> {dr_lang($m.name)} </button></label>
+                                    {/loop}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('全局设置URL规则')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <select class="form-control" name="data[SITE_URLRULE]" id="dr_sync_value">
+                                            {if $data['SITE_URLRULE']}
+                                            <option value="0"> {dr_lang('还原动态地址')} </option>
+                                            {else}
+                                            <option value="0"> {dr_lang('动态地址')} </option>
+                                            {/if}
+                                            {list action=cache name=urlrule return=u}
+                                            {if $u.type==3}<option value="{$u.id}" {if $u.id == $data['SITE_URLRULE']}selected{/if}> {$u.name} </option>{/if}
+                                            {/list}
+                                        </select>
+                                    </label>
+                                    <label style="margin-left:20px;"><a href="{dr_url('module/urlrule/index', ['hide_menu' => 1])}" style="color:blue !important">{dr_lang('[URL规则管理]')}</a> </label>
+                                    <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('module/seo_site/sync_index')}&ct=1&value='+$('#dr_sync_value').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                    <span class="help-block">{dr_lang('设置共享栏目的默认URL规则')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('栏目电脑列表信息数')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <input class="form-control" type="text" value="{intval($data['list_pagesize'] ? $data['list_pagesize'] : 10)}" id="dr_sync_value2" name="data[list_pagesize]">
+                                    </label>
+                                    <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('module/seo_site/sync_index')}&ct=2&value='+$('#dr_sync_value2').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                    <span class="help-block">{dr_lang('设置共享栏目的默认的电脑列表分页显示每页的信息数')}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('栏目手机列表信息数')}</label>
+                                <div class="col-md-9">
+                                    <label>
+                                        <input class="form-control" type="text" value="{intval($data['list_mpagesize'] ? $data['list_mpagesize'] : 10)}" id="dr_sync_value3" name="data[list_mpagesize]">
+                                    </label>
+                                    <label style="margin-left:10px;"><button type="button" onclick="dr_iframe_show('{dr_lang('一键同步')}', '{dr_url('module/seo_site/sync_index')}&ct=3&value='+$('#dr_sync_value3').val(), '500px', '300px')" class="btn blue"> <i class="fa fa-cog"></i> {dr_lang('一键同步设置')} </button></label>
+                                    <span class="help-block">{dr_lang('设置共享栏目的默认的手机列表分页显示每页的信息数')}</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+{template "footer.html"}
