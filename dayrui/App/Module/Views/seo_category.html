@@ -109,7 +109,7 @@
             shade: [0.3,'#fff'], //0.1透明度的白色背景
             time: 10000000
         });
-        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=update_category_cache&mid="+dir,
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?s=module&c=api&m=update_category_cache&mid="+dir,
             success: function(json) {
                 layer.close(index);
                 dr_cmf_tips(json.code, json.msg);

@@ -80,8 +80,8 @@ class Cache extends \Phpcmf\Model {
             }
         }
 
+        \Phpcmf\Service::M('table')->cache(SITE_ID, $this->module_cache);
         if ($this->module_cache) {
-            \Phpcmf\Service::M('table')->cache(SITE_ID, $this->module_cache);
             \Phpcmf\Service::M('module')->cache(SITE_ID, $this->module_cache);
         }
 
@@ -290,26 +290,7 @@ class Cache extends \Phpcmf\Model {
         }
 
         if (IS_USE_MODULE) {
-            $cache = $this->table('module')->getAll();
-            foreach ($cache as $t) {
-                if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                    continue;
-                } elseif ($t['share']) {
-                    continue;
-                }
-                $t['site'] = dr_string2array($t['site']);
-                foreach ($site as $siteid) {
-                    if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
-                        $rt = $this->update_webpath('Module_Domain', $t['site'][$siteid]['webpath'], [
-                            'SITE_ID' => $siteid,
-                            'MOD_DIR' => $t['dirname'],
-                        ]);
-                        if ($rt) {
-                            $this->_error_msg('模块['.$t['site'][$siteid]['domain'].']: '.$rt);
-                        }
-                    }
-                }
-            }
+            \Phpcmf\Service::M('module', 'module')->update_site_config($site);
         }
 
     }
@@ -336,7 +317,7 @@ class Cache extends \Phpcmf\Model {
     }
 
     // 更新项目
-    public function update_webpath($name, $path, $value) {
+    public function update_webpath($name, $path, $value, $root = TEMPPATH) {
 
         if (!$path) {
             return '目录为空';
@@ -363,7 +344,7 @@ class Cache extends \Phpcmf\Model {
                      'mobile/api.php',
                      'mobile/index.php',
                  ] as $file) {
-            if (is_file(TEMPPATH.$name.'/'.$file)) {
+            if (is_file($root.$name.'/'.$file)) {
                 if ($file == 'admin.php') {
                     $dst = $path.(SELF == 'index.php' ? 'admin.php' : SELF);
                 } else {
@@ -393,7 +374,7 @@ class Cache extends \Phpcmf\Model {
                     $value['MOD_DIR'],
                     $value['SITE_ID'],
                     $fix_web_dir
-                ], file_get_contents(TEMPPATH.$name.'/'.$file)));
+                ], file_get_contents($root.$name.'/'.$file)));
                 if (!$size) {
                     return '文件['.$dst.']无法写入';
                 }
@@ -437,27 +418,8 @@ class Cache extends \Phpcmf\Model {
         }
 
         if (IS_USE_MODULE) {
-            $module = $this->table('module')->getAll();
-            foreach ($module as $t) {
-                if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                    continue;
-                } elseif ($t['share']) {
-                    continue;
-                }
-                $t['site'] = dr_string2array($t['site']);
-                foreach ($site as $r) {
-                    $siteid = $r['id'];
-                    if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
-                        $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
-                        // 复制百度编辑器到当前目录
-                        $this->cp_ueditor_file($path);
-                        // 复制百度编辑器到移动端项目
-                        $this->cp_ueditor_file($path.'mobile/');
-                    }
-                }
-            }
+            \Phpcmf\Service::M('module', 'module')->update_ueditor($site);
         }
-
 
         // 为后台域名移动编辑器目录
         if (dr_is_app('safe')) {
@@ -487,7 +449,7 @@ class Cache extends \Phpcmf\Model {
     }
 
     // 错误输出
-    protected function _error_msg($msg) {
+    public function _error_msg($msg) {
         echo dr_array2string(dr_return_data(0, $msg));exit;
     }
 

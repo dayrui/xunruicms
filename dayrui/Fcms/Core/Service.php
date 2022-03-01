@@ -317,28 +317,28 @@ class Service {
             switch ($className) {
 
                 case 'Content':
-                    if (!dr_is_app('module')) {
+                    if (!IS_USE_MODULE) {
                         \dr_exit_msg(0, '没有安装「内容系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Search':
-                    if (!dr_is_app('module')) {
+                    if (!IS_USE_MODULE) {
                         \dr_exit_msg(0, '没有安装「内容系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Category':
-                    if (!dr_is_app('module')) {
+                    if (!IS_USE_MODULE) {
                         \dr_exit_msg(0, '没有安装「内容系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Module':
-                    if (!dr_is_app('module')) {
+                    if (!IS_USE_MODULE) {
                         \dr_exit_msg(0, '没有安装「内容系统」插件');
                     }
                     $namespace = 'module';
@@ -352,7 +352,7 @@ class Service {
                     break;
             }
         } else {
-            if (in_array($className, ['Content', 'Search'])
+            if (IS_USE_MODULE && in_array($className, ['Content', 'Search'])
                 && !is_file(dr_get_app_dir($namespace).'Models/'.$className.'.php')) {
                 $namespace = 'module';
             }

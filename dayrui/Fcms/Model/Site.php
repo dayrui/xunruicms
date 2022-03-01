@@ -219,57 +219,9 @@ class Site extends \Phpcmf\Model {
             }
         }
 
-        // 用户中心域名
-        /*
-        if (dr_is_app('member')) {
-            $member = $this->db->table('member_setting')->where('name', 'domain')->get()->getRowArray();
-            $member && $member['value'] = dr_string2array($member['value']);
-            if ($value) {
-                $member['value'][SITE_ID]['domain'] = $value['member_domain'];
-                $member['value'][SITE_ID]['mobile_domain'] = $value['member_mobile_domain'];
-                $this->db->table('member_setting')->replace([
-                    'name' => 'domain',
-                    'value' => dr_array2string($member['value'])
-                ]);
-            }
-            $data['member_domain'] = $member['value'][SITE_ID]['domain'];
-            $data['member_mobile_domain'] = $member['value'][SITE_ID]['mobile_domain'];
-        }*/
-
         // 模块域名
         $my = [];
-        $module = $this->table('module')->getAll();
-        foreach ($module as $t) {
-            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                continue;
-            }
-            $cfg = require APPSPATH.ucfirst($t['dirname']).'/Config/App.php';
-            $t['site'] = dr_string2array($t['site']);
-            $my[$t['dirname']] = [
-                'share' => $t['share'],
-                'name' => dr_lang($cfg['name']),
-                'error' => '',
-            ];
-            if ($t['share']) {
-                $my[$t['dirname']]['error'] = dr_lang('共享模块不支持绑定');
-                continue;
-            }
-            if ($t['site'][SITE_ID]) {
-                if ($value) {
-                    $t['site'][SITE_ID]['domain'] = strtolower((string)$value['module_'.$t['dirname']]);
-                    $t['site'][SITE_ID]['mobile_domain'] = $value['module_mobile_'.$t['dirname']];
-                    $t['site'][SITE_ID]['webpath'] = $value['webpath_'.$t['dirname']];
-                    $this->db->table('module')->where('id', $t['id'])->update([
-                        'site' => dr_array2string($t['site'])
-                    ]);
-                }
-                $data['module_'.$t['dirname']] = strtolower((string)$t['site'][SITE_ID]['domain']);
-                $data['module_mobile_'.$t['dirname']] = strtolower((string)$t['site'][SITE_ID]['mobile_domain']);
-                $data['webpath_'.$t['dirname']] = $t['site'][SITE_ID]['webpath'];
-            } else {
-                $my[$t['dirname']]['error'] = dr_lang('当前站点未安装');
-            }
-        }
+        list($my, $data) = \Phpcmf\Service::M('module', 'module')->domian($value, $my, $data);
 
         return [$my, $data];
     }
@@ -382,53 +334,7 @@ class Site extends \Phpcmf\Model {
             }
 
             if (IS_USE_MODULE) {
-                // 循环模块域名
-                !$module && $module = $this->table('module')->getAll();
-                if ($module) {
-                    foreach ($module as $t) {
-                        if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                            continue;
-                        }
-                        $t['site'] = dr_string2array($t['site']);
-                        if (!$t['site']) {
-                            // 表示没有进行站点安装
-                            continue;
-                        }
-                        // 循环站点信息
-                        foreach ($t['site'] as $sid => $v) {
-                            if (!$t['share']) {
-                                // 独立模块才有域名
-                                $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
-                                if ($v['domain']) {
-                                    $site_domain[$v['domain']] = $sid;
-                                    $app_domain[$v['domain']] = $t['dirname'];
-                                    $sso_domain[] = $v['domain'];
-                                    // 网站路径
-                                    if ($v['webpath']) {
-                                        $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
-                                    }
-                                }
-                                if ($v['mobile_domain']) {
-                                    $site_domain[$v['mobile_domain']] = $sid;
-                                    $app_domain[$v['mobile_domain']] = $t['dirname'];
-                                    $client_domain[$v['domain']] = $v['mobile_domain'];
-                                    $sso_domain[] = $v['mobile_domain'];
-                                }
-                            }
-                            $module_cache_file[] = 'module-'.$sid.'-'.$t['dirname'].'.cache'; // 删除多余的模块缓存文件
-                        }
-                    }
-                }
-                // 删除多余的模块缓存文件
-                if ($fp = @opendir(WRITEPATH.'data')) {
-                    while (FALSE !== ($file = readdir($fp))) {
-                        $pos = strpos($file, 'module-');
-                        if ($pos !== false && $pos === 0 && !dr_in_array($file, $module_cache_file)) {
-                            unlink(WRITEPATH.'data/'.$file);
-                        }
-                    }
-                    closedir($fp);
-                }
+                list($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file) = \Phpcmf\Service::M('module', 'module')->sync_site_cache($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file);
             }
         }
 

@@ -73,7 +73,6 @@ class Home extends \Phpcmf\Common {
 		$this->goto_404_page($msg);
 	}
 
-
 	// 生成静态
 	public function html() {
 

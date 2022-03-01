@@ -712,8 +712,220 @@ class Module extends \Phpcmf\Model {
         return $cache;
     }
 
+    public function sync_site_cache($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file) {
+        // 循环模块域名
+        !$module && $module = $this->table('module')->getAll();
+        if ($module) {
+            foreach ($module as $t) {
+                if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                    continue;
+                }
+                $t['site'] = dr_string2array($t['site']);
+                if (!$t['site']) {
+                    // 表示没有进行站点安装
+                    continue;
+                }
+                // 循环站点信息
+                foreach ($t['site'] as $sid => $v) {
+                    if (!$t['share']) {
+                        // 独立模块才有域名
+                        $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
+                        if ($v['domain']) {
+                            $site_domain[$v['domain']] = $sid;
+                            $app_domain[$v['domain']] = $t['dirname'];
+                            $sso_domain[] = $v['domain'];
+                            // 网站路径
+                            if ($v['webpath']) {
+                                $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
+                            }
+                        }
+                        if ($v['mobile_domain']) {
+                            $site_domain[$v['mobile_domain']] = $sid;
+                            $app_domain[$v['mobile_domain']] = $t['dirname'];
+                            $client_domain[$v['domain']] = $v['mobile_domain'];
+                            $sso_domain[] = $v['mobile_domain'];
+                        }
+                    }
+                    $module_cache_file[] = 'module-'.$sid.'-'.$t['dirname'].'.cache'; // 删除多余的模块缓存文件
+                }
+            }
+        }
+        // 删除多余的模块缓存文件
+        if ($fp = @opendir(WRITEPATH.'data')) {
+            while (FALSE !== ($file = readdir($fp))) {
+                $pos = strpos($file, 'module-');
+                if ($pos !== false && $pos === 0 && !dr_in_array($file, $module_cache_file)) {
+                    unlink(WRITEPATH.'data/'.$file);
+                }
+            }
+            closedir($fp);
+        }
+
+        return [$module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file];
+    }
+    public function domian($value, $my, $data) {
+
+        $module = $this->table('module')->getAll();
+        foreach ($module as $t) {
+            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                continue;
+            }
+            $cfg = require APPSPATH.ucfirst($t['dirname']).'/Config/App.php';
+            $t['site'] = dr_string2array($t['site']);
+            $my[$t['dirname']] = [
+                'share' => $t['share'],
+                'name' => dr_lang($cfg['name']),
+                'error' => '',
+            ];
+            if ($t['share']) {
+                $my[$t['dirname']]['error'] = dr_lang('共享模块不支持绑定');
+                continue;
+            }
+            if ($t['site'][SITE_ID]) {
+                if ($value) {
+                    $t['site'][SITE_ID]['domain'] = strtolower((string)$value['module_'.$t['dirname']]);
+                    $t['site'][SITE_ID]['mobile_domain'] = $value['module_mobile_'.$t['dirname']];
+                    $t['site'][SITE_ID]['webpath'] = $value['webpath_'.$t['dirname']];
+                    $this->db->table('module')->where('id', $t['id'])->update([
+                        'site' => dr_array2string($t['site'])
+                    ]);
+                }
+                $data['module_'.$t['dirname']] = strtolower((string)$t['site'][SITE_ID]['domain']);
+                $data['module_mobile_'.$t['dirname']] = strtolower((string)$t['site'][SITE_ID]['mobile_domain']);
+                $data['webpath_'.$t['dirname']] = $t['site'][SITE_ID]['webpath'];
+            } else {
+                $my[$t['dirname']]['error'] = dr_lang('当前站点未安装');
+            }
+        }
+
+        return [$my, $data];
+    }
+
+    // 编辑器更新
+    public function update_ueditor($site) {
+        $module = $this->table('module')->getAll();
+        foreach ($module as $t) {
+            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                continue;
+            } elseif ($t['share']) {
+                continue;
+            }
+            $t['site'] = dr_string2array($t['site']);
+            foreach ($site as $r) {
+                $siteid = $r['id'];
+                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                    $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
+                    // 复制百度编辑器到当前目录
+                    \Phpcmf\Service::M('cache')->cp_ueditor_file($path);
+                    // 复制百度编辑器到移动端项目
+                    \Phpcmf\Service::M('cache')->cp_ueditor_file($path.'mobile/');
+                }
+            }
+        }
+    }
+
+    // 重建子站配置文件
+    public function update_site_config($site) {
+        $cache = $this->table('module')->getAll();
+        foreach ($cache as $t) {
+            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                continue;
+            } elseif ($t['share']) {
+                continue;
+            }
+            $t['site'] = dr_string2array($t['site']);
+            foreach ($site as $siteid) {
+                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                    $rt = \Phpcmf\Service::M('cache')->update_webpath('Module_Domain', $t['site'][$siteid]['webpath'], [
+                        'SITE_ID' => $siteid,
+                        'MOD_DIR' => $t['dirname'],
+                    ], IS_USE_MODULE.'Temps/');
+                    if ($rt) {
+                        \Phpcmf\Service::M('cache')->_error_msg('模块['.$t['site'][$siteid]['domain'].']: '.$rt);
+                    }
+                }
+            }
+        }
+    }
+
+    public function paytable($paytable, $module, $siteid) {
+
+        !$module && $module = $this->table('module')->getAll();
+        if ($module) {
+            $is_module_form = $this->is_table_exists('module_form');
+            foreach ($module as $t) {
+                // 模块主表
+                $table = dr_module_table_prefix($t['dirname'], $siteid);
+                $prefix = $this->dbprefix($table);
+                // 判断是否存在表
+                if (!$this->db->tableExists($prefix)) {
+                    continue;
+                }
+                $main_field = $this->db->getFieldNames($prefix);
+                if ($main_field) {
+                    // 付款表
+                    $paytable['module-'.$t['id']] = [
+                        'table' => $table,
+                        'name' => 'title',
+                        'thumb' => 'thumb',
+                        'url' => dr_web_prefix('index.php?s='.$t['dirname'].'&c=show&id='),
+                        'username' => 'author',
+                    ];
+                    // 模块表
+                    $cache[$prefix] = $main_field;
+                    // 模块附表
+                    $table = $prefix.'_data_0';
+                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                    // 栏目模型主表
+                    $table = $prefix.'_category_data';
+                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                    // 模块点击量表
+                    $table = $prefix.'_hits';
+                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                    // 模块评论表
+                    $table = $prefix.'_comment';
+                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                    // 模块表单
+                    if ($is_module_form) {
+                        $form = $this->table('module_form')->where('module', $t['dirname'])->order_by('id ASC')->getAll();
+                        if ($form) {
+                            foreach ($form as $f) {
+                                // 主表
+                                $table = $prefix . '_form_' . $f['table'];
+                                $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                                // 付款表
+                                $paytable['mform-' . $t['dirname'] . '-' . $f['id']] = [
+                                    'table' => $table,
+                                    'name' => 'title',
+                                    'thumb' => 'thumb',
+                                    'url' => dr_web_prefix('index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id='),
+                                    'username' => 'author',
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $paytable;
+    }
+
     // 缓存
     public function cache($siteid = SITE_ID, $module = null) {
+
+       if ($siteid == 1) {
+           // 规则缓存
+           $data = $this->table('urlrule')->getAll();
+           $cache = [];
+           if ($data) {
+               foreach ($data as $t) {
+                   $t['value'] = dr_string2array($t['value']);
+                   $cache[$t['id']] = $t;
+               }
+           }
+
+           \Phpcmf\Service::L('cache')->set_file('urlrule', $cache);
+       }
 
         // 重置缓存
         $this->cat_share_lock[$siteid] = 1;

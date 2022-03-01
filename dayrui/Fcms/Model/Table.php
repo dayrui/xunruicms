@@ -16,84 +16,12 @@ class Table extends \Phpcmf\Model {
         $paytable = []; // 付款表名
         // 生成模块表结构
         if (IS_USE_MODULE) {
-            !$module && $module = $this->table('module')->getAll();
-            if ($module) {
-                $is_module_form = $this->is_table_exists('module_form');
-                foreach ($module as $t) {
-                    // 模块主表
-                    $table = dr_module_table_prefix($t['dirname'], $siteid);
-                    $prefix = $this->dbprefix($table);
-                    // 判断是否存在表
-                    if (!$this->db->tableExists($prefix)) {
-                        continue;
-                    }
-                    $main_field = $this->db->getFieldNames($prefix);
-                    if ($main_field) {
-                        // 付款表
-                        $paytable['module-'.$t['id']] = [
-                            'table' => $table,
-                            'name' => 'title',
-                            'thumb' => 'thumb',
-                            'url' => dr_web_prefix('index.php?s='.$t['dirname'].'&c=show&id='),
-                            'username' => 'author',
-                        ];
-                        // 模块表
-                        $cache[$prefix] = $main_field;
-                        // 模块附表
-                        $table = $prefix.'_data_0';
-                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                        // 栏目模型主表
-                        $table = $prefix.'_category_data';
-                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                        // 模块点击量表
-                        $table = $prefix.'_hits';
-                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                        // 模块评论表
-                        $table = $prefix.'_comment';
-                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                        // 模块表单
-                        if ($is_module_form) {
-                            $form = $this->table('module_form')->where('module', $t['dirname'])->order_by('id ASC')->getAll();
-                            if ($form) {
-                                foreach ($form as $f) {
-                                    // 主表
-                                    $table = $prefix . '_form_' . $f['table'];
-                                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                                    // 付款表
-                                    $paytable['mform-' . $t['dirname'] . '-' . $f['id']] = [
-                                        'table' => $table,
-                                        'name' => 'title',
-                                        'thumb' => 'thumb',
-                                        'url' => dr_web_prefix('index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id='),
-                                        'username' => 'author',
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            $paytable = \Phpcmf\Service::M('module', 'module')->paytable($paytable, $module, $siteid);
         }
 
         // 网站表单
         if ($this->is_table_exists($siteid.'_form')) {
-            $form = $this->table($siteid.'_form')->getAll();
-            if ($form) {
-                foreach ($form as $t) {
-                    // 主表
-                    $table = $siteid.'_form_'.$t['table'];
-                    $prefix = $this->dbprefix($table);
-                    $cache[$prefix] = $this->db->getFieldNames($prefix);
-                    // 付款表
-                    $paytable['form-'.$siteid.'-'.$t['id']] = [
-                        'table' => $table,
-                        'name' => 'title',
-                        'thumb' => 'thumb',
-                        'url' => dr_web_prefix('index.php?s=form&c='.$t['table'].'&m=show&id='),
-                        'username' => 'author',
-                    ];
-                }
-            }
+            $paytable = \Phpcmf\Service::M('form', 'form')->paytable($paytable, $siteid);
         }
 
         // 会员表
