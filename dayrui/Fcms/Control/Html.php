@@ -6,8 +6,7 @@
  **/
 
 // 共享栏目生成静态
-class Html extends \Phpcmf\Home\Module
-{
+class Html extends \Phpcmf\Home\Module {
 
 	// 生成栏目
 	public function category() {
@@ -29,5 +28,4 @@ class Html extends \Phpcmf\Home\Module
 		parent::_Show_Html_File();
 	}
 
-	
 }

@@ -33,7 +33,6 @@ class Autoload extends AutoloadConfig
             'Phpcmf\Library'                => CMSPATH.'Library',
             'Phpcmf\Field'                  => CMSPATH.'Field',
             'Phpcmf\ThirdParty'             => FCPATH.'ThirdParty',
-            'Phpcmf\Admin'                  => CMSPATH.'Extend/Admin',
 
             'My\Field'                      => MYPATH.'Field',
             'My\Library'                	=> MYPATH.'Library',
@@ -42,14 +41,21 @@ class Autoload extends AutoloadConfig
 		];
 
 		$classmap = [
-
             'Phpcmf\App'                  => CMSPATH.'Core/App.php',
 		    'Phpcmf\Table'                => CMSPATH.'Core/Table.php',
 		    'Phpcmf\Model'                => CMSPATH.'Core/Model.php',
 		    'Phpcmf\View'                 => CMSPATH.'Core/View.php',
             'Phpcmf\Common'               => CMSPATH.'Core/Common.php',
-            'Phpcmf\Home\Module'          => CMSPATH.'Extend/Home/Module.php',
+            'Phpcmf\Admin\File'           => CMSPATH.'Extend/File.php',
         ];
+
+        if (IS_USE_MODULE) {
+            $classmap['Phpcmf\Home\Module'] = IS_USE_MODULE.'Extends/Home/Module.php';
+            $classmap['Phpcmf\Admin\Config'] = IS_USE_MODULE.'Extends/Admin/Config.php';
+            $classmap['Phpcmf\Admin\Module'] = IS_USE_MODULE.'Extends/Admin/Module.php';
+            $classmap['Phpcmf\Model\Content'] = IS_USE_MODULE.'Models/Content.php';
+            $classmap['Phpcmf\Admin\Category'] = IS_USE_MODULE.'Extends/Admin/Category.php';
+        }
 
 		if (IS_USE_MEMBER) {
 		    $classmap['Phpcmf\Member\Module'] = IS_USE_MEMBER.'Extends/Module.php';

@@ -344,7 +344,7 @@ $db[\'default\']	= [
                                 'SYS_URL_PREG'                  => '1',
                                 'SYS_CRON_AUTH'                 => '0',
                                 'SYS_CSRF'                      => '0',
-                                'SYS_CSRF_TIME'                      => '0',
+                                'SYS_CSRF_TIME'                 => '0',
                                 'SYS_301'                       => '1',
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
                                 'SYS_HTTPS'                     => $ssl,
@@ -376,9 +376,6 @@ $db[\'default\']	= [
                                 $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
                             }
                             $this->query($sql);
-                            if (is_file(MYPATH.'Config/Install.php')) {
-                                require MYPATH.'Config/Install.php';
-                            }
 
                             $errorlog = file_get_contents(WRITEPATH.'install.error');
                             if ($errorlog && strlen($errorlog) > 10) {

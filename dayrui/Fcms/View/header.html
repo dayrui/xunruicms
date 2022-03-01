@@ -10,7 +10,7 @@
     <div class="page-content-wrapper">
         <div class="page-content page-content3 mybody-nheader main-content  {if isset($_GET['is_iframe']) && $_GET['is_iframe'] && !isset($_GET['is_menu'])} main-content2{/if}">
             {if (!isset($_GET['hide_menu']) || !$_GET['hide_menu']) || isset($_GET['is_menu'])}
-                {if (isset($menu) && $menu && !$is_ajax) || isset($_GET['is_menu'])}
+                {if (isset($menu) && $menu && !$_GET['is_iframe']) || isset($_GET['is_menu'])}
                 <div class="page-bar">
                     <ul class="page-breadcrumb">
                         {$menu}

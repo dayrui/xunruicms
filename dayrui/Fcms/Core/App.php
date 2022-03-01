@@ -6,11 +6,9 @@
  **/
 
 // 应用公共继承类
-class App extends \Phpcmf\Common
-{
+class App extends \Phpcmf\Common {
 
-    public function __construct(...$params)
-    {
+    public function __construct(...$params) {
         parent::__construct($params);
         if (!dr_is_app(APP_DIR)) {
             if (is_file(APPPATH.'Config/App.php')) {

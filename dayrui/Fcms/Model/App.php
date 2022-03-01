@@ -87,7 +87,7 @@ class App extends \Phpcmf\Model {
         } elseif ($first_uri) {
             $url = dr_url($first_uri);
         } elseif (isset($config['ftype']) && $config['ftype'] == 'module') {
-            $url = dr_url('module/index');
+            $url = dr_url('module/module/index');
         } else {
             $url = dr_url('cloud/local');
         }

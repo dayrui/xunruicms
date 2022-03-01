@@ -61,12 +61,12 @@ class Cache extends \Phpcmf\Model {
     }
 
     // 同步更新缓存
-    // \Phpcmf\Service::M('cache')->sync_cache(); $is_site 表示是否作为站点来更新缓存
+    // \Phpcmf\Service::M('cache')->sync_cache(); $is_site 表示是否作为项目来更新缓存
     public function sync_cache($name = '', $namepspace = '', $is_site_param = 0) {
 
         if (!$this->is_sync_cache) {
             $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
-            $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+            dr_is_app('module') && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
             \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
         }
 
@@ -75,7 +75,7 @@ class Cache extends \Phpcmf\Model {
                 // 普通缓存执行
                 \Phpcmf\Service::M($name, $namepspace)->cache();
             } else {
-                // 传入站点参数
+                // 传入项目参数
                 \Phpcmf\Service::M($name, $namepspace)->cache(SITE_ID);
             }
         }
@@ -103,11 +103,11 @@ class Cache extends \Phpcmf\Model {
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
 
         // 全局缓存
-        foreach (['auth', 'email', 'urlrule', 'member', 'attachment', 'system'] as $m) {
+        foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
             \Phpcmf\Service::M($m)->cache();
         }
 
-        // 按站点更新的缓存
+        // 按项目更新的缓存
         $cache = [];
 
         if (is_file(MYPATH.'/Config/Cache.php')) {
@@ -129,7 +129,7 @@ class Cache extends \Phpcmf\Model {
         foreach ($site_cache as $t) {
 
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+            dr_is_app('module') && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
             foreach ($cache as $m => $namespace) {
                 \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
@@ -149,7 +149,7 @@ class Cache extends \Phpcmf\Model {
             }
 
             // 记录日志
-            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[站点#'.$t['id'].']缓存： '.implode(' - ', $apps));
+            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[项目#'.$t['id'].']缓存： '.implode(' - ', $apps));
         }
 
         \Phpcmf\Service::M('menu')->cache();
@@ -161,7 +161,7 @@ class Cache extends \Phpcmf\Model {
     public function update_search_index() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-        $module_cache = $this->table('module')->getAll();
+        dr_is_app('module') && $module_cache = $this->table('module')->getAll();
         if (!$module_cache) {
             return;
         }
@@ -264,7 +264,7 @@ class Cache extends \Phpcmf\Model {
                     'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
                 ]);
                 if ($rt) {
-                    $this->_error_msg('站点['.$t['domain'].']: '.$rt);
+                    $this->_error_msg('项目['.$t['domain'].']: '.$rt);
                 }
                 $path = rtrim($t['setting']['webpath'], '/').'/';
             } else {
@@ -280,7 +280,7 @@ class Cache extends \Phpcmf\Model {
                             'SITE_FIX_WEB_DIR' => $t['id'] > 1 && $t['setting']['webpath'] && strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
                         ]);
                         if ($rt) {
-                            $this->_error_msg('站点['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
+                            $this->_error_msg('项目['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
                         }
                     }
                 }
@@ -331,7 +331,7 @@ class Cache extends \Phpcmf\Model {
         return;
     }
 
-    // 更新站点
+    // 更新项目
     public function update_webpath($name, $path, $value) {
 
         if (!$path) {
@@ -399,7 +399,7 @@ class Cache extends \Phpcmf\Model {
         // 复制百度编辑器到当前目录
         $this->cp_ueditor_file($path);
 
-        // 复制百度编辑器到移动端站点
+        // 复制百度编辑器到移动端项目
         if (is_dir($path.'mobile')) {
             $this->cp_ueditor_file($path.'mobile/');
         }
@@ -420,7 +420,7 @@ class Cache extends \Phpcmf\Model {
             }
             // 复制百度编辑器到当前目录
             $this->cp_ueditor_file($path);
-            // 复制百度编辑器到移动端站点
+            // 复制百度编辑器到移动端项目
             $this->cp_ueditor_file($path.'mobile/');
             if ($t['setting']['client']) {
                 foreach ($t['setting']['client'] as $c) {
@@ -446,7 +446,7 @@ class Cache extends \Phpcmf\Model {
                     $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
                     // 复制百度编辑器到当前目录
                     $this->cp_ueditor_file($path);
-                    // 复制百度编辑器到移动端站点
+                    // 复制百度编辑器到移动端项目
                     $this->cp_ueditor_file($path.'mobile/');
                 }
             }

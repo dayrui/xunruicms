@@ -1173,38 +1173,6 @@ function dr_linkage_level($code) {
     return (int)\Phpcmf\Service::L('cache')->get_file('level', 'linkage/'.SITE_ID.'_'.$code.'/');
 }
 
-/**
- * 单页面包屑导航
- *
- * @param   intval  $id
- * @param   string  $symbol
- * @param   string  $html
- * @return  string
- */
-function dr_page_catpos($id, $symbol = ' > ', $html = '') {
-
-    if (!$id) {
-        return '';
-    }
-
-    $page = \Phpcmf\Service::C()->get_cache('page-'.SITE_ID, 'data');
-    if (!isset($page[$id])) {
-        return '';
-    }
-
-    $name = [];
-    $array = explode(',', $page[$id]['pids']);
-    $array[] = $id;
-
-    foreach ($array as $i) {
-        if ($i && $page[$i]) {
-            $murl = dr_url_prefix($page[$i]['url']);
-            $name[] = $html ? str_replace(['[url]', '[name]'], [$murl, $page[$i]['name']], $html) : "<a href=\"{$murl}\">{$page[$i]['name']}</a>";
-        }
-    }
-
-    return implode($symbol, array_unique($name));
-}
 
 /**
  * 支付表单调用
@@ -1369,15 +1337,6 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
     return $file ? $file : ROOT_THEME_PATH.'assets/images/nopic.gif';
 }
 
-// 评论名称
-function dr_comment_cname($name) {
-
-    if (!$name) {
-        return dr_lang('评论');
-    }
-
-    return dr_lang($name);
-}
 
 /**
  * 文件真实地址
@@ -2004,51 +1963,6 @@ if (! function_exists('dr_is_image')) {
 }
 
 /**
- * 单页层次关系
- *
- * @param   intval  $id
- * @param   string  $symbol
- * @return  string
- */
-function dr_get_page_pname($id, $symbol = '_', $page) {
-
-    if (!$page[$id]['pids']) {
-        return $page[$id]['name'];
-    }
-
-    $name = [];
-    $array = explode(',', $page[$id]['pids']);
-
-    foreach ($array as $i) {
-        $i && $page[$i] && $name[] = $page[$i]['name'];
-    }
-
-    $name[] = $page[$id]['name'];
-
-    $name = array_unique($name);
-
-    krsort($name);
-
-    return implode($symbol, $name);
-}
-
-
-/**
- * 生成静态文件名
- */
-function dr_to_html_file($url, $root = WEBPATH) {
-
-    if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
-        return '';
-    } elseif (strpos($url, 'index.php') !== false) {
-        return '';
-    }
-
-    return dr_format_html_file($url, $root);
-}
-
-
-/**
  * 格式化复选框\单选框\选项值 字符串转换为数组
  */
 function dr_format_option_array($value) {
@@ -2434,130 +2348,6 @@ function dr_replace_emotion($content) {
     return $content;
 }
 
-// 评论表情
-function dr_comment_emotion() {
-
-    // 可用表情
-    $emotion = [];
-    foreach (array (
-                 0 => 'dangao',
-                 1 => 'qiu',
-                 2 => 'fadou',
-                 3 => 'tiaopi',
-                 4 => 'fadai',
-                 5 => 'xinsui',
-                 6 => 'ruo',
-                 7 => 'jingkong',
-                 8 => 'quantou',
-                 9 => 'gangga',
-                 10 => 'da',
-                 11 => 'touxiao',
-                 12 => 'ciya',
-                 13 => 'liulei',
-                 14 => 'fendou',
-                 15 => 'kiss',
-                 16 => 'aoman',
-                 17 => 'kulou',
-                 18 => 'yueliang',
-                 19 => 'lenghan',
-                 20 => 'kun',
-                 21 => 'meng',
-                 22 => 'shenma',
-                 23 => 'peifu',
-                 24 => 'qinqin',
-                 25 => 'nanguo',
-                 26 => 'hufen',
-                 27 => 'shuai',
-                 28 => 'jingya',
-                 29 => 'cahan',
-                 30 => 'shengli',
-                 31 => 'qioudale',
-                 32 => 'cheer',
-                 33 => 'ketou',
-                 34 => 'shandian',
-                 35 => 'haqian',
-                 36 => 'jidong',
-                 37 => 'zaijian',
-                 38 => 'kafei',
-                 39 => 'love',
-                 40 => 'pizui',
-                 41 => 'huitou',
-                 42 => 'tiao',
-                 43 => 'liwu',
-                 44 => 'zhutou',
-                 45 => 'e',
-                 46 => 'qiang',
-                 47 => 'youtaiji',
-                 48 => 'zuohengheng',
-                 49 => 'huaixiao',
-                 50 => 'gouyin',
-                 51 => 'keai',
-                 52 => 'tiaosheng',
-                 53 => 'daku',
-                 54 => 'weiqu',
-                 55 => 'lanqiu',
-                 56 => 'zhemo',
-                 57 => 'xia',
-                 58 => 'fan',
-                 59 => 'yun',
-                 60 => 'youhengheng',
-                 61 => 'chong',
-                 62 => 'pijiu',
-                 63 => 'dajiao',
-                 64 => 'dao',
-                 65 => 'diaoxie',
-                 66 => 'liuhan',
-                 67 => 'haha',
-                 68 => 'xu',
-                 69 => 'zhuakuang',
-                 70 => 'zhuanquan',
-                 71 => 'no',
-                 72 => 'ok',
-                 73 => 'feiwen',
-                 74 => 'taiyang',
-                 75 => 'woshou',
-                 76 => 'zuqiu',
-                 77 => 'xigua',
-                 78 => 'hua',
-                 79 => 'tu',
-                 80 => 'tiaowu',
-                 81 => 'ma',
-                 82 => 'baiyan',
-                 83 => 'zhadan',
-                 84 => 'weixiao',
-                 85 => 'wen',
-                 86 => 'dabing',
-                 87 => 'xianwen',
-                 88 => 'shuijiao',
-                 89 => 'yongbao',
-                 90 => 'kelian',
-                 91 => 'pingpang',
-                 92 => 'danu',
-                 93 => 'geili',
-                 94 => 'wabi',
-                 95 => 'kuaikule',
-                 96 => 'zuotaiji',
-                 97 => 'tuzi',
-                 98 => 'bishi',
-                 99 => 'caidao',
-                 100 => 'dabian',
-                 101 => 'fanu',
-                 102 => 'guzhang',
-                 103 => 'se',
-                 104 => 'chajin',
-                 105 => 'bizui',
-                 106 => 'deyi',
-                 107 => 'ku',
-                 108 => 'huishou',
-                 109 => 'yinxian',
-                 110 => 'haixiu',
-             ) as $t) {
-        $emotion[$t] = ROOT_THEME_PATH.'assets/comment/emotions/'.$t.'.gif';
-    }
-
-    return $emotion;
-}
-
 /**
  * 基于本地存储的加解密算法
  */
@@ -2654,45 +2444,6 @@ function dr_show_stars($num, $starthreshold = 4) {
     }
 
     return $str;
-}
-
-/**
- * 模块评论js调用
- *
- * @param   intval  $id
- * @return  string
- */
-function dr_module_comment($dir, $id, $url = '') {
-    if (defined('MODULE_MYSHOW')) {
-        return '';
-    }
-    $url = dr_web_prefix("index.php?s=".$dir."&c=comment&m=index&id={$id}&".$url);
-    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
-    return "<div id=\"dr_module_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_module_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });$.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_module_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_module_comment_{$id}(0, 1); </script>";
-}
-
-/**
- * 模块表单评论js调用
- *
- * @param   intval  $id
- * @return  string
- */
-function dr_mform_comment($dir, $fid, $id, $url = '') {
-    $url = dr_web_prefix("index.php?s=".$dir."&c=".$fid."_comment&m=index&id={$id}&".$url);
-    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
-    return "<div id=\"dr_mform_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_mform_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 });  $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_mform_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll();  var msg = HttpRequest.responseText;  ".$error."  } }); } dr_ajax_mform_{$fid}_comment_{$id}(0, 1); </script>";
-}
-
-/**
- * 网站表单评论js调用
- *
- * @param   intval  $id
- * @return  string
- */
-function dr_form_comment($fid, $id, $url = '') {
-    $url = dr_web_prefix("index.php?s=form&c=".$fid."_comment&m=index&id={$id}&".$url);
-    $error = IS_DEV ? 'layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  });' : 'alert("评论调用函数返回错误："+msg);';
-    return "<div id=\"dr_form_{$fid}_comment_{$id}\"></div><script type=\"text/javascript\"> function dr_ajax_form_{$fid}_comment_{$id}(type, page) { var index = layer.load(2, { time: 10000 }); $.ajax({type: \"GET\", url: \"{$url}&type=\"+type+\"&page=\"+page+\"&\"+Math.random(), dataType:\"jsonp\", success: function (data) { layer.close(index); if (data.code) { $(\"#dr_form_{$fid}_comment_{$id}\").html(data.msg); } else { dr_tips(0, data.msg); } }, error: function(HttpRequest, ajaxOptions, thrownError) { layer.closeAll(); var msg = HttpRequest.responseText; ".$error." } }); } dr_ajax_form_{$fid}_comment_{$id}(0, 1);</script>";
 }
 
 /**
@@ -3460,52 +3211,6 @@ function dr_square_point($lng, $lat, $distance = 0.5){
     );
 }
 
-// 格式化生成文件
-function dr_format_html_file($file, $root = WEBPATH) {
-
-    if (strpos($file, 'http://') !== false) {
-        return '';
-    }
-
-    $dir = dirname($file);
-    $nfile = basename($file);
-    if ($dir != '.' && !is_dir($root.$dir)) {
-        dr_mkdirs($root.$dir, TRUE);
-    }
-
-    $hfile = str_replace('./', '', $root.$dir.'/'.$nfile);
-    $hfile = str_replace('////', '/', $hfile);
-    $hfile = str_replace('///', '/', $hfile);
-    $hfile = str_replace('//', '/', $hfile);
-
-
-    // 判断是否为目录形式
-    if (strpos($nfile, '.html') === FALSE
-        && strpos($nfile, '.htm') === FALSE
-        && strpos($nfile, '.shtml') === FALSE) {
-        $hfile = rtrim($hfile, '/').'/';
-        mkdir ($hfile,0777,true);
-    }
-
-    // 如果是目录就生成一个index.html
-    if (is_dir($hfile)) {
-        $dir.= '/'.$nfile;
-        $nfile = 'index.html';
-        $hfile = str_replace('./', '', $root.$dir.'/'.$nfile);
-    }
-
-    return $hfile;
-}
-
-// 删除静态文件
-function dr_delete_html_file($url, $root = WEBPATH) {
-
-    $file = dr_format_html_file($url, $root);
-    if (is_file($file)) {
-        unlink($file);
-    }
-}
-
 // 获取当前模板目录
 function dr_tpl_path($is_member = IS_MEMBER) {
 
@@ -3919,32 +3624,6 @@ function dr_clear_emoji($str){
     return dr_clear_empty(dr_html2emoji(preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '';}, $str)));
 }
 
-/**
- * 判断是否支持回复
- * $reply   评论模式
- * $member   当前用户数组
- * $cuid   评论主题作者uid
- */
-function dr_comment_is_reply($reply, $member, $cuid) {
-
-    if ($reply == 1) {
-        // 都允许
-        return 1;
-    } elseif ($reply == 2) {
-        // 仅自己
-        if ($member['uid'] == $cuid) {
-            // 自己的评论
-            return 1;
-        } elseif ($member['is_admin']) {
-            return 1; // 管理员可以回复
-        } else {
-            return 0;
-        }
-    } else {
-        // 禁止所有
-        return 0;
-    }
-}
 
 /**
  * 将同步代码转为数组

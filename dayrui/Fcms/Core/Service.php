@@ -101,6 +101,29 @@ class Service {
             static::$apps = $filedata;
         }
 
+        if (IS_XRDEV) {
+            $source_dir = APPSPATH;
+            if ($fp = opendir($source_dir)) {
+                $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+                while (FALSE !== ($file = readdir($fp))) {
+                    if ($file === '.' OR $file === '..'
+                        OR $file[0] === '.'
+                        OR !is_dir($source_dir.$file)) {
+                        continue;
+                    }
+                    if ($is_install && !is_file($source_dir.$file . '/install.lock')) {
+                        continue;
+                    }
+                    if (is_dir($source_dir.$file)) {
+                        $filedata[$file] = dr_get_app_dir($file);
+                    }
+                }
+                closedir($fp);
+
+                static::$apps = $filedata;
+            }
+        }
+
         return static::$apps;
     }
 
@@ -290,11 +313,49 @@ class Service {
         }
 
         $className = ucfirst($name);
-        if ($className == 'Pay' && !$namespace) {
-            if (!dr_is_app('pay')) {
-                \dr_exit_msg(0, '没有安装「支付系统」插件');
+        if (!$namespace) {
+            switch ($className) {
+
+                case 'Content':
+                    if (!dr_is_app('module')) {
+                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                    }
+                    $namespace = 'module';
+                    break;
+
+                case 'Search':
+                    if (!dr_is_app('module')) {
+                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                    }
+                    $namespace = 'module';
+                    break;
+
+                case 'Category':
+                    if (!dr_is_app('module')) {
+                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                    }
+                    $namespace = 'module';
+                    break;
+
+                case 'Module':
+                    if (!dr_is_app('module')) {
+                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                    }
+                    $namespace = 'module';
+                    break;
+
+                case 'Pay':
+                    if (!dr_is_app('pay')) {
+                        \dr_exit_msg(0, '没有安装「支付系统」插件');
+                    }
+                    $namespace = 'pay';
+                    break;
             }
-            $namespace = 'pay';
+        } else {
+            if (in_array($className, ['Content', 'Search'])
+                && !is_file(dr_get_app_dir($namespace).'Models/'.$className.'.php')) {
+                $namespace = 'module';
+            }
         }
 
         list($classFile, $extendFile, $appFile) = self::_get_class_file($name, $namespace, 'Model');

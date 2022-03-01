@@ -402,6 +402,9 @@ if (!IS_API && $_GET['s'] != 'api' && is_file(WRITEPATH.'config/domain_app.php')
 // 是否使用用户系统
 define('IS_USE_MEMBER',  is_file(dr_get_app_dir('member').'/install.lock') ? dr_get_app_dir('member') : '');
 
+// 是否使用内容系统
+define('IS_USE_MODULE',  is_file(dr_get_app_dir('module').'/install.lock') ? dr_get_app_dir('module') : '');
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用

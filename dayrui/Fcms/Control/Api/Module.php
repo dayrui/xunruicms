@@ -6,8 +6,8 @@
  **/
 
 // 模块ajax操作接口
-class Module extends \Phpcmf\Common
-{
+class Module extends \Phpcmf\Common {
+
     private $siteid;
     private $dirname;
     private $tablename;
@@ -91,4 +91,5 @@ class Module extends \Phpcmf\Common
 
         $this->_json($rt['code'], $rt['msg'], $rt['data']);
     }
+
 }
