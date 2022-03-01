@@ -813,7 +813,7 @@ class Module extends \Phpcmf\Model {
                     unset($cache['comment']);
 
                     // 更新内容模块菜单
-                    $menu_model->update_module($mdir, $config, $cache['form']);
+                    \Phpcmf\Service::M('menu', 'module')->update_module($mdir, $config, $cache['form']);
                     !$cache['title'] && $cache['title'] = $cache['name'];
 
                     // 执行模块自己的缓存程序

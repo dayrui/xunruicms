@@ -15,57 +15,59 @@ class Table extends \Phpcmf\Model {
         $cache = [];
         $paytable = []; // 付款表名
         // 生成模块表结构
-        !$module && $module = $this->table('module')->getAll();
-        if ($module) {
-            $is_module_form = $this->is_table_exists('module_form');
-            foreach ($module as $t) {
-                // 模块主表
-                $table = dr_module_table_prefix($t['dirname'], $siteid);
-                $prefix = $this->dbprefix($table);
-                // 判断是否存在表
-                if (!$this->db->tableExists($prefix)) {
-                    continue;
-                }
-                $main_field = $this->db->getFieldNames($prefix);
-                if ($main_field) {
-                    // 付款表
-                    $paytable['module-'.$t['id']] = [
-                        'table' => $table,
-                        'name' => 'title',
-                        'thumb' => 'thumb',
-                        'url' => dr_web_prefix('index.php?s='.$t['dirname'].'&c=show&id='),
-                        'username' => 'author',
-                    ];
-                    // 模块表
-                    $cache[$prefix] = $main_field;
-                    // 模块附表
-                    $table = $prefix.'_data_0';
-                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                    // 栏目模型主表
-                    $table = $prefix.'_category_data';
-                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                    // 模块点击量表
-                    $table = $prefix.'_hits';
-                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                    // 模块评论表
-                    $table = $prefix.'_comment';
-                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                    // 模块表单
-                    if ($is_module_form) {
-                        $form = $this->table('module_form')->where('module', $t['dirname'])->order_by('id ASC')->getAll();
-                        if ($form) {
-                            foreach ($form as $f) {
-                                // 主表
-                                $table = $prefix . '_form_' . $f['table'];
-                                $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
-                                // 付款表
-                                $paytable['mform-' . $t['dirname'] . '-' . $f['id']] = [
-                                    'table' => $table,
-                                    'name' => 'title',
-                                    'thumb' => 'thumb',
-                                    'url' => dr_web_prefix('index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id='),
-                                    'username' => 'author',
-                                ];
+        if (IS_USE_MODULE) {
+            !$module && $module = $this->table('module')->getAll();
+            if ($module) {
+                $is_module_form = $this->is_table_exists('module_form');
+                foreach ($module as $t) {
+                    // 模块主表
+                    $table = dr_module_table_prefix($t['dirname'], $siteid);
+                    $prefix = $this->dbprefix($table);
+                    // 判断是否存在表
+                    if (!$this->db->tableExists($prefix)) {
+                        continue;
+                    }
+                    $main_field = $this->db->getFieldNames($prefix);
+                    if ($main_field) {
+                        // 付款表
+                        $paytable['module-'.$t['id']] = [
+                            'table' => $table,
+                            'name' => 'title',
+                            'thumb' => 'thumb',
+                            'url' => dr_web_prefix('index.php?s='.$t['dirname'].'&c=show&id='),
+                            'username' => 'author',
+                        ];
+                        // 模块表
+                        $cache[$prefix] = $main_field;
+                        // 模块附表
+                        $table = $prefix.'_data_0';
+                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                        // 栏目模型主表
+                        $table = $prefix.'_category_data';
+                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                        // 模块点击量表
+                        $table = $prefix.'_hits';
+                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                        // 模块评论表
+                        $table = $prefix.'_comment';
+                        $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                        // 模块表单
+                        if ($is_module_form) {
+                            $form = $this->table('module_form')->where('module', $t['dirname'])->order_by('id ASC')->getAll();
+                            if ($form) {
+                                foreach ($form as $f) {
+                                    // 主表
+                                    $table = $prefix . '_form_' . $f['table'];
+                                    $this->db->tableExists($table) && $cache[$table] = $this->db->getFieldNames($table);
+                                    // 付款表
+                                    $paytable['mform-' . $t['dirname'] . '-' . $f['id']] = [
+                                        'table' => $table,
+                                        'name' => 'title',
+                                        'thumb' => 'thumb',
+                                        'url' => dr_web_prefix('index.php?s=' . $t['dirname'] . '&c=' . $f['table'] . '&m=show&id='),
+                                        'username' => 'author',
+                                    ];
+                                }
                             }
                         }
                     }
@@ -214,39 +216,7 @@ class Table extends \Phpcmf\Model {
     // 创建项目
     public function create_site($siteid) {
 
-        // 创建数据表
-        if ($siteid > 1) {
-            // 复制站点1的栏目结构
-            $sql = $this->db->query("SHOW CREATE TABLE `".$this->dbprefix('1_share_category')."`")->getRowArray();
-            $sql = str_replace(
-                array($sql['Table'], 'CREATE TABLE'),
-                array('{tablename}', 'CREATE TABLE IF NOT EXISTS'),
-                $sql['Create Table']
-            );
-            $this->db->simpleQuery(str_replace('{tablename}', $this->dbprefix($siteid.'_share_category'), dr_format_create_sql($sql)));
-            $this->db->table($siteid.'_share_category')->truncate();
-        } else {
 
-        }
-
-        $this->db->simpleQuery("DROP TABLE IF EXISTS `".$this->dbprefix($siteid.'_share_index')."`");
-        $this->db->simpleQuery(dr_format_create_sql("
-        CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_index')."` (
-          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `mid` varchar(20) NOT NULL COMMENT '模块目录',
-          PRIMARY KEY (`id`),
-          KEY `mid` (`mid`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='共享模块内容索引表';
-        "));
-
-        // 执行应用插件的站点sql语句
-        $local = \Phpcmf\Service::Apps();
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock') && is_file($path.'Config/Install_site.sql')) {
-                $sql = file_get_contents($path.'Config/Install_site.sql');
-                $this->_query(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));
-            }
-        }
 
     }
     

@@ -66,7 +66,7 @@ class Cache extends \Phpcmf\Model {
 
         if (!$this->is_sync_cache) {
             $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
-            dr_is_app('module') && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+            IS_USE_MODULE && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
             \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
         }
 
@@ -98,7 +98,8 @@ class Cache extends \Phpcmf\Model {
     public function update_cache() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-        $module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+
+        $module_cache = IS_USE_MODULE ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
 
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
 
@@ -129,7 +130,7 @@ class Cache extends \Phpcmf\Model {
         foreach ($site_cache as $t) {
 
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            dr_is_app('module') && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+            IS_USE_MODULE && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
             foreach ($cache as $m => $namespace) {
                 \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
@@ -161,7 +162,7 @@ class Cache extends \Phpcmf\Model {
     public function update_search_index() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-        dr_is_app('module') && $module_cache = $this->table('module')->getAll();
+        IS_USE_MODULE && $module_cache = $this->table('module')->getAll();
         if (!$module_cache) {
             return;
         }
@@ -288,26 +289,29 @@ class Cache extends \Phpcmf\Model {
             $site[] = $t['id'];
         }
 
-        $cache = $this->table('module')->getAll();
-        foreach ($cache as $t) {
-            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                continue;
-            } elseif ($t['share']) {
-                continue;
-            }
-            $t['site'] = dr_string2array($t['site']);
-            foreach ($site as $siteid) {
-                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
-                    $rt = $this->update_webpath('Module_Domain', $t['site'][$siteid]['webpath'], [
-                        'SITE_ID' => $siteid,
-                        'MOD_DIR' => $t['dirname'],
-                    ]);
-                    if ($rt) {
-                        $this->_error_msg('模块['.$t['site'][$siteid]['domain'].']: '.$rt);
+        if (IS_USE_MODULE) {
+            $cache = $this->table('module')->getAll();
+            foreach ($cache as $t) {
+                if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                    continue;
+                } elseif ($t['share']) {
+                    continue;
+                }
+                $t['site'] = dr_string2array($t['site']);
+                foreach ($site as $siteid) {
+                    if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                        $rt = $this->update_webpath('Module_Domain', $t['site'][$siteid]['webpath'], [
+                            'SITE_ID' => $siteid,
+                            'MOD_DIR' => $t['dirname'],
+                        ]);
+                        if ($rt) {
+                            $this->_error_msg('模块['.$t['site'][$siteid]['domain'].']: '.$rt);
+                        }
                     }
                 }
             }
         }
+
     }
 
     // 生成目录式手机目录
@@ -432,25 +436,28 @@ class Cache extends \Phpcmf\Model {
             }
         }
 
-        $module = $this->table('module')->getAll();
-        foreach ($module as $t) {
-            if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                continue;
-            } elseif ($t['share']) {
-                continue;
-            }
-            $t['site'] = dr_string2array($t['site']);
-            foreach ($site as $r) {
-                $siteid = $r['id'];
-                if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
-                    $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
-                    // 复制百度编辑器到当前目录
-                    $this->cp_ueditor_file($path);
-                    // 复制百度编辑器到移动端项目
-                    $this->cp_ueditor_file($path.'mobile/');
+        if (IS_USE_MODULE) {
+            $module = $this->table('module')->getAll();
+            foreach ($module as $t) {
+                if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                    continue;
+                } elseif ($t['share']) {
+                    continue;
+                }
+                $t['site'] = dr_string2array($t['site']);
+                foreach ($site as $r) {
+                    $siteid = $r['id'];
+                    if (isset($t['site'][$siteid]['domain']) && $t['site'][$siteid]['domain'] && $t['site'][$siteid] && $t['site'][$siteid]['webpath']) {
+                        $path = rtrim($t['site'][$siteid]['webpath'], '/').'/';
+                        // 复制百度编辑器到当前目录
+                        $this->cp_ueditor_file($path);
+                        // 复制百度编辑器到移动端项目
+                        $this->cp_ueditor_file($path.'mobile/');
+                    }
                 }
             }
         }
+
 
         // 为后台域名移动编辑器目录
         if (dr_is_app('safe')) {

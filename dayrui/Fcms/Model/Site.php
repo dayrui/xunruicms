@@ -142,8 +142,6 @@ class Site extends \Phpcmf\Model {
 
         $siteid = $this->db->insertID();
 
-        \Phpcmf\Service::M('Table')->create_site($siteid);
-
         if ($siteid == 1) {
             return; // 安装不执行后面操作
         }
@@ -159,20 +157,12 @@ class Site extends \Phpcmf\Model {
             require MYPATH.'Config/Install.php';
         }
 
-        // 应用插件
-        $local = dr_dir_map(APPSPATH, 1);
-        foreach ($local as $dir) {
-            if (is_file(APPSPATH.$dir.'/install.lock')
-                && is_file(APPSPATH.$dir.'/Config/App.php')
-                && is_file(APPSPATH.$dir.'/Config/Install_site.sql')) {
-                $cfg = require APPSPATH.$dir.'/Config/App.php';
-                if ($cfg['type'] != 'module') {
-                    // 这是插件
-                    $sql = file_get_contents(APPSPATH.$dir.'/Config/Install_site.sql');
-                    $this->query_all(str_replace('{dbprefix}',  $this->dbprefix($siteid.'_'), $sql));
-                } else {
-                    // 这是模块
-                }
+        // 执行应用插件的站点sql语句
+        $local = \Phpcmf\Service::Apps(true);
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'Config/Install_site.sql')) {
+                $sql = file_get_contents($path.'Config/Install_site.sql');
+                $this->_query(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));
             }
         }
 
@@ -391,52 +381,54 @@ class Site extends \Phpcmf\Model {
                 $cache[$t['id']] = $t['setting'];
             }
 
-            // 循环模块域名
-            !$module && $module = $this->table('module')->getAll();
-            if ($module) {
-                foreach ($module as $t) {
-                    if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
-                        continue;
-                    }
-                    $t['site'] = dr_string2array($t['site']);
-                    if (!$t['site']) {
-                        // 表示没有进行站点安装
-                        continue;
-                    }
-                    // 循环站点信息
-                    foreach ($t['site'] as $sid => $v) {
-                        if (!$t['share']) {
-                            // 独立模块才有域名
-                            $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
-                            if ($v['domain']) {
-                                $site_domain[$v['domain']] = $sid;
-                                $app_domain[$v['domain']] = $t['dirname'];
-                                $sso_domain[] = $v['domain'];
-                                // 网站路径
-                                if ($v['webpath']) {
-                                    $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
+            if (IS_USE_MODULE) {
+                // 循环模块域名
+                !$module && $module = $this->table('module')->getAll();
+                if ($module) {
+                    foreach ($module as $t) {
+                        if (!is_file(APPSPATH.ucfirst($t['dirname']).'/Config/App.php')) {
+                            continue;
+                        }
+                        $t['site'] = dr_string2array($t['site']);
+                        if (!$t['site']) {
+                            // 表示没有进行站点安装
+                            continue;
+                        }
+                        // 循环站点信息
+                        foreach ($t['site'] as $sid => $v) {
+                            if (!$t['share']) {
+                                // 独立模块才有域名
+                                $webpath[$sid][$t['dirname']] = $webpath[$sid]['site'];
+                                if ($v['domain']) {
+                                    $site_domain[$v['domain']] = $sid;
+                                    $app_domain[$v['domain']] = $t['dirname'];
+                                    $sso_domain[] = $v['domain'];
+                                    // 网站路径
+                                    if ($v['webpath']) {
+                                        $webpath[$sid][$t['dirname']] = dr_get_dir_path($v['webpath']);
+                                    }
+                                }
+                                if ($v['mobile_domain']) {
+                                    $site_domain[$v['mobile_domain']] = $sid;
+                                    $app_domain[$v['mobile_domain']] = $t['dirname'];
+                                    $client_domain[$v['domain']] = $v['mobile_domain'];
+                                    $sso_domain[] = $v['mobile_domain'];
                                 }
                             }
-                            if ($v['mobile_domain']) {
-                                $site_domain[$v['mobile_domain']] = $sid;
-                                $app_domain[$v['mobile_domain']] = $t['dirname'];
-                                $client_domain[$v['domain']] = $v['mobile_domain'];
-                                $sso_domain[] = $v['mobile_domain'];
-                            }
+                            $module_cache_file[] = 'module-'.$sid.'-'.$t['dirname'].'.cache'; // 删除多余的模块缓存文件
                         }
-                        $module_cache_file[] = 'module-'.$sid.'-'.$t['dirname'].'.cache'; // 删除多余的模块缓存文件
                     }
                 }
-            }
-            // 删除多余的模块缓存文件
-            if ($fp = @opendir(WRITEPATH.'data')) {
-                while (FALSE !== ($file = readdir($fp))) {
-                    $pos = strpos($file, 'module-');
-                    if ($pos !== false && $pos === 0 && !dr_in_array($file, $module_cache_file)) {
-                        unlink(WRITEPATH.'data/'.$file);
+                // 删除多余的模块缓存文件
+                if ($fp = @opendir(WRITEPATH.'data')) {
+                    while (FALSE !== ($file = readdir($fp))) {
+                        $pos = strpos($file, 'module-');
+                        if ($pos !== false && $pos === 0 && !dr_in_array($file, $module_cache_file)) {
+                            unlink(WRITEPATH.'data/'.$file);
+                        }
                     }
+                    closedir($fp);
                 }
-                closedir($fp);
             }
         }
 

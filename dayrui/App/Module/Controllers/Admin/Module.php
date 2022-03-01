@@ -151,7 +151,7 @@ class Module extends \Phpcmf\Common {
             file_put_contents($file, '<?php return '.var_export($config, true).';');
 
             // 变更菜单
-            \Phpcmf\Service::M('menu')->update_module_name($mid, $old, $config['name'], $config['icon']);
+            \Phpcmf\Service::M('menu', 'module')->update_module_name($mid, $old, $config['name'], $config['icon']);
 
             // 重置Zend OPcache
             function_exists('opcache_reset') && opcache_reset();
