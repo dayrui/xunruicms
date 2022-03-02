@@ -221,7 +221,9 @@ class Site extends \Phpcmf\Model {
 
         // 模块域名
         $my = [];
-        list($my, $data) = \Phpcmf\Service::M('module', 'module')->domian($value, $my, $data);
+        if (IS_USE_MODULE) {
+            list($my, $data) = \Phpcmf\Service::M('module', 'module')->domian($value, $my, $data);
+        }
 
         return [$my, $data];
     }
@@ -334,7 +336,7 @@ class Site extends \Phpcmf\Model {
             }
 
             if (IS_USE_MODULE) {
-                list($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file) = \Phpcmf\Service::M('module', 'module')->sync_site_cache($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file);
+                list($webpath, $site_domain, $app_domain, $sso_domain, $client_domain) = \Phpcmf\Service::M('module', 'module')->sync_site_cache($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file);
             }
         }
 
