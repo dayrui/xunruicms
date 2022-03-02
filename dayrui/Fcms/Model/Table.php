@@ -16,12 +16,12 @@ class Table extends \Phpcmf\Model {
         $paytable = []; // 付款表名
         // 生成模块表结构
         if (IS_USE_MODULE) {
-            $paytable = \Phpcmf\Service::M('module', 'module')->paytable($paytable, $module, $siteid);
+            list($cache, $paytable) = \Phpcmf\Service::M('module', 'module')->paytable($cache, $paytable, $module, $siteid);
         }
 
         // 网站表单
         if ($this->is_table_exists($siteid.'_form')) {
-            $paytable = \Phpcmf\Service::M('form', 'form')->paytable($paytable, $siteid);
+            list($cache, $paytable) = \Phpcmf\Service::M('form', 'form')->paytable($cache, $paytable, $siteid);
         }
 
         // 会员表

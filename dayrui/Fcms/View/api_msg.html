@@ -13,44 +13,44 @@
 <body class="page-container-bg-solid" style=" background-color: #eef1f5;">
 <div class="page-content">
 
-                <div class="container" style="padding-top:110px">
+    <div class="container" style="padding-top:110px">
 
 
-                            <div class="portlet light">
-                            <div class="portlet-body">
-                                <div class="row fc-msg-body">
+        <div class="portlet light">
+            <div class="portlet-body">
+                <div class="row fc-msg-body">
 
 
-                                    <div class="col-md-12 text-center">
+                    <div class="col-md-12 text-center">
 
-                                        <div class="fc-msg-info">
-                                            <p class="fc-msg-title">{$msg}</p>
+                        <div class="fc-msg-info">
+                            <p class="fc-msg-title">{$msg}</p>
 
-                                            <p>
-                                                    系统检测到前端缺失{$this->_filename}模板，本页面是临时的显示模板。
-                                            </p>
-                                            <p class="fc-msg-url">
-                                                {if $url}
-                                                <a href="{$url}">如果您的浏览器没有自动跳转，请点击这里</a>
-                                                <meta http-equiv="refresh" content="{$time}; url={$url}">
-                                                {else}
-                                                <a href="{$backurl}" >[点击返回上一页]</a>
-                                                {/if}
-                                            </p>
-                                        </div>
-                                    </div>
-
-
-
-
-
-                                </div>
-                            </div>
+                            <p>
+                                系统检测到前端缺失{$this->_filename}模板，本页面是临时的显示模板。
+                            </p>
+                            <p class="fc-msg-url">
+                                {if $url}
+                                <a href="{$url}">如果您的浏览器没有自动跳转，请点击这里</a>
+                                <meta http-equiv="refresh" content="{$time}; url={$url}">
+                                {else}
+                                <a href="{$backurl}" >[点击返回上一页]</a>
+                                {/if}
+                            </p>
                         </div>
+                    </div>
+
+
+
+
 
                 </div>
-
             </div>
+        </div>
+
+    </div>
+
+</div>
 </body>
 
 </html>
