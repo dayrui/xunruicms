@@ -317,14 +317,14 @@ class File extends \Phpcmf\Common
         $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))
             ->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts();
 
-        $url = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=input_file_list')
+        $url = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=input_file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
             .'&ct='.$ct
             .'&p='.\Phpcmf\Service::L('input')->get('p');
         $pp = intval($_GET['pp']);
         $pp = $unused ? $pp : ($pp == 2 ? 2 : 1);
 
-        $listurl = dr_web_prefix('index.php?is_ajax=1&s=api&c=file&m=file_list')
+        $listurl = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
             .'&p='.\Phpcmf\Service::L('input')->get('p');
 
