@@ -536,6 +536,16 @@ class Check extends \Phpcmf\Common
 
             case '08':
                 // 程序兼容性
+
+                // 判断模块表
+                if (!IS_USE_MODULE
+                    && \Phpcmf\Service::M()->is_table_exists('module')
+                    &&  is_file(dr_get_app_dir('module').'/Config/App.php')
+                ) {
+                    // 表示模块表已经操作，手动安装模块
+                    file_put_contents(dr_get_app_dir('module').'/install.lock', 'fix');
+                }
+
                 $local = dr_dir_map(APPSPATH, 1); // 搜索本地模块
                 foreach ($local as $dir) {
                     if (is_file(APPSPATH.$dir.'/Config/App.php')) {
@@ -581,7 +591,7 @@ class Check extends \Phpcmf\Common
                     'member_explog' => 'explog',
                 ];
                 $app_name = [
-                    'form' => '全局网站表单',
+                    'form' => '全局表单',
                     'mform' => '模块内容表单',
                     'notice' => '提醒消息',
                     'pay' => '支付系统',

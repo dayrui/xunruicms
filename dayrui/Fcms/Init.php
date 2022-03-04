@@ -149,29 +149,51 @@ unset($cache);
 // 自定义开发目录分布
 if (IS_XRDEV && is_file(MYPATH.'Dev.php')) {
     require MYPATH.'Dev.php';
-} else {
-    // 判断是否是app目录
+}
+
+// 判断是否是app目录
+if (!function_exists('dr_is_app_dir')) {
     function dr_is_app_dir($name) {
         if (!$name) {
             return false;
         }
         return is_dir(APPSPATH.ucfirst($name));
     }
+}
+
+// 获取指定app目录
+if (!function_exists('dr_get_app_dir')) {
     function dr_get_app_dir($name) {
         if (!$name) {
             return false;
         }
         return APPSPATH.ucfirst($name).'/';
     }
+}
+
+// 获取模板目录
+if (!function_exists('dr_get_app_tpl')) {
     function dr_get_app_tpl($name = '') {
         return TPLPATH;
     }
+}
+
+// 获取app目录
+if (!function_exists('dr_get_app_list')) {
     function dr_get_app_list() {
         return APPSPATH;
     }
+}
+
+// 获取app的css地址
+if (!function_exists('dr_get_app_css')) {
     function dr_get_app_css($name) {
         return THEME_PATH.$name.'/';
     }
+}
+
+// 获取app的css目录
+if (!function_exists('dr_get_app_css_dir')) {
     function dr_get_app_css_dir($name) {
         return WEBPATH.'static/'.$name.'/';
     }
