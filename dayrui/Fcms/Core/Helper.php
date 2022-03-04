@@ -1874,7 +1874,7 @@ function dr_get_theme() {
         return ['default'];
     }
 
-    return array_diff(dr_dir_map(ROOTPATH.'static/', 1), ['assets', 'space']);
+    return dr_diff(dr_dir_map(ROOTPATH.'static/', 1), ['assets']);
 }
 
 /**
@@ -3228,7 +3228,7 @@ function dr_html2text($str, $cn = false) {
 function dr_htmlspecialchars($param) {
 
     if (!$param) {
-        return '';
+        return is_array($param) ? [] : '';
     } elseif (is_array($param)) {
         foreach ($param as $a => $t) {
             if ($t && !is_array($t)) {

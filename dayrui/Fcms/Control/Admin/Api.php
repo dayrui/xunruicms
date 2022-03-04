@@ -450,12 +450,28 @@ class Api extends \Phpcmf\Common {
 
 	// 统计
 	public function mtotal() {
+
+        if (!IS_USE_MODULE) {
+            $this->_json(1, '');
+        }
+
+        require IS_USE_MODULE.'Controllers/Admin/Api.php';
+        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci->mtotal();
 		exit;
 	}
 
 	// 统计栏目
 	public function ctotal() {
-	    $this->_json(1, '');
+
+        if (!IS_USE_MODULE) {
+            $this->_json(1, '');
+        }
+
+        require IS_USE_MODULE.'Controllers/Admin/Api.php';
+        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci->ctotal();
+        exit;
 	}
 	
 	// api

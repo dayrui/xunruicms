@@ -54,6 +54,7 @@ class Autoload extends AutoloadConfig
             $classmap['Phpcmf\Admin\Config'] = IS_USE_MODULE.'Extends/Admin/Config.php';
             $classmap['Phpcmf\Admin\Module'] = IS_USE_MODULE.'Extends/Admin/Module.php';
             $classmap['Phpcmf\Model\Content'] = IS_USE_MODULE.'Models/Content.php';
+            $classmap['Phpcmf\Model\Search'] = IS_USE_MODULE.'Models/Search.php';
             $classmap['Phpcmf\Admin\Category'] = IS_USE_MODULE.'Extends/Admin/Category.php';
         }
 

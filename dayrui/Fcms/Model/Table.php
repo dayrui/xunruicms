@@ -20,7 +20,7 @@ class Table extends \Phpcmf\Model {
         }
 
         // 网站表单
-        if ($this->is_table_exists($siteid.'_form')) {
+        if (dr_is_app('form') && $this->is_table_exists($siteid.'_form')) {
             list($cache, $paytable) = \Phpcmf\Service::M('form', 'form')->paytable($cache, $paytable, $siteid);
         }
 

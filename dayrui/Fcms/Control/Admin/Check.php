@@ -543,7 +543,10 @@ class Check extends \Phpcmf\Common
                     &&  is_file(dr_get_app_dir('module').'/Config/App.php')
                 ) {
                     // 表示模块表已经操作，手动安装模块
-                    file_put_contents(dr_get_app_dir('module').'/install.lock', 'fix');
+                    $rs = file_put_contents(dr_get_app_dir('module').'/install.lock', 'fix');
+                    if (!$rs) {
+                        $this->halt('【重要】目录（'.dr_get_app_dir('module').'）无法写入', 0);
+                    }
                 }
 
                 $local = dr_dir_map(APPSPATH, 1); // 搜索本地模块

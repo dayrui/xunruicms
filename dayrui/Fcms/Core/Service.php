@@ -101,27 +101,13 @@ class Service {
             static::$apps = $filedata;
         }
 
-        if (IS_XRDEV) {
-            $source_dir = APPSPATH;
-            if ($fp = opendir($source_dir)) {
-                $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-                while (FALSE !== ($file = readdir($fp))) {
-                    if ($file === '.' OR $file === '..'
-                        OR $file[0] === '.'
-                        OR !is_dir($source_dir.$file)) {
-                        continue;
-                    }
-                    if ($is_install && !is_file($source_dir.$file . '/install.lock')) {
-                        continue;
-                    }
-                    if (is_dir($source_dir.$file)) {
-                        $filedata[$file] = dr_get_app_dir($file);
-                    }
-                }
-                closedir($fp);
-
-                static::$apps = $filedata;
-            }
+        if (function_exists('dr_get_app_extend')) {
+            $extend = dr_get_app_extend($is_install);
+           if ($extend) {
+               foreach ($extend as $i => $t) {
+                   static::$apps[$i] = $t;
+               }
+           }
         }
 
         return static::$apps;
