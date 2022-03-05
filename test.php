@@ -44,7 +44,7 @@ dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
 // 判断环境
 $min = '7.3.0';
 $max = '8.1.0';
-if (version_compare(PHP_VERSION, $max) >= 0) {
+if (version_compare(PHP_VERSION, $max) > 0) {
     dr_echo_msg(0, "<font color=red>PHP版本过高，请在".$max."以下的环境使用，当前".PHP_VERSION."，高版本需要等待官方对CMS版本的更新升级！~</font>");exit;
 } elseif (version_compare(PHP_VERSION, $min) < 0) {
     dr_echo_msg(0, "<font color=red>PHP版本建议在7.3及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");exit;

@@ -37,8 +37,8 @@ class Captcha
 
         $this->_code();
 
-        $this->width = min(200, $width > 0 ? abs($width) : 120);
-        $this->height = min(100, $height > 0 ? abs($height) : 32);
+        $this->width = min(200, $width > 0 ? abs((int)$width) : 120);
+        $this->height = min(100, $height > 0 ? abs((int)$height) : 32);
 
         $this->_bg();
         $this->_line();
