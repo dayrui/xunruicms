@@ -489,7 +489,7 @@ class Editor extends \Phpcmf\Library\A_Field {
         <div class="portlet  bordered light">
         <div class="portlet-body">
         <div class="scroller" style="width:'.(\Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '') : '100%')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '300').'px" data-always-visible="1" data-rail-visible="1">
-        '.htmlspecialchars_decode($value).'                
+        '.htmlspecialchars_decode((string)$value).'                
         </div>
         </div>
         </div>';

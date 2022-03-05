@@ -82,7 +82,7 @@ class Api extends \Phpcmf\Common
         ob_start();
         ob_clean();
         header("Content-type: image/png");
-        ImagePng($QR);
+        $QR && imagepng($QR);
         exit;
     }
 
