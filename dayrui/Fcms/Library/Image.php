@@ -1747,8 +1747,8 @@ class Image
         $source_width = $this->image_info[0];
         $source_height = $this->image_info[1];
         $source_mime  = $this->image_info['mime'];
-        $source_ratio = $source_height / $source_width;
-        $target_ratio = $target_height / $target_width;
+        $source_ratio = intval($source_height / $source_width);
+        $target_ratio = intval($target_height / $target_width);
         if ($source_ratio > $target_ratio) {
             // image-to-height
             $cropped_width = $source_width;
@@ -1819,8 +1819,8 @@ class Image
 
         if ($width > $cw) {
             $per = $cw / $width;//计算比例
-            $new_width = $width * $per; //压缩后的图片宽
-            $new_height = $height * $per; //压缩后的图片高
+            $new_width = intval($width * $per); //压缩后的图片宽
+            $new_height = intval($height * $per); //压缩后的图片高
             switch ($type) {
                 case 1:
                     // gif
