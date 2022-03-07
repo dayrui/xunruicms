@@ -9,14 +9,17 @@
  * 列表格式化函数库
  */
 
-class Function_list
-{
+class Function_list {
 
     protected $uid_data = [];
     protected $cid_data = [];
 
     // 用于列表显示栏目
     public function catid($catid, $param = [], $data = []) {
+
+        if (!$catid) {
+            return '';
+        }
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
@@ -27,6 +30,10 @@ class Function_list
 
     // 用于列表显示副栏目
     public function catids($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         $rt = [];
         $arr = dr_string2array($value);
@@ -44,11 +51,20 @@ class Function_list
 
     // 用于列表显示内容
     public function comment($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return $this->content($value, $param, $data);
     }
 
     // 用于列表显示内容
     public function content($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
@@ -60,6 +76,11 @@ class Function_list
 
     // 用于列表显示联动菜单值
     public function linkage_address($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return dr_linkagepos('address', $value, '-');
     }
 
@@ -80,6 +101,10 @@ class Function_list
     // 用于列表显示标题
     public function title($value, $param = [], $data = []) {
 
+        if (!$value) {
+            return '';
+        }
+
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
         $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
@@ -90,16 +115,31 @@ class Function_list
 
     // 用于列表显示时间日期格式
     public function datetime($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return dr_date($value, null, 'red');
     }
 
     // 用于列表显示日期格式
     public function date($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return dr_date($value, 'Y-m-d', 'red');
     }
 
     // 用于列表显示作者
     public function author($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         if ($value == 'guest') {
             return dr_lang('游客');
         } elseif ((isset($data['username']) || isset($data['author'])) && $data['uid']) {
@@ -116,6 +156,11 @@ class Function_list
 
     // 用于列表显示作者
     public function uid($uid, $param = [], $data = []) {
+
+        if (!$uid) {
+            return '';
+        }
+
         // 查询username
         if (strlen($uid) > 12) {
             return dr_lang('游客');
@@ -208,6 +253,11 @@ class Function_list
 
     // 用于列表显示单文件
     public function file($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         if ($value) {
             $file = \Phpcmf\Service::C()->get_attachment($value);
             if ($file) {
@@ -229,11 +279,16 @@ class Function_list
                 return $value;
             }
         }
+
         return dr_lang('无');
     }
 
     // 用于列表显示用户组
     public function group($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         $user = dr_member_info($data['id']);
         if ($user && $user['group']) {
@@ -253,19 +308,35 @@ class Function_list
 
     // 用于列表显示价格
     public function price($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return '<span style="color:#ef4c2f">￥'.number_format($value, 2).'</span>';
     }
 
     // 用于列表显示价格
     public function money($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         if (dr_is_app('pay') && \Phpcmf\Service::C()->_is_admin_auth('pay/paylog/index')) {
             return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('pay/paylog/index', 'pay/paylog/index', ['field'=>'uid','keyword'=>$data['id']]).'" style="color:#ef4c2f">'.number_format($value, 2).'</a>';
         }
+
         return '<span style="color:#ef4c2f">'.number_format($value, 2).'</span>';
     }
 
     // 用于列表显示积分
     public function score($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         if (dr_is_app('scorelog') && \Phpcmf\Service::C()->_is_admin_auth('scorelog/home/index')) {
             return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$data['id']]). '" style="color:#2f5fef">' .intval($value).'</a>';
         }
@@ -274,19 +345,34 @@ class Function_list
 
     // 用于列表显示价格、库存
     public function price_quantity($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return '<span style="color:#ef4c2f">￥'.number_format($value, 2).'</span> / '.$data['price_quantity'];
     }
 
     // 用于指定插件调用
     public function fstatus($value, $param = [], $data = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         if (!dr_is_app('fstatus')) {
             return '[模块内容开关]插件未安装';
         }
+
         return '&nbsp;&nbsp;<a href="javascript:;" onclick="dr_ajax_open_close(this, \''.dr_url('fstatus/home/edit', ['id'=>$data['id'], 'mid'=>APP_DIR]).'\', 0);" class="badge badge-'.($value == 1 ? 'yes' : 'no').'"><i class="fa fa-'.($value == 1 ? 'check' : 'times').'"></i></a>';
     }
 
     // 单选字段name
     public function radio_name($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         if ($field) {
             $options = dr_format_option_array($field['setting']['option']['options']);
@@ -301,6 +387,10 @@ class Function_list
     // 下拉字段name值
     public function select_name($value, $param = [], $data = [], $field = []) {
 
+        if (!$value) {
+            return '';
+        }
+
         if ($field) {
             $options = dr_format_option_array($field['setting']['option']['options']);
             if ($options && isset($options[$value])) {
@@ -313,6 +403,10 @@ class Function_list
 
     // checkbox字段name值
     public function checkbox_name($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         $arr = dr_string2array($value);
         if ($field && is_array($arr)) {
@@ -367,6 +461,10 @@ class Function_list
     // 实时存储时间值
     public function save_time_value($value, $param = [], $data = [], $field = []) {
 
+        if (!$value) {
+            return '';
+        }
+
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
         $html = '<input type="text" class="form-control" placeholder="" value="'.dr_date($value).'" onblur="dr_ajax_save(dr_strtotime(this.value), \''.$url.'\', \''.$field['fieldname'].'\')">';
@@ -379,6 +477,10 @@ class Function_list
     // 实时存储文本值
     public function save_text_value($value, $param = [], $data = [], $field = []) {
 
+        if (!$value) {
+            return '';
+        }
+
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
         $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars($value).'" onblur="dr_ajax_save(this.value, \''.$url.'\', \''.$field['fieldname'].'\')">';
@@ -390,6 +492,10 @@ class Function_list
 
     // 实时存储选择值
     public function save_select_value($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
 
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&name='.$field['fieldname'].'&id='.$data['id'].'&after='; //after是回调函数
@@ -437,6 +543,11 @@ class Function_list
 
     // text
     public function text($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
+
         return dr_clearhtml($value);
     }
 }

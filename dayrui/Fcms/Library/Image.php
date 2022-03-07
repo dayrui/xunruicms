@@ -9,8 +9,7 @@
 /**
  * 图片处理类
  */
-class Image
-{
+class Image {
 
     /**
      * Can be: imagemagick, netpbm, gd, gd2

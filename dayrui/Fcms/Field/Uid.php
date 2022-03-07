@@ -159,7 +159,7 @@ class Uid extends \Phpcmf\Library\A_Field {
             $value = \Phpcmf\Service::C()->member ? \Phpcmf\Service::C()->member['username'] : '';
         }
 
-        $str = '<div class="form-control-static"> '.htmlspecialchars_decode($value).' </div>';
+        $str = '<div class="form-control-static"> '.htmlspecialchars_decode((string)$value).' </div>';
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }

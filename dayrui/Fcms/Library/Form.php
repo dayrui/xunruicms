@@ -6,8 +6,7 @@
  **/
 
 // 表单验证类
-class Form
-{
+class Form {
 
     public $mfields;
     protected $id = 0;

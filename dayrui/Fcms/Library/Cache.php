@@ -229,18 +229,6 @@ class Cache {
             return;
         }
 
-        // 文件缓存，清理相关文件
-        if (!SYS_CACHE_TYPE && is_dir(WRITEPATH.'file/')) {
-            if ($fp = opendir(WRITEPATH.'file/')) {
-                while (FALSE !== ($file = readdir($fp))) {
-                    if (strpos($file, $name) !== false) {
-                        @unlink(WRITEPATH.'file/'.$file);
-                    }
-                }
-                closedir($fp);
-            }
-        }
-
         $this->del_data($name);
     }
 
@@ -279,7 +267,7 @@ class Cache {
 
         $var = '';
         foreach ($param as $v) {
-            $var.= '[\''.dr_safe_replace($v).'\']';
+            $var.= '[\''.(in_array($v, [0, '0']) ? 0 : dr_safe_replace($v)).'\']';
         }
 
         $return = null;

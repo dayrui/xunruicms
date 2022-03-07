@@ -190,7 +190,7 @@ function dr_move_uploaded_file($tempfile, $fullname) {
 
 // html实体字符转换
 function dr_html2code($value) {
-    return htmlspecialchars($value);
+    return htmlspecialchars((string)$value);
 }
 
 // html实体字符转换
@@ -286,10 +286,13 @@ function dr_is_admin_search_field($t) {
 
 // 通过数组值查找数组key
 function dr_get_array_key($array, $value) {
+
     if ($array && !in_array($value, $array)) {
         return false;
     }
+
     $new = array_flip($array);
+
     return isset($new[$value]) ? $new[$value] : false;
 }
 
@@ -323,6 +326,10 @@ function dr_get_content_img($value, $num = 0) {
 function dr_get_content_url($value, $attr, $ext, $num = 0) {
 
     $rt = [];
+    if (!$value) {
+        return $rt;
+    }
+
     $ext = str_replace(',', '|', $ext);
     $value = preg_replace('/\.('.$ext.')@(.*)(\'|")/iU', '.$1$3', $value);
     if (preg_match_all("/(".$attr.")=([\"|']?)([^ \"'>]+\.(".$ext."))\\2/i", $value, $imgs)) {
@@ -356,7 +363,7 @@ function dr_is_module($dir, $siteid = SITE_ID) {
  * 字符串替换函数
  */
 function dr_rp($str, $o, $t) {
-    return str_replace($o, $t, $str);
+    return str_replace($o, $t, (string)$str);
 }
 
 /**
@@ -370,7 +377,9 @@ function dr_qrcode($text, $thumb = '', $level = 'H', $size = 5) {
  * 秒转化时间
  */
 function dr_sec2time($times){
+
     $result = '00:00:00';
+
     if ($times > 0) {
         $hour = floor($times/3600);
         $minute = floor(($times-3600 * $hour)/60);
@@ -380,6 +389,7 @@ function dr_sec2time($times){
         strlen($second) == 1 && $second = '0'.$second;
         $result = $hour.':'.$minute.':'.$second;
     }
+
     return $result;
 }
 
@@ -487,8 +497,14 @@ function dr_star_level($num, $shifen = 0) {
 
 // 格式化sql创建
 function dr_format_create_sql($sql) {
+
+    if (!$sql) {
+        return '';
+    }
+
     $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
     $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ', $sql));
+
     return $sql;
 }
 
@@ -496,6 +512,10 @@ function dr_format_create_sql($sql) {
  * 获取cms域名部分
  */
 function dr_cms_domain_name($url) {
+
+    if (!$url) {
+        return '';
+    }
 
     $param = parse_url($url);
     if (isset($param['host']) && $param['host']) {
@@ -592,6 +612,10 @@ function dr_ueditor_html($value, $title = '') {
 
 // 获取域名部分
 function dr_get_domain_name($url) {
+
+    if (!$url) {
+        return '';
+    }
 
     list($url) = explode(':', str_replace(['https://', 'http://', '/'], '', $url));
 
@@ -1217,7 +1241,7 @@ function dr_notice_update($id, $name = '', $icon = '') {
 function dr_notice_icon($type, $c = '') {
 
     $data = dr_notice_info();
-    if ($data[$type]) {
+    if ($data && isset($data[$type]) && $data[$type]) {
         return '<i class="'.$data[$type]['icon'].'"></i>';
     }
 
@@ -1276,6 +1300,11 @@ function dr_post_json_data($url, $param = []) {
  * 获取折扣价格值
  */
 function dr_zhe_price($value, $zhe) {
+
+    if (!$value) {
+        return 0;
+    }
+
     return (float)max(0, $value * ($zhe/100));
 }
 
@@ -1482,6 +1511,11 @@ function dr_pay_money_html($data, $v = 2) {
  * 清除空白字符
  */
 function dr_clear_empty($value) {
+
+    if (!$value) {
+        return '';
+    }
+
     return str_replace(['　', ' '], '', trim($value));
 }
 
@@ -1618,6 +1652,10 @@ function dr_file($url) {
  */
 function dr_file_preview_html($value, $id = 0) {
 
+    if (!$value) {
+        return '';
+    }
+
     $ext = trim(strtolower(strrchr($value, '.')), '.');
     if (dr_is_image($ext)) {
         $value = dr_file($value);
@@ -1657,11 +1695,14 @@ function dr_file_list_preview_html($t) {
     }
 }
 
-
 if (! function_exists('dr_is_image')) {
     // 文件是否是图片
     function dr_is_image($value)
     {
+        if (!$value) {
+            return false;
+        }
+
         return in_array(
             strpos($value, '.') !== false ? trim(strtolower(strrchr($value, '.')), '.') : $value,
             ['jpg', 'gif', 'png', 'jpeg', 'webp']
@@ -1720,7 +1761,7 @@ function dr_field_input($name, $type, $option, $value = '', $id = 0) {
  */
 function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 
-    if ($fp = opendir($source_dir)) {
+    if ($source_dir && $fp = opendir($source_dir)) {
 
         $filedata = [];
         $new_depth = $directory_depth - 1;
@@ -1757,7 +1798,7 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
  */
 function dr_file_map($source_dir) {
 
-    if ($fp = opendir($source_dir)) {
+    if ($source_dir && $fp = opendir($source_dir)) {
 
         $filedata = [];
         $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
@@ -1845,8 +1886,14 @@ function dr_form_search_hidden($p = []) {
  * @return  string
  */
 function dr_base64_encode($string) {
+
+    if (!$string) {
+        return '';
+    }
+
     $data = base64_encode($string);
     $data = str_replace(['+', '/', '='], ['-', '_', ''], $data);
+
     return $data;
 }
 
@@ -1857,9 +1904,15 @@ function dr_base64_encode($string) {
  * @return  string
  */
 function dr_base64_decode($string) {
+
+    if (!$string) {
+        return '';
+    }
+
     $data = str_replace(['-', '_'], ['+', '/'], $string);
     $mod4 = strlen($data) % 4;
     $mod4 && $data.= substr('====', $mod4);
+
     return base64_decode($data);
 }
 
@@ -1984,6 +2037,10 @@ function dr_sorting($name) {
  */
 function dr_member_order($url) {
 
+    if (!$url) {
+        return '';
+    }
+
     $data = explode('&', $url);
     if ($data) {
         foreach ($data as $t) {
@@ -2040,6 +2097,10 @@ function dr_ajax_template($id, $filename, $param_str = '') {
  * @return  string
  */
 function dr_catcher_data($url, $timeout = 0) {
+
+    if (!$url) {
+        return '';
+    }
 
     // 获取本地文件
     if (strpos($url, 'file://')  === 0) {
@@ -2228,6 +2289,11 @@ function dr_get_keyword($s) {
     return dr_safe_keyword($s);
 }
 function dr_safe_keyword($s) {
+
+    if (!$s) {
+        return '';
+    }
+
     return str_replace('\%', '%', \Phpcmf\Service::M()->db->escapeLikeStringDirect(htmlspecialchars(trim(str_replace(['+', ' ', '_'], '%', urldecode((string)$s)), '%'))));
 }
 
@@ -2235,6 +2301,10 @@ function dr_safe_keyword($s) {
  * 安全过滤函数
  */
 function dr_safe_replace($string, $diy = []) {
+
+    if (!$string) {
+        return '';
+    }
 
     $replace = ['%20', '%27', '%2527', '*', "'", '"', ';', '<', '>', "{", '}'];
     $diy && is_array($diy) && $replace = dr_array2array($replace, $diy);
@@ -2247,6 +2317,11 @@ function dr_safe_replace($string, $diy = []) {
  * 安全过滤文件及目录名称函数
  */
 function dr_safe_filename($string) {
+
+    if (!$string) {
+        return '';
+    }
+
     return str_replace(
         ['..', "/", '\\', ' ', '<', '>', "{", '}', ';', ':', '[', ']', '\'', '"', '*', '?'],
         '',
@@ -2258,6 +2333,11 @@ function dr_safe_filename($string) {
  * 安全过滤用户名函数
  */
 function dr_safe_username($string) {
+
+    if (!$string) {
+        return '';
+    }
+
     return str_replace(
         ['..', "/", '\\', ' ', "#",'\'', '"'],
         '',
@@ -2269,6 +2349,11 @@ function dr_safe_username($string) {
  * 安全过滤密码函数
  */
 function dr_safe_password($string) {
+
+    if (!$string) {
+        return '';
+    }
+
     return trim($string);
 }
 
@@ -2276,6 +2361,11 @@ function dr_safe_password($string) {
  * 后台移除http和https协议
  */
 function dr_rm_http($url) {
+
+    if (!$url) {
+        return '';
+    }
+
     return IS_ADMIN ? str_replace(['http:', 'https:'], '', $url) : $url;
 }
 
@@ -2283,6 +2373,11 @@ function dr_rm_http($url) {
  * 将路径进行安全转换变量模式
  */
 function dr_safe_replace_path($path) {
+
+    if (!$path) {
+        return '';
+    }
+
     return str_replace(
         [
             WRITEPATH,
@@ -2490,6 +2585,11 @@ function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
  * @return  array
  */
 function dr_object2array($obj) {
+
+    if (!$obj) {
+        return [];
+    }
+
     $_arr = is_object($obj) ? get_object_vars($obj) : $obj;
     if ($_arr && is_array($_arr)) {
         foreach ($_arr as $key => $val) {
@@ -2497,6 +2597,7 @@ function dr_object2array($obj) {
             $arr[$key] = $val;
         }
     }
+
     return $arr;
 }
 
@@ -2647,12 +2748,18 @@ function dollar($value, $include_cents = TRUE) {
  * @param   $html
  */
 function dr_preg_html($html){
+
+    if (!$html) {
+        return '';
+    }
+
     $p = array("/<[a|A][^>]+(topic=\"true\")+[^>]*+>#([^<]+)#<\/[a|A]>/",
         "/<[a|A][^>]+(data=\")+([^\"]+)\"[^>]*+>[^<]*+<\/[a|A]>/",
         "/<[img|IMG][^>]+(src=\")+([^\"]+)\"[^>]*+>/");
     $t = array('topic{data=$2}','$2','img{data=$2}');
     $html = preg_replace($p, $t, $html);
     $html = strip_tags($html, "<br/>");
+
     return $html;
 }
 
@@ -3144,6 +3251,10 @@ function dr_member_group_dtype($dtype) {
  */
 function dr_html2emoji($msg){
 
+    if (!$msg) {
+        return '';
+    }
+
     if (substr($msg, 0, 1) == '"' && substr($msg, -1, 1) == '"') {
 
         $txt = json_decode(str_replace('|', '\\', $msg));
@@ -3172,9 +3283,11 @@ function dr_emoji2html($msg) {
  * @return type
  */
 function dr_clear_emoji($str){
+
     if (!$str) {
         return '';
     }
+
     return dr_clear_empty(dr_html2emoji(preg_replace_callback('/[\xf0-\xf7].{3}/', function($r) { return '';}, $str)));
 }
 
@@ -3184,6 +3297,10 @@ function dr_clear_emoji($str){
  * string 同步代码字符串
  */
 function dr_member_sync_url($string) {
+
+    if (!$string) {
+        return [];
+    }
 
     if (preg_match_all('/src="(.+)"/iU', $string, $match)) {
         return $match[1];

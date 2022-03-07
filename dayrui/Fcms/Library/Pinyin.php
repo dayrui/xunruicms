@@ -9,8 +9,7 @@
  * 汉字转换拼音
  */
  
-class Pinyin
-{
+class Pinyin {
 
     private $pinyin = []; // 汉字拼音对照数组
 

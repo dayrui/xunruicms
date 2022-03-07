@@ -9,10 +9,9 @@
  * SMTP邮件发送类
  */
 
-class Email
-{
+class Email {
 
-    public  $error;
+    public $error;
     protected $config;
 
     /**

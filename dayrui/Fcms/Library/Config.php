@@ -7,8 +7,7 @@
 
 
 // 配置文件生成
-class Config
-{
+class Config {
 
     private $file;
     private $space = 32;
@@ -133,7 +132,7 @@ class Config
      * 补空格
      */
     private function _space($name) {
-        $len = strlen($name) + 2;
+        $len = dr_strlen($name) + 2;
         $cha = $this->space - $len;
         $str = '';
         for ($i = 0; $i < $cha; $i ++) $str .= ' ';

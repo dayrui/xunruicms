@@ -292,14 +292,14 @@ class Files extends \Phpcmf\Library\A_Field {
                     $upload = '<input type="file" name="file_data">';
                 } else {
                     $disabled = '';
-                    $filepath = htmlspecialchars($id);
+                    $filepath = htmlspecialchars((string)$id);
                     $preview = dr_file_preview_html($id);
                     $upload = '';
                     $id = '';
                 }
                 $val.= str_replace(
                     ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
-                    [htmlspecialchars($t['title']), $description, $id, $filepath, $disabled, $preview, $upload],
+                    [htmlspecialchars((string)$t['title']), $description, $id, $filepath, $disabled, $preview, $upload],
                     $tpl
                 );
             }

@@ -9,8 +9,7 @@
  * Http格式化数据类
  */
 
-class Http
-{
+class Http {
 
     // 用于用户中心财务记录时间格式化回调，开发者可以根据实际情况回调返回参数
     public function member_paylog_list($data) {

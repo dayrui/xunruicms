@@ -8,8 +8,7 @@
 /**
  * 附件类
  */
-class Upload
-{
+class Upload {
 
     protected $error;
     protected $notallowed;

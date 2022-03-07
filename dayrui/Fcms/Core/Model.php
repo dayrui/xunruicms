@@ -591,8 +591,8 @@ class Model {
         if ((isset($field['fieldtype']) && $field['fieldtype'] == 'Date') || in_array($name, ['inputtime', 'updatetime'])) {
             // 匹配时间字段
             list($s, $e) = explode(',', $value);
-            $s = (int)strtotime($s);
-            $e = (int)strtotime($e);
+            $s = (int)strtotime((string)$s);
+            $e = (int)strtotime((string)$e);
             if ($s == $e && $s == 0) {
                 return '';
             }

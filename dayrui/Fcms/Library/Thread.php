@@ -9,8 +9,7 @@
  * 线程处理
  */
 
-class Thread
-{
+class Thread {
 
     /**
      * 线程非堵塞执行任务

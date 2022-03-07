@@ -9,8 +9,8 @@
  * 网站HTML目录分布
  */
 
-class Html
-{
+class Html {
+
     protected $webpath;
 
     // 网站文件生成地址

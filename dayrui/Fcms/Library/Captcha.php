@@ -8,8 +8,7 @@
 /**
  * 验证码类
  */
-class Captcha
-{
+class Captcha {
 
     private $code;
     private $charset = 'adehkmnprswyADEFGHKMNPRSTVWY683457'; //设置随机生成因子
@@ -75,7 +74,7 @@ class Captcha
         $_x = $this->width / 4;
         $this->fontcolor = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
         for ($i=0; $i<4; $i++) {
-            imagettftext($this->img,$this->fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),$this->height / 1.4,$this->fontcolor,$this->font,$this->code[$i]);
+            imagettftext($this->img,$this->fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),intval($this->height / 1.4),$this->fontcolor,$this->font,$this->code[$i]);
         }
     }
 

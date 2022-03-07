@@ -223,7 +223,7 @@ class Editor extends \Phpcmf\Library\A_Field {
      */
     public function insert_value($field) {
 
-        $value = (string)str_replace(['style=""', '<p><br></p>'], '', $_POST['data'][$field['fieldname']]);
+        $value = str_replace(['style=""', '<p><br></p>'], '', (string)$_POST['data'][$field['fieldname']]);
         $value = preg_replace("/cmsattachid=\"([0-9]+)\"/U", '', $value);
         // 第一张作为缩略图
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']]) && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];

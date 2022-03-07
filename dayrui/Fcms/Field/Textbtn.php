@@ -191,7 +191,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
             }
         }
 
-        $str = '<div class="form-control-static"> '.htmlspecialchars_decode($value).' </div>';
+        $str = '<div class="form-control-static"> '.htmlspecialchars_decode((string)$value).' </div>';
 
         return $this->input_format($field['fieldname'], $field['name'], $str);
     }

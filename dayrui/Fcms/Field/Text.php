@@ -84,7 +84,7 @@ class Text extends \Phpcmf\Library\A_Field {
 		} elseif ($field['setting']['option']['fieldtype'] == 'MEDIUMINT') {
 			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value ? $value : 0;
 		} else {
-			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
+			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_htmlspecialchars($value);
 		}
     }
 
