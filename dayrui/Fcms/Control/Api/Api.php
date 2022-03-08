@@ -6,8 +6,7 @@
  **/
 
 // 通用接口处理
-class Api extends \Phpcmf\Common
-{
+class Api extends \Phpcmf\Common {
 
     /**
      * ip地址

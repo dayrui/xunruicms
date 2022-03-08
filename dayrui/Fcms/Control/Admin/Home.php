@@ -22,6 +22,17 @@ class Home extends \Phpcmf\Common
             dr_redirect(dr_url('cache/index'));
         }
 
+        $local = \Phpcmf\Service::Apps(1);
+        if ($local) {
+            foreach ($local as $dir => $path) {
+                if (is_file(dr_get_app_dir($dir).'Config/Panel.php')) {
+                    \Phpcmf\Service::V()->admin(dr_get_app_dir($dir).'Views/');
+                    require dr_get_app_dir($dir).'Config/Panel.php';
+                    exit;
+                }
+            }
+        }
+
         $table_data = [];
         if (is_file(WRITEPATH.'config/main.php')) {
             $table_data = require WRITEPATH.'config/main.php';
