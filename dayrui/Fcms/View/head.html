@@ -68,7 +68,6 @@
             window.location.href = '{$category_field_url}&catid='+catid;
             {/if}
         }
-
         {if $is_index}
             // 退出
             function dr_logout(url) {
@@ -103,7 +102,7 @@
                      $(".nav-item").removeClass("active open");
                      name = '';
                  }
-               {/if}
+                {/if}
                 {if SYS_NOT_ADMIN_CACHE}
                 $("#right_page").attr('src', url);
                 $("#right_page").attr("url", url);
@@ -136,16 +135,18 @@
                     } else {
                         var wh = iw/1.5;
                     }
+                    $('#dr_tab_close').remove();
                     $('#dr_go_url').attr('style', 'width:'+wh+'px');
                     $('#dr_go_url').prepend('<li id="dr_go_url_'+cmd+'" class="active"><a href="javascript:;" onclick="dr_go_url(\''+url+'\', \'\', \'true\')">'+name+'</a><i onclick="$(\'#dr_go_url_'+cmd+'\').remove();" class="close-tab fa fa-remove"></i></li>');
-                    $('#dr_go_url').prepend('<li id="dr_tab_close"><i title="{dr_lang('全部移除')}" onclick="dr_tab_close()" class="fa fa-trash"></i></li>');
+                    if ($('#dr_tab_close').length == 0) {
+                        $('#dr_go_url').prepend('<li id="dr_tab_close"><i title="{dr_lang('全部移除')}" onclick="dr_tab_close()" class="fa fa-trash"></i></li>');
+                    }
                 }
                 {/if}
             }
-                function dr_tab_close() {
-
-                    $('#dr_go_url li').remove();
-               }
+            function dr_tab_close() {
+                $('#dr_go_url li').remove();
+            }
             function Mlink(top, left, link, url) {
 
                 $('.tooltip').hide();

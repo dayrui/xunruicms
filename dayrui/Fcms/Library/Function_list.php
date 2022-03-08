@@ -136,10 +136,6 @@ class Function_list {
     // 用于列表显示作者
     public function author($value, $param = [], $data = []) {
 
-        if (!$value) {
-            return '';
-        }
-
         if ($value == 'guest') {
             return dr_lang('游客');
         } elseif ((isset($data['username']) || isset($data['author'])) && $data['uid']) {
@@ -151,41 +147,45 @@ class Function_list {
         } else {
             $member = $value;
         }
+
         return $value ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($data['uid']).'" member="'.htmlspecialchars($member).'">'.dr_strcut($value, 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表显示作者
     public function uid($uid, $param = [], $data = []) {
 
-        if (!$uid) {
-            return '';
-        }
-
         // 查询username
         if (strlen($uid) > 12) {
             return dr_lang('游客');
         }
+
         $this->uid_data[$uid] = isset($this->uid_data[$uid]) && $this->uid_data[$uid] ? $this->uid_data[$uid] : \Phpcmf\Service::M('member')->username($uid);
+
         return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($uid).'" member="'.htmlspecialchars($this->uid_data[$uid]).'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表关联主题
     public function ctitle($cid, $param = [], $data = []) {
+
         // 查询username
         if (!$cid) {
             return dr_lang('未关联');
         }
+
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $this->cid_data[$cid] = isset($this->cid_data[$cid]) && $this->cid_data[$cid] ? $this->cid_data[$cid] : \Phpcmf\Service::M()->table_site($mid)->get($cid);
+
         return $this->cid_data[$cid] ? $this->title($this->cid_data[$cid]['title'], $param, $this->cid_data[$cid]) : dr_lang('关联主题不存在');
     }
 
     // 用于列表显示ip地址
     public function ip($value, $param = [], $data = []) {
+
         if ($value) {
             list($value) = explode('-', $value);
             return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), 20).'</a>';
         }
+
         return dr_lang( '无');
     }
 
@@ -254,10 +254,6 @@ class Function_list {
     // 用于列表显示单文件
     public function file($value, $param = [], $data = []) {
 
-        if (!$value) {
-            return '';
-        }
-
         if ($value) {
             $file = \Phpcmf\Service::C()->get_attachment($value);
             if ($file) {
@@ -285,10 +281,6 @@ class Function_list {
 
     // 用于列表显示用户组
     public function group($value, $param = [], $data = []) {
-
-        if (!$value) {
-            return '';
-        }
 
         $user = dr_member_info($data['id']);
         if ($user && $user['group']) {
@@ -340,6 +332,7 @@ class Function_list {
         if (dr_is_app('scorelog') && \Phpcmf\Service::C()->_is_admin_auth('scorelog/home/index')) {
             return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('scorelog/home/index', 'scorelog/home/index', ['field'=>'uid','keyword'=>$data['id']]). '" style="color:#2f5fef">' .intval($value).'</a>';
         }
+
         return '<span style="color:#2f5fef">'.intval($value).'</span>';
     }
 
@@ -355,10 +348,6 @@ class Function_list {
 
     // 用于指定插件调用
     public function fstatus($value, $param = [], $data = []) {
-
-        if (!$value) {
-            return '';
-        }
 
         if (!dr_is_app('fstatus')) {
             return '[模块内容开关]插件未安装';
@@ -461,10 +450,6 @@ class Function_list {
     // 实时存储时间值
     public function save_time_value($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
-            return '';
-        }
-
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
         $html = '<input type="text" class="form-control" placeholder="" value="'.dr_date($value).'" onblur="dr_ajax_save(dr_strtotime(this.value), \''.$url.'\', \''.$field['fieldname'].'\')">';
@@ -477,13 +462,9 @@ class Function_list {
     // 实时存储文本值
     public function save_text_value($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
-            return '';
-        }
-
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
-        $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars($value).'" onblur="dr_ajax_save(this.value, \''.$url.'\', \''.$field['fieldname'].'\')">';
+        $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars((string)$value).'" onblur="dr_ajax_save(this.value, \''.$url.'\', \''.$field['fieldname'].'\')">';
 
         \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
 
@@ -493,14 +474,10 @@ class Function_list {
     // 实时存储选择值
     public function save_select_value($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
-            return '';
-        }
-
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&name='.$field['fieldname'].'&id='.$data['id'].'&after='; //after是回调函数
 
-        $html = '<a href="javascript:;" onclick="dr_ajax_list_open_close(this, \''.$url.'\');" value="'.$value.'" class="badge badge-'.($value ? "yes" : "no").'"><i class="fa fa-'.($value ? "check" : "times").'"></i></a>';
+        $html = '<a href="javascript:;" onclick="dr_ajax_list_open_close(this, \''.$url.'\');" value="'.(string)$value.'" class="badge badge-'.($value ? "yes" : "no").'"><i class="fa fa-'.($value ? "check" : "times").'"></i></a>';
         if (!$this->select_js) {
             $html.= '<script>function dr_ajax_list_open_close(e, url) {
             var obj = $(e);

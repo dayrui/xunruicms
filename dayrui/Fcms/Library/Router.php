@@ -317,8 +317,8 @@ class Router {
             $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
             $data['pdirname'].= $data['dirname'];
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
-            $data['opdirname'] = $data['pid'] && isset($mod['category'][$data['pid']]) ? $mod['category'][$data['pid']]['dirname'] : '';
-            $data['otdirname'] = $data['topid'] && isset($mod['category'][$data['topid']]) ? $mod['category'][$data['topid']]['dirname'] : '';
+            $data['opdirname'] = $data['pid'] && isset($mod['category'][$data['pid']]) ? $mod['category'][$data['pid']]['dirname'] : $data['dirname'];
+            $data['otdirname'] = $data['topid'] && isset($mod['category'][$data['topid']]) ? $mod['category'][$data['topid']]['dirname'] : $data['dirname'];
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
         }
 
@@ -373,8 +373,8 @@ class Router {
             $data['m'] = date('m', $inputtime);
             $data['d'] = date('d', $inputtime);
             $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
-            $data['opdirname'] = $cat['pid'] && isset($mod['category'][$cat['pid']]) ? $mod['category'][$cat['pid']]['dirname'] : '';
-            $data['otdirname'] = $cat['topid'] && isset($mod['category'][$cat['topid']]) ? $mod['category'][$cat['topid']]['dirname'] : '';
+            $data['opdirname'] = $cat['pid'] && isset($mod['category'][$cat['pid']]) ? $mod['category'][$cat['pid']]['dirname'] : $data['dirname'];
+            $data['otdirname'] = $cat['topid'] && isset($mod['category'][$cat['topid']]) ? $mod['category'][$cat['topid']]['dirname'] : $data['dirname'];
             return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
         }
 

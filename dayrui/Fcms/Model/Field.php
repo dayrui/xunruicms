@@ -365,7 +365,6 @@ class Field extends \Phpcmf\Model {
                 $this->_table_field = array_merge($this->_table_field, $rt);
             }
         }
-
     }
     
     /**
