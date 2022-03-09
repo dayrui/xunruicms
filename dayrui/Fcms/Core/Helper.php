@@ -460,9 +460,9 @@ function dr_upload_temp_path() {
 // 星级显示
 function dr_star_level($num, $shifen = 0) {
 
-    $shifen && $num = $num/2;
-
     $lv = 5;
+    $shifen && $num = $num/2;
+    $num = floatval($num);
     $int = min(floor($num), $lv);
     if (!$int) {
         return '<i title="'.$num.'" class="fa fa-star-o"></i><i title="'.$num.'" class="fa fa-star-o"></i><i title="'.$num.'" class="fa fa-star-o"></i><i title="'.$num.'" class="fa fa-star-o"></i><i title="'.$num.'" class="fa fa-star-o"></i>';

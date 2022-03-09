@@ -165,10 +165,9 @@ class Install extends \Phpcmf\Common {
                     $data['db_prefix'] = strtolower($data['db_prefix']);
 
                     // 判断是否安装过
-                    /*
-                    if ($result = mysqli_query($mysqli, 'SHOW FULL COLUMNS FROM `'.$data['db_prefix'].'cron`')) {
+                    if (mysqli_query($mysqli, 'SHOW FULL COLUMNS FROM `'.$data['db_prefix'].'cron`')) {
                         $this->_json(0, '指定的数据库（'.$data['db_name'].'）已经被安装过，你可以尝试修改数据库名或者数据表前缀');
-                    }*/
+                    }
                     
 
                     // 存储缓存文件中

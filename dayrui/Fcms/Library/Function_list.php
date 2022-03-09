@@ -148,7 +148,7 @@ class Function_list {
             $member = $value;
         }
 
-        return $value ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($data['uid']).'" member="'.htmlspecialchars($member).'">'.dr_strcut($value, 10).'</a>' : dr_lang('游客');
+        return $value ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($data['uid']).'" member="'.dr_htmlspecialchars($member).'">'.dr_strcut($value, 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表显示作者
@@ -161,7 +161,7 @@ class Function_list {
 
         $this->uid_data[$uid] = isset($this->uid_data[$uid]) && $this->uid_data[$uid] ? $this->uid_data[$uid] : \Phpcmf\Service::M('member')->username($uid);
 
-        return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($uid).'" member="'.htmlspecialchars($this->uid_data[$uid]).'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
+        return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($uid).'" member="'.dr_htmlspecialchars($this->uid_data[$uid]).'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
     }
 
     // 用于列表关联主题
