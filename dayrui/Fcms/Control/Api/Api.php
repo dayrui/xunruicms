@@ -60,6 +60,9 @@ class Api extends \Phpcmf\Common {
             $QR = imagecreatefrompng($file);
         } else {
             \QRcode::png($value, $file, $errorCorrectionLevel, $matrixPointSize, 3);
+            if (!is_file($file)) {
+                exit('二维码生成失败');
+            }
             $QR = imagecreatefromstring(file_get_contents($file));
             if ($thumb) {
                 $code = dr_catcher_data($thumb);

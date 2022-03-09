@@ -233,13 +233,10 @@ class QRtools {
     //----------------------------------------------------------------------
     public static function log($outfile, $err)
     {
-        if (QR_LOG_DIR !== false) {
+     
+        if (CI_DEBUG) {
             if ($err != '') {
-                if ($outfile !== false) {
-                    file_put_contents(QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
-                } else {
-                    file_put_contents(QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
-                }
+                log_message('error', '生成二维码失败：'.$err);
             }
         }
     }
@@ -2937,18 +2934,17 @@ class QRrawcode {
     //----------------------------------------------------------------------
     public function getCode()
     {
-        $ret;
 
         if($this->count < $this->dataLength) {
-            $row = $this->count % $this->blocks;
-            $col = $this->count / $this->blocks;
+            $row = intval($this->count % $this->blocks);
+            $col = intval($this->count / $this->blocks);
             if($col >= $this->rsblocks[0]->dataLength) {
                 $row += $this->b1;
             }
             $ret = $this->rsblocks[$row]->data[$col];
         } else if($this->count < $this->dataLength + $this->eccLength) {
-            $row = ($this->count - $this->dataLength) % $this->blocks;
-            $col = ($this->count - $this->dataLength) / $this->blocks;
+            $row = intval(($this->count - $this->dataLength) % $this->blocks);
+            $col = intval(($this->count - $this->dataLength) / $this->blocks);
             $ret = $this->rsblocks[$row]->ecc[$col];
         } else {
             return 0;
@@ -3000,7 +2996,6 @@ class QRcode {
                 $bit = $bit >> 1;
             }
         }
-
         QRtools::markTime('after_filler');
 
         unset($raw);
