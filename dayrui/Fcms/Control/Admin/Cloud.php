@@ -212,6 +212,9 @@ class Cloud extends \Phpcmf\Common
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
         $type = intval(\Phpcmf\Service::L('input')->get('type'));
         if (!is_file(dr_get_app_dir($dir).'Config/App.php')) {
+            if (IS_DEV) {
+                $this->_json(0, dr_lang('安装程序'.dr_get_app_dir($dir).'Config/App.php不存在'));
+            }
             $this->_json(0, dr_lang('安装程序App.php不存在'));
         }
 
