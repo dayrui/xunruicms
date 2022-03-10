@@ -107,7 +107,14 @@ class Pay extends \Phpcmf\Library\A_Field  {
             }
 
             // 付款界面模板
-            $htmlfile = $field['setting']['option']['payfile'] && is_file(WEBPATH.'config/pay/'.$field['setting']['option']['payfile']) ? WEBPATH.'config/pay/'.$field['setting']['option']['payfile'] :  ROOTPATH.'config/pay/buy.html';
+            $htmlfile = CONFIGPATH.'pay/buy.html';
+            if ($field['setting']['option']['payfile']) {
+                if (is_file(WEBPATH.'config/pay/'.$field['setting']['option']['payfile'])) {
+                    $htmlfile = WEBPATH.'config/pay/'.$field['setting']['option']['payfile'];
+                } elseif (is_file(CONFIGPATH.'pay/'.$field['setting']['option']['payfile'])) {
+                    $htmlfile = CONFIGPATH.'pay/'.$field['setting']['option']['payfile'];
+                }
+            }
             if (!is_file($htmlfile)) {
                 return '支付表单模板文件不存在：'.$htmlfile;
             }

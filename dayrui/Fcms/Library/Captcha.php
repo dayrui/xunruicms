@@ -24,7 +24,7 @@ class Captcha {
         $this->font = WRITEPATH.'captcha.ttf';
         if (!is_file($this->font)) {
             // 加载老版本的字体文件
-            $this->font = ROOTPATH.'config/font/1.ttf';
+            $this->font = CONFIGPATH.'font/1.ttf';
             if (!is_file($this->font)) {
                 log_message('errpr', '验证码字体文件（'.WRITEPATH.'captcha.ttf）不存在，可能无法生成验证码');
             }

@@ -41,8 +41,8 @@
                 return $this->format;
             }
 
-            if (is_file(ROOTPATH.'config/field.php')) {
-                $field = require ROOTPATH.'config/field.php';
+            if (is_file(CONFIGPATH.'field.php')) {
+                $field = require CONFIGPATH.'field.php';
                 if (IS_ADMIN) {
                     isset($field['admin']) && $field['admin'] && $this->format = $field['admin'];
                 } elseif (IS_MEMBER) {

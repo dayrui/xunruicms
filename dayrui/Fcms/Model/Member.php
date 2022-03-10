@@ -798,8 +798,8 @@ class Member extends \Phpcmf\Model {
 
         $config = \Phpcmf\Service::R($file);
         if ($config['third']) {
-            if (is_file(ROOTPATH.'config/mysms.php')) {
-                require_once ROOTPATH.'config/mysms.php';
+            if (is_file(CONFIGPATH.'mysms.php')) {
+                require_once CONFIGPATH.'mysms.php';
             }
             $method = 'my_sendsms_'.$type;
             if (function_exists($method)) {

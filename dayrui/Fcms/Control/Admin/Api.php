@@ -671,8 +671,8 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('参数错误'));
         }
 
-		if (is_file(ROOTPATH.'config/mysms.php')) {
-			require_once ROOTPATH.'config/mysms.php';
+		if (is_file(CONFIGPATH.'mysms.php')) {
+			require_once CONFIGPATH.'mysms.php';
 		}
         $method = 'my_sendsms_code';
         if (function_exists($method)) {

@@ -24,7 +24,7 @@ class Hooks extends \CodeIgniter\Events\Events {
         }
 
         // 框架主钩子
-        require ROOTPATH.'config/hooks.php';
+        require CONFIGPATH.'hooks.php';
 
         self::on('pre_system', function () {
 

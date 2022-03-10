@@ -227,7 +227,7 @@ class Api extends \Phpcmf\Common {
             $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('file'));
             if ($name) {
                 $data = dr_linkage($code, $pid);
-                $file = ROOTPATH.'config/mylinkage/'.$name;
+                $file = CONFIGPATH.'mylinkage/'.$name;
                 $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
                 if (is_file($file)) {
                     require $file;

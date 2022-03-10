@@ -58,7 +58,7 @@ class Site_image extends \Phpcmf\Common
             //'image' => $data['image_reduce'],
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,
-            'waterfile' => dr_file_map(ROOTPATH.'config/watermark/', 1),
+            'waterfile' => dr_file_map(CONFIGPATH.'watermark/', 1),
         ]);
         \Phpcmf\Service::V()->display('site_image.html');
 	}
@@ -70,7 +70,7 @@ class Site_image extends \Phpcmf\Common
         if ($at == 'font') {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
                 'save_name' => 'null',
-                'save_path' => ROOTPATH.'config/watermark/',
+                'save_path' => CONFIGPATH.'watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['ttf'],
                 'file_size' => 50 * 1024 * 1024,
@@ -83,7 +83,7 @@ class Site_image extends \Phpcmf\Common
         } else {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
                 'save_name' => 'null',
-                'save_path' => ROOTPATH.'config/watermark/',
+                'save_path' => CONFIGPATH.'watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['png'],
                 'file_size' => 10 * 1024 * 1024,

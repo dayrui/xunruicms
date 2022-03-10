@@ -35,7 +35,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
 		$str.= '</select>';
 
         $str2 = '<select class="form-control" name="data[setting][option][file]"><option value=""> -- </option>';
-        $files = dr_file_map(ROOTPATH.'config/mylinkage/', 1);
+        $files = dr_file_map(CONFIGPATH.'mylinkage/', 1);
         $files2 = dr_file_map(dr_get_app_dir($this->app).'Config/mylinkage/', 1);
         $files2 && $files = dr_array2array($files2, $files);
         if ($files) {
@@ -194,7 +194,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
             $edit_html = '<div class="form-control-static" >'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkage_select_'.$name.'()" style="color:blue">'.dr_lang('[重新选择]').'</a></div>';
             if ($field['setting']['option']['file']) {
                 $data = dr_linkage($field['setting']['option']['linkage'], $value);
-                $file = ROOTPATH.'config/mylinkage/'.$field['setting']['option']['file'];
+                $file = CONFIGPATH.'mylinkage/'.$field['setting']['option']['file'];
                 $file2 = dr_get_app_dir(APP_DIR).'Config/mylinkage/'.$field['setting']['option']['file'];
                 if (is_file($file)) {
                     require $file;

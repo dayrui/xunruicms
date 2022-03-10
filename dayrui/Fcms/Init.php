@@ -23,6 +23,8 @@ define('SYSTEMPATH', BASEPATH);
 define('CMSPATH', FCPATH.'Fcms/');
 // 核心程序目录
 define('COREPATH', CMSPATH);
+// 主配置目录
+!defined('CONFIGPATH') && define('CONFIGPATH', ROOTPATH.'config/');
 // App程序目录
 !defined('APPSPATH') && define('APPSPATH', FCPATH.'App/');
 // 程序初始化

@@ -778,11 +778,11 @@ class Table extends \Phpcmf\Common {
             $config = require CMSPATH.'Config/Apage.php';
         } else {
             // 用户中心的分页配置
-            $file = 'config/page/'.(\Phpcmf\Service::IS_PC() ? 'pc' : 'mobile').'/member.php';
-            if (is_file(WEBPATH.$file)) {
-                $config = require WEBPATH.$file;
-            } elseif (is_file(ROOTPATH.$file)) {
-                $config = require ROOTPATH.$file;
+            $file = 'page/'.(\Phpcmf\Service::IS_PC() ? 'pc' : 'mobile').'/member.php';
+            if (is_file(WEBPATH.'config/'.$file)) {
+                $config = require WEBPATH.'config/'.$file;
+            } elseif (is_file(CONFIGPATH.$file)) {
+                $config = require CONFIGPATH.$file;
             } else {
                 exit('无法找到分页配置文件【'.$file.'】');
             }

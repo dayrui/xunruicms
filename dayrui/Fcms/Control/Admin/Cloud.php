@@ -438,9 +438,9 @@ return [
             $is_ok = 1;
             $this->_copy_dir($cmspath.'MYPATH', MYPATH);
         }
-        if (is_dir($cmspath.'COREPATH')) {
+        if (is_dir($cmspath.'CONFIGPATH')) {
             $is_ok = 1;
-            $this->_copy_dir($cmspath.'COREPATH', COREPATH);
+            $this->_copy_dir($cmspath.'CONFIGPATH', CONFIGPATH);
         }
 
         // 开发者模式下保留目录

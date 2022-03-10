@@ -40,7 +40,7 @@ class Email extends \Phpcmf\Model {
         $content = $msg;
         if (strlen($msg) <= 30 && trim(strtolower(strrchr($msg, '.')), '.') == 'html') {
             $my = WEBPATH.'config/notice/email/'.$msg;
-            $default = ROOTPATH.'config/notice/email/'.$msg;
+            $default = CONFIGPATH.'notice/email/'.$msg;
             $content = is_file($my) ? file_get_contents($my) : file_get_contents($default);
             if (!$content) {
                 log_message('error', '邮件模板不存在：'.$msg);

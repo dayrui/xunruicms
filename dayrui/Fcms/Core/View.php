@@ -1276,11 +1276,11 @@ class View {
         } else {
             // 这里要支持移动端分页条件
             !$name && $name = 'page';
-            $file = 'config/page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
-            if (is_file(WEBPATH.$file)) {
-                $config = require WEBPATH.$file;
-            } elseif (is_file(ROOTPATH.$file)) {
-                $config = require ROOTPATH.$file;
+            $file = 'page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
+            if (is_file(WEBPATH.'config/'.$file)) {
+                $config = require WEBPATH.'config/'.$file;
+            } elseif (is_file(CONFIGPATH.$file)) {
+                $config = require CONFIGPATH.$file;
             } else {
                 exit('无法找到分页配置文件【'.$file.'】');
             }

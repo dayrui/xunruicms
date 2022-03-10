@@ -164,8 +164,8 @@ class Check extends \Phpcmf\Common
             case '06':
 
                 // 语言文件兼容处理
-                if (is_dir(ROOTPATH.'config/language/') && !is_dir(ROOTPATH.'api/language/')) {
-                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'config/language/', ROOTPATH.'config/language/', ROOTPATH.'api/language/');
+                if (is_dir(CONFIGPATH.'language/') && !is_dir(CONFIGPATH.'language/')) {
+                    \Phpcmf\Service::L('file')->copy_dir(CONFIGPATH.'language/', CONFIGPATH.'language/', ROOTPATH.'api/language/');
                 }
 
                 $rt = [];
@@ -836,7 +836,7 @@ class Check extends \Phpcmf\Common
                 // 应用插件
                 $func = [];
                 $local = \Phpcmf\Service::Apps();
-                $custom = file_get_contents(ROOTPATH.'config/custom.php');
+                $custom = file_get_contents(CONFIGPATH.'custom.php');
                 foreach ($local as $dir => $path) {
                     if (is_file($path.'Config/App.php')) {
                         // 变量重定义

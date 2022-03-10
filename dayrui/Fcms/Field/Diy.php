@@ -29,7 +29,7 @@ class Diy extends \Phpcmf\Library\A_Field {
         $option['file'] = isset($option['file']) ? $option['file'] : '';
 
         $str = '<select class="form-control" name="data[setting][option][file]"><option value=""> -- </option>';
-        $files = dr_file_map(ROOTPATH.'config/myfield/', 1);
+        $files = dr_file_map(CONFIGPATH.'myfield/', 1);
 		if ($this->app) {
 			$files2 = dr_file_map(dr_get_app_dir($this->app).'Config/myfield/', 1);
 			$files2 && $files = dr_array2array($files2, $files);
@@ -115,7 +115,7 @@ class Diy extends \Phpcmf\Library\A_Field {
         $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
         // 文件类型
-        $file = ROOTPATH.'config/myfield/'.$field['setting']['option']['file'];
+        $file = CONFIGPATH.'myfield/'.$field['setting']['option']['file'];
         $file2 = dr_get_app_dir(APP_DIR).'Config/myfield/'.$field['setting']['option']['file'];
         if (is_file($file)) {
             $name = $field['fieldname'];

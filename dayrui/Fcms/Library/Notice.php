@@ -259,7 +259,7 @@ class Notice {
             $my = '';
         }
 
-        $content_code = $my ? $my : file_get_contents(ROOTPATH.'config/notice/'.$type.'/'.$name.'.html');
+        $content_code = $my ? $my : file_get_contents(CONFIGPATH.'notice/'.$type.'/'.$name.'.html');
         if (!$content_code) {
             return dr_return_data(0, '模板不存在【config/notice/'.$type.'/'.$name.'.html】');
         }
