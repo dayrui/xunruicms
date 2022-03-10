@@ -1184,10 +1184,13 @@ class Api extends \Phpcmf\Common {
         }
 
         list($cache_path, $cache_url) = dr_avatar_path();
-        if (is_file($cache_path.$uid.'.jpg')) {
-            unlink($cache_path.$uid.'.jpg');
-            if (is_file($cache_path.$uid.'.jpg')) {
-                $this->_json(0, dr_lang('文件删除失败，请检查头像目录权限'));
+
+        foreach ([$cache_path.$uid.'.jpg', $cache_path.dr_avatar_dir($uid).$uid.'.jpg'] as $file) {
+            if (is_file($file)) {
+                unlink($file);
+                if (is_file($file)) {
+                    $this->_json(0, dr_lang('文件删除失败，请检查头像目录权限'));
+                }
             }
         }
 
@@ -1215,6 +1218,9 @@ class Api extends \Phpcmf\Common {
                     $content = \Phpcmf\Service::L('file')->base64_image($_FILES["file"]["tmp_name"]);
                 }
             }
+            if (!$content) {
+                $this->_json(0, dr_lang('上传文件失败'));
+            }
             list($cache_path) = dr_avatar_path();
             if (preg_match('/^(data:\s*image\/(\w+);base64,)/i', $content, $result)) {
                 $content = base64_decode(str_replace($result[1], '', $content));
@@ -1225,7 +1231,7 @@ class Api extends \Phpcmf\Common {
                     'content' => $content,
                     'ext' => 'jpg',
                     'save_name' => $uid,
-                    'save_file' => $cache_path.$uid.'.jpg',
+                    'save_file' => $cache_path.dr_avatar_dir($uid).$uid.'.jpg',
                 ]);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);

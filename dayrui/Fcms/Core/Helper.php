@@ -641,7 +641,23 @@ function dr_save_bfb_data($data) {
     return $cache;
 }
 
-// 会员头像路径和url
+// 会员头像存储目录
+function dr_avatar_dir($uid) {
+
+    if (!$uid) {
+        return '';
+    }
+
+    $uid = abs(intval($uid));
+    $uid = sprintf("%09d", $uid); //前边加0补齐9位，例如UID为31的用户变成 000000031
+    $dir1 = substr($uid, 0, 3);  //取左边3位，即 000
+    $dir2 = substr($uid, 3, 2);  //取4-5位，即00
+    $dir3 = substr($uid, 5, 2);  //取6-7位，即00
+    // 下面拼成用户头像路径，即000/00/00/
+    return $dir1.'/'.$dir2.'/'.$dir3.'/';
+}
+
+// 会员头像存储路径
 function dr_avatar_path() {
 
     //$config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
@@ -672,7 +688,10 @@ function dr_avatar($uid, $fix = 1) {
 
     if ($uid) {
         list($cache_path, $cache_url) = dr_avatar_path();
-        if (is_file($cache_path.$uid.'.jpg')) {
+        $dir = dr_avatar_dir($uid);
+        if (is_file($cache_path.$dir.$uid.'.jpg')) {
+            return $cache_url.$dir.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
+        } elseif (is_file($cache_path.$uid.'.jpg')) {
             return $cache_url.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
         }
     }
