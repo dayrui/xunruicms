@@ -1982,6 +1982,6 @@ function fileupload_file_edit(name, e)
                 dr_tips(1, obj.msg);
             }
         },
-        content: json.input_url+"&is_iframe=1&file="+file+"&name="+name
+        content: json.input_url+"&is_iframe=1&file="+encodeURIComponent(file)+"&name="+name
     });
 }
