@@ -119,6 +119,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     </div>
 				</div>
 			</div>
+			'.$this->attachment($option).'
 			',
             '<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
@@ -153,7 +154,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
     }
 
     // 对应的html
-    protected function _field_type_html($config, $cname, $value, $hang, $lie) {
+    protected function _field_type_html($config, $cname, $value, $hang, $lie, $field = []) {
 
         $html = '';
         if ($config['type'] == 1) {
@@ -184,8 +185,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 'size' => 10,
                 'count' => 1,
                 'exts' => $config['option'] ? $config['option'] : 'jpg,gif,png,jpeg',
-                'attachment' => 0,
-                'image_reduce' => 0,
+                'attachment' => $field['setting']['option']['attachment'],
+                'image_reduce' => $field['setting']['option']['image_reduce'],
             ], 'ENCODE').'&ct=0&one=1';
             $html = '<label><input class="form-control2" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<input class="form-control-link" type="hidden" value="'.$link.'">';
@@ -426,7 +427,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             if ($field['setting']['option']['field']) {
                 foreach ($field['setting']['option']['field'] as $n => $t) {
                     if ($t['type']) {
-                        $tpl.= ' <td>'.$this->_field_type_html($t, $name, $value, '{hang}', $n).'</td>';
+                        $tpl.= ' <td>'.$this->_field_type_html($t, $name, $value, '{hang}', $n, $field).'</td>';
                     }
                 }
             }
@@ -440,7 +441,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     if ($field['setting']['option']['field']) {
                         foreach ($field['setting']['option']['field'] as $n => $t) {
                             if ($t['type']) {
-                                $str.= ' <td>'.$this->_field_type_html($t, $name, $value, $hang, $n).'</td>';
+                                $str.= ' <td>'.$this->_field_type_html($t, $name, $value, $hang, $n, $field).'</td>';
                             }
                         }
                     }
@@ -461,7 +462,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 if ($field['setting']['option']['field']) {
                     foreach ($field['setting']['option']['field'] as $n => $t) {
                         if ($t['type']) {
-                            $str.= ' <td>'.$this->_field_type_html($t, $name, $value, $i, $n).'</td>';
+                            $str.= ' <td>'.$this->_field_type_html($t, $name, $value, $i, $n, $field).'</td>';
                         }
                     }
                 }
