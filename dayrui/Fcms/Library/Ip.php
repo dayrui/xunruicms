@@ -19,6 +19,10 @@ class Ip {
      */
     public function set($ip) {
 
+        if (!$ip) {
+            return '';
+        }
+
         if (strpos($ip, '-') !== false) {
             list($ip) = explode('-', $ip); // 排除源端口号
         }
@@ -46,10 +50,17 @@ class Ip {
      * IP地址解析详细地址
      */
     public function address($ip) {
+
+        if (!$ip) {
+            return '';
+        }
+
         if ($ip == '127.0.0.1') {
             return '本地';
         }
+
         $this->set($ip);
+
         return $this->address;
     }
 
@@ -57,9 +68,13 @@ class Ip {
      * IP地址解析城市
      */
     public function city($ip) {
-        if ($ip == '127.0.0.1') {
+
+        if (!$ip) {
+            return '';
+        } elseif ($ip == '127.0.0.1') {
             return '本地';
         }
+
         $this->set($ip);
         if (preg_match('/省(.+)市/U', $this->address, $m)) {
             return $m[1];
@@ -81,9 +96,13 @@ class Ip {
      * IP地址解析省
      */
     public function province($ip) {
-        if ($ip == '127.0.0.1') {
+
+        if (!$ip) {
+            return '';
+        } elseif ($ip == '127.0.0.1') {
             return '本地';
         }
+
         $this->set($ip);
         if (preg_match('/(.+)省/U', $this->address, $m)) {
             return $m[1];
@@ -110,7 +129,7 @@ class Ip {
             return 'IP库不存在';
         }
 
-        $ip = explode('.', $ip);
+        $ip = explode('.', (string)$ip);
         $ipNum = $ip[0] * 16777216 + $ip[1] * 65536 + $ip[2] * 256 + $ip[3];
 
         if(!($DataBegin = fread($fd, 4)) || !($DataEnd = fread($fd, 4)) ) return;
@@ -239,6 +258,7 @@ class Ip {
 
         $name = dr_code2utf8($ipaddr);
         $arr = explode(' ', $name);
+
         return $arr[0] ? $arr[0] : $name;
     }
 

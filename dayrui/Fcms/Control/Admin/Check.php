@@ -12,8 +12,8 @@ class Check extends \Phpcmf\Common
 
         '01' => '文件上传检测',
         '02' => 'PHP环境检测',
-        '15' => '服务器环境检测',
         '03' => '目录权限检测',
+        '15' => '服务器环境检测',
         '04' => '后台入口名称检测',
         '05' => '数据库权限检测',
         '06' => '模板完整性检测',
@@ -911,7 +911,14 @@ class Check extends \Phpcmf\Common
             case '15':
                 // 服务器环境
                 if (is_file(ROOTPATH.'test.php')) {
-                    $this->_json(0,'当项目正式上线后，根目录的test.php建议删除');
+                    $error[] = '当项目正式上线后，根目录的test.php建议删除';
+                }
+                if (IS_DEV) {
+                    $error[] = '当项目正式上线后，根目录的index.php中的开发者默认是参数，建议关闭';
+                }
+
+                if ($error) {
+                    $this->_json(0, implode('<br>', $error));
                 }
 
                 $this->_json(1, '完成');
