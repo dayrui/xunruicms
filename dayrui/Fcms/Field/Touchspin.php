@@ -165,12 +165,19 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 
 		$str.= '<div '.$style.'><input class="form-control '.$field['setting']['option']['css'].'" type="text" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$required.' '.$attr.' /></div>';
         $js = \Phpcmf\Service::L('js_packer');
+        $xs = 0;
+        if (strpos($field['setting']['option']['step'], '.')) {
+            list($a, $b) = explode('.', $field['setting']['option']['step']);
+            $xs = dr_strlen($b);
+        }
+
         $str.= $js->pack('<script type="text/javascript">
     $(function(){
         $("#dr_'.$field['fieldname'].'").TouchSpin({
             buttondown_class: "btn '.$down.'",
             buttonup_class: "btn '.$up.'",
             verticalbuttons: '.(!$field['setting']['option']['show'] ?  'true' : 'false').',
+            decimals: '.$xs.',
             step: '.$field['setting']['option']['step'].',
             min: '.$field['setting']['option']['min'].',
             max: '.$field['setting']['option']['max'].'
