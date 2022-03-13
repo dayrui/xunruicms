@@ -169,7 +169,7 @@ class Date extends \Phpcmf\Library\A_Field {
 
         $updatetime_select = 0;
         // 字段默认值
-        !$value && $value = $this->get_default_value($field['setting']['option']['value']);
+        !$value && $value = (string)$this->get_default_value($field['setting']['option']['value']);
         if (APP_DIR && $name == 'updatetime' && \Phpcmf\Service::C()->module) {
             $updatetime_select = isset(\Phpcmf\Service::C()->module['setting']['updatetime_select']) && \Phpcmf\Service::C()->module['setting']['updatetime_select'];
             if ($updatetime_select) {
