@@ -6,8 +6,8 @@
  **/
 
 // 云服务
-class Cloud extends \Phpcmf\Common
-{
+class Cloud extends \Phpcmf\Common {
+
     private $admin_url;
     private $service_url;
 
