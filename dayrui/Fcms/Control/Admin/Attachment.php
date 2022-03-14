@@ -5,8 +5,8 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class Attachment extends \Phpcmf\Common
-{
+class Attachment extends \Phpcmf\Common {
+
     public $type;
     public $path;
     public $load_file;
@@ -59,6 +59,14 @@ class Attachment extends \Phpcmf\Common
                     $this->_json(0, dr_lang('头像存储目录不能与缩略图存储目录相同'));
                 }
             }
+            $save['cache_path'] = $image['cache_path'];
+            foreach (['SYS_ATTACHMENT_PATH' => '附件上传', 'SYS_AVATAR_PATH' => '头像上传', 'cache_path' => '缩略图上传'] as $key => $name) {
+                if (isset($save[$key]) && $save[$key] &&
+                    (strpos($save[$key], 'config') !== false || strpos($save[$key], CONFIGPATH) !== false)) {
+                    $this->_json(0, dr_lang('%s目录不能包含config目录', $name));
+                }
+            }
+            unset($save['cache_path']);
             \Phpcmf\Service::M('System')->save_config($data, $save);
             unset($image['avatar_url'], $image['avatar_path']);
             \Phpcmf\Service::M('site')->config(SITE_ID, 'image', $image);

@@ -843,6 +843,8 @@ class Api extends \Phpcmf\Common {
             $this->_json(1, dr_lang('默认目录'));
         } elseif (strpos($v, ' ') === 0) {
             $this->_json(0, dr_lang('不能用空格开头'));
+        } elseif (strpos($v, 'config') !== false) {
+            $this->_json(0, dr_lang('不能包含config目录'));
         }
         $path = dr_get_dir_path($v);
         if (is_dir($path)) {
@@ -867,6 +869,8 @@ class Api extends \Phpcmf\Common {
         } elseif (!$data['SYS_ATTACHMENT_PATH']) {
             $note = dr_lang('上传目录留空时，采用系统默认分配的目录');
             $data['SYS_ATTACHMENT_PATH'] = 'uploadfile';
+        } elseif (strpos($data['SYS_ATTACHMENT_PATH'], 'config') !== false) {
+            $this->_json(0, dr_lang('不能包含config目录'));
         } elseif (!$data['SYS_ATTACHMENT_URL']) {
             $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
         }
@@ -904,6 +908,8 @@ class Api extends \Phpcmf\Common {
         } elseif (!$data['cache_path']) {
             $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
             $data['cache_path'] = 'uploadfile/thumb/';
+        } elseif (strpos($data['cache_path'], 'config') !== false) {
+            $this->_json(0, dr_lang('不能包含config目录'));
         } elseif (!$data['cache_url']) {
             $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
         }
@@ -940,6 +946,8 @@ class Api extends \Phpcmf\Common {
             $data['avatar_path'] = 'api/member/';
         } elseif (!$data['cache_url']) {
             $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
+        } elseif (strpos($data['avatar_path'], 'config') !== false) {
+            $this->_json(0, dr_lang('不能包含config目录'));
         }
 
         if ((strpos($data['avatar_path'], '/') === 0 || strpos($data['avatar_path'], ':') !== false) && is_dir($data['avatar_path'])) {
