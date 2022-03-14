@@ -1190,6 +1190,8 @@ class View {
                     }
                 }
 
+                $return_data = [];
+
                 // 当来自插件目录
                 if ($system['app']) {
                     if (!dr_is_app($system['app'])) {
@@ -1197,7 +1199,11 @@ class View {
                     }
                     $myfile = dr_get_app_dir($system['app']).'Action/'.dr_safe_filename(ucfirst($system['action'])).'.php';
                     if (is_file($myfile)) {
-                        return require $myfile;
+                        $rs = require $myfile;
+                        if (!$return_data && is_array($rs)) {
+                            return $rs;
+                        }
+                        return $return_data;
                     } else {
                         return $this->_return($system['return'], '本插件('.$system['app'].')没有('.$system['action'].')标签');
                     }
@@ -1205,7 +1211,11 @@ class View {
                     // 识别自定义标签
                     $myfile = MYPATH.'Action/'.dr_safe_filename(ucfirst($system['action'])).'.php';
                     if (is_file($myfile)) {
-                        return require $myfile;
+                        $rs = require $myfile;
+                        if (!$return_data && is_array($rs)) {
+                            return $rs;
+                        }
+                        return $return_data;
                     } else {
                         return $this->_return($system['return'], '无此标签('.$system['action'].')');
                     }

@@ -442,7 +442,11 @@ class Table extends \Phpcmf\Common {
             } elseif (isset($data[$this->init['show_field']]) && $data[$this->init['show_field']]) {
                 $logname = ($this->init['show_field'] != 'id' ? $logname.' ' : '').$this->init['show_field'].'：'.$data[$this->init['show_field']];
             }
-            \Phpcmf\Service::L('input')->system_log($this->name . dr_lang($id ? '修改' : '新增').' ('.$logname.')');
+            \Phpcmf\Service::L('input')->system_log(
+                $this->name . dr_lang($id ? '修改' : '新增').' ('.$logname.')',
+                0,
+                $post
+            );
             // 获取新的存储id
             $id = $rt['code'];
             // 附件归档
@@ -756,12 +760,13 @@ class Table extends \Phpcmf\Common {
             ];
         }
 
-        $data['mytable'] = $this->mytable ? $this->mytable : [
+        !$this->mytable && $this->mytable = [
             'foot_tpl' => $this->_is_admin_auth('del') ? '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>
         <button type="button" onclick="dr_table_option(\''.(IS_ADMIN ? dr_url($uriprefix.'/del') : dr_member_url($uriprefix.'/del')).'\', \''.dr_lang('你确定要删除它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button>' : '',
             'link_tpl' => $this->_is_admin_auth('edit') ? '<label><a href="'.(IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>' : '',
             'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
         ];
+        $data['mytable'] = $this->mytable;
         $data['mytable_name'] = $this->name ? $this->name : 'mytable';
         $data['mytable_pagesize'] = $size;
 

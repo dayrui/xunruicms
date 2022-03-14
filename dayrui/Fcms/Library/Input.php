@@ -106,7 +106,7 @@ class Input {
     /**
      * 后台日志
      */
-    public function system_log($action, $insert = 0) {
+    public function system_log($action, $insert = 0, $param = []) {
 
         if (!$insert && (!SYS_ADMIN_LOG || !IS_ADMIN)) {
             // 是否开启日志
@@ -118,6 +118,7 @@ class Input {
             'uid' => (int)\Phpcmf\Service::C()->admin['uid'],
             'url' => dr_safe_url(FC_NOW_URL),
             'time' => SYS_TIME,
+            'param' => $param,
             'action' => addslashes(dr_safe_replace($action)),
             'username' => \Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录',
         ];

@@ -226,17 +226,20 @@ class Api extends \Phpcmf\Common {
             $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
             $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('file'));
             if ($name) {
-                $data = dr_linkage($code, $pid);
-                $file = CONFIGPATH.'mylinkage/'.$name;
-                $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
-                if (is_file($file)) {
-                    require $file;
-                } elseif (is_file($file2)) {
-                    require $file2;
-                } else {
-                    log_message('error', '联动菜单自定义程序文件【'.$name.'】不存在');
-                    if (CI_DEBUG) {
-                        $html = '联动菜单自定义程序文件【'.$name.'】不存在';
+                $ext = str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
+                if ($ext == 'php') {
+                    $data = dr_linkage($code, $pid);
+                    $file = CONFIGPATH.'mylinkage/'.$name;
+                    $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
+                    if (is_file($file)) {
+                        require $file;
+                    } elseif (is_file($file2)) {
+                        require $file2;
+                    } else {
+                        log_message('error', '联动菜单自定义程序文件【'.$name.'】不存在');
+                        if (CI_DEBUG) {
+                            $html = '联动菜单自定义程序文件【'.$name.'】不存在';
+                        }
                     }
                 }
             }
