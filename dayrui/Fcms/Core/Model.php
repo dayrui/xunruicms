@@ -1005,7 +1005,7 @@ class Model {
                 $this->param['where'][] = !is_numeric($f) ? [$f, $v] : $v;
             }
         } else {
-            $this->param['where'][] = strlen($value) ? [$name, $value] : $name;
+            $this->param['where'][] = dr_strlen($value) ? [$name, $value] : $name;
         }
 
         return $this;

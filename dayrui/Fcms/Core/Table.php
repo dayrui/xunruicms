@@ -789,7 +789,8 @@ class Table extends \Phpcmf\Common {
             } elseif (is_file(CONFIGPATH.$file)) {
                 $config = require CONFIGPATH.$file;
             } else {
-                exit('无法找到分页配置文件【'.$file.'】');
+                //exit('无法找到分页配置文件【'.$file.'】');
+                $config = require CMSPATH.'Config/Apage.php';
             }
         }
 

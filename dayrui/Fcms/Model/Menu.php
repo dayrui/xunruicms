@@ -698,6 +698,9 @@ class Menu extends \Phpcmf\Model {
                                 ];
                             }
                         }
+                        if (!$list['url'][$t['id']]['link']) {
+                            unset($list['url'][$t['id']]);
+                        }
                     }
                 }
                 $menu['member'] = $list;

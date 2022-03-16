@@ -117,11 +117,9 @@ function dr_strlen($string) {
 
     if (is_array($string)) {
         return dr_count($string);
-    } elseif (!$string) {
-        return 0;
     }
 
-    return strlen($string);
+    return strlen((string)$string);
 }
 
 /**
