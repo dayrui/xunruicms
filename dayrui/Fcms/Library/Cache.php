@@ -267,7 +267,7 @@ class Cache {
 
         $var = '';
         foreach ($param as $v) {
-            $var.= '[\''.(in_array($v, [0, '0']) ? 0 : dr_safe_replace($v)).'\']';
+            $var.= '[\''.(!$v ? 0 : dr_safe_replace($v)).'\']';
         }
 
         $return = null;
