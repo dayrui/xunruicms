@@ -1801,7 +1801,7 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
         return $filedata;
     }
 
-    return FALSE;
+    return [];
 }
 
 /**
@@ -1832,7 +1832,7 @@ function dr_file_map($source_dir) {
         return $filedata;
     }
 
-    return FALSE;
+    return [];
 }
 
 /**
@@ -1944,7 +1944,7 @@ function dr_get_theme() {
         return ['default'];
     }
 
-    return dr_diff(dr_dir_map(ROOTPATH.'static/', 1), ['assets']);
+    return array_diff(dr_dir_map(ROOTPATH.'static/', 1), ['assets']);
 }
 
 /**
@@ -1964,6 +1964,11 @@ function dr_randcode() {
 
 function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
 {
+
+    if (!$path) {
+        return false;
+    }
+
     // Trim the trailing slash
     $path = rtrim($path, '/\\');
 
