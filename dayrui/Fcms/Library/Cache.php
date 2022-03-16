@@ -270,7 +270,7 @@ class Cache {
             $var.= '[\''.(!$v ? 0 : dr_safe_replace($v)).'\']';
         }
 
-        $return = null;
+        $return = null; 
         eval('$return = $result'.$var.';');
 
         return $return;
