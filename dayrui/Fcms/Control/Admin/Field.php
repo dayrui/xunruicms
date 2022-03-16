@@ -958,7 +958,7 @@ class Field extends \Phpcmf\Common {
                         'dirname' => $module,
                     ];
                     $this->name = '模块【'.$module.'】栏目公共模型字段';
-                    $this->backurl = \Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir' => $module]); // 返回uri地址
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('module/module_category/field_index', ['dir' => $module]); // 返回uri地址
                 }
 
                 $this->module = $cache;
