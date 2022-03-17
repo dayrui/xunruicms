@@ -15,7 +15,10 @@ class Service {
     static private $view;
     static private $model;
     static private $require;
-    static private $apps;
+    static private $apps = [
+		1 => [],
+		0 => [],
+	];
     static private $mwhere_apps = [];
     static private $filters = [
         'home' => ['install/index'],
@@ -73,11 +76,13 @@ class Service {
     // 获取应用目录
     public static function Apps($is_install = 0) {
 
-        if (isset(static::$apps) && static::$apps) {
-            return static::$apps;
+		$is_install = $is_install ? 1 : 0;
+
+        if (isset(static::$apps[$is_install]) && static::$apps[$is_install]) {
+            return static::$apps[$is_install];
         }
 
-        static::$apps = [];
+        static::$apps[$is_install] = [];
         $source_dir = dr_get_app_list();
 
         if ($fp = opendir($source_dir)) {
@@ -93,24 +98,22 @@ class Service {
                     continue;
                 }
                 if (is_dir($source_dir.$file)) {
-                    $filedata[$file] = dr_get_app_dir($file);
+					static::$apps[$is_install][$file] = dr_get_app_dir($file);
                 }
             }
             closedir($fp);
-
-            static::$apps = $filedata;
         }
 
         if (function_exists('dr_get_app_extend')) {
             $extend = dr_get_app_extend($is_install);
            if ($extend) {
                foreach ($extend as $i => $t) {
-                   static::$apps[$i] = $t;
+                   static::$apps[$is_install][$i] = $t;
                }
            }
         }
 
-        return static::$apps;
+        return static::$apps[$is_install];
     }
 
     // 设置mwhere的插件名称
