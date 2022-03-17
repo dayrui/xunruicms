@@ -739,13 +739,13 @@ class Model {
                 }
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (substr_count($value, ',') == 1 && preg_match('/[0-9]+,[0-9]+/', $value)) {
+        } elseif (substr_count($value, ',') == 1 && preg_match('/[0-9\.]+,[0-9\.]+/', $value)) {
             // BETWEEN 条件
             list($s, $e) = explode(',', $value);
-            $s = intval($s);
-            $e = intval($e);
+            $s = floatval($s);
+            $e = floatval($e);
             if ($s == $e && $s == 0) {
-                return '';
+                return '`'.$table.'`.`'.$name.'` = 0';
             }
             if (!$e) {
                 return '`'.$table.'`.`'.$name.'` > '.$s;
