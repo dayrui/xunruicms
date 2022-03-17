@@ -1721,15 +1721,15 @@ class Image {
 
         $source_width = $this->image_info[0];
         $source_height = $this->image_info[1];
-        $source_ratio = $source_height / $source_width;
-        $target_ratio = $target_height / $target_width;
+        $source_ratio = intval($source_height / $source_width);
+        $target_ratio = intval($target_height / $target_width);
         if ($source_ratio > $target_ratio) {
             // image-to-height
             $cropped_width = $source_width;
             $cropped_height = $source_width * $target_ratio;
         } elseif ($source_ratio < $target_ratio){
             //image-to-widht
-            $cropped_width = $source_height / $target_ratio;
+            $cropped_width = intval($source_height / $target_ratio);
             $cropped_height = $source_height;
         } else {
             //image-size-ok
