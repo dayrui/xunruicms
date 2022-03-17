@@ -45,6 +45,49 @@ class Hooks extends \CodeIgniter\Events\Events {
         static::$initialized_hook = true;
     }
 
+    /**
+     * 插件中注册钩子
+     */
+    public static function app_on($app, $eventName, $callback, $priority = EVENT_PRIORITY_NORMAL)
+    {
+        if (! isset(static::$listeners[$eventName])) {
+            static::$listeners[$eventName] = [
+                true, // If there's only 1 item, it's sorted.
+                [$priority],
+                [$callback],
+                [$app],
+            ];
+        } else {
+            static::$listeners[$eventName][0]   = false; // Not sorted
+            static::$listeners[$eventName][1][] = $priority;
+            static::$listeners[$eventName][2][] = $callback;
+            static::$listeners[$eventName][3][] = $app;
+        }
+    }
+
+    /**
+     * Returns an array of listeners for a single event. They are
+     * sorted by priority.
+     *
+     * @param string $eventName
+     */
+    public static function listeners($eventName): array
+    {
+        if (! isset(static::$listeners[$eventName])) {
+            return [[], []];
+        }
+
+        // The list is not sorted
+        if (! static::$listeners[$eventName][0]) {
+            // Sort it!
+            array_multisort(static::$listeners[$eventName][1], SORT_NUMERIC, static::$listeners[$eventName][2]);
+
+            // Mark it as sorted already!
+            static::$listeners[$eventName][0] = true;
+        }
+
+        return [static::$listeners[$eventName][2], static::$listeners[$eventName][3]];
+    }
 
     /**
      * 运行带返回参数的钩子点，其中某个钩子返回值时终止运行
@@ -62,16 +105,16 @@ class Hooks extends \CodeIgniter\Events\Events {
             static::initialize();
         }
 
-        $listeners = static::listeners($eventName);
+        list($listeners, $apps) = static::listeners($eventName);
         if (!$listeners) {
             return false;
         }
 
-        if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
-            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次');
-        }
+        foreach ($listeners as $k => $listener) {
 
-        foreach ($listeners as $listener) {
+            if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
+                log_message('debug', ($apps && isset($apps[$k]) ? '插件【'.$apps[$k].'】' : '' ).'运行钩子【'.$eventName.'】');
+            }
 
             $start = microtime(true);
             $rt = call_user_func($listener, ...$arguments);
@@ -109,16 +152,16 @@ class Hooks extends \CodeIgniter\Events\Events {
             static::initialize();
         }
 
-        $listeners = static::listeners($eventName);
+        list($listeners, $apps) = static::listeners($eventName);
         if (!$listeners) {
             return false;
         }
 
-        if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
-            log_message('debug', '运行钩子【'.$eventName.'】'.count($listeners).'次');
-        }
+        foreach ($listeners as $k => $listener) {
 
-        foreach ($listeners as $listener) {
+            if (IS_POST && CI_DEBUG && !in_array($eventName, ['DBQuery', 'pre_system'])) {
+                log_message('debug', ($apps && isset($apps[$k]) ? '插件【'.$apps[$k].'】' : '' ).'运行钩子【'.$eventName.'】');
+            }
 
             $start = microtime(true);
             $result = static::$simulate === false ? call_user_func($listener, ...$arguments) : true;

@@ -1588,7 +1588,7 @@ class View {
                         break;
 
                     default:
-                        if (strpos($t['name'], '`thumb`')) {
+                        if ($t['name'] && strpos($t['name'], '`thumb`')) {
                             // 缩略图筛选
                             $t['value'] == 1 ? $string.= $join." {$t['name']}<>''" : $string.= $join." {$t['name']}=''";
                         } elseif (!$t['name'] && $t['value']) {
