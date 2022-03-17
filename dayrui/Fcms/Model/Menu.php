@@ -733,4 +733,7 @@ class Menu extends \Phpcmf\Model {
         return $menu;
     }
 
+    public function update_module($mdir, $config, $form) {
+        \Phpcmf\Service::M('menu', 'module')->update_module($mdir, $config, $form);
+    }
 }

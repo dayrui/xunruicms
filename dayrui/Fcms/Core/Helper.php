@@ -6,7 +6,6 @@
  **/
 
 
-
 /**
  * 是否301跳转
  */
@@ -22,7 +21,10 @@ function dr_is_sys_301() {
 }
 
 /**
- * 三元运算
+ * 两个变量判断是否有值并返回
+ * @param $a 变量1
+ * @param $b 变量2
+ * @return $a 有值时返回$a 否则返回$b
  */
 function dr_else_value($a, $b) {
     return dr_strlen($a) ? $a : $b;
@@ -30,6 +32,9 @@ function dr_else_value($a, $b) {
 
 /**
  * 安全url过滤
+ * @param $url URL地址
+ * @param $is_html 是否作为html转换
+ * @return 过滤后的URL地址
  */
 function dr_safe_url($url, $is_html = false) {
 
@@ -47,6 +52,9 @@ function dr_safe_url($url, $is_html = false) {
 
 /**
  * 模糊比较两个变量
+ * @param $str1 变量1
+ * @param $str2 变量2
+ * @return 判断两个变量是否相等
  */
 function dr_diff($str1, $str2) {
 
@@ -61,6 +69,10 @@ function dr_diff($str1, $str2) {
 
 /**
  * 返回包含数组中所有键名的一个新数组
+ * @param $array 指定数组
+ * @param $value 具体值
+ * @param $strict 严格比较
+ * @return 返回包含数组中所有键名的一个新数组
  */
 function dr_array_keys($array, $value = '', $strict = false) {
 
@@ -74,8 +86,12 @@ function dr_array_keys($array, $value = '', $strict = false) {
         return array_keys($array);
     }
 }
+
 /**
  * 判断存在于数组中
+ * @param $var 指定值
+ * @param $array 指定数组
+ * @return 判断$var是否存在于数组$array中
  */
 function dr_in_array($var, $array) {
 
@@ -88,6 +104,9 @@ function dr_in_array($var, $array) {
 
 /**
  * 两个数组比较
+ * @param $arr1 指定数组1
+ * @param $arr2 指定数组2
+ * @return 比较两个数组的键值,并返回交集
  */
 function dr_array_intersect($arr1, $arr2) {
 
@@ -100,6 +119,9 @@ function dr_array_intersect($arr1, $arr2) {
 
 /**
  * 两个数组比较
+ * @param $arr1 指定数组1
+ * @param $arr2 指定数组2
+ * @return 比较两个数组的键名,并返回交集
  */
 function dr_array_intersect_key($arr1, $arr2) {
 
@@ -112,6 +134,8 @@ function dr_array_intersect_key($arr1, $arr2) {
 
 /**
  * 字符长度
+ * @param $string 字符串
+ * @return 返回字符串的长度
  */
 function dr_strlen($string) {
 
@@ -124,6 +148,9 @@ function dr_strlen($string) {
 
 /**
  * 字符是否包含
+ * @param $string 原字符串
+ * @param $key 查询的字符串
+ * @return 返回$string中是否包含$key，区分大小写
  */
 function dr_strpos($string, $key) {
     return strpos((string)$string, $key);
@@ -131,6 +158,9 @@ function dr_strpos($string, $key) {
 
 /**
  * 字符是否包含
+ * @param $string 原字符串
+ * @param $key 查询的字符串
+ * @return 返回$string中是否包含$key，不区分大小写
  */
 function dr_stripos($string, $key) {
     return stripos((string)$string, $key);
@@ -138,6 +168,9 @@ function dr_stripos($string, $key) {
 
 /**
  * 上传移动文件
+ * @param $tempfile 临时文件
+ * @param $fullname 存储文件
+ * @return 将临时文件存储到指定的目录中
  */
 function dr_move_uploaded_file($tempfile, $fullname) {
 
@@ -186,15 +219,34 @@ function dr_move_uploaded_file($tempfile, $fullname) {
     }
 }
 
-// html实体字符转换
+/**
+ * html实体字符转换
+ * @param $value 指定字符串
+ * @param $fullname 存储文件
+ * @return 用htmlspecialchars进行html转码值
+ */
 function dr_html2code($value) {
     return htmlspecialchars((string)$value);
 }
 
-// html实体字符转换
+/**
+ * html实体字符转换
+ * @param $value 指定字符串
+ * @param $fk 强制转为utf8
+ * @param $flags 用下列标记中的一个或多个作为一个位掩码
+ * @return htmlspecialchars_decode进行html转码值
+ */
 function dr_code2html($value, $fk = false, $flags = '') {
     return dr_html_code($value, $fk, $flags);
 }
+
+/**
+ * html实体字符转换
+ * @param $value 指定字符串
+ * @param $fk 强制转为utf8
+ * @param $flags 用下列标记中的一个或多个作为一个位掩码
+ * @return htmlspecialchars_decode进行html转码值
+ */
 function dr_html_code($value, $fk = false, $flags = '') {
 
     if (!$value) {
@@ -212,7 +264,10 @@ function dr_html_code($value, $fk = false, $flags = '') {
     return htmlspecialchars_decode($value, $flags);
 }
 
-// 快捷登录接入商信息列表
+/**
+ * 快捷登录接入商信息列表
+ * @return 返回文件数组
+ */
 function dr_oauth_list() {
 
     $data = [];
@@ -229,7 +284,10 @@ function dr_oauth_list() {
     return $data;
 }
 
-// 判断是否是移动端终端
+/**
+ * 判断是否是移动端终端
+ * @return bool
+ */
 if (!function_exists('dr_is_mobile')) {
     function dr_is_mobile() {
         if (defined('SITE_MOBILE_NOT_PAD') && SITE_MOBILE_NOT_PAD) {
