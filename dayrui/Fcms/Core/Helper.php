@@ -8,6 +8,7 @@
 
 /**
  * 是否301跳转
+ * @return 是否301跳转
  */
 function dr_is_sys_301() {
 
@@ -324,7 +325,11 @@ if (!function_exists('dr_is_mobile')) {
     }
 }
 
-// 后台搜索字段过滤函数
+/**
+ * 后台搜索字段过滤函数
+ * @param $array 单个字段数组
+ * @return 是否被搜索时可用
+ */
 function dr_is_admin_search_field($t) {
 
     if (!$t['ismain']) {
@@ -340,7 +345,12 @@ function dr_is_admin_search_field($t) {
     return 0;
 }
 
-// 通过数组值查找数组key
+/**
+ * 通过数组值查找数组key
+ * @param $array 数组
+ * @param $value 指定键值
+ * @return 返回键值对应的键名
+ */
 function dr_get_array_key($array, $value) {
 
     if ($array && !in_array($value, $array)) {
@@ -352,17 +362,33 @@ function dr_get_array_key($array, $value) {
     return isset($new[$value]) ? $new[$value] : false;
 }
 
-// 站点信息输出
+/**
+ * 站点信息/项目信息的字段输出（自定义模板方式）
+ * @param $name 字段名
+ * @param $siteid 项目/站点id
+ * @return 字段值
+ */
 function dr_site_info($name, $siteid = SITE_ID) {
     return \Phpcmf\Service::C()->get_cache('site', $siteid, 'config', $name);
 }
 
-// 站点自定义信息输出
+/**
+ * 站点信息/项目信息的字段输出（自定义字段方式）
+ * @param $name 字段名
+ * @param $siteid 项目/站点id
+ * @return 字段值
+ */
 function dr_site_value($name, $siteid = SITE_ID) {
     return \Phpcmf\Service::C()->get_cache('site', $siteid, 'param', $name);
 }
 
-// ftable字段输出
+/**
+ * ftable字段输出
+ * @param $id 字段id
+ * @param $value 存储值
+ * @param $class 给table指定class
+ * @return 表格
+ */
 function dr_get_ftable($id, $value, $class = '') {
 
     $field = \Phpcmf\Service::C()->get_cache('table-field', $id);
@@ -373,12 +399,24 @@ function dr_get_ftable($id, $value, $class = '') {
     return \Phpcmf\Service::L('Field')->get('ftable')->show_table($field, $value, $class);
 }
 
-// 获取内容中的缩略图
+/**
+ * 获取内容中的缩略图
+ * @param $value 内容值
+ * @param $num 指定获取数量
+ * @return 在变量中提取img标签的图片路径到数组
+ */
 function dr_get_content_img($value, $num = 0) {
     return dr_get_content_url($value, 'src', 'gif|jpg|jpeg|png', $num);
 }
 
-// 获取内容中的指定标签URL地址
+/**
+ * 获取内容中的指定标签URL地址
+ * @param $value 内容值
+ * @param $attr 标签值，例如src
+ * @param $ext 指定扩展名，例如jpg|gif
+ * @param $num 指定获取数量
+ * @return 在变量中提取img标签的图片路径到数组
+ */
 function dr_get_content_url($value, $attr, $ext, $num = 0) {
 
     $rt = [];
@@ -403,6 +441,8 @@ function dr_get_content_url($value, $attr, $ext, $num = 0) {
 
 /**
  * 插件是否被安装
+ * @param $dir 插件英文名
+ * @return bool
  */
 function dr_is_app($dir) {
     return is_file(dr_get_app_dir($dir).'/install.lock');
@@ -410,6 +450,9 @@ function dr_is_app($dir) {
 
 /**
  * 模块是否被安装
+ * @param $dir 模块英文名
+ * @param $siteid 站点id
+ * @return bool
  */
 function dr_is_module($dir, $siteid = SITE_ID) {
     return \Phpcmf\Service::L('cache')->get('module-'.$siteid, $dir) ? 1 : 0;
@@ -417,6 +460,10 @@ function dr_is_module($dir, $siteid = SITE_ID) {
 
 /**
  * 字符串替换函数
+ * @param $str 指定字符串
+ * @param $o 需要替换的值
+ * @param $t 替换后的值
+ * @return 进行str_replace运算
  */
 function dr_rp($str, $o, $t) {
     return str_replace($o, $t, (string)$str);
@@ -424,6 +471,11 @@ function dr_rp($str, $o, $t) {
 
 /**
  * 二维码调用
+ * @param $text 指定字符串
+ * @param $thumb 中间图片
+ * @param $level 等级字母
+ * @param $size 大小值
+ * @return 生成二维码图片url
  */
 function dr_qrcode($text, $thumb = '', $level = 'H', $size = 5) {
     return ROOT_URL.'index.php?s=api&c=api&m=qrcode&thumb='.urlencode($thumb).'&text='.urlencode($text).'&size='.$size.'&level='.$level;
@@ -431,6 +483,8 @@ function dr_qrcode($text, $thumb = '', $level = 'H', $size = 5) {
 
 /**
  * 秒转化时间
+ * @param $times 多少秒
+ * @return 返回秒对于的时分秒值
  */
 function dr_sec2time($times){
 
@@ -451,6 +505,9 @@ function dr_sec2time($times){
 
 /**
  * 格式化多文件数组
+ * @param $value json字符
+ * @param $limit 限定返回几个值
+ * @return 格式化多文件数组
  */
 function dr_get_files($value, $limit = '') {
 
@@ -479,6 +536,8 @@ function dr_get_files($value, $limit = '') {
 
 /**
  * 格式化图片专用数组
+ * @param $value json字符
+ * @return 格式化图片专用数组
  */
 function dr_get_image($value) {
 
@@ -500,7 +559,10 @@ function dr_get_image($value) {
     return $data;
 }
 
-// 文件上传临时目录
+/**
+ * 文件上传临时目录
+ * @return 文件上传临时目录
+ */
 function dr_upload_temp_path() {
 
     if (function_exists('ini_get')) {
@@ -513,11 +575,16 @@ function dr_upload_temp_path() {
     return WRITEPATH.'temp/';
 }
 
-// 星级显示
+/**
+ * 星级显示
+ * @param $num 数字
+ * @param $shifen 按十分计算
+ * @return 星级显示
+ */
 function dr_star_level($num, $shifen = 0) {
 
     $lv = 5;
-    $shifen && $num = $num/2;
+    $shifen && $num = (int)$num/2;
     $num = floatval($num);
     $int = min(floor($num), $lv);
     if (!$int) {
@@ -551,7 +618,11 @@ function dr_star_level($num, $shifen = 0) {
     return @implode('', $shi);
 }
 
-// 格式化sql创建
+/**
+ * 格式化sql创建
+ * @param $sql
+ * @return 格式化sql创建
+ */
 function dr_format_create_sql($sql) {
 
     if (!$sql) {
@@ -566,6 +637,8 @@ function dr_format_create_sql($sql) {
 
 /**
  * 获取cms域名部分
+ * @param $url 指定url
+ * @return 从指定url中获取cms域名部分
  */
 function dr_cms_domain_name($url) {
 
@@ -583,6 +656,8 @@ function dr_cms_domain_name($url) {
 
 /**
  * 多语言输出
+ * @param $param 指定文字
+ * @return 将指定文字转换成系统对于的语言文字
  */
 function dr_lang(...$param) {
 
@@ -600,7 +675,10 @@ function dr_lang(...$param) {
     return $param ? vsprintf($string, $param) : $string;
 }
 
-// 获取终端列表
+/**
+ * 获取终端列表
+ * @return 获取终端列表
+ */
 function dr_client_data() {
 
     $rt = [
@@ -615,48 +693,17 @@ function dr_client_data() {
     return $rt;
 }
 
-// 判断用户中心菜单权限
-function dr_member_menu_show($t) {
-
-    if ($t['mark']) {
-        list($a, $b) = explode('-', $t['mark']);
-        switch ($a) {
-            case 'module':
-                // 判断模块当前站点是否可用
-                if (!\Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$b)) {
-                    return 0;
-                }
-                break;
-        }
-    }
-
-    // 判断站点显示权限
-    $is_site = 0;
-    if (!$t['site'] || ($t['site'] && dr_in_array(SITE_ID, $t['site']))) {
-        $is_site = 1; // 当前可用
-    }
-
-    // 判断终端显示权限
-    $is_client = 0;
-    if (!$t['client'] || ($t['client'] && dr_in_array(CLIENT_NAME, $t['client']))) {
-        $is_client = 1; // 当前可用
-    }
-
-    // 判断用户组显示权限
-    if ($is_client && $is_site
-        && (!$t['group'] || dr_array_intersect(\Phpcmf\Service::C()->member['groupid'], $t['group']))) {
-        return 1;
-    }
-
-    return 0;
-}
-
 // 获取url在导航的id
 function dr_navigator_id($type, $markid) {
     return (int)\Phpcmf\Service::L('cache')->get('navigator-'.SITE_ID.'-url', $type, $markid);
 }
 
-// 格式化编辑器内容数据
+/**
+ * 格式化编辑器内容数据
+ * @param $value 指定文字
+ * @param $title title标题值
+ * @return 将UEDITOR_IMG_TITLE替换成指定的标题
+ */
 function dr_ueditor_html($value, $title = '') {
 
     if (!$value) {
@@ -666,7 +713,11 @@ function dr_ueditor_html($value, $title = '') {
     return UEDITOR_IMG_TITLE ? str_replace(UEDITOR_IMG_TITLE, $title, htmlspecialchars_decode($value)) : htmlspecialchars_decode($value);
 }
 
-// 获取域名部分
+/**
+ * 获取域名部分
+ * @param $url
+ * @return 从$url中获取到域名
+ */
 function dr_get_domain_name($url) {
 
     if (!$url) {
@@ -678,7 +729,11 @@ function dr_get_domain_name($url) {
     return $url;
 }
 
-// 分割数组
+/**
+ * 按百分比分割数组
+ * @param $data 数组
+ * @return 将数组按百分比等分划分
+ */
 function dr_save_bfb_data($data) {
 
     $cache = [];
@@ -697,7 +752,11 @@ function dr_save_bfb_data($data) {
     return $cache;
 }
 
-// 会员头像存储目录
+/**
+ * 会员头像存储目录
+ * @param $uid
+ * @return 按uid进行分配头像存储目录
+ */
 function dr_avatar_dir($uid) {
 
     if (!$uid) {
@@ -713,7 +772,10 @@ function dr_avatar_dir($uid) {
     return $dir1.'/'.$dir2.'/'.$dir3.'/';
 }
 
-// 会员头像存储路径
+/**
+ * 会员头像存储路径
+ * @return 返回头像存储目录和对于的访问url
+ */
 function dr_avatar_path() {
 
     //$config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
@@ -736,9 +798,9 @@ function dr_avatar_path() {
 /**
  * 会员头像
  *
- * @param   intval  $uid
- * @param   intval  $fix 是否加时间戳后缀
- * @return  string
+ * @param   $uid
+ * @param   $fix 是否加时间戳后缀
+ * @return  会员头像url
  */
 function dr_avatar($uid, $fix = 1) {
 
@@ -758,10 +820,10 @@ function dr_avatar($uid, $fix = 1) {
 /**
  * 调用会员详细信息（自定义字段需要手动格式化）
  *
- * @param   intval  $uid    会员uid
- * @param   intval  $name   输出字段
- * @param   intval  $cache  缓存时间
- * @return  string
+ * @param   $uid    会员uid
+ * @param   $name   输出字段
+ * @param   $cache  缓存时间
+ * @return  用户详情数组
  */
 function dr_member_info($uid, $name = '', $cache = -1) {
 
@@ -3761,6 +3823,15 @@ if ( ! function_exists('dr_directory_map'))
     }
 }
 
+// 评论名称
+function dr_comment_cname($name) {
+
+    if (!$name) {
+        return dr_lang('评论');
+    }
+
+    return dr_lang($name);
+}
 
 // 快速下单 判断是否购买// 0 没有购买 1 购买了
 if (!function_exists('dr_is_buy')) {
