@@ -1753,12 +1753,12 @@ class Image {
             $cropped_width = $source_width;
             $cropped_height = $source_width * $target_ratio;
             $source_x = 0;
-            $source_y = ($source_height - $cropped_height) / 2;
+            $source_y = intval(($source_height - $cropped_height) / 2);
         } elseif ($source_ratio < $target_ratio){
             //image-to-widht
-            $cropped_width = $source_height / $target_ratio;
+            $cropped_width = intval($source_height / $target_ratio);
             $cropped_height = $source_height;
-            $source_x = ($source_width - $cropped_width) / 2;
+            $source_x = intval(($source_width - $cropped_width) / 2);
             $source_y = 0;
         } else {
             //image-size-ok
