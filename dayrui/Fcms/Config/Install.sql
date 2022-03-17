@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS `{dbprefix}admin`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}admin` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL COMMENT '管理员uid',
-  `setting` Text DEFAULT NULL COMMENT '相关配置',
+  `setting` mediumtext DEFAULT NULL COMMENT '相关配置',
   `usermenu` text COMMENT '自定义面板菜单，序列化数组格式',
   `history` text COMMENT '历史菜单，序列化数组格式',
   PRIMARY KEY (`id`),
@@ -276,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}site` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '站点名称',
   `domain` varchar(50) NOT NULL COMMENT '站点域名',
-  `setting` text NOT NULL COMMENT '站点配置',
+  `setting` mediumtext NOT NULL COMMENT '站点配置',
   `disabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '禁用？',
   `displayorder` smallint(5) DEFAULT '0',
   PRIMARY KEY (`id`),
