@@ -30,7 +30,7 @@
       htmlContent: false,               
       htmlHyperlink: 'content',         // Export the 'content' or the 'href' link of <a> tags unless onCellHtmlHyperlink is not defined
       ignoreColumn: [0, table_ignoreColumn],
-      ignoreRow: [$('#mytable > tbody > tr').length],
+      ignoreRow: [$('#mytable > tbody > tr').length + 1],
       jsonScope: 'all',                 // One of 'head', 'data', 'all'
       jspdf: {                          // jsPDF / jsPDF-AutoTable related options
         orientation: 'p',               
