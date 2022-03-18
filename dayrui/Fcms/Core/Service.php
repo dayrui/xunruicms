@@ -356,7 +356,7 @@ class Service {
             // 自定义继承类
             if ($extendFile && is_file($extendFile)) {
                 if ($namespace && is_file($appFile)) {
-                    require $appFile;
+                    require_once $appFile;
                     $newClassName = '\\Phpcmf\\Model\\'.ucfirst($namespace).'\\'.$className;
                 } else {
                     require $extendFile;
