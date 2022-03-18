@@ -1912,6 +1912,8 @@ class View {
             }
 
             $debug.= '<p>变量前缀：'.($return ? $return : 't').'</p>';
+        } else {
+            $debug = 'debug诊断信息需要在index.php文件中开启开发者模式才能查看';
         }
 
         // 开始返回
