@@ -3059,6 +3059,7 @@ function dr_get_form_post_value($table) {
         'form' => dr_form_hidden(),
         'debug' => 'debug返回正常',
     ];
+
     $form = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID, $table);
     if (!$form) {
         $rt['debug'] = '网站表单【'.$table.'】不存在';
@@ -3069,7 +3070,26 @@ function dr_get_form_post_value($table) {
     $rt['form_table'] = $form['table'];
 
     // 是否有验证码
-    $rt['is_post_code'] = $form['setting']['is_post_code'] ? 0 : 1;
+    if ($form['setting']['post_code']) {
+        $member = \Phpcmf\Service::C()->meber;
+        if (!$member) {
+            $auth = [0];
+        } else {
+            $auth = $member['groupid'];
+            if (!$auth) {
+                $auth = [0]; // 没有用户组的视为游客
+            }
+        }
+        $value = [];
+        foreach ($auth as $k) {
+            if (isset($form['setting']['post_code'][$k])) {
+                $value[] = (int)$form['setting']['post_code'][$k];
+            }
+        }
+        $rt['is_post_code'] =  $value ? max($value) : 0;
+    } else {
+        $rt['is_post_code'] =  0;
+    }
 
     // 返回url
     $rt['rt_url'] =  $form['setting']['rt_url'] ? $form['setting']['rt_url'] : (defined('SC_HTML_FILE') ? '' : dr_now_url());
