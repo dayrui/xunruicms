@@ -5,7 +5,6 @@
  */
 
 header('Content-Type: text/html; charset=utf-8');
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
 ini_set('display_errors', 1);
 
 define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
@@ -43,7 +42,7 @@ dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
 $min = '7.3.0';
-$max = '8.1.0';
+$max = '8.2.0';
 if (version_compare(PHP_VERSION, $max) > 0) {
     dr_echo_msg(0, "<font color=red>PHP版本过高，请在".$max."以下的环境使用，当前".PHP_VERSION."，高版本需要等待官方对CMS版本的更新升级！~</font>");exit;
 } elseif (version_compare(PHP_VERSION, $min) < 0) {
@@ -70,6 +69,10 @@ if (! extension_loaded('xml')) {
 }
 if (!function_exists('chmod')) {
     dr_echo_msg(0, 'PHP函数chmod被禁用，需要开启');
+}
+
+if (!fopen('https://www.xunruicms.com/', "rb")) {
+    dr_echo_msg(0, 'fopen无法获取远程数据，无法使用在线下载插件和在线升级');
 }
 
 if (is_file(WEBPATH.'config/database.php')) {

@@ -110,6 +110,13 @@ class Check extends \Phpcmf\Common
                 if (!class_exists('ZipArchive')) {
                     $rt[] = 'php_zip扩展未开启，无法使用应用市场功能';
                 }
+                $url = 'https://www.xunruicms.com/';
+                if ($this->cmf_license['cloud']) {
+                    $url = $this->cmf_license['cloud'];
+                }
+                if (!fopen($url, "rb")) {
+                    $rt[] = 'fopen无法获取远程数据，无法使用在线下载插件和在线升级';
+                }
 
                 if ($rt) {
                     $this->halt(implode('<br>', $rt), 0);
