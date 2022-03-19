@@ -332,6 +332,10 @@ if (!function_exists('dr_is_mobile')) {
  */
 function dr_is_admin_search_field($t) {
 
+    if (!$t) {
+        return 0;
+    }
+
     if (!$t['ismain']) {
         return 0;
     } elseif (in_array($t['fieldtype'], [
