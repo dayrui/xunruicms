@@ -25,7 +25,6 @@ class Files extends \Phpcmf\Library\A_Field {
      */
     public function option($option) {
 
-
         $mthumb = '';
         if (\Phpcmf\Service::M('field')->relatedname == 'module') {
             $mthumb = '<div class="form-group">
@@ -146,7 +145,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $data = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        if ($value) {
+        if ($value && $value['title']) {
             foreach ($value['title'] as $id => $title) {
                 $data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
                 $data['title'][$id] = trim($title);

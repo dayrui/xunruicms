@@ -820,6 +820,9 @@ return [
             if (is_dir($cmspath.'COREPATH')) {
                 $this->_copy_dir($cmspath.'COREPATH', COREPATH);
             }
+            if (is_dir($cmspath.'CMSPATH')) {
+                $this->_copy_dir($cmspath.'CMSPATH', COREPATH);
+            }
         }
 
         dr_dir_delete($cmspath, 1);
