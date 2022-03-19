@@ -3071,7 +3071,7 @@ function dr_get_form_post_value($table) {
 
     // 是否有验证码
     if ($form['setting']['post_code']) {
-        $member = \Phpcmf\Service::C()->meber;
+        $member = \Phpcmf\Service::C()->member;
         if (!$member) {
             $auth = [0];
         } else {
