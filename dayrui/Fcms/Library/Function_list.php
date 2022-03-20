@@ -68,7 +68,7 @@ class Function_list {
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
-        $title = dr_replace_emotion(dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']));
+        $title = dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
         !$title && $title = '...';
 
         return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
