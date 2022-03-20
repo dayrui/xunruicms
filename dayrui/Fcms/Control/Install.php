@@ -258,7 +258,7 @@ $db[\'default\']	= [
                 }
 
                 \Phpcmf\Service::V()->assign([
-                    'do_url' => 'index.php?c=install&m=index&step=3&doin=1',
+                    'do_url' => 'index.php?c=install&m=index&step=3&doin=1&is_install_db='.intval($_GET['is_install_db']),
                 ]);
                 break;
 
@@ -324,6 +324,7 @@ $db[\'default\']	= [
                                 'name' => $data['name'],
                                 'domain' => DOMAIN_NAME,
                             ]);
+                            \Phpcmf\Service::M()->site = $this->site = [ 1 => 1 ];
 
                             $ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? 1 : 0;;
                             if (isset($_GET['protocol']) && trim($_GET['protocol'], ':') == 'https') {
@@ -374,6 +375,9 @@ $db[\'default\']	= [
                                 $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
                             }
                             $this->query($sql);
+                            if (is_file(MYPATH.'Config/Install.php')) {
+                                require MYPATH.'Config/Install.php';
+                            }
 
                             $errorlog = file_get_contents(WRITEPATH.'install.error');
                             if ($errorlog && strlen($errorlog) > 10) {
@@ -398,7 +402,7 @@ $db[\'default\']	= [
             'data' => $data,
             'step' => $step,
             'error' => $error,
-            'pre_url' => 'index.php?c=install&m=index&step='.($step-1),
+            'pre_url' => 'index.php?c=install&m=index&step='.($step-1).'&is_install_db='.intval($_GET['is_install_db']),
             'next_url' => 'index.php?c=install&m=index&step='.($step+1).'&is_install_db='.intval($_GET['is_install_db']),
         ]);
         \Phpcmf\Service::V()->display('install/'.$step.'.html');
