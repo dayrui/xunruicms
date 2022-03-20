@@ -162,7 +162,7 @@ class Site extends \Phpcmf\Model {
         foreach ($local as $dir => $path) {
             if (is_file($path.'Config/Install_site.sql')) {
                 $sql = file_get_contents($path.'Config/Install_site.sql');
-                $this->_query(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));
+                $this->query_all(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));
             }
         }
 
