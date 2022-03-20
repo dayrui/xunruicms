@@ -171,6 +171,14 @@ class Linkage extends \Phpcmf\Common
                 $this->_html_msg(0, '文件解压失败');
             }
             $files = dr_file_map($path);
+            if (!$files) {
+                $this->_html_msg(0, '文件分析失败');
+            }
+            foreach ($files as $t) {
+                if (stripos($t, '.php')) {
+                    @unlink($path.$t);
+                }
+            }
             \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
             $this->_html_msg(1, dr_lang('正在准备导入数据'), dr_url('linkage/import_add', ['key'=>$key, 'page' => 1, 'tpage' => dr_count($files)]));
         }
