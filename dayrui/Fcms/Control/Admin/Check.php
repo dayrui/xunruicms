@@ -880,6 +880,11 @@ class Check extends \Phpcmf\Common
                         @unlink($path.$file);
                     }
                 }
+
+                if (!is_file(ROOTPATH.'static/assets/js/my.js') && is_dir(ROOTPATH.'static/assets/js/')) {
+                    @file_put_contents(ROOTPATH.'static/assets/js/my.js', '');
+                }
+
                 $this->_json(1, '完成');
 
                 break;
