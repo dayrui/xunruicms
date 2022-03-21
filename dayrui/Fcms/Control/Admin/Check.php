@@ -872,6 +872,14 @@ class Check extends \Phpcmf\Common
                         //
                     }
                 }
+
+                $path = CMSPATH.'View/';
+                $files = dr_file_map($path);
+                foreach ($files as $file) {
+                    if (strpos($file, 'share_category') === 0) {
+                        @unlink($path.$file);
+                    }
+                }
                 $this->_json(1, '完成');
 
                 break;
