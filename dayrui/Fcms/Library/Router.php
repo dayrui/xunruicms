@@ -238,7 +238,7 @@ class Router {
      */
     public function member_url($url = '', $query = [], $null = '') {
 
-        if (!$url || $url == 'home/index' || $url == '/') {
+        if (!$url || $url == 'member/home/index' || $url == 'home/index' || $url == '/') {
             return MEMBER_URL;
         }
 

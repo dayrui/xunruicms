@@ -469,6 +469,8 @@ class Auth extends \Phpcmf\Model {
 
         if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             return '`status`>=0'; // 超管用户
+        } elseif (!IS_USE_MEMBER && !$this->is_post_user()) {
+            return '`status`>=0'; // 普通管理员
         }
 
         $verify = \Phpcmf\Service::C()->get_cache('verify');
@@ -792,7 +794,7 @@ class Auth extends \Phpcmf\Model {
         $this->_is_admin_auth($module['dirname'].'/draft/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/draft/index').'"> <i class="fa fa-pencil"></i> '.dr_lang('草稿箱管理').' </a></li>';
         $this->_is_admin_auth($module['dirname'].'/recycle/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/recycle/index').'"> <i class="fa fa-trash-o"></i> '.dr_lang('回收站管理').' </a></li>';
         $this->_is_admin_auth($module['dirname'].'/time/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/time/index').'"> <i class="fa fa-clock-o"></i> '.dr_lang('待发布管理').' </a></li>';
-        IS_USE_MEMBER && $this->_is_admin_auth($module['dirname'].'/verify/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/verify/index').'"> <i class="fa fa-edit"></i> '.dr_lang('待审核管理').' </a></li>';
+        $this->_is_admin_auth($module['dirname'].'/verify/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/verify/index').'"> <i class="fa fa-edit"></i> '.dr_lang('待审核管理').' </a></li>';
         $module_menu.= '</ul>';
 
         // 显示菜单

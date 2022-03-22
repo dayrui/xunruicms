@@ -799,6 +799,8 @@ abstract class Common extends \CodeIgniter\Controller {
      */
     public function goto_404_page($msg) {
 
+        \Phpcmf\Hooks::trigger('cms_404', $msg);
+
         if (IS_API_HTTP) {
             $this->_json(0, $msg);
         }
