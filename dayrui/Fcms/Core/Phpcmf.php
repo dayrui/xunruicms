@@ -62,12 +62,14 @@ abstract class Common extends \CodeIgniter\Controller {
                 $this->site_info[$id]['SITE_MURL'] = dr_http_prefix(($t['SITE_MOBILE'] ? $t['SITE_MOBILE'] : $t['SITE_DOMAIN']).'/');
                 $this->site_info[$id]['SITE_IS_MOBILE'] = $t['SITE_MOBILE'] ? 1 : 0;
             }
+            define('IS_SITES', $id > 1 ? 1 : 0);
         } else {
             $this->site_info[1] = [
                 'SITE_ID' => 1,
                 'SITE_URL' => dr_http_prefix(DOMAIN_NAME.'/'),
                 'SITE_MURL' => dr_http_prefix(DOMAIN_NAME.'/'),
             ];
+            define('IS_SITES', 0);
         }
 
         // 版本

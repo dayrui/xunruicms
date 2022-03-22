@@ -20,7 +20,7 @@
             {/if}
             <th width="300"> {dr_lang('角色组')} </th>
             <th width="100" style="text-align:center"> {dr_lang('身份')} </th>
-            <th width="100" style="text-align:center"> {dr_lang('项目数')} </th>
+            {if IS_SITES}<th width="100" style="text-align:center"> {dr_lang('项目数')} </th>{/if}
             <th>
 
             </th>
@@ -43,13 +43,15 @@
             <td style="text-align:center">
                 <a {if $ci->_is_admin_auth('edit')}href="{if $t.id>1}javascript:dr_iframe('{dr_lang('修改')}', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '80%');{else}javascript:;{/if}"{/if} class="badge {if $t.application.tid}badge-danger{else}badge-success{/if}">{if $t.application.tid}{dr_lang('投稿者')}{else}{dr_lang('管理者')}{/if}</a>
             </td>
+            {if IS_SITES}
             <td style="text-align:center">
                 <a {if $ci->_is_admin_auth('edit')}href="{if $t.id>1}javascript:dr_iframe('{dr_lang('项目权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '50%');{else}javascript:;{/if}"{/if} class="badge badge-success">{if $t.id>1}{count($t.site)}{else}{dr_lang('全部')}{/if}</a>
             </td>
+            {/if}
             <td>
                 {if $ci->_is_admin_auth() && $t.id>1}
                 <a href="{dr_url('role/auth_edit', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
-                <a href="javascript:dr_iframe('{dr_lang('项目权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '80%');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('项目权限')}</a>
+                {if IS_SITES}<a href="javascript:dr_iframe('{dr_lang('项目权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '80%');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('项目权限')}</a>{/if}
                 <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('role/copy_edit', ['id'=>$t.id])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他角色')}</a>
                 {/if}
                 {if $ci->_is_admin_auth('edit')}<a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '60%');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}

@@ -255,7 +255,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 非创始人验证登录权限
-        if ($verify && !isset($data['role'][1]) && !dr_in_array(SITE_ID, $data['site'])) {
+        if (IS_SITES && $verify && !isset($data['role'][1]) && !dr_in_array(SITE_ID, $data['site'])) {
             // 注销账号
             \Phpcmf\Service::C()->session()->remove('uid');
             \Phpcmf\Service::C()->session()->remove('admin');

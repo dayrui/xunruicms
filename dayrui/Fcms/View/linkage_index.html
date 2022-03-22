@@ -20,7 +20,8 @@
                 {/if}
                 <th width="150"> {dr_lang('名称')} </th>
                 <th width="120"> {dr_lang('别名')} </th>
-                <th width="120" style="text-align:center"> {dr_lang('类型')} </th>
+                {if IS_SITES}
+                <th width="120" style="text-align:center"> {dr_lang('类型')} </th>{/if}
                 <th width="120" style="text-align:center"> {dr_lang('数据')} </th>
                 <th> {dr_lang('操作')} </th>
             </tr>
@@ -38,6 +39,7 @@
                 {/if}
                 <td>{$t.name}</td>
                 <td>{$t.code}</td>
+                {if IS_SITES}
                 <td style="text-align:center">
                     {if $t.type}
                     <span class="label label-success"> {dr_lang('独立')} </span>
@@ -45,6 +47,7 @@
                     <span class="label label-danger"> {dr_lang('共享')} </span>
                     {/if}
                 </td>
+                {/if}
                 <td style="text-align:center">
                     {php $tb='linkage_data_'.$t.id;}
                     {count action=table table=$tb}

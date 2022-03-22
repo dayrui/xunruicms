@@ -27,7 +27,7 @@
                 <span class="help-block"> {dr_lang('别名只能由字母或者字母+数字组成')} </span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group {if !IS_SITES} hide {/if}">
             <label class="col-xs-3 control-label ajax_name">{dr_lang('类型')}</label>
             <div class="col-xs-9">
                 <div class="mt-radio-inline">
