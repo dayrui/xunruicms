@@ -146,29 +146,12 @@ class Site extends \Phpcmf\Model {
             return; // 安装不执行后面操作
         }
 
-        if (is_file(MYPATH.'Config/Install_site.sql')) {
-            $s = file_get_contents(MYPATH.'Config/Install_site.sql');
-            $sql = str_replace('{dbprefix}', $this->prefix.$siteid.'_', $s);
-            $this->query_all($sql);
-        }
-
-        // 创建
-        if (is_file(MYPATH.'Config/Install.php')) {
-            require MYPATH.'Config/Install.php';
-        }
-
-        // 执行应用插件的站点sql语句
-        $local = \Phpcmf\Service::Apps(true);
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'Config/Install_site.sql')) {
-                $sql = file_get_contents($path.'Config/Install_site.sql');
-                $this->query_all(str_replace('{dbprefix}',  $this->preifx.$siteid.'_', $sql));
+        if (dr_is_app('sites')) {
+            $obj = \Phpcmf\Service::M('sites', 'sites');
+            if (method_exists($obj, 'create')) {
+                $obj->create($siteid, $data);
             }
         }
-
-        \Phpcmf\Service::M('cache')->update_webpath('Web', $data['webpath'], [
-            'SITE_ID' => $siteid
-        ]);
     }
 
     // 变更主域名
