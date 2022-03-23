@@ -238,7 +238,10 @@ class Editor extends \Phpcmf\Library\A_Field {
             $temp = preg_replace('/<pre(.*)<\/pre>/siU', '', $value);
             $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
             if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
-                $imgs[3] = array_unique($imgs[3]);
+                $reps = array_unique($imgs[3]);
+                usort($reps, function ($a, $b) {
+                    return dr_strlen($b) - dr_strlen($a);
+                });
                 foreach ($imgs[3] as $img) {
 
                     if ($base64 && preg_match('/^(data:\s*image\/(\w+);base64,)/i', $img, $result)) {
@@ -303,7 +306,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                                             // 可以下载文件
                                             // 下载远程文件
                                             $rt = \Phpcmf\Service::L('upload')->down_file([
-                                                'url' => $img,
+                                                'url' => html_entity_decode((string)$img),
                                                 'timeout' => 5,
                                                 'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                                 'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
@@ -346,7 +349,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                                         } else {
                                             // 下载归档
                                             $rt = \Phpcmf\Service::L('upload')->down_file([
-                                                'url' => $img,
+                                                'url' => html_entity_decode((string)$img),
                                                 'timeout' => 5,
                                                 'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                                                 'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
@@ -373,8 +376,6 @@ class Editor extends \Phpcmf\Library\A_Field {
                 }
             }
         }
-
-        exit;
 
         // 去除站外链接
         if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']]
