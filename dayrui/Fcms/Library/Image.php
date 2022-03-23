@@ -1702,9 +1702,6 @@ class Image {
 
     // 处理图片大小是否溢出内存（图片分辨率，图片对象的width和height ）X（图片的通道数，一般是3）X 1.7
     public function memory_limit($img) {
-        if ($img[1] > 1200 || $img[0] > 1200) {
-            return 1; // 图片分辨率太大不进行缩略图处理
-        }
         $max = ($img[0] * $img[1] * 3 * 1.7)/1024/1024;
         $limit = intval(ini_get("memory_limit")) / 1.7; // 多预留一些内存
         return $limit && $limit - $max < 0;

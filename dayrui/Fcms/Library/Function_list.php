@@ -164,6 +164,19 @@ class Function_list {
         return $this->uid_data[$uid] ? '<a class="fc_member_show" href="javascript:;" uid="'.intval($uid).'" member="'.dr_htmlspecialchars($this->uid_data[$uid]).'">'.dr_strcut($this->uid_data[$uid], 10).'</a>' : dr_lang('游客');
     }
 
+    // 头像
+    public function avatar_uid($value, $param = [], $data = [], $field = []) {
+
+        $uid = isset($data['uid']) ? $data['uid'] : 0;
+
+        return '<a class="fc_member_show" href="javascript:;" uid="'.$uid.'"><img class="img-circle" src="'.dr_avatar($uid).'" style="width:30px;height:30px"></a>';
+    }
+
+    // 头像
+    public function avatar($value, $param = [], $data = [], $field = []) {
+        return '<a class="fc_member_show" href="javascript:;" uid="'.$value.'"><img class="img-circle" src="'.dr_avatar($value).'" style="width:30px;height:30px"></a>';
+    }
+
     // 用于列表关联主题
     public function ctitle($cid, $param = [], $data = []) {
 
