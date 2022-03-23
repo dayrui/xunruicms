@@ -242,7 +242,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                 usort($reps, function ($a, $b) {
                     return dr_strlen($b) - dr_strlen($a);
                 });
-                foreach ($imgs[3] as $img) {
+                foreach ($reps as $img) {
 
                     if ($base64 && preg_match('/^(data:\s*image\/(\w+);base64,)/i', $img, $result)) {
                         // 处理图片
