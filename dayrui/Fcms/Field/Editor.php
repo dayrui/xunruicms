@@ -238,6 +238,7 @@ class Editor extends \Phpcmf\Library\A_Field {
             $temp = preg_replace('/<pre(.*)<\/pre>/siU', '', $value);
             $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
             if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
+                $imgs[3] = array_unique($imgs[3]);
                 foreach ($imgs[3] as $img) {
 
                     if ($base64 && preg_match('/^(data:\s*image\/(\w+);base64,)/i', $img, $result)) {
@@ -372,6 +373,8 @@ class Editor extends \Phpcmf\Library\A_Field {
                 }
             }
         }
+
+        exit;
 
         // 去除站外链接
         if (isset($_POST['is_remove_a_'.$field['fieldname']]) && $_POST['is_remove_a_'.$field['fieldname']]
