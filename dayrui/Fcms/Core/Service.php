@@ -84,22 +84,18 @@ class Service {
 
         static::$apps[$is_install] = [];
         $source_dir = dr_get_app_list();
-
         if ($fp = opendir($source_dir)) {
-            $filedata = [];
-            $source_dir	= rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             while (FALSE !== ($file = readdir($fp))) {
+                $path = dr_get_app_dir($file);
                 if ($file === '.' OR $file === '..'
                     OR $file[0] === '.'
-                    OR !is_dir($source_dir.$file)) {
+                    OR !is_dir($path)) {
                     continue;
                 }
-                if ($is_install && !is_file($source_dir.$file . '/install.lock')) {
+                if ($is_install && !is_file($path . 'install.lock')) {
                     continue;
                 }
-                if (is_dir($source_dir.$file)) {
-					static::$apps[$is_install][$file] = dr_get_app_dir($file);
-                }
+                static::$apps[$is_install][$file] = $path;
             }
             closedir($fp);
         }
