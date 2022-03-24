@@ -441,6 +441,14 @@ return [
             $is_ok = 1;
             $this->_copy_dir($cmspath.'MYPATH', MYPATH);
         }
+        if (is_dir($cmspath.'COREPATH')) {
+            $is_ok = 1;
+            $this->_copy_dir($cmspath.'COREPATH', COREPATH);
+        }
+        if (is_dir($cmspath.'CMSPATH')) {
+            $is_ok = 1;
+            $this->_copy_dir($cmspath.'CMSPATH', COREPATH);
+        }
         if (is_dir($cmspath.'CONFIGPATH')) {
             $is_ok = 1;
             $this->_copy_dir($cmspath.'CONFIGPATH', CONFIGPATH);
@@ -822,6 +830,9 @@ return [
             }
             if (is_dir($cmspath.'CMSPATH')) {
                 $this->_copy_dir($cmspath.'CMSPATH', COREPATH);
+            }
+            if (is_dir($cmspath.'CONFIGPATH')) {
+                $this->_copy_dir($cmspath.'CONFIGPATH', CONFIGPATH);
             }
         }
 
