@@ -546,7 +546,7 @@ class Router {
 
     // 快捷登录地址
     public function oauth_url($name, $type, $gourl = '') {
-        return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode($gourl);
+        return OAUTH_URL . 'index.php?s=api&c=oauth&m=index&name=' . $name . '&type=' . $type.'&back='.urlencode((string)$gourl);
     }
 
     // 地址前缀部分
