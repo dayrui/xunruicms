@@ -153,7 +153,7 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 
         if (!$this->is_load_js($field['fieldtype'])) {
 			$str.= '
-			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
+			<link href="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.min.css?v='.CMF_UPDATE_TIME.'" rel="stylesheet" type="text/css" />
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/fuelux/js/spinner.min.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			<script src="'.ROOT_THEME_PATH.'assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js?v='.CMF_UPDATE_TIME.'" type="text/javascript"></script>
 			';

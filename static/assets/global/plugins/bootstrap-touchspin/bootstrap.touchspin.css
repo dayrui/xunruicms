@@ -7,6 +7,10 @@
  *  Under Apache License v2.0 License
  */
 
+.bootstrap-touchspin .form-control {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+}
 .bootstrap-touchspin .input-group-btn-vertical {
   position: relative;
   white-space: nowrap;
