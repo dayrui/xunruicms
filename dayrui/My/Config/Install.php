@@ -8,6 +8,9 @@ if (isset($_GET['is_install_db']) && $_GET['is_install_db']) {
     if (is_file(APPSPATH.'Module/Config/App.php')) {
         $rt = \Phpcmf\Service::M('app')->install('module');
         if ($rt['code']) {
+            if (!defined('IS_USE_MODULE')) {
+                define('IS_USE_MODULE', 1);
+            }
             \Phpcmf\Service::M('module')->install('news', null, 0, 1);
             $sql = file_get_contents(MYPATH.'Config/demo.sql');
             if ($sql) {
