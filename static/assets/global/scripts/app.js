@@ -1242,7 +1242,7 @@ function dr_install_module(url) {
                     layer.close(index);
                     dr_tips(json.code, json.msg);
                     if (json.code == 1) {
-                        setTimeout("dr_install_confirm("+json.data.url+")", 2000);
+                        setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
                         //setTimeout("window.location.reload(true)", 2000)
                     }
                 },
