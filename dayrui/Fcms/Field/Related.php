@@ -117,6 +117,10 @@ class Related extends \Phpcmf\Library\A_Field {
             return $this->show($field, $value);
         }
 
+        if (!IS_USE_MODULE) {
+            return '使用本字段类别需要安装【内容系统】插件';
+        }
+
         $is_show = 0;
 
         // 字段存储名称
@@ -174,9 +178,6 @@ class Related extends \Phpcmf\Library\A_Field {
         require $file;
         $str = ob_get_clean();
 
-		$str.= '<p>';
-		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_related_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联内容').'</button>';
-        $str.= '</p>';
         $str.= $tips;
         $js = \Phpcmf\Service::L('js_packer');
         $str.= $js->pack('

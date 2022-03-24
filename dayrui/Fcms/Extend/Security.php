@@ -55,7 +55,7 @@ class Security extends \CodeIgniter\Security\Security {
 
         // Do the tokens match?
         if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
-            CI_DEBUG && log_message('debug', '跨站验证');
+            CI_DEBUG && log_message('debug', '跨站验证拦截（'.$this->hash.' / '.$token.'）');
             dr_exit_msg(0, '跨站验证超时请重试', '', [
                 'name' => $this->tokenName,
                 'value' => $this->hash

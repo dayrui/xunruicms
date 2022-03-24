@@ -160,7 +160,10 @@ class Property extends \Phpcmf\Library\A_Field {
             <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>';
         if (!$field['setting']['option']['is_hang']) {
             $str.='
-            <th width="45"> </th>';
+            <th width="45" style="text-align: center"> ';
+
+            $str.= '	<a href="javascript:;" class="btn blue btn-xs" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i></a>';
+            $str.='</th>';
         }
         $str.= '
         </tr>
@@ -223,7 +226,7 @@ class Property extends \Phpcmf\Library\A_Field {
                 $str.= '<td>';
                 $str.= '<input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$t['value']).'" name="data['.$name.']['.$i.'][value]" />';
                 $str.= '</td>';
-                $str.= '<td><a class="btn btn-xs red" href="javascript:;" onclick="$(\'#dr_items_'.$name.'_'.$i.'\').remove()"> <i class="fa fa-trash"></i> </a>';
+                $str.= '<td style="text-align: center"><a class="btn btn-xs red" href="javascript:;" onclick="$(\'#dr_items_'.$name.'_'.$i.'\').remove()"> <i class="fa fa-trash"></i> </a>';
                 $str.= '</td>';
                 $str.= '</tr>';
                 $i++;
@@ -234,9 +237,7 @@ class Property extends \Phpcmf\Library\A_Field {
             </tbody>
         </table></div></div>';
 		if (!$field['setting']['option']['is_hang']) {
-            $str.= '<p>';
-            $str.= '	<a href="javascript:;" class="btn blue btn-sm" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加').' </a>';
-            $str.= '</p>';
+
             $js = \Phpcmf\Service::L('js_packer');
             $str.= $js->pack('<script type="text/javascript">
 		$("#property_'.$name.'-sort-items").sortable();
@@ -251,7 +252,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			var html = "<tr id=\"dr_items_'.$name.'_"+id+"\">";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][name]\"></td>";
 			html+= "<td><input type=\"text\" class=\"form-control input-sm\" value=\"\" name=\"data['.$name.']["+id+"][value]\"></td>";
-			html+= "<td><a class=\"btn btn-xs red\" href=\"javascript:;\" onclick=\"$(\'#dr_items_'.$name.'_"+id+"\').remove()\"> <i class=\"fa fa-trash\"></i> </a></td></tr>";
+			html+= "<td style=\"text-align: center\"><a class=\"btn btn-xs red\" href=\"javascript:;\" onclick=\"$(\'#dr_items_'.$name.'_"+id+"\').remove()\"> <i class=\"fa fa-trash\"></i> </a></td></tr>";
 			$("#property_'.$name.'-sort-items").append(html);
             dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 			id++;

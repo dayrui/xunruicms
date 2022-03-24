@@ -136,9 +136,7 @@ class Members extends \Phpcmf\Library\A_Field {
         ob_start();
         require $file;
         $str = ob_get_clean();
-		$str.= '<p>';
-		$str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_rmember_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('关联用户').'</button>';
-        $str.= '</p>';
+
         $str.= $tips;
         $js = \Phpcmf\Service::L('js_packer');
         $str.= $js->pack('

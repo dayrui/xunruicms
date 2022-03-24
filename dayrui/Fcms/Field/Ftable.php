@@ -416,7 +416,9 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
         }
         if ($field['setting']['option']['is_add']) {
-            $str.= ' <th width="50" style="text-align: center">'.dr_lang('删除').'</th>';
+            $str.= ' <th width="50" style="text-align: center">';
+            $str.= '<button type="button" class="btn blue btn-xs" onClick="dr_add_table_'.$name.'()"> <i class="fa fa-plus"></i> </button>';
+            $str.'</th>';
         }
         $str.= ' </tr></thead>';
         $str.= ' <tbody id="dr_'.$name.'_body">';
@@ -487,8 +489,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $this->set_load_js('Date', 1);
         }
         if ($field['setting']['option']['is_add']) {
-            $str.= '<div class="table-add">';
-            $str.= '<button type="button" class="btn blue btn-sm" onClick="dr_add_table_'.$name.'()"> <i class="fa fa-plus"></i> '.dr_lang('添加一行').'</button>';
             $str.= '<script>
                 var ks_'.$name.' = '.json_encode(['tpl' => $tpl, 'id' => $ksid]).';
                 function dr_del_table_'.$name.'(e) {
@@ -507,7 +507,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     $(\'#dr_'.$name.'_body\').append(tpl);
                 }
                 </script>';
-            $str.= '</div>';
         }
         $str.= '<script> $("#dr_'.$name.'_body").sortable();';
 
