@@ -81,10 +81,15 @@ class Filters extends BaseConfig
             // 后台登录关闭跨站验证
             if (IS_ADMIN && in_array(\Phpcmf\Service::L('router')->uri(), ['login/index'])) {
                 $this->methods['post'] = [];
+            } elseif (IS_ADMIN && \Phpcmf\Service::L('router')->class == 'cloud') {
+                $this->methods['post'] = [];
             }
         }
 
-        if (defined('IS_API') && IS_API) {
+        if (IS_DEV || CI_DEBUG) {
+            // 调试模式下关闭
+            $this->methods['post'] = [];
+        } elseif (defined('IS_API') && IS_API) {
             $this->methods['post'] = [];
         } elseif (isset($_GET['appid']) && is_file(dr_get_app_dir('httpapi').'/install.lock')) {
             $this->methods['post'] = [];
