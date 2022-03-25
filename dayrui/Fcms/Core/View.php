@@ -375,6 +375,12 @@ class View {
             if ($file == 'msg.html' || $file == '404.html') {
                 return COREPATH.'View/api_msg.html';
             }
+            if ($this->_is_mobile) {
+                $pc = str_replace('/mobile/', '/pc/', $default_file);
+                if (is_file($pc)) {
+                    $this->show_error('移动端模板文件不存在', $error, $pc);exit;
+                }
+            }
         }
 
         $this->show_error('模板文件不存在', $error);
@@ -2104,12 +2110,15 @@ class View {
     }
 
     // 错误提示
-    public function show_error($msg, $file = '') {
+    public function show_error($msg, $file = '', $fixfile = '') {
 
         if (CI_DEBUG || defined('SC_HTML_FILE')) {
             // 开发者模式下，静态生成模式下，显示详细错误
             if ($file) {
                 $msg.= '（'.$file.'）';
+                if ($fixfile) {
+                    $msg.= '<br>你可以将PC模板（'.$fixfile.'）手动复制过来作为本模板';
+                }
             }
             log_message('error', $this->_options['my_web_url'].'：'.$msg);
             if (defined('SC_HTML_FILE')) {
