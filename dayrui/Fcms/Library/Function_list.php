@@ -314,17 +314,17 @@ class Function_list {
     // 用于列表显示价格
     public function price($value, $param = [], $data = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
-        return '<span style="color:#ef4c2f">￥'.number_format($value, 2).'</span>';
+        return '<span style="color:#ef4c2f">￥'.number_format(floatval($value), 2).'</span>';
     }
 
     // 用于列表显示价格
     public function money($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
@@ -332,13 +332,13 @@ class Function_list {
             return '<a href="'.\Phpcmf\Service::M('auth')->_menu_link_url('pay/paylog/index', 'pay/paylog/index', ['field'=>'uid','keyword'=>$data['id']]).'" style="color:#ef4c2f">'.number_format($value, 2).'</a>';
         }
 
-        return '<span style="color:#ef4c2f">'.number_format($value, 2).'</span>';
+        return '<span style="color:#ef4c2f">'.number_format(floatval($value), 2).'</span>';
     }
 
     // 用于列表显示积分
     public function score($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
@@ -352,7 +352,7 @@ class Function_list {
     // 用于列表显示价格、库存
     public function price_quantity($value, $param = [], $data = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
@@ -372,7 +372,7 @@ class Function_list {
     // 单选字段name
     public function radio_name($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
@@ -389,7 +389,7 @@ class Function_list {
     // 下拉字段name值
     public function select_name($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 
@@ -406,7 +406,7 @@ class Function_list {
     // checkbox字段name值
     public function checkbox_name($value, $param = [], $data = [], $field = []) {
 
-        if (!$value) {
+        if (dr_is_empty($value)) {
             return '';
         }
 

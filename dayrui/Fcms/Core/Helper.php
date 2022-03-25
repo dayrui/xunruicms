@@ -6,6 +6,20 @@
  **/
 
 
+
+/**
+ * 是否为空白
+ * @return 是否空白
+ */
+function dr_is_empty($value) {
+
+    if (is_array($value)) {
+        return $value ? 1 : 0;
+    }
+
+    return strlen((string)$value) ? 1 : 0;
+}
+
 /**
  * 是否301跳转
  * @return 是否301跳转
