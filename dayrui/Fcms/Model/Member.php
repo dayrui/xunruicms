@@ -585,6 +585,8 @@ class Member extends \Phpcmf\Model {
             }
         }
 
+        $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
+
         // 默认注册组
         !$groupid && $groupid = (int)\Phpcmf\Service::C()->member_cache['register']['groupid'];
 
@@ -601,6 +603,7 @@ class Member extends \Phpcmf\Model {
             // 前端验证密码格式
             if (!IS_ADMIN) {
                 if ($member['password'] == SYS_KEY.'_login_sms') {
+                    $member['salt'] = 'login_sms';
                     $member['password'] = rand(0, 99999); // 表示短信直接注册
                 } else {
                     $rt = \Phpcmf\Service::L('Form')->check_password($member['password'], $member['username']);
@@ -632,7 +635,6 @@ class Member extends \Phpcmf\Model {
             }
         }*/
 
-        $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
         $member['password'] = $member['password'] ? md5(md5($member['password']).$member['salt'].md5($member['password'])) : '';
         $member['login_attr'] = '';
         $member['money'] = 0;
