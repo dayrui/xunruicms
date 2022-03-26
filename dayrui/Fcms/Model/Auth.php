@@ -541,6 +541,8 @@ class Auth extends \Phpcmf\Model {
      */
     public function _is_admin_auth($uri = '') {
 
+        $uri = trim((string)$uri, '/');
+
         // 管理员1组不验证, 后台首页不验证
         if ((!\Phpcmf\Service::C()->admin || isset(\Phpcmf\Service::C()->admin['role'][1]))
             || \Phpcmf\Service::L('router')->class == 'api'
@@ -610,9 +612,6 @@ class Auth extends \Phpcmf\Model {
         if (APP_DIR && $this_c == 'flag') {
             // 特殊推荐位权限
             $this_uri = str_replace('/flag/', '/home/', $this_uri);
-        } elseif ($this_c == 'category') {
-            // 栏目权限
-            $this_uri = APP_DIR ? str_replace(APP_DIR.'/', 'module_', $this_uri) : 'module_category/'.$action;
         }
         /* elseif ($this_c == 'member' && APP_DIR) {
             // 用户内容权限

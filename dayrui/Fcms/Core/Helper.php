@@ -14,10 +14,10 @@
 function dr_is_empty($value) {
 
     if (is_array($value)) {
-        return $value ? 1 : 0;
+        return $value ? 0 : 1;
     }
 
-    return strlen((string)$value) ? 1 : 0;
+    return strlen((string)$value) ? 0 : 1;
 }
 
 /**
