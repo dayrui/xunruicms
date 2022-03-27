@@ -56,7 +56,7 @@ class Api extends \Phpcmf\Common {
         //生成二维码图片
         require_once CMSPATH.'Library/Phpqrcode.php';
         $file = WRITEPATH.'file/qrcode-'.md5($value.$thumb.$matrixPointSize.$errorCorrectionLevel).'-qrcode.png';
-        if (is_file($file)) {
+        if (!IS_DEV && is_file($file)) {
             $QR = imagecreatefrompng($file);
         } else {
             \QRcode::png($value, $file, $errorCorrectionLevel, $matrixPointSize, 3);
@@ -79,7 +79,7 @@ class Api extends \Phpcmf\Common {
                 $logo_qr_height = $logo_height/$scale;
                 $from_width = ($QR_width - $logo_qr_width) / 2;
                 //重新组合图片并调整大小
-                imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height);
+                imagecopyresampled($QR, $logo, (int)$from_width, (int)$from_width, 0, 0, (int)$logo_qr_width, (int)$logo_qr_height, (int)$logo_width, (int)$logo_height);
                 imagepng($QR, $file);
             }
         }
