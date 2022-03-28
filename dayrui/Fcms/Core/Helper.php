@@ -57,7 +57,7 @@ function dr_safe_url($url, $is_html = false) {
         return '';
     }
 
-    $url = trim(\Phpcmf\Service::L('Security')->xss_clean($url, true));
+    $url = trim(\Phpcmf\Service::L('Security')->xss_clean((string)$url, true));
     if ($is_html) {
         $url = htmlspecialchars($url);
     }

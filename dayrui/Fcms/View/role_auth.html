@@ -39,6 +39,7 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {php $uris=[];}
                         {loop $menu_data $t}
                         <tr class="{if $t.pid==0} my_pid_menu{/if} odd gradeX" id="dr_row_{$t.id}">
 
@@ -60,6 +61,7 @@
                                     <input type="checkbox" class="checkboxes zsg{$t.id}  menu{$t.pid} menu{$t.tid}" {if dr_in_array('add', (array)$data['system']['auth'][$t.uri])}checked{/if} name="data[auth][{$t.uri}][]" value="add" />
                                     <span></span>
                                 </label>
+                                {php $uris[]=$t.uri;}
                                 {/if}
                             </td>
                             <td style="text-align:center" class="myselect">
@@ -96,7 +98,7 @@
                                     <span></span>
                                 </label>
                             </th>
-                            <th> {$t.name} </th>
+                            <th> {$t.name}</th>
                             <th width="50" style="text-align:center" class="myselect"> {dr_lang('增')} </th>
                             <th width="50" style="text-align:center" class="myselect"> {dr_lang('改')} </th>
                             <th width="50" style="text-align:center" class="myselect"> {dr_lang('删')} </th>
@@ -104,6 +106,7 @@
                         </thead>
                         <tbody>
                         {loop $t.auth $uri $name}
+                        {if !dr_in_array($uri.'index', $uris)}
                         <tr class="odd gradeX">
                             <td class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -112,7 +115,7 @@
                                 </label>
                             </td>
                             <td>
-                                {$name}
+                                {$name} - {$uri}index
                             </td>
                             <td style="text-align:center" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -133,6 +136,7 @@
                                 </label>
                             </td>
                         </tr>
+                        {/if}
                         {/loop}
                         </tbody>
                     </table>
