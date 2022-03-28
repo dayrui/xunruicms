@@ -250,12 +250,6 @@ class View {
         $LANG_PATH = LANG_PATH;
         $THEME_PATH = THEME_PATH;
 
-        if (SITE_ID == 1 && isset($_SERVER['SCRIPT_FILENAME'])
-            && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/admin.min.css')) {
-            $THEME_PATH = '/static/';
-            $LANG_PATH = '/api/language/'.SITE_LANGUAGE.'/';
-        }
-
         $_temp_file = $this->load_view_file($_view_file);
 
         // 挂钩点 模板加载之后

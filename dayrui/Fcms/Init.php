@@ -90,7 +90,6 @@ $system = [
     'SYS_AVATAR_PATH'   => '',
     'SYS_AVATAR_URL'    => '',
     'SYS_API_CODE'  => '',
-    'SYS_THEME_ROOT'    => '',
     'SYS_ATTACHMENT_SAFE'    => '',
 ];
 if (is_file(WRITEPATH.'config/system.php')) {

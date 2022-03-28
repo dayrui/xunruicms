@@ -76,18 +76,6 @@
                                 <span class="help-block">{dr_lang('发布内容临时存储，再次发布时自动填充')}</span>
                             </div>
                         </div>
-                        {if dr_is_app('sites')}
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('系统风格目录的作用域')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT]" value="1" {if $data['SYS_THEME_ROOT']}checked{/if} /> {dr_lang('相对')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT]" value="0" {if empty($data['SYS_THEME_ROOT'])}checked{/if} /> {dr_lang('绝对')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('选择绝对模式时，多个项目和THEME_PATH变量在引用风格时，路径为主站URL')}</span>
-                            </div>
-                        </div>
-                        {/if}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('后台数据分页条数')}</label>
                             <div class="col-md-9">

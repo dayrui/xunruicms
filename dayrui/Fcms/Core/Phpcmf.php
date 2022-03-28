@@ -124,13 +124,23 @@ abstract class Common extends \CodeIgniter\Controller {
             date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
         }
 
+        if (!defined('THEME_PATH')) {
+            // 系统风格
+            if (SITE_ID == 1 && isset($_SERVER['SCRIPT_FILENAME'])
+                && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/admin.min.css')) {
+                define('THEME_PATH', '/static/');
+                define('LANG_PATH', '/api/language/'.SITE_LANGUAGE.'/');
+                define('ROOT_THEME_PATH', '/static/');
+            } else {
+                define('THEME_PATH', ROOT_URL.'static/');
+            }
+        }
+
         // 全局URL
         define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
         define('OAUTH_URL', PAY_URL); // 第三方登录URL
-        define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
-
-        !defined('THEME_PATH') && define('THEME_PATH', trim(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
+        !defined('LANG_PATH') && define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径
 
         if (strpos(SITE_THEME, '/') !== false) {
@@ -139,7 +149,7 @@ abstract class Common extends \CodeIgniter\Controller {
             define('MOBILE_THEME_PATH', SITE_THEME); // 移动端站点风格
         } else {
             // 本地资源
-            define('HOME_THEME_PATH', trim(SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
+            define('HOME_THEME_PATH', trim(THEME_PATH == '/static/' ? '/' : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
             if (!defined('IS_MOBILE') && (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.SITE_MOBILE_DIR.'/static/'.SITE_THEME.'/'); // 移动端站点风格

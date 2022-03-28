@@ -540,4 +540,9 @@ class Function_list {
 
         return dr_clearhtml($value);
     }
+
+    // 原样输出
+    public function get_value($value, $param = [], $data = [], $field = []) {
+        return $value;
+    }
 }

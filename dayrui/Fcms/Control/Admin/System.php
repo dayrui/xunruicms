@@ -19,7 +19,6 @@ class System extends \Phpcmf\Common
 		    $post = \Phpcmf\Service::L('input')->post('data', true);
             $save = [
                 'SYS_DEBUG' => (int)$post['SYS_DEBUG'],
-                'SYS_THEME_ROOT' => (int)$post['SYS_THEME_ROOT'],
                 'SYS_AUTO_FORM' => (int)$post['SYS_AUTO_FORM'],
                 'SYS_CRON_AUTH' => dr_safe_replace($post['SYS_CRON_AUTH']),
                 'SYS_SMS_IMG_CODE' => intval($post['SYS_SMS_IMG_CODE']),
