@@ -332,6 +332,10 @@ class Form {
 			return true;
 		}
 
+        if (!IS_ADMIN && function_exists('my_check_captcha')) {
+            return my_check_captcha($id);
+        }
+
         $data = \Phpcmf\Service::L('input')->post($id);
         if (!$data) {
             IS_DEV && log_message('debug', '图片验证码验证失败：没有输入验证码');
@@ -357,6 +361,10 @@ class Form {
 			return true;
 		} elseif (!$data) {
             return false;
+        }
+
+        if (!IS_ADMIN && function_exists('my_check_captcha_value')) {
+            return my_check_captcha_value($data);
         }
 
         $code = \Phpcmf\Service::L('cache')->get_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID, 300);
