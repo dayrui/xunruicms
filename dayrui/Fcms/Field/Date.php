@@ -12,8 +12,8 @@ class Date extends \Phpcmf\Library\A_Field {
      */
     public function __construct(...$params) {
         parent::__construct(...$params);
-        $this->fieldtype = ['bigint' => 10];
-        $this->defaulttype = 'INT';
+        $this->fieldtype = ['BIGINT' => 10];
+        $this->defaulttype = 'BIGINT';
     }
 
     /**

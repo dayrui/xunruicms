@@ -1120,12 +1120,21 @@
          */
         public function get_default_value($value) {
 
-            if ($value && preg_match('/\{(\w+)\}/', $value, $match)) {
+            if (dr_is_empty($value)) {
+                return '';
+            }
+
+            if (preg_match('/\{(\w+)\}/', $value, $match)) {
                 $rt = isset(\Phpcmf\Service::C()->member[$match[1]]) ? \Phpcmf\Service::C()->member[$match[1]] : '';
                 if ($match[1] == 'name' && !$rt) {
                     $rt = isset(\Phpcmf\Service::C()->member['username']) ? \Phpcmf\Service::C()->member['username'] : '';
                 }
                 return $rt;
+            } elseif (strpos((string)$value, '()') !== false) {
+                $func = str_replace('()', '', trim((string)$value));
+                if (function_exists($func)) {
+                    return call_user_func($func);
+                }
             }
 
             return $value;
@@ -1133,7 +1142,7 @@
 
         // 数字默认值
         public function _default_value($type) {
-            if (in_array($type, array('INT', 'TINYINT', 'SMALLINT', 'MEDIUMINT'))) {
+            if (in_array($type, array('INT', 'BIGINT', 'TINYINT', 'SMALLINT', 'MEDIUMINT'))) {
                 return '0';
             } else {
                 return 'NULL';
@@ -1150,6 +1159,7 @@
         public function field_type($name = NULL, $length = NULL) {
             if ($this->fieldtype === TRUE) {
                 $select	= '<option value="">-</option>
+				<option value="BIGINT" '.($name == 'BIGINT' ? 'selected' : '').'>BIGINT</option>
 				<option value="INT" '.($name == 'INT' ? 'selected' : '').'>INT</option>
 				<option value="TINYINT" '.($name == 'TINYINT' ? 'selected' : '').'>TINYINT</option>
 				<option value="SMALLINT" '.($name == 'SMALLINT' ? 'selected' : '').'>SMALLINT</option>

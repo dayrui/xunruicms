@@ -124,9 +124,14 @@ abstract class Common extends \CodeIgniter\Controller {
             date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
         }
 
+        // 全局URL
+        define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
+        define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
+        define('OAUTH_URL', PAY_URL); // 第三方登录URL
+
         if (!defined('THEME_PATH')) {
             // 系统风格
-            if (SITE_ID == 1 && isset($_SERVER['SCRIPT_FILENAME'])
+            if (IS_ADMIN && SITE_ID == 1 && isset($_SERVER['SCRIPT_FILENAME'])
                 && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/admin.min.css')) {
                 define('THEME_PATH', '/static/');
                 define('LANG_PATH', '/api/language/'.SITE_LANGUAGE.'/');
@@ -136,10 +141,6 @@ abstract class Common extends \CodeIgniter\Controller {
             }
         }
 
-        // 全局URL
-        define('PAY_URL', $this->is_mobile ? SITE_MURL : SITE_URL); // 付款URL
-        define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
-        define('OAUTH_URL', PAY_URL); // 第三方登录URL
         !defined('LANG_PATH') && define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径
 
