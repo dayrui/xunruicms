@@ -132,7 +132,7 @@ class Attachment extends \Phpcmf\Model {
             return;
         }
 
-        $indexs = $this->table('attachment')->like('related', $related.'-'.$cid)->getAll();
+        $indexs = $this->table('attachment')->where('related', $related.'-'.$cid)->getAll();
         if ($indexs) {
             foreach ($indexs as $i) {
                 $this->file_delete($member, intval($i['id']));
@@ -163,7 +163,7 @@ class Attachment extends \Phpcmf\Model {
         }
 
         foreach ($ids as $id) {
-            $indexs = $this->table('attachment')->like('related', $related.'-'.$id)->getAll();
+            $indexs = $this->table('attachment')->where('related', $related.'-'.$id)->getAll();
             if ($indexs) {
                 foreach ($indexs as $i) {
                     $this->file_delete($member, intval($i['id']));
@@ -176,7 +176,7 @@ class Attachment extends \Phpcmf\Model {
     public function related_delete($related, $id = 0) {
 
         if ($id) {
-            $indexs = $this->table('attachment')->like('related', $related.'-'.$id)->getAll();
+            $indexs = $this->table('attachment')->where('related', $related.'-'.$id)->getAll();
         } else {
             $indexs = $this->table('attachment')->where('related LIKE "'.$related.'-%"')->getAll();
         }

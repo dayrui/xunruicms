@@ -655,7 +655,7 @@ class Api extends \Phpcmf\Common {
         if (!$rt['code']) {
             $this->_json(0, $rt['msg']);
         } elseif (strpos(dr_catcher_data($rt['data']['url']), 'phpcmf') !== false) {
-            $this->_json(1, dr_lang('测试成功'));
+            $this->_json(1, dr_lang('测试成功：%s', $rt['data']['url']));
         }
 
         $this->_json(0, dr_lang('无法访问到附件: %s', $rt['data']['url']));
