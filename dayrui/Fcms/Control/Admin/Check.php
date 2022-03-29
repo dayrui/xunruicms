@@ -873,14 +873,6 @@ class Check extends \Phpcmf\Common
                     }
                 }
 
-                $path = CMSPATH.'View/';
-                $files = dr_file_map($path);
-                foreach ($files as $file) {
-                    if (strpos($file, 'share_category') === 0) {
-                        @unlink($path.$file);
-                    }
-                }
-
                 if (!is_file(ROOTPATH.'static/assets/js/my.js') && is_dir(ROOTPATH.'static/assets/js/')) {
                     @file_put_contents(ROOTPATH.'static/assets/js/my.js', '');
                 }
