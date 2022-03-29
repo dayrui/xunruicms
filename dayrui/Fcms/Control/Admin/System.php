@@ -24,6 +24,7 @@ class System extends \Phpcmf\Common
                 'SYS_SMS_IMG_CODE' => intval($post['SYS_SMS_IMG_CODE']),
                 'SYS_GO_404' => intval($post['SYS_GO_404']),
                 'SYS_301' => intval($post['SYS_301']),
+                'SYS_THEME_ROOT_PATH' => intval($post['SYS_THEME_ROOT_PATH']),
 
                 'SYS_URL_PREG' => (int)$post['SYS_URL_PREG'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],

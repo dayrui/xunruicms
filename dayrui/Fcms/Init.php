@@ -67,6 +67,7 @@ $system = [
     'SYS_CRON_AUTH' => '',
     'SYS_SMS_IMG_CODE' => 0,
     'SYS_GO_404' => 0,
+    'SYS_THEME_ROOT_PATH' => 0,
     'SYS_301' => 0,
     'SYS_NOT_UPDATE' => 0,
     'SYS_URL_PREG' => 0,

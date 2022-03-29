@@ -103,6 +103,18 @@
                                 <span class="help-block">{dr_lang('在后台登录界面显示完整模式和简化模式的切换选项')}</span>
                             </div>
                         </div>
+                        {if dr_is_root_path()}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('资源路径引用方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="0" {if empty($data['SYS_THEME_ROOT_PATH'])}checked{/if} /> {dr_lang('绝对引用')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="1" {if $data['SYS_THEME_ROOT_PATH']}checked{/if} /> {dr_lang('相对引用')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('前端界面中的static资源目录的引用方式')}</span>
+                            </div>
+                        </div>
+                        {/if}
                     </div>
                 </div>
 
