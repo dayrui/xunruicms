@@ -32,7 +32,9 @@ class Ftable extends \Phpcmf\Library\A_Field {
 					<label>'.$this->_field_type_select($i, $option['field'][$i]['type']).'</label>
 					<label><input type="text" placeholder="'.dr_lang('列名称').'" class="form-control" size="20" value="'.$option['field'][$i]['name'].'" name="data[setting][option][field]['.$i.'][name]"></label>
 					<label><input type="text" placeholder="'.dr_lang('列宽度').'" class="form-control" size="20" value="'.$option['field'][$i]['width'].'" name="data[setting][option][field]['.$i.'][width]"></label>
-					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('例如：选择框或复选框的选项、日期格式值、文件扩展名等').'" class="form-control input-xlarge" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]"></label>
+					<label id="dr_h_type_2"><input type="text" placeholder="'.dr_lang('选项配置').'" class="form-control input-xlarge" size="20" value="'.$option['field'][$i]['option'].'" name="data[setting][option][field]['.$i.'][option]">
+					</label><label>&nbsp;<a href="javascript:dr_help(\'1234\');"><i class="fa fa-question-circle"></i></a>
+					</label>
 				</div>
 			</div>';
         }
@@ -108,15 +110,14 @@ class Ftable extends \Phpcmf\Library\A_Field {
 			</div>'.$html.'
 			
 			<div class="form-group">
-				<label class="col-md-2 control-label">'.dr_lang('名词解释').'</label>
+				<label class="col-md-2 control-label"></label>
 				<div class="col-md-9">
-					<div class="form-control-static">
 					    <p>'.dr_lang('列名称：是表格列的显示名称').'</p>
 					    <p>'.dr_lang('列宽度：是表格列的宽度，[整数]表示固定宽度；[整数%]表示百分比').'</p>
 					    <p>'.dr_lang('选择项：仅用于下拉选择框和复选框的选项，多个选项用半角,分开').'</p>
 					    <p>'.dr_lang('行名称：是表格每一行的显示名称，如果不填就按照默认行名称显示，如果默认行名称也没有填写就不显示行名').'</p>
 					    <span class="help-block"> <a href="javascript:dr_help(\'644\');"> '.dr_lang('了解此字段的使用方法').'</a> </span>
-                    </div>
+                  
 				</div>
 			</div>
 			'.$this->attachment($option).'
@@ -181,10 +182,16 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     }
                 }
             }
+            if ($config['option'] && strpos((string)$config['option'], '-') !== false) {
+                list($size, $exts) = explode('-', $config['option']);
+            } else {
+                $size = 10;
+                $exts =  $config['option'];
+            }
             $url = '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
-                'size' => 10,
+                'size' => $size ? $size : 10,
+                'exts' => $exts ? $exts : 'jpg,gif,png,jpeg',
                 'count' => 1,
-                'exts' => $config['option'] ? $config['option'] : 'jpg,gif,png,jpeg',
                 'attachment' => $field['setting']['option']['attachment'],
                 'image_reduce' => $field['setting']['option']['image_reduce'],
             ], 'ENCODE').'&ct=0&one=1';
