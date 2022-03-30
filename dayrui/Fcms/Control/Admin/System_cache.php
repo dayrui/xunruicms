@@ -34,10 +34,10 @@ class System_cache extends \Phpcmf\Common
                 ]
             ),
             'cache_var' => [
-                'SHOW' => '模块内容',
+                'SHOW' => '内容缓存',
                 //'ATTACH' => '网站附件',
-                'LIST' => '查询标签',
-                'SEARCH' => '内容搜索',
+                'LIST' => '查询缓存',
+                'SEARCH' => '搜索缓存',
             ],
         ]);
         \Phpcmf\Service::V()->display('system_cache.html');

@@ -757,6 +757,7 @@ class Table extends \Phpcmf\Common {
                 'list_field' => $list_field, // 列表显示的可用字段
                 'list_query' => urlencode(dr_authcode($sql, 'ENCODE')), // 查询列表的sql语句
                 'list_table' => $list_table, // 查询列表的数据表名称
+                'extend_param' => $p, // 附加参数
             ];
         }
 
