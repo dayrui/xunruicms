@@ -426,7 +426,8 @@ abstract class Common extends \CodeIgniter\Controller {
         }
 
         // 插件目录初始化
-        APP_DIR && $this->init_file(APP_DIR);
+        IS_MEMBER && $this->init_file('member');
+        APP_DIR && APP_DIR != 'member' && $this->init_file(APP_DIR);
 
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('cms_init');
