@@ -13,14 +13,26 @@ class Cache extends \Phpcmf\Common
 
         $list = [
             ['系统配置缓存', 'update_cache'],
-            ['重建搜索索引', 'update_search_index'],
             ['更新附件缓存', 'update_attachment'],
             ['清理缩略图文件', 'update_thumb'],
         ];
-        if (is_file(CMSPATH.'Field/Ueditor.php')) {
+        $cname = [];
+        if (dr_is_app('module')) {
+            $list[] = ['重建内容搜索索引', 'update_search_index'];
+            $cname[] = '更新模块域名目录';
+        }
+        if (dr_is_app('ueditor') && is_file(CMSPATH.'Field/Ueditor.php')) {
             $list[] = ['更新百度编辑器', 'update_ueditor'];
         }
-        $list[] = ['更新子站目录、更新模块域名目录、更新终端目录', 'update_site_config'];
+        if (dr_is_app('sites')) {
+            $cname[] = '更新子站目录';
+        }
+        if (dr_is_app('client')) {
+            $cname[] = '更新终端目录';
+        }
+        if ($cname) {
+            $list[] = [implode('、', $cname), 'update_site_config'];
+        }
 
         \Phpcmf\Service::V()->assign([
             'list' => $list,
