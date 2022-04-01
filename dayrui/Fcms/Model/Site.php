@@ -164,7 +164,10 @@ class Site extends \Phpcmf\Model {
             'setting' => dr_array2string($site),
         ]);
         // 替换栏目编辑器域名
-        $this->db->query('UPDATE `'.$this->dbprefix(SITE_ID.'_share_category').'` SET `content`=REPLACE(`content`, \''.$site['config']['SITE_DOMAIN'].'\', \''.$value.'\')');
+        $table = $this->dbprefix(SITE_ID.'_share_category');
+        if ($this->is_table_exists($table)) {
+            $this->db->query('UPDATE `'.$table.'` SET `content`=REPLACE(`content`, \''.$site['config']['SITE_DOMAIN'].'\', \''.$value.'\')');
+        }
     }
 
     // 设置域名
