@@ -612,6 +612,9 @@ class Auth extends \Phpcmf\Model {
         if (APP_DIR && $this_c == 'flag') {
             // 特殊推荐位权限
             $this_uri = str_replace('/flag/', '/home/', $this_uri);
+        } elseif ($this_c == 'module_category') {
+            // 栏目权限
+            $this_uri = 'category/'.$action;
         }
         /* elseif ($this_c == 'member' && APP_DIR) {
             // 用户内容权限

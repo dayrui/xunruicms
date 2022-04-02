@@ -111,9 +111,11 @@ class Router {
     public function redirect($url) {
 
         // 跳转
-        if ($url != dr_now_url()) {
+        if ($url != FC_NOW_URL) {
             if (IS_DEV) {
                 \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
+            } elseif (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
+                \Phpcmf\Service::C()->goto_404_page('匹配地址与实际地址不符');
             } else {
                 dr_redirect($url, 'location', '301');
             }

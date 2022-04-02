@@ -21,7 +21,7 @@ class System extends \Phpcmf\Model {
         'SYS_GO_404' => '404页面跳转开关',
         'SYS_301' => '内容地址唯一模式',
 
-        'SYS_URL_PREG' => '地址匹配规则',
+        'SYS_URL_ONLY' => '地址匹配规则',
 
         'SYS_KEY' => '安全密匙',
         'SYS_CSRF'	=> '开启跨站验证',
