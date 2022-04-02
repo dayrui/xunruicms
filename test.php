@@ -130,7 +130,7 @@ if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($d
 }
 
 if (!$version) {
-    dr_echo_msg(1, 'MySQL版本建议：5.6及以上');
+    dr_echo_msg(1, 'MySQL版本建议：5.6 及以上');
 }
 
 $post = intval(@ini_get("post_max_size"));
