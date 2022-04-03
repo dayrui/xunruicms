@@ -56,7 +56,7 @@ class View {
     private $_page_value = 0; // 页码变量
     private $_sum_field; // 求和时的字段
 
-    private $_select_rt_name = '_XUNDRUIRCMS_RT_'; // select替换字符
+    private $_select_rt_name = '_XUNRUICMS_RT_'; // select替换字符
 
     public $call_value; // 动态模板返回调用
 
