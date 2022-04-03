@@ -132,7 +132,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('地址唯一模式')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('地址匹配模式')}</label>
                             <div class="col-md-9">
                                 {if defined('IS_NOT_301')}
                                 <div class="mt-radio-inline">
@@ -150,13 +150,13 @@
                             </div>
                         </div>
                         <div class="form-group dr_url_only" {if ($data['SYS_301'])} style="display:none"{/if}>
-                            <label class="col-md-2 control-label">{dr_lang('地址匹配规则')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('地址唯一规则')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_URL_ONLY]" value="0" {if empty($data['SYS_URL_ONLY'])}checked{/if} /> {dr_lang('模糊匹配')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_URL_ONLY]" value="1" {if $data['SYS_URL_ONLY']}checked{/if} /> {dr_lang('精确匹配')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('例如地址是abc.html，在地址后面加任意参数时，精确匹配模式下会404，模糊匹配模式下会正常识别')}</span>
+                                <span class="help-block">{dr_lang('例如地址是abc/1.html，在地址前后加任意参数时，精确匹配模式下会404，模糊匹配模式下会正常识别')}</span>
 
                             </div>
                         </div>

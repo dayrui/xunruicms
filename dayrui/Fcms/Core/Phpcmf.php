@@ -131,7 +131,7 @@ abstract class Common extends \CodeIgniter\Controller {
 
         if (!defined('THEME_PATH')) {
             // 系统风格
-            if (dr_is_root_path() && (IS_ADMIN || SYS_THEME_ROOT_PATH)) {
+            if (dr_is_root_path() && (IS_ADMIN || (defined('SYS_THEME_ROOT_PATH') && SYS_THEME_ROOT_PATH))) {
                 define('THEME_PATH', '/static/');
                 define('LANG_PATH', '/api/language/'.SITE_LANGUAGE.'/');
                 define('ROOT_THEME_PATH', '/static/');
