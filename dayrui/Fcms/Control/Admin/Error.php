@@ -52,7 +52,7 @@ class Error extends \Phpcmf\Common {
                             } else {
                                 $value['type'] = '<span class="label label-danger"> '.dr_lang('错误').' </span>';
                             }
-                            if (strpos($v[1], '{br}')) {
+                            if (strpos((string)$v[1], '{br}')) {
                                 // phpcmf模式
                                 $vv = explode('{br}', $v[1]);
                                 $value['message'] = $vv[0];

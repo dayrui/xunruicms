@@ -425,8 +425,10 @@ abstract class Common extends \CodeIgniter\Controller {
             require MYPATH.'Init.php';
         }
 
-        // 插件目录初始化
-        IS_MEMBER && $this->init_file('member');
+        // 用户系统初始化
+        (IS_MEMBER || APP_DIR == 'member') && $this->init_file('member');
+
+        // 插件目录初始化(排除用户系统重复触发)
         APP_DIR && APP_DIR != 'member' && $this->init_file(APP_DIR);
 
         // 挂钩点 程序初始化之后

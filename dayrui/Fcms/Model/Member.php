@@ -992,7 +992,7 @@ class Member extends \Phpcmf\Model {
         if ($member['email']) {
             list($name) = explode('@', $member['email']);
         } elseif ($member['phone']) {
-            $name = substr($member['phone'], 3);
+            $name = substr($member['phone'], 5);
         } elseif ($member['name']) {
             $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
         }

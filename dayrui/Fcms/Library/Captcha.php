@@ -54,7 +54,7 @@ class Captcha {
         $code = '';
         $charset_len = strlen($this->charset) - 1;
         for ($i = 0; $i < 4; $i++) {
-            $code .= $this->charset[rand(1, $charset_len)];
+            $code.= $this->charset[rand(1, $charset_len)];
         }
 
         $this->code = trim($code);
@@ -72,16 +72,25 @@ class Captcha {
     //生成文字
     private function _font() {
         $_x = $this->width / 4;
-        $this->fontcolor = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
+        $this->fontcolor = imagecolorallocate($this->img, mt_rand(0,180), mt_rand(0,180), mt_rand(0,180));
         for ($i=0; $i<4; $i++) {
-            imagettftext($this->img,$this->fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),intval($this->height / 1.4),$this->fontcolor,$this->font,$this->code[$i]);
+            imagettftext(
+                $this->img,
+                $this->fontsize,
+                mt_rand(-30,30),
+                intval($_x*$i+mt_rand(1,5)),
+                intval($this->height / 1.4),
+                $this->fontcolor,
+                $this->font,
+                $this->code[$i]
+            );
         }
     }
 
     //生成干扰线条
     private function _line() {
         for ($i=0;$i<5;$i++) {
-            $color = imagecolorallocate($this->img,mt_rand(0,180),mt_rand(0,180),mt_rand(0,180));
+            $color = imagecolorallocate($this->img, mt_rand(0,180), mt_rand(0,180), mt_rand(0,180));
             imageline(
                 $this->img,
                 mt_rand(0,$this->width),
@@ -92,7 +101,7 @@ class Captcha {
             );
         }
         for ($i=0;$i<30;$i++) {
-            $color = imagecolorallocate($this->img,mt_rand(100,255),mt_rand(100,255),mt_rand(100,255));
+            $color = imagecolorallocate($this->img, mt_rand(100,255), mt_rand(100,255), mt_rand(100,255));
             imagestring(
                 $this->img,
                 mt_rand(1,5),
