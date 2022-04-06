@@ -111,7 +111,7 @@ class Date extends \Phpcmf\Library\A_Field {
      * @return  void
      */
     public function insert_value($field) {
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = strtotime(\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
+        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = strtotime((int)\Phpcmf\Service::L('Field')->post[$field['fieldname']]);
     }
 
     /**
