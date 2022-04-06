@@ -78,8 +78,8 @@ class Linkage extends \Phpcmf\Common
 	public function export_down() {
 
         $key = (int)\Phpcmf\Service::L('input')->get('key');
-        $path = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'/';
-        $file = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'.zip';
+        $path = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'/';
+        $file = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'.zip';
 
         if (!is_dir($path)) {
             $this->_html_msg(0, dr_lang('导出文件目录不存在'));
@@ -121,7 +121,7 @@ class Linkage extends \Phpcmf\Common
         $page = (int)\Phpcmf\Service::L('input')->get('page');
         $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
         $psize = 500;
-        $path = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'/';
+        $path = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'/';
 
         if (!$page) {
             $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
@@ -157,8 +157,8 @@ class Linkage extends \Phpcmf\Common
         $page = (int)\Phpcmf\Service::L('input')->get('page');
         $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
 
-        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.zip';
-        $path = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'/';
+        $file = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'.zip';
+        $path = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'/';
         if (!is_file($file)) {
             $this->_html_msg(0, dr_lang('导入文件不存在'));
         }
@@ -226,7 +226,7 @@ class Linkage extends \Phpcmf\Common
     function import_upload() {
 
         $key = (int)\Phpcmf\Service::L('input')->get('key');
-        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.zip';
+        $file = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'.zip';
         $rt = \Phpcmf\Service::L('upload')->upload_file([
             'save_file' => $file, // 上传的固定文件路径
             'form_name' => 'file_data', // 固定格式
@@ -421,7 +421,7 @@ class Linkage extends \Phpcmf\Common
             }
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
             \Phpcmf\Service::L('input')->system_log('创建联动菜单('.$data['name'].')');
-            exit($this->_json(1, $rt['msg']));
+            $this->_json(1, $rt['msg']);
         }
 
         $select = '';
