@@ -21,6 +21,7 @@ if (preg_match('/[\x{4e00}-\x{9fff}]+/u', WEBPATH)) {
     exit(dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>'));
 }
 
+
 foreach (array(' ', '[', ']') as $t) {
     if (strpos(WEBPATH, $t) !== false) {
         exit(dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>'));
