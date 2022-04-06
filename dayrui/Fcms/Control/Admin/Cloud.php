@@ -38,6 +38,7 @@ class Cloud extends \Phpcmf\Common {
             $this->service_url = $this->cmf_license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->cmf_license['license'];
         }
 
+
         \Phpcmf\Service::V()->assign([
             'is_oem' => $this->cmf_license['oem'] ? 1 : 0,
             'license' => $this->cmf_license,
@@ -225,8 +226,8 @@ class Cloud extends \Phpcmf\Common {
         }
 
         // 运行安装脚本
-        if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
-            require WRITEPATH.'temp/run-'.$id.'.php';
+        if (is_file(WRITEPATH.'cloud/run-'.$id.'.php')) {
+            require WRITEPATH.'cloud/run-'.$id.'.php';
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('');
@@ -329,8 +330,8 @@ return [
         \Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
 
         // 运行安装脚本
-        if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
-            require WRITEPATH.'temp/run-'.$id.'.php';
+        if (is_file(WRITEPATH.'cloud/run-'.$id.'.php')) {
+            require WRITEPATH.'cloud/run-'.$id.'.php';
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('');
@@ -341,8 +342,8 @@ return [
     function install_app() {
 
         $id = dr_safe_replace($_GET['id']);
-        $file = WRITEPATH.'temp/'.$id.'.zip';
-        $cmspath = WRITEPATH.'temp/'.$id.'/';
+        $file = WRITEPATH.'cloud/'.$id.'.zip';
+        $cmspath = WRITEPATH.'cloud/'.$id.'/';
         if (!is_file($file)) {
             $this->_json(0, '本站：文件还没有被下载');
         } elseif (!class_exists('ZipArchive')) {
@@ -388,7 +389,7 @@ return [
         }
 
         if (is_file($cmspath.'Run.php')) {
-            copy($cmspath.'Run.php',WRITEPATH.'temp/run-'.$id.'.php');
+            copy($cmspath.'Run.php',WRITEPATH.'cloud/run-'.$id.'.php');
         }
 
         if (!$is_tpl && !$is_app && is_dir($cmspath.'APPSPATH/')) {
@@ -683,7 +684,7 @@ return [
         }
 
         // 执行下载文件
-        $file = WRITEPATH.'temp/'.$id.'.zip';
+        $file = WRITEPATH.'cloud/'.$id.'.zip';
 
         set_time_limit(0);
         touch($file);
@@ -722,7 +723,7 @@ return [
         }
 
         // 执行下载文件
-        $file = WRITEPATH.'temp/'.$id.'.zip';
+        $file = WRITEPATH.'cloud/'.$id.'.zip';
         if (is_file($file)) {
             $now = max(1, filesize($file));
             $jd = max(1, round($now / $cache['size'] * 100, 0)); // 进度百分百
@@ -745,13 +746,13 @@ return [
             $this->_json(0, '本站：授权验证缓存过期，请重试');
         }
 
-        $file = WRITEPATH.'temp/'.$id.'.zip';
+        $file = WRITEPATH.'cloud/'.$id.'.zip';
         if (!is_file($file)) {
             $this->_json(0, '本站：文件还没有被下载');
         }
 
         // 解压目录
-        $cmspath = WRITEPATH.'temp/'.$id.'/';
+        $cmspath = WRITEPATH.'cloud/'.$id.'/';
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             cloud_msg(0, '本站：文件解压失败');
         }

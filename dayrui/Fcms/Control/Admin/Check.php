@@ -132,6 +132,7 @@ class Check extends \Phpcmf\Common
                 $dir = array(
                     WRITEPATH => '无法生成系统缓存文件',
                     $avatar_path => '无法上传头像',
+                    WRITEPATH.'cloud/' => '无法下载应用插件',
                     WRITEPATH.'data/' => '无法生成系统配置文件，会导致系统配置无效',
                     WRITEPATH.'file/' => '无法生成系统缓存文件，会导致系统无法运行',
                     $thumb_path => '无法生成缩略图缓存文件',
