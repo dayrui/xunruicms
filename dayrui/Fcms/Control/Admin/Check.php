@@ -129,7 +129,8 @@ class Check extends \Phpcmf\Common
                 list($thumb_path) = dr_thumb_path();
                 list($avatar_path) = dr_avatar_path();
 
-                $dir = array(
+                $rt = [];
+                $dir = [
                     WRITEPATH => '无法生成系统缓存文件',
                     $avatar_path => '无法上传头像',
                     WRITEPATH.'cloud/' => '无法下载应用插件',
@@ -139,12 +140,19 @@ class Check extends \Phpcmf\Common
                     SYS_UPLOAD_PATH => '无法上传附件',
                     APPSPATH => '无法创建模块、创建表单、下载应用插件',
                     TPLPATH => '无法创建模块模板和应用插件模板',
-                );
+                ];
 
                 foreach ($dir as $path => $note) {
-                    if (!dr_check_put_path($path)) {
-                        $this->_json(0, $note.'【'.(IS_DEV ? $path : dr_safe_replace_path($path)).'】');
+                    if (!is_dir($path)) {
+                       dr_mkdirs($path);
                     }
+                    if (!dr_check_put_path($path)) {
+                        $rt[] = $note.'【'.(IS_DEV ? $path : dr_safe_replace_path($path)).'】';
+                    }
+                }
+
+                if ($rt) {
+                    $this->halt(implode('<br>', $rt), 0);
                 }
 
                 break;
