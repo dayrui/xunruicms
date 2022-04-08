@@ -1,5 +1,11 @@
 {template "header.html"}
 
+{if IS_DEV}
+<div class="note note-danger">
+    <p><a style="color: red" href="javascript:dr_help(204);">当前环境参数已经开启开发者模式，项目上线后建议关闭开发者模式</a></p>
+</div>
+{/if}
+
 <div class="row">
 
     <div class="col-md-6 col-sm-6">
