@@ -656,7 +656,7 @@ class Linkage extends \Phpcmf\Common
         if (!$pids) {
             $this->_html_msg(0, dr_lang('临时数据读取失败'));
         } elseif (!isset($pids[$page-1])) {
-            $this->_html_msg(0, dr_lang('更新完成'));
+            $this->_html_msg(1, dr_lang('更新完成'));
         }
 
         $tpage = ceil($total / $psize); // 总页数

@@ -6,8 +6,7 @@
  **/
 
 // 缓存更新
-class Cache extends \Phpcmf\Common
-{
+class Cache extends \Phpcmf\Common {
 
     public function index() {
 
@@ -45,6 +44,468 @@ class Cache extends \Phpcmf\Common
             )
         ]);
         \Phpcmf\Service::V()->display('cache.html');
+    }
+
+    public function update_index() {
+
+        $page = intval($_GET['page']);
+        $next = dr_url('cache/update_index');
+        if (!$page) {
+            $this->_html_msg(1, dr_lang('正在更新升级程序'), $next.'&page=1');
+        }
+
+        switch ($page) {
+
+            case 1:
+
+                $dir = [
+                    WRITEPATH.'cloud/'
+                ];
+                foreach ($dir as $path) {
+                    if (!is_dir($path)) {
+                        dr_mkdirs($path);
+                    }
+                    if (!dr_check_put_path($path)) {
+                        $this->_html_msg(0, dr_lang('目录创建失败'), '', $path);
+                    }
+                }
+
+                $this->_html_msg(1, dr_lang('正在升级文件目录结构'), $next.'&page='.($page+1));
+                break;
+
+            case 2:
+
+                // 判断模块表
+                if (!IS_USE_MODULE
+                    && \Phpcmf\Service::M()->is_table_exists('module')
+                    &&  is_file(dr_get_app_dir('module').'/Config/App.php')
+                ) {
+                    // 表示模块表已经操作，手动安装模块
+                    $rs = file_put_contents(dr_get_app_dir('module').'/install.lock', 'fix');
+                    if (!$rs) {
+                        $this->_html_msg(0, dr_lang('目录无法写入'), '', dr_get_app_dir('module'));
+                    }
+                }
+
+                $local = dr_dir_map(APPSPATH, 1); // 搜索本地模块
+                foreach ($local as $dir) {
+                    if (is_file(APPSPATH.$dir.'/Config/App.php')) {
+                        $file = APPSPATH.$dir.'/Controllers/Search.php';
+                        if (is_file($file)) {
+                            // 替换搜索控制器
+                            $code = file_get_contents($file);
+                            if ($code && strpos($code, '\Phpcmf\Home\Search') !== false) {
+                                file_put_contents($file, str_replace(
+                                    ['\Phpcmf\Home\Search', '_Module_Search'],
+                                    ['\Phpcmf\Home\Module', '_Search'],
+                                    $code
+                                ));
+                            }
+                        }
+                        $file = APPSPATH.$dir.'/Controllers/Recycle.php';
+                        if (is_file($file)) {
+                            // 替换搜索控制器
+                            $code = file_get_contents($file);
+                            if ($code && strpos($code, '_Admin_Recycle_Edit') === false) {
+                                file_put_contents($file, str_replace(
+                                    'public function index() {',
+                                    ' public function edit() {
+        $this->_Admin_Recycle_Edit();
+    }
+    public function index() {
+    ',
+                                    $code
+                                ));
+                            }
+                        }
+                    }
+                }
+
+                // 升级插件兼容测试
+                $error = [];
+                $table_app = [
+                    SITE_ID.'_form' => 'form',
+                    'module_form' => 'mform',
+                    'member_notice' => 'notice',
+                    'member_scorelog' => 'scorelog',
+                    'member_paylog' => 'pay',
+                    'member_explog' => 'explog',
+                ];
+                $app_name = [
+                    'form' => '全局表单',
+                    'mform' => '模块内容表单',
+                    'notice' => '提醒消息',
+                    'pay' => '支付系统',
+                    'scorelog' => '积分系统',
+                    'explog' => '经验值系统',
+                    'member' => '用户系统',
+                    'chtml' => '内容静态生成',
+                ];
+                foreach ($table_app as $table => $name) {
+                    if (\Phpcmf\Service::M()->is_table_exists($table) && \Phpcmf\Service::M()->table($table)->counts() && !dr_is_app($name)) {
+                        $error[] = $app_name[$name];
+                    }
+                }
+
+                // 用户系统
+                if (\Phpcmf\Service::M()->is_table_exists('member_menu') && !dr_is_app('member')) {
+                    $error[] = $app_name['member'];
+                }
+
+                // 判断静态生成插件
+                if (!dr_is_app('chtml')) {
+                    $is_html = 0;
+                    if (IS_USE_MODULE) {
+                        $module = \Phpcmf\Service::M()->table('module')->getAll();
+                        if ($module) {
+                            foreach ($module as $m) {
+                                $site = dr_string2array($m['site']);
+                                if ($site) {
+                                    foreach ($site as $t) {
+                                        if ($t['html']) {
+                                            $is_html = 1;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (!$is_html) {
+                                // 共享栏目
+                                $category = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category');
+                                if ($category) {
+                                    foreach ($category as $t) {
+                                        if ($t['setting']['html']) {
+                                            $is_html = 1;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if ($is_html) {
+                            $error[] = $app_name['chtml'];
+                        }
+                    }
+                }
+
+                if ($error) {
+                    $this->_html_msg(0, '需要手动安装这些应用插件：'.implode('、', $error).'
+<br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a>', 0);
+                }
+
+
+                $this->_html_msg(1, dr_lang('正在升级程序兼容性'), $next.'&page='.($page+1));
+                break;
+
+            case 3:
+
+                $prefix = \Phpcmf\Service::M()->prefix;
+
+                // 增加长度
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member` CHANGE `salt` `salt` VARCHAR(50) NOT NULL COMMENT \'随机加密码\';');
+
+                $table = $prefix.'cron';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
+                }
+
+                $table = $prefix.'site';
+                if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
+                }
+
+                $table = $prefix.'member_data';
+                if (!\Phpcmf\Service::M()->db->fieldExists('is_email', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `is_email` tinyint(1) DEFAULT NULL COMMENT \'邮箱认证\'');
+                }
+
+                $table = $prefix.'member_paylog';
+                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                    if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` INT(10) NOT NULL COMMENT \'站点\'');
+                    }
+                    if (\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `username`');
+                    }
+                    if (\Phpcmf\Service::M()->db->fieldExists('tousername', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` DROP `tousername`');
+                    }
+                }
+
+                $table = $prefix.'member_group_verify';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
+                }
+
+                $table = $prefix.'member_scorelog';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_notice';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('mark', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `mark` VARCHAR(100) DEFAULT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'member_notice` CHANGE `type` `type` tinyint(2) unsigned NOT NULL COMMENT \'类型\';');
+                }
+
+                $table = $prefix.'member_explog';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('username', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `username` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_oauth';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('unionid', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `unionid` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member';
+                if (!\Phpcmf\Service::M()->db->fieldExists('login_attr', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `login_attr` VARCHAR(100) DEFAULT NULL');
+                }
+
+                $table = $prefix.'member_menu';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                }
+
+                $table = $prefix.'member_menu';
+                if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('client', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `client` TEXT NOT NULL');
+                }
+
+                $table = $prefix.'member_level';
+                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
+                    if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
+                    }
+                    if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
+                    }
+                }
+
+                $table = $prefix.'admin_menu';
+                if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                }
+
+                $table = $prefix.'admin';
+                if (!\Phpcmf\Service::M()->db->fieldExists('history', $table)) {
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT NOT NULL');
+                }
+                $table = $prefix.'admin_setting';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                      `name` varchar(50) NOT NULL,
+                      `value` mediumtext NOT NULL,
+                      PRIMARY KEY (`name`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'系统属性参数表\';'));
+                }
+
+                if (IS_USE_MEMBER) {
+                    $table = $prefix.'member_setting';
+                    if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                        \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                          `name` varchar(50) NOT NULL,
+                          `value` mediumtext NOT NULL,
+                          PRIMARY KEY (`name`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT=\'用户属性参数表\';'));
+                    } else {
+                        if (\Phpcmf\Service::M()->db->fieldExists('id', $table)) {
+                            // 处理id字段
+                            $data = \Phpcmf\Service::M()->db->table('member_setting')->get()->getResultArray();
+                            \Phpcmf\Service::M()->query('DROP TABLE IF EXISTS `'.$table.'`;');
+                            \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                              `name` varchar(50) NOT NULL,
+                              `value` mediumtext NOT NULL,
+                              PRIMARY KEY (`name`)
+                            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT=\'用户属性参数表\';'));
+                            if ($data) {
+                                foreach ($data as $t) {
+                                    \Phpcmf\Service::M()->table('member_setting')->replace([
+                                        'name' => $t['name'],
+                                        'value' => $t['value'],
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                    if (!\Phpcmf\Service::M()->db->table('member_setting')->where('name', 'auth2')->get()->getRowArray()) {
+                        // 权限数据
+                        \Phpcmf\Service::M()->query_sql('REPLACE INTO `{dbprefix}member_setting` VALUES(\'auth2\', \'{"1":{"public":{"home":{"show":"0","is_category":"0"},"form_public":[],"share_category_public":{"show":"1","add":"1","edit":"1","code":"1","verify":"1","exp":"","score":"","money":"","day_post":"","total_post":""},"category_public":[],"mform_public":"","form":null,"share_category":null,"category":null,"mform":null}}}\')');
+                    }
+                }
+
+
+                $table = $prefix.'admin_min_menu';
+                if (!\Phpcmf\Service::M()->db->tableExists($table)) {
+                    \Phpcmf\Service::M()->query(dr_format_create_sql('CREATE TABLE IF NOT EXISTS `'.$table.'` (
+                      `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+                      `pid` smallint(5) unsigned NOT NULL COMMENT \'上级菜单id\',
+                      `name` text NOT NULL COMMENT \'菜单语言名称\',
+                      `site` text NOT NULL COMMENT \'站点归属\',
+                      `uri` varchar(255) DEFAULT NULL COMMENT \'uri字符串\',
+                      `url` varchar(255) DEFAULT NULL COMMENT \'外链地址\',
+                      `mark` varchar(255) DEFAULT NULL COMMENT \'菜单标识\',
+                      `hidden` tinyint(1) unsigned DEFAULT NULL COMMENT \'是否隐藏\',
+                      `icon` varchar(255) DEFAULT NULL COMMENT \'图标标示\',
+                      `displayorder` int(5) DEFAULT NULL COMMENT \'排序值\',
+                      PRIMARY KEY (`id`),
+                      KEY `list` (`pid`),
+                      KEY `displayorder` (`displayorder`),
+                      KEY `mark` (`mark`),
+                      KEY `hidden` (`hidden`),
+                      KEY `uri` (`uri`)
+                    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT=\'后台简化菜单表\';'));
+                }
+
+                // 模块
+                if (IS_USE_MODULE) {
+
+                    $module = \Phpcmf\Service::M()->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+
+                    // 栏目模型字段修正
+                    \Phpcmf\Service::M()->db->table('field')->where('relatedname', 'share-'.SITE_ID)->update(['relatedname' => 'catmodule-share']);
+
+                    if ($module) {
+                        foreach ($module as $m) {
+                            if (!\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
+                                ->where('relatedid', $m['id'])->where('fieldname', 'author')->counts()) {
+                                \Phpcmf\Service::M()->db->table('field')->insert(array(
+                                    'name' => '笔名',
+                                    'fieldname' => 'author',
+                                    'fieldtype' => 'Text',
+                                    'relatedid' => $m['id'],
+                                    'relatedname' => 'module',
+                                    'isedit' => 1,
+                                    'ismain' => 1,
+                                    'ismember' => 1,
+                                    'issystem' => 1,
+                                    'issearch' => 1,
+                                    'disabled' => 0,
+                                    'setting' => dr_array2string(array(
+                                        'is_right' => 1,
+                                        'option' => array(
+                                            'width' => 200, // 表单宽度
+                                            'fieldtype' => 'VARCHAR', // 字段类型
+                                            'fieldlength' => '255', // 字段长度
+                                            'value' => '{name}'
+                                        ),
+                                        'validate' => array(
+                                            'xss' => 1, // xss过滤
+                                        )
+                                    )),
+                                    'displayorder' => 0,
+                                ));
+                            }
+                        }
+                    }
+                }
+
+
+                // 站点
+                foreach ($this->site as $siteid) {
+                    // 升级资料库
+                    $table = $prefix.$siteid.'_block';
+                    if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                        // 创建code字段 代码
+                        if (!\Phpcmf\Service::M()->db->fieldExists('code', $table)) {
+                            \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `code` VARCHAR(100) NOT NULL');
+                        }
+                    }
+                    // 升级栏目表
+
+                    if (IS_USE_MODULE) {
+                        $table = $prefix . $siteid . '_share_category';
+                        if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                            // 创建字段 代码
+                            if (!\Phpcmf\Service::M()->db->fieldExists('disabled', $table)) {
+                                \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `disabled` tinyint(1) DEFAULT  \'0\'');
+                                \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `disabled` = 0');
+                            }
+                            \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `disabled` = 0 WHERE `disabled` IS NULL ');
+                            if (!\Phpcmf\Service::M()->db->fieldExists('ismain', $table)) {
+                                \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `ismain` tinyint(1) DEFAULT  \'0\'');
+                                \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `ismain` = 1');
+                            }
+                        }
+                        if ($module) {
+                            foreach ($module as $m) {
+                                if (!\Phpcmf\Service::M()->db->tableExists($prefix . $siteid . '_' . $m['dirname'])) {
+                                    continue;
+                                }
+                                // 增加长度
+                                $table = $prefix . $siteid . '_' . $m['dirname'];
+                                if (\Phpcmf\Service::M()->db->fieldExists('inputip', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` CHANGE `inputip` `inputip` VARCHAR(100) NOT NULL COMMENT \'客户端ip信息\';');
+                                }
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_recycle';
+                                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                    // 创建字段 删除理由
+                                    if (!\Phpcmf\Service::M()->db->fieldExists('result', $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `result` Text NOT NULL');
+                                    }
+                                }
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_support';
+                                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                    // 创建字段 游客点赞
+                                    if (!\Phpcmf\Service::M()->db->fieldExists('agent', $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `agent` VARCHAR(200) DEFAULT NULL');
+                                    }
+                                }
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_oppose';
+                                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                    // 创建字段 游客点赞
+                                    if (!\Phpcmf\Service::M()->db->fieldExists('agent', $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `agent` VARCHAR(200) DEFAULT NULL');
+                                    }
+                                }
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_verify';
+                                if (!\Phpcmf\Service::M()->db->fieldExists('vid', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `vid` INT(10) DEFAULT NULL');
+                                }
+                                if (!\Phpcmf\Service::M()->db->fieldExists('islock', $table)) {
+                                    \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `islock` tinyint(1) DEFAULT NULL');
+                                }
+                                // 点击时间
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_hits';
+                                foreach (['day_time', 'week_time', 'month_time', 'year_time'] as $a) {
+                                    if (!\Phpcmf\Service::M()->db->fieldExists($a, $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `' . $a . '` INT(10) DEFAULT NULL');
+                                    }
+                                }
+                                $table = $prefix . $siteid . '_' . $m['dirname'] . '_category';
+                                if (\Phpcmf\Service::M()->db->tableExists($table)) {
+                                    if (!\Phpcmf\Service::M()->db->fieldExists('disabled', $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `disabled` tinyint(1) DEFAULT \'0\'');
+                                        \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `disabled` = 0');
+                                    }
+                                    \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `disabled` = 0 WHERE `disabled` IS NULL ');
+                                    if (!\Phpcmf\Service::M()->db->fieldExists('ismain', $table)) {
+                                        \Phpcmf\Service::M()->query('ALTER TABLE `' . $table . '` ADD `ismain` tinyint(1) DEFAULT \'0\'');
+                                        \Phpcmf\Service::M()->query('UPDATE `' . $table . '` SET `ismain` = 1');
+                                    }
+                                }
+                                // 栏目模型字段修正
+                                \Phpcmf\Service::M()->db->table('field')->where('relatedname', $m['dirname'] . '-' . $siteid)->update(['relatedname' => 'catmodule-' . $m['dirname']]);
+                                // 无符号修正
+                                //\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `updatetime` `updatetime` INT(10) NOT NULL COMMENT \'更新时间\'');
+                                //\Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.$siteid.'_'.$m['dirname'].'` CHANGE `inputtime` `inputtime` INT(10) NOT NULL COMMENT \'更新时间\'');
+                            }
+                        }
+                    }
+                }
+
+                $this->_html_msg(1, dr_lang('正在升级数据表结构'), $next.'&page='.($page+1));
+                break;
+
+            default:
+
+                \Phpcmf\Service::M('cache')->update_cache();
+                \Phpcmf\Service::M('cache')->update_data_cache();
+                $this->_html_msg(1, dr_lang('更新完成'));
+                break;
+        }
     }
 
 }

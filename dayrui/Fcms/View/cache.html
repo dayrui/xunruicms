@@ -11,7 +11,7 @@
             <thead>
             <tr class="heading">
                 <th width="55"> </th>
-                <th width="350"> {dr_lang('更新项目')} </th>
+                <th width="400"> {dr_lang('更新项目')} </th>
                 <th> </th>
             </tr>
             </thead>
@@ -34,7 +34,19 @@
                 </td>
             </tr>
             {/loop}
-
+            <tr>
+                <td>
+                    <span class="badge badge-success"> {$id+2} </span>
+                </td>
+                <td style="color:blue">
+                    {dr_lang('更新CMS版本升级程序（当版本升级时必须操作）')}
+                </td>
+                <td style="overflow:auto">
+                    <label>
+                        <a href="javascript:dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}', '500px', '300px');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即更新')} </a>
+                    </label>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
