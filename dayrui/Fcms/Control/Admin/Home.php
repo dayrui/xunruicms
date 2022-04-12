@@ -17,6 +17,9 @@ class Home extends \Phpcmf\Common
         if (is_file(WRITEPATH.'update.txt')) {
             unlink(WRITEPATH.'update.txt');
             dr_redirect(dr_url('cache/index'));
+        } elseif (is_file(WRITEPATH.'check.txt')) {
+            unlink(WRITEPATH.'check.txt');
+            dr_redirect(dr_url('check/index'));
         }
 
         $local = \Phpcmf\Service::Apps(1);

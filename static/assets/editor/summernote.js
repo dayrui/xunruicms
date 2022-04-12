@@ -10075,7 +10075,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
     codeviewKeepButton: false,
     toolbar: [
         ['style', ['style']],
-      ['font', ['bold', 'underline', 'clear']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
       ['fontname', ['fontsize']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],

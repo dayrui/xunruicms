@@ -531,7 +531,7 @@ class Router {
             $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
             return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)), $mod['dirname']);
         } else {
-            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . ($params ? http_build_query($params) : ''), '&'), $mod['dirname']);
+            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . (is_array($params) ? http_build_query($params) : ''), '&'), $mod['dirname']);
         }
     }
 
