@@ -433,68 +433,13 @@ class Auth extends \Phpcmf\Model {
     // 后台内容审核权限编辑时的验证
     public function get_admin_verify_status_edit($vid, $status) {
 
-        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
-            return 1; // 超管用户
-        } elseif ($status == 0) {
-            return 1; // 退稿的可以看到
-        }
 
-        $verify = \Phpcmf\Service::C()->get_cache('verify');
-        if (!$verify) {
-            return 0; // 没有审核流程时
-        }
-
-        $my = [];
-        foreach ($verify as $t) {
-            if ($t['value']['role'] && dr_array_intersect($t['value']['role'], \Phpcmf\Service::C()->admin['roleid'] )) {
-                $my[] = $t['id'];
-            }
-        }
-
-        if (!$my) {
-            // 此管理员没有管理权限
-            return 0;
-        }
-
-        // 有权限了
-        if (dr_in_array($vid, $my)) {
-            return 1;
-        }
-
-        return 0;
     }
 
     // 后台内容审核列表的权限的sql语句
     public function get_admin_verify_status_list() {
 
-        if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
-            return '`status`>=0'; // 超管用户
-        } elseif (!IS_USE_MEMBER && !$this->is_post_user()) {
-            return '`status`>=0'; // 普通管理员
-        }
 
-        $verify = \Phpcmf\Service::C()->get_cache('verify');
-        if (!$verify) {
-            return '`status`=0'; // 没有审核流程时
-        }
-
-        $where = [];
-        foreach ($verify as $t) {
-            if ($t['value']['role']) {
-                foreach ($t['value']['role'] as $status => $rid) {
-                    if (dr_in_array($rid, \Phpcmf\Service::C()->admin['roleid'])) {
-                        $where[] = '(`status`='.$status.' and `vid`='.$t['id'].')';
-                    }
-                }
-            }
-        }
-
-        // 此管理员没有管理权限
-        if (!$where) {
-            return 'status=0';
-        }
-
-        return '`status` = 0 OR '.implode(' OR ', $where);
     }
 
     /**
