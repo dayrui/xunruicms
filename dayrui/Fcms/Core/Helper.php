@@ -3870,13 +3870,15 @@ if ( ! function_exists('dr_directory_map'))
 }
 
 // 评论名称
-function dr_comment_cname($name) {
+if (!function_exists('dr_comment_cname')) {
+    function dr_comment_cname($name) {
 
-    if (!$name) {
-        return dr_lang('评论');
+        if (!$name) {
+            return dr_lang('评论');
+        }
+
+        return dr_lang($name);
     }
-
-    return dr_lang($name);
 }
 
 // 快速下单 判断是否购买// 0 没有购买 1 购买了
