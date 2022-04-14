@@ -190,7 +190,7 @@ class Cache extends \Phpcmf\Common {
 
                 if ($error) {
                     $this->_html_msg(0, '需要手动安装这些应用插件：'.implode('、', $error).'
-<br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a>', 0);
+<br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a><br><br>将以上问题处理之后继续更新此脚本', 0);
                 }
 
 
