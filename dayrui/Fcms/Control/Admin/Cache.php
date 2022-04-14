@@ -360,13 +360,11 @@ class Cache extends \Phpcmf\Common {
                 }
 
                 // 模块
-                if (IS_USE_MODULE) {
-
+                $is_module = \Phpcmf\Service::M()->db->tableExists('module');
+                if ($is_module) {
                     $module = \Phpcmf\Service::M()->table('module')->order_by('displayorder ASC,id ASC')->getAll();
-
                     // 栏目模型字段修正
                     \Phpcmf\Service::M()->db->table('field')->where('relatedname', 'share-'.SITE_ID)->update(['relatedname' => 'catmodule-share']);
-
                     if ($module) {
                         foreach ($module as $m) {
                             if (!\Phpcmf\Service::M()->table('field')->where('relatedname', 'module')
@@ -415,7 +413,7 @@ class Cache extends \Phpcmf\Common {
                     }
                     // 升级栏目表
 
-                    if (IS_USE_MODULE) {
+                    if ($is_module) {
                         $table = $prefix . $siteid . '_share_category';
                         if (\Phpcmf\Service::M()->db->tableExists($table)) {
                             // 创建字段 代码
