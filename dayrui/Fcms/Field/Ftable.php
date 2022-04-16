@@ -442,7 +442,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
             $tpl.= ' <td style="text-align: center"><button type="button" class="btn red btn-xs" onClick="dr_del_table_'.$name.'(this)"> <i class="fa fa-trash"></i> </button></td>';
             $tpl.= ' </tr>';
-            $ksid = 0; // 开始ID
             $ksids = [];
             if ($value) {
                 foreach ($value as $hang => $t) {
@@ -458,7 +457,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     $str.= ' </tr>';
                     $ksids[] = $hang;
                 }
-                $ksid = max($ksids);
+                $ksid = is_array($ksids) && $ksids ? max($ksids) : 0; // 开始ID
             }
         } else {
             // 固定列
