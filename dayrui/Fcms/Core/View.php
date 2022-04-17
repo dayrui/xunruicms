@@ -1249,6 +1249,9 @@ class View {
             }
         }
 
+        // 挂钩点 模板中的sql语句
+        \Phpcmf\Hooks::trigger('cms_view_sql', $sql);
+
         // 执行SQL
         $query = $mysql->query($sql);
 
