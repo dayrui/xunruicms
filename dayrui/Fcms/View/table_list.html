@@ -1,7 +1,7 @@
 {template "header.html"}
 
 {if $is_time_where}
-{template "api_list_date_search.html"}
+{template "api_list_date_search.html", "admin"}
 {/if}
 
 <div class="right-card-box">
@@ -45,7 +45,7 @@
             </form>
         </div>
     </div>
-    {template "mytable.html"}
+    {template "mytable.html", "admin"}
 </div>
 
 {template "footer.html"}
