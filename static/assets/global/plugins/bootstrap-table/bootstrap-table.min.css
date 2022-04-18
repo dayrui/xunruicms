@@ -7,3 +7,6 @@
 @media (max-width:768px) {
 .bootstrap-table .fixed-table-container .table{ width:auto!important }
 }
+.bootstrap-table .table_select_all,.th-inner label select {
+    top: 3px; position: relative;
+}
