@@ -162,7 +162,7 @@ class Run extends \Phpcmf\Common
 
         $file = WRITEPATH.'thread/'.dr_safe_filename(\Phpcmf\Service::L('input')->get('auth')).'.auth';
         if (!is_file($file)) {
-            log_message('error', '线程任务auth文件不存在：'.FC_NOW_URL);
+            log_message('error', '线程任务auth文件不存在：'.dr_now_url());
             exit('线程任务auth文件不存在'.$file);
         }
 
@@ -170,7 +170,7 @@ class Run extends \Phpcmf\Common
         unlink($file);
         if (SYS_TIME - $time > 500) {
             // 500秒外无效
-            log_message('error', '线程任务auth过期：'.FC_NOW_URL);
+            log_message('error', '线程任务auth过期：'.dr_now_url());
             exit('线程任务auth过期');
         }
 
