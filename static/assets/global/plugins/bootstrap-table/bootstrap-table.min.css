@@ -4,9 +4,5 @@
 .bootstrap-table tfoot th { text-align: left !important; padding-left: 10px !important;padding-top: 12px !important; overflow: initial !important;} .bootstrap-table tfoot .th-inner {padding-top: 5px !important;}
 .bootstrap-table tr>td:first-child{ padding: 8px !important; }
 .bootstrap-table .table_select_all{ margin-right: 17px;margin-left: 9px; }
-@media (max-width:768px) {
-.bootstrap-table .fixed-table-container .table{ width:auto!important }
-}
-.bootstrap-table .table_select_all,.th-inner label select {
-    top: 3px; position: relative;
-}
+@media (max-width:768px) { .bootstrap-table .fixed-table-container .table{ width:auto!important } }
+.bootstrap-table .table_select_all,.th-inner label select { top: 3px; position: relative; }
