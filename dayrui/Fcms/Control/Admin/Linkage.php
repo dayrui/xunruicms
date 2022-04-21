@@ -631,7 +631,7 @@ class Linkage extends \Phpcmf\Common
         $key = (int)\Phpcmf\Service::L('input')->get('key');
         $link = \Phpcmf\Service::M('Linkage')->table('linkage')->get($key);
         if (!$link) {
-            $this->_html_msg(dr_lang('联动菜单不存在'));
+            $this->_html_msg(0, dr_lang('联动菜单不存在'));
         }
 
         $page = (int)\Phpcmf\Service::L('input')->get('page');

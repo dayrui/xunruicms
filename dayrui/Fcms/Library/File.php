@@ -20,7 +20,7 @@ class File {
     public function copy_file($fromFile, $toFile) {
         $this->_create_folder($toFile);
         $folder1 = opendir($fromFile);
-        while ($f1 = readdir($folder1)) {
+        while ($folder1 && $f1 = readdir($folder1)) {
             if ($f1 != "." && $f1 != "..") {
                 $path2 = "{$fromFile}/{$f1}";
                 if (is_file($path2)) {
