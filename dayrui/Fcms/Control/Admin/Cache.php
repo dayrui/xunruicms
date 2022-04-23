@@ -12,6 +12,7 @@ class Cache extends \Phpcmf\Common {
 
         $list = [
             ['系统配置缓存', 'update_cache'],
+            ['更新数据结构', 'update_db'],
             ['更新附件缓存', 'update_attachment'],
             ['清理缩略图文件', 'update_thumb'],
         ];

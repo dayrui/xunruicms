@@ -94,6 +94,20 @@ class Cache extends \Phpcmf\Model {
         $this->update_data_cache();
     }
 
+    // 更新数据结构
+    public function update_db() {
+
+        // 执行插件自己的缓存程序
+        $local = \Phpcmf\Service::Apps();
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'install.lock')
+                && is_file($path.'Config/Update.php')) {
+               require $path.'Config/Update.php';
+            }
+        }
+
+    }
+
     // 更新缓存
     public function update_cache() {
 

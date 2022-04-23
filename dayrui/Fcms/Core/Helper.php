@@ -2548,12 +2548,12 @@ function dr_safe_replace_path($path) {
             MYPATH,
         ],
         [
-            'WRITEPATH/',
-            'WEBPATH/',
-            'APPSPATH/',
-            'TPLPATH/',
-            'FCPATH/',
-            'MYPATH/',
+            'cache/',
+            '/',
+            'dayrui/App/',
+            'template/',
+            'dayrui/',
+            'dayrui/My/',
         ],
         $path
     );
