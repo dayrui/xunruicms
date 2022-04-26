@@ -301,7 +301,13 @@ class Upload {
     /**
      * 存储文件
      */
-    public function save_file($type, $data, $file_path, $attachment, $watermark = 0) {
+    public function save_file($type, $data, $file_path, $attachment, $watermark = 0)  {
+
+        // 存储目录安全验证
+        if ($attachment['value']['path']
+            && strpos($attachment['value']['path'], 'config') !== false) {
+            return dr_return_data(0, dr_lang('存储目录不能包含config文字'));
+        }
 
         // 按照附件存储类型来保存文件
         $storage = new \Phpcmf\Library\Storage();

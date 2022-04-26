@@ -6,8 +6,7 @@
  **/
 
 // 联动菜单
-class Linkage extends \Phpcmf\Common
-{
+class Linkage extends \Phpcmf\Common {
 
 	public function index() {
 
