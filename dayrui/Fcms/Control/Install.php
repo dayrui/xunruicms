@@ -58,6 +58,7 @@ class Install extends \Phpcmf\Common {
         $data = [];
         $step = intval($_GET['step']);
         $error = '';
+        $admin = 'admin';
 
         switch ($step) {
 
@@ -389,19 +390,36 @@ $db[\'default\']	= [
                                 file_put_contents(WRITEPATH.'install.test', time());
                                 unlink(WRITEPATH.'install.info');
                                 unlink(WRITEPATH.'install.error');
+                                // 重命名后台入口
+                                $admin = substr(md5(SYS_TIME.rand(1, 999999)), 0, 12);
+                                $afile = WEBPATH.$admin.'.php';
+                                if (is_file(WEBPATH.'admin.php')) {
+                                    copy(WEBPATH.'admin.php', $afile);
+                                }
+                                if (!is_file($afile)) {
+                                    file_put_contents($afile, "<?php
+define('IS_ADMIN', TRUE);
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+require('index.php');");
+                                }
+                                if (is_file($afile)) {
+                                    unlink(WEBPATH.'admin.php');
+                                } else {
+                                    $admin = 'admin';
+                                }
                             }
                         }
                     }
                 }
 
                 break;
-
-
         }
+
         \Phpcmf\Service::V()->assign([
             'data' => $data,
             'step' => $step,
             'error' => $error,
+            'admin' => $admin,
             'pre_url' => 'index.php?c=install&m=index&step='.($step-1).'&is_install_db='.intval($_GET['is_install_db']),
             'next_url' => 'index.php?c=install&m=index&step='.($step+1).'&is_install_db='.intval($_GET['is_install_db']),
         ]);
