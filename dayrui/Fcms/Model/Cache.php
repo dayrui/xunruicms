@@ -108,7 +108,81 @@ class Cache extends \Phpcmf\Model {
 
     }
 
-    // 更新缓存
+    // 更新全部项目缓存
+    public function update_site_cache() {
+
+        $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
+
+        $module_cache = IS_USE_MODULE ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
+
+        // 按项目更新的缓存
+        $cache = [];
+
+        if (is_file(MYPATH.'/Config/Cache.php')) {
+            $_cache = require MYPATH.'/Config/Cache.php';
+            $_cache && $cache = dr_array22array($cache, $_cache);
+        }
+
+        // 执行插件自己的缓存程序
+        $local = \Phpcmf\Service::Apps();
+        $app_cache = [];
+        foreach ($local as $dir => $path) {
+            if (is_file($path.'install.lock')
+                && is_file($path.'Config/Cache.php')) {
+                $_cache = require $path.'Config/Cache.php';
+                $_cache && $app_cache[$dir] = $_cache;
+            }
+        }
+
+        $page = intval($_GET['page']);
+        $tpage = dr_count($site_cache);
+
+        if (!$page) {
+            // 全局系统缓存
+            \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
+            foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
+                \Phpcmf\Service::M($m)->cache();
+            }
+            \Phpcmf\Service::C()->_json(1, dr_lang('正在缓存数据'), 1);
+        }
+
+        $key = $page - 1;
+        if (!isset($site_cache[$key])) {
+            \Phpcmf\Service::M('menu')->cache();
+            $this->update_data_cache();
+            \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'));
+        }
+
+        foreach ([ $site_cache[$key] ] as $t) {
+
+            \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
+            IS_USE_MODULE && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+
+            foreach ($cache as $m => $namespace) {
+                \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+            }
+
+            // 插件缓存
+            $apps = [];
+            if ($app_cache) {
+                foreach ($app_cache as $namespace => $c) {
+                    \Phpcmf\Service::C()->init_file($namespace);
+                    foreach ($c as $i => $apt) {
+                        $class = is_numeric($i) ? $apt : $i;
+                        $apps[] = '['.$namespace.'-'.$class.']';
+                        \Phpcmf\Service::M($class, $namespace)->cache($t['id']);
+                    }
+                }
+            }
+
+            // 记录日志
+            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[项目#'.$t['id'].']缓存： '.implode(' - ', $apps));
+        }
+
+        \Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s/%s）', $page+1, $tpage), $page + 1);
+    }
+
+    // 更新当前项目缓存
     public function update_cache() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
@@ -142,6 +216,10 @@ class Cache extends \Phpcmf\Model {
         }
 
         foreach ($site_cache as $t) {
+
+            if (!in_array($t['id'], [SITE_ID, 1])) {
+                continue;
+            }
 
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
             IS_USE_MODULE && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
