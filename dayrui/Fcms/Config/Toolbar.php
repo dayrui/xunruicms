@@ -43,7 +43,7 @@ class Toolbar extends BaseConfig
         \Phpcmf\Extend\View::class,
         // \CodeIgniter\Debug\Toolbar\Collectors\Cache::class,
         Files::class,
-        Routes::class,
+        \Phpcmf\Extend\Routes::class,
         Events::class,
     ];
 
