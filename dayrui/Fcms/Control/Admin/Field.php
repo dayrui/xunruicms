@@ -233,7 +233,7 @@ class Field extends \Phpcmf\Common {
                     // 栏目自定义字段
                     $cat = \Phpcmf\Service::L('input')->post('cat');
                     if ($cat['use'] && $cat['catid']) {
-                        $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->getAll();
+                        $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain', 1)->getAll();
                         if ($cats) {
                             foreach ($cats as $t) {
                                 if (in_array($t['id'], $cat['catid'])) {
@@ -254,7 +254,8 @@ class Field extends \Phpcmf\Common {
                     // 栏目模型字段
                     $cat = \Phpcmf\Service::L('input')->post('cat');
                     if ($cat['use'] && $cat['catid']) {
-                        $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->getAll();
+                        $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')
+                            ->where('ismain', 1)->getAll();
                         if ($cats) {
                             foreach ($cats as $t) {
                                 if (in_array($t['id'], $cat['catid'])) {
@@ -353,7 +354,7 @@ class Field extends \Phpcmf\Common {
             } elseif (\Phpcmf\Service::M('Field')->func == 'category') {
                 // 栏目自定义字段
                 $cat = \Phpcmf\Service::L('input')->post('cat');
-                $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->getAll();
+                $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain', 1)->getAll();
                 if ($cat['use'] && $cat['catid']) {
                     foreach ($cats as $t) {
                         $setting = dr_string2array($t['setting']);
@@ -387,7 +388,8 @@ class Field extends \Phpcmf\Common {
             } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
                 // 栏目模型字段
                 $cat = \Phpcmf\Service::L('input')->post('cat');
-                $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->getAll();
+                $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')
+                    ->where('ismain', 1)->getAll();
                 if ($cat['use'] && $cat['catid']) {
                     foreach ($cats as $t) {
                         $setting = dr_string2array($t['setting']);

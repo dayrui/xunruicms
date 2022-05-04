@@ -146,7 +146,7 @@ class File extends \Phpcmf\Common
             if (empty($post['url'])) {
                 $this->_json(0, dr_lang('文件地址不能为空'));
             }
-
+            $post['url'] = trim($post['url']);
             if ($post['down']) {
                 if (strpos($post['url'], 'http') !== 0 ) {
                     $this->_json(0, dr_lang('下载文件地址必须是https或者http开头'));
@@ -472,13 +472,18 @@ class File extends \Phpcmf\Common
                 'id' => $id,
                 'name' => dr_safe_replace(\Phpcmf\Service::L('input')->get('name')),
             ];
-        } else {
+        } elseif (strlen((string)$id) == 32) {
             $rt = \Phpcmf\Service::L('cache')->get_auth_data('down-file-'.$id);
             if (!$rt) {
                 $this->_msg(0, dr_lang('此附件下载链接已经失效'));
             }
+        } else {
+            $rt = [
+                'id' => dr_safe_replace(urldecode($id)),
+                'name' => dr_safe_replace(\Phpcmf\Service::L('input')->get('name')),
+            ];
         }
-
+        
         $id = trim($rt['id']);
 
         // 下载文件钩子
@@ -523,7 +528,7 @@ class File extends \Phpcmf\Common
                 exit;
             } else {
                 // 其他附件就转向地址
-                dr_redirect($info['url']);
+                $this->_redirect_url($info['url']);
             }
         } else {
             $info = dr_file($id);
@@ -531,10 +536,23 @@ class File extends \Phpcmf\Common
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             }
-            dr_redirect($info);
+            $this->_redirect_url($info);
         }
 
         exit;
+    }
+
+    /**
+     * 跳转外链提示
+     */
+    private function _redirect_url($url) {
+
+        if (is_file(\Phpcmf\Service::V()->get_dir().'down_file_msg.html')) {
+            \Phpcmf\Service::V()->assign('url', $url);
+            \Phpcmf\Service::V()->display('down_file_msg.html');
+        }
+
+        $this->_msg(1, dr_lang('正在为你下载附件'), $url);
     }
 
     /**
