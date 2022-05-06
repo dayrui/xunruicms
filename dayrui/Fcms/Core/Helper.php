@@ -1420,37 +1420,6 @@ function dr_member_auth_id($authid, $postid) {
     return [];
 }
 
-// https进行post数据
-function dr_post_json_data($url, $param = []) {
-
-    if (!$url) {
-        return dr_return_data(0, 'url为空');
-    }
-
-    $ch = curl_init ();
-    curl_setopt ( $ch, CURLOPT_URL, $url );
-    curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
-    curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-    curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, FALSE );
-    curl_setopt ( $ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)' );
-    curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, 1 );
-    curl_setopt ( $ch, CURLOPT_AUTOREFERER, 1 );
-    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $param);
-    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-    $response = curl_exec ( $ch );
-    if ($error=curl_error($ch)){
-        return dr_return_data(0, $error);
-    }
-
-    curl_close($ch);
-    $data = json_decode($response, true);
-    if (!$data) {
-        return dr_return_data(0, $response);
-    }
-
-    return dr_return_data(1, 'ok', $data);
-}
-
 /**
  * 获取折扣价格值
  */
@@ -2247,7 +2216,36 @@ function dr_ajax_template($id, $filename, $param_str = '') {
     return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".dr_web_prefix("index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str)."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
+// https进行post数据
+function dr_post_json_data($url, $param = []) {
 
+    if (!$url) {
+        return dr_return_data(0, 'url为空');
+    }
+
+    $ch = curl_init ();
+    curl_setopt ( $ch, CURLOPT_URL, $url );
+    curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+    curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+    curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, FALSE );
+    curl_setopt ( $ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)' );
+    curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+    curl_setopt ( $ch, CURLOPT_AUTOREFERER, 1 );
+    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $param);
+    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+    $response = curl_exec ( $ch );
+    if ($error=curl_error($ch)){
+        return dr_return_data(0, $error);
+    }
+
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if (!$data) {
+        return dr_return_data(0, $response);
+    }
+
+    return dr_return_data(1, 'ok', $data);
+}
 
 /**
  * 调用远程数据
@@ -2276,6 +2274,7 @@ function dr_catcher_data($url, $timeout = 0) {
         }
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1 );
         // 最大执行时间
         $timeout && curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         $data = curl_exec($ch);
