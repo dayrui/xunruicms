@@ -293,11 +293,11 @@ class Router {
 
         // 是否分页
         $page && $data['page'] = $page = is_numeric($page) ? max((int)$page, 1) : $page;
-        $page == 1 && $page = 0;
+        !$page && $page = 1;
 
         // 获取自定义URL
         $rule = isset($data['setting']['urlrule']) ? \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value') : 0;
-        if ($page) {
+        if ($page > 1) {
             if (isset($data['myurl_page']) && $data['myurl_page']) {
                 $url = ltrim($data['myurl_page'], '/');
                 return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
@@ -344,10 +344,10 @@ class Router {
         $cat = $mod['category'][$data['catid']];
 
         $page && $data['page'] = $page = is_numeric($page) ? max((int)$page, 1) : $page;
-        $page == 1 && $page = 0;
+        !$page && $page = 1;
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cat['setting']['urlrule'], 'value');
-        if ($page) {
+        if ($page > 1) {
             if (isset($data['myurl_page']) && $data['myurl_page']) {
                 $url = ltrim($data['myurl_page'], '/');
                 return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
@@ -367,7 +367,7 @@ class Router {
             // URL模式为自定义，且已经设置规则
             $data['cat'] = $cat;
             $data['modname'] = $mod['dirname'];
-            $cat['pdirname'] .= $cat['dirname'];
+            $cat['pdirname'].= $cat['dirname'];
             $data['dirname'] = $cat['dirname'];
             $inputtime = isset($data['_inputtime']) ? $data['_inputtime'] : $data['inputtime'];
             $data['y'] = date('Y', $inputtime);

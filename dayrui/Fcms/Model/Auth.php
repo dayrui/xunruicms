@@ -521,6 +521,11 @@ class Auth extends \Phpcmf\Model {
         // 找到下划线的控制器
         $action = strpos($method, '_') !== false ? str_replace('_', '', trim(strtolower(strrchr($method, '_')), '_')) : $method;
 
+        // _api控制器不进行权限验证
+        if ($action == 'api') {
+            return true;
+        }
+
         // 查看的index URI
         $uri_arr[dr_count($uri_arr) - 1] = $action;
         $this_uri = implode('/', $uri_arr);
@@ -530,7 +535,6 @@ class Auth extends \Phpcmf\Model {
         } elseif (dr_in_array($this_uri, \Phpcmf\Service::C()->admin['system']['mark'])) {
             return true;
         }
-
 
         // 取当前uri中的名称
         $arr = explode('/', $this_uri);

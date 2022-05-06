@@ -26,7 +26,7 @@ class Captcha {
             // 加载老版本的字体文件
             $this->font = CONFIGPATH.'font/1.ttf';
             if (!is_file($this->font)) {
-                log_message('errpr', '验证码字体文件（'.WRITEPATH.'captcha.ttf）不存在，可能无法生成验证码');
+                log_message('error', '验证码字体文件（'.WRITEPATH.'captcha.ttf）不存在，可能无法生成验证码');
             }
         }
     }

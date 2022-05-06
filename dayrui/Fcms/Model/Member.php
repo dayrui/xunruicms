@@ -577,14 +577,6 @@ class Member extends \Phpcmf\Model {
             $member['username'] = strtolower(dr_safe_filename($member['username']));
         }
 
-        // 验证格式
-        if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
-            $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
-            if (!$rt['code']) {
-                return $rt;
-            }
-        }
-
         $member['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
 
         // 默认注册组
@@ -593,6 +585,13 @@ class Member extends \Phpcmf\Model {
         if ((\Phpcmf\Service::C()->member_cache['oauth']['login'] || !\Phpcmf\Service::C()->member_cache['oauth']['field']) && $oauth) {
             // 授权登录直接模式
         } else {
+            // 验证格式
+            if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
+                $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
+                if (!$rt['code']) {
+                    return $rt;
+                }
+            }
             if (dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
                 return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
