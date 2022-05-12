@@ -769,9 +769,11 @@
                         $format !== $value && $data['_'.$n] = $value;
                     }
                 } elseif (strpos($n, '_lng') !== FALSE) {
-                    // 百度地图
+                    // 地图
                     $name = str_replace('_lng', '', $n);
-                    $data[$name] = isset($data[$name.'_lat']) && ($data[$name.'_lng'] > 0 || $data[$name.'_lat'] > 0) ? $data[$name.'_lng'].','.$data[$name.'_lat'] : '';
+                    if (isset($data[$name.'_lat'])) {
+                        $data[$name] = isset($data[$name.'_lat']) && ($data[$name.'_lng'] > 0 || $data[$name.'_lat'] > 0) ? $data[$name.'_lng'].','.$data[$name.'_lat'] : '';
+                    }
                 }
             }
 

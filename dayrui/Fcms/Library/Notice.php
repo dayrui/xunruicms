@@ -89,6 +89,8 @@ class Notice {
     // 来至队列中执行
     public function cron_notice($siteid, $value) {
 
+        \Phpcmf\Service::M()->siteid = $siteid;
+
         $error = [];
         if (!$value['data']['uid']) {
             CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）执行失败：用户uid参数为空，任务不能执行');

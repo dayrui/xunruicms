@@ -257,6 +257,9 @@ class View {
 
         include $_temp_file;
 
+        // 挂钩点 模板结束之后
+        \Phpcmf\Hooks::trigger('cms_view_end');
+
         $this->_view_time = round(microtime(true) - $phpcmf_start, 2);
 
         // 消毁变量
@@ -1782,7 +1785,6 @@ class View {
         $sql_from.= ' LEFT JOIN `'.$table.'` ON `'.$main.'`.`'.$a.'`=`'.$table.'`.`'.$b.'`';
 
         return dr_return_data(1, 'ok', [$system, $where, $_order, $sql_from]);
-
     }
 
     // 给排序字段加上多表前缀

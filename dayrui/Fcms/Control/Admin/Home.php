@@ -208,8 +208,10 @@ class Home extends \Phpcmf\Common
 		    // 权限判断并筛选
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
+                    unset($my_menu[$tid]);
                     continue; // 没有分组菜单就不要
                 } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $top['site'])) {
+                    unset($my_menu[$tid]);
                     continue; // 没有划分本站点就不显示
                 } elseif ($top['mark'] && strpos($top['mark'], 'app-') === 0) {
                     // 判断应用模块权限
@@ -222,6 +224,7 @@ class Home extends \Phpcmf\Common
                             if ((isset($config['ftype']) && $config['ftype'] == 'module') || $config['type'] == 'module') {
                                 if (!$this->get_cache('module-'.SITE_ID.'-content', $mm)) {
                                     unset($top[$tid]);
+                                    unset($my_menu[$tid]);
                                     continue;
                                 }
                             }
@@ -236,9 +239,11 @@ class Home extends \Phpcmf\Common
                 foreach ($top['left'] as $if => $left) {
                     if (!$left['link']) {
                         unset($top['left'][$if]);
+                        unset($my_menu[$tid]['left'][$if]);
                         continue; // 没有链接菜单就不要
                     } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $left['site'])) {
                         unset($top['left'][$if]);
+                        unset($my_menu[$tid]['left'][$if]);
                         continue; // 没有划分本站点就不显示
                     }
                     // 链接菜单开始
@@ -248,37 +253,44 @@ class Home extends \Phpcmf\Common
                         if ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
                             // 判断权限
                             unset($left['link'][$i]);
+                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue;
                         } elseif ($link['mark'] && $left['mark'] == 'content-module') {
                             // 内容模块权限判断
                             list($ac, $name, $cname) = explode('-', $link['mark']);
                             if ($ac == 'module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
                                 unset($left['link'][$i]);
+                                unset($my_menu[$tid]['left'][$if]['link'][$i]);
                                 continue;
                             }
                             // 网站表单权限判断
                             if ($ac == 'app' && $name == 'form' && !$this->get_cache('form-'.SITE_ID, $cname)) {
                                 unset($left['link'][$i]);
+                                unset($my_menu[$tid]['left'][$if]['link'][$i]);
                                 continue;
                             }
                         } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $link['site'])) {
                             // 没有划分本站点就不显示
                             unset($left['link'][$i]);
+                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue;
                         } elseif (SITE_ID > 1 && $link['uri'] && $link['uri'] == 'cloud/local') {
                             // 多站点不显示应用
                             unset($left['link'][$i]);
+                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue;
                         } elseif ($link['mark'] && $left['mark'] == 'content-verify') {
                             // 内容模块审核部分权限判断
                             list($ac, $ab, $name, $cc, $dd) = explode('-', $link['mark']);
                             if ($ac.'-'.$ab == 'verify-module' && !$this->get_cache('module-'.SITE_ID.'-content', $name)) {
                                 unset($left['link'][$i]);
+                                unset($my_menu[$tid]['left'][$if]['link'][$i]);
                                 continue;
                             }
                         } elseif (IS_OEM_CMS && $link['uri'] == 'cloud/bf') {
                             // oem版排除对比菜单
                             unset($left['link'][$i]);
+                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue;
                         }
                         $url = $link['url'] ? $link['url'] : \Phpcmf\Service::L('Router')->url($link['uri']);
@@ -297,6 +309,7 @@ class Home extends \Phpcmf\Common
                         $mlink_string.= '<li id="dr_menu_m_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($top['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
                     }
                     if (!$link_string) {
+                        unset($my_menu[$tid]['left'][$if]);
                         continue; // 没有链接菜单就不要
                     }
                     $left_string.= '
@@ -343,7 +356,7 @@ class Home extends \Phpcmf\Common
         }
         // 自定义后台菜单显示
         if (function_exists('dr_my_admin_menu')) {
-            list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($menu, $string, $mstring, $menu_top, $first);
+            list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($my_menu, $string, $mstring, $menu_top, $first);
         }
 
 		\Phpcmf\Service::V()->assign([

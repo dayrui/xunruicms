@@ -65,6 +65,7 @@ class Hooks extends \CodeIgniter\Events\Events {
         }
     }
 
+
     /**
      * Returns an array of listeners for a single event. They are
      * sorted by priority.

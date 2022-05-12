@@ -12,6 +12,7 @@ class Model {
     public $id;
     public $key;
     public $field;
+    public $siteid;
     public $table;
     public $stable; // join关联表
     public $sfield; // join关联表的字段
@@ -35,6 +36,7 @@ class Model {
         $this->admin = \Phpcmf\Service::C()->admin;
         $this->member = \Phpcmf\Service::C()->member;
         $this->prefix = $this->db->DBPrefix;
+        $this->siteid = defined('SITE_ID') ? SITE_ID : 0;
     }
 
     // 设置初始化查询条件
@@ -96,7 +98,10 @@ class Model {
     }
 
     // 设置操作站点的表
-    public function table_site($name, $site = SITE_ID) {
+    public function table_site($name, $site = 0) {
+        if (!$site) {
+            $site = $this->siteid ? $this->siteid : SITE_ID;
+        }
         $this->table = dr_site_table_prefix($name, $site);
         return $this;
     }
