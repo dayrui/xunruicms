@@ -200,45 +200,6 @@ return [
             ],
         ],
 
-        'code' => [
-            'name' => '界面',
-            'icon' => 'fa fa-html5',
-            'left' => [
-                'code-html' => [
-                    'name' => '模板管理',
-                    'icon' => 'fa fa-home',
-                    'link' => [
-                        [
-                            'name' => '电脑模板',
-                            'icon' => 'fa fa-desktop',
-                            'uri' => 'tpl_pc/index',
-                        ],
-                        [
-                            'name' => '手机模板',
-                            'icon' => 'fa fa-mobile',
-                            'uri' => 'tpl_mobile/index',
-                        ],
-                    ]
-                ],
-                'code-css' => [
-                    'name' => '风格管理',
-                    'icon' => 'fa fa-css3',
-                    'link' => [
-                        [
-                            'name' => '系统文件',
-                            'icon' => 'fa fa-chrome',
-                            'uri' => 'system_theme/index',
-                        ],
-                        [
-                            'name' => '项目风格',
-                            'icon' => 'fa fa-photo',
-                            'uri' => 'theme/index',
-                        ],
-                    ],
-                    'displayorder' => 99
-                ],
-            ],
-        ],
 
         'app' => [
             'name' => '应用',

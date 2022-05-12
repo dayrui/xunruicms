@@ -46,7 +46,6 @@ class Autoload extends AutoloadConfig
 		    'Phpcmf\Model'                => CMSPATH.'Core/Model.php',
 		    'Phpcmf\View'                 => CMSPATH.'Core/View.php',
             'Phpcmf\Common'               => CMSPATH.'Core/Common.php',
-            'Phpcmf\Admin\File'           => CMSPATH.'Extend/File.php',
         ];
 
         if (IS_USE_MODULE) {
