@@ -2,6 +2,8 @@
 
 安装环境监测：/test.php
 程序安装地址：/install.php
+后台登录地址：/admin-****.php（****是随机的）
+重置后台地址：https://www.xunruicms.com/doc/1097.html
 首次使用方法：https://www.xunruicms.com/doc/631.html
 
 官方技术QQ群：758974716
