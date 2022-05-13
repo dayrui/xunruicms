@@ -2722,7 +2722,19 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
  */
 function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
 
-    $time = (int)$time;
+    if (!$time) {
+        return '';
+    }
+
+    if (!is_numeric($time)) {
+        $new = strtotime(dr_clearhtml($time));
+        if (is_numeric($new)) {
+            $time = $new;
+        } else {
+            return IS_DEV ? '参数不是时间戳格式' : '';
+        }
+    }
+
     if (!$time) {
         return '';
     }
