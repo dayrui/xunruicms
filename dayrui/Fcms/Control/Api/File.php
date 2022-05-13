@@ -109,6 +109,9 @@ class File extends \Phpcmf\Common
                 $storage = new \Phpcmf\Library\Storage($this);
                 $storage->delete(\Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment']), $rt['data']['file']);
                 $rt['data'] = $this->get_attachment($att['id']);
+                if ($rt['data']) {
+                    $rt['data']['name'] = $rt['data']['filename'];
+                }
             }
         }
 
