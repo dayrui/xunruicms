@@ -167,17 +167,32 @@ class Linkage extends \Phpcmf\Common {
         if (!$page) {
             // 解压
             if (!\Phpcmf\Service::L('file')->unzip($file, $path)) {
-                $this->_html_msg(0, '文件解压失败');
+                $this->_html_msg(0, dr_lang('文件解压失败'));
             }
-            $files = dr_file_map($path);
-            if (!$files) {
-                $this->_html_msg(0, '文件分析失败');
-            }
-            foreach ($files as $t) {
-                if (stripos($t, '.php')) {
-                    @unlink($path.$t);
+
+            $files = [];
+            if ($fp = opendir($path)) {
+                while (FALSE !== ($file = readdir($fp))) {
+                    if ($file === '.' OR $file === '..'
+                        OR $file[0] === '.') {
+                        continue;
+                    }
+                    if (is_dir($path.$file)) {
+                        dr_dir_delete($path);
+                        $this->_html_msg(0, dr_lang('文件验证失败'));
+                    }
+                    if (stripos($file, '.php')) {
+                        @unlink($path.$file);
+                    }
+                    $files[] = $file;
                 }
+                closedir($fp);
             }
+            if (!$files) {
+                dr_dir_delete($path);
+                $this->_html_msg(0, dr_lang('文件分析失败'));
+            }
+
             \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
             $this->_html_msg(1, dr_lang('正在准备导入数据'), dr_url('linkage/import_add', ['key'=>$key, 'page' => 1, 'tpage' => dr_count($files)]));
         }
