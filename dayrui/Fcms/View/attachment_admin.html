@@ -75,7 +75,9 @@
                 <tbody>
                 {loop $list $t}
                 <?php
-
+                if (!$t.filename) {
+                    $t.filename = '未命名';
+                }
                 if (dr_is_image($t.fileext)) {
                     $hs = 'dr_preview_image';
                 } elseif ($t.fileext == 'mp4') {

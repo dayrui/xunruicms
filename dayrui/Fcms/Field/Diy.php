@@ -91,6 +91,29 @@ class Diy extends \Phpcmf\Library\A_Field {
     }
 
     /**
+     * 字段表单显示
+     *
+     * @param	string	$field	字段数组
+     * @param	array	$value	值
+     * @return  string
+     */
+    public function show($field, $value = null) {
+
+        // 字段默认值
+        $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+
+        // 回调格式化函数
+        $func = 'dr_diy_field_'.substr($field['setting']['option']['file'], 0, -4).'_show';
+        if (function_exists($func)) {
+            $str = call_user_func($func, $field, $value);
+        } else {
+            $str = '<div class="form-control-static"> '.htmlspecialchars_decode((string)$value).' </div>';
+        }
+
+        return $this->input_format($field['fieldname'], $field['name'], $str);
+    }
+
+    /**
      * 字段表单输入
      *
      * @param   string  $cname  字段

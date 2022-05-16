@@ -437,9 +437,9 @@ class Api extends \Phpcmf\Common {
             $unique = array_unique ( $my );
             if ($my && count($my) != count($unique)) {
                 $arr = array_diff_assoc ( $my, $unique );
-                $html.= '<p>当前配置项存在重复域名</p>';
+                $html.= '<p>当前配置项存在重复</p>';
                 foreach ($arr as $t) {
-                    $html.= '<p>此域名【'.$t.'】被重复配置过，请检查</p>';
+                    $html.= '<p>【'.$t.'】被重复配置过，请检查</p>';
                 }
             }
             $html && exit($html);
