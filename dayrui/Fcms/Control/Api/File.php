@@ -317,8 +317,8 @@ class File extends \Phpcmf\Common
         }
 
         $exts = dr_safe_replace($p['exts']);
-        $unused = \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))
-            ->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts();
+        $unused = SYS_ATTACHMENT_DB ? \Phpcmf\Service::M()->table('attachment_unused')->where(urldecode($list['unused']))
+            ->where_in('fileext', explode(',', strtolower(str_replace('，', ',', $exts))))->counts() : [];
 
         $url = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=input_file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
