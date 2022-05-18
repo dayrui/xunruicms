@@ -18,7 +18,7 @@
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
 define('COREPATH', CMSPATH); // 老版本别名
-define('BASEPATH', CMSPATH); // 老版本别名
+define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 // 主配置目录
 !defined('CONFIGPATH') && define('CONFIGPATH', ROOTPATH.'config/');
 // App程序目录
@@ -436,7 +436,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     }
 } else {
     // 系统主目录
-    !defined('APPPATH') && define('APPPATH', COREPATH);
+    !defined('APPPATH') && define('APPPATH', FRAMEPATH);
     !defined('APP_DIR') && define('APP_DIR', '');
     define('IS_MEMBER', FALSE);
 }
