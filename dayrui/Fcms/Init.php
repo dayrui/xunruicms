@@ -13,12 +13,12 @@
 // 框架目录
 !defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'CodeIgniter/');
 //!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'Laravel/');
-!defined('BASEPATH') && define('BASEPATH', FRAMEPATH.'System/');
+//!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'Phalcon/');
 
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
-// 核心程序目录
-define('COREPATH', CMSPATH);
+define('COREPATH', CMSPATH); // 老版本别名
+define('BASEPATH', CMSPATH); // 老版本别名
 // 主配置目录
 !defined('CONFIGPATH') && define('CONFIGPATH', ROOTPATH.'config/');
 // App程序目录
