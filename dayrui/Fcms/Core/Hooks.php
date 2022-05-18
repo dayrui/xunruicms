@@ -68,7 +68,9 @@ class Hooks {
         // 框架主钩子
         require CONFIGPATH.'hooks.php';
 
-        require FRAMEPATH.'Config/Hook.php';
+        if (is_file(FRAMEPATH.'Hook.php')) {
+            require FRAMEPATH.'Hook.php';
+        }
 
         static::$initialized = true;
         static::$initialized_hook = true;

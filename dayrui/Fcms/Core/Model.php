@@ -5,10 +5,11 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-// 模型类
-class Model {
+require FRAMEPATH.'M.php';
 
-    public $db;
+// 模型类
+class Model extends \Frame\Model {
+
     public $id;
     public $key;
     public $field;
@@ -16,7 +17,6 @@ class Model {
     public $table;
     public $stable; // join关联表
     public $sfield; // join关联表的字段
-    public $prefix;
     public $db_temp; // 备份默认数据库
 
     public $uid;
@@ -28,14 +28,12 @@ class Model {
     protected $init;
 
     public function __construct(...$params) {
-        // 数据库
-        $this->db = \Config\Database::connect('default');
+        $this->_load_db();
         $this->key = $this->id = 'id';
         $this->uid = \Phpcmf\Service::C()->uid;
         $this->site = \Phpcmf\Service::C()->site;
         $this->admin = \Phpcmf\Service::C()->admin;
         $this->member = \Phpcmf\Service::C()->member;
-        $this->prefix = $this->db->DBPrefix;
         $this->siteid = defined('SITE_ID') ? SITE_ID : 0;
     }
 

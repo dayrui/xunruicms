@@ -17,10 +17,10 @@ class Router {
 
     public function __construct(...$params) {
 
-        $routes = \Config\Services::router(null, null, true);
+
         // 获取路由信息
-        $this->class = strtolower(strpos($routes->controllerName(), '\\') !== false ? substr(strrchr($routes->controllerName(), '\\'), 1) : $routes->controllerName());
-        $this->method = strtolower($routes->methodName());
+        $this->class = strtolower(isset($_GET['c']) ? dr_safe_filename($_GET['c']) : '');
+        $this->method = strtolower(isset($_GET['m']) ? dr_safe_filename($_GET['m']) : '');
     }
 
     // 获取用户中心,当前页面的URI

@@ -6,8 +6,10 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+require FRAMEPATH.'C.php';
+
 // 公共类
-abstract class Common extends \CodeIgniter\Controller {
+abstract class Common extends \Frame\Controller {
 
     private static $instance;
 
@@ -37,7 +39,7 @@ abstract class Common extends \CodeIgniter\Controller {
     /**
      * 初始化共享控制器
      */
-    public function __construct(...$params)
+    public function __construct()
     {
         //parent::initController(...$params);
 
