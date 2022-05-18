@@ -10,15 +10,11 @@
  * file that was distributed with this source code.
  **/
 
-use CodeIgniter\Config\DotEnv;
-use Config\App;
-use Config\Autoload;
-use Config\Modules;
-use Config\Services;
+// 框架目录
+!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'CodeIgniter/');
+//!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'Laravel/');
+!defined('BASEPATH') && define('BASEPATH', FRAMEPATH.'System/');
 
-// CI框架目录
-!defined('BASEPATH') && define('BASEPATH', FCPATH.'System/');
-define('SYSTEMPATH', BASEPATH);
 // CMS公共程序目录
 define('CMSPATH', FCPATH.'Fcms/');
 // 核心程序目录
@@ -227,18 +223,6 @@ function dr_show_error($msg) {
     }
 }
 
-/*
- * 重写config函数，防止modules被加载
- */
-function config ($name, $getShared = true) {
-
-    if ($name == 'Modules') {
-        $name = 'Config\Modules';
-    }
-
-    return \CodeIgniter\Config\Config::get($name, $getShared);
-}
-
 /**
  * 全局返回消息
  */
@@ -283,13 +267,6 @@ if (!function_exists('dr_get_rewrite_uri')) {
  */
 if (!function_exists('locale_set_default')) {
     function locale_set_default($a) { }
-}
-
-/*
- * 重写日志记录函数
- */
-function log_message($level, $message, array $context = []) {
-    return \Phpcmf\Service::Log($level, $message, $context);
 }
 
 /*
@@ -464,9 +441,6 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     define('IS_MEMBER', FALSE);
 }
 
-
-/******* CodeIgniter Bootstrap *******/
-
 // 自定义函数库
 if (is_file(ROOTPATH.'config/custom.php')) {
     require ROOTPATH.'config/custom.php';
@@ -477,47 +451,5 @@ if (is_file(MYPATH.'Helper.php')) {
 // 系统函数库
 require CMSPATH.'Core/Helper.php';
 
-// 定义常量
-require COREPATH.'Config/Constants.php';
-
-require BASEPATH.'Common.php';
-
-// 自动加载机制
-require SYSTEMPATH . 'Config/AutoloadConfig.php';
-require COREPATH . 'Config/Autoload.php';
-require SYSTEMPATH . 'Modules/Modules.php';
-require COREPATH . 'Config/Modules.php';
-
-require SYSTEMPATH . 'Autoloader/Autoloader.php';
-require SYSTEMPATH . 'Config/BaseService.php';
-require SYSTEMPATH . 'Config/Services.php';
-require COREPATH . 'Config/Services.php';
-
-require SYSTEMPATH . 'Events/Events.php';
-require CMSPATH.'Core/Service.php';
-require CMSPATH.'Core/Hooks.php';
-
-class_alias('Config\Services', 'CodeIgniter\Services');
-
-$loader = Services::autoloader();
-$auto = new Autoload();
-
-// 应用插件的自动识别
-$auto = \Phpcmf\Service::Auto($auto);
-
-$loader->initialize($auto, new Modules())->register();
-
-if (is_file(COMPOSER_PATH)) {
-    require_once COMPOSER_PATH;
-}
-
-require BASEPATH . 'Config/DotEnv.php';
-
-$env = new DotEnv(COREPATH);
-$env->load();
-
-helper('url');
-
-$app = new \Phpcmf\Extend\CodeIgniter(new App());
-$app->initialize();
-$app->run();
+// 进入系统框架加载
+require FRAMEPATH.'Init.php';

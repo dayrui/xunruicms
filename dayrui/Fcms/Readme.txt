@@ -4,7 +4,6 @@
 Config          配置相关文件
 Control         控制器文件
 Core            核心文件及函数库
-Extend          扩展框架文件和被继承控制器文件
 Field           自定义字段
 Library         系统类库文件
 Model           系统模型文件
