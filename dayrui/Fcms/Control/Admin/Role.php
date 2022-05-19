@@ -9,8 +9,8 @@ class Role extends \Phpcmf\Common {
 
 	private $form; // 表单验证配置
 	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
         // 不是超级管理员
         if (!dr_in_array(1, $this->admin['roleid'])) {
             $this->_admin_msg(0, dr_lang('需要超级管理员账号操作'));

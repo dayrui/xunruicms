@@ -10,8 +10,8 @@ class Notice extends \Phpcmf\Common
 	
 	private $field;
 	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
 		$this->field = [
 			'msg' => [
 				'name' => dr_lang('内容'),

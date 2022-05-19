@@ -11,8 +11,8 @@ class Attachment extends \Phpcmf\Common {
     public $path;
     public $load_file;
 
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
         $this->type = [
             0 => [
                 'name' => '本地磁盘',

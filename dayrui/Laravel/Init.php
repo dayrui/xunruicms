@@ -1,8 +1,7 @@
 <?php
 
 
-require FRAMEPATH . 'Autoloader/Autoloader.php';
-require FRAMEPATH . 'Autoloader/Config.php';
+require CMSPATH . 'Core/Auto.php';
 require CMSPATH . 'Core/Service.php';
 require CMSPATH . 'Core/Hooks.php';
 
@@ -23,8 +22,8 @@ if (! function_exists('csrf_token')) {
 }
 
 // 应用插件的自动识别
-$loader = new \Laravel\Autoloader\Autoloader();
-$loader->initialize(\Phpcmf\Service::Auto(new \Laravel\Autoloader\Config()))->register();
+$loader = new \Phpcmf\Auto();
+$loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register();
 
 require __DIR__.'/vendor/autoload.php';
 

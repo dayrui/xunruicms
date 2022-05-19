@@ -8,8 +8,8 @@
 class Sms extends \Phpcmf\Common
 {
 	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'短信设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-envelope'],

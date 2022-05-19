@@ -11,9 +11,9 @@ class Cloud extends \Phpcmf\Common {
     private $admin_url;
     private $service_url;
 
-    public function __construct(...$params)
+    public function __construct()
     {
-        parent::__construct(...$params);
+        parent::__construct();
 
         // 不是超级管理员
         if (!dr_in_array(1, $this->admin['roleid'])) {

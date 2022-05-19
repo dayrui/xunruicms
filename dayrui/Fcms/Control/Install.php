@@ -17,9 +17,9 @@ class Install extends \Phpcmf\Common {
     /**
      * 初始化共享控制器
      */
-    public function __construct(...$params)
+    public function __construct()
     {
-        parent::__construct(...$params);
+        parent::__construct();
         $this->lock = WRITEPATH.'install.lock';
         if (is_file($this->lock)) {
             exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');

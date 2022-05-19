@@ -8,8 +8,8 @@
 class Email_log extends \Phpcmf\Common
 {
 	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'错误日志' => ['email_log/index', 'fa fa-calendar'],

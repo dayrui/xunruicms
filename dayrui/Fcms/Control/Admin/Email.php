@@ -9,8 +9,8 @@ class Email extends \Phpcmf\Common
 {
 	private $form; // 表单验证配置
 	
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
 		\Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::M('auth')->_admin_menu(
 			[
 				'邮件服务器' => ['email/index', 'fa fa-envelope'],

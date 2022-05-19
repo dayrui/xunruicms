@@ -14,8 +14,8 @@ class Module extends \Phpcmf\Common {
 
     protected $content_model;
 
-    public function __construct(...$params) {
-        parent::__construct(...$params);
+    public function __construct() {
+        parent::__construct();
         // 初始化模块
         $this->siteid = (int)\Phpcmf\Service::L('input')->get('siteid');
         !$this->siteid && $this->siteid = SITE_ID;

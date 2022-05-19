@@ -19,8 +19,8 @@ class Field extends \Phpcmf\Common {
 	public $relatedid;
 	public $relatedname;
 
-	public function __construct(...$params) {
-		parent::__construct(...$params);
+	public function __construct() {
+		parent::__construct();
 
 		$this->name = '字段管理';
 		$this->namespace = ''; // 设置应用目录

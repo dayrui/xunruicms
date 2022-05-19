@@ -12,9 +12,9 @@ class Root extends \Phpcmf\Table
     private $myrole;
     private $mywhere;
 
-    public function __construct(...$params)
+    public function __construct()
     {
-        parent::__construct(...$params);
+        parent::__construct();
         if (!dr_in_array(1, $this->admin['roleid'])) {
             // 不是超级管理员
             if (dr_is_app('cqx')) {

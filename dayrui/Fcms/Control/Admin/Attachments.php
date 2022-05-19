@@ -8,8 +8,8 @@
 // 附件
 class Attachments extends \Phpcmf\Table {
 
-    public function __construct(...$params) {
-        parent::__construct(...$params);
+    public function __construct() {
+        parent::__construct();
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
