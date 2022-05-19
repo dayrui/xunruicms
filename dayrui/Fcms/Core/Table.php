@@ -42,8 +42,8 @@ class Table extends \Phpcmf\Common {
 
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
 
-    public function __construct(...$params) {
-        parent::__construct(...$params);
+    public function __construct() {
+        parent::__construct();
         $this->is_data = 0;
         $this->tpl_name = '';
         $this->auto_save = 1;

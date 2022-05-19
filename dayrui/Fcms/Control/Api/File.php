@@ -11,9 +11,9 @@ class File extends \Phpcmf\Common
 
     private $siteid;
 
-    public function __construct(...$params)
+    public function __construct()
     {
-        parent::__construct(...$params);
+        parent::__construct();
         $this->siteid = max(intval($_GET['siteid']), 1);
     }
 

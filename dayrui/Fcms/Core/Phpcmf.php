@@ -467,9 +467,11 @@ abstract class Common extends \Frame\Controller {
             return $this->session;
         }
 
-        $this->session = \Config\Services::session();
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            $this->session->start();
+        if (is_file(FRAMEPATH.'Session.php')) {
+            require FRAMEPATH.'Session.php';
+            $this->session = new \Frame\Session();
+        } else {
+            $this->session = \Config\Services::session();
         }
 
         return $this->session;

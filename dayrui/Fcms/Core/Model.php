@@ -187,7 +187,7 @@ class Model extends \Frame\Model {
             }
         }
 
-        $rt = $builder->where($name, $value)->where($this->key.'<>', $id)->countAllResults();
+        $rt = $builder->where($name, $value)->where($this->key.'<>'. $id)->countAllResults();
 
         $this->_clear();
 
@@ -552,6 +552,8 @@ class Model extends \Frame\Model {
 
         // 排序
         $this->param['order'] && $builder->orderBy($this->param['order']);
+
+        $builder->limit(1);
 
         $rt = $builder->get();
 

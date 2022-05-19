@@ -12,6 +12,8 @@
 
 class Cache {
 
+    private $cache;
+
     // 文件缓存目录
     private $file_dir;
 
@@ -193,9 +195,21 @@ class Cache {
 
     //------------------------------------------------
 
-    // 调用ci框架缓存
+    // 调用框架缓存
     public function init() {
-        return cache();
+
+        if ($this->cache) {
+            return $this->cache;
+        }
+
+        if (is_file(FRAMEPATH.'Cache.php')) {
+            require FRAMEPATH.'Cache.php';
+            $this->cache = new \Frame\Cache();
+        } else {
+            $this->cache = cache();
+        }
+
+        return $this->cache;
     }
 
     //------------------------------------------------

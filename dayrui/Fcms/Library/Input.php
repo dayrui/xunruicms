@@ -45,14 +45,11 @@ class Input {
     }
     
     public function set_cookie($name, $value = '', $expire = '') {
-        // 部分虚拟主机会报500错误
-        \Config\Services::response()->removeHeader('Content-Type');
-        \Config\Services::response()->setcookie(md5(SYS_KEY).'_'.dr_safe_replace($name), (string)$value, $expire)->send();
+        return \Frame\set_cookie($name, $value, $expire);
     }
     
     public function get_cookie($name) {
-        $name = md5(SYS_KEY).'_'.dr_safe_replace($name);
-        return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
+        return \Frame\get_cookie($name);
     }
 
     // inputip存储信息
@@ -82,7 +79,7 @@ class Input {
             $client_ip = '';
         }
 
-        $this->ip_address = $client_ip ? $client_ip : \Config\Services::request(null, true)->getIPAddress();
+        $this->ip_address = $client_ip;
         $this->ip_address = str_replace([",", '(', ')', ',', chr(13), PHP_EOL], '', $this->ip_address);
         $this->ip_address = trim($this->ip_address);
 
