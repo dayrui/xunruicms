@@ -197,6 +197,13 @@ if (!function_exists('dr_get_app_css_dir')) {
     }
 }
 
+/*
+ * 重写日志记录函数
+ */
+function log_message($level, $message, array $context = []) {
+    return \Phpcmf\Service::Log($level, $message, $context);
+}
+
 // 兼容错误提示
 function dr_show_error($msg) {
 

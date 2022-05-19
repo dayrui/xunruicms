@@ -224,11 +224,11 @@ class Service {
             $context['user'] = dr_safe_replace($_SERVER['HTTP_USER_AGENT']);
             $context['referer'] = dr_safe_url($_SERVER['HTTP_REFERER'], true);
 
-            return \Config\Services::logger(true)->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
+            return \Phpcmf\Service::L('input')->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
         }
 
         $message.= '---'.FC_NOW_URL;
-        return \Config\Services::logger(true)->log($level, $message, $context);
+        return \Phpcmf\Service::L('input')->log($level, $message, $context);
     }
 
     /**

@@ -285,13 +285,11 @@
 <footer>
     <div class="environment">
 
-        <p>页面加载时间： {elapsed_time} 秒</p>
-
         <p>
             PHP: <?= PHP_VERSION ?> &nbsp;&nbsp;
             MySql: <?= \Phpcmf\Service::M()->db->getVersion(); ?> &nbsp;&nbsp;
             XunRuiCMS: <?= CMF_VERSION ?> &nbsp;&nbsp;
-            CodeIgniter: <?= CodeIgniter\CodeIgniter::CI_VERSION ?>
+            {FRAME_NAME}: <?= FRAME_VERSION; ?>
         </p>
 
     </div>

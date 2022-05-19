@@ -1,4 +1,5 @@
 <?php namespace Phpcmf\Library;
+
 /**
  * {{www.xunruicms.com}}
  * {{迅睿内容管理框架系统}}
@@ -102,6 +103,142 @@ class Input {
 	public function get_user_agent() {
 		return str_replace(['"', "'"], '', \Phpcmf\Service::L('Security')->xss_clean((string)$_SERVER['HTTP_USER_AGENT'], true));
 	}
+
+    /**
+     * 系统错误日志
+     */
+    public function log($level, $message, $context = []) {
+
+        $message = $this->interpolate($message, $context);
+
+        if (! is_string($message)) {
+            $message = print_r($message, true);
+        }
+
+        $message = strtoupper($level) . ' - '.date('Y-m-d H:i:s'). ' --> '.$message;
+
+        $file = WRITEPATH . 'error/log-'.date('Y-m-d').'.php';
+        if (is_file($file)) {
+            file_put_contents($file, $message);
+        } else {
+            file_put_contents($file, $message, FILE_APPEND);
+        }
+
+        return true;
+    }
+    /**
+     * Replaces any placeholders in the message with variables
+     * from the context, as well as a few special items like:
+     *
+     * {session_vars}
+     * {post_vars}
+     * {get_vars}
+     * {env}
+     * {env:foo}
+     * {file}
+     * {line}
+     *
+     * @param mixed $message
+     *
+     * @return mixed
+     */
+    protected function interpolate($message, array $context = [])
+    {
+        if (! is_string($message)) {
+            return $message;
+        }
+
+        // build a replacement array with braces around the context keys
+        $replace = [];
+
+        foreach ($context as $key => $val) {
+            // Verify that the 'exception' key is actually an exception
+            // or error, both of which implement the 'Throwable' interface.
+            if ($key === 'exception' && $val instanceof Throwable) {
+                $val = $val->getMessage() . ' ' . $val->getFile() . ':' . $val->getLine();
+            }
+
+            // todo - sanitize input before writing to file?
+            $replace['{' . $key . '}'] = $val;
+        }
+
+        // Add special placeholders
+        $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, true);
+        $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, true);
+
+        // Allow us to log the file/line that we are logging from
+        if (strpos($message, '{file}') !== false) {
+            [$file, $line] = $this->determineFile();
+
+            $replace['{file}'] = $file;
+            $replace['{line}'] = $line;
+        }
+
+        // Match up environment variables in {env:foo} tags.
+        if (strpos($message, 'env:') !== false) {
+            preg_match('/env:[^}]+/', $message, $matches);
+
+            if ($matches) {
+                foreach ($matches as $str) {
+                    $key                 = str_replace('env:', '', $str);
+                    $replace["{{$str}}"] = $_ENV[$key] ?? 'n/a';
+                }
+            }
+        }
+
+        if (isset($_SESSION)) {
+            $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, true);
+        }
+
+        // interpolate replacement values into the message and return
+        return strtr($message, $replace);
+    }
+
+    /**
+     * Determines the file and line that the logging call
+     * was made from by analyzing the backtrace.
+     * Find the earliest stack frame that is part of our logging system.
+     */
+    public function determineFile(): array
+    {
+        $logFunctions = [
+            'log_message',
+            'log',
+            'error',
+            'debug',
+            'info',
+            'warning',
+            'critical',
+            'emergency',
+            'alert',
+            'notice',
+        ];
+
+        // Generate Backtrace info
+        $trace = \debug_backtrace(0);
+
+        // So we search from the bottom (earliest) of the stack frames
+        $stackFrames = \array_reverse($trace);
+
+        // Find the first reference to a Logger class method
+        foreach ($stackFrames as $frame) {
+            if (\in_array($frame['function'], $logFunctions, true)) {
+                $file = isset($frame['file']) ? ($frame['file']) : 'unknown';
+                $line = $frame['line'] ?? 'unknown';
+
+                return [
+                    $file,
+                    $line,
+                ];
+            }
+        }
+
+        return [
+            'unknown',
+            'unknown',
+        ];
+    }
+
 
     /**
      * 后台日志

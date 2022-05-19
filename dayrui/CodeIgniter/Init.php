@@ -9,9 +9,7 @@ use Config\Autoload;
 use Config\Modules;
 use Config\Services;
 
-
 define('SYSTEMPATH', BASEPATH);
-
 
 /*
  * 重写config函数，防止modules被加载
@@ -25,15 +23,7 @@ function config ($name, $getShared = true) {
     return \CodeIgniter\Config\Config::get($name, $getShared);
 }
 
-/*
- * 重写日志记录函数
- */
-function log_message($level, $message, array $context = []) {
-    return \Phpcmf\Service::Log($level, $message, $context);
-}
-
 /******* CodeIgniter Bootstrap *******/
-
 
 // 定义常量
 require FRAMEPATH.'Config/Constants.php';

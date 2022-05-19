@@ -1,5 +1,8 @@
 <?php
 
+define('FRAME_NAME', 'CodeIgniter');
+define('FRAME_VERSION', CodeIgniter\CodeIgniter::CI_VERSION);
+
 \CodeIgniter\Events\Events::on('pre_system', function () {
 
     /*
