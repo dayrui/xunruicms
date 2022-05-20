@@ -88,7 +88,7 @@ class Login extends \Phpcmf\Common
                     // 写入日志
                     $this->admin = $login['data'];
                     \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
-                    $this->_json(1, 'ok', ['sync' => $sync, 'url' => $url]);
+                    return $this->_json(1, 'ok', ['sync' => $sync, 'url' => $url], true);
                 } else {
                     // 登录失败
                     if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {

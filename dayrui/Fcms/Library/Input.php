@@ -115,10 +115,10 @@ class Input {
         $message = strtoupper($level) . ' - '.date('Y-m-d H:i:s'). ' --> '.$message;
 
         $file = WRITEPATH . 'error/log-'.date('Y-m-d').'.php';
-        if (is_file($file)) {
+        if (!is_file($file)) {
             file_put_contents($file, $message);
         } else {
-            file_put_contents($file, $message, FILE_APPEND);
+            file_put_contents($file, $message.PHP_EOL, FILE_APPEND);
         }
 
         return true;

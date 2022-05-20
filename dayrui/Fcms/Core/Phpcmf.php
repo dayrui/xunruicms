@@ -654,7 +654,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 统一返回json格式并退出程序
      */
-    public function _json($code, $msg, $data = []){
+    public function _json($code, $msg, $data = [], $return = false){
 
         // 强制显示提交信息而不采用ajax返回
         if (isset($_GET['is_show_msg']) && $_GET['is_show_msg']) {
@@ -698,7 +698,10 @@ abstract class Common extends \Frame\Controller {
 
         \Phpcmf\Hooks::trigger('cms_end', $rt);
 
-        echo dr_array2string($rt);exit;
+        echo dr_array2string($rt);
+        if (!$return) {
+            exit;
+        }
     }
 
     /**

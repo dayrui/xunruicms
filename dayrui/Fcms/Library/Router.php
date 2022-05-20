@@ -15,12 +15,10 @@ class Router {
     protected $_uri;
     protected $_temp;
 
-    public function __construct(...$params) {
-
-
+    public function __construct() {
         // 获取路由信息
-        $this->class = strtolower(isset($_GET['c']) ? dr_safe_filename($_GET['c']) : '');
-        $this->method = strtolower(isset($_GET['m']) ? dr_safe_filename($_GET['m']) : '');
+        $this->class = strtolower(isset($_GET['c']) ? dr_safe_filename($_GET['c']) : 'home');
+        $this->method = strtolower(isset($_GET['m']) ? dr_safe_filename($_GET['m']) : 'index');
     }
 
     // 获取用户中心,当前页面的URI
@@ -55,7 +53,11 @@ class Router {
     public function go_member_login($url) {
 
         $url = $this->member_url('login/index', ['back' => urlencode($url)]);
-        dr_redirect($url);
+        if (IS_DEV) {
+            \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：登录超时<br>正在自动跳转到登录页面（关闭开发者模式时即可自动跳转）', $url, 9);
+        } else {
+            dr_redirect($url);
+        }
         exit;
     }
 
