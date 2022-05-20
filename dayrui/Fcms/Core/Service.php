@@ -216,6 +216,7 @@ class Service {
             if (is_array( static::$logs) && in_array($code, static::$logs)) {
                 return;
             }
+
             static::$logs[] = $code;
 
             $context['trace'] = $message->getTraceAsString();

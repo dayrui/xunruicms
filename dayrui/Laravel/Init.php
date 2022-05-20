@@ -34,7 +34,7 @@ use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
 $app = new Illuminate\Foundation\Application(
-    FRAMEPATH
+    FRAMEPATH.'System/'
 );
 
 $app->singleton(
