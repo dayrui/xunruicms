@@ -1,0 +1,24 @@
+<?php namespace Frame;
+
+class Session {
+
+    private $session;
+
+    public function __construct() {
+        $this->session = \Config\Services::session();
+    }
+
+    public function set($key, $value = null) {
+        $this->session->set(SYS_KEY.$key, $value);
+    }
+
+    public function get($key = null)
+    {
+        return $this->session->get(SYS_KEY.$key);
+    }
+
+    public function remove($key)
+    {
+        $this->session->remove(SYS_KEY.$key);
+    }
+}

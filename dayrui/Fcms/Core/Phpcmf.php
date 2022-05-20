@@ -467,12 +467,9 @@ abstract class Common extends \Frame\Controller {
             return $this->session;
         }
 
-        if (is_file(FRAMEPATH.'Extend/Session.php')) {
-            require FRAMEPATH.'Extend/Session.php';
-            $this->session = new \Frame\Session();
-        } else {
-            $this->session = \Config\Services::session();
-        }
+        require_once FRAMEPATH.'Extend/Session.php';
+
+        $this->session = new \Frame\Session();
 
         return $this->session;
     }
