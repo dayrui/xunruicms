@@ -1585,7 +1585,7 @@ class Image {
 
         // 图片缩略图文件
         $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
-        if (is_file($cache_path.$cache_file)) {
+        if (!IS_DEV && is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }
 
@@ -1723,15 +1723,15 @@ class Image {
         $source_height = $this->image_info[1];
         $target_width = (int)$target_width;
         $target_height = (int)$target_height;
-        $source_ratio = max(intval($source_height / $source_width), 1);
-        $target_ratio = max(intval($target_height / $target_width), 1);
+        $source_ratio = $source_height / $source_width;
+        $target_ratio = $target_height / $target_width;
         if ($source_ratio > $target_ratio) {
             // image-to-height
             $cropped_width = $source_width;
             $cropped_height = $source_width * $target_ratio;
         } elseif ($source_ratio < $target_ratio) {
             //image-to-widht
-            $cropped_width = max(intval($source_height / $target_ratio),1);
+            $cropped_width = $source_height / $target_ratio;
             $cropped_height = $source_height;
         } else {
             //image-size-ok
@@ -1739,7 +1739,7 @@ class Image {
             $cropped_height = $source_height;
         }
 
-        return [$cropped_width, $cropped_height];
+        return [floor($cropped_width), floor($cropped_height)];
     }
 
     // 图片剪切函数可继承
@@ -1750,19 +1750,19 @@ class Image {
         $source_mime  = $this->image_info['mime'];
         $target_width = (int)$target_width;
         $target_height = (int)$target_height;
-        $source_ratio = max(intval($source_height / $source_width), 1);
-        $target_ratio = max(intval($target_height / $target_width), 1);
+        $source_ratio = ($source_height / $source_width);
+        $target_ratio = ($target_height / $target_width);
         if ($source_ratio > $target_ratio) {
             // image-to-height
             $cropped_width = $source_width;
-            $cropped_height = $source_width * $target_ratio;
+            $cropped_height = floor($source_width * $target_ratio);
             $source_x = 0;
-            $source_y = max(intval(($source_height - $cropped_height) / 2), 1);
+            $source_y = floor(($source_height - $cropped_height) / 2);
         } elseif ($source_ratio < $target_ratio){
             //image-to-widht
-            $cropped_width = max(intval($source_height / $target_ratio), 1);
+            $cropped_width = floor($source_height / $target_ratio);
             $cropped_height = $source_height;
-            $source_x = max(intval(($source_width - $cropped_width) / 2), 1);
+            $source_x = floor(($source_width - $cropped_width) / 2);
             $source_y = 0;
         } else {
             //image-size-ok
@@ -1822,8 +1822,8 @@ class Image {
 
         if ($width > $cw) {
             $per = $cw / $width;//计算比例
-            $new_width = intval($width * $per); //压缩后的图片宽
-            $new_height = intval($height * $per); //压缩后的图片高
+            $new_width = floor($width * $per); //压缩后的图片宽
+            $new_height = floor($height * $per); //压缩后的图片高
             switch ($type) {
                 case 1:
                     // gif
