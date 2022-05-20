@@ -6,7 +6,6 @@ require CMSPATH . 'Core/Service.php';
 require CMSPATH . 'Core/Hooks.php';
 
 
-
 if (! function_exists('csrf_token')) {
     /**
      * Get the CSRF token value.
@@ -21,11 +20,13 @@ if (! function_exists('csrf_token')) {
     }
 }
 
+require __DIR__.'/System/vendor/autoload.php';
+require __DIR__.'/Extend/Error.php';
+
 // 应用插件的自动识别
 $loader = new \Phpcmf\Auto();
 $loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register();
 
-require __DIR__.'/vendor/autoload.php';
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
