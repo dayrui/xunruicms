@@ -6,7 +6,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-require FRAMEPATH.'C.php';
+require FRAMEPATH.'Extend/Controller.php';
 
 // 公共类
 abstract class Common extends \Frame\Controller {
@@ -467,8 +467,8 @@ abstract class Common extends \Frame\Controller {
             return $this->session;
         }
 
-        if (is_file(FRAMEPATH.'Session.php')) {
-            require FRAMEPATH.'Session.php';
+        if (is_file(FRAMEPATH.'Extend/Session.php')) {
+            require FRAMEPATH.'Extend/Session.php';
             $this->session = new \Frame\Session();
         } else {
             $this->session = \Config\Services::session();

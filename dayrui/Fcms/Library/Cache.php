@@ -202,8 +202,8 @@ class Cache {
             return $this->cache;
         }
 
-        if (is_file(FRAMEPATH.'Cache.php')) {
-            require FRAMEPATH.'Cache.php';
+        if (is_file(FRAMEPATH.'Extend/Cache.php')) {
+            require FRAMEPATH.'Extend/Cache.php';
             $this->cache = new \Frame\Cache();
         } else {
             $this->cache = cache();
