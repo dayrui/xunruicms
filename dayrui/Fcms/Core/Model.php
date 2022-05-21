@@ -1135,7 +1135,7 @@ class Model extends \Frame\Model {
 
         if ($my && !method_exists($my, 'getQuery')) {
             $this->_clear();
-            return '';
+            return (string)$my;
         }
 
         $rt = str_replace(PHP_EOL, ' ', $my->getQuery());
