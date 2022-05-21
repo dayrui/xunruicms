@@ -1,0 +1,386 @@
+<?php namespace Frame;
+
+// 数据库引导类
+class Model {
+
+    public $db;
+    public $prefix;
+
+    public function _load_db() {
+        // 数据库
+        $this->db = new db_mysql();
+        $this->db->prefix = $this->prefix = defined('XR_DB_PREFIX') ? XR_DB_PREFIX : '';
+    }
+
+}
+
+use \think\facade\Db;
+
+
+class db_mysql {
+
+    public $query_sql;
+    public $param = [];
+    public $prefix;
+    public $likeEscapeChar = '!';
+
+    public function query($sql) {
+        $this->_clear();
+        $this->param['result'] = Db::query($sql);
+        return $this;
+    }
+
+    public function simpleQuery($sql) {
+        $this->_clear();
+        Db::execute($sql);
+        return $this;
+    }
+
+    public function error() {
+
+    }
+
+    public function getVersion() {
+        return Db::query("select version()")[0]["version()"];
+    }
+
+    public function get() {
+
+        if (!$this->param['table']) {
+            return $this;
+        }
+
+        $builder = Db::name($this->param['table']);
+
+        if ($this->param['select']) {
+            $builder->field(($this->param['select']));
+        }
+
+        if ($this->param['where']) {
+            foreach ($this->param['where'] as $v) {
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+            }
+        }
+
+        if ($this->param['whereIn']) {
+            foreach ($this->param['whereIn'] as $v) {
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->where($v);
+            }
+        }
+
+        if ($this->param['order']) {
+            $builder->order($this->param['order']);
+        }
+
+        if ($this->param['group']) {
+            $builder->group($this->param['group']);
+        }
+
+        if ($this->param['limit']) {
+            list($a, $b) = explode(',', $this->param['limit']);
+            if ($b) {
+                $builder->limit($a, $b);
+            } else {
+                $builder->limit($a);
+            }
+        }
+
+        $this->param['is_get'] = true;
+        $this->param['builder'] = $builder;
+
+        return $this;
+    }
+
+    public function limit($limit, $b = 0) {
+
+        $this->param['limit'] = $b ? $limit.','.$b : $limit;
+
+        return $this;
+    }
+
+    public function getRowArray() {
+
+        $rt = [];
+        if ($this->param['result']) {
+            $rt = array_shift($this->param['result']);
+        } elseif ($this->param['builder']) {
+            $rt = $this->param['builder']->find();
+        }
+
+        $this->_clear();
+
+        return $rt;
+    }
+
+    public function getResultArray() {
+
+        $rt = [];
+        if ($this->param['result']) {
+            $rt = ($this->param['result']);
+        } elseif ($this->param['builder']) {
+            $rt = $this->param['builder']->select()->toArray();
+        }
+
+        $this->_clear();
+
+        return $rt;
+    }
+
+    public function countAllResults() {
+
+        $rt = 0;
+
+        if (!$this->param['is_get']) {
+            $this->get();
+        }
+
+        if ($this->param['builder']) {
+            $rt = $this->param['builder']->count();
+        }
+
+        $this->_clear();
+
+        return $rt;
+    }
+
+    public function where($where, $value = '', $test = '') {
+
+        if (dr_strlen($value)) {
+            $this->param['where'][] = [$where, $value];
+        } else {
+            $this->param['where'][] = $where;
+        }
+
+        return $this;
+    }
+
+    public function whereIn($where, $value = '') {
+
+        if (dr_strlen($value)) {
+            $this->param['whereIn'][] = [$where, $value];
+        } else {
+            $this->param['whereIn'][] = $where;
+        }
+
+        return $this;
+    }
+
+    public function table($name) {
+        $this->_clear();
+        $this->param['table'] = $name;
+        return $this;
+    }
+
+    public function select($name) {
+        $this->param['select'] = $name;
+        return $this;
+    }
+
+    public function orderBy($name) {
+        $this->param['order'] = $name;
+        return $this;
+    }
+
+    public function groupBy($name) {
+        $this->param['group'] = $name;
+        return $this;
+    }
+
+    public function insertID() {
+        return Db::getLastInsID();
+    }
+
+    public function insert($data) {
+        Db::name($this->param['table'])->insert($data);
+        $this->_clear();
+    }
+
+    public function replace($data) {
+        Db::name($this->param['table'])->replace()->insert($data, 'id');
+        $this->_clear();
+    }
+
+    public function set($key, $value) {
+        $this->param['update'][$key] = $value;
+        return $this;
+    }
+
+    public function update($data = []) {
+
+        if (!$this->param['is_get']) {
+            $this->get();
+        }
+
+        if ($this->param['builder']) {
+            if ($this->param['update']) {
+                foreach ($this->param['update'] as $key => $value) {
+                    $data[$key] = $value;
+                }
+            }
+            $data && $this->param['builder']->update($data);
+        }
+
+        $this->_clear();
+    }
+
+    public function escapeString($str, bool $like = false) {
+
+        if (is_array($str)) {
+            foreach ($str as $key => $val) {
+                $str[$key] = $this->escapeString($val, $like);
+            }
+
+            return $str;
+        }
+
+        $str = str_replace("'", "''", remove_invisible_characters($str, false));
+
+        // escape LIKE condition wildcards
+        if ($like === true) {
+            return str_replace(
+                [
+                    $this->likeEscapeChar,
+                    '%',
+                    '_',
+                ],
+                [
+                    $this->likeEscapeChar . $this->likeEscapeChar,
+                    $this->likeEscapeChar . '%',
+                    $this->likeEscapeChar . '_',
+                ],
+                $str
+            );
+        }
+
+        return $str;
+    }
+
+    public function updateBatch($values, $index) {
+
+        $ids   = [];
+        $final = [];
+
+        foreach ($values as $val) {
+            $ids[] = $val[$index];
+
+            foreach (array_keys($val) as $field) {
+                if ($field !== $index) {
+                    $final[$field][] = 'WHEN ' . $index . ' = ' . $val[$index] . ' THEN "' . $val[$field] . '"';
+                }
+            }
+        }
+
+        $cases = '';
+
+        foreach ($final as $k => $v) {
+            $cases .= $k . " = CASE \n"
+                . implode("\n", $v) . "\n"
+                . 'ELSE ' . $k . ' END, ';
+        }
+
+        $where = ' WHERE ' .$index . ' IN(' . implode(',', $ids) . ')';
+
+        $sql = 'UPDATE `'.$this->prefix.$this->param['table'].'` SET ' . substr($cases, 0, -2) . $where;
+
+        $this->_clear();
+
+        Db::execute($sql);
+    }
+
+    public function delete() {
+
+        if (!$this->param['is_get']) {
+            $this->get();
+        }
+
+        if ($this->param['builder']) {
+            $this->param['builder']->delete();
+        }
+
+        $this->_clear();
+    }
+
+    public function setLastQuery($sql) {
+        $this->query_sql = $sql;
+    }
+
+    public function getLastQuery() {
+        return Db::getLastSql();
+    }
+
+    public function truncate() {
+        // 前缀
+        $table = $this->param['table'];
+        if ($this->prefix && strpos($table, $this->prefix) === false) {
+            $table = $this->prefix.$table;
+        }
+        Db::execute('truncate table '.$table);
+        $this->_clear();
+    }
+
+    public function tableExists($table) {
+
+        if (!$table) {
+            return false;
+        }
+
+        // 前缀
+        if ($this->prefix && strpos($table, $this->prefix) === false) {
+            $table = $this->prefix.$table;
+        }
+
+        $res = Db::query('SHOW TABLES LIKE "'.$table.'"');
+
+        return $res;
+    }
+
+    public function fieldExists($name, $table) {
+
+        if (!$table or !$name) {
+            return false;
+        }
+
+        $field = $this->getFieldNames($table);
+        if (!$field) {
+            return false;
+        }
+
+        return in_array($name, $field);
+    }
+
+    public function getFieldNames($table) {
+
+        if (!$table) {
+            return [];
+        }
+
+        // 前缀
+        if ($this->prefix && strpos($table, $this->prefix) === false) {
+            $table = $this->prefix.$table;
+        }
+
+        $res = Db::query("show COLUMNS FROM ".$table);
+        $field = [];
+        foreach($res as $vo){
+            $field[]=$vo['Field'];
+        }
+
+        return $field;
+    }
+
+    private function _clear() {
+        $this->param = [
+            'table' => '',
+            'select' => '',
+            'order' => '',
+            'group' => '',
+            'where' => [],
+            'update' => [],
+            'whereIn' => [],
+            'builder' => null,
+            'result' => null,
+            'is_get' => false,
+        ];
+    }
+
+}
