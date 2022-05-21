@@ -35,8 +35,12 @@
                     {else}
                     <li>
                         <span>系统版本</span>
-                        <a target="_blank" href="https://www.xunruicms.com/">{$cmf_version}</a>
+                        <a target="_blank" href="https://www.xunruicms.com/version/">{$cmf_version}</a>
                         <a id="dr_cmf_update" href="{dr_url('cloud/update')}" style="margin-left: 10px;display: none" class="badge badge-danger badge-roundless">  </a>
+                    </li>
+                    <li>
+                        <span>系统内核</span>
+                        <a href="https://www.xunruicms.com/frame/" target="_blank">{FRAME_NAME}（{FRAME_VERSION}）</a>
                     </li>
 
                     <li>
