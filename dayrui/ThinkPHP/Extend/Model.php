@@ -58,18 +58,20 @@ class db_mysql {
 
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->whereRaw($v);
             }
+        } else {
+            $builder->where(true);
         }
 
         if ($this->param['whereIn']) {
             foreach ($this->param['whereIn'] as $v) {
-                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->where($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereRaw($v);
             }
         }
 
         if ($this->param['order']) {
-            $builder->order($this->param['order']);
+            $builder->orderRaw($this->param['order']);
         }
 
         if ($this->param['group']) {
@@ -187,7 +189,8 @@ class db_mysql {
     }
 
     public function insertID() {
-        return Db::getLastInsID();
+        $rs = Db::query('SELECT LAST_INSERT_ID()');
+        return ($rs[0]['LAST_INSERT_ID()']);
     }
 
     public function insert($data) {
