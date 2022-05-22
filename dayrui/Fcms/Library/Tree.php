@@ -294,7 +294,7 @@ class Tree {
             }
         }
 
-        $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
+        $string = '<select class="bs-select form-control" data-live-search="true"  '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
         $tree = [];

@@ -203,8 +203,32 @@ class db_mysql {
         $this->_clear();
     }
 
-    public function set($key, $value) {
-        $this->param['update'][$key] = $value;
+    public function set($key, $value, $escape = true) {
+
+        if ($escape) {
+            $this->param['update'][$key] = $value;
+        } else {
+            if (strpos($value, '+') !== false) {
+                list($a, $b) = explode('+', $value);
+                $this->param['update_inc'][trim($a)] = trim($b);
+            } elseif (strpos($value, '-') !== false) {
+                list($a, $b) = explode('-', $value);
+                $this->param['update_dec'][trim($a)] = trim($b);
+            }
+        }
+
+        return $this;
+    }
+
+    //+
+    public function increment($key, $value) {
+        $this->param['update_inc'][$key] = $value;
+        return $this;
+    }
+
+    //-
+    public function decrement($key, $value) {
+        $this->param['update_dec'][$key] = $value;
         return $this;
     }
 
@@ -220,7 +244,17 @@ class db_mysql {
                     $data[$key] = $value;
                 }
             }
-            $data && $this->param['builder']->update($data);
+            if ($this->param['update_dec']) {
+                foreach ($this->param['update_dec'] as $key => $value) {
+                    $this->param['builder']->dec($key, $value);
+                }
+            }
+            if ($this->param['update_inc']) {
+                foreach ($this->param['update_inc'] as $key => $value) {
+                    $this->param['builder']->inc($key, $value);
+                }
+            }
+            $this->param['builder']->update($data);
         }
 
         $this->_clear();
@@ -379,6 +413,8 @@ class db_mysql {
             'group' => '',
             'where' => [],
             'update' => [],
+            'update_dec' => [],
+            'update_inc' => [],
             'whereIn' => [],
             'builder' => null,
             'result' => null,
