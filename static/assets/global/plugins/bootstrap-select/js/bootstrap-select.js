@@ -2040,7 +2040,7 @@
         if ($('.fixed-table-container').length) {
           var tableHeight = $('.fixed-table-container').height();
           if (maxHeight > tableHeight) {
-            maxHeight = tableHeight - 100;
+            menuInnerHeight = maxHeight = tableHeight - 100;
           }
         }
 
