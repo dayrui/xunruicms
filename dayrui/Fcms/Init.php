@@ -11,12 +11,20 @@
  **/
 
 // 框架目录
-!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'CodeIgniter/');
-//!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'Laravel/');
-//!defined('FRAMEPATH') && define('FRAMEPATH', FCPATH.'Phalcon/');
+if (!defined('FRAMEPATH')) {
+    if (is_file(WRITEPATH.'frame.lock')) {
+        $frame = (string)file_get_contents(WRITEPATH.'frame.lock');
+        if (!is_file(FCPATH.$frame.'/Init.php')) {
+            $frame = 'CodeIgniter';
+        }
+        define('FRAMEPATH', FCPATH.$frame.'/');
+    } else {
+        define('FRAMEPATH', FCPATH.'CodeIgniter/');
+    }
+}
 
 // CMS公共程序目录
-define('CMSPATH', FCPATH.'Fcms/');
+!defined('CMSPATH') && define('CMSPATH', FCPATH.'Fcms/');
 define('COREPATH', CMSPATH); // 老版本别名
 define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 // 主配置目录
@@ -31,8 +39,6 @@ define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
 // 是否启用高级开发模式
 !defined('IS_XRDEV') && define('IS_XRDEV', 0);
-// 最大栏目数量限制category
-!defined('MAX_CATEGORY') && define('MAX_CATEGORY', 200);
 // 定义移动端模板目录
 !defined('MOBILE_TPL_DIR') && define('MOBILE_TPL_DIR', 'mobile');
 // 编辑器的图片的title和alt默认占位字符
