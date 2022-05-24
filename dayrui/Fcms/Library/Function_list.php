@@ -21,7 +21,7 @@ class Function_list {
             return '';
         }
 
-        $mid = defined('MOD_DIR') ? MOD_DIR : '';
+        $mid = isset(\Phpcmf\Service::C()->module['mid']) ? \Phpcmf\Service::C()->module['mid'] : (defined('MOD_DIR') ? MOD_DIR : '');
         $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
         $value = dr_cat_value($mid, $catid, 'name');
 
@@ -37,7 +37,7 @@ class Function_list {
 
         $rt = [];
         $arr = dr_string2array($value);
-        $mid = defined('MOD_DIR') ? MOD_DIR : '';
+        $mid = isset(\Phpcmf\Service::C()->module['mid']) ? \Phpcmf\Service::C()->module['mid'] : (defined('MOD_DIR') ? MOD_DIR : '');
         if ($arr) {
             foreach ($arr as $catid) {
                 $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';

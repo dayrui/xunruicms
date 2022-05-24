@@ -51,7 +51,7 @@ class Cache {
      */
     public function set_file($key, $value, $cache_dir = null) {
 
-        if (!$key) {
+        if (dr_is_empty($key)) {
             return false;
         }
 
@@ -78,7 +78,7 @@ class Cache {
      */
     public function get_file($key, $cache_dir = null, $is_cache = true) {
 
-        if (!$key) {
+        if (dr_is_empty($key)) {
             return false;
         }
 
@@ -98,7 +98,7 @@ class Cache {
      */
     public function del_file($key, $cache_dir = null) {
 
-        if (!$key) {
+        if (dr_is_empty($key)) {
             return true;
         }
 
