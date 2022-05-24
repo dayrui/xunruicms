@@ -53,7 +53,7 @@
                     </label>
                 </td>
                 <td>{$t.id}</td>
-                <td>{$category[$t.catid]['name']}</td>
+                <td>{dr_cat_value($site, $mmid, $t.catid, 'name')$}</td>
                 <td><a href="{$t.url}" target="_blank">{$t.title}</a></td>
             </tr>
             {/module}
