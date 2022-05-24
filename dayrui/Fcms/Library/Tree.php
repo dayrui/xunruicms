@@ -294,7 +294,7 @@ class Tree {
             }
         }
 
-        $string = '<select class="bs-select form-control" data-live-search="true"  '.$str.'>'.PHP_EOL;
+        $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
         $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
         $tree = [];
@@ -451,6 +451,7 @@ class Tree {
         $nstr = '';
         $number = 1;
         $mychild = $this->get_child($myid);
+        //$mychild = $this->data[$myid]['catids'];
         $mytotal = dr_count($mychild);
 
         if (is_array($mychild)) {
@@ -466,7 +467,8 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $id == $sid ? 'selected' : '';
                 $class = 'dr_catid_'.$value['id'];
-                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$value['childids'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
+                $childs = isset($value['childids']) ? $value['childids'] : (implode(',', $value['catids']));
+                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$childs.'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
                 extract($value);
 

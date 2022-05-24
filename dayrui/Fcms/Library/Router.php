@@ -288,45 +288,11 @@ class Router {
      * @return    string
      */
     public function category_url($mod, $data, $page = 0, $fid = 0) {
-
-        if (!$mod || !$data) {
-            return '栏目URL参数不完整';
-        }
-
-        // 是否分页
-        $page && $data['page'] = $page = is_numeric($page) ? max((int)$page, 1) : $page;
-        !$page && $page = 1;
-
-        // 获取自定义URL
-        $rule = isset($data['setting']['urlrule']) ? \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value') : 0;
-        if ($page > 1) {
-            if (isset($data['myurl_page']) && $data['myurl_page']) {
-                $url = ltrim($data['myurl_page'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
-            } elseif ($rule && $rule['list_page']) {
-                $url = ltrim($rule['list_page'], '/');
-            }
+        if (function_exists('dr_module_category_url')) {
+            return dr_module_category_url($mod, $data, $page, $fid);
         } else {
-            if (isset($data['myurl']) && $data['myurl']) {
-                $url = ltrim($data['myurl'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
-            } elseif ($rule && $rule['list']) {
-                $url = ltrim($rule['list'], '/');
-            }
+            return '需要升级内容系统插件';
         }
-
-        if ($url) {
-            // URL模式为自定义，且已经设置规则
-            $data['fid'] = $fid;
-            $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
-            $data['pdirname'].= $data['dirname'];
-            $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
-            $data['opdirname'] = $data['pid'] && isset($mod['category'][$data['pid']]) ? $mod['category'][$data['pid']]['dirname'] : $data['dirname'];
-            $data['otdirname'] = $data['topid'] && isset($mod['category'][$data['topid']]) ? $mod['category'][$data['topid']]['dirname'] : $data['dirname'];
-            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $data, $fid));
-        }
-
-        return $this->url_prefix('module_php', $mod, $data, $fid) . 'c=category&id=' . (isset($data['id']) ? $data['id'] : 0) . ($page ? '&page=' . $page : '');
     }
 
     /**
@@ -338,51 +304,11 @@ class Router {
      * @return    string
      */
     public function show_url($mod, $data, $page = 0) {
-
-        if (!$mod || !$data) {
-            return '内容URL参数不完整';
-        }
-
-        $cat = $mod['category'][$data['catid']];
-
-        $page && $data['page'] = $page = is_numeric($page) ? max((int)$page, 1) : $page;
-        !$page && $page = 1;
-
-        $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cat['setting']['urlrule'], 'value');
-        if ($page > 1) {
-            if (isset($data['myurl_page']) && $data['myurl_page']) {
-                $url = ltrim($data['myurl_page'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
-            } elseif ($rule && $rule['show_page']) {
-                $url = ltrim($rule['show_page'], '/');
-            }
+        if (function_exists('dr_module_show_url')) {
+            return dr_module_show_url($mod, $data, $page);
         } else {
-            if (isset($data['myurl']) && $data['myurl']) {
-                $url = ltrim($data['myurl'], '/');
-                return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
-            } elseif ($rule && $rule['show']) {
-                $url = ltrim($rule['show'], '/');
-            }
+            return '需要升级内容系统插件';
         }
-
-        if ($url) {
-            // URL模式为自定义，且已经设置规则
-            $data['cat'] = $cat;
-            $data['modname'] = $mod['dirname'];
-            $cat['pdirname'].= $cat['dirname'];
-            $data['dirname'] = $cat['dirname'];
-            $inputtime = isset($data['_inputtime']) ? $data['_inputtime'] : $data['inputtime'];
-            $data['y'] = date('Y', $inputtime);
-            $data['yy'] = date('y', $inputtime);
-            $data['m'] = date('m', $inputtime);
-            $data['d'] = date('d', $inputtime);
-            $data['pdirname'] = str_replace('/', $rule['catjoin'], $cat['pdirname']);
-            $data['opdirname'] = $cat['pid'] && isset($mod['category'][$cat['pid']]) ? $mod['category'][$cat['pid']]['dirname'] : $data['dirname'];
-            $data['otdirname'] = $cat['topid'] && isset($mod['category'][$cat['topid']]) ? $mod['category'][$cat['topid']]['dirname'] : $data['dirname'];
-            return $this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod, $cat));
-        }
-
-        return $this->url_prefix('module_php', $mod, $cat) . 'c=show&id=' . $data['id'] . ($page ? '&page=' . $page : '');
     }
 
     /*
@@ -461,18 +387,11 @@ class Router {
     // 模块URL
     public function module_url($mod, $sid) {
 
-        // 绑定域名的情况下
-        if ($mod['site'][$sid]['domain']) {
-            return dr_http_prefix($mod['site'][$sid]['domain']) . '/';
+        if (function_exists('dr_module_index_url')) {
+            return dr_module_index_url($mod, $sid);
+        } else {
+            return '需要升级内容系统插件';
         }
-
-        // 自定义规则的情况下
-        $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value', 'module');
-        if ($rule) {
-            return dr_web_prefix(str_replace('{modname}', $mod['dirname'], $rule));
-        }
-
-        return dr_web_prefix('index.php?s=' . $mod['dirname']);
     }
 
     /**
@@ -487,53 +406,10 @@ class Router {
      */
     public function search_url($params = [], $name = '', $value = '', $mid = '', $fid = SITE_FID) {
 
-        // 模块目录识别
-        defined('MOD_DIR') && MOD_DIR && $dir = MOD_DIR;
-        $mid && $dir = $mid;
-
-        $mod = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
-        if (!$mod) {
-            return '模块[' . $dir . ']缓存不存在';
-        }
-
-        if ($name) {
-            if (is_array($name)) {
-                foreach ($name as $i => $_name) {
-                    if (isset($value[$i]) && strlen((string)$value[$i])) {
-                        $params[$_name] = $value[$i];
-                    } else {
-                        unset($params[$_name]);
-                    }
-                }
-            } else {
-                if (strlen((string)$value)) {
-                    $params[$name] = $value;
-                } else {
-                    unset($params[$name]);
-                }
-            }
-        }
-
-        if (is_array($params)) {
-            foreach ($params as $i => $t) {
-                if (strlen((string)$t) == 0) {
-                    unset($params[$i]);
-                }
-            }
-        }
-
-        $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$mod['urlrule'], 'value');
-        if ($rule && $rule['search']) {
-            $fid && $data['fid'] = $fid;
-            $data['modname'] = $mod['dirname'];
-            $data['param'] = dr_search_rewrite_encode($params, $mod['setting']['search']);
-            if ($params && !$data['param']) {
-                log_message('debug', '模块['.$mod['dirname'].']无法通过[搜索参数字符串规则]获得参数');
-            }
-            $url = ltrim($data['param'] ? $rule['search_page'] : $rule['search'], '/');
-            return dr_url_prefix($this->get_url_value($data, $url, $this->url_prefix('rewrite', $mod)), $mod['dirname']);
+        if (function_exists('dr_module_search_url')) {
+            return dr_module_search_url($params, $name, $value, $mid, $fid);
         } else {
-            return dr_url_prefix($this->url_prefix('php', $mod, [], $fid) . trim('c=search&' . (is_array($params) ? http_build_query($params) : ''), '&'), $mod['dirname']);
+            return '需要升级内容系统插件';
         }
     }
 
