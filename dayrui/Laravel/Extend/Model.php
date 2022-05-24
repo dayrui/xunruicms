@@ -105,6 +105,7 @@ class db_mysql {
         $rt = [];
         if ($this->param['result']) {
             $rt = dr_object2array($this->param['result']);
+            $rt = array_shift($rt);
         } elseif ($this->param['builder']) {
             $a = $this->param['builder']->get()->map(function ($value) {
                 return (array)$value;
@@ -354,6 +355,11 @@ class db_mysql {
             return false;
         }
 
+        // 去掉多余前缀
+        if ($this->prefix && strpos($table, $this->prefix) === 0) {
+            $table = substr($table, strlen($this->prefix));
+        }
+
         return Schema::hasTable($table);
     }
 
@@ -361,6 +367,11 @@ class db_mysql {
 
         if (!$table or !$name) {
             return false;
+        }
+
+        // 去掉多余前缀
+        if ($this->prefix && strpos($table, $this->prefix) === 0) {
+            $table = substr($table, strlen($this->prefix));
         }
 
         return Schema::hasColumn($table, $name);
