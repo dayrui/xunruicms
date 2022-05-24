@@ -7,6 +7,27 @@
 
 class Api extends \Phpcmf\Common {
 
+    // 切换系统内核
+    public function sys_edit() {
+
+        if (!IS_DEV) {
+            $this->_json(0, dr_lang('开发者模式下才能进行'));
+        }
+
+        $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
+        if (!$name) {
+            $this->_json(0, dr_lang('目录参数不能为空'));
+        }
+
+        if (!is_file(FCPATH.$name.'/Init.php')) {
+            $this->_json(0, dr_lang('内核文件缺少'));
+        }
+
+        file_put_contents(WRITEPATH.'frame.lock', $name);
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
     // 清理通知
     public function clear_notice() {
 

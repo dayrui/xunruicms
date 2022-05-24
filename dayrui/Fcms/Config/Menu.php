@@ -240,7 +240,7 @@ return [
             'displayorder' => 99,
             'left' => [
                 'cloud-dayrui' => [
-                    'name' => '项目管理',
+                    'name' => '项目服务',
                     'icon' => 'fa fa-cloud',
                     'link' => [
                         [

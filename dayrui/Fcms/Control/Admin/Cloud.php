@@ -30,7 +30,7 @@ class Cloud extends \Phpcmf\Common {
         }
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
-        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&version=' . $this->cmf_version['version']  . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->cmf_license['license'];
+        $this->service_url = 'https://www.xunruicms.com/cloud.php?domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) .'&frame='.FRAME_NAME. '&version=' . $this->cmf_version['version']  . '&cms=' . $this->cmf_version['id'] . '&license=' . $this->cmf_license['license'];
         if ($this->cmf_license['cloud'] && IS_OEM_CMS) {
             if (trim($this->cmf_license['cloud'], '/') == trim(ROOT_URL, '/')) {
                 $this->_admin_msg(0, '云端服务器域名不能与本站点相同');
