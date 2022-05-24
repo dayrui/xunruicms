@@ -281,7 +281,7 @@ class Linkage extends \Phpcmf\Model {
     /**
      * 获取子栏目ID列表
      *
-     * @param	$catid	栏目ID
+     * @param	$catid
      * @return	string
      */
     protected function get_childids($catid, $n = 1) {

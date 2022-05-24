@@ -884,7 +884,7 @@ abstract class Common extends \Frame\Controller {
      */
     public function _get_module_member_category($module, $name) {
 
-        if (!$module || !$module['category']) {
+        if (!$module) {
             return [];
         }
 

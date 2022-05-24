@@ -273,15 +273,16 @@ class Field extends \Phpcmf\Common {
 				$this->_json(1, dr_lang('操作成功'));
 			}
 		}
-
-        in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data']) && \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('tree')->ismain(1)->select_category(
-            $this->module['category'],
-            0,
-            'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
-            '',
-            0,
-            0
-        ));
+        if (in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data'])) {
+            \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
+                $this->module['dirname'],
+                0,
+                'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
+                '',
+                0,
+                0
+            ));
+        }
 
 		\Phpcmf\Service::V()->assign([
 			'id' => $id,
@@ -439,7 +440,7 @@ class Field extends \Phpcmf\Common {
             }
         } elseif (\Phpcmf\Service::M('Field')->func == 'category') {
             $ids = [];
-            $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->getAll();
+            $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain=1')->getAll();
             if ($cats) {
                 foreach ($cats as $t) {
                     $setting = dr_string2array($t['setting']);
@@ -450,8 +451,8 @@ class Field extends \Phpcmf\Common {
             }
             \Phpcmf\Service::V()->assign([
                 'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('tree')->ismain(1)->select_category(
-                    $this->module['category'],
+                'select_category' => \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
+                    $this->module['dirname'],
                     $ids,
                     'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
                     '',
@@ -461,7 +462,7 @@ class Field extends \Phpcmf\Common {
             ]);
         } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
             $ids = [];
-            $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->getAll();
+            $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->where('ismain=1')->getAll();
             if ($cats) {
                 foreach ($cats as $t) {
                     $setting = dr_string2array($t['setting']);
@@ -472,8 +473,8 @@ class Field extends \Phpcmf\Common {
             }
             \Phpcmf\Service::V()->assign([
                 'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('tree')->ismain(1)->select_category(
-                    $this->module['category'],
+                'select_category' => \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
+                    $this->module['dirname'],
                     $ids,
                     'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
                     '',
@@ -941,7 +942,7 @@ class Field extends \Phpcmf\Common {
                     $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
                 }
                 if ($this->relatedid) {
-                    $this->data = $cache['category'][$this->relatedid];
+                    $this->data = dr_cat_value($cache['mid'], $this->relatedid);
                     if (!$this->data) {
                         $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
                     }

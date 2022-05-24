@@ -84,12 +84,13 @@ class Table extends \Phpcmf\Common {
 
         // 栏目模型字段
         if ($this->is_category_data_field && $catid) {
-            if (!$this->module['category'][$catid]['ismain']) {
+            $cat = dr_cat_value($this->module['mid'], $catid);
+            if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $catid = \Phpcmf\Service::M('category')->get_ismain_id($this->module['category'], $catid);
+                $catid = \Phpcmf\Service::M('category')->get_ismain_id($cat);
             }
-            if ($this->module['category'][$catid]['field']) {
-                foreach ($this->module['category'][$catid]['field'] as $f) {
+            if ($cat['field']) {
+                foreach ($cat['field'] as $f) {
                     if ($this->module['category_data_field'][$f]) {
                         $field[$f] = $this->module['category_data_field'][$f];
                     }
@@ -125,12 +126,13 @@ class Table extends \Phpcmf\Common {
         // 栏目模型字段
         if ($this->is_category_data_field && $data['catid']) {
             $catid = $data['catid'];
-            if (!$this->module['category'][$data['catid']]['ismain']) {
+            $cat = dr_cat_value($this->module['mid'], $catid);
+            if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $catid = \Phpcmf\Service::M('category')->get_ismain_id($this->module['category'], $catid);
+                $catid = \Phpcmf\Service::M('category')->get_ismain_id($cat);
             }
-            if ($this->module['category'][$catid]['field']) {
-                foreach ($this->module['category'][$catid]['field'] as $f) {
+            if ($cat['field']) {
+                foreach ($cat['field'] as $f) {
                     if ($this->module['category_data_field'][$f]) {
                         $field[$f] = $this->module['category_data_field'][$f];
                     }

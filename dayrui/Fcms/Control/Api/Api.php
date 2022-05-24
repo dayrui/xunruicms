@@ -414,8 +414,11 @@ class Api extends \Phpcmf\Common {
         }
         if ($data['search']) {
             $catid = (int)$data['catid'];
-            if ($catid && isset($module['category'][$catid]['catids']) && $module['category'][$catid]['catids']) {
-                $where[] = '`catid` in('.implode(',', $module['category'][$catid]['catids']).')';
+            if ($catid) {
+                $cat = dr_cat_value($module['mid'], $catid);
+                if ($cat['catids']) {
+                    $where[] = '`catid` in('.implode(',', $cat['catids']).')';
+                }
             }
             $data['keyword'] = dr_safe_replace(urldecode($data['keyword']));
             if (isset($data['keyword']) && $data['keyword'] && $data['field'] && isset($module['field'][$data['field']])) {
@@ -444,19 +447,19 @@ class Api extends \Phpcmf\Common {
 
         \Phpcmf\Service::V()->assign(array(
             'mid' => $dirname,
+            'mmid' => $module['mid'],
             'site' => $site,
             'param' => $data,
             'field' => $module['field'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
             'search' => dr_form_search_hidden(['search' => 1, 'is_iframe' => 1, 'module' => $dirname, 'site' => $site, 'my' => $my, 'pagesize' => $pagesize]),
-            'select' => \Phpcmf\Service::L('tree')->select_category(
-                $module['category'],
+            'select' => \Phpcmf\Service::L('category', 'module')->select(
+                $module['dirname'],
                 $data['catid'],
                 'name="catid"',
                 '--'
             ),
             'urlrule' => dr_url('api/api/related', $rules, '/index.php'),
-            'category' => $module['category'],
             'pagesize' => $pagesize,
         ));
         \Phpcmf\Service::V()->display('api_related.html');
@@ -473,12 +476,6 @@ class Api extends \Phpcmf\Common {
 
         // 强制将模板设置为后台
         \Phpcmf\Service::V()->admin();
-
-        // 登陆判断
-        /*
-        if (!$this->uid) {
-            $this->_json(0, dr_lang('会话超时，请重新登录'));
-        }*/
 
         $field = array(
             'id' => array(

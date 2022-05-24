@@ -116,7 +116,7 @@ class Field extends \Phpcmf\Model {
                     list($module, $s) = explode('-', $field['relatedname']);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
                     if ($cache) {
-                        $data = $cache['category'][$field['relatedid']];
+                        $data = dr_cat_value($module, $field['relatedid']);
                         if ($data) {
                             if ($module == 'share') {
                                 if ($data['tid'] != 1) {

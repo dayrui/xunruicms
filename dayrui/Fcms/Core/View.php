@@ -1608,7 +1608,7 @@ class View {
             return trim($string);
         }
 
-        return 1;
+        return '';
     }
 
     // 给条件字段加上表前缀
