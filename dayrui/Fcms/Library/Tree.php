@@ -282,98 +282,119 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
-        if (\Phpcmf\Service::IS_MOBILE_USER() && strpos($str, 'multiple') !== false) {
-            $str = str_replace('style', '_style', $str);
+        $mid = '';
+        if (isset($data[0]) && count($data) == 1) {
+            $mid = $data[0];
+            $data = \Phpcmf\Service::L('category', 'module')->get_category($mid);
         }
 
-        if (!IS_DEV && $this->cache) {
-            $name = 'tree'.md5($this->ismain.dr_array2string($data).$id.$str.$default.$onlysub.$is_push.$is_first.\Phpcmf\Service::C()->uid);
-            $cache = \Phpcmf\Service::L('cache')->get_data($name);
-            if ($cache) {
-                return $cache;
-            }
-        }
+        $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
+        $name = 'tree'.md5($this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first).($is_push ? \Phpcmf\Service::C()->uid : '');
+        $string = \Phpcmf\Service::L('cache')->get_file($name, $dir);
+        if (!$string) {
 
-        $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
-        $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
+            $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
+            $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
-        $tree = [];
-        $first = 0; // 第一个可用栏目
-        $is_cks = 0;
-        if (is_array($data)) {
-            foreach($data as $t) {
-                // 只显示主栏目
-                if ($this->ismain && !$t['ismain']) {
-                    continue;
-                }
-                // 用于发布内容时【单页和外链】且为最终栏目时，不显示
-                if ($is_push && in_array($t['tid'], [2, 0]) && !$t['child']) {
-                    $is_cks = 1;
-                    continue;
-                }
-                // 验证权限
-                if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
-                    $is_cks = 1;
-                    continue;
-                }
-
-                // 栏目发布权限判断,主要筛选栏目下是否有空白选项
-                //unset($t['catids'][$t['id']]);
-                if ($is_push && $t['child'] == 1 && $t['catids']) {
-                    if ($t['is_post']) {
-                        $ispost = 1; // 允许发布的父栏目
-                    } else {
-                        $ispost = 0;
-                        foreach ($t['catids'] as $i) {
-                            // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
-                            if (isset($data[$i]) && $data[$i]['child'] == 0) {
-                                $ispost = 1; // 可以发布 表示此栏目可用
-                                break;
-                            }
-                        }
+            $tree = [];
+            $first = 0; // 第一个可用栏目
+            $is_cks = 0;
+            if (is_array($data)) {
+                foreach($data as $t) {
+                    // 只显示主栏目
+                    if ($this->ismain && !$t['ismain']) {
+                        continue;
                     }
-                    if (!$ispost) {
-                        // ispost = 0 表示此栏目没有发布权限
+                    // 用于发布内容时【单页和外链】且为最终栏目时，不显示
+                    if ($is_push && in_array($t['tid'], [2, 0]) && !$t['child']) {
                         $is_cks = 1;
                         continue;
                     }
+                    // 验证权限
+                    if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+                        $is_cks = 1;
+                        continue;
+                    }
+
+                    // 栏目发布权限判断,主要筛选栏目下是否有空白选项
+                    //unset($t['catids'][$t['id']]);
+                    if ($is_push && $t['child'] == 1 && $t['catids']) {
+                        if ($t['is_post']) {
+                            $ispost = 1; // 允许发布的父栏目
+                        } else {
+                            $ispost = 0;
+                            foreach ($t['catids'] as $i) {
+                                // 当此栏目还存在下级栏目时,逐步判断全部下级栏目是否具备发布权限
+                                if (isset($data[$i]) && $data[$i]['child'] == 0) {
+                                    $ispost = 1; // 可以发布 表示此栏目可用
+                                    break;
+                                }
+                            }
+                        }
+                        if (!$ispost) {
+                            // ispost = 0 表示此栏目没有发布权限
+                            $is_cks = 1;
+                            continue;
+                        }
+                    }
+                    // 选中操作
+                    //$t['selected'] = (is_array($id) ? dr_in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
+                    $t['selected'] = '_selected_'.$t['id'];
+                    // 是否可选子栏目
+                    if (isset($t['pcatpost']) && $t['pcatpost']) {
+                        $t['html_disabled'] = 0;
+                    } else {
+                        $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
+                    }
+                    if (isset($t['setting'])) {
+                        unset($t['setting']);
+                    }
+                    $tree[$t['id']] = $t;
                 }
-                // 选中操作
-                $t['selected'] = (is_array($id) ? dr_in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
-                // 是否可选子栏目
-                if (isset($t['pcatpost']) && $t['pcatpost']) {
-                    $t['html_disabled'] = 0;
-                } else {
-                    $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
-                }
-                if (isset($t['setting'])) {
-                    unset($t['setting']);
-                }
-                $tree[$t['id']] = $t;
             }
+
+            $string.= $this->icon()->_data($tree)->_category_tree_result(0, "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL);
+            $string.= '</select>'.PHP_EOL;
+
+            if ($is_first) {
+                // 第一个子栏目
+                $temp = str_replace("disabled value='", '', $string);
+                $mark = "value='";
+                $first = (int)substr($temp, strpos($temp, $mark) + strlen($mark));
+            }
+
+            if ($is_first) {
+                \Phpcmf\Service::L('cache')->set_file($name.'_first', $first, $dir);
+            }
+
+            $string.= \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();
+            \Phpcmf\Service::L('cache')->set_file($name, $string, $dir);
+
         }
-
-        $string.= $this->icon()->_data($tree)->_category_tree_result(0, "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL);
-        $string.= '</select>'.PHP_EOL;
-
-        if ($is_first) {
-            // 第一个子栏目
-            $temp = str_replace("disabled value='", '', $string);
-            $mark = "value='";
-            $first = (int)substr($temp, strpos($temp, $mark) + strlen($mark));
-        }
-
-        $data = $is_first ? [$string, $first] : $string;
 
         unset($this->ret);
         unset($this->data);
 
-        if (!IS_DEV && $this->cache) {
-            \Phpcmf\Service::L('cache')->set_data($name, $data, 3600);
+        $this->ismain = 0;
+
+        if ($id) {
+            if (!is_array($id)) {
+                $id = [$id];
+            }
+            foreach ($id as $i) {
+                $string = str_replace('_selected_'.$i, 'selected', $string);
+            }
         }
 
-        $this->ismain = 0;
-        return $data;
+        if (\Phpcmf\Service::IS_MOBILE_USER() && strpos($str, 'multiple') !== false) {
+            $string = str_replace('style', '_style', $str);
+        }
+
+        if ($is_first) {
+            return [$string, intval($first ? $first : \Phpcmf\Service::L('cache')->get_file($name.'_first', $dir))];
+        } else {
+            return $string;
+        }
     }
 
     /**
