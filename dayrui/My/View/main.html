@@ -21,7 +21,7 @@
             <div class="portlet-body">
 
                 <ul class="use-info">
-                    {if $license.name && $license.url}
+                    {if IS_OEM_CMS}
                     <li>
                         <span>系统版本</span>
                         <a target="_blank" href="{$license.url}">{$cmf_version}</a>
