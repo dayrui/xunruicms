@@ -14,13 +14,26 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('开发者模式下才能进行'));
         }
 
+        $version = [
+            'CodeIgniter' => '7.3.0',
+            'ThinkPHP' => '7.1.0',
+            'Laravel' => '8.0.2',
+        ];
+
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
         if (!$name) {
             $this->_json(0, dr_lang('目录参数不能为空'));
+        } elseif (!isset($version[$name])) {
+            $this->_json(0, '内核（'.$name.'）不支持');
         }
 
         if (!is_file(FCPATH.$name.'/Init.php')) {
-            $this->_json(0, dr_lang('内核文件缺少'));
+            $this->_json(0, '内核文件（'.FCPATH.$name.'/Init.php'.'）缺少');
+        }
+
+        // 判断环境
+        if (version_compare(PHP_VERSION, $version[$name]) < 0) {
+            $this->_json(0, '内核（'.$name.'）要求PHP版本不能低于'.$version[$name].'（当前'.PHP_VERSION.'）');
         }
 
         file_put_contents(WRITEPATH.'frame.lock', $name);
