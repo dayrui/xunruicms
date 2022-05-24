@@ -125,7 +125,7 @@ class Api extends \Phpcmf\Common {
         }
 
         // 判断是否重复存在
-        if (\Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>', $id)->where('title', $title)->countAllResults()) {
+        if (\Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>'.$id)->where('title', $title)->countAllResults()) {
             exit(dr_lang('已经有相同的%s存在', isset($cache['field']['title']['name']) ? $cache['field']['title']['name'] : dr_lang('主题')));
         }
 
