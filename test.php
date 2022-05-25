@@ -14,17 +14,22 @@ define('SYSTEMPATH', true);
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME'],);
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
-    dr_echo_msg(0, "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");exit;
+    exit("<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");
 }
 
 if (preg_match('/[\x{4e00}-\x{9fff}]+/u', WEBPATH)) {
-    exit(dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>'));
+    exit('<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>');
 }
-
 
 foreach (array(' ', '[', ']') as $t) {
     if (strpos(WEBPATH, $t) !== false) {
-        exit(dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>'));
+        exit('<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>');
+    }
+}
+
+foreach (array(WEBPATH.'index.php', WEBPATH.'config/database.php', WEBPATH.'config/rewrite.php',WEBPATH.'config/custom.php' ) as $t) {
+    if (is_file($t) && dr_check_bom($t)) {
+        exit('<font color=red>文件['.str_replace(WEBPATH, '', $t).']编码存在严重问题，查看手册：https://www.xunruicms.com/doc/395.html</font>');
     }
 }
 
@@ -147,7 +152,6 @@ if ($post < 10) {
     dr_echo_msg(1,'系统环境要求每次发布内容不能超过'.$post.'MB（含文件），可以设置post_max_size值提升发布大小');
 }
 
-
 if (!function_exists('mb_substr')) {
     dr_echo_msg(0, 'PHP不支持mbstring扩展，必须开启');
 }
@@ -197,6 +201,18 @@ function dr_echo_msg($code, $msg) {
         echo '<font color=green>'.$msg.'</font>';
     }
     echo '</div>';
+}
+// 检查bom
+function dr_check_bom($filename) {
+    $contents = file_get_contents($filename);
+    $charset[1] = substr($contents, 0, 1);
+    $charset[2] = substr($contents, 1, 1);
+    $charset[3] = substr($contents, 2, 1);
+    if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {
+        return true;
+    } else {
+        return false;
+    };
 }
 
 echo '<div style=" padding: 10px; color:blue">';
