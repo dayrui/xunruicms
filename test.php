@@ -33,6 +33,12 @@ foreach (array(WEBPATH.'index.php', WEBPATH.'config/database.php', WEBPATH.'conf
     }
 }
 
+foreach (array(WEBPATH.'cache/file/', WEBPATH.'cache/template/', WEBPATH.'cache/session/', WEBPATH.'uploadfile/' ) as $t) {
+    if (is_dir($t) && !dr_check_put_path($t)) {
+        dr_echo_msg(0, '<font color=red>目录['.str_replace(WEBPATH, '', $t).']无法写入文件，请给可读可写权限：0777</font>');
+    }
+}
+
 if (isset($_GET['log']) && $_GET['log']) {
     if (!is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
         exit('今天没有错误日志记录');
@@ -199,7 +205,7 @@ function dr_echo_msg($code, $msg) {
         if (strpos($msg, 'http')) {
             echo '<b style="color:red;text-decoration:none;">'.$msg.'</b>';
         } else {
-            echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd='.urlencode($msg).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
+            echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd=迅睿CMS'.urlencode(strip_tags($msg)).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
         }
     } else {
         echo '<font color=green>'.$msg.'</font>';
@@ -217,6 +223,17 @@ function dr_check_bom($filename) {
     } else {
         return false;
     };
+}
+// 检查目录权限
+function dr_check_put_path($dir) {
+
+    $size = @file_put_contents($dir.'test.html', 'test');
+    if ($size === false) {
+        return 0;
+    } else {
+        @unlink($dir.'test.html');
+        return 1;
+    }
 }
 
 echo '<div style=" padding: 10px; color:blue">';
