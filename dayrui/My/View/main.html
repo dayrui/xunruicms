@@ -41,15 +41,15 @@
                     <li style="overflow: initial;">
                         <span>系统内核</span>
                         <a href="https://www.xunruicms.com/frame/" target="_blank">{FRAME_NAME}（{FRAME_VERSION}）</a>
-                        {if IS_DEV}
+                        {if IS_DEV && $frame}
                         <div class="btn-group">
                             <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;"> 切换内核
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:dr_sys_edit('CodeIgniter');"> CodeIgniter </a></li>
-                                <li><a href="javascript:dr_sys_edit('Laravel');;"> Laravel </a></li>
-                                <li><a href="javascript:dr_sys_edit('ThinkPHP');;"> ThinkPHP</a></li>
+                                {loop $frame $t}
+                                <li><a href="javascript:dr_sys_edit('{$t}');"> {$t} </a></li>
+                                {/loop}
                             </ul>
                         </div>
                         <script>

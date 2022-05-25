@@ -62,9 +62,21 @@ class Home extends \Phpcmf\Common
             unset($menu['自定义控制台']);
         }
 
+        $frame = [
+            'CodeIgniter',
+            'ThinkPHP',
+            'Laravel',
+        ];
+        foreach ($frame as $i => $name) {
+            if (!is_file(FCPATH.$name.'/Init.php')) {
+               unset($frame[$i]);
+            }
+        }
+
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
             'admin' => $this->admin,
+            'frame' => dr_count($frame) > 1 ? $frame : [],
             'domain' => dr_get_domain_name(ROOT_URL),
             'license' => $this->cmf_license,
             'table_data' => $table_data,
