@@ -338,32 +338,39 @@ class Editor extends \Phpcmf\Library\A_Field {
                                 $arr = parse_url($img);
                                 $domain = $arr['host'];
                                 if ($domain) {
-                                    $file = dr_catcher_data($img, 8);
-                                    if (!$file) {
-                                        CI_DEBUG && log_message('debug', '服务器无法下载图片：'.$img);
+                                    $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
+                                    if (isset($sites[$domain])) {
+                                        // 过滤站点域名
+                                    } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
+                                        // 过滤附件白名单
                                     } else {
-                                        // 尝试找一找附件库
-                                        $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
-                                        if ($att) {
-                                            $img = $att['id'];
+                                        $file = dr_catcher_data($img, 8);
+                                        if (!$file) {
+                                            CI_DEBUG && log_message('debug', '服务器无法下载图片：'.$img);
                                         } else {
-                                            // 下载归档
-                                            $rt = \Phpcmf\Service::L('upload')->down_file([
-                                                'url' => html_entity_decode((string)$img),
-                                                'timeout' => 5,
-                                                'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
-                                                'file_ext' => $ext,
-                                                'file_content' => $file,
-                                            ]);
-                                            if ($rt['code']) {
-                                                $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
-                                                if ($att['code']) {
-                                                    // 归档成功
-                                                    $value = str_replace($img, $rt['data']['url'], $value);
-                                                    $img = $att['code'];
-                                                    // 标记附件
-                                                    \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
+                                            // 尝试找一找附件库
+                                            $att = \Phpcmf\Service::M()->table('attachment')->like('related', 'ueditor')->where('filemd5', md5($file))->getRow();
+                                            if ($att) {
+                                                $img = $att['id'];
+                                            } else {
+                                                // 下载归档
+                                                $rt = \Phpcmf\Service::L('upload')->down_file([
+                                                    'url' => html_entity_decode((string)$img),
+                                                    'timeout' => 5,
+                                                    'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
+                                                    'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
+                                                    'file_ext' => $ext,
+                                                    'file_content' => $file,
+                                                ]);
+                                                if ($rt['code']) {
+                                                    $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
+                                                    if ($att['code']) {
+                                                        // 归档成功
+                                                        $value = str_replace($img, $rt['data']['url'], $value);
+                                                        $img = $att['code'];
+                                                        // 标记附件
+                                                        \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
+                                                    }
                                                 }
                                             }
                                         }
