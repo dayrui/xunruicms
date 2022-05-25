@@ -271,7 +271,7 @@ class Form {
                     if (\Phpcmf\Service::C()->init['table']) {
                         $table = \Phpcmf\Service::M()->dbprefix(\Phpcmf\Service::C()->init['table']);
                         if (\Phpcmf\Service::M()->db->fieldExists($name, $table)) {
-                            $rt = \Phpcmf\Service::M()->db->table(\Phpcmf\Service::C()->init['table'])->where('id<>', $this->id)->where($name, $post[$name])->countAllResults();
+                            $rt = \Phpcmf\Service::M()->db->table(\Phpcmf\Service::C()->init['table'])->where('id<>'. $this->id)->where($name, $post[$name])->countAllResults();
                             if ($rt) {
                                 return [[], ['name' => $name, 'error' => dr_lang('%s已经存在', $field['name'])]];
                             }
