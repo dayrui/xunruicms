@@ -343,44 +343,60 @@ class Cache extends \Phpcmf\Model {
     // 重建子站配置文件
     public function update_site_config() {
 
-        $site = [];
-        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-        foreach ($site_cache as $t) {
-            $t['setting'] = dr_string2array($t['setting']);
-            if ($t['id'] > 1 && $t['setting']['webpath']) {
-                $rt = $this->update_webpath('Web', $t['setting']['webpath'], [
-                    'SITE_ID' => $t['id'],
-                    'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
-                ]);
-                if ($rt) {
-                    $this->_error_msg('项目['.$t['domain'].']: '.$rt);
+        $page = intval($_GET['page']);
+        if (!$page) {
+            $site_cache = $this->table('site')->where('disabled', 0)->getAll();
+            foreach ($site_cache as $t) {
+                $t['setting'] = dr_string2array($t['setting']);
+                if ($t['id'] > 1 && $t['setting']['webpath']) {
+                    $rt = $this->update_webpath('Web', $t['setting']['webpath'], [
+                        'SITE_ID' => $t['id'],
+                        'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
+                    ]);
+                    if ($rt) {
+                        $this->_error_msg('项目['.$t['domain'].']: '.$rt);
+                    }
+                    $path = rtrim($t['setting']['webpath'], '/').'/';
+                } else {
+                    $path = ROOTPATH;
                 }
-                $path = rtrim($t['setting']['webpath'], '/').'/';
-            } else {
-                $path = ROOTPATH;
-            }
-            if ($t['setting']['client']) {
-                foreach ($t['setting']['client'] as $c) {
-                    if ($c['name'] && $c['domain']) {
-                        $rt = $this->update_webpath('Client', $path.$c['name'].'/', [
-                            'CLIENT' => $c['name'],
-                            'SITE_ID' => $t['id'],
-                            'FIX_WEB_DIR' => $c['domain'] == $t['domain'].'/'.$c['name'] ? $c['name'] : '',
-                            'SITE_FIX_WEB_DIR' => $t['id'] > 1 && $t['setting']['webpath'] && strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
-                        ]);
-                        if ($rt) {
-                            $this->_error_msg('项目['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
+                if ($t['setting']['client']) {
+                    foreach ($t['setting']['client'] as $c) {
+                        if ($c['name'] && $c['domain']) {
+                            $rt = $this->update_webpath('Client', $path.$c['name'].'/', [
+                                'CLIENT' => $c['name'],
+                                'SITE_ID' => $t['id'],
+                                'FIX_WEB_DIR' => $c['domain'] == $t['domain'].'/'.$c['name'] ? $c['name'] : '',
+                                'SITE_FIX_WEB_DIR' => $t['id'] > 1 && $t['setting']['webpath'] && strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
+                            ]);
+                            if ($rt) {
+                                $this->_error_msg('项目['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
+                            }
                         }
                     }
                 }
             }
-            $site[] = $t['id'];
+            if (IS_USE_MODULE) {
+                \Phpcmf\Service::L('cache')->set_auth_data('update_site_config', $this->table('module')->where('share', 0)->getAll());
+                \Phpcmf\Service::C()->_json(1, dr_lang('正在准备更新'), 1);
+            } else {
+                \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'), 0);
+            }
         }
 
-        if (IS_USE_MODULE) {
-            \Phpcmf\Service::M('module', 'module')->update_site_config($site);
+        $module = \Phpcmf\Service::L('cache')->get_auth_data('update_site_config');
+        if (!$module) {
+            \Phpcmf\Service::C()->_json(1, dr_lang('无可用更新'), 0);
         }
 
+        $key = $page - 1;
+        if (!isset($module[$key])) {
+            \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'), 0);
+        }
+
+        \Phpcmf\Service::M('module', 'module')->update_site_config($module[$key]);
+
+        \Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s）', $page), $page + 1);
     }
 
     // 生成目录式手机目录
@@ -470,12 +486,12 @@ class Cache extends \Phpcmf\Model {
         }
 
         // 复制百度编辑器到当前目录
-        $this->cp_ueditor_file($path);
+        //$this->cp_ueditor_file($path);
 
         // 复制百度编辑器到移动端项目
-        if (is_dir($path.'mobile')) {
-            $this->cp_ueditor_file($path.'mobile/');
-        }
+        //if (is_dir($path.'mobile')) {
+            //$this->cp_ueditor_file($path.'mobile/');
+        //}
 
         return '';
     }
@@ -503,10 +519,6 @@ class Cache extends \Phpcmf\Model {
                     }
                 }
             }
-        }
-
-        if (IS_USE_MODULE) {
-            \Phpcmf\Service::M('module', 'module')->update_ueditor($site);
         }
 
         // 为后台域名移动编辑器目录

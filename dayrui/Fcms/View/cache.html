@@ -92,6 +92,8 @@
         } else if (m == 'update_cache') {
             my_update_site_cache(id, 0);
         {/if}
+        } else if (m == 'update_site_config') {
+                my_update_site_config(id, 0);
         } else {
             $.ajax({
                 type: "GET",
@@ -105,13 +107,11 @@
                     }
                 },
                 error: function(HttpRequest, ajax, thrownError) {
-                    my_ajax_alert_error(HttpRequest, ajax, thrownError);
+                    dr_ajax_alert_error(HttpRequest, ajax, thrownError);
                     obj.html('<a href="javascript:dr_show_file_code(\'{dr_lang('查看日志')}\', \'{dr_url('error/log_show')}\');" style="color:red">{dr_lang("系统崩溃，请将错误日志发送给官方处理")}</a>');
                 }
             });
         }
-
-
     }
     function my_update_attachment(id, page) {
         var obj = $('#dr_'+id+'_result');
@@ -162,6 +162,29 @@
             }
         });
     }
-
+    function my_update_site_config(id, page) {
+            var obj = $('#dr_'+id+'_result');
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "{SELF}?c=api&m=cache&id=update_site_config&page="+page,
+                success: function (json) {
+                    if (json.code == 0) {
+                        obj.html('<font color="red">'+json.msg+'</font>');
+                    } else {
+                        if (json.data == 0) {
+                            obj.html('<font color="green">'+json.msg+'</font>');
+                        } else {
+                            my_update_site_config(id, json.data);
+                            obj.html('<font color="blue">'+json.msg+'</font>');
+                        }
+                    }
+                },
+                error: function(HttpRequest, ajax, thrownError) {
+                    dr_ajax_alert_error(HttpRequest, ajax, thrownError);
+                    obj.html('<a href="javascript:dr_show_file_code(\'{dr_lang('查看日志')}\', \'{dr_url('error/log_show')}\');" style="color:red">{dr_lang("系统崩溃，请将错误日志发送给官方处理")}</a>');
+                }
+            });
+        }
 </script>
 {template "footer.html"}
