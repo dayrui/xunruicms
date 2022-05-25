@@ -14,22 +14,22 @@ define('SYSTEMPATH', true);
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME'],);
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
-    exit("<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");
+    dr_echo_msg(0, "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");exit;
 }
 
 if (preg_match('/[\x{4e00}-\x{9fff}]+/u', WEBPATH)) {
-    exit('<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>');
+    dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现中文或全角符号</font>');
 }
 
 foreach (array(' ', '[', ']') as $t) {
     if (strpos(WEBPATH, $t) !== false) {
-        exit('<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>');
+        dr_echo_msg(0, '<font color=red>WEB目录['.WEBPATH.']不允许出现'.($t ? $t : '空格').'符号</font>');
     }
 }
 
 foreach (array(WEBPATH.'index.php', WEBPATH.'config/database.php', WEBPATH.'config/rewrite.php',WEBPATH.'config/custom.php' ) as $t) {
     if (is_file($t) && dr_check_bom($t)) {
-        exit('<font color=red>文件['.str_replace(WEBPATH, '', $t).']编码存在严重问题，查看手册：https://www.xunruicms.com/doc/395.html</font>');
+        dr_echo_msg(0, '<font color=red>文件['.str_replace(WEBPATH, '', $t).']编码存在严重问题，查看手册：https://www.xunruicms.com/doc/395.html</font>');
     }
 }
 
@@ -196,7 +196,11 @@ if (is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
 function dr_echo_msg($code, $msg) {
     echo '<div style="border-bottom: 1px dashed #9699a2; padding: 10px;">';
     if (!$code) {
-        echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd='.urlencode($msg).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
+        if (strpos($msg, 'http')) {
+            echo '<b style="color:red;text-decoration:none;">'.$msg.'</b>';
+        } else {
+            echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd='.urlencode($msg).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
+        }
     } else {
         echo '<font color=green>'.$msg.'</font>';
     }
