@@ -137,6 +137,9 @@ class Root extends \Phpcmf\Table
                     $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
                 } elseif (empty($post['password'])) {
                     $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
+                } elseif ($post['name'] && $this->member_cache['config']['unique_name']
+                    && \Phpcmf\Service::M()->db->table('member')->where('name', $post['name'])->countAllResults()) {
+                    $this->_json(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
                 }
                 $rt = \Phpcmf\Service::M('member')->register(0, [
                     'username' => $post['username'],
@@ -212,6 +215,9 @@ class Root extends \Phpcmf\Table
                 $this->_json(0, dr_lang('邮箱%s已经注册', $post['email']), ['field' => 'email']);
             } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'. $member['id'])->where('phone', $post['phone'])->countAllResults()) {
                 $this->_json(0, dr_lang('手机号码%s已经注册', $post['phone']), ['field' => 'phone']);
+            } elseif ($post['name'] && $this->member_cache['config']['unique_name']
+                && \Phpcmf\Service::M()->db->table('member')->where('id<>'. $member['id'])->where('name', $post['name'])->countAllResults()) {
+                $this->_json(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
             } elseif ($this->myrole) {
                 foreach ($post['role'] as $t) {
                     if (!in_array($t, $this->myrole)) {

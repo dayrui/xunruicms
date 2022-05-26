@@ -620,6 +620,9 @@ class Member extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('邮箱已经注册'), ['field' => 'email']);
         } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
             return dr_return_data(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
+        } elseif ($member['name'] && \Phpcmf\Service::C()->member_cache['config']['unique_name']
+            && $this->db->table('member')->where('name', $member['name'])->countAllResults()) {
+            return dr_return_data(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
         }
 
         if ($member['username'] == 'guest') {
