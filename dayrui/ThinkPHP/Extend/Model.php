@@ -56,6 +56,34 @@ class db_mysql {
             $builder->field(($this->param['select']));
         }
 
+        if ($this->param['join']) {
+            foreach ($this->param['join'] as $table => $v) {
+                list($where, $type) = $v;
+                if (strpos($where, '.') !== false) {
+                    $where = str_replace($table.'.', ''.$this->prefix.$table.'.', $where);
+                    $where = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $where);
+                }
+                if ($this->param['where']) {
+                    foreach ($this->param['where'] as $i => $t) {
+                        if (!is_array($t) && strpos($t, '.') !== false) {
+                            $this->param['where'][$i] = str_replace($table.'.', ''.$this->prefix.$table.'.', $t);
+                            $this->param['where'][$i] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['where'][$i]);
+                        }
+                    }
+                }
+
+                if ($this->param['order'] && strpos($this->param['order'], '.') !== false) {
+                    $this->param['order'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['order']);
+                    $this->param['order'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['order']);
+                }
+                
+                if (strpos($table, $this->prefix) === false) {
+                    $table = $this->prefix.$table;
+                }
+                $builder->join($table, $where, $type);
+            }
+        }
+
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
                 dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->whereRaw($v);
@@ -143,6 +171,13 @@ class db_mysql {
         $this->_clear();
 
         return $rt;
+    }
+
+    public function join($table, $where, $type = 'left') {
+
+        $this->param['join'][$table] = [$where, $type];
+
+        return $this;
     }
 
     public function where($where, $value = '', $test = '') {
@@ -412,6 +447,7 @@ class db_mysql {
             'order' => '',
             'group' => '',
             'where' => [],
+            'join' => [],
             'update' => [],
             'update_dec' => [],
             'update_inc' => [],

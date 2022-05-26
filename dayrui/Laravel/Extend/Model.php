@@ -69,6 +69,18 @@ class db_mysql {
             }
         }
 
+        if ($this->param['join']) {
+            foreach ($this->param['join'] as $table => $v) {
+                list($where, $type) = $v;
+                list($a, $b) = explode('=', $where);
+                $builder->join($table, $a, '=', $b);
+                if ($this->param['order'] && strpos($this->param['order'], '.') !== false) {
+                    $this->param['order'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['order']);
+                    $this->param['order'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['order']);
+                }
+            }
+        }
+
         if ($this->param['order']) {
             $builder->orderByRaw($this->param['order']);
         }
@@ -96,6 +108,13 @@ class db_mysql {
     public function limit($limit, $b = 0) {
 
         $this->param['limit'] = $b ? $limit.','.$b : $limit;
+
+        return $this;
+    }
+
+    public function join($table, $where, $type = 'left') {
+
+        $this->param['join'][$table] = [$where, $type];
 
         return $this;
     }
@@ -398,6 +417,7 @@ class db_mysql {
             'order' => '',
             'group' => '',
             'where' => [],
+            'join' => [],
             'update' => [],
             'update_dec' => [],
             'update_inc' => [],

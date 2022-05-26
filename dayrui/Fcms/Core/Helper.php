@@ -1005,6 +1005,22 @@ function dr_linkage($code, $id, $level = 0, $name = '') {
 }
 
 /**
+ * 联动菜单json数据
+ *
+ * @param   string  $code   菜单代码
+ * @param   intval  $pid    菜单父级id或者别名
+ * @return  array
+ */
+function dr_linkage_json($code) {
+
+    if (!$code) {
+        return [];
+    }
+
+    return \Phpcmf\Service::L('cache')->get_file('json', 'linkage/'.SITE_ID.'_'.$code.'/');
+}
+
+/**
  * 联动菜单列表数据
  *
  * @param   string  $code   菜单代码
@@ -1993,7 +2009,7 @@ function dr_form_search_hidden($p = []) {
 
     $form = '';
     $_GET['app'] && $form.= '<input name="app" type="hidden" value="'.$_GET['app'].'">'.PHP_EOL;
-    $form.= '<input name="s" type="hidden" value="'.$_GET['s'].'">'.PHP_EOL;
+    $form.= '<input name="s" type="hidden" value="'.APP_DIR.'">'.PHP_EOL;
     $form.= '<input name="m" type="hidden" value="'.$_GET['m'].'">'.PHP_EOL;
     $form.= '<input name="c" type="hidden" value="'.$_GET['c'].'">'.PHP_EOL;
     if ($p) {
