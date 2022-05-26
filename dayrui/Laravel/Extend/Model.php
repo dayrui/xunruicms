@@ -73,7 +73,17 @@ class db_mysql {
             foreach ($this->param['join'] as $table => $v) {
                 list($where, $type) = $v;
                 list($a, $b) = explode('=', $where);
-                $builder->join($table, $a, '=', $b);
+                switch ($type) {
+                    case 'left':
+                        $builder->leftJoin($table, $a, '=', $b);
+                        break;
+                    case 'right':
+                        $builder->rightJoin($table, $a, '=', $b);
+                        break;
+                    default:
+                        $builder->join($table, $a, '=', $b);
+                        break;
+                }
                 if ($this->param['order'] && strpos($this->param['order'], '.') !== false) {
                     $this->param['order'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['order']);
                     $this->param['order'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['order']);

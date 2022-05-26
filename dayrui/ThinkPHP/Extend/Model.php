@@ -76,7 +76,7 @@ class db_mysql {
                     $this->param['order'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['order']);
                     $this->param['order'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['order']);
                 }
-                
+
                 if (strpos($table, $this->prefix) === false) {
                     $table = $this->prefix.$table;
                 }
