@@ -198,7 +198,12 @@ class Model extends \Frame\Model {
     // 统计数量
     public function counts($table = '', $where = '') {
 
-        $builder = $this->db->table(!$table ? $this->table : $table);
+        $table = !$table ? $this->table : $table;
+        if (!$table) {
+            return 0;
+        }
+
+        $builder = $this->db->table($table);
 
         // 条件
         if ($this->param['where']) {

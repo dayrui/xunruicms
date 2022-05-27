@@ -73,6 +73,7 @@ $system = [
     'SYS_301' => 0,
     'SYS_NOT_UPDATE' => 0,
     'SYS_URL_ONLY' => 0,
+    'SYS_URL_REL' => 0,
     'SYS_KEY' => 'xunruicms',
     'SYS_CSRF'  => 1,
     'SYS_CSRF_TIME'  => 0,

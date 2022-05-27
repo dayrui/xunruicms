@@ -1212,7 +1212,7 @@ function dr_thumb_path() {
 function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
     if (!$img) {
-        return ROOT_THEME_PATH.'assets/images/nopic.gif';
+        return dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
     } elseif (!$width || !$height) {
         return dr_get_file($img);
     } elseif (is_numeric($img) || $webimg) {
@@ -1228,17 +1228,17 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
             // 非开发者模式下读取缓存
             $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
             if (is_file($cache_path.$cache_file)) {
-                return $cache_url.$cache_file;
+                return dr_url_rel($cache_url.$cache_file);
             }
         }
 
-        return \Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode, $webimg);
+        return dr_url_rel(\Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode, $webimg));
     }
 
     $file = dr_file($img);
     CI_DEBUG && log_message('debug', '图片['.$img.']不是数字id号，dr_thumb函数无法进行缩略图处理');
 
-    return $file ? $file : ROOT_THEME_PATH.'assets/images/nopic.gif';
+    return $file ? $file : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
 }
 
 
@@ -1258,7 +1258,7 @@ function dr_get_file($id) {
         // 表示附件id
         $info = \Phpcmf\Service::C()->get_attachment($id);
         if ($info['url']) {
-            return $info['url'];
+            return dr_url_rel($info['url']);
         }
     }
 
@@ -1781,12 +1781,12 @@ function dr_file($url) {
     if (!$url || dr_strlen($url) == 1) {
         return '';
     } elseif (substr($url, 0, 7) == 'http://' || substr($url, 0, 8) == 'https://') {
-        return $url;
+        return dr_url_rel($url);
     } elseif (substr($url, 0, 1) == '/') {
-        return ROOT_URL.substr($url, 1);
+        return dr_url_rel(ROOT_URL.substr($url, 1));
     }
 
-    return SYS_UPLOAD_URL.$url;
+    return dr_url_rel(SYS_UPLOAD_URL.$url);
 }
 
 /**
@@ -3404,14 +3404,45 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
 /**
  * 补全相对路径
- * @param $url
  */
 function dr_web_prefix($url) {
     if ($url && strpos($url, 'http') === 0) {
-        return $url;
+        return dr_url_rel($url);
     } else {
         return WEB_DIR.ltrim($url, '/');
     }
+}
+
+/**
+ * url转为相对路径
+ */
+function dr_url_rel($url) {
+
+    if (IS_API || IS_ADMIN) {
+        return $url;
+    } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
+        $url = str_replace(FC_NOW_HOST, '/', $url);
+        if (IS_DEV && strpos($url, 'http') === 0) {
+            $url.= '#站外域名不能转为相对路径（本提示信息关闭开发者模式时不显示）';
+        }
+    }
+
+    return $url;
+}
+
+/**
+ * 内容中的转为相对路径
+ */
+function dr_text_rel($text) {
+
+    if (IS_API || IS_ADMIN) {
+        return $text;
+    } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
+        $text = str_replace('href="'.FC_NOW_HOST, 'href="/', $text);
+        $text = str_replace('href=\''.FC_NOW_HOST, 'href="/', $text);
+    }
+
+    return $text;
 }
 
 /**

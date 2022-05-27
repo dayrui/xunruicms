@@ -342,6 +342,7 @@ $db[\'default\']	= [
                                 'SYS_SMS_IMG_CODE'              => '0',
                                 'SYS_NOT_ADMIN_CACHE'           => '0',
                                 'SYS_URL_ONLY'                  => '0',
+                                'SYS_URL_REL'                   => '1',
                                 'SYS_CRON_AUTH'                 => '0',
                                 'SYS_CSRF'                      => '0',
                                 'SYS_CSRF_TIME'                 => '0',

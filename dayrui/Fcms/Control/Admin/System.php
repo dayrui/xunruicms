@@ -27,6 +27,7 @@ class System extends \Phpcmf\Common
                 'SYS_THEME_ROOT_PATH' => intval($post['SYS_THEME_ROOT_PATH']),
 
                 'SYS_URL_ONLY' => (int)$post['SYS_URL_ONLY'],
+                'SYS_URL_REL' => (int)$post['SYS_URL_REL'],
                 'SYS_NOT_UPDATE' => (int)$post['SYS_NOT_UPDATE'],
                 'SYS_NOT_ADMIN_CACHE' => (int)$post['SYS_NOT_ADMIN_CACHE'],
 

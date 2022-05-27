@@ -744,7 +744,8 @@
             foreach ($data as $n => $value) {
                 if (isset($fields[$n]) && $fields[$n]) {
                     if ($n == 'content' && stripos($fields[$n]['fieldtype'], 'editor') !== false) {
-                        $value = $this->get_value($fields[$n]['fieldtype'], $value);
+                        // 编辑器
+                        $value = dr_text_rel($this->get_value($fields[$n]['fieldtype'], $value));
                         if (strpos($value, '<hr class="pagebreak">') !== FALSE) {
                             // 编辑器分页
                             $page = 1;
