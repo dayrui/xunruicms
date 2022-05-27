@@ -458,7 +458,8 @@
     display: inline-block;
     white-space: nowrap;
     user-select: none;
-    margin-right: 30px
+    margin-right: 30px;
+    margin-top: 5px;
 }
 
 .el-checkbox.is-bordered {
@@ -1101,7 +1102,7 @@
 }
 
 .el-cascader .el-input.is-focus .el-input__inner {
-    border-color: #409eff
+    border-color: #93a1bb
 }
 
 .el-cascader--medium {
