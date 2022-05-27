@@ -87,16 +87,15 @@ class Table extends \Phpcmf\Common {
             $cat = dr_cat_value($this->module['mid'], $catid);
             if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $catid = \Phpcmf\Service::M('category')->get_ismain_id($cat);
+                $cat = dr_cat_value($this->module['mid'], \Phpcmf\Service::M('category')->get_ismain_id($cat));
             }
-            if ($cat['field']) {
+            if ($cat && $cat['field']) {
                 foreach ($cat['field'] as $f) {
                     if ($this->module['category_data_field'][$f]) {
                         $field[$f] = $this->module['category_data_field'][$f];
                     }
                 }
             }
-
         }
 
         if ($field) {
@@ -125,13 +124,12 @@ class Table extends \Phpcmf\Common {
 
         // 栏目模型字段
         if ($this->is_category_data_field && $data['catid']) {
-            $catid = $data['catid'];
-            $cat = dr_cat_value($this->module['mid'], $catid);
+            $cat = dr_cat_value($this->module['mid'], $data['catid']);
             if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $catid = \Phpcmf\Service::M('category')->get_ismain_id($cat);
+                $cat = dr_cat_value($this->module['mid'], \Phpcmf\Service::M('category')->get_ismain_id($cat));
             }
-            if ($cat['field']) {
+            if ($cat && $cat['field']) {
                 foreach ($cat['field'] as $f) {
                     if ($this->module['category_data_field'][$f]) {
                         $field[$f] = $this->module['category_data_field'][$f];

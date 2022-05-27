@@ -205,50 +205,23 @@ class Api extends \Phpcmf\Common {
      */
     public function linkage() {
 
-        $pid = (int)\Phpcmf\Service::L('input')->get('parent_id');
         $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
-        $linkage = dr_linkage_list($code, $pid);
-
-        $json = [];
-        $html = '';
-        foreach ($linkage as $v) {
-            if ($v['pid'] == $pid) {
-                $json[] = [
-                    'region_id' => $v['ii'],
-                    'region_code' => $v['id'],
-                    'region_name' => $v['name']
+        $linkage = dr_linkage_json($code);
+        if (!$linkage) {
+            if (CI_DEBUG) {
+                $linkage = [
+                    [
+                        'value' => 0,
+                        'label' => '请在联动菜单管理，找到【'.$code.'】，点击一键生成按钮',
+                        'children' => [],
+                    ]
                 ];
+            } else {
+                $linkage = [];
             }
         }
 
-        // 最终linkage
-        if (!$json) {
-            $mid = dr_safe_filename(\Phpcmf\Service::L('input')->get('mid'));
-            $name = dr_safe_filename(\Phpcmf\Service::L('input')->get('file'));
-            if ($name) {
-                $ext = str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
-                if ($ext == 'php') {
-                    $data = dr_linkage($code, $pid);
-                    $file = CONFIGPATH.'mylinkage/'.$name;
-                    $file2 = dr_get_app_dir($mid).'Config/mylinkage/'.$name;
-                    if (is_file($file)) {
-                        require $file;
-                    } elseif (is_file($file2)) {
-                        require $file2;
-                    } else {
-                        log_message('error', '联动菜单自定义程序文件【'.$name.'】不存在');
-                        if (CI_DEBUG) {
-                            $html = '联动菜单自定义程序文件【'.$name.'】不存在';
-                        }
-                    }
-                }
-            }
-        }
-
-        echo json_encode([
-            'data' => $json,
-            'html' => $html,
-        ], JSON_UNESCAPED_UNICODE);exit;
+        echo 'var linkage_'.$code.' ='.json_encode($linkage, JSON_UNESCAPED_UNICODE).';';exit;
     }
 
     /**

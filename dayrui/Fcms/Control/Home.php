@@ -30,7 +30,7 @@ class Home extends \Phpcmf\Common {
                 !$rt && CI_DEBUG && log_message('error', '项目首页终端（'.IS_CLIENT.'）生成失败：'.$file);
             } elseif (defined('IS_MOBILE') && IS_MOBILE) {
                 // 移动端，当移动端独立域名情况下才生成静态
-                if (SITE_MURL != SITE_URL) {
+                if (SITE_MURL == dr_now_url()) {
                     $mfile = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', SITE_MOBILE_DIR.'/index.html');
                     $mobile = file_put_contents($mfile, $html);
                     !$mobile && CI_DEBUG && log_message('error', '项目首页移动端生成失败：'.$mfile);

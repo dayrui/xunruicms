@@ -9,6 +9,7 @@
 
 class Linkage extends \Phpcmf\Model {
 
+    protected $top;
     protected $pids;
     protected $cache;
     protected $categorys;
@@ -357,6 +358,23 @@ class Linkage extends \Phpcmf\Model {
         return $this->categorys;
     }
 
+    public function get_child_row($pid) {
+        $newArr = [];
+        foreach ($this->categorys as $cat) {
+            $item = [
+                'value' => $cat['id'],
+                'label' => $cat['name'],
+                'children' => [],
+            ];
+            if ($pid == $cat['pid']) {
+                $item['children'] = $this->get_child_row($cat['id']);
+                $newArr[] = $item;
+            }
+
+        }
+        return $newArr;
+    }
+
     public function get_child_pids() {
         return $this->child_pids;
     }
@@ -383,6 +401,19 @@ class Linkage extends \Phpcmf\Model {
 
     // 缓存
     public function cache($siteid = SITE_ID) {
+
+    }
+
+    public function get_json($link, $links) {
+
+        $json = [];
+        if ($links) {
+            $this->categorys = $links;
+            $json = $this->get_child_row(0);
+        }
+
+        $data_path = 'linkage/'.SITE_ID.'_'.$link['code'].'/';
+        \Phpcmf\Service::L('cache')->set_file('json', $json, $data_path);
 
     }
 

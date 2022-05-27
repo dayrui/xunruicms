@@ -9,7 +9,6 @@
 class Linkage extends \Phpcmf\Common {
 
 	public function index() {
-
 		\Phpcmf\Service::V()->assign([
 			'list' => \Phpcmf\Service::M('Linkage')->table('linkage')->getAll(),
             'menu' =>  \Phpcmf\Service::M('auth')->_admin_menu(
@@ -343,7 +342,6 @@ class Linkage extends \Phpcmf\Common {
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
 		\Phpcmf\Service::L('input')->system_log('修改联动菜单状态: '. $i);
 		$this->_json(1, dr_lang($v ? '此菜单已被禁用' : '此菜单已被启用'), ['value' => $v]);
-
 	}
 
 	public function list_del() {
@@ -655,30 +653,29 @@ class Linkage extends \Phpcmf\Common {
         if (!$page) {
             $path = WRITEPATH.'linkage/'.SITE_ID.'_'.$link['code'].'/';
             dr_dir_delete($path);
-            \Phpcmf\Service::M('Linkage')->repair($link, SITE_ID); // 修复菜单
+            $links = \Phpcmf\Service::M('Linkage')->repair($link, SITE_ID); // 修复菜单
             $pids = \Phpcmf\Service::M('Linkage')->get_child_pids();
             $total = dr_count($pids);
             if (!$total) {
                 $this->_html_msg(0, dr_lang('无可用数据'));
             }
             // 存储执行
+            \Phpcmf\Service::L('cache')->set_auth_data('linkage-all-'.$key, $links, SITE_ID);
             \Phpcmf\Service::L('cache')->set_auth_data('linkage-cache-'.$key, array_chunk($pids, $psize), SITE_ID);
             $this->_html_msg(1, dr_lang('正在执行中...'), dr_url('linkage/cache_index', ['key' => $key]).'&total='.$total.'&page='.($page+1));
         }
 
+        $tpage = ceil($total / $psize); // 总页数
         $pids = \Phpcmf\Service::L('cache')->get_auth_data('linkage-cache-'.$key, SITE_ID);
         if (!$pids) {
             $this->_html_msg(0, dr_lang('临时数据读取失败'));
-        } elseif (!isset($pids[$page-1])) {
+        } elseif (!isset($pids[$page-1]) || $page > $tpage) {
+            // 生成级联关系
+            $links = \Phpcmf\Service::L('cache')->get_auth_data('linkage-all-'.$key, SITE_ID);
+            \Phpcmf\Service::M('Linkage')->get_json($link, $links);
             $this->_html_msg(1, dr_lang('更新完成'));
         }
 
-        $tpage = ceil($total / $psize); // 总页数
-
-        // 更新完成
-        if ($page > $tpage) {
-            $this->_html_msg(1, dr_lang('更新完成'));
-        }
         $field = \Phpcmf\Service::M('Linkage')->get_fields($key);
         foreach ($pids[$page-1] as $pid) {
             \Phpcmf\Service::M('linkage')->cache_list($link, $pid, $field);
