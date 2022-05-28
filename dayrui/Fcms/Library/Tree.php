@@ -289,7 +289,15 @@ class Tree {
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
-        $name = 'tree'.md5($this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first).($is_push ? \Phpcmf\Service::C()->uid : '');
+        $name = 'tree'.md5($this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
+        if ($is_push) {
+            $name.= \Phpcmf\Service::C()->uid;
+            if (IS_ADMIN) {
+                $name.= 'admin'.md5(\Phpcmf\Service::C()->admin ? dr_array2string(\Phpcmf\Service::C()->admin['roleid']) : '1');
+            } else {
+                $name.= md5(\Phpcmf\Service::C()->member ? dr_array2string(\Phpcmf\Service::C()->member['authid']) : '2');
+            }
+        }
         $string = \Phpcmf\Service::L('cache')->get_file($name, $dir);
         if (!$string) {
 
