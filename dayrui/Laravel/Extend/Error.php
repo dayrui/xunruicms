@@ -1,5 +1,6 @@
 <?php
 // 屏蔽error_reporting设置，由xunruicms统一配置
+// /dayrui/Laravel/System/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php
 namespace Illuminate\Foundation\Bootstrap;
 
 use ErrorException;

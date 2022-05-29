@@ -289,7 +289,7 @@ class Tree {
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
-        $name = 'tree'.md5($this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
+        $name = 'tree'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
         if ($is_push) {
             $name.= \Phpcmf\Service::C()->uid;
             if (IS_ADMIN) {

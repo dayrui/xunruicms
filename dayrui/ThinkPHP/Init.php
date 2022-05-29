@@ -3,6 +3,7 @@
 require CMSPATH . 'Core/Auto.php';
 require CMSPATH . 'Core/Service.php';
 require CMSPATH . 'Core/Hooks.php';
+require __DIR__ . '/Extend/Error.php';
 
 
 if (! function_exists('csrf_token')) {
