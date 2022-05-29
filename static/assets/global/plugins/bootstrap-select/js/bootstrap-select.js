@@ -2041,6 +2041,7 @@
           var tableHeight = $('.fixed-table-container').height();
           if (maxHeight > tableHeight) {
             menuInnerHeight = maxHeight = tableHeight - 100;
+            $('.bootstrap-select .inner').height(maxHeight - 140);
           }
         }
 
