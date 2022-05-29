@@ -931,7 +931,7 @@ class Image {
             $config['wm_opacity'] = isset($data['wm_opacity']) && $data['wm_opacity'] ? min(100, max($data['wm_opacity'], 1)) : 100;
         }
 
-        list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', $data['locate']);
+        list($config['wm_hor_alignment'], $config['wm_vrt_alignment']) = explode('-', (string)$data['locate']);
 
         $config['wm_padding'] = (int)$data['wm_padding'];
         $config['wm_hor_offset'] = (int)$data['wm_hor_offset'];

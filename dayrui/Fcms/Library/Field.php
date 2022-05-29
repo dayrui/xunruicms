@@ -952,7 +952,7 @@
          * @return
          */
         public function check_required($field, $value) {
-            if (!is_array($value) && trim($value) == '') {
+            if (dr_is_empty($value)) {
                 // 验证值为空
                 return dr_lang('%s不能为空', $field['name']);
             }
