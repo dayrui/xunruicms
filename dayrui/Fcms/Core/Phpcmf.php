@@ -684,7 +684,7 @@ abstract class Common extends \Frame\Controller {
         if (isset($_GET['format']) && $_GET['format']) {
             switch ($_GET['format']) {
                 case 'jsonp':
-                    $this->_jsonp(1, $msg, $data);exit;
+                    $this->_jsonp(1, $msg, $data, $return);
                     break;
                 case 'text':
                     \Phpcmf\Hooks::trigger('cms_end', $rt);
@@ -704,18 +704,21 @@ abstract class Common extends \Frame\Controller {
     /**
      * 统一返回jsonp格式并退出程序
      */
-    public function _jsonp($code, $msg, $data = []){
+    public function _jsonp($code, $msg, $data = [], $return = false){
 
         $callback = dr_safe_replace(\Phpcmf\Service::L('input')->get('callback'));
         !$callback && $callback = 'callback';
 
         if (IS_API_HTTP) {
-            $this->_json($code, $msg, $data);
+            $this->_json($code, $msg, $data, $return);
         } else {
             // 返回的钩子
             $rt = dr_return_data($code, $msg, $data);
             \Phpcmf\Hooks::trigger('cms_end', $rt);
-            echo $callback.'('.dr_array2string($rt).')';exit;
+            echo $callback.'('.dr_array2string($rt).')';
+            if (!$return) {
+                exit;
+            }
         }
     }
 
@@ -774,7 +777,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 前台提示信息
      */
-    public function _msg($code, $msg, $url = '', $time = 3) {
+    public function _msg($code, $msg, $url = '', $time = 3, $return = false) {
 
         if (isset($_GET['is_show_msg'])) {
             // 强制显示提交信息而不采用ajax返回
@@ -810,6 +813,9 @@ abstract class Common extends \Frame\Controller {
 
         \Phpcmf\Service::V()->assign($rt);
         \Phpcmf\Service::V()->display('msg.html');
+        if ($return) {
+            return;
+        }
         !defined('SC_HTML_FILE') && exit();
     }
 

@@ -9,9 +9,9 @@ abstract class Controller  {
 use think\facade\Cookie;
 
 function set_cookie($name, $value = '', $expire = '') {
-    Cookie::set($name, $value, $expire);
+    Cookie::set(SYS_KEY.$name, $value, $expire);
 }
 
 function get_cookie($name) {
-    return Cookie::get($name);
+    return Cookie::get(SYS_KEY.$name);
 }

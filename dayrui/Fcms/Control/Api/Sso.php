@@ -73,8 +73,7 @@ class Sso extends \Phpcmf\Common {
 
         }
 
-        $this->_jsonp(1, 'ok');
-		exit;
+        return $this->_jsonp(1, 'ok', [], true);
 	}
 
     public function login() {

@@ -571,7 +571,7 @@ class Api extends \Phpcmf\Common {
 
         $admin = \Phpcmf\Service::M()->table('member')->get($this->admin['uid']);
         \Phpcmf\Service::L('cache')->set_data('admin_login_member', $admin, 30);
-        $this->session()->set('admin_login_member_code', $uid.$this->admin['id'].$this->admin['password']);
+        $this->session()->set('admin_login_member_code', md5($uid.$this->admin['id'].$this->admin['password']));
 
         $sso = '';
         $url = \Phpcmf\Service::M('member')->get_sso_url();
@@ -587,7 +587,7 @@ class Api extends \Phpcmf\Common {
         $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
         !$url && $url = MEMBER_URL;
 
-        $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, dr_url_prefix(dr_member_url('api/alogin', ['url' => $url])), 0);exit;
+        return $this->_msg(1, dr_lang('正在授权登录此用户...').$sso, dr_url_prefix(dr_member_url('api/alogin', ['url' => $url])), 0, true);
     }
 
     /**
@@ -608,7 +608,7 @@ class Api extends \Phpcmf\Common {
         $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
         !$url && $url = SITE_URL;
 
-        $this->_msg(1, dr_lang('正在授权登录...').$sso,$url, 0);exit;
+        return $this->_msg(1, dr_lang('正在授权登录...').$sso,$url, 0, true);
     }
 
 	/**
