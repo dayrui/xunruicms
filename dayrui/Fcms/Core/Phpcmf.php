@@ -739,12 +739,12 @@ abstract class Common extends \Frame\Controller {
     /**
      * 后台提示信息
      */
-    public function _admin_msg($code, $msg, $url = '', $time = 3) {
+    public function _admin_msg($code, $msg, $url = '', $time = 3, $return = false) {
 
         if (\Phpcmf\Service::L('input')->get('callback')) {
-            $this->_jsonp($code, $msg, $url);
+            return $this->_jsonp($code, $msg, $url, $return);
         } elseif ((\Phpcmf\Service::L('input')->get('is_ajax') || IS_API_HTTP || IS_AJAX)) {
-            $this->_json($code, $msg, $url);
+            return $this->_json($code, $msg, $url, $return);
         }
 
         $url = dr_safe_url($url, true);
@@ -771,7 +771,10 @@ abstract class Common extends \Frame\Controller {
         ]);
 
         \Phpcmf\Service::V()->display('msg.html', 'admin');
-        exit;
+        if ($return) {
+            return;
+        }
+        !defined('SC_HTML_FILE') && exit();
     }
 
     /**
