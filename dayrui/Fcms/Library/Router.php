@@ -501,6 +501,52 @@ class Router {
     }
 
     /**
+     * 伪静态设置代码
+     */
+    public function rewrite_code() {
+
+        $root = '';
+        $server = strtolower($_SERVER['SERVER_SOFTWARE']);
+        if (strpos($server, 'apache') !== FALSE) {
+            $name = 'Apache';
+            $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录</b></font>';
+            $code = '';
+            $code.= 'RewriteEngine On'.PHP_EOL.PHP_EOL;
+            $code.= 'RewriteBase '.$root.'/'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
+                .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ '.$root.'/index.php [NC,L]'.PHP_EOL.PHP_EOL;
+        } elseif (strpos($server, 'nginx') !== FALSE) {
+            $name = $server;
+            $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码）</b></font>';
+            // 子目录
+            $code = '###当存在多个子目录格式的域名时，需要多写几组location标签：location /目录/ '.PHP_EOL;
+            // 主目录
+            $code.= 'location '.$root.'/ { '.PHP_EOL
+                .'    if (-f $request_filename) {'.PHP_EOL
+                .'           break;'.PHP_EOL
+                .'    }'.PHP_EOL
+                .'    if ($request_filename ~* "\.(js|ico|gif|jpe?g|bmp|png|css)$") {'.PHP_EOL
+                .'        break;'.PHP_EOL
+                .'    }'.PHP_EOL
+                .'    if (!-e $request_filename) {'.PHP_EOL
+                .'        rewrite . '.$root.'/index.php last;'.PHP_EOL
+                .'    }'.PHP_EOL
+                .'}'.PHP_EOL;
+        } else {
+            $name = $server;
+            $note = '<font color=red><b>无法为此服务器提供伪静态规则，建议让运营商帮你把下面的Apache规则做转换</b></font>';
+            $code = 'RewriteEngine On'.PHP_EOL
+                .'RewriteBase /'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
+                .'RewriteCond %{REQUEST_FILENAME} !-d'.PHP_EOL
+                .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php [NC,L]';
+        }
+
+        return [$name, $note, $code];
+    }
+
+    /**
      * url参数转化成数组
      */
     public function url2array($query) {
@@ -519,492 +565,6 @@ class Router {
         return $params;
     }
 
-    // 生成伪静态解析代码
-    public function get_rewrite_code() {
-
-        $data = \Phpcmf\Service::M()->table('urlrule')->getAll();
-        if (!$data) {
-            return dr_return_data(0, dr_lang('你没有设置URL规则'));
-        }
-
-        $code = '';
-        $error = '';
-        $write = []; // 防止重复
-        foreach ($data as $r) {
-            $value = dr_string2array($r['value']);
-            if ($r['type'] == 1) {
-                // 独立模块
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
-                if ($value['module']) {
-                    $rule = $value['module'];
-                    $cname = "【".$r['name']."】模块首页（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname.'</textarea>';
-                        }
-                    }
-                }
-                if ($value['list_page']) {
-                    $rule = $value['list_page'];
-                    $cname = "【".$r['name']."】模块栏目列表(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{page}'])) {
-                        $error.= "<p>".$cname."缺少{page}标签</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&dir=$'.$rname['{dirname}'].'&page=$'.$rname['{page}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&dir=$'.$rname['{pdirname}'].'&page=$'.$rname['{page}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&id=$'.$rname['{id}'].'&page=$'.$rname['{page}'];
-                        }
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">   "'.$preg.'" => "'.$rule.'",  //'.$cname.'</textarea>';
-                        }
-                    }
-                }
-                if ($value['list']) {
-                    $rule = $value['list'];
-                    $cname = "【".$r['name']."】模块栏目列表（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&dir=$'.$rname['{dirname}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&dir=$'.$rname['{pdirname}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?s=$'.$rname['{modname}'].'&c=category&id=$'.$rname['{id}'];
-                        }
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['show_page']) {
-                    $rule = $value['show_page'];
-                    $cname = "【".$r['name']."】模块内容页(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{id}'])) {
-                        $error.= "<p>".$cname."缺少{id}标签</p>";
-                    } elseif (!isset($rname['{page}'])) {
-                        $error.= "<p>".$cname."缺少{page}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=show&id=$'.$rname['{id}'].'&page=$'.$rname['{page}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['show']) {
-                    $rule = $value['show'];
-                    $cname = "【".$r['name']."】模块内容页（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{id}'])) {
-                        $error.= "<p>".$cname."缺少{id}标签</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=show&id=$'.$rname['{id}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['search_page']) {
-                    $rule = $value['search_page'];
-                    $cname = "【".$r['name']."】模块搜索页(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{param}'])) {
-                        $error.= "<p>".$cname."缺少{param}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search&rewrite=$'.$rname['{param}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['search']) {
-                    $rule = $value['search'];
-                    $cname = "【".$r['name']."】模块搜索页（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search';
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
-            } elseif ($r['type'] == 3 ) {
-                // 共享栏目
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
-                if ($value['list_page']) {
-                    $rule = $value['list_page'];
-                    $cname = "【".$r['name']."】模块栏目列表(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{page}'])) {
-                        $error.= "<p>".$cname."缺少{page}标签</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?c=category&dir=$'.$rname['{dirname}'].'&page=$'.$rname['{page}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?c=category&dir=$'.$rname['{pdirname}'].'&page=$'.$rname['{page}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?c=category&id=$'.$rname['{id}'].'&page=$'.$rname['{page}'];
-                        }
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['list']) {
-                    $rule = $value['list'];
-                    $cname = "【".$r['name']."】模块栏目列表（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?c=category&dir=$'.$rname['{dirname}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?c=category&dir=$'.$rname['{pdirname}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?c=category&id=$'.$rname['{id}'];
-                        }
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['show_page']) {
-                    $rule = $value['show_page'];
-                    $cname = "【".$r['name']."】模块内容页(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{page}'])) {
-                        $error.= "<p>".$cname."缺少{page}标签</p>";
-                    } elseif (!isset($rname['{id}'])) {
-                        $error.= "<p>".$cname."缺少{id}标签</p>";
-                    } else {
-                        $rule = 'index.php?c=show&id=$'.$rname['{id}'].'&page=$'.$rname['{page}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['show']) {
-                    $rule = $value['show'];
-                    $cname = "【".$r['name']."】模块内容页（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{id}'])) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } else {
-                        $rule = 'index.php?c=show&id=$'.$rname['{id}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
-            } elseif ($r['type'] == 2 ) {
-                // 共享模块
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
-                if ($value['search_page']) {
-                    $rule = $value['search_page'];
-                    $cname = "【".$r['name']."】模块搜索页(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } elseif (!isset($rname['{param}'])) {
-                        $error.= "<p>".$cname."缺少{param}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search&rewrite=$'.$rname['{param}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['search']) {
-                    $rule = $value['search'];
-                    $cname = "【".$r['name']."】模块搜索页（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{modname}'])) {
-                        $error.= "<p>".$cname."缺少{modname}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=$'.$rname['{modname}'].'&c=search';
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
-            } elseif ($r['type'] == 4 ) {
-                // 关键词库插件
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
-                if ($value['tag']) {
-                    $rule = $value['tag'];
-                    $cname = "【".$r['name']."】TagURL（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{tag}'])) {
-                        $error.= "<p>".$cname."缺少{tag}标签</p>";
-                    } else {
-                        $rule = 'index.php?s=tag&name=$'.$rname['{tag}'];
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
-            } elseif ($r['type'] == 0 ) {
-                // 自定义页面插件
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL;
-                if ($value['page_page']) {
-                    $rule = $value['page_page'];
-                    $cname = "【".$r['name']."】自定义页面(分页)（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{page}'])) {
-                        $error.= "<p>".$cname."缺少{page}标签</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?s=page&dir=$'.$rname['{dirname}'].'&page=$'.$rname['{page}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?s=page&dir=$'.$rname['{pdirname}'].'&page=$'.$rname['{page}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?s=page&id=$'.$rname['{id}'].'&page=$'.$rname['{page}'];
-                        }
-
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                if ($value['page']) {
-                    $rule = $value['page'];
-                    $cname = "【".$r['name']."】自定义页面（{$rule}）";
-                    list($preg, $rname) = $this->_rule_preg_value($rule);
-                    if (!$preg || !$rname) {
-                        $error.= "<p>".$cname."格式不正确</p>";
-                    } elseif (!isset($rname['{dirname}']) && !isset($rname['{id}']) && !isset($rname['{pdirname}'])) {
-                        $error.= "<p>".$cname."缺少{dirname}或{id}或{pdirname}标签</p>";
-                    } else {
-                        if (isset($rname['{dirname}'])) {
-                            // 目录格式
-                            $rule = 'index.php?s=page&dir=$'.$rname['{dirname}'];
-                        } elseif (isset($rname['{pdirname}'])) {
-                            // 层次目录格式
-                            $rule = 'index.php?s=page&dir=$'.$rname['{pdirname}'];
-                        } else {
-                            // id模式
-                            $rule = 'index.php?s=page&id=$'.$rname['{id}'];
-                        }
-                        if (isset($write[$preg])) {
-                            $error.= "<p>".$cname."与".$write[$preg]."规则存在冲突</p>";
-                        } else {
-                            $write[$preg] = $cname;
-                            $code.= '<textarea class="form-control" rows="1">    "'.$preg.'" => "'.$rule.'",  //'.$cname."</textarea>";
-                        }
-                    }
-                }
-                $code.= PHP_EOL.'	// '.$r['name'].'---解析规则----结束'.PHP_EOL;
-            }
-        }
-
-        return dr_return_data(1, dr_lang('生成成功'), [
-            'code' => nl2br($code),
-            'error' => $error,
-        ]);
-    }
-
-
-    // 正则解析
-    protected function _rule_preg_value($rule) {
-
-        $rule = trim(trim($rule, '/'));
-
-        if (preg_match_all('/\{(.*)\}/U', $rule, $match)) {
-
-            $value = [];
-            foreach ($match[0] as $k => $v) {
-                $value[$v] = ($k + 1);
-            }
-
-            $preg = preg_replace(
-                [
-                    '#\{id\}#U',
-                    '#\{uid\}#U',
-                    '#\{mid\}#U',
-                    '#\{fid\}#U',
-                    '#\{page\}#U',
-
-                    '#\{pdirname\}#Ui',
-                    '#\{dirname\}#Ui',
-                    '#\{opdirname\}#Ui',
-                    '#\{otdirname\}#Ui',
-                    '#\{modname\}#Ui',
-                    '#\{name\}#Ui',
-
-                    '#\{tag\}#U',
-                    '#\{param\}#U',
-
-                    '#\{y\}#U',
-                    '#\{m\}#U',
-                    '#\{d\}#U',
-
-                    '#\{.+}#U',
-                    '#/#'
-                ],
-                [
-                    '([0-9]+)',
-                    '([0-9]+)',
-                    '(\d+)',
-                    '(\w+)',
-                    '([0-9]+)',
-
-                    '([\w\/]+)',
-                    '([A-za-z0-9 \-\_]+)',
-                    '([A-za-z0-9 \-\_]+)',
-                    '([A-za-z0-9 \-\_]+)',
-                    '([a-z]+)',
-                    '([a-z]+)',
-
-                    '(.+)',
-                    '(.+)',
-
-                    '([0-9]+)',
-                    '([0-9]+)',
-                    '([0-9]+)',
-
-                    '(.+)',
-                    '\/'
-                ],
-                $rule
-            );
-
-            // 替换特殊的结果
-            $preg = str_replace(
-                ['(.+))}-', '.html'],
-                ['(.+)-', '\.html'],
-                $preg
-            );
-
-            return [$preg, $value];
-        }
-
-        return [$rule, []];
-    }
 
     /**
      * 补空格

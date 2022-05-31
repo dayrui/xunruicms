@@ -168,9 +168,23 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_URL_ONLY]" value="1" {if $data['SYS_URL_ONLY']}checked{/if} /> {dr_lang('精确匹配')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('例如地址是abc/1.html，在地址前后加任意参数时，精确匹配模式下会404，模糊匹配模式下会正常识别')}</span>
-
                             </div>
                         </div>
+
+                        {if !IS_USE_MODULE}
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('服务器启用伪静态')}</label>
+                            <div class="col-md-9">
+
+                                    <div class="mt-radio-inline" style="margin-top:-3px">
+                                        <label>{strtolower((string)$_SERVER['SERVER_SOFTWARE'])}</label>
+                                        <label style="padding-left: 10px"><a class="btn btn-sm blue" href="javascript:dr_iframe_show('', '{dr_url('api/rewrite_code')}');"> {dr_lang('部署代码')} </a></label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {/if}
+
                     </div>
                 </div>
 

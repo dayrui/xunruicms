@@ -591,6 +591,21 @@ class Api extends \Phpcmf\Common {
     }
 
     /**
+     * 伪静态代码
+     */
+    public function rewrite_code() {
+
+        list($name, $note, $code) = \Phpcmf\Service::L('router')->rewrite_code();
+        \Phpcmf\Service::V()->assign([
+            'name' => $name,
+            'code' => $code,
+            'note' => $note,
+            'count' => $code ? dr_count(explode(PHP_EOL, $code)) : 0,
+        ]);
+        \Phpcmf\Service::V()->display('api_rewrite_code.html');exit;
+    }
+
+    /**
      * 后台发送登录数据
      */
     public function slogin() {

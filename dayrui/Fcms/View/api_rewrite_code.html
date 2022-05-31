@@ -1,0 +1,23 @@
+{template header.html}
+
+<div class="portlet-body">
+    <div class="caption">
+        <span class="caption-subject font-green sbold">{$name}</span>
+        <span class="caption-helper">需要在服务器中配置，不懂的可以咨询服务器空间商</span>
+    </div>
+
+    <div style="margin-top: 10px">{$note}</div>
+    {if $code}
+    <div style="margin-top: 10px"><textarea class="form-control" style="width:90%; height:{php echo $count * 25;}px;">{$code}</textarea></div>
+    {/if}
+
+</div>
+<div style="margin-top: 10px">伪静态URL解析规则配置文件：/config/rewrite.php </div>
+<div style="margin-top: 10px">使用自定义URL之后必须要设置解析规则，否则是无法正常打开页面的</div>
+<style>
+    #dr_code textarea{
+        margin: 5px 0;
+    }
+</style>
+
+{template footer.html}
