@@ -595,6 +595,10 @@ class Api extends \Phpcmf\Common {
      */
     public function rewrite_code() {
 
+        if (IS_USE_MODULE) {
+            dr_redirect(dr_url('module/urlrule/rewrite_index'));exit;
+        }
+
         list($name, $note, $code) = \Phpcmf\Service::L('router')->rewrite_code();
         \Phpcmf\Service::V()->assign([
             'name' => $name,

@@ -171,19 +171,15 @@
                             </div>
                         </div>
 
-                        {if !IS_USE_MODULE}
                         <div class="form-group ">
                             <label class="col-md-2 control-label">{dr_lang('服务器启用伪静态')}</label>
                             <div class="col-md-9">
-
-                                    <div class="mt-radio-inline" style="margin-top:-3px">
-                                        <label>{strtolower((string)$_SERVER['SERVER_SOFTWARE'])}</label>
-                                        <label style="padding-left: 10px"><a class="btn btn-sm blue" href="javascript:dr_iframe_show('', '{dr_url('api/rewrite_code')}');"> {dr_lang('部署代码')} </a></label>
-                                    </div>
-
+                                <div class="mt-radio-inline" style="margin-top:-3px">
+                                    <label>{strtolower((string)$_SERVER['SERVER_SOFTWARE'])}</label>
+                                    <label style="padding-left: 10px"><a class="btn btn-sm blue" href="javascript:dr_iframe_show('', '{dr_url('api/rewrite_code')}');"> {dr_lang('部署代码')} </a></label>
                                 </div>
                             </div>
-                        {/if}
+                        </div>
 
                     </div>
                 </div>

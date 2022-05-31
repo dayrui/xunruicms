@@ -35,7 +35,6 @@ abstract class Common extends \Frame\Controller {
     protected $cmf_version; // 版本信息
     protected $cmf_license; // 版本信息
 
-
     /**
      * 初始化共享控制器
      */
@@ -49,8 +48,14 @@ abstract class Common extends \Frame\Controller {
         self::$instance =& $this;
 
         if (defined('IS_INSTALL')) {
+            // 安装程序不执行他
+            return;
+        } elseif (defined('IS_COMMON')) {
+            // 防止重复实例化
             return;
         }
+
+        define('IS_COMMON', 1);
 
         // 站点配置
         if (is_file(WRITEPATH.'config/site.php')) {
