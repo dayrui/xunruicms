@@ -3665,6 +3665,10 @@ class php5replace {
 
     // 替换数组变量值
     function php55_replace_data($value) {
+        if (isset($value[2]) && $value[2] && isset($this->data[$value[1]]) && is_array($this->data[$value[1]])
+            && isset($this->data[$value[1]][$value[2]])) {
+            return $this->data[$value[1]][$value[2]];
+        }
         return $this->data[$value[1]];
     }
 
@@ -3694,9 +3698,11 @@ class php5replace {
     function replace($value) {
 
         $value = preg_replace_callback('#{\$([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
+        $value = preg_replace_callback('#{\$([a-z_0-9]+)\.([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
         $value = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$this, 'php55_replace_function'], $value);
         $value = preg_replace_callback('#{([A-Z_]+)}#U', [$this, 'php55_replace_var'], $value);
         $value = preg_replace_callback('#{([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
+        $value = preg_replace_callback('#{([a-z_0-9]+)\.([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
 
         return $value;
     }
