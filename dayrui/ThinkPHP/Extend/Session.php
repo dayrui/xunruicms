@@ -10,6 +10,11 @@ class Session {
         session(SYS_KEY.$key, $value);
     }
 
+    public function setTempdata($key, $value, $time)
+    {
+        session(SYS_KEY.$key, $value);
+    }
+
     public function get($key = null)
     {
         return session(SYS_KEY.$key);

@@ -4,9 +4,9 @@
 // | 缓存设置
 // +----------------------------------------------------------------------
 
-return [
+$config = [
     // 默认缓存驱动
-    'default' => env('cache.driver', 'file'),
+    'default' => 'file',
 
     // 缓存连接方式配置
     'stores'  => [
@@ -14,7 +14,7 @@ return [
             // 驱动方式
             'type'       => 'File',
             // 缓存保存目录
-            'path'       => '',
+            'path'       => WRITEPATH.'file/',
             // 缓存前缀
             'prefix'     => '',
             // 缓存有效期 0表示永久缓存
@@ -27,3 +27,5 @@ return [
         // 更多的缓存连接
     ],
 ];
+
+return $config;
