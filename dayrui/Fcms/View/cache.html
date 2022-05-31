@@ -46,12 +46,12 @@
                 </td>
                 <td style="overflow:auto">
                     <label>
-                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_cache')}&all=1&mid=share', '500px', '300px');" class="btn blue btn-xs"><i class="fa fa-cog"></i> {dr_lang('共享栏目')} </a>
+                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_repair')}&all=1&mid=share', '500px', '300px');" class="btn blue btn-xs"><i class="fa fa-cog"></i> {dr_lang('共享栏目')} </a>
                     </label>
                     {cache name=module-content return=c}
                     {if !$c.share}
                     <label>
-                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_cache')}&all=1&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
+                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_repair')}&all=1&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
                     </label>
                     {/if}
                     {/cache}

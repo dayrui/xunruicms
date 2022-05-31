@@ -10,7 +10,7 @@ class Api extends \Phpcmf\Common {
     // 切换系统内核
     public function sys_edit() {
 
-        if (!IS_DEV) {
+        if (!IS_DEV && !defined('DEMO_ADMIN_USERNAME')) {
             $this->_json(0, dr_lang('开发者模式下才能进行'));
         }
 

@@ -62,16 +62,20 @@ class Home extends \Phpcmf\Common
             unset($menu['自定义控制台']);
         }
 
-        $frame = [
-            'CodeIgniter',
-            'ThinkPHP',
-            'Laravel',
-        ];
-        foreach ($frame as $i => $name) {
-            if (!is_file(FCPATH.$name.'/Init.php')) {
-               unset($frame[$i]);
+        $frame = [];
+        if (IS_DEV || defined('DEMO_ADMIN_USERNAME')) {
+            $frame = [
+                'CodeIgniter',
+                'ThinkPHP',
+                'Laravel',
+            ];
+            foreach ($frame as $i => $name) {
+                if (!is_file(FCPATH.$name.'/Init.php')) {
+                    unset($frame[$i]);
+                }
             }
         }
+
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),

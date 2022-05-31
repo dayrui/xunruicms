@@ -79,7 +79,7 @@ class Input {
             $client_ip = '';
         }
 
-        $this->ip_address = $client_ip;
+        $this->ip_address = (string)$client_ip;
         $this->ip_address = str_replace([",", '(', ')', ',', chr(13), PHP_EOL], '', $this->ip_address);
         $this->ip_address = trim($this->ip_address);
 
