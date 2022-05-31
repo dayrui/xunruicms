@@ -35,34 +35,48 @@
                     </label>
                 </td>
             </tr>
-            {if $id ==0 && IS_USE_MODULE}
+            {/loop}
             {php $key=$key+1;}
+            {if IS_USE_MODULE}
             <tr>
                 <td>
-                    <span class="badge badge-success">{$key}</span>
+                    <span class="badge badge-success">{$key++}</span>
                 </td>
                 <td>
-                    {dr_lang('更新栏目配置')}
+                    {dr_lang('更新栏目关系和配置')}
                 </td>
                 <td style="overflow:auto">
                     <label>
-                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_repair')}&all=1&mid=share', '500px', '300px');" class="btn blue btn-xs"><i class="fa fa-cog"></i> {dr_lang('共享栏目')} </a>
+                        <a href="javascript:dr_iframe_show('{dr_lang('更新共享栏目')}', '{dr_url('module/api/update_category_repair')}&all=1&mid=share', '500px', '300px');" class="btn blue btn-xs"><i class="fa fa-cog"></i> {dr_lang('共享栏目')} </a>
                     </label>
                     {cache name=module-content return=c}
                     {if !$c.share}
                     <label>
-                        <a href="javascript:dr_iframe_show('{dr_lang('更新栏目配置')}', '{dr_url('module/api/update_category_repair')}&all=1&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
+                        <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('module/api/update_category_repair')}&all=1&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
                     </label>
                     {/if}
                     {/cache}
                 </td>
             </tr>
-
             {/if}
-            {/loop}
             <tr>
                 <td>
-                    <span class="badge badge-success"> {$key+1} </span>
+                    <span class="badge badge-success">{$key++}</span>
+                </td>
+                <td>
+                    {dr_lang('更新联动菜单数据')}
+                </td>
+                <td style="overflow:auto">
+                    {table table=linkage return=c}
+                    <label>
+                        <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('linkage/cache_index')}&key={$c.id}', '500px', '300px');" class="btn blue btn-xs"> {dr_lang($c.name)} </a>
+                    </label>
+                    {/table}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="badge badge-success"> {$key++} </span>
                 </td>
                 <td style="color:blue">
                     {dr_lang('更新CMS版本升级程序（当版本升级时必须操作）')}
