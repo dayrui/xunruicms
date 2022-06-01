@@ -46,6 +46,7 @@ class System extends \Phpcmf\Model {
         'SYS_AVATAR_PATH'	=> '头像上传路径',
         'SYS_AVATAR_URL'	=> '头像访问地址',
         'SYS_API_CODE'	=> 'API请求时验证码开关',
+        'SYS_API_REL'	=> 'API请求时的URL方式',
         'SYS_THEME_ROOT_PATH'	=> '资源路径引用方式',
         'SYS_NOT_UPDATE'	=> '禁止自动检测版本',
 

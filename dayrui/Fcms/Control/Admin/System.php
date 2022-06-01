@@ -44,6 +44,7 @@ class System extends \Phpcmf\Common
                 'SYS_CSRF' => (int)$post['SYS_CSRF'],
                 'SYS_CSRF_TIME' => (int)$post['SYS_CSRF_TIME'],
                 'SYS_API_CODE' => (int)$post['SYS_API_CODE'],
+                'SYS_API_REL' => (int)$post['SYS_API_REL'],
             ];
             if ($save['SYS_HTTPS'] && $data['SYS_HTTPS'] != $save['SYS_HTTPS']
                 && !\Phpcmf\Service::L('input')->post('https_test')) {

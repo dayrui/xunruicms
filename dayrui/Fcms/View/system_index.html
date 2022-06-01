@@ -292,6 +292,19 @@
                             </div>
                         </div>
 
+                        {if SYS_URL_REL}
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('URL路径补全')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_API_REL]" value="0" {if empty($data['SYS_API_REL'])}checked{/if} /> {dr_lang('绝对路径')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_API_REL]" value="1" {if $data['SYS_API_REL']}checked{/if} /> {dr_lang('相对路径')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('通过API插件请求数据时，返回的URL路径的方式，建议选择绝对路径')}</span>
+                            </div>
+                        </div>
+                        {/if}
+
                     </div>
                 </div>
 
