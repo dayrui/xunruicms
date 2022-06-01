@@ -210,6 +210,10 @@ class Service {
     // 错误日志记录
     public static function Log($level, $message, array $context = []) {
 
+        if ($level == 'debug' && defined('IS_FB_DEBUG')) {
+            return;
+        }
+
         if (is_object($message)) {
             $msg = $message->getMessage();
             $code = md5($msg);

@@ -172,7 +172,7 @@ class Cache extends \Phpcmf\Common {
                             }
                             if (!$is_html) {
                                 // 共享栏目
-                                $category = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category');
+                                $category = \Phpcmf\Service::L('category', 'module')->get_category('share');
                                 if ($category) {
                                     foreach ($category as $t) {
                                         if ($t['setting']['html']) {
