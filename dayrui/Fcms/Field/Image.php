@@ -290,7 +290,7 @@ $(function() {
         maxFiles:99999,
         maxFilesize: '.$size.',
         acceptedFiles: "image/*",
-        dictMaxFilesExceeded: "'.dr_lang("最多只能上传%s张图片", $count).'",
+        dictMaxFilesExceeded: "'.dr_lang("最多只能上传%s张图片", $count).(CI_DEBUG ? '（可在自定义字段中设置本字段的个数值）' : '').'",
         dictResponseError: \'文件上传失败\',
         dictInvalidFileType: "不能上传该类型文件",
         dictFallbackMessage:"浏览器不受支持",

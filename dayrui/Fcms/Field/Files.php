@@ -315,7 +315,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["80%", "80%"],
             'url_area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["50%", "340px"],
             'count' => $count,
-            'error' => dr_lang('上传文件不能超过%s个', $count),
+            'error' => dr_lang('上传文件不能超过%s个', $count).(CI_DEBUG ? '（可在自定义字段中设置本字段的个数值）' : ''),
             'chunk' => $field['setting']['option']['chunk'] ? 20 * 1024 * 1024 : 0,
         ]);
 
