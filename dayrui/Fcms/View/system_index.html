@@ -114,8 +114,8 @@
                             <label class="col-md-2 control-label">{dr_lang('资源路径')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="0" {if empty($data['SYS_THEME_ROOT_PATH'])}checked{/if} /> {dr_lang('绝对引用')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="1" {if $data['SYS_THEME_ROOT_PATH']}checked{/if} /> {dr_lang('相对引用')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="0" {if empty($data['SYS_THEME_ROOT_PATH'])}checked{/if} /> {dr_lang('绝对路径')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_THEME_ROOT_PATH]" value="1" {if $data['SYS_THEME_ROOT_PATH']}checked{/if} /> {dr_lang('相对路径')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('前端界面中的static资源目录的引用方式')}</span>
                             </div>
@@ -172,10 +172,10 @@
                         </div>
 
                         <div class="form-group ">
-                            <label class="col-md-2 control-label">{dr_lang('服务器启用伪静态')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('服务器伪静态')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline" style="margin-top:-3px">
-                                    <label>{strtolower((string)$_SERVER['SERVER_SOFTWARE'])}</label>
+                                    <label>{php echo((string)$_SERVER['SERVER_SOFTWARE'])}</label>
                                     <label style="padding-left: 10px"><a class="btn btn-sm blue" href="javascript:dr_iframe_show('', '{dr_url('api/rewrite_code')}');"> {dr_lang('部署代码')} </a></label>
                                 </div>
                             </div>
@@ -294,7 +294,7 @@
 
                         {if SYS_URL_REL}
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('URL路径补全')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('API中URL路径补全')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_API_REL]" value="0" {if empty($data['SYS_API_REL'])}checked{/if} /> {dr_lang('绝对路径')} <span></span></label>

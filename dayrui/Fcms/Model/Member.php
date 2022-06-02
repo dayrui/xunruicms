@@ -1004,22 +1004,12 @@ class Member extends \Phpcmf\Model {
             }
         }
 
-        if (!$name) {
+        if (!$name || $ct > 5) {
             return '';
         }
 
         // 重复名称加随机数
-        if ($ct && $ct < 5) {
-            $name.= $ct + rand(0, 999);
-            if ($ct > 5) {
-                $name.= rand(0, 999);
-            }
-        }
-
-        // 重复账号时
-        if ($this->db->table('member')->where('username', $name)->countAllResults()) {
-            $name = $this->_register_rand_username($member, $ct + 1);
-        }
+        $ct && $name.= $ct + rand(0, 999);
 
         // 最大位数
         if (\Phpcmf\Service::C()->member_cache['config']['userlenmax']
@@ -1028,9 +1018,14 @@ class Member extends \Phpcmf\Model {
         }
 
         // 增加用户名前缀
-        if ($name && isset(\Phpcmf\Service::C()->member_cache['register']['unprefix'])
+        if (isset(\Phpcmf\Service::C()->member_cache['register']['unprefix'])
             && \Phpcmf\Service::C()->member_cache['register']['unprefix']) {
             $name = strtolower(trim((string)\Phpcmf\Service::C()->member_cache['register']['unprefix'])).$name;
+        }
+
+        // 重复账号时
+        if ($this->db->table('member')->where('username', $name)->countAllResults()) {
+            $name = $this->_register_rand_username($member, $ct + 1);
         }
 
         return $name;

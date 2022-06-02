@@ -170,7 +170,7 @@ class App extends \Phpcmf\Model {
         }
 
         if (!isset($this->cfg_cache[$dir])) {
-            $this->cfg_cache[$dir] = \Phpcmf\Service::L('Cache')->get_file($dir, 'app');
+            $this->cfg_cache[$dir] = \Phpcmf\Service::L('cache')->get_file($dir, 'app');
         }
 
         return $this->cfg_cache[$dir];

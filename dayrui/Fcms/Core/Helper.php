@@ -3440,6 +3440,8 @@ function dr_text_rel($text) {
     } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
         $text = str_replace('href="'.FC_NOW_HOST, 'href="/', $text);
         $text = str_replace('href=\''.FC_NOW_HOST, 'href="/', $text);
+        $text = str_replace('src="'.FC_NOW_HOST, 'src="/', $text);
+        $text = str_replace('src=\''.FC_NOW_HOST, 'src="/', $text);
     }
 
     return $text;
