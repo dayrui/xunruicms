@@ -237,7 +237,7 @@ class Files extends \Phpcmf\Library\A_Field {
         $tips = ($name == 'title' && APP_DIR) || $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_' . $field['fieldname'] . '_tips">' . $field['setting']['validate']['tips'] . '</span>' : '';
 
         $count = intval($field['setting']['option']['count']);
-        $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), ($field['setting']['option']['size']) . 'MB', $count);
+        $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', (string)$field['setting']['option']['ext']), ($field['setting']['option']['size']) . 'MB', $count);
 
 
         $p = dr_authcode([

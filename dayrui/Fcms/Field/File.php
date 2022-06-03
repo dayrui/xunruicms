@@ -205,7 +205,7 @@ class File extends \Phpcmf\Library\A_Field {
         // 表单附加参数
         $attr = $field['setting']['validate']['formattr'];
 
-		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', $field['setting']['option']['ext']), ($field['setting']['option']['size']).'MB');
+		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', (string)$field['setting']['option']['ext']), ($field['setting']['option']['size']).'MB');
 
         $p = dr_authcode([
             'size' => ($field['setting']['option']['size']),
