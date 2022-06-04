@@ -36,6 +36,10 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, '内核（'.$name.'）要求PHP版本不能低于'.$version[$name].'（当前'.PHP_VERSION.'）');
         }
 
+        if ($name != 'CodeIgniter' && !is_file(FCPATH.$name.'/System/vendor/autoload.php')) {
+            $this->_json(0, '内核目录（'.FCPATH.$name.'/System/vendor/'.'）缺少文件');
+        }
+
         file_put_contents(WRITEPATH.'frame.lock', $name);
 
         $this->_json(1, dr_lang('操作成功'));
