@@ -68,4 +68,5 @@ helper('url');
 
 $app = new \Phpcmf\Extend\CodeIgniter(new App());
 $app->initialize();
+$app->setContext(is_cli() ? 'php-cli' : 'web');
 $app->run();

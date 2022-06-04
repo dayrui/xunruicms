@@ -50,6 +50,7 @@ class Database extends Config
         'encrypt'      => false,
         'compress'     => false,
         'strictOn'     => false,
+        'foreignKeys'   => true,
         'failover'     => []
     ];
 
