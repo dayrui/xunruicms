@@ -349,6 +349,13 @@ class Upload {
     }
 
     /**
+     * 随机存储的文件名
+     */
+    protected function _rand_save_file_name($file) {
+        return substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15);
+    }
+
+    /**
      * 随机存储的文件路径
      */
     protected function _rand_save_file_path($config, $file_ext, $file) {
@@ -367,7 +374,9 @@ class Upload {
         }
 
         // 随机新名字
-        !$name && $name = substr(md5(SYS_TIME.(is_array($file) ? dr_array2string($file) : $file).uniqid()), rand(0, 20), 15);
+        if (!$name) {
+            $name = $this->_rand_save_file_name($file);
+        }
 
         if (isset($config['save_file']) && $config['save_file']) {
             // 指定存储名称
