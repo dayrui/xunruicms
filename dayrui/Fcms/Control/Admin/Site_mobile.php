@@ -19,6 +19,9 @@ class Site_mobile extends \Phpcmf\Common
                 }
             }
             if ($post['mode'] == -1) {
+                $post['auto'] = 0;
+                $post['tohtml'] = 0;
+                $post['tohtml'] = 0;
                 $post['dirname'] = $post['domain'] = '';
             }
 			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
