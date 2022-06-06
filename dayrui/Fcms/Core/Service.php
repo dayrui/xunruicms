@@ -232,7 +232,7 @@ class Service {
             return \Phpcmf\Service::L('input')->log($level, $msg."\n#SQL：{sql}\n#URL：{url}\n#AGENT：{user}\n".($context['referer'] ? "#REFERER：{referer}\n" : "")."{trace}\n", $context);
         }
 
-        $message.= '---'.FC_NOW_URL;
+        $message.= '---'.FC_NOW_URL.PHP_EOL;
         return \Phpcmf\Service::L('input')->log($level, $message, $context);
     }
 

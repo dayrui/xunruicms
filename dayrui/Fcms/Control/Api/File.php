@@ -512,6 +512,9 @@ class File extends \Phpcmf\Common
                 $filesize = filesize($info['file']);
 				if ($filesize > 1024 * 1024 * 50) {
 					// 大文件转向
+                    if (isset($rt['name']) && $rt['name'] && IS_DEV) {
+                        log_message('debug', '由于文件大于50MB，重命名文件功能将失效，下载地址将跳转到文件本身的地址');
+                    }
 					dr_redirect($info['url']);exit;
 				}
 				
