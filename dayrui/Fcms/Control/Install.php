@@ -23,9 +23,8 @@ class Install extends \Phpcmf\Common {
         $this->lock = WRITEPATH.'install.lock';
         if (is_file($this->lock)) {
             exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');
-        } elseif (version_compare(PHP_VERSION, '7.2.0') < 0) {
-            echo "<font color=red>安装提示：PHP版本必须在7.3以上，当前".PHP_VERSION."</font>";exit;
         }
+        define('IS_PHP_MIN', '7.4');  // PHP最低版本
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
         define('SITE_URL', '/');
