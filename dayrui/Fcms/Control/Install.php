@@ -24,7 +24,6 @@ class Install extends \Phpcmf\Common {
         if (is_file($this->lock)) {
             exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');
         }
-        define('IS_PHP_MIN', '7.4');  // PHP最低版本
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
         define('SITE_URL', '/');
