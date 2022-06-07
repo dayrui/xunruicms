@@ -16,7 +16,7 @@ class Api extends \Phpcmf\Common {
 
         $version = [
             'CodeIgniter' => '7.4.0',
-            'ThinkPHP' => '7.1.0',
+            'ThinkPHP' => '7.4.0',
             'Laravel' => '8.0.2',
         ];
 

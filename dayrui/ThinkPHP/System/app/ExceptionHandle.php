@@ -37,6 +37,18 @@ class ExceptionHandle extends Handle
     public function report(Throwable $exception): void
     {
         // 使用内置的方式记录异常日志
+        $message = $exception->getMessage();
+        log_message('error', $exception);
+        // ajax 返回
+        if (IS_AJAX || IS_API) {
+            // 调试模式不屏蔽敏感信息
+            if (CI_DEBUG) {
+                $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
+            } else {
+                $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
+            }
+            dr_exit_msg(0, $message);
+        }
         parent::report($exception);
     }
 

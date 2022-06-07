@@ -275,8 +275,8 @@ class Notice {
 
         ob_start();
         extract($data, EXTR_OVERWRITE);
-        $file = \Phpcmf\Service::V()->code2php($content_code);
-        require $file;
+        $require_file = \Phpcmf\Service::V()->code2php($content_code);
+        require $require_file;
         $code = ob_get_clean();
 
         return dr_return_data(1, $code);
@@ -286,27 +286,23 @@ class Notice {
     protected function _xml_array($xml) {
 
         $reg = "/<(\\w+)[^>]*?>(.*?)<\\/\\1>/Us";
-        if(preg_match_all($reg, $xml, $matches))
-        {
+        if (preg_match_all($reg, $xml, $matches)) {
             $count = dr_count($matches[0]);
             $arr = array();
-            for($i = 0; $i < $count; $i++)
-            {
+            for($i = 0; $i < $count; $i++) {
                 $key = $matches[1][$i];
                 $val = $this->_xml_array( $matches[2][$i] );  // 递归
-                if(array_key_exists($key, $arr))
-                {
-                    if(is_array($arr[$key]))
-                    {
+                if (array_key_exists($key, $arr)) {
+                    if (is_array($arr[$key])) {
                         if(!array_key_exists(0,$arr[$key]))
                         {
                             $arr[$key] = array($arr[$key]);
                         }
-                    }else{
+                    } else {
                         $arr[$key] = array($arr[$key]);
                     }
                     $arr[$key][] = $val;
-                }else{
+                } else {
                     $arr[$key] = $val;
                 }
             }
