@@ -215,7 +215,9 @@ function dr_check_bom($filename) {
     $charset[1] = substr($contents, 0, 1);
     $charset[2] = substr($contents, 1, 1);
     $charset[3] = substr($contents, 2, 1);
-    if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {
+    if ($charset[1] != '<') {
+        return false;
+    } elseif (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {
         return true;
     } else {
         return false;

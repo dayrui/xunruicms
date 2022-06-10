@@ -320,6 +320,20 @@ class db_mysql {
         return $str;
     }
 
+
+    public function insertBatch($values) {
+
+        if (!$values) {
+            return;
+        }
+
+        $rt = DB::table($this->param['table'])->insertOrIgnore($values);
+
+        $this->_clear();
+
+        return $rt;
+    }
+
     public function updateBatch($values, $index) {
 
         $ids   = [];

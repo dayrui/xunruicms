@@ -1017,8 +1017,8 @@ class View {
 
                     // 替换前缀
                     $sql = str_replace(
-                        ['@#S', '@#'],
-                        [\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()],
+                        ['@#S', 'S@#', '@#'],
+                        [\Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix($system['site']), \Phpcmf\Service::M()->dbprefix()],
                         trim(urldecode($sql[1]))
                     );
 
@@ -1488,7 +1488,7 @@ class View {
                         break;
 
                     case 'SQL':
-                        $string.= $join.' '.$t['value'];
+                        $string.= $join.' '.str_replace('@#', \Phpcmf\Service::M()->dbprefix(), $t['value']);
                         break;
 
                     case 'DAY':
@@ -2029,7 +2029,11 @@ class View {
                 $data = \Phpcmf\Service::L('cache')->get('page-'.$siteid, 'data');
                 break;
             default:
-                $data = \Phpcmf\Service::L('cache')->get($name.'-'.$siteid);
+                if ($siteid) {
+                    $data = \Phpcmf\Service::L('cache')->get($name.'-'.$siteid);
+                } else {
+                    $data = \Phpcmf\Service::L('cache')->get($name);
+                }
                 break;
         }
 

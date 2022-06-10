@@ -387,6 +387,7 @@ $db[\'default\']	= [
                             } else {
                                 // 安装完成
                                 file_put_contents($this->lock, time());
+                                file_put_contents(WRITEPATH.'update.txt', time());
                                 file_put_contents(WRITEPATH.'install.test', time());
                                 unlink(WRITEPATH.'install.info');
                                 unlink(WRITEPATH.'install.error');

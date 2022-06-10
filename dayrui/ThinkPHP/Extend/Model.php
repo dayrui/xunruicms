@@ -327,6 +327,19 @@ class db_mysql {
         return $str;
     }
 
+    public function insertBatch($values) {
+
+        if (!$values) {
+            return;
+        }
+
+        $rt = Db::name($this->param['table'])->insertAll($values);
+
+        $this->_clear();
+
+        return $rt;
+    }
+
     public function updateBatch($values, $index) {
 
         $ids   = [];

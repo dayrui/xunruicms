@@ -278,6 +278,20 @@ class Model extends \Frame\Model {
 
         return dr_return_data($id);
     }
+
+    // 批量插入
+    public function insert_batch($data) {
+
+        if (!$this->table || !$data) {
+            return;
+        }
+
+        $rt = $this->db->table($this->table)->insertBatch($data);
+
+        $this->_clear();
+
+        return $rt;
+    }
 	
 	// 批量更新
 	public function update_batch($data, $key = 'id') {
