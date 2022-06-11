@@ -1589,9 +1589,6 @@ class Image {
             return $cache_url.$cache_file;
         }
 
-        // 创建缓存目录
-        dr_mkdirs($cache_path.dirname($cache_file));
-
         if (is_numeric($img)) {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
@@ -1657,6 +1654,9 @@ class Image {
             CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
             return $attach['url']; // 原样输出
         }
+
+        // 创建缓存目录
+        dr_mkdirs($cache_path.dirname($cache_file));
 
         // 开始处理图片
         if ($width > 0 || $height > 0) {
