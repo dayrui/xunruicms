@@ -46,6 +46,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             // 记录日志
             $message = $e->getMessage();
+
+            if ($message && strpos($message, 'Unresolvable dependency resolving [Parameter #0 [ <optional> ...$params ]]') !== false) {
+                dr_exit_msg(0, '控制器文件中含有字符（...$params），请手动删除：https://www.xunruicms.com/doc/1246.html');
+            }
+
             log_message('error', $e);
             // ajax 返回
             if (IS_AJAX || IS_API) {

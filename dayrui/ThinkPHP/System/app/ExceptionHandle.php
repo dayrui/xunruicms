@@ -38,6 +38,9 @@ class ExceptionHandle extends Handle
     {
         // 使用内置的方式记录异常日志
         $message = $exception->getMessage();
+        if ($message == 'method param miss:params') {
+            dr_exit_msg(0, '控制器文件中含有字符（...$params），请手动删除：https://www.xunruicms.com/doc/1246.html');
+        }
         log_message('error', $exception);
         // ajax 返回
         if (IS_AJAX || IS_API) {
