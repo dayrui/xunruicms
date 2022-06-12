@@ -1,4 +1,8 @@
+
 迅睿CMS官方下载地址：https://www.xunruicms.com/down/
+
+
+#### 安装路径
 
 安装环境监测：/test.php
 程序安装地址：/install.php
@@ -6,16 +10,19 @@
 重置后台地址：https://www.xunruicms.com/doc/1097.html
 首次使用方法：https://www.xunruicms.com/doc/631.html
 
-官方技术QQ群：758974716
+#### 运行环境
+
+Laravel内核：PHP8.0及以上
+ThinkPHP内核：PHP7.1及以上
+CodeIgniter内核：PHP7.4及以上
+
+MySQL数据库：MySQL5及以上，推荐5.7及以上
 
 
-对于已经安装后的迅睿CMS升级到最新发布的版本方法：
-1、下载升级包，一定要是升级包，千万不要下载安装包
-https://www.xunruicms.com/down/
-本页面有一个“更新时间”，如果你下载程序的时间晚于这个“更新时间”，说明你需要升级程序。
-2、将升级包解压
-3、如果修改模板可以不必覆盖 template目录
-4、处理完之后将升级包覆盖到网站目录即可
-5、登录迅睿CMS后台，进行“我的面板”菜单->“系统更新”，全部更新一次，即可升级完成
+#### 内核切换方法
 
-升级之前一定要备份程序，备份全部程序+数据库！
+CodeIgniter内核：https://www.xunruicms.com/down.php?frame=ci
+Laravel内核：https://www.xunruicms.com/down.php?frame=la
+ThinkPHP内核：https://www.xunruicms.com/down.php?frame=tp
+
+下载以上对应的内核包覆盖即可
