@@ -289,7 +289,7 @@ class Tree {
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
-        $name = 'tree'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
+        $name = 'tree_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
         if ($is_push) {
             $name.= \Phpcmf\Service::C()->uid;
             if (IS_ADMIN) {
@@ -395,7 +395,7 @@ class Tree {
         }
 
         if (\Phpcmf\Service::IS_MOBILE_USER() && strpos($str, 'multiple') !== false) {
-            $string = str_replace('style', '_style', $str);
+            $string = str_replace('style', '_style', $string);
         }
 
         if ($is_first) {
