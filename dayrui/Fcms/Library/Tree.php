@@ -282,10 +282,11 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
-        $mid = 'share';
         if (isset($data[0]) && count($data) == 1) {
             $mid = $data[0];
             $data = \Phpcmf\Service::L('category', 'module')->get_category($mid);
+        } else {
+            $mid = md5(dr_array2string($data));
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';

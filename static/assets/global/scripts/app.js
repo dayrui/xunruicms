@@ -1783,8 +1783,8 @@ function dr_url_module_search_page() {
 }
 
 function dr_help(id) {
-    if (is_oemcms == 1) {
-        dr_tips(1, '请联系开发商');
+    if (is_oemcms) {
+        dr_tips(1, '请联系开发商：'+is_oemcms);
         return;
     }
     layer.open({
