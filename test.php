@@ -11,7 +11,7 @@ define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 define('WEBPATH', dirname(__FILE__).'/');
 define('SYSTEMPATH', true);
 
-dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME'],);
+dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME']);
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
     dr_echo_msg(0, "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");exit;
