@@ -284,6 +284,7 @@ class Cache extends \Phpcmf\Common {
 
             default:
 
+                \Phpcmf\Service::M('cache')->update_db();
                 \Phpcmf\Service::M('cache')->update_cache();
                 \Phpcmf\Service::M('cache')->update_data_cache();
                 $this->_html_msg(1, dr_lang('更新完成'));

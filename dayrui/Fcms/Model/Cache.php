@@ -97,7 +97,7 @@ class Cache extends \Phpcmf\Model {
     // 更新数据结构
     public function update_db() {
 
-        // 执行插件自己的缓存程序
+        // 执行插件自己的更新程序
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
             if (is_file($path.'install.lock')
