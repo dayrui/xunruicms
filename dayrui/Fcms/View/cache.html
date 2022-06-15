@@ -11,7 +11,7 @@
             <thead>
             <tr class="heading">
                 <th width="55"> </th>
-                <th width="400"> {dr_lang('更新项目')} </th>
+                <th width="500"> {dr_lang('更新项目')} </th>
                 <th> </th>
             </tr>
             </thead>
@@ -37,25 +37,72 @@
             </tr>
             {/loop}
             {php $key=$key+1;}
-            {if IS_USE_MODULE}
+            {if $module}
             <tr>
                 <td>
                     <span class="badge badge-success">{$key++}</span>
                 </td>
                 <td>
-                    {dr_lang('更新栏目关系和配置')}
+                    {dr_lang('变更栏目后，更新栏目关系和配置')}
                 </td>
                 <td style="overflow:auto">
                     <label>
                         <a href="javascript:dr_iframe_show('{dr_lang('更新共享栏目')}', '{dr_url('module/api/update_category_repair')}&all=1&mid=share', '500px', '300px');" class="btn blue btn-xs"><i class="fa fa-cog"></i> {dr_lang('共享栏目')} </a>
                     </label>
-                    {cache name=module-content return=c}
+                    {loop $module $c}
                     {if !$c.share}
                     <label>
                         <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('module/api/update_category_repair')}&all=1&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
                     </label>
                     {/if}
-                    {/cache}
+                    {/loop}
+                    {if $module_more}
+                    <div class="btn-group" style="margin-top:0; margin-left: 10px">
+                        <button type="button" class="btn btn-xs btn-default ">{dr_lang('更多')}</button>
+                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {loop $module_more $c}
+                            {if !$c.share}
+                            <li>
+                                <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('module/api/update_category_repair')}&all=1&mid={$c.dirname}', '500px', '300px');"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
+                            </li>
+                            {/if}
+                            {/loop}
+                        </ul>
+                    </div>
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="badge badge-success">{$key++}</span>
+                </td>
+                <td>
+                    {dr_lang('内容地址与设置地址不同步时，更新内容URL地址')}
+                </td>
+                <td style="overflow:auto">
+                    {loop $module $c}
+                    <label>
+                        <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('api/update_url')}&mid={$c.dirname}', '500px', '300px');" class="btn blue btn-xs"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
+                    </label>
+                    {/loop}
+                    {if $module_more}
+                    <div class="btn-group" style="margin-top:0; margin-left: 10px">
+                        <button type="button" class="btn btn-xs btn-default ">{dr_lang('更多')}</button>
+                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {loop $module_more $c}
+                            <li>
+                                <a href="javascript:dr_iframe_show('{dr_lang($c.name)}', '{dr_url('api/update_url')}&mid={$c.dirname}', '500px', '300px');"><i class="{dr_icon($c.icon)}"></i> {dr_lang($c.name)} </a>
+                            </li>
+                            {/loop}
+                        </ul>
+                    </div>
+                    {/if}
                 </td>
             </tr>
             {/if}
@@ -67,7 +114,7 @@
                     <span class="badge badge-success">{$key++}</span>
                 </td>
                 <td>
-                    {dr_lang('更新联动菜单数据')}
+                    {dr_lang('变更联动菜单数据后，更新缓存数据')}
                 </td>
                 <td style="overflow:auto">
                     {loop $return_c $c}

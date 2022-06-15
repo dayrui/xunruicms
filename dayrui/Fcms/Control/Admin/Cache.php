@@ -12,17 +12,27 @@ class Cache extends \Phpcmf\Common {
 
         $list = [
             ['系统配置缓存', 'update_cache'],
-            ['更新数据结构', 'update_db'],
-            ['更新附件缓存', 'update_attachment'],
-            ['清理缩略图文件', 'update_thumb'],
+            ['表或表字段异常时，更新数据结构', 'update_db'],
+            ['附件地址未更新时，更新附件缓存', 'update_attachment'],
+            ['手动清理缩略图文件', 'update_thumb'],
         ];
-        $cname = [];
+        $cname[] = '更新模块域名目录';
+        $module_more = $module = $cname = [];
         if (dr_is_app('module')) {
-            $list[] = ['重建内容搜索索引', 'update_search_index'];
+            $list[] = ['手动重建内容搜索索引', 'update_search_index'];
             $cname[] = '更新模块域名目录';
+            $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
+            if ($module) {
+                $module = dr_array_sort($module, 'share', 'asc');
+                $limit = 10;
+                if (dr_count($module) > $limit) {
+                    $module_more = array_slice($module, $limit);
+                    $module = array_slice($module, 0, $limit);
+                }
+            }
         }
         if (dr_is_app('ueditor') && is_file(CMSPATH.'Field/Ueditor.php')) {
-            $list[] = ['更新百度编辑器', 'update_ueditor'];
+            $list[] = ['生成百度编辑器到其他域名', 'update_ueditor'];
         }
         if (dr_is_app('sites')) {
             $cname[] = '更新子站目录';
@@ -42,7 +52,9 @@ class Cache extends \Phpcmf\Common {
                     '系统体检' => ['check/index', 'fa fa-wrench'],
                     'help' => [378],
                 ]
-            )
+            ),
+            'module' => $module,
+            'module_more' => $module_more,
         ]);
         \Phpcmf\Service::V()->display('cache.html');
     }
