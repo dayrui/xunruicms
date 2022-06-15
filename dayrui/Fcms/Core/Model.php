@@ -387,6 +387,11 @@ class Model extends \Frame\Model {
         return dr_return_data(1);
     }
 
+    // 执行”写入”类型的语句（insert，update等）时返回有多少行受影响
+    public function affected_rows() {
+        return $this->db->affectedRows();
+    }
+
     // 删除全部内容
     public function clear_all() {
         return $this->db->table($this->table)->truncate();

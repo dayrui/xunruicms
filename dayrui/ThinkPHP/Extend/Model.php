@@ -23,6 +23,7 @@ class db_mysql {
     public $param = [];
     public $prefix;
     public $likeEscapeChar = '!';
+    public $affectedRows = 0;
 
     public function query($sql) {
         $this->_clear();
@@ -228,13 +229,18 @@ class db_mysql {
         return ($rs[0]['LAST_INSERT_ID()']);
     }
 
+    // 执行”写入”类型的语句（insert，update等）时返回有多少行受影响
+    public function affectedRows() {
+        return $this->affectedRows;
+    }
+
     public function insert($data) {
-        Db::name($this->param['table'])->insert($data);
+        $this->affectedRows = Db::name($this->param['table'])->insert($data);
         $this->_clear();
     }
 
     public function replace($data) {
-        Db::name($this->param['table'])->replace()->insert($data, 'id');
+        $this->affectedRows = Db::name($this->param['table'])->replace()->insert($data, 'id');
         $this->_clear();
     }
 
@@ -289,7 +295,7 @@ class db_mysql {
                     $this->param['builder']->inc($key, $value);
                 }
             }
-            $this->param['builder']->update($data);
+            $this->affectedRows = $this->param['builder']->update($data);
         }
 
         $this->_clear();
@@ -333,11 +339,11 @@ class db_mysql {
             return;
         }
 
-        $rt = Db::name($this->param['table'])->insertAll($values);
+        $this->affectedRows = Db::name($this->param['table'])->insertAll($values);
 
         $this->_clear();
 
-        return $rt;
+        return $this->affectedRows;
     }
 
     public function updateBatch($values, $index) {
@@ -370,6 +376,8 @@ class db_mysql {
         $this->_clear();
 
         Db::execute($sql);
+        $this->affectedRows = 0;
+
     }
 
     public function delete() {
@@ -379,7 +387,7 @@ class db_mysql {
         }
 
         if ($this->param['builder']) {
-            $this->param['builder']->delete();
+            $this->affectedRows = $this->param['builder']->delete();
         }
 
         $this->_clear();

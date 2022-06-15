@@ -23,6 +23,7 @@ class db_mysql {
     public $param = [];
     public $prefix;
     public $likeEscapeChar = '!';
+    public $affectedRows = 0;
 
     public function query($sql) {
         $this->_clear();
@@ -227,13 +228,20 @@ class db_mysql {
         return DB::getPdo()->lastInsertId();
     }
 
+    // 执行”写入”类型的语句（insert，update等）时返回有多少行受影响
+    public function affectedRows() {
+        return $this->affectedRows;
+    }
+
     public function insert($data) {
-        DB::table($this->param['table'])->insert($data);
+        $rt = DB::table($this->param['table'])->insert($data);
+        $this->affectedRows = $rt ? 1 : 0;
         $this->_clear();
     }
 
     public function replace($data) {
-        DB::table($this->param['table'])->upsert($data, 'id');
+        $rt = $this->affectedRows = DB::table($this->param['table'])->upsert($data, 'id');
+        $this->affectedRows = $rt ? 1 : 0;
         $this->_clear();
     }
     public function set($key, $value, $escape = true) {
@@ -262,6 +270,8 @@ class db_mysql {
 
     public function update($data = []) {
 
+        $this->affectedRows = 0;
+
         if (!$this->param['is_get']) {
             $this->get();
         }
@@ -282,7 +292,7 @@ class db_mysql {
                     $data[$key] = DB::raw($key.'+'.$value);
                 }
             }
-            $this->param['builder']->update($data);
+            $this->affectedRows = $this->param['builder']->update($data);
         }
 
         $this->_clear();
@@ -327,7 +337,7 @@ class db_mysql {
             return;
         }
 
-        $rt = DB::table($this->param['table'])->insertOrIgnore($values);
+        $this->affectedRows = $rt = DB::table($this->param['table'])->insertOrIgnore($values);
 
         $this->_clear();
 
@@ -335,6 +345,7 @@ class db_mysql {
     }
 
     public function updateBatch($values, $index) {
+
 
         $ids   = [];
         $final = [];
@@ -363,7 +374,7 @@ class db_mysql {
 
         $this->_clear();
 
-        DB::statement($sql);
+        $this->affectedRows = DB::affectingStatement($sql);
     }
 
     public function delete() {
@@ -373,7 +384,7 @@ class db_mysql {
         }
 
         if ($this->param['builder']) {
-            $this->param['builder']->delete();
+            $this->affectedRows = $this->param['builder']->delete();
         }
 
         $this->_clear();
