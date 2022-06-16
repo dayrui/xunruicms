@@ -1,11 +1,11 @@
-<h3>б╥си</h3>
+<h3>Matched Route</h3>
 
 <table>
     <tbody>
     {matchedRoute}
         <tr>
-            <td>App:</td>
-            <td>{app}</td>
+            <td>Directory:</td>
+            <td>{directory}</td>
         </tr>
         <tr>
             <td>Controller:</td>
@@ -16,14 +16,37 @@
             <td>{method}</td>
         </tr>
         <tr>
-            <td>URI:</td>
-            <td>{uri}</td>
+            <td>Params:</td>
+            <td>{paramCount} / {truePCount}</td>
         </tr>
-        <tr>
-            <td>URL:</td>
-            <td>{url}</td>
-        </tr>
+        {params}
+            <tr class="route-params-item">
+                <td>{name}</td>
+                <td>{value}</td>
+            </tr>
+        {/params}
     {/matchedRoute}
     </tbody>
 </table>
 
+
+<h3>Defined Routes</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Route</th>
+            <th>Handler</th>
+        </tr>
+    </thead>
+    <tbody>
+    {routes}
+        <tr>
+            <td>{method}</td>
+            <td data-debugbar-route="{method}">{route}</td>
+            <td>{handler}</td>
+        </tr>
+    {/routes}
+    </tbody>
+</table>
