@@ -18,7 +18,8 @@ class Notice {
         $data['sys_app'] = defined('MOD_DIR') ? MOD_DIR : APP_DIR;
         $data['sys_uri'] = \Phpcmf\Service::L('router')->uri();
         $data['sys_time'] = SYS_TIME;
-        $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
+        $data['sys_ip'] = \Phpcmf\Service::L('input')->ip_address();
+        $data['sys_ip_address'] = $data['ip_address'] = \Phpcmf\Service::L('input')->ip_address_info();
         // 自定义参数累加进去
         if ($param) {
             $data = array_merge($data, $param);
