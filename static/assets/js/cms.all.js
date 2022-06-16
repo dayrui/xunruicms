@@ -1,5 +1,5 @@
 if(typeof jQuery == 'undefined'){
-    window.alert("没有引用jquery库");
+    console.log("没有引用jquery库");
 }
 
 var cms_post_addfunc = new Array();
