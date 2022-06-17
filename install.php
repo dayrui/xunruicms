@@ -9,7 +9,7 @@ header('Content-Type: text/html; charset=utf-8');
 // 判断环境
 $min = '7.4.0';
 if (version_compare(PHP_VERSION, $min) < 0) {
-    exit("<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.1环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
+    exit("<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 }
 
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');

@@ -13,7 +13,7 @@
 #### 运行环境
 
 Laravel内核：PHP8.0及以上
-ThinkPHP内核：PHP7.1及以上
+ThinkPHP内核：PHP7.2及以上
 CodeIgniter内核：PHP7.4及以上
 
 MySQL数据库：MySQL5及以上，推荐5.7及以上
