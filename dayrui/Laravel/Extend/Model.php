@@ -346,7 +346,6 @@ class db_mysql {
 
     public function updateBatch($values, $index) {
 
-
         $ids   = [];
         $final = [];
 

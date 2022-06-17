@@ -6007,15 +6007,18 @@
                         if (_this10.options.sidePagination === 'server' && _this10.options.pageNumber > 1 && res[_this10.options.totalField] > 0 && !res[_this10.options.dataField].length) {
                             _this10.updatePagination();
                         }
+                        if (!res.code && res.msg) {
+                            dr_tips(0, res.msg);
+                        }
                         $('.tooltips').tooltip();
                     },
-                    error: function error(jqXHR) {
+                    error: function error(jqXHR, ajax, thrownError) {
                         // abort ajax by multiple request
                         if (jqXHR && jqXHR.status === 0 && _this10._xhrAbort) {
                             _this10._xhrAbort = false;
                             return;
                         }
-
+                        dr_ajax_alert_error(jqXHR, this, thrownError)
                         var data = [];
 
                         if (_this10.options.sidePagination === 'server') {
