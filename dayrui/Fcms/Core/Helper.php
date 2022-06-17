@@ -3937,6 +3937,35 @@ if ( ! function_exists('dr_directory_map'))
     }
 }
 
+
+if (! function_exists('remove_invisible_characters')) {
+    /**
+     * Remove Invisible Characters
+     *
+     * This prevents sandwiching null characters
+     * between ascii characters, like Java\0script.
+     */
+    function remove_invisible_characters($str, $urlEncoded = true)
+    {
+        $nonDisplayables = [];
+
+        // every control character except newline (dec 10),
+        // carriage return (dec 13) and horizontal tab (dec 09)
+        if ($urlEncoded) {
+            $nonDisplayables[] = '/%0[0-8bcef]/';  // url encoded 00-08, 11, 12, 14, 15
+            $nonDisplayables[] = '/%1[0-9a-f]/';   // url encoded 16-31
+        }
+
+        $nonDisplayables[] = '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S';   // 00-08, 11, 12, 14-31, 127
+
+        do {
+            $str = preg_replace($nonDisplayables, '', $str, -1, $count);
+        } while ($count);
+
+        return $str;
+    }
+}
+
 // 评论名称
 if (!function_exists('dr_comment_cname')) {
     function dr_comment_cname($name) {

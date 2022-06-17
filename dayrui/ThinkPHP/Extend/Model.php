@@ -264,13 +264,13 @@ class db_mysql {
     //+
     public function increment($key, $value) {
         $this->param['update_inc'][$key] = $value;
-        return $this;
+        return $this->update();
     }
 
     //-
     public function decrement($key, $value) {
         $this->param['update_dec'][$key] = $value;
-        return $this;
+        return $this->update();
     }
 
     public function update($data = []) {
@@ -391,6 +391,10 @@ class db_mysql {
         }
 
         $this->_clear();
+    }
+
+    public function emptyTable() {
+        $this->delete();
     }
 
     public function setLastQuery($sql) {
