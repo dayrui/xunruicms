@@ -26,7 +26,7 @@ class Cache {
     /**
      * 构造函数,初始化变量
      */
-    public function __construct(...$params) {
+    public function __construct() {
         $this->file_dir = WRITEPATH.'data/'; // 设置缓存目录
         $this->auth_dir = WRITEPATH.'authcode/'; // 认证数据缓存目录
     }

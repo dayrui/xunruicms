@@ -16,7 +16,7 @@ class Api extends \Phpcmf\Common {
 
         $version = [
             'CodeIgniter' => '7.4.0',
-            'ThinkPHP' => '7.1.0',
+            'ThinkPHP' => '7.2.0',
             'Laravel' => '8.0.2',
         ];
 
@@ -1048,37 +1048,34 @@ class Api extends \Phpcmf\Common {
         }
 
 		$type = intval(isset($_POST['data']['SYS_CACHE_TYPE']) ? $_POST['data']['SYS_CACHE_TYPE'] : 0);
-		switch ($type) {
+        switch ($type) {
             case 1:
                 $name = 'memcached';
+                if (!extension_loaded('memcached') && !extension_loaded('memcache')) {
+                    $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $name));
+                }
                 break;
             case 2:
                 $name = 'redis';
+                if (!extension_loaded('redis')) {
+                    $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $name));
+                }
                 break;
             default:
                 $name = 'file';
+                if (!dr_check_put_path(WRITEPATH.'file/')) {
+                    $this->_json(0, dr_lang('请分配cache/file目录的可读写权限'));
+                }
                 break;
         }
 
-        $config = new \Config\Cache();
-        $config->handler = $name;
-        $adapter = new $config->validHandlers[$config->handler]($config);
-        if (!$adapter->isSupported()) {
-            if ($type) {
-                $this->_json(0, dr_lang('PHP环境没有安装[%s]扩展', $config->handler));
-            } else {
-                $this->_json(0, dr_lang('请分配cache目录的可读写权限'));
-            }
-        }
-
-        $adapter->initialize();
-        $rt = $adapter->save('test', 'phpcmf', 60);
-        if (!$rt) {
-            $this->_json(1, dr_lang('缓存方式[%s]存储失败', $config->handler));
-        } elseif ($adapter->get('test') == 'phpcmf') {
-            $this->_json(1, dr_lang('缓存方式[%s]已生效', $config->handler));
+        if (is_file(FRAMEPATH.'Extend/Cache.php')) {
+            require FRAMEPATH.'Extend/Cache.php';
+            $cache = new \Frame\Cache();
+            $rt = $cache->test($name);
+            $this->_json($rt['code'], $rt['msg']);
         } else {
-            $this->_json(0, dr_lang('缓存方式[%s]未生效', $config->handler));
+            $this->_json(0, dr_lang('此版本不支持自定义缓存功能'));
         }
     }
 
