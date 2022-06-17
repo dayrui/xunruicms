@@ -538,7 +538,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                 foreach ($value['sku']['value'] as $ii => $t) {
                     foreach ($sku_field_id as $if) {
                         $ovalue[$ii.'_'.$if] = $t[$if];
-                        if ($if == 'image') {
+                        if ($if == 'image' && $t[$if]) {
                             $ovalue[$ii.'_'.$if.'_url'] = dr_get_file($t[$if]);
                         }
                     }

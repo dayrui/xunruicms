@@ -122,6 +122,7 @@ function dr_is_mobile() {
 
 function dr_ftable_mydelete(e){
     var ob = $(e);
+    ob.parent().find('.form-control-file').val('0');
     ob.parent().find('.form-control-link').val('0');
     ob.parent().find('.form-control-preview').val('');
     ob.parent().find('.ftable-show').hide();

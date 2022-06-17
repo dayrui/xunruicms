@@ -195,7 +195,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 'attachment' => $field['setting']['option']['attachment'],
                 'image_reduce' => $field['setting']['option']['image_reduce'],
             ], 'ENCODE').'&ct=0&one=1';
-            $html = '<label><input class="form-control2" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
+            $html = '<label><input class="form-control2 form-control-file" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<input class="form-control-link" type="hidden" value="'.$link.'">';
             $html.= '<input class="form-control-preview" type="hidden" value="'.$preview.'">';
             $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this, \''.$url.'\')" class="ftable-fileinput btn green btn-sm">上传</a>';
