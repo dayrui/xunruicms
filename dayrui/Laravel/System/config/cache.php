@@ -15,7 +15,7 @@ $config = [
     |
     */
 
-    'default' => 'file',
+    'default' => SYS_CACHE_TYPE  == 1 ? 'memcached' : (SYS_CACHE_TYPE  == 2 ? 'redis' : 'file'),
 
     /*
     |--------------------------------------------------------------------------
@@ -105,7 +105,7 @@ $config = [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
+    'prefix' => SYS_KEY.'_cache',
 
 ];
 
