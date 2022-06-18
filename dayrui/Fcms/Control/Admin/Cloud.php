@@ -925,6 +925,116 @@ return [
         $this->_json(100, '');
     }
 
+    // 删除app的提示信息
+    public function app_delete() {
+
+        $dir = dr_safe_filename($_GET['dir']);
+        if (!$dir) {
+            $this->_json(0, dr_lang('目录不能为空'));
+        }
+
+        $path = dr_get_app_dir($dir);
+
+        if (IS_POST) {
+
+            dr_dir_delete($path, true);
+            if (is_dir($path)) {
+                $this->_json(0, dr_lang('目录未删除成功，建议手动删除该目录'), [
+                    'time' => -1
+                ]);
+            }
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        $files = [];
+        if (is_file($path.'Files.txt')) {
+            $arr = explode(',', file_get_contents($path.'Files.txt'));
+            if ($arr) {
+                foreach ($arr as $t) {
+                    if (!$t) {
+                        continue;
+                    }
+                    if (IS_DEV) {
+                        $t = $this->_replace_path($t);
+                    }
+                    $files[] = $t;
+                }
+            }
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'dir' => $dir,
+            'path' => IS_DEV ? $path : dr_safe_replace_path($path),
+            'files' => $files,
+        ]);
+        \Phpcmf\Service::V()->display('cloud_app_delete.html');exit;
+    }
+
+    // app的文件列表
+    public function app_file() {
+
+        $dir = dr_safe_filename($_GET['dir']);
+        if (!$dir) {
+            $this->_json(0, dr_lang('目录不能为空'));
+        }
+
+        $path = dr_get_app_dir($dir);
+
+        $files = [];
+        if (is_file($path.'Files.txt')) {
+            $arr = explode(',', file_get_contents($path.'Files.txt'));
+            if ($arr) {
+                foreach ($arr as $t) {
+                    if (!$t) {
+                        continue;
+                    }
+                    if (IS_DEV) {
+                        $t = $this->_replace_path($t);
+                    }
+                    $files[] = $t;
+                }
+            }
+        } else {
+            $this->_json(0, dr_lang('没有找到相关文件'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'files' => $files,
+        ]);
+        \Phpcmf\Service::V()->display('cloud_app_file.html');exit;
+    }
+
+
+    ///////////////////////////////////////////////////
+
+    // 替换域名
+    private function _replace_path($t) {
+        return str_replace(
+            [
+                'WRITEPATH/',
+                'ROOTPATH/',
+                'WEBPATH/',
+                'APPSPATH/',
+                'TPLPATH/',
+                'FCPATH/',
+                'COREPATH/',
+                'MYPATH/',
+                'CSSPATH/',
+            ],
+            [
+                WRITEPATH,
+                ROOTPATH,
+                WEBPATH,
+                APPSPATH,
+                TPLPATH,
+                FCPATH,
+                COREPATH,
+                MYPATH,
+                ROOTPATH.'static/',
+            ],
+            trim($t, '/')
+        );
+    }
 
     // 复制目录
     private function _copy_dir($src, $dst) {

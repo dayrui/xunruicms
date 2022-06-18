@@ -1,0 +1,10 @@
+{template "header.html"}
+
+{if $files}
+    <div class="note " style="margin-top: -40px">
+        {loop $files $t}
+        <p style=" word-wrap: break-word;">{$t}</p>
+        {/loop}
+    </div>
+    {/if}
+{template "footer.html"}
