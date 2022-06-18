@@ -3096,14 +3096,14 @@ function dr_array_sort($arr, $key, $type = 'asc') {
 }
 
 // 获取网站表单发布页面需要的变量值
-function dr_get_form_post_value($table) {
+function dr_get_form_post_value($table, $siteid = SITE_ID) {
 
     $rt = [
         'form' => dr_form_hidden(),
         'debug' => 'debug返回正常',
     ];
 
-    $form = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID, $table);
+    $form = \Phpcmf\Service::L('cache')->get('form-'.$siteid, $table);
     if (!$form) {
         $rt['debug'] = '网站表单【'.$table.'】不存在';
         return $rt;
@@ -3169,14 +3169,14 @@ function dr_get_form_post_value($table) {
 }
 
 // 获取模块表单发布页面需要的变量值
-function dr_get_mform_post_value($mid, $table, $cid) {
+function dr_get_mform_post_value($mid, $table, $cid, $siteid = SITE_ID) {
 
     $rt = [
         'form' => dr_form_hidden(),
         'debug' => 'debug返回正常',
     ];
 
-    $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$mid);
+    $module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$mid);
     if (!$module) {
         $rt['debug'] = '模块【'.$mid.'】不存在';
         return $rt;

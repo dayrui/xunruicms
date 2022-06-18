@@ -525,7 +525,7 @@ class Table extends \Phpcmf\Common {
      * 回调保存或添加结果
      * */
     protected function _Call_Post($data) {
-        return dr_return_data(1, dr_lang('操作成功'));
+        return dr_return_data(1, dr_lang('操作成功'), $data);
     }
 
     /**
