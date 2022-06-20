@@ -30,9 +30,10 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
      */
     public function exceptionHandler(Throwable $exception)
     {
-        $codes      = $this->determineCodes($exception);
-        $statusCode = $codes[0];
-        $exitCode   = $codes[1];
+
+        $message = $exception->getMessage();
+
+        list($statusCode, $exitCode) = $this->determineCodes($exception);
 
         // Log it
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes))
@@ -43,7 +44,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
 		 // ajax 返回
         if (IS_AJAX || IS_API) {
-			$message = $exception->getMessage();
 			// 调试模式不屏蔽敏感信息
             if (CI_DEBUG) {
                 $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';

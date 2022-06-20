@@ -68,10 +68,9 @@ class Service {
             $classmap['Phpcmf\Model\Content'] = IS_USE_MODULE.'Models/Content.php';
             $classmap['Phpcmf\Model\Search'] = IS_USE_MODULE.'Models/Search.php';
             $classmap['Phpcmf\Admin\Category'] = IS_USE_MODULE.'Extends/Admin/Category.php';
-        }
-
-        if (IS_USE_MEMBER) {
-            $classmap['Phpcmf\Member\Module'] = IS_USE_MEMBER.'Extends/Module.php';
+            if (IS_USE_MEMBER) {
+                $classmap['Phpcmf\Member\Module'] = IS_USE_MODULE.'Extends/Member/Module.php';
+            }
         }
 
         $auto->classmap = array_merge($auto->classmap, $classmap);
