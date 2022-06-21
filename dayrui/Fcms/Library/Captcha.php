@@ -20,7 +20,7 @@ class Captcha {
     private $fontcolor;
     private $randstring = ['*', '@', '$', '%', '&', '!'];
 
-    public function __construct(...$params) {
+    public function __construct() {
         $this->font = WRITEPATH.'captcha.ttf';
         if (!is_file($this->font)) {
             // 加载老版本的字体文件
@@ -50,6 +50,10 @@ class Captcha {
 
     //生成随机验证码
     private function _code() {
+
+        if ($this->code) {
+            return $this->code;
+        }
 
         $code = '';
         $charset_len = strlen($this->charset) - 1;

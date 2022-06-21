@@ -3421,7 +3421,15 @@ function dr_url_rel($url) {
     if ((IS_API && !SYS_API_REL) || IS_ADMIN) {
         return $url;
     } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
-        $url = str_replace(FC_NOW_HOST, '/', $url);
+        $surl = FC_NOW_HOST;
+        if (defined('SC_HTML_FILE') && SITE_IS_MOBILE_HTML
+            && \Phpcmf\Service::V()->_is_mobile
+            && strpos(SITE_MURL, SITE_URL) === false
+        ) {
+            // 静态生成，移动端域名模式下
+            $surl = SITE_MURL;
+        }
+        $url = str_replace($surl, '/', $url);
         if (IS_DEV && strpos($url, 'http') === 0) {
             $url.= '#站外域名不能转为相对路径（本提示信息关闭开发者模式时不显示）';
         }
@@ -3438,10 +3446,18 @@ function dr_text_rel($text) {
     if ((IS_API && !SYS_API_REL) || IS_ADMIN) {
         return $text;
     } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
-        $text = str_replace('href="'.FC_NOW_HOST, 'href="/', $text);
-        $text = str_replace('href=\''.FC_NOW_HOST, 'href="/', $text);
-        $text = str_replace('src="'.FC_NOW_HOST, 'src="/', $text);
-        $text = str_replace('src=\''.FC_NOW_HOST, 'src="/', $text);
+        $surl = FC_NOW_HOST;
+        if (defined('SC_HTML_FILE') && SITE_IS_MOBILE_HTML
+            && \Phpcmf\Service::V()->_is_mobile
+            && strpos(SITE_MURL, SITE_URL) === false
+        ) {
+            // 静态生成，移动端域名模式下
+            $surl = SITE_MURL;
+        }
+        $text = str_replace('href="'.$surl, 'href="/', $text);
+        $text = str_replace('href=\''.$surl, 'href="/', $text);
+        $text = str_replace('src="'.$surl, 'src="/', $text);
+        $text = str_replace('src=\''.$surl, 'src="/', $text);
     }
 
     return $text;
