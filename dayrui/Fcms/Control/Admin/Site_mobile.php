@@ -7,6 +7,7 @@
 
 class Site_mobile extends \Phpcmf\Common
 {
+
 	public function index() {
 
 		if (IS_AJAX_POST) {
@@ -23,6 +24,12 @@ class Site_mobile extends \Phpcmf\Common
                 $post['tohtml'] = 0;
                 $post['tohtml'] = 0;
                 $post['dirname'] = $post['domain'] = '';
+            } elseif ($post['mode'] == 1) {
+                // 生成手机目录
+                $rt = \Phpcmf\Service::M('cache')->update_mobile_webpath(WEBPATH, $post['dirname']);
+                if ($rt) {
+                    $this->_json(0, dr_lang($rt));
+                }
             }
 			$rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'mobile', $post);
             if (!is_array($rt)) {
@@ -57,6 +64,5 @@ class Site_mobile extends \Phpcmf\Common
 		]);
 		\Phpcmf\Service::V()->display('site_mobile.html');
 	}
-
 	
 }
