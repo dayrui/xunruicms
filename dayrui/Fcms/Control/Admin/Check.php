@@ -187,7 +187,7 @@ class Check extends \Phpcmf\Common
                 $rt = [];
 
                 // 语言文件
-                $lang = dr_catcher_data(LANG_PATH.'lang.js', 5);
+                $lang = dr_catcher_data(LANG_PATH.'lang.js', 5, false);
                 if ($lang && strlen($lang) < 10) {
                     $rt[] = '语言JS文件异常：'.LANG_PATH.'lang.js';
                 } elseif ($lang && strpos($lang, 'finecms_datepicker_lang') === false) {
@@ -257,7 +257,7 @@ class Check extends \Phpcmf\Common
 				
 				$dir = ['cache', 'config', 'dayrui', 'template'];
 				foreach ($dir as $p) {
-					$code = dr_catcher_data(ROOT_URL.$p.'/api.php', 5);
+					$code = dr_catcher_data(ROOT_URL.$p.'/api.php', 5, false);
 					if (strpos($code, 'phpcmf') !== false) {
 						$rt[] = '目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
@@ -347,7 +347,7 @@ class Check extends \Phpcmf\Common
                         }
 
                         if ($url && $cname) {
-                            $code = dr_catcher_data($url, 5);
+                            $code = dr_catcher_data($url, 5, false);
                             if ($code != 'phpcmf ok') {
                                 $error[] = '['.$cname.']域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
@@ -367,7 +367,7 @@ class Check extends \Phpcmf\Common
                     if (!file_put_contents($t['path'].'api.html', 'phpcmf ok')) {
                         $this->_json(0, (IS_DEV ? $t['path'] : dr_safe_replace_path($t['path'])).' 无法写入文件');
                     }
-                    $code = dr_catcher_data($t['url'].'api.html', 5);
+                    $code = dr_catcher_data($t['url'].'api.html', 5, false);
                     if ($code != 'phpcmf ok') {
                         $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
                     }

@@ -2272,7 +2272,7 @@ function dr_post_json_data($url, $param = []) {
  * @param   intval  $timeout 超时时间，0不超时
  * @return  string
  */
-function dr_catcher_data($url, $timeout = 0) {
+function dr_catcher_data($url, $timeout = 0, $is_log = true) {
 
     if (!$url) {
         return '';
@@ -2298,7 +2298,7 @@ function dr_catcher_data($url, $timeout = 0) {
         $data = curl_exec($ch);
         $code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
         $errno = curl_errno($ch);
-        if (CI_DEBUG && $errno) {
+        if (CI_DEBUG && $errno && $is_log) {
             log_message('error', '获取远程数据失败['.$url.']：（'.$errno.'）'.curl_error($ch));
         }
         curl_close($ch);
@@ -2307,7 +2307,7 @@ function dr_catcher_data($url, $timeout = 0) {
         } elseif ($errno == 35) {
             // 当服务器不支持时改为普通获取方式
         } else {
-            if (CI_DEBUG && $code) {
+            if (CI_DEBUG && $code && $is_log) {
                 log_message('error', '获取远程数据失败['.$url.']http状态：'.$code);
             }
             return '';
