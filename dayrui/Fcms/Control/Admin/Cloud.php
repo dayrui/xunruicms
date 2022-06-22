@@ -405,6 +405,12 @@ return [
                     $is_module_app = $cfg['ftype'] == 'module' && $cfg['mtype'] == 0;
                     break;
                 }
+                if (is_file($cmspath.'APPSPATH/'.$name.'/Config/Before.php')) {
+                    $rt = require $cmspath.'APPSPATH/'.$name.'/Config/Before.php';
+                    if (!$rt['code']) {
+                        $this->_json(0, $rt['msg']);
+                    }
+                }
             }
         }
 
