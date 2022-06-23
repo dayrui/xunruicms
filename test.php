@@ -11,6 +11,12 @@ define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 define('WEBPATH', dirname(__FILE__).'/');
 define('SYSTEMPATH', true);
 
+$version = WEBPATH.'dayrui/My/Config/Version.php';
+if (is_file($version)) {
+    $vcfg = require $version;
+    dr_echo_msg(1, '当前CMS版本：V'.$vcfg['version'].'（'.$vcfg['downtime'].'）- '.$vcfg['name']);
+}
+
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME']);
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
