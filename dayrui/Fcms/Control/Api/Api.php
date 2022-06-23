@@ -115,7 +115,7 @@ class Api extends \Phpcmf\Common {
 
         // 获取参数
         $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $title = dr_safe_replace(htmlspecialchars(\Phpcmf\Service::L('input')->get('title')));
+        $title = dr_safe_replace(htmlspecialchars((string)\Phpcmf\Service::L('input')->get('title')));
         $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
         $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
 
