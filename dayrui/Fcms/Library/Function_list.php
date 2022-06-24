@@ -541,6 +541,16 @@ class Function_list {
         return dr_clearhtml($value);
     }
 
+    // 编码
+    public function code($value, $param = [], $data = [], $field = []) {
+
+        if (!$value) {
+            return '';
+        }
+
+        return htmlspecialchars($value);
+    }
+
     // 原样输出
     public function get_value($value, $param = [], $data = [], $field = []) {
         return $value;
