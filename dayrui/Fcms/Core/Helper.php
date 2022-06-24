@@ -3418,7 +3418,7 @@ function dr_web_prefix($url) {
  */
 function dr_url_rel($url) {
 
-    if ((IS_API && !SYS_API_REL) || IS_ADMIN) {
+    if ((IS_API_HTTP && (!defined('SYS_API_REL') || !SYS_API_REL)) || IS_ADMIN) {
         return $url;
     } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
         $surl = FC_NOW_HOST;
@@ -3443,7 +3443,7 @@ function dr_url_rel($url) {
  */
 function dr_text_rel($text) {
 
-    if ((IS_API && !SYS_API_REL) || IS_ADMIN) {
+    if ((IS_API_HTTP && (!defined('SYS_API_REL') || !SYS_API_REL)) || IS_ADMIN) {
         return $text;
     } elseif (defined('SYS_URL_REL') && SYS_URL_REL) {
         $surl = FC_NOW_HOST;
