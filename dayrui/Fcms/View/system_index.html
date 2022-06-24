@@ -247,7 +247,7 @@
                             <label class="col-md-2 control-label">{dr_lang('系统安全密钥')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-large" type="text" name="data[SYS_KEY]" id="sys_key" value="{if $data['SYS_KEY']}************{/if}" ></label>
-                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key()"> {dr_lang('重新生成')} </button></label>
+                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key('sys_key')"> {dr_lang('重新生成')} </button></label>
                                 <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
                             </div>
                         </div>
@@ -280,6 +280,15 @@
 
                 <div class="tab-pane  {if $page==2}active{/if}" id="tab_2">
                     <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">API_TOKEN</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_API_TOKEN]" id="SYS_API_TOKEN" value="{$data['SYS_API_TOKEN']}" ></label>
+                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key('SYS_API_TOKEN')"> {dr_lang('重新生成')} </button></label>
+                                <span class="help-block">{dr_lang('用于api_token参数，留空表示不开启此功能')}</span>
+                            </div>
+                        </div>
 
 						<div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('验证图片验证码')}</label>
@@ -333,9 +342,9 @@
             $("#dr_cron").val('');
         }
     }
-    function dr_to_key() {
+    function dr_to_key(id) {
         $.get("{dr_url('api/syskey')}", function(data){
-            $("#sys_key").val(data);
+            $("#"+id).val(data);
         });
     }
     function dr_test_https() {

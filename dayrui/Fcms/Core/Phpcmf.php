@@ -240,7 +240,35 @@ abstract class Common extends \Frame\Controller {
         define('SITE_EXPERIENCE', dr_lang($this->member_cache['pay']['experience'] ? $this->member_cache['pay']['experience'] : '经验'));
 
         // 验证api提交认证
-        if (dr_is_app('httpapi') && \Phpcmf\Service::L('input')->request('appid')) {
+        if (\Phpcmf\Service::L('input')->request('api_token')) {
+            define('IS_API_HTTP', 1);
+            if (!defined('SYS_API_TOKEN') || !SYS_API_TOKEN) {
+                $this->_json(0, dr_lang('API_TOKEN 未启用'));
+            }
+            $token = \Phpcmf\Service::L('input')->request('api_token');
+            if (md5(SYS_API_TOKEN) != $token) {
+                $this->_json(0, dr_lang('API_TOKEN 不正确'));
+            }
+            define('IS_API_HTTP_CODE', $token);
+            // 验证账号授权并登录
+            $auth = \Phpcmf\Service::L('input')->request('api_auth_code');  // 获取当前的登录记录
+            if ($auth) {
+                // 通过接口的post认证
+                $uid = (int)\Phpcmf\Service::L('input')->get('api_auth_uid');
+                if ($uid) {
+                    $member = \Phpcmf\Service::M('member')->get_member($uid);
+                    // 表示登录成功
+                    if (!$member) {
+                        // 不存在的账号
+                        $this->_json(0, dr_lang('api_auth_uid 账号不存在'));
+                    } elseif (md5($member['password'].$member['salt']) != $auth) {
+                        $this->_json(0, dr_lang('登录超时，请重新登录'));
+                    }
+                    $this->uid = $uid;
+                    $this->member = $member;
+                }
+            }
+        } elseif (dr_is_app('httpapi') && \Phpcmf\Service::L('input')->request('appid')) {
             define('IS_API_HTTP', 1);
             \Phpcmf\Service::M('http', 'httpapi')->check_auth();
         } else {

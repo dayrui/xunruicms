@@ -75,6 +75,7 @@ $system = [
     'SYS_URL_ONLY' => 0,
     'SYS_URL_REL' => 0,
     'SYS_KEY' => 'xunruicms',
+    'SYS_API_TOKEN' => '',
     'SYS_CSRF'  => 1,
     'SYS_CSRF_TIME'  => 0,
     'SYS_API_REL'  => 0,

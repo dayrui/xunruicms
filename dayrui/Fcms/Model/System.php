@@ -45,6 +45,7 @@ class System extends \Phpcmf\Model {
         'SYS_ATTACHMENT_URL'	=> '附件访问地址',
         'SYS_AVATAR_PATH'	=> '头像上传路径',
         'SYS_AVATAR_URL'	=> '头像访问地址',
+        'SYS_API_TOKEN'	=> 'API请求密钥',
         'SYS_API_CODE'	=> 'API请求时验证码开关',
         'SYS_API_REL'	=> 'API请求时的URL方式',
         'SYS_THEME_ROOT_PATH'	=> '资源路径引用方式',

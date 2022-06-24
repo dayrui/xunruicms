@@ -351,6 +351,7 @@ $db[\'default\']	= [
                                 'SYS_ATTACHMENT_DB'             => '',
                                 'SYS_ATTACHMENT_PATH'           => '',
                                 'SYS_ATTACHMENT_URL'            => '',
+                                'SYS_API_TOKEN'                 => '',
                             ];
                             if (is_file(MYPATH.'Config/License.php')) {
                                 $ls = require MYPATH.'Config/License.php';
