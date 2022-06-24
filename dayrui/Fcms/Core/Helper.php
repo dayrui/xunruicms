@@ -2467,7 +2467,7 @@ function dr_get_keyword($s) {
 }
 function dr_safe_keyword($s) {
 
-    if (!$s) {
+    if (dr_is_empty($s)) {
         return '';
     }
 
@@ -2479,7 +2479,7 @@ function dr_safe_keyword($s) {
  */
 function dr_safe_replace($string, $diy = []) {
 
-    if (!$string) {
+    if (dr_is_empty($string)) {
         return '';
     }
 
@@ -2495,7 +2495,7 @@ function dr_safe_replace($string, $diy = []) {
  */
 function dr_safe_filename($string) {
 
-    if (!$string) {
+    if (dr_is_empty($string)) {
         return '';
     }
 
@@ -2511,7 +2511,7 @@ function dr_safe_filename($string) {
  */
 function dr_safe_username($string) {
 
-    if (!$string) {
+    if (dr_is_empty($string)) {
         return '';
     }
 
@@ -2527,7 +2527,7 @@ function dr_safe_username($string) {
  */
 function dr_safe_password($string) {
 
-    if (!$string) {
+    if (dr_is_empty($string)) {
         return '';
     }
 
