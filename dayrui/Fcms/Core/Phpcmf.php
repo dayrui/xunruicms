@@ -246,8 +246,14 @@ abstract class Common extends \Frame\Controller {
                 $this->_json(0, dr_lang('API_TOKEN 未启用'));
             }
             $token = \Phpcmf\Service::L('input')->request('api_token');
-            if (md5(SYS_API_TOKEN) != $token) {
+            if (SYS_API_TOKEN != $token) {
                 $this->_json(0, dr_lang('API_TOKEN 不正确'));
+            }
+            if (IS_POST && !$_POST) {
+                $param = file_get_contents('php://input');
+                if ($param) {
+                    $_POST = json_decode($param, true);
+                }
             }
             define('IS_API_HTTP_CODE', $token);
             // 验证账号授权并登录
