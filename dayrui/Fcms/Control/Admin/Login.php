@@ -55,11 +55,15 @@ class Login extends \Phpcmf\Common
                 }
                 if ($login['code']) {
                     // 登录成功
+                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
 					if ($sn) {
 						// 解除禁止登陆
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
 						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
 					}
+                    if (IS_API_HTTP) {
+                        return $this->_json(1, 'ok', $login['data'], true);
+                    }
                     if (!$url) {
                         $url = SELF.'?time='.SYS_TIME;
                         if (isset($data['mode']) && $data['mode']) {
@@ -86,8 +90,7 @@ class Login extends \Phpcmf\Common
                     $url = dr_redirect_safe_check(\Phpcmf\Service::L('input')->xss_clean($url, true));
                     // 写入日志
                     $this->admin = $login['data'];
-                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
-                    return $this->_json(1, 'ok', ['sync' => [], 'url' => $url, 'auth' => $login['data']['auth']], true);
+                    return $this->_json(1, 'ok', ['sync' => [], 'url' => $url], true);
                 } else {
                     // 登录失败
                     if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {

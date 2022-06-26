@@ -163,11 +163,13 @@ class Home extends \Phpcmf\Common
 	public function index() {
 
         // 账号是否强制了简化模式
-        if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
-            $this->min();exit;
-        } elseif ($this->admin['setting']['admin_min']) {
-            // 自己切换的
-            $this->min();exit;
+        if (!IS_API_HTTP) {
+            if (\Phpcmf\Service::M('auth')->is_admin_min_mode()) {
+                $this->min();exit;
+            } elseif ($this->admin['setting']['admin_min']) {
+                // 自己切换的
+                $this->min();exit;
+            }
         }
 
         $menu = \Phpcmf\Service::L('cache')->get('menu-admin');
@@ -373,6 +375,34 @@ class Home extends \Phpcmf\Common
         // 自定义后台菜单显示
         if (function_exists('dr_my_admin_menu')) {
             list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($my_menu, $string, $mstring, $menu_top, $first);
+        }
+
+        if (1) {
+            $vue_menu = [];
+            foreach ($my_menu as $i => $top) {
+                $vue_menu[$i] = [
+                    'heading' => $top['name'],
+                    'route' => $top['mark'],
+                    'fontIcon' => $top['icon'],
+                    'pages' => [],
+                ];
+                foreach ($top['left'] as $f => $left) {
+                    $vue_menu[$i]['pages'][$f] = [
+                        'sectionTitle' => $left['name'],
+                        'route' => $left['mark'],
+                        'fontIcon' => $left['icon'],
+                        'sub' => [],
+                    ];
+                    foreach ($left['link'] as $l => $link) {
+                        $vue_menu[$i]['pages'][$f]['sub'][] = [
+                            'heading' => $link['name'],
+                            'route' => '/'.$link['uri'],
+                            'fontIcon' => $link['icon'],
+                        ];
+                    }
+                }
+            }
+            $this->_json(1, 'ok', ['menu' => $vue_menu]);
         }
 
 		\Phpcmf\Service::V()->assign([
