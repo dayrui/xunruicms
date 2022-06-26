@@ -272,6 +272,11 @@ abstract class Common extends \Frame\Controller {
                     }
                     $this->uid = $uid;
                     $this->member = $member;
+                    if (IS_ADMIN) {
+                        // 开启session
+                        $this->session();
+                        \Phpcmf\Service::M('auth')->login_session($member);
+                    }
                 }
             }
         } elseif (dr_is_app('httpapi') && \Phpcmf\Service::L('input')->request('appid')) {

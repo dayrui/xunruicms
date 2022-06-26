@@ -2845,7 +2845,7 @@ function dr_string2array($data, $limit = '') {
  * @return  string
  */
 function dr_array2string($data) {
-    return $data ? json_encode($data, JSON_UNESCAPED_UNICODE) : '';
+    return $data ? json_encode($data, JSON_UNESCAPED_UNICODE | 320) : '';
 }
 
 /**
