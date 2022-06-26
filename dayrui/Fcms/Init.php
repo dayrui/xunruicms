@@ -53,8 +53,7 @@ define('TEMPPATH', CMSPATH.'Temp/');
 // 是否来自ajax提交
 define('IS_AJAX', (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'));
 // 是否来自post提交
-define('IS_POST', isset($_POST) && count($_POST) ? TRUE : FALSE);
-
+define('IS_POST', $_SERVER['REQUEST_METHOD'] == 'POST' ? TRUE : FALSE);
 define('IS_AJAX_POST', IS_POST);
 // 当前系统时间戳
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
