@@ -150,6 +150,9 @@ class Auth extends \Phpcmf\Model {
         // 登录后的钩子
         \Phpcmf\Hooks::trigger('admin_login_after', $data);
 
+        // API认证字符串
+        $data['auth'] = md5($data['password'].$data['salt']);
+
         return dr_return_data($uid, 'login', $data);
     }
 

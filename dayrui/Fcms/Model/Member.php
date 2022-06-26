@@ -722,7 +722,7 @@ class Member extends \Phpcmf\Model {
         // 注册后的钩子
         \Phpcmf\Hooks::trigger('member_register_after', $data);
 
-        // API认证字符串,
+        // API认证字符串
         $data['auth'] = md5($data['password'].$data['salt']);
 
         // 记录日志

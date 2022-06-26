@@ -55,7 +55,6 @@ class Login extends \Phpcmf\Common
                 }
                 if ($login['code']) {
                     // 登录成功
-                    $sync = [];
 					if ($sn) {
 						// 解除禁止登陆
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
@@ -88,7 +87,7 @@ class Login extends \Phpcmf\Common
                     // 写入日志
                     $this->admin = $login['data'];
                     \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
-                    return $this->_json(1, 'ok', ['sync' => $sync, 'url' => $url], true);
+                    return $this->_json(1, 'ok', ['sync' => [], 'url' => $url, 'auth' => $login['data']['auth']], true);
                 } else {
                     // 登录失败
                     if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
