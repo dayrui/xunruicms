@@ -377,7 +377,7 @@ class Home extends \Phpcmf\Common
             list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($my_menu, $string, $mstring, $menu_top, $first);
         }
 
-        if (1) {
+        if (IS_API_HTTP) {
             $vue_menu = [];
             foreach ($my_menu as $i => $top) {
                 $vue_menu[$i] = [
