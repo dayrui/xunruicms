@@ -685,7 +685,7 @@ class Member extends \Phpcmf\Model {
             $data['is_mobile'] = \Phpcmf\Service::C()->member_cache['register']['sms'] ? 1 : 0;
         }
         $data['is_complete'] = 0;
-        $rt = $this->table('member_data')->insert($data);
+        $rt = $this->table('member_data')->replace($data);
         if (!$rt['code']) {
             // 删除主表
             $this->table('member')->delete($uid);

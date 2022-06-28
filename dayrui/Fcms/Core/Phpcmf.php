@@ -878,7 +878,7 @@ abstract class Common extends \Frame\Controller {
         }
 
         // 调试模式下不进行404状态码
-        if (!CI_DEBUG) {
+        if (!CI_DEBUG && !defined('SC_HTML_FILE')) {
             http_response_code(404);
         }
 
@@ -948,6 +948,9 @@ abstract class Common extends \Frame\Controller {
         $category = $module['category'];
         foreach ($category as $id => $t) {
             // 筛选可发布的栏目权限
+            if (!is_array($t)) {
+                continue;
+            }
             if (!$t['child']) {
                 if ($t['mid'] != $module['dirname']) {
                     // 模块不符合 排除
