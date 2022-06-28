@@ -18,7 +18,7 @@ class App extends BaseConfig
 
 	public $uriProtocol = 'REQUEST_URI';
 
-	public $defaultLocale = 'en';
+	public $defaultLocale = 'zh-cn';
 
 	public $negotiateLocale = false;
 
