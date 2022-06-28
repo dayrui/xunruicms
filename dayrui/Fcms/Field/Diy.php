@@ -137,19 +137,29 @@ class Diy extends \Phpcmf\Library\A_Field {
         // 字段默认值
         $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
+        $name = $field['fieldname'];
+        $code = '';
+
         // 文件类型
-        $file = CONFIGPATH.'myfield/'.$field['setting']['option']['file'];
-        $file2 = dr_get_app_dir(APP_DIR).'Config/myfield/'.$field['setting']['option']['file'];
-        if (is_file($file)) {
-            $name = $field['fieldname'];
-            require $file;
-        } elseif (is_file($file2)) {
-            $name = $field['fieldname'];
-            require $file2;
-        } elseif (!$field['setting']['option']['file']) {
-            $code = '<font color=red>没有选择文件，在字段属性中选择</font>';
+        if (!$field['setting']['option']['file']) {
+            $code = '<font color=red>没有设置文件</font>';
         } else {
-            $code = '<font color=red>文件（'.$file.'）不存在</font>';
+            if (strpos((string)$field['setting']['option']['file'], '/') !== false
+                && is_file($field['setting']['option']['file'])) {
+                require $field['setting']['option']['file'];
+            } else {
+                $file = CONFIGPATH.'myfield/'.$field['setting']['option']['file'];
+                $file2 = dr_get_app_dir(APP_DIR).'Config/myfield/'.$field['setting']['option']['file'];
+                if (is_file($file)) {
+                    require $file;
+                } elseif (is_file($file2)) {
+                    require $file2;
+                } elseif (!$field['setting']['option']['file']) {
+                    $code = '<font color=red>没有选择文件，在字段属性中选择</font>';
+                } else {
+                    $code = '<font color=red>文件（'.$file.'）不存在</font>';
+                }
+            }
         }
 
         return $this->input_format($field['fieldname'], $text, $code);

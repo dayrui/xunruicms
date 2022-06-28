@@ -282,7 +282,7 @@ class Tree {
      */
     public function select_category($data, $id = 0, $str = '', $default = ' -- ', $onlysub = 0, $is_push = 0, $is_first = 0) {
 
-        if (isset($data[0]) && count($data) == 1) {
+        if (isset($data[0]) && dr_is_module($data[0])) {
             $mid = $data[0];
             $data = \Phpcmf\Service::L('category', 'module')->get_category($mid);
         } else {
@@ -310,6 +310,9 @@ class Tree {
             $is_cks = 0;
             if (is_array($data)) {
                 foreach($data as $t) {
+                    if (!is_array($t)) {
+                        continue;
+                    }
                     // 只显示主栏目
                     if ($this->ismain && !$t['ismain']) {
                         continue;
