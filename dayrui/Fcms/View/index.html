@@ -1,5 +1,65 @@
 {template "head.html"}
 
+<?php
+
+// 权限判断并筛选
+foreach ($my_menu as $tid => $topm) {
+$_left = 0; // 是否第一个分组菜单，0表示第一个
+$_link = 0; // 是否第一个链接菜单，0表示第一个
+$left_string = '';
+$mleft_string = [];
+!$first && $first = $tid;
+foreach ($topm['left'] as $if => $left) {
+// 链接菜单开始
+$link_string = '';
+$mlink_string = '';
+foreach ($left['link'] as $i => $link) {
+$url = $link['url'];
+if (!$_link) {
+// 第一个链接菜单时 指定class
+$class = 'nav-item active open';
+$topm['url'] = $link['url'];
+$topm['link_id'] = $link['id'];
+$topm['left_id'] = $left['id'];
+} else {
+$class = 'nav-item';
+}
+$_link = 1; // 标识以后的菜单就不是第一个了
+$link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');" class="tooltips" data-container="body" data-placement="right" data-original-title="'.dr_lang($link['name']).'" title="'.dr_lang($link['name']).'"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($topm['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
+$mlink_string.= '<li id="dr_menu_m_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($topm['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
+}
+$left_string.= '
+<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($_left ? '' : 'active open').' " style="'.($first==$tid ? '' : 'display:none').'">
+    <a href="javascript:;" class="nav-link nav-toggle tooltips" data-container="body" data-placement="right" data-original-title="'.dr_lang($left['name']).'">
+        <i class="'.$left['icon'].'"></i>
+        <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
+        <span class="selected" style="'.($_left ? 'display:none' : '').'"></span>
+        <span class="arrow '.($_left ? '' : ' open').'"></span>
+    </a>
+    <ul class="sub-menu">'.$link_string.'</ul>
+</li>';
+$mleft_string[] = $mlink_string;
+
+$_left = 1; // 标识以后的菜单就不是第一个了
+}
+
+$string.= $left_string;
+$mstring.= '<li class="dropdown dropdown-extended dropdown-tasks fc-mb-sum-menu" id="dr_m_top_'.$tid.'" style=" '.($first == $tid ? '' : 'display:none').'">
+    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-angle-down"></i>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        '.implode('<li class="divider"> </li>', $mleft_string).'
+    </ul>
+</li>';
+$menu_top[$tid] = $topm;
+}
+// 自定义后台菜单显示
+if (function_exists('dr_my_admin_menu')) {
+list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($my_menu, $string, $mstring, $menu_top, $first);
+}
+$top = $menu_top;
+?>
 <body scroll="no" style="overflow: hidden;" class="page-sidebar-closed-hide-logo page-admin-all page-content-white page-header-fixed page-sidebar-fixed ">
 <style>.page-content {padding:0px !important;} </style>
 <div class="page-header navbar navbar-fixed-top">

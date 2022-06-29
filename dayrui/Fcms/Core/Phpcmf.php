@@ -91,6 +91,7 @@ abstract class Common extends \Frame\Controller {
         } else {
             $this->cmf_version = require MYPATH.'Config/Version.php';
         }
+        define('CMF_NAME', $this->cmf_version['name']);
         define('CMF_VERSION', $this->cmf_version['version']);
         // 版本更新时间字符串
         define('CMF_UPDATE_TIME', IS_XRDEV ? SYS_TIME : str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']));

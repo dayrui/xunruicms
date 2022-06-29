@@ -1,4 +1,45 @@
 {template "head.html"}
+
+<?php
+foreach ($my_menu as $tid => $left) {
+    $_link = 0; // 是否第一个链接菜单，0表示第一个
+    $left_string = '';
+    // 链接菜单开始
+    $link_string = '';
+    foreach ($left['link'] as $i => $link) {
+
+        $url = $link['url'];
+        if (!$_link) {
+        // 第一个链接菜单时 指定class
+        $class = 'nav-item active open';
+        $top['url'] = $url;
+        $top['link_id'] = $link['id'];
+        $top['left_id'] = $left['id'];
+        } else {
+        $class = 'nav-item';
+        }
+        $_link = 1; // 标识以后的菜单就不是第一个了
+        $link['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
+        $link_string .= '<li id="dr_menu_link_' . $link['id'] . '" class="' . $class . '"><a href="javascript:Mlink(' . $tid . ', ' . $left['id'] . ', ' . $link['id'] . ', \'' . $url . '\');"><i class="iconm ' . $link['icon'] . '"></i> <span class="title" title="' . dr_lang($top['name']) . ' - ' . dr_lang($left['name']) . ' - ' . dr_lang($link['name']) . '">' . dr_lang($link['name']) . '</span></a></li>';
+        }
+        $left_string .= '
+        <li id="dr_menu_left_' . $left['id'] . '" class="dr_menu_' . $tid . ' dr_menu_item nav-item ' . ($first != $tid ? '' : 'active open') . ' " >
+            <a href="javascript:;" class="nav-link nav-toggle">
+                <i class="' . $left['icon'] . '"></i>
+                <span class="title">' . dr_strcut(dr_lang($left['name']), 5) . '</span>
+                <span class="selected" style="' . ($first != $tid ? 'display:none' : '') . '"></span>
+                <span class="arrow ' . ($first != $tid ? '' : ' open') . '"></span>
+            </a>
+            <ul class="sub-menu">' . $link_string . '</ul>
+        </li>';
+        $string .= $left_string;
+}
+// 自定义后台菜单显示字符串
+if (function_exists('dr_my_admin_min_menu')) {
+$string = dr_my_admin_min_menu($my_menu, $string);
+}
+?>
+
 <body scroll="no" style="overflow: hidden;" class="page-sidebar-closed-hide-logo page-admin-min page-container-bg-solid page-header-fixed page-sidebar-fixed ">
 <div class="page-header navbar navbar-fixed-top">
     <div class="page-header-inner ">

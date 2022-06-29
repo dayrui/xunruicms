@@ -192,6 +192,7 @@ class Home extends \Phpcmf\Common
         // 默认的首页内容
         $main_url = dr_url('home/main');
         $main_link = '';
+        $main_menu = [];
         if (isset($_GET['go']) && $_GET['go']) {
             $go = urldecode((string)\Phpcmf\Service::L('input')->get('go'));
             $url = parse_url($go);
@@ -222,7 +223,6 @@ class Home extends \Phpcmf\Common
                     }
                 }
             }
-
 		    // 权限判断并筛选
             foreach ($my_menu as $tid => $top) {
                 if (!$top['left']) {
@@ -249,10 +249,7 @@ class Home extends \Phpcmf\Common
                         }
                     }
                 }
-                $_left = 0; // 是否第一个分组菜单，0表示第一个
-                $_link = 0; // 是否第一个链接菜单，0表示第一个
                 $left_string = '';
-                $mleft_string = [];
                 !$first && $first = $tid;
                 foreach ($top['left'] as $if => $left) {
                     if (!$left['link']) {
@@ -266,7 +263,6 @@ class Home extends \Phpcmf\Common
                     }
                     // 链接菜单开始
                     $link_string = '';
-                    $mlink_string = '';
                     foreach ($left['link'] as $i => $link) {
                         if ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
                             // 判断权限
@@ -311,70 +307,33 @@ class Home extends \Phpcmf\Common
                             unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue;
                         }
-                        $url = $link['url'] ? $link['url'] : \Phpcmf\Service::L('Router')->url($link['uri']);
-                        if (!$_link) {
-                            // 第一个链接菜单时 指定class
-                            $class = 'nav-item active open';
-                            $top['url'] = $url;
-                            $top['link_id'] = $link['id'];
-                            $top['left_id'] = $left['id'];
-                        } else {
-                            $class = 'nav-item';
+
+                        $left['link'][$i]['url'] = $link['url'] ? $link['url'] : \Phpcmf\Service::L('Router')->url($link['uri']);
+                        $left['link'][$i]['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
+
+                        if (!$main_menu) {
+                            $main_menu = $link;
                         }
-                        $_link = 1; // 标识以后的菜单就不是第一个了
-                        $link['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
-                        $link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');" class="tooltips" data-container="body" data-placement="right" data-original-title="'.dr_lang($link['name']).'" title="'.dr_lang($link['name']).'"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($top['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
-                        $mlink_string.= '<li id="dr_menu_m_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($top['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
+                        $link_string = 'true';
                     }
                     if (!$link_string) {
                         unset($my_menu[$tid]['left'][$if]);
                         continue; // 没有链接菜单就不要
                     }
-                    $left_string.= '
-				<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($_left ? '' : 'active open').' " style="'.($first==$tid ? '' : 'display:none').'">
-                    <a href="javascript:;" class="nav-link nav-toggle tooltips" data-container="body" data-placement="right" data-original-title="'.dr_lang($left['name']).'">
-                        <i class="'.$left['icon'].'"></i>
-                        <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
-                        <span class="selected" style="'.($_left ? 'display:none' : '').'"></span>
-                        <span class="arrow '.($_left ? '' : ' open').'"></span>
-                    </a>
-					<ul class="sub-menu">'.$link_string.'</ul>
-				</li>';
-                    $mleft_string[] = $mlink_string;
-                    $_left = 1; // 标识以后的菜单就不是第一个了
+                    $left_string = 'true';
+                    $top['left'][$if] = $left;
                 }
                 if (!$left_string) {
                     $first == $tid && $first = 0;
                     continue; // 没有分组菜单就不要
                 }
-                $string.= $left_string;
-                /*
-                $mstring.= '<div class="btn-group pull-left" id="dr_m_top_'.$tid.'" style=" '.($first == $tid ? '' : 'display:none').'">
-                    <button type="button" class="btn green btn-sm btn-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> '.dr_lang($top['name']).'
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        '.implode($mleft_string, '<li class="divider"> </li>').'
-                    </ul>
-                </div>';<li class="dropdown dropdown-user">*/
-                $mstring.= '<li class="dropdown dropdown-extended dropdown-tasks fc-mb-sum-menu" id="dr_m_top_'.$tid.'" style=" '.($first == $tid ? '' : 'display:none').'">
-                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
-                        <i class="fa fa-angle-down"></i>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        '.implode('<li class="divider"> </li>', $mleft_string).'
-                    </ul>
-                </li>';
+                $my_menu[$tid] = $top;
                 unset($top['left']);
                 $menu_top[$tid] = $top;
             }
         }
         if (!$menu_top && SITE_ID > 1) {
             $this->_admin_msg(0, dr_lang('没有给当前站点分配管理菜单权限'));
-        }
-        // 自定义后台菜单显示
-        if (function_exists('dr_my_admin_menu')) {
-            list($string, $mstring, $menu_top, $first) = dr_my_admin_menu($my_menu, $string, $mstring, $menu_top, $first);
         }
 
         if (IS_API_HTTP) {
@@ -408,19 +367,11 @@ class Home extends \Phpcmf\Common
 		\Phpcmf\Service::V()->assign([
 			'top' => $menu_top,
 			'first' => $first,
-			'string' => $string,
-			'mstring' => $mstring,
+            'my_menu' => $my_menu,
             'is_index' => 1,
-			'sys_color' => [
-				'default' => '#333438',
-				'blue' => '#368ee0',
-				'darkblue' => '#2b3643',
-				'grey' => '#697380',
-				'light' => '#F9FAFD',
-				'light2' => '#F1F1F1',
-			],
             'main_url' => $main_url,
             'main_link' => $main_link,
+            'main_menu' => $main_menu,
             'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
 		\Phpcmf\Service::V()->display('index.html');exit;
@@ -437,7 +388,6 @@ class Home extends \Phpcmf\Common
 
         $admin_menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri');
 
-        $string = '';
         $my_menu = [];
         if ($this->admin['adminid'] > 1) {
             foreach ($menu as $t) {
@@ -445,6 +395,25 @@ class Home extends \Phpcmf\Common
             }
         } else {
             $my_menu = $menu;
+        }
+
+        // 默认的首页内容
+        $main_url = dr_url('home/main');
+        $main_link = '';
+        $main_menu = [];
+        if (isset($_GET['go']) && $_GET['go']) {
+            $go = urldecode((string)\Phpcmf\Service::L('input')->get('go'));
+            $url = parse_url($go);
+            if (isset($url['query']) && $url['query']) {
+                parse_str($url['query'], $p);
+                $uri = trim($p['s'].'/'.$p['c'].'/'.$p['m'], '/');
+                $main_menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri', $uri);
+                if ($main_menu) {
+                    $first = $main_menu['tid'];
+                    $main_url = dr_url($uri);
+                    $main_link = 'Mlink('.$main_menu['tid'].', '.$main_menu['pid'].', '.$main_menu['id'].', \'\');';
+                }
+            }
         }
 
         if ($my_menu) {
@@ -463,18 +432,10 @@ class Home extends \Phpcmf\Common
                 }
             }
             // 权限判断并筛选
-            $tid = 0;
-            $first = 0;
-            foreach ($my_menu as $left) {
+            foreach ($my_menu as $tid => $left) {
                 if (!$left['link']) {
                     continue; // 没有分组菜单就不要
                 }
-                /*elseif (SITE_ID > 1 && !in_array(SITE_ID, $left['site'])) {
-                    //continue; // 没有划分本站点就不显示 , 这里不做判断，因为只判断下方的link
-                }*/
-                $_link = 0; // 是否第一个链接菜单，0表示第一个
-                $left_string = '';
-
                 // 链接菜单开始
                 $link_string = '';
                 foreach ($left['link'] as $i => $link) {
@@ -513,50 +474,30 @@ class Home extends \Phpcmf\Common
                             continue;
                         }
                     }
-                    $url = $link['url'] ? $link['url'] :\Phpcmf\Service::L('Router')->url($link['uri']);
-                    if (!$_link) {
-                        // 第一个链接菜单时 指定class
-                        $class = 'nav-item active open';
-                        $top['url'] = $url;
-                        $top['link_id'] = $link['id'];
-                        $top['left_id'] = $left['id'];
-                    } else {
-                        $class = 'nav-item';
+                    $left['link'][$i]['url'] = $link['url'] ? $link['url'] :\Phpcmf\Service::L('Router')->url($link['uri']);
+                    $left['link'][$i]['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
+                    $link_string.= 'true';
+                    if (!$main_menu) {
+                        $first = $tid;
+                        $main_menu = $link;
                     }
-                    $_link = 1; // 标识以后的菜单就不是第一个了
-                    $link['icon'] = $link['icon'] ? $link['icon'] : 'fa fa-th-large';
-                    $link_string.= '<li id="dr_menu_link_'.$link['id'].'" class="'.$class.'"><a href="javascript:Mlink('.$tid.', '.$left['id'].', '.$link['id'].', \''.$url.'\');"><i class="iconm '.$link['icon'].'"></i> <span class="title" title="'.dr_lang($top['name']).' - '.dr_lang($left['name']).' - '.dr_lang($link['name']).'">'.dr_lang($link['name']).'</span></a></li>';
                 }
                 if (!$link_string) {
+                    unset($my_menu[$tid]);
                     continue; // 没有链接菜单就不要
                 }
-                $left_string.= '
-				<li id="dr_menu_left_'.$left['id'].'" class="dr_menu_'.$tid.' dr_menu_item nav-item '.($first ? '' : 'active open').' " >
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="'.$left['icon'].'"></i>
-                        <span class="title">'.dr_strcut(dr_lang($left['name']), 5).'</span>
-                        <span class="selected" style="'.($first ? 'display:none' : '').'"></span>
-                        <span class="arrow '.($first ? '' : ' open').'"></span>
-                    </a>
-					<ul class="sub-menu">'.$link_string.'</ul>
-				</li>';
-                !$first && $first = 1;
-                $string.= $left_string;
-
+                $my_menu[$tid] = $left;
             }
         }
-
-        // 自定义后台菜单显示字符串
-        if (function_exists('dr_my_admin_min_menu')) {
-            $string = dr_my_admin_min_menu($menu, $string);
-        }
-
         \Phpcmf\Service::V()->assign([
-            'string' => $string,
+            'first' => $first,
             'is_min' => 1,
             'is_mode' => \Phpcmf\Service::M('auth')->is_admin_min_mode(),
+            'my_menu' => $my_menu,
             'is_index' => 1,
-            'main_url' => dr_url('home/main'),
+            'main_url' => $main_url,
+            'main_link' => $main_link,
+            'main_menu' => $main_menu,
             'is_search_help' => IS_OEM_CMS ? 0 : CI_DEBUG,
         ]);
         \Phpcmf\Service::V()->display('index_min.html');exit;
