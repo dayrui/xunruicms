@@ -7718,9 +7718,8 @@ body[ng-controller] .modal {
 
 .note {
     margin: 0 0 20px;
-    padding: 15px 30px 15px 15px;
-    border-left: 5px solid #eee;
-    border-radius: 0 4px 4px 0
+    padding: 15px;
+    border-radius: 4px;
 }
 
 .note h1,.note h2,.note h3,.note h4,.note h5,.note h6 {
@@ -7807,9 +7806,7 @@ body[ng-controller] .modal {
 }
 
 .note.note-danger {
-    background-color: #fef7f8;
-    border-color: #f0868e;
-    color: #210406
+
 }
 
 .note.note-danger.note-bordered {
@@ -13877,7 +13874,6 @@ body{background-color:#f5f6f8}
 }
 .note.note-danger {
     border-radius: 4px;
-    border-left: 4px solid #3ea9e2;
     background-color: #ffffff;
     color: #888;
 }

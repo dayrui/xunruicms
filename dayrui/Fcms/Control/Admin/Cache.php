@@ -165,42 +165,6 @@ class Cache extends \Phpcmf\Common {
                     $error[] = $app_name['member'];
                 }
 
-                // 判断静态生成插件
-                if (!dr_is_app('chtml')) {
-                    $is_html = 0;
-                    if (IS_USE_MODULE) {
-                        $module = \Phpcmf\Service::M()->table('module')->getAll();
-                        if ($module) {
-                            foreach ($module as $m) {
-                                $site = dr_string2array($m['site']);
-                                if ($site) {
-                                    foreach ($site as $t) {
-                                        if ($t['html']) {
-                                            $is_html = 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (!$is_html) {
-                                // 共享栏目
-                                $category = \Phpcmf\Service::L('category', 'module')->get_category('share');
-                                if ($category) {
-                                    foreach ($category as $t) {
-                                        if ($t['setting']['html']) {
-                                            $is_html = 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if ($is_html) {
-                            $error[] = $app_name['chtml'];
-                        }
-                    }
-                }
-
                 if ($error) {
                     $this->_html_msg(0, '需要手动安装这些应用插件：'.implode('、', $error).'
 <br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a><br><br>将以上问题处理之后继续更新此脚本', 0);

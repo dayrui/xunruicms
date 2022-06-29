@@ -1,8 +1,6 @@
 {template "head.html"}
 
 <?php
-
-// 权限判断并筛选
 foreach ($my_menu as $tid => $topm) {
 $_left = 0; // 是否第一个分组菜单，0表示第一个
 $_link = 0; // 是否第一个链接菜单，0表示第一个
@@ -39,10 +37,8 @@ $left_string.= '
     <ul class="sub-menu">'.$link_string.'</ul>
 </li>';
 $mleft_string[] = $mlink_string;
-
 $_left = 1; // 标识以后的菜单就不是第一个了
 }
-
 $string.= $left_string;
 $mstring.= '<li class="dropdown dropdown-extended dropdown-tasks fc-mb-sum-menu" id="dr_m_top_'.$tid.'" style=" '.($first == $tid ? '' : 'display:none').'">
     <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
