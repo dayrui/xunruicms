@@ -409,7 +409,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
         $this->_load_date = $this->_load_datetime = 0;
 
         $str = '<div class="table-scrollable" style="width:'.$width.(is_numeric($width) ? 'px !important' : '').';">';
-        $str.= '<table class="table table-nomargin table-bordered table-striped table-bordered table-advance" >';
+        $str.= '<table class="table fc-sku-table table-nomargin table-bordered table-striped table-bordered table-advance" >';
         $str.= ' <thead><tr>';
         if ($field['setting']['option']['is_first_hang'] && !$field['setting']['option']['is_add']) {
             $str.= ' <th> '.dr_lang($field['setting']['option']['first_cname']).' </th>';
@@ -532,7 +532,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
     public function show_table($field, $value, $class = '') {
 
         // class属性
-        !$class && $class = 'table table-nomargin table-bordered table-striped table-bordered table-advance';
+        !$class && $class = 'table fc-sku-table table-nomargin table-bordered table-striped table-bordered table-advance';
 
         // 字段默认值
         $value = dr_string2array($value);

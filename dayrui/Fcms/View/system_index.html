@@ -90,7 +90,7 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_NOT_UPDATE]" value="0" {if empty($data['SYS_NOT_UPDATE'])}checked{/if} /> {dr_lang('允许检测')} <span></span></label>
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_NOT_UPDATE]" value="1" {if $data['SYS_NOT_UPDATE']}checked{/if} /> {dr_lang('禁止检测')} <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('不进行主动检测系统框架的版本信息')}</span>
+                                <span class="help-block">{dr_lang('不主动向官网服务器检测系统框架的版本信息')}</span>
                             </div>
                         </div>
                         <div class="form-group">

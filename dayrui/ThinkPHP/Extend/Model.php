@@ -356,7 +356,7 @@ class db_mysql {
 
             foreach (array_keys($val) as $field) {
                 if ($field !== $index) {
-                    $final[$field][] = 'WHEN ' . $index . ' = ' . $val[$index] . ' THEN "' . $val[$field] . '"';
+                    $final[$field][] = 'WHEN ' . $index . ' = ' . $val[$index] . ' THEN "' . addslashes($val[$field]) . '"';
                 }
             }
         }
