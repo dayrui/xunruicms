@@ -817,12 +817,13 @@ return [
             if (is_dir($cmspath.'ROOTPATH')) {
                 $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
             }
+            /*升级不覆盖模板
             if (is_dir($cmspath.'CSSPATH')) {
                 $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
             }
             if (is_dir($cmspath.'TPLPATH')) {
                 $this->_copy_dir($cmspath.'TPLPATH', TPLPATH);
-            }
+            }*/
             if (is_dir($cmspath.'WRITEPATH')) {
                 $this->_copy_dir($cmspath.'WRITEPATH', WRITEPATH);
             }
