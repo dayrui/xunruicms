@@ -214,75 +214,11 @@ class Field extends \Phpcmf\Common {
 				if (!$rt['code']) {
 					$this->_json(0, dr_lang($rt['msg']));
 				}
-                if (\Phpcmf\Service::M('Field')->func == 'member') {
-                    // 用户字段
-                    $cat = \Phpcmf\Service::L('input')->post('cat');
-                    if ($cat['use'] && $cat['gids']) {
-                        $group = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
-                        $value = $group ? dr_string2array($group['value']) : [];
-                        $value[$rt['code']] = [];
-                        foreach ($cat['gids'] as $gid) {
-                            $value[$rt['code']][$gid] = $gid;
-                        }
-                        \Phpcmf\Service::M()->db->table('member_setting')->replace([
-                            'name' => 'field',
-                            'value' => dr_array2string($value)
-                        ]);
-                    }
-                } elseif (\Phpcmf\Service::M('Field')->func == 'category') {
-                    // 栏目自定义字段
-                    $cat = \Phpcmf\Service::L('input')->post('cat');
-                    if ($cat['use'] && $cat['catid']) {
-                        $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain', 1)->getAll();
-                        if ($cats) {
-                            foreach ($cats as $t) {
-                                if (in_array($t['id'], $cat['catid'])) {
-                                    // 表示选中的栏目了
-                                } else {
-                                    // 这种这些未选择的栏目属性
-                                    $setting = dr_string2array($t['setting']);
-                                    if (!$setting['cat_field'] || !is_array($setting['cat_field'])) {
-                                        $setting['cat_field'] = [];
-                                    }
-                                    $setting['cat_field'][$data['fieldname']] = 1;
-                                    \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                                }
-                            }
-                        }
-                    }
-                } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
-                    // 栏目模型字段
-                    $cat = \Phpcmf\Service::L('input')->post('cat');
-                    if ($cat['use'] && $cat['catid']) {
-                        $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')
-                            ->where('ismain', 1)->getAll();
-                        if ($cats) {
-                            foreach ($cats as $t) {
-                                if (in_array($t['id'], $cat['catid'])) {
-                                    // 表示选中的栏目了
-                                    $setting = dr_string2array($t['setting']);
-                                    $setting['module_field'][$data['fieldname']] = 1;
-                                    \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                                }
-                            }
-                        }
-                    }
-                }
                 $this->_cache(); // 自动更新缓存
 				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
 				$this->_json(1, dr_lang('操作成功'));
 			}
 		}
-        if (in_array(\Phpcmf\Service::M('Field')->func, ['category', 'category_data'])) {
-            \Phpcmf\Service::V()->assign('select_category', \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
-                $this->module['dirname'],
-                0,
-                'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
-                '',
-                0,
-                0
-            ));
-        }
 
 		\Phpcmf\Service::V()->assign([
 			'id' => $id,
@@ -337,152 +273,10 @@ class Field extends \Phpcmf\Common {
 			if (!$rt['code']) {
 			    $this->_json(0, dr_lang($rt['msg']));
             }
-            if (\Phpcmf\Service::M('Field')->func == 'member') {
-                // 用户字段
-                $cat = \Phpcmf\Service::L('input')->post('cat');
-                $group = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
-                $value = $group ? dr_string2array($group['value']) : [];
-                $value[$id] = [];
-                if ($cat['use'] && $cat['gids']) {
-                    foreach ($cat['gids'] as $gid) {
-                        $value[$id][$gid] = $gid;
-                    }
-                }
-                \Phpcmf\Service::M()->db->table('member_setting')->replace([
-                    'name' => 'field',
-                    'value' => dr_array2string($value)
-                ]);
-            } elseif (\Phpcmf\Service::M('Field')->func == 'category') {
-                // 栏目自定义字段
-                $cat = \Phpcmf\Service::L('input')->post('cat');
-                $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain', 1)->getAll();
-                if ($cat['use'] && $cat['catid']) {
-                    foreach ($cats as $t) {
-                        $setting = dr_string2array($t['setting']);
-                        if (in_array($t['id'], $cat['catid'])) {
-                            // 表示选中的栏目了
-                            if (isset($setting['cat_field'][$data['fieldname']])) {
-                                unset($setting['cat_field'][$data['fieldname']]);
-                                \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                            }
-                        } else {
-                            // 这种这些未选择的栏目属性
-                            if (!$setting['cat_field'] || !is_array($setting['cat_field'])) {
-                                $setting['cat_field'] = [];
-                            }
-                            $setting['cat_field'][$data['fieldname']] = 1;
-                            \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                        }
-                    }
-                } else {
-                    // 删除全部
-                    foreach ($cats as $t) {
-                        $setting = dr_string2array($t['setting']);
-                        // 这种这些未选择的栏目属性
-                        if (!$setting['cat_field'] || !is_array($setting['cat_field'])) {
-                            $setting['cat_field'] = [];
-                        }
-                        $setting['cat_field'][$data['fieldname']] = 1;
-                        \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                    }
-                }
-            } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
-                // 栏目模型字段
-                $cat = \Phpcmf\Service::L('input')->post('cat');
-                $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')
-                    ->where('ismain', 1)->getAll();
-                if ($cat['use'] && $cat['catid']) {
-                    foreach ($cats as $t) {
-                        $setting = dr_string2array($t['setting']);
-                        if (in_array($t['id'], $cat['catid'])) {
-                            // 表示选中的栏目了
-                            if (!$setting['module_field'] || !is_array($setting['module_field'])) {
-                                $setting['module_field'] = [];
-                            }
-                            $setting['module_field'][$data['fieldname']] = 1;
-                            \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                        } else {
-                            if (isset($setting['module_field'][$data['fieldname']])) {
-                                unset($setting['module_field'][$data['fieldname']]);
-                                \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                            }
-                        }
-                    }
-                } else {
-                    // 删除全部
-                    foreach ($cats as $t) {
-                        $setting = dr_string2array($t['setting']);
-                        if (isset($setting['module_field'][$data['fieldname']])) {
-                            unset($setting['module_field'][$data['fieldname']]);
-                            \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->update($t['id'], ['setting' => dr_array2string($setting)]);
-                        }
-                    }
-                }
-            }
             $this->_cache(); // 自动更新缓存
 			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
 			$this->_json(1, dr_lang('操作成功'));
 		}
-
-        if (\Phpcmf\Service::M('Field')->func == 'member') {
-            $group = \Phpcmf\Service::M()->db->table('member_setting')->where('name', 'field')->get()->getRowArray();
-            $value = $group ? dr_string2array($group['value']) : [];
-            if (isset($value[$id]) && dr_count($value[$id])) {
-                \Phpcmf\Service::V()->assign([
-                    'cat_show' => 1,
-                    'group_value' => $value[$id],
-                ]);
-            } else {
-                \Phpcmf\Service::V()->assign([
-                    'cat_show' => 0,
-                    'group_value' => [],
-                ]);
-            }
-        } elseif (\Phpcmf\Service::M('Field')->func == 'category') {
-            $ids = [];
-            $cats = \Phpcmf\Service::M()->table_site($this->module['dirname'].'_category')->where('ismain=1')->getAll();
-            if ($cats) {
-                foreach ($cats as $t) {
-                    $setting = dr_string2array($t['setting']);
-                    if (!isset($setting['cat_field'][$data['fieldname']])) {
-                        $ids[] = $t['id'];
-                    }
-                }
-            }
-            \Phpcmf\Service::V()->assign([
-                'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
-                    $this->module['dirname'],
-                    $ids,
-                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
-                    '',
-                    0,
-                    0
-                )
-            ]);
-        } elseif (\Phpcmf\Service::M('Field')->func == 'category_data') {
-            $ids = [];
-            $cats = \Phpcmf\Service::M()->table_site(($this->module['share'] ? 'share' : $this->module['dirname']).'_category')->where('ismain=1')->getAll();
-            if ($cats) {
-                foreach ($cats as $t) {
-                    $setting = dr_string2array($t['setting']);
-                    if (isset($setting['module_field'][$data['fieldname']])) {
-                        $ids[] = $t['id'];
-                    }
-                }
-            }
-            \Phpcmf\Service::V()->assign([
-                'cat_show' => $ids ? 1 : 0,
-                'select_category' => \Phpcmf\Service::L('category', 'module')->ismain(true)->select(
-                    $this->module['dirname'],
-                    $ids,
-                    'id=\'dr_catid\' name=\'cat[catid][]\' multiple="multiple" data-actions-box="true"',
-                    '',
-                    0,
-                    0
-                )
-            ]);
-        }
 
 		\Phpcmf\Service::V()->assign([
 			'id' => $id,
