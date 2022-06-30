@@ -206,7 +206,7 @@ class Login extends \Phpcmf\Common
 		$this->session()->remove('uid');
 		$this->session()->remove('admin');
 		$this->session()->remove('siteid');
-		$this->_json(1, dr_lang('您已经安全退出系统了'));
+		return $this->_json(1, dr_lang('您已经安全退出系统了'), 0, true);
 	}
 
 }
