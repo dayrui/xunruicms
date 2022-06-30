@@ -298,6 +298,27 @@ class Api extends \Phpcmf\Common {
 		\Phpcmf\Service::V()->display('api_my.html');exit;
 	}
 
+    public function search_menu() {
+
+        $kw = (dr_safe_replace(\Phpcmf\Service::L('input')->get('kw')));
+        if (!$kw) {
+            $this->_json(0, '');
+        }
+        $menu = \Phpcmf\Service::M()->table('admin_menu')->where('uri<>""')->like('name', $kw)->getAll();
+        if (!$menu) {
+            $this->_json(0, '');
+        }
+
+        \Phpcmf\Service::V()->assign('list', $menu);
+        \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::L('cache')->get('menu-admin'));
+        ob_start();
+        \Phpcmf\Service::V()->display('api_search_menu.html');
+        $html = ob_get_contents();
+        ob_clean();
+
+        $this->_json(1, $html);
+    }
+
 	// 加入菜单
 	public function menu() {
 
