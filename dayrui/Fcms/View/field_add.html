@@ -349,7 +349,7 @@
         {/if}
     }
     function set_required(id) {
-        if (id == 0) {
+        if (!id) {
             $('#required').hide();
         } else {
             $('#required').show();

@@ -302,15 +302,13 @@ class Api extends \Phpcmf\Common {
 
         $kw = (dr_safe_replace(\Phpcmf\Service::L('input')->get('kw')));
         if (!$kw) {
-            $this->_json(0, '');
-        }
-        $menu = \Phpcmf\Service::M()->table('admin_menu')->where('uri<>""')->like('name', $kw)->getAll();
-        if (!$menu) {
-            $this->_json(0, '');
+            $menu = [];
+        } else {
+            $menu = \Phpcmf\Service::M()->table('admin_menu')->where('uri<>""')->like('name', $kw)->getAll();
         }
 
         \Phpcmf\Service::V()->assign('list', $menu);
-        \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::L('cache')->get('menu-admin'));
+        $menu && \Phpcmf\Service::V()->assign('menu', \Phpcmf\Service::L('cache')->get('menu-admin'));
         ob_start();
         \Phpcmf\Service::V()->display('api_search_menu.html');
         $html = ob_get_contents();
@@ -351,10 +349,12 @@ class Api extends \Phpcmf\Common {
                 'usermenu' => dr_array2string($menu)
             ]);
 
-			$html = '';
-			foreach ($menu as $t) {
-			    $html.= '<a class="btn '.($t['color'] && $t['color']!='default' ? $t['color'] : 'btn-default').'" '.($t['target'] ? 'target="_blank"' : ' target="right"').' onclick="dr_hide_left_tab()" href="'.$t['url'].'"> '.$t['name'].' </a>';
-            }
+            ob_start();
+            $this->admin['usermenu'] = $menu;
+            \Phpcmf\Service::V()->assign('admin', $this->admin);
+            \Phpcmf\Service::V()->display('api_link_menu.html');
+            $html = ob_get_contents();
+            ob_clean();
 
 			$this->_json(1, dr_lang('操作成功'), $html);
 		}

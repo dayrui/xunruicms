@@ -477,7 +477,7 @@ class Function_list {
 
         $uri = \Phpcmf\Service::L('router')->uri('save_value_edit');
         $url = (IS_MEMBER ? dr_member_url($uri) : dr_url($uri)).'&id='.$data['id'].'&after='; //after是回调函数
-        $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars((string)$value).'" onblur="dr_ajax_save(this.value, \''.$url.'\', \''.$field['fieldname'].'\')">';
+        $html = '<input type="text" class="form-control" placeholder="" value="'.htmlspecialchars((string)$value).'" onblur="dr_ajax_save(encodeURIComponent(this.value), \''.$url.'\', \''.$field['fieldname'].'\')">';
 
         \Phpcmf\Service::C()->session()->set('function_list_save_text_value', \Phpcmf\Service::C()->uid);
 
