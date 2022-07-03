@@ -34,7 +34,7 @@
 
 	<!-- Source -->
 	<div class="container">
-		<p><b><?= static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
+		<p><b><?php echo IS_DEV ? $file :  static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
 
 		<?php if (is_file($file)) : ?>
 			<div class="source">
@@ -70,11 +70,11 @@
 								<?php
 									if (isset($row['function']) && in_array($row['function'], ['include', 'include_once', 'require', 'require_once']))
 									{
-										echo $row['function'].' '. static::cleanPath($row['file']);
+										echo $row['function'].' '. (IS_DEV ? $row['file'] : static::cleanPath($row['file']));
 									}
 									else
 									{
-										echo static::cleanPath($row['file']).' : '.$row['line'];
+										echo (IS_DEV ? $row['file'] :static::cleanPath($row['file'])).' : '.$row['line'];
 									}
 								?>
 							<?php else : ?>
@@ -346,7 +346,7 @@
 
 				<ol>
 				<?php foreach ($files as $file) :?>
-					<li><?= htmlspecialchars( static::cleanPath($file), ENT_SUBSTITUTE, 'UTF-8') ?></li>
+					<li><?= htmlspecialchars( IS_DEV ? $file :static::cleanPath($file), ENT_SUBSTITUTE, 'UTF-8') ?></li>
 				<?php endforeach ?>
 				</ol>
 			</div>
