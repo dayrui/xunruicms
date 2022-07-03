@@ -2201,14 +2201,14 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-group-sm>.btn,.btn-sm {
     padding: 5px 10px;
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.6 !important;;
     border-radius: 3px
 }
 
 .btn-group-xs>.btn,.btn-xs {
     padding: 1px 5px;
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.6 !important;
     border-radius: 3px
 }
 
@@ -3876,11 +3876,11 @@ button.close {
 }
 
 .datepicker .active {
-    background-color: #4b8df8!important
+    background-color: #3fa8e1!important
 }
 
 .datepicker .active:hover {
-    background-color: #2678FC!important
+    background-color: #70c6f5 !important
 }
 
 .datepicker .input-daterange input {
@@ -5778,9 +5778,9 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
 .badge {
     font-size: 11px!important;
     font-weight: 300;
-    height: 18px;
     color: #fff;
-    padding: 3px 6px;
+    height: 22px;
+    padding: 5px 6px;
     -webkit-border-radius: 12px!important;
     -moz-border-radius: 12px!important;
     border-radius: 12px!important;
@@ -6707,12 +6707,13 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 
 .feeds li .col1>.cont>.cont-col1 {
     float: left;
-    margin-right: -100%
+    margin-right: -100%;
+    padding-top:7px
 }
 
 .feeds li .col1>.cont>.cont-col1>.label {
     display: inline-block;
-    padding: 5px 4px 6px 5px;
+    padding: 9px 4px 6px 5px;
     vertical-align: middle;
     text-align: center
 }
@@ -6724,7 +6725,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 
 .feeds li .col1>.cont>.cont-col2>.desc {
     margin-left: 35px;
-    padding-top: 4px;
+    padding-top: 9px;
     padding-bottom: 5px;
     overflow: hidden
 }
@@ -6740,10 +6741,15 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 }
 
 .feeds li .col2>.date {
-    padding: 4px 9px 5px 4px;
+    padding: 9px 9px 5px 4px;
     text-align: right;
     font-style: italic;
     color: #c1cbd0
+}
+
+.feeds li .col2>.date {
+    height: 38px;
+    overflow: hidden
 }
 
 .help-block {
@@ -7953,12 +7959,6 @@ body[ng-controller] .modal {
     border: 0
 }
 
-.portlet>.portlet-title>.nav-tabs>li {
-    background: 0 0;
-    margin: 0;
-    border: 0
-}
-
 .portlet>.portlet-title>.nav-tabs>li>a {
     background: 0 0;
     margin: 5px 0 0 1px;
@@ -8721,11 +8721,6 @@ body[ng-controller] .modal {
     margin: 0
 }
 
-.tabbable-line>.nav-tabs>li {
-    margin: 0;
-    border-bottom: 4px solid transparent
-}
-
 .tabbable-line>.nav-tabs>li>a {
     background: 0 0!important;
     border: 0;
@@ -8741,7 +8736,7 @@ body[ng-controller] .modal {
 
 .tabbable-line>.nav-tabs>li.active {
     background: 0 0;
-    border-bottom: 4px solid #3ea9e2;
+    border-bottom: 4px solid #dadbde;
     position: relative
 }
 
@@ -8756,7 +8751,7 @@ body[ng-controller] .modal {
 
 .tabbable-line>.nav-tabs>li.open,.tabbable-line>.nav-tabs>li:hover {
     background: 0 0;
-    border-bottom: 4px solid #dadbde
+    border-bottom: 4px solid #eff2f5
 }
 
 .tabbable-line>.nav-tabs>li.open>a,.tabbable-line>.nav-tabs>li:hover>a {
@@ -9890,11 +9885,6 @@ body .ui-tooltip {
 .order_sorting,.order_sorting_asc,.order_sorting_desc {
     padding-right: 10px;
     cursor: pointer
-}
-
-.feeds li .col2>.date {
-    height: 20px;
-    overflow: hidden
 }
 
 .fc-member-avatar {
@@ -11453,7 +11443,7 @@ code.form-control-static {
 }
 
 .page-container-bg-solid .page-bar .page-breadcrumb,.page-content-white .page-bar .page-breadcrumb {
-    padding: 11px 0
+    padding: 12px 0
 }
 
 .page-container-bg-solid .page-bar .page-breadcrumb>li>a,.page-container-bg-solid .page-bar .page-breadcrumb>li>span,.page-content-white .page-bar .page-breadcrumb>li>a,.page-content-white .page-bar .page-breadcrumb>li>span {
@@ -11499,7 +11489,7 @@ code.form-control-static {
 }
 
 .page-content-white .page-content .page-bar {
-    border-bottom: 1px solid #e7ecf1;
+    border-bottom: 1px solid #eef1f5;
     border-radius: 0
 }
 
@@ -13046,6 +13036,9 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     .files .col-md-2 {
         width: 11% !important;
     }
+    .well label, .note label{
+        margin-bottom: 0px;
+    }
 }
 
 /****************/
@@ -13656,9 +13649,6 @@ body{background-color:#f5f6f8}
 .page-admin-all .page-sidebar .page-sidebar-menu > li.active > a > .selected, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a > .selected {
     border-right: 12px solid #f5f6f8!important;
 }
-.tabbable-line > .nav-tabs > li.active {
-    border-bottom: 4px solid #40aae3;
-}
 .note.note-danger a {
     color: #666;
 }
@@ -13718,7 +13708,7 @@ form .portlet.light .portlet-body {
     background-clip: border-box;
     border: 0 solid #f7f7f7;
     border-radius: .25rem;
-    padding: 1.5rem;
+    padding: 1.5rem 2rem;
 }
 
 .layui-layer-btn .layui-layer-btn0 {
@@ -13735,15 +13725,11 @@ form .portlet.light .portlet-body {
     .myfooter .btn,.myfooter label {
         width: 100%;
     }
-    .note.note-danger {
-        border-left: 2px solid #3ea9e2;
-
-    }
 }
 
 select.form-control {
-    background-color: #f5f8fa;
-    border-color: #f5f8fa;
+    background-color: #eff2f5;
+    border-color: #eff2f5;
     color: #5e6278;
     transition: color .2s ease,background-color .2s ease;
 }

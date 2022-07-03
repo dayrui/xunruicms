@@ -186,6 +186,9 @@
                     // 升级完成
                     $('#dr_check_button').html('<button type="button" onclick="parent.location.reload()" class="btn green"> <i class="fa fa-refresh"></i> 刷新后台 </button>');
                     $('#dr_check_html').html('<p>恭喜你，升级完成，请刷新后台之后再更新后台缓存</p>');
+                    // 避免多次请求赋值
+                    $('#dr_check_html').attr('id', "test");
+                    $('#dr_check_button').attr('id', "test2");
                 } else {
                     $('#dr_check_button_ing').html('<i class="fa fa-times-circle"></i> 升级失败');
                     $('#dr_check_button_ing').addClass('red');
