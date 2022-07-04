@@ -2008,8 +2008,12 @@ function dr_get_csrf_token() {
 function dr_form_search_hidden($p = []) {
 
     $form = '';
-    $_GET['app'] && $form.= '<input name="app" type="hidden" value="'.$_GET['app'].'">'.PHP_EOL;
-    $form.= '<input name="s" type="hidden" value="'.APP_DIR.'">'.PHP_EOL;
+    if ($_GET['app']) {
+        $form.= '<input name="app" type="hidden" value="'.$_GET['app'].'">'.PHP_EOL;
+        $form.= '<input name="s" type="hidden" value="'.(IS_MEMBER ? 'member' : APP_DIR).'">'.PHP_EOL;
+    } else {
+        $form.= '<input name="s" type="hidden" value="'.APP_DIR.'">'.PHP_EOL;
+    }
     $form.= '<input name="m" type="hidden" value="'.$_GET['m'].'">'.PHP_EOL;
     $form.= '<input name="c" type="hidden" value="'.$_GET['c'].'">'.PHP_EOL;
     if ($p) {

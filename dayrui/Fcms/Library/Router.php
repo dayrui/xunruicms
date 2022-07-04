@@ -752,4 +752,8 @@ class Router {
 
         return $this->url_prefix('php', [], [], SITE_FID) . 's=form&c=' . $form . ($page > 1 || strlen($page) > 1 ? '&page=' . $page : '');
     }
+
+    public function get_rewrite_code() {
+        return dr_return_data(0, '请升级内容系统插件');
+    }
 }
