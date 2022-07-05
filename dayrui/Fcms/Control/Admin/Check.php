@@ -461,21 +461,9 @@ class Check extends \Phpcmf\Common
 
                 $error = [];
 
-                // 开起自动识别，
-                if ($this->site_info[SITE_ID]['SITE_AUTO']) {
-                    // 又开启了首页静态
-                    if ($this->site_info[SITE_ID]['SITE_INDEX_HTML']) {
-                        $error[] = '当前站点已经开启[首页静态]模式，将无法实现移动端自动跳转功能，<a href="javascript:dr_help(664);">查看解决方案</a>';
-                    }
-                    $category = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-share', 'category');
-                    if ($category) {
-                        foreach ($category as $t) {
-                            if ($t['setting']['html']) {
-                                $error[] = '当前站点的栏目已经开启[静态]模式，将无法实现移动端自动跳转功能，<a href="javascript:dr_help(664);">查看解决方案</a>';
-                                break;
-                            }
-                        }
-                    }
+                // 开起自动识别，又开启了首页静态
+                if ($this->site_info[SITE_ID]['SITE_AUTO'] && $this->site_info[SITE_ID]['SITE_INDEX_HTML']) {
+                    $error[] = '当前站点已经开启[首页静态]模式，将无法实现移动端自动跳转功能，<a href="javascript:dr_help(664);">查看解决方案</a>';
                 }
 
                 $config = $this->get_cache('site', SITE_ID, 'mobile');

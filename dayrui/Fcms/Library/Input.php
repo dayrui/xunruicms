@@ -64,7 +64,11 @@ class Input {
             return $this->ip_address;
         }
 
-        if (getenv('HTTP_CLIENT_IP')) {
+        if (defined('IS_CDN_IP') && IS_CDN_IP && getenv(IS_CDN_IP)) {
+            $client_ip = getenv(IS_CDN_IP);
+        } elseif (getenv('HTTP_TRUE_CLIENT_IP')) {
+            $client_ip = getenv('HTTP_TRUE_CLIENT_IP');
+        } elseif (getenv('HTTP_CLIENT_IP')) {
             $client_ip = getenv('HTTP_CLIENT_IP');
         } elseif(getenv('HTTP_X_FORWARDED_FOR')) {
             $client_ip = getenv('HTTP_X_FORWARDED_FOR');
