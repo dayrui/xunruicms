@@ -2582,11 +2582,6 @@ function dr_safe_replace_path($path) {
 
 /**
  * 字符截取
- *
- * @param   string  $str
- * @param   string  $limit
- * @param   string  $dot
- * @return  string
  */
 function dr_strcut($string, $limit = '100', $dot = '...') {
 
@@ -2655,6 +2650,37 @@ function dr_strcut($string, $limit = '100', $dot = '...') {
     $strcut == $string && $dot = '';
 
     return $strcut . $dot;
+}
+
+/**
+ * 单词截取
+ */
+function dr_wordcut($text, $maxchar, $end = '...') {
+
+    if (!$text) {
+        return '';
+    }
+
+    if (strlen($text) > $maxchar || $text == '') {
+        $words = preg_split('/\s/', $text);
+        $output = '';
+        $i      = 0;
+        while (1) {
+            $length = strlen($output)+strlen($words[$i]);
+            if ($length > $maxchar) {
+                break;
+            }
+            else {
+                $output .= " " . $words[$i];
+                ++$i;
+            }
+        }
+        $output .= $end;
+    } else {
+        $output = $text;
+    }
+
+    return trim((string)$output);
 }
 
 /**
