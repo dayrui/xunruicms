@@ -3154,7 +3154,7 @@
             return dr_lang('搜索');
         },
         formatNoMatches: function formatNoMatches() {
-            return dr_lang('没有找到匹配的记录');
+            return dr_lang('没有数据');
         },
         formatPaginationSwitch: function formatPaginationSwitch() {
             return dr_lang('隐藏/显示分页');

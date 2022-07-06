@@ -2031,30 +2031,30 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-success {
     color: #fff;
     background-color: #3ea9e2;
-    border-color: #2bb8c4
+    border-color: #08c
 }
 
 .btn-success.focus,.btn-success:focus {
     color: #fff;
-    background-color: #27a4b0;
-    border-color: #14565c
+    background-color: #3ea9e2;
+    border-color: #08c
 }
 
 .btn-success.active,.btn-success:active,.btn-success:hover,.open>.btn-success.dropdown-toggle {
     color: #fff;
-    background-color: #27a4b0;
-    border-color: #208992
+    background-color: #3ea9e2;
+    border-color: #08c
 }
 
 .btn-success.active.focus,.btn-success.active:focus,.btn-success.active:hover,.btn-success:active.focus,.btn-success:active:focus,.btn-success:active:hover,.open>.btn-success.dropdown-toggle.focus,.open>.btn-success.dropdown-toggle:focus,.open>.btn-success.dropdown-toggle:hover {
     color: #fff;
-    background-color: #208992;
-    border-color: #14565c
+    background-color: #3ea9e2;
+    border-color: #08c
 }
 
 .btn-success.disabled.focus,.btn-success.disabled:focus,.btn-success.disabled:hover,.btn-success[disabled].focus,.btn-success[disabled]:focus,.btn-success[disabled]:hover,fieldset[disabled] .btn-success.focus,fieldset[disabled] .btn-success:focus,fieldset[disabled] .btn-success:hover {
     background-color: #3ea9e2;
-    border-color: #2bb8c4
+    border-color: #08c
 }
 
 .btn-success .badge {
@@ -3911,7 +3911,7 @@ button.close {
 }
 
 .daterangepicker td.active {
-    background-color: #4b8df8;
+    background-color: #40aae3;
     background-image: none;
     filter: none
 }
@@ -3958,8 +3958,8 @@ button.close {
 }
 
 .daterangepicker .ranges li.active,.daterangepicker .ranges li:hover {
-    background: #4b8df8!important;
-    border: 1px solid #4b8df8!important;
+    background: #40aae3!important;
+    border: 1px solid #40aae3!important;
     color: #fff
 }
 
@@ -3981,11 +3981,11 @@ button.close {
 }
 
 .datetimepicker .active {
-    background-color: #4b8df8!important
+    background-color: #40aae3!important
 }
 
 .datetimepicker .active:hover {
-    background-color: #2678FC!important
+    background-color: #009ef7!important
 }
 
 .datetimepicker .fa-angle-right:before {
@@ -5776,16 +5776,16 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
 }
 
 .badge {
-    font-size: 11px!important;
-    font-weight: 300;
     color: #fff;
-    height: 22px;
-    padding: 5px 6px;
-    -webkit-border-radius: 12px!important;
-    -moz-border-radius: 12px!important;
-    border-radius: 12px!important;
     text-shadow: none!important;
-    text-align: center
+    text-align: center;
+    padding: .325rem .5rem;
+    font-size: .85rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .325rem;
 }
 
 .badge.badge-roundless {
@@ -7441,10 +7441,11 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 
 .label {
     text-shadow: none!important;
-    font-size: 14px;
-    font-weight: 300;
-    padding: 3px 6px;
-    color: #fff
+    color: #fff;
+    padding: .325rem .5rem;
+    font-size: .85rem;
+    font-weight: 600;
+    line-height: 1;
 }
 
 .label.label-sm {
@@ -7469,34 +7470,42 @@ h1 .label,h2 .label,h3 .label,h4 .label,h5 .label,h6 .label {
 }
 
 .label-success {
-    background-color: #3ea9e2
+    color:#40aae3;
+    background-color:#f1faff
 }
 
 .label-success[href]:focus,.label-success[href]:hover {
-    background-color: #40aae3
+    color:#40aae3;
+    background-color:#f1faff
 }
 
 .label-info {
-    background-color: #08a891
+    color:#181c32;
+    background-color:#eff2f5
 }
 .label-info[href]:focus,.label-info[href]:hover {
-    background-color: #08a891
+    color:#181c32;
+    background-color:#eff2f5
 }
 
 .label-warning {
-    background-color: #F1C40F
+    color:#ffc700;
+    background-color:#fff8dd
 }
 
 .label-warning[href]:focus,.label-warning[href]:hover {
-    background-color: #c29d0b
+    color:#ffc700;
+    background-color:#fff8dd
 }
 
 .label-danger {
-    background-color: #ed6b75
+    color:#f1416c;
+    background-color:#fff5f8
 }
 
 .label-danger[href]:focus,.label-danger[href]:hover {
-    background-color: #e73d4a
+    color:#f1416c;
+    background-color:#fff5f8
 }
 
 .label.label-icon {
@@ -7991,7 +8000,7 @@ body[ng-controller] .modal {
 }
 
 .portlet.bordered {
-    border-left: 2px solid #e6e9ec!important
+    border: 1px solid #e7ecf1
 }
 
 .portlet.bordered>.portlet-title {
@@ -8051,11 +8060,8 @@ body[ng-controller] .modal {
 
 .portlet.light {
     padding: 12px 20px 15px;
-    background-color: #fff
-}
-
-.portlet.light.bordered {
-    border: 1px solid #e7ecf1!important
+    background-color: #fff;
+    border: 0;
 }
 
 
@@ -9807,6 +9813,12 @@ body .ui-tooltip {
     padding-bottom: 4px
 }
 
+.fc-sku-table thead th:first-child {
+    border-radius: 4px 0 0 4px
+}
+.fc-sku-table thead th:last-child {
+    border-radius: 0 4px 4px 0
+}
 .fc-sku-table thead tr {
     border: 0 !important;
 }
@@ -12860,11 +12872,12 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 
 .files_row_preview {
     margin-right: 10px;
-    border: 1px dashed #e2e2e2;
+    border: 1px solid #efefef;
     padding: 10px;
     width: 80px;
     height: 70px;
     overflow: hidden;
+    border-radius: 4px;
     text-align: center
 }
 
@@ -12969,9 +12982,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .table-search-tool form .input-group-addon {
     border-radius:0;
 }
-.btn-group-vertical>.btn-group:not(:first-child):not(:last-child)>.btn, .input-group .form-control:not(:first-child):not(:last-child), .input-group-addon:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child) {
-    border-radius: 0;
-}
+
 .files .on-view {
     border: 2px solid #40aae3;
 }
@@ -13673,12 +13684,6 @@ form .portlet.light .portlet-body {
 .myfooter .form-actions {
     background-color: #ecf0f1 !important;
     padding: 20px 15px 15px 15px !important;
-}
-.portlet.light,.portlet.light.bordered {
-    border:none !important;
-}
-.form-group .portlet.light.bordered {
-    border: 1px solid #e7ecf1!important;
 }
 .right-card-box .portlet.light {
     padding: 0;
