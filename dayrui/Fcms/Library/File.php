@@ -168,6 +168,8 @@ class File {
 
         if (!class_exists('ZipArchive')) {
             return dr_lang('PHP环境不支持ZipArchive类');
+        } elseif (!$path) {
+            return dr_lang('目录参数为空');
         }
 
         $zpath = dirname($zfile);

@@ -595,7 +595,6 @@ return [
 
     // 执行更新程序的界面
     public function todo_update() {
-
         \Phpcmf\Service::V()->assign([
             'ls' => dr_safe_replace($_GET['ls']),
             'dir' => dr_safe_replace($_GET['dir']),
@@ -625,11 +624,17 @@ return [
                 FCPATH
             );
         } else {
-            // 插件备份
-            $rt = \Phpcmf\Service::L('file')->zip(
-                WRITEPATH.'backups/update/'.$dir.'/'.date('Y-m-d-H-i-s').'.zip',
-                dr_get_app_dir($dir)
-            );
+            $arr = explode(',', $dir);
+            foreach ($arr as $dir) {
+                if ($dir) {
+                    // 插件备份
+                    $rt = \Phpcmf\Service::L('file')->zip(
+                        WRITEPATH.'backups/update/'.$dir.'/'.date('Y-m-d-H-i-s').'.zip',
+                        dr_get_app_dir($dir)
+                    );
+                }
+            }
+
         }
 
         if ($rt) {
@@ -658,7 +663,6 @@ return [
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式', $surl);
         }
-
         $data = dr_string2array($json);
         if (!$data) {
 			CI_DEBUG && log_message('error', '服务端['.$surl.']返回数据异常：'.$json);
@@ -1009,6 +1013,18 @@ return [
             'files' => $files,
         ]);
         \Phpcmf\Service::V()->display('cloud_app_file.html');exit;
+    }
+
+    // 服务器下载离线包
+    public function down_app() {
+
+        $id = dr_safe_replace($_GET['id']);
+        if (!$id) {
+            $this->_msg(0, '没有选择需要下载的程序');
+        }
+
+        $surl = $this->service_url.'&action=lx_admin&php='.PHP_VERSION.'&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']);
+        dr_redirect($surl);
     }
 
 

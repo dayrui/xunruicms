@@ -220,7 +220,7 @@ class View {
         extract($this->_options, EXTR_SKIP);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
-        $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
+        $phpcmf_name && $this->_filename = str_replace('..', '[removed]', $phpcmf_name);
 
         // 加载编译后的缓存文件
         $this->_disp_dir = $phpcmf_dir;

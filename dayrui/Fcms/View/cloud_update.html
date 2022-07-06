@@ -10,7 +10,8 @@
         <table class="table table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
             <tr class="heading">
-                <th width="80"> 类型</th>
+                <th class="myselect"></th>
+                <th width="80" style="text-align: center"> 类型</th>
                 <th width="250"> 程序名称</th>
                 <th width="110"> 更新时间 </th>
                 <th width="100"> 版本 </th>
@@ -19,10 +20,18 @@
             </tr>
             </thead>
             <tbody>
-            {php $i=1;}
+            {php $i=1;$dirs=[];}
             {loop $list $dir $t}
             <tr class="odd gradeX">
-                <td>{$t.tname}</td>
+                {php $dirs[$t.id]=$dir;}
+                {if !$is_oem}<td class="myselect">
+                {if $t.type == 'app'}
+                    <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                        <input type="checkbox" class="checkboxes" name="ids[]" value="{$t.id}" />
+                        <span></span>
+                    </label>{/if}
+                </td>{/if}
+                <td style="text-align: center">{$t.tname}</td>
                 <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
                 <td> {$t.updatetime} </td>
                 <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
@@ -40,7 +49,7 @@
                         {if $dir == 'phpcmf'}
 					    <a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
 					    {else}
-                        <a href="https://www.xunruicms.com/doc/641.html" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
+                        <a href="javascript:dr_down_cms('{$t.id}');" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
 					    {/if}
 					{/if}
 					</label>
@@ -54,14 +63,20 @@
             </tr>
             {php $i++;}
             {/loop}
+
             </tbody>
         </table>
     </div>
     {if !$is_oem}
     <div class="row fc-list-footer table-checkable ">
-        <div class="col-md-12">
-            <label><a href="https://www.xunruicms.com/doc/video-%E8%BF%85%E7%9D%BFCMS%E5%9C%A8%E7%BA%BF%E5%8D%87%E7%BA%A7%E6%95%99%E7%A8%8B.html" target="_blank" class="btn green btn-sm"> <i class="fa fa-book"></i> {dr_lang('在线升级教程')}</a></label>
-            <label><a href="https://www.xunruicms.com/doc/video-%E8%BF%85%E7%9D%BFCMS%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E6%95%99%E7%A8%8B.html" target="_blank" class="btn blue btn-sm"> <i class="fa fa-book"></i> {dr_lang('离线升级教程')}</a></label>
+        <div class="col-md-12 fc-list-select">
+            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
+                <span></span>
+            </label>
+            <label style="margin-left: 15px;"><button type="button" onclick="dr_update_all()" class="btn blue btn-sm"> <i class="fa fa-cloud-download"></i> {dr_lang('批量在线升级')}</button></label>
+            <label><button type="button" onclick="dr_down_all()" class="btn green btn-sm"> <i class="fa fa-cloud-download"></i>  {dr_lang('批量离线下载')}</button></label>
+
         </div>
     </div>
     {/if}
@@ -69,35 +84,98 @@
 </div>
 <script type="text/javascript">
 
-    $(function() {
-        {loop $list $dir $t}
-        {if $t.id}
-        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
-        $("#dr_update_{$dir}").hide();
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
-            success: function(json) {
-                if (json.code == 1) {
-                    $("#dr_row_{$dir}").html(json.msg);
-                    $("#dr_update_{$dir}").show();
-                } else if (json.code == 2) {
-                    $("#dr_row_{$dir}").html(json.msg);
-                    $("#dr_duibi_{$dir}").show();
-                } else {
-                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
-                }
+    function dr_down_cms(id) {
+        var login_url = '{dr_url("cloud/login")}';
+        layer.open({
+            type: 2,
+            title: '登录官方云账号',
+            fix:true,
+            scrollbar: false,
+            shadeClose: true,
+            shade: 0,
+            area: ['500px', '260px'],
+            btn: [lang['ok'], lang['esc']],
+            yes: function(index, layero){
+                var body = layer.getChildFrame('body', index);
+                $(body).find('.form-group').removeClass('has-error');
+                // 延迟加载
+                var loading = layer.load(2, {
+                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                    time: 100000000
+                });
+                $.ajax({type: "POST",dataType:"json", url: login_url, data: $(body).find('#myform').serialize(),
+                    success: function(json) {
+                        layer.close(loading);
+                        if (json.code == 1) {
+                            layer.close(index);
+                            var yz_url = '{dr_url("cloud/down_app")}&id='+id+'&ls='+json.data;
+                            location.href= yz_url;
+                        } else {
+                            $(body).find('#dr_row_'+json.data.field).addClass('has-error');
+                            dr_tips(0, json.msg);
+                        }
+                        return false;
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, this, thrownError);
+                    }
+                });
+                return false;
             },
-            error: function(HttpRequest, ajaxOptions, thrownError) {
-                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
-            }
+            content: login_url+'&is_iframe=1'
         });
-        {/if}
-        {/loop}
-    });
+    }
 
-    // ajax 批量操作确认
+
+    function dr_down_all() {
+        var ids = new Array();
+        var idss = '';
+        var i = 0;
+        $(".checkboxes:checked").each(function(){
+            ids[i] = this.value;
+            idss+= ','+this.value;
+            i++;
+        });
+        if (ids.length < 1) {
+            dr_tips(0, '你还没有选中需要下载的选项');
+            return false;
+        }
+        dr_down_cms(idss);
+    }
+
+    function dr_update_all() {
+        var dirs_array = {json_encode($dirs)};
+        var ids = new Array();
+        var dirs = '';
+        var idss = '';
+        var i = 0;
+        $(".checkboxes:checked").each(function(){
+            ids[i] = this.value;
+            idss+= ','+this.value;
+            dirs+= ','+dirs_array[this.value];
+            i++;
+        });
+        if (ids.length < 1) {
+            dr_tips(0, '你还没有选中需要升级的选项');
+            return false;
+        }
+        var url = "{dr_url('cloud/todo_update')}&id="+idss+"&dir="+dirs;
+        layer.confirm(
+            "升级前请做好系统备份，你确定要升级他们吗？",
+            {
+                icon: 3,
+                shade: 0,
+                title: lang['ts'],
+                btn: ['直接升级','备份再升级', lang['esc']]
+            }, function(index, layero){
+                layer.close(index);
+                dr_todo_cms(url+'&is_bf=1');
+            }, function(index){
+                layer.close(index);
+                dr_todo_cms(url+'&is_bf=0');
+            });
+    }
+
     function dr_update_cms(url, msg, remove) {
         layer.confirm(
         msg,
@@ -223,6 +301,35 @@
             //content: 'http://www.phpcmf.net/version.php?id='+id+'&version='+v,
         });
     }
+
+
+    $(function() {
+        {loop $list $dir $t}
+        {if $t.id}
+        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
+        $("#dr_update_{$dir}").hide();
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
+            success: function(json) {
+                if (json.code == 1) {
+                    $("#dr_row_{$dir}").html(json.msg);
+                    $("#dr_update_{$dir}").show();
+                } else if (json.code == 2) {
+                    $("#dr_row_{$dir}").html(json.msg);
+                    $("#dr_duibi_{$dir}").show();
+                } else {
+                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
+            }
+        });
+        {/if}
+        {/loop}
+    });
 
 </script>
 

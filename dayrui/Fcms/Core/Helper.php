@@ -2661,16 +2661,15 @@ function dr_wordcut($text, $maxchar, $end = '...') {
         return '';
     }
 
-    if (strlen($text) > $maxchar || $text == '') {
+    if (mb_strlen($text) > $maxchar || $text == '') {
         $words = preg_split('/\s/', $text);
         $output = '';
         $i      = 0;
         while (1) {
-            $length = strlen($output)+strlen($words[$i]);
+            $length = mb_strlen($output) + mb_strlen($words[$i]);
             if ($length > $maxchar) {
                 break;
-            }
-            else {
+            } else {
                 $output .= " " . $words[$i];
                 ++$i;
             }

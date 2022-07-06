@@ -573,6 +573,7 @@ class Member extends \Phpcmf\Model {
         // 没有账号，随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = $this->_register_rand_username($member);
+            // 随机账号不满足规范时
         } else {
             $member['username'] = strtolower(dr_safe_filename($member['username']));
         }
@@ -996,7 +997,7 @@ class Member extends \Phpcmf\Model {
         } elseif ($member['phone']) {
             $name = substr($member['phone'], 5);
         } elseif ($member['name']) {
-            $name = \Phpcmf\Service::L('pinyin')->result($member['name']);
+            $name = \Phpcmf\Service::L('pinyin')->result(dr_clear_emoji($member['name']));
             if ($name) {
                 $name = urlencode((string)$name);
                 $name = preg_replace("/(%7E|%60|%21|%40|%23|%24|%25|%5E|%26|%27|%2A|%28|%29|%2B|%7C|%5C|%3D|\-|_|%5B|%5D|%7D|%7B|%3B|%22|%3A|%3F|%3E|%3C|%2C|\.|%2F|%A3%BF|%A1%B7|%A1%B6|%A1%A2|%A1%A3|%A3%AC|%7D|%A1%B0|%A3%BA|%A3%BB|%A1%AE|%A1%AF|%A1%B1|%A3%FC|%A3%BD|%A1%AA|%A3%A9|%A3%A8|%A1%AD|%A3%A4|%A1%A4|%A3%A1|%E3%80%82|%EF%BC%81|%EF%BC%8C|%EF%BC%9B|%EF%BC%9F|%EF%BC%9A|%E3%80%81|%E2%80%A6%E2%80%A6|%E2%80%9D|%E2%80%9C|%E2%80%98|%E2%80%99)+/",'', $name);
