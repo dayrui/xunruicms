@@ -37,7 +37,7 @@
                 <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
                 <td  style="text-align: center">
 					{if $t.backup}
-                    <a href="javascript:dr_tips(1, '备份目录：{$t.backup}', -1);" class="label label-success"> 已备份 </a>
+                    <a href="javascript:dr_show_info('<p>文件备份时间：{$t.backup_time}</p><p>程序备份目录：{$t.backup}</p><p>模板备份目录：{$t.backup_tpl}</p>');" class="label label-success"> 已备份 </a>
                     {else}
                     <span class="label label-danger"> 未备份 </span>
                     {/if}
@@ -161,7 +161,7 @@
         }
         var url = "{dr_url('cloud/todo_update')}&id="+idss+"&dir="+dirs;
         layer.confirm(
-            "升级前请做好系统备份，你确定要升级他们吗？",
+            "升级前请做好系统备份，你确定要升级吗？",
             {
                 icon: 3,
                 shade: 0,

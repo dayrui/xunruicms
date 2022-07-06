@@ -520,6 +520,8 @@ return [
         $data['phpcmf']['id'] = 'cms-1';
         $data['phpcmf']['tname'] = $this->cmf_license['oem'] ? '系统' : '<a href="javascript:dr_help(538);">系统</a>';
         $data['phpcmf']['backup'] = $this->_is_backup_file(WRITEPATH.'backups/update/cms/');
+        $data['phpcmf']['backup_tpl'] = $this->_is_backup_file(WRITEPATH.'backups/update/template/');
+        $data['phpcmf']['backup_time'] = is_dir(WRITEPATH.'backups/update/cms/') ? dr_date(filemtime(WRITEPATH.'backups/update/cms/')) : '';
 
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
@@ -529,6 +531,7 @@ return [
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
                     && is_file(APPSPATH.$dir.'/Config/Version.php')) {
                     $vsn = require APPSPATH.$dir.'/Config/Version.php';
+                    $path = WRITEPATH.'backups/update/'.$key.'/';
                     $vsn['id'] && $data[$key] = [
                         'id' => $cfg['type'].'-'.$vsn['id'],
                         'name' => $cfg['name'],
@@ -537,7 +540,9 @@ return [
                         'version' => $vsn['version'],
                         'license' => $vsn['license'],
                         'updatetime' => $vsn['updatetime'],
-                        'backup' => $this->_is_backup_file(WRITEPATH.'backups/update/'.$key.'/'),
+                        'backup' => $this->_is_backup_file($path),
+                        'backup_tpl' => $data['phpcmf']['backup_tpl'],
+                        'backup_time' => is_dir($path) ? dr_date(filemtime($path)) : '',
                     ];
                 }
             }

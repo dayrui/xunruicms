@@ -12,7 +12,7 @@
 <body class="login">
 <div class="content">
     <div class="logo">
-        <a href="{SITE_URL}"><img src="{$THEME_PATH}assets/logo.png" /> </a>
+        <a href="{SITE_URL}"><img src="{$THEME_PATH}assets/logo-web.png" /> </a>
     </div>
     <form class="login-form" action="" onsubmit="return dr_submit()" method="post">
         {$form}
@@ -55,7 +55,7 @@
         {/if}
         {/if}
         <div class="form-actions">
-            <button type="button" onclick="dr_submit()" class="btn default btn-block"> {dr_lang('登录后台')} </button>
+            <button type="button" onclick="dr_submit()" class="btn blue btn-block"> {dr_lang('登录后台')} </button>
         </div>
         {if !SYS_ADMIN_MODE}
         <div class="form-group text-center" style="margin-bottom: -10px;">
@@ -85,15 +85,14 @@
 </div>
 {if $license.name}
 {if $license.url}
-<div class="copyright"> <a style="color: #fff" href="{$license.url}" target="_blank">{$license.name}</a> </div>
+<div class="copyright"> <a href="{$license.url}" target="_blank">{$license.name}</a> </div>
 {/if}
 {else}
-<div class="copyright"> <a style="color: #fff" href="https://www.xunruicms.com" target="_blank">迅睿CMS开源框架</a> </div>
+<div class="copyright"> <a href="https://www.xunruicms.com" target="_blank">迅睿CMS开源框架</a> </div>
 {/if}
 <script src="{$THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script src="{$THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
-<script src="{$THEME_PATH}assets/global/plugins/backstretch/jquery.backstretch.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script src="{$THEME_PATH}assets/global/scripts/app.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script type="text/javascript">
     var is_admin = 2;
@@ -139,20 +138,7 @@
         });
         return false;
     }
-    <?php $bg = array('"'.$THEME_PATH.'assets/global/login/1.jpg"',
-            '"'.$THEME_PATH.'assets/global/login/2.jpg"',
-            '"'.$THEME_PATH.'assets/global/login/3.jpg"',
-            '"'.$THEME_PATH.'assets/global/login/4.jpg"');
-    shuffle($bg);
-    ?>
     jQuery(document).ready(function() {
-        $.backstretch([
-            {implode(',', $bg)}
-        ], {
-            fade: 1000,
-            duration: 8000
-        }
-        );
         $('.login-form input').keypress(function (e) {
             if (e.which == 13) {
                 dr_submit();
