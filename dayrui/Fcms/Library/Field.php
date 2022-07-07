@@ -668,11 +668,8 @@
                 $my && $type = dr_array2array($type, $my);
             }
             // 加载全部插件的字段
-            $local = \Phpcmf\Service::Apps();
+            $local = \Phpcmf\Service::Apps(1);
             foreach ($local as $dir => $path) {
-                if (!is_file($path.'install.lock')) {
-                    continue;
-                }
                 // 加载
                 if (is_file($path.'Fields/Field.php')) {
                     $my = require $path.'Fields/Field.php';
