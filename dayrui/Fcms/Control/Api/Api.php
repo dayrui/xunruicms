@@ -335,6 +335,8 @@ class Api extends \Phpcmf\Common {
             'fieldname' => 'id',
         ];
 
+        $param = $data = \Phpcmf\Service::L('input')->get('', true);
+
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -361,6 +363,7 @@ class Api extends \Phpcmf\Common {
                 $ids[] = $t['id'];
             }
 
+            $diy = $data['diy'];
             $file = \Phpcmf\Service::V()->code2php(
                 file_get_contents(is_file(MYPATH.'View/api_related_field.html') ? MYPATH.'View/api_related_field.html' : COREPATH.'View/api_related_field.html')
             );
@@ -372,8 +375,7 @@ class Api extends \Phpcmf\Common {
             $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
-        $my = intval(\Phpcmf\Service::L('input')->get('my'));
-        $data = \Phpcmf\Service::L('input')->get('', true);
+        $my = intval($data['my']);
         $where = [];
         if ($my) {
             $where[] = 'uid = '.$this->uid;
@@ -418,14 +420,15 @@ class Api extends \Phpcmf\Common {
         $rules = $data;
         $rules['page'] = '{page}';
 
-        \Phpcmf\Service::V()->assign(array(
+        \Phpcmf\Service::V()->assign([
+            'diy' => $data['diy'],
             'mid' => $dirname,
             'mmid' => $module['mid'],
             'site' => $site,
             'param' => $data,
             'field' => $module['field'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
-            'search' => dr_form_search_hidden(['search' => 1, 'is_iframe' => 1, 'module' => $dirname, 'site' => $site, 'my' => $my, 'pagesize' => $pagesize]),
+            'search' => dr_form_search_hidden(['search' => 1, 'is_iframe' => 1, 'module' => $dirname, 'site' => $site, 'diy' => $data['diy'], 'my' => $my, 'pagesize' => $pagesize]),
             'select' => \Phpcmf\Service::L('category', 'module')->select(
                 $module['dirname'],
                 $data['catid'],
@@ -434,7 +437,7 @@ class Api extends \Phpcmf\Common {
             ),
             'urlrule' => dr_url('api/api/related', $rules, '/index.php'),
             'pagesize' => $pagesize,
-        ));
+        ]);
         \Phpcmf\Service::V()->display('api_related.html');
     }
 
@@ -483,6 +486,8 @@ class Api extends \Phpcmf\Common {
             ),
         );
 
+        $param = $data = \Phpcmf\Service::L('input')->get('', true);
+
         if (IS_POST) {
             $ids = \Phpcmf\Service::L('input')->get_post_ids();
             if (!$ids) {
@@ -508,6 +513,7 @@ class Api extends \Phpcmf\Common {
                 $ids[] = $t['id'];
             }
 
+            $diy = $data['diy'];
             $file = \Phpcmf\Service::V()->code2php(
                 file_get_contents(is_file(MYPATH.'View/api_members_field.html') ? MYPATH.'View/api_members_field.html' : COREPATH.'View/api_members_field.html')
             );
@@ -519,7 +525,6 @@ class Api extends \Phpcmf\Common {
             $this->_json(1, dr_lang('操作成功'), ['ids' => $ids, 'html' => $html[1]]);
         }
 
-        $data = \Phpcmf\Service::L('input')->get('', true);
         $where = [];
         if ($data['group']) {
             // 指定用户组时
@@ -567,14 +572,15 @@ class Api extends \Phpcmf\Common {
         $rules = $data;
         $rules['page'] = '{page}';
 
-        \Phpcmf\Service::V()->assign(array(
+        \Phpcmf\Service::V()->assign([
+            'diy' => $data['diy'],
             'where' => $where ? urlencode(implode(' AND ', $where)) : '',
             'param' => $data,
             'field' => $field,
             'group' => $group,
-            'search' => dr_form_search_hidden(['search' => 1, 'is_iframe' => 1]),
+            'search' => dr_form_search_hidden(['search' => 1, 'is_iframe' => 1, 'diy' => $data['diy']]),
             'urlrule' => dr_url('api/api/members', $rules, '/index.php'),
-        ));
+        ]);
         \Phpcmf\Service::V()->display('api_members.html');
     }
 

@@ -38,6 +38,13 @@ class Members extends \Phpcmf\Library\A_Field {
 					<span class="help-block">'.dr_lang('最大能选择的数量限制').'</span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('自定义参数').'</label>
+                    <div class="col-md-9">
+                    <label><input type="text" class="form-control" size="10" name="data[setting][option][diy]" value="'.$option['diy'].'"></label>
+					<span class="help-block">'.dr_lang('将自定义参数变量$diy传入到模板中，用于二次开发时的识别判断').'</span>
+                    </div>
+                </div>
 				<div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('每页显示条数').'</label>
                     <div class="col-md-9">
@@ -149,7 +156,7 @@ class Members extends \Phpcmf\Library\A_Field {
 		        dr_tips(0, "'.dr_lang('关联数量超限').'");
 		        return;
 		    }
-		    var url = "/index.php?&is_iframe=1&s=api&c=api&m=members&name='.$name.'&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
+		    var url = "/index.php?&is_iframe=1&s=api&c=api&m=members&name='.$name.'&diy='.dr_safe_replace($field['setting']['option']['diy']).'&pagesize='.intval($field['setting']['option']['pagesize']).'&group='.($field['setting']['option']['group'] ? implode(',', $field['setting']['option']['group']) : '').'";
             layer.open({
                 type: 2,
                 title: \'<i class="fa fa-user"></i> '.dr_lang('关联用户').'\',

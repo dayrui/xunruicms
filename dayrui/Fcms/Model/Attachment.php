@@ -285,7 +285,7 @@ class Attachment extends \Phpcmf\Model {
             'related' => $related,
             'tableid' => $tid,
             'download' => 0,
-            'filesize' => $data['size'],
+            'filesize' => (int)$data['size'],
             'fileext' => $data['ext'],
             'filemd5' => $data['md5'] ? $data['md5'] : 0,
         ]);
@@ -305,7 +305,7 @@ class Attachment extends \Phpcmf\Model {
                 'remote' => $data['remote'],
                 'fileext' => $data['ext'],
                 'filename' => $data['name'],
-                'filesize' => $data['size'],
+                'filesize' => (int)$data['size'],
                 'inputtime' => SYS_TIME,
                 'attachment' => $data['file'],
                 'attachinfo' => dr_safe_url($_SERVER['HTTP_REFERER']),

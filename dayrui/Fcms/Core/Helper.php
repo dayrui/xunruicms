@@ -2011,6 +2011,8 @@ function dr_form_search_hidden($p = []) {
     if ($_GET['app']) {
         $form.= '<input name="app" type="hidden" value="'.$_GET['app'].'">'.PHP_EOL;
         $form.= '<input name="s" type="hidden" value="'.(IS_MEMBER ? 'member' : APP_DIR).'">'.PHP_EOL;
+    } elseif (IS_API && !APP_DIR) {
+        $form.= '<input name="s" type="hidden" value="api">'.PHP_EOL;
     } else {
         $form.= '<input name="s" type="hidden" value="'.APP_DIR.'">'.PHP_EOL;
     }
