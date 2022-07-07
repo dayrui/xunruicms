@@ -100,10 +100,6 @@ return [
         'name' => '账号',
     ],
     [
-        'id' => 'Members',
-        'name' => '用户关联',
-    ],
-    [
         'id' => 'Pay',
         'name' => '购买（单一）',
     ],
@@ -114,10 +110,6 @@ return [
     [
         'id' => 'Paystext',
         'name' => '购买（组合）参数',
-    ],
-    [
-        'id' => 'Score',
-        'name' => '用户组设定值',
     ],
     [
         'id' => 'Image',
