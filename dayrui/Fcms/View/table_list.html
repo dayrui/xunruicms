@@ -5,6 +5,7 @@
 {/if}
 
 <div class="right-card-box">
+    {if $is_search}
     <div id="toolbar" class="toolbar">
         <div class="row table-search-tool">
             <form action="{SELF}" method="get">
@@ -45,6 +46,7 @@
             </form>
         </div>
     </div>
+    {/if}
     {template "mytable.html", "admin"}
 </div>
 

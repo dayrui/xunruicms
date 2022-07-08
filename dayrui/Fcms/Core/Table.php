@@ -41,12 +41,14 @@ class Table extends \Phpcmf\Common {
     protected $fix_admin_tpl_path; // 修正值的后台模板指定目录
 
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
+    protected $is_search; // 是否开启列表上方的搜索功能
 
     public function __construct() {
         parent::__construct();
         $this->is_data = 0;
         $this->tpl_name = '';
         $this->auto_save = 1;
+        $this->is_search = 1;
         $this->tpl_prefix = \Phpcmf\Service::L('Router')->class.'_';
         $this->delete_where = '';
         $this->is_module_index = 0;
@@ -672,6 +674,9 @@ class Table extends \Phpcmf\Common {
                     }
                 }
             }
+            // 格式化结果集
+            $list = $this->_Call_List($list);
+
             // 存储当前页URL
             unset($param['is_ajax']);
             \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
@@ -746,6 +751,9 @@ class Table extends \Phpcmf\Common {
                 $list_table.= ','.\Phpcmf\Service::M()->dbprefix($this->init['join_list'][0]);
             }
 
+            // 格式化结果集
+            $list = $this->_Call_List($list);
+
             // 返回数据
             $data = [
                 'list' => $list,
@@ -770,10 +778,18 @@ class Table extends \Phpcmf\Common {
         $data['mytable'] = $this->mytable;
         $data['mytable_name'] = $this->name ? $this->name : 'mytable';
         $data['mytable_pagesize'] = $size;
+        $data['is_search'] = $this->is_search;
 
         \Phpcmf\Service::V()->assign($data);
 
         return [$this->_tpl_filename('list'), $data];
+    }
+
+    /**
+     * 回调结果集
+     * */
+    protected function _Call_List($data) {
+        return $data;
     }
 
     // 分页配置文件加载

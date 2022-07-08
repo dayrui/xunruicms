@@ -964,6 +964,7 @@ class View {
                 break;
 
             case 'linkage': // 联动菜单
+
                 if (isset($param['pid']) && $param['pid']) {
                     $link = dr_linkage($param['code'],  $param['pid']);
                     if (!$link) {
