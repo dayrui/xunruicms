@@ -17,7 +17,11 @@ class Html {
     public function get_webpath($siteid, $mid, $file = '') {
 
         if (!$this->webpath) {
-            $this->webpath = require WRITEPATH.'config/webpath.php';
+            if (is_file(WRITEPATH.'config/webpath.php')) {
+                $this->webpath = require WRITEPATH.'config/webpath.php';
+            } else {
+                return WEBPATH.$file;
+            }
         }
 
         $webpath = isset($this->webpath[$siteid]['site']) && $this->webpath[$siteid]['site'] ? $this->webpath[$siteid]['site'] : WEBPATH;
