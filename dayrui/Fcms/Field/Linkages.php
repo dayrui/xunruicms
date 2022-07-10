@@ -203,7 +203,8 @@ class Linkages extends \Phpcmf\Library\A_Field {
                   minCollapseTagsNumber: 0,
                   options: linkage_'.$field['setting']['option']['linkage'].',
                   props: {
-                    multiple: true
+                    multiple: true,
+                    checkStrictly: '.($field['setting']['option']['ck_child'] ? 'false' : 'true').',
                   }
                 });
 			})

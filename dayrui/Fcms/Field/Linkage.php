@@ -187,7 +187,10 @@ class Linkage extends \Phpcmf\Library\A_Field {
                   value: '.(int)$value.',
                     clearable: true,
                      filterable: true,
-                  options: linkage_'.$field['setting']['option']['linkage'].'
+                  options: linkage_'.$field['setting']['option']['linkage'].',
+                  props: {
+                    checkStrictly: '.($field['setting']['option']['ck_child'] ? 'false' : 'true').',
+                  }
                 });
 			})
 				});
