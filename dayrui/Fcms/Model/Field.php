@@ -160,6 +160,30 @@ class Field extends \Phpcmf\Model {
             $rt[$t['id']] = $t;
         }
 
+        list($case_name, $a) = explode('-', $this->relatedname);
+        if ($case_name == 'module') {
+            // 模块字段时，加载栏目模型字段
+            $module = \Phpcmf\Service::M()->table('module')->get($this->relatedid);
+            if ($module) {
+                $like = ['catmodule-'.$module['dirname']];
+                if ($module['share']) {
+                    $like[] = 'catmodule-share';
+                }
+                $field = \Phpcmf\Service::M()->db->table('field')
+                    ->where('ismain', 1)
+                    ->where('disabled', 0)
+                    ->whereIn('relatedname', $like)
+                    ->orderBy('displayorder ASC, id ASC')->get()->getResultArray();
+                if ($field) {
+                    foreach ($field as $t) {
+                        $t['spacer'] = '';
+                        $t['setting'] = dr_string2array($t['setting']);
+                        $rt[$t['id']] = $t;
+                    }
+                }
+            }
+        }
+
         return $rt;
     }
 
