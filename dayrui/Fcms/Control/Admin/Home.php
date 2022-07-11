@@ -388,14 +388,7 @@ class Home extends \Phpcmf\Common
 
         $admin_menu = \Phpcmf\Service::L('cache')->get('menu-admin-uri');
 
-        $my_menu = [];
-        if ($this->admin['adminid'] > 1) {
-            foreach ($menu as $t) {
-                dr_in_array($t['mark'], $this->admin['system']['mark']) && $my_menu[$t['id']] = $t;
-            }
-        } else {
-            $my_menu = $menu;
-        }
+        $my_menu = $menu;
 
         // 默认的首页内容
         $main_url = dr_url('home/main');
