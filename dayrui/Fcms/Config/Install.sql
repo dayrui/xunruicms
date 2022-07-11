@@ -113,9 +113,9 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin_role` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `site` text NOT NULL COMMENT '允许管理的站点，序列化数组格式',
   `name` text NOT NULL COMMENT '角色组语言名称',
-  `system` text NOT NULL COMMENT '系统权限',
-  `module` text NOT NULL COMMENT '模块权限',
-  `application` text NOT NULL COMMENT '应用权限',
+  `system` mediumtext NOT NULL COMMENT '系统权限',
+  `module` mediumtext NOT NULL COMMENT '模块权限',
+  `application` mediumtext NOT NULL COMMENT '应用权限',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='后台角色权限表';
 

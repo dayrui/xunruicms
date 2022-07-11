@@ -620,6 +620,8 @@ class Auth extends \Phpcmf\Model {
         $_link = '';
         $_select = 0;
 
+        $more = [];
+
         foreach ($menu as $name => $t) {
             $p = [];
             $uri = $t[0];
@@ -698,14 +700,28 @@ class Auth extends \Phpcmf\Model {
     // 多级框架菜单
     public function _iframe_menu($list, $now, $help = 0) {
 
+        $i = 0;
         $menu = '';
+        $more = '';
         foreach ($list as $dir => $t) {
+            $i++;
             $class = '';
             // 选中当前菜单
             if ($now == $dir) {
                 $class = ' on';
             }
-            $menu .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> <i class="fa fa-circle"></i> </li>';
+            if ($i > 4) {
+                $more .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> </li>';
+            } else{
+                $menu .= '<li id="iframe_menu_a_'.$dir.'" class="iframe_menu_a"> <a class="' . $class . '" href="javascript:;" onclick="McLink(\''.$dir.'\', \''.$t['url'].'\')"><i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).'</a> <i class="fa fa-circle"></i> </li>';
+            }
+        }
+        if ($more) {
+            $menu.= '<li class="dropdown"><a class="dropdown-toggle {ON}" '.(\Phpcmf\Service::IS_MOBILE_USER() ? ' data-toggle="dropdown"' : '').' data-hover="dropdown" data-close-others="true" aria-expanded="true"> '.dr_lang('更多').'<i class="fa fa-angle-double-down"></i></a>';
+            $menu.= '<ul class="dropdown-menu">';
+            $menu.= $more;
+            $menu.= '</ul>';
+            $menu.= '</li>';
         }
         if (CI_DEBUG && $help) {
             $menu .= '<li> <a href="javascript:dr_help(\''.$help.'\');"><i class="fa fa-question-circle"></i> '.dr_lang('在线帮助').'</a> <i class="fa fa-circle"></i> </li>';
