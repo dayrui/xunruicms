@@ -123,6 +123,30 @@ $top = $menu_top;
                     </ul>
                 </li>
                 {/if}
+                <?php $notice = \Phpcmf\Service::M('auth')->admin_notice(10, true);?>
+                {if $notice}
+                <li class="dropdown dropdown-extended dropdown-notification">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                        <div class="menu-top-icon"><i class="fa fa-bell"></i>
+                        </div>
+                        <div class="top-txt-menu">{dr_lang('提醒')}</div>
+                    </a>
+                    <ul class="dropdown-menu extended tasks">
+                        <li>
+                            <ul class="dropdown-menu-list scroller" style="height:400px;overflow: scroll;" data-handle-color="#637283">
+                                {loop $notice $t}
+                                <li>
+                                    <a  onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{dr_url('api/notice', array('id' => $t.id))}');">
+                                        <span class="time">{dr_fdate($t.inputtime)}</span>
+                                        <span class="details"> {$t.msg} </span>
+                                    </a>
+                                </li>
+                                {/loop}
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                {/if}
 
                 {if $is_mobile}
                 <li class="dropdown">
@@ -134,8 +158,6 @@ $top = $menu_top;
                 <li class="dropdown dropdown-user">
                     <a style="margin-right: -10px;" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <img alt="{$admin['username']}" class="img-circle" src="{dr_avatar($admin.uid)}" />
-                        <span class="username username-hide-on-mobile"> {dr_strcut($admin['username'], 8)} </span>
-                        <i class="fa fa-angle-down"></i>
                     </a>
                     {/if}
                     <ul class="dropdown-menu dropdown-menu-default">
@@ -161,13 +183,6 @@ $top = $menu_top;
                         {/if}
                     </ul>
                 </li>
-                {if !$is_mobile}
-                <li class="dropdown dropdown-quick-sidebar-toggler">
-                    <a href="javascript:;" class="dropdown-toggle">
-                        <i class="fa fa-bell-o"></i>
-                    </a>
-                </li>
-                {/if}
             </ul>
         </div>
     </div>
@@ -219,49 +234,7 @@ $top = $menu_top;
         </div>
     </div>
 
-    {if !$is_mobile}
-    <a href="javascript:;" class="page-quick-sidebar-toggler">
-        <i class="fa fa-angle-double-left"></i>
-    </a>
-    <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
-        <div class="page-quick-sidebar">
-            <?php $notice = \Phpcmf\Service::M('auth')->admin_notice(10, true);?>
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> {dr_lang('系统提醒')}</a>
-                </li>
-            </ul>
-            <div class="tab-content">
 
-                <div class="tab-pane active page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
-                    {if $notice}
-                    <ul class="feeds list-items">
-                        {loop $notice $t}
-                        <li>
-                            <div class="col1" style="padding-top: 2px;padding-left: 3px;">
-                                <div class="cont">
-                                    <div class="cont-col1 user-avatar">
-                                        <a  onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{dr_url('api/notice', array('id' => $t.id))}');"><img style="height: 25px!important;" src="{dr_avatar($t.uid)}" /></a>
-                                    </div>
-                                    <div class="cont-col2">
-                                        <div class="desc"><a style="color: #c1cbd0"  onclick="dr_hide_left_tab()" href="javascript:dr_go_url('{dr_url('api/notice', array('id' => $t.id))}');">{$t.msg}</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col2">
-                                <div class="date"> {dr_fdate($t.inputtime)} </div>
-                            </div>
-                        </li>
-                        {/loop}
-                    </ul>
-                    {/if}
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-    {/if}
 </div>
 <script>
     // 关闭栏

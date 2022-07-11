@@ -75,8 +75,7 @@ class Menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$data = $this->_validation($type, $data);
-            if ($data['uri']
-                && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
+            if ($data['uri'] && \Phpcmf\Service::M()->table('admin_menu')->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 $this->_json(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
             }
@@ -173,8 +172,7 @@ class Menu extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 			$data = \Phpcmf\Service::L('input')->post('data');
 			$data = $this->_validation($type, $data);
-            if ($data['uri']
-                && \Phpcmf\Service::M()->table('admin_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
+            if ($data['uri'] && \Phpcmf\Service::M()->table('admin_menu')->where('id<>'.$id)->where('uri', $data['uri'])->counts()) {
                 // 链接菜单判断重复
                 $this->_json(0, dr_lang('系统路径已经存在'), ['field' => 'uri']);
             }
