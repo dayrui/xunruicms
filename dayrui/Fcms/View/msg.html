@@ -1,6 +1,6 @@
 {template "head.html"}
-<body style="background: #ffffff">
-    <div class="page-404-full-page" style="padding-top:10px">
+<body>
+    <div class="page-404-full-page">
         <div class="row">
             <div class="col-xs-12 page-404">
                 {if $mark==1}
@@ -14,10 +14,10 @@
                     <h4>{$msg}</h4>
                     <p class="alert_btnleft">
                         {if $url}
-                        <a href="{$url}">{dr_lang('如果您的浏览器没有自动跳转，请点击这里')}</a>
+                        <a href="{$url}" class="btn blue btn-outline">{dr_lang('即将跳转')}</a>
                         <meta http-equiv="refresh" content="{$time}; url={$url}">
                         {else}
-                        <a href="{$backurl}" >[{dr_lang('点击返回上一页')}]</a>
+                        <a href="{$backurl}" class="btn {if $mark}blue{else}red{/if} btn-outline">{dr_lang('点击返回上一页')}</a>
                         {/if}
                     </p>
 

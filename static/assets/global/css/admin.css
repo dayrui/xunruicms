@@ -8579,14 +8579,11 @@ body[ng-controller] .modal {
     }
 }
 
-
 .table-scrollable {
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    margin: 10px 0!important;
 }
-
 
 .table-scrollable>.table {
     width: 100%!important;
@@ -9932,10 +9929,6 @@ body .ui-tooltip {
 
 .ajax_link>.form-control {
     padding-left: 12px!important
-}
-
-.admin_msg {
-    top: 5px!important
 }
 
 .fc-form {
@@ -11970,7 +11963,8 @@ code.form-control-static {
 }
 
 .dropdown-user {
-    margin-left: 0!important
+    margin-left: 0!important;
+    margin-right: 10px!important;
 }
 
 
@@ -12532,35 +12526,29 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 }
 
 .page-404 .number,.page-500 .number {
-    letter-spacing: -10px;
     font-size: 66px;
     font-weight: 300
 }
 
-.page-404 .details,.page-500 .details {
-    margin-left: 40px;
-    display: inline-block
+.page-404 .font-red i {
+    color:#e7505a;
 }
 
 .page-404 .number {
-    position: relative;
-    top: 35px;
-    display: inline-block;
     margin-top: 0;
     margin-bottom: 10px;
     color: #40aae2;
-    text-align: right
 }
 .table-center , .table-center input {
     text-align: center;
 }
+
 .page-404-full-page .page-404,.page-500-full-page .page-500 {
-    margin-top: 70px
+    padding:40px 0;
 }
 
-.page-404 .details {
-    padding-top: 0;
-    text-align: left
+.page-404-full-page .page-404 .alert_btnleft,.page-500-full-page .page-500 .alert_btnleft {
+    margin-top: 20px;
 }
 
 .page-500 {
@@ -12570,17 +12558,19 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .page-500 .number {
     display: inline-block;
     color: #ec8c8c;
-    text-align: right
-}
-
-.page-500 .details {
-    text-align: left
 }
 
 .page-404-full-page {
     overflow-x: hidden;
-    padding: 20px;
-    margin-bottom: 20px
+    max-width: 1024px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background: #fff;
+    text-align: center;
+    border: 1px solid #efefef;
+    border-radius: 0.5rem;
+    position: relative;
+    margin-top: 150px;
 }
 
 .page-404-full-page .details input {
@@ -12660,9 +12650,6 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     }
 }
 
-.page-404 .details .alert_btnleft {
-    margin: 10px 0
-}
 
 .my-left-content {
     margin: 0;
@@ -12991,12 +12978,12 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     right: 0;
     padding: 0 10px;
     overflow: hidden;
-    height: 42px;
+    height: 44px;
     text-align: right;
 }
 .fc-mb-left-menu li {
-    height: 43px;
-    line-height: 43px;
+    height: 44px;
+    line-height: 44px;
     padding: 0px 10px 0px 15px;
     border-right: 1px solid rgba(0,0,0,0.02);
     color: #888;
@@ -13721,6 +13708,13 @@ form .portlet.light .portlet-body {
     background-color: #40aae3 !important;
 }
 
+@media (max-width:780px) {
+    .page-404-full-page {
+        margin-top: 0px;
+        background: none;
+        border:none;
+    }
+}
 @media (max-width:480px) {
     .myfooter .form-actions {
         background-color: #ffffff !important;

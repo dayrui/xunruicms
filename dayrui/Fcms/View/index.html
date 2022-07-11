@@ -142,6 +142,11 @@ $top = $menu_top;
                                     </a>
                                 </li>
                                 {/loop}
+                                {if $ci->_is_admin_auth('notice/index')}
+                                <li class="external text-center">
+                                    <a href="javascript:dr_go_url('{dr_url('notice/index')}');">{dr_lang('更多提醒')}</a>
+                                </li>
+                                {/if}
                             </ul>
                         </li>
                     </ul>
