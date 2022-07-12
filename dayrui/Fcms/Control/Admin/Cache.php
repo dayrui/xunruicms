@@ -208,6 +208,9 @@ class Cache extends \Phpcmf\Common {
                     }
                 }
 
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'admin_notice` CHANGE `to_rid` `to_rid` varchar(100) NOT NULL COMMENT \'指定角色组\';');
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$prefix.'admin_notice` CHANGE `to_uid` `to_uid` varchar(100) NOT NULL COMMENT \'指定管理员\';');
+
                 $table = $prefix.'member_group_verify';
                 if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('price', $table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `price` decimal(10,2) DEFAULT NULL COMMENT \'已费用\'');
