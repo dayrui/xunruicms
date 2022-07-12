@@ -190,9 +190,9 @@ class Api extends \Phpcmf\Common {
 
         // 权限判断
         if (!isset($this->admin['roleid'][1])) {
-            if ($data['to_uid'] && $data['to_uid'] != $this->uid) {
+            if ($data['to_uid'] && !dr_in_array($this->uid, explode(',', (string)$data['to_uid']))) {
                 $this->_admin_msg(0, dr_lang('您无权限执行'));
-            } elseif ($data['to_rid'] && !isset($this->admin['roleid'][$data['to_rid']])) {
+            } elseif ($data['to_rid'] && !dr_array_intersect($this->admin['roleid'], explode(',', (string)$data['to_rid']))) {
                 $this->_admin_msg(0, dr_lang('您无权限执行'));
             }
         }

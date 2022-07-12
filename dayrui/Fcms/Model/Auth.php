@@ -192,7 +192,11 @@ class Auth extends \Phpcmf\Model {
             // 超管
             $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         } else {
-            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ((`to_uid`='.$this->uid.') '.(' or (`to_rid` IN ('.implode(',', \Phpcmf\Service::C()->admin['roleid']).'))').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
+            $rid = [];
+            foreach (\Phpcmf\Service::C()->admin['roleid'] as $r) {
+                $rid[] = 'FIND_IN_SET('.$r.',`to_rid`)';
+            }
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ( FIND_IN_SET('.$this->uid.',`to_uid`) '.(' or ('.implode(' OR ', $rid).')').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         }
 
         $query = $this->db->query($sql);

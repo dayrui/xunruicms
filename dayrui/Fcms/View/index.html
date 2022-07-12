@@ -98,7 +98,7 @@ $top = $menu_top;
                 {$mstring}
                 {/if}
 
-                {if count($ci->site_info) > 1}
+                {if count($ci->site_info) > 1 && dr_is_app('sites')}
                 <li class="dropdown dropdown-extended dropdown-tasks">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <div class="menu-top-icon"><i class="fa fa-share-alt"></i>
@@ -118,6 +118,11 @@ $top = $menu_top;
                                 </li>
                                 {/if}
                                 {/loop}
+                                {if $ci->_is_admin_auth('sites/home/index')}
+                                <li class="external text-center">
+                                    <a href="javascript:dr_go_url('{dr_url('sites/home/index')}');">{dr_lang('站点管理')}</a>
+                                </li>
+                                {/if}
                             </ul>
                         </li>
                     </ul>
