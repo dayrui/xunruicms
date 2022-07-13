@@ -1134,6 +1134,13 @@ class View {
                         $sql = "SELECT count(*) as c FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ORDER BY NULL";
                         $row = $this->_query($sql, $system, FALSE);
                         $total = (int)$row['c'];
+                        if ($system['maxlimit'] && $total > $system['maxlimit']) {
+                            $total = $system['maxlimit']; // 最大限制
+                            if ($page * $pagesize > $total) {
+                                $return_data = $this->_return($system['return'], 'maxlimit设置最大显示'.$system['maxlimit'].'条，当前（'.$total.'）已超出', $sql, 0);
+                                return;
+                            }
+                        }
                         // 没有数据时返回空
                         if (!$total) {
                             return $this->_return($system['return'], '没有查询到内容', $sql, 0);
