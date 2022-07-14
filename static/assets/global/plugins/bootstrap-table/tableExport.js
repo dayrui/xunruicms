@@ -74,7 +74,9 @@
         fileFormat: 'xlshtml',          // 'xlshtml' = Excel 2000 html format
                                         // 'xmlss' = XML Spreadsheet 2003 file format (XMLSS)
                                         // 'xlsx' = Excel 2007 Office Open XML format
-        onMsoNumberFormat: null,        // Excel 2000 html format only. See readme.md for more information about msonumberformat
+        onMsoNumberFormat: function(cell, row, col) {
+          return '\\@';
+        },        // Excel 2000 html format only. See readme.md for more information about msonumberformat
         pageFormat: 'a4',               // Page format used for page orientation
         pageOrientation: 'portrait',    // portrait, landscape (xlshtml format only)
         rtl: false,                     // true = Set worksheet option 'DisplayRightToLeft'
