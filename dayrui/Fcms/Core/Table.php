@@ -666,10 +666,12 @@ class Table extends \Phpcmf\Common {
             // 格式化字段
             if ($this->init['list_field'] && $list) {
                 $field = $this->_field_save(0);
+                $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
                 foreach ($list as $k => $v) {
+                    $list[$k] = $dfield->format_value($field, $v, 1);
                     foreach ($this->init['list_field'] as $i => $t) {
                         if ($t['use']) {
-                            $list[$k][$i] = dr_list_function($t['func'], $v[$i], $param, $v, $field[$i], $i);
+                            $list[$k][$i] = dr_list_function($t['func'], $list[$k][$i], $param, $list[$k], $field[$i], $i);
                         }
                     }
                 }
@@ -750,7 +752,14 @@ class Table extends \Phpcmf\Common {
             if (isset($this->init['join_list'][0]) && $this->init['join_list'][0]) {
                 $list_table.= ','.\Phpcmf\Service::M()->dbprefix($this->init['join_list'][0]);
             }
-
+            // 格式化字段
+            if ($list) {
+                $field = $this->_field_save(0);
+                $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
+                foreach ($list as $k => $v) {
+                    $list[$k] = $dfield->format_value($field, $v, 1);
+                }
+            }
             // 格式化结果集
             $list = $this->_Call_List($list);
 
