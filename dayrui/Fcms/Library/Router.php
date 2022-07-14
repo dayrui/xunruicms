@@ -416,7 +416,10 @@ class Router {
     // 伪静态替换
     public function get_url_value($data, $rule, $prefix) {
         $rep = new \php5replace($data);
-        $url = $rep->replace($rule);
+        $url = (string)$rep->replace($rule);
+        if (strpos($url, 'http://') === 0 or strpos($url, 'https://') === 0) {
+            return $url; // 带域名的url直接返回
+        }
         $url = ltrim(str_replace('//', '/', $url), '/');
         if (IS_DEV && strpos($url, '?') !== false) {
             log_message('debug', '开发者模式提醒：自定义URL规则['.$rule.']不建议包含问号?');

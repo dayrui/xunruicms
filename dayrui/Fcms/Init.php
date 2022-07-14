@@ -348,6 +348,7 @@ if (is_cli()) {
 
     // 当前URI
     $uri = dr_get_rewrite_uri($uu);
+    $is_404 = 1;
     define('CMSURI', $uri);
 
     // 根据自定义URL规则来识别路由
@@ -362,7 +363,6 @@ if (is_cli()) {
             $my && $routes = array_merge($routes, $my);
         }
         // 正则匹配路由规则
-        $is_404 = 1;
         foreach ($routes as $key => $val) {
             $rewrite = $match = []; //(defined('SYS_URL_PREG') && SYS_URL_PREG ? '' : '$')
             if ($key == CMSURI || preg_match('/^'.$key.'$/U', CMSURI, $match)) {
@@ -388,17 +388,17 @@ if (is_cli()) {
                 break;
             }
         }
-        // 自定义路由模式
-        if (is_file(ROOTPATH.'config/router.php')) {
-            require ROOTPATH.'config/router.php';
-        }
-        // 说明是404
-        if ($is_404) {
-            $_GET['s'] = '';
-            $_GET['c'] = 'home';
-            $_GET['m'] = 's404';
-            $_GET['uri'] = CMSURI;
-        }
+    }
+    // 自定义路由模式
+    if (is_file(ROOTPATH.'config/router.php')) {
+        require ROOTPATH.'config/router.php';
+    }
+    // 说明是404
+    if ($is_404) {
+        $_GET['s'] = '';
+        $_GET['c'] = 'home';
+        $_GET['m'] = 's404';
+        $_GET['uri'] = CMSURI;
     }
 }
 
