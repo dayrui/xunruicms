@@ -9,7 +9,7 @@ class Cache {
     }
 
     public function save($key, $value, $time = 3600) {
-        $this->cache->save(SYS_KEY.$key, $value, $time);
+        return $this->cache->save(SYS_KEY.$key, $value, $time);
     }
 
     public function get($key)

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Cache as Fcache;
 class Cache {
 
     public function save($key, $value, $time = 3600) {
-        Fcache::put(SYS_KEY.$key, $value, $time);
+        return Fcache::put(SYS_KEY.$key, $value, $time);
     }
 
     public function get($key)
