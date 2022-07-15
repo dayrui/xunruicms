@@ -950,6 +950,9 @@ return [
         }
 
         $path = dr_get_app_dir($dir);
+        if (!is_file($path.'Config/App.php')) {
+            $this->_json(0, dr_lang('目录%s不是一个有效的应用', $dir));
+        }
 
         if (IS_POST) {
 
