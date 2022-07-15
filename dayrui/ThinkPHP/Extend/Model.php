@@ -192,6 +192,17 @@ class db_mysql {
         return $this;
     }
 
+    public function like($where, $value = '') {
+
+        if (dr_strlen($value)) {
+            $this->param['where'][] = $where." LIKE '%".$this->escapeString($value, 1)."%'";
+        } else {
+            $this->param['where'][] = $where;
+        }
+
+        return $this;
+    }
+
     public function whereIn($where, $value = '') {
 
         if (dr_strlen($value)) {

@@ -90,6 +90,7 @@ class Menu extends \Phpcmf\Model {
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'group' => dr_array2string($group),
                 'site' => dr_array2string($site),
+                'client' => '',
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
             ]);

@@ -244,19 +244,19 @@ class Cache extends \Phpcmf\Common {
 
                 $table = $prefix.'member_menu';
                 if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT DEFAULT NULL');
                 }
 
                 $table = $prefix.'member_menu';
                 if (\Phpcmf\Service::M()->db->tableExists($table) && !\Phpcmf\Service::M()->db->fieldExists('client', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `client` TEXT NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `client` TEXT DEFAULT NULL');
                 }
 
                 $table = $prefix.'member_level';
                 if (\Phpcmf\Service::M()->db->tableExists($table)) {
                     \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` CHANGE `stars` `stars` int(10) unsigned NOT NULL COMMENT \'图标\';');
                     if (!\Phpcmf\Service::M()->db->fieldExists('setting', $table)) {
-                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT NOT NULL');
+                        \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `setting` TEXT DEFAULT NULL');
                     }
                     if (!\Phpcmf\Service::M()->db->fieldExists('displayorder', $table)) {
                         \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `displayorder` INT(10) DEFAULT NULL COMMENT \'排序\'');
@@ -265,12 +265,12 @@ class Cache extends \Phpcmf\Common {
 
                 $table = $prefix.'admin_menu';
                 if (!\Phpcmf\Service::M()->db->fieldExists('site', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `site` TEXT DEFAULT NULL');
                 }
 
                 $table = $prefix.'admin';
                 if (!\Phpcmf\Service::M()->db->fieldExists('history', $table)) {
-                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT NOT NULL');
+                    \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'` ADD `history` TEXT DEFAULT NULL');
                 }
                 $table = $prefix.'admin_setting';
                 if (!\Phpcmf\Service::M()->db->tableExists($table)) {
