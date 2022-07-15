@@ -25,7 +25,7 @@ class Function_list {
         $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
         $value = dr_cat_value($mid, $catid, 'name');
 
-        return '<a href="'.$url.'">'.dr_strcut($value, 10).'</a>';
+        return '<a href="'.$url.'">'.$value.'</a>';
     }
 
     // 用于列表显示副栏目
@@ -42,7 +42,7 @@ class Function_list {
             foreach ($arr as $catid) {
                 $url = IS_ADMIN ? \Phpcmf\Service::L('router')->url(APP_DIR.'/'.$_GET['c'].'/index', ['catid' => $catid]) : dr_url_prefix(dr_cat_value($mid, $catid, 'url'), $mid).'" target="_blank';
                 $value = dr_cat_value($mid, $catid, 'name');
-                $rt[] = '<a href="'.$url.'">'.dr_strcut($value, 10).'</a>';
+                $rt[] = '<a href="'.$url.'">'.$value.'</a>';
             }
         }
 
@@ -68,7 +68,7 @@ class Function_list {
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
-        $title = dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
+        $title = dr_keyword_highlight(dr_strcut($value, 50), $param['keyword']);
         !$title && $title = '...';
 
         return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
@@ -107,7 +107,7 @@ class Function_list {
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
-        $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 30), $param['keyword']);
+        $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 50), $param['keyword']);
         !$title && $title = '...';
 
         return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
