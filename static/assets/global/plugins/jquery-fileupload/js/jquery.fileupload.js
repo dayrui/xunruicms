@@ -1920,8 +1920,8 @@ function fileupload_file_edit(name, e)
         return;
     }
     var obj = $(e).parents(".files_row");
-    var file = obj.find(".files_row_name").val();
-    var name = obj.find(".files_row_title").val();
+    var file = encodeURIComponent(obj.find(".files_row_name").val());
+    var name = encodeURIComponent(obj.find(".files_row_title").val());
     var only = obj.find(".files_row_name").attr("readonly");
     if (only == "readonly" || only == true) {
         return;
@@ -1982,6 +1982,6 @@ function fileupload_file_edit(name, e)
                 dr_tips(1, obj.msg);
             }
         },
-        content: json.input_url+"&is_iframe=1&file="+encodeURIComponent(file)+"&name="+name
+        content: json.input_url+"&is_iframe=1&file="+file+"&name="+name
     });
 }
