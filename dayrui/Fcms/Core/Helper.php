@@ -1244,11 +1244,8 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
 
 /**
  * 文件真实地址
- *
- * @param   string  $id
- * @return  array
  */
-function dr_get_file($id) {
+function dr_get_file($id, $full = 0) {
 
     if (!$id) {
         return IS_DEV ? '文件参数没有值' : '';
@@ -1258,20 +1255,17 @@ function dr_get_file($id) {
         // 表示附件id
         $info = \Phpcmf\Service::C()->get_attachment($id);
         if ($info['url']) {
-            return dr_url_rel($info['url']);
+            return $full ? $info['url'] : dr_url_rel($info['url']);
         }
     }
 
-    $file = dr_file($id);
+    $file = dr_file($id, $full);
 
     return $file ? $file : $id;
 }
 
 /**
  * 文件下载地址
- *
- * @param   string  $id
- * @return  array
  */
 function dr_down_file($id, $name = '') {
 
@@ -1772,21 +1766,20 @@ function dr_icon($value) {
 
 /**
  * 完整的文件路径
- *
- * @param   string  $url
- * @return  string
  */
-function dr_file($url) {
+function dr_file($url, $full = 0) {
 
     if (!$url || dr_strlen($url) == 1) {
         return '';
     } elseif (substr($url, 0, 7) == 'http://' || substr($url, 0, 8) == 'https://') {
-        return dr_url_rel($url);
+        return $full ? $url : dr_url_rel($url);
     } elseif (substr($url, 0, 1) == '/') {
-        return dr_url_rel(ROOT_URL.substr($url, 1));
+        $url = ROOT_URL.substr($url, 1);
+        return $full ? $url : dr_url_rel($url);
     }
 
-    return dr_url_rel(SYS_UPLOAD_URL.$url);
+    $url = SYS_UPLOAD_URL.$url;
+    return $full ? $url : dr_url_rel($url);
 }
 
 /**

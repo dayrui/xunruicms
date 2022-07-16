@@ -80,7 +80,7 @@ class Table extends \Phpcmf\Common {
     }
 
     // 获取入库时的字段
-    protected function _field_save($catid) {
+    protected function _field_save($catid = 0) {
 
         $field = $this->sys_field ? dr_array22array($this->sys_field, $this->field) : $this->field;
 

@@ -954,6 +954,10 @@ return [
             $this->_json(0, dr_lang('目录%s不是一个有效的应用', $dir));
         }
 
+        if (is_file($path.'install.lock')) {
+            $this->_json(0, dr_lang('应用%s需要卸载后才能删除', $dir));
+        }
+
         if (IS_POST) {
 
             dr_dir_delete($path, true);
