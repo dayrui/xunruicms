@@ -17,6 +17,9 @@
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-expeditedssl"></i> {dr_lang('安全设置')} </a>
                 </li>
+                <li class="{if $page==4}active{/if}">
+                    <a href="#tab_4" data-toggle="tab" onclick="$('#dr_page').val('4')"> <i class="fa fa-user"></i> {dr_lang('后台登录')} </a>
+                </li>
                 <li class="{if $page==2}active{/if}">
                     <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-code"></i> {dr_lang('API设置')} </a>
                 </li>
@@ -93,19 +96,8 @@
                                 <span class="help-block">{dr_lang('不主动向官网服务器检测系统框架的版本信息')}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('允许后台登录选择模式')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="0" {if empty($data['SYS_ADMIN_MODE'])}checked{/if} /> {dr_lang('允许选择')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="1" {if $data['SYS_ADMIN_MODE']}checked{/if} /> {dr_lang('禁用选择')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('在后台登录界面显示完整模式和简化模式的切换选项')}</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
 
                 <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
                     <div class="form-body">
@@ -184,8 +176,20 @@
                     </div>
                 </div>
 
-                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
+                <div class="tab-pane  {if $page==4}active{/if}" id="tab_4">
                     <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模式选择')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="0" {if empty($data['SYS_ADMIN_MODE'])}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_MODE]" value="1" {if $data['SYS_ADMIN_MODE']}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('是否在后台登录界面显示完整模式和简化模式的切换选项')}</span>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录验证码')}</label>
                             <div class="col-md-9">
@@ -204,6 +208,23 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_OAUTH]" value="0" {if empty($data['SYS_ADMIN_OAUTH'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane  {if $page==1}active{/if}" id="tab_1">
+                    <div class="form-body">
+
+                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" >
+                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" >
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('系统安全密钥')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control input-large" type="text" name="data[SYS_KEY]" id="sys_key" value="{if $data['SYS_KEY']}************{/if}" ></label>
+                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key('sys_key')"> {dr_lang('重新生成')} </button></label>
+                                <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
                             </div>
                         </div>
                         <div class="form-group" id="dr_row_https">
@@ -239,18 +260,6 @@
                                 <span class="help-block">{dr_lang('是否在每次请求时重新生成CSRF令牌')}</span>
                             </div>
                         </div>
-
-                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" >
-                        <input class="form-control" type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{intval($data['SYS_ADMIN_LOGIN_TIME'])}" >
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('系统安全密钥')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SYS_KEY]" id="sys_key" value="{if $data['SYS_KEY']}************{/if}" ></label>
-                                <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key('sys_key')"> {dr_lang('重新生成')} </button></label>
-                                <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('自动任务权限')}</label>
                             <div class="col-md-9">
@@ -276,7 +285,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="tab-pane  {if $page==2}active{/if}" id="tab_2">
                     <div class="form-body">

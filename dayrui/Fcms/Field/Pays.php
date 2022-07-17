@@ -410,6 +410,22 @@ class Pays extends \Phpcmf\Library\A_Field  {
      */
     public function get_value($name, $data) {
 
+        $value = [
+            'price' => $data[$name],
+            'sku' => dr_string2array($data[$name.'_sku']),
+            'sn' => $data[$name.'_sn'],
+            'quantity' => $data[$name.'_quantity'],
+        ];
+
+        $field = \Phpcmf\Service::L('field')->fields;
+
+        foreach ($field[$name]['setting']['option']['field'] as $ff ) {
+            if ($field[$ff]['fieldtype'] == 'Paystext') {
+                $value[$ff] = (string)$data[$ff];
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -497,7 +513,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     $pay_html.= '<div class="form-group">
                             <label class="col-md-2 control-label">'.$name.'</label>
                             <div class="col-md-7">
-                                <input type="text" name="'.$field['fieldname'].'['.$ff.']" value="'.$value[$ff].'" class="form-control input-inline input-medium">
+                                <input type="text" name="'.$field['fieldname'].'['.$ff.']" value="'.(isset($value[$ff]) ? $value[$ff] : '').'" class="form-control input-inline input-medium">
                             </div>
                         </div>';
                 }
@@ -550,11 +566,11 @@ class Pays extends \Phpcmf\Library\A_Field  {
             // 是否单一模式
             if (isset($field['setting']['option']['close_one']) && $field['setting']['option']['close_one']) {
                 $is_field_pay = 1;
-                $sku_html = '<p>
+                $sku_html = '<p class="margin-bottom-20">
                     <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
                     <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
                 </p>
-                <div class="portlet light bordered">
+                <div class="portlet light isbordered">
                     <div id="dr_sku_result">
                         '.$result.'
                     </div>
@@ -571,11 +587,11 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     <span></span>
                 </label>
             </div>';
-                $sku_html = '<p>
+                $sku_html = '<p class="margin-bottom-20">
                     <label><button type="button" class="btn blue btn-sm" onclick="dr_sku_add_group()"> <i class="fa fa-plus"></i> '.dr_lang('添加属性').'</button></label>
                     <label><button type="button" class="btn green btn-sm" onclick="dr_sku_init()"> <i class="fa fa-refresh"></i> '.dr_lang('更新属性').'</button></label>
                 </p>
-                <div class="portlet light bordered">
+                <div class="portlet light isbordered">
                     <div id="dr_sku_result">
                         '.$result.'
                     </div>
@@ -586,7 +602,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             $str.= '
            
             <div id="dr_field_pay" style="display:'.(!$is_field_pay ? 'block' : 'none').';">
-                <div class="portlet light bordered">
+                <div class="portlet light isbordered">
                    <div class="form-body" style="padding:30px 0 10px 0">
                         '.$pay_html.'
                    </div>
@@ -747,7 +763,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
         $str = '
       
             <div id="dr_field_pay" style="display:'.(!$is_field_pay ? 'block' : 'none').';">
-                <div class="portlet light bordered">
+                <div class="portlet light isbordered">
                     
                    <div class="form-body" style="padding:30px 0 10px 0">
                    

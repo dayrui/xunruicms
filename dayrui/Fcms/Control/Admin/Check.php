@@ -467,7 +467,7 @@ class Check extends \Phpcmf\Common
                 }
 
                 $config = $this->get_cache('site', SITE_ID, 'mobile');
-                if (!$this->site_info[SITE_ID]['SITE_IS_MOBILE'] && $config['tohtml']) {
+                if (!$this->site_info[SITE_ID]['SITE_IS_MOBILE'] && $config && $config['tohtml']) {
                     $error[] = '当前站点没有绑定移动端域名，将无法实现移动端静态页面功能，<a href="javascript:dr_help(506);">查看解决方案</a>';
                 }
 
