@@ -795,7 +795,7 @@ class View {
             if (!$var) {
                 continue;
             }
-            $val = defined($val) ? constant($val) : str_replace('_XUN'.'RUI'.'CMS_SK_', ' ', $val);
+            $val = defined($val) ? constant($val) : dr_rp_view($val, true);
             if ($var == 'fid' && !$val) {
                 continue;
             }

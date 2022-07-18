@@ -488,6 +488,24 @@ function dr_rp($str, $o, $t) {
 }
 
 /**
+ * 替换模板参数特殊字符
+ */
+function dr_rp_view($str, $rt = 0) {
+
+    $a = [
+        ' ',
+        '='
+    ];
+
+    $b = [
+        '_XUNRUICMS_SK_',
+        '_XUNRUICMS_ET_',
+    ];
+
+    return $rt ? str_replace($b, $a, (string)$str) : str_replace($a, $b, (string)$str);
+}
+
+/**
  * 二维码调用
  * @param $text 指定字符串
  * @param $thumb 中间图片
