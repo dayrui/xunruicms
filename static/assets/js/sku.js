@@ -5,11 +5,19 @@ function dr_sku_add_group() {
 	} else {
 		id++;
 	}
+	id = dr_sku_get_id(id);
 	var html = tpl_group;
 	html = html.replace(/\{id\}/g, id);
 	html = html.replace(/\{name\}/g, "属性名称_"+(id+1));
 	html = html.replace(/\{value\}/g, "");
 	$("#dr_sku_result").append(html);
+}
+function dr_sku_get_id(id) {
+	if ($('#dr_sku_group_'+id).length) {
+		id = parseInt(id) + 1;
+		return dr_sku_get_id(id);
+	}
+	return id;
 }
 function dr_sku_del_group(id) {
 	$("#dr_sku_group_"+id).remove();
