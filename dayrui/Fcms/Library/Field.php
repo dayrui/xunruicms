@@ -168,7 +168,7 @@
 					    </div>
 					</div>
 				</div>
-                <div class="portlet light bordered" id="dr_{name}">
+                <div class="portlet light bordered" id="dr_row_{name}">
                     <div class="portlet-title mytitle">
                         <div class="caption"><span class="caption-subject font-green">{text}</span></div>
                     </div>

@@ -277,8 +277,6 @@ class Pays extends \Phpcmf\Library\A_Field  {
     }
 
 
-
-
     /**
      * 获取附件id
      */
@@ -426,6 +424,25 @@ class Pays extends \Phpcmf\Library\A_Field  {
         }
 
         return $value;
+    }
+
+    /**
+     * 支付时获取商品属性
+     */
+    public function get_pay_info($rt, $field, $sku) {
+
+        $rt[$field['fieldname'].'_sku'] = dr_string2array($rt[$field['fieldname'].'_sku']);
+        if (!$sku && $rt[$field['fieldname'].'_sku']) {
+            return dr_return_data(0, dr_lang('没有选择商品属性'));
+        } elseif (!isset($rt[$field['fieldname'].'_sku']['value'][$sku]) || !$rt[$field['fieldname'].'_sku']['value'][$sku]) {
+            return dr_return_data(0, dr_lang('商品(#'.$rt['id'].')属性（#'.$sku.'）无效'));
+        }
+
+        $sn = (string)$rt[$field['fieldname'].'_sku']['value'][$sku]['sn'];
+        $quantity = (int)$rt[$field['fieldname'].'_sku']['value'][$sku]['quantity'];
+        list($sku_name, $sku_string) = dr_sku_name($sku, $rt[$field['fieldname'].'_sku'], 1);
+
+        return dr_return_data(1, '', [$sn, $quantity, $sku_name, $sku_string]);
     }
 
     /**
