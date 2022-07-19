@@ -18,6 +18,7 @@ if (is_file($version)) {
 }
 
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME']);
+dr_echo_msg(1, '当前脚本路径：'.__FILE__);
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
     dr_echo_msg(0, "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html");exit;
@@ -53,7 +54,7 @@ if (isset($_GET['log']) && $_GET['log']) {
     exit;
 }
 
-dr_echo_msg(1, '客户端信息：'.$_SERVER['HTTP_USER_AGENT']);
+dr_echo_msg(1, '客户端字符串：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
 $min = '7.4.0';
