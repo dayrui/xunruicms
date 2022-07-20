@@ -135,7 +135,7 @@ class Diy extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = isset($field['setting']['validate']['tips']) && $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
         // 字段默认值
-        $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+        $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
         $name = $field['fieldname'];
         $code = '';

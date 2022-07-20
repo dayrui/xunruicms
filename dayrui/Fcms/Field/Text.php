@@ -77,13 +77,15 @@ class Text extends \Phpcmf\Library\A_Field {
     public function insert_value($field) {
 		// 格式化入库值
 		$value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-		if (in_array($field['setting']['option']['fieldtype'], array('INT', 'TINYINT', 'SMALLINT'))) {
+        if (in_array($field['setting']['option']['fieldtype'], array('INT', 'TINYINT', 'SMALLINT'))) {
 			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value ? (int)$value : 0;
 		} elseif (in_array($field['setting']['option']['fieldtype'], array('DECIMAL', 'FLOAT'))) {
 			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value ? (float)$value : 0;
 		} elseif ($field['setting']['option']['fieldtype'] == 'MEDIUMINT') {
 			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = $value ? $value : 0;
-		} else {
+		} elseif (dr_strlen($value) == 1 && $value == '0') {
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = '0';
+        } else {
 			\Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = dr_htmlspecialchars($value);
 		}
     }
@@ -127,7 +129,7 @@ class Text extends \Phpcmf\Library\A_Field {
 		$type = $field['setting']['option']['ispwd'] ? 'password' : 'text';
 
 		// 字段默认值
-		$value = $value && dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$str = '<input class="form-control '.($field['setting']['validate']['required'] ? 'dr_required' : '').' '.$field['setting']['option']['css'].'" type="'.$type.'" name="data['.$field['fieldname'].']" id="dr_'.$field['fieldname'].'" value="'.$value.'" '.$style.' '.$required.' '.$attr.' />';
 		

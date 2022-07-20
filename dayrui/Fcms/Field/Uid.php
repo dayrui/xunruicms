@@ -96,7 +96,7 @@ class Uid extends \Phpcmf\Library\A_Field {
         }
 
         // 字段默认值
-        if ($value && strlen($value)) {
+        if ($value) {
             $value = \Phpcmf\Service::M('member')->author($value);
         } else {
             $value = \Phpcmf\Service::C()->member ? \Phpcmf\Service::C()->member['username'] : '';
@@ -153,7 +153,7 @@ class Uid extends \Phpcmf\Library\A_Field {
     public function show($field, $value = null) {
 
         // 字段默认值
-        if ($value && strlen($value)) {
+        if ($value) {
             $value = \Phpcmf\Service::M('member')->author($value);
         } else {
             $value = \Phpcmf\Service::C()->member ? \Phpcmf\Service::C()->member['username'] : '';

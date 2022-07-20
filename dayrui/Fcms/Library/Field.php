@@ -903,6 +903,8 @@
             $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
             if (is_array($value)) {
                 $value = dr_array2string($value);
+            } elseif (strlen($value) == 1 && $value == '0') {
+                $value = '0';
             } else {
                 $value = htmlspecialchars((string)$value);
             }

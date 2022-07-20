@@ -100,7 +100,7 @@ class Textarea extends \Phpcmf\Library\A_Field {
 		$height = $field['setting']['option']['height'] ? $field['setting']['option']['height'] : '100';
 
 		// 字段默认值
-		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$str = '<textarea class="form-control" style="height:'.$height.'px; width:'.$width.(is_numeric($width) ? 'px' : '').';" name="data['.$name.']" id="dr_'.$name.'" '.$attr.'>'.$value.'</textarea>';
 

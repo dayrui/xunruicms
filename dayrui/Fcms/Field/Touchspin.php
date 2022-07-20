@@ -147,7 +147,7 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 		$down = $field['setting']['option']['down'] ? $field['setting']['option']['down'] : 'default';
 
 		// 字段默认值
-		$value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+		$value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
 		$str = '';
 

@@ -116,7 +116,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
         }
 
         // 字段默认值
-        $value = $value && strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
+        $value = dr_strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
         if (isset($field['setting']['option']['diy_show_value']) && $field['setting']['option']['diy_show_value']) {
             // 扩展字段函数
