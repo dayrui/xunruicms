@@ -25,7 +25,7 @@
                         <tr style="background-color: #fbfcfd;">
                             <th width="50" style="text-align:center"> Id </th>
                             <th> {dr_lang('菜单名称')} </th>
-                            <th width="40" class="myselect" style="text-align:center">
+                            <th  class="myselect" style="text-align:center;max-width: 40px!important;width: 40px!important">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
                                     <span></span>
@@ -47,7 +47,7 @@
                             <td>
                                 {$t.spacer} <i class="{$t.icon}"></i> {$t.name} {if $t.uri} - {$t.uri}{/if}
                             </td>
-                            <td class="myselect" style="text-align:center">
+                            <td class="myselect" style="text-align:center;max-width: 40px!important;width: 40px!important">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="checkboxes group-checkable menu{$t.pid} menu{$t.tid}" data-set="{if $t.uri}.zsg{$t.id}{else}.menu{$t.id}{/if}" name="data[mark][]" {if $t.mark && dr_in_array($t.mark, (array)$data.system.mark)}checked{/if} value="{$t.mark}" />
                                     <span></span>
@@ -93,7 +93,7 @@
                         <tr style="background-color: #fbfcfd;">
                             <th width="50" style="text-align:center"> Id </th>
                             <th> {$t.name}</th>
-                            <th width="50" class="myselect" style="text-align:center">
+                            <th width="50" class="myselect" style="text-align:center;max-width: 40px!important;width: 40px!important">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="group-checkable" data-set=".menu_module_{$dir}" />
                                     <span></span>
@@ -115,7 +115,7 @@
                             <td>
                                 {$name} - {$uri}index
                             </td>
-                            <td style="text-align:center" class="myselect">
+                            <td style="text-align:center;max-width: 40px!important;width: 40px!important" class="myselect">
                                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                     <input type="checkbox" class="checkboxes menu{md5($uri)} menu_module_{$dir}" {if dr_in_array($uri.'add', (array)$data.module)}checked{/if} name="module[{$uri}add]" value="{$uri.'add'}" />
                                     <span></span>

@@ -393,7 +393,7 @@ $db[\'default\']	= [
                                 unlink(WRITEPATH.'install.info');
                                 unlink(WRITEPATH.'install.error');
                                 // 重命名后台入口
-                                $admin = 'admin-'.substr(md5(SYS_TIME.rand(1, 999999)), 0, 12);
+                                $admin = 'admin'.substr(md5(SYS_TIME.rand(1, 999999)), 0, 12);
                                 $afile = WEBPATH.$admin.'.php';
                                 if (is_file(WEBPATH.'admin.php')) {
                                     copy(WEBPATH.'admin.php', $afile);
