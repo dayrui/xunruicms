@@ -493,13 +493,12 @@ function dr_rp($str, $o, $t) {
 function dr_rp_view($str, $rt = 0) {
 
     $a = [
-        ' ',
-        '='
+        '=',
+        ' '
     ];
-
     $b = [
+        '_FINECMS_ET_',
         '_XUNRUICMS_SK_',
-        '_XUNRUICMS_ET_',
     ];
 
     return $rt ? str_replace($b, $a, (string)$str) : str_replace($a, $b, (string)$str);
@@ -2298,6 +2297,8 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
     // 获取本地文件
     if (strpos($url, 'file://')  === 0) {
         return file_get_contents($url);
+    } elseif (strpos($url, '/')  === 0 && is_file(WEBPATH.$url)) {
+        return file_get_contents(WEBPATH.$url);
     }
 
     // curl模式
