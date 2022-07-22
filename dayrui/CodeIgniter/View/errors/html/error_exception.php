@@ -8,6 +8,11 @@
 	<title><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8') ?></title>
 	<style type="text/css">
 		<?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'debug.css')) ?>
+        .source code {
+            white-space:normal;
+            word-break:break-all;
+            word-wrap:break-word;
+        }
 	</style>
 
 	<script type="text/javascript">
@@ -21,7 +26,7 @@
 		<div class="container">
 			<h1><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
 			<p>
-				<?= $exception->getMessage() ?>
+				<?= $message ?>
 				<a href="https://www.baidu.com/s?ie=UTF-8&wd=迅睿CMS框架%20<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
 				   rel="noreferrer" target="_blank">搜索问题 &rarr;</a>
 			</p>
@@ -34,7 +39,15 @@
 
 	<!-- Source -->
 	<div class="container">
-		<p><b><?php echo IS_DEV ? $file :  static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
+        <?php if ($is_template) : ?>
+            <?php foreach ($is_template as $index => $row) : ?>
+                <p><b>模板文件：<?php echo $row['path'] ?></b> </p>
+            <?php endforeach; ?>
+            <p><b>解析文件：<?php echo IS_DEV ? $file :  static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
+        <?php else : ?>
+
+            <p><b><?php echo IS_DEV ? $file :  static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
+        <?php endif; ?>
 
 		<?php if (is_file($file)) : ?>
 			<div class="source">

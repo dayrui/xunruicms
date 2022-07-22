@@ -5,7 +5,9 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+use Config\Paths;
 use Throwable;
+
 
 /**
  * 继承异常类，用于Services.php
@@ -80,6 +82,9 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
         $message = $exception->getMessage();
 
+
+
+
         // 调试模式不屏蔽敏感信息
         if (CI_DEBUG) {
             $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
@@ -99,7 +104,73 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         }
 
         $this->viewPath = is_file(MYPATH.'View/errors/html/production.php') ? MYPATH.'View/errors/' : FRAMEPATH.'View/errors/';
+        // Determine possible directories of error views
+        $path    = $this->viewPath;
+        $altPath = rtrim((new Paths())->viewDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR;
 
-        return parent::render($exception, $statusCode);
+        $path    .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;
+        $altPath .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;
+
+        // Determine the views
+        $view    = $this->determineView($exception, $path);
+        $altView = $this->determineView($exception, $altPath);
+
+        // Check if the view exists
+        if (is_file($path . $view)) {
+            $viewFile = $path . $view;
+        } elseif (is_file($altPath . $altView)) {
+            $viewFile = $altPath . $altView;
+        }
+
+        if (! isset($viewFile)) {
+            echo 'The error view files were not found. Cannot render exception trace.';
+
+            exit(1);
+        }
+
+        if (ob_get_level() > $this->ob_level + 1) {
+            ob_end_clean();
+        }
+
+        echo(function () use ($exception, $statusCode, $viewFile): string {
+            $vars = $this->collectVars($exception, $statusCode);
+            extract($vars, EXTR_SKIP);
+
+            $file = $exception->getFile();
+            $is_template = false;
+            if (strpos($file, WRITEPATH.'template') !== false) {
+                $message = '模板标签写法错误：'.$exception->getMessage();
+                $is_template = \Phpcmf\Service::V()->get_view_files();
+            }
+            ob_start();
+            include $viewFile;
+
+            return ob_get_clean();
+        })();
+    }
+
+
+
+
+    /**
+     * Gathers the variables that will be made available to the view.
+     */
+    protected function collectVars(Throwable $exception, int $statusCode): array
+    {
+        $trace = $exception->getTrace();
+
+        if ($this->config->sensitiveDataInTrace !== []) {
+            $this->maskSensitiveData($trace, $this->config->sensitiveDataInTrace);
+        }
+
+        return [
+            'title'   => get_class($exception),
+            'type'    => get_class($exception),
+            'code'    => $statusCode,
+            'message' => $exception->getMessage() ?? '(null)',
+            'file'    => $exception->getFile(),
+            'line'    => $exception->getLine(),
+            'trace'   => $trace,
+        ];
     }
 }
