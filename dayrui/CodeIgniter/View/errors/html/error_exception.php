@@ -42,7 +42,13 @@
         <?php if ($is_template) : ?>
             <?php foreach ($is_template as $index => $row) : ?>
                 <p><b>模板文件：<?php echo $row['path'] ?></b> </p>
-            <?php endforeach; ?>
+                <?php if ($line_template && is_file($row['path'])) : ?>
+                    <div class="source">
+                        <?= static::highlightFile($row['path'], $line_template, 15); ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?></div>
+        <div class="container">
             <p><b>解析文件：<?php echo IS_DEV ? $file :  static::cleanPath($file, $line) ?></b> at line <b><?= $line ?></b></p>
         <?php else : ?>
 

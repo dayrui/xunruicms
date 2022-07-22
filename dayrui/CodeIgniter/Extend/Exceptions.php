@@ -82,9 +82,6 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
         $message = $exception->getMessage();
 
-
-
-
         // 调试模式不屏蔽敏感信息
         if (CI_DEBUG) {
             $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
@@ -138,7 +135,12 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
             $file = $exception->getFile();
             $is_template = false;
+            $line_template = 0;
             if (strpos($file, WRITEPATH.'template') !== false) {
+                list($a, $b) = explode('on line ', $exception->getMessage());
+                if (is_numeric($b)) {
+                    $line_template = $b;
+                }
                 $message = '模板标签写法错误：'.$exception->getMessage();
                 $is_template = \Phpcmf\Service::V()->get_view_files();
             }
@@ -149,28 +151,4 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         })();
     }
 
-
-
-
-    /**
-     * Gathers the variables that will be made available to the view.
-     */
-    protected function collectVars(Throwable $exception, int $statusCode): array
-    {
-        $trace = $exception->getTrace();
-
-        if ($this->config->sensitiveDataInTrace !== []) {
-            $this->maskSensitiveData($trace, $this->config->sensitiveDataInTrace);
-        }
-
-        return [
-            'title'   => get_class($exception),
-            'type'    => get_class($exception),
-            'code'    => $statusCode,
-            'message' => $exception->getMessage() ?? '(null)',
-            'file'    => $exception->getFile(),
-            'line'    => $exception->getLine(),
-            'trace'   => $trace,
-        ];
-    }
 }
