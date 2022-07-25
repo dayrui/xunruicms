@@ -109,7 +109,7 @@ class Image extends \Phpcmf\Library\A_Field {
                     }
                 }
             }
-            if (count($data) > $field['setting']['option']['count']) {
+            if (dr_count($data) > $field['setting']['option']['count']) {
                 $data = array_slice($data, 0, $field['setting']['option']['count']-2);
             }
         }
