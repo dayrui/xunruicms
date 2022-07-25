@@ -100,8 +100,14 @@ abstract class Common extends \Frame\Controller {
 
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
+
+        // 项目站点不存在
         if (!isset($this->site_info[SITE_ID]) || !$this->site_info[SITE_ID]) {
-            $this->_admin_msg(0, '项目【'.SITE_ID.'】不存在，请更新SITE_ID');
+            if (IS_DEV) {
+                $this->_admin_msg(0, '项目【'.SITE_ID.'】不存在，请检查cache/config/site.php文件数据是否完整');
+            } else {
+                $this->_admin_msg(0, '项目不存在');
+            }
         }
 
         // 站点共享变量

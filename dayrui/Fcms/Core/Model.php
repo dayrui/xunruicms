@@ -911,8 +911,8 @@ class Model extends \Frame\Model {
             // 栏目查询
             if (isset($param['catid']) && $param['catid']) {
                 $mid = defined('MOD_DIR') ? MOD_DIR : (APP_DIR ? APP_DIR : 'share');
-                $cat = \Phpcmf\Service::C()->get_cache('module-'.SITE_ID.'-'.$mid, 'category', $param['catid']);
-                $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
+                $cat = dr_cat_value($mid, $param['catid']);
+                $cat && $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
             }
             // 其他自定义字段查询
             if (isset($this->param['is_diy_where_list']) && $this->param['is_diy_where_list']) {
