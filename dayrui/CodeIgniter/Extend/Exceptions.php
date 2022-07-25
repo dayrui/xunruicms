@@ -132,8 +132,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         echo(function () use ($exception, $statusCode, $viewFile): string {
             $vars = $this->collectVars($exception, $statusCode);
             extract($vars, EXTR_SKIP);
-
             $file = $exception->getFile();
+            $message = $exception->getMessage();
             $is_template = false;
             $line_template = 0;
             if (strpos($file, WRITEPATH.'template') !== false) {
