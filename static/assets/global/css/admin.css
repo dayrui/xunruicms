@@ -2031,30 +2031,30 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-success {
     color: #fff;
     background-color: #3ea9e2;
-    border-color: #08c
+    border-color: #3ea9e2
 }
 
 .btn-success.focus,.btn-success:focus {
     color: #fff;
     background-color: #3ea9e2;
-    border-color: #08c
+    border-color: #3ea9e2
 }
 
 .btn-success.active,.btn-success:active,.btn-success:hover,.open>.btn-success.dropdown-toggle {
     color: #fff;
     background-color: #3ea9e2;
-    border-color: #08c
+    border-color: #3ea9e2
 }
 
 .btn-success.active.focus,.btn-success.active:focus,.btn-success.active:hover,.btn-success:active.focus,.btn-success:active:focus,.btn-success:active:hover,.open>.btn-success.dropdown-toggle.focus,.open>.btn-success.dropdown-toggle:focus,.open>.btn-success.dropdown-toggle:hover {
     color: #fff;
     background-color: #3ea9e2;
-    border-color: #08c
+    border-color: #3ea9e2
 }
 
 .btn-success.disabled.focus,.btn-success.disabled:focus,.btn-success.disabled:hover,.btn-success[disabled].focus,.btn-success[disabled]:focus,.btn-success[disabled]:hover,fieldset[disabled] .btn-success.focus,fieldset[disabled] .btn-success:focus,fieldset[disabled] .btn-success:hover {
     background-color: #3ea9e2;
-    border-color: #08c
+    border-color: #3ea9e2
 }
 
 .btn-success .badge {
@@ -2206,7 +2206,7 @@ a.btn.disabled,fieldset[disabled] a.btn {
 }
 
 .btn-group-xs>.btn,.btn-xs {
-    padding: 1px 5px;
+    padding: 2px 5px;
     font-size: 12px;
     line-height: 1.6 !important;
     border-radius: 3px
@@ -5847,10 +5847,6 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     transition: all .3s
 }
 
-.btn:not(.btn-sm):not(.btn-lg) {
-    line-height: 1.44
-}
-
 .btn.white:not(.btn-outline) {
     color: #666;
     background-color: #fff;
@@ -7999,10 +7995,6 @@ body[ng-controller] .modal {
     margin-bottom: 0
 }
 
-.portlet.bordered {
-    border: 1px solid #e7ecf1
-}
-
 .portlet.bordered>.portlet-title {
     border-bottom: 0
 }
@@ -8062,6 +8054,10 @@ body[ng-controller] .modal {
     padding: 12px 20px 15px;
     background-color: #fff;
     border: 0;
+}
+
+.portlet.isbordered {
+    border: 1px solid #e7ecf1
 }
 
 
@@ -13727,7 +13723,6 @@ form .portlet.light .portlet-body {
 }
 
 select.form-control {
-    background-color: #eff2f5;
     border-color: #eff2f5;
     color: #5e6278;
     transition: color .2s ease,background-color .2s ease;

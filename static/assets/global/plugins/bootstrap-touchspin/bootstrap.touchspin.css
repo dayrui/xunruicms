@@ -8,8 +8,7 @@
  */
 
 .bootstrap-touchspin .form-control {
-  border-top-left-radius: 4px !important;
-  border-bottom-left-radius: 4px !important;
+  border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important;
 }
 .bootstrap-touchspin .input-group-btn-vertical {
   position: relative;
