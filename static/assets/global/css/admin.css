@@ -2201,14 +2201,14 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-group-sm>.btn,.btn-sm {
     padding: 5px 10px;
     font-size: 12px;
-    line-height: 1.6 !important;;
+    line-height: 1.5 !important;
     border-radius: 3px
 }
 
 .btn-group-xs>.btn,.btn-xs {
     padding: 2px 5px;
     font-size: 12px;
-    line-height: 1.6 !important;
+    line-height: 1.5 !important;
     border-radius: 3px
 }
 
