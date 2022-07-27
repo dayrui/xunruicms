@@ -87,7 +87,14 @@ class db_mysql {
 
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->whereRaw($v);
+                if (dr_count($v) == 2) {
+                    $builder->where($v[0], $v[1]);
+                } else {
+                    if (strpos($v, $this->prefix.$this->prefix) !== false) {
+                        $v = str_replace($this->prefix.$this->prefix, $this->prefix, $v);
+                    }
+                    $builder->whereRaw($v);
+                }
             }
         } else {
             $builder->where(true);
