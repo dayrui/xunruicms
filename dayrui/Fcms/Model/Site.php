@@ -244,7 +244,7 @@ class Site extends \Phpcmf\Model {
                 $config[$t['id']] = [
                     'SITE_NAME' => $t['name'],
                     'SITE_DOMAIN' => strtolower($t['domain']),
-                    'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo/home.png',
+                    'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
                     'SITE_MOBILE' => $mobile_domain,
                     'SITE_MOBILE_DIR' => $mobile_dirname,
                     'SITE_AUTO' => (string)$t['setting']['mobile']['auto'],
