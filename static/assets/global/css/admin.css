@@ -5757,12 +5757,6 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
 
 
 
-.badge-default,.label-default {
-    background-color: #bac3d0
-}
-
-
-
 .alert {
     border-width: 1px
 }
@@ -7451,6 +7445,13 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 
 h1 .label,h2 .label,h3 .label,h4 .label,h5 .label,h6 .label {
     font-size: 75%
+}
+
+
+
+.badge-default,.label-default {
+    color:#aaa;
+    background-color: #efefef
 }
 
 .label-default[href]:focus,.label-default[href]:hover {
