@@ -321,7 +321,7 @@ class Site extends \Phpcmf\Model {
                 $cache[$t['id']] = $t['setting'];
             }
 
-            if (IS_USE_MODULE) {
+            if (dr_is_use_module()) {
                 list($webpath, $site_domain, $app_domain, $sso_domain, $client_domain) = \Phpcmf\Service::M('module', 'module')->sync_site_cache($module, $webpath, $site_domain, $app_domain, $sso_domain, $client_domain, $module_cache_file);
             }
         }

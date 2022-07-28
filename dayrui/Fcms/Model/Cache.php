@@ -66,7 +66,7 @@ class Cache extends \Phpcmf\Model {
 
         if (!$this->is_sync_cache) {
             $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
-            IS_USE_MODULE && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+            dr_is_use_module() && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
             \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
         }
 
@@ -113,7 +113,7 @@ class Cache extends \Phpcmf\Model {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
 
-        $module_cache = IS_USE_MODULE ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
+        $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
 
         // 按项目更新的缓存
         $cache = [];
@@ -156,7 +156,7 @@ class Cache extends \Phpcmf\Model {
         foreach ([ $site_cache[$key] ] as $t) {
 
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            IS_USE_MODULE && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+            dr_is_use_module() && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
             foreach ($cache as $m => $namespace) {
                 \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
@@ -187,7 +187,7 @@ class Cache extends \Phpcmf\Model {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
 
-        $module_cache = IS_USE_MODULE ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
+        $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
 
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
 
@@ -222,7 +222,7 @@ class Cache extends \Phpcmf\Model {
             }
 
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            IS_USE_MODULE && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+            dr_is_use_module() && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
             foreach ($cache as $m => $namespace) {
                 \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
@@ -254,7 +254,7 @@ class Cache extends \Phpcmf\Model {
     public function update_search_index() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-        IS_USE_MODULE && $module_cache = $this->table('module')->getAll();
+        dr_is_use_module() && $module_cache = $this->table('module')->getAll();
         if (!$module_cache) {
             return;
         }
@@ -376,7 +376,7 @@ class Cache extends \Phpcmf\Model {
                     }
                 }
             }
-            if (IS_USE_MODULE) {
+            if (dr_is_use_module()) {
                 \Phpcmf\Service::L('cache')->set_auth_data('update_site_config', $this->table('module')->where('share', 0)->getAll());
                 \Phpcmf\Service::C()->_json(1, dr_lang('正在准备更新'), 1);
             } else {
@@ -552,5 +552,4 @@ class Cache extends \Phpcmf\Model {
     public function _error_msg($msg) {
         echo dr_array2string(dr_return_data(0, $msg));exit;
     }
-
 }

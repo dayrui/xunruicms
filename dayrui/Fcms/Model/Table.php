@@ -15,7 +15,7 @@ class Table extends \Phpcmf\Model {
         $cache = [];
         $paytable = []; // 付款表名
         // 生成模块表结构
-        if (IS_USE_MODULE) {
+        if (dr_is_use_module()) {
             $obj = \Phpcmf\Service::M('module', 'module');
             if (method_exists($obj, 'paytable')) {
                 list($cache, $paytable) = $obj->paytable($cache, $paytable, $module, $siteid);

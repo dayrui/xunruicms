@@ -188,18 +188,20 @@ class Run extends \Phpcmf\Common
 
                 list($cache_path) = dr_avatar_path();
                 $path = $cache_path.dr_avatar_dir($oauth['uid']);
-                if (is_file($path.$oauth['uid'].'.jpg')) {
+                $file = $path.$oauth['uid'].'.jpg';
+                if (is_file($file)) {
                     \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
                     exit('头像已经存在');
                 }
 
                 $avatar = dr_catcher_data($oauth['avatar']);
                 if ($avatar) {
-                    file_put_contents($path.$oauth['uid'].'.jpg', $avatar);
-                }
-
-                if (is_file($path.$oauth['uid'].'.jpg')) {
-                    \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
+                    if (!is_dir($path)) {
+                        dr_mkdirs($path);
+                    }
+                    if (file_put_contents($file, $avatar)) {
+                        \Phpcmf\Service::M()->db->table('member_data')->where('id', $oauth['uid'])->update(['is_avatar' => 1]);
+                    }
                 }
 
                 break;

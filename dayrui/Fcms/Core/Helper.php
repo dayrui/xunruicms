@@ -803,6 +803,7 @@ function dr_avatar_dir($uid) {
     $dir1 = substr($uid, 0, 3);  //取左边3位，即 000
     $dir2 = substr($uid, 3, 2);  //取4-5位，即00
     $dir3 = substr($uid, 5, 2);  //取6-7位，即00
+
     // 下面拼成用户头像路径，即000/00/00/
     return $dir1.'/'.$dir2.'/'.$dir3.'/';
 }
@@ -1744,6 +1745,22 @@ function dr_array22array($a1, $a2) {
     }
 
     return $a;
+}
+
+/**
+ * 判断是否启用了内容系统插件
+ */
+function dr_is_use_module() {
+
+    if (!IS_USE_MODULE) {
+        return 0;
+    }
+
+    if (is_file(IS_USE_MODULE.'/install.lock')) {
+        return IS_USE_MODULE;
+    }
+
+    return 0;
 }
 
 /**
