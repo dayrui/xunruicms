@@ -7477,21 +7477,21 @@ h1 .label,h2 .label,h3 .label,h4 .label,h5 .label,h6 .label {
 }
 
 .label-info {
-    color:#181c32;
+    color:#2fa80b;
     background-color:#eff2f5
 }
 .label-info[href]:focus,.label-info[href]:hover {
-    color:#181c32;
+    color:#2fa80b;
     background-color:#eff2f5
 }
 
 .label-warning {
-    color:#ffc700;
+    color:#ddb929;
     background-color:#fff8dd
 }
 
 .label-warning[href]:focus,.label-warning[href]:hover {
-    color:#ffc700;
+    color:#ddb929;
     background-color:#fff8dd
 }
 
