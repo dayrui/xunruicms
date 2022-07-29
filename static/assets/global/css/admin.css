@@ -9738,7 +9738,8 @@ body .ui-tooltip {
 .bootstrap-tagsinput .tag {
     margin-right: 2px;
     line-height: 30px;
-    color: #fff
+    background-color: #f0f2f5;
+    color: #909399;
 }
 
 .bootstrap-tagsinput .tag [data-role=remove] {
