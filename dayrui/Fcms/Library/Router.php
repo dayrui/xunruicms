@@ -128,7 +128,7 @@ class Router {
     }
 
     // 判断满足定向跳转的条件
-    public function is_redirect_url($url, $is_mobile = 0) {
+    public function is_redirect_url($url, $is_mobile = 0, $is_page = 0) {
 
         // 不跳转的条件
         if (!dr_is_sys_301()) {
@@ -143,7 +143,7 @@ class Router {
             return; // 排除移动端,移动端不跳转开关
         } elseif (defined('SC_HTML_FILE')) {
             return; // 排除生成
-        } elseif (isset($_GET['page']) && intval($_GET['page']) > 1) {
+        } elseif (!$is_page && isset($_GET['page']) && intval($_GET['page']) > 1) {
             return; // 排除分页
         } elseif (isset($_GET['not301']) && intval($_GET['not301']) > 1) {
             return; // 排除自定义参数

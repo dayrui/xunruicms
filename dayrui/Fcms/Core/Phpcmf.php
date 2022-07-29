@@ -487,11 +487,6 @@ abstract class Common extends \Frame\Controller {
 
         // 挂钩点 程序初始化之后
         \Phpcmf\Hooks::trigger('cms_init');
-
-        // 提交后销毁验证码
-        if (IS_POST) {
-            \Phpcmf\Service::L('cache')->del_auth_data('web-captcha-'.USER_HTTP_CODE);
-        }
     }
 
     /**
