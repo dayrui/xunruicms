@@ -729,7 +729,7 @@
 
             $this->data = $data;
             foreach ($data as $n => $value) {
-                if (isset($fields[$n]) && $fields[$n]) {
+                if (isset($fields[$n]) && $fields[$n] && isset($fields[$n]['fieldtype']) && $fields[$n]['fieldtype']) {
                     if ($n == 'content' && stripos($fields[$n]['fieldtype'], 'editor') !== false) {
                         // 编辑器
                         $value = dr_text_rel($this->get_value($fields[$n]['fieldtype'], $value));
