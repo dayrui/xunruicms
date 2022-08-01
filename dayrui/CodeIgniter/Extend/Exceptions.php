@@ -47,6 +47,9 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 		 // ajax 返回
         if (IS_AJAX || IS_API) {
 			// 调试模式不屏蔽敏感信息
+            if (strpos($message, 'Unable to connect to the database') !== false) {
+                $message = '无法连接到数据库<br>'.$message;
+            }
             if (CI_DEBUG) {
                 $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
             } else {
@@ -81,6 +84,13 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
     {
 
         $message = $exception->getMessage();
+        if (empty($message)) {
+            $message = '(null)';
+        }
+
+        if (strpos($message, 'Unable to connect to the database') !== false) {
+            $message = '无法连接到数据库<br>'.$message;
+        }
 
         // 调试模式不屏蔽敏感信息
         if (CI_DEBUG) {
@@ -89,9 +99,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
         }
 
-        if (empty($message)) {
-            $message = '(null)';
-        } elseif (strpos($message, 'The action you requested is not allowed') !== false) {
+        if (strpos($message, 'The action you requested is not allowed') !== false) {
             dr_exit_msg(0, '提交验证超时，请重试', 'CSRFVerify');
         }
 
@@ -129,11 +137,10 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             ob_end_clean();
         }
 
-        echo(function () use ($exception, $statusCode, $viewFile): string {
+        echo(function () use ($exception, $statusCode, $viewFile, $message): string {
             $vars = $this->collectVars($exception, $statusCode);
             extract($vars, EXTR_SKIP);
             $file = $exception->getFile();
-            $message = $exception->getMessage();
             $is_template = false;
             $line_template = 0;
             if (strpos($file, WRITEPATH.'template') !== false) {
@@ -141,7 +148,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
                 if (is_numeric($b)) {
                     $line_template = $b;
                 }
-                $message = '模板标签写法错误：'.$exception->getMessage();
+                $message = '模板标签写法错误：'.$message;
                 $is_template = \Phpcmf\Service::V()->get_view_files();
             }
             ob_start();

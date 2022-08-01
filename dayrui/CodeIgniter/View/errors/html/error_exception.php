@@ -24,7 +24,7 @@
 	<!-- Header -->
 	<div class="header">
 		<div class="container">
-			<h1><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h1>
+			<h2><?= htmlspecialchars((string)$title, ENT_SUBSTITUTE, 'UTF-8'), ($exception->getCode() ? ' #'.$exception->getCode() : '') ?></h2>
 			<p>
 				<?= $message ?>
 				<a href="https://www.baidu.com/s?ie=UTF-8&wd=迅睿CMS框架%20<?= urlencode($title.' '.preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>"
