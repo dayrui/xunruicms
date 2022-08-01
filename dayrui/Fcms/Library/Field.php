@@ -98,17 +98,25 @@
                 }
 
                 // 字段合并分组筛选
-                foreach ($field as $t) {
+                foreach ($field as $i => $t) {
                     if ($t['fieldtype'] == 'Merge'
                         && preg_match_all('/\{(.+)\}/U', $t['setting']['option']['value'], $value)) {
                         foreach ($value[1] as $v) {
                             $merge[$v] = $t['fieldname'];
                             if (!in_array($t['fieldname'], $this->merge)) {
                                 $this->merge[] = $t['fieldname'];
+                                $field[$v]['displayorder']+=1;
+                                $field[$t['fieldname']]['displayorder']+=1;
                             }
                         }
                     }
                 }
+                uasort($field, function($a, $b){
+                    if($a['displayorder'] == $b['displayorder']){
+                        return 0;
+                    }
+                    return($a['displayorder']<$b['displayorder']) ? -1 : 1;
+                });
             }
 
             // 主字段
