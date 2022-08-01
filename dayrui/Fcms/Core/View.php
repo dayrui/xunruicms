@@ -1876,7 +1876,7 @@ class View {
             $debug = '<pre style="background-color: #f5f5f5; border: 1px solid #ccc;padding:10px; overflow: auto; text-align: left">';
 
             if ($this->_list_tag) {
-                $debug.= '<p>标签解析：'.$this->_list_tag.'</p>';
+                $debug.= '<p>标签解析：'.str_replace('{list action=', '{', $this->_list_tag).'</p>';
             }
 
             if ($this->_list_error) {
