@@ -184,7 +184,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
                 var layCascader = layui.layCascader;
                 layCascader({
                   elem: \'#dr_'.$name.'\',
-                  value: '.(int)$value.',
+                  value: \''.(int)$value.'\',
                     clearable: true,
                      filterable: true,
                   options: linkage_'.$field['setting']['option']['linkage'].',

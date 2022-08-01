@@ -650,8 +650,9 @@ class Model extends \Frame\Model {
             $where = [];
             if ($is_like && $value) {
                 $key = \Phpcmf\Service::L('cache')->get_file('key', 'linkage/'.SITE_ID.'_'.$field['setting']['option']['linkage'].'/');
-                if ($key) {
-                    $where[] = '`'.$table.'`.`'.$name.'` in (select id from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%")';
+                $row = $this->db->query('select * from `'.$this->dbprefix('linkage_data_'.$key).'` where `name` LIKE "%'.$value.'%"')->getRowArray();
+                if ($row) {
+                    $arr[] = $row['cname'];
                 }
             }
             foreach ($arr as $value) {
