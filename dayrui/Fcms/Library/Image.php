@@ -1842,6 +1842,13 @@ class Image {
                     header('Content-Type:image/png');
                     $image_wp = imagecreatetruecolor($new_width, $new_height);
                     $image = imagecreatefrompng($imgsrc);
+
+                    //2.上色
+                    $color=imagecolorallocate($image_wp,255,255,255);
+                    //3.设置透明
+                    imagecolortransparent($image_wp,$color);
+                    imagefill($image_wp,0,0,$color);
+
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
                     //90代表的是质量、压缩图片容量大小
                     imagejpeg($image_wp, $imgsrc, 100);
