@@ -59,7 +59,7 @@ class Attachments extends \Phpcmf\Table {
 
         $remote = (int)$_GET['remote'];
         $where_list = 'id in (select id from '.\Phpcmf\Service::M()->dbprefix('attachment').' where siteid='.SITE_ID.')';
-        $remote && $where_list = ' and `remote`='.$remote;
+        $remote && $where_list.= ' and `remote`='.$remote;
 
         $this->_init([
             'table' => 'attachment_data',
@@ -105,7 +105,7 @@ class Attachments extends \Phpcmf\Table {
 
         $remote = (int)$_GET['remote'];
         $where_list = 'siteid='.SITE_ID;
-        $remote && $where_list = ' and `remote`='.$remote;
+        $remote && $where_list.= ' and `remote`='.$remote;
 
         $this->_init([
             'table' => 'attachment_unused',
