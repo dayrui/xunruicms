@@ -863,8 +863,6 @@ return [
 
         if ($this->cmf_license['oem']) {
             $this->_admin_msg(0, '无法使用此功能');
-        } elseif (strpos($this->cmf_version['version'], 'Dev')) {
-            $this->_admin_msg(0, '开发版（'.$this->cmf_version['version'].'）无法使用此功能');
         }
 
         \Phpcmf\Service::V()->assign([
@@ -880,7 +878,7 @@ return [
 
     public function bf_count() {
 
-        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&time='.strtotime((string)$this->cmf_version['downtime']).'&license='.$this->cmf_license['license'];
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&version='.$this->cmf_version['version'].'&time='.strtotime((string)$this->cmf_version['downtime']).'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据');
