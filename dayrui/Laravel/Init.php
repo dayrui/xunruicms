@@ -24,6 +24,21 @@ if (! function_exists('csrf_token')) {
     }
 }
 
+
+if (! function_exists('csrf_hash')) {
+    /**
+     * Get the CSRF token value.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    function csrf_hash()
+    {
+
+    }
+}
+
 require __DIR__.'/System/vendor/autoload.php';
 require __DIR__.'/Extend/Error.php';
 
