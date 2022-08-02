@@ -914,6 +914,11 @@ abstract class Common extends \Frame\Controller {
      * 生成静态时的跳转提示
      */
     protected function _html_msg($code, $msg, $url = '', $note = '') {
+
+        if (\Phpcmf\Service::L('input')->get('is_ajax')) {
+            $this->_json($code, $msg, $url);
+        }
+
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
             'url' => $url,

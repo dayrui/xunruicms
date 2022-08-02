@@ -666,7 +666,7 @@ class Auth extends \Phpcmf\Model {
             } elseif (strpos($uri, 'js:') === 0) {
                 $url = 'javascript:'.substr($uri, 3).'();';
             } elseif (strpos($uri, 'hide:') === 0) {
-                $uri = substr($uri, 5);
+                $uri = trim(substr($uri, 5), '/');
                 $url = dr_now_url();
                 $_li_class = $uri == $_uri ? '' : '{HIDE}';
             } elseif (strpos($uri, 'url:') === 0) {
