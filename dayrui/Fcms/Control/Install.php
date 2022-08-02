@@ -207,7 +207,7 @@ $db[\'default\']	= [
                 if (empty($data)) {
                     $error = '临时数据获取失败，请返回前一页重新执行';
                 } else {
-                    $this->db = \Config\Database::connect('default');
+                    $this->db = \Phpcmf\Service::M()->db;
                     // 检查数据库是否存在
                     if (!$this->db->connect(false)) {
                         // 链接失败,尝试创建数据库
@@ -267,7 +267,7 @@ $db[\'default\']	= [
                 if (empty($data)) {
                     $error = '临时数据获取失败，请返回前一页重新执行';
                 } else {
-                    $this->db = \Config\Database::connect('default');
+                    $this->db = \Phpcmf\Service::M()->db;
                     // 检查数据库是否存在
                     if (!$this->db->connect(false)) {
                         // 链接失败,尝试创建数据库

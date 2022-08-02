@@ -37,6 +37,14 @@ class db_mysql {
         return $this;
     }
 
+    public function connect($name = '') {
+        return true;
+    }
+
+    public function resetDataCache() {
+
+    }
+
     public function error() {
 
     }

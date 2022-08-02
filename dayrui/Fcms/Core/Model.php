@@ -27,7 +27,7 @@ class Model extends \Frame\Model {
     protected $param;
     protected $init;
 
-    public function __construct(...$params) {
+    public function __construct() {
         $this->_load_db();
         $this->key = $this->id = 'id';
         $this->uid = \Phpcmf\Service::C()->uid;

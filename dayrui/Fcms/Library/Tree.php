@@ -350,8 +350,7 @@ class Tree {
                         }
                     }
                     // 选中操作
-                    //$t['selected'] = (is_array($id) ? dr_in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
-                    $t['selected'] = '_selected_'.$t['id'];
+                    $t['selected'] = '_selected_'.$t['id'].'_';
                     // 是否可选子栏目
                     if (isset($t['pcatpost']) && $t['pcatpost']) {
                         $t['html_disabled'] = 0;
@@ -389,12 +388,13 @@ class Tree {
 
         $this->ismain = 0;
 
+
         if ($id) {
             if (!is_array($id)) {
                 $id = [$id];
             }
             foreach ($id as $i) {
-                $string = str_replace('_selected_'.$i, 'selected', $string);
+                $string = str_replace('_selected_'.$i.'_', 'selected', $string);
             }
         }
 
