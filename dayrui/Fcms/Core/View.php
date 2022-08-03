@@ -306,6 +306,8 @@ class View {
             } elseif (is_file($this->_aroot.$file)) {
                 $this->_load_file_tips[$file] = '由于模板文件['.$this->_dir.$file.']不存在，因此本页面引用主目录的模板['.$this->_aroot.$file.']';
                 return $this->_aroot.$file; // 当前项目目录模板不存在时调用主项目的
+            } elseif (APP_DIR && is_file(MYPATH.'View/'.$file)) {
+                return MYPATH.'View/'.$file; // 当前项目目录模板不存在时调用主项目的My目录
             } elseif ($dir != 'admin' && is_file(APPSPATH.ucfirst($dir).'/Views/'.$file)) {
                 return APPSPATH.ucfirst($dir).'/Views/'.$file; // 指定模块时调用模块下的文件
             }
