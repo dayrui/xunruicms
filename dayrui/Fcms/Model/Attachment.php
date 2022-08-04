@@ -11,8 +11,8 @@
 
 class Attachment extends \Phpcmf\Model {
 
-    public function __construct(...$params) {
-        parent::__construct(...$params);
+    public function __construct() {
+        parent::__construct();
         $this->siteid = SITE_ID;
     }
 

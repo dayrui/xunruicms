@@ -3637,6 +3637,13 @@ function dr_member_sync_url($string) {
 }
 
 /**
+ * 文字转换拼音
+ */
+function dr_text2py($str) {
+    return \Phpcmf\Service::L('pinyin')->result((string)$str);
+}
+
+/**
  * 将html转化为纯文字
  * html 文字提取
  * cn 是否纯中文

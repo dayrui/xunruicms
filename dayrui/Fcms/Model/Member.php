@@ -585,6 +585,7 @@ class Member extends \Phpcmf\Model {
 
         if ((\Phpcmf\Service::C()->member_cache['oauth']['login'] || !\Phpcmf\Service::C()->member_cache['oauth']['field']) && $oauth) {
             // 授权登录直接模式
+
         } else {
             // 验证格式
             if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
