@@ -19,15 +19,30 @@ class Routes extends \CodeIgniter\Debug\Toolbar\Collectors\Routes {
     public function display(): array
     {
 
+        $file = APPPATH;
+        if ($file == FRAMEPATH) {
+            $file = CMSPATH.'Control';
+        } else {
+            $file.= 'Controllers';
+        }
+
+        if (IS_ADMIN) {
+            $file.= '/Admin';
+        } elseif (IS_MEMBER) {
+            $file.= '/Member';
+        } elseif (IS_API) {
+            $file.= '/Api';
+        }
 
         return [
             'matchedRoute' => [
                [
                    'uri' => \Phpcmf\Service::L('Router')->uri(),
                    'url' => dr_now_url(),
-                   'app' => APP_DIR,
+                   'app' => APP_DIR ? APP_DIR : '/',
                    'controller' => \Phpcmf\Service::L('Router')->class,
                    'method' => \Phpcmf\Service::L('Router')->method,
+                   'file' => $file.'/'.ucfirst(\Phpcmf\Service::L('Router')->class).'.php',
                ]
             ],
             'get'       => $_GET,
