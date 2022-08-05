@@ -98,15 +98,15 @@
                 }
 
                 // 字段合并分组筛选
-                foreach ($field as $i => $t) {
+                foreach ($field as $t) {
                     if ($t['fieldtype'] == 'Merge'
                         && preg_match_all('/\{(.+)\}/U', $t['setting']['option']['value'], $value)) {
                         foreach ($value[1] as $v) {
                             $merge[$v] = $t['fieldname'];
+                            $field[$v]['displayorder']+=1;
+                            $field[$t['fieldname']]['displayorder']+=1;
                             if (!in_array($t['fieldname'], $this->merge)) {
                                 $this->merge[] = $t['fieldname'];
-                                $field[$v]['displayorder']+=1;
-                                $field[$t['fieldname']]['displayorder']+=1;
                             }
                         }
                     }

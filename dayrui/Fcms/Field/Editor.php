@@ -592,7 +592,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                 $('#dr_".$name."').summernote({
                 isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
                 llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p)."',
-                llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p2)."',
+                llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$field['setting']['option']['watermark'])."',
                 attachUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p3)."',
                 isImageTitle:'".$title."',
                 isImageAlt:'".$alt."',
