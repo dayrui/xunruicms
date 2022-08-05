@@ -322,6 +322,7 @@ class File extends \Phpcmf\Common
 
         $url = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=input_file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
+            .'&is_wm='.\Phpcmf\Service::L('input')->get('is_wm')
             .'&ct='.$ct
             .'&p='.\Phpcmf\Service::L('input')->get('p');
         $pp = intval($_GET['pp']);
@@ -329,11 +330,15 @@ class File extends \Phpcmf\Common
 
         $listurl = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')
+            .'&is_wm='.\Phpcmf\Service::L('input')->get('is_wm')
             .'&p='.\Phpcmf\Service::L('input')->get('p');
 
         // 快捷上传字段参数
         $field = [
-            'url' => dr_web_prefix('index.php?s=api&c=file&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE').'&fid='.\Phpcmf\Service::L('input')->get('fid'),
+            'url' => dr_web_prefix('index.php?s=api&c=file&token='.dr_get_csrf_token())
+                .'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE')
+                .'&is_wm='.\Phpcmf\Service::L('input')->get('is_wm')
+                .'&fid='.\Phpcmf\Service::L('input')->get('fid'),
             'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), ($p['size']).'MB'),
             'param' => $p,
             'back' => $url.'&pp=0',
