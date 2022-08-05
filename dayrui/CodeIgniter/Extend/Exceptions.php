@@ -50,8 +50,17 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             if (strpos($message, 'Unable to connect to the database') !== false) {
                 $message = '无法连接到数据库<br>'.$message;
             }
+            $file = $exception->getFile();
+            if (strpos($file, WRITEPATH.'template') !== false) {
+                $message = '模板标签写法错误：'.$message;
+                $arr = \Phpcmf\Service::V()->get_view_files();
+                if ($arr) {
+                    $one = current($arr);
+                    $message.= '（'.CI_DEBUG ? $one['path'] : basename($one['path']).'）';
+                }
+            }
             if (CI_DEBUG) {
-                $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
+                $message.= '<br>'.$file.'（'.$exception->getLine().'）';
             } else {
                 $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
             }
