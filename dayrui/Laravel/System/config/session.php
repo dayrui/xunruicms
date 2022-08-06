@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Str;
 
+!defined('WRITEPATH') && define('WRITEPATH', dirname(__FILE__));
 return [
 
     /*

@@ -116,7 +116,7 @@ $config = [
 
 ];
 
-
+!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
 if (is_file(ROOTPATH.'config/database.php')) {
 
     $db = [];

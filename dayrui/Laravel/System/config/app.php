@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'debug' => CI_DEBUG ? true : false,
+    'debug' => defined('CI_DEBUG') && CI_DEBUG ? true : false,
 
     /*
     |--------------------------------------------------------------------------

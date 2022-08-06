@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Str;
-
+!defined('SYS_KEY') && define('SYS_KEY', 'xunruicms');
+!defined('WEBPATH') && define('WEBPATH', dirname(__FILE__));
+!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
+!defined('WRITEPATH') && define('WRITEPATH', dirname(__FILE__));
+!defined('SYS_CACHE_TYPE') && define('SYS_CACHE_TYPE', 0);
 $config = [
 
     /*
