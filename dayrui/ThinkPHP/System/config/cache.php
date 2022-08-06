@@ -3,7 +3,11 @@
 // +----------------------------------------------------------------------
 // | 缓存设置
 // +----------------------------------------------------------------------
-
+!defined('SYS_KEY') && define('SYS_KEY', 'xunruicms');
+!defined('WEBPATH') && define('WEBPATH', dirname(__FILE__));
+!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
+!defined('WRITEPATH') && define('WRITEPATH', dirname(__FILE__));
+!defined('SYS_CACHE_TYPE') && define('SYS_CACHE_TYPE', 0);
 $config = [
     // 默认缓存驱动
     'default' => SYS_CACHE_TYPE  == 1 ? 'memcached' : (SYS_CACHE_TYPE  == 2 ? 'redis' : 'file'),
