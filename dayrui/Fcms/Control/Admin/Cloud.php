@@ -283,7 +283,7 @@ class Cloud extends \Phpcmf\Common {
             }
             $rt = dr_string2array($json);
             if (!$rt) {
-                $this->_json(0, '本站：从服务端获取到的数据不规范');
+                $this->_json(0, '本站：从服务端获取到的数据不规范（'.dr_strcut($json, 30).'）');
             }
             if (!$rt['code']) {
                 $this->_json(0, '服务端：'.$rt['msg']);
