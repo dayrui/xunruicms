@@ -83,13 +83,6 @@
         {/if}
     </form>
 </div>
-{if $license.name}
-{if $license.url}
-<div class="copyright"> <a href="{$license.url}" target="_blank">{$license.name}</a> </div>
-{/if}
-{else}
-<div class="copyright"> <a href="https://www.xunruicms.com" target="_blank">迅睿CMS开源框架</a> </div>
-{/if}
 <script src="{$THEME_PATH}assets/global/plugins/jquery.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script src="{$THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
@@ -147,7 +140,28 @@
         });
         top.$('#dr_go_url').hide();
     });
+
 </script>
+{if IS_OEM_CMS}
+<script src="{$THEME_PATH}assets/global/plugins/backstretch/jquery.backstretch.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script type="text/javascript">
+    <?php $bg = array('"'.$THEME_PATH.'assets/global/login/1.jpg"',
+        '"'.$THEME_PATH.'assets/global/login/2.jpg"',
+        '"'.$THEME_PATH.'assets/global/login/3.jpg"',
+        '"'.$THEME_PATH.'assets/global/login/4.jpg"');
+    shuffle($bg);
+        ?>
+    jQuery(document).ready(function() {
+        $.backstretch([
+            {implode(',', $bg)}
+        ], {
+                fade: 1000,
+                    duration: 8000
+            }
+        );
+    });
+</script>
+{/if}
 {if isset($_GET['isback']) && $_GET['isback']}
 <script type="text/javascript">
     $(function(){
