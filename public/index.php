@@ -22,10 +22,10 @@ define('ROOTPATH', dirname(__FILE__).'/');
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 
 // 缓存文件存储目录,支持自定义路径,建议固态硬盘存储缓存文件
-define('WRITEPATH', ROOTPATH.'cache/');
+define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
 
 // 系统核心程序目录,支持自定义路径和改名
-define('FCPATH', dirname(__FILE__).'/dayrui/');
+define('FCPATH', dirname(dirname(__FILE__)).'/dayrui/');
 
 // 入口文件名称
 !defined('SELF') && define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
