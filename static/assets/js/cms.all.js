@@ -923,7 +923,7 @@ function dr_loginout(url) {
             }
             dr_cmf_tips(1, json.msg, json.data.time);
             if (url && url != '退出成功') {
-                setTimeout("window.location.href = '"+tourl+"'", 2000);
+                setTimeout("window.location.href = '"+url+"'", 2000);
             } else {
                 setTimeout('window.location.href="'+json.data.url+'"', 2000);
             }
