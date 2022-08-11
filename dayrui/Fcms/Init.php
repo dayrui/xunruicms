@@ -29,13 +29,13 @@ if (!defined('FRAMEPATH')) {
 define('COREPATH', CMSPATH); // 老版本别名
 define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 // 主配置目录
-!defined('CONFIGPATH') && define('CONFIGPATH', ROOTPATH.'config/');
+!defined('CONFIGPATH') && define('CONFIGPATH', dirname(dirname(dirname(__FILE__))).'/config/');
 // App程序目录
 !defined('APPSPATH') && define('APPSPATH', FCPATH.'App/');
 // 程序初始化
 !defined('MYPATH') && define('MYPATH', FCPATH.'My/');
 // 定义模板目录
-!defined('TPLPATH') && define('TPLPATH', ROOTPATH.'template/');
+!defined('TPLPATH') && define('TPLPATH', dirname(dirname(dirname(__FILE__))).'/template/');
 // 是否可编辑后模板
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
 // 是否启用高级开发模式
