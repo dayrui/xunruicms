@@ -1,6 +1,6 @@
 <?php
 
-!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
+!defined('CONFIGPATH') && define('CONFIGPATH', dirname(__FILE__));
 
 $config = [
     // 默认使用的数据库连接配置
@@ -64,10 +64,10 @@ $config = [
     ],
 ];
 
-if (is_file(ROOTPATH.'config/database.php')) {
+if (is_file(CONFIGPATH.'database.php')) {
 
     $db = [];
-    require ROOTPATH.'config/database.php';
+    require CONFIGPATH.'database.php';
     $config['connections']['mysql']['host'] = $db['default']['hostname'];
     $config['connections']['mysql']['username'] = $db['default']['username'];
     $config['connections']['mysql']['password'] = $db['default']['password'];

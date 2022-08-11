@@ -116,11 +116,11 @@ $config = [
 
 ];
 
-!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
-if (is_file(ROOTPATH.'config/database.php')) {
+!defined('CONFIGPATH') && define('CONFIGPATH', dirname(__FILE__));
+if (is_file(CONFIGPATH.'database.php')) {
 
     $db = [];
-    require ROOTPATH.'config/database.php';
+    require CONFIGPATH.'database.php';
     $config['connections']['mysql']['host'] = $db['default']['hostname'];
     $config['connections']['mysql']['username'] = $db['default']['username'];
     $config['connections']['mysql']['password'] = $db['default']['password'];

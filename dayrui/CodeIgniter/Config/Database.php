@@ -60,12 +60,12 @@ class Database extends Config
     {
         parent::__construct();
 
-        if (!is_file(ROOTPATH.'config/database.php')) {
+        if (!is_file(CONFIGPATH.'database.php')) {
             return $this;
         }
 
         $db = [];
-        require ROOTPATH.'config/database.php';
+        require CONFIGPATH.'database.php';
 
         foreach ($this->default as $p => $t) {
             foreach ($db as $name => $v) {
@@ -78,27 +78,6 @@ class Database extends Config
             exit('数据库名称不能是数字');
         } elseif (strpos($this->default['database'], '.') !== false) {
             exit('数据库名称不能存在.号');
-        }
-
-        // Thinkphp数据库配置
-        if (is_file(dirname(COMPOSER_PATH).'/topthink/think-orm/src/DbManager.php')) {
-            $cfg = [
-                'default'     => 'default',
-                'connections' => [],
-            ];
-            foreach ($db as $name => $v) {
-                $cfg['connections'][$name] = [
-                    'type'     => 'mysql',
-                    'hostname' => $v['hostname'],
-                    'username' => $v['username'],
-                    'password' => $v['password'],
-                    'database' => $v['database'],
-                    'charset'  => 'utf8mb4',
-                    'prefix'   => $v['DBPrefix'],
-                    'debug'    => true,
-                ];
-            }
-            \think\facade\Db::setConfig($cfg);
         }
 
     }
