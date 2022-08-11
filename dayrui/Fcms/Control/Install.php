@@ -84,7 +84,7 @@ class Install extends \Phpcmf\Common {
                     WRITEPATH.'config/',
                     WRITEPATH.'session/',
                     WRITEPATH.'template/',
-                    WEBPATH.'config/',
+                    CONFIGPATH,
                     WEBPATH.'uploadfile/',
                 ];
                 $path = [];
@@ -184,7 +184,7 @@ $db[\'default\']	= [
     \'database\'	=> \''.$data['db_name'].'\',
     \'DBPrefix\'	=> \''.dr_safe_filename($data['db_prefix']).'\',
 ];';
-                    $size = file_put_contents(WEBPATH.'config/database.php', $database);
+                    $size = file_put_contents(CONFIGPATH.'database.php', $database);
                     if (!$size || $size < 10) {
                         $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
                     }

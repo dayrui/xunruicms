@@ -70,7 +70,7 @@ class Site_image extends \Phpcmf\Common
         if ($at == 'font') {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
                 'save_name' => 'null',
-                'save_path' => CONFIGPATH.'watermark/',
+                'save_path' => WRITEPATH.'watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['ttf'],
                 'file_size' => 50 * 1024 * 1024,
@@ -83,7 +83,7 @@ class Site_image extends \Phpcmf\Common
         } else {
             $rt = \Phpcmf\Service::L('upload')->upload_file([
                 'save_name' => 'null',
-                'save_path' => CONFIGPATH.'watermark/',
+                'save_path' => WRITEPATH.'watermark/',
                 'form_name' => 'file_data',
                 'file_exts' => ['png'],
                 'file_size' => 10 * 1024 * 1024,

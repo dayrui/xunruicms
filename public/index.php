@@ -15,17 +15,17 @@ define('IS_DEV', 0);
 // 是否允许后台修改模板文件（1开启、0关闭），请不要长期开启此功能
 define('IS_EDIT_TPL', 0);
 
-// 主网站目录,表示index.php文件的目录
+// 网站目录,表示index.php文件的目录
 define('ROOTPATH', dirname(__FILE__).'/');
 
 // 当前站点目录
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 
-// 缓存文件存储目录,支持自定义路径,建议固态硬盘存储缓存文件
-define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
-
 // 系统核心程序目录,支持自定义路径和改名
 define('FCPATH', dirname(dirname(__FILE__)).'/dayrui/');
+
+// 缓存文件存储目录,支持自定义路径
+define('WRITEPATH', dirname(FCPATH).'/cache/');
 
 // 入口文件名称
 !defined('SELF') && define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
