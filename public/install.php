@@ -19,6 +19,11 @@ if ($pos !== false && $pos > 1) {
 
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 !defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
+if (is_file(WEBPATH.'config/api.php')) {
+    define('CONFIGPATH',WEBPATH.'config/');
+} else {
+    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
+}
 
 foreach (array(' ', '[', ']') as $t) {
     if (strpos(WEBPATH, $t) !== false) {
@@ -33,7 +38,7 @@ foreach (array(
              WRITEPATH.'template/',
              WRITEPATH.'file/',
              WRITEPATH.'session/',
-             WEBPATH.'config/',
+             CONFIGPATH,
              WEBPATH.'uploadfile/',
          ) as $t) {
     if (!dr_check_put_path($t)) {

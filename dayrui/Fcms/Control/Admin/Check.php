@@ -254,12 +254,11 @@ class Check extends \Phpcmf\Common
                         $rt[] = '存在大文件文件【/'.$file.'】请及时清理';
                     }
                 }
-				
-				$dir = ['cache', 'config', 'dayrui', 'template'];
-				foreach ($dir as $p) {
-					$code = dr_catcher_data(ROOT_URL.$p.'/api.php', 5, false);
+
+				if (is_file(WEBPATH.'config/api.php')) {
+					$code = dr_catcher_data(SITE_URL.'config/api.php', 5, false);
 					if (strpos($code, 'phpcmf') !== false) {
-						$rt[] = '目录['.$p.']需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
+						$rt[] = '目录[config]需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
 				}
 
