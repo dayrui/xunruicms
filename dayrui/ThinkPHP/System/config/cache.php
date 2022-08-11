@@ -5,7 +5,7 @@
 // +----------------------------------------------------------------------
 !defined('SYS_KEY') && define('SYS_KEY', 'xunruicms');
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__));
-!defined('ROOTPATH') && define('ROOTPATH', dirname(__FILE__));
+!defined('CONFIGPATH') && define('CONFIGPATH', dirname(__FILE__));
 !defined('WRITEPATH') && define('WRITEPATH', dirname(__FILE__));
 !defined('SYS_CACHE_TYPE') && define('SYS_CACHE_TYPE', 0);
 $config = [
@@ -48,8 +48,8 @@ $config = [
     ],
 ];
 
-if (is_file(ROOTPATH.'config/memcached.php')) {
-    $my = require ROOTPATH.'config/memcached.php';
+if (is_file(CONFIGPATH.'memcached.php')) {
+    $my = require CONFIGPATH.'memcached.php';
     $config['stores']['memcached'] = [
         // 驱动方式
         'type'   => 'memcached',
@@ -60,8 +60,8 @@ if (is_file(ROOTPATH.'config/memcached.php')) {
     ];
 }
 
-if (is_file(ROOTPATH.'config/redis.php')) {
-    $my = require ROOTPATH.'config/redis.php';
+if (is_file(CONFIGPATH.'redis.php')) {
+    $my = require CONFIGPATH.'redis.php';
     $config['stores']['redis'] = [
         // 驱动方式
         'type'   => 'redis',

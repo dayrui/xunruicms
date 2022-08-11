@@ -161,10 +161,14 @@ class Cache extends BaseConfig
     public function __construct()
     {
         parent::__construct();
-        if (is_file(ROOTPATH.'config/redis.php')) {
+        if (is_file(CONFIGPATH.'redis.php')) {
+            $this->redis = require CONFIGPATH.'redis.php';
+        } elseif (is_file(ROOTPATH.'config/redis.php')) {
             $this->redis = require ROOTPATH.'config/redis.php';
         }
-        if (is_file(ROOTPATH.'config/memcached.php')) {
+        if (is_file(CONFIGPATH.'memcached.php')) {
+            $this->memcached = require CONFIGPATH.'memcached.php';
+        } elseif (is_file(ROOTPATH.'config/memcached.php')) {
             $this->memcached = require ROOTPATH.'config/memcached.php';
         }
         $this->prefix = substr(SYS_KEY, 0, 10).'-';

@@ -357,7 +357,10 @@ if (is_cli()) {
         $routes['index\.html(.*)'] = 'index.php?c=home&m=index';
         $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.CMSURI;
         $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test';
-        if (is_file(ROOTPATH.'config/rewrite.php')) {
+        if (is_file(CONFIGPATH.'rewrite.php')) {
+            $my = require CONFIGPATH.'rewrite.php';
+            $my && $routes = array_merge($routes, $my);
+        } elseif (is_file(ROOTPATH.'config/rewrite.php')) {
             $my = require ROOTPATH.'config/rewrite.php';
             $my && $routes = array_merge($routes, $my);
         }
@@ -397,7 +400,9 @@ if (is_cli()) {
         }
     }
     // 自定义路由模式
-    if (is_file(ROOTPATH.'config/router.php')) {
+    if (is_file(CONFIGPATH.'router.php')) {
+        require CONFIGPATH.'router.php';
+    } elseif (is_file(ROOTPATH.'config/router.php')) {
         require ROOTPATH.'config/router.php';
     }
 }
@@ -457,7 +462,9 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
 }
 
 // 自定义函数库
-if (is_file(ROOTPATH.'config/custom.php')) {
+if (is_file(CONFIGPATH.'custom.php')) {
+    require CONFIGPATH.'custom.php';
+} elseif (is_file(ROOTPATH.'config/custom.php')) {
     require ROOTPATH.'config/custom.php';
 }
 if (is_file(MYPATH.'Helper.php')) {
