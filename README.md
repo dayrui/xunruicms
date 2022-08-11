@@ -17,10 +17,10 @@ http://demo4.xunruicms.com/admin.php
 #### 安装教程
 
 1. 将代码下载到网站的根目录
-2. 运行环境检查程序 /test.php
-3. 环境通过后，运行安装文件 /install.php
-4. 切忌不要放在子目录安装
-5. 默认后台入口文件是 /admin.php
+2. 将网站运行目录（主目录）设置为：public
+3. 运行环境检查程序 /test.php
+4. 环境通过后，运行安装文件 /install.php
+6. 默认后台入口文件是 /admin随机文字.php
 
 #### 使用说明
 
