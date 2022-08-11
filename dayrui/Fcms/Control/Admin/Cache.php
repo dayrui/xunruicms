@@ -169,6 +169,10 @@ class Cache extends \Phpcmf\Common {
 <br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a><br><br>将以上问题处理之后继续更新此脚本', 0);
                 }
 
+                // 移动水印目录
+                if (is_dir(WEBPATH.'config/watermark/')) {
+                    \Phpcmf\Service::L('file')->copy_dir(WEBPATH.'config/watermark/', WEBPATH.'config/watermark/', WRITEPATH.'watermark/');
+                }
 
                 $this->_html_msg(1, dr_lang('正在升级程序兼容性'), $next.'&page='.($page+1));
                 break;
