@@ -585,7 +585,13 @@ class Member extends \Phpcmf\Model {
 
         if ((\Phpcmf\Service::C()->member_cache['oauth']['login'] || !\Phpcmf\Service::C()->member_cache['oauth']['field']) && $oauth) {
             // 授权登录直接模式
-
+            if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
+                // 验证账号是否规范
+                $rt = \Phpcmf\Service::L('Form')->check_username($member['username']);
+                if (!$rt['code']) {
+                    $member['username'] = $this->_register_rand_username($member);
+                }
+            }
         } else {
             // 验证格式
             if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {

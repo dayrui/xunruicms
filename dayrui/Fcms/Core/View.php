@@ -945,11 +945,26 @@ class View {
                 $cache = $this->_cache_var($_name, $system['site']);
                 if (!$cache) {
                     return $this->_return($system['return'], "缓存({$_name})不存在，请在后台更新缓存");
-                } elseif ($_name == 'module-content' && $system['more']) {
-                    // 读取内容模块更多信息
-                    foreach ($cache as $i => $t) {
-                        $cache[$i] = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$t['dirname']);
+                } elseif ($_name == 'module-content') {
+                    // 指定模块
+                    if ($system['module']) {
+                        $mid = explode(',', $system['module']);
+                        foreach ($cache as $i => $t) {
+                            if (!in_array($t['dirname'], $mid)) {
+                                unset($cache[$i]);
+                            }
+                        }
+                        if (!$cache) {
+                            return $this->_return($system['return'], '指定的模块('.$system['module'].')都不存在');
+                        }
                     }
+                    // 读取内容模块更多信息
+                    if ($system['more']) {
+                        foreach ($cache as $i => $t) {
+                            $cache[$i] = \Phpcmf\Service::L('cache')->get('module-'.$system['site'].'-'.$t['dirname']);
+                        }
+                    }
+
                 }
 
                 if ($_param) {
