@@ -29,7 +29,7 @@ if (!defined('FRAMEPATH')) {
 define('COREPATH', CMSPATH); // 老版本别名
 define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 // 主配置目录
-!defined('CONFIGPATH') && define('CONFIGPATH', dirname(FCPATH).'/config/');
+!defined('CONFIGPATH') && define('CONFIGPATH', ROOTPATH.'config/');
 // App程序目录
 !defined('APPSPATH') && define('APPSPATH', FCPATH.'App/');
 // 程序初始化

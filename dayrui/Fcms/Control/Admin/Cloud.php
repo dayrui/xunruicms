@@ -38,8 +38,15 @@ class Cloud extends \Phpcmf\Common {
             $this->service_url = $this->cmf_license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->cmf_license['license'];
         }
 
+        $vs = 0;
+        if (defined('IS_VERSION') && IS_VERSION) {
+            // 版本控制
+            $vs = 1;
+            $this->service_url.= '&vs=1';
+        }
 
         \Phpcmf\Service::V()->assign([
+            'vs' => $vs,
             'is_oem' => $this->cmf_license['oem'] ? 1 : 0,
             'license' => $this->cmf_license,
             'license_sn' => $this->cmf_license['license'],
@@ -289,12 +296,12 @@ class Cloud extends \Phpcmf\Common {
                 $this->_json(0, '服务端：'.$rt['msg']);
             }
             $text = "<?php
-// 此文件是安装授权文件，每次下载安装包会自动生成，请勿修改
+// 此文件是版本文件，每次下载安装包会自动生成，请勿修改
 return [
 
     'license' => '".$rt['data']."',
-    'name' => '迅睿CMS建站框架',
-    'url' => 'http://www.xunruicms.com',
+    'name' => '迅睿CMS开源框架',
+    'url' => 'https://www.xunruicms.com',
 
 ];
 ";
@@ -509,10 +516,6 @@ return [
 
     // 程序升级
     public function update() {
-		
-		if ($this->cmf_license['license'] == 'dev') {
-            \Phpcmf\Service::V()->display('cloud_login.html');exit;
-        }
 
         $data = [];
 

@@ -44,19 +44,20 @@
                 </td>
                 <td>
                     <label style="display: none" id="dr_update_{$dir}">
-					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
-					{if !$is_oem}
-                        {if $dir == 'phpcmf'}
-					    <a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
-					    {else}
-                        <a href="javascript:dr_down_cms('{$t.id}');" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
-					    {/if}
-					{/if}
+                        <button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
+                        {if !$is_oem}
+                            {if $dir == 'phpcmf'}
+                            <a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}&vs={$vs}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载升级包')}</a>
+                            {else}
+                            <a href="javascript:dr_down_cms('{$t.id}');" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载升级包')}</a>
+                            {/if}
+                        {/if}
 					</label>
-                    <label style="display: none" id="dr_duibi_{$dir}"><a href="{dr_url('cloud/bf')}" class="btn red btn-xs"> <i class="fa fa-code"></i> {dr_lang('文件对比升级')}</a>
-					{if IS_DEV}
-					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('更新前请做好系统备份，你确定要更新吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线更新')}</button>
-					{/if}
+                    <label style="display: none" id="dr_duibi_{$dir}">
+                        <a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}&vs={$vs}" target="_blank" class="btn green btn-xs"> <i class="fa fa-code"></i> {dr_lang('离线下载升级包')}</a>
+                        {if IS_DEV}
+                        <button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('更新前请做好系统备份，你确定要更新吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线更新')}</button>
+                        {/if}
                     </label>
                     <label class="dr_check_version" id="dr_row_{$dir}"></label>
                 </td>
@@ -108,7 +109,7 @@
                         layer.close(loading);
                         if (json.code == 1) {
                             layer.close(index);
-                            var yz_url = '{dr_url("cloud/down_app")}&id='+id+'&ls='+json.data;
+                            var yz_url = '{dr_url("cloud/down_app")}&id='+id+'&vs={$vs}&ls='+json.data;
                             location.href= yz_url;
                         } else {
                             $(body).find('#dr_row_'+json.data.field).addClass('has-error');
@@ -159,7 +160,7 @@
             dr_tips(0, '你还没有选中需要升级的选项');
             return false;
         }
-        var url = "{dr_url('cloud/todo_update')}&id="+idss+"&dir="+dirs;
+        var url = "{dr_url('cloud/todo_update')}&id="+idss+"&vs={$vs}&dir="+dirs;
         layer.confirm(
             "升级前请做好系统备份，你确定要升级吗？",
             {

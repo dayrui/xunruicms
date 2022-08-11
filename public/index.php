@@ -27,11 +27,17 @@ define('FCPATH', dirname(dirname(__FILE__)).'/dayrui/');
 // 缓存文件存储目录,支持自定义路径
 define('WRITEPATH', dirname(FCPATH).'/cache/');
 
+// 公共配置文件
+define('CONFIGPATH', dirname(FCPATH).'/config/');
+
 // 入口文件名称
 !defined('SELF') && define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
 // 后台管理标识
 !defined('IS_ADMIN') && define('IS_ADMIN', FALSE);
+
+// 版本标识
+define('IS_VERSION', 1);
 
 // ======开始，自动进入安装界面监测代码 
 if (!is_file(WRITEPATH.'install.lock') && !isset($_GET['c'])) {
