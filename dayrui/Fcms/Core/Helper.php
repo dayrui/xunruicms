@@ -821,7 +821,7 @@ function dr_avatar_path() {
     ];
 
     if (!$config['avatar_path'] || !$config['avatar_url']) {
-        return [ROOTPATH.'api/member/', ROOT_URL.'api/member/'];
+        return [SYS_UPLOAD_PATH.'member/', SYS_UPLOAD_URL.'member/'];
     } elseif ((strpos($config['avatar_path'], '/') === 0 || strpos($config['avatar_path'], ':') !== false) && is_dir($config['avatar_path'])) {
         // 相对于根目录
         return [rtrim($config['avatar_path'], DIRECTORY_SEPARATOR).'/', trim($config['avatar_url'], '/').'/'];

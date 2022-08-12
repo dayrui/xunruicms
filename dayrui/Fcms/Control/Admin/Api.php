@@ -1021,7 +1021,7 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('参数错误'));
         } elseif (!$data['avatar_path']) {
             $note = dr_lang('存储目录留空时，采用系统默认分配的目录');
-            $data['avatar_path'] = 'api/member/';
+            $data['avatar_path'] = 'uploadfile/member/';
         } elseif (!$data['cache_url']) {
             $note = dr_lang('URL地址留空时，采用系统默认分配的URL');
         } elseif (strpos($data['avatar_path'], 'config') !== false) {

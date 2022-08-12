@@ -104,6 +104,13 @@ class Cache extends \Phpcmf\Common {
                     }
                 }
 
+                // 移动头像目录
+                $path = ROOTPATH.'api/member/';
+                if (is_dir($path)) {
+                    \Phpcmf\Service::L('file')->copy_dir($path, $path, SYS_UPLOAD_PATH.'member/');
+                    dr_dir_delete($path, true);
+                }
+
                 $this->_html_msg(1, dr_lang('正在升级文件目录结构'), $next.'&page='.($page+1));
                 break;
 
