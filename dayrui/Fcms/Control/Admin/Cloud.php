@@ -8,6 +8,7 @@
 // 云服务
 class Cloud extends \Phpcmf\Common {
 
+    private $vs;
     private $admin_url;
     private $service_url;
 
@@ -38,15 +39,15 @@ class Cloud extends \Phpcmf\Common {
             $this->service_url = $this->cmf_license['cloud'] . '/index.php?s=cloud&c=api&domain=' . dr_get_domain_name(ROOT_URL) . '&admin=' . urlencode($this->admin_url) . '&license=' . $this->cmf_license['license'];
         }
 
-        $vs = 0;
+        $this->vs = 0;
         if (defined('IS_VERSION') && IS_VERSION) {
             // 版本控制
-            $vs = 1;
+            $this->vs = 1;
             $this->service_url.= '&vs=1';
         }
 
         \Phpcmf\Service::V()->assign([
-            'vs' => $vs,
+            'vs' => $this->vs,
             'is_oem' => $this->cmf_license['oem'] ? 1 : 0,
             'license' => $this->cmf_license,
             'license_sn' => $this->cmf_license['license'],
@@ -427,17 +428,32 @@ return [
             $is_ok = 1;
             $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
         }
-        if (is_dir($cmspath.'WEBPATH')) {
-            $is_ok = 1;
-            $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
-        }
-        if (is_dir($cmspath.'ROOTPATH')) {
-            $is_ok = 1;
-            $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
-        }
-        if (is_dir($cmspath.'CSSPATH')) {
-            $is_ok = 1;
-            $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
+        if ($this->vs) {
+            if (is_dir($cmspath.'WEBPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH.'public/');
+            }
+            if (is_dir($cmspath.'ROOTPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH.'public/');
+            }
+            if (is_dir($cmspath.'CSSPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'public/static/');
+            }
+        } else {
+            if (is_dir($cmspath.'WEBPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
+            }
+            if (is_dir($cmspath.'ROOTPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
+            }
+            if (is_dir($cmspath.'CSSPATH')) {
+                $is_ok = 1;
+                $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
+            }
         }
         if (is_dir($cmspath.'TPLPATH')) {
             $is_ok = 1;
@@ -823,11 +839,20 @@ return [
             if (is_dir($cmspath.'APPSPATH')) {
                 $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
             }
-            if (is_dir($cmspath.'WEBPATH')) {
-                $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
-            }
-            if (is_dir($cmspath.'ROOTPATH')) {
-                $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
+            if ($this->vs) {
+                if (is_dir($cmspath.'WEBPATH')) {
+                    $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH.'public/');
+                }
+                if (is_dir($cmspath.'ROOTPATH')) {
+                    $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH.'public/');
+                }
+            } else {
+                if (is_dir($cmspath.'WEBPATH')) {
+                    $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
+                }
+                if (is_dir($cmspath.'ROOTPATH')) {
+                    $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
+                }
             }
             /*升级不覆盖模板
             if (is_dir($cmspath.'CSSPATH')) {
