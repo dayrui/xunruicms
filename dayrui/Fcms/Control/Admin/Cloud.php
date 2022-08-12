@@ -238,6 +238,18 @@ class Cloud extends \Phpcmf\Common {
             require WRITEPATH.'cloud/run-'.$id.'.php';
         }
 
+        // 判断public
+        if (defined('IS_VERSION') && IS_VERSION) {
+
+        } else {
+            // 传统结构时复制目录到根目录去
+            $path = ROOTPATH.'public/';
+            if (is_dir($path)) {
+                \Phpcmf\Service::L('file')->copy_dir($path, $path, ROOTPATH);
+                dr_dir_delete($path, true);
+            }
+        }
+
         \Phpcmf\Service::M('cache')->sync_cache('');
         $this->_json(1, dr_lang('安装成功，请刷新后台页面'), $rt['data']);
     }
@@ -340,6 +352,18 @@ return [
         // 运行安装脚本
         if (is_file(WRITEPATH.'cloud/run-'.$id.'.php')) {
             require WRITEPATH.'cloud/run-'.$id.'.php';
+        }
+
+        // 判断public
+        if (defined('IS_VERSION') && IS_VERSION) {
+
+        } else {
+            // 传统结构时复制目录到根目录去
+            $path = ROOTPATH.'public/';
+            if (is_dir($path)) {
+                \Phpcmf\Service::L('file')->copy_dir($path, $path, ROOTPATH);
+                dr_dir_delete($path, true);
+            }
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('');
