@@ -72,7 +72,8 @@ class Cache extends \Phpcmf\Common {
             case 1:
 
                 $dir = [
-                    WRITEPATH.'cloud/'
+                    WRITEPATH.'cloud/',
+                    WRITEPATH.'watermark/',
                 ];
                 foreach ($dir as $path) {
                     if (!is_dir($path)) {
@@ -80,6 +81,26 @@ class Cache extends \Phpcmf\Common {
                     }
                     if (!dr_check_put_path($path)) {
                         $this->_html_msg(0, dr_lang('目录创建失败'), '', $path);
+                    }
+                }
+
+                // 移动水印目录
+                if (is_dir(WEBPATH.'config/watermark/')) {
+                    \Phpcmf\Service::L('file')->copy_dir(WEBPATH.'config/watermark/', WEBPATH.'config/watermark/', WRITEPATH.'watermark/');
+                }
+
+                // 判断public
+                if (defined('IS_VERSION') && IS_VERSION) {
+
+                } else {
+                    // 传统结构时复制目录到根目录去
+                    $path = ROOTPATH.'public/';
+                    if (is_dir($path)) {
+                        \Phpcmf\Service::L('file')->copy_dir($path, $path, ROOTPATH);
+                        dr_dir_delete($path, true);
+                    }
+                    if (is_dir($path)) {
+                        $this->_html_msg(0, dr_lang('目录移动失败'), '', '请手动将['.$path.']下面的文件移动到网站根目录中['.ROOTPATH.']，再删除public目录');
                     }
                 }
 
@@ -167,11 +188,6 @@ class Cache extends \Phpcmf\Common {
                 if ($error) {
                     $this->_html_msg(0, '需要手动安装这些应用插件：'.implode('、', $error).'
 <br><br><a href="http://help.xunruicms.com/1104.html" target="_blank">查看解决方案</a><br><br>将以上问题处理之后继续更新此脚本', 0);
-                }
-
-                // 移动水印目录
-                if (is_dir(WEBPATH.'config/watermark/')) {
-                    \Phpcmf\Service::L('file')->copy_dir(WEBPATH.'config/watermark/', WEBPATH.'config/watermark/', WRITEPATH.'watermark/');
                 }
 
                 $this->_html_msg(1, dr_lang('正在升级程序兼容性'), $next.'&page='.($page+1));
