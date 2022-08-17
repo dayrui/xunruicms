@@ -461,6 +461,9 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     define('IS_MEMBER', FALSE);
 }
 
+// 是否前端
+define('IS_HOME', !IS_ADMIN && !IS_MEMBER);
+
 // 自定义函数库
 if (is_file(CONFIGPATH.'custom.php')) {
     require CONFIGPATH.'custom.php';

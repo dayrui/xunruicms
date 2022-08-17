@@ -183,6 +183,20 @@ class View {
     }
 
     /**
+     * 当前模板对应的URL地址
+     */
+    public function now_php_url() {
+
+        if (isset($this->_options['my_php_url']) && $this->_options['my_php_url']) {
+            return $this->_options['my_php_url'];
+        } elseif (isset($this->_options['my_web_url']) && $this->_options['my_web_url']) {
+            return $this->_options['my_web_url'];
+        }
+
+        return FC_NOW_URL;
+    }
+
+    /**
      * 输出模板
      *
      * @param   string  $_name      模板文件名称（含扩展名）

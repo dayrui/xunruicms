@@ -60,7 +60,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
                 }
             }
             if (CI_DEBUG) {
-                $message.= '<br>'.$file.'（'.$exception->getLine().'）';
+                $message.= '<br>模板标签解析文件：'.$file.'（'.$exception->getLine().'）';
+                $message.= '<br>错误页面访问地址：'.\Phpcmf\Service::V()->now_php_url();
             } else {
                 $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
             }

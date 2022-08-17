@@ -123,9 +123,6 @@ class Form {
                 if ($t['filter']) {
                     foreach ($t['filter'] as $value) {
                         switch ($value) {
-                            case 'url':
-                                $data[$name] && $data[$name] = strpos($data[$name], 'http://') === 0 ? $data[$name] : 'http://'.$data[$name];
-                                break;
                             case 'intval':
                                 $data[$name] = intval($data[$name]);
                                 break;

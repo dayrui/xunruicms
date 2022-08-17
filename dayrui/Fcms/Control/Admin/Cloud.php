@@ -812,7 +812,7 @@ return [
         // 解压目录
         $cmspath = WRITEPATH.'cloud/'.$id.'/';
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-            cloud_msg(0, '本站：文件解压失败');
+            $this->_json(0, '本站：文件解压失败');
         }
 
         unlink($file);
@@ -878,10 +878,10 @@ return [
                     $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
                 }
             }
-            /*升级不覆盖模板
             if (is_dir($cmspath.'CSSPATH')) {
                 $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
             }
+            /*升级不覆盖模板
             if (is_dir($cmspath.'TPLPATH')) {
                 $this->_copy_dir($cmspath.'TPLPATH', TPLPATH);
             }*/

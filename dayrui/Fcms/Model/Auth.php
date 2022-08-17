@@ -775,6 +775,9 @@ class Auth extends \Phpcmf\Model {
         }
 
         $menu.= '<li><a href="javascript:dr_iframe_show(\''.dr_lang('批量更新内容URL').'\', \''.dr_url('api/update_url', ['mid' => $module['dirname']]).'\', \'500px\', \'300px\')""> <i class="fa fa-refresh"></i> '.dr_lang('更新URL').'</a> <i class="fa fa-circle"></i> </li>';
+        if ($this->_is_admin_auth('module/module/edit')) {
+            $menu.= '<li><a href="javascript:dr_iframe_show(\''.dr_lang('模块配置').'\', \''.dr_url('module/module/edit', ['id' => $module['id']]).'\', \'80%\', \'80%\')""> <i class="fa fa-cog"></i> '.dr_lang('模块配置').'</a> <i class="fa fa-circle"></i> </li>';
+        }
 
         // 非内容页面就显示返回链接
         if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
