@@ -3485,7 +3485,7 @@ function dr_web_prefix($url) {
 /**
  * url转为相对路径
  */
-function dr_url_rel($url) {
+function dr_url_rel($url, $prefix = '') {
 
     if ((IS_API_HTTP && (!defined('SYS_API_REL') || !SYS_API_REL)) || IS_ADMIN) {
         return $url;
@@ -3502,6 +3502,7 @@ function dr_url_rel($url) {
         if (IS_DEV && strpos($url, 'http') === 0) {
             $url.= '#站外域名不能转为相对路径（本提示信息关闭开发者模式时不显示）';
         }
+        $prefix && $url = str_replace($prefix, '/', $url);
     }
 
     return $url;
@@ -3510,7 +3511,7 @@ function dr_url_rel($url) {
 /**
  * 内容中的转为相对路径
  */
-function dr_text_rel($text) {
+function dr_text_rel($text, $prefix = '') {
 
     if ((IS_API_HTTP && (!defined('SYS_API_REL') || !SYS_API_REL)) || IS_ADMIN) {
         return $text;
@@ -3527,6 +3528,13 @@ function dr_text_rel($text) {
         $text = str_replace('href=\''.$surl, 'href="/', $text);
         $text = str_replace('src="'.$surl, 'src="/', $text);
         $text = str_replace('src=\''.$surl, 'src="/', $text);
+        if ($prefix) {
+            $surl = $prefix;
+            $text = str_replace('href="'.$surl, 'href="/', $text);
+            $text = str_replace('href=\''.$surl, 'href="/', $text);
+            $text = str_replace('src="'.$surl, 'src="/', $text);
+            $text = str_replace('src=\''.$surl, 'src="/', $text);
+        }
     }
 
     return $text;

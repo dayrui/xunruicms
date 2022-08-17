@@ -165,6 +165,7 @@ class Cache extends \Phpcmf\Common {
                 // 升级插件兼容测试
                 $error = [];
                 $table_app = [
+                    'module' => 'module',
                     SITE_ID.'_form' => 'form',
                     'module_form' => 'mform',
                     'member_notice' => 'notice',
@@ -173,6 +174,7 @@ class Cache extends \Phpcmf\Common {
                     'member_explog' => 'explog',
                 ];
                 $app_name = [
+                    'module' => '内容系统',
                     'form' => '全局表单',
                     'mform' => '模块内容表单',
                     'notice' => '提醒消息',
