@@ -737,102 +737,17 @@ class Auth extends \Phpcmf\Model {
     // 模块后台菜单
     public function _module_menu($module, $list_name, $list_url, $post_url) {
 
-        // <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false">
-        $module_menu = '<a class="dropdown-toggle {ON}" '.(\Phpcmf\Service::IS_MOBILE_USER() ? ' data-toggle="dropdown"' : '').' data-hover="dropdown" data-close-others="true" aria-expanded="true"><i class="fa fa-angle-double-down"></i></a>';
-        $module_menu.= '<ul class="dropdown-menu">';
-        $this->_is_admin_auth($module['dirname'].'/home/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/home/index').'"> <i class="'.dr_icon($module['icon']).'"></i> '.dr_lang('%s管理', $module['cname']).' </a></li>';
-
-        //$this->_is_admin_auth($module['dirname'].'/comment/index') && $module['comment'] && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/comment/index').'"> <i class="fa fa-comment"></i> '.dr_lang('%s管理', dr_comment_cname($module['comment']['cname'])).' </a></li>';
-
-        if ($module['setting']['flag']) {
-            $module_menu.= '<li class="divider"> </li>';
-            foreach ($module['setting']['flag'] as $i => $t) {
-                $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/flag/index', array('flag'=>$i)).'"> <i class="'.dr_icon($t['icon']).'"></i> '.dr_lang($t['name']).' </a></li>';
-            }
-        }
-
-        if ($module['form']) {
-            $module_menu.= '<li class="divider"> </li>';
-            foreach ($module['form'] as $i => $t) {
-                $this->_is_admin_auth($module['dirname'].'/'.$i.'/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/'.$i.'/index').'"> <i class="'.dr_icon($t['setting']['icon']).'"></i> '.dr_lang('%s管理', $t['name']).' </a></li>';
-            }
-        }
-
-        $module_menu.= '<li class="divider"> </li>';
-        $this->_is_admin_auth($module['dirname'].'/draft/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/draft/index').'"> <i class="fa fa-pencil"></i> '.dr_lang('草稿箱管理').' </a></li>';
-        $this->_is_admin_auth($module['dirname'].'/recycle/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/recycle/index').'"> <i class="fa fa-trash-o"></i> '.dr_lang('回收站管理').' </a></li>';
-        $this->_is_admin_auth($module['dirname'].'/time/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/time/index').'"> <i class="fa fa-clock-o"></i> '.dr_lang('待发布管理').' </a></li>';
-        $this->_is_admin_auth($module['dirname'].'/verify/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/verify/index').'"> <i class="fa fa-edit"></i> '.dr_lang('待审核管理').' </a></li>';
-        $module_menu.= '</ul>';
-
-        // 显示菜单
-        $menu = '';
-        $menu.= '<li class="dropdown"> <a href="'.$list_url.'" class="{ON}">'.$list_name.'</a> '.$module_menu.' <i class="fa fa-circle"></i> </li>';
-
-        // 独立模块显示其栏目
-        if (!$module['share'] && $this->_is_admin_auth($module['dirname'].'/category/index')) {
-            $menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/category/index').'"> <i class="fa fa-reorder"></i> '.dr_lang('栏目管理').'</a> <i class="fa fa-circle"></i> </li>';
-        }
-
-        $menu.= '<li><a href="javascript:dr_iframe_show(\''.dr_lang('批量更新内容URL').'\', \''.dr_url('api/update_url', ['mid' => $module['dirname']]).'\', \'500px\', \'300px\')""> <i class="fa fa-refresh"></i> '.dr_lang('更新URL').'</a> <i class="fa fa-circle"></i> </li>';
-        if ($this->_is_admin_auth('module/module/edit')) {
-            $menu.= '<li><a href="javascript:dr_iframe_show(\''.dr_lang('模块配置').'\', \''.dr_url('module/module/edit', ['id' => $module['id']]).'\', \'80%\', \'80%\')""> <i class="fa fa-cog"></i> '.dr_lang('模块配置').'</a> <i class="fa fa-circle"></i> </li>';
-        }
-
-        // 非内容页面就显示返回链接
-        if (\Phpcmf\Service::L('router')->uri() != $module['dirname'].'/home/index'
-            && $this->_is_admin_auth($module['dirname'].'/home/index') ) {
-            $menu.= '<li> <a href="'.\Phpcmf\Service::L('Router')->get_back($module['dirname'].'/home/index').'" class=""> <i class="fa fa-reply"></i> '.dr_lang('返回').'</a> <i class="fa fa-circle"></i> </li>';
-        }
-
-        // 发布和编辑权限
-        $this->_is_admin_auth($module['dirname'].'/home/add') && $post_url && $menu.= '<li> <a href="'.$post_url.'" class="'.(\Phpcmf\Service::L('router')->method == 'add' ? 'on' : '').'"> <i class="fa fa-plus"></i> '.(isset($module['post_name']) && $module['post_name'] ? dr_lang($module['post_name']) : dr_lang('发布')).'</a> <i class="fa fa-circle"></i> </li>';
-        \Phpcmf\Service::L('router')->method == 'edit' && $menu.= '<li> <a href="'.dr_now_url().'" class="on"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a> <i class="fa fa-circle"></i> </li>';
-
-        // 选中判断
-        strpos($menu, 'class="on"') === false && $menu = str_replace('{ON}', 'on', $menu);
-
-        return $menu;
+        return '_module_menu函数已弃用，请升级内容系统插件';
     }
 
     // 导航后台菜单
     public function _navigator_menu($type, $list_name, $list_url, $post_url) {
-
-        $module_menu = '<a class="dropdown-toggle {ON}" data-toggle="dropdown" data-close-others="true" aria-expanded="true"><i class="fa fa-angle-double-down"></i></a>';
-        $module_menu.= '<ul class="dropdown-menu">';
-
-        if ($type) {
-            foreach ($type as $i => $t) {
-                $t && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url('navigator/home/index', ['tid'=>$i]).'">'.$i.' <i class="fa fa-"></i> '.$t.' </a></li>';
-            }
-        }
-
-        $module_menu.= '</ul>';
-
-        // 显示菜单
-        $menu = '';
-        $menu.= '<li class="dropdown"> <a href="'.$list_url.'" class="{ON}">'.$list_name.'</a> '.$module_menu.' <i class="fa fa-circle"></i> </li>';
-        $post_url && $menu.= '<li> <a href="'.$post_url.'" class="'.(\Phpcmf\Service::L('router')->method == 'add' ? 'on' : '').'"> <i class="fa fa-plus"></i> '.dr_lang('添加').'</a> <i class="fa fa-circle"></i> </li>';
-        \Phpcmf\Service::L('router')->method == 'edit' && $menu.= '<li> <a href="'.dr_now_url().'" class="on"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a> <i class="fa fa-circle"></i> </li>';
-        // 自定义字段
-        $menu.= '<li> <a href="'.\Phpcmf\Service::L('router')->url('field/index', ['rname'=>'navigator', 'rid'=>SITE_ID]).'"> <i class="fa fa-code"></i> '.dr_lang('自定义字段').'</a> <i class="fa fa-circle"></i> </li>';
-        $menu.= '<li> <a href="javascript:dr_iframe(\'save\', \''.\Phpcmf\Service::L('router')->url('navigator/home/config_edit').'\');"> <i class="fa fa-save"></i> '.dr_lang('链接分类').'</a> <i class="fa fa-circle"></i> </li>';
-        // 选中判断
-        strpos($menu, 'class="on"') === false && $menu = str_replace('{ON}', 'on', $menu);
-
-
-        return $menu;
+        return '_navigator_menu函数已弃用，请升级自定义链接插件';
     }
 
     // 模块栏目的快捷菜单
     public function _module_category_menu($module) {
-
-        $module_menu = '';
-        $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url(APP_DIR.'/category/index').'"> <i class=" fa fa-reorder"></i> '.dr_lang('栏目管理').' </a></li>';
-        $this->_is_admin_auth($module['dirname'].'/category/edit') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url(APP_DIR.'/category/url_edit').'"> <i class="fa fa-link"></i> '.dr_lang('自定义URL').' </a></li>';
-        $this->_is_admin_auth('field/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url('field/index', ['rname' => 'category-'.$module['dirname']]).'"> <i class="fa fa-code"></i> '.dr_lang('自定义栏目字段').' </a></li>';
-
-        return $module_menu;
+        return '_module_category_menu函数已弃用';
     }
 
     // 菜单点击url
