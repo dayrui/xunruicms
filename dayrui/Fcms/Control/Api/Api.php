@@ -65,13 +65,21 @@ class Api extends \Phpcmf\Common {
             }
             $QR = imagecreatefromstring(file_get_contents($file));
             if ($thumb) {
+                if (strpos($thumb, 'https://') !== false
+                    && strpos($thumb, '/') !== false
+                    && strpos($thumb, 'http://') !== false) {
+                    exit('图片地址不规范');
+                }
+                $img = getimagesize($thumb);
+                if (!$img) {
+                    exit('此图片不是一张可用的图片');
+                }
                 $code = dr_catcher_data($thumb);
                 if (!$code) {
                     exit('图片参数不规范');
                 }
                 $logo = imagecreatefromstring($code);
                 $QR_width = imagesx($QR);//二维码图片宽度
-                $QR_height = imagesy($QR);//二维码图片高度
                 $logo_width = imagesx($logo);//logo图片宽度
                 $logo_height = imagesy($logo);//logo图片高度
                 $logo_qr_width = $QR_width / 4;
