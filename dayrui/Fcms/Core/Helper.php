@@ -2322,7 +2322,6 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
             log_message('error', '获取远程数据失败['.$url.']：地址前缀要求是http开头');
         }
         return '';
-
     }
 
     // curl模式
