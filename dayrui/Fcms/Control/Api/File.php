@@ -250,6 +250,7 @@ class File extends \Phpcmf\Common
             }
             $list = [];
             if ($p == 2) {
+                // 文件模式
                 $ids = \Phpcmf\Service::L('input')->post('ids2');
                 foreach ($ids as $t) {
                     $file = trim(str_replace('..', '', $t));
@@ -266,15 +267,23 @@ class File extends \Phpcmf\Common
                     ];
                 }
             } else {
+                // 归档附件
                 $db = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused');
                 !$is_admin && $db->where('uid', $this->uid);
                 $temp = $db->where_in('id', $ids)->getAll();
                 foreach ($temp as $t) {
+                    $url = dr_get_file($t['id']);
+                    if ($t['remote'])  {
+                       $remote = \Phpcmf\Service::C()->get_cache('attachment', $t['remote']);
+                       if ($remote && $remote['value']['image']) {
+                           $url.= $remote['value']['image'];
+                       }
+                    }
                     $list[] = [
                         'id' => $t['id'],
                         'name' => $t['filename'],
                         'file' => $t['attachment'],
-                        'url' => dr_get_file($t['id']),
+                        'url' => $url,
                         'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png' : '',
                         'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
                         'upload' => '<input type="file" name="file_data"></button>',
