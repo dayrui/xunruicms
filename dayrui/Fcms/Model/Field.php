@@ -13,7 +13,7 @@ class Field extends \Phpcmf\Model {
     public $relatedid;
     public $relatedname;
 
-    protected $_table_field = [];
+    public $_table_field = [];
 
     // 通过字段来查询表名称
     public function get_table_name($siteid, $field) {
@@ -21,116 +21,125 @@ class Field extends \Phpcmf\Model {
         $table = '';
         list($case_name, $a) = explode('-', $field['relatedname']);
 
-        switch ($case_name) {
+        if (function_exists('myfield_tablename_'.$case_name)) {
+            $table = call_user_func_array('myfield_tablename_'.$case_name, [
+                $field,
+                $siteid,
+                $this->relatedname,
+                $this->relatedid
+            ]);
+        } else {
+            switch ($case_name) {
 
-            case 'form':
-                // 网站表单 form-站点id, 表单id
-                list($a, $siteid) = explode('-', $this->relatedname);
-                $data = $this->table($siteid.'_form')->get($this->relatedid);
-                if (!$data) {
-                    return;
-                }
-                $table = $field['ismain'] ? $siteid.'_form_'.$data['table'] : $siteid.'_form_'.$data['table'].'_data_{tableid}';
-                break;
-
-            case 'tag':
-                // 网站tag
-                $table = $field['relatedid'].'_tag';
-                break;
-
-            case 'linkage':
-                // 联动菜单
-                $table = 'linkage_data_'.$field['relatedid'];
-                break;
-
-            case 'member':
-                // 用户主表
-                $table = 'member_data';
-                break;
-
-            case 'navigator':
-                // 导航链接
-                $table = $field['relatedid'].'_navigator';
-                break;
-
-            case 'order':
-                // 订单插件
-                $table = $field['relatedid'].'_order';
-                break;
-
-            case 'page':
-                // 网站单页
-                $table = $field['relatedid'].'_order';
-                break;
-
-            case 'table':
-                // 任意表
-                return $a;
-                break;
-
-            case 'module':
-                // 模块字段
-                $data = \Phpcmf\Service::M()->table('module')->get($field['relatedid']);
-                if ($data) {
-                    $table = $field['ismain'] ? '{siteid}_'.$data['dirname'] : '{siteid}_'.$data['dirname'].'_data_{tableid}';
-                }
-                break;
-
-            case 'mform':
-                // 模块表单
-                $data = \Phpcmf\Service::M()->table('module_form')->get($field['relatedid']);
-                if (!$data) {
-                    $table = $field['ismain'] ? '{siteid}_'.$a.'_form_'.$data['table'] : '{siteid}_'.$a.'_form_'.$data['table'].'_data_{tableid}';
-                }
-                break;
-
-            case 'category':
-                // 栏目自定义字段
-                $table = $siteid.'_'.$a.'_category';
-                break;
-
-            default:
-                if (strpos($field['relatedname'], 'comment-module') !== false) {
-                    // 模块评论字段
-                    list($a, $b, $module) = explode('-', $field['relatedname']);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
-                    if (!$cache) {
-                        $table = $siteid . '_' . $cache['dirname'] . '_comment';
+                case 'form':
+                    // 网站表单 form-站点id, 表单id
+                    list($a, $siteid) = explode('-', $this->relatedname);
+                    $data = $this->table($siteid.'_form')->get($this->relatedid);
+                    if (!$data) {
+                        return;
                     }
-                } elseif (strpos($field['relatedname'], 'comment-mform') !== false) {
-                    // 模块表单评论字段
-                    list($a, $b, $module, $fid) = explode('-', $field['relatedname']);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
-                    if (!$cache) {
-                        $table = $siteid.'_'.$cache['dirname'].'_form_'.$fid.'_comment';
+                    $table = $field['ismain'] ? $siteid.'_form_'.$data['table'] : $siteid.'_form_'.$data['table'].'_data_{tableid}';
+                    break;
+
+                case 'tag':
+                    // 网站tag
+                    $table = $field['relatedid'].'_tag';
+                    break;
+
+                case 'linkage':
+                    // 联动菜单
+                    $table = 'linkage_data_'.$field['relatedid'];
+                    break;
+
+                case 'member':
+                    // 用户主表
+                    $table = 'member_data';
+                    break;
+
+                case 'navigator':
+                    // 导航链接
+                    $table = $field['relatedid'].'_navigator';
+                    break;
+
+                case 'order':
+                    // 订单插件
+                    $table = $field['relatedid'].'_order';
+                    break;
+
+                case 'page':
+                    // 网站单页
+                    $table = $field['relatedid'].'_order';
+                    break;
+
+                case 'table':
+                    // 任意表
+                    return $a;
+                    break;
+
+                case 'module':
+                    // 模块字段
+                    $data = \Phpcmf\Service::M()->table('module')->get($field['relatedid']);
+                    if ($data) {
+                        $table = $field['ismain'] ? '{siteid}_'.$data['dirname'] : '{siteid}_'.$data['dirname'].'_data_{tableid}';
                     }
-                } elseif (strpos($field['relatedname'], 'comment-form') !== false) {
-                    // 网站评论字段
-                    list($a, $b, $fid) = explode('-', $field['relatedname']);
-                    $cache = \Phpcmf\Service::L('cache')->get('form-'.$field['relatedid'], $fid);
-                    if (!$cache) {
-                        $table = $siteid.'_form_'.$cache['table'].'_comment';
+                    break;
+
+                case 'mform':
+                    // 模块表单
+                    $data = \Phpcmf\Service::M()->table('module_form')->get($field['relatedid']);
+                    if (!$data) {
+                        $table = $field['ismain'] ? '{siteid}_'.$a.'_form_'.$data['table'] : '{siteid}_'.$a.'_form_'.$data['table'].'_data_{tableid}';
                     }
-                } else {
-                    // 识别栏目模型字段
-                    list($module, $s) = explode('-', $field['relatedname']);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
-                    if ($cache) {
-                        $data = dr_cat_value($module, $field['relatedid']);
-                        if ($data) {
-                            if ($module == 'share') {
-                                if ($data['tid'] != 1) {
+                    break;
+
+                case 'category':
+                    // 栏目自定义字段
+                    $table = $siteid.'_'.$a.'_category';
+                    break;
+
+                default:
+                    if (strpos($field['relatedname'], 'comment-module') !== false) {
+                        // 模块评论字段
+                        list($a, $b, $module) = explode('-', $field['relatedname']);
+                        $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
+                        if (!$cache) {
+                            $table = $siteid . '_' . $cache['dirname'] . '_comment';
+                        }
+                    } elseif (strpos($field['relatedname'], 'comment-mform') !== false) {
+                        // 模块表单评论字段
+                        list($a, $b, $module, $fid) = explode('-', $field['relatedname']);
+                        $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
+                        if (!$cache) {
+                            $table = $siteid.'_'.$cache['dirname'].'_form_'.$fid.'_comment';
+                        }
+                    } elseif (strpos($field['relatedname'], 'comment-form') !== false) {
+                        // 网站评论字段
+                        list($a, $b, $fid) = explode('-', $field['relatedname']);
+                        $cache = \Phpcmf\Service::L('cache')->get('form-'.$field['relatedid'], $fid);
+                        if (!$cache) {
+                            $table = $siteid.'_form_'.$cache['table'].'_comment';
+                        }
+                    } else {
+                        // 识别栏目模型字段
+                        list($module, $s) = explode('-', $field['relatedname']);
+                        $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
+                        if ($cache) {
+                            $data = dr_cat_value($module, $field['relatedid']);
+                            if ($data) {
+                                if ($module == 'share') {
+                                    if ($data['tid'] != 1) {
+                                    } else {
+                                        $table = dr_module_table_prefix($data['mid']).'_category_data';
+                                    }
                                 } else {
-                                    $table = dr_module_table_prefix($data['mid']).'_category_data';
+                                    $table = dr_module_table_prefix($module).'_category_data';
                                 }
-                            } else {
-                                $table = dr_module_table_prefix($module).'_category_data';
                             }
                         }
-                    }
 
-                }
-                break;
+                    }
+                    break;
+            }
         }
 
         return str_replace('{siteid}', $siteid, $table);
@@ -444,6 +453,11 @@ class Field extends \Phpcmf\Model {
         if ($rt) {
             return 1;
         }
+        // 栏目表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
+        if ($rt) {
+            return 1;
+        }
         return 0;
     }
 
@@ -713,7 +727,7 @@ class Field extends \Phpcmf\Model {
     protected function _field_module($name) {
         // 保留字段
         if (in_array($name, [
-            'cat', 'category',
+            'cat', 'category', 'name',
             'top', 'content_page',
             'pageid', 'params', 'page', 'pages',
             'parent', 'urlrule', 'member',
@@ -730,6 +744,16 @@ class Field extends \Phpcmf\Model {
         }
         // 附表
         $rt = $this->_field_exitsts('id', $name, $table.'_data_0', SITE_ID);
+        if ($rt) {
+            return 1;
+        }
+        // 栏目模型表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category_data', SITE_ID);
+        if ($rt) {
+            return 1;
+        }
+        // 栏目表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
         if ($rt) {
             return 1;
         }

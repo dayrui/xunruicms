@@ -607,237 +607,254 @@ class Field extends \Phpcmf\Common {
 
         list($case_name, $a) = explode('-', $this->relatedname);
 
-        switch ($case_name) {
+        if (function_exists('myfield_init_'.$case_name)) {
+            $rt = call_user_func_array('myfield_init_'.$case_name, [
+                $this->relatedname,
+                $this->relatedid
+            ]);
+            if (!$rt['code']) {
+                $this->_admin_msg(0, $rt['msg']);
+            }
+            $this->data = $rt['data']['data'];
+            $this->name = $rt['data']['name'];
+            $this->backurl = $rt['data']['backurl'];
+            \Phpcmf\Service::M('Field')->func = $case_name; // 重要标识: 函数和识别码
+            \Phpcmf\Service::M('Field')->data = $this->data;
+        } else {
 
-            case 'form':
-                // 网站表单 form-站点id, 表单id
-                list($a, $siteid) = explode('-', $this->relatedname);
-                $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
-                if (!$this->data) {
-					$this->_admin_msg(0, dr_lang('表单【%s】不存在', $this->relatedid));
-				} 
-                $this->name = '表单【'.$this->data['name'].'】字段';
-                $this->backurl = ''; // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
-                \Phpcmf\Service::M('Field')->data = $this->data;
-                break;
+            switch ($case_name) {
 
-            case 'site':
-                // 网站信息
-                $ismain = 1;
-                $this->name = '项目信息字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
-                break;
-
-            case 'tag':
-                // 网站tag
-                $ismain = 1;
-                $this->name = 'Tag字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'tag'; // 重要标识: 函数和识别码
-                break;
-
-            case 'linkage':
-                // 联动菜单
-                $ismain = 1;
-                $this->name = '联动菜单字段';
-                $this->backurl = ''; // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'linkage'; // 重要标识: 函数和识别码
-                break;
-
-            case 'member':
-                // 用户主表
-                $ismain = 1;
-                $this->name = '用户信息字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('member/field/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'member'; // 重要标识: 函数和识别码
-                break;
-
-            case 'navigator':
-                // 导航链接
-                $ismain = 1;
-                $this->name = '自定义链接字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'navigator'; // 重要标识: 函数和识别码
-                break;
-
-            case 'order':
-                // 订单插件
-                $ismain = 1;
-                $this->name = '订单应用';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('order/field/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'order'; // 重要标识: 函数和识别码
-                break;
-
-            case 'page':
-                // 网站单页
-                $ismain = 1;
-                $this->name = '自定义页面字段';
-                $this->backurl = \Phpcmf\Service::L('Router')->url('page/home/index'); // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'page'; // 重要标识: 函数和识别码
-                break;
-
-            case 'table':
-                // 任意表
-                $ismain = 1;
-                $this->name = '数据标识【'.\Phpcmf\Service::M()->dbprefix($a).'】';
-                \Phpcmf\Service::M('Field')->data = $a;
-                \Phpcmf\Service::M('Field')->func = 'table'; // 重要标识: 函数和识别码
-                break;
-
-            case 'module':
-                // 模块字段
-                $this->data = \Phpcmf\Service::M()->table('module')->get($this->relatedid);
-                if (!$this->data) {
-					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
-				}
-                $this->backurl = ''; // 返回uri地址
-                $this->name = '模块【'.$this->data['dirname'].'】字段';
-                \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
-                \Phpcmf\Service::M('Field')->data = $this->data;
-                $this->namespace = $this->data['dirname'];
-                break;
-
-            case 'mform':
-                // 模块表单
-                $this->data = \Phpcmf\Service::M()->table('module_form')->get($this->relatedid);
-                if (!$this->data) {
-					$this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
-				} 
-                $this->backurl = ''; // 返回uri地址
-                $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
-                \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
-                \Phpcmf\Service::M('Field')->data = $this->data;
-                $this->namespace = $this->data['module'];
-                break;
-
-            case 'category':
-                // 栏目自定义字段
-                $ismain = 1;
-                $this->name = '栏目自定义字段';
-                $this->backurl = ''; // 返回uri地址
-                \Phpcmf\Service::M('Field')->func = 'category'; // 重要标识: 函数和识别码
-                \Phpcmf\Service::M('Field')->data = $a;
-                $this->module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$a);
-                if (!$this->module) {
-                    $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $a));
-                }
-                break;
-
-            case 'catmodule':
-                // 识别栏目模型字段
-                $ismain = 1;
-                $issearch = 1;
-                $iscategory = 1;
-                $module = $a;
-                $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
-                if (!$cache) {
-                    $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-                }
-                if ($this->relatedid) {
-                    $this->data = dr_cat_value($cache['mid'], $this->relatedid);
+                case 'form':
+                    // 网站表单 form-站点id, 表单id
+                    list($a, $siteid) = explode('-', $this->relatedname);
+                    $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
                     if (!$this->data) {
-                        $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                        $this->_admin_msg(0, dr_lang('表单【%s】不存在', $this->relatedid));
                     }
-                    if ($module == 'share') {
-                        $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
-                        $this->data['dirname'] = $this->data['mid'];
-                        $this->backurl = \Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
-                        $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
-                    } else {
-                        $this->data['dirname'] = $module;
-                        $this->backurl = \Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
-                        $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
-                    }
-                } else {
-                    $this->data = [
-                        'dirname' => $module,
-                    ];
-                    $this->name = '模块【'.$module.'】栏目公共模型字段';
-                    $this->backurl = \Phpcmf\Service::L('Router')->url('module/module_category/field_index', ['dir' => $module]); // 返回uri地址
-                }
-
-                $this->module = $cache;
-
-                \Phpcmf\Service::M('Field')->func = 'category_data'; // 重要标识: 函数和识别码
-                \Phpcmf\Service::M('Field')->data = $this->data;
-                $this->namespace = $module;
-                break;
-
-            default:
-                if (strpos($this->relatedname, 'comment-module') !== false) {
-                    // 模块评论字段
-                    if (!dr_is_app('comment')) {
-                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));
-                    }
-                    $ismain = 1;
-                    list($a, $b, $module) = explode('-', $this->relatedname);
-                    $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
-                    if (!$cache) {
-                        $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-                    }
-                    $this->name = '模块【' . $cache['name'] . '】评论字段';
-                    $this->data = $cache['dirname'];
+                    $this->name = '表单【'.$this->data['name'].'】字段';
                     $this->backurl = ''; // 返回uri地址
-                    \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $cache['dirname'];
-                    $this->namespace = $cache['dirname'];
-                } elseif (strpos($this->relatedname, 'comment-mform') !== false) {
-                    // 模块评论字段
-                    if (!dr_is_app('comment')) {
-                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
-                    }
+                    \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $this->data;
+                    break;
+
+                case 'site':
+                    // 网站信息
                     $ismain = 1;
-                    list($a, $b, $module, $fid) = explode('-', $this->relatedname);
+                    $this->name = '项目信息字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'tag':
+                    // 网站tag
+                    $ismain = 1;
+                    $this->name = 'Tag字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'tag'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'linkage':
+                    // 联动菜单
+                    $ismain = 1;
+                    $this->name = '联动菜单字段';
+                    $this->backurl = ''; // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'linkage'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'member':
+                    // 用户主表
+                    $ismain = 1;
+                    $this->name = '用户信息字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('member/field/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'member'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'navigator':
+                    // 导航链接
+                    $ismain = 1;
+                    $this->name = '自定义链接字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'navigator'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'order':
+                    // 订单插件
+                    $ismain = 1;
+                    $this->name = '订单应用';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('order/field/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'order'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'page':
+                    // 网站单页
+                    $ismain = 1;
+                    $this->name = '自定义页面字段';
+                    $this->backurl = \Phpcmf\Service::L('Router')->url('page/home/index'); // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'page'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'table':
+                    // 任意表
+                    $ismain = 1;
+                    $this->name = '数据标识【'.\Phpcmf\Service::M()->dbprefix($a).'】';
+                    \Phpcmf\Service::M('Field')->data = $a;
+                    \Phpcmf\Service::M('Field')->func = 'table'; // 重要标识: 函数和识别码
+                    break;
+
+                case 'module':
+                    // 模块字段
+                    $this->data = \Phpcmf\Service::M()->table('module')->get($this->relatedid);
+                    if (!$this->data) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                    }
+                    $this->backurl = ''; // 返回uri地址
+                    $this->name = '模块【'.$this->data['dirname'].'】字段';
+                    \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $this->data;
+                    $this->namespace = $this->data['dirname'];
+                    break;
+
+                case 'mform':
+                    // 模块表单
+                    $this->data = \Phpcmf\Service::M()->table('module_form')->get($this->relatedid);
+                    if (!$this->data) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                    }
+                    $this->backurl = ''; // 返回uri地址
+                    $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
+                    \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $this->data;
+                    $this->namespace = $this->data['module'];
+                    break;
+
+                case 'category':
+                    // 栏目自定义字段
+                    $ismain = 1;
+                    $this->name = '栏目自定义字段';
+                    $this->backurl = ''; // 返回uri地址
+                    \Phpcmf\Service::M('Field')->func = 'category'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $a;
+                    $this->module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$a);
+                    if (!$this->module) {
+                        $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $a));
+                    }
+                    break;
+
+                case 'catmodule':
+                    // 识别栏目模型字段
+                    $ismain = 1;
+                    $issearch = 1;
+                    $iscategory = 1;
+                    $module = $a;
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
                     if (!$cache) {
                         $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-                    } elseif (!$cache['form'][$fid]) {
-                        $this->_admin_msg(0, dr_lang('模块【%s】表单【%s】缓存不存在', $module, $fid));
                     }
-                    $this->name = '模块【'.$cache['name'].'】表单【'.$cache['form'][$fid]['name'].'】评论字段';
-                    $this->data = $cache['dirname'].'_form_'.$cache['form'][$fid]['table'];
-                    $this->backurl = ''; // 返回uri地址
-                    \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $this->data;
-                    $this->namespace = $cache['dirname'];
-                } elseif (strpos($this->relatedname, 'comment-form') !== false) {
-                    // 表单评论字段
-                    if (!dr_is_app('comment')) {
-                        $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
-                    }
-                    $ismain = 1;
-                    list($a, $b, $fid) = explode('-', $this->relatedname);
-                    $cache = \Phpcmf\Service::L('cache')->get('form-'.$this->relatedid, $fid);
-                    if (!$cache) {
-                        $this->_admin_msg(0, dr_lang('表单【%s】缓存不存在', $fid));
-                    }
-                    $this->name = '表单【'.$cache['name'].'】评论字段';
-                    $this->data = 'form_'.$cache['table'];
-                    $this->backurl = ''; // 返回uri地址
-                    \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
-                    \Phpcmf\Service::M('Field')->data = $this->data;
-                } elseif (function_exists('myfield_info_'.$case_name)) {
-                    // 其他自定义
-                    $rt = call_user_func_array('myfield_info_'.$case_name, array(
-                        $this->relatedname,
-                        $this->relatedid
-                    ));
-                    if (is_array($rt)) {
-                        list(
-                            $ismain,
-                            $this->name,
-                            $this->data,
-                            \Phpcmf\Service::M('Field')->func,
-                            $this->backurl
-                            ) = $rt;
-                        \Phpcmf\Service::M('Field')->data = $this->data;
+                    if ($this->relatedid) {
+                        $this->data = dr_cat_value($cache['mid'], $this->relatedid);
+                        if (!$this->data) {
+                            $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                        }
+                        if ($module == 'share') {
+                            $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
+                            $this->data['dirname'] = $this->data['mid'];
+                            $this->backurl = \Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
+                            $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                        } else {
+                            $this->data['dirname'] = $module;
+                            $this->backurl = \Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
+                            $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                        }
                     } else {
-                        $this->_admin_msg(0, $rt);
+                        $this->data = [
+                            'dirname' => $module,
+                        ];
+                        $this->name = '模块【'.$module.'】栏目公共模型字段';
+                        $this->backurl = \Phpcmf\Service::L('Router')->url('module/module_category/field_index', ['dir' => $module]); // 返回uri地址
                     }
-                }
-                break;
+
+                    $this->module = $cache;
+
+                    \Phpcmf\Service::M('Field')->func = 'category_data'; // 重要标识: 函数和识别码
+                    \Phpcmf\Service::M('Field')->data = $this->data;
+                    $this->namespace = $module;
+                    break;
+
+                default:
+                    if (strpos($this->relatedname, 'comment-module') !== false) {
+                        // 模块评论字段
+                        if (!dr_is_app('comment')) {
+                            $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));
+                        }
+                        $ismain = 1;
+                        list($a, $b, $module) = explode('-', $this->relatedname);
+                        $cache = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $module);
+                        if (!$cache) {
+                            $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                        }
+                        $this->name = '模块【' . $cache['name'] . '】评论字段';
+                        $this->data = $cache['dirname'];
+                        $this->backurl = ''; // 返回uri地址
+                        \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
+                        \Phpcmf\Service::M('Field')->data = $cache['dirname'];
+                        $this->namespace = $cache['dirname'];
+                    } elseif (strpos($this->relatedname, 'comment-mform') !== false) {
+                        // 模块评论字段
+                        if (!dr_is_app('comment')) {
+                            $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                        }
+                        $ismain = 1;
+                        list($a, $b, $module, $fid) = explode('-', $this->relatedname);
+                        $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
+                        if (!$cache) {
+                            $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                        } elseif (!$cache['form'][$fid]) {
+                            $this->_admin_msg(0, dr_lang('模块【%s】表单【%s】缓存不存在', $module, $fid));
+                        }
+                        $this->name = '模块【'.$cache['name'].'】表单【'.$cache['form'][$fid]['name'].'】评论字段';
+                        $this->data = $cache['dirname'].'_form_'.$cache['form'][$fid]['table'];
+                        $this->backurl = ''; // 返回uri地址
+                        \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
+                        \Phpcmf\Service::M('Field')->data = $this->data;
+                        $this->namespace = $cache['dirname'];
+                    } elseif (strpos($this->relatedname, 'comment-form') !== false) {
+                        // 表单评论字段
+                        if (!dr_is_app('comment')) {
+                            $this->_admin_msg(0, dr_lang('系统没有安装评论插件'));exit;
+                        }
+                        $ismain = 1;
+                        list($a, $b, $fid) = explode('-', $this->relatedname);
+                        $cache = \Phpcmf\Service::L('cache')->get('form-'.$this->relatedid, $fid);
+                        if (!$cache) {
+                            $this->_admin_msg(0, dr_lang('表单【%s】缓存不存在', $fid));
+                        }
+                        $this->name = '表单【'.$cache['name'].'】评论字段';
+                        $this->data = 'form_'.$cache['table'];
+                        $this->backurl = ''; // 返回uri地址
+                        \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
+                        \Phpcmf\Service::M('Field')->data = $this->data;
+                    } elseif (function_exists('myfield_info_'.$case_name)) {
+                        // 其他自定义
+                        $rt = call_user_func_array('myfield_info_'.$case_name, array(
+                            $this->relatedname,
+                            $this->relatedid
+                        ));
+                        if (is_array($rt)) {
+                            list(
+                                $ismain,
+                                $this->name,
+                                $this->data,
+                                \Phpcmf\Service::M('Field')->func,
+                                $this->backurl
+                                ) = $rt;
+                            \Phpcmf\Service::M('Field')->data = $this->data;
+                        } else {
+                            $this->_admin_msg(0, $rt);
+                        }
+                    }
+                    break;
+            }
+
         }
 
         \Phpcmf\Service::V()->assign('fmid', \Phpcmf\Service::M('Field')->func);
