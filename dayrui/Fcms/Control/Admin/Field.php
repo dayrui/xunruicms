@@ -525,70 +525,76 @@ class Field extends \Phpcmf\Common {
 
         list($case_name, $a) = explode('-', $this->relatedname);
 
-        switch ($case_name) {
+        if (function_exists('myfield_cache_'.$case_name)) {
+            call_user_func('myfield_cache_'.$case_name);
+        } else {
 
-            case 'form':
-                // 网站表单 form-站点id, 表单id
-                \Phpcmf\Service::M('cache')->sync_cache('form', 'form', 1); // 自动更新缓存
-                break;
+            switch ($case_name) {
 
-            case 'tag':
-                // 网站tag
-                \Phpcmf\Service::M('cache')->sync_cache('tag', 'tag', 1); // 自动更新缓存
-                break;
+                case 'form':
+                    // _网站表单 form-站点id, 表单id
+                    \Phpcmf\Service::M('cache')->sync_cache('form', 'form', 1); // 自动更新缓存
+                    break;
 
-            case 'linkage':
-                // 联动菜单
-                \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-                break;
+                case 'tag':
+                    // _网站tag
+                    \Phpcmf\Service::M('cache')->sync_cache('tag', 'tag', 1); // 自动更新缓存
+                    break;
 
-            case 'member':
-                // 用户主表
-                \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
-                break;
+                case 'linkage':
+                    // 联动菜单
+                    \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+                    break;
 
-            case 'navigator':
-                // 导航链接
-                \Phpcmf\Service::M('cache')->sync_cache('navigator', 'navigator', 1); // 自动更新缓存
-                break;
+                case 'member':
+                    // _用户主表
+                    \Phpcmf\Service::M('cache')->sync_cache('member'); // 自动更新缓存
+                    break;
 
-            case 'order':
-                // 订单插件
-                break;
+                case 'navigator':
+                    // _导航链接
+                    \Phpcmf\Service::M('cache')->sync_cache('navigator', 'navigator', 1); // 自动更新缓存
+                    break;
 
-            case 'page':
-                // 网站单页
-                \Phpcmf\Service::M('cache')->sync_cache('page', 'page', 1); // 自动更新缓存
-                break;
+                case 'order':
+                    // 订单插件
+                    break;
 
-            case 'table':
-                // 任意表
-                break;
+                case 'page':
+                    // 网站单页
+                    \Phpcmf\Service::M('cache')->sync_cache('page', 'page', 1); // 自动更新缓存
+                    break;
 
-            case 'module':
-                // 模块字段
-                \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-                break;
+                case 'table':
+                    // 任意表
+                    break;
 
-            case 'mform':
-                // 模块表单
-                \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-                break;
+                case 'module':
+                    // 模块字段
+                    \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+                    break;
 
-            case 'category':
-                // 栏目自定义字段
-                \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-                break;
+                case 'mform':
+                    // 模块表单
+                    \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+                    break;
 
-            case 'site':
-                // 网站信息
-                \Phpcmf\Service::L('cache')->del_data('my-site-'.SITE_ID);
-                break;
+                case 'category':
+                    // 栏目自定义字段
+                    \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+                    break;
 
-            default:
-                \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-                break;
+                case 'site':
+                    // 网站信息
+                    \Phpcmf\Service::L('cache')->del_data('my-site-'.SITE_ID);
+                    break;
+
+                default:
+                    \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+                    break;
+            }
         }
+
     }
 
 	// 初始化设置
@@ -618,6 +624,9 @@ class Field extends \Phpcmf\Common {
             $this->data = $rt['data']['data'];
             $this->name = $rt['data']['name'];
             $this->backurl = $rt['data']['backurl'];
+            if (isset($rt['data']['ismain']) && $rt['data']['ismain']) {
+                $ismain = 1;
+            }
             \Phpcmf\Service::M('Field')->func = $case_name; // 重要标识: 函数和识别码
             \Phpcmf\Service::M('Field')->data = $this->data;
         } else {
@@ -625,7 +634,7 @@ class Field extends \Phpcmf\Common {
             switch ($case_name) {
 
                 case 'form':
-                    // 网站表单 form-站点id, 表单id
+                    // _网站表单 form-站点id, 表单id
                     list($a, $siteid) = explode('-', $this->relatedname);
                     $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
                     if (!$this->data) {
@@ -646,7 +655,7 @@ class Field extends \Phpcmf\Common {
                     break;
 
                 case 'tag':
-                    // 网站tag
+                    // _网站tag
                     $ismain = 1;
                     $this->name = 'Tag字段';
                     $this->backurl = \Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
@@ -662,7 +671,7 @@ class Field extends \Phpcmf\Common {
                     break;
 
                 case 'member':
-                    // 用户主表
+                    // _用户主表
                     $ismain = 1;
                     $this->name = '用户信息字段';
                     $this->backurl = \Phpcmf\Service::L('Router')->url('member/field/index'); // 返回uri地址
@@ -670,7 +679,7 @@ class Field extends \Phpcmf\Common {
                     break;
 
                 case 'navigator':
-                    // 导航链接
+                    // _导航链接
                     $ismain = 1;
                     $this->name = '自定义链接字段';
                     $this->backurl = \Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址

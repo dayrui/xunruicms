@@ -32,7 +32,7 @@ class Field extends \Phpcmf\Model {
             switch ($case_name) {
 
                 case 'form':
-                    // 网站表单 form-站点id, 表单id
+                    // _网站表单 form-站点id, 表单id
                     list($a, $siteid) = explode('-', $this->relatedname);
                     $data = $this->table($siteid.'_form')->get($this->relatedid);
                     if (!$data) {
@@ -42,7 +42,7 @@ class Field extends \Phpcmf\Model {
                     break;
 
                 case 'tag':
-                    // 网站tag
+                    // _网站tag
                     $table = $field['relatedid'].'_tag';
                     break;
 
@@ -52,12 +52,12 @@ class Field extends \Phpcmf\Model {
                     break;
 
                 case 'member':
-                    // 用户主表
+                    // _用户主表
                     $table = 'member_data';
                     break;
 
                 case 'navigator':
-                    // 导航链接
+                    // _导航链接
                     $table = $field['relatedid'].'_navigator';
                     break;
 
