@@ -366,7 +366,7 @@ class Field extends \Phpcmf\Model {
     /**
      * 判断表字段否存在
      */
-    protected function _field_exitsts($id, $name, $table, $siteid = 0) {
+    public function _field_exitsts($id, $name, $table, $siteid = 0) {
 
         if (!$table)	{
             return 0;
