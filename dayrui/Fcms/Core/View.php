@@ -551,6 +551,10 @@ class View {
             return '';
         }
 
+        if (function_exists('my_parser_view_rule')) {
+            $view_content = my_parser_view_rule($view_content);
+        }
+
         // 正则表达式匹配的模板标签
         $regex_array = [
             // 3维数组变量
