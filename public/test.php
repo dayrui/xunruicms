@@ -99,7 +99,7 @@ $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
 if (!$mysqli) {
     dr_echo_msg(0, 'PHP环境必须启用Mysqli扩展');
 }
-
+$version = '';
 if (isset($db['default']['hostname']) && $db['default']['hostname'] && strpos($db['default']['hostname'], '，') === false) {
     if (!@mysqli_real_connect($mysqli, $db['default']['hostname'], $db['default']['username'], $db['default']['password'])) {
         dr_echo_msg(0, '['.mysqli_connect_errno().'] - ['.mysqli_connect_error().'] 无法连接到数据库服务器（'.$db['default']['hostname'].'），请检查用户名（'.$db['default']['username'].'）和密码（'.$db['default']['password'].'）是否正确');

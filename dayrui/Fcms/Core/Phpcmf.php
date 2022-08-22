@@ -995,9 +995,8 @@ abstract class Common extends \Frame\Controller {
     /**
      * 插件的clink值
      */
-    protected function _app_clink($type = '') {
+    protected function _app_clink($type = '', $data = []) {
 
-        $data = [];
         if (!$type) {
             // 表示模块部分
             $endfix = '';
@@ -1100,37 +1099,15 @@ abstract class Common extends \Frame\Controller {
     /**
      * 插件的cbottom值
      */
-    protected function _app_cbottom($type = '')
+    protected function _app_cbottom($type = '', $data = [])
     {
 
-        $data = [];
         if (!$type) {
             // 表示模块部分
-            $data[] = [
-                'icon' => 'fa fa-flag',
-                'name' => dr_lang('推送到推荐位'),
-                'uri' => APP_DIR.'/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("推荐位").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=0\')',
-            ];
-            if ($this->module['setting']['sync_category']) {
-                $data[] = [
-                    'icon' => 'fa fa-refresh',
-                    'name' => dr_lang('发布到其他栏目'),
-                    'uri' => APP_DIR.'/home/edit',
-                    'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
-                ];
-            }
-            $data[] = [
-                'icon' => 'fa fa-clock-o',
-                'name' => dr_lang('更新时间'),
-                'uri' => APP_DIR.'/home/edit',
-                'url' => 'javascript:;" onclick="dr_module_send_ajax(\''.dr_url(APP_DIR.'/home/tui_edit').'&page=4\')',
-            ];
             $endfix = '';
         } else {
             $endfix = '_'.$type;
         }
-
 
         // 加载模块自身的
         if (APP_DIR && is_file(APPPATH.'Config/Cbottom'.$endfix.'.php')) {
