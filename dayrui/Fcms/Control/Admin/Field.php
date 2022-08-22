@@ -82,6 +82,11 @@ class Field extends \Phpcmf\Common {
             $data = [];
             $group_data = [];
 
+            $ftype = [];
+            foreach ($this->ftype as $t) {
+                $ftype[$t['id']] = strpos($t['id'], $t['name']) !== false ? $t['id'] : $t['name'].' '.$t['id'];
+            }
+
             // 主字段
             foreach ($field as $t) {
 
@@ -96,7 +101,7 @@ class Field extends \Phpcmf\Common {
                         $t['setting']['validate']['xss'] = 0;
                     }
                 }
-
+                $t['ftype'] = isset($ftype[$t['fieldtype']]) ? $ftype[$t['fieldtype']] : $t['fieldtype'];
                 // 重复了 删除记录
                 if (isset($data[$t['fieldname']]) && $data[$t['fieldname']]) {
                     \Phpcmf\Service::M()->table('field')->delete($t['id']);
