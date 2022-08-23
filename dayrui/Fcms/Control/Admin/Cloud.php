@@ -95,10 +95,6 @@ class Cloud extends \Phpcmf\Common {
     // 插件应用
     public function app() {
 
-        if ($this->cmf_license['license'] == 'dev') {
-            \Phpcmf\Service::V()->display('cloud_login.html');exit;
-        }
-
         $id = [];
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
@@ -122,9 +118,6 @@ class Cloud extends \Phpcmf\Common {
     // 功能组件
     public function func() {
 
-        if ($this->cmf_license['license'] == 'dev') {
-            \Phpcmf\Service::V()->display('cloud_login.html');exit;
-        }
 
         \Phpcmf\Service::V()->assign([
             'url' => $this->service_url.'&action=app&catid=16',
@@ -135,9 +128,6 @@ class Cloud extends \Phpcmf\Common {
     // 模板界面
     public function template() {
 
-        if ($this->cmf_license['license'] == 'dev') {
-            \Phpcmf\Service::V()->display('cloud_login.html');exit;
-        }
 
         \Phpcmf\Service::V()->assign([
             'url' => $this->service_url.'&action=app&catid=14',
@@ -299,7 +289,7 @@ class Cloud extends \Phpcmf\Common {
             $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
             $json = dr_catcher_data($surl);
             if (!$json) {
-                $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
+                $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
             }
             $rt = dr_string2array($json);
             if (!$rt) {
