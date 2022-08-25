@@ -24,10 +24,10 @@ class Cloud extends \Phpcmf\Common {
         if (!$this->cmf_license) {
             $this->cmf_license = [
                 'id' => 10,
-                'license' => 'dev',
+                'license' => SYS_TIME,
             ];
         } elseif (!$this->cmf_license['license']) {
-            $this->cmf_license['license'] = 'dev';
+            $this->cmf_license['license'] = SYS_TIME;
         }
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
