@@ -23,6 +23,10 @@ class Radio extends \Phpcmf\Library\A_Field {
         foreach ($field as $t) {
             if ($t['disabled']) {
                 continue;
+            } elseif ($t['fieldtype'] == 'Merge') {
+                continue;
+            } elseif ($t['fieldtype'] == 'Group') {
+                continue;
             }
             $str.= '<label class="mt-checkbox mt-checkbox-outline">';
             $str.= '<input type="checkbox" '.(dr_in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '.$t['name'].' ';
