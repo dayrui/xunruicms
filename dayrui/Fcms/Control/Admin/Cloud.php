@@ -274,23 +274,6 @@ class Cloud extends \Phpcmf\Common {
             if (!$json) {
                 $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
             }
-            exit($json);
-        }
-
-        \Phpcmf\Service::V()->display('cloud_login_ajax.html');exit;
-    }
-
-    // 绑定账号
-    public function license() {
-
-        if (IS_POST) {
-
-            $post = \Phpcmf\Service::L('input')->post('data');
-            $surl = $this->service_url.'&action=update_login&get_http=1&username='.$post['username'].'&password='.md5($post['password']);
-            $json = dr_catcher_data($surl);
-            if (!$json) {
-                $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
-            }
             $rt = dr_string2array($json);
             if (!$rt) {
                 $this->_json(0, '本站：从服务端获取到的数据不规范（'.dr_strcut($json, 30).'）');
@@ -298,6 +281,7 @@ class Cloud extends \Phpcmf\Common {
             if (!$rt['code']) {
                 $this->_json(0, '服务端：'.$rt['msg']);
             }
+
             $text = "<?php
 // 此文件是版本文件，每次下载安装包会自动生成，请勿修改
 return [
@@ -309,13 +293,13 @@ return [
 ];
 ";
             if (file_put_contents(MYPATH.'Config/License.php', $text)) {
-                $this->_json(1, '绑定成功');
+                $this->_json(1, $rt['msg']);
             }
 
             $this->_json(0, '本站：dayrui/My/目录无法写入文件，请给于777权限');
         }
 
-        $this->_json(0, '提交验证失败');
+        \Phpcmf\Service::V()->display('cloud_login_ajax.html');exit;
     }
 
     // 下载程序
@@ -625,7 +609,7 @@ return [
         $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION.'&get_http=1&time='.strtotime((string)$this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式');
+            $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
         }
         $rt = json_decode($json, true);
         $this->_json($rt['code'], isset($_GET['isindex']) ? dr_clearhtml($rt['msg']) : $rt['msg']);
@@ -699,7 +683,7 @@ return [
         $surl = $this->service_url.'&action=update_file&php='.PHP_VERSION.'&get_http=1&app_id='.$id.'&ls='.dr_safe_replace($_GET['ls']).'&is_update='.intval($_GET['is_update']);
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '本站：没有从服务端获取到数据，建议尝试离线方式', $surl);
+            $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能', $surl);
         }
         $data = dr_string2array($json);
         if (!$data) {
@@ -923,7 +907,7 @@ return [
         $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&version='.$this->cmf_version['version'].'&time='.strtotime((string)$this->cmf_version['downtime']).'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
-            $this->_json(0, '本站：没有从服务端获取到数据');
+            $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
         }
 
         $data = dr_string2array($json);

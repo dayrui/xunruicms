@@ -389,11 +389,11 @@ abstract class Common extends \Frame\Controller {
             $this->session();
             // 版本
             if (!is_file(MYPATH.'Config/License.php')) {
-                define('IS_OEM_CMS', 0);
+                define('IS_OEM_CMS', '');
                 $this->cmf_license = [];
             } else {
                 $this->cmf_license = \Phpcmf\Service::R(MYPATH.'Config/License.php');
-                define('IS_OEM_CMS', $this->cmf_license['oem'] ? $this->cmf_license['name'] : 0);
+                define('IS_OEM_CMS', $this->cmf_license['oem'] ? $this->cmf_license['name'] : '');
             }
             // 后台登录判断
             $this->admin = \Phpcmf\Service::M('auth')->is_admin_login($this->member);

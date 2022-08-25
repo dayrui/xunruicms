@@ -29,6 +29,9 @@ class Security extends \CodeIgniter\Security\Security {
         // 过滤白名单内的控制器
         if (in_array(\Phpcmf\Service::L('router')->uri(), \Phpcmf\Service::Filters())) {
             return $this;
+        } elseif (IS_API_HTTP || IS_API) {
+            // api 请求下不做验证
+            return $this;
         }
 
         // Protects POST, PUT, DELETE, PATCH
