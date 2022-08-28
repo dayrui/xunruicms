@@ -3506,7 +3506,7 @@ function dr_url_rel($url, $prefix = '') {
         }
         $url = str_replace($surl, '/', $url);
         if (IS_DEV && strpos($url, 'http') === 0) {
-            $url.= '#站外域名不能转为相对路径（本提示信息关闭开发者模式时不显示）';
+            $url.= '#系统开启了相对路径模式，本地址是站外域名，不能转为相对路径（在关闭开发者模式后不显示这句话）';
         }
         $prefix && $url = str_replace($prefix, '/', $url);
     }
