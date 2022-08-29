@@ -250,11 +250,11 @@ abstract class Common extends \Frame\Controller {
         if (\Phpcmf\Service::L('input')->request('api_token')) {
             define('IS_API_HTTP', 1);
             if (!defined('SYS_API_TOKEN') || !SYS_API_TOKEN) {
-                $this->_json(0, dr_lang('API_TOKEN 未启用'));
+                $this->_json(0, dr_lang('API_TOKEN未启用'));
             }
             $token = \Phpcmf\Service::L('input')->request('api_token');
             if (SYS_API_TOKEN != $token) {
-                $this->_json(0, dr_lang('API_TOKEN 不正确'));
+                $this->_json(0, dr_lang('API_TOKEN不正确'));
             }
             if (IS_POST && !$_POST) {
                 $param = file_get_contents('php://input');

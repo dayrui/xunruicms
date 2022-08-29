@@ -21,7 +21,7 @@ class Sms_log extends \Phpcmf\Common
 	public function index() {
 
 		$data = $list = [];
-		$file = file_get_contents(WRITEPATH.'sms_log.php');
+		$file = file_get_contents(WRITEPATH.'sms_log.txt');
 		if ($file) {
 			$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, $file));
 			$data = $data ? array_reverse($data) : [];
@@ -50,7 +50,7 @@ class Sms_log extends \Phpcmf\Common
 
 	public function del() {
 
-		unlink(WRITEPATH.'sms_log.php');
+		unlink(WRITEPATH.'sms_log.txt');
 
 		$this->_json(1, dr_lang('操作成功'));
 	}

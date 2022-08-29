@@ -20,8 +20,8 @@ class Email_log extends \Phpcmf\Common
 	public function index() {
 
 		$data = $list = [];
-		$file = WRITEPATH.'email_log.php';
-		if (is_file(WRITEPATH.'email_log.php')) {
+		$file = WRITEPATH.'email_log.txt';
+		if (is_file(WRITEPATH.'email_log.txt')) {
 			$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, file_get_contents($file)));
 			$data = $data ? array_reverse($data) : [];
 			unset($data[0]);
@@ -49,7 +49,7 @@ class Email_log extends \Phpcmf\Common
 
 	public function del() {
 
-		@unlink(WRITEPATH.'email_log.php');
+		@unlink(WRITEPATH.'email_log.txt');
 
 		exit($this->_json(1, dr_lang('操作成功')));
 	}

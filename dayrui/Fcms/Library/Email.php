@@ -201,7 +201,7 @@ class Email {
 
         $this->error = $name.'-'.$msg;
         
-        @file_put_contents(WRITEPATH.'email_log.php', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
+        @file_put_contents(WRITEPATH.'email_log.txt', date('Y-m-d H:i:s').' ['.$server.'] '.str_replace([PHP_EOL, chr(13), chr(10)], '', $msg).PHP_EOL, FILE_APPEND);
     }
 
     protected function is_gb2312($str) {

@@ -822,7 +822,7 @@ class Member extends \Phpcmf\Model {
                 ]);
             } else {
                 $error = dr_lang('你没有定义第三方短信接口: '. $method);
-                @file_put_contents(WRITEPATH.'sms_log.php', date('Y-m-d H:i:s').' ['.$mobile.'] ['.$error.'] （'.str_replace(array(chr(13), chr(10)), '', $content).'）'.PHP_EOL, FILE_APPEND);
+                @file_put_contents(WRITEPATH.'sms_log.txt', date('Y-m-d H:i:s').' ['.$mobile.'] ['.$error.'] （'.str_replace(array(chr(13), chr(10)), '', $content).'）'.PHP_EOL, FILE_APPEND);
                 return dr_return_data(0, $error);
             }
         } else {
@@ -836,7 +836,7 @@ class Member extends \Phpcmf\Model {
             $result = json_decode($result, true);
         }
 
-        @file_put_contents(WRITEPATH.'sms_log.php', date('Y-m-d H:i:s').' ['.$mobile.'] ['.$result['msg'].'] （'.str_replace(array(chr(13), chr(10)), '', $content).'）'.PHP_EOL, FILE_APPEND);
+        @file_put_contents(WRITEPATH.'sms_log.txt', date('Y-m-d H:i:s').' ['.$mobile.'] ['.$result['msg'].'] （'.str_replace(array(chr(13), chr(10)), '', $content).'）'.PHP_EOL, FILE_APPEND);
 
         return $result;
     }
