@@ -346,6 +346,7 @@ $db[\'default\']	= [
                                 'SYS_CSRF'                      => '0',
                                 'SYS_CSRF_TIME'                 => '0',
                                 'SYS_301'                       => '1',
+                                'SYS_NOT_UPDATE'                => '1',
                                 'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
                                 'SYS_HTTPS'                     => $ssl,
                                 'SYS_ATTACHMENT_DB'             => '',

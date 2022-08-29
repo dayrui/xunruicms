@@ -72,20 +72,30 @@
                         <a target="_blank" href="https://www.xunruicms.com/" style="margin-right: 10px;">www.xunruicms.com</a>
                     </li>
                     {/if}
-                    {if !defined('SYS_NOT_UPDATE') || !SYS_NOT_UPDATE}
                     <script>
                         $(function () {
+                            {if !defined('SYS_NOT_UPDATE') || !SYS_NOT_UPDATE}
+                            dr_check_version();
+                            {else}
+                            $('#dr_cmf_update').removeClass('badge-danger');
+                            $('#dr_cmf_update').show();
+                            $('#dr_cmf_update').attr('href', 'javascript:dr_check_version();');
+                            $('#dr_cmf_update').html('{dr_lang('检测版本')}');
+                            {/if}
+                        });
+                        function dr_check_version(){
+                            $('#dr_cmf_update').html('{dr_lang('检测版本进行中...')}');
                             $.ajax({type: "GET",dataType:"json", url: "{dr_url('cloud/check_version')}&id=cms-1&isindex=1&version={CMF_VERSION}",
                                 success: function(json) {
                                     if (json.code) {
+                                        $('#dr_cmf_update').addClass('badge-danger');
                                         $('#dr_cmf_update').show();
                                         $('#dr_cmf_update').html(json.msg);
                                     }
                                 }
                             });
-                        });
+                        }
                     </script>
-                    {/if}
                 </ul>
             </div>
         </div>
