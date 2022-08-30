@@ -6,8 +6,21 @@
 
 header('Content-Type: text/html; charset=utf-8');
 
-// 判断环境
+// 最低支持php版本
 $min = '7.4.0';
+
+!defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
+!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
+if (is_file(WEBPATH.'config/api.php')) {
+    define('CONFIGPATH',WEBPATH.'config/');
+    if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
+        $min = '7.2.0';
+    }
+} else {
+    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
+}
+
+// 判断环境
 if (version_compare(PHP_VERSION, $min) < 0) {
     exit("<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 }
@@ -15,14 +28,6 @@ if (version_compare(PHP_VERSION, $min) < 0) {
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
 if ($pos !== false && $pos > 1) {
     echo "<font color=red>本程序必须在域名根目录中安装</font>，查看手册：https://www.xunruicms.com/doc/741.html";exit;
-}
-
-!defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
-!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
-if (is_file(WEBPATH.'config/api.php')) {
-    define('CONFIGPATH',WEBPATH.'config/');
-} else {
-    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
 }
 
 foreach (array(' ', '[', ']') as $t) {

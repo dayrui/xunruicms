@@ -11,6 +11,18 @@ define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 define('WEBPATH', dirname(__FILE__).'/');
 define('SYSTEMPATH', true);
 
+$min = '7.4.0';
+if (is_file(WEBPATH.'config/api.php')) {
+    define('CONFIGPATH',WEBPATH.'config/');
+    define('WRITEPATH',WEBPATH.'cache/');
+    if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
+        $min = '7.2.0';
+    }
+} else {
+    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
+    define('WRITEPATH',dirname(dirname(__FILE__)).'/cache/');
+}
+
 $version = WEBPATH.'dayrui/My/Config/Version.php';
 if (is_file($version)) {
     $vcfg = require $version;
@@ -34,30 +46,29 @@ foreach (array(' ', '[', ']') as $t) {
     }
 }
 
-foreach (array(WEBPATH.'index.php', WEBPATH.'config/database.php', WEBPATH.'config/rewrite.php',WEBPATH.'config/custom.php' ) as $t) {
+foreach (array(WEBPATH.'index.php', CONFIGPATH.'database.php', CONFIGPATH.'rewrite.php',CONFIGPATH.'custom.php' ) as $t) {
     if (is_file($t) && dr_check_bom($t)) {
         dr_echo_msg(0, '<font color=red>文件['.str_replace(WEBPATH, '', $t).']编码存在严重问题，查看手册：https://www.xunruicms.com/doc/395.html</font>');
     }
 }
 
-foreach (array(WEBPATH.'cache/file/', WEBPATH.'cache/template/', WEBPATH.'cache/session/', WEBPATH.'uploadfile/' ) as $t) {
+foreach (array(WRITEPATH.'file/', WRITEPATH.'template/', WRITEPATH.'session/', WEBPATH.'uploadfile/' ) as $t) {
     if (is_dir($t) && !dr_check_put_path($t)) {
         dr_echo_msg(0, '<font color=red>目录['.str_replace(WEBPATH, '', $t).']无法写入文件，请给可读可写权限：0777</font>');
     }
 }
 
 if (isset($_GET['log']) && $_GET['log']) {
-    if (!is_file(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php')) {
+    if (!is_file(WRITEPATH.'error/log-'.date('Y-m-d').'.php')) {
         exit('今天没有错误日志记录');
     }
-    echo nl2br(file_get_contents(WEBPATH.'cache/error/log-'.date('Y-m-d').'.php'));
+    echo nl2br(file_get_contents(WRITEPATH.'error/log-'.date('Y-m-d').'.php'));
     exit;
 }
 
 dr_echo_msg(1, '客户端字符串：'.$_SERVER['HTTP_USER_AGENT']);
 
 // 判断环境
-$min = '7.4.0';
 $max = '8.2.0';
 if (version_compare(PHP_VERSION, $max) > 0) {
     dr_echo_msg(0, "<font color=red>PHP版本过高，请在".$max."以下的环境使用，当前".PHP_VERSION."，高版本需要等待官方对CMS版本的更新升级！~</font>");exit;
@@ -94,8 +105,8 @@ if (!fopen('https://www.xunruicms.com/', "rb")) {
     dr_echo_msg(0, 'fopen无法获取远程数据，无法使用在线下载插件和在线升级');
 }
 
-if (is_file(WEBPATH.'config/database.php')) {
-    require WEBPATH.'config/database.php';
+if (is_file(CONFIGPATH.'database.php')) {
+    require CONFIGPATH.'database.php';
 }
 
 $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
