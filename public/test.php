@@ -77,6 +77,9 @@ if (! extension_loaded('curl')) {
 if (! extension_loaded('json')) {
     dr_echo_msg(0, 'PHP扩展库：JSON未安装');
 }
+if (! extension_loaded('intl')) {
+    dr_echo_msg(0, 'PHP扩展库：intl未安装');
+}
 if (! extension_loaded('mbstring')) {
     dr_echo_msg(0, 'PHP扩展库：mbstring未安装');
 }
