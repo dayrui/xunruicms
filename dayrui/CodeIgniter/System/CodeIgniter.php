@@ -47,7 +47,7 @@ class CodeIgniter
     /**
      * The current version of CodeIgniter Framework
      */
-    public const CI_VERSION = '4.2.3';
+    public const CI_VERSION = '4.2.5';
 
     /**
      * App startup time.
@@ -489,20 +489,26 @@ class CodeIgniter
             $this->response = $response;
         }
 
-        // Cache it without the performance metrics replaced
-        // so that we can have live speed updates along the way.
-        // Must be run after filters to preserve the Response headers.
-        if (static::$cacheTTL > 0) {
-            $this->cachePage($cacheConfig);
+        // Skip unnecessary processing for special Responses.
+        if (! $response instanceof DownloadResponse && ! $response instanceof RedirectResponse) {
+            // Cache it without the performance metrics replaced
+            // so that we can have live speed updates along the way.
+            // Must be run after filters to preserve the Response headers.
+            if (static::$cacheTTL > 0) {
+                $this->cachePage($cacheConfig);
+            }
+
+            // Update the performance metrics
+            $body = $this->response->getBody();
+            if ($body !== null) {
+                $output = $this->displayPerformanceMetrics($body);
+                $this->response->setBody($output);
+            }
+
+            // Save our current URI as the previous URI in the session
+            // for safer, more accurate use with `previous_url()` helper function.
+            $this->storePreviousURL(current_url(true));
         }
-
-        // Update the performance metrics
-        $output = $this->displayPerformanceMetrics($this->response->getBody());
-        $this->response->setBody($output);
-
-        // Save our current URI as the previous URI in the session
-        // for safer, more accurate use with `previous_url()` helper function.
-        $this->storePreviousURL(current_url(true));
 
         unset($uri);
 
@@ -976,8 +982,10 @@ class CodeIgniter
 
         if ($returned instanceof DownloadResponse) {
             // Turn off output buffering completely, even if php.ini output_buffering is not off
-            while (ob_get_level() > 0) {
-                ob_end_clean();
+            if (ENVIRONMENT !== 'testing') {
+                while (ob_get_level() > 0) {
+                    ob_end_clean();
+                }
             }
 
             $this->response = $returned;

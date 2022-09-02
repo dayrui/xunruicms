@@ -1,0 +1,32 @@
+
+<table>
+    <tbody>
+    {matchedRoute}
+        <tr>
+            <td>File:</td>
+            <td>{file}</td>
+        </tr>
+        <tr>
+            <td>App:</td>
+            <td>{app}</td>
+        </tr>
+        <tr>
+            <td>Controller:</td>
+            <td>{controller}</td>
+        </tr>
+        <tr>
+            <td>Method:</td>
+            <td>{method}</td>
+        </tr>
+        <tr>
+            <td>URI:</td>
+            <td>{uri}</td>
+        </tr>
+        <tr>
+            <td>URL:</td>
+            <td>{url}</td>
+        </tr>
+    {/matchedRoute}
+    </tbody>
+</table>
+
