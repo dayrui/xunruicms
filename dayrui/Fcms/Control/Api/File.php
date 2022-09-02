@@ -684,14 +684,24 @@ class File extends \Phpcmf\Common
             if (!$post['w']) {
                 $this->_json(0, dr_lang('图形宽度不规范'));
             }
-            try {
-                $image = \Config\Services::image();
-                $image->withFile($info['file']);
-                $image->crop($post['w'], $post['h'], $post['x'], $post['y']);
-                $image->save($info['file']);
-            } catch (CodeIgniter\Images\ImageException $e) {
-                $this->_json(0, $e->getMessage());
+
+
+            $config = [];
+            $config['source_image'] = $info['file'];
+            $config['maintain_ratio'] = false;
+            $config['width'] = $post['w'];
+            $config['height'] = $post['h'];
+            $config['x_axis'] = $post['x'];
+            $config['y_axis'] = $post['y'];
+            $image_lib = \Phpcmf\Service::L('image');
+            $image_lib->initialize($config);
+
+            if (!$image_lib->crop()) {
+                $err = $image_lib->display_errors();
+                $this->_json(0, $err ? $err : dr_lang('剪切失败'));
             }
+
+
             \Phpcmf\Service::M('attachment')->clear_data($info);
             $this->_json(1, dr_lang('操作成功'));
         }
