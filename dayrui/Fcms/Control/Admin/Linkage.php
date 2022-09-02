@@ -363,6 +363,42 @@ class Linkage extends \Phpcmf\Common {
 		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
 	}
 
+	public function close_edit() {
+
+		$ids = \Phpcmf\Service::L('input')->get_post_ids();
+		$key = (int)\Phpcmf\Service::L('input')->get('key');
+		if (!$ids) {
+		    $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        \Phpcmf\Service::M()->table('linkage_data_'.$key)->where_in('id', $ids)->update(null, [
+            'hidden' => 1,
+        ]);
+
+        \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+		\Phpcmf\Service::L('input')->system_log('批量禁用联动菜单: '. implode(',', $ids));
+
+		$this->_json(1, dr_lang('操作成功'));
+	}
+
+	public function open_edit() {
+
+		$ids = \Phpcmf\Service::L('input')->get_post_ids();
+		$key = (int)\Phpcmf\Service::L('input')->get('key');
+		if (!$ids) {
+		    $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        \Phpcmf\Service::M()->table('linkage_data_'.$key)->where_in('id', $ids)->update(null, [
+            'hidden' => 0,
+        ]);
+
+        \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
+		\Phpcmf\Service::L('input')->system_log('批量启用联动菜单: '. implode(',', $ids));
+
+		$this->_json(1, dr_lang('操作成功'));
+	}
+
     // 变更分类
 	public function pid_edit() {
 
