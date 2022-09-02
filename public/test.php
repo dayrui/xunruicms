@@ -15,18 +15,26 @@ $min = '7.4.0';
 if (is_file(WEBPATH.'config/api.php')) {
     define('CONFIGPATH',WEBPATH.'config/');
     define('WRITEPATH',WEBPATH.'cache/');
-    if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
+    if (is_dir(WEBPATH.'dayrui/CodeIgniter72/')) {
         $min = '7.2.0';
     }
+    $version = WEBPATH.'dayrui/My/Config/Version.php';
+    if (is_file($version)) {
+        $vcfg = require $version;
+        dr_echo_msg(1, '当前CMS版本：V'.$vcfg['version'].'（'.$vcfg['downtime'].'）- '.$vcfg['name']);
+    }
 } else {
-    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
-    define('WRITEPATH',dirname(dirname(__FILE__)).'/cache/');
-}
-
-$version = WEBPATH.'dayrui/My/Config/Version.php';
-if (is_file($version)) {
-    $vcfg = require $version;
-    dr_echo_msg(1, '当前CMS版本：V'.$vcfg['version'].'（'.$vcfg['downtime'].'）- '.$vcfg['name']);
+    $wpath = dirname(dirname(__FILE__)).'/';
+    define('CONFIGPATH', $wpath.'config/');
+    define('WRITEPATH', $wpath.'cache/');
+    if (is_dir($wpath.'dayrui/CodeIgniter72/')) {
+        $min = '7.2.0';
+    }
+    $version = $wpath.'dayrui/My/Config/Version.php';
+    if (is_file($version)) {
+        $vcfg = require $version;
+        dr_echo_msg(1, '当前CMS版本：V'.$vcfg['version'].'（'.$vcfg['downtime'].'）- '.$vcfg['name']);
+    }
 }
 
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME']);
@@ -257,5 +265,5 @@ function dr_check_put_path($dir) {
 }
 
 echo '<div style=" padding: 10px; color:blue">';
-echo '如果以上提示文字是红色选项，就必须修改正确的环境配置 (*^▽^*) ，当网站正式上线后，请删除本文件吧~';
+echo '如果以上提示文字是红色选项，就必须修改正确的环境配置 (*^▽^*) ，<font color="red">当网站正式上线后，请删除本文件吧~</font>';
 echo '</div>';
