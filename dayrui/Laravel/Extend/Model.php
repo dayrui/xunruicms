@@ -63,7 +63,11 @@ class db_mysql {
         $builder = DB::table($this->param['table']);
 
         if ($this->param['select']) {
-            $builder->select(DB::raw($this->param['select']));
+            if ($this->param['select_sum']) {
+                $builder->select(DB::raw($this->param['select']), DB::raw('SUM('.$this->param['select_sum'].') as '.$this->param['select_sum']));
+            } else {
+                $builder->select(DB::raw($this->param['select']));
+            }
         }
 
         if ($this->param['where']) {
@@ -196,6 +200,13 @@ class db_mysql {
         } else {
             $this->param['where'][] = $where;
         }
+
+        return $this;
+    }
+
+    public function selectSum($field) {
+
+        $this->param['select_sum'] = $field;
 
         return $this;
     }
@@ -471,6 +482,7 @@ class db_mysql {
         $this->param = [
             'table' => '',
             'select' => '',
+            'select_sum' => '',
             'order' => '',
             'group' => '',
             'where' => [],

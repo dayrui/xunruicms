@@ -150,7 +150,12 @@ class db_mysql {
         if ($this->param['result']) {
             $rt = array_shift($this->param['result']);
         } elseif ($this->param['builder']) {
-            $rt = $this->param['builder']->find();
+            if ($this->param['select_sum']) {
+                $rt = $this->param['builder']->sum($this->param['select_sum']);
+            } else {
+                $rt = $this->param['builder']->find();
+            }
+
         }
 
         $this->_clear();
@@ -187,6 +192,13 @@ class db_mysql {
         $this->_clear();
 
         return $rt;
+    }
+
+    public function selectSum($field) {
+
+        $this->param['select_sum'] = $field;
+
+        return $this;
     }
 
     public function join($table, $where, $type = 'left') {
@@ -495,6 +507,7 @@ class db_mysql {
         $this->param = [
             'table' => '',
             'select' => '',
+            'select_sum' => '',
             'order' => '',
             'group' => '',
             'where' => [],

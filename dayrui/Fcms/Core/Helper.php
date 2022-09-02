@@ -2515,13 +2515,15 @@ function dr_rewrite_decode($params, $join = '-', $field = []) {
 function dr_get_keyword($s) {
     return dr_safe_keyword($s);
 }
-function dr_safe_keyword($s) {
+if (!function_exists('dr_safe_keyword')) {
+    function dr_safe_keyword($s) {
 
-    if (dr_is_empty($s)) {
-        return '';
+        if (dr_is_empty($s)) {
+            return '';
+        }
+
+        return str_replace('\%', '%', \Phpcmf\Service::M()->db->escapeLikeStringDirect(htmlspecialchars(trim(str_replace(['+', ' ', '_'], '%', urldecode((string)$s)), '%'))));
     }
-
-    return str_replace('\%', '%', \Phpcmf\Service::M()->db->escapeLikeStringDirect(htmlspecialchars(trim(str_replace(['+', ' ', '_'], '%', urldecode((string)$s)), '%'))));
 }
 
 /**
