@@ -169,7 +169,11 @@ class Linkages extends \Phpcmf\Library\A_Field {
         $value = $value ? $value : $this->get_default_value($field['setting']['option']['value']);
         $value = dr_string2array($value);
         if (is_array($value)) {
-            $value = json_encode($value);
+            $new = [];
+            foreach ($value as $t) {
+                $new[] = (string)$t;
+            }
+            $value = json_encode($new);
         } else {
             $value = '[]';
         }
