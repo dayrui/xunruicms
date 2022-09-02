@@ -447,14 +447,14 @@ class Field extends \Phpcmf\Model {
         if ($rt) {
             return 1;
         }
-        // 栏目模型主表
-        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']).'_category_data');
-        $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
+        // 栏目表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
         if ($rt) {
             return 1;
         }
-        // 栏目表
-        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
+        // 栏目模型主表
+        $table = $this->dbprefix(dr_module_table_prefix($this->data['dirname']).'_category_data');
+        $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
         if ($rt) {
             return 1;
         }
@@ -747,13 +747,13 @@ class Field extends \Phpcmf\Model {
         if ($rt) {
             return 1;
         }
-        // 栏目模型表
-        $rt = $this->_field_exitsts('id', $name, $table.'_category_data', SITE_ID);
+        // 栏目表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
         if ($rt) {
             return 1;
         }
-        // 栏目表
-        $rt = $this->_field_exitsts('id', $name, $table.'_category', SITE_ID);
+        // 栏目模型表
+        $rt = $this->_field_exitsts('id', $name, $table.'_category_data', SITE_ID);
         if ($rt) {
             return 1;
         }
