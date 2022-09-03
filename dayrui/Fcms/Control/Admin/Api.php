@@ -1055,7 +1055,13 @@ class Api extends \Phpcmf\Common {
         if ($code && strpos($code, 'This') !== false) {
             $this->_json(1, dr_lang('支持HTTPS访问'));
         } else {
-            $this->_json(0, dr_lang('无法访问：%s', $url));
+            ob_start();
+            \Phpcmf\Service::V()->assign('url', $url);
+            \Phpcmf\Service::V()->display('api_test_https.html');
+            $html = ob_get_contents();
+            ob_clean();
+
+            $this->_json(0, $html);
         }
     }
 
