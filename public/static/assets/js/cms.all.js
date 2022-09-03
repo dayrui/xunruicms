@@ -129,27 +129,6 @@ function dr_ftable_mydelete(e){
     ob.parent().find('.ftable-delete').hide();
 }
 
-function dr_ftable_myshow(e){
-    var ob = $(e);
-    var url = ob.parent().find('.form-control-link').val();
-    var preview = ob.parent().find('.form-control-preview').val();
-
-    var width = '400px';
-    var height = '300px';
-
-    if (is_mobile_cms == 1) {
-        width = height = '80%';
-    }
-    top.layer.alert('<p style="text-align: center"><a href="'+url+'" target="_blank">'+url+'</a></p><p style="text-align: center"><a href="'+url+'" target="_blank"><img style="max-width:100%" src="'+preview+'?'+Date.parse(new Date())+'"></a></p>', {
-        shade: 0,
-        //scrollbar: false,
-        shadeClose: true,
-        title: '',
-        area: [width, width],
-        btn: []
-    });
-}
-
 function dr_ftable_myfileinput (e, url){
     var ob = $(e);
     var c = 1;
@@ -214,6 +193,31 @@ function dr_ftable_myfileinput (e, url){
     });
 }
 
+function dr_ftable_myshow(e){
+    var ob = $(e);
+    var url = ob.parent().find('.form-control-link').val();
+    var preview = ob.parent().find('.form-control-preview').val();
+
+    var width = '400px';
+    var height = '300px';
+
+    if (is_mobile_cms == 1) {
+        width = height = '80%';
+    }
+    var dev = '';
+    if (typeof is_cms_dev != "undefined" && is_cms_dev) {
+        dev = '<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p>';
+    }
+    top.layer.alert(dev+'<p style="text-align: center"><a href="'+url+'" target="_blank"><img style="max-width:100%" src="'+preview+'?'+Date.parse(new Date())+'"></a></p>', {
+        shade: 0,
+        //scrollbar: false,
+        shadeClose: true,
+        title: '',
+        area: [width, width],
+        btn: []
+    });
+}
+
 // 显示视频
 function dr_preview_video(file) {
 
@@ -225,7 +229,11 @@ function dr_preview_video(file) {
         width = height = '90%';
         var att = 'width="90%" height="200"';
     }
-    layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"> <video class="video-js vjs-default-skin" controls="" preload="auto" '+att+'><source src="'+file+'" type="video/mp4"/></video>\n</p>', {
+    var dev = '';
+    if (typeof is_cms_dev != "undefined" && is_cms_dev) {
+        dev = '<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p>';
+    }
+    layer.alert(dev+'<p style="text-align: center"> <video class="video-js vjs-default-skin" controls="" preload="auto" '+att+'><source src="'+file+'" type="video/mp4"/></video>\n</p>', {
         shade: 0,
         //scrollbar: false,
         shadeClose: true,
@@ -244,7 +252,11 @@ function dr_preview_image(file) {
     if (is_mobile_cms == 1) {
         width = height = '80%';
     }
-    top.layer.alert('<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p><p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'?'+Date.parse(new Date())+'"></a></p>', {
+    var dev = '';
+    if (typeof is_cms_dev != "undefined" && is_cms_dev) {
+        dev = '<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p>';
+    }
+    top.layer.alert(dev+'<p style="text-align: center"><a href="'+file+'" target="_blank"><img style="max-width:100%" src="'+file+'?'+Date.parse(new Date())+'"></a></p>', {
         shade: 0,
         //scrollbar: false,
         shadeClose: true,

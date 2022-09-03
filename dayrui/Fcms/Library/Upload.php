@@ -345,7 +345,22 @@ class Upload {
      * 获取文件扩展名
      */
     protected function _file_ext($name) {
-        return str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
+
+        if (strlen($name) > 300) {
+            return '';
+        }
+
+        $ext = str_replace('.', '', trim(strtolower(strrchr($name, '.')), '.'));
+
+        if (strlen($ext) > 10) {
+            foreach (['gif', 'jpg', 'jpeg', 'png', 'webp'] as $t) {
+                if (stripos($name, $t) !== false) {
+                    return $t;
+                }
+            }
+        }
+
+        return $ext;
     }
 
     /**
