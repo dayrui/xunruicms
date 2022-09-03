@@ -68,9 +68,15 @@ class Notice extends \Phpcmf\Common
 	// 待处理
 	public function my_index() {
 
+        if (\Phpcmf\Service::M('auth')->is_post_user()) {
+            $where = '`to_uid`='.$this->uid.'  and `status`<>3 and (site=0 or site='.SITE_ID.')';
+        } else {
+            $where = '((`to_uid`='.$this->uid.') '.($this->admin['roleid'] ? ' or (`to_rid` IN ('.implode(',', $this->admin['roleid']).'))' : '').' or (`to_uid`=0 and `to_rid`=0)) and `status`<>3 and (site=0 or site='.SITE_ID.')';
+        }
+
 		list($list, $total, $param) = \Phpcmf\Service::M()->init([
 			'table' => 'admin_notice',
-			'where_list' => '((`to_uid`='.$this->uid.') '.($this->admin['roleid'] ? ' or (`to_rid` IN ('.implode(',', $this->admin['roleid']).'))' : '').' or (`to_uid`=0 and `to_rid`=0)) and `status`<>3 and (site=0 or site='.SITE_ID.')',
+			'where_list' => $where,
 			'field' => $this->field,
 			'date_field' => 'inputtime',
 			'order' => 'inputtime desc'

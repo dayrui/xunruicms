@@ -190,7 +190,10 @@ class Auth extends \Phpcmf\Model {
         }
         if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             // 超管
-            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where (`site`='.SITE_ID.' or `site`=0) and `to_uid`=0 and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
+        } elseif ($this->is_post_user()) {
+            // 投稿者
+            $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ( FIND_IN_SET('.$this->uid.',`to_uid`) or `to_uid`='.$this->uid.' ) and (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         } else {
             $rid = [];
             foreach (\Phpcmf\Service::C()->admin['roleid'] as $r) {
@@ -201,6 +204,62 @@ class Auth extends \Phpcmf\Model {
 
         $query = $this->db->query($sql);
         return $query ? $query->getResultArray() : [];
+    }
+
+    /**
+     * 系统提醒
+     *
+     * @param   site    站点id,公共部分0
+     * @param   type    system系统  content内容相关  member会员相关 app应用相关 pay 交易相关
+     * @param   msg     提醒内容
+     * @param   uri     后台对应的链接
+     * @param   to      通知对象 留空表示全部对象
+     * array(
+     *      to_uid 指定人
+     *      to_rid 指定角色组
+     * )
+     */
+    public function notice($site, $type, $member, $msg, $uri, $to = []) {
+
+        if (!$to || !is_array($to)) {
+            $to = [
+                'to_rid' => 0,
+                'to_uid' => 0,
+            ];
+        }
+
+        $data = [
+            'site' => (int)$site,
+            'type' => $type,
+            'msg' => dr_strcut(dr_clearhtml($msg), 100),
+            'uri' => $uri,
+            'to_rid' => $to['to_rid'] ? $to['to_rid'] : 0,
+            'to_uid' => $to['to_uid'] ? $to['to_uid'] : 0,
+            'status' => 0,
+            'uid' => (int)$member['id'],
+            'username' => $member['username'] ? $member['username'] : '',
+            'op_uid' => 0,
+            'op_username' => '',
+            'updatetime' => 0,
+            'inputtime' => SYS_TIME,
+        ];
+        $this->db->table('admin_notice')->insert($data);
+
+        // 挂钩点
+        \Phpcmf\Hooks::trigger('admin_notice', $data);
+    }
+
+    // 执行提醒
+    public function todo_notice($uri, $site = 0) {
+        $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->update([
+            'status' => 3,
+            'updatetime' => SYS_TIME,
+        ]);
+    }
+
+    // 执行删除提醒
+    public function delete_notice($uri, $site = 0) {
+        $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->delete();
     }
 
     /**

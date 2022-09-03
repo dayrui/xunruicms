@@ -329,48 +329,18 @@ class Member extends \Phpcmf\Model {
      * )
      */
     public function admin_notice($site, $type, $member, $msg, $uri, $to = []) {
-
-        if (!$to || !is_array($to)) {
-            $to = [
-                'to_rid' => 0,
-                'to_uid' => 0,
-            ];
-        }
-
-        $data = [
-            'site' => (int)$site,
-            'type' => $type,
-            'msg' => dr_strcut(dr_clearhtml($msg), 100),
-            'uri' => $uri,
-            'to_rid' => $to['to_rid'] ? $to['to_rid'] : 0,
-            'to_uid' => $to['to_uid'] ? $to['to_uid'] : 0,
-            'status' => 0,
-            'uid' => (int)$member['id'],
-            'username' => $member['username'] ? $member['username'] : '',
-            'op_uid' => 0,
-            'op_username' => '',
-            'updatetime' => 0,
-            'inputtime' => SYS_TIME,
-        ];
-        $this->db->table('admin_notice')->insert($data);
-
-        // 挂钩点
-        \Phpcmf\Hooks::trigger('admin_notice', $data);
+        \Phpcmf\Service::M('auth')->notice($site, $type, $member, $msg, $uri, $to);
     }
 
     // 执行提醒
     public function todo_admin_notice($uri, $site = 0) {
-        $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->update([
-            'status' => 3,
-            'updatetime' => SYS_TIME,
-        ]);
+        \Phpcmf\Service::M('auth')->todo_notice($uri, $site);
     }
 
     // 执行删除提醒
     public function delete_admin_notice($uri, $site = 0) {
-        $this->db->table('admin_notice')->where('site', (int)$site)->where('uri', $uri)->delete();
+        \Phpcmf\Service::M('auth')->delete_notice($uri, $site);
     }
-
 
     // 审核用户
     public function verify_member($uid) {
