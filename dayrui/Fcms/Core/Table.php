@@ -244,8 +244,6 @@ class Table extends \Phpcmf\Common {
             $this->_json(0, $rt['msg']);
         }
 
-        //log_message('error', $this->name.'：修改('.$row[$this->init['show_field']].')表字段('.$name.')的值为'.$value);
-
         \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$row[$this->init['show_field']].')表字段('.$name.')的值为'.$value);
 
         // 自动更新缓存
