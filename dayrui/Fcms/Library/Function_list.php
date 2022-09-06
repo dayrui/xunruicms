@@ -68,7 +68,7 @@ class Function_list {
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
-        $title = dr_keyword_highlight(dr_strcut($value, 50), $param['keyword']);
+        $title = dr_keyword_highlight($value, $param['keyword']);
         !$title && $title = '...';
 
         return isset($data['url']) && $data['url'] ? '<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>' : $title;
@@ -107,7 +107,7 @@ class Function_list {
 
         $mid = defined('MOD_DIR') ? MOD_DIR : '';
         $value = htmlspecialchars(dr_clearhtml($value));
-        $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight(dr_strcut($value, 50), $param['keyword']);
+        $title = ($data['thumb'] ? '<i class="fa fa-photo"></i> ' : '').dr_keyword_highlight($value, $param['keyword']);
         !$title && $title = '...';
 
         return isset($data['url']) && $data['url'] ? ('<a href="'.dr_url_prefix($data['url'], $mid).'" target="_blank" class="tooltips" data-container="body" data-placement="top" data-original-title="'.$value.'" title="'.$value.'">'.$title.'</a>'.($data['link_id'] > 0 ? '  <i class="fa fa-link font-green" title="'.dr_lang('同步链接').'"></i>' : '')) : $title;
@@ -196,7 +196,7 @@ class Function_list {
 
         if ($value) {
             list($value) = explode('-', $value);
-            return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.dr_strcut(\Phpcmf\Service::L('ip')->address($value), 20).'</a>';
+            return '<a href="https://www.baidu.com/s?wd='.$value.'&action=xunruicms" target="_blank">'.\Phpcmf\Service::L('ip')->address($value).'</a>';
         }
 
         return dr_lang( '无');
