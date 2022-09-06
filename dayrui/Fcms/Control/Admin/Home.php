@@ -76,7 +76,6 @@ class Home extends \Phpcmf\Common
             }
         }
 
-
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu($menu),
             'admin' => $this->admin,
@@ -317,6 +316,7 @@ class Home extends \Phpcmf\Common
                         $link_string = 'true';
                     }
                     if (!$link_string) {
+                        unset($top['left'][$if]);
                         unset($my_menu[$tid]['left'][$if]);
                         continue; // 没有链接菜单就不要
                     }
