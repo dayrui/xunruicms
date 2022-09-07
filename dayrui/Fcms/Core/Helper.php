@@ -418,6 +418,45 @@ function dr_get_ftable($id, $value, $class = '') {
 }
 
 /**
+ * ftable字段数组
+ * @param $id 字段id
+ * @param $value 存储值
+ * @return 表格
+ */
+function dr_get_ftable_array($id, $value) {
+
+    $field = \Phpcmf\Service::C()->get_cache('table-field', $id);
+    if (!$field) {
+        return [];
+    }
+
+    $value = dr_string2array($value);
+    if ($value) {
+        $img = [];
+        foreach ($field['setting']['option']['field'] as $n => $t) {
+            if ($t['type']) {
+                if ($t['type'] == 3) {
+                    // 图片
+                    $img[] = $n;
+                }
+            }
+        }
+        $rt = [];
+        foreach ($value as $row) {
+            if ($img) {
+                foreach ($img as $i) {
+                    $row[$i] = dr_get_file($row[$i]);
+                }
+            }
+            $rt[] = $row;
+        }
+        return $rt;
+    }
+
+    return $value;
+}
+
+/**
  * 获取内容中的缩略图
  * @param $value 内容值
  * @param $num 指定获取数量

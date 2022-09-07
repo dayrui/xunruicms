@@ -1923,7 +1923,6 @@ class View {
                 if (strpos($arr[1], ' ') !== false) {
                     $debug.= '<p>错误提示：return参数必须放在最后，且后面不能带有空格符号</p>';
                 }
-
             }
 
             if ($this->_is_list_search) {
