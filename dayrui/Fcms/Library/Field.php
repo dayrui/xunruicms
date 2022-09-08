@@ -1120,7 +1120,8 @@
          */
         public function get_default_value($value) {
 
-            if (dr_is_empty($value)) {
+            if (dr_is_empty($value) || $this->id) {
+                // 新发布时才进行填充
                 return '';
             }
 
