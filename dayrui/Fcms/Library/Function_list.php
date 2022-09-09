@@ -245,11 +245,11 @@ class Function_list {
                 $ext = trim(strtolower(strrchr($value, '.')), '.');
                 if (dr_is_image($ext)) {
                     $url = 'javascript:dr_preview_image(\''.$value.'\');';
-                    $rt[] = '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
+                    $rt[] = '<a href="'.$url.'"><img width="25" src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
                 } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
                     $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
                     $url = 'javascript:dr_preview_url(\''.dr_file($value).'\');';
-                    $rt[] = '<a href="'.$url.'"><img src="'.$file.'"></a>';
+                    $rt[] = '<a href="'.$url.'"><img width="25" src="'.$file.'"></a>';
                 } elseif (strpos($value, 'http://') === 0) {
                     $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
                     $url = 'javascript:dr_preview_url(\''.$value.'\');';
@@ -275,11 +275,11 @@ class Function_list {
             $ext = trim(strtolower(strrchr($value, '.')), '.');
             if (dr_is_image($ext)) {
                 $url = 'javascript:dr_preview_image(\''.$value.'\');';
-                return '<a href="'.$url.'"><img src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
+                return '<a href="'.$url.'"><img width="25" src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
             } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
                 $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
                 $url = 'javascript:dr_preview_url(\''.dr_file($value).'\');';
-                return '<a href="'.$url.'"><img src="'.$file.'"></a>';
+                return '<a href="'.$url.'"><img width="25" src="'.$file.'"></a>';
             } elseif (strpos($value, 'http://') === 0) {
                 $file = ROOT_THEME_PATH.'assets/images/ext/url.png';
                 $url = 'javascript:dr_preview_url(\''.$value.'\');';

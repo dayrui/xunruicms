@@ -12,11 +12,12 @@ class Upload {
 
     protected $error;
     protected $notallowed;
+    protected $down_file_ext;
 
     /**
      * 构造函数
      */
-    public function __construct(...$params) {
+    public function __construct() {
         // 返回错误信息
         $this->error = [
             "SUCCESS",
@@ -42,7 +43,15 @@ class Upload {
             "ERROR_HTTP_CONTENTTYPE" => dr_lang("链接contentType不正确")
         ];
         // 禁止以下文件上传
-        $this->notallowed = ['php', 'asp', 'jsp', 'aspx', 'exe', 'sh', 'phtml'];
+        $this->notallowed = ['php', 'php3', 'asp', 'jsp', 'jspx', 'aspx', 'exe', 'sh', 'phtml'];
+        // 下载文件扩展名白名单
+        $this->down_file_ext = ['jpg', 'jpeg', 'gif', 'png', 'webp', 'zip', 'rar'];
+        // 自定义白名单文件
+        if (is_file(WEBPATH.'config/fileext.php')) {
+            require WEBPATH.'config/fileext.php';
+        } elseif (is_file(CONFIGPATH.'fileext.php')) {
+            require CONFIGPATH.'fileext.php';
+        }
     }
 
     // 安全验证
@@ -214,6 +223,9 @@ class Upload {
         }
 
         $file_ext = isset($config['file_ext']) && $config['file_ext'] ? $config['file_ext'] : $this->_file_ext($config['url']); // 扩展名
+        if (!in_array($file_ext, $this->down_file_ext)) {
+            return dr_return_data(0, dr_lang('此扩展名被禁止下载'));
+        }
 
         // 安全验证
         $rt = $this->_safe_check($file_ext, $data);
