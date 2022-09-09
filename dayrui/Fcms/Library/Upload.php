@@ -212,6 +212,11 @@ class Upload {
             return dr_return_data(0, dr_lang('文件下载失败'));
         }*/
 
+        $file_ext = isset($config['file_ext']) && $config['file_ext'] ? $config['file_ext'] : $this->_file_ext($config['url']); // 扩展名
+        if (!in_array($file_ext, $this->down_file_ext)) {
+            return dr_return_data(0, dr_lang('此扩展名被禁止下载'));
+        }
+
         if (isset($config['file_content']) && $config['file_content']) {
             // 表示已经下载好了的文件
             $data = $config['file_content'];
@@ -220,11 +225,6 @@ class Upload {
             if (!$data) {
                 return dr_return_data(0, dr_lang('文件下载失败'));
             }
-        }
-
-        $file_ext = isset($config['file_ext']) && $config['file_ext'] ? $config['file_ext'] : $this->_file_ext($config['url']); // 扩展名
-        if (!in_array($file_ext, $this->down_file_ext)) {
-            return dr_return_data(0, dr_lang('此扩展名被禁止下载'));
         }
 
         // 安全验证
