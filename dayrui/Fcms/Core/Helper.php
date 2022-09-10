@@ -2302,7 +2302,7 @@ function dr_show_stars($num, $starthreshold = 4) {
  * 动态调用模板
  */
 function dr_ajax_template($id, $filename, $param_str = '') {
-    $error = IS_DEV ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
+    $error = IS_DEV && !defined('SC_HTML_FILE') ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
     return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".dr_web_prefix("index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str)."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
@@ -3447,6 +3447,20 @@ function dr_mobile_url($url = SITE_MURL) {
     return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
+// 是否是完整的url
+function dr_is_url($url) {
+
+    if (!$url) {
+        return false;
+    } elseif (strpos((string)$url, 'http://') === 0) {
+        return true;
+    } elseif (strpos((string)$url, 'https://') === 0) {
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * 补全url
  * @param $url
@@ -3458,7 +3472,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
     !$url && $url = '';
 
-    if ($url && strpos($url, 'http') === 0) {
+    if ($url && dr_is_url($url)) {
         // 本身就是绝对域名
     } else {
         // 相对域名
@@ -3472,13 +3486,13 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
         in_array($domain, ['MOD_DIR', 'share']) && $domain = '';
 
         // 判断是否是模块，如果domain不是http开头
-        if ($domain && strpos($url, 'http') === false) {
+        if ($domain && !dr_is_url($url)) {
             if (is_dir(APPSPATH.ucfirst($domain))) {
                 $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
                 $domain = $mod && $mod['domain'] ? (\Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain']) : '';
             }
             // 域名是不是http开通
-            if (strpos($domain, 'http') === false) {
+            if (!dr_is_url($domain)) {
                 $domain = '';
             }
         }
@@ -3499,7 +3513,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
                 $domain = $is_mobile ? SITE_MURL : SITE_URL;
             }
         }
-        $url = strpos($url, 'http') === 0 ? $url : rtrim($domain, '/').'/'.ltrim($url, '/');
+        $url = dr_is_url($url) ? $url : rtrim($domain, '/').'/'.ltrim($url, '/');
     }
 
     // url地址替换动作
@@ -3522,7 +3536,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
  * 补全相对路径
  */
 function dr_web_prefix($url) {
-    if ($url && strpos($url, 'http') === 0) {
+    if ($url && dr_is_url($url)) {
         return dr_url_rel($url);
     } else {
         return WEB_DIR.ltrim($url, '/');
@@ -3546,7 +3560,7 @@ function dr_url_rel($url, $prefix = '') {
             $surl = SITE_MURL;
         }
         $url = str_replace($surl, '/', $url);
-        if (IS_DEV && strpos($url, 'http') === 0) {
+        if (IS_DEV && dr_is_url($url)) {
             $url.= '#系统开启了相对路径模式，本地址是站外域名，不能转为相对路径（在关闭开发者模式后不显示这句话）';
         }
         $prefix && $url = str_replace($prefix, '/', $url);

@@ -277,7 +277,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                             continue;
                         }
                         // 下载图片
-                        if ($yct && strpos($img, 'http') === 0) {
+                        if ($yct && dr_is_url($img)) {
                             if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
                                 //用户存储空间已满
                             } else {
