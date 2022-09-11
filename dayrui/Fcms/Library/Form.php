@@ -341,7 +341,10 @@ class Form {
         }
 
         $code = \Phpcmf\Service::L('cache')->get_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID, 300);
-        if ($code && strtolower($data) == strtolower($code)) {
+        if (!$code) {
+            IS_DEV && log_message('debug', '图片验证码未生成');
+            return false;
+        } elseif (strtolower($data) == strtolower($code)) {
             \Phpcmf\Service::L('cache')->del_auth_data('web-captcha', SITE_ID);
             return true;
         }
@@ -366,7 +369,10 @@ class Form {
         }
 
         $code = \Phpcmf\Service::L('cache')->get_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID, 300);
-        if ($code && strtolower($data) == strtolower($code)) {
+        if (!$code) {
+            IS_DEV && log_message('debug', '图片验证码未生成');
+            return false;
+        } elseif (strtolower($data) == strtolower($code)) {
             return true;
         }
 

@@ -89,7 +89,10 @@ class Table extends \Phpcmf\Common {
             $cat = dr_cat_value($this->module['mid'], $catid);
             if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $cat = dr_cat_value($this->module['mid'], \Phpcmf\Service::M('category')->get_ismain_id($cat));
+                $cat = dr_cat_value(
+                    $this->module['mid'],
+                    \Phpcmf\Service::L('category', 'module')->get_ismain_id($this->module['mid'], $cat)
+                );
             }
             if ($cat && $cat['field']) {
                 foreach ($cat['field'] as $f) {
@@ -129,7 +132,10 @@ class Table extends \Phpcmf\Common {
             $cat = dr_cat_value($this->module['mid'], $data['catid']);
             if (!$cat['ismain']) {
                 // 非主栏目继承上级
-                $cat = dr_cat_value($this->module['mid'], \Phpcmf\Service::M('category')->get_ismain_id($cat));
+                $cat = dr_cat_value(
+                    $this->module['mid'],
+                    \Phpcmf\Service::L('category', 'module')->get_ismain_id($this->module['mid'], $cat)
+                );
             }
             if ($cat && $cat['field']) {
                 foreach ($cat['field'] as $f) {
