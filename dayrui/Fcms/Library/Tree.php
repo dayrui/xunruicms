@@ -299,7 +299,7 @@ class Tree {
                 $name.= md5(\Phpcmf\Service::C()->member ? dr_array2string(\Phpcmf\Service::C()->member['authid']) : '2');
             }
         }
-        $string = \Phpcmf\Service::L('cache')->get_file($name, $dir);
+        $string = CI_DEBUG ? '' : \Phpcmf\Service::L('cache')->get_file($name, $dir);
         if (!$string) {
 
             $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
