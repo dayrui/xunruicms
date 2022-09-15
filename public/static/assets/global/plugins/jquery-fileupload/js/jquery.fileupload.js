@@ -1527,7 +1527,7 @@ function fileupload_file_init(json){
         },
         fail: function (e, data) {
             //console.log(data.errorThrown);
-            dr_tips(0, "系统故障："+data.errorThrown);
+            dr_tips(0, dr_lang("上传请求错误：")+data.errorThrown);
             $("#fileupload_"+json.name+" .fileupload-progress").addClass("fade");
             $("#fileupload_"+json.name+" .fileupload-progress").hide();
         },
@@ -1722,7 +1722,7 @@ function fileupload_files_init(json) {
         },
         fail: function (e, data) {
             //console.log(data.errorThrown);
-            dr_tips(0, "系统故障："+data.errorThrown);
+            dr_tips(0, dr_lang("上传请求错误：")+data.errorThrown);
             $("#fileupload_"+json.name+" .fileupload-progress").addClass("fade");
             $("#fileupload_"+json.name+" .fileupload-progress").hide();
         },
@@ -1763,7 +1763,7 @@ function fileupload_files_init(json) {
         },
         fail: function (e, data) {
             //console.log(data.errorThrown);
-            dr_tips(0, "系统故障："+data.errorThrown);
+            dr_tips(0, dr_lang("上传请求错误：")+data.errorThrown);
             $("#fileupload_"+json.name+" .fileupload-progress").addClass("fade");
             $("#fileupload_"+json.name+" .fileupload-progress").hide();
         },

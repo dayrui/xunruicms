@@ -10,7 +10,6 @@ header('Content-Type: text/html; charset=utf-8');
 $min = '7.4.0';
 
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
-!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
 if (is_file(WEBPATH.'config/api.php')) {
     define('CONFIGPATH',WEBPATH.'config/');
     if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
@@ -18,7 +17,9 @@ if (is_file(WEBPATH.'config/api.php')) {
     }
 } else {
     define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
+	define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
 }
+!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
 
 // 判断环境
 if (version_compare(PHP_VERSION, $min) < 0) {
