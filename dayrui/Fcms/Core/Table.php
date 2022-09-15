@@ -257,7 +257,10 @@ class Table extends \Phpcmf\Common {
 
         // 提交之后的操作
         if ($after) {
-            call_user_func_array($after, [$row]);
+            $rt = call_user_func_array($after, [$id, $data, $old]);
+            if ($rt && isset($rt['code'])) {
+                return $rt;
+            }
         }
 
         $this->_json(1, dr_lang('操作成功'));
