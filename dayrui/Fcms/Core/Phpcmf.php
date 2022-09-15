@@ -957,6 +957,11 @@ abstract class Common extends \Frame\Controller {
             return $this->temp['_get_module_member_category'][$module['dirname'].$name];
         }
 
+        // 重新获取栏目
+        if (isset($module['category'][0]) && dr_is_module($module['category'][0])) {
+            $module['category'] = \Phpcmf\Service::L('category', 'module')->get_category($module['dirname']);
+        }
+
         $category = $module['category'];
         foreach ($category as $id => $t) {
             // 筛选可发布的栏目权限

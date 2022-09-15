@@ -177,7 +177,7 @@ class Linkage extends \Phpcmf\Library\A_Field {
 
         // 输出js支持
         $str.= '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'" />
-        <script src="/index.php?s=api&c=api&m=linkage&mid='.APP_DIR.'&file='.$field['setting']['option']['file'].'&code='.$field['setting']['option']['linkage'].'"></script>
+        <script src="'.WEB_DIR.'index.php?s=api&c=api&m=linkage&mid='.APP_DIR.'&file='.$field['setting']['option']['file'].'&code='.$field['setting']['option']['linkage'].'"></script>
 		<script type="text/javascript">
 		$(function (){
 				layui.use(\'layCascader\', function () {
