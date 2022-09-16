@@ -646,7 +646,7 @@ abstract class Common extends \Frame\Controller {
                             return 0;
                         } else {
                             CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
-                            $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                            $this->_admin_msg(0, dr_lang('模块缓存【%s】不存在', $dirname));
                         }
                     }
                 } else {
@@ -654,7 +654,7 @@ abstract class Common extends \Frame\Controller {
                         return 0;
                     } else {
                         CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
-                        $this->goto_404_page(dr_lang('模块【%s】不存在', $dirname));
+                        $this->goto_404_page(dr_lang('模块缓存【%s】不存在', $dirname));
                     }
                 }
             }
