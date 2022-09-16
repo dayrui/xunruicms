@@ -1278,7 +1278,7 @@ function dr_module_send(title, url, nogo) {
             // 延迟加载
             var loading = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 5000
+                time: 9999999
             });
             $.ajax({type: "POST",dataType:"json", url: url, data: $(body).find('#myform').serialize(),
                 success: function(json) {
