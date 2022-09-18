@@ -798,7 +798,7 @@ function dr_ajax_submit(url, form, time, go) {
     var tips = tips_obj.val();
     if (tips) {
         if (tips == 'required') {
-            tips = '有必填字段未填写，确认提交吗？';
+            tips = dr_lang('有必填字段未填写，确认提交吗？');
         }
         layer.confirm(
             tips,
