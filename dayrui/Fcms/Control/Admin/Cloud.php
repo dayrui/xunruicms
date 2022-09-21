@@ -302,13 +302,12 @@ return [
 
 ];
 ";
-                    if (file_put_contents($myfile, $text)) {
-                        $this->_json(1, $rt['msg']);
+                    if (!file_put_contents($myfile, $text)) {
+                        $this->_json(0, '本站：dayrui/My/目录无法写入文件，请给于777权限');
                     }
                 }
             }
-
-            $this->_json(0, '本站：dayrui/My/目录无法写入文件，请给于777权限');
+            $this->_json(1, $rt['msg']);
         }
 
         \Phpcmf\Service::V()->display('cloud_login_ajax.html');exit;
