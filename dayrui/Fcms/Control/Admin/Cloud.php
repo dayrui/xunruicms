@@ -282,7 +282,17 @@ class Cloud extends \Phpcmf\Common {
                 $this->_json(0, '服务端：'.$rt['msg']);
             }
 
-            $text = "<?php
+            if ($rt['data']) {
+                $myfile = MYPATH.'Config/License.php';
+                if (is_file($myfile)) {
+                    // 存在就更新id
+                    if ($rt['data'] != $this->cmf_license['license']) {
+                        $this->cmf_license['license'] = $rt['data'];
+                        \Phpcmf\Service::L('Config')->file($myfile, '此文件是版本文件，每次下载安装包会自动生成，请勿修改', 32)
+                            ->to_require($this->cmf_license['license']);
+                    }
+                } else {
+                    $text = "<?php
 // 此文件是版本文件，每次下载安装包会自动生成，请勿修改
 return [
 
@@ -292,8 +302,10 @@ return [
 
 ];
 ";
-            if (file_put_contents(MYPATH.'Config/License.php', $text)) {
-                $this->_json(1, $rt['msg']);
+                    if (file_put_contents($myfile, $text)) {
+                        $this->_json(1, $rt['msg']);
+                    }
+                }
             }
 
             $this->_json(0, '本站：dayrui/My/目录无法写入文件，请给于777权限');

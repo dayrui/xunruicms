@@ -9,7 +9,6 @@
 	<style type="text/css">
 		<?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'debug.css')) ?>
         .source code {
-            white-space:normal;
             word-break:break-all;
             word-wrap:break-word;
         }
