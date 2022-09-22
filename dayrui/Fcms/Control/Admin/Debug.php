@@ -15,6 +15,7 @@ class Debug extends \Phpcmf\Common
         $this->_echo_msg(1, 'PHP版本：'.PHP_VERSION.'');
         $this->_echo_msg(1, 'MySQL版本：'.\Phpcmf\Service::M()->db->getVersion());
 
+        $this->_echo_msg(1, '内核版本：'.FRAME_NAME.' - '.FRAME_VERSION);
         $this->_echo_msg(1, 'CMS版本：'.$this->cmf_version['version'].' - '.dr_date($this->cmf_version['downtime'], 'Y-m-d H:i:s'));
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
