@@ -315,33 +315,14 @@ class Router {
     }
 
     /*
-     * 单页URL地址
+     * 单页URL地址 后期废弃
      *
      * @param	array	$data
      * @param	intval	$page
      * @return	string
      */
     public function page_url($data, $page = 0) {
-
-        if (!$data) {
-            return '自定义页面数据不存在';
-        }
-
-        $page && $data['page'] = $page = is_numeric($page) ? max((int)$page, 1) : $page;
-        $page == 1 && $page = 0;
-
-        $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value');
-        if ($rule && $rule['page']) {
-            // URL模式为自定义，且已经设置规则
-            $data['pdirname'] == '/' && $data['pdirname'] = '';
-            $data['dirname'] == '/' && $data['dirname'] = '';
-            $data['pdirname'] .= $data['dirname'];
-            $data['pdirname'] = str_replace('/', $rule['catjoin'], $data['pdirname']);
-            $url = $page ? $rule['page_page'] : $rule['page'];
-            return $this->get_url_value($data, $url, '/');
-        }
-
-        return $this->url_prefix('php') . 's=page&id=' . $data['id'] . ($page ? '&page=' . $page : '');
+        return '请升级自定义页面插件';
     }
 
     /**
