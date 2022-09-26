@@ -6,7 +6,7 @@
  **/
 
 define('EVENT_PRIORITY_LOW', 200);
-define('EVENT_PRIORITY_NORMAL', 100);
+define('EVENT_PRIORITY_NORMAL', 10);
 define('EVENT_PRIORITY_HIGH', 10);
 
 /**
@@ -274,6 +274,7 @@ class Hooks {
             }
 
             if ($rt && isset($rt['code'])) {
+                // 只要遇到返回成功的钩子就中断执行直接返回
                 return $rt;
             }
         }

@@ -3188,6 +3188,18 @@ function dr_tpl_path($is_member = IS_MEMBER) {
     return $path;
 }
 
+// 数组随机排序，并截取数组
+function dr_array_rand($arr, $num = 0) {
+
+    if (!$arr or !is_array($arr)) {
+        return [];
+    }
+
+    shuffle($arr);
+
+    return $num ? dr_arraycut($arr, $num) : $arr;
+}
+
 // 数组的指定元素大小排序
 function dr_array_sort($arr, $key, $type = 'asc') {
 
