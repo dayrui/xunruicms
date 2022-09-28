@@ -1270,6 +1270,8 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
 
     if (!$img) {
         return dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
+    } elseif (is_array($img)) {
+        return IS_DEV ? '文件参数不能是数组' : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
     } elseif (!$width || !$height) {
         return dr_get_file($img);
     } elseif (is_numeric($img) || $webimg) {
@@ -1306,6 +1308,8 @@ function dr_get_file($id, $full = 0) {
 
     if (!$id) {
         return IS_DEV ? '文件参数没有值' : '';
+    } elseif (is_array($id)) {
+        return IS_DEV ? '文件参数不能是数组' : '';
     }
 
     if (is_numeric($id)) {
@@ -1328,6 +1332,8 @@ function dr_down_file($id, $name = '') {
 
     if (!$id) {
         return IS_DEV ? '文件参数不能为空' : '';
+    } elseif (is_array($id)) {
+        return IS_DEV ? '文件参数不能是数组' : '';
     }
 
     if (defined('SC_HTML_FILE')) {
