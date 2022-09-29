@@ -184,7 +184,7 @@ class Api extends \Phpcmf\Common {
 
         \Phpcmf\Service::L('cache')->set_auth_data('web-captcha-'.USER_HTTP_CODE, $code, SITE_ID);
 
-        return;
+        exit;
     }
 
     /**

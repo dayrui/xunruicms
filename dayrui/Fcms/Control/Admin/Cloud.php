@@ -282,7 +282,7 @@ class Cloud extends \Phpcmf\Common {
                 $this->_json(0, '服务端：'.$rt['msg']);
             }
 
-            if ($rt['data']) {
+            if (dr_strlen($rt['data']) > 8) {
                 $myfile = MYPATH.'Config/License.php';
                 if (is_file($myfile)) {
                     // 存在就更新id

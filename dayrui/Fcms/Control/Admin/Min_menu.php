@@ -101,28 +101,34 @@ class Min_menu extends \Phpcmf\Common {
             }
 		}
 
-        $menu = \Phpcmf\Service::L('cache')->get('menu-admin');
-
         $select = '<select class="form-control" name="data[id]">';
         $select.= '<option value="0"> -- </option>';
         $topdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
         foreach ($topdata as $t) {
-            $select.= '<optgroup label="'.$t['name'].'">';
             $leftdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid='.$t['id'])->order_by('displayorder ASC,id ASC')->getAll();
+            $is_left = '';
             foreach ($leftdata as $c) {
                 $linkdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid='.$c['id'])->order_by('displayorder ASC,id ASC')->getAll();
-                $select.= '<optgroup label=" └ '.$c['name'].'">';
+                $is_link = '';
                 if ($linkdata) {
                     foreach ($linkdata as $k) {
                         if ($k['uri'] && !$this->_is_admin_auth($k['uri'])) {
                             continue;
                         }
-                        $select.= '<option value="'.$k['id'].'">&nbsp;&nbsp;&nbsp;└ '.$k['name'].'</option>';
+                        $is_link.= '<option value="'.$k['id'].'">&nbsp;&nbsp;&nbsp;└ '.$k['name'].'</option>';
                     }
                 }
+                if ($is_link) {
+                    $is_left.= '<optgroup label=" └ '.$c['name'].'">';
+                    $is_left.= $is_link;
+                    $is_left.= '</optgroup>';
+                }
+            }
+            if ($is_left) {
+                $select.= '<optgroup label="'.$t['name'].'">';
+                $select.= $is_left;
                 $select.= '</optgroup>';
             }
-            $select.= '</optgroup>';
         }
         $select.= '</select>';
 
