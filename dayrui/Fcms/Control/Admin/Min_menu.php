@@ -101,6 +101,8 @@ class Min_menu extends \Phpcmf\Common {
             }
 		}
 
+        $menu = \Phpcmf\Service::L('cache')->get('menu-admin');
+
         $select = '<select class="form-control" name="data[id]">';
         $select.= '<option value="0"> -- </option>';
         $topdata = \Phpcmf\Service::M()->table('admin_menu')->where('pid=0')->order_by('displayorder ASC,id ASC')->getAll();
@@ -112,6 +114,9 @@ class Min_menu extends \Phpcmf\Common {
                 $select.= '<optgroup label=" └ '.$c['name'].'">';
                 if ($linkdata) {
                     foreach ($linkdata as $k) {
+                        if ($k['uri'] && !$this->_is_admin_auth($k['uri'])) {
+                            continue;
+                        }
                         $select.= '<option value="'.$k['id'].'">&nbsp;&nbsp;&nbsp;└ '.$k['name'].'</option>';
                     }
                 }
