@@ -3021,8 +3021,8 @@ function dr_format_file_size($fileSize, $round = 2) {
 /**
  * 关键字高亮显示
  *
- * @param   string  $string     字符串
- * @param   string  $keyword    关键字
+ * @param   $string     字符串
+ * @param   $keyword    关键字，可数组
  * @return  string
  */
 function dr_keyword_highlight($string, $keyword, $rule = '') {
@@ -3031,7 +3031,12 @@ function dr_keyword_highlight($string, $keyword, $rule = '') {
         return $string;
     }
 
-    $arr = explode(' ', trim(str_replace('%', ' ', urldecode($keyword)), '%'));
+    if (is_array($keyword)) {
+        $arr = $keyword;
+    } else {
+        $arr = explode(' ', trim(str_replace('%', ' ', urldecode($keyword)), '%'));
+    }
+
     if (!$arr) {
         return $string;
     }
