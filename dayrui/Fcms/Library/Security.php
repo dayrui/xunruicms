@@ -845,9 +845,15 @@ class Security {
         $str = str_replace(array_keys($this->_never_call_str), $this->_never_call_str, $str);
 		$str = str_replace(array_keys($this->_never_allowed_str), $this->_never_allowed_str, $str);
 
+        $old = preg_replace_callback('#<pre(.+)</pre>#Us', function ($match) {
+            return '';
+        }, $str);
+
 		foreach ($this->_never_allowed_regex as $regex)
 		{
-			$str = preg_replace('#'.$regex.'#is', '_\\0', $str);
+            if (preg_match('#'.$regex.'#is', $old, $mt)) {
+                $str = preg_replace('#'.$regex.'#is', '_\\0', $str);
+            }
 		}
 
 		$str = str_replace($this->_never_call_str, array_keys($this->_never_call_str), $str);
