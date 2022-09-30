@@ -381,7 +381,6 @@ class Model extends \Frame\Model {
             return $this->_return_error($this->table.': '.$rt['message']);
         }
 
-
         $this->_clear();
 
         return dr_return_data(1);
@@ -390,6 +389,27 @@ class Model extends \Frame\Model {
     // 执行”写入”类型的语句（insert，update等）时返回有多少行受影响
     public function affected_rows() {
         return $this->db->affectedRows();
+    }
+
+    // 启动事务
+    public function trans_start(){
+        $this->db->transBegin();
+    }
+
+    // 回滚事务
+    public function trans_rollback(){
+        $this->db->transRollback();
+    }
+
+    // 执行事务提交
+    public function trans_comment(){
+        if ($this->db->transStatus() === FALSE) {
+            $this->db->transRollback();
+            return false;
+        } else  {
+            $this->db->transCommit();
+            return true;
+        }
     }
 
     // 删除全部内容

@@ -49,6 +49,23 @@ class db_mysql {
 
     }
 
+
+    public function transBegin() {
+        Db::beginTransaction();
+    }
+
+    public function transRollback() {
+        Db::rollBack();
+    }
+
+    public function transStatus() {
+        return true;
+    }
+
+    public function transCommit() {
+        Db::commit();
+    }
+
     public function getVersion() {
         $v = "version()";
         return DB::select("select version()")[0]->$v;

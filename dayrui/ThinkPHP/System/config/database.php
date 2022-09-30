@@ -74,6 +74,9 @@ if (is_file(CONFIGPATH.'database.php')) {
     $config['connections']['mysql']['database'] = $db['default']['database'];
     $config['connections']['mysql']['prefix'] = $db['default']['DBPrefix'];
     define('XR_DB_PREFIX', $config['connections']['mysql']['prefix']);
+    if (isset($db['failover']) && $db['failover']) {
+        // 备用库
+    }
 }
 
 return $config;
