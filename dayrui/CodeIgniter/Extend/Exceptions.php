@@ -207,7 +207,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             $this->_is_404 = 1;
         } elseif (preg_match("/count(): Argument #1 \((.+)\) must be of type Countable|array/", $message, $mt)) {
             $message.= '<br>需要将count函数改为dr_count';
-        } else {
+        } elseif (IS_XRDEV) {
             echo '需要入库cn_msg<br>';
             var_dump($message);
         }
