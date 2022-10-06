@@ -13,8 +13,8 @@ class Checkbox extends \Phpcmf\Library\A_Field  {
     public function __construct(...$params) {
         parent::__construct(...$params);
         $this->close_xss = 1;
-		$this->fieldtype = TRUE;
-		$this->defaulttype = 'VARCHAR';
+        $this->fieldtype = ['TEXT' => ''];
+        $this->defaulttype = 'TEXT';
     }
 	
 	/**

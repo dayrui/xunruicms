@@ -3,14 +3,21 @@
 // 数据库引导类
 class Model {
 
-    public $db;
-    public $prefix;
+    static private $db;
 
-    public function _load_db() {
+    static function _load_db() {
+
         // 数据库
-        $this->db = new db_mysql();
-        $this->db->prefix = $this->prefix = defined('XR_DB_PREFIX') ? XR_DB_PREFIX : '';
+        if (self::$db) {
+            return [self::$db, self::$db->prefix];
+        }
+
+        self::$db = new db_mysql();
+        self::$db->prefix = defined('XR_DB_PREFIX') ? XR_DB_PREFIX : '';
+
+        return [self::$db, self::$db->prefix];
     }
+
 
 }
 

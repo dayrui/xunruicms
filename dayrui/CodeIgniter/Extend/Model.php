@@ -3,13 +3,18 @@
 // 数据库引导类
 class Model {
 
-    public $db;
-    public $prefix;
+    static private $db;
 
-    public function _load_db() {
+    static function _load_db() {
+
         // 数据库
-        $this->db = \Config\Database::connect('default');
-        $this->prefix = $this->db->DBPrefix;
+        if (self::$db) {
+            return [self::$db, self::$db->DBPrefix];
+        }
+
+        self::$db = \Config\Database::connect('default');
+
+        return [self::$db, self::$db->DBPrefix];
     }
 
 }

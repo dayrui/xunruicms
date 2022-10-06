@@ -8,10 +8,14 @@
 require FRAMEPATH.'Extend/Model.php';
 
 // 模型类
-class Model extends \Frame\Model {
+class Model {
 
-    public $id;
-    public $key;
+    public $db;
+    public $prefix;
+
+    public $id = 'id';
+    public $key = 'id';
+
     public $field;
     public $siteid;
     public $table;
@@ -28,8 +32,9 @@ class Model extends \Frame\Model {
     protected $init;
 
     public function __construct() {
-        $this->_load_db();
-        $this->key = $this->id = 'id';
+
+        list($this->db, $this->prefix) = \Frame\Model::_load_db();
+
         $this->uid = \Phpcmf\Service::C()->uid;
         $this->site = \Phpcmf\Service::C()->site;
         $this->admin = \Phpcmf\Service::C()->admin;
