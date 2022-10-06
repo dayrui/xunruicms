@@ -4,6 +4,7 @@
 class Model {
 
     static private $db;
+    static private $dbs = [];
 
     static function _load_db() {
 
@@ -15,6 +16,18 @@ class Model {
         self::$db = \Config\Database::connect('default');
 
         return [self::$db, self::$db->DBPrefix];
+    }
+
+    static function _load_db_source($name) {
+
+        // 数据库
+        if (isset(self::$dbs[$name]) && self::$dbs[$name]) {
+            return [self::$dbs[$name], self::$dbs[$name]->DBPrefix];
+        }
+
+        self::$dbs[$name] = \Config\Database::connect($name,  false);
+
+        return [self::$dbs[$name], self::$dbs[$name]->DBPrefix];
     }
 
 }

@@ -73,10 +73,26 @@ if (is_file(CONFIGPATH.'database.php')) {
     $config['connections']['mysql']['password'] = $db['default']['password'];
     $config['connections']['mysql']['database'] = $db['default']['database'];
     $config['connections']['mysql']['prefix'] = $db['default']['DBPrefix'];
-    define('XR_DB_PREFIX', $config['connections']['mysql']['prefix']);
+    unset($db['default']);
+
     if (isset($db['failover']) && $db['failover']) {
         // 备用库
+        unset($db['failover']);
     }
+
+    if ($db) {
+        foreach ($db as $name2 => $t) {
+            $config['connections'][$name2] = $config['connections']['mysql'];
+            $config['connections'][$name2]['host'] = $t['hostname'];
+            $config['connections'][$name2]['username'] = $t['username'];
+            $config['connections'][$name2]['password'] = $t['password'];
+            $config['connections'][$name2]['database'] = $t['database'];
+            $config['connections'][$name2]['prefix'] = $t['DBPrefix'];
+        }
+    }
+
+
+
 }
 
 return $config;

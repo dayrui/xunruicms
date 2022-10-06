@@ -88,8 +88,7 @@ class Model {
     public function db_source($name = '') {
         if ($name) {
             $this->db_temp = $this->db;
-            $this->db = \Config\Database::connect($name, false);
-            $this->prefix = $this->db->DBPrefix;
+            list($this->db, $this->prefix) = \Frame\Model::_load_db_source($name);
         }
         return $this;
     }

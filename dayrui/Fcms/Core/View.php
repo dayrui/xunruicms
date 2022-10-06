@@ -1277,7 +1277,7 @@ class View {
 
         $mysql = \Phpcmf\Service::M()->db;
         if (isset($system['db']) && $system['db']) {
-            $mysql = \Config\Database::connect($system['db'], false);
+            list($mysql) = \Frame\Model::_load_db_source($system['db']);
         }
 
         // 运算替换

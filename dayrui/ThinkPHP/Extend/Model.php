@@ -1,9 +1,13 @@
 <?php namespace Frame;
 
+use \think\facade\Db;
+use \think\facade\Config;
+
 // 数据库引导类
 class Model {
 
     static private $db;
+    static private $dbs;
 
     static function _load_db() {
         // 数据库
@@ -12,15 +16,26 @@ class Model {
         }
 
         self::$db = new db_mysql();
-        self::$db->prefix = defined('XR_DB_PREFIX') ? XR_DB_PREFIX : '';
+        self::$db->prefix = Config::get('database.connections.mysql.prefix');
         self::$db->query("set session sql_mode='NO_ENGINE_SUBSTITUTION'");
 
         return [self::$db, self::$db->prefix];
     }
 
-}
+    static function _load_db_source($name) {
 
-use \think\facade\Db;
+        // 数据库
+        if (isset(self::$dbs[$name]) && self::$dbs[$name]) {
+            return [self::$dbs[$name], self::$dbs[$name]->prefix];
+        }
+
+        self::$dbs[$name] = new db_mysql($name);
+        self::$dbs[$name]->prefix = Config::get('database.connections.'.$name.'.prefix');
+
+        return [self::$dbs[$name], self::$dbs[$name]->prefix];
+    }
+
+}
 
 
 class db_mysql {
@@ -30,10 +45,21 @@ class db_mysql {
     public $prefix;
     public $likeEscapeChar = '!';
     public $affectedRows = 0;
+    public $db_source = '';
+
+    public function __construct($name = '') {
+        if ($name) {
+            $this->db_source = $name;
+        }
+    }
 
     public function query($sql) {
         $this->_clear();
-        $this->param['result'] = Db::query($sql);
+        if ($this->db_source) {
+            $this->param['result'] = Db::connect($this->db_source)->query($sql);
+        } else {
+            $this->param['result'] = Db::query($sql);
+        }
         return $this;
     }
 

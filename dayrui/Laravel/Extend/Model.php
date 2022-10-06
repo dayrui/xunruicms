@@ -1,9 +1,14 @@
 <?php namespace Frame;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Config;
+
 // 数据库引导类
 class Model {
 
     static private $db;
+    static private $dbs;
 
     static function _load_db() {
 
@@ -13,16 +18,26 @@ class Model {
         }
 
         self::$db = new db_mysql();
-        self::$db->prefix = defined('XR_DB_PREFIX') ? XR_DB_PREFIX : '';
+        self::$db->prefix = Config::get('database.connections.mysql.prefix');
 
         return [self::$db, self::$db->prefix];
     }
 
 
-}
+    static function _load_db_source($name) {
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+        // 数据库
+        if (isset(self::$dbs[$name]) && self::$dbs[$name]) {
+            return [self::$dbs[$name], self::$dbs[$name]->prefix];
+        }
+
+        self::$dbs[$name] = new db_mysql($name);
+        self::$dbs[$name]->prefix = config('database.connections.'.$name.'.prefix');
+
+        return [self::$dbs[$name], self::$dbs[$name]->prefix];
+    }
+
+}
 
 class db_mysql {
 
@@ -31,10 +46,21 @@ class db_mysql {
     public $prefix;
     public $likeEscapeChar = '!';
     public $affectedRows = 0;
+    public $db_source = '';
+
+    public function __construct($name = '') {
+        if ($name) {
+            $this->db_source = $name;
+        }
+    }
 
     public function query($sql) {
         $this->_clear();
-        $this->param['result'] = DB::select($sql);
+        if ($this->db_source) {
+            $this->param['result'] = DB::Connection($this->db_source)->select($sql);
+        } else {
+            $this->param['result'] = DB::select($sql);
+        }
         return $this;
     }
 
