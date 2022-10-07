@@ -183,8 +183,8 @@ class Validation implements ValidationInterface
      * Runs the validation process, returning true or false
      * determining whether validation was successful or not.
      *
-     * @param mixed    $value
-     * @param string[] $errors
+     * @param array|bool|float|int|object|string|null $value
+     * @param string[]                                $errors
      */
     public function check($value, string $rule, array $errors = []): bool
     {
@@ -312,7 +312,7 @@ class Validation implements ValidationInterface
                     $found  = true;
                     $passed = $param === false
                         ? $set->{$rule}($value, $error)
-                        : $set->{$rule}($value, $param, $data, $error);
+                        : $set->{$rule}($value, $param, $data, $error, $field);
 
                     break;
                 }
@@ -328,7 +328,9 @@ class Validation implements ValidationInterface
             if ($passed === false) {
                 // if the $value is an array, convert it to as string representation
                 if (is_array($value)) {
-                    $value = '[' . implode(', ', $value) . ']';
+                    $value = $this->isStringList($value)
+                        ? '[' . implode(', ', $value) . ']'
+                        : json_encode($value);
                 } elseif (is_object($value)) {
                     $value = json_encode($value);
                 }
@@ -344,6 +346,32 @@ class Validation implements ValidationInterface
                     $originalField
                 );
 
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Is the array a string list `list<string>`?
+     */
+    private function isStringList(array $array): bool
+    {
+        $expectedKey = 0;
+
+        foreach ($array as $key => $val) {
+            // Note: also covers PHP array key conversion, e.g. '5' and 5.1 both become 5
+            if (! is_int($key)) {
+                return false;
+            }
+
+            if ($key !== $expectedKey) {
+                return false;
+            }
+            $expectedKey++;
+
+            if (! is_string($val)) {
                 return false;
             }
         }
@@ -388,9 +416,9 @@ class Validation implements ValidationInterface
      *
      * @param array|string $rules
      *
-     * @throws TypeError
-     *
      * @return $this
+     *
+     * @throws TypeError
      */
     public function setRule(string $field, ?string $label, $rules, array $errors = [])
     {
@@ -477,9 +505,9 @@ class Validation implements ValidationInterface
      *
      * @param string $group Group.
      *
-     * @throws InvalidArgumentException If group not found.
-     *
      * @return string[] Rule group.
+     *
+     * @throws InvalidArgumentException If group not found.
      */
     public function getRuleGroup(string $group): array
     {

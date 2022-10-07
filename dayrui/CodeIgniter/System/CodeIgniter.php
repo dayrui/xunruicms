@@ -47,7 +47,7 @@ class CodeIgniter
     /**
      * The current version of CodeIgniter Framework
      */
-    public const CI_VERSION = '4.2.5';
+    public const CI_VERSION = '4.2.7';
 
     /**
      * App startup time.
@@ -285,9 +285,9 @@ class CodeIgniter
      * tries to route the response, loads the controller and generally
      * makes all of the pieces work together.
      *
-     * @throws RedirectException
-     *
      * @return ResponseInterface|void
+     *
+     * @throws RedirectException
      */
     public function run(?RouteCollectionInterface $routes = null, bool $returnResponse = false)
     {
@@ -396,10 +396,10 @@ class CodeIgniter
     /**
      * Handles the main request logic and fires the controller.
      *
+     * @return ResponseInterface
+     *
      * @throws PageNotFoundException
      * @throws RedirectException
-     *
-     * @return ResponseInterface
      */
     protected function handleRequest(?RouteCollectionInterface $routes, Cache $cacheConfig, bool $returnResponse = false)
     {
@@ -649,9 +649,9 @@ class CodeIgniter
     /**
      * Determines if a response has been cached for the given URI.
      *
-     * @throws Exception
-     *
      * @return false|ResponseInterface
+     *
+     * @throws Exception
      */
     public function displayCache(Cache $config)
     {
@@ -729,15 +729,13 @@ class CodeIgniter
             return md5($this->request->getPath());
         }
 
-        $uri = $this->request->getUri();
+        $uri = clone $this->request->getUri();
 
-        if ($config->cacheQueryString) {
-            $name = URI::createURIString($uri->getScheme(), $uri->getAuthority(), $uri->getPath(), $uri->getQuery());
-        } else {
-            $name = URI::createURIString($uri->getScheme(), $uri->getAuthority(), $uri->getPath());
-        }
+        $query = $config->cacheQueryString
+            ? $uri->getQuery(is_array($config->cacheQueryString) ? ['only' => $config->cacheQueryString] : [])
+            : '';
 
-        return md5($name);
+        return md5($uri->setFragment('')->setQuery($query));
     }
 
     /**
@@ -756,9 +754,9 @@ class CodeIgniter
      * @param RouteCollectionInterface|null $routes An collection interface to use in place
      *                                              of the config file.
      *
-     * @throws RedirectException
-     *
      * @return string|string[]|null Route filters, that is, the filters specified in the routes file
+     *
+     * @throws RedirectException
      */
     protected function tryToRouteIt(?RouteCollectionInterface $routes = null)
     {
@@ -945,11 +943,9 @@ class CodeIgniter
         $this->response->setStatusCode($e->getCode());
 
         if (ENVIRONMENT !== 'testing') {
-            // @codeCoverageIgnoreStart
             if (ob_get_level() > 0) {
-                ob_end_flush();
+                ob_end_flush(); // @codeCoverageIgnore
             }
-            // @codeCoverageIgnoreEnd
         }
         // When testing, one is for phpunit, another is for test case.
         elseif (ob_get_level() > 2) {

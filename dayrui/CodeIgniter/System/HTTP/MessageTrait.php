@@ -38,9 +38,9 @@ trait MessageTrait
      */
     protected $headerMap = [];
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Body
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Sets the body of the current message.
@@ -70,9 +70,9 @@ trait MessageTrait
         return $this;
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Headers
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Populates the $headers array with any headers the server knows about.
@@ -215,9 +215,9 @@ trait MessageTrait
     /**
      * Sets the HTTP protocol version.
      *
-     * @throws HTTPException For invalid protocols
-     *
      * @return $this
+     *
+     * @throws HTTPException For invalid protocols
      */
     public function setProtocolVersion(string $version): self
     {

@@ -130,9 +130,9 @@ interface ResponseInterface
      *                       provided status code; if none is provided, will
      *                       default to the IANA name.
      *
-     * @throws InvalidArgumentException For invalid status code arguments.
-     *
      * @return self
+     *
+     * @throws InvalidArgumentException For invalid status code arguments.
      */
     public function setStatusCode(int $code, string $reason = '');
 
@@ -141,13 +141,14 @@ interface ResponseInterface
      *
      * @see http://tools.ietf.org/html/rfc7231#section-6
      * @see http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+     *
      * @deprecated Use getReasonPhrase()
      */
     public function getReason(): string;
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Convenience Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Sets the date header
@@ -185,9 +186,9 @@ interface ResponseInterface
      */
     public function setContentType(string $mime, string $charset = 'UTF-8');
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Formatter Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Converts the $body into JSON and sets the Content Type header.
@@ -201,9 +202,9 @@ interface ResponseInterface
     /**
      * Returns the current body, converted to JSON is it isn't already.
      *
-     * @throws InvalidArgumentException If the body property is not array.
-     *
      * @return mixed|string
+     *
+     * @throws InvalidArgumentException If the body property is not array.
      */
     public function getJSON();
 
@@ -219,17 +220,17 @@ interface ResponseInterface
     /**
      * Retrieves the current body into XML and returns it.
      *
-     * @throws InvalidArgumentException If the body property is not array.
-     *
      * @return mixed|string
+     *
+     * @throws InvalidArgumentException If the body property is not array.
      */
     public function getXML();
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Cache Control Methods
     //
     // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Sets the appropriate headers to ensure this response
@@ -265,9 +266,9 @@ interface ResponseInterface
      */
     public function setCache(array $options = []);
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Output Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Sends the output to the browser.
@@ -290,9 +291,9 @@ interface ResponseInterface
      */
     public function sendBody();
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Cookie Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Set a cookie
@@ -350,9 +351,9 @@ interface ResponseInterface
      */
     public function getCookies();
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Response Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Perform a redirect to a new URL, in two flavors: header or location.
@@ -360,9 +361,9 @@ interface ResponseInterface
      * @param string $uri  The URI to redirect to
      * @param int    $code The type of redirection, defaults to 302
      *
-     * @throws HTTPException For invalid status code.
-     *
      * @return $this
+     *
+     * @throws HTTPException For invalid status code.
      */
     public function redirect(string $uri, string $method = 'auto', ?int $code = null);
 

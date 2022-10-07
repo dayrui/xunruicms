@@ -71,20 +71,36 @@ class Rules
     /**
      * Greater than
      *
-     * @param mixed $str
+     * @param mixed $str expects int|string
      */
     public function greater_than($str, string $min): bool
     {
+        if (is_int($str)) {
+            $str = (string) $str;
+        }
+
+        if (! is_string($str)) {
+            return false;
+        }
+
         return $this->nonStrictRules->greater_than($str, $min);
     }
 
     /**
      * Equal to or Greater than
      *
-     * @param mixed $str
+     * @param mixed $str expects int|string
      */
     public function greater_than_equal_to($str, string $min): bool
     {
+        if (is_int($str)) {
+            $str = (string) $str;
+        }
+
+        if (! is_string($str)) {
+            return false;
+        }
+
         return $this->nonStrictRules->greater_than_equal_to($str, $min);
     }
 
@@ -141,20 +157,36 @@ class Rules
     /**
      * Less than
      *
-     * @param mixed $str
+     * @param mixed $str expects int|string
      */
     public function less_than($str, string $max): bool
     {
+        if (is_int($str)) {
+            $str = (string) $str;
+        }
+
+        if (! is_string($str)) {
+            return false;
+        }
+
         return $this->nonStrictRules->less_than($str, $max);
     }
 
     /**
      * Equal to or Less than
      *
-     * @param mixed $str
+     * @param mixed $str expects int|string
      */
     public function less_than_equal_to($str, string $max): bool
     {
+        if (is_int($str)) {
+            $str = (string) $str;
+        }
+
+        if (! is_string($str)) {
+            return false;
+        }
+
         return $this->nonStrictRules->less_than_equal_to($str, $max);
     }
 
@@ -270,10 +302,12 @@ class Rules
      *
      *     required_without[id,email]
      *
-     * @param mixed $str
+     * @param string|null $str
+     * @param string|null $otherFields The param fields of required_without[].
+     * @param string|null $field       This rule param fields aren't present, this field is required.
      */
-    public function required_without($str = null, ?string $fields = null, array $data = []): bool
+    public function required_without($str = null, ?string $otherFields = null, array $data = [], ?string $error = null, ?string $field = null): bool
     {
-        return $this->nonStrictRules->required_without($str, $fields, $data);
+        return $this->nonStrictRules->required_without($str, $otherFields, $data, $error, $field);
     }
 }

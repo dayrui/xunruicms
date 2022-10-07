@@ -136,14 +136,14 @@ trait ResponseTrait
         return $this->respond($response, $status, $customMessage);
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Response Helpers
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Used after successfully creating a new resource.
      *
-     * @param mixed $data
+     * @param array|string|null $data
      *
      * @return Response
      */
@@ -155,7 +155,7 @@ trait ResponseTrait
     /**
      * Used after a resource has been successfully deleted.
      *
-     * @param mixed $data
+     * @param array|string|null $data
      *
      * @return Response
      */
@@ -167,7 +167,7 @@ trait ResponseTrait
     /**
      * Used after a resource has been successfully updated.
      *
-     * @param mixed $data
+     * @param array|string|null $data
      *
      * @return Response
      */
@@ -290,9 +290,9 @@ trait ResponseTrait
         return $this->fail($description, $this->codes['server_error'], $code, $message);
     }
 
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
     // Utility Methods
-    //--------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     /**
      * Handles formatting a response. Currently makes some heavy assumptions

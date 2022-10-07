@@ -350,8 +350,6 @@ class Toolbar
      *
      * @param RequestInterface  $request
      * @param ResponseInterface $response
-     *
-     * @global \CodeIgniter\CodeIgniter $app
      */
     public function prepare(?RequestInterface $request = null, ?ResponseInterface $response = null)
     {
@@ -360,6 +358,7 @@ class Toolbar
          * @var Response|null        $response
          */
         if (CI_DEBUG && ! is_cli()) {
+            //$app = Services::codeigniter(); 这里会出现bug
             global $app;
 
             $request ??= Services::request();
@@ -374,7 +373,7 @@ class Toolbar
             $stats   = $app->getPerformanceStats();
             $data    = $toolbar->run(
                 $stats['startTime'],
-                $stats['totalTime'],
+                $stats['totalTime'] ??  microtime(true),
                 $request,
                 $response
             );
