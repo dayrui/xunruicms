@@ -437,6 +437,7 @@ return [
             $is_ok = 1;
             $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
         }
+        /*
         if ($this->vs) {
             if (is_dir($cmspath.'WEBPATH')) {
                 $is_ok = 1;
@@ -450,7 +451,7 @@ return [
                 $is_ok = 1;
                 $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'public/static/');
             }
-        } else {
+        } else {*/
             if (is_dir($cmspath.'WEBPATH')) {
                 $is_ok = 1;
                 $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
@@ -463,7 +464,7 @@ return [
                 $is_ok = 1;
                 $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
             }
-        }
+        //}
         if (is_dir($cmspath.'TPLPATH')) {
             $is_ok = 1;
             $this->_copy_dir($cmspath.'TPLPATH', TPLPATH);
@@ -848,6 +849,7 @@ return [
             if (is_dir($cmspath.'APPSPATH')) {
                 $this->_copy_dir($cmspath.'APPSPATH', APPSPATH);
             }
+            /*
             if ($this->vs) {
                 if (is_dir($cmspath.'WEBPATH')) {
                     $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH.'public/');
@@ -855,14 +857,14 @@ return [
                 if (is_dir($cmspath.'ROOTPATH')) {
                     $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH.'public/');
                 }
-            } else {
+            } else {*/
                 if (is_dir($cmspath.'WEBPATH')) {
                     $this->_copy_dir($cmspath.'WEBPATH', ROOTPATH);
                 }
                 if (is_dir($cmspath.'ROOTPATH')) {
                     $this->_copy_dir($cmspath.'ROOTPATH', ROOTPATH);
                 }
-            }
+            //}
             if (is_dir($cmspath.'CSSPATH')) {
                 $this->_copy_dir($cmspath.'CSSPATH/', ROOTPATH.'static/');
             }
