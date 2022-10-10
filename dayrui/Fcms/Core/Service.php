@@ -5,8 +5,6 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-class_alias('Phpcmf\Service', 'XR');
-
 class Service {
 
     static private $instances = [];
@@ -25,15 +23,6 @@ class Service {
         'member' => [],
         'admin' => [],
     ];
-
-    /**
-     * 控制器对象实例
-     *
-     * @var object
-     */
-    public static function C() {
-        return class_exists('\Phpcmf\Common') ? \Phpcmf\Common::get_instance() : null;
-    }
 
     // 获取应用自动加载
     public static function Auto($auto) {
@@ -236,6 +225,29 @@ class Service {
     }
 
     /**
+     * 模型类对象实例
+     *
+     * @var object
+     */
+    public static function model() {
+
+        if (!is_object(static::$model)) {
+            static::$model = new \Phpcmf\Model();
+        }
+
+        return static::$model;
+    }
+
+    /**
+     * 控制器对象实例
+     *
+     * @var object
+     */
+    public static function C() {
+        return class_exists('\Phpcmf\Common') ? \Phpcmf\Common::get_instance() : null;
+    }
+
+    /**
      * 获取文件内容
      *
      * @var object
@@ -270,20 +282,6 @@ class Service {
         }
 
         return static::$view;
-    }
-
-    /**
-     * 模型类对象实例
-     *
-     * @var object
-     */
-    public static function model() {
-
-        if (!is_object(static::$model)) {
-            static::$model = new \Phpcmf\Model();
-        }
-
-        return static::$model;
     }
 
     /**

@@ -4319,3 +4319,33 @@ function dr_member_url($url, $query = [],  $self = 'index.php') {
 function dr_search_url($params = [], $name = '', $value = '', $moddir = '') {
     return \Phpcmf\Service::L('router')->search_url($params, $name, $value, $moddir);
 }
+
+//////////////////////////简化函数///////////////////////////
+
+function XR_L($name, $namespace = '') {
+    return \Phpcmf\Service::L($name, $namespace);
+}
+
+function XR_M($name, $namespace = '') {
+    return \Phpcmf\Service::M($name, $namespace);
+}
+
+function XR_H($name, $namespace) {
+    return \Phpcmf\Service::H($name, $namespace);
+}
+
+function XR_R($name, $clear = false) {
+    return \Phpcmf\Service::R($name, $clear);
+}
+
+function XR_C() {
+    return \Phpcmf\Service::C();
+}
+
+function XR_V() {
+    return \Phpcmf\Service::V();
+}
+
+function XR_DB() {
+    return \Phpcmf\Service::M()->db;
+}
