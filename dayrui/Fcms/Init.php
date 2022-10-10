@@ -473,6 +473,7 @@ if (is_file(WEBPATH.'config/custom.php')) {
 if (is_file(MYPATH.'Helper.php')) {
     require MYPATH.'Helper.php';
 }
+
 // 系统函数库
 require CMSPATH.'Core/Helper.php';
 

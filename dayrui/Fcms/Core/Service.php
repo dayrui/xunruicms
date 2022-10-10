@@ -5,7 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-use \Phpcmf\View;
+class_alias('Phpcmf\Service', 'XR');
 
 class Service {
 
