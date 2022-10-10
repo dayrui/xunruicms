@@ -868,6 +868,10 @@ class Auth extends \Phpcmf\Model {
                     sort($t['module']);
                     $t['module'] && $t['system']['uri'] = dr_array2array($t['module'], $t['system']['uri']);
                 }
+                if (!IS_SITES) {
+                    // 没有多站点时主动赋值1
+                    $t['site'] = [1];
+                }
                 $cache[$t['id']] = $t;
             }
         }
