@@ -9,53 +9,60 @@
     </div>
     <div class="portlet-body " style="">
 
-            {if $error}
-            <div class="scroller" style="height:300px;" data-rail-visible="1">
-                {nl2br($error)}
-            </div>
-            {else}
-			<div class="scroller" style="height:300px; font-size: 12px;" data-rail-visible="1" id="dr_check_html">
-                <p>正在执行安装程序</p>
-            </div>
-            <script>
-			$(function(){
-				dr_ajax2ajax(1);
-			});
-			function dr_ajax2ajax(page) {
-				$.ajax({
-					type: "GET",
-					dataType: "json",
-					url: "{$do_url}&page="+page,
-					success: function (json) {
+        {if $error}
+        <div class="scroller" style="height:300px;" data-rail-visible="1">
+            {nl2br($error)}
+        </div>
+        {else}
+        <div class="scroller" style="height:300px; font-size: 12px;" data-rail-visible="1" id="dr_check_html">
+            <p>正在执行安装程序</p>
+        </div>
+        <div id="dr_error_html" style="display: none">
+            <!--s-->
+            <h5 class="caption-subject font-green">常见问题：</h5>
+            <p><a href="https://www.xunruicms.com/doc/1238.html" target="_blank">Index column size too large</a></p>
+            <!--e-->
+        </div>
+        <script>
+            $(function(){
+                dr_ajax2ajax(1);
+            });
+            function dr_ajax2ajax(page) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "{$do_url}&page="+page,
+                    success: function (json) {
 
-						$('#dr_check_html').append("<p>"+json.msg+"</p>");
-						document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
+                        $('#dr_check_html').append("<p>"+json.msg+"</p>");
+                        document.getElementById('dr_check_html').scrollTop = document.getElementById('dr_check_html').scrollHeight;
 
-						if (json.code == 0) {
+                        if (json.code == 0) {
                             $('#dr_check_html').append("<p style='color:red'>出现故障："+json.msg+"</p>");
+                            $('#dr_error_html').show();
                             return;
-						} else {
-							if (json.data.page == 99 ) {
-								// 完成 
-								var loading = layer.load(2, {
-									shade: [0.3,'#fff'], //0.1透明度的白色背景
-									time: 100000000
-								});
-								window.location.href = "{$next_url}&protocol="+document.location.protocol;
-							} else {
-								dr_ajax2ajax(json.data.page);
-							}
-						}
-					},
-					error: function(HttpRequest, ajaxOptions, thrownError) {
-						dr_ajax_alert_error(HttpRequest, this, thrownError);;
+                        } else {
+                            if (json.data.page == 99 ) {
+                                // 完成
+                                var loading = layer.load(2, {
+                                    shade: [0.3,'#fff'], //0.1透明度的白色背景
+                                    time: 100000000
+                                });
+                                window.location.href = "{$next_url}&protocol="+document.location.protocol;
+                            } else {
+                                dr_ajax2ajax(json.data.page);
+                            }
+                        }
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        dr_ajax_alert_error(HttpRequest, this, thrownError);;
                         $('#dr_check_html').append("<p style='color:red'>出现故障："+HttpRequest.responseText+"</p>");
-					}
-				});
-			}
-            
-            </script>
-            {/if}
+                    }
+                });
+            }
+
+        </script>
+        {/if}
 
     </div>
     <div class="portlet-title" style="min-height: 18px;">
