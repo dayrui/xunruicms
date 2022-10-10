@@ -303,8 +303,12 @@ class View {
      */
     public function get_file_name($file, $dir = null, $include = FALSE) {
 
+        if (!$file) {
+            $this->show_error('模板文件没有设置');
+        }
+
         $dir = $dir ? $dir : $this->_disp_dir;
-        $file = str_replace('..', '', $file); // 安全规范化模板名称引入
+        $file = str_replace('..', '', (string)$file); // 安全规范化模板名称引入
 
         if ($dir == 'admin' || $this->_is_admin) {
             // 后台操作时，不需要加载风格目录，如果文件不存在可以尝试调用主项目模板
