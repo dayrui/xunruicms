@@ -68,6 +68,8 @@ class Input {
             $client_ip = getenv(IS_CDN_IP);
         } elseif (getenv('HTTP_TRUE_CLIENT_IP')) {
             $client_ip = getenv('HTTP_TRUE_CLIENT_IP');
+        } elseif (getenv('HTTP_ALI_CDN_REAL_IP')) {
+            $client_ip = getenv('HTTP_ALI_CDN_REAL_IP');
         } elseif (getenv('HTTP_CLIENT_IP')) {
             $client_ip = getenv('HTTP_CLIENT_IP');
         } elseif(getenv('HTTP_X_FORWARDED_FOR')) {

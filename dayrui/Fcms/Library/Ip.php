@@ -53,10 +53,13 @@ class Ip {
 
         if (!$ip) {
             return '';
+        } elseif ($ip == '127.0.0.1') {
+            return '本地';
         }
 
-        if ($ip == '127.0.0.1') {
-            return '本地';
+        $rs = \Phpcmf\Hooks::trigger_callback('ip_address', $ip);
+        if ($rs && isset($rs['code']) && $rs['code']) {
+            return $rs['msg'];
         }
 
         $this->set($ip);
@@ -73,6 +76,11 @@ class Ip {
             return '';
         } elseif ($ip == '127.0.0.1') {
             return '本地';
+        }
+
+        $rs = \Phpcmf\Hooks::trigger_callback('ip_city', $ip);
+        if ($rs && isset($rs['code']) && $rs['code']) {
+            return $rs['msg'];
         }
 
         $this->set($ip);
@@ -101,6 +109,11 @@ class Ip {
             return '';
         } elseif ($ip == '127.0.0.1') {
             return '本地';
+        }
+
+        $rs = \Phpcmf\Hooks::trigger_callback('ip_province', $ip);
+        if ($rs && isset($rs['code']) && $rs['code']) {
+            return $rs['msg'];
         }
 
         $this->set($ip);
