@@ -8,11 +8,11 @@
             <ul class="nav nav-tabs" style="float:left;">
                 {if $unused}
                 <li id="tab_nav_0" class="{if $pp==0}active{/if}">
-                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未使用')} </a>
+                    <a href="{$tab_url}&pp=0"><i class="fa fa-folder"></i> {dr_lang('未归档')} </a>
                 </li>
                 {/if}
                 <li class="dev {if $pp==1}active{/if}">
-                    <a href="{$tab_url}&pp=1"><i class="bi bi-folder-check"></i> {dr_lang('已使用')} </a>
+                    <a href="{$tab_url}&pp=1"><i class="bi bi-folder-check"></i> {dr_lang('已归档')} </a>
                 </li>
                 {if $member.is_admin}
                 <li class="dev {if $pp==2}active{/if}">

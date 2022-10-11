@@ -13,15 +13,15 @@ class Attachments extends \Phpcmf\Table {
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '已使用的附件' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
-                    '未使用的附件' => [\Phpcmf\Service::L('Router')->class.'/unused_index', 'fa fa-folder-o'],
+                    '已归档的附件' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
+                    '未归档的附件' => [\Phpcmf\Service::L('Router')->class.'/unused_index', 'fa fa-folder-o'],
                     'help' => [356],
                 ]
             )
         ]);
     }
 
-    // 已使用管理
+    // 已归档管理
     public function index() {
 
         $field = [
@@ -79,7 +79,7 @@ class Attachments extends \Phpcmf\Table {
         \Phpcmf\Service::V()->display('attachment_admin.html');
     }
 
-    // 未使用的附件
+    // 未归档的附件
     public function unused_index() {
 
         $field = [
@@ -182,7 +182,7 @@ class Attachments extends \Phpcmf\Table {
                 'attachment' => $t['attachment'],
                 'attachinfo' => '',
             ));
-            // 删除未使用附件
+            // 删除未归档附件
             \Phpcmf\Service::M()->table('attachment_unused')->delete($t['id']);
         }
 
