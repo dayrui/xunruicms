@@ -358,7 +358,7 @@ return [
     // 将下载程序安装到目录中
     function install_app() {
 
-        $id = dr_safe_replace($_GET['id']);
+        $id = dr_safe_filename($_GET['id']);
         $file = WRITEPATH.'cloud/'.$id.'.zip';
         $cmspath = WRITEPATH.'cloud/'.$id.'/';
         if (!is_file($file)) {
@@ -366,11 +366,11 @@ return [
         } elseif (!class_exists('ZipArchive')) {
             $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能，建议尝试离线方式');
         }
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
+        if (!$cache) {
+            $this->_json(0, '本站：授权验证缓存过期，请重试');
+        }
         if (!IS_DEV) {
-            $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
-            if (!$cache) {
-                $this->_json(0, '本站：授权验证缓存过期，请重试');
-            }
             // 解压目录
             if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
                 $this->_json(0, '本站：文件解压失败');
