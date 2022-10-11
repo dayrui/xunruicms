@@ -370,17 +370,12 @@ return [
         if (!$cache) {
             $this->_json(0, '本站：授权验证缓存过期，请重试');
         }
+        // 解压目录
+        if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
+            $this->_json(0, '本站：文件解压失败');
+        }
         if (!IS_DEV) {
-            // 解压目录
-            if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-                $this->_json(0, '本站：文件解压失败');
-            }
             unlink($file);
-        } else {
-            // 解压目录
-            if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-                $this->_json(0, '本站：文件解压失败');
-            }
         }
 
         // 查询插件目录
