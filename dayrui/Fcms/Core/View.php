@@ -493,7 +493,7 @@ class View {
      */
     public function load_view_file($name) {
 
-        $cache_file = $this->_cache.str_replace([WEBPATH, '/', '\\', DIRECTORY_SEPARATOR], ['', '-', '-', '-'], $name).($this->_is_mobile ? '.mobile.' : '').'.cache.php';
+        $cache_file = $this->_cache.str_replace([WEBPATH, '/', '\\', DIRECTORY_SEPARATOR], ['', '_DS_', '_DS_', '_DS_'], $name).'.cache.php';
 
         $this->_view_files[$name] = [
             'name' => pathinfo($name, PATHINFO_BASENAME),

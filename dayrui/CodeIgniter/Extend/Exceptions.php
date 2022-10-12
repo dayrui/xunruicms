@@ -51,6 +51,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 			// 调试模式不屏蔽敏感信息
             $file = $exception->getFile();
             if (strpos($file, WRITEPATH.'template') !== false) {
+                $file = $this->_rp_file($file);
                 $message = '模板标签写法错误：'.$message;
                 $arr = \Phpcmf\Service::V()->get_view_files();
                 if ($arr) {
@@ -103,7 +104,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             if ($this->_is_404) {
                 //,404页面不显示路径
             } else {
-                $message.= '<br>'.$exception->getFile().'（'.$exception->getLine().'）';
+                $message.= '<br>'.$this->_rp_file($exception->getFile()).'（'.$exception->getLine().'）';
             }
         } else {
             $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
@@ -150,7 +151,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         echo(function () use ($exception, $statusCode, $viewFile, $message): string {
             $vars = $this->collectVars($exception, $statusCode);
             extract($vars, EXTR_SKIP);
-            $file = $exception->getFile();
+            $file = $this->_rp_file($exception->getFile());
             $is_template = false;
             $line_template = 0;
             if (strpos($file, WRITEPATH.'template') !== false) {
@@ -213,6 +214,18 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         }
 
         return $message;
+    }
+
+    /**
+     * 替换模板文件
+     */
+    private function _rp_file($file) {
+
+        if (strpos((string)$file, '.cache.php') !== false && strpos((string)$file, '_DS_') !== false) {
+            $file = str_replace([WRITEPATH.'template/', '_DS_', '.cache.php'], ['', '/', ''], $file);
+        }
+
+        return $file;
     }
 
     /**
