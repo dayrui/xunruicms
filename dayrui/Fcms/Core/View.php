@@ -486,7 +486,7 @@ class View {
     }
 
     /**
-     * 加载
+     * 加载缓存文件
      *
      * @param   string
      * @return  string

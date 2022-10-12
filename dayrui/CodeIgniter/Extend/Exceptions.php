@@ -217,7 +217,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
     }
 
     /**
-     * 替换模板文件
+     * 替换模板文件显示完整路径
      */
     private function _rp_file($file) {
 
