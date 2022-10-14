@@ -104,9 +104,9 @@ abstract class Common extends \Frame\Controller {
         // 项目站点不存在
         if (!isset($this->site_info[SITE_ID]) || !$this->site_info[SITE_ID]) {
             if (IS_DEV) {
-                $this->_admin_msg(0, '项目【'.SITE_ID.'】不存在，请检查cache/config/site.php文件数据是否完整');
+                dr_show_error('项目【'.SITE_ID.'】配置文件不存在，请检查cache/config/site.php文件数据是否完整');
             } else {
-                $this->_admin_msg(0, '项目不存在');
+                dr_show_error('项目配置文件不存在');
             }
         }
 
