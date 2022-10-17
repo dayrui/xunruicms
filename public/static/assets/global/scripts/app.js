@@ -5,9 +5,6 @@ var App = function() {
 
     // IE mode
     var isRTL = false;
-    var isIE8 = false;
-    var isIE9 = false;
-    var isIE10 = false;
 
     var resizeHandlers = [];
 
@@ -558,16 +555,6 @@ var App = function() {
             return 'prefix_' + Math.floor(Math.random() * (new Date()).getTime());
         },
 
-        // check IE8 mode
-        isIE8: function() {
-            return isIE8;
-        },
-
-        // check IE9 mode
-        isIE9: function() {
-            return isIE9;
-        },
-
         //check RTL mode
         isRTL: function() {
             return isRTL;
@@ -613,7 +600,7 @@ var Layout = function () {
     //此函数处理屏幕大小调整或移动设备旋转时的响应布局。
     //为边栏和内容设置适当的高度。内容和侧边栏高度必须始终同步。
     var handleSidebarAndContentHeight = function () {
-       
+
     };
 
 
