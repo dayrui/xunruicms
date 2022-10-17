@@ -334,7 +334,7 @@ class Form {
             return my_check_captcha($id);
         }
 
-        $data = \Phpcmf\Service::L('input')->post($id);
+        $data = trim((string)\Phpcmf\Service::L('input')->post($id));
         if (!$data) {
             IS_DEV && log_message('debug', '图片验证码验证失败：没有输入验证码');
             return false;
@@ -364,6 +364,7 @@ class Form {
             return false;
         }
 
+        $data = trim((string)$data);
         if (!IS_ADMIN && function_exists('my_check_captcha_value')) {
             return my_check_captcha_value($data);
         }
