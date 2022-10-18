@@ -143,7 +143,6 @@ foreach ([
              'SYS_CACHE',
              'SYS_CACHE_TYPE',
              'SYS_CACHE_SHOW',
-             'SYS_CACHE_PAGE',
              'SYS_CACHE_LIST',
              'SYS_CACHE_SEARCH',
              'SYS_CACHE_SMS',
