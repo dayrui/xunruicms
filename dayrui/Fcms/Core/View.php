@@ -1731,6 +1731,9 @@ class View {
                 $where[$i]['use'] = 1;
                 $where[$i]['prefix'] = "`$prefix`.";
             } else {
+                if (!$t['use']) {
+                    $this->_list_error[] = '在['.$prefix.']表中字段['.$t['name'].']不存在';
+                }
                 $where[$i]['use'] = $t['use'] ? 1 : 0;
             }
         }
