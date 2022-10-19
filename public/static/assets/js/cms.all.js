@@ -946,7 +946,7 @@ function dr_loginout(url) {
     });
 }
 // ajax提交登录或者注册
-function dr_ajax_member(url, form) {
+function dr_ajax_member(url, form, go) {
 
     var flen = $('[id='+form+']').length;
     // 验证id是否存在
@@ -993,9 +993,11 @@ function dr_ajax_member(url, form) {
                     }).then(function(json) {
                     })['catch'](function(ex) {
                     });
-
                 }
-                if (json.data.url) {
+                if (typeof go != "undefined" && go && go.length > 2) {
+                    dr_cmf_tips(1, json.msg, json.data.time);
+                    setTimeout('window.location.href="'+go+'"', 3000);
+                } else if (json.data.url) {
                     if (oss_url.length > 2) {
                         dr_cmf_tips(1, json.msg, json.data.time);
                         setTimeout('window.location.href="'+json.data.url+'"', 3000);
