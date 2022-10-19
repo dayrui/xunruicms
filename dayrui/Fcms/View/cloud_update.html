@@ -16,7 +16,7 @@
                 <th width="110"> 更新时间 </th>
                 <th width="100"> 版本 </th>
                 <th width="110" style="text-align: center"> 备份 </th>
-                <th> </th>
+                <th><a onclick="dr_update_version_all()"  class="badge badge-danger badge-roundless"> {dr_lang('检测全部')} </a> </th>
             </tr>
             </thead>
             <tbody>
@@ -59,7 +59,9 @@
                         <button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id, 'dir'=>$dir])}', '{dr_lang('更新前请做好系统备份，你确定要更新吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线更新')}</button>
                         {/if}
                     </label>
-                    <label class="dr_check_version" id="dr_row_{$dir}"></label>
+                    <label class="dr_check_version" id="dr_row_{$dir}">
+                        <a onclick="dr_update_version('{$dir}', '{$t.id}', '{$t.version}')"  class="badge badge-danger badge-roundless"> {dr_lang('检测版本')} </a>
+                    </label>
                 </td>
             </tr>
             {php $i++;}
@@ -304,33 +306,39 @@
     }
 
 
-    $(function() {
+    function dr_update_version_all() {
         {loop $list $dir $t}
         {if $t.id}
-        $("#dr_row_{$dir}").html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
-        $("#dr_update_{$dir}").hide();
+            dr_update_version("{$dir}", "{$t.id}", "{$t.version}");
+        {/if}
+        {/loop}
+    }
+
+    function dr_update_version(dir, id, version) {
+        $("#dr_row_"+dir).html("<img style='height:17px' src='{THEME_PATH}assets/images/loading-0.gif'>");
+        $("#dr_update_"+dir).hide();
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/check_version', ['id'=>$t.id, 'version' => $t.version])}",
+            url: "{dr_url('cloud/check_version')}&id="+id+"&version="+version,
             success: function(json) {
                 if (json.code == 1) {
-                    $("#dr_row_{$dir}").html(json.msg);
-                    $("#dr_update_{$dir}").show();
+                    $("#dr_row_"+dir).html(json.msg);
+                    $("#dr_update_"+dir).show();
                 } else if (json.code == 2) {
-                    $("#dr_row_{$dir}").html(json.msg);
-                    $("#dr_duibi_{$dir}").show();
+                    $("#dr_row_"+dir).html(json.msg);
+                    $("#dr_duibi_"+dir).show();
                 } else {
-                    $("#dr_row_{$dir}").html("<font color='red'>"+json.msg+"</font>");
+                    $("#dr_row_"+dir).html("<a onclick=\"dr_update_version('"+dir+"', '"+id+"', '"+version+"')\"  class=\"badge badge-danger badge-roundless\"> {dr_lang('检测版本')} </a>");
+                    $("#dr_row_"+dir).append("&nbsp;&nbsp;<font color='red'>"+json.msg+"</font>");
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
+                $("#dr_row_"+dir).html("<a onclick=\"dr_update_version('"+dir+"', '"+id+"', '"+version+"')\"  class=\"badge badge-danger badge-roundless\"> {dr_lang('检测版本')} </a>");
+                $("#dr_row_"+dir).append("&nbsp;&nbsp;<font color='red'>网络异常，请稍后再试</font>");
             }
         });
-        {/if}
-        {/loop}
-    });
+    }
 
 </script>
 
