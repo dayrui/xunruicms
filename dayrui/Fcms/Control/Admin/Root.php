@@ -141,6 +141,10 @@ class Root extends \Phpcmf\Table
                     && \Phpcmf\Service::M()->db->table('member')->where('name', $post['name'])->countAllResults()) {
                     $this->_json(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
                 }
+                $rt = \Phpcmf\Service::L('Form')->check_password($post['password'], $name);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['field' => 'password']);
+                }
                 $rt = \Phpcmf\Service::M('member')->register(0, [
                     'username' => $post['username'],
                     'phone' => $post['phone'],
@@ -248,7 +252,13 @@ class Root extends \Phpcmf\Table
                 ]);
             }
 
-            $post['password'] && \Phpcmf\Service::M('member')->edit_password($member, $post['password']);
+            if ($post['password']) {
+                $rt = \Phpcmf\Service::L('Form')->check_password($post['password'], $post['username']);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['field' => 'password']);
+                }
+                \Phpcmf\Service::M('member')->edit_password($member, $post['password']);
+            }
             if ($id > 1) {
                 \Phpcmf\Service::M()->db->table('admin_role_index')->where('uid', $member['id'])->delete();
                 foreach ($post['role'] as $t) {
