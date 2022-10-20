@@ -182,6 +182,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             $message.= '<br>无法连接到数据库，检查数据库是否启动或者数据库配置文件不对，config/database.php';
         } elseif (strpos($message, 'Unclosed \'{\'') !== false) {
             $message.= '<br>循环体或者if语句，缺少结束语句，{ }没有成对出现';
+        } elseif (strpos($message, 'Class \'Locale\' not found') !== false) {
+            $message.= '<br>需要在PHP环境中开启扩展：Intl';
         } elseif (strpos($message, 'Cannot access offset of type string on string') !== false) {
             $message.= '<br>此变量是字符串，不能使用数组的方式调用他，检查下代码语法';
         } elseif (strpos($message, 'Call to undefined function') !== false) {
