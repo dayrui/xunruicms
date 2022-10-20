@@ -507,7 +507,6 @@ $.ajax({
     success: function (json) {
         layer.close(index);
         if (json.code == 0) {
-            $('#dr_row_".$field['fieldname']."').addClass('has-error');
             dr_cmf_tips(0, json.msg, json.data.time);
         } else {
             
