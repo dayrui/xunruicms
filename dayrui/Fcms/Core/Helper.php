@@ -2380,7 +2380,7 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
             'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:40.0)' . 'Gecko/20100101 Firefox/40.0',
             'Accept: */*',
             'X-Requested-With: XMLHttpRequest',
-            'Referer: '.SITE_URL,
+            'Referer: '.$url,
             'Accept-Language: pt-BR,en-US;q=0.7,en;q=0.3',
         ));
         curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
