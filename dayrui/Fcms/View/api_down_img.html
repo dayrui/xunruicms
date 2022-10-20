@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <title>{dr_clearhtml($msg)}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="{ROOT_THEME_PATH}assets/icon/css/icon.css" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/admin.min.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    <link href="{THEME_PATH}assets/global/css/my.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">var admin_file = '{SELF}'; var assets_path = '{THEME_PATH}assets/';</script>
+    <script src="{LANG_PATH}lang.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/js/cms.js" type="text/javascript"></script>
+    <script src="{ROOT_THEME_PATH}assets/global/scripts/app.min.js" type="text/javascript"></script>
+</head>
+<body style="background: #ffffff">
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div style="padding: 20px;">
+        <ul class="list-group">
+            {loop $list $id $t}
+            <li class="list-group-item" style="overflow: hidden">
+                <input type="hidden" name="data[{$id}]" value="" id="aid_{$id}">
+                <a href="{$t}" target="_blank">{$t}</a>
+                <a id="content_{$id}" style="margin-top:0px;float: right;"> </a>
+            </li>
+            <script type="text/javascript">
+                function dr_down_{$id}(){
+                    $('#content_{$id}').html('<img width="15" src="{THEME_PATH}assets/images/loading-2.gif">');
+                    $.ajax({
+                        type: "GET",
+                        url: "{$down_url}&id={$id}",
+                        dataType: "json",
+                        success: function (json) {
+                            if (json.code == 0) {
+                                $('#content_{$id}').addClass("badge badge-danger");
+                                $('#content_{$id}').html(json.msg);
+                                $('#content_{$id}').attr("onclick", "dr_down_{$id}()");
+                            } else {
+                                $('#content_{$id}').removeClass("badge-danger");
+                                $('#content_{$id}').addClass("badge badge-success");
+                                $('#content_{$id}').html('{dr_lang("成功")}');
+                                $('#aid_{$id}').val(json.msg);
+                            }
+                        },
+                        error: function(HttpRequest, ajaxOptions, thrownError) {
+                            dr_ajax_alert_error(HttpRequest, this, thrownError);
+                        }
+                    });
+                }
+                $(function () {
+                    dr_down_{$id}();
+                });
+            </script>
+            {/loop}
+        </ul>
+    </div>
+</form>
+</body>
+</html>
