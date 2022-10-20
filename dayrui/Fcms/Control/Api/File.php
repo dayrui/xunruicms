@@ -402,6 +402,7 @@ class File extends \Phpcmf\Common
         ]);
         \Phpcmf\Service::V()->display('api_upload_filelist.html');
     }
+
     /**
      * 目录扫描
      */
@@ -766,5 +767,179 @@ class File extends \Phpcmf\Common
         ]);
         \Phpcmf\Service::V()->display('attachment_edit.html');exit;
     }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img_list() {
+
+        $vid = XR_L('input')->get('vid');
+        if (!$vid) {
+            $this->_json(0, dr_lang('vid参数不能为空'));
+        }
+
+        $rt = \Phpcmf\Service::L('cache')->get_auth_data('down_img_'.$vid);
+        if (!$rt) {
+            $this->_json(0, dr_lang('数据读取失败，请重试'));
+        }
+
+        if (IS_POST) {
+
+            $post = XR_L('input')->post('data');
+            if (!$post) {
+                $this->_json(0, dr_lang('还没有下载完毕'));
+            }
+
+            $err = $ct = 0;
+            foreach ($post as $id => $aid) {
+                if ($aid) {
+                    $rt['value'] = str_replace($rt['url'][$id], dr_get_file($aid), $rt['value']);
+                    $ct++;
+                } else {
+                    $err++;
+                }
+            }
+            \Phpcmf\Service::L('cache')->del_auth_data('down_img_'.$vid);
+            $this->_json(1, dr_lang('共下载成功%s张，失败%s张', $ct, $err), $rt['value']);
+        }
+
+        \Phpcmf\Service::V()->admin();
+        \Phpcmf\Service::V()->assign([
+            'list' => $rt['url'],
+            'down_url' => dr_web_prefix('index.php?s=api&c=file&m=down_img_url&vid='.$vid.'&token='.dr_get_csrf_token()),
+        ]);
+        \Phpcmf\Service::V()->display('api_down_img.html');exit;
+    }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img_url() {
+
+        // 验证上传权限
+        $this->_check_upload_auth();
+
+        $vid = XR_L('input')->get('vid');
+        if (!$vid) {
+            $this->_json(0, dr_lang('vid参数不能为空'));
+        }
+
+        $rt = \Phpcmf\Service::L('cache')->get_auth_data('down_img_'.$vid);
+        if (!$rt) {
+            $this->_json(0, dr_lang('数据读取失败，请重试'));
+        }
+
+        $id = XR_L('input')->get('id');
+        if (!isset($rt['ext'][$id]) || !$rt['ext'][$id]) {
+            $this->_json(0, dr_lang('扩展名识别失败，请重试'));
+        }
+
+        // 下载图片
+        if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
+            //用户存储空间已满
+            $this->_json(0, dr_lang('用户存储空间已满'));
+        } else {
+            // 正常下载
+            // 下载远程文件
+            $rs = \Phpcmf\Service::L('upload')->down_file([
+                'url' => html_entity_decode((string)$rt['url'][$id]),
+                'timeout' => 5,
+                'watermark' => $rt['watermark'],
+                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($rt['attachment']), $rt['image_reduce']),
+                'file_ext' => $rt['ext'][$id],
+            ]);
+            if ($rs['code']) {
+                $att = \Phpcmf\Service::M('Attachment')->save_data($rs['data'], 'ueditor:'.$rt['rid']);
+                if ($att['code']) {
+                    // 归档成功
+                    // 标记附件
+                    \Phpcmf\Service::M('Attachment')->save_ueditor_aid($rt['rid'], $att['code']);
+                    $this->_json(1, $att['code']);
+                } else {
+                    $this->_json(0, $att['msg']);
+                }
+            } else {
+                $this->_json(0, $rs['msg']);
+            }
+        }
+    }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img() {
+
+        // 验证上传权限
+        $this->_check_upload_auth();
+
+        $value = XR_L('input')->post('value');
+        if (!$value) {
+            $this->_json(0, dr_lang('内容不能为空'));
+        }
+
+        // 找远程图片
+        $exts = $arrs = [];
+        $temp = preg_replace('/<pre(.*)<\/pre>/siU', '', $value);
+        $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
+        if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
+            $reps = array_unique($imgs[3]);
+            usort($reps, function ($a, $b) {
+                return dr_strlen($b) - dr_strlen($a);
+            });
+            foreach ($reps as $img) {
+                $arr = parse_url($img);
+                $domain = $arr['host'];
+                if ($domain) {
+                    $sites = \Phpcmf\Service::R(WRITEPATH . 'config/domain_site.php');
+                    if (isset($sites[$domain])) {
+                        // 过滤站点域名
+                    } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
+                        // 过滤附件白名单
+                    } else {
+                        $zj = 0;
+                        $remote = \Phpcmf\Service::C()->get_cache('attachment');
+                        if ($remote) {
+                            foreach ($remote as $t) {
+                                if (strpos($t['url'], $domain) !== false) {
+                                    $zj = 1;
+                                    break;
+                                }
+                            }
+                        }
+                        if ($zj == 0) {
+                            $ext = XR_L('upload')->get_image_ext($img);
+                            if (!$ext) {
+                                continue;
+                            }
+                            $arrs[] = $img;
+                            $exts[] = $ext;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$arrs){
+            $this->_json(0, dr_lang('没有分析出远程图片'));
+        }
+
+        $p = $this->_get_upload_params();
+
+        // 储存缓存
+        $vid = md5($value);
+        \Phpcmf\Service::L('cache')->set_auth_data('down_img_'.$vid, [
+            'url' => $arrs,
+            'ext' => $exts,
+            'value' => $value,
+            'attachment' => $p['attachment'],
+            'image_reduce' => $p['image_reduce'],
+            'watermark' => \Phpcmf\Service::L('input')->get('is_wm'),
+            'rid' => \Phpcmf\Service::L('input')->get('rid'),
+        ]);
+
+        $this->_json(1, dr_web_prefix('index.php?s=api&c=file&m=down_img_list&vid='.$vid));
+    }
+
+
 
 }

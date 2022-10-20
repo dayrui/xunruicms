@@ -93,31 +93,20 @@ class Editor extends \Phpcmf\Library\A_Field {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">'.dr_lang("下载远程图").'</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[setting][option][tool_select_3]" value="1" '.($option['tool_select_3'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">                             
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-md-2 control-label">'.dr_lang("去除站外链接").'</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[setting][option][tool_select_4]" value="1" '.($option['tool_select_4'] ? 'checked' : '').' data-on-text="'.dr_lang("默认选中").'" data-off-text="'.dr_lang("默认不选").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">                             
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">'.dr_lang("下载远程图").'</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[setting][option][tool_select_3]" value="1" '.($option['tool_select_3'] ? 'checked' : '').' data-on-text="'.dr_lang("启用").'" data-off-text="'.dr_lang("不启用").'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">                             
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr>
-                <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('下载远程图片').'</label>
-                    <div class="col-md-9">
-                        <div class="mt-radio-inline">
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').' <span></span></label>
-                            &nbsp; &nbsp;
-                            <label class="mt-radio mt-radio-outline"><input  type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').' <span></span></label>
-                        </div>
-						<span class="help-block">'.dr_lang('自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”').'</span>
-                    </div>
-                </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片title').'</label>
                     <div class="col-md-9">
@@ -228,13 +217,11 @@ class Editor extends \Phpcmf\Library\A_Field {
         // 第一张作为缩略图
         $slt = isset($_POST['data']['thumb']) && isset($_POST['is_auto_thumb_'.$field['fieldname']]) && !$_POST['data']['thumb'] && $_POST['is_auto_thumb_'.$field['fieldname']];
 
-        // 是否下载图片
-        $yct = $field['setting']['option']['down_img'] || (isset($_POST['is_auto_down_img_'.$field['fieldname']]) && $_POST['is_auto_down_img_'.$field['fieldname']]);
 
         $base64 = strpos($value, ';base64,');
 
         // 下载远程图片
-        if ($yct || $slt || $base64) {
+        if ($slt || $base64) {
             $temp = preg_replace('/<pre(.*)<\/pre>/siU', '', $value);
             $temp = preg_replace('/<code(.*)<\/code>/siU', '', $temp);
             if (preg_match_all("/(src)=([\"|']?)([^ \"'>]+)\\2/i", $temp, $imgs)) {
@@ -270,62 +257,6 @@ class Editor extends \Phpcmf\Library\A_Field {
                             $img = $att['code'];
                             // 标记附件
                             \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
-                        }
-                    } else {
-                        $ext = $this->_get_image_ext($img);
-                        if (!$ext) {
-                            continue;
-                        }
-                        // 下载图片
-                        if ($yct && dr_is_url($img)) {
-                            if (dr_is_app('mfile') && \Phpcmf\Service::M('mfile', 'mfile')->check_upload(\Phpcmf\Service::C()->uid)) {
-                                //用户存储空间已满
-                            } else {
-                                // 正常下载
-                                // 判断域名白名单
-                                $arr = parse_url($img);
-                                $domain = $arr['host'];
-                                if ($domain) {
-                                    $sites = \Phpcmf\Service::R(WRITEPATH.'config/domain_site.php');
-                                    if (isset($sites[$domain])) {
-                                        // 过滤站点域名
-                                    } elseif (strpos(SYS_UPLOAD_URL, $domain) !== false) {
-                                        // 过滤附件白名单
-                                    } else {
-                                        $zj = 0;
-                                        $remote = \Phpcmf\Service::C()->get_cache('attachment');
-                                        if ($remote) {
-                                            foreach ($remote as $t) {
-                                                if (strpos($t['url'], $domain) !== false) {
-                                                    $zj = 1;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if ($zj == 0) {
-                                            // 可以下载文件
-                                            // 下载远程文件
-                                            $rt = \Phpcmf\Service::L('upload')->down_file([
-                                                'url' => html_entity_decode((string)$img),
-                                                'timeout' => 5,
-                                                'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
-                                                'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
-                                                'file_ext' => $ext,
-                                            ]);
-                                            if ($rt['code']) {
-                                                $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data'], 'ueditor:'.$this->rid);
-                                                if ($att['code']) {
-                                                    // 归档成功
-                                                    $value = str_replace($img, $rt['data']['url'], $value);
-                                                    $img = $att['code'];
-                                                    // 标记附件
-                                                    \Phpcmf\Service::M('Attachment')->save_ueditor_aid($this->rid, $att['code']);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                     // 缩略图
@@ -417,42 +348,6 @@ class Editor extends \Phpcmf\Library\A_Field {
         }
         // 入库操作
         \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
-    }
-
-    // 获取远程附件扩展名
-    protected function _get_image_ext($url) {
-
-        if (strlen($url) > 300) {
-            return '';
-        }
-
-        $arr = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
-        $ext = str_replace('.', '', trim(strtolower(strrchr($url, '.')), '.'));
-        if ($ext && in_array($ext, $arr)) {
-            return $ext; // 满足扩展名
-        } elseif ($ext && strlen($ext) < 4) {
-            //CI_DEBUG && log_message('error', '此路径不是远程图片：'.$url);
-            return ''; // 表示不是图片扩展名了
-        }
-
-        foreach ($arr as $t) {
-            if (stripos($url, $t) !== false) {
-                return $t;
-            }
-        }
-
-        $rt = getimagesize($url);
-        if ($rt && $rt['mime']) {
-            foreach ($arr as $t) {
-                if (stripos($rt['mime'], $t) !== false) {
-                    return $t;
-                }
-            }
-        }
-
-        CI_DEBUG && log_message('debug', '服务器无法获取远程图片的扩展名：'.dr_safe_replace($url));
-
-        return '';
     }
 
     /**
@@ -599,6 +494,89 @@ class Editor extends \Phpcmf\Library\A_Field {
                 height:'".$height."',
                 width:'".$width."'});
             });
+            function dr_editor_down_img_".$field['fieldname']."(){
+var index = layer.load(2, {
+    shade: [0.3,'#fff'], //0.1透明度的白色背景
+    time: 100000000
+});
+$.ajax({
+    type: 'POST',
+    url: '".dr_web_prefix('index.php?s=api&c=file&m=down_img&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p2."&is_wm=".$field['setting']['option']['watermark'])."',
+    dataType: 'json',
+    data: { value: $('#dr_".$field['fieldname']."').summernote('code') },
+    success: function (json) {
+        layer.close(index);
+        if (json.code == 0) {
+            $('#dr_row_".$field['fieldname']."').addClass('has-error');
+            dr_cmf_tips(0, json.msg, json.data.time);
+        } else {
+            
+            var width = '500px';
+            var height = '70%';
+        
+            if (is_mobile_cms == 1) {
+                width = '95%';
+                height = '90%';
+            }
+        
+            layer.open({
+                type: 2,
+                title: '',
+                fix:true,
+                scrollbar: false,
+                maxmin: false,
+                resize: true,
+                shadeClose: true,
+                shade: 0,
+                area: [width, height],
+                btn: [dr_lang('确定'), dr_lang('取消')],
+                yes: function(index, layero){
+                    // 延迟加载
+                    var loading = layer.load(2, {
+                        shade: [0.3,'#fff'], //0.1透明度的白色背景
+                        time: 100000000
+                    });
+                    var body = layer.getChildFrame('body', index);
+                    $.ajax({type: 'POST',dataType:'json', url: json.msg, data: $(body).find('#myform').serialize(),
+                        success: function(json) {
+                            layer.close(loading);
+                            if (json.code) {
+                                layer.close(index);
+                                 $('#dr_".$field['fieldname']."').summernote('reset');
+                                 $('#dr_".$field['fieldname']."').summernote('pasteHTML', json.data);
+                                dr_cmf_tips(1, json.msg);
+                            } else {
+                                dr_cmf_tips(0, json.msg, json.data.time);
+                            }
+                            return false;
+                        },
+                        error: function(HttpRequest, ajaxOptions, thrownError) {
+                            dr_ajax_alert_error(HttpRequest, this, thrownError);
+                        }
+                    });
+                    return false;
+                },
+                success: function(layero, index){
+                    // 主要用于后台权限验证
+                    var body = layer.getChildFrame('body', index);
+                    var json = $(body).html();
+                    if (json.indexOf('\"code\":0') > 0 && json.length < 500){
+                        var obj = JSON.parse(json);
+                        layer.close(index);
+                        dr_cmf_tips(0, obj.msg);
+                    }
+                },
+                content: json.msg+'&is_iframe=1'
+            });
+            
+            
+        }
+    },
+    error: function(HttpRequest, ajaxOptions, thrownError) {
+        dr_ajax_alert_error(HttpRequest, this, thrownError);
+    }
+});
+            }
         </script>
         ", 0);
 
@@ -612,16 +590,17 @@ class Editor extends \Phpcmf\Library\A_Field {
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
                   <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取内容作为描述信息').' <span></span>
                  </label>';
-            if (!$field['setting']['option']['down_img']) {
-                $str.= '
-                 <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_down_img_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_3'] ? 'checked' : '').' value="1"> '.dr_lang('下载远程图片').' <span></span>
-                 </label>';
-            }
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
                   <input name="is_remove_a_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_4'] ? 'checked' : '').' value="1"> '.dr_lang('去除站外链接').' <span></span>
                  </label>';
+            if ($field['setting']['option']['tool_select_3']) {
+                $str.= '
+                 <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
+                  <a class="btn blue btn-xs" onclick="dr_editor_down_img_'.$field['fieldname'].'()"> '.dr_lang('一键下载远程图片').' </a>
+                 </label>';
+            }
+
             $str.= '</div>';
         }
 

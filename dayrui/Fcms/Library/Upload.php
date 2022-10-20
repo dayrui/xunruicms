@@ -441,4 +441,42 @@ class Upload {
 
         return [$file_path, $config, $diy];
     }
+
+    /**
+     * 获取远程附件扩展名
+     */
+    public function get_image_ext($url) {
+
+        if (strlen($url) > 300) {
+            return '';
+        }
+
+        $arr = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
+        $ext = str_replace('.', '', trim(strtolower(strrchr($url, '.')), '.'));
+        if ($ext && in_array($ext, $arr)) {
+            return $ext; // 满足扩展名
+        } elseif ($ext && strlen($ext) < 4) {
+            //CI_DEBUG && log_message('error', '此路径不是远程图片：'.$url);
+            return ''; // 表示不是图片扩展名了
+        }
+
+        foreach ($arr as $t) {
+            if (stripos($url, $t) !== false) {
+                return $t;
+            }
+        }
+
+        $rt = getimagesize($url);
+        if ($rt && $rt['mime']) {
+            foreach ($arr as $t) {
+                if (stripos($rt['mime'], $t) !== false) {
+                    return $t;
+                }
+            }
+        }
+
+        CI_DEBUG && log_message('debug', '服务器无法获取远程图片的扩展名：'.dr_safe_replace($url));
+
+        return '';
+    }
 }
