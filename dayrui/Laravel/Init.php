@@ -39,6 +39,10 @@ if (! function_exists('csrf_hash')) {
     }
 }
 
+if (!is_file(__DIR__.'/System/vendor/autoload.php')) {
+    exit('缺少文件（'.__DIR__.'/System/vendor/autoload.php'.'）请在官网下载Laravel内核包');
+}
+
 require __DIR__.'/System/vendor/autoload.php';
 require __DIR__.'/Extend/Error.php';
 
