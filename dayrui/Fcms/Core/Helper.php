@@ -4326,7 +4326,7 @@ function XR_L($name, $namespace = '') {
     return \Phpcmf\Service::L($name, $namespace);
 }
 
-function XR_M($name, $namespace = '') {
+function XR_M($name = '', $namespace = '') {
     return \Phpcmf\Service::M($name, $namespace);
 }
 

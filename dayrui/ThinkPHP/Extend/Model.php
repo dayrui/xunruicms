@@ -291,6 +291,9 @@ class db_mysql {
 
     public function table($name) {
         $this->_clear();
+        if (strpos($name, $this->prefix) === 0) {
+            $name = substr($name, strlen($this->prefix));
+        }
         $this->param['table'] = $name;
         return $this;
     }
