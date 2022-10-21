@@ -28,6 +28,24 @@ function config ($name, $getShared = true) {
     return \CodeIgniter\Config\Config::get($name, $getShared);
 }
 
+/******* Locale  *******/
+if (!class_exists('Locale')) {
+    class Locale {
+
+        static private $locale;
+
+        public static function getDefault() {
+            return self::$locale;
+        }
+
+        public static function setDefault($locale) {
+            self::$locale = $locale;
+        }
+
+    }
+}
+
+
 /******* CodeIgniter Bootstrap *******/
 
 // 定义常量
