@@ -68,7 +68,7 @@ if (is_file(CONFIGPATH.'database.php')) {
 
     $db = [];
     require CONFIGPATH.'database.php';
-    $config['connections']['mysql']['host'] = $db['default']['hostname'];
+    $config['connections']['mysql']['hostname'] = $db['default']['hostname'];
     $config['connections']['mysql']['username'] = $db['default']['username'];
     $config['connections']['mysql']['password'] = $db['default']['password'];
     $config['connections']['mysql']['database'] = $db['default']['database'];
@@ -83,7 +83,7 @@ if (is_file(CONFIGPATH.'database.php')) {
     if ($db) {
         foreach ($db as $name2 => $t) {
             $config['connections'][$name2] = $config['connections']['mysql'];
-            $config['connections'][$name2]['host'] = $t['hostname'];
+            $config['connections'][$name2]['hostname'] = $t['hostname'];
             $config['connections'][$name2]['username'] = $t['username'];
             $config['connections'][$name2]['password'] = $t['password'];
             $config['connections'][$name2]['database'] = $t['database'];
