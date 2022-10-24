@@ -1277,7 +1277,9 @@ function dr_module_send(title, url, nogo) {
                     }
                     if (json.code == 1) {
                         layer.close(index);
-                        if (nogo) {
+                        if (json.data.url) {
+                            dr_iframe_show(title, json.data.url);
+                        } else if (nogo) {
 
                         } else {
                             setTimeout("window.location.reload(true)", 2000)
