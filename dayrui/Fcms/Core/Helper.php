@@ -2361,9 +2361,8 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
         return file_get_contents($url);
     } elseif (strpos($url, '/')  === 0 && is_file(WEBPATH.$url)) {
         return file_get_contents(WEBPATH.$url);
-    } elseif (strpos($url, 'https://') !== false
-        && strpos($url, 'http://') !== false) {
-        if (CI_DEBUG && $url && $is_log) {
+    } elseif (!dr_is_url($url)) {
+        if (CI_DEBUG && $is_log) {
             log_message('error', '获取远程数据失败['.$url.']：地址前缀要求是http开头');
         }
         return '';

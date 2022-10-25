@@ -206,7 +206,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         } elseif (preg_match("/Controller or its method is not found:(.+)/", $message, $mt)) {
             $message.= '<br>检查此文件是否存在：'.$this->_get_file().'，检查地址是否正确，注意控制器文件首字母要大写';
             $this->_is_404 = 1;
-        } elseif (preg_match("/count(): Argument #1 \((.+)\) must be of type Countable|array/", $message, $mt)) {
+        } elseif (preg_match("/count\(\): Argument #1 \((.+)\) must be of type Countable\|array/", $message, $mt)) {
             $message.= '<br>需要将count函数改为dr_count';
         } elseif (IS_XRDEV) {
             echo '需要入库cn_msg<br>';
