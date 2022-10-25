@@ -307,7 +307,7 @@ return [
                     }
                 }
             }
-            $this->_json(1, $rt['msg']);
+            $this->_json(1, $rt['msg'], $rt['data']);
         }
 
         \Phpcmf\Service::V()->display('cloud_login_ajax.html');exit;

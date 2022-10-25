@@ -476,5 +476,10 @@ if (is_file(MYPATH.'Helper.php')) {
 // 系统函数库
 require CMSPATH.'Core/Helper.php';
 
+// 自定义入口执行
+if (function_exists('cms_init')) {
+    cms_init();
+}
+
 // 进入系统框架加载
 require FRAMEPATH.'Init.php';
