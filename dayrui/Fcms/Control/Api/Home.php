@@ -29,7 +29,7 @@ class Home extends \Phpcmf\Common
             require $apifile;
         } elseif (IS_API === 'cron') {
 	        // 任务脚本
-            $cron = new \Phpcmf\Control\Api\Run();
+            $cron = new \Phpcmf\Control\Api\Run($this);
             $cron->index();
         } elseif (is_file(IS_API)) {
             // 自定义任意目录的api

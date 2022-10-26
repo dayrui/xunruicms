@@ -81,7 +81,7 @@ class Sso extends \Phpcmf\Common {
             $this->_json(0, '没有安装用户系统插件');
         }
         require IS_USE_MEMBER.'Controllers/Login.php';
-        $ci = new \Phpcmf\Controllers\Login();
+        $ci = new \Phpcmf\Controllers\Login($this);
         $ci->index();
     }
 
@@ -90,7 +90,7 @@ class Sso extends \Phpcmf\Common {
             $this->_json(0, '没有安装用户系统插件');
         }
         require IS_USE_MEMBER.'Controllers/Login.php';
-        $ci = new \Phpcmf\Controllers\Login();
+        $ci = new \Phpcmf\Controllers\Login($this);
         $ci->sms();
     }
 
@@ -99,7 +99,7 @@ class Sso extends \Phpcmf\Common {
             $this->_json(0, '没有安装用户系统插件');
         }
         require IS_USE_MEMBER.'Controllers/Login.php';
-        $ci = new \Phpcmf\Controllers\Login();
+        $ci = new \Phpcmf\Controllers\Login($this);
         $ci->oauth();
     }
 
@@ -108,7 +108,7 @@ class Sso extends \Phpcmf\Common {
             $this->_json(0, '没有安装用户系统插件');
         }
         require IS_USE_MEMBER.'Controllers/Register.php';
-        $ci = new \Phpcmf\Controllers\Register();
+        $ci = new \Phpcmf\Controllers\Register($this);
         $ci->index();
     }
 

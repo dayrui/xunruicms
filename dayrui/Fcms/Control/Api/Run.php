@@ -12,6 +12,19 @@
 class Run extends \Phpcmf\Common
 {
 
+    /**
+     * 初始化
+     */
+    public function __construct($object = NULL)
+    {
+        parent::__construct();
+        if ($object) {
+            foreach ($object as $var => $value) {
+                $this->$var = $value;
+            }
+        }
+    }
+
 	public function index() {
 
 	    // 验证运行权限
@@ -129,6 +142,19 @@ class Run extends \Phpcmf\Common
             // 缓存清理
             \Phpcmf\Service::M('cache')->update_data_cache();
             file_put_contents(WRITEPATH.'config/run_auto_cache_time.php', SYS_TIME);
+            // 清理日志
+            $map = dr_file_map(WRITEPATH.'error/');
+            if ($map) {
+                foreach ($map as $file) {
+                    if (strpos($file, 'log-') !== false) {
+                        $file = WRITEPATH.'error/'.$file;
+                        $time = filectime($file);
+                        if ($time && SYS_TIME - $time > 3600 * 24 * 30) {
+                            @unlink($file);
+                        }
+                    }
+                }
+            }
         }
 
         // 项目计划

@@ -515,7 +515,7 @@ class Api extends \Phpcmf\Common {
         }
 
         require IS_USE_MODULE.'Controllers/Admin/Api.php';
-        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci = new \Phpcmf\Controllers\Admin\Api($this);
         $ci->mtotal();
 		exit;
 	}
@@ -528,7 +528,7 @@ class Api extends \Phpcmf\Common {
         }
 
         require IS_USE_MODULE.'Controllers/Admin/Api.php';
-        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci = new \Phpcmf\Controllers\Admin\Api($this);
         $ci->ctotal();
         exit;
 	}
@@ -1175,14 +1175,14 @@ class Api extends \Phpcmf\Common {
     // 更新url
     public function update_url() {
         require IS_USE_MODULE.'Controllers/Admin/Api.php';
-        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci = new \Phpcmf\Controllers\Admin\Api($this);
         $ci->update_url();
     }
 
     // 更新栏目缓存配置
     public function update_category_cache() {
         require IS_USE_MODULE.'Controllers/Admin/Api.php';
-        $ci = new \Phpcmf\Controllers\Admin\Api();
+        $ci = new \Phpcmf\Controllers\Admin\Api($this);
         $ci->update_category_cache();
     }
 
