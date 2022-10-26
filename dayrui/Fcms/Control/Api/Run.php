@@ -102,9 +102,10 @@ class Run extends \Phpcmf\Common
                     }
                     // 定时发布动作
                     $rt = $this->_module_init($dir, $siteid, 1);
-                    if ($rt) {
+                    if ($rt && $this->module) {
                         $times = $this->content_model->table($siteid.'_'.$dir.'_time')->where('posttime < '.SYS_TIME)->getAll();
                         if ($times) {
+                            \Phpcmf\Service::C()->module = $this->module;
                             foreach ($times as $t) {
                                 $rt = $this->content_model->post_time($t);
                                 if (!$rt['code']) {
