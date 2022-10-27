@@ -86,7 +86,7 @@ class Filters extends BaseConfig
             }
         }
 
-        if (IS_DEV || CI_DEBUG) {
+        if (IS_ADMIN && (IS_DEV || CI_DEBUG)) {
             // 调试模式下关闭
             $this->methods['post'] = [];
         } elseif (defined('IS_API') && IS_API) {
