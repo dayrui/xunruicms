@@ -158,7 +158,7 @@ class Install extends \Phpcmf\Common {
                     }
 
                     if (!mysqli_set_charset($mysqli, "utf8mb4")) {
-                        $this->_json(0, "当前MySQL不支持utf8mb4编码（".mysqli_error($mysqli)."）");
+                        $this->_json(0, "当前MySQL不支持utf8mb4编码（".mysqli_error($mysqli)."）建议升级MySQL版本");
                     }
 
                     $data['db_prefix'] = strtolower($data['db_prefix']);

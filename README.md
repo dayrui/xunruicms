@@ -6,12 +6,12 @@
 
 
 #### 运行环境
-PHP7.3以上（支持PHP8）
-MySQL5以上，推荐5.7及以上
+PHP7.4以上（支持PHP8）
+MySQL5.7及以上
 Apache、Nginx、IIS等Web服务器都可以
 
 #### 在线预览
-http://demo4.xunruicms.com/admin.php
+http://demo.xunruicms.com/admin.php
 
 
 #### 安装教程
