@@ -1097,7 +1097,7 @@ class Api extends \Phpcmf\Common {
         }
 
         if (is_file(FRAMEPATH.'Extend/Cache.php')) {
-            require FRAMEPATH.'Extend/Cache.php';
+            require_once FRAMEPATH.'Extend/Cache.php';
             $cache = new \Frame\Cache();
             $rt = $cache->test($name);
             $this->_json($rt['code'], $rt['msg']);
