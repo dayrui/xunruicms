@@ -193,7 +193,7 @@ if (!function_exists('dr_get_app_list')) {
 // 获取app的css地址
 if (!function_exists('dr_get_app_css')) {
     function dr_get_app_css($name) {
-        return THEME_PATH.$name.'/';
+        return (defined('THEME_PATH') ? THEME_PATH : '/static/').$name.'/';
     }
 }
 
