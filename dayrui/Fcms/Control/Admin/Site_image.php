@@ -58,7 +58,7 @@ class Site_image extends \Phpcmf\Common
             //'image' => $data['image_reduce'],
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,
-            'waterfile' => dr_file_map(CONFIGPATH.'watermark/', 1),
+            'waterfile' => dr_file_map(WRITEPATH.'watermark/', 1),
         ]);
         \Phpcmf\Service::V()->display('site_image.html');
 	}

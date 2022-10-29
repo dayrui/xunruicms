@@ -90,6 +90,7 @@ class File extends \Phpcmf\Common
             'file_exts' => explode(',', strtolower(str_replace('，', ',', $p['exts']))),
             'file_size' => $p['size'] * 1024 * 1024,
             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
+            'watermark' => isset($_GET['is_wm']) && $_GET['is_wm'] ? 1 : 0,
         ]);
         if (!$rt['code']) {
             exit(dr_array2string($rt));
