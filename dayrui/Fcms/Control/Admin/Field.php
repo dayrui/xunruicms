@@ -215,6 +215,10 @@ class Field extends \Phpcmf\Common {
             } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
                 $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
 			} else {
+                $rt = $field->edit_config($data);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
 				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
 				if (!$rt['code']) {
 					$this->_json(0, dr_lang($rt['msg']));
@@ -269,6 +273,10 @@ class Field extends \Phpcmf\Common {
 			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
             if (!$field) {
                 $this->_json(0, dr_lang('字段类别（%s）不存在', $post['fieldtype']));
+            }
+            $rt = $field->edit_config($post);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
             }
 			$rt = \Phpcmf\Service::M('Field')->edit(
 				$data,

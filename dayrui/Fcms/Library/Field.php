@@ -1050,6 +1050,14 @@
 
 
         /**
+         * 验证字段属性
+         */
+        public function edit_config($post) {
+            return dr_return_data(1, 'ok');
+        }
+
+
+        /**
          * 会员字段选择（用于字段默认值设定）
          *
          * @return  string

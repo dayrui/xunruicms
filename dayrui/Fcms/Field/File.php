@@ -90,6 +90,20 @@ class File extends \Phpcmf\Library\A_Field {
             </div>'
 		];
 	}
+
+    /**
+     * 验证字段属性
+     */
+    public function edit_config($post) {
+
+        if (!isset($post['setting']['option']['ext']) || !$post['setting']['option']['ext']) {
+            return dr_return_data(0, dr_lang('扩展名必须填写'));
+        } elseif (!isset($post['setting']['option']['size']) || !$post['setting']['option']['size']) {
+            return dr_return_data(0, dr_lang('文件大小必须填写'));
+        }
+
+        return dr_return_data(1, 'ok');
+    }
 	
 	/**
 	 * 字段输出
