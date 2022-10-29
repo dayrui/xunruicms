@@ -481,13 +481,14 @@ class Editor extends \Phpcmf\Library\A_Field {
         } else {
             $alt = '';
         }
+        $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0;
         $str.= \Phpcmf\Service::L('js_packer')->pack("
         <script type=\"text/javascript\">
             $(function(){
                 $('#dr_".$name."').summernote({
                 isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
                 llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p)."',
-                llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$field['setting']['option']['watermark'])."',
+                llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
                 attachUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p3)."',
                 isImageTitle:'".$title."',
                 isImageAlt:'".$alt."',
@@ -501,7 +502,7 @@ var index = layer.load(2, {
 });
 $.ajax({
     type: 'POST',
-    url: '".dr_web_prefix('index.php?s=api&c=file&m=down_img&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p2."&is_wm=".$field['setting']['option']['watermark'])."',
+    url: '".dr_web_prefix('index.php?s=api&c=file&m=down_img&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p2."&is_wm=".$wm)."',
     dataType: 'json',
     data: { value: $('#dr_".$field['fieldname']."').summernote('code') },
     success: function (json) {
